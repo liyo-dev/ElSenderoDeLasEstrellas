@@ -50,13 +50,6 @@ public class SequenceStage : MonoBehaviour
         public Transform target;
     }
 
-    [Header("Planos de cámara")]
-    [Tooltip("Los puntos de cámara de esta secuencia. Lo normal es que cada uno sea un GameObject " +
-             "vacío con el componente CinematicShot (así se ve el encuadre en la Scene View). " +
-             "Si se deja el campo 'name' vacío, se usa el 'label' del CinematicShot, y si tampoco " +
-             "lo tiene, el nombre del GameObject.")]
-    [SerializeField] private List<NamedTransform> _shots = new();
-
     [Serializable]
     public struct PropActor
     {
@@ -81,9 +74,8 @@ public class SequenceStage : MonoBehaviour
 
     [Header("Objetos que la cámara puede encuadrar")]
     [Tooltip("Objetos del decorado dados de alta como actores de la secuencia (el horno, la " +
-             "carreta, el portón). A partir de ahí un ShotBeat puede usarlos como 'subjectId' o " +
-             "'secondaryId' igual que a un personaje, y un FaceBeat puede hacer que alguien los " +
-             "mire.\n\n" +
+             "carreta, el portón). A partir de ahí un guion puede encuadrarlos y un FaceBeat puede hacer que " +
+             "alguien los mire.\n\n" +
              "Existe porque sin esto la única forma de encuadrar algo del escenario era que un " +
              "SequenceModule lo registrara por código (ctx.RegisterActor), y un horno que ya está " +
              "colocado en la escena no necesita código ninguno. Lo registra el SequencePlayer al " +
@@ -104,35 +96,6 @@ public class SequenceStage : MonoBehaviour
     [SerializeField] private CinematicCameraDriver _cameraDriver;
 
     public CinematicCameraDriver CameraDriver => _cameraDriver;
-
-    [Header("Ajuste de los planos calculados")]
-    [Tooltip("Aleja (>1) o acerca (<1) TODOS los planos calculados de esta secuencia, sin tocar su " +
-             "composición: el encuadre es el mismo, solo que desde más lejos o más cerca.\n\n" +
-             "Está aquí, y no en el código, porque cuánto de cerca se ve un personaje es una " +
-             "decisión de gusto, no de geometría — y depende del arte del juego. Se puede mover " +
-             "DURANTE el Play, con la secuencia corriendo, y el cambio se nota al instante en los " +
-             "planos que siguen a alguien. Cuando encuentres el valor que te gusta, dilo y se pasa " +
-             "a ser el de por defecto.\n\n" +
-             "Para un plano suelto que necesite otra cosa, cada beat tiene su propio " +
-             "'distanceScale', que se multiplica con este.")]
-    [Range(0.4f, 3f)]
-    [SerializeField] private float _distanceMultiplier = 1f;
-
-    public float DistanceMultiplier => Mathf.Max(0.1f, _distanceMultiplier);
-
-    [Tooltip("HERRAMIENTA DE AJUSTE. Con esto marcado, TODOS los planos calculados se recalculan " +
-             "cada frame en vez de una sola vez al cortar. Es lo que hace que mover el deslizador " +
-             "de arriba se vea al instante en cualquier plano, y no solo en los que siguen a " +
-             "alguien.\n\n" +
-             "Sin esto, un plano de corte seco ya está resuelto cuando mueves el deslizador, así " +
-             "que no se entera del cambio — que es justo lo que pasaba el 16 sep ('he movido el " +
-             "slider y no hace nada').\n\n" +
-             "Quitarlo cuando termines de ajustar: recalcular cada frame gasta de más, y hace que " +
-             "la cámara siga a los personajes en planos que deberían estar quietos.")]
-    [FormerlySerializedAs("_previsualizarPlanosEnVivo")]
-    [SerializeField] private bool _livePreviewShots = false;
-
-    public bool LivePreview => _livePreviewShots;
 
     [Header("Mecánica propia de esta escena")]
     [Tooltip("Módulos con la mecánica de juego que solo existe en esta secuencia (un panic input, " +
@@ -208,9 +171,6 @@ public class SequenceStage : MonoBehaviour
     }
 
 
-    /// Plano de cámara por nombre, o null (con aviso) si no está en la lista.
-    public Transform GetShot(string shotName) => Resolve(_shots, shotName, "plano de cámara");
-
     /// Marca de posición por nombre, o null (con aviso) si no está en la lista.
     public Transform GetMark(string markName)
     {
@@ -245,9 +205,6 @@ public class SequenceStage : MonoBehaviour
     /// Todas las marcas, para las herramientas de Editor (captura del escenario, horneado de guiones).
     public IReadOnlyList<NamedTransform> Marks => _marks;
 
-    /// Todos los planos con nombre, para las herramientas de Editor.
-    public IReadOnlyList<NamedTransform> Shots => _shots;
-
     private Transform Resolve(List<NamedTransform> list, string wanted, string what)
     {
         if (string.IsNullOrWhiteSpace(wanted) || list == null) return null;
@@ -268,15 +225,10 @@ public class SequenceStage : MonoBehaviour
         return null;
     }
 
-    /// El nombre efectivo de una entrada: el campo 'name' si lo tiene, si no el 'label' del
-    /// CinematicShot, si no el nombre del GameObject. Así basta con arrastrar los planos ya
-    /// colocados y etiquetados, sin volver a teclear su nombre aquí.
+    /// El nombre efectivo de una entrada: el campo 'name' si lo tiene, si no el del GameObject.
     private static string NameOf(NamedTransform entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.name)) return entry.name.Trim();
-        if (entry.target != null && entry.target.TryGetComponent(out CinematicShot shot)
-            && !string.IsNullOrWhiteSpace(shot.label))
-            return shot.label.Trim();
         return entry.target != null ? entry.target.name : string.Empty;
     }
 

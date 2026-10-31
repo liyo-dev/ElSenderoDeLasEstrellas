@@ -18,7 +18,7 @@ MonoBehaviour:
   descriptionId: QUEST_PREPARA_VIAJE_DESC
   description: "Antes de ir al Bosque Prohibido, prep\xE1rate en el pueblo."
   detailedDescriptionId: QUEST_PREPARA_VIAJE_DETAIL
-  detailedDescription: "Eldran quiere que no salgas con las manos vac\xEDas: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika, y practica la punter\xEDa con \xE9l."
+  detailedDescription: "Eldran quiere que no salgas con las manos vac\xEDas: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika. Luego vuelve con \xE9l."
   steps:
   - descriptionId: QUEST_PREPARA_VIAJE_STEP1
     description: Pide una capa a Victoria
@@ -30,5 +30,5 @@ MonoBehaviour:
     description: Entrena con Erika
     conditionId: PREPARA_VIAJE_ERIKA
   - descriptionId: QUEST_PREPARA_VIAJE_STEP4
-    description: "Practica la punter\xEDa con Eldran"
-    conditionId: PREPARA_VIAJE_ELDRAN
+    description: Vuelve con Eldran
+    conditionId: PREPARA_VIAJE_VOLVER

@@ -119,6 +119,7 @@ public class SpeechBubbleUI : MonoBehaviour
     Image _bubbleImage;
     Camera _cam;
     Transform _target;
+    float _factorDeTalla = 1f; // TallaDeNino del que habla: el bocadillo baja con la cabeza de un niño
     bool _isShowing;
     // Cada Show() abre un turno nuevo: quien lo abrió puede cerrar SOLO el suyo (Hide(turno)) y
     // saber si otro le ha quitado el bocadillo. Ver INC-613.
@@ -308,7 +309,7 @@ public class SpeechBubbleUI : MonoBehaviour
 
         if (_target == null || _cam == null) return;
 
-        Vector3 offset = _offsetOverride ?? _worldOffset;
+        Vector3 offset = _offsetOverride ?? _worldOffset * _factorDeTalla;
         Vector3 screenPos = _cam.WorldToScreenPoint(_target.position + offset);
         if (screenPos.z < 0f) return;
 
@@ -317,8 +318,8 @@ public class SpeechBubbleUI : MonoBehaviour
             _bubbleRect.anchoredPosition = ClampToCanvas(local);
     }
 
-    /// FIX (17 sep 2026, Raúl: "los bocadillos se cortan por arriba" -- prólogo, planos cerrados
-    /// nuevos generados por ShotComposer). Antes esta posición se aplicaba sin límites: con poco
+    /// FIX (17 sep 2026, Raúl: "los bocadillos se cortan por arriba" -- prólogo, planos
+    /// cerrados). Antes esta posición se aplicaba sin límites: con poco
     /// headroom (un CloseUp, por ejemplo) la cabeza del personaje queda cerca del borde superior
     /// de la pantalla, y el bocadillo -- que crece HACIA ARRIBA desde el punto de anclaje, con el
     /// pico apuntando hacia abajo a la cabeza -- se salía por encima del canvas. Nunca se había
@@ -398,6 +399,7 @@ public class SpeechBubbleUI : MonoBehaviour
 
         SenalesDeHabla.Para(_target);
         _target = target;
+        _factorDeTalla = TallaDeNino.FactorDe(target);
         _offsetOverride = worldOffset;
         _isShowing = true;
         _fijoEnPantalla = fijoEnPantalla;

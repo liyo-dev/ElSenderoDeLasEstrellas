@@ -15,6 +15,8 @@ public class OrbDropper : MonoBehaviour
     [SerializeField] private string    _profileId;
     [Tooltip("Punto de spawn opcional. Si es null usa el offset del perfil")]
     [SerializeField] private Transform _spawnOrigin;
+    [Tooltip("La moneda (Esencia) solo cae la primera vez que se le derrota en la partida; después solo suelta orbes de vida y maná (p. ej. un combate de entrenamiento que se puede repetir).")]
+    [SerializeField] private bool _monedaSoloLaPrimeraVez;
 
     private Damageable     _damageable;
     private OrbDropProfile _profile;
@@ -88,6 +90,7 @@ public class OrbDropper : MonoBehaviour
     {
         if (p.currencyItem == null || p.currencyItem.usageKind != ItemData.ItemUsageKind.Currency ||
             p.currencyOrbPrefab == null) return;
+        if (_monedaSoloLaPrimeraVez && !FlagDePartida.Marcar(ClaveDeMonedaSoltada())) return;
         int minimum = Mathf.Max(0, p.currencyDeathMin);
         int maximum = Mathf.Max(minimum, p.currencyDeathMax);
         int total = Random.Range(minimum, maximum + 1);
@@ -101,6 +104,13 @@ public class OrbDropper : MonoBehaviour
             SpawnOrb(p.specialCurrencyOrbPrefab, OrbType.Currency,
                 total * Mathf.Max(1, p.specialCurrencyMultiplier), p.specialCurrencyPickupSFXKey);
         AlSoltarOrbes?.Invoke(this, OrbType.Currency);
+    }
+
+    private string ClaveDeMonedaSoltada()
+    {
+        var npc = GetComponent<Game.NPC.NPCBehaviourManagerV2>();
+        string id = npc != null && !string.IsNullOrEmpty(npc.PersistenceId) ? npc.PersistenceId : gameObject.name;
+        return $"ORBES_MONEDA_SOLTADA:{id}";
     }
 
     /// Notifica quién suelta orbes y su tipo para que otros sistemas reaccionen.

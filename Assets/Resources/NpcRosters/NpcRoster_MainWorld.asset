@@ -104,3 +104,13 @@ MonoBehaviour:
     requireNavMesh: 1
     requiredFlag: NARRATIVE_FLAG:CAP2_INICIADO
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Aldona
+    prefab: {fileID: 6941739730369371496, guid: d46e61fa509cde242a44210410485805, type: 3}
+    gameObjectName: Aldona
+    persistenceId: npc_aldona
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0

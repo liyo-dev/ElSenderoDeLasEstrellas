@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4749176542339580}
   - component: {fileID: 7808316938202738570}
-  - component: {fileID: 1536150387625788468}
   - component: {fileID: 712089295218325241}
   m_Layer: 0
   m_Name: SEQ_StarAwakening_Modulos
@@ -52,8 +51,11 @@ MonoBehaviour:
   spawnDistance: 18
   spawnAngle: 160
   spawnHeight: 1.5
+  clearPathStepDegrees: 20
+  clearPathMaxSteps: 4
   cinematicProjectileLifetime: 120
   explosionVFX: {fileID: 100010, guid: 6abcdaf8c8fd61b4697e96e8a1138d29, type: 3}
+  impactWaitUnscaled: 6
   playerSpawner: {fileID: 0}
   castSlot: 1
   cinematicSpellFallback: {fileID: 11400000, guid: d45589ea2589f21499b4b61ab8d6f54b, type: 2}
@@ -64,37 +66,13 @@ MonoBehaviour:
   willUpperBodyLayer: 1
   castAnimDelay: 0.3
   collisionWaitUnscaled: 3
-  panicInputDetector: {fileID: 1536150387625788468}
-  panicInputUI: {fileID: 0}
-  panicButtonSprite: {fileID: 21300000, guid: cf629afeef7445d1b12313c98a1a2631, type: 3}
-  interactIconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  clashMarkName: choque
+  clashTravelUnscaled: 0.7
   shockEffects: {fileID: 712089295218325241}
   approachShakeMin: 0.02
   approachShakeMax: 0.15
   approachShakeRampSeconds: 4
   approachShakeInterval: 0.15
---- !u!114 &1536150387625788468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468072592841052729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 674d65bcbe174d8469bb8608e811d7a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PanicInputDetector
-  mode: 0
-  panicAction: {fileID: 3179225871509790519, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
-  pressesRequired: 8
-  windowSeconds: 5
-  holdSeconds: 1.5
-  maxHoldSeconds: 2.5
-  directionAction: {fileID: 0}
-  expectedDirection: {x: 0, y: 1}
-  directionAngleTolerance: 45
-  directionHoldSeconds: 0.15
 --- !u!114 &712089295218325241
 MonoBehaviour:
   m_ObjectHideFlags: 0

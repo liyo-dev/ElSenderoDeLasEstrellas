@@ -23,7 +23,7 @@ public static partial class CombatLabBuilder
     /// Destino del viaje rápido.
     private static readonly Vector3 EntradaTesoros = new Vector3(106f, 0.1f, 96f);
 
-    private struct Premio
+    internal struct Premio
     {
         public PickupEffectType tipo;
         public string ruta;
@@ -116,7 +116,7 @@ public static partial class CombatLabBuilder
 
     /// Cofre o punto de tesoro con su Interactable (trigger en la capa Interactable) y, en el cofre,
     /// el cuerpo sólido en la capa Floor (se puede pisar y no tapa la vista del interactuable).
-    private static Tesoro CrearTesoro(string nombre, Transform padre, Vector3 pie, float giro, string id, Tesoro.Forma forma,
+    internal static Tesoro CrearTesoro(string nombre, Transform padre, Vector3 pie, float giro, string id, Tesoro.Forma forma,
                                       string region = RegionLab)
     {
         var raiz = new GameObject(nombre);
@@ -249,7 +249,7 @@ public static partial class CombatLabBuilder
         return copia;
     }
 
-    private static void Recompensas(Tesoro tesoro, params Premio[] premios)
+    internal static void Recompensas(Tesoro tesoro, params Premio[] premios)
     {
         var so = new SerializedObject(tesoro);
         var lista = so.FindProperty("recompensas");

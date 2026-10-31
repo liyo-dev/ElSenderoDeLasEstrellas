@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Bedroom
+  spawnAnchorId: Eldran_PuntoGuardado
   level: 1
   maxHP: 100
   currentHP: 100
@@ -24,8 +24,8 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 
-  basicSpellIds: 
+  unlockedSpells: 1800000005000000020000000300000001000000i
+  basicSpellIds: 18000000050000000200000003000000i
   companionBasics: []
   companionHealth: []
   flags:
@@ -38,11 +38,14 @@ MonoBehaviour:
   - QUEST_ACTIVE:ELDRAN_SIGUEME
   - QUEST_COMPLETED:ELDRAN_SIGUEME
   - QUEST_ACTIVE:ELDRAN_MISSION2
+  - QUEST_COMPLETED:ELDRAN_MISSION2
+  - QUEST_ACTIVE:ELDRAN_MISSION3
+  - QUEST_COMPLETED:ELDRAN_MISSION3
   abilities:
     swim: 0
     jump: 0
     climb: 0
-    magic: 0
+    magic: 1
     fly: 0
     sprint: 0
     shield: 0
@@ -68,7 +71,16 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
+      value: 
+    - key: __flowEnded
+      type: bool
+      value: 1
+  - graphLabel: Cap2
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: cap2-iniciado-flag
+  senalesEmitidas: []
   npcPositions:
   - npcId: Eldran
     position: {x: 25.8, y: 27.01, z: -82.61}

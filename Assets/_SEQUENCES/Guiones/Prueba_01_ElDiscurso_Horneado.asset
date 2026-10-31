@@ -1,0 +1,872 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Prueba_01_ElDiscurso_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Prueba_01_ElDiscurso
+  duracion: 23.049694
+  presentacion: 1
+  huella: "2026-10-30 23:27 \xB7 cfa9a0d34c7bb903f323f85fc85dc57a"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -0.0000019073486, y: 0, z: 39.79}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -0.0000019073486, y: 0, z: 42.49}
+      actor: 
+    - t: 12.517142
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 16.18102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.394693
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    cabezas:
+    - t: 12.467142
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 16.18102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.344694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion:
+    - fundido: 0
+      t: 13.0671425
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.18102
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.26102
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.294693
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.944695
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    - t: 16.18102
+      emocion: enfado
+      dura: 2.4636736
+    visible: []
+    deslizando: []
+  - id: Actor_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: Estela
+    posiciones:
+    - t: 0
+      p: {x: -1.3000019, y: 0, z: 39.39}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -0.0000019073486, y: 0, z: 42.49}
+      actor: 
+    - t: 12.367143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.33102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 12.367143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.281021
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 12.367143
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.447143
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.23102
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.881021
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.244694
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    - t: 12.367143
+      emocion: picaro
+      dura: 4.2138777
+    - t: 18.244694
+      emocion: alegre
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: Liam
+    posiciones:
+    - t: 0
+      p: {x: 1.299998, y: 0, z: 39.39}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -0.0000019073486, y: 0, z: 42.49}
+      actor: 
+    - t: 18.244694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 18.244694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 18.244694
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.324694
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.999693
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 18.244694
+      emocion: picaro
+      dura: 4.105
+    visible: []
+    deslizando: []
+  - id: Actor_WillNino
+    alias: nino
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -0.0000019073486, y: -299.5, z: 49.79}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -2.000002, y: -300, z: 43.29}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 2.2
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.28
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.746667
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.1871433
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.387143
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.467143
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.517143
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 2.2
+      emocion: preocupado
+      dura: 0
+    - t: 10.617143
+      emocion: triste
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_EldranRecuerdo
+    alias: eldran
+    colorDelNombre: {r: 0.61960787, g: 0.8392157, b: 1, a: 1}
+    claveDelNombre: Eldran
+    posiciones:
+    - t: 0
+      p: {x: -1.1000019, y: -300, z: 47.884747}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.3500001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.537143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.3000002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.487143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.617143
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 10.617143
+      emocion: alegre
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino1
+    alias: v1
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 2.275042, y: -300, z: 47.26331}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.47
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.657143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.42
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.607143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.367143
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino2
+    alias: v2
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: -2.2750459, y: -300, z: 47.26331}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.5900002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.777143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.5400002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.727143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.5671425
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino3
+    alias: v3
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 3.5951743, y: -300, z: 48.03652}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.71
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.8971434
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.66
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.847143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.467143
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino4
+    alias: v4
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: -3.5951781, y: -300, z: 48.03652}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.3500001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.537143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.3000002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.487143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.667143
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino5
+    alias: v5
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 4.5887933, y: -300, z: 49.46912}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.47
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.657143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.42
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.607143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.517142
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Vecino6
+    alias: v6
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: -4.588797, y: -300, z: 49.46912}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 2.5900002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.777143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    cabezas:
+    - t: 2.5400002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    - t: 7.727143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_WillNino
+    animacion:
+    - fundido: 0
+      t: 8.087143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.617143
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2.2
+    t1: 7.137143
+    actor: Actor_WillNino
+    clave: PRUEBA_WILL_DISCURSO_01
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 7.387143
+    t1: 9.467143
+    actor: Actor_WillNino
+    clave: PRUEBA_WILL_DISCURSO_02
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 12.367143
+    t1: 16.18102
+    actor: Actor_Estela
+    clave: PRUEBA_WILL_DISCURSO_03
+    gesto: Laugh01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 16.18102
+    t1: 18.244694
+    actor: Player
+    clave: PRUEBA_WILL_DISCURSO_04
+    gesto: Angry01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.244694
+    t1: 21.949694
+    actor: Actor_Liam
+    clave: PRUEBA_WILL_DISCURSO_05
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos:
+    - t: 0
+      p: {x: -0.0000019073486, y: 2.2, z: 42.49}
+    t0: 0
+    t1: 2.2
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 0
+      p: {x: -0.0000019073486, y: 1.9, z: 35.79}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: -0.0000019073486, y: 2.2, z: 42.49}
+    alturaDelFoco: 2.2
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 2.2
+    t1: 10.367143
+    tipo: 2
+    descripcion: medio de nino
+    posiciones:
+    - t: 2.2
+      p: {x: 0.3999981, y: -298.9, z: 47.190002}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_WillNino
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.7853755
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 10.367143
+    t1: 12.367143
+    tipo: 0
+    descripcion: general de nino y eldran y v1 y v2
+    posiciones:
+    - t: 10.367143
+      p: {x: -2.000002, y: -297, z: 43.29}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Actor_WillNino
+    - Actor_EldranRecuerdo
+    - Actor_Vecino1
+    - Actor_Vecino2
+    pesos:
+    - 1
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.78512067
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 12.367143
+      p: {x: -0.0000019073486, y: 1.4, z: 42.49}
+    t0: 12.367143
+    t1: 16.18102
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 12.367143
+      p: {x: -0.0000019073486, y: 1.9, z: 35.79}
+    lente: 34
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: -0.0000019073486, y: 1.4, z: 42.49}
+    alturaDelFoco: 1.4
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 16.18102
+    t1: 18.244694
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 16.18102
+      p: {x: -0.26010764, y: 0.89116585, z: 37.036945}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 18.244694
+    t1: 23.049694
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 18.244694
+      p: {x: -0.41584754, y: 0.89723605, z: 37.316105}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: discurso
+    t: 2.2
+  - nombre: aplauso
+    t: 10.367143
+  - nombre: palacio
+    t: 12.367143
+  puntos:
+  - nombre: p_will
+    posicion: {x: -0.0000019073486, y: 0, z: 39.79}
+  - nombre: p_estela
+    posicion: {x: -1.3000019, y: 0, z: 39.39}
+  - nombre: p_liam
+    posicion: {x: 1.299998, y: 0, z: 39.39}
+  - nombre: espejo
+    posicion: {x: -0.0000019073486, y: 0, z: 42.49}
+  - nombre: cam_grupo
+    posicion: {x: -0.0000019073486, y: 0, z: 35.79}
+  - nombre: p_nino
+    posicion: {x: -0.0000019073486, y: -299.5, z: 49.79}
+  - nombre: p_eldran
+    posicion: {x: -1.1000019, y: -300, z: 47.884747}
+  - nombre: p_v1
+    posicion: {x: 2.275042, y: -300, z: 47.26331}
+  - nombre: p_v2
+    posicion: {x: -2.2750459, y: -300, z: 47.26331}
+  - nombre: p_v3
+    posicion: {x: 3.5951743, y: -300, z: 48.03652}
+  - nombre: p_v4
+    posicion: {x: -3.5951781, y: -300, z: 48.03652}
+  - nombre: p_v5
+    posicion: {x: 4.5887933, y: -300, z: 49.46912}
+  - nombre: p_v6
+    posicion: {x: -4.588797, y: -300, z: 49.46912}
+  - nombre: cam_nino
+    posicion: {x: 0.3999981, y: -300, z: 47.190002}
+  - nombre: cam_plaza
+    posicion: {x: -2.000002, y: -300, z: 43.29}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

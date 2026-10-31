@@ -30,6 +30,9 @@ public sealed class WaitNpcInteractionNode : NarrativeNode
     [Tooltip("Marca propia de este nodo mientras se espera la charla, si se quiere una distinta de la del actor. Vacío = la marca por defecto del actor (recomendado: se pone una vez en el actor y vale para cualquier nodo).")]
     public GameObject questIcon;
 
+    [Tooltip("Enseñar la marca de «tiene algo para ti» (cabeza y minimapa) mientras se espera. Apagarlo para charlas que el jugador busca por su cuenta (p. ej. un servicio que se puede repetir siempre).")]
+    public bool showMarker = true;
+
     public static string SignalKeyFor(string npcId) => $"NPC_INTERACT_{npcId}";
 
     public override void Describe(INarrativeNodeDescriber d)
@@ -103,6 +106,7 @@ public sealed class WaitNpcInteractionNode : NarrativeNode
 
     private void ShowIcon()
     {
+        if (!showMarker) return;
         if (NarrativeServices.TryGet(out INarrativeAttentionMarkers markers, nameof(WaitNpcInteractionNode)))
             markers.ShowMarker(npcId, questIcon);
     }

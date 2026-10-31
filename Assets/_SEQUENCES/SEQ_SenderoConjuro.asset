@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_SenderoConjuro
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: El conjuro de la Piedra Ancestral
+  summary: 'Will recita el ritual y se abre el portal al Sendero. Guion: Sendero_01_ElConjuro.'
+  signalIn: SENDERO_CONJURO_START
+  signalOut: SENDERO_CONJURO_DONE
+  musicId: 
+  presentacionDeTexto: 1
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Sendero_01_ElConjuro'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 5630202821400330529
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202821400330529
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: c0f6b3f17f1c0b94cbe483025e69ce41, type: 2}
+        empezarEn: 0

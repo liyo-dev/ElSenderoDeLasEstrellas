@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-/// Inspector del Sequence Player: resumen de señales y panel de ajuste de planos.
+/// Inspector del Sequence Player: resumen de las señales que usa de verdad.
 ///
 /// ── Por qué no se dibuja el Inspector por defecto tal cual ────────────────────────────────────
 /// El SequencePlayer hereda de CinematicSequencerBase, que trae sus propios campos de señal de
@@ -23,7 +23,6 @@ public class SequencePlayerInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        var player = (SequencePlayer)target;
         serializedObject.Update();
 
         var definicion = serializedObject.FindProperty("_definition")?.objectReferenceValue as SequenceDefinition;
@@ -42,8 +41,6 @@ public class SequencePlayerInspector : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
-
-        DibujarAjusteDePlanos(player);
     }
 
     private void DibujarResumenDeSeniales(SequenceDefinition def)
@@ -90,81 +87,5 @@ public class SequencePlayerInspector : Editor
             "están ocultos porque no se usan mientras haya una definición asignada.",
             MessageType.None);
         EditorGUILayout.Space();
-    }
-
-    private void DibujarAjusteDePlanos(SequencePlayer player)
-    {
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Ajuste de planos", EditorStyles.boldLabel);
-
-        if (!Application.isPlaying)
-        {
-            EditorGUILayout.HelpBox(
-                "Dale a Play y lanza la secuencia. Cuando haya un plano calculado en pantalla, aquí " +
-                "saldrán los mandos para ajustarlo mientras lo ves.\n\n" +
-                "Acuérdate de marcar 'Live Preview Shots' en el Sequence Stage: sin eso, un plano de " +
-                "corte seco no se entera de los cambios hasta el corte siguiente.",
-                MessageType.Info);
-            return;
-        }
-
-        var framing = player.CurrentFraming;
-        if (framing == null)
-        {
-            EditorGUILayout.HelpBox("Todavía no hay ningún plano calculado en pantalla.", MessageType.None);
-            return;
-        }
-
-        EditorGUILayout.LabelField("Plano actual", player.CurrentShotLabel ?? "—");
-
-        EditorGUI.BeginChangeCheck();
-
-        float distancia = EditorGUILayout.Slider(
-            new GUIContent("Distancia", "Aleja (>1) o acerca (<1) este plano concreto, sin cambiar su " +
-                "composición. Se multiplica con el ajuste general del Sequence Stage."),
-            framing.distanceScale <= 0.01f ? 1f : framing.distanceScale, 0.4f, 3f);
-
-        float altura = EditorGUILayout.Slider(
-            new GUIContent("Altura", "Sube (+) o baja (-) la cámara, en metros. Bajarla mira al " +
-                "personaje desde abajo y lo hace parecer más imponente; subirla lo empequeñece."),
-            framing.heightBias, -2f, 2f);
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            framing.distanceScale = distancia;
-            framing.heightBias = altura;
-            player.RefreshCurrentShot();
-        }
-
-        EditorGUILayout.Space();
-
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            if (GUILayout.Button("Guardar en el asset"))
-            {
-                var def = serializedObject.FindProperty("_definition")?.objectReferenceValue;
-                if (def != null)
-                {
-                    EditorUtility.SetDirty(def);
-                    AssetDatabase.SaveAssets();
-                    Debug.Log($"[Ajuste de planos] Guardado: '{player.CurrentShotLabel}' → " +
-                              $"distancia ×{distancia:F2}, altura {altura:+0.00;-0.00;0}.");
-                }
-            }
-
-            if (GUILayout.Button("Volver a 1 / 0"))
-            {
-                framing.distanceScale = 1f;
-                framing.heightBias = 0f;
-                player.RefreshCurrentShot();
-            }
-        }
-
-        EditorGUILayout.HelpBox(
-            "Los cambios ya están puestos en el asset aunque no guardes: al ser un ScriptableObject " +
-            "sobreviven a salir del Play. El botón solo los escribe a disco.",
-            MessageType.None);
-
-        Repaint();
     }
 }

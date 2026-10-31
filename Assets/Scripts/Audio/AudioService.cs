@@ -849,11 +849,12 @@ public sealed class AudioService : MonoBehaviour
 
         if (_victoryRestoreCoroutine != null) StopCoroutine(_victoryRestoreCoroutine);
 
-        // El jingle nunca hace loop: si lo que viene detrás dura más que él, sigue la música
-        // del lugar, no el jingle repetido.
+        // Siempre desde el principio y sin bucle. PlayMusic pone el bucle según el perfil, así
+        // que se quita después: si no, el jingle vuelve a empezar mientras la música del lugar
+        // espera su gracia y se oye dos veces. Ver INC-879.
+        PlayMusic(victoryRule.music, victoryRule.fade, continuarDondeIba: false);
         _musicA.loop = false;
         _musicB.loop = false;
-        PlayMusic(victoryRule.music, victoryRule.fade);
         _jingleSonando = victoryRule.music;
         _victoryRestoreCoroutine = StartCoroutine(Co_TrasElJingleDeVictoria(victoryRule.music));
     }
@@ -865,8 +866,10 @@ public sealed class AudioService : MonoBehaviour
         bool sigueSonando = _jingleSonando == jingle;
         _jingleSonando = null;
 
-        _musicA.loop = true;
-        _musicB.loop = true;
+        // La fuente del jingle se queda sin bucle: si aún le queda un instante, acaba ahí en
+        // vez de volver a empezar. La próxima pista pone el suyo al sonar (PlayMusic).
+        if (_musicA.clip != jingle) _musicA.loop = true;
+        if (_musicB.clip != jingle) _musicB.loop = true;
         if (_battleActive)
         {
             if (_musicStack.Count > 0) _musicStack.Pop();

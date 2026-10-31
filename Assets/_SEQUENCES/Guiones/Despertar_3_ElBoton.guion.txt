@@ -1,0 +1,41 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  EL DESPERTAR DE LA ESTRELLA · 3. EL BOTÓN  (INC-867, fase 6)
+#  La jugabilidad entre «1. La amenaza» y el desenlace: plano general con Will y el camino de la
+#  bola, la bola vuelve a moverse y el jugador tiene que machacar el botón a tiempo. La escena se
+#  detiene mientras dura la prueba; la marca «panicSuperado» decide la fase siguiente
+#  («2. El contraataque» o «4. Sin reacción»). Sigue en la cámara lenta de la parte 1.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Despertar_3_ElBoton
+ESCENA MainWorld
+ZONA Despertar 25.8 -82.6 40
+SECUENCIA Assets/_SEQUENCES/SEQ_StarAwakening.asset
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=Eldran color=9AD0FF prefab=Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
+
+PUNTOS
+p_will       25.3 -79.4
+bola_salida  30.5 -61.0 30.5
+escondite    21.3 -85.7
+mira_bola    27.6 -70.0 28.6
+# Cinco metros detrás de Will y un poco a su derecha: se le ve entero y la bola viene de frente.
+cam_atras    25.6 -84.6
+
+HILO
+@inicio
+will en p_will mirando bola_salida
+& eldran en escondite mirando will
+& will bucle Idle_Battle_NoWeapon
+& will cara decidido
+& plano conjunto will mira_bola desde=cam_atras altura=2.2 lente=34
+espera 0.8
+
+# Vuelve la amenaza y toca reaccionar. El lanzador de Will se apaga mientras dura la prueba.
+@boton
+efecto ModuleBeat routine=ReanudarProyectil
+& efecto ModuleBeat routine=SinMagiaDeWill
++0.2 efecto InputPromptBeat mode=Mash actionRef=Assets/_SEQUENCES/Guiones/EntradaPanico.asset pressesRequired=8 windowSeconds=5 iconGlyphName=interactable_x successFlag=panicSuperado tolerant=true detenerEscena=true dura=0.1
+espera 0.2

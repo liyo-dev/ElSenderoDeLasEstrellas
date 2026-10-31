@@ -512,8 +512,27 @@ namespace Game.NPC
                 || _context.IsActivelyFollowingPlayer;
         }
 
+        // Lo que EnterFarState cambia para devolverlo igual al despertar.
+        private AnimatorCullingMode _cullingAntesDeDormir;
+        private bool _cullingCambiadoPorDistancia;
+        private SombraDeContacto _sombraApagadaPorDistancia;
+
         private void EnterFarState()
         {
+            // Lejos, el animador solo trabaja si alguna cámara lo ve, y la sombra de contacto
+            // (un rayo por fotograma) se apaga: a esta distancia no se distingue.
+            if (_unityAnimator != null)
+            {
+                _cullingAntesDeDormir = _unityAnimator.cullingMode;
+                _unityAnimator.cullingMode = AnimatorCullingMode.CullCompletely;
+                _cullingCambiadoPorDistancia = true;
+            }
+            if (TryGetComponent(out SombraDeContacto sombra) && sombra.enabled)
+            {
+                sombra.enabled = false;
+                _sombraApagadaPorDistancia = sombra;
+            }
+
             // Además de detener el movimiento, desactivamos el propio componente NavMeshAgent:
             // dejarlo solo "isStopped = true" no lo saca del sistema interno de NavMesh de Unity
             // (PreUpdate.AIUpdate / AIUpdatePostScript en el Profiler), que sigue procesando el
@@ -532,6 +551,15 @@ namespace Game.NPC
 
         private void ExitFarState()
         {
+            if (_cullingCambiadoPorDistancia && _unityAnimator != null)
+                _unityAnimator.cullingMode = _cullingAntesDeDormir;
+            _cullingCambiadoPorDistancia = false;
+            if (_sombraApagadaPorDistancia != null)
+            {
+                _sombraApagadaPorDistancia.enabled = true;
+                _sombraApagadaPorDistancia = null;
+            }
+
             if (_agent != null && !_agent.enabled)
             {
                 // ✅ FIX (04 sep 2026): antes se hacía "_agent.enabled = true" a secas y solo

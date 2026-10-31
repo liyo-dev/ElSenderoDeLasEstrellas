@@ -150,6 +150,9 @@ namespace Game.NPC.Modules
 
         [Tooltip("Diálogo que se muestra cuando el NPC se levanta mareado (solo si postDeathBehavior = Marearse)")]
         public DialogueAsset dialogueOnDizzy;
+
+        [Tooltip("Diálogo al levantarse mareado las siguientes veces que se le derrota en la partida (combates que se pueden repetir). Vacío = el de siempre.")]
+        public DialogueAsset dialogueOnDizzyRepeat;
         
         [Tooltip("Prefab del VFX de desaparición (solo si postDeathBehavior = Desaparecer)")]
         public GameObject disappearVFXPrefab;

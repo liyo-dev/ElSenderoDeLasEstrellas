@@ -43,34 +43,13 @@ MonoBehaviour:
   - rid: 5630202263296279110
   - rid: 5630202263296279111
   - rid: 5630202263296279125
-  - rid: 5630202403377381376
-  - rid: 5630202403377381377
-  - rid: 5630202403377381378
-  - rid: 5630202403377381379
-  - rid: 5630202403377381380
-  - rid: 5630202403377381381
-  - rid: 5630202403377381382
-  - rid: 5630202403377381383
-  - rid: 5630202403377381384
-  - rid: 5630202403377381385
-  - rid: 5630202403377381386
-  - rid: 5630202403377381387
-  - rid: 5630202403377381388
-  - rid: 5630202403377381389
-  - rid: 5630202403377381390
   - rid: 5630202568397029506
   - rid: 5630202568397029508
-  - rid: 5630202568397029509
-  - rid: 5630202568397029510
-  - rid: 5630202568397029511
-  - rid: 5630202568397029512
   - rid: 5630202570100441218
   - rid: 5630202570100441219
   - rid: 5630202570100441220
-  - rid: 5630202570100441221
   - rid: 5630202570100441222
   - rid: 5630202570100441223
-  - rid: 5630202570100441224
   - rid: 5630202570100441225
   - rid: 5630202570100441226
   - rid: 5630202655468159109
@@ -81,6 +60,12 @@ MonoBehaviour:
   - rid: 5630202718439342225
   - rid: 5630202718439342303
   - rid: 5630202741379039245
+  - rid: 5630202816662077838
+  - rid: 5630202816662077839
+  - rid: 5630202816662077840
+  - rid: 5630202816662077841
+  - rid: 5630202816662077842
+  - rid: 5630202816662077843
   applicableSceneNames: []
   references:
     version: 2
@@ -208,12 +193,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-fork
-        position: {x: 6840, y: 0}
+        position: {x: 7220, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-0
         - cap2-prepara-viaje-boticaria-0
         - cap2-prepara-viaje-erika-0
-        - cap2-prepara-viaje-eldran-0
         - cap2-prepara-viaje-espera
     - rid: 5630202263296279101
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
@@ -242,12 +226,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-0
-        position: {x: 7220, y: 0}
+        position: {x: 7600, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-1
         npcId: NPC_Victoria
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202263296279103
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -259,7 +244,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-1
-        position: {x: 7600, y: 0}
+        position: {x: 7980, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-2
         dialogue: {fileID: 11400000, guid: fa547693d02e99e449e4b2ed340b54a9, type: 2}
@@ -276,7 +261,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-2
-        position: {x: 7980, y: 0}
+        position: {x: 8360, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-3
         wardrobeItem: {fileID: 11400000, guid: 7367f9d40af192b45aac491cf7b33acf, type: 2}
@@ -284,7 +269,7 @@ MonoBehaviour:
     - rid: 5630202263296279105
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "20.- Tutorial \xB7 Equipo \u25B8 Capas"
+        displayTitle: "20.- Tutorial \xB7 equipar la capa"
         chapter: Cap. 2
         blockSaving: 1
         inputAnchor: 0
@@ -292,11 +277,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-3
-        position: {x: 8360, y: 0}
+        position: {x: 8740, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-4
         action: 0
-        text: "Equ\xEDpate la capa desde el men\xFA: Equipo \u25B8 Capas."
+        text: "Pulsa {BOTON} y equ\xEDpate la capa en Equipo, apartado Capas."
         textId: TUTORIAL_PREPARA_VIAJE_CAPA
         icon: {fileID: 0}
         buttonName: start
@@ -315,7 +300,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-4
-        position: {x: 8740, y: 0}
+        position: {x: 9120, y: 0}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Victoria
@@ -337,12 +322,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-0
-        position: {x: 7220, y: 184}
+        position: {x: 7600, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-1
         npcId: NPC_Boticaria
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202263296279108
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -354,7 +340,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-1
-        position: {x: 7600, y: 251.20001}
+        position: {x: 7980, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-2
         dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
@@ -371,7 +357,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-2
-        position: {x: 7980, y: 184}
+        position: {x: 8360, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-3
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -389,7 +375,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 8360, y: 188.8}
+        position: {x: 8740, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-4
         action: 0
@@ -412,7 +398,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-4
-        position: {x: 8740, y: 282.4}
+        position: {x: 9120, y: 160}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Boticaria
@@ -434,7 +420,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-rotulo-manana-siguiente
-        position: {x: 4560, y: 0}
+        position: {x: 0, y: 160}
         outputs:
         - cap2-manana-despues-11
         text: "A la ma\xF1ana siguiente\u2026"
@@ -446,272 +432,6 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
-    - rid: 5630202403377381376
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.3d \xB7 Aprende Bola Prisma (tras los cubos de Eldran)"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-desbloqueo-bola-prisma
-        position: {x: -385.59998, y: 1937.6}
-        outputs:
-        - cap2-prepara-viaje-eldran-2
-        abilityKeysToUnlock: 
-        abilitiesToUnlock: 
-        spellsToUnlock: 02000000i
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 0
-    - rid: 5630202403377381377
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.9 \xB7 Primera receta: C\xFApula Estelar"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-desbloqueo-cupula-estelar
-        position: {x: 44.800003, y: 546.4}
-        outputs:
-        - cap2-tutorial-cupula-estelar
-        abilityKeysToUnlock: 
-        abilitiesToUnlock: 
-        spellsToUnlock: 1a000000i
-        assignSpellsToEmptySlot: 0
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 0
-    - rid: 5630202403377381378
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.9 \xB7 Tutorial \xB7 combo m\xE1gico (Y \u2192 X \u2192 B \u2192 A)"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-tutorial-cupula-estelar
-        position: {x: 380, y: 548.8}
-        outputs: []
-        action: 0
-        text: "Pulsa {BOTON} y teclea X, B, A: C\xFApula Estelar protege a quien est\xE9 debajo."
-        textId: TUTORIAL_CAP2_CUPULA_ESTELAR
-        icon: {fileID: 0}
-        buttonName: interactable_y
-        dismissWithCancel: 1
-        cerrarConSenal: 
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 1
-    - rid: 5630202403377381379
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.10 \xB7 Will sostiene la figura: aprende Levitaci\xF3n"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-desbloqueo-levitacion
-        position: {x: 0, y: 2192}
-        outputs: []
-        abilityKeysToUnlock: 
-        abilitiesToUnlock: 
-        spellsToUnlock: 04000000i
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 0
-    - rid: 5630202403377381380
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Contrabandistas: \xBFc\xF3mo act\xFAa Will?"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-0
-        position: {x: -645.6, y: 619.2}
-        outputs:
-        - cap2-contrabandistas-ataque-0
-        - cap2-contrabandistas-pluma-0
-        - cap2-contrabandistas-jaula-0
-    - rid: 5630202403377381381
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Will entra en el claro"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-ataque-0
-        position: {x: 380, y: 751.2}
-        outputs:
-        - cap2-contrabandistas-ataque-1
-        eventKey: CAP2_CONTRABANDISTAS_ATAQUE
-        acceptEarlierEvent: 1
-    - rid: 5630202403377381382
-      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 \xBFYa hab\xEDa elegido el sigilo?"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-ataque-1
-        position: {x: 760, y: 539.2}
-        outputs:
-        - 
-        - cap2-contrabandistas-ataque-2
-        flagKey: CAP2_CONTRABANDISTAS_SIGILO
-        invert: 0
-    - rid: 5630202403377381383
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Elige pelear"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-ataque-2
-        position: {x: 1140, y: 545.6}
-        outputs:
-        - cap2-contrabandistas-ataque-3
-        flagKey: CAP2_CONTRABANDISTAS_COMBATE
-        value: 1
-    - rid: 5630202403377381384
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Contrabandistas vencidos"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-ataque-3
-        position: {x: 1520, y: 545.6}
-        outputs:
-        - cap2-contrabandistas-fin
-        eventKey: CAP2_CONTRABANDISTAS_VENCIDOS
-        acceptEarlierEvent: 1
-    - rid: 5630202403377381385
-      type: {class: WaitForItemAddedNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Coge la pluma brillante"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-pluma-0
-        position: {x: 240.00002, y: 370.4}
-        outputs:
-        - cap2-contrabandistas-pluma-1
-        itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
-        minimumAmount: 0
-        completeIfAlreadyOwned: 1
-        debugLogs: 0
-    - rid: 5630202403377381386
-      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 \xBFYa hab\xEDa empezado a pelear?"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-pluma-1
-        position: {x: 760, y: 346.4}
-        outputs:
-        - 
-        - cap2-contrabandistas-pluma-2
-        flagKey: CAP2_CONTRABANDISTAS_COMBATE
-        invert: 0
-    - rid: 5630202403377381387
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Elige avisar a la guardia"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-pluma-2
-        position: {x: 1140, y: 376.8}
-        outputs:
-        - cap2-contrabandistas-fin
-        flagKey: CAP2_CONTRABANDISTAS_SIGILO
-        value: 1
-    - rid: 5630202403377381388
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Arde una jaula"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-jaula-0
-        position: {x: 380, y: 940}
-        outputs:
-        - cap2-contrabandistas-jaula-1
-        eventKey: CAP2_CONTRABANDISTAS_JAULA_QUEMADA
-        acceptEarlierEvent: 1
-    - rid: 5630202403377381389
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Consecuencia: jaulas quemadas"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-jaula-1
-        position: {x: 760, y: 732}
-        outputs: []
-        flagKey: CAP2_JAULAS_QUEMADAS
-        value: 1
-    - rid: 5630202403377381390
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2.7 \xB7 Cap. 2 \xB7 Tras los contrabandistas"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-contrabandistas-fin
-        position: {x: 1924, y: 372}
-        outputs: []
-        checkpointId: CAP2_TRAS_CONTRABANDISTAS
-        spawnAnchorId: 
-        sceneName: 
     - rid: 5630202568397029506
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
@@ -723,12 +443,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-0
-        position: {x: 7220, y: 368}
+        position: {x: 7600, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-desbloqueo
         npcId: NPC_Erika
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202568397029508
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
@@ -740,7 +461,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-2
-        position: {x: 8740, y: 857.6}
+        position: {x: 9120, y: 320}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Erika
@@ -751,82 +472,10 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 5630202568397029509
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "22c.- Hablar con Eldran (punter\xEDa)"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-eldran-0
-        position: {x: 7220, y: 552}
-        outputs:
-        - cap2-prepara-viaje-eldran-1
-        npcId: NPC_Eldran
-        acceptEarlierInteraction: 0
-        questIcon: {fileID: 0}
-    - rid: 5630202568397029510
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: '23c.- Eldran: cubos y Bola Prisma'
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-eldran-1
-        position: {x: -1109.6, y: 1918.4}
-        outputs:
-        - cap2-desbloqueo-bola-prisma
-        dialogue: {fileID: 11400000, guid: 9e790c4c2d8b35445932bbe8fc743226, type: 2}
-        npcId: NPC_Eldran
-        oneShotFlag: 
-    - rid: 5630202568397029511
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "24c.- Desbloquear t\xFAnica de viaje (opcional)"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-eldran-2
-        position: {x: 0, y: 2008}
-        outputs:
-        - cap2-prepara-viaje-eldran-3
-        wardrobeItem: {fileID: 11400000, guid: 7a534d57f71d61c478607f7af14308c0, type: 2}
-        logWarnings: 0
-    - rid: 5630202568397029512
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "25c.- Completar encargo \xB7 punter\xEDa Eldran"
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-eldran-3
-        position: {x: 8740, y: 583.2}
-        outputs:
-        - cap2-prepara-viaje-encargo-hecho
-        standingActorId: NPC_Eldran
-        standingDialogue: {fileID: 11400000, guid: 9ae7f8a19a1319b40bfc8da411a786ee, type: 2}
-        questId: PREPARA_VIAJE
-        stepConditionIds:
-        - PREPARA_VIAJE_ELDRAN
-        steps: 
-        completeQuest: 0
-        logWarnings: 1
     - rid: 5630202570100441218
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "26.- Lista de motivos y br\xFAjula"
+        displayTitle: '26.- Eldran: la lista de motivos'
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -834,10 +483,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-motivos
-        position: {x: 9120, y: 0}
+        position: {x: 8360, y: 640}
         outputs:
-        - cap2-despedida-oliver-talk
-        - cap2-despedida-eldran-talk
+        - cap2-prepara-viaje-completar
         dialogue: {fileID: 11400000, guid: e3e9c5d6b93ecac4087a29210890a696, type: 2}
         npcId: NPC_Eldran
         oneShotFlag: 
@@ -852,12 +500,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-talk
-        position: {x: 9500, y: 0}
+        position: {x: 8740, y: 640}
         outputs:
         - cap2-despedida-oliver-dlg
         npcId: NPC_Oliver
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202570100441220
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -869,27 +518,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-dlg
-        position: {x: 9880, y: 0}
+        position: {x: 9120, y: 640}
         outputs:
-        - cap2-despedida-oliver-sale
+        - cap2-despedida-oliver-hecha
         dialogue: {fileID: 11400000, guid: 5630ba1303db3fd4086d7168d232b93c, type: 2}
         npcId: NPC_Oliver
         oneShotFlag: 
-    - rid: 5630202570100441221
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 29.- Oliver sale del grupo
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-oliver-sale
-        position: {x: 10260, y: 0}
-        outputs:
-        - cap2-despedida-join
-        eventKey: OLIVER_SALE_DEL_GRUPO
     - rid: 5630202570100441222
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
@@ -901,12 +535,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-eldran-talk
-        position: {x: 9500, y: 184}
+        position: {x: 8740, y: 800}
         outputs:
         - cap2-despedida-eldran-dlg
         npcId: NPC_Eldran
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202570100441223
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -918,27 +553,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-eldran-dlg
-        position: {x: 9880, y: 237.6}
+        position: {x: 9120, y: 800}
         outputs:
-        - cap2-despedida-eldran-seva
+        - cap2-despedida-eldran-hecha
         dialogue: {fileID: 11400000, guid: 75d30b9b54e5dce49af4eefdea8d7ecd, type: 2}
         npcId: NPC_Eldran
         oneShotFlag: 
-    - rid: 5630202570100441224
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 32.- Eldran parte (evento)
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-eldran-seva
-        position: {x: 10260, y: 188.8}
-        outputs:
-        - cap2-despedida-join
-        eventKey: ELDRAN_PARTE_A_CAPITAL
     - rid: 5630202570100441225
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
@@ -950,7 +570,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-join
-        position: {x: 10640, y: 0}
+        position: {x: 9880, y: 0}
         outputs:
         - cap2-final-checkpoint
         flagKey: CAP2_COMPLETADO
@@ -966,10 +586,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-final-checkpoint
-        position: {x: 11020, y: 0}
-        outputs: []
+        position: {x: 10260, y: 0}
+        outputs:
+        - cap2-fin-senal
         checkpointId: CAP2_FIN
-        spawnAnchorId: Bedroom
+        spawnAnchorId: Eldran_PuntoGuardado
         sceneName: MainWorld
     - rid: 5630202655468159109
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
@@ -982,13 +603,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-encargo-hecho
-        position: {x: 9120, y: -300}
+        position: {x: 9500, y: 0}
         outputs: []
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
     - rid: 5630202655468159110
       type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 25b.- Esperar los 4 encargos
+        displayTitle: 25b.- Esperar los 3 encargos
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -996,16 +617,16 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-espera
-        position: {x: 7220, y: 900}
+        position: {x: 7600, y: 640}
         outputs:
-        - cap2-prepara-viaje-completar
+        - cap2-prepara-viaje-volver
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
-        count: 4
+        count: 3
         questId: 
     - rid: 5630202655468159111
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "25c.- Completar misi\xF3n \xB7 Prep\xE1rate para el viaje"
+        displayTitle: "26b.- Completar misi\xF3n \xB7 Prep\xE1rate para el viaje"
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -1013,20 +634,21 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-completar
-        position: {x: 7600, y: 900}
+        position: {x: 7980, y: 640}
         outputs:
-        - cap2-despedida-motivos
+        - cap2-despedida-fork
         standingActorId: 
         standingDialogue: {fileID: 0}
         questId: PREPARA_VIAJE
-        stepConditionIds: []
+        stepConditionIds:
+        - PREPARA_VIAJE_VOLVER
         steps: 
         completeQuest: 1
         logWarnings: 0
     - rid: 5630202705244324020
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "15b.- Eldran sale a la plaza (punter\xEDa)"
+        displayTitle: 15b.- Eldran sale a la plaza
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -1034,7 +656,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-eldran-a-pueblo
-        position: {x: 6420, y: 0}
+        position: {x: 6840, y: 0}
         outputs:
         - cap2-prepara-viaje-fork
         actorId: NPC_Eldran
@@ -1052,7 +674,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-item
-        position: {x: 8740, y: 372}
+        position: {x: 8740, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-2
         item: {fileID: 11400000, guid: 21c07b37d24802f4a8c2f9c9296320a6, type: 2}
@@ -1070,7 +692,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-combate
-        position: {x: 7600, y: 372}
+        position: {x: 8360, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-item
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
@@ -1078,7 +700,7 @@ MonoBehaviour:
     - rid: 5630202718439342303
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "22b-1.- Aprender Protecci\xF3n"
+        displayTitle: "22b-1.- Aprender Protecci\xF3n y Bola Prisma"
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -1086,12 +708,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-desbloqueo
-        position: {x: 7980, y: 372}
+        position: {x: 7980, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-combate
         abilityKeysToUnlock: 06000000i
         abilitiesToUnlock: 
-        spellsToUnlock: 
+        spellsToUnlock: 02000000i
         assignSpellsToEmptySlot: 1
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
@@ -1108,7 +730,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-espera-salida
-        position: {x: 6000, y: 0}
+        position: {x: 6460, y: 0}
         outputs:
         - cap2-eldran-a-pueblo
         eventKey: WILL_EXITS_HOUSE
@@ -1124,7 +746,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
-        position: {x: 2540, y: 0}
+        position: {x: 3040, y: 0}
         outputs:
         - cap2-manana-despues-8
         targetTime: 6
@@ -1140,7 +762,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-8
-        position: {x: 2920, y: 0}
+        position: {x: 3420, y: 0}
         outputs:
         - cap2-manana-despues-9
         operacion: 0
@@ -1157,7 +779,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-9
-        position: {x: 3300, y: 0}
+        position: {x: 3800, y: 0}
         outputs:
         - cap2-manana-despues-10
         actorId: Player
@@ -1175,9 +797,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-10
-        position: {x: 3680, y: 0}
+        position: {x: 4180, y: 0}
         outputs:
-        - cap2-manana-despues-11
+        - cap2-rotulo-manana-siguiente
         actorId: NPC_Eldran
         markId: M_Manana_EldranPuerta
         applyPlayerEnvironment: 0
@@ -1193,7 +815,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-11
-        position: {x: 4060, y: 0}
+        position: {x: 4560, y: 0}
         outputs:
         - cap2-manana-despues-12
         cinematicName: "La ma\xF1ana despu\xE9s"
@@ -1216,7 +838,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-12
-        position: {x: 4440, y: 0}
+        position: {x: 4940, y: 0}
         outputs:
         - cap2-manana-despues-13
         actorId: NPC_Eldran
@@ -1234,7 +856,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-13
-        position: {x: 4820, y: 0}
+        position: {x: 5320, y: 0}
         outputs:
         - cap2-manana-despues-14
         item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
@@ -1252,7 +874,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-14
-        position: {x: 5200, y: 0}
+        position: {x: 5700, y: 0}
         outputs:
         - cap2-manana-despues-15
         questId: PREPARA_VIAJE
@@ -1270,9 +892,102 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-15
-        position: {x: 5580, y: 0}
+        position: {x: 6080, y: 0}
         outputs:
         - cap2-manana-espera-salida
         checkpointId: CAP2_MANANA_DESPUES
         spawnAnchorId: Bedroom
         sceneName: WillHouse
+    - rid: 5630202816662077838
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 25d.- Volver con Eldran
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-volver
+        position: {x: 7860, y: 640}
+        outputs:
+        - cap2-despedida-motivos
+        npcId: NPC_Eldran
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 5630202816662077839
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 26c.- Despedidas (en el orden que quiera)
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-fork
+        position: {x: 8240, y: 640}
+        outputs:
+        - cap2-despedida-oliver-talk
+        - cap2-despedida-eldran-talk
+        - cap2-despedida-espera
+    - rid: 5630202816662077840
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 32b.- Esperar las 2 despedidas
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-espera
+        position: {x: 8760, y: 900}
+        outputs:
+        - cap2-despedida-join
+        eventKey: CAP2_DESPEDIDA_HECHA
+        count: 2
+        questId: 
+    - rid: 5630202816662077841
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 29.- Despedida de Oliver hecha
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-oliver-hecha
+        position: {x: 9380, y: 640}
+        outputs: []
+        eventKey: CAP2_DESPEDIDA_HECHA
+    - rid: 5630202816662077842
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 32.- Despedida de Eldran hecha
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-eldran-hecha
+        position: {x: 9380, y: 800}
+        outputs: []
+        eventKey: CAP2_DESPEDIDA_HECHA
+    - rid: 5630202816662077843
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 35.- Fin del Cap. 2 (CH_Cap2_BACK_1)
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-fin-senal
+        position: {x: 10520, y: 0}
+        outputs: []
+        eventKey: CH_Cap2_BACK_1

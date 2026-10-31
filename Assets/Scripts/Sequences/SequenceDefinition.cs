@@ -42,20 +42,6 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
     [Tooltip("Presentación de las líneas que heredan el estilo de la secuencia.")]
     public PresentacionDeTexto presentacionDeTexto = PresentacionDeTexto.Bocadillo;
 
-    [Tooltip("Actores que nunca se ocultan al despejar un plano. Vacío protege a todos los que tienen líneas.")]
-    public List<string> protagonistas = new();
-
-    [Tooltip("Plano de cámara al que se corta DURANTE el fundido de entrada, con la pantalla ya " +
-             "cubierta, para que la escena aparezca ya encuadrada en vez de verse el corte. " +
-             "Nombre tal como está en el SequenceStage. Vacío = la cámara se queda donde estaba.")]
-    public string openingShotName;
-
-    [Tooltip("Plano de apertura CALCULADO, para cuando no hay ninguno colocado a mano. Se resuelve " +
-             "y se aplica en el mismo punto que el anterior — con la pantalla ya cubierta — así que " +
-             "la escena aparece encuadrada en vez de verse el corte. Si 'openingShotName' tiene " +
-             "algo, manda aquel.")]
-    public ShotFraming openingShot = new();
-
     [Tooltip("Marcado = al terminar, la secuencia deja la pantalla CUBIERTA en vez de descubrirla. " +
              "Se usa cuando lo que viene detrás gestiona su propia entrada — el caso real es el " +
              "Despertar de la Estrella, cuya señal de salida arranca la intro del jefe, que trae su " +

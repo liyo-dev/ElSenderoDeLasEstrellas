@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe7cf6bc994462ea97722caabeee749, type: 3}
+  m_Name: Estilo_MenuSencillo
+  m_EditorClassIdentifier: Assembly-CSharp::EstiloDeMenuSencillo
+  fondo: {fileID: 21300000, guid: c6c7b1f8a18140a3a869b36c992812ff, type: 3}
+  panel: {fileID: 21300000, guid: 6f186041e5b3439483fbd258603b26ef, type: 3}
+  tarjeta: {fileID: 21300000, guid: fc2b3e18d26a40258431206a7fc75065, type: 3}
+  chip: {fileID: 21300000, guid: 68dfa8cdf7824401be4630b5a4f37d97, type: 3}
+  boton: {fileID: 21300000, guid: 4ed36212bff5425ca241216e5648f355, type: 3}
+  fuenteTitulo: {fileID: 11400000, guid: 21a67e0dff06da94d848f1cf0d0074f8, type: 2}
+  fuenteTexto: {fileID: 11400000, guid: 812c7b0dc56552d4aaa2319860b0c738, type: 2}
+  colorTexto: {r: 0.96, g: 0.95, b: 1, a: 1}
+  colorTextoSuave: {r: 0.78, g: 0.76, b: 0.9, a: 1}
+  colorResalte: {r: 1, g: 0.83, b: 0.35, a: 1}

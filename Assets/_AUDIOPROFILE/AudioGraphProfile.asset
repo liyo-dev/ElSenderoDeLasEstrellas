@@ -35,7 +35,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
     fade: 0
   - battleId: Npc_Battle
-    music: {fileID: 8300000, guid: 316cecf77c02820419a4df496695d01f, type: 3}
+    music: {fileID: 8300000, guid: 5100da4e8a78401c9a903b425308be3f, type: 3}
     fade: 0
   - battleId: Npc_Battle_Alert
     music: {fileID: 8300000, guid: 62b4431cd362b8c48af97e06e697bb25, type: 3}
@@ -59,7 +59,7 @@ MonoBehaviour:
     loop: 0
   ambientZones:
   - zoneId: Woods
-    music: {fileID: 0}
+    music: {fileID: 8300000, guid: 2db9a75ca94f41ea8b6a2133893f18d9, type: 3}
     fade: 1
     loop: 1
   - zoneId: Mountains
@@ -90,9 +90,13 @@ MonoBehaviour:
   - sceneName: Credits
     music: {fileID: 8300000, guid: e4417147d8027ae48a5ef706f52635d8, type: 3}
   - sceneName: Sendero
-    music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
-  - sceneName: CandyLand
-    music: {fileID: 8300000, guid: 187aae3a437affa4eaf8dd12c5d4b5ea, type: 3}
+    music: {fileID: 8300000, guid: d6e03aa8d167469e88a68ca4fcba9b7a, type: 3}
+  - sceneName: Chuchelandia
+    music: {fileID: 8300000, guid: 8e7e56e140b841128cf80b40afd3b6a9, type: 3}
+  - sceneName: Laberinto
+    music: {fileID: 8300000, guid: 68453c86e8f648f9988999f0b8f1ca67, type: 3}
+  - sceneName: Parque
+    music: {fileID: 8300000, guid: 3325bfd0c9b14cc9865b9eadbd5d32cc, type: 3}
   - sceneName: WillHouse
     music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
   eventSfx:

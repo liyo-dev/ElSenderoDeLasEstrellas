@@ -29,3 +29,20 @@ public interface INarrativeActorPlacement
     /// </summary>
     bool TryPlace(string actorId, string markId, bool applyLocationSettings, bool makeVisible);
 }
+
+/// <summary>
+/// Que un actor esté o no en el mundo, y cambiarlo de sitio, sin que el jugador lo vea. Lo usan
+/// las agendas (<see cref="AgendaDeActores"/>): si ahora se notaría, devuelve false y se vuelve a
+/// intentar más tarde.
+/// </summary>
+public interface INarrativeActorPresence
+{
+    /// <summary>true si el actor está ahora en una escena cargada.</summary>
+    bool IsPresent(string actorId);
+
+    /// <summary>Lo retira o lo devuelve. false = ahora no (el jugador lo vería).</summary>
+    bool TrySetPresent(string actorId, bool present);
+
+    /// <summary>Lo pone en una marca (devolviéndolo si estaba retirado). false = ahora no.</summary>
+    bool TryPlaceUnseen(string actorId, string markId);
+}

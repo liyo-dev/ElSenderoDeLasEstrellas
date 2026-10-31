@@ -12,7 +12,8 @@ public enum MenuKind
     Dialog,
     Mission, // Menú de misiones principal
     GameOver, // Menú de Game Over
-    BigMap // Mapa grande (minimapa ampliado, ver BigMapController)
+    BigMap, // Mapa grande (minimapa ampliado, ver BigMapController)
+    Collection // Álbum de una colección de objetos (ColeccionUI)
     // Agregar aquí otros menús principales si es necesario
 }
 

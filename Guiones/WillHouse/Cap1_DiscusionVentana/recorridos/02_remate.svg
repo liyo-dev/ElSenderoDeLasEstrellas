@@ -1,0 +1,20 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='2048' viewBox='0 0 2048 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='../../escenario/planta_detalle.png' xlink:href='../../escenario/planta_detalle.png' x='0' y='0' width='2048' height='2048' opacity='0.85'/>
+<line x1='0' y1='2048' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<line x1='0' y1='2048' x2='2048' y2='2048' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='2046' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<polyline points='238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 238059.5,-1003.52 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='238059.5' cy='-1003.52' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='238059.5' cy='-1003.52' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='238059.5' cy='-1003.52' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='238059.5' cy='-1003.52' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
+<line x1='238059.5' y1='-1003.52' x2='238072.4' y2='-1012.969' stroke='#ffd27a' stroke-width='2'/>
+<text x='238067.5' y='-1011.52' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
+<circle cx='238059.5' cy='-1003.52' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
+<polygon points='238796.8,-6963.2 240091.2,-1099.249 236112.4,-1591.468' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='238796.8' cy='-6963.2' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='238803.8' y='-6959.2' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>3</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@remate  0:13,9 – 0:18,9</text>
+</svg>

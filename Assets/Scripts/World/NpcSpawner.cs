@@ -172,7 +172,7 @@ public static class NpcSpawner
     {
         Vector3 position = entry.requireNavMesh
             ? ResolveNavMeshPosition(point, entry.spawnId)
-            : point.transform.position;
+            : ApoyarEnElSuelo(point.transform.position);
         Quaternion rotation = point.applyRotation
             ? point.GetSpawnRotation()
             : entry.prefab.transform.rotation;
@@ -252,7 +252,31 @@ public static class NpcSpawner
         Debug.LogError($"[NpcSpawner] El marcador '{spawnId}' NO tiene NavMesh en {NavMeshSampleRadius} m. " +
                        "El NPC aparecerá ahí igualmente, pero su NavMeshAgent no funcionará (no podrá caminar).");
 #endif
-        return raw;
+        return ApoyarEnElSuelo(raw);
+    }
+
+    // Los NPCs no tienen gravedad (los mueve el NavMeshAgent): sin NavMesh debajo, se apoyan en el
+    // suelo (capa Floor) que haya bajo el marcador, para que un marcador puesto un poco alto no los
+    // deje flotando.
+    private const float AlturaDeBusquedaDelSuelo = 1f;
+    private const float ProfundidadDeBusquedaDelSuelo = 30f;
+    private static readonly RaycastHit[] s_suelo = new RaycastHit[8];
+
+    private static Vector3 ApoyarEnElSuelo(Vector3 posicion)
+    {
+        int capaSuelo = LayerMask.GetMask("Floor");
+        if (capaSuelo == 0) return posicion;
+        var origen = posicion + Vector3.up * AlturaDeBusquedaDelSuelo;
+        int n = Physics.RaycastNonAlloc(origen, Vector3.down, s_suelo, AlturaDeBusquedaDelSuelo + ProfundidadDeBusquedaDelSuelo, capaSuelo, QueryTriggerInteraction.Ignore);
+        float masCerca = float.MaxValue;
+        Vector3 resultado = posicion;
+        for (int i = 0; i < n; i++)
+        {
+            if (s_suelo[i].distance >= masCerca) continue;
+            masCerca = s_suelo[i].distance;
+            resultado = s_suelo[i].point;
+        }
+        return resultado;
     }
 
     /// <summary>

@@ -1163,7 +1163,7 @@ internal sealed partial class Horno
             Error($"{o}: no existe el beat '{clase}'");
             return null;
         }
-        if (tipo == typeof(GuionBeat) || tipo == typeof(ShotBeat) || tipo == typeof(WaitBeat) || tipo == typeof(ParallelBeat))
+        if (tipo == typeof(GuionBeat) || tipo == typeof(WaitBeat) || tipo == typeof(ParallelBeat))
         {
             Error($"{o}: '{tipo.Name}' no se usa dentro de un guion (el guion ya hace eso a su manera)");
             return null;
@@ -1172,6 +1172,9 @@ internal sealed partial class Horno
         foreach (var kv in campos)
         {
             if (kv.Key == "dura" || kv.Key == "onlyIfFlag" || kv.Key == "skipIfFlag") continue;
+            if (beat is IConfigurableDesdeGuion configurable
+                && configurable.Configurar(kv.Key, kv.Value, alias => _actores.TryGetValue(alias, out var ac) ? ac.id : alias))
+                continue;
             var campo = tipo.GetField(kv.Key, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             if (campo == null) { Error($"{o}: {tipo.Name} no tiene el campo '{kv.Key}'"); continue; }
             if (!Convertir(kv.Value, campo.FieldType, out object valor, o)) continue;

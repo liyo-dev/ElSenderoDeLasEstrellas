@@ -31,8 +31,9 @@ public class SenderoTriggerArea : MonoBehaviour
         if (!other.CompareTag("Player") && other.GetComponentInParent<NPCSimpleAnimator>() == null)
             return;
 
+        // Solo se gasta si el controlador la acepta: tocar una puerta que aún no toca no la estropea.
+        if (!EjecutarAccion()) return;
         _disparado = true;
-        EjecutarAccion();
 
         if (_desactivarTrasDisparo)
         {
@@ -40,37 +41,22 @@ public class SenderoTriggerArea : MonoBehaviour
         }
     }
 
-    private void EjecutarAccion()
+    private bool EjecutarAccion()
     {
         var controller = SenderoProgressionController.Instance;
-        if (controller == null) return;
+        if (controller == null) return false;
 
-        switch (_accion)
+        return _accion switch
         {
-            case TipoAccionTrigger.ManifestarPortalWill:
-                controller.ManifestarPortalWill();
-                break;
-            case TipoAccionTrigger.EntrarPruebaWill:
-                controller.EntrarPruebaWill();
-                break;
-            case TipoAccionTrigger.ManifestarPortalEstela:
-                controller.ManifestarPortalEstela();
-                break;
-            case TipoAccionTrigger.EntrarPruebaEstela:
-                controller.EntrarPruebaEstela();
-                break;
-            case TipoAccionTrigger.ManifestarPortalLiam:
-                controller.ManifestarPortalLiam();
-                break;
-            case TipoAccionTrigger.EntrarPruebaLiam:
-                controller.EntrarPruebaLiam();
-                break;
-            case TipoAccionTrigger.AvanzarHaciaAltar:
-                controller.AvanzarHaciaElAltar();
-                break;
-            case TipoAccionTrigger.DetonarAparicionMagoOscuro:
-                controller.DesatarAparicionMagoOscuro();
-                break;
-        }
+            TipoAccionTrigger.ManifestarPortalWill => controller.ManifestarPortalWill(),
+            TipoAccionTrigger.EntrarPruebaWill => controller.EntrarPruebaWill(),
+            TipoAccionTrigger.ManifestarPortalEstela => controller.ManifestarPortalEstela(),
+            TipoAccionTrigger.EntrarPruebaEstela => controller.EntrarPruebaEstela(),
+            TipoAccionTrigger.ManifestarPortalLiam => controller.ManifestarPortalLiam(),
+            TipoAccionTrigger.EntrarPruebaLiam => controller.EntrarPruebaLiam(),
+            TipoAccionTrigger.AvanzarHaciaAltar => controller.AvanzarHaciaElAltar(),
+            TipoAccionTrigger.DetonarAparicionMagoOscuro => controller.DesatarAparicionMagoOscuro(),
+            _ => false,
+        };
     }
 }

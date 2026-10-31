@@ -78,7 +78,6 @@ public static class Cap2MananaDespues
         def.signalIn = "MANANA_DESPUES_START";
         def.signalOut = "MANANA_DESPUES_DONE";
         def.presentacionDeTexto = PresentacionDeTexto.Subtitulo;
-        def.protagonistas = new List<string> { "Player", "NPC_Eldran" };
         def.endStayBlack = false;
         if (def.phases.Count == 0) def.phases.Add(new SequencePhase { name = "Guion", beats = new List<SequenceBeat> { new GuionBeat { note = "Guion: Cap2_02_MananaDespues" } } });
         EditorUtility.SetDirty(def);

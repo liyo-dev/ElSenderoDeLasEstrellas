@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-using Core.InputGlyphs;
 using Game.NPC.Common;
 
-/// La mecánica de juego del Despertar de la Estrella: el proyectil entrante, el panic input, el
-/// contraataque real de Will y, si no reacciona a tiempo, el impacto de la bola sobre él.
+/// La mecánica de juego del Despertar de la Estrella: el proyectil entrante, el contraataque real
+/// de Will y, si no reacciona a tiempo, el impacto de la bola sobre él. La prueba del botón la
+/// pide el guion con InputPromptBeat, que deja la marca «panicSuperado».
 ///
 /// ── Qué hay aquí y qué no ─────────────────────────────────────────────────────────────────────
 /// Aquí está SOLO lo que es mecánica y no se repite en ninguna otra secuencia del juego. Todo el
@@ -18,7 +18,6 @@ using Game.NPC.Common;
 ///
 /// ── Cómo se comunica con el asset ─────────────────────────────────────────────────────────────
 ///   · El asset invoca rutinas por nombre, con beats de tipo "Mecánica".
-///   · Este módulo deja marcas (ctx.SetFlag) que las fases siguientes miran para ramificarse.
 ///   · Y registra el proyectil como actor ("Proyectil"), para que los beats de cámara puedan
 ///     encuadrarlo y Will pueda girarse hacia él sin que el asset sepa nada de proyectiles.
 [AddComponentMenu("Cinematics/Módulos/Despertar de la Estrella")]
@@ -28,10 +27,6 @@ public class StarAwakeningModule : SequenceModule
     /// El id con el que el asset se refiere al proyectil entrante. Es el que se escribe en los
     /// beats de cámara ("siguiendo a Proyectil") y en los de mirar.
     public const string ProjectileActorId = "Proyectil";
-
-    /// La marca que queda puesta si el jugador supera el panic input. Las fases del desenlace
-    /// bueno llevan onlyIfFlag con este nombre; las del malo, skipIfFlag.
-    public const string FlagPanicSuperado = "panicSuperado";
 
     [Header("Proyectil entrante")]
     [SerializeField] private SlowMotionFireProjectile incomingProjectilePrefab;
@@ -103,16 +98,6 @@ public class StarAwakeningModule : SequenceModule
     [Tooltip("Lo que tardan las dos bolas en encontrarse, en segundos reales.")]
     [SerializeField] private float clashTravelUnscaled = 0.7f;
 
-    [Header("Panic input")]
-    [SerializeField] private PanicInputDetector panicInputDetector;
-    [SerializeField] private PanicInputUI panicInputUI;
-    [Tooltip("Último respaldo del icono del botón, si InputGlyphService no devuelve nada.")]
-    [SerializeField] private Sprite panicButtonSprite;
-    [Tooltip("Respaldo intermedio. OJO: este set solo tiene el icono de Interactuar (E), que NO es " +
-             "el botón del panic input — panicAction está atado a AttackMagicWest. El icono bueno " +
-             "lo da InputGlyphService; esto es solo para que no salga un hueco si falla.")]
-    [SerializeField] private InteractionHintIconSet interactIconSet;
-
     [Header("Efectos de shock")]
     [SerializeField] private ShockEffectsController shockEffects;
 
@@ -132,15 +117,13 @@ public class StarAwakeningModule : SequenceModule
     private GameObject _pendingFireball;
     private Transform _collisionPoint;
     private bool _collisionTriggered;
-    private bool _panicResolved;
-    private bool _panicSucceeded;
     private Coroutine _tension;
     private SequenceContext _ctx;
 
     public override string[] Routines => new[]
     {
         "LanzarProyectil",
-        "PanicInput",
+        "SinMagiaDeWill",
         "WillContraataca",
         "Aturdimiento",
         "Tinnitus",
@@ -156,7 +139,7 @@ public class StarAwakeningModule : SequenceModule
         return routine.Trim().ToLowerInvariant() switch
         {
             "lanzarproyectil" => Co_LanzarProyectil(ctx),
-            "panicinput" => Co_PanicInput(ctx),
+            "sinmagiadewill" => Co_SinMagiaDeWill(ctx),
             "willcontraataca" => Co_WillContraataca(ctx),
             "pausarproyectil" => Co_PausarProyectil(),
             "reanudarproyectil" => Co_ReanudarProyectil(),
@@ -284,139 +267,14 @@ public class StarAwakeningModule : SequenceModule
         return true;
     }
 
-    /// Da el control al jugador: aparece el botón y hay que pulsarlo a tiempo. Deja puesta la
-    /// marca 'panicSuperado' con el resultado y devuelve el control a la secuencia.
-    private IEnumerator Co_PanicInput(SequenceContext ctx)
+    /// Apaga el lanzador de hechizos de Will mientras dura la prueba del botón: el mismo botón le
+    /// dispararía un hechizo de verdad que revienta el proyectil enemigo antes de tiempo. Se vuelve
+    /// a encender al cerrar la secuencia (OnSequenceCleanup).
+    private IEnumerator Co_SinMagiaDeWill(SequenceContext ctx)
     {
-        if (panicInputDetector == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[StarAwakeningModule] Sin PanicInputDetector asignado: no hay forma de " +
-                "superar la prueba, así que se da por buena para no dejar la escena colgada.");
-#endif
-            ctx.SetFlag(FlagPanicSuperado, true);
-            yield break;
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Diagnóstico (17 sep 2026). La prueba se quedaba colgada aquí sin decir una palabra: la
-        // secuencia entraba en la fase del botón y no volvía a pasar nada. En vez de adivinar, esto
-        // dice en una línea qué referencias hay y, sobre todo, si el detector está ACTIVO — porque
-        // su cuenta atrás vive en un Update(), y un GameObject desactivado no ejecuta Update: ni
-        // aparece el botón ni salta el fallo por tiempo, así que la espera no termina nunca.
-        Debug.Log($"[StarAwakeningModule] Arrancando panic input — detector='{panicInputDetector.name}' " +
-            $"(componente {(panicInputDetector.enabled ? "activo" : "DESACTIVADO")}, " +
-            $"GameObject {(panicInputDetector.gameObject.activeInHierarchy ? "activo" : "DESACTIVADO EN JERARQUÍA")}), " +
-            $"UI={(panicInputUI != null ? panicInputUI.name : "se creará ahora")}, " +
-            $"spawner={(ResolverSpawner(ctx) != null ? "sí" : "NO ENCONTRADO")}.");
-
-        if (!panicInputDetector.gameObject.activeInHierarchy || !panicInputDetector.enabled)
-            Debug.LogError("[StarAwakeningModule] El PanicInputDetector NO está activo. Su cuenta " +
-                "atrás corre en Update(), así que no va a escuchar el botón ni a fallar por tiempo: " +
-                "el botón de la X no llega a salir. ARREGLO: ejecuta 'El Sendero ▸ Secuencias ▸ " +
-                "Montar Despertar de la Estrella (sistema nuevo)' y guarda la escena — el montaje " +
-                "detecta el detector varado en un GameObject apagado, lo copia a este mismo objeto " +
-                "con sus ajustes y reapunta la referencia.", panicInputDetector);
-
-        // INC-224 (17 sep 2026): el detector puede estar perfectamente activo y el botón seguir
-        // sin verse — 'panicInputUI' es un Canvas aparte y puede quedarse igual de varado que el
-        // detector estaba en INC-221. Aquí no hay excepción que avisar: 'Activate()' más abajo se
-        // ejecuta entero sin fallar, solo que sobre un Canvas que Unity no dibuja porque algún
-        // antecesor suyo está apagado.
-        if (panicInputUI != null && !panicInputUI.gameObject.activeInHierarchy)
-            Debug.LogError("[StarAwakeningModule] El PanicInputUI existe pero su GameObject (o " +
-                "algún antecesor suyo) está DESACTIVADO EN JERARQUÍA. Activate() se va a ejecutar " +
-                "sin dar ningún error, pero el icono de la X NO se va a ver. ARREGLO: ejecuta " +
-                "'El Sendero ▸ Secuencias ▸ Montar Despertar de la Estrella (sistema nuevo)' y " +
-                "guarda la escena — el montaje reparenta ese Canvas a un sitio activo.",
-                panicInputUI);
-#endif
-
-        // El spawner del jugador se apaga mientras dura la prueba: si no, el mismo botón del panic
-        // input le dispara un hechizo de verdad que revienta el proyectil enemigo antes de tiempo.
         var spawner = ResolverSpawner(ctx);
         if (spawner != null) spawner.enabled = false;
-
-        // El icono correcto lo da InputGlyphService por familia de dispositivo activa. El set de
-        // interacción solo tiene el icono de "E", que es de otra acción distinta (ver el campo).
-        var icon = InputGlyphService.GetSprite(InputGlyphNames.West)
-                   ?? (interactIconSet != null ? interactIconSet.GetSprite(InputGlyphService.CurrentFamily) : null)
-                   ?? panicButtonSprite;
-
-        if (panicInputUI == null) panicInputUI = PanicInputUI.GetOrCreate(icon);
-        else panicInputUI.SetIcon(icon);
-
-        _panicResolved = false;
-        _panicSucceeded = false;
-
-        panicInputDetector.OnSuccess += OnPanicSuccess;
-        panicInputDetector.OnFailure += OnPanicFailure;
-
-        panicInputUI?.Activate(panicInputDetector);
-        panicInputDetector.StartListening();
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[StarAwakeningModule] Panic input escuchando. Quedan " +
-            $"{panicInputDetector.TimeRemaining:F1} s reales para pulsar el botón.");
-
-        // Diagnóstico (17 sept 2026): Raúl ve el icono de la X ocupando toda la
-        // pantalla tras el rescate de INC-224 v2. No se puede inspeccionar el Canvas real desde
-        // fuera del Editor (vive en la escena binaria), así que esto deja en el log, cada vez
-        // que se activa, exactamente los datos que hacen falta para saber si es un problema de
-        // escala (reparentar cambió el lossyScale del Canvas) o de modo de render (un Canvas
-        // que se quedó anidado bajo otro y, al reparentarlo, pasó a ser raíz con su propio
-        // CanvasScaler sin configurar).
-        if (panicInputUI != null)
-        {
-            var canvas = panicInputUI.GetComponentInParent<Canvas>(true);
-            if (canvas != null)
-            {
-                var scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
-                Debug.Log($"[StarAwakeningModule] Diagnóstico tamaño PanicInputUI — " +
-                    $"Canvas='{canvas.name}' renderMode={canvas.renderMode} " +
-                    $"isRootCanvas={canvas.isRootCanvas} sortingOrder={canvas.sortingOrder} " +
-                    $"transform.localScale={canvas.transform.localScale} " +
-                    $"transform.lossyScale={canvas.transform.lossyScale} " +
-                    $"rect={canvas.GetComponent<RectTransform>()?.rect} " +
-                    $"scaler={(scaler != null ? $"modo={scaler.uiScaleMode} refRes={scaler.referenceResolution} matchWidthOrHeight={scaler.matchWidthOrHeight}" : "SIN CanvasScaler")}");
-            }
-            else
-            {
-                Debug.Log("[StarAwakeningModule] Diagnóstico tamaño PanicInputUI — " +
-                    "no se encontró ningún Canvas en sus antecesores (raro: debería haber uno).");
-            }
-        }
-#endif
-
-        // Tope de seguridad. El detector debería resolver solo —acierto, o fallo al agotarse su
-        // ventana— pero si por lo que sea no lo hace, esta espera no tenía salida: la secuencia se
-        // queda colgada con el input bloqueado y la única salida es cerrar el juego. Pasó el 17
-        // sep. El tope da margen de sobra sobre la ventana real del detector y, si salta, lo dice.
-        float limite = Mathf.Max(panicInputDetector.TimeRemaining, 1f) + 5f;
-        float esperado = 0f;
-
-        while (!_panicResolved && esperado < limite)
-        {
-            yield return null;
-            esperado += Time.unscaledDeltaTime;
-        }
-
-        if (!_panicResolved)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[StarAwakeningModule] El panic input no ha resuelto en {limite:F0} s. " +
-                "Lo normal es que el PanicInputDetector no esté activo (su cuenta atrás corre en " +
-                "Update) o que su 'panicAction' esté sin asignar. Se da la prueba por FALLADA para " +
-                "no dejar la secuencia colgada, que es lo que pasaba antes de este tope.");
-#endif
-            _panicSucceeded = false;
-        }
-
-        UnsubscribePanic();
-        panicInputDetector.StopListening();
-        panicInputUI?.Deactivate();
-
-        ctx.SetFlag(FlagPanicSuperado, _panicSucceeded);
+        yield break;
     }
 
     /// Will devuelve el golpe con su sistema de magia real, y los dos proyectiles chocan.
@@ -455,8 +313,8 @@ public class StarAwakeningModule : SequenceModule
         var will = ctx.GetActor(SequenceActor.PlayerId);
         if (will?.Transform == null) yield break;
 
-        // El spawner sigue apagado a propósito: SpawnForCinematic no lo necesita, y volver a
-        // encenderlo aquí haría que un botón mantenido del panic input disparase un hechizo
+        // El spawner sigue apagado a propósito (SinMagiaDeWill): SpawnForCinematic no lo necesita,
+        // y volver a encenderlo aquí haría que un botón mantenido de la prueba disparase un hechizo
         // accidental que destruye el proyectil enemigo antes del que sí cuenta.
 
         Transform willT = will.Transform;
@@ -652,18 +510,6 @@ public class StarAwakeningModule : SequenceModule
         _tension = null;
     }
 
-    private void OnPanicSuccess()
-    {
-        _panicSucceeded = true;
-        _panicResolved = true;
-    }
-
-    private void OnPanicFailure()
-    {
-        _panicSucceeded = false;
-        _panicResolved = true;
-    }
-
     private void OnPhysicsCollision()
     {
         if (_projectile != null) EnsureCollisionPoint().position = _projectile.transform.position;
@@ -725,32 +571,12 @@ public class StarAwakeningModule : SequenceModule
         ctx?.UnregisterActor(ProjectileActorId);
     }
 
-    private void UnsubscribePanic()
-    {
-        if (panicInputDetector == null) return;
-        panicInputDetector.OnSuccess -= OnPanicSuccess;
-        panicInputDetector.OnFailure -= OnPanicFailure;
-    }
-
-    /// Se llama SIEMPRE al cerrar: final normal, skip, o si algo revienta por el camino.
-    ///
-    /// El sequencer viejo documenta por qué esto importa tanto: sus corrutinas se lanzaban sueltas
-    /// desde los callbacks del panic input, así que el StopCoroutine del skip no las tocaba y
-    /// seguían vivas en pleno gameplay — spawneando un hechizo real y levantando las dos señales
-    /// de salida del grafo a la vez. Aquí todo cuelga del módulo y se corta de una vez.
+    /// Se llama SIEMPRE al cerrar: final normal, skip, o si algo revienta por el camino. Todas las
+    /// corrutinas cuelgan del módulo, así que se cortan de una vez y no siguen vivas en pleno juego.
     public override void OnSequenceCleanup()
     {
         StopAllCoroutines();
         _tension = null;
-
-        UnsubscribePanic();
-
-        // Y cerrar la prueba de verdad, no solo dejar de escucharla. Sin esto, saltar la cinemática
-        // durante el panic input dejaba su overlay (una pantalla oscurecida al 55% con el icono del
-        // botón y la barra) encima del gameplay hasta que el detector agotaba su ventana, y la
-        // acción de magia forzada a habilitada mientras tanto. Los dos métodos son idempotentes.
-        panicInputDetector?.StopListening();
-        panicInputUI?.Deactivate();
 
         if (_pendingFireball != null) { Destroy(_pendingFireball); _pendingFireball = null; }
         DespawnProjectile(_ctx);
@@ -765,7 +591,6 @@ public class StarAwakeningModule : SequenceModule
         if (animator != null && willUpperBodyLayer < animator.layerCount)
             animator.SetLayerWeight(willUpperBodyLayer, 0f);
 
-        _panicResolved = false;
         _collisionTriggered = false;
         _ctx = null;
     }

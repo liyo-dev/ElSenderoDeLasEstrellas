@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298b367b43a1fbe4398c089b8ec069f6, type: 3}
+  m_Name: CatalogoDeTesoros
+  m_EditorClassIdentifier: Assembly-CSharp::CatalogoDeTesoros
+  tesoros:
+  - id: PUEBLO_COLECCION_CANICA
+    region: PUEBLO
+    escena: Assets/Scenes/Worlds/MainWorld.unity
+  - id: PUEBLO_COLECCION_PIEDRA
+    region: PUEBLO
+    escena: Assets/Scenes/Worlds/MainWorld.unity
+  - id: PUEBLO_COLECCION_MONEDA
+    region: PUEBLO
+    escena: Assets/Scenes/Worlds/MainWorld.unity

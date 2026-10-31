@@ -101,7 +101,7 @@
         {"key":"TUTORIAL_VELA","value":"Enciende la vela: mantén {BOTON} para concentrar la magia y suelta cuando se llene la barra."},
         {"key":"CHAR_BOTICARIA","value":"Boticaria"},
         {"key":"CHAR_TOBI","value":"Tobi"},
-        {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Equípate la capa desde el menú: Equipo ▸ Capas."},
+        {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Pulsa {BOTON} y equípate la capa en Equipo, apartado Capas."},
         {"key":"TUTORIAL_PREPARA_VIAJE_POCION","value":"En Inventario, selecciona la poción y confirma {BOTON}; confirma otra vez en Usar."},
         {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"A la mañana siguiente…"},
         {"key":"TUTORIAL_CAP2_CUPULA_ESTELAR","value":"Pulsa {BOTON} y teclea X, B, A: Cúpula Estelar protege a quien esté debajo."},
@@ -110,6 +110,20 @@
         {"key":"ITEM_CUERDA_NAME","value":"Cuerda"},
         {"key":"ITEM_CUERDA_DESC","value":"Una cuerda fuerte. Sirve para atar una tabla suelta."},
         {"key":"ITEM_CLAVOS_NAME","value":"Clavos"},
-        {"key":"ITEM_CLAVOS_DESC","value":"Dos clavos algo torcidos. Todavía sujetan."}
+        {"key":"ITEM_CLAVOS_DESC","value":"Dos clavos algo torcidos. Todavía sujetan."},
+        {"key":"SENDERO_PIEDRA_PREGUNTA","value":"¿Quieres leer el conjuro para abrir el portal al Sendero de las Estrellas?"},
+        {"key":"SENDERO_PIEDRA_SOLO_WILL","value":"Solo Will puede leer el conjuro."},
+        {"key":"ERIKA_REVANCHA_PREGUNTA","value":"Erika: ¿Otra ronda de entrenamiento?"},
+        {"key":"COLECCION_PREGUNTA_VER","value":"¿Quieres ver la colección de Oliver?"},
+        {"key":"COLECCION_PIEZA_QUE_FALTA","value":"Todavía no la tiene. Quizá esté por ahí, esperando a que alguien la encuentre."},
+        {"key":"COLECCION_PREMIO_CONSEGUIDO","value":"Premio de la página conseguido"},
+        {"key":"COLECCION_PREMIO_DE_LA_PAGINA","value":"Premio al completar la página: {0} ×{1}"},
+        {"key":"COLECCION_NUEVO","value":"¡Nuevo!"},
+        {"key":"UI_CERRAR","value":"Cerrar"},
+        {"key":"COLECCION_OLIVER_TITULO","value":"Colección de Oliver"},
+        {"key":"COLECCION_OLIVER_PAGINA_1","value":"Cosas raras del pueblo"},
+        {"key":"COLECCION_OLIVER_FRASE_CANICA","value":"¡Una canica de cielo! Sabía que existían. Va en el centro de la página."},
+        {"key":"COLECCION_OLIVER_FRASE_PIEDRA","value":"Si miras por el agujero, el pueblo parece otro. ¿Lo ves? Yo tampoco, pero da suerte."},
+        {"key":"COLECCION_OLIVER_FRASE_MONEDA","value":"No es de ningún reino que yo conozca. ¡Mejor! Las cosas raras valen más."}
     ]
 }

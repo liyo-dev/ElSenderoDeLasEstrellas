@@ -233,7 +233,6 @@ public class SayBeat : SequenceBeat
         ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
         var estilo = presentacion.Resolver(
             ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo);
-        ctx.CambiarPresentacionDeLinea(estilo);
         var pages = new System.Collections.Generic.List<string>();
         foreach (string raw in text.Split('\n'))
         {
@@ -337,7 +336,6 @@ public class SayBeat : SequenceBeat
             caracteresLeidos += page.Length;
         }
 
-        ctx.CambiarPresentacionDeLinea(null);
         if (voiceStarted) stopVoice();
 
         foreach (var escucha in escuchas) escucha.Actualizar(1f);
@@ -446,9 +444,12 @@ public class SayBeat : SequenceBeat
 ///
 /// Se usa cuando el jugador tiene que poder leer con calma — típicamente contenido que enseña a
 /// jugar — en vez de que las frases pasen solas por tiempo. La secuencia se queda esperando hasta
-/// que el diálogo termina.
+/// que el diálogo termina; dentro de un guion, con 'detenerEscena' el reloj del guion también.
+///
+/// Desde un guion, las reacciones se escriben por actor: «reacciones_will=HeadNod01,Question01,-»
+/// (gestos línea a línea, «-» = ninguno) y «caras_will=alegre,-,sorpresa».
 [Serializable]
-public class DialogueBeat : SequenceBeat
+public class DialogueBeat : SequenceBeat, IConfigurableDesdeGuion
 {
     [Tooltip("El DialogueAsset a reproducir.")]
     public DialogueAsset dialogue;
@@ -471,6 +472,38 @@ public class DialogueBeat : SequenceBeat
     [Tooltip("Cómo reaccionan los que ESCUCHAN, línea a línea. DialogueManager solo anima al que " +
              "habla; sin esto, el otro personaje se queda en idle durante todo el diálogo.")]
     public List<DialogueReaction> reactions = new();
+
+    [Tooltip("Dentro de un guion: la escena se detiene mientras el diálogo está abierto (el reloj " +
+             "del guion no avanza hasta que el jugador lo cierra).")]
+    public bool detenerEscena = false;
+
+    public bool Configurar(string clave, string valor, Func<string, string> idDeActor)
+    {
+        bool gestos = clave.StartsWith("reacciones_", StringComparison.Ordinal);
+        bool caras = clave.StartsWith("caras_", StringComparison.Ordinal);
+        if (!gestos && !caras) return false;
+
+        string alias = clave.Substring(clave.IndexOf('_') + 1);
+        string id = idDeActor != null ? idDeActor(alias) : alias;
+        reactions ??= new List<DialogueReaction>();
+        var reaccion = reactions.Find(r => r != null && r.actorId == id);
+        if (reaccion == null) reactions.Add(reaccion = new DialogueReaction { actorId = id });
+
+        string[] partes = valor.Split(',');
+        if (gestos)
+        {
+            reaccion.gestures = new string[partes.Length];
+            for (int i = 0; i < partes.Length; i++)
+                reaccion.gestures[i] = partes[i].Trim() == "-" ? string.Empty : partes[i].Trim();
+        }
+        else
+        {
+            reaccion.emotions = new NPCEmotion[partes.Length];
+            for (int i = 0; i < partes.Length; i++)
+                reaccion.emotions[i] = CarasDelGuion.Intentar(partes[i].Trim(), out var e) ? e : NPCEmotion.None;
+        }
+        return true;
+    }
 
     public override string Describe()
         => $"Diálogo: {(dialogue != null ? dialogue.name : "SIN ASIGNAR")} con {actorId}"
@@ -552,6 +585,19 @@ public class DialogueBeat : SequenceBeat
             });
         }
 
+        bool relojSoltado = !detenerEscena;
+        System.Action soltarReloj = () =>
+        {
+            if (relojSoltado) return;
+            relojSoltado = true;
+            ctx.SoltarReloj();
+        };
+        if (detenerEscena)
+        {
+            ctx.RetenerReloj();
+            ctx.Player?.RegisterCleanup(soltarReloj);
+        }
+
         try
         {
             DialogueManager.Instance.StartDialogue(dialogue, anchor, () => finished = true,
@@ -562,6 +608,7 @@ public class DialogueBeat : SequenceBeat
         finally
         {
             desuscribir();
+            soltarReloj();
 
             if (conservarCamaraDeLaSecuencia && DialogueManager.Instance != null)
                 DialogueManager.Instance.ConservarCamaraDeSecuencia = false;

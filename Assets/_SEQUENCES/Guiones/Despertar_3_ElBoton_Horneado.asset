@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Despertar_3_ElBoton_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Despertar_3_ElBoton
+  duracion: 1.6
+  presentacion: 1
+  huella: "2026-10-30 17:29 \xB7 883bfeef35076afcc3d26ba7c0af5919"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 25.3, y: 26.537277, z: -79.4}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 30.5, y: 30.5, z: -61}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Idle_Battle_NoWeapon
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: decidido
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Eldran
+    alias: eldran
+    colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
+    claveDelNombre: Eldran
+    posiciones:
+    - t: 0
+      p: {x: 21.3, y: 26.281815, z: -85.7}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas: []
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  lineas: []
+  planos:
+  - focos: []
+    t0: 0
+    t1: 1.6
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 0
+      p: {x: 25.6, y: 28.481815, z: -84.6}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras:
+    - {x: 27.6, y: 28.6, z: -70}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0880126
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.8
+    beat:
+      rid: 5630202816662077758
+    linea: 38
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.8
+    beat:
+      rid: 5630202816662077759
+    linea: 39
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1
+    beat:
+      rid: 5630202816662077760
+    linea: 40
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: boton
+    t: 0.8
+  puntos:
+  - nombre: p_will
+    posicion: {x: 25.3, y: 26.537277, z: -79.4}
+  - nombre: bola_salida
+    posicion: {x: 30.5, y: 30.5, z: -61}
+  - nombre: escondite
+    posicion: {x: 21.3, y: 26.281815, z: -85.7}
+  - nombre: mira_bola
+    posicion: {x: 27.6, y: 28.6, z: -70}
+  - nombre: cam_atras
+    posicion: {x: 25.6, y: 26.281815, z: -84.6}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202816662077758
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ReanudarProyectil
+        waitForEnd: 1
+        detenerEscena: 0
+    - rid: 5630202816662077759
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: SinMagiaDeWill
+        waitForEnd: 1
+        detenerEscena: 0
+    - rid: 5630202816662077760
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mode: 0
+        actionRef: {fileID: 11400000, guid: 1de742d14fb41d04d9ddc79662e6c25a, type: 2}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 8
+        windowSeconds: 5
+        holdSeconds: 1.5
+        maxHoldSeconds: 2.5
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: interactable_x
+        promptTextId: 
+        successFlag: panicSuperado
+        tolerant: 1
+        detenerEscena: 1

@@ -251,7 +251,7 @@ public sealed class ReproductorDeGuion
             var plano = _g.planos[_iPlano++];
             _camaras.Activar(plano);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            InformeDeRodaje.PlanoNuevo(plano.descripcion, null, null, plano.sujetos.Count > 0 ? plano.sujetos[0] : null);
+            InformeDeRodaje.PlanoNuevo(plano.descripcion, plano.sujetos.Count > 0 ? plano.sujetos[0] : null);
             _nPlano = _iPlano;
             _tFoto = Mathf.Lerp(plano.t0, plano.t1, 0.35f);
             _desviados.Clear();
@@ -370,7 +370,6 @@ public sealed class ReproductorDeGuion
             string texto = PresentadorDeLinea.Texto(linea.clave);
             string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
             var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
-            _ctx.CambiarPresentacionDeLinea(presentacion);
             PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
                 new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));

@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Sendero
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: sendero-inicio
+  nodes:
+  - rid: 5630202821400330500
+  - rid: 5630202821400330501
+  - rid: 5630202821400330502
+  - rid: 5630202821400330503
+  - rid: 5630202821400330504
+  - rid: 5630202821400330505
+  - rid: 5630202821400330506
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202821400330500
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio del Sendero
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-inicio
+        position: {x: 0, y: 0}
+        outputs:
+        - sendero-tras-capitulo
+    - rid: 5630202821400330501
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Espera: libro prohibido y ritual (lo emite el cap\xEDtulo de la Piedra)"
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-requisitos
+        position: {x: 320, y: 0}
+        outputs:
+        - sendero-ritual-listo
+        eventKey: SENDERO_REQUISITOS_CUMPLIDOS
+        acceptEarlierEvent: 1
+    - rid: 5630202821400330502
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "La Piedra admite el conjuro (probar desde aqu\xED)"
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-ritual-listo
+        position: {x: 700, y: 0}
+        outputs:
+        - sendero-espera-conjuro
+        eventKey: SENDERO_RITUAL_LISTO
+    - rid: 5630202821400330503
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Will acepta leer el conjuro ante la Piedra
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-espera-conjuro
+        position: {x: 1080, y: 0}
+        outputs:
+        - sendero-cinematica-conjuro
+        eventKey: SENDERO_CONJURO_ACEPTADO
+        acceptEarlierEvent: 0
+    - rid: 5630202821400330504
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Cinem\xE1tica: el conjuro abre el portal"
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-cinematica-conjuro
+        position: {x: 1460, y: 0}
+        outputs:
+        - sendero-llegada
+        cinematicName: El conjuro de la Piedra Ancestral
+        signalIn: SENDERO_CONJURO_START
+        signalDone: SENDERO_CONJURO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 7f276964bd44ff146b92b5a907aa0d04, type: 2}
+        plantillaDeAjustes: SEQ_PerasEldran
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 5630202821400330505
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Llegada al Sendero
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-llegada
+        position: {x: 1840, y: 0}
+        outputs: []
+        eventKey: SENDERO_LLEGADA
+        acceptEarlierEvent: 1
+    - rid: 5630202821400330506
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap2_BACK_1)"
+        chapter: Sendero
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-tras-capitulo
+        position: {x: 160, y: -160}
+        outputs:
+        - sendero-requisitos
+        eventKey: CH_Cap2_BACK_1
+        acceptEarlierEvent: 1

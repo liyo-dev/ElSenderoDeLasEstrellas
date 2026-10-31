@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_PruebaWill_Discurso
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: 'Prueba de Will: el discurso'
+  summary: "Will, Estela y Liam ven en un espejo a Will con nueve a\xF1os trab\xE1ndose en el discurso de su cumplea\xF1os."
+  signalIn: PRUEBA_WILL_DISCURSO_START
+  signalOut: PRUEBA_WILL_DISCURSO_DONE
+  musicId: 
+  presentacionDeTexto: 1
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Prueba_01_ElDiscurso'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 5630202821400330474
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202821400330474
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 7fb6a7dbef611a74d9c0aa162b342ca8, type: 2}
+        empezarEn: 0

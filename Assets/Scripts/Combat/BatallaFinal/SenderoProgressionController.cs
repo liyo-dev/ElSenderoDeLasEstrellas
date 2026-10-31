@@ -55,9 +55,9 @@ public class SenderoProgressionController : MonoBehaviour
     [SerializeField, Min(0.1f)] private float _duracionVfx = 3f;
 
     [Header("Escenas de Pruebas")]
-    [SerializeField] private string _escenaPruebaWill = "Sendero_PruebaWill";
-    [SerializeField] private string _escenaPruebaEstela = "CandyLand";
-    [SerializeField] private string _escenaPruebaLiam = "Sendero";
+    [SerializeField] private string _escenaPruebaWill = "Laberinto";
+    [SerializeField] private string _escenaPruebaEstela = "Chuchelandia";
+    [SerializeField] private string _escenaPruebaLiam = "Parque";
 
     [Header("Señal de Batalla Final")]
     [SerializeField] private string _senialBatallaFinal = "SENDERO_FINAL_START";
@@ -65,6 +65,10 @@ public class SenderoProgressionController : MonoBehaviour
     [Header("Seguridad en el Vacío")]
     [Tooltip("Altura límite Y bajo la cual el jugador cae al abismo cósmico y es rescatado.")]
     [SerializeField] private float _alturaCaidaVacio = -10f;
+
+    [Tooltip("Dónde se rescata al que cae, por tramo: 0 llegada, 1 tras la puerta de Will, 2 tras la de " +
+             "Estela, 3 tras la de Liam, 4 ante el altar. Sin punto: junto a este controlador.")]
+    [SerializeField] private Transform[] _puntosDeRescate = new Transform[0];
 
     private Transform _jugadorTransform;
     private bool _enRespawn = false;
@@ -147,34 +151,24 @@ public class SenderoProgressionController : MonoBehaviour
 
         yield return new WaitForSeconds(0.15f);
 
+        int tramo = _estado switch
+        {
+            EstadoSendero.Llegada or EstadoSendero.HaciaPruebaWill => 0,
+            EstadoSendero.EnPruebaWill or EstadoSendero.HaciaPruebaEstela => 1,
+            EstadoSendero.EnPruebaEstela or EstadoSendero.HaciaPruebaLiam => 2,
+            EstadoSendero.EnPruebaLiam or EstadoSendero.RupturaYReconciliacion => 3,
+            _ => 4,
+        };
         Vector3 posDestino;
         Quaternion rotDestino = Quaternion.identity;
-
-        switch (_estado)
+        if (tramo < _puntosDeRescate.Length && _puntosDeRescate[tramo] != null)
         {
-            case EstadoSendero.Llegada:
-            case EstadoSendero.HaciaPruebaWill:
-                posDestino = new Vector3(0f, 0.5f, 0f);
-                break;
-            case EstadoSendero.EnPruebaWill:
-            case EstadoSendero.HaciaPruebaEstela:
-                posDestino = new Vector3(0f, 1.2f, 60f);
-                break;
-            case EstadoSendero.EnPruebaEstela:
-            case EstadoSendero.HaciaPruebaLiam:
-                posDestino = new Vector3(8f, 3.2f, 125f);
-                break;
-            case EstadoSendero.EnPruebaLiam:
-            case EstadoSendero.RupturaYReconciliacion:
-                posDestino = new Vector3(0f, 1.8f, 205f);
-                break;
-            case EstadoSendero.FrenteAlAltar:
-            case EstadoSendero.BatallaIniciada:
-                posDestino = new Vector3(0f, 2.8f, 260f);
-                break;
-            default:
-                posDestino = new Vector3(0f, 0.5f, 0f);
-                break;
+            posDestino = _puntosDeRescate[tramo].position;
+            rotDestino = _puntosDeRescate[tramo].rotation;
+        }
+        else
+        {
+            posDestino = transform.position + Vector3.up;
         }
 
         if (_jugadorTransform != null)
@@ -227,25 +221,27 @@ public class SenderoProgressionController : MonoBehaviour
     /// <summary>
     /// Llamado cuando el jugador alcanza el hito astral de la Prueba 1.
     /// </summary>
-    public void ManifestarPortalWill()
+    public bool ManifestarPortalWill()
     {
-        if (_estado != EstadoSendero.HaciaPruebaWill) return;
+        if (_estado != EstadoSendero.HaciaPruebaWill) return false;
 
         if (_portalWill != null && !_portalWill.activeSelf)
         {
             _portalWill.SetActive(true);
             ReproducirVfx(_vfxAparicionPrefab, _portalWill.transform.position);
         }
+        return true;
     }
 
     /// <summary>
     /// Entrar a la Prueba de Will (Laberinto de Recuerdos).
     /// </summary>
-    public void EntrarPruebaWill()
+    public bool EntrarPruebaWill()
     {
-        if (_estado != EstadoSendero.HaciaPruebaWill) return;
+        if (_estado != EstadoSendero.HaciaPruebaWill) return false;
         CambiarEstado(EstadoSendero.EnPruebaWill);
         CargarEscenaPrueba(_escenaPruebaWill);
+        return true;
     }
 
     /// <summary>
@@ -259,25 +255,27 @@ public class SenderoProgressionController : MonoBehaviour
     /// <summary>
     /// Llamado cuando el jugador alcanza el hito astral de la Prueba 2.
     /// </summary>
-    public void ManifestarPortalEstela()
+    public bool ManifestarPortalEstela()
     {
-        if (_estado != EstadoSendero.HaciaPruebaEstela) return;
+        if (_estado != EstadoSendero.HaciaPruebaEstela) return false;
 
         if (_portalEstela != null && !_portalEstela.activeSelf)
         {
             _portalEstela.SetActive(true);
             ReproducirVfx(_vfxAparicionPrefab, _portalEstela.transform.position);
         }
+        return true;
     }
 
     /// <summary>
     /// Entrar a la Prueba de Estela (Chuchelandia / Duelo del Corazón).
     /// </summary>
-    public void EntrarPruebaEstela()
+    public bool EntrarPruebaEstela()
     {
-        if (_estado != EstadoSendero.HaciaPruebaEstela) return;
+        if (_estado != EstadoSendero.HaciaPruebaEstela) return false;
         CambiarEstado(EstadoSendero.EnPruebaEstela);
         CargarEscenaPrueba(_escenaPruebaEstela);
+        return true;
     }
 
     /// <summary>
@@ -291,24 +289,27 @@ public class SenderoProgressionController : MonoBehaviour
     /// <summary>
     /// Llamado cuando el jugador alcanza el hito astral de la Prueba 3.
     /// </summary>
-    public void ManifestarPortalLiam()
+    public bool ManifestarPortalLiam()
     {
-        if (_estado != EstadoSendero.HaciaPruebaLiam) return;
+        if (_estado != EstadoSendero.HaciaPruebaLiam) return false;
 
         if (_portalLiam != null && !_portalLiam.activeSelf)
         {
             _portalLiam.SetActive(true);
             ReproducirVfx(_vfxAparicionPrefab, _portalLiam.transform.position);
         }
+        return true;
     }
 
     /// <summary>
-    /// Entrar a la Prueba de Liam (La Caja / Pasillo de las Mentiras).
+    /// Entrar a la Prueba de Liam (el parque de atracciones).
     /// </summary>
-    public void EntrarPruebaLiam()
+    public bool EntrarPruebaLiam()
     {
-        if (_estado != EstadoSendero.HaciaPruebaLiam) return;
+        if (_estado != EstadoSendero.HaciaPruebaLiam) return false;
         CambiarEstado(EstadoSendero.EnPruebaLiam);
+        CargarEscenaPrueba(_escenaPruebaLiam);
+        return true;
     }
 
     /// <summary>
@@ -322,24 +323,26 @@ public class SenderoProgressionController : MonoBehaviour
     /// <summary>
     /// Llamado tras concluir la conversación y reconciliación sobre el Sendero.
     /// </summary>
-    public void AvanzarHaciaElAltar()
+    public bool AvanzarHaciaElAltar()
     {
-        if (_estado != EstadoSendero.RupturaYReconciliacion) return;
+        if (_estado != EstadoSendero.RupturaYReconciliacion) return false;
         CambiarEstado(EstadoSendero.FrenteAlAltar);
+        return true;
     }
 
     /// <summary>
     /// Llamado al llegar frente al Altar de Piedra Blanca para detonar la aparición del Mago Oscuro.
     /// </summary>
-    public void DesatarAparicionMagoOscuro()
+    public bool DesatarAparicionMagoOscuro()
     {
-        if (_estado == EstadoSendero.BatallaIniciada) return;
+        if (_estado == EstadoSendero.BatallaIniciada) return false;
         CambiarEstado(EstadoSendero.BatallaIniciada);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Sendero] El aire frente al altar se ha rasgado. Disparando señal '{_senialBatallaFinal}'.");
 #endif
         DefaultNarrativeSignals.EnsureInstance().RaiseCustom(_senialBatallaFinal);
+        return true;
     }
 
     private IEnumerator Co_CerrarPortal(GameObject portal, EstadoSendero siguienteEstado)

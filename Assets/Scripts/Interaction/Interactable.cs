@@ -408,7 +408,11 @@ public class Interactable : MonoBehaviour
             // va después del diálogo (p. ej. abrir su tienda con OnFinished) sigue igual.
             if (_npcManager.TryGetStandingLine(out var frase))
             {
-                if (mode == InteractableMode.OpenDialogue) StartDialogue(frase);
+                if (mode == InteractableMode.OpenDialogue)
+                {
+                    StartDialogue(frase);
+                    NarrativeStandingLines.MarkSaid(_npcManager.PersistenceId, frase);
+                }
                 else NarrativeStandingLines.TryPlay(_npcManager.PersistenceId, transform);
                 return;
             }

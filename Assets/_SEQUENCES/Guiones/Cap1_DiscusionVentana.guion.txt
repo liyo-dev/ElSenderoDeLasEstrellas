@@ -1,0 +1,48 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CAP. 1 · LA DISCUSIÓN DE LA VENTANA  (INC-867, fase 6)
+#  Will acaba de levantarse y oye a Eldran y a Victoria discutir fuera por la caja que falta,
+#  sin verlos: sus voces salen de la ventana (bocadillos anclados a las marcas del escenario).
+#  Will empieza donde lo deja la cama al levantarse, mirando hacia donde se levanta.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Cap1_DiscusionVentana
+ESCENA WillHouse
+SECUENCIA Assets/_SEQUENCES/SEQ_DiscusionVentana.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+
+PUNTOS
+# El punto donde la cama deja a Will al levantarse (SleepTrigger.wakeUpPosition, rumbo 281).
+p_will        116.24 1.49
+ventana_izq   VentanaIzq
+ventana_dcha  VentanaDcha
+# Cámaras. Delante de Will y alta, para ver la cama desde arriba en vez de su cabecero; y detrás,
+# desde el rincón de los armarios, para ver a Will con la ventana al fondo.
+cam_frente    116.6 4.4 0
+cam_rincon    114.0 0.6 0
+
+HILO
+@inicio
+will en p_will mirando 281
+& plano medio will solo desde=cam_frente altura=1.7 lente=40
+desde @inicio+0.2 will mira ventana_izq
+desde @inicio+0.2 will cara sorpresa
+
+# Las voces de fuera: Eldran (izquierda) y Victoria (derecha). Will escucha con curiosidad.
+desde @inicio+0.5 efecto SayBeat markName=VentanaIzq textKey=HOOK_DISCUSION_01 pageDuration=2.6 dura=3.9
+desde @inicio+4.4 efecto SayBeat markName=VentanaDcha textKey=HOOK_DISCUSION_02 pageDuration=2.6 dura=3.8
+desde @inicio+4.4 plano conjunto will solo desde=cam_rincon altura=1.3 lente=42
+desde @inicio+8.2 efecto SayBeat markName=VentanaIzq textKey=HOOK_DISCUSION_03 pageDuration=2.6 dura=5.7
+desde @inicio+8.4 will gesto Question01
+desde @inicio+8.4 will cara pensativo
+espera 13.9
+
+# Ya les conoce: media sonrisa y su comentario.
+@remate
+will cara picaro
+& plano primer will solo desde=cam_frente altura=1.6 lente=26
+will dice HOOK_DISCUSION_04
+espera 0.4

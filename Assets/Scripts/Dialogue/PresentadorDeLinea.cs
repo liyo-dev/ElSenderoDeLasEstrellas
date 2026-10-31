@@ -139,6 +139,9 @@ public static class PresentadorDeLinea
     /// Esconde la frase de ese turno, si sigue en pantalla (no la que otro haya puesto después).
     public static void Esconder(int turno) => SpeechBubbleUI.Instance?.Hide(turno);
 
+    /// Esconde lo que haya en pantalla, sea de quien sea (al cerrar una cinemática).
+    public static void EsconderTodo() => SpeechBubbleUI.Instance?.Hide();
+
     /// Da por terminada ya la frase en pantalla: avisa a quien la esperaba y la esconde.
     public static void SaltarLaActual() => SpeechBubbleUI.Instance?.SkipCurrent();
 

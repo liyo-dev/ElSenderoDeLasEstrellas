@@ -108,7 +108,10 @@ namespace Game.NPC
 
         // Buffer y ruta reutilizables para comprobar si un compañero puede llegar hasta el
         // jugador sin cruzar una pared o una reja. Ver INC-819.
-        private static readonly NavMeshPath _rutaHastaElJugador = new NavMeshPath();
+        // La ruta se crea al primer uso: NavMeshPath no se puede construir en el inicializador
+        // estático, porque Unity puede ejecutarlo al deserializar el componente y entonces el
+        // tipo PlayerParty entero queda inservible (TypeInitializationException). Ver INC-887.
+        private static NavMeshPath _rutaHastaElJugador;
         private static readonly RaycastHit[] _paredesHastaElJugador = new RaycastHit[32];
         private const float AlturaDelPecho = 1f;
         private const float RadioDelCuerpo = 0.3f;
@@ -474,6 +477,7 @@ namespace Game.NPC
             // a la comprobación física para no bloquear una recuperación legítima.
             if (origenEnMalla)
             {
+                _rutaHastaElJugador ??= new NavMeshPath();
                 if (!NavMesh.CalculatePath(origenNav.position, destinoNav.position, NavMesh.AllAreas, _rutaHastaElJugador))
                     return false;
                 if (_rutaHastaElJugador.status != NavMeshPathStatus.PathComplete)

@@ -34,9 +34,8 @@ using UnityEngine;
 /// puntería, así que para que falle a propósito se apunta a una marca y no a un actor.
 ///
 /// ── Para la cámara ────────────────────────────────────────────────────────────────────────────
-/// Con `registrarComo` el proyectil se da de alta como actor mientras vuela, así que un `ShotBeat`
-/// con `live` puede SEGUIRLO igual que a un personaje. Es el mismo mecanismo que usa el módulo del
-/// Despertar de la Estrella para su proyectil entrante.
+/// Con `registrarComo` el proyectil se da de alta como actor mientras vuela, así que se le puede
+/// nombrar (mirarlo, colocar algo en él) igual que a un personaje.
 [Serializable]
 public class SpellBeat : SequenceBeat
 {
@@ -102,7 +101,7 @@ public class SpellBeat : SequenceBeat
     public bool esperarAlImpacto = true;
 
     [Tooltip("Si se rellena, el proyectil se da de alta como actor con este ID mientras vuela, " +
-             "para que un ShotBeat con 'live' pueda seguirlo. Se da de baja al impactar.")]
+             "para que se le pueda nombrar como a un personaje. Se da de baja al impactar.")]
     public string registrarComo;
 
     /// Tope de seguridad. Ningún beat puede colgar la secuencia (regla del sistema).

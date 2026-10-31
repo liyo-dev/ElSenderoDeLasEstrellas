@@ -1,0 +1,63 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CAP. 1 · LA DISCUSIÓN SE RESUELVE (LAS PERAS)  (INC-867, fase 6)
+#  Will llega con Oliver hasta Eldran y Victoria, que discuten en broma por la caja que falta.
+#  Eldran cae en la cuenta, se ríen, ve a Will; Oliver quiere ir con él y Victoria le pide que
+#  se quede. Al final Eldran se acerca a Will para lo del regalo (caja de diálogo, la escena
+#  espera a que el jugador la cierre).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Cap1_PerasEldran
+ESCENA MainWorld
+ZONA Cap1 6 -136 22
+SECUENCIA Assets/_SEQUENCES/SEQ_PerasEldran.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will      Player        nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran    NPC_Eldran    nombre=Eldran color=9AD0FF
+victoria  NPC_Victoria  nombre=Victoria color=F2A7C8
+oliver    NPC_Oliver    nombre=Oliver color=9FE0A0
+
+PUNTOS
+# Eldran y Victoria en su sitio de la plaza (SP_Eldran, SP_Victoria), cara a cara.
+p_eldran      -1.91 -142.75
+p_victoria    -1.0 -144.06
+# Will y Oliver, que acaban de llegar desde casa (al norte).
+p_will        0.6 -139.6
+p_oliver      1.8 -139.0
+# Donde se para Eldran para hablar con Will, a 1,6 m.
+p_eldran_will -0.40 -140.85
+
+HILO
+@inicio
+eldran en p_eldran mirando victoria
+& victoria en p_victoria mirando eldran
+& will en p_will mirando eldran
+& oliver en p_oliver mirando eldran
+& plano medio eldran
+eldran dice PERAS_01 gesto=Talk02 cara=alegre
+plano medio victoria
+victoria dice PERAS_02 gesto=Question01 cara=picaro
+plano medio eldran
+eldran dice PERAS_03 gesto=Laugh01 cara=alegre
+plano medio victoria
+victoria dice PERAS_04 gesto=Laugh01 cara=alegre
+
+# Eldran se gira y ve a Will (y a Oliver) esperando.
+@will
+eldran mira will
+& plano general eldran will lente=34
+eldran dice PERAS_05 gesto=HandWave01 mira=will cara=alegre
+plano medio oliver
+oliver dice PERAS_OLIVER_VOY gesto=Cheer01 cara=ilusionado
+plano medio victoria
+victoria dice PERAS_VICTORIA_QUEDATE gesto=HeadNod01 mira=oliver
+
+# El regalo: Eldran se acerca a Will; los dos en plano y la caja de diálogo.
+@regalo
+eldran anda a p_eldran_will llega_mirando=will
+& will mira eldran
+& plano dos eldran will lente=34 quieta
+efecto DialogueBeat dialogue=DG_ELDRAN_REGALO actorId=eldran conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=Question01,-,HeadNod01,-,HeadNod01,- reacciones_eldran=-,HeadShake01,-,Laugh01,-,HeadNod01 dura=0.3
+espera 0.4

@@ -518,8 +518,8 @@ public class SequenceActor
 
     // ── Geometría: a qué altura está la cara ─────────────────────────────────
     //
-    // El solver de planos (ShotComposer) necesita saber dónde tiene los ojos un actor, y eso no
-    // se puede dar por supuesto: el pivot de un personaje está en los pies, y no todos miden lo
+    // Las cámaras, los bocadillos y las franjas necesitan saber dónde tiene los ojos un actor, y
+    // eso no se puede dar por supuesto: el pivot de un personaje está en los pies, y no todos miden lo
     // mismo. Se resuelve una sola vez por actor, en este orden:
     //
     //   1. El hueso de la cabeza del Animator, si el avatar es humanoide. Es el dato bueno: da la
@@ -566,6 +566,21 @@ public class SequenceActor
             return frente.sqrMagnitude > 0.0001f ? frente.normalized : Vector3.forward;
         }
     }
+    /// Hacia dónde mira de verdad, en horizontal: la cara si va más o menos hacia donde va el
+    /// cuerpo; si no (una animación que gira la cabeza del todo), el cuerpo.
+    public Vector3 FrenteFiable
+    {
+        get
+        {
+            if (Transform == null) return Vector3.forward;
+            Vector3 cuerpo = Transform.forward;
+            cuerpo.y = 0f;
+            cuerpo = cuerpo.sqrMagnitude > 0.0001f ? cuerpo.normalized : Vector3.forward;
+            Vector3 cara = FrenteDeLaCara;
+            return Vector3.Dot(cara, cuerpo) > 0.2f ? cara : cuerpo;
+        }
+    }
+
     private void MedirCara()
     {
         if (_caraMedida) return;
@@ -927,9 +942,7 @@ public class SequenceActor
     public void Hold()
     {
         // Fuera de Play no hay corrutinas ni FSM corriendo: retener a un NPC no significa nada y
-        // StartCinematicSequence lanzaría una corrutina sobre un objeto que no está en juego. Las
-        // herramientas de Editor que resuelven planos (ver SequenceShotCapture) resuelven actores
-        // igual que el juego, y pasan por aquí.
+        // StartCinematicSequence lanzaría una corrutina sobre un objeto que no está en juego.
         if (!Application.isPlaying) return;
         if (IsPlayer)
         {

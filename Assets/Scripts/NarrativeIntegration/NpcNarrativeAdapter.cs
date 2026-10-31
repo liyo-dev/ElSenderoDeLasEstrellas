@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.NPC;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ using UnityEngine;
 /// su icono de «tiene algo para ti» (<see cref="NarrativeActor"/>) y su colocación en marcas
 /// (<see cref="SpawnAnchor"/>, con <see cref="SequenceActor"/> para moverlos).
 /// </summary>
-public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAttentionMarkers, INarrativeActorPlacement
+public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAttentionMarkers, INarrativeActorPlacement, INarrativeActorPresence
 {
     // ── INarrativeActorDirectory ─────────────────────────────────────────────────────────────
 
@@ -62,4 +63,63 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         actor.ForzarEnElSuelo();
         return true;
     }
+
+    // ── INarrativeActorPresence ──────────────────────────────────────────────────────────────
+
+    // Más cerca que esto, el jugador vería al actor desaparecer, aparecer o saltar de sitio.
+    const float DistanciaSinTestigos = 25f;
+
+    // Actores retirados por una agenda: se apagan y se guardan aquí para poder devolverlos.
+    readonly Dictionary<string, GameObject> _retirados = new();
+
+    public bool IsPresent(string actorId) => BuscarSinAviso(actorId) != null;
+
+    public bool TrySetPresent(string actorId, bool present)
+    {
+        if (string.IsNullOrEmpty(actorId)) return true;
+        if (!present)
+        {
+            var npc = BuscarSinAviso(actorId);
+            if (npc == null) return true;
+            if (CercaDelJugador(npc.transform.position)) return false;
+            _retirados[actorId] = npc.gameObject;
+            npc.gameObject.SetActive(false);
+            return true;
+        }
+
+        if (!_retirados.TryGetValue(actorId, out var go)) return true;
+        if (go == null) { _retirados.Remove(actorId); return true; }
+        if (CercaDelJugador(go.transform.position)) return false;
+        go.SetActive(true);
+        _retirados.Remove(actorId);
+        return true;
+    }
+
+    public bool TryPlaceUnseen(string actorId, string markId)
+    {
+        var mark = string.IsNullOrWhiteSpace(markId) ? null : SpawnAnchor.FindById(markId);
+        if (mark == null) return true; // Sin marca no hay nada que hacer; no se reintenta.
+        if (CercaDelJugador(mark.transform.position)) return false;
+
+        if (_retirados.TryGetValue(actorId, out var go) && go != null)
+        {
+            go.SetActive(true);
+            _retirados.Remove(actorId);
+        }
+        else
+        {
+            var npc = BuscarSinAviso(actorId);
+            if (npc == null) return true;
+            if (CercaDelJugador(npc.transform.position)) return false;
+        }
+        return TryPlace(actorId, markId, false, true);
+    }
+
+    static NPCBehaviourManagerV2 BuscarSinAviso(string actorId) =>
+        !string.IsNullOrEmpty(actorId) && NPCRegistry.HasInstance && NPCRegistry.Instance.TryGetNPCByID(actorId, out var npc) && npc.isActiveAndEnabled
+            ? npc : null;
+
+    static bool CercaDelJugador(Vector3 posicion) =>
+        PlayerService.TryGetPlayer(out GameObject jugador) && jugador != null
+        && (jugador.transform.position - posicion).sqrMagnitude < DistanciaSinTestigos * DistanciaSinTestigos;
 }

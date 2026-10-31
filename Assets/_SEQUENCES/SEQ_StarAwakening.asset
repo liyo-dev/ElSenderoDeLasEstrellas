@@ -13,13 +13,11 @@ MonoBehaviour:
   m_Name: SEQ_StarAwakening
   m_EditorClassIdentifier: 
   displayName: El Despertar de la Estrella
-  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo a esconderse gritandole que se aparte, y Will se queda solo: primer plano de su cara, la camara retrocede hasta verle entero y se planta en pose de combate. El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta, devuelve el golpe; si falla, la bola le alcanza y es Game Over. Ningun plano esta colocado a mano.'
+  summary: Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo a esconderse gritandole que se aparte, y Will se queda solo y se planta en pose de combate. El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta, devuelve el golpe; si falla, la bola le alcanza y es Game Over. Las cuatro partes son guiones horneados.
   signalIn: AWAKEN_START
   signalOut: AWAKEN_DONE
   musicId: AWAKEN
   presentacionDeTexto: 1
-  protagonistas: []
-  openingShotName: 
   openingShot:
     type: 3
     subjectId: NPC_Eldran
@@ -39,28 +37,21 @@ MonoBehaviour:
     skipIfFlag: 
     beats:
     - rid: 5630202252946833408
-  - name: 5 - Gameplay, el boton
+  - name: 5 - El boton (guion)
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 8000000000000000050
-    - rid: 8000000000000000037
-    - rid: 8000000000000000051
+    - rid: 5630202816662077721
   - name: 6 - El contraataque (guion)
     onlyIfFlag: panicSuperado
     skipIfFlag: 
     beats:
     - rid: 5630202252946833409
-  - name: 8 - Si Will no reacciona a tiempo
+  - name: 8 - Si Will no reacciona a tiempo (guion)
     onlyIfFlag: 
     skipIfFlag: panicSuperado
     beats:
-    - rid: 7428272587110613230
-    - rid: 7428272587110613231
-    - rid: 7428272587110613232
-    - rid: 7428272587110613233
-    - rid: 7428272587110613234
-    - rid: 7428272587110613235
+    - rid: 5630202816662077722
   references:
     version: 2
     RefIds:
@@ -76,86 +67,15 @@ MonoBehaviour:
         note: 'Guion: Despertar_2_Contraataque'
         guion: {fileID: 11400000, guid: 933a2fb998ca5104abbe1f4ffafc351f, type: 2}
         empezarEn: 0
-    - rid: 7428272587110613230
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+    - rid: 5630202816662077721
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Se ve venir la bola hasta Will. Sigue a los dos hasta el impacto.
-        shotName: 
-        framing:
-          type: 0
-          subjectId: Player
-          secondaryId: Proyectil
-          heightBias: 0
-          distanceScale: 1
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-          encara: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        arrancaLanzado: 0
-        entrarDesdeArriba: 0
-        live: 1
-    - rid: 7428272587110613231
-      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+        note: 'Guion: Despertar_3_ElBoton'
+        guion: {fileID: 11400000, guid: 2dc9ae43c81f950409459cbe0fae5d82, type: 2}
+        empezarEn: 0
+    - rid: 5630202816662077722
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Fuera la camara lenta: la bola llega ya.'
-        timeScale: 1
-        rampDuration: 0.4
-    - rid: 7428272587110613232
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: La bola alcanza a Will y le explota encima.
-        routine: ImpactoEnWill
-        waitForEnd: 1
-    - rid: 7428272587110613233
-      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: El golpe.
-        intensity: 0.5
-        duration: 0.5
-        waitForEnd: 0
-    - rid: 7428272587110613234
-      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        color: {r: 1, g: 0.6, b: 0.2, a: 1}
-        duration: 0.25
-    - rid: 7428272587110613235
-      type: {class: DerrotaBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Will cae: Game Over y se recarga la partida.'
-    - rid: 8000000000000000037
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Y vuelve la amenaza, ya con el plano general establecido: primero se ve donde estamos, y entonces el peligro se reanuda y toca reaccionar.'
-        routine: ReanudarProyectil
-        waitForEnd: 1
-    - rid: 8000000000000000050
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Se abre a general para el gameplay. Con el proyectil de segundo sujeto: el general lo calcula el solver a partir de la separacion entre los dos, asi que la amenaza NO se sale de cuadro (era el fallo: la bola desaparecia al cambiar de plano y el jugador perdia de vista lo que le viene encima).'
-        shotName: 
-        framing:
-          type: 0
-          subjectId: Player
-          secondaryId: Proyectil
-          heightBias: 0.35
-          distanceScale: 1.1
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-          encara: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        arrancaLanzado: 0
-        entrarDesdeArriba: 0
-        live: 0
-    - rid: 8000000000000000051
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'El panic input. Sin frase de Eldran: no sabe que Will tiene magia, y el icono del boton ya lo dice todo.'
-        routine: PanicInput
-        waitForEnd: 1
+        note: 'Guion: Despertar_4_SinReaccion'
+        guion: {fileID: 11400000, guid: 7fe7d22a2d2e1d743a5bc57b52fcb193, type: 2}
+        empezarEn: 0

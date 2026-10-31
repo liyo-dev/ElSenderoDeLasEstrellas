@@ -1,0 +1,247 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap1_EldranCaja_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap1_EldranCaja
+  duracion: 6.3795223
+  presentacion: 0
+  huella: "2026-10-30 17:47 \xB7 231e0b25b93bbe3c2596903ec4c7e4d5"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 13.2, y: 26.281815, z: -135.6}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    cabezas:
+    - t: 0.10000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    animacion: []
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Eldran
+    alias: eldran
+    colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
+    claveDelNombre: Eldran
+    posiciones:
+    - t: 0
+      p: {x: 7, y: 26.281815, z: -137}
+    - t: 2.0114286
+      p: {x: 7, y: 26.281815, z: -137}
+    - t: 2.2875962
+      p: {x: 7.287097, y: 26.281815, z: -136.93549}
+    - t: 2.5024226
+      p: {x: 7.5741935, y: 26.281815, z: -136.87097}
+    - t: 2.7886424
+      p: {x: 8.004839, y: 26.281815, z: -136.7742}
+    - t: 3.0734084
+      p: {x: 8.435484, y: 26.281815, z: -136.67741}
+    - t: 3.3581722
+      p: {x: 8.866129, y: 26.281815, z: -136.58064}
+    - t: 3.642936
+      p: {x: 9.296774, y: 26.281815, z: -136.48387}
+    - t: 3.9276998
+      p: {x: 9.727419, y: 26.281815, z: -136.3871}
+    - t: 4.212464
+      p: {x: 10.158064, y: 26.281815, z: -136.29033}
+    - t: 4.49723
+      p: {x: 10.58871, y: 26.281815, z: -136.19354}
+    - t: 4.79151
+      p: {x: 11.019355, y: 26.281815, z: -136.09677}
+    - t: 5.028445
+      p: {x: 11.306451, y: 26.281815, z: -136.03226}
+    - t: 5.179522
+      p: {x: 11.45, y: 26.281815, z: -136}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 5.179522
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 0.08
+      tipo: 2
+      estado: Cheer01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.0614285
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: alegre
+      dura: 2.4114287
+    visible: []
+    deslizando: []
+  - id: NPC_Tomasa
+    alias: tomasa
+    colorDelNombre: {r: 0.9098039, g: 0.7607843, b: 0.47843137, a: 1}
+    claveDelNombre: Tomasa
+    posiciones:
+    - t: 0
+      p: {x: 16.69, y: 26.281815, z: -136.84}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 0.27
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 2.0114286
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 0.22000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0
+    t1: 2.0114286
+    actor: NPC_Eldran
+    clave: DLG_ELDRAN_CAJA_LLAMADA
+    gesto: Cheer01
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 5.179522
+    tipo: 0
+    descripcion: general de eldran y will
+    posiciones:
+    - t: 0
+      p: {x: -2.6114836, y: 34.13601, z: -132.34673}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.85419536
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 5.179522
+    t1: 6.3795223
+    tipo: 5
+    descripcion: 'dos: eldran y will'
+    posiciones:
+    - t: 5.179522
+      p: {x: 10.059403, y: 27.172022, z: -134.37741}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8461868
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 5.179522
+    beat:
+      rid: 5630202816662077803
+    linea: 46
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: acerca
+    t: 2.0114286
+  - nombre: charla
+    t: 5.179522
+  puntos:
+  - nombre: p_will
+    posicion: {x: 13.2, y: 26.281815, z: -135.6}
+  - nombre: p_tomasa
+    posicion: {x: 16.69, y: 26.281815, z: -136.84}
+  - nombre: p_eldran
+    posicion: {x: 7, y: 26.281815, z: -137}
+  - nombre: p_llega
+    posicion: {x: 11.45, y: 26.281815, z: -136}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202816662077803
+      type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        dialogue: {fileID: 11400000, guid: e95f2e8ac600c88479cb370df86865e2, type: 2}
+        actorId: NPC_Eldran
+        endDialogueCameraImmediately: 1
+        conservarCamaraDeLaSecuencia: 1
+        reactions:
+        - actorId: Player
+          gestures:
+          - 
+          - HeadNod01
+          emotions: 
+        detenerEscena: 1

@@ -1,0 +1,41 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  EL DESPERTAR DE LA ESTRELLA · 4. SIN REACCIÓN  (INC-867, fase 6)
+#  Solo si el jugador no pulsa a tiempo (fase sin la marca «panicSuperado»). Fuera la cámara
+#  lenta, la bola llega a Will y le explota encima: Game Over y se recarga la partida. La escena
+#  se detiene hasta que la bola le alcanza, que depende de dónde estuviera al fallar.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Despertar_4_SinReaccion
+ESCENA MainWorld
+ZONA Despertar 25.8 -82.6 40
+SECUENCIA Assets/_SEQUENCES/SEQ_StarAwakening.asset
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=Eldran color=9AD0FF prefab=Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
+
+PUNTOS
+p_will       25.3 -79.4
+bola_salida  30.5 -61.0 30.5
+mira_bola    27.6 -70.0 28.6
+escondite    21.3 -85.7
+# Delante de Will, a un lado del camino de la bola: se le ve la cara y la bola pasa junto a cámara.
+cam_norte    28.8 -74.8
+
+HILO
+@inicio
+will en p_will mirando bola_salida
+& eldran en escondite mirando will
+& will cara miedo
+& plano medio will desde=cam_norte altura=1.5 lente=30
+& lento 1 0.4
++0.1 efecto ModuleBeat routine=ImpactoEnWill detenerEscena=true dura=0.1
+
+# El golpe.
+@golpe
+sacudida 0.5 0.5
+& destello FF9933FF 0.25
+espera 0.3
+efecto DerrotaBeat
+espera 1.0

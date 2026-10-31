@@ -53,12 +53,8 @@ public class SequencePlayer : CinematicSequencerBase
 
     private SequenceContext _context;
 
-    // Cámara del juego, cacheada: los planos calculados en modo 'live' consultan el aspecto y
-    // aplican una pose cada frame, y Camera.main hace una búsqueda por tag cada vez (CLAUDE.md § 2).
+    // Cámara del juego, cacheada: Camera.main hace una búsqueda por tag cada vez (CLAUDE.md § 2).
     private Camera _gameCamera;
-
-    // Seguimiento de un plano que se recalcula cada frame (ShotBeat con 'live').
-    private Coroutine _shotTracking;
 
     // Corrutinas de módulos lanzadas "de fondo" (ModuleBeat sin esperar). Se guardan para poder
     // pararlas al cerrar: una corrutina de mecánica que sobreviva a la secuencia sigue spawneando
@@ -102,54 +98,7 @@ public class SequencePlayer : CinematicSequencerBase
         }
     }
 
-    /// Relación de aspecto de la pantalla. La necesita ShotComposer para saber cuánto cabe a lo
-    /// ancho: un two-shot bien encuadrado en 16:9 se sale de cuadro en 4:3.
-    public float CameraAspect
-    {
-        get
-        {
-            var cam = CachedCamera;
-            return cam != null && cam.aspect > 0.1f ? cam.aspect : 16f / 9f;
-        }
-    }
-
-    /// El plano que está en pantalla ahora mismo, para poder ajustarlo mientras se ve. Lo pone
-    /// cada ShotBeat al aplicarse, y lo lee el panel de ajuste del Inspector.
-    ///
-    /// Se guarda el ShotFraming del asset, no una copia: así mover un deslizador en el Inspector
-    /// cambia el plano de verdad, y el valor se queda guardado en el asset al salir del Play —
-    /// que es lo que hace que afinar un plano deje de ser un ciclo de recompilar.
-    public ShotFraming CurrentFraming { get; private set; }
-
-    /// Nombre legible del plano actual, para el panel de ajuste.
-    public string CurrentShotLabel { get; private set; }
-
-    /// Lo llama ShotBeat al aplicar un plano calculado.
-    public void NotifyCurrentShot(ShotFraming framing, string label)
-    {
-        CurrentFraming = framing;
-        CurrentShotLabel = label;
-    }
-
-    /// Vuelve a aplicar el plano actual. Lo usa el panel de ajuste al mover un deslizador, para
-    /// que el cambio se vea sin esperar al siguiente corte.
-    public void RefreshCurrentShot()
-    {
-        if (CurrentFraming == null || _context == null) return;
-        var driver = ActiveCamera;
-        if (driver == null) return;
-
-        if (ShotComposer.TrySolve(_context, CurrentFraming, CameraAspect, out ShotSolution s, isCut: false))
-            driver.SetPose(s.position, s.rotation, s.fieldOfView);
-    }
-
-    /// ¿Está puesto el modo de ajuste que refresca todos los planos cada frame? Ver
-    /// SequenceStage.LivePreview.
-    public bool LivePreviewEnabled => _stage != null && _stage.LivePreview;
-
-    /// La secuencia que reproduce este player y el escenario con el que la resuelve. Son de solo
-    /// lectura y existen para las herramientas de Editor (ver SequenceShotCapture), que necesitan
-    /// recorrer los beats y resolver los planos sin entrar en Play.
+    /// La secuencia que reproduce este player. De solo lectura, para las herramientas de Editor.
     public SequenceDefinition Definition => _definition;
 
     /// Monta en tiempo de ejecución un SequencePlayer para 'definicion' con los mismos ajustes que
@@ -195,131 +144,6 @@ public class SequencePlayer : CinematicSequencerBase
         return sp;
     }
     public SequenceStage Stage => _stage;
-
-    /// Empieza a recalcular un plano cada frame, para seguir a alguien que se mueve. Lo llama
-    /// ShotBeat cuando tiene marcado 'live'.
-    public void StartShotTracking(ShotFraming framing)
-    {
-        StopShotTracking();
-        if (framing == null || _context == null) return;
-        _shotTracking = StartCoroutine(Co_TrackShot(framing));
-    }
-
-    /// Deja de seguir. Lo llama cualquier beat de cámara nuevo y también el cierre de la secuencia.
-    public void StopShotTracking()
-    {
-        if (_shotTracking == null) return;
-        StopCoroutine(_shotTracking);
-        _shotTracking = null;
-    }
-
-    /// Segundos que tarda la cámara de un plano vivo en alcanzar la pose que le toca. Lo bastante
-    /// corto para no perder a alguien que corre; lo bastante largo para que un cambio de ángulo
-    /// sea un movimiento y no un salto.
-    private const float SuavizadoDelPlanoVivo = 0.35f;
-
-    /// Rapidez del giro de la cámara en un plano vivo (1/s). Más alto que la posición: lo que no
-    /// puede pasar es que el sujeto se salga del cuadro mientras la cámara se recoloca.
-    private const float GiroDelPlanoVivo = 9f;
-
-    /// Metros de diferencia a partir de los cuales una pose nueva NO es el mismo plano refrescado,
-    /// sino otro sitio: el buscador ha rodeado un obstáculo o se ha ido al lado contrario.
-    private const float SaltoDelPlanoVivo = 2.5f;
-
-    /// Segundos que tiene que MANTENERSE esa pose nueva para aceptarla. Menos de esto y es un
-    /// parpadeo —una esquina que entra y sale del rayo de visión— y se ignora: «los planos aéreos
-    /// hacen en momentos concretos cambios rápidos que parecen fallos» (23 sep).
-    private const float AguantarAntesDeSaltar = 0.6f;
-
-    private IEnumerator Co_TrackShot(ShotFraming framing)
-    {
-        var driver = ActiveCamera;
-        if (driver == null) yield break;
-
-        int fallosSeguidos = 0;
-
-        // (21 sep) El plano vivo se SUAVIZA. Antes se aplicaba la pose calculada tal cual cada
-        // fotograma, y cuando el buscador cambiaba de ángulo porque una casa se metía en medio
-        // (en un camino entre casas pasa constantemente), la cámara saltaba de un sitio a otro de
-        // un fotograma al siguiente: nueve saltos seguidos en la vuelta al pueblo tras el trueno,
-        // «la cámara se vuelve loca». Ahora la cámara VA hacia la pose que toca en vez de
-        // teletransportarse a ella: un cambio de ángulo se ve como un movimiento, no como un tic.
-        Vector3 velocidad = Vector3.zero;
-
-        // Histéresis (23 sep): la pose que se persigue solo cambia de sitio cuando el cambio se
-        // mantiene. Si no, un obstáculo que entra y sale del rayo de visión hace ir y venir a la
-        // cámara varias veces por segundo, y eso se lee como un fallo, no como un plano.
-        bool hayObjetivo = false;
-        Vector3 objetivoPos = Vector3.zero;
-        Quaternion objetivoRot = Quaternion.identity;
-        float objetivoFov = 0f;
-        float discrepando = 0f;
-
-        while (true)
-        {
-            // El driver puede desaparecer si su escena se descarga a mitad de secuencia.
-            if (driver == null) yield break;
-
-            // SetPose en vez de Cut: aplicar la pose sin cancelar tweens ni seguimientos, porque
-            // el que está al mando de la cámara en este momento es este bucle.
-            // isCut: false — esto es el mismo plano refrescándose, no un corte nuevo.
-            if (ShotComposer.TrySolve(_context, framing, CameraAspect, out ShotSolution s, isCut: false))
-            {
-                float dt = Time.unscaledDeltaTime;
-
-                if (!hayObjetivo)
-                {
-                    objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
-                    hayObjetivo = true;
-                    discrepando = 0f;
-                }
-                else if (Vector3.Distance(s.position, objetivoPos) > SaltoDelPlanoVivo)
-                {
-                    // Sitio distinto: solo se acepta si se mantiene. Un parpadeo no mueve la cámara.
-                    discrepando += dt;
-                    if (discrepando >= AguantarAntesDeSaltar)
-                    {
-                        objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
-                        discrepando = 0f;
-                    }
-                }
-                else
-                {
-                    // El mismo sitio, corregido: se sigue sin más.
-                    objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
-                    discrepando = 0f;
-                }
-
-                Vector3 pos = Vector3.SmoothDamp(driver.CurrentPosition, objetivoPos, ref velocidad,
-                    SuavizadoDelPlanoVivo, Mathf.Infinity, dt);
-                Quaternion rot = Quaternion.Slerp(driver.CurrentRotation, objetivoRot,
-                    1f - Mathf.Exp(-GiroDelPlanoVivo * dt));
-                Vector3 sobreSuelo = ShotComposer.LiftOffGround(pos);
-                if (sobreSuelo != pos)
-                {
-                    pos = sobreSuelo;
-                    velocidad.y = 0f;
-                    Vector3 haciaSujeto = s.lookAt - pos;
-                    if (haciaSujeto.sqrMagnitude > 0.001f)
-                        rot = Quaternion.LookRotation(haciaSujeto, Vector3.up);
-                }
-                driver.SetPose(pos, rot, objetivoFov);
-                fallosSeguidos = 0;
-            }
-            else if (++fallosSeguidos >= 10)
-            {
-                // El sujeto ha dejado de existir (un proyectil que ya explotó, un NPC despawneado).
-                // Insistir solo sirve para repetir el mismo aviso sesenta veces por segundo.
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[SequencePlayer:{name}] Se deja de seguir el plano " +
-                    $"'{framing.Describe()}': su sujeto ya no existe. La cámara se queda donde está.");
-#endif
-                yield break;
-            }
-
-            yield return null;
-        }
-    }
 
     // Limpiezas que un beat deja pedidas y que hay que ejecutar sí o sí al cerrar. Existe porque
     // el try/finally de un beat NO es de fiar cuando la secuencia se salta: StopCoroutine sobre la
@@ -414,14 +238,6 @@ public class SequencePlayer : CinematicSequencerBase
         if (AudioService.Instance != null) AudioService.Instance.StopMusic(Mathf.Max(0f, fadeOut));
     }
 
-    /// Corta a un plano por su nombre en el SequenceStage. Usado por CutBeat.
-    public void CutTo(string shotName)
-    {
-        var shot = _stage != null ? _stage.GetShot(shotName) : null;
-        if (shot == null) return; // el aviso ya lo ha dado el stage
-        ActiveCamera?.Cut(shot);
-    }
-
     /// Levanta una señal narrativa a mitad de secuencia. Usado por SignalBeat.
     public void Raise(string signal) => RaiseSignal(signal);
 
@@ -456,15 +272,6 @@ public class SequencePlayer : CinematicSequencerBase
         if (_cinematicCamera == null)
             Debug.LogWarning($"[SequencePlayer:{name}] Sin CinematicCameraDriver (ni en el Inspector " +
                 "ni en el SequenceStage) — ningún corte de cámara de esta secuencia hará nada.");
-
-        // El driver usa StartCoroutine internamente (MoveTo, StartFollowing): falla en silencio si
-        // su GO está desactivado — los cortes secos funcionan, pero los planos con movimiento no.
-        else if (!_cinematicCamera.gameObject.activeInHierarchy)
-            Debug.LogError($"[SequencePlayer:{name}] El CinematicCameraDriver vive en " +
-                $"'{_cinematicCamera.gameObject.name}', que está APAGADO en la jerarquía. Los cortes " +
-                "secos van a funcionar, pero todo plano con movimiento o con seguimiento va a fallar " +
-                "en silencio. Mueve el componente a este GameObject o enciende el suyo.",
-                _cinematicCamera.gameObject);
 #endif
 
         base.Awake();
@@ -531,7 +338,7 @@ public class SequencePlayer : CinematicSequencerBase
         }
 
         // Objetos del decorado que esta escena quiere poder encuadrar (el horno, la carreta, el
-        // portón). Se registran aquí, antes del primer beat, para que un ShotBeat pueda nombrarlos
+        // portón). Se registran aquí, antes del primer beat, para que el guion pueda encuadrarlos
         // igual que a un personaje. Ver SequenceStage.Props.
         if (_stage != null && _stage.Props != null)
         {
@@ -549,9 +356,6 @@ public class SequencePlayer : CinematicSequencerBase
         // Co_BeginCinematicWithTransition) y así no se le cuelgan lluvia ni niebla.
         if (!OcurreEnInterior) CinematicTimeOfDay.MostrarExterior(CachedCamera);
 
-        // La caché de colliders de ShotComposer es estática: se vacía al empezar cada secuencia.
-        ShotComposer.ClearColliderCache();
-
         // EndSequenceBeat escribe estos campos para cerrar por una rama concreta. Si la secuencia
         // se relanza (p.ej. retry tras fallo de panic input), deben partir de cero o la segunda
         // ejecución salta todos los beats y levanta la señal de rama errónea de inmediato.
@@ -559,8 +363,6 @@ public class SequencePlayer : CinematicSequencerBase
         _endSignalOverride = null;
         _endScreenOverride = SequenceEndScreen.ComoElAsset;
         _signalRaised = false;
-        CurrentFraming = null;
-        CurrentShotLabel = null;
 
         try
         {
@@ -596,13 +398,9 @@ public class SequencePlayer : CinematicSequencerBase
         // portal picaría la música de zona encima de la de la secuencia.
         // El plano de apertura se aplica también en el cut point para que la escena aparezca ya
         // encuadrada.
-        Transform opening = _stage != null && !string.IsNullOrWhiteSpace(_definition.openingShotName)
-            ? _stage.GetShot(_definition.openingShotName)
-            : null;
-
-        yield return Co_BeginCinematicWithTransition(opening, () =>
+        yield return Co_BeginCinematicWithTransition(() =>
         {
-            if (opening == null) ApplyOpeningShotIfDescribed();
+            ApplyOpeningShotIfDescribed();
 
             PrepararBeats();
 
@@ -675,19 +473,7 @@ public class SequencePlayer : CinematicSequencerBase
                 // plano, o el primer beat que tarde algo. Antes se destapaba al acabar la transición
                 // de entrada, con el Mago Oscuro todavía en mitad de la plaza y la carreta sin volcar.
                 if (Telon.Retiene(ClaveTelon) && !EsPreparacion(beat))
-                {
-                    if (beat.EsPlano)
-                    {
-                        // Se deja aplicar el corte un fotograma y entonces se destapa: la pantalla
-                        // se abre ya encuadrada. Si el plano tiene movimiento, se ve moverse.
-                        var corte = StartCoroutine(beat.Run(_context));
-                        yield return null;
-                        Telon.Soltar(ClaveTelon);
-                        yield return corte;
-                        continue;
-                    }
                     Telon.Soltar(ClaveTelon);
-                }
 
                 yield return beat.Run(_context);
             }
@@ -702,9 +488,7 @@ public class SequencePlayer : CinematicSequencerBase
             }
         }
 
-        // La cámara deja de seguir a nadie, y la mecánica lanzada de fondo se para: a partir de
-        // aquí manda otra vez el juego.
-        StopShotTracking();
+        // La mecánica lanzada de fondo se para: a partir de aquí manda otra vez el juego.
         StopBackgroundRoutines();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         InformeDeRodaje.Terminar(this);
@@ -764,28 +548,15 @@ public class SequencePlayer : CinematicSequencerBase
         ReleaseAllActors();
     }
 
-    /// Resuelve y aplica el plano de apertura descrito en el asset. Se llama desde el cut point de
-    /// la transición de entrada, así que el corte no se ve.
+    /// Coloca la cámara en su plano de apertura. Se llama desde el cut point de la transición de
+    /// entrada, así que el corte no se ve. Lo hace el primer beat si sabe (el guion horneado la
+    /// compone con su primer plano): lo declara el propio beat, el reproductor no reconoce tipos.
     private void ApplyOpeningShotIfDescribed()
     {
-        var driver = ActiveCamera;
-
-        // El primer beat puede saber colocarse la cámara de apertura él mismo (el guion horneado
-        // la compone con su primer plano). Lo declara el propio beat, para que el reproductor no
-        // tenga que reconocer tipos.
-        if (_definition != null && _definition.phases != null && _definition.phases.Count > 0
-            && _definition.phases[0].beats != null && _definition.phases[0].beats.Count > 0)
-        {
-            var primero = _definition.phases[0].beats[0];
-            if (primero != null && primero.ColocarCamaraDeApertura(this)) return;
-        }
-
-        var framing = _definition != null ? _definition.openingShot : null;
-        if (framing == null || string.IsNullOrWhiteSpace(framing.subjectId)) return;
-        if (driver == null) return;
-
-        if (ShotComposer.TrySolve(_context, framing, CameraAspect, out ShotSolution s))
-            driver.Cut(s.position, s.rotation, s.fieldOfView);
+        if (_definition == null || _definition.phases == null || _definition.phases.Count == 0) return;
+        var beats = _definition.phases[0].beats;
+        if (beats == null || beats.Count == 0) return;
+        beats[0]?.ColocarCamaraDeApertura(this);
     }
 
     private void StopBackgroundRoutines()
@@ -829,7 +600,6 @@ public class SequencePlayer : CinematicSequencerBase
         // Todo lo de aquí es idempotente y se llama desde los tres caminos de cierre (final
         // normal, finally de seguridad y skip), porque ninguno de los tres puede dar por hecho que
         // los otros hayan pasado.
-        StopShotTracking();
         StopBackgroundRoutines();
         RunScreenCleanups();
         RunPendingCleanups();

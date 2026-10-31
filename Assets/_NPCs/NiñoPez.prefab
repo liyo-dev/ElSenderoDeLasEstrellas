@@ -2356,6 +2356,7 @@ GameObject:
   - component: {fileID: 1499675811760925345}
   - component: {fileID: 3117070836986322599}
   - component: {fileID: 3257884612277224425}
+  - component: {fileID: 8489829348987399112}
   m_Layer: 8
   m_Name: "Ni\xF1oPez"
   m_TagString: Untagged
@@ -2373,7 +2374,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.72, y: 0.72, z: 0.72}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2581053519111126854}
@@ -2663,6 +2664,18 @@ MonoBehaviour:
   ojosYaCerrados:
   - Eye07
   - Eye09
+--- !u!114 &8489829348987399112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5537166060776438587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c06cc5f78e36c49bb2ac8ec2d93544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TallaDeNino
 --- !u!1 &5617114899492603211
 GameObject:
   m_ObjectHideFlags: 0
@@ -4266,7 +4279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
   controlador: {fileID: 3257884612277224425}
-  mallaDelPelo: {fileID: 3905018669747230313}
+  mallaDeLasCejas: {fileID: 3905018669747230313}
   ojosDeReferencia: {fileID: 1185605341102479543}
   intensidad: 1
   velocidad: 14

@@ -281,7 +281,7 @@ public sealed class CutInUI : MonoBehaviour
     static float ElegirAngulo(Franja f)
     {
         Vector3 objetivo = f.actor.Transform.position + Vector3.up * f.ojos;
-        Vector3 frente = ShotComposer.FrenteFiable(f.actor);
+        Vector3 frente = f.actor.FrenteFiable;
         foreach (float a in new[] { 0f, 25f, -25f, 50f, -50f, 75f, -75f })
         {
             Vector3 cam = objetivo + Quaternion.AngleAxis(a, Vector3.up) * frente * f.distancia;
@@ -317,7 +317,7 @@ public sealed class CutInUI : MonoBehaviour
     static void SeguirActor(Franja f)
     {
         Vector3 objetivo = f.actor.Transform.position + Vector3.up * f.ojos;
-        Vector3 frente = Quaternion.AngleAxis(f.angulo, Vector3.up) * ShotComposer.FrenteFiable(f.actor);
+        Vector3 frente = Quaternion.AngleAxis(f.angulo, Vector3.up) * f.actor.FrenteFiable;
         f.camara.transform.position = objetivo + frente * f.distancia;
         f.camara.transform.rotation = Quaternion.LookRotation(-frente, Vector3.up);
     }

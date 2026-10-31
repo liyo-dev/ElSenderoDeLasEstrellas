@@ -1,0 +1,105 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='2048' viewBox='0 0 2048 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='../../escenario/planta_detalle.png' xlink:href='../../escenario/planta_detalle.png' x='0' y='0' width='2048' height='2048' opacity='0.85'/>
+<line x1='0' y1='2048' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-16</text>
+<line x1='93.091' y1='2048' x2='93.091' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='186.182' y1='2048' x2='186.182' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='188.182' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-12</text>
+<line x1='279.273' y1='2048' x2='279.273' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='372.364' y1='2048' x2='372.364' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='374.364' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-8</text>
+<line x1='465.455' y1='2048' x2='465.455' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='558.546' y1='2048' x2='558.546' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='560.546' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-4</text>
+<line x1='651.636' y1='2048' x2='651.636' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='744.727' y1='2048' x2='744.727' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='746.727' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<line x1='837.818' y1='2048' x2='837.818' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='930.909' y1='2048' x2='930.909' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='932.909' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>4</text>
+<line x1='1024' y1='2048' x2='1024' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='1117.091' y1='2048' x2='1117.091' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='1119.091' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>8</text>
+<line x1='1210.182' y1='2048' x2='1210.182' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='1303.273' y1='2048' x2='1303.273' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='1305.273' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>12</text>
+<line x1='1396.364' y1='2048' x2='1396.364' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='1489.455' y1='2048' x2='1489.455' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='1491.455' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>16</text>
+<line x1='1582.545' y1='2048' x2='1582.545' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='1675.636' y1='2048' x2='1675.636' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='1677.636' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>20</text>
+<line x1='1768.727' y1='2048' x2='1768.727' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='1861.818' y1='2048' x2='1861.818' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='1863.818' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>24</text>
+<line x1='1954.909' y1='2048' x2='1954.909' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='2048' y1='2048' x2='2048' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2050' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>28</text>
+<line x1='0' y1='2048' x2='2048' y2='2048' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1954.909' x2='2048' y2='1954.909' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1952.909' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-156</text>
+<line x1='0' y1='1861.818' x2='2048' y2='1861.818' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1768.727' x2='2048' y2='1768.727' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1766.727' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-152</text>
+<line x1='0' y1='1675.636' x2='2048' y2='1675.636' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1582.545' x2='2048' y2='1582.545' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1580.545' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-148</text>
+<line x1='0' y1='1489.455' x2='2048' y2='1489.455' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1396.364' x2='2048' y2='1396.364' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1394.364' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-144</text>
+<line x1='0' y1='1303.273' x2='2048' y2='1303.273' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1210.182' x2='2048' y2='1210.182' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1208.182' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-140</text>
+<line x1='0' y1='1117.091' x2='2048' y2='1117.091' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='1024' x2='2048' y2='1024' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='1022' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-136</text>
+<line x1='0' y1='930.909' x2='2048' y2='930.909' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='837.818' x2='2048' y2='837.818' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='835.818' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-132</text>
+<line x1='0' y1='744.727' x2='2048' y2='744.727' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='651.636' x2='2048' y2='651.636' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='649.636' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-128</text>
+<line x1='0' y1='558.546' x2='2048' y2='558.546' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='465.455' x2='2048' y2='465.455' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='463.455' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-124</text>
+<line x1='0' y1='372.364' x2='2048' y2='372.364' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='279.273' x2='2048' y2='279.273' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='277.273' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-120</text>
+<line x1='0' y1='186.182' x2='2048' y2='186.182' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<line x1='0' y1='93.091' x2='2048' y2='93.091' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='91.091' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-116</text>
+<line x1='0' y1='0' x2='2048' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
+<polyline points='772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 772.655,1191.564 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='772.655' cy='1191.564' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='772.655' cy='1191.564' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='772.655' cy='1191.564' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
+<line x1='772.655' y1='1191.564' x2='762.695' y2='1204.086' stroke='#ffd27a' stroke-width='2'/>
+<text x='780.655' y='1183.564' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
+<circle cx='772.655' cy='1191.564' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
+<polyline points='655.825,1338.182 662.414,1335.147 669.491,1331.886 677.906,1328.01 687.344,1323.663 697.014,1319.209 706.349,1314.057 714.622,1307.458 720.715,1298.896 724.042,1288.848 725.379,1278.461 725.632,1268.513 725.846,1260.1 726.037,1252.597 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='681.583' cy='1326.317' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='726.103' cy='1249.969' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='656.155' cy='1338.03' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
+<line x1='656.155' y1='1338.03' x2='670.687' y2='1331.335' stroke='#7ad7ff' stroke-width='2'/>
+<text x='664.155' y='1330.03' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
+<circle cx='726.109' cy='1249.746' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
+<polyline points='698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 698.182,1399.156 ' fill='none' stroke='#ff8fb1' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='698.182' cy='1399.156' r='2.5' fill='#ff8fb1' stroke='#000' stroke-width='1'/>
+<circle cx='698.182' cy='1399.156' r='2.5' fill='#ff8fb1' stroke='#000' stroke-width='1'/>
+<circle cx='698.182' cy='1399.156' r='6' fill='#ff8fb1' stroke='#fff' stroke-width='1'/>
+<line x1='698.182' y1='1399.156' x2='705.929' y2='1385.157' stroke='#ff8fb1' stroke-width='2'/>
+<text x='706.182' y='1391.156' font-size='14' fill='#ff8fb1' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>victoria</text>
+<circle cx='698.182' cy='1399.156' r='4' fill='#000' stroke='#ff8fb1' stroke-width='1'/>
+<polyline points='828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 828.509,1163.636 ' fill='none' stroke='#9dff7a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='828.509' cy='1163.636' r='2.5' fill='#9dff7a' stroke='#000' stroke-width='1'/>
+<circle cx='828.509' cy='1163.636' r='2.5' fill='#9dff7a' stroke='#000' stroke-width='1'/>
+<circle cx='828.509' cy='1163.636' r='6' fill='#9dff7a' stroke='#fff' stroke-width='1'/>
+<line x1='828.509' y1='1163.636' x2='820.762' y2='1177.636' stroke='#9dff7a' stroke-width='2'/>
+<text x='836.509' y='1155.636' font-size='14' fill='#9dff7a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>oliver</text>
+<circle cx='828.509' cy='1163.636' r='4' fill='#000' stroke='#9dff7a' stroke-width='1'/>
+<polygon points='876.743,1341.797 696.954,1342.326 763.187,1202.407' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='876.743' cy='1341.797' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='883.743' y='1345.797' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>8</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@regalo  0:31,3 – 0:35,2</text>
+</svg>

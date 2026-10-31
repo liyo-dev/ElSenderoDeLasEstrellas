@@ -82,10 +82,16 @@ public sealed class StartNpcCombatNode : NarrativeNode
         }
         dmg.SetDestroyOnDeath(false);
 
-        // Asegurar LifecycleHandler
-        if (!manager.GetComponent<NPCCombatLifecycleHandler>())
+        // Asegurar LifecycleHandler. Si el NPC ya fue derrotado antes (una revancha), se levanta
+        // para poder volver a pelear: ForceEnterCombat ignora a un NPC derrotado.
+        var lifecycle = manager.GetComponent<NPCCombatLifecycleHandler>();
+        if (!lifecycle)
         {
             manager.gameObject.AddComponent<NPCCombatLifecycleHandler>();
+        }
+        else if (lifecycle.IsDefeatedAndInactive)
+        {
+            lifecycle.Resurrect();
         }
 
         // Suscribirse si se espera a la derrota

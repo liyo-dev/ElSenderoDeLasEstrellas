@@ -30,6 +30,9 @@ namespace Sendero.Narrative.Editor
         public bool abilitySprint;
         public bool abilityShield;
 
+        /// Estela y Liam en el grupo al empezar la prueba (para cambiar de personaje al mando).
+        public bool grupoCompleto;
+
         public SpellId[] basicSpellIds = new SpellId[MagicCaster.BasicSlotCount];
         public SpellId comboSpellId = SpellId.None;
 
@@ -313,7 +316,7 @@ namespace Sendero.Narrative.Editor
             dst.objetosDelMundo = new List<ObjetoPersistente.Estado>();
             dst.completedInteractiveNarratives = new List<string>();
             dst.seenLorePopupIds = new List<string>();
-            dst.partyMemberIds = new List<string>();
+            dst.partyMemberIds = cfg.grupoCompleto ? new List<string> { "_ESTELA", "_LIAM" } : new List<string>();
             dst.activeCharacterSlot = 1;
             dst.unlockedTeleportPoints = new List<string>();
             dst.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();

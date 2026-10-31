@@ -1,0 +1,645 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Sendero_01_ElConjuro_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Sendero_01_ElConjuro
+  duracion: 33.513542
+  presentacion: 1
+  huella: "2026-10-31 06:48 \xB7 633967a3f1cc0497a5362a7981e94820"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 565, y: 18, z: -512.4}
+    - t: 28.899998
+      p: {x: 565, y: 18, z: -512.4}
+    - t: 29.14844
+      p: {x: 565, y: 17.995789, z: -512.26}
+    - t: 29.349575
+      p: {x: 565, y: 17.995789, z: -512.12}
+    - t: 29.692049
+      p: {x: 565, y: 17.995789, z: -511.84003}
+    - t: 30.021494
+      p: {x: 565, y: 17.995789, z: -511.56}
+    - t: 30.364008
+      p: {x: 565, y: 17.995789, z: -511.28}
+    - t: 30.565102
+      p: {x: 565, y: 17.995789, z: -511.14}
+    - t: 30.813543
+      p: {x: 565, y: 17.995789, z: -511}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 565, y: 18, z: -505}
+      actor: 
+    - t: 30.813543
+      tipo: 1
+      rumbo: 0
+      punto: {x: 565, y: 18, z: -508.6}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 2
+      tipo: 1
+      estado: CastingIdle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 24.899998
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 2
+      emocion: decidido
+      dura: 0
+    - t: 2
+      emocion: decidido
+      dura: 6.9
+    - t: 8.9
+      emocion: decidido
+      dura: 6.9
+    - t: 15.799999
+      emocion: decidido
+      dura: 6.4
+    - t: 22.099998
+      emocion: enfado
+      dura: 3.2
+    - t: 27.499998
+      emocion: sorpresa
+      dura: 0
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2
+    t1: 8.5
+    actor: Player
+    clave: SENDERO_CONJURO_01
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 8.9
+    t1: 15.4
+    actor: Player
+    clave: SENDERO_CONJURO_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 15.799999
+    t1: 21.8
+    actor: Player
+    clave: SENDERO_CONJURO_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 22.099998
+    t1: 24.899998
+    actor: Player
+    clave: SENDERO_CONJURO_04
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  planos:
+  - focos:
+    - t: 0
+      p: {x: 565, y: 20.2, z: -505}
+    t0: 0
+    t1: 2
+    tipo: 0
+    descripcion: general de will
+    posiciones:
+    - t: 0
+      p: {x: 565, y: 22.5, z: -524}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 20.2, z: -505}
+    alturaDelFoco: 2.2
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.8
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 2
+      p: {x: 565, y: 19.2, z: -512.4}
+    t0: 2
+    t1: 8.9
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 2
+      p: {x: 563.4, y: 19.3, z: -509.8}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 19.2, z: -512.4}
+    alturaDelFoco: 1.2
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 8.9
+      p: {x: 565, y: 20.8, z: -505}
+    t0: 8.9
+    t1: 15.799999
+    tipo: 0
+    descripcion: general de will
+    posiciones:
+    - t: 8.9
+      p: {x: 566.6, y: 18.5, z: -514}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 20.8, z: -505}
+    alturaDelFoco: 2.8
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 15.799999
+      p: {x: 565, y: 19.6, z: -508.6}
+    t0: 15.799999
+    t1: 22.099998
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 15.799999
+      p: {x: 558.6, y: 19.7, z: -510.8}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 19.6, z: -508.6}
+    alturaDelFoco: 1.6
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 22.099998
+      p: {x: 565, y: 19.3, z: -512.4}
+    t0: 22.099998
+    t1: 24.899998
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 22.099998
+      p: {x: 563.4, y: 19.3, z: -509.8}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 19.3, z: -512.4}
+    alturaDelFoco: 1.3
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.2
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 24.899998
+      p: {x: 565, y: 19.65, z: -508.6}
+    t0: 24.899998
+    t1: 27.499998
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 24.899998
+      p: {x: 558.6, y: 19.6, z: -510.8}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 19.65, z: -508.6}
+    alturaDelFoco: 1.65
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 27.499998
+      p: {x: 565, y: 19.65, z: -508.6}
+    t0: 27.499998
+    t1: 33.513542
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 27.499998
+      p: {x: 565.4, y: 19.5, z: -516.2}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 565, y: 19.65, z: -508.6}
+    alturaDelFoco: 1.65
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202821400330507
+    linea: 37
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
+    beat:
+      rid: 5630202821400330508
+    linea: 47
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
+    beat:
+      rid: 5630202821400330509
+    linea: 48
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
+    beat:
+      rid: 5630202821400330510
+    linea: 49
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
+    beat:
+      rid: 5630202821400330511
+    linea: 50
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.9
+    beat:
+      rid: 5630202821400330512
+    linea: 56
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.9
+    beat:
+      rid: 5630202821400330513
+    linea: 57
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.9
+    beat:
+      rid: 5630202821400330514
+    linea: 58
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.799999
+    beat:
+      rid: 5630202821400330515
+    linea: 68
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.799999
+    beat:
+      rid: 5630202821400330516
+    linea: 67
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.799999
+    beat:
+      rid: 5630202821400330517
+    linea: 66
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.799999
+    beat:
+      rid: 5630202821400330518
+    linea: 65
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.799999
+    beat:
+      rid: 5630202821400330519
+    linea: 64
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 22.099998
+    beat:
+      rid: 5630202821400330520
+    linea: 74
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 22.099998
+    beat:
+      rid: 5630202821400330521
+    linea: 75
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330522
+    linea: 77
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330523
+    linea: 81
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330524
+    linea: 82
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330525
+    linea: 83
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330526
+    linea: 84
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.899998
+    beat:
+      rid: 5630202821400330527
+    linea: 85
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 27.499998
+    beat:
+      rid: 5630202821400330528
+    linea: 91
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: p_piedra
+    posicion: {x: 565, y: 18, z: -505}
+  - nombre: p_portal
+    posicion: {x: 565, y: 18, z: -508.6}
+  - nombre: p_will
+    posicion: {x: 565, y: 18, z: -512.4}
+  - nombre: p_will_cerca
+    posicion: {x: 565, y: 18, z: -511}
+  - nombre: cam_general
+    posicion: {x: 565, y: 18, z: -524}
+  - nombre: cam_will_frente
+    posicion: {x: 563.4, y: 18, z: -509.8}
+  - nombre: cam_contrapicado
+    posicion: {x: 566.6, y: 18, z: -514}
+  - nombre: cam_hombro
+    posicion: {x: 564, y: 18, z: -514.6}
+  - nombre: cam_lateral
+    posicion: {x: 558.6, y: 18, z: -510.8}
+  - nombre: cam_espalda
+    posicion: {x: 565.4, y: 18, z: -516.2}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202821400330507
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202821400330508
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+        atActorId: 
+        markName: p_will
+        offset: {x: 0, y: 0.05, z: 0}
+        lifetime: 40
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: CIRCULO_CONJURO
+        escala: 1
+    - rid: 5630202821400330509
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologo_MagiaLevitar
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.45
+        tono: 1
+    - rid: 5630202821400330510
+      type: {class: ConjuroEnLasManosBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 3335782661780353895, guid: 96191e74333daf74b9169ccdedf8e314, type: 3}
+        actorId: Player
+        offset: {x: 0, y: 0.4, z: 0.2}
+        duracion: 1.5
+        periodo: 1.2
+        avance: 0.05
+        elevacion: 0.03
+        escalaInicial: 0.3
+        escalaFinal: 0.7
+        vidaEnPool: 40
+        registrarComo: LUZ_MANOS
+        efectoRegistrado: 
+        subirACabeza: 0
+        offsetFinal: {x: 0, y: 2.85, z: 0}
+        tiempoSubida: 1.4
+    - rid: 5630202821400330511
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 4
+        gananciaDb: 3
+    - rid: 5630202821400330512
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4115455537270748339, guid: 6555300494081614fa6b6a823cca9f64, type: 3}
+        atActorId: 
+        markName: p_piedra
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 2.4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 5630202821400330513
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: SFX_Prologo_Trueno_Lejano
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.45
+        tono: 1
+    - rid: 5630202821400330514
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.15
+        duration: 1.4
+        waitForEnd: 0
+    - rid: 5630202821400330515
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.25
+        duration: 1.6
+        waitForEnd: 0
+    - rid: 5630202821400330516
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologo_Carga
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 5630202821400330517
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: SEMILLA_PORTAL
+        escala: 1
+        duracion: 5.5
+        esperar: 0
+    - rid: 5630202821400330518
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: SEMILLA_PORTAL
+        escala: 0.2
+        duracion: 0
+        esperar: 0
+    - rid: 5630202821400330519
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 3335782661780353895, guid: 96191e74333daf74b9169ccdedf8e314, type: 3}
+        atActorId: 
+        markName: p_portal
+        offset: {x: 0, y: 1.65, z: 0}
+        lifetime: 40
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: SEMILLA_PORTAL
+        escala: 1
+    - rid: 5630202821400330520
+      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        color: {r: 1, g: 1, b: 1, a: 0.85}
+        huecoCentral: 0.35
+        fundido: 0.1
+        duracion: 2.8
+        esperar: 0
+    - rid: 5630202821400330521
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: SEMILLA_PORTAL
+        escala: 1.6
+        duracion: 2.6
+        esperar: 0
+    - rid: 5630202821400330522
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202821400330523
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 0.35
+    - rid: 5630202821400330524
+      type: {class: RecogerVfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        ids:
+        - SEMILLA_PORTAL
+        - LUZ_MANOS
+    - rid: 5630202821400330525
+      type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        senal: SENDERO_PORTAL_ABIERTO
+    - rid: 5630202821400330526
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.35
+        duration: 0.9
+        waitForEnd: 0
+    - rid: 5630202821400330527
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologo_HechizoGrande
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 5630202821400330528
+      type: {class: RecogerVfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        ids:
+        - CIRCULO_CONJURO

@@ -8988,6 +8988,7 @@ GameObject:
   - component: {fileID: 4248147246037903535}
   - component: {fileID: 4369455140464452097}
   - component: {fileID: 6671290099410408466}
+  - component: {fileID: 597544270084334343}
   m_Layer: 8
   m_Name: Nina_Prologo
   m_TagString: Untagged
@@ -9005,7 +9006,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.72, y: 0.72, z: 0.72}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6065492019799927496}
@@ -9305,6 +9306,18 @@ MonoBehaviour:
   ojosYaCerrados:
   - Eye07
   - Eye09
+--- !u!114 &597544270084334343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3737266592732030412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c06cc5f78e36c49bb2ac8ec2d93544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TallaDeNino
 --- !u!1 &3851692192945982446
 GameObject:
   m_ObjectHideFlags: 0

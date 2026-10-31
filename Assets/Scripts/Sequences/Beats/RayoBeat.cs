@@ -41,8 +41,6 @@ public class RayoBeat : SequenceBeat
                 var camara = SolYLunaEnElCielo.CamaraActual() ?? ctx.Player?.CachedCamera;
                 if (!alFondoDelPlano || camara == null) yield break;
                 float minimo = 40f;
-                if (ctx.TryGetPreviousShot(out var plano))
-                    minimo = Mathf.Max(minimo, camara.transform.InverseTransformPoint(plano.lookAt).z + 10f);
                 float maximo = Mathf.Min(90f, camara.farClipPlane * 0.85f);
                 if (minimo > maximo)
                 {

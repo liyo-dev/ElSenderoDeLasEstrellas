@@ -440,8 +440,13 @@ public class ModuleBeat : SequenceBeat
              "sigue — para algo que debe correr de fondo durante varias fases.")]
     public bool waitForEnd = true;
 
+    [Tooltip("Dentro de un guion: la escena se detiene hasta que la rutina termina (el reloj del " +
+             "guion no avanza). Para una mecánica de duración variable, como esperar a que algo " +
+             "llegue a su destino.")]
+    public bool detenerEscena = false;
+
     public override string Describe()
-        => $"Mecánica: {routine}" + (waitForEnd ? "" : " (de fondo)");
+        => $"Mecánica: {routine}" + (waitForEnd ? "" : " (de fondo)") + (detenerEscena ? " (detiene la escena)" : "");
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -461,7 +466,21 @@ public class ModuleBeat : SequenceBeat
         var body = module.Run(routine, ctx);
         if (body == null) yield break;
 
-        if (waitForEnd) yield return body;
+        if (detenerEscena)
+        {
+            bool soltado = false;
+            void Soltar()
+            {
+                if (soltado) return;
+                soltado = true;
+                ctx.SoltarReloj();
+            }
+            ctx.RetenerReloj();
+            ctx.Player.RegisterCleanup(Soltar);
+            yield return body;
+            Soltar();
+        }
+        else if (waitForEnd) yield return body;
         else ctx.Player.TrackBackgroundRoutine(ctx.Player.StartCoroutine(body));
     }
 }

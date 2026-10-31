@@ -8,15 +8,14 @@ using EasyTransition;
 using Sendero.Core.Feedback;
 using Sendero.UI;
 
-/// Clase base para todos los orquestadores de cinemáticas del juego.
-/// Centraliza señales narrativas, modo de acción, cámara cinemática, HUD,
-/// gestión de música y utilidades reutilizables.
+/// Ciclo de vida común de una cinemática: escucha su señal de entrada, bloquea al jugador y
+/// esconde el HUD, hace las transiciones de entrada y salida (o recoge el telón), activa la
+/// cámara cinemática, gestiona la música, el salto («mantener para saltar») y el cierre aunque
+/// la secuencia se corte. Su única subclase es <see cref="SequencePlayer"/>; las cinemáticas
+/// nuevas se escriben como <see cref="SequenceDefinition"/> o guion, nunca heredando de aquí.
 ///
-/// Subclases deben:
-///   1. Implementar Co_Sequence() con la lógica específica.
-///   2. Abrir con Co_BeginCinematicWithTransition() y cerrar con Co_EndCinematicWithTransition().
-///   3. Usar PlaySequenceMusic() / RestoreMusic() para el audio.
-///   4. Emitir la señal de salida con RaiseSignalOut() o RaiseSignal(string).
+/// Los estáticos (<see cref="AnySequenceActive"/>, <see cref="RunningSequences"/>,
+/// <see cref="RequestSkipAll"/>) son los que consulta el resto del juego.
 [DisallowMultipleComponent]
 public abstract class CinematicSequencerBase : MonoBehaviour
 {
@@ -381,7 +380,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
-        SpeechBubbleUI.Instance?.Hide();
+        PresentadorDeLinea.EsconderTodo();
         OcultablesDeCinematica.MostrarTodos(this);
         ResolveActionManager()?.PopMode(ActionMode.Cinematic);
         if (_interiorAnchor != null) EnvironmentController.Instance?.EndCinematicOverride();
@@ -404,29 +403,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // ── Transiciones ─────────────────────────────────────────────────────────
 
     /// Cubre la pantalla, llama a BeginCinematic() en el cut point y revela la cinemática.
-    /// additionalOnCut: acciones extra que deben ocurrir junto con BeginCinematic (mismo frame, pantalla cubierta).
+    /// additionalOnCut: acciones extra en el mismo fotograma, con la pantalla cubierta.
     protected IEnumerator Co_BeginCinematicWithTransition(Action additionalOnCut = null)
     {
         LockCinematic();
         yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
         {
             BeginCinematic();
-            // El interior se aplica en el cut point, con la pantalla cubierta:
-            // si se aplica tras el reveal se ve el skybox exterior un instante
-            ApplyInteriorAtCutPoint();
-            additionalOnCut?.Invoke();
-        });
-    }
-
-    /// Igual que el anterior pero corta al plano inicial durante el blackout,
-    /// de modo que la cámara ya está en posición cuando la transición revela la escena.
-    protected IEnumerator Co_BeginCinematicWithTransition(Transform initialShot, Action additionalOnCut = null)
-    {
-        LockCinematic();
-        yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
-        {
-            BeginCinematic();
-            if (initialShot != null) _cinematicCamera.Cut(initialShot);
             // El interior se aplica en el cut point, con la pantalla cubierta:
             // si se aplica tras el reveal se ve el skybox exterior un instante
             ApplyInteriorAtCutPoint();
@@ -594,7 +577,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
                 Debug.LogException(e);
             }
 
-            if (SkipRestoresMusic) RestoreMusic();
+            RestoreMusic();
         }, _skipFadeDuration);
 
         string customSignal = SkipCompletionSignal;
@@ -623,20 +606,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// (por defecto) = usar RaiseSignalOut() normal.
     protected virtual string SkipCompletionSignal => null;
 
-    /// Si el skip debe restaurar la música de escena (RestoreMusic()) al cerrar. Poner a false en
-    /// sequencers cuyo cierre normal deliberadamente NO restaura música porque el sistema siguiente
-    /// gestiona su propio crossfade (ver comentario en ReinoExitBanterSequencer.Co_Sequence) —
-    /// restaurarla en el skip igualmente reintroduciría el bug ya solucionado de "dos músicas
-    /// sonando a la vez".
-    protected virtual bool SkipRestoresMusic => true;
-
     // ── Música ────────────────────────────────────────────────────────────────
-
-    protected void PlaySequenceMusic()
-    {
-        if (MusicRule?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(MusicRule.music, MusicRule.fadeIn);
-    }
 
     /// Perfil de audio efectivo: el del Inspector de este sequencer si lo tiene, y si no el que ya
     /// usa el propio AudioService.
@@ -716,229 +686,6 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
     protected void RaiseSignal(string signal) =>
         DefaultNarrativeSignals.EnsureInstance().RaiseCustom(signal);
-
-    // ── Localización ─────────────────────────────────────────────────────────
-
-    protected string Loc(string key) => LocalizationManager.Instance != null
-        ? LocalizationManager.Instance.Get(key, key)
-        : key;
-
-    // ── Persistencia de "cinemática ya vista" ─────────────────────────────────
-    // INC-075 (05/08/2026): EstelaAppearsSequencer llevaba su propia clave de flag
-    // ("CINEMATIC_SEEN:ESTELA_APPEARS", añadida a mano el 27/28 jul) que NO coincidía con la
-    // convención real del proyecto ("CINEMATIC_SEEN:Cinematic_{id}", la misma que genera
-    // la que ya llevan escrita los 9
-    // PlayerPreset_*.asset existentes como "CINEMATIC_SEEN:Cinematic_EstelaAppears"). Al activar
-    // modo test contra un preset con la clave "buena", HasSequencePlayed() nunca la encontraba y
-    // las arañas/guerreros volvían a aparecer aunque la secuencia constara como vista.
-    //
-    // Estos dos helpers centralizan la convención correcta para que cualquier sequencer que
-    // necesite ocultar actores de forma permanente tras su cinemática (como EstelaAppearsSequencer)
-    // la use igual, sin reinventar el formato de la clave cada vez.
-    protected static bool HasCinematicBeenSeen(string id)
-    {
-        // INC-075-bis (08/08/2026): si GameBootService.Profile es null, esta comprobación
-        // devolvía silenciosamente "false" (no vista) — indistinguible de un save real sin el
-        // flag. Eso hizo perder tiempo varias veces diagnosticando "el flag no persiste" cuando
-        // en realidad la causa era entrar en Play Mode directamente sobre una escena de mundo
-        // (ej. MainWorld) en vez de por 'Start.unity': GameBootService.Bootstrap() SOLO busca una
-        // instancia ya existente (no crea una dinámica, ver comentario en GameBootService.cs), así
-        // que sin 'Start' cargado (normalmente vía Editor/AutoBootstrapOnPlay.cs) Profile se queda
-        // en null y CUALQUIER sequencer que dependa de este helper deja de ocultar sus actores, sin
-        // que eso implique que el guardado/carga real esté roto. El log de aviso hace explícita esa
-        // diferencia para no repetir la misma investigación cada vez.
-        if (GameBootService.Profile == null)
-        {
-            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CinematicSequencerBase] HasCinematicBeenSeen('{id}'): GameBootService.Profile " +
-                "es null, así que no se puede saber si esta cinemática ya se vio (se asume que no). Si esperabas " +
-                "que sus actores ya estuvieran ocultos, probablemente entraste en Play Mode directamente sobre " +
-                "esta escena en vez de por 'Start.unity' — revisa la consola por '[AutoBootstrapOnPlay]' o " +
-                "arranca desde 'Start.unity'/el flujo normal del menú. No es un fallo del guardado/carga real.");
-            #endif
-            return false;
-        }
-
-        var preset = Partida.Preset;
-        return preset != null && preset.flags != null && preset.flags.Contains($"CINEMATIC_SEEN:Cinematic_{id}");
-    }
-
-    protected static void MarkCinematicAsSeen(string id)
-    {
-        var preset = Partida.Preset;
-        if (preset == null) return;
-        if (preset.flags == null) preset.flags = new System.Collections.Generic.List<string>();
-        string flag = $"CINEMATIC_SEEN:Cinematic_{id}";
-        if (!preset.flags.Contains(flag)) preset.flags.Add(flag);
-    }
-
-    // ── Bocadillos paginados ──────────────────────────────────────────────────
-
-    /// Muestra un texto con saltos de línea como páginas sucesivas de bocadillo.
-    /// loopAnim: si true, re-dispara el animTrigger en cada página.
-    ///
-    /// BUG REAL (Raúl, 30/08/2026, ronda 9): "hace la animación de enfado, el bocadillo continúa,
-    /// y el personaje se queda en Idle" — incluso con loopAnim:true. Causa: el gesto (p.ej. Angry01)
-    /// es un one-shot de 1-2s, pero cada página se queda en pantalla "durationPerPage" (5s en el
-    /// monólogo del Mago Oscuro) — en cuanto el clip del gesto termina, NPCSimpleAnimator (si
-    /// "_isInteracting" es false, que es el caso por defecto aquí) fuerza la vuelta a Idle de pie
-    /// por su cuenta (PlayOneShotCoroutine), mucho antes de que la página cambie. Exactamente el
-    /// mismo bug ya diagnosticado y resuelto para NPCs reales en el motor de gestos de este
-    /// proyecto — el mecanismo que lo resuelve es NPCSimpleAnimator.BeginInteraction(), que
-    /// dejaría al NPC en su interactState ("Talk01" por defecto, tras el cambio del 5 sep 2026) en vez de caer
-    /// a Idle entre gesto y gesto — simplemente no se estaba llamando desde este helper compartido.
-    /// Arreglo: se llama aquí, una sola vez, para que todo bocadillo cinemático de este archivo
-    /// (Mago Oscuro, Will, Estela, Liam, Eldran, etc.) quede cubierto sin tocar cada punto de
-    /// llamada. Solo aplica a NPCs con NPCSimpleAnimator — Will (jugador) usa PlayerDialogueAnimator,
-    /// que no tiene este problema (sus gestos viven en la UpperBody layer y se quedan en su último
-    /// frame en vez de forzar Idle, ver PlayerDialogueAnimator.PlayGestureCoroutine()).
-    protected IEnumerator ShowBubbleLocalized(Transform target, string textKey, float durationPerPage,
-        string animTrigger = null, bool loopAnim = false, string speakerName = null)
-    {
-        if (SpeechBubbleUI.Instance == null) yield break;
-        string text = Loc(textKey);
-        float voz = VoiceLines.TryPlay(textKey);
-        int paginas = Mathf.Max(1, text.Split('\n').Length);
-        if (voz > 0f) durationPerPage = Mathf.Max(durationPerPage, (voz + 0.3f) / paginas);
-        yield return ShowBubblePaged(target, text, durationPerPage, animTrigger, loopAnim, speakerName);
-    }
-
-    protected IEnumerator ShowBubblePaged(Transform target, string text, float durationPerPage,
-        string animTrigger = null, bool loopAnim = false, string speakerName = null)
-    {
-        var npcAnim = target != null ? target.GetComponentInChildren<NPCSimpleAnimator>(true) : null;
-        npcAnim?.BeginInteraction();
-        // FIX (30/08/2026, Raul: "sigue fallando que el mago oscuro no haga las animaciones de
-        // hablar si el bocadillo aun se ve"): BeginInteraction() + el gesto puntual de
-        // PlaySocialGesture (via animTrigger, re-disparado en cada pagina con loopAnim) ya evitan
-        // que el NPC caiga a Idle -- pero entre gesto y gesto se queda en una pose neutra estatica
-        // (interactState), que a simple vista no se distingue de estar "parado sin hablar" durante
-        // el resto de los ~3-4s que dura cada pagina. DialogueManager.ActivateSpeakerTalkAnimation()
-        // (el camino real de las conversaciones normales del juego, "asi es como lo tenemos en el
-        // juego") no depende solo del gesto puntual: tambien activa NPCSimpleAnimator.SetTalking(true)
-        // -- un parametro bool ("IsTalking") del propio Animator Controller que mantiene una
-        // animacion de hablar continua mientras dura la linea, independiente del gesto de un solo
-        // disparo. ShowBubblePaged nunca lo activaba. Se activa aqui junto con BeginInteraction() y
-        // se desactiva junto con EndInteraction() mas abajo, igual que hace DialogueManager.
-        npcAnim?.SetTalking(true);
-
-        // FIX (30/08/2026, ronda 14, Raul: "sigue fallando que el mago oscuro no haga las
-        // animaciones de hablar si el bocadillo aun se ve" + "no salen logs en esa parte"):
-        // SetTalking(true) de arriba resulto ser un no-op real para el Mago Oscuro -- su Animator
-        // Controller (NPC_NoWeapon.controller, compartido por varios NPCs) NO tiene ningun
-        // parametro "IsTalking" (confirmado leyendo el .controller: solo existen WeaponType/
-        // WeaponChange/Fidget/FidgetIndex/Flourish/FlourishIndex/InputMagnitude/InputHorizontal/
-        // InputVertical/IsStrafing). SetTalking() ya comprobaba si el parametro existe antes de
-        // usarlo y, si no lo encuentra, sale en silencio -- el aviso solo se imprime con debugMode
-        // activo (false por defecto), lo que explica exactamente el "no salen logs" de Raul: no es
-        // que nada se ejecute, es que SetTalking() no tiene nada real que hacer y no lo dice.
-        // Sin ese bool, la unica forma real de que el NPC parezca hablar durante TODA la pagina (no
-        // solo el primer 1-2s del gesto de un solo disparo) es seguir re-lanzando gestos a
-        // intervalos mientras la pagina siga en pantalla -- mismo mecanismo que ya usa `loopAnim`
-        // entre paginas distintas, aplicado ahora tambien DENTRO de una misma pagina.
-        const float talkGestureRetriggerInterval = 1.6f;
-
-        // FIX (31/08/2026, ronda 15, Raul: "lo que esta haciendo son las animaciones de enfado en
-        // bucle cuando lo que debe hacer es la animacion de enfado y luego la de hablar"): el
-        // re-disparo de la ronda 14 repetia siempre el MISMO animTrigger (p.ej. "Angry01" durante
-        // todo un tramo del monologo) -- se veia como enfado en bucle en vez de una conversacion
-        // real. Mismo criterio que ya se aplico en la vision de Will (seccion 13 del documento del
-        // proyecto): la PRIMERA vez se muestra el gesto especifico de la frase/tramo (enfado,
-        // sorpresa, etc.), y todas las veces siguientes (tanto el re-disparo entre paginas de
-        // `loopAnim` como el nuevo re-disparo dentro de una misma pagina) alternan entre variaciones
-        // genericas de "hablando" -- nunca se repite el gesto especifico una y otra vez.
-        bool specificGestureFired = false;
-        int talkVariationIndex = 0;
-
-        string[] pages = text.Split('\n');
-        for (int i = 0; i < pages.Length; i++)
-        {
-            string page = pages[i].Trim();
-            if (string.IsNullOrEmpty(page)) continue;
-            bool done = false;
-            bool pageHasTrigger = (i == 0 || loopAnim) && !string.IsNullOrEmpty(animTrigger);
-            string triggerThisPage = pageHasTrigger
-                ? PickTalkGesture(animTrigger, ref specificGestureFired, ref talkVariationIndex)
-                : null;
-            SpeechBubbleUI.Instance.Show(target, page, durationPerPage, () => done = true, triggerThisPage,
-                speakerName: speakerName);
-
-            if (npcAnim != null && pageHasTrigger)
-            {
-                float elapsedSinceRetrigger = 0f;
-                while (!done)
-                {
-                    yield return null;
-                    elapsedSinceRetrigger += Time.deltaTime;
-                    if (elapsedSinceRetrigger >= talkGestureRetriggerInterval)
-                    {
-                        elapsedSinceRetrigger = 0f;
-                        npcAnim.PlaySocialGesture(PickTalkGesture(animTrigger, ref specificGestureFired, ref talkVariationIndex));
-                    }
-                }
-            }
-            else
-            {
-                yield return new WaitUntil(() => done);
-            }
-        }
-
-        npcAnim?.SetTalking(false);
-        npcAnim?.EndInteraction();
-    }
-
-    // Estados de "hablando" genéricos usados por PickTalkGesture() tras el primer gesto específico
-    // -- confirmados como estados reales compartidos entre NPCs y el monólogo del Mago Oscuro
-    // (sección 9.2 del documento del proyecto ya usa Talk02 como animTrigger propio de un tramo).
-    private static readonly string[] TalkVariations = { "Talk01", "Talk02", "Talk03" };
-
-    /// <summary>
-    /// La primera vez que se llama (por cada ShowBubblePaged en curso, gracias a los ref) devuelve
-    /// el gesto específico pasado (p.ej. "Angry01"); todas las veces siguientes devuelve, rotando,
-    /// una variación genérica de "hablando" -- así el personaje muestra su emoción una vez y luego
-    /// sigue "conversando" en vez de repetir el mismo gesto específico en bucle.
-    /// </summary>
-    private static string PickTalkGesture(string specificGesture, ref bool specificGestureFired, ref int talkVariationIndex)
-    {
-        if (!specificGestureFired && !string.IsNullOrEmpty(specificGesture))
-        {
-            specificGestureFired = true;
-            return specificGesture;
-        }
-
-        string chosen = TalkVariations[talkVariationIndex % TalkVariations.Length];
-        talkVariationIndex++;
-        return chosen;
-    }
-
-    // ── Rotación de personajes ────────────────────────────────────────────────
-
-    protected static void FaceTarget(Transform from, Transform to)
-    {
-        if (from == null || to == null) return;
-        Vector3 dir = to.position - from.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude > 0.001f)
-            from.rotation = Quaternion.LookRotation(dir);
-    }
-
-    protected static void FaceTarget(Transform from, Vector3 worldPos)
-    {
-        if (from == null) return;
-        Vector3 dir = worldPos - from.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude > 0.001f)
-            from.rotation = Quaternion.LookRotation(dir);
-    }
-
-    protected static void FaceAway(Transform from, Transform away)
-    {
-        if (from == null || away == null) return;
-        Vector3 dir = from.position - away.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude > 0.001f)
-            from.rotation = Quaternion.LookRotation(dir);
-    }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Debug")]

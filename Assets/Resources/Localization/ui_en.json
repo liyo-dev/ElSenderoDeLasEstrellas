@@ -1770,11 +1770,11 @@
         },
         {
             "key": "ABILITY_SHIELD_TITLE",
-            "value": "Shield"
+            "value": "Protection"
         },
         {
             "key": "ABILITY_SHIELD_DESC",
-            "value": "Raises a shield to block enemy attacks."
+            "value": "Hold B to raise it. Block at the right moment to strike back."
         },
         {
             "key": "SPELL_FX_BOUNCE",
@@ -2176,6 +2176,30 @@
         {
             "key": "TESORO_MAPA_LAB_DESC",
             "value": "Marks where something is buried in the LAB treasure room. Check the minimap."
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_NAME",
+            "value": "Glass marble"
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_DESC",
+            "value": "A blue marble that shines like a piece of sky."
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_NAME",
+            "value": "Holed stone"
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_DESC",
+            "value": "They say looking through the hole brings luck."
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_NAME",
+            "value": "Old coin"
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_DESC",
+            "value": "No one knows which kingdom it's from. It can't buy anything."
         }
     ]
 }

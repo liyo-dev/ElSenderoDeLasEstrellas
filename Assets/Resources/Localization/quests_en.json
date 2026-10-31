@@ -506,7 +506,7 @@
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_DETAIL",
-            "value":  "Eldran wants you to be ready before you leave: stop by Victoria\u0027s shop, visit the apothecary and Erika\u0027s training field, and practise your aim with him."
+            "value":  "Eldran wants you to be ready before you leave: stop by Victoria\u0027s shop, the apothecary and Erika\u0027s training field. Then go back to him."
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_STEP1",
@@ -522,7 +522,7 @@
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_STEP4",
-            "value":  "Practise your aim with Eldran"
+            "value":  "Go back to Eldran"
         },
         {"key":"QUEST_RENARD_CONTRATO_1_NAME","value":"Too Many Legs"},
         {"key":"QUEST_RENARD_CONTRATO_1_DESC","value":"Renard wants you to deal with eight spiders in the Forbidden Forest."},

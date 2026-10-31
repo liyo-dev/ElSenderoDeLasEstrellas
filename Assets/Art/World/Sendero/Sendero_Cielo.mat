@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sendero_Cielo
+  m_Shader: {fileID: 4800000, guid: 5d8c11c75f5bf6f41970342a4f61c46d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AnchoTinte: 0.05
+    - _BrilloEstrellas: 2.2
+    - _CadaFugaz: 9
+    - _FuerzaNebulosa: 0.5
+    - _FuerzaTinte: 0.3
+    - _FuerzaViaLactea: 1
+    - _Titileo: 0.35
+    m_Colors:
+    - _ColorEstrellaGuia: {r: 2.4, g: 2.1, b: 1.5, a: 1}
+    - _ColorFondo: {r: 0.01, g: 0.018, b: 0.045, a: 1}
+    - _ColorNebulosa: {r: 0.05, g: 0.22, b: 0.3, a: 1}
+    - _ColorNebulosa2: {r: 0.09, g: 0.04, b: 0.16, a: 1}
+    - _DirEstrellaGuia: {r: 0.05, g: 0.42, b: 0.9, a: 0}
+    - _DirViaLactea: {r: 0.35, g: 0.55, b: -0.75, a: 0}
+    - _Tinte: {r: 1, g: 0.78, b: 0.38, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

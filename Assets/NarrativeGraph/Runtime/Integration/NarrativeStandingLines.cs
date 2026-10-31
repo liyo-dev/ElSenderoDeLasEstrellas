@@ -4,7 +4,8 @@ using UnityEngine;
 /// Frase de un actor cuando el jugador le habla y el grafo no está esperando esa conversación
 /// (p. ej. quien encargó una misión, mientras sigue en curso). Recorre los nodos de los grafos
 /// cargados que implementan <see cref="INarrativeStandingLine"/> y se queda con el primero que
-/// valga ahora. Solo se consulta al pulsar hablar, nunca por fotograma.
+/// valga ahora; si ninguno, la frase de la agenda del actor (<see cref="AgendaDeActores"/>).
+/// Solo se consulta al pulsar hablar, nunca por fotograma.
 /// </summary>
 public static class NarrativeStandingLines
 {
@@ -36,8 +37,15 @@ public static class NarrativeStandingLines
                 return true;
             }
         }
-        return false;
+        return AgendaDeActores.TryFrase(actorId, out dialogue);
     }
+
+    /// <summary>
+    /// Apunta que el actor ha dicho <paramref name="dialogue"/> (encontrada con <see cref="TryFind"/>),
+    /// para que su agenda pase a la siguiente frase. Quien abre el diálogo por su cuenta la llama.
+    /// </summary>
+    public static void MarkSaid(string actorId, NarrativeDialogueAsset dialogue) =>
+        AgendaDeActores.FraseDicha(actorId, dialogue);
 
     /// <summary>
     /// Si el actor tiene frase ahora y no hay otro diálogo abierto, la dice (con la cámara de
@@ -48,7 +56,9 @@ public static class NarrativeStandingLines
         if (!NarrativeServices.TryGet(out INarrativeDialoguePlayer dialogues, nameof(NarrativeStandingLines))) return false;
         if (dialogues.IsOpen) return false;
         if (!TryFind(actorId, out var dialogue)) return false;
+        if (!dialogues.TryPlay(dialogue, speaker, null)) return false;
 
-        return dialogues.TryPlay(dialogue, speaker, null);
+        MarkSaid(actorId, dialogue);
+        return true;
     }
 }

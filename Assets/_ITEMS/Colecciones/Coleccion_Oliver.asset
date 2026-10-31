@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ed7cb854a645ea94108cd8b31adc48, type: 3}
+  m_Name: Coleccion_Oliver
+  m_EditorClassIdentifier: Assembly-CSharp::ColeccionDeObjetos
+  coleccionId: OLIVER
+  tituloId: COLECCION_OLIVER_TITULO
+  titulo: "Colecci\xF3n de Oliver"
+  paginas:
+  - tituloId: COLECCION_OLIVER_PAGINA_1
+    titulo: Cosas raras del pueblo
+    piezas:
+    - objeto: {fileID: 11400000, guid: b506d8c3a99c4c848b98f093d2b7e790, type: 2}
+      fraseId: COLECCION_OLIVER_FRASE_CANICA
+      frase: "\xA1Una canica de cielo! Sab\xEDa que exist\xEDan. Va en el centro de la p\xE1gina."
+    - objeto: {fileID: 11400000, guid: 8b9e40e0965044d68c0cf3b75fe01534, type: 2}
+      fraseId: COLECCION_OLIVER_FRASE_PIEDRA
+      frase: "Si miras por el agujero, el pueblo parece otro. \xBFLo ves? Yo tampoco, pero da suerte."
+    - objeto: {fileID: 11400000, guid: 6a7853d7975b431daa5d30a7de9f2e6f, type: 2}
+      fraseId: COLECCION_OLIVER_FRASE_MONEDA
+      frase: "No es de ning\xFAn reino que yo conozca. \xA1Mejor! Las cosas raras valen m\xE1s."
+    premio: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+    cantidadDelPremio: 50

@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-/// <summary>Diálogos y preguntas del grafo, en la caja de <see cref="DialogueManager"/>.</summary>
+/// <summary>
+/// Diálogos del grafo, en la caja de <see cref="DialogueManager"/>; sus preguntas de dos respuestas,
+/// en el popup unificado de Sí / No (<see cref="ConfirmationPopupUI"/>) si está, o en la caja si no.
+/// </summary>
 public sealed class DialogueNarrativeAdapter : INarrativeDialoguePlayer, INarrativeChoicePresenter
 {
     public bool IsOpen => DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
@@ -18,6 +21,13 @@ public sealed class DialogueNarrativeAdapter : INarrativeDialoguePlayer, INarrat
 
     public bool TryShowChoice(string prompt, string optionA, string optionB, Action onA, Action onB)
     {
+        var popup = ConfirmationPopupUI.Instance;
+        if (popup != null)
+        {
+            popup.Show(prompt, onA, onB, optionA, optionB, selectConfirm: true, cancelWithBack: true);
+            return true;
+        }
+
         var dm = DialogueManager.Instance;
         if (dm == null) return false;
         dm.ShowWithChoices(prompt, optionA, optionB, onA, onB);

@@ -1109,8 +1109,8 @@ public class SolDeFondoBeat : SequenceBeat
     [Tooltip("Marcado = colocar el sol. Desmarcado = soltarlo (se funde de vuelta al ciclo).")]
     public bool colocar = true;
 
-    [Tooltip("De qué lado está la cámara, en grados del mundo (el mismo valor que el " +
-             "SetActionAxisBeat de la escena). El sol se pone en el lado CONTRARIO: al fondo.")]
+    [Tooltip("De qué lado está la cámara, en grados del mundo. El sol se pone en el lado " +
+             "CONTRARIO: al fondo.")]
     [Range(0f, 360f)]
     public float ladoDeLaCamara = 0f;
 

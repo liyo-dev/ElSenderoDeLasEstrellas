@@ -1450,7 +1450,7 @@
         },
         {
             "key": "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
-            "value": "Victoria, the apothecary, Erika... and then come and find me at the practice field."
+            "value": "Stop by Victoria, the apothecary and Erika. When you are done, come and see me."
         },
         {
             "key": "DLG_VICTORIA_CAPA_01",
@@ -1487,6 +1487,18 @@
         {
             "key": "DLG_VICTORIA_CAPA_DESPUES_01",
             "value": "That cloak suits you perfectly."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_01",
+            "value": "When you were little you used to hide under my sewing table. I always found you by your feet."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_02",
+            "value": "Eldran says my pears are green. He's been saying it for forty years, and eating them for forty years."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_03",
+            "value": "The first night Eldran brought you home, he came to borrow a blanket. He didn't even know how to hold a baby."
         },
         {
             "key": "DLG_BOTICARIA_POCION_01",
@@ -1553,26 +1565,6 @@
             "value": "Take this eyepatch. I wore it the winter a bear tried to take my eye. It didn't manage."
         },
         {
-            "key": "DLG_ELDRAN_PUNTERIA_01",
-            "value": "Before you leave I want to see how you aim. Those buckets over there are your target."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_02",
-            "value": "A Prism Ball won't fly on its own: breathe, watch the bucket, and let go only when you are sure."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_03",
-            "value": "What if I miss?"
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_04",
-            "value": "You will. But you will know why. That is also learning to aim."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_DESPUES_01",
-            "value": "You aim the way you should now. Don't shoot unless you have to."
-        },
-        {
             "key": "DLG_ERIKA_ENTRENAMIENTO_01",
             "value": "They say you are leaving the village, Will. Before crossing those gates, you must learn to defend yourself: I attack, you hold."
         },
@@ -1610,7 +1602,7 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "You have a cloak, a potion, a handkerchief and a good aim. What is missing is the important part: knowing why you are leaving."
+            "value": "You have a cloak, a potion and a handkerchief. What is missing is the important part: knowing why you are leaving."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
@@ -1875,6 +1867,38 @@
         {
             "key": "IDLE_LIAM_LEVANTA_ESTELA_03",
             "value": "You can eat later. Up you get."
+        },
+        {
+            "key": "CHAR_ALDONA",
+            "value": "Aldona"
+        },
+        {
+            "key": "DLG_ALDONA_01",
+            "value": "Hello, lad. My pear jam came out sweet this year, which is no small thing."
+        },
+        {
+            "key": "DLG_ALDONA_02",
+            "value": "And don't run so fast down the street, or one day you'll knock me over."
+        },
+        {
+            "key": "DLG_ERIKA_REVANCHA_FIN",
+            "value": "You've improved, Will. Come back whenever you want another round."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_01",
+            "value": "Found anything strange out there? If it's really strange, I want it for my collection."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_02",
+            "value": "They say there's a stone with a hole in it somewhere in town that brings luck. I haven't found it. Yet."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_03",
+            "value": "If you ever see a marble that shines like a piece of sky, think of me."
+        },
+        {
+            "key": "DLG_BOTICARIA_CHARLA_01",
+            "value": "Do you still have the potion? Good. Keep it that way."
         }
     ]
 }

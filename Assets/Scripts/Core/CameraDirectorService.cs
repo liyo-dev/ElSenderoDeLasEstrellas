@@ -47,7 +47,7 @@ public static class CameraDirectorService
 
     // ── FOV de juego (INC-415) ────────────────────────────────────────────────────────────────
     // Las cinemáticas escriben el FOV de cada plano directamente en la cámara de juego
-    // (CinematicCameraDriver.Cut/MoveTo/SetPose) y nadie lo devolvía: tras el saludo de Oliver la
+    // (CinematicCameraDriver.Cut y el guion horneado) y nadie lo devolvía: tras el saludo de Oliver la
     // cámara de gameplay se quedaba con el FOV del último plano (~49° en vez de los 60° del
     // prefab). Además de verse más cerrada, eso desalineaba la «Hint Camera» (overlay de _WILL,
     // FOV 60 fijo) respecto a la cámara base, y como las dos pintan la capa InteractHint, cada

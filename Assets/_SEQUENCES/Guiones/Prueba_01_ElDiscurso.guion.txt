@@ -1,0 +1,99 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  PRUEBA DE WILL · TRAMO 2 · EL DISCURSO  (INC-881)
+#  Will, Estela y Liam se paran delante de un espejo que, en vez de reflejarlos, enseña la plaza
+#  del pueblo: Will con nueve años, de pie en una silla, se traba en el discurso de su cumpleaños.
+#  Los vecinos aplauden por compromiso. De vuelta al palacio, Estela se ríe, Will protesta y Liam
+#  remata. El recuerdo es un decorado bajo el palacio que el espejo enseña en modo ventana
+#  (PruebaDeWillRecuerdos); las marcas M_Discurso_* las pone el montaje del nivel.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Prueba_01_ElDiscurso
+ESCENA Laberinto
+SECUENCIA Assets/_SEQUENCES/SEQ_PruebaWill_Discurso.asset
+TEXTO subtitulo
+RITMO entre_frases=0.35 mismo_hablante=0.25
+
+REPARTO
+will    Player                nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  Actor_Estela          nombre=Estela color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam    Actor_Liam            nombre=Liam color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+nino    Actor_WillNino        nombre=Will color=FFD27A prefab=Assets/_NPCs/Recuerdos/WillNino.prefab
+eldran  Actor_EldranRecuerdo  nombre=Eldran color=9ED6FF prefab=Assets/_NPCs/Eldran.prefab
+v1      Actor_Vecino1         prefab=Assets/_NPCs/Manuel.prefab
+v2      Actor_Vecino2         prefab=Assets/_NPCs/Patricia.prefab
+v3      Actor_Vecino3         prefab=Assets/_NPCs/Roberto.prefab
+v4      Actor_Vecino4         prefab=Assets/_NPCs/Sara.prefab
+v5      Actor_Vecino5         prefab=Assets/_NPCs/Nora.prefab
+v6      Actor_Vecino6         prefab=Assets/_NPCs/Pueblo/Jorge.prefab
+
+PUNTOS
+# El grupo, delante del espejo del lado norte de la sala 2.
+p_will      M_Discurso_Will
+p_estela    M_Discurso_Estela
+p_liam      M_Discurso_Liam
+espejo      M_Discurso_Espejo
+cam_grupo   M_Discurso_CamGrupo
+# La plaza del recuerdo (bajo el palacio). Will niño está de pie en la silla.
+p_nino      M_Discurso_Nino
+p_eldran    M_Discurso_Eldran
+p_v1        M_Discurso_Vecino1
+p_v2        M_Discurso_Vecino2
+p_v3        M_Discurso_Vecino3
+p_v4        M_Discurso_Vecino4
+p_v5        M_Discurso_Vecino5
+p_v6        M_Discurso_Vecino6
+cam_nino    M_Discurso_CamNino
+cam_plaza   M_Discurso_CamPlaza
+
+HILO
+@inicio
+will en p_will mirando espejo
+& estela en p_estela mirando espejo
+& liam en p_liam mirando espejo
+& nino en p_nino mirando cam_plaza
+& eldran en p_eldran mirando nino
+& v1 en p_v1 mirando nino
+& v2 en p_v2 mirando nino
+& v3 en p_v3 mirando nino
+& v4 en p_v4 mirando nino
+& v5 en p_v5 mirando nino
+& v6 en p_v6 mirando nino
+# El espejo no los refleja: enseña la plaza.
+& plano fijo desde=cam_grupo mira=espejo altura=1.9 altura_foco=2.2 lente=40 quieta
+& will cara sorpresa
+& estela cara sorpresa
+espera 2.2
+
+# Dentro del recuerdo.
+@discurso
+plano medio nino desde=cam_nino altura=1.1 solo quieta
+& nino cara preocupado
+nino dice PRUEBA_WILL_DISCURSO_01 gesto=Talk01
+nino dice PRUEBA_WILL_DISCURSO_02 gesto=Talk02
+espera 0.9
+
+# Silencio y aplauso por compromiso.
+@aplauso
+plano general nino eldran v1 v2 desde=cam_plaza quieta
+& v1 gesto HandClap01
++0.2 v2 gesto HandClap01
++0.1 v3 gesto HandClap01
++0.3 v4 gesto HandClap01
++0.15 v5 gesto HandClap01
++0.25 v6 gesto HandClap01
+& eldran gesto HandClap01
+& eldran cara alegre
+& nino cara triste
+espera 2.0
+
+# De vuelta al palacio.
+@palacio
+plano fijo desde=cam_grupo mira=espejo altura=1.9 altura_foco=1.4 lente=34 quieta
+estela dice PRUEBA_WILL_DISCURSO_03 cara=picaro gesto=Laugh01 mira=will
+plano medio will solo
+will dice PRUEBA_WILL_DISCURSO_04 cara=enfadado gesto=Angry01 mira=estela
+plano medio liam solo
+liam dice PRUEBA_WILL_DISCURSO_05 cara=picaro mira=will
+& estela gesto Laugh01
+& estela cara alegre
+espera 0.6

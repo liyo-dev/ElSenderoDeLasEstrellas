@@ -1055,6 +1055,7 @@ GameObject:
   - component: {fileID: 5725277032407328577}
   - component: {fileID: 6032231274682188275}
   - component: {fileID: 21003879955180305}
+  - component: {fileID: 3411288549481016319}
   m_Layer: 8
   m_Name: Oliver
   m_TagString: Untagged
@@ -1397,6 +1398,22 @@ MonoBehaviour:
   narrativeEventKey: PERAS_START
   partyMember: {fileID: 0}
   action: 1
+--- !u!114 &3411288549481016319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853791838701468352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11d9e104bc24d6a94cd0e129396ca05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Coleccionista
+  coleccion: {fileID: 11400000, guid: 25a16dbab50d405785621923191c6c96, type: 2}
+  estilo: {fileID: 11400000, guid: 14c8172772ab453e86c26da0e65ce0a4, type: 2}
+  preguntaId: COLECCION_PREGUNTA_VER
+  pregunta: "\xBFQuieres ver la colecci\xF3n?"
 --- !u!1 &2001743202552776681
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,13 @@ using UnityEngine;
 ///        personajes, terreno, edificios).
 /// El resultado aparece en la consola, y también se selecciona en la
 /// Hierarchy cada GameObject afectado para que sea fácil de revisar.
+///
+///   Tools > Quibli > Pasar a Quibli los materiales seleccionados (o carpetas)
+///     -- convierte los materiales URP Lit / Simple Lit / Standard de la
+///        selección (materiales sueltos o carpetas enteras) a Quibli
+///        StylizedLit con los ajustes de la plantilla (Chuchelandia), y
+///        conserva la textura, el color y la emisión de cada uno. Los demás
+///        shaders (agua, cielo, partículas...) se dejan como están.
 /// </summary>
 public static class FindNonQuibliMaterials
 {
@@ -123,6 +130,107 @@ public static class FindNonQuibliMaterials
 
         // Seleccionar todos los GameObjects afectados en la Hierarchy.
         Selection.objects = offenders.Select(o => (Object)o.go).Distinct().ToArray();
+    }
+
+    // Material Quibli de referencia: el look de Chuchelandia (Sweet_Land, ithappy).
+    private const string RutaPlantillaQuibli = "Assets/Art/World/ithappy/Sweet_Land/Materials/Color.mat";
+
+    // Shaders opacos de iluminación estándar que se pueden pasar a Quibli sin perder nada.
+    private static readonly HashSet<string> ShadersConvertibles = new HashSet<string>
+    {
+        "Universal Render Pipeline/Lit",
+        "Universal Render Pipeline/Simple Lit",
+        "Universal Render Pipeline/Baked Lit",
+        "Standard",
+    };
+
+    [MenuItem("Tools/Quibli/Pasar a Quibli los materiales seleccionados (o carpetas)")]
+    private static void PasarSeleccionAQuibli()
+    {
+        var plantilla = AssetDatabase.LoadAssetAtPath<Material>(RutaPlantillaQuibli);
+        if (plantilla == null || plantilla.shader == null)
+        {
+            Debug.LogError($"[Quibli] No se encuentra la plantilla en {RutaPlantillaQuibli}.");
+            return;
+        }
+
+        var rutas = new SortedSet<string>();
+        foreach (var obj in Selection.objects)
+        {
+            string ruta = AssetDatabase.GetAssetPath(obj);
+            if (string.IsNullOrEmpty(ruta)) continue;
+            if (AssetDatabase.IsValidFolder(ruta))
+            {
+                foreach (var guid in AssetDatabase.FindAssets("t:Material", new[] { ruta }))
+                    rutas.Add(AssetDatabase.GUIDToAssetPath(guid));
+            }
+            else if (obj is Material)
+            {
+                rutas.Add(ruta);
+            }
+        }
+
+        if (rutas.Count == 0)
+        {
+            Debug.LogWarning("[Quibli] Selecciona en el Project materiales o carpetas con materiales.");
+            return;
+        }
+
+        var convertidos = new List<string>();
+        var omitidos = new List<string>();
+        foreach (var ruta in rutas)
+        {
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            if (mat == null || mat.shader == null || mat.shader == plantilla.shader) continue;
+            if (!ShadersConvertibles.Contains(mat.shader.name))
+            {
+                omitidos.Add($"{mat.name} ({mat.shader.name})");
+                continue;
+            }
+
+            Undo.RecordObject(mat, "Pasar a Quibli");
+            PasarAQuibli(mat, plantilla);
+            EditorUtility.SetDirty(mat);
+            convertidos.Add(mat.name);
+        }
+
+        AssetDatabase.SaveAssets();
+        Debug.Log($"[Quibli] Pasados a Quibli: {convertidos.Count} ({string.Join(", ", convertidos)})." +
+                  (omitidos.Count > 0 ? $" Sin tocar por su shader: {string.Join(", ", omitidos)}." : ""));
+    }
+
+    private static void PasarAQuibli(Material mat, Material plantilla)
+    {
+        Texture mapaBase = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap") : mat.mainTexture;
+        Vector2 escala = mat.HasProperty("_BaseMap") ? mat.GetTextureScale("_BaseMap") : mat.mainTextureScale;
+        Vector2 desplazamiento = mat.HasProperty("_BaseMap") ? mat.GetTextureOffset("_BaseMap") : mat.mainTextureOffset;
+        Color color = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : mat.color;
+        Color emision = mat.HasProperty("_EmissionColor") ? mat.GetColor("_EmissionColor") : Color.black;
+        Texture mapaEmision = mat.HasProperty("_EmissionMap") ? mat.GetTexture("_EmissionMap") : null;
+        bool emite = mat.IsKeywordEnabled("_EMISSION") && emision.maxColorComponent > 0f;
+
+        mat.shader = plantilla.shader;
+        mat.CopyPropertiesFromMaterial(plantilla);
+
+        mat.SetTexture("_BaseMap", mapaBase);
+        mat.SetTextureScale("_BaseMap", escala);
+        mat.SetTextureOffset("_BaseMap", desplazamiento);
+        mat.SetColor("_BaseColor", color);
+
+        if (emite)
+        {
+            mat.SetColor("_EmissionColor", emision);
+            if (mat.HasProperty("_EmissionColorUI")) mat.SetColor("_EmissionColorUI", emision);
+            if (mat.HasProperty("_EmissionScaleUI")) mat.SetFloat("_EmissionScaleUI", 1f);
+            if (mapaEmision != null) mat.SetTexture("_EmissionMap", mapaEmision);
+            mat.EnableKeyword("_EMISSION");
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        }
+        else
+        {
+            mat.SetColor("_EmissionColor", Color.black);
+            mat.DisableKeyword("_EMISSION");
+        }
     }
 
     private static bool IsExpectedVfxRenderer(Renderer r)

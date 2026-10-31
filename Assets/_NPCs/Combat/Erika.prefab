@@ -10311,6 +10311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 1
 --- !u!114 &2775683701247765321
 MonoBehaviour:
   m_ObjectHideFlags: 0

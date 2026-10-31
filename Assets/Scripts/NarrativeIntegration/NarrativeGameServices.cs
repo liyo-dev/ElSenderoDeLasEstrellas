@@ -36,6 +36,7 @@ public static class NarrativeGameServices
         NarrativeServices.Register<INarrativeActorDirectory>(npcs);
         NarrativeServices.Register<INarrativeAttentionMarkers>(npcs);
         NarrativeServices.Register<INarrativeActorPlacement>(npcs);
+        NarrativeServices.Register<INarrativeActorPresence>(npcs);
 
         var dialogues = new DialogueNarrativeAdapter();
         NarrativeServices.Register<INarrativeDialoguePlayer>(dialogues);

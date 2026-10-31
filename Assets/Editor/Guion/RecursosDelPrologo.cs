@@ -91,23 +91,6 @@ public static class RecursosDelPrologo
             else perfil.eventSfx.Add(new AudioGraphProfile.EventSfx { eventKey = clave, sfx = clip });
             cambiado = true;
         }
-        if (perfil.cinematicVoiceDuck != null)
-        {
-            // El ducking oficial de las cinemáticas: la música se aparta -3 dB, no -8
-            // (INC-827). El horneado no puede volver a pisar el balance que fija el menú
-            // «Actualizar Perfil de Voces Cinematicas».
-            if (perfil.cinematicVoiceDuck.voiceGainDb != 0f || perfil.cinematicVoiceDuck.musicDb != -3f)
-            {
-                perfil.cinematicVoiceDuck.voiceGainDb = 0f;
-                perfil.cinematicVoiceDuck.musicDb = -3f;
-                perfil.cinematicVoiceDuck.ambienceDb = -6f;
-                perfil.cinematicVoiceDuck.sfxDb = -4f;
-                perfil.cinematicVoiceDuck.attackSeconds = 0.08f;
-                perfil.cinematicVoiceDuck.releaseSeconds = 0.65f;
-                perfil.cinematicVoiceDuck.holdAfterVoiceSeconds = 0.5f;
-                cambiado = true;
-            }
-        }
         if (cambiado) EditorUtility.SetDirty(perfil);
     }
 

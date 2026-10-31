@@ -84,6 +84,15 @@ namespace Game.NPC.Modules
         // ✅ CAMBIO: Obtener _config dinámicamente para asegurar que siempre tenga los valores actualizados
         // Esto es necesario porque NPCInteractiveNarrativeExecutor puede actualizar combatConfig después de Start()
         private NPCCombatConfig _config => _manager?.Configuration?.combatConfig;
+
+        // Si en esta partida ya se le había derrotado antes de la caída en curso (revanchas).
+        private bool _yaHabiaCaidoAntes;
+
+        private string ClaveDeDerrota()
+        {
+            string id = _manager != null && !string.IsNullOrEmpty(_manager.PersistenceId) ? _manager.PersistenceId : name;
+            return $"NPC_DERROTADO:{id}";
+        }
         #endregion
 
         #region 📊 State
@@ -360,6 +369,8 @@ namespace Game.NPC.Modules
             
             _isProcessingDefeat = true;
             IsDefeatedAndInactive = true;
+            _yaHabiaCaidoAntes = FlagDePartida.EstaPuesto(ClaveDeDerrota());
+            FlagDePartida.Marcar(ClaveDeDerrota());
             
             // ✅ Notificar al equipo si pertenece a uno
             var teamMember = ResolvedTeamMember;
@@ -517,24 +528,19 @@ namespace Game.NPC.Modules
                 yield return new WaitForSeconds(1f);
             }
             
-            // ✅ Enviar evento de derrota al grafo narrativo DESPUÉS de la muerte (solo si no se envió antes)
-            if (_config != null && _config.sendEventOnDefeat && !_config.sendDefeatEventBeforeDeath && !string.IsNullOrEmpty(_config.defeatEventKey))
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 📤 Enviando evento de derrota al grafo narrativo: '{_config.defeatEventKey}'");
-                #endif
-                DefaultNarrativeSignals.Instance?.RaiseCustom(_config.defeatEventKey, name);
-            }
-
             // ✅ 7. POST-MUERTE (Desaparecer o continuar con Dizzy)
+            // El evento de derrota sale al acabar la secuencia completa (tras el diálogo del NPC),
+            // para que lo que dé el grafo llegue después de lo que dice el NPC. Al desaparecer, el
+            // objeto se apaga dentro de HandleDisappear y la corrutina ya no sigue: se envía antes.
             if (behavior == PostDeathBehavior.Disappear)
             {
+                EnviarEventoDeDerrota();
                 yield return HandleDisappear();
             }
             else
             {
-                // HandleGetUpDizzy ahora solo espera el dizzy y muestra el diálogo
                 yield return HandleGetUpDizzy();
+                EnviarEventoDeDerrota();
             }
 
             _isProcessingDefeat = false;
@@ -555,6 +561,14 @@ namespace Game.NPC.Modules
                 VfxPoolService.Instance.Play(_config.disappearVFXPrefab, transform.position + Vector3.up, Quaternion.identity, 3f);
 
             gameObject.SetActive(false);
+        }
+
+        // Evento de derrota al grafo narrativo, salvo que la config lo pida antes de la muerte.
+        private void EnviarEventoDeDerrota()
+        {
+            if (_config == null || !_config.sendEventOnDefeat || _config.sendDefeatEventBeforeDeath || string.IsNullOrEmpty(_config.defeatEventKey))
+                return;
+            DefaultNarrativeSignals.Instance?.RaiseCustom(_config.defeatEventKey, name);
         }
 
         public void CancelDizzySequence()
@@ -635,7 +649,9 @@ namespace Game.NPC.Modules
             
             if (shouldShowDialogue)
             {
-                DialogueAsset dialogue = _config?.dialogueOnDizzy ?? _config?.dialogueOnDefeat;
+                DialogueAsset dialogue = _yaHabiaCaidoAntes && _config?.dialogueOnDizzyRepeat != null
+                    ? _config.dialogueOnDizzyRepeat
+                    : _config?.dialogueOnDizzy ?? _config?.dialogueOnDefeat;
                 if (dialogue != null)
                 {
                     // ✅ Verificar antes de mostrar diálogo

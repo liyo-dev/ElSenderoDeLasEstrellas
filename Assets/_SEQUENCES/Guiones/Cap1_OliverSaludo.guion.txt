@@ -1,0 +1,76 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CAP. 1 · OLIVER SALUDA A WILL  (INC-867, fase 6)
+#  Will sale de casa y Oliver le ve desde la plaza: le llama, corre hasta él sin aliento, le
+#  enseña su hechizo nuevo (que le explota en la cara a los dos), se ríen, le explica los menús
+#  (caja de diálogo, la escena espera) y se van juntos a ver qué pasa con Eldran y Victoria.
+#  Dos planos, como pidió Raúl (INC-357): uno aéreo mientras Oliver va hacia Will y uno abierto
+#  con los dos de perfil para el resto.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Cap1_OliverSaludo
+ESCENA MainWorld
+ZONA Cap1 6 -136 22
+SECUENCIA Assets/_SEQUENCES/SEQ_OliverSaludo.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+oliver  NPC_Oliver  nombre=Oliver color=9FE0A0
+
+PUNTOS
+# Will, recién salido por la puerta de casa (House_FrontDoor, -0.18 -132.51).
+p_will        1.0 -132.5
+# Oliver en su sitio de la plaza (SP_Oliver) y donde se para, a 1,8 m de Will.
+p_oliver      5.99 -143.19
+p_llega       1.76 -134.13
+
+HILO
+@inicio
+will en p_will mirando oliver
+& oliver en p_oliver mirando will
+& plano general oliver will altura=7 lente=40 quieta
+oliver dice OLIVER_GREETING_SPOT_WILL gesto=Cheer02 cara=alegre
+
+# Corre hasta Will. El mismo plano aéreo: se le ve cruzar la plaza.
+@carrera
+oliver corre a p_llega llega_mirando=will
+& will cara sorpresa
+
+# Ya juntos: los dos de perfil, el plano no cambia hasta el final.
+@charla
+plano conjunto oliver will lente=40 quieta
+& will mira oliver
+oliver dice OLIVER_GREETING_OUT_OF_BREATH gesto=Dizzy_NoWeapon cara=cansado
+oliver dice OLIVER_GREETING_NEW_SPELL_INTRO cara=ilusionado
+& will gesto Question01
+& will cara alegre
+
+# El hechizo fallido: les explota a los dos.
+@hechizo
+oliver gesto MagicSpecial dura=0.5
+efecto VfxBeat vfxPrefab=Assets/Art/World/ithappy/Sweet_Land/VFX/FX_Prefabs/FX_Smoke_Small.prefab atActorId=oliver offset=0;1.1;0 earlyDespawn=1
+& efecto SfxBeat eventKey=SpellFail atActorId=oliver
+& sacudida 0.35 0.4
+& oliver gesto TakeDamage_2
+& will gesto TakeDamage_2
+& oliver cara sorpresa
+& will cara sorpresa
+espera 0.9
+oliver gesto Dizzy_NoWeapon dura=1.2
+& will gesto Dizzy_NoWeapon dura=1.2
+espera 0.8
+oliver gesto Laugh01
+& will gesto Laugh01
+& oliver cara alegre
+& will cara alegre
+will dice WILL_GREETING_OLIVER_CUT_OFF gesto=Laugh01
+& oliver gesto HeadShake01
+
+# Los menús: caja de diálogo, la escena espera a que el jugador la cierre.
+@menus
+oliver dice OLIVER_GREETING_BEFORE_MENUS_HANDOFF gesto=Cheer01
+efecto DialogueBeat dialogue=DG_Oliver_Menus actorId=oliver conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=HeadNod01,Question01,HeadNod01,HeadNod01 caras_will=alegre dura=0.3
+oliver dice OLIVER_GREETING_PERAS_HANDOFF gesto=HandWave01
+will dice WILL_GREETING_PERAS_HANDOFF gesto=HeadNod01
+espera 0.4

@@ -55,6 +55,10 @@ MonoBehaviour:
   - rid: 5630202287041282395
   - rid: 5630202287041282396
   - rid: 5630202287041282397
+  - rid: 5630202821400330240
+  - rid: 5630202821400330241
+  - rid: 5630202821400330242
+  - rid: 5630202821400330243
   applicableSceneNames:
   - MainWorld
   references:
@@ -86,7 +90,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c3149093-4f7b-48e2-81e1-8bbaba2350f2
-        position: {x: 380, y: 1657}
+        position: {x: 380, y: 1680}
         outputs:
         - 1769126c-f9bd-455f-b76f-96f0d096bac6
         questId: Q_TABERNERA_ALGAS
@@ -102,7 +106,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: db4b04b0-fed3-4756-b4d8-6a01b4459193
-        position: {x: 380, y: 388}
+        position: {x: 380, y: 720}
         outputs:
         - b4502fed-c3e7-4fe9-a48a-d3151dd615da
         questId: Q_NORA_POCIONES
@@ -118,7 +122,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 231b6f08-67fc-47a5-b544-7b88b4a36290
-        position: {x: 760, y: 1488}
+        position: {x: 760, y: 1752}
         outputs: []
         wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
         logWarnings: 1
@@ -133,7 +137,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 9f7e4a93-96a1-45e9-9426-6a214f7c837f
-        position: {x: 1140, y: 198}
+        position: {x: 1140, y: 605}
         outputs: []
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
         amount: 15
@@ -150,7 +154,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: b38702f2-1671-472b-b58d-ce3a8050f085
-        position: {x: 380, y: 1855}
+        position: {x: 380, y: 1865}
         outputs:
         - 231b6f08-67fc-47a5-b544-7b88b4a36290
         questId: Q_MANUEL_POCIONES
@@ -166,7 +170,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: b4502fed-c3e7-4fe9-a48a-d3151dd615da
-        position: {x: 760, y: 404}
+        position: {x: 760, y: 745}
         outputs:
         - 9f7e4a93-96a1-45e9-9426-6a214f7c837f
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -184,7 +188,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 1769126c-f9bd-455f-b76f-96f0d096bac6
-        position: {x: 760, y: 1318}
+        position: {x: 760, y: 1592}
         outputs: []
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
         amount: 25
@@ -221,6 +225,7 @@ MonoBehaviour:
         outputs:
         - a5b0ec64-4604-458f-baa2-4363bad5d765
         eventKey: ALGAS_INVENTORY
+        acceptEarlierEvent: 1
     - rid: 5623891252771815606
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
@@ -249,7 +254,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 434108a8-8f50-407a-b807-74d22ff2a5ac
-        position: {x: -1, y: 0}
+        position: {x: 0, y: 0}
         outputs:
         - 099fe10e-98f2-475b-ae44-0f435002ee2c
         - 00079bce-e03b-4fa9-bf56-051f0f3b427c
@@ -261,6 +266,7 @@ MonoBehaviour:
         - b38702f2-1671-472b-b58d-ce3a8050f085
         - db4b04b0-fed3-4756-b4d8-6a01b4459193
         - 25b810b1-9ddd-48bd-9474-773389932a01
+        - sec-erika-revancha-0
     - rid: 5623891481250759595
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -272,7 +278,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 29625f69-6406-4f2c-a5b7-4f2351d2a8d1
-        position: {x: 380, y: 586}
+        position: {x: 380, y: 905}
         outputs:
         - f01dc9e7-de62-484e-8166-01c99735cb97
         questId: Q_RUDOLFO
@@ -288,7 +294,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f01dc9e7-de62-484e-8166-01c99735cb97
-        position: {x: 760, y: 574}
+        position: {x: 760, y: 905}
         outputs: []
         abilityKeysToUnlock: 01000000i
         abilitiesToUnlock: 
@@ -309,7 +315,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: fa24c4e1-e60f-4788-b4c0-a6d276e5cddb
-        position: {x: 380, y: 190}
+        position: {x: 380, y: 177}
         outputs:
         - 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
         questId: "Q_NI\xD1OPEZ"
@@ -325,7 +331,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
-        position: {x: 760, y: 170}
+        position: {x: 760, y: 160}
         outputs:
         - 19e6376b-e48c-41d5-bf3a-aa9beef62892
         abilityKeysToUnlock: 00000000i
@@ -347,7 +353,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 00079bce-e03b-4fa9-bf56-051f0f3b427c
-        position: {x: 380, y: 784}
+        position: {x: 380, y: 1090}
         outputs:
         - b3cc61c7-023e-47cc-865a-06c7e4c93ab5
         questId: ROBERTO_MISION1
@@ -363,7 +369,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: b3cc61c7-023e-47cc-865a-06c7e4c93ab5
-        position: {x: 760, y: 808}
+        position: {x: 760, y: 1112}
         outputs: []
         item: {fileID: 11400000, guid: e420f009517398f4aa2f67aed445c278, type: 2}
         amount: 5
@@ -380,7 +386,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-773389932a01
-        position: {x: 400, y: 2700}
+        position: {x: 380, y: 362}
         outputs:
         - 
         - 25b810b1-9ddd-48bd-9474-773389932a02
@@ -397,12 +403,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-773389932a02
-        position: {x: 730, y: 2700}
+        position: {x: 760, y: 367}
         outputs:
         - 25b810b1-9ddd-48bd-9474-773389932a03
         npcId: NPC_Renard
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202287041282380
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -414,7 +421,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-773389932a03
-        position: {x: 1060, y: 2700}
+        position: {x: 1140, y: 185}
         outputs:
         - 25b810b1-9ddd-48bd-9474-773389932a04
         dialogue: {fileID: 11400000, guid: feeb6c6a2c373f3418b50bd08b54b207, type: 2}
@@ -431,7 +438,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-773389932a04
-        position: {x: 1390, y: 2700}
+        position: {x: 1520, y: 173}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c001
         flagKey: RENARD_CONOCIDO
@@ -447,7 +454,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c001
-        position: {x: 400, y: 2950}
+        position: {x: 1900, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c002
         dialogue: {fileID: 11400000, guid: dc41e36c492c8fb40a36e3a57ce4376c, type: 2}
@@ -464,7 +471,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c002
-        position: {x: 730, y: 2950}
+        position: {x: 2280, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c003
         questId: RENARD_CONTRATO_1
@@ -482,7 +489,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c003
-        position: {x: 1060, y: 2950}
+        position: {x: 2660, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c004
         eventKey: ENEMIGO_DERROTADO_ARANA
@@ -499,12 +506,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c004
-        position: {x: 1390, y: 2950}
+        position: {x: 3040, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c005
         npcId: NPC_Renard
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202287041282387
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -516,7 +524,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c005
-        position: {x: 1720, y: 2950}
+        position: {x: 3420, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c006
         dialogue: {fileID: 11400000, guid: 3769c1b55ac01ef40976aa58af24bc33, type: 2}
@@ -533,7 +541,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c006
-        position: {x: 2050, y: 2950}
+        position: {x: 3800, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c007
         standingActorId: 
@@ -554,7 +562,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c007
-        position: {x: 2380, y: 2950}
+        position: {x: 4180, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c008
         item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
@@ -572,7 +580,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c008
-        position: {x: 2710, y: 2950}
+        position: {x: 4560, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c009
         dialogue: {fileID: 11400000, guid: c1c2adf255659a24bb4ffe4b3ab19183, type: 2}
@@ -589,7 +597,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c009
-        position: {x: 400, y: 3210}
+        position: {x: 4940, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c010
         questId: RENARD_CONTRATO_2
@@ -607,7 +615,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c010
-        position: {x: 730, y: 3210}
+        position: {x: 5320, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c011
         eventKey: ENEMIGO_DERROTADO_ARANA
@@ -624,12 +632,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c011
-        position: {x: 1060, y: 3210}
+        position: {x: 5700, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c012
         npcId: NPC_Renard
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
+        showMarker: 1
     - rid: 5630202287041282394
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -641,7 +650,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c012
-        position: {x: 1390, y: 3210}
+        position: {x: 6080, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c013
         dialogue: {fileID: 11400000, guid: 8da04dd077a26644989199af41e1b7b7, type: 2}
@@ -658,7 +667,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c013
-        position: {x: 1720, y: 3210}
+        position: {x: 6460, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c014
         standingActorId: 
@@ -679,7 +688,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c014
-        position: {x: 2050, y: 3210}
+        position: {x: 6840, y: 0}
         outputs:
         - 25b810b1-9ddd-48bd-9474-77338993c015
         item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
@@ -697,10 +706,85 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 25b810b1-9ddd-48bd-9474-77338993c015
-        position: {x: 2380, y: 3210}
+        position: {x: 7220, y: 0}
         outputs: []
         wardrobeItem: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}
         logWarnings: 1
+    - rid: 5630202821400330240
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Erika ya te ha entrenado
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sec-erika-revancha-0
+        position: {x: 380, y: 543}
+        outputs:
+        - sec-erika-revancha-1
+        eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
+        acceptEarlierEvent: 1
+    - rid: 5630202821400330241
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Hablar con Erika (entrenar)
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sec-erika-revancha-1
+        position: {x: 760, y: 556}
+        outputs:
+        - sec-erika-revancha-2
+        npcId: NPC_Erika
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 0
+    - rid: 5630202821400330242
+      type: {class: DialogueChoiceNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "\xBFOtra ronda?"
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sec-erika-revancha-2
+        position: {x: 1140, y: 392}
+        outputs:
+        - sec-erika-revancha-3
+        - sec-erika-revancha-1
+        promptTextId: ERIKA_REVANCHA_PREGUNTA
+        promptText: "Erika: \xBFOtra ronda de entrenamiento?"
+        optionATextId: 
+        optionAText: "S\xED"
+        optionBTextId: 
+        optionBText: No
+        rememberAsFlag: 
+    - rid: 5630202821400330243
+      type: {class: StartNpcCombatNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Combate de pr\xE1ctica con Erika"
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sec-erika-revancha-3
+        position: {x: 1520, y: 333}
+        outputs:
+        - sec-erika-revancha-1
+        npcId: NPC_Erika
+        combatConfig: {fileID: 0}
+        defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
+        waitForDefeat: 1
+        restorePeacefulOnDefeat: 1
     - rid: 7719302845561928001
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -712,7 +796,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 1f4a2b3c-5d6e-4f70-8a91-b2c3d4e5f601
-        position: {x: 380, y: 982}
+        position: {x: 380, y: 1275}
         outputs:
         - 2a5b3c4d-6e7f-4081-9a02-c3d4e5f60712
         questId: Q_GUARDIABOSQUE_ARANAS
@@ -728,7 +812,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 2a5b3c4d-6e7f-4081-9a02-c3d4e5f60712
-        position: {x: 760, y: 978}
+        position: {x: 760, y: 1272}
         outputs: []
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
         amount: 30
@@ -745,7 +829,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 3b6c4d5e-7f80-4192-ab13-d4e5f6071823
-        position: {x: 380, y: 1446}
+        position: {x: 380, y: 1482}
         outputs:
         - 4c7d5e6f-8091-42a3-bc24-e5f607182934
         questId: Q_TENDERA_ALGAS
@@ -761,7 +845,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 4c7d5e6f-8091-42a3-bc24-e5f607182934
-        position: {x: 760, y: 1148}
+        position: {x: 760, y: 1432}
         outputs: []
         item: {fileID: 11400000, guid: bb3bcf64887e34149b4ee8bb86b1a155, type: 2}
         amount: 3

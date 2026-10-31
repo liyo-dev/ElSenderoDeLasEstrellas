@@ -12,7 +12,10 @@ using UnityEngine.UI;
 /// cinemática o la intro de un jefe, lo que llega espera y los avisos que ya estaban se esconden
 /// con la cuenta atrás parada. Lo ganado en batalla no saca aviso (lo cuenta el informe de
 /// victoria): mientras dura, la batalla tiene cerrado el canal y lo que llega se descarta.
-/// Ver INC-642.
+///
+/// La cola coloca ella misma los avisos en pila (uno debajo de otro, o encima con
+/// <see cref="spawnAtTop"/>) y, si llegan varios a la vez, los saca de uno en uno con
+/// <see cref="esperaEntreAvisos"/> de separación. Ver INC-642, INC-880.
 /// </summary>
 public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
 {
@@ -20,15 +23,22 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
     [Tooltip("Prefab con un CollectiblePopupPanel.")]
     public GameObject popupPrefab;
 
-    [Tooltip("Contenedor donde se crean los avisos (normalmente un panel con VerticalLayoutGroup bajo un Canvas).")]
+    [Tooltip("Contenedor donde se crean los avisos. La cola los coloca en pila dentro de él; un LayoutGroup en el contenedor se apaga.")]
     public Transform popupParent;
 
     [Header("Settings")]
     [Tooltip("Segundos que se ve cada aviso (solo cuentan mientras está a la vista).")]
     public float displayDuration = 1.25f;
 
-    [Tooltip("True: los avisos nuevos se colocan arriba de la pila. False: abajo (ajustar el VerticalLayoutGroup para apilar desde abajo).")]
+    [Tooltip("True: los avisos nuevos se colocan arriba de la pila y empujan a los demás hacia abajo. False: debajo del último.")]
     public bool spawnAtTop = false;
+
+    [Header("Pila")]
+    [Tooltip("Distancia vertical entre un aviso y el siguiente de la pila.")]
+    public float separacionVertical = 110f;
+
+    [Tooltip("Segundos entre la entrada de un aviso y la del siguiente cuando llegan varios a la vez.")]
+    public float esperaEntreAvisos = 0.35f;
 
     [Header("Grouping")]
     [Tooltip("Ventana (segundos) en la que varias entradas seguidas del mismo objeto se juntan en un solo aviso.")]
@@ -55,8 +65,12 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
     private readonly Dictionary<string, int> _agrupando = new();
     // Avisos que esperan turno (menú, cinemática…), en orden de llegada.
     private readonly List<Pendiente> _esperando = new();
-    // Avisos en pantalla.
+    // Avisos con turno que esperan su hueco para entrar, de uno en uno.
+    private readonly List<Pendiente> _porSacar = new();
+    // Avisos en pantalla, en orden de llegada.
     private readonly List<CollectiblePopupPanel> _vivos = new();
+    private Coroutine _sacando;
+    private float _proximaEntrada;
 
     private static CollectiblePopupQueue _activa;
 
@@ -81,6 +95,9 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         _grupoDelContenedor = contenedor.GetComponent<CanvasGroup>();
         if (_grupoDelContenedor == null) _grupoDelContenedor = contenedor.gameObject.AddComponent<CanvasGroup>();
         _grupoDelContenedor.alpha = 0f;
+        // La pila la coloca la cola: un LayoutGroup movería los avisos por debajo de ella.
+        var layout = contenedor.GetComponent<LayoutGroup>();
+        if (layout != null) layout.enabled = false;
 
         // Habilitada por defecto (también en escenas que no aplican preset, como el CombatLab);
         // solo se apaga mientras se aplica un preset o se carga partida. Ver INC-642.
@@ -99,7 +116,7 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
             _pendingEnable = false;
             StartEnableRoutine();
         }
-        if (_esperando.Count > 0 || _vivos.Count > 0) ArbitroDeAvisos.Pedir(this);
+        if (_esperando.Count > 0 || _porSacar.Count > 0 || _vivos.Count > 0) ArbitroDeAvisos.Pedir(this);
     }
 
     void OnDisable()
@@ -110,8 +127,10 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
             StopCoroutine(_enableRoutine);
             _enableRoutine = null;
         }
-        // Las corrutinas de agrupado se paran con el objeto: lo que se estaba juntando se pierde.
+        // Las corrutinas se paran con el objeto: lo que se estaba juntando se pierde y lo que
+        // esperaba su hueco vuelve a esperar turno.
         _agrupando.Clear();
+        DevolverPorSacar();
         ArbitroDeAvisos.Terminar(this);
         _aLaVista = false;
     }
@@ -171,6 +190,8 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         }
         _agrupando.Clear();
         _esperando.Clear();
+        PararSacado();
+        _porSacar.Clear();
         DestroyActivePopups();
         ArbitroDeAvisos.Terminar(this);
         _aLaVista = false;
@@ -237,10 +258,11 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
             if (_vivos[i] != null) _vivos[i].Congelar(false);
 
         for (int i = 0; i < _esperando.Count; i++)
-            SpawnPopup(_esperando[i].item, _esperando[i].cantidad);
+            PonerPorSacar(_esperando[i].item, _esperando[i].cantidad);
         _esperando.Clear();
+        if (_porSacar.Count > 0 && _sacando == null) _sacando = StartCoroutine(Co_Sacar());
 
-        if (_vivos.Count == 0) ArbitroDeAvisos.Terminar(this);
+        if (_vivos.Count == 0 && _porSacar.Count == 0) ArbitroDeAvisos.Terminar(this);
     }
 
     public void AlPerderTurno()
@@ -249,12 +271,15 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         _grupoDelContenedor.alpha = 0f;
         for (int i = 0; i < _vivos.Count; i++)
             if (_vivos[i] != null) _vivos[i].Congelar(true);
+        DevolverPorSacar();
     }
 
     public void AlDescartar()
     {
         _aLaVista = false;
         _esperando.Clear();
+        PararSacado();
+        _porSacar.Clear();
         DestroyActivePopups();
     }
 
@@ -266,7 +291,7 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
 
         if (_aLaVista)
         {
-            SpawnPopup(item, amount);
+            PonerPorSacar(item, amount);
             return;
         }
 
@@ -284,21 +309,66 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         ArbitroDeAvisos.Pedir(this);
     }
 
-    private void SpawnPopup(ItemData item, int amountToShow)
+    /// Con turno: se suma a su aviso si ya está en pantalla o en la fila; si no, entra en la fila
+    /// para salir en su hueco.
+    private void PonerPorSacar(ItemData item, int amount)
     {
         var key = Clave(item);
-
-        // Si ya hay un aviso de este objeto en pantalla, se le suma la cantidad.
         for (int i = 0; i < _vivos.Count; i++)
         {
             var vivo = _vivos[i];
             if (vivo != null && vivo.ItemId == key)
             {
-                vivo.AddAmount(amountToShow);
+                vivo.AddAmount(amount);
                 return;
             }
         }
+        for (int i = 0; i < _porSacar.Count; i++)
+        {
+            if (Clave(_porSacar[i].item) != key) continue;
+            var p = _porSacar[i];
+            p.cantidad += amount;
+            _porSacar[i] = p;
+            return;
+        }
+        _porSacar.Add(new Pendiente { item = item, cantidad = amount });
+        if (_sacando == null && isActiveAndEnabled) _sacando = StartCoroutine(Co_Sacar());
+    }
 
+    private IEnumerator Co_Sacar()
+    {
+        // Un frame de margen: así la corrutina nunca acaba dentro de su propio StartCoroutine y
+        // _sacando no se queda apuntando a una que ya terminó.
+        yield return null;
+        while (_porSacar.Count > 0)
+        {
+            while (Time.unscaledTime < _proximaEntrada) yield return null;
+            var p = _porSacar[0];
+            _porSacar.RemoveAt(0);
+            SpawnPopup(p.item, p.cantidad);
+            _proximaEntrada = Time.unscaledTime + esperaEntreAvisos;
+        }
+        _sacando = null;
+        if (_vivos.Count == 0 && _esperando.Count == 0) ArbitroDeAvisos.Terminar(this);
+    }
+
+    private void PararSacado()
+    {
+        if (_sacando != null) StopCoroutine(_sacando);
+        _sacando = null;
+    }
+
+    /// Sin turno, lo que esperaba su hueco vuelve a esperar turno, delante de lo que llegue.
+    private void DevolverPorSacar()
+    {
+        PararSacado();
+        if (_porSacar.Count == 0) return;
+        _esperando.InsertRange(0, _porSacar);
+        _porSacar.Clear();
+    }
+
+    private void SpawnPopup(ItemData item, int amountToShow)
+    {
         if (popupPrefab == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -323,7 +393,6 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         if (spawnAtTop) go.transform.SetAsFirstSibling();
         else go.transform.SetAsLastSibling();
 
-        // El layout del contenedor decide la posición de cada aviso.
         if (go.transform is RectTransform rt)
         {
             rt.localScale = Vector3.one;
@@ -333,9 +402,24 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
 
         panel.Acabado += AlAcabarUnAviso;
         _vivos.Add(panel);
-        panel.Init(item, amountToShow, displayDuration);
-        if (parent is RectTransform parentRect)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+        panel.Init(item, amountToShow, displayDuration, SitioEnLaPila(spawnAtTop ? 0 : _vivos.Count - 1));
+        RecolocarPila();
+    }
+
+    /// Sitio del aviso que ocupa el puesto <paramref name="puesto"/> de la pila (0 = el primero).
+    private Vector2 SitioEnLaPila(int puesto) => new Vector2(0f, -puesto * separacionVertical);
+
+    private void RecolocarPila()
+    {
+        int puesto = 0;
+        for (int i = 0; i < _vivos.Count; i++)
+        {
+            int indice = spawnAtTop ? _vivos.Count - 1 - i : i;
+            var panel = _vivos[indice];
+            if (panel == null) continue;
+            panel.ColocarEn(SitioEnLaPila(puesto));
+            puesto++;
+        }
     }
 
     private void AlAcabarUnAviso(CollectiblePopupPanel panel)
@@ -343,7 +427,8 @@ public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
         _vivos.Remove(panel);
         for (int i = _vivos.Count - 1; i >= 0; i--)
             if (_vivos[i] == null) _vivos.RemoveAt(i);
-        if (_vivos.Count == 0 && _esperando.Count == 0) ArbitroDeAvisos.Terminar(this);
+        RecolocarPila();
+        if (_vivos.Count == 0 && _esperando.Count == 0 && _porSacar.Count == 0) ArbitroDeAvisos.Terminar(this);
     }
 
     void DestroyActivePopups()

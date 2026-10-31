@@ -506,7 +506,7 @@
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_DETAIL",
-            "value":  "Eldran quiere que no salgas con las manos vacías: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika, y practica la puntería con él."
+            "value":  "Eldran quiere que no salgas con las manos vacías: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika. Luego vuelve con él."
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_STEP1",
@@ -522,7 +522,7 @@
         },
         {
             "key":  "QUEST_PREPARA_VIAJE_STEP4",
-            "value":  "Practica la puntería con Eldran"
+            "value":  "Vuelve con Eldran"
         },
         {"key":"QUEST_RENARD_CONTRATO_1_NAME","value":"Patas de sobra"},
         {"key":"QUEST_RENARD_CONTRATO_1_DESC","value":"Renard quiere que acabes con ocho arañas del Bosque Prohibido."},

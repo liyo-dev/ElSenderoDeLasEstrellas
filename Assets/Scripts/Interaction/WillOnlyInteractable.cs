@@ -6,7 +6,7 @@ using UnityEngine;
 /// Marca un NPC como accesible únicamente cuando Will es el personaje activo.
 ///
 /// Si el jugador intenta interactuar con otro personaje activo:
-///   - Se muestra un mensaje HUD no bloqueante ("Solo Will puede hablar con este personaje").
+///   - Se muestra un mensaje HUD no bloqueante (avisoKey; por defecto "Solo Will puede hablar con este personaje").
 ///   - Se reproduce un leve shake de cámara.
 ///   - La interacción no avanza.
 ///
@@ -18,7 +18,9 @@ using UnityEngine;
 [RequireComponent(typeof(Interactable))]
 public class WillOnlyInteractable : MonoBehaviour
 {
-    private const string FeedbackLocKey = "NPC_REQUIRES_WILL";
+
+    [Tooltip("Clave del aviso que sale cuando lo intenta otro personaje.")]
+    [SerializeField] private string avisoKey = "NPC_REQUIRES_WILL";
 
     [Header("Indicador visual")]
     [Tooltip("Prefab del icono que aparece flotando sobre el NPC. Si está vacío, no se muestra icono.")]
@@ -60,7 +62,7 @@ public class WillOnlyInteractable : MonoBehaviour
     /// </summary>
     public void ShowFeedback()
     {
-        HudToastService.Instance?.Show(FeedbackLocKey);
+        HudToastService.Instance?.Show(avisoKey);
         FeedbackService.CameraShake(0.15f, 0.2f);
     }
 

@@ -128,6 +128,9 @@ namespace Sendero.Narrative.Editor
             abilities.Add(AbilityToggle("Escudo", _config.abilityShield, v => _config.abilityShield = v));
             abilities.Add(AbilityToggle("Magia (casts)", _config.abilityMagic, v => _config.abilityMagic = v));
             body.Add(abilities);
+            var grupo = new Toggle("Estela y Liam en el grupo") { value = _config.grupoCompleto };
+            grupo.RegisterValueChangedCallback(evt => { _config.grupoCompleto = evt.newValue; _config.Save(); });
+            body.Add(grupo);
 
             body.Add(new Label("Hechizos equipados") { name = "spells-title" });
             _config.EnsureSpellSlots();

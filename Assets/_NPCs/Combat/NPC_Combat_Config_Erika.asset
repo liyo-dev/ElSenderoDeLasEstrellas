@@ -31,7 +31,7 @@ MonoBehaviour:
   manaBarPrefab: {fileID: 662809776453450714, guid: 06a21cf2429ee2d4e879a503cb78faf6, type: 3}
   showManaBarToPlayer: 0
   dialogueOnAlert: {fileID: 11400000, guid: 4d7e29d781db19a44b19a032275208f2, type: 2}
-  dialogueOnDefeat: {fileID: 0}
+  dialogueOnDefeat: {fileID: 11400000, guid: 00e01ce253148554881597dfe2faa75c, type: 2}
   dialogueAfterDefeat: {fileID: 11400000, guid: cbaea10abdb313f4cbb0b49b649d6381, type: 2}
   waitForAlertDialogue: 1
   freezePlayerOnAlert: 1
@@ -42,6 +42,7 @@ MonoBehaviour:
   disappearOnArrivalVFX: {fileID: 0}
   moveTeamMembersOnDefeat: 1
   dialogueOnDizzy: {fileID: 11400000, guid: 00e01ce253148554881597dfe2faa75c, type: 2}
+  dialogueOnDizzyRepeat: {fileID: 11400000, guid: 3ff6761e98c748968e04f5ddd5886d66, type: 2}
   disappearVFXPrefab: {fileID: 0}
   disappearTransition: {fileID: 0}
   disappearDuration: 2

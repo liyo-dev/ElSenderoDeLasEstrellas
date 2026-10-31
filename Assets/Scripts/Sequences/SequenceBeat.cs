@@ -88,17 +88,6 @@ public sealed class SequenceContext
     }
     public SequencePlayer Player { get; }
     public SequenceStage Stage { get; }
-    public PresentacionDeTexto? PresentacionDeLineaActiva { get; private set; }
-    public bool UsaSubtitulos => (PresentacionDeLineaActiva ?? Player?.Definition?.presentacionDeTexto
-        ?? PresentacionDeTexto.Bocadillo) != PresentacionDeTexto.Bocadillo;
-
-    /// Reencuadra solo cuando cambia la necesidad de reservar hueco de bocadillo.
-    public void CambiarPresentacionDeLinea(PresentacionDeTexto? estilo)
-    {
-        bool anterior = UsaSubtitulos;
-        PresentacionDeLineaActiva = estilo;
-        if (anterior != UsaSubtitulos) Player?.RefreshCurrentShot();
-    }
 
     private readonly Dictionary<string, SequenceActor> _actors = new();
     private readonly Dictionary<string, SequenceActor> _personajesVisibles = new();
@@ -272,110 +261,6 @@ public sealed class SequenceContext
     public bool EstaRegistrado(string id)
         => !string.IsNullOrWhiteSpace(id) && _actors.TryGetValue(id, out var a) && a?.Transform != null;
 
-    // ── Eje de acción (la regla de los 180 grados) ───────────────────────────
-    //
-    // Entre dos personajes que hablan hay una línea imaginaria. Todos los planos de una escena
-    // tienen que rodarse del MISMO lado de esa línea: si uno se cruza, el espectador ve a los dos
-    // personajes intercambiados de sitio y siente que algo va mal aunque no sepa decir qué. Es la
-    // regla de montaje más básica que hay y también la más barata de cumplir — es un signo.
-    //
-    // El lado se decide UNA vez, en el primer plano calculado de la escena, y lo heredan todos los
-    // demás. Y se decide mirando dónde estaba la cámara de juego en ese momento: así el primer
-    // corte de la cinemática cae del mismo lado desde el que el jugador venía mirando, y la
-    // entrada no se siente como un salto.
-
-    private Vector3 _actionSide;
-    private bool _actionSideSet;
-
-    /// Fija el lado del eje a mano, en vez de dejar que lo decida el primer plano.
-    ///
-    /// Hace falta cuando la cinemática NO ocurre donde está el jugador. El criterio normal
-    /// ("el lado desde el que el jugador venía mirando") es el bueno para una escena que arranca
-    /// delante de él; pero una secuencia que pasa en otro sitio del mapa — el prólogo, que ocurre
-    /// en un valle a seis kilómetros mientras Will duerme — hereda la orientación de una cámara
-    /// que no tiene nada que ver, y el resultado es que el mismo montaje sale rodado por un lado o
-    /// por el otro según dónde estuviera mirando el jugador al acostarse. Con esto el decorado se
-    /// puede construir sabiendo por dónde va a entrar la cámara.
-    public void SetActionSide(Vector3 worldDirection)
-    {
-        worldDirection.y = 0f;
-        if (worldDirection.sqrMagnitude < 0.0001f) return;
-
-        _actionSide = worldDirection.normalized;
-        _actionSideSet = true;
-    }
-
-    /// El lado del eje desde el que se rueda esta escena, para el par de actores dado.
-    /// Devuelve un vector horizontal normalizado, perpendicular a la línea que los une.
-    public Vector3 ResolveActionSide(SequenceActor subject, SequenceActor secondary)
-    {
-        if (subject?.Transform == null) return Vector3.right;
-
-        Vector3 axis = secondary?.Transform != null
-            ? secondary.Transform.position - subject.Transform.position
-            : subject.Transform.forward;
-        axis.y = 0f;
-
-        if (axis.sqrMagnitude < 0.0001f) axis = subject.Transform.forward;
-        axis.y = 0f;
-        if (axis.sqrMagnitude < 0.0001f) axis = Vector3.forward;
-        axis.Normalize();
-
-        Vector3 perpendicular = Vector3.Cross(Vector3.up, axis).normalized;
-
-        if (_actionSideSet)
-        {
-            // Ya hay un lado elegido para esta escena: se conserva. De los dos candidatos se coge
-            // el que apunta hacia donde ya estábamos.
-            return Vector3.Dot(perpendicular, _actionSide) >= 0f ? perpendicular : -perpendicular;
-        }
-
-        // Primer plano de la escena: se elige el lado en el que ya estaba la cámara de juego, para
-        // no arrancar la cinemática con un salto.
-        Vector3 hint = perpendicular;
-        var cam = Player != null ? Player.CachedCamera : null;
-        if (cam != null)
-        {
-            Vector3 midpoint = subject.Transform.position;
-            if (secondary?.Transform != null)
-                midpoint = (midpoint + secondary.Transform.position) * 0.5f;
-
-            Vector3 toCamera = cam.transform.position - midpoint;
-            toCamera.y = 0f;
-            if (toCamera.sqrMagnitude > 0.0001f)
-                hint = Vector3.Dot(perpendicular, toCamera) >= 0f ? perpendicular : -perpendicular;
-        }
-
-        _actionSide = hint;
-        _actionSideSet = true;
-        return hint;
-    }
-
-    /// Olvida el lado elegido: el siguiente plano vuelve a decidirlo desde cero. Sirve cuando la
-    /// escena cambia de sitio o de pareja de personajes y arrastrar el eje anterior ya no
-    /// significa nada.
-    public void ResetActionAxis() => _actionSideSet = false;
-
-    // ── Último plano montado ─────────────────────────────────────────────────
-    //
-    // Se guarda solo para poder avisar de dos cortes seguidos que apenas cambian de ángulo ni de
-    // tamaño, que al verlos parecen un fallo de montaje. Ver ShotComposer.
-
-    private ShotSolution _previousShot;
-    private bool _hasPreviousShot;
-
-    public void RememberShot(ShotSolution shot)
-    {
-        _previousShot = shot;
-        _hasPreviousShot = true;
-    }
-
-    public bool TryGetPreviousShot(out ShotSolution shot)
-    {
-        shot = _previousShot;
-        return _hasPreviousShot;
-    }
-
     // ── Marcas (las ramas de la secuencia) ───────────────────────────────────
     //
     // Una marca es un sí/no con nombre que un beat deja puesto y que las fases siguientes pueden
@@ -452,10 +337,6 @@ public abstract class SequenceBeat
     /// aplicar desde el principio, porque su efecto se queda puesto; los que son un efecto
     /// puntual (un VFX, un sonido) no, porque ya pasaron.
     public virtual bool CambiaElEscenario => false;
-
-    /// ¿Es un plano de cámara? El reproductor suelta el telón justo antes de aplicarlo, para
-    /// que la pantalla se abra ya encuadrada.
-    public virtual bool EsPlano => false;
 
     /// Un beat que deja algo en la mano de un personaje lo coloca aquí, antes de que se vea la
     /// escena: el objeto tiene que estar en la mano desde el primer fotograma, no aparecer de

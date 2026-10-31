@@ -1,0 +1,47 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CAP. 1 · ELDRAN LE LLAMA: «VEN, SÍGUEME»  (INC-867, fase 6)
+#  Will acaba de comprar la estrella torcida en el puesto de Tomasa. Eldran le llama desde la
+#  plaza, se acerca y le pide que le siga (caja de diálogo, la escena espera a que el jugador la
+#  cierre). Plano aéreo mientras Eldran se acerca y los dos en plano para la charla.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Cap1_EldranCaja
+ESCENA MainWorld
+ZONA Cap1 6 -136 22
+SECUENCIA Assets/_SEQUENCES/SEQ_EldranCaja.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=Eldran color=9AD0FF
+tomasa  NPC_Tomasa  nombre=Tomasa color=E8C27A
+
+PUNTOS
+# Will delante del mostrador de Tomasa (SPAWN_Tomasa 16.69 -136.84), recién comprada la estrella.
+p_will      13.2 -135.6
+p_tomasa    16.69 -136.84
+# Eldran le llama desde la plaza y se para a 1,8 m de Will.
+p_eldran    7.0 -137.0
+p_llega     11.45 -136.0
+
+HILO
+@inicio
+will en p_will mirando tomasa
+& tomasa en p_tomasa mirando will
+& eldran en p_eldran mirando will
+& plano general eldran will altura=7 lente=40 quieta
+eldran dice DLG_ELDRAN_CAJA_LLAMADA gesto=Cheer01 cara=alegre
+& will mira eldran
+& will cara sorpresa
+
+# Se acerca. El mismo plano aéreo.
+@acerca
+eldran anda a p_llega llega_mirando=will ritmo=prisa
+& tomasa mira will
+
+# Los dos, para la charla.
+@charla
+plano dos eldran will lente=34 quieta
+efecto DialogueBeat dialogue=DG_ELDRAN_SIGUEME actorId=eldran conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=-,HeadNod01 dura=0.3
+espera 0.4

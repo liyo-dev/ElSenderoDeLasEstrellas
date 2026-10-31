@@ -17,7 +17,7 @@ MonoBehaviour:
   displayName: Trozo del aro
   pluralDisplayNameId: 
   pluralDisplayName: 
-  icon: {fileID: 21300000, guid: 44f25f2d590c4c549a997a9a763eec1f, type: 3}
+  icon: {fileID: 21300000, guid: 0214ea95c1774df695d5ac7cde6414c3, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_TROZO_DEL_ARO_DESC

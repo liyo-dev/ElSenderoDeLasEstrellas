@@ -417,7 +417,6 @@ public static class BatallaFinalLabBuilder
             seqDef.signalIn = "BATALLA_FINAL_INTRO_START";
             seqDef.signalOut = "BATALLA_FINAL_COMBATE_START";
             seqDef.presentacionDeTexto = PresentacionDeTexto.Subtitulo;
-            seqDef.protagonistas = new List<string> { "Player", "NPC_MagoOscuro", "NPC_Estela", "NPC_Liam" };
             if (guionHorneado != null)
             {
                 seqDef.phases = new List<SequencePhase>

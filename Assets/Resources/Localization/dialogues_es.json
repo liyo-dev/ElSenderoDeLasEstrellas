@@ -1450,7 +1450,7 @@
         },
         {
             "key": "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
-            "value": "Victoria, la boticaria, Erika… y luego ven a verme al campo de prácticas."
+            "value": "Pasa por Victoria, la boticaria y Erika. Cuando acabes, ven a verme."
         },
         {
             "key": "DLG_VICTORIA_CAPA_01",
@@ -1487,6 +1487,18 @@
         {
             "key": "DLG_VICTORIA_CAPA_DESPUES_01",
             "value": "Esa capa te queda que ni pintada."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_01",
+            "value": "De pequeño te escondías debajo de mi mesa de costura. Siempre te encontraba por los pies."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_02",
+            "value": "Eldran dice que mis peras están verdes. Lleva cuarenta años diciéndolo y cuarenta años comiéndoselas."
+        },
+        {
+            "key": "DLG_VICTORIA_CHARLA_03",
+            "value": "La primera noche que Eldran te trajo, vino a pedirme una manta. No sabía ni cómo coger a un bebé."
         },
         {
             "key": "DLG_BOTICARIA_POCION_01",
@@ -1553,26 +1565,6 @@
             "value": "Toma este parche. Lo llevé el invierno en que un oso quiso dejarme tuerto. No lo consiguió."
         },
         {
-            "key": "DLG_ELDRAN_PUNTERIA_01",
-            "value": "Antes de salir quiero ver cómo apuntas. Esos cubos de ahí serán tu blanco."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_02",
-            "value": "Una Bola Prisma no sale sola: respira, mira el cubo y suelta solo cuando estés seguro."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_03",
-            "value": "¿Y si fallo?"
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_04",
-            "value": "Fallarás. Pero sabrás por qué. Eso también es aprender a apuntar."
-        },
-        {
-            "key": "DLG_ELDRAN_PUNTERIA_DESPUES_01",
-            "value": "Ya apuntas como debe ser. No dispares si no hace falta."
-        },
-        {
             "key": "DLG_ERIKA_ENTRENAMIENTO_01",
             "value": "Dicen que te vas del pueblo, Will. Antes de cruzar esas puertas, necesitas saber defenderte de verdad: yo ataco, tú aguantas."
         },
@@ -1610,7 +1602,7 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "Ya tienes capa, poción, pañuelo y buena puntería. Falta lo importante: saber por qué te vas."
+            "value": "Ya tienes capa, poción y pañuelo. Falta lo importante: saber por qué te vas."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
@@ -1875,6 +1867,38 @@
         {
             "key": "IDLE_LIAM_LEVANTA_ESTELA_03",
             "value": "Ya comerás luego. Arriba."
+        },
+        {
+            "key": "CHAR_ALDONA",
+            "value": "Aldona"
+        },
+        {
+            "key": "DLG_ALDONA_01",
+            "value": "Hola, muchacho. Este año la mermelada de pera me ha salido dulce, que no es poco."
+        },
+        {
+            "key": "DLG_ALDONA_02",
+            "value": "Y no corras tanto por la calle, que cualquier día me tiras."
+        },
+        {
+            "key": "DLG_ERIKA_REVANCHA_FIN",
+            "value": "Has mejorado, Will. Vuelve cuando quieras otra ronda."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_01",
+            "value": "¿Has encontrado algo raro por ahí? Si es raro de verdad, lo quiero para mi colección."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_02",
+            "value": "Dicen que en el pueblo hay una piedra con un agujero que da suerte. Yo no la he encontrado. Todavía."
+        },
+        {
+            "key": "DLG_OLIVER_CHARLA_03",
+            "value": "Si algún día ves una canica que brilla como un trozo de cielo, acuérdate de mí."
+        },
+        {
+            "key": "DLG_BOTICARIA_CHARLA_01",
+            "value": "¿Todavía tienes la poción? Bien. Que siga así."
         }
     ]
 }

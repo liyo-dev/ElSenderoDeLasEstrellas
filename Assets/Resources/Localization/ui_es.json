@@ -1770,11 +1770,11 @@
         },
         {
             "key": "ABILITY_SHIELD_TITLE",
-            "value": "Escudo"
+            "value": "Protección"
         },
         {
             "key": "ABILITY_SHIELD_DESC",
-            "value": "Levanta un escudo para bloquear ataques enemigos."
+            "value": "Mantén B para alzarla. Si bloqueas en el momento justo, devuelves el golpe."
         },
         {
             "key": "SPELL_FX_BOUNCE",
@@ -2176,6 +2176,30 @@
         {
             "key": "TESORO_MAPA_LAB_DESC",
             "value": "Marca dónde hay algo enterrado en la sala de tesoros del LAB. Míralo en el minimapa."
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_NAME",
+            "value": "Canica de cristal"
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_DESC",
+            "value": "Una canica azul que brilla como un trozo de cielo."
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_NAME",
+            "value": "Piedra con agujero"
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_DESC",
+            "value": "Dicen que mirar a través del agujero da suerte."
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_NAME",
+            "value": "Moneda antigua"
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_DESC",
+            "value": "Nadie sabe de qué reino es. No sirve para comprar nada."
         }
     ]
 }
