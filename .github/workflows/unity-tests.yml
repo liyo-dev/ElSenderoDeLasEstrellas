@@ -55,9 +55,16 @@ jobs:
       # Solo EditMode por ahora: es lo único que tiene tests hoy (Assets/Scripts/Editor/Tests/).
       # PlayMode necesita más infraestructura (escena de test, display virtual) — añadir un
       # segundo job "testMode: playmode" cuando existan tests de ese tipo.
+      #
+      # Hasta tres intentos. En el runner, el editor recibe a veces un SIGKILL (código 137)
+      # a los ~2 s de arrancar, antes de compilar nada (ver INC-888). Solo se reintenta si el
+      # intento anterior no llegó a escribir editmode-results.xml: un test que falla de
+      # verdad deja el XML y no se repite. Un error de compilación no lo deja, así que se
+      # repite, pero falla igual en cada intento.
       - name: Run EditMode tests
         uses: game-ci/unity-test-runner@v4
-        id: tests
+        id: tests1
+        continue-on-error: true
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -66,6 +73,60 @@ jobs:
           testMode: editmode
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Quién mató al editor: el OOM killer deja rastro en dmesg; memoria y disco por si acaso.
+      - name: Diagnóstico tras un intento sin resultados
+        if: steps.tests1.outcome == 'failure' && hashFiles('test-results/editmode-results.xml') == ''
+        run: |
+          free -m
+          df -h / /tmp
+          sudo dmesg -T | grep -iE 'killed process|out of memory|oom' | tail -n 20 || true
+
+      - name: Run EditMode tests (2.º intento)
+        if: steps.tests1.outcome == 'failure' && hashFiles('test-results/editmode-results.xml') == ''
+        uses: game-ci/unity-test-runner@v4
+        id: tests2
+        continue-on-error: true
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: editmode
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run EditMode tests (3.er intento)
+        if: steps.tests2.outcome == 'failure' && hashFiles('test-results/editmode-results.xml') == ''
+        uses: game-ci/unity-test-runner@v4
+        id: tests3
+        continue-on-error: true
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: editmode
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # El job lo decide el último intento que se ejecutó.
+      - name: Resultado de los tests
+        if: always()
+        env:
+          T1: ${{ steps.tests1.outcome }}
+          T2: ${{ steps.tests2.outcome }}
+          T3: ${{ steps.tests3.outcome }}
+        run: |
+          echo "Intentos: 1=$T1 2=$T2 3=$T3"
+          for r in "$T3" "$T2" "$T1"; do
+            [ "$r" = "success" ] && exit 0
+            if [ "$r" = "failure" ]; then
+              echo "::error::Los tests de EditMode han fallado. Ver el log del último intento."
+              exit 1
+            fi
+          done
+          exit 1
 
       - name: Subir resultados de los tests
         uses: actions/upload-artifact@v4
