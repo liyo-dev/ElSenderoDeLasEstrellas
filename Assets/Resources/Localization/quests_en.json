@@ -549,6 +549,90 @@
         {"key":"CHUCHE_TROMPETILLAS_NAME","value":"The lost trumpets"},
         {"key":"CHUCHE_TROMPETILLAS_DESC","value":"The substitute herald needs the army's trumpets to announce Her Highness."},
         {"key":"CHUCHE_TROMPETILLAS_DETAIL","value":"The gummy army has lost five little trumpets all over the kingdom: up high, across the long jumps and where only a good bounce will take you. Find them and bring them back to the substitute herald."},
-        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Find the army's trumpets"}
+        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Find the army's trumpets"},
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_NAME",
+            "value": "The iron marks"
+        },
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_DESC",
+            "value": "Someone is putting iron collars on animals. The seaside village might know something."
+        },
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
+            "value": "Someone is putting iron collars on animals. The seaside village might know something."
+        },
+        {
+            "key": "CAP3_LLEGAR_PASO",
+            "value": "Reach the seaside village"
+        },
+        {
+            "key": "CAP3_POSADA_PASO",
+            "value": "Ask at the inn"
+        },
+        {
+            "key": "CAP3_PISTA_1_PASO",
+            "value": "Hear what the innkeeper saw"
+        },
+        {
+            "key": "CAP3_PISTA_2_PASO",
+            "value": "Look at the garden fence"
+        },
+        {
+            "key": "CAP3_PISTA_3_PASO",
+            "value": "Look at the net shed"
+        },
+        {
+            "key": "CAP3_HOJA_PASO",
+            "value": "Tell the innkeeper"
+        },
+        {
+            "key": "CAP3_CARRO_PASO",
+            "value": "Follow the cart without being seen"
+        },
+        {
+            "key": "CAP3_CLARO_PASO",
+            "value": "Decide what to do in the clearing"
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_NAME",
+            "value": "The forest sorceress"
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_DESC",
+            "value": "A sorceress who might be able to read the collar lives in the Forbidden Forest."
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_DETAIL",
+            "value": "A sorceress who might be able to read the collar lives in the Forbidden Forest."
+        },
+        {
+            "key": "CAP4_ESTELA_PASO",
+            "value": "Find Estela in the Forbidden Forest"
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_NAME",
+            "value": "Bound for the Kingdom"
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_DESC",
+            "value": "Estela is helping Will. First, his training; then, the road to the Kingdom."
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_DETAIL",
+            "value": "Estela is helping Will. First, his training; then, the road to the Kingdom."
+        },
+        {
+            "key": "CAP4_CAMPANA_PASO",
+            "value": "Pass the bell trial"
+        },
+        {
+            "key": "CAP4_GOLEM_PASO",
+            "value": "Cross the forest toward the Kingdom"
+        },
+        {
+            "key": "CAP4_VADO_PASO",
+            "value": "Follow the river road"
+        }
     ]
 }

@@ -1,0 +1,1365 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Cap3
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: cap3-inicio
+  nodes:
+  - rid: 6540294459056455832
+  - rid: 6540294459056455833
+  - rid: 6540294459056455834
+  - rid: 6540294459056455835
+  - rid: 6540294459056455836
+  - rid: 6540294459056455837
+  - rid: 6540294459056455838
+  - rid: 6540294459056455839
+  - rid: 6540294459056455840
+  - rid: 6540294459056455841
+  - rid: 6540294459056455842
+  - rid: 6540294459056455843
+  - rid: 6540294459056455844
+  - rid: 6540294459056455845
+  - rid: 6540294459056455846
+  - rid: 6540294459056455847
+  - rid: 6540294459056455848
+  - rid: 6540294459056455849
+  - rid: 6540294459056455850
+  - rid: 6540294459056455851
+  - rid: 6540294459056455852
+  - rid: 6540294459056455853
+  - rid: 6540294459056455854
+  - rid: 6540294459056455855
+  - rid: 6540294459056455856
+  - rid: 6540294459056455857
+  - rid: 6540294459056455858
+  - rid: 6540294459056455859
+  - rid: 6540294459056455860
+  - rid: 6540294459056455861
+  - rid: 6540294459056455862
+  - rid: 6540294459056455863
+  - rid: 6540294459056455864
+  - rid: 6540294459056455865
+  - rid: 6540294459056455866
+  - rid: 6540294459056455867
+  - rid: 6540294459056455868
+  - rid: 6540294459056455869
+  - rid: 6540294459056455870
+  - rid: 6540294459056455871
+  - rid: 6540294459056455872
+  - rid: 6540294459056455873
+  - rid: 6540294459056455874
+  - rid: 6540294459056455875
+  - rid: 6540294459056455876
+  - rid: 6540294459056455877
+  - rid: 6540294459056455878
+  - rid: 6540294459056455879
+  - rid: 6540294459056455880
+  - rid: 6540294459056455881
+  - rid: 6540294459056455882
+  - rid: 6540294459056455883
+  - rid: 6540294459056455884
+  - rid: 6540294459056455885
+  - rid: 6540294459056455886
+  - rid: 6540294459056455887
+  - rid: 6540294459056455888
+  - rid: 6540294459056455889
+  - rid: 6540294459056455890
+  - rid: 6540294459056455891
+  - rid: 6540294459056455892
+  - rid: 6540294459056455893
+  - rid: 6540294459056455894
+  - rid: 6540294459056455895
+  - rid: 6540294459056455896
+  - rid: 6540294459056455897
+  - rid: 6540294459056455898
+  - rid: 6540294459056455899
+  - rid: 6540294459056455900
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294459056455832
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio del Cap. 3
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-inicio
+        position: {x: 0, y: 0}
+        outputs:
+        - cap3-tras-cap2
+    - rid: 6540294459056455833
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Tras el Cap. 2 (CH_Cap2_BACK_1)
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-tras-cap2
+        position: {x: 380, y: 0}
+        outputs:
+        - cap3-flag
+        eventKey: CH_Cap2_BACK_1
+        acceptEarlierEvent: 1
+    - rid: 6540294459056455834
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Comienza el Cap. 3 (aparece el reparto de la costa y del cruce)
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-flag
+        position: {x: 760, y: 0}
+        outputs:
+        - cap3-espejo-carga
+        flagKey: CAP3_INICIADO
+        value: 1
+    - rid: 6540294459056455835
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.1 \xB7 Carga la torre de Liam (probar desde aqu\xED)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-espejo-carga
+        position: {x: 1140, y: 0}
+        outputs:
+        - cap3-espejo
+        operacion: 0
+        sceneName: TorreDeLiam
+        waitForCompletion: 1
+    - rid: 6540294459056455836
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.1 \xB7 Cinem\xE1tica: Tob\xEDas en el espejo"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-espejo
+        position: {x: 1520, y: 0}
+        outputs:
+        - cap3-espejo-descarga
+        cinematicName: "Cap. 3: Tob\xEDas en el espejo"
+        signalIn: CAP3_ESPEJO_START
+        signalDone: CAP3_ESPEJO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 7534df0a09c9c8c488295ea355a6bc15, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455837
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.1 \xB7 Descarga la torre de Liam"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-espejo-descarga
+        position: {x: 1900, y: 0}
+        outputs:
+        - cap3-rotulo-costa
+        operacion: 1
+        sceneName: TorreDeLiam
+        waitForCompletion: 1
+    - rid: 6540294459056455838
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 R\xF3tulo: dos d\xEDas de camino"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-rotulo-costa
+        position: {x: 0, y: 240}
+        outputs:
+        - cap3-a-la-costa
+        text: "Dos d\xEDas de camino hacia la costa\u2026"
+        textId: CAP3_ROTULO_COSTA
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294459056455839
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Will llega a la costa"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-a-la-costa
+        position: {x: 380, y: 240}
+        outputs:
+        - cap3-costa-destapa
+        actorId: Player
+        markId: Cap3_LlegadaCosta
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294459056455840
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Hacia la aldea del mar (probar desde aqu\xED)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-aldea
+        position: {x: 1140, y: 240}
+        outputs:
+        - cap3-mision
+        eventKey: CAP3_ALDEA_EMPIEZA
+    - rid: 6540294459056455841
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n: las marcas de hierro (aviso de misi\xF3n nueva)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-mision
+        position: {x: 1520, y: 240}
+        outputs:
+        - cap3-punto-aldea
+        questId: CAP3_MARCAS_DE_HIERRO
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294459056455842
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Punto de guardado: la costa"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-punto-aldea
+        position: {x: 1900, y: 240}
+        outputs:
+        - cap3-llegada
+        checkpointId: CAP3_COSTA
+        spawnAnchorId: Cap3_LlegadaCosta
+        sceneName: MainWorld
+    - rid: 6540294459056455843
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Llega a la aldea del mar"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-llegada
+        position: {x: 0, y: 480}
+        outputs:
+        - cap3-paso-llegar
+        eventKey: CAP3_LLEGADA_ALDEA
+        acceptEarlierEvent: 1
+    - rid: 6540294459056455844
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: llegar a la aldea'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-paso-llegar
+        position: {x: 380, y: 480}
+        outputs:
+        - cap3-posadero
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_LLEGAR
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455845
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Hablar con el posadero"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-posadero
+        position: {x: 760, y: 480}
+        outputs:
+        - cap3-posada
+        npcId: NPC_Posadero
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294459056455846
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Cinem\xE1tica: la posada, la cuchara y el trozo del aro"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-posada
+        position: {x: 1140, y: 480}
+        outputs:
+        - cap3-paso-posada
+        cinematicName: 'Cap. 3: la posada'
+        signalIn: CAP3_POSADA_START
+        signalDone: CAP3_POSADA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 5c05b3a853e0e9f4384818437d0d60dc, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455847
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: preguntar en la posada'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-paso-posada
+        position: {x: 1520, y: 480}
+        outputs:
+        - cap3-hoja
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_POSADA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455848
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Will saca su hoja para apuntar lo que vea"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-hoja
+        position: {x: 1900, y: 480}
+        outputs:
+        - cap3-pistas
+        item: {fileID: 11400000, guid: ba32d251435c4fb419a3dbe425cc196c, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294459056455849
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Las tres pistas, en el orden que quiera (probar desde aqu\xED)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pistas
+        position: {x: 0, y: 720}
+        outputs:
+        - cap3-pistas-fork
+        eventKey: CAP3_PISTAS_EMPIEZA
+    - rid: 6540294459056455850
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pistas en paralelo"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pistas-fork
+        position: {x: 380, y: 720}
+        outputs:
+        - cap3-pista1-hablar
+        - cap3-pista2
+        - cap3-pista3
+        - cap3-pistas-espera
+    - rid: 6540294459056455851
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Esperar las tres pistas"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pistas-espera
+        position: {x: 760, y: 720}
+        outputs:
+        - cap3-hoja-volver
+        eventKey: CAP3_PISTA_HECHA
+        count: 3
+        questId: 
+    - rid: 6540294459056455852
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Volver con el posadero"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-hoja-volver
+        position: {x: 1140, y: 720}
+        outputs:
+        - cap3-hoja-dlg
+        npcId: NPC_Posadero
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294459056455853
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 El posadero: \xABT\xFA eres el primero que trae uno encima\xBB"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-hoja-dlg
+        position: {x: 1520, y: 720}
+        outputs:
+        - cap3-paso-hoja
+        dialogue: {fileID: 11400000, guid: 96ab930b8efb1a645aafe8f0ea85cbb4, type: 2}
+        npcId: NPC_Posadero
+        oneShotFlag: 
+    - rid: 6540294459056455854
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: cont\xE1rselo al posadero"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-paso-hoja
+        position: {x: 1900, y: 720}
+        outputs:
+        - cap3-rotulo-noche
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_HOJA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455855
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 R\xF3tulo: de vuelta al camino"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-rotulo-noche
+        position: {x: 0, y: 960}
+        outputs:
+        - cap3-noche-hora
+        text: "Esa noche, camino del bosque\u2026"
+        textId: CAP3_ROTULO_NOCHE
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294459056455856
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Se hace de noche"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-noche-hora
+        position: {x: 380, y: 960}
+        outputs:
+        - cap3-noche
+        targetTime: 7
+        immediate: 1
+    - rid: 6540294459056455857
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 La acampada (probar desde aqu\xED)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-noche
+        position: {x: 760, y: 960}
+        outputs:
+        - cap3-a-la-acampada
+        eventKey: CAP3_NOCHE_EMPIEZA
+    - rid: 6540294459056455858
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Will acampa junto al camino"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-a-la-acampada
+        position: {x: 1140, y: 960}
+        outputs:
+        - cap3-punto-noche
+        actorId: Player
+        markId: Cap3_Acampada
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294459056455859
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Punto de guardado: la acampada"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-punto-noche
+        position: {x: 1520, y: 960}
+        outputs:
+        - cap3-carro
+        checkpointId: CAP3_ACAMPADA
+        spawnAnchorId: Cap3_Acampada
+        sceneName: MainWorld
+    - rid: 6540294459056455860
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Cinem\xE1tica: el carro con jaulas"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-carro
+        position: {x: 1900, y: 960}
+        outputs:
+        - cap3-seguir-tuto
+        cinematicName: 'Cap. 3: el carro de noche'
+        signalIn: CAP3_CARRO_START
+        signalDone: CAP3_CARRO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: f16e96c5438700242ade049e1c55e364, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455861
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Aviso: seguir de lejos"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-seguir-tuto
+        position: {x: 0, y: 1200}
+        outputs:
+        - cap3-seguir
+        action: 0
+        text: "Sigue al carro sin acercarte: si te ven, tendr\xE1s que volver atr\xE1s."
+        textId: CAP3_TUTO_SEGUIR
+        icon: {fileID: 0}
+        buttonName: interactable_y
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 6540294459056455862
+      type: {class: GuiarJugadorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Seguir al contrabandista de lejos hasta el claro"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-seguir
+        position: {x: 380, y: 1200}
+        outputs:
+        - cap3-paso-carro
+        npcId: NPC_Contrabandista1
+        anchorId: Cap3_Claro_Llegada
+        puntosDePaso:
+        - Cap3_Ruta1
+        - Cap3_Ruta2
+        - Cap3_Ruta3
+        llamadaKey: 
+        duracionLlamada: 2.2
+        distanciaMaxima: 32
+        distanciaReanudar: 24
+        separacionDelGuia: 1.2
+        radioLlegada: 26
+        velocidad: 2.2
+        duracionMaxima: 420
+        distanciaMinima: 7
+        avisoAlAcercarseKey: CAP3_AVISO_QUIEN
+        anclaDeVuelta: Cap3_Seguir_Vuelta
+        charla: {fileID: 0}
+    - rid: 6540294459056455863
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: seguir al carro'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-paso-carro
+        position: {x: 760, y: 1200}
+        outputs:
+        - cap3-claro
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_CARRO
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455864
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Cinem\xE1tica: el claro y \xAB\xBFDebes hacerlo?\xBB"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-claro
+        position: {x: 1140, y: 1200}
+        outputs:
+        - cap3-decide
+        cinematicName: 'Cap. 3: el claro'
+        signalIn: CAP3_CLARO_START
+        signalDone: CAP3_CLARO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0a6089819fd1aa94583e647092debf8b, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455865
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 La decisi\xF3n, jugando (probar desde aqu\xED)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-decide
+        position: {x: 1520, y: 1200}
+        outputs:
+        - cap3-pista-pluma
+        eventKey: CAP3_DECIDE_EMPIEZA
+    - rid: 6540294459056455866
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Will ve la pluma de la zarza"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista-pluma
+        position: {x: 1900, y: 1200}
+        outputs:
+        - cap3-decision
+        targetTag: Player
+        text: "Hay una pluma enganchada en esa zarza\u2026"
+        textId: CAP3_BOC_ZARZA
+        duration: 3.7285714
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294459056455867
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 \xBFCoge la pluma o entra en el claro? Gana lo primero que haga"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-decision
+        position: {x: 0, y: 1440}
+        outputs:
+        - cap3-pluma-0
+        - cap3-pelea-0
+    - rid: 6540294459056455868
+      type: {class: WaitForItemAddedNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 Coge la pluma brillante"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-0
+        position: {x: 380, y: 1440}
+        outputs:
+        - cap3-pluma-1
+        itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
+        minimumAmount: 0
+        completeIfAlreadyOwned: 1
+        debugLogs: 0
+    - rid: 6540294459056455869
+      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 \xBFYa hab\xEDa empezado a pelear?"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-1
+        position: {x: 760, y: 1440}
+        outputs:
+        - 
+        - cap3-pluma-2
+        flagKey: CAP3_PELEA_EN_EL_CLARO
+        invert: 0
+    - rid: 6540294459056455870
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 Elige avisar a la guardia"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-2
+        position: {x: 1140, y: 1440}
+        outputs:
+        - cap3-pluma-3
+        flagKey: CAP3_AVISO_A_LA_GUARDIA
+        value: 1
+    - rid: 6540294459056455871
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 \xABTres piedras\u2026 y al cruce\xBB"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-3
+        position: {x: 1520, y: 1440}
+        outputs:
+        - cap3-pluma-4
+        targetTag: Player
+        text: Tres piedras apiladas, para encontrar el sitio. Y ahora, al puesto de guardia.
+        textId: CAP3_BOC_PIEDRAS
+        duration: 6.3714285
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294459056455872
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 Hablar con el sargento del cruce"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-4
+        position: {x: 1900, y: 1440}
+        outputs:
+        - cap3-pluma-5
+        npcId: NPC_Sargento
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294459056455873
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 El sargento ve la pluma"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-5
+        position: {x: 0, y: 1680}
+        outputs:
+        - cap3-pluma-6
+        dialogue: {fileID: 11400000, guid: 696de4c4956c84346a8a585e01600c9d, type: 2}
+        npcId: NPC_Sargento
+        oneShotFlag: 
+    - rid: 6540294459056455874
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 A \xB7 Cinem\xE1tica: los p\xE1jaros suben como chispas"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pluma-6
+        position: {x: 380, y: 1680}
+        outputs:
+        - cap3-fin-contrabandistas
+        cinematicName: "Cap. 3: los p\xE1jaros"
+        signalIn: CAP3_PAJAROS_START
+        signalDone: CAP3_PAJAROS_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 4c7fbde09be080b4db42bff6c2c96c33, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455875
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 Will entra en el claro"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-0
+        position: {x: 760, y: 1680}
+        outputs:
+        - cap3-pelea-1
+        eventKey: CAP2_CONTRABANDISTAS_ATAQUE
+        acceptEarlierEvent: 1
+    - rid: 6540294459056455876
+      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 \xBFYa hab\xEDa elegido avisar?"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-1
+        position: {x: 1140, y: 1680}
+        outputs:
+        - 
+        - cap3-pelea-2
+        flagKey: CAP3_AVISO_A_LA_GUARDIA
+        invert: 0
+    - rid: 6540294459056455877
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 Elige pelear"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-2
+        position: {x: 1520, y: 1680}
+        outputs:
+        - cap3-pelea-3
+        flagKey: CAP3_PELEA_EN_EL_CLARO
+        value: 1
+    - rid: 6540294459056455878
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 En la pelea arden jaulas"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-3
+        position: {x: 1900, y: 1680}
+        outputs:
+        - cap3-pelea-4
+        flagKey: CAP3_JAULAS_QUEMADAS
+        value: 1
+    - rid: 6540294459056455879
+      type: {class: StartNpcCombatNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 Combate contra el jefe de los contrabandistas"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-4
+        position: {x: 0, y: 1920}
+        outputs:
+        - cap3-pelea-5
+        npcId: NPC_ContrabandistaJefe
+        combatConfig: {fileID: 11400000, guid: 67318bc17bb9d9b4192dc2df70ced10e, type: 2}
+        defeatEventKey: CAP3_CONTRABANDISTA_VENCIDO
+        waitForDefeat: 1
+        restorePeacefulOnDefeat: 1
+    - rid: 6540294459056455880
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 B \xB7 Cinem\xE1tica: el humo trae a la guardia"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pelea-5
+        position: {x: 380, y: 1920}
+        outputs:
+        - cap3-fin-contrabandistas
+        cinematicName: 'Cap. 3: las jaulas quemadas'
+        signalIn: CAP3_JAULAS_START
+        signalDone: CAP3_JAULAS_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0e325146951d9d84d978acad3fa6d20e, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294459056455881
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.3 \xB7 Los contrabandistas, detenidos"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-fin-contrabandistas
+        position: {x: 760, y: 1920}
+        outputs:
+        - cap3-paso-claro
+        eventKey: CAP3_CONTRABANDISTAS_FIN
+    - rid: 6540294459056455882
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: el claro (cierra la misi\xF3n)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-paso-claro
+        position: {x: 1140, y: 1920}
+        outputs:
+        - cap3-manana-rotulo
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_CLARO
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294459056455883
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "R\xF3tulo: a la ma\xF1ana siguiente"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-manana-rotulo
+        position: {x: 1520, y: 1920}
+        outputs:
+        - cap3-manana-hora
+        text: "A la ma\xF1ana siguiente\u2026"
+        textId: CAP3_ROTULO_MANANA
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294459056455884
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Amanece
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-manana-hora
+        position: {x: 1900, y: 1920}
+        outputs:
+        - cap3-manana-will
+        targetTime: 6
+        immediate: 1
+    - rid: 6540294459056455885
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Will amanece en el cruce
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-manana-will
+        position: {x: 0, y: 2160}
+        outputs:
+        - cap3-manana-destapa
+        actorId: Player
+        markId: Cap3_Amanecer
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294459056455886
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Cap. 3 \xB7 Fin (punto de guardado)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-fin-punto
+        position: {x: 760, y: 2160}
+        outputs:
+        - cap3-fin
+        checkpointId: CAP3_FIN
+        spawnAnchorId: Cap3_Amanecer
+        sceneName: MainWorld
+    - rid: 6540294459056455887
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Fin del Cap. 3 (CH_Cap3_BACK_1)
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-fin
+        position: {x: 1140, y: 2160}
+        outputs: []
+        eventKey: CH_Cap3_BACK_1
+    - rid: 6540294459056455888
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 1 \xB7 hablar con el posadero"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista1-hablar
+        position: {x: 0, y: 2640}
+        outputs:
+        - cap3-pista1-dlg
+        npcId: NPC_Posadero
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294459056455889
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 1 \xB7 las luces que respiran"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista1-dlg
+        position: {x: 380, y: 2640}
+        outputs:
+        - cap3-pista1-paso
+        dialogue: {fileID: 11400000, guid: a1f5635302e8cfc4891aa1129f5ea70f, type: 2}
+        npcId: NPC_Posadero
+        oneShotFlag: 
+    - rid: 6540294459056455890
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: lo que vio el posadero'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista1-paso
+        position: {x: 760, y: 2640}
+        outputs:
+        - cap3-pista1-hecha
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_PISTA_1
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455891
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 1 hecha"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista1-hecha
+        position: {x: 1140, y: 2640}
+        outputs: []
+        eventKey: CAP3_PISTA_HECHA
+    - rid: 6540294459056455892
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 2 \xB7 la cerca del huerto (Luc\xEDa dice d\xF3nde vio al zorro)"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista2
+        position: {x: 0, y: 3120}
+        outputs:
+        - cap3-pista2-paso
+        eventKey: CAP3_PISTA_HUERTO
+        acceptEarlierEvent: 1
+    - rid: 6540294459056455893
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: la cerca del huerto'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista2-paso
+        position: {x: 380, y: 3120}
+        outputs:
+        - cap3-pista2-hecha
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_PISTA_2
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455894
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 2 hecha"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista2-hecha
+        position: {x: 760, y: 3120}
+        outputs: []
+        eventKey: CAP3_PISTA_HECHA
+    - rid: 6540294459056455895
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 3 \xB7 el cobertizo de las redes"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista3
+        position: {x: 0, y: 3600}
+        outputs:
+        - cap3-pista3-paso
+        eventKey: CAP3_PISTA_COBERTIZO
+        acceptEarlierEvent: 1
+    - rid: 6540294459056455896
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: el cobertizo'
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista3-paso
+        position: {x: 380, y: 3600}
+        outputs:
+        - cap3-pista3-hecha
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP3_MARCAS_DE_HIERRO
+        stepConditionIds:
+        - CAP3_PISTA_3
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294459056455897
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Pista 3 hecha"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pista3-hecha
+        position: {x: 760, y: 3600}
+        outputs: []
+        eventKey: CAP3_PISTA_HECHA
+    - rid: 6540294459056455898
+      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nota
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-nota
+        position: {x: 0, y: -240}
+        outputs: []
+        note: "Cap. 3 \xB7 La pista del mar (GDD \xA7 5.7). Lo monta El Sendero \u25B8 Demo \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap3-\u2026\xBB se rehacen. Escena: \xABCap\xEDtulos de la demo (generado)\xBB en MainWorld (marcas Cap3_*, puntos del roster, pistas, el campamento de los contrabandistas)."
+        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
+    - rid: 6540294459056455899
+      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3.2 \xB7 Se destapa la pantalla en la costa"
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-costa-destapa
+        position: {x: 760, y: 240}
+        outputs:
+        - cap3-aldea
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2
+    - rid: 6540294459056455900
+      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Se destapa la pantalla en el cruce
+        chapter: Cap. 3
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-manana-destapa
+        position: {x: 380, y: 2160}
+        outputs:
+        - cap3-fin-punto
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2

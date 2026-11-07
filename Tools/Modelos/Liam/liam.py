@@ -63,7 +63,8 @@ def torno(g, nombre, perfil, mat, pesos=None, seg=40, elip=0.92, cy=-0.01, onda=
     n = len(filas[0])
     for f in range(len(filas) - 1):
         for k in range(n if not abierto else n - 1):
-            bm.faces.new((filas[f][k], filas[f][(k+1) % n], filas[f+1][(k+1) % n], filas[f+1][k]))
+            cara = (filas[f][k], filas[f][(k+1) % n], filas[f+1][(k+1) % n], filas[f+1][k])
+            bm.faces.new(cara if perfil[0][0] < perfil[-1][0] else cara[::-1])   # siempre hacia fuera (en Unity no se pinta el revés)
     return nueva(g, nombre, bm, mat, pesos, grosor)
 
 def tubo(g, nombre, puntos, radios, mat, pesos, seg=14, cerrar=True):
@@ -134,31 +135,95 @@ def hacia(theta_g, phi_g, levantar=0.0, girar=(0, 0, 0)):
     return (n + Vector((0, 0, levantar)) + Vector(girar)).normalized()
 
 
-# Liam: castaño, corte redondo con volumen, mechones en pico que caen (no aplastados), flequillo con el
-# mechón del centro hasta el entrecejo, y dos pelillos de punta arriba
-casquete("Casquete", 0.12, -0.24, "Pelo")
-# alrededor: picos que caen hacia abajo y algo hacia fuera (dan el volumen de «champiñón» juvenil)
-for i, ph in enumerate(range(-10, 200, 21)):
-    pico(f"Vuelta{i}", 72, ph, hacia(72, ph, -1.8), 0.17, 0.12, "Pelo" if i % 2 else "PeloClaro")
-for i, ph in enumerate((-165, -150, -30, -15)):
-    pico(f"Patilla{i}", 76, ph, hacia(76, ph, -2.2), 0.2, 0.1, "Pelo")
-# flequillo: cuatro picos hacia abajo, y el del centro más largo (entre los ojos)
-for i, (ph, largo, gx) in enumerate(((-128, 0.2, -0.15), (-108, 0.22, -0.1), (-72, 0.22, 0.1), (-52, 0.2, 0.15))):
-    pico(f"Flequillo{i}", 58, ph, (gx, -0.6, -1), largo, 0.1, "Pelo")
-pico("Mechon", 52, -90, (0, -0.65, -1), 0.26, 0.075, "PeloClaro")
-# pelillos de punta
-pico("Pelillo0", 12, -100, (-0.35, 0.1, 1), 0.13, 0.03, "Pelo", lados=3)
-pico("Pelillo1", 14, -72, (0.4, 0.15, 1), 0.11, 0.028, "Pelo", lados=3)
+# Liam: su Hair02 del pack (el pelo de siempre, de una pieza y pegado a la cabeza) con más volumen para que no
+# se vea aplastado, el flequillo por encima de los ojos salvo el mechón del centro, que cae entre ellos, y dos
+# pelillos de punta arriba. Mismo tratamiento que el pelo de Will: sombreado suave y duras solo las crestas.
+import os
+from mathutils.bvhtree import BVHTree
+HAIR02 = os.environ.get("LIAM_HAIR02") or os.path.join(os.path.dirname(os.path.abspath(__file__)),
+    "../../../Assets/Art/Characters/RPG Tiny Hero Duo/Mesh/HeadParts/Hair02.fbx")
+_antes = set(bpy.data.objects)
+bpy.ops.import_scene.fbx(filepath=HAIR02)
+_nuevos = [o for o in bpy.data.objects if o not in _antes]
+pelo = [o for o in _nuevos if o.type == 'MESH'][0]
+for o in _nuevos:
+    if o is not pelo: bpy.data.objects.remove(o)
+bpy.context.view_layer.update()
+pelo.parent = None; pelo.data.transform(pelo.matrix_world); pelo.matrix_world = Matrix.Identity(4)
+pelo.data.transform(Matrix.Translation((0, -0.0129, 0.914)))   # las piezas sueltas de cabeza vienen sin el sitio del esqueleto
+for m in list(pelo.modifiers): pelo.modifiers.remove(m)
+for g in list(pelo.vertex_groups): pelo.vertex_groups.remove(g)
+with bpy.data.libraries.load(BASE.replace("base.blend", "modular.blend")) as (fr, to): to.objects = ["Head01_Male", "Armature"]
+for o in to.objects: bpy.context.scene.collection.objects.link(o)
+bpy.context.view_layer.update()
+cab = to.objects[0]; bm_c = bmesh.new(); bm_c.from_mesh(cab.data); bm_c.transform(cab.matrix_world); arbol = BVHTree.FromBMesh(bm_c)
+C = Vector((0, -0.013, 0.99)); PEGADO = 0.02
+VOLUMEN = float(os.environ.get("LIAM_VOLUMEN", "1.35"))   # cuánto se esponja lo que sale de la cabeza
+def suave(a, b, x):
+    u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
+def radio(t):
+    h = arbol.ray_cast(C, t); return (h[0] - C).length if h[0] else 0.33
+bm = bmesh.new(); bm.from_mesh(pelo.data); bm.verts.ensure_lookup_table()
+# fuera las cejas que trae el pelo (islas pequeñas delante de la frente): las cejas van en las caras nuevas
+vistos = set(); quitar = []
+for v0 in bm.verts:
+    if v0.index in vistos: continue
+    isla = [v0]; vistos.add(v0.index); k = 0
+    while k < len(isla):
+        for e in isla[k].link_edges:
+            w = e.other_vert(isla[k])
+            if w.index not in vistos: vistos.add(w.index); isla.append(w)
+        k += 1
+    if len(isla) < 100 and max(v.co.y for v in isla) < -0.18: quitar += isla
+bmesh.ops.delete(bm, geom=quitar, context='VERTS')
+print("CEJAS FUERA", len(quitar))
+for v in bm.verts:
+    p = v.co - C; t = p.normalized(); R = radio(t)
+    sobra = max(0.0, p.length - R)
+    # volumen: lo que sale de la cabeza se esponja (más arriba y atrás que en la cara)
+    esponja = 1.0 + (VOLUMEN - 1.0) * suave(0.1, 0.8, t.z) * (1.0 - 0.7 * suave(0.4, 0.8, -t.y))   # arriba, que es donde se aplastaba
+    base = C + t * (R + max(PEGADO, sobra * esponja))
+    # flequillo: por encima de los ojos; solo el mechón del centro baja entre ellos
+    delante = suave(0.45, 0.7, -t.y)
+    if delante > 0:
+        f = base.copy()
+        centro = 1.0 - suave(0.035, 0.085, abs(f.x))
+        tope = 1.07 - 0.085 * centro
+        if f.z < tope: f.z = tope + (f.z - tope) * (0.25 + 0.35 * centro)
+        tf = (f - C).normalized(); rf = radio(tf)       # que al subirlo no se meta en la cara
+        if (f - C).length < rf + PEGADO: f = C + tf * (rf + PEGADO)
+        base = base.lerp(f, delante)
+    v.co = base
+bm.to_mesh(pelo.data); bm.free(); bm_c.free()
+bpy.data.objects.remove(to.objects[0]); bpy.data.objects.remove(to.objects[1])
+bpy.context.view_layer.objects.active = pelo
+if pelo.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()
+if "sharp_edge" in pelo.data.attributes: pelo.data.attributes.remove(pelo.data.attributes["sharp_edge"])
+bm2 = bmesh.new(); bm2.from_mesh(pelo.data)
+for e in bm2.edges: e.smooth = not (len(e.link_faces) == 2 and math.degrees(e.calc_face_angle()) > 45)
+bm2.to_mesh(pelo.data); bm2.free()
+pelo.data.materials.clear(); pelo.data.materials.append(MAT["Pelo"]); pelo.data.materials.append(MAT["PeloClaro"])
+for f in pelo.data.polygons:
+    f.use_smooth = True; f.material_index = 1 if f.normal.z > 0.6 else 0
+GRUPOS["pelo"].append((pelo, H))
+# pelillos de punta, desde la coronilla esponjada (el casquete de referencia se ajusta al pelo nuevo)
+_vs = [v.co for v in pelo.data.vertices]
+RAD = Vector((max(abs(p.x) for p in _vs), max(abs(p.y - CENTRO_PELO.y) for p in _vs), max(p.z for p in _vs) - CENTRO_PELO.z)) * 0.97
+print("PELO", tuple(round(x, 3) for x in RAD))
+pico("Pelillo0", 10, -100, (-0.35, 0.1, 1), 0.12, 0.03, "Pelo", lados=3, hundir=0.0)
+pico("Pelillo1", 12, -72, (0.4, 0.15, 1), 0.1, 0.028, "Pelo", lados=3, hundir=0.0)
 
 # ── Capucha (accesorio aparte: el jugador se la puede quitar en el armario) ──
 # Capucha puesta: una cáscara más grande que la cabeza y el pelo, algo alta y con un pico suave atrás;
 # abierta por delante con un corte limpio (la cara queda a la vista) y por abajo (el cuello). Va con la cabeza.
 CENTRO = CAB + Vector((0, 0.03, 0.04))
 bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=48, v_segments=28, radius=1)
-transformar(bm, CENTRO, (0.45, 0.445, 0.465), (0, 0, 0))
+# la cáscara envuelve el pelo esponjado (RAD es su tamaño) con un margen
+CAPUCHA = (max(0.45, RAD.x + 0.035), max(0.445, RAD.y + 0.035), max(0.465, RAD.z + 0.03))
+transformar(bm, CENTRO, CAPUCHA, (0, 0, 0))
 for v in bm.verts:   # el pico: lo de arriba y atrás se estira hacia arriba y atrás
     d = v.co - CENTRO
-    k = max(0.0, (d.y / 0.445) * 0.6 + (d.z / 0.465) * 0.8) ** 3
+    k = max(0.0, (d.y / CAPUCHA[1]) * 0.6 + (d.z / CAPUCHA[2]) * 0.8) ** 3
     v.co += Vector((0, 0.09, 0.07)) * k
 NORMAL_CARA = Vector((0, -1, -0.25)).normalized()      # la abertura mira al frente y un poco abajo
 PUNTO_CARA = CENTRO + NORMAL_CARA * 0.29
@@ -185,7 +250,7 @@ if borde:
     tubo("capucha", "BordeCapucha", [tuple(p) for p in pts], [0.026] * len(pts), "TunicaOscura", H, seg=10, cerrar=False)
 # ── Túnica juvenil (cuerpo): corta, a medio muslo, con cuello vuelto, cinturón de cuero y bolsita;
 # pantalón y botas altas a la vista
-torno("traje", "Cuello", [(0.755, 0.15), (0.73, 0.2), (0.7, 0.215)], "Camisa", seg=40, grosor=0.014)
+torno("traje", "Cuello", [(0.755, 0.15), (0.73, 0.2), (0.7, 0.215)], "TunicaOscura", seg=40, grosor=0.014)   # del color de los ribetes: el crema destacaba
 torno("traje", "Tunica", [(0.72, 0.15), (0.66, 0.198), (0.58, 0.206), (0.5, 0.194), (0.45, 0.19), (0.36, 0.21), (0.27, 0.228)],
       "Tunica", grosor=0.008)
 toro("traje", "Bajo", (0, -0.01, 0.272), 0.226, 0.012, "TunicaOscura", None, escala=(1, 0.92, 1))
@@ -195,8 +260,12 @@ toro("traje", "Cinturon", (0, -0.01, 0.45), 0.197, 0.02, "Cuero", None, escala=(
 esfera("traje", "Hebilla", (0.05, -0.198, 0.45), (0.03, 0.014, 0.026), "Dorado", None)
 esfera("traje", "Bolsita", (-0.16, -0.1, 0.42), (0.045, 0.035, 0.05), "Cuero", {"pelvis": 1.0})
 for lado, s in (("l", 1), ("r", -1)):
-    tubo("traje", f"Manga_{lado}", [(0.17 * s, -0.003, 0.636), (0.3 * s, -0.003, 0.634), (0.42 * s, -0.003, 0.633), (0.455 * s, -0.003, 0.633)],
-         [0.072, 0.066, 0.06, 0.06], "Tunica", None, cerrar=False)
+    # manga algo más ancha en el hombro que en la muñeca, con un puño oscuro que la separa de la mano, y el
+    # hombro redondo tapando la unión con la túnica (si no, asoma el cuerpo de debajo)
+    tubo("traje", f"Manga_{lado}", [(0.17 * s, -0.003, 0.636), (0.26 * s, -0.003, 0.635), (0.35 * s, -0.003, 0.634), (0.43 * s, -0.003, 0.633)],
+         [0.08, 0.072, 0.066, 0.064], "Tunica", None, cerrar=False)
+    esfera("traje", f"Hombro_{lado}", (0.175 * s, -0.003, 0.637), (0.082, 0.08, 0.08), "Tunica", None)
+    toro("traje", f"Puno_{lado}", (0.43 * s, -0.003, 0.633), 0.066, 0.015, "TunicaOscura", {f"lowerarm_{lado}": 1.0}, rot=(0, math.radians(90), 0))
     tubo("traje", f"Pernera_{lado}", [(0.098 * s, 0.003, 0.44), (0.103 * s, 0.0, 0.33), (0.11 * s, -0.001, 0.22), (0.116 * s, 0.004, 0.11)],
          [0.092, 0.086, 0.078, 0.074], "Pantalon", None, cerrar=False)
     bota = [(0.0, 0.082), (0.04, 0.087), (0.1, 0.074), (0.13, 0.076), (0.15, 0.084)]

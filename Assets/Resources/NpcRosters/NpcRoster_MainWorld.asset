@@ -28,11 +28,11 @@ MonoBehaviour:
     spawnId: SPAWN__LIAM
     prefab: {fileID: 3335879819108417999, guid: de7b566c44b3b6949964c333227535b2, type: 3}
     gameObjectName: _LIAM
-    persistenceId: 
+    persistenceId: _LIAM
     vozDeReacciones: Vecino
-    startActive: 0
+    startActive: 1
     requireNavMesh: 0
-    requiredFlag: LIAM_EN_GRUPO
+    requiredFlag: NARRATIVE_FLAG:LIAM_APARECE
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Eldran
@@ -113,4 +113,94 @@ MonoBehaviour:
     startActive: 1
     requireNavMesh: 0
     requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Posadero
+    prefab: {fileID: 6523536033449891113, guid: b1696cfbbee704a408e6d7926dc5e991, type: 3}
+    gameObjectName: Posadero
+    persistenceId: NPC_Posadero
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Lucia
+    prefab: {fileID: 3592848395794621156, guid: 6b0a15551992dff4d8342e0e8aaca85c, type: 3}
+    gameObjectName: Lucia
+    persistenceId: NPC_Lucia
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Sargento
+    prefab: {fileID: 6212661583293693831, guid: 177e4d720a9f83b48aefe7fa6c0ca586, type: 3}
+    gameObjectName: Sargento
+    persistenceId: NPC_Sargento
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_GuardiaCruce1
+    prefab: {fileID: 6212661583293693831, guid: 177e4d720a9f83b48aefe7fa6c0ca586, type: 3}
+    gameObjectName: GuardiaCruce1
+    persistenceId: NPC_GuardiaCruce1
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_GuardiaCruce2
+    prefab: {fileID: 6212661583293693831, guid: 177e4d720a9f83b48aefe7fa6c0ca586, type: 3}
+    gameObjectName: GuardiaCruce2
+    persistenceId: NPC_GuardiaCruce2
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Contrabandista1
+    prefab: {fileID: 4329106663490025928, guid: 2ee002eec61c23d479bdb0c2ee1aac46, type: 3}
+    gameObjectName: Contrabandista1
+    persistenceId: NPC_Contrabandista1
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Contrabandista2
+    prefab: {fileID: 7766501778076261952, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
+    gameObjectName: Contrabandista2
+    persistenceId: NPC_Contrabandista2
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_ContrabandistaJefe
+    prefab: {fileID: 7766501778076261952, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
+    gameObjectName: ContrabandistaJefe
+    persistenceId: NPC_ContrabandistaJefe
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:CAP3_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN__ESTELA
+    prefab: {fileID: 6741617104233437454, guid: a75e3ceddb1bc844683082087c61b2d5, type: 3}
+    gameObjectName: _ESTELA
+    persistenceId: _ESTELA
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:ESTELA_APARECE
     invertCondition: 0

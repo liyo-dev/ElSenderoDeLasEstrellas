@@ -127,7 +127,7 @@ MonoBehaviour:
     - rid: 5630202821400330506
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap2_BACK_1)"
+        displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap4_BACK_1)"
         chapter: Sendero
         blockSaving: 0
         inputAnchor: 0
@@ -138,5 +138,5 @@ MonoBehaviour:
         position: {x: 380, y: 0}
         outputs:
         - sendero-requisitos
-        eventKey: CH_Cap2_BACK_1
+        eventKey: CH_Cap4_BACK_1
         acceptEarlierEvent: 1

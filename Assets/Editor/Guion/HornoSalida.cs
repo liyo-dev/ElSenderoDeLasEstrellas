@@ -20,6 +20,10 @@ internal sealed partial class Horno
     /// Lo rellenan las fotos de escaparate (Rodaje); los guiones normales no lo tocan.
     internal static readonly Dictionary<string, NPCEmotion> CarasDelStoryboard = new();
 
+    /// Ojos y boca concretos para las fotos del storyboard (por alias), encima de la emoción de
+    /// <see cref="CarasDelStoryboard"/>: para caras que mezclan piezas de dos emociones. Vacío o null = no se toca.
+    internal static readonly Dictionary<string, (string ojos, string boca)> PiezasDeCaraDelStoryboard = new();
+
     /// Retoques de pose para las fotos (por alias): giran huesos humanoides para apuntar del hueso a su
     /// punta en una dirección del espacio del personaje (X a su derecha, Y arriba, Z al frente), en orden.
     /// Sirve para poses que no tiene ningún clip (brazos cruzados, apoyarse). Solo lo usan las fotos de escaparate.
@@ -46,16 +50,27 @@ internal sealed partial class Horno
     /// leyendo su EmotionProfile (los MonoBehaviour del storyboard están apagados).
     private static void PonerCaraDelStoryboard(GameObject inst, string alias)
     {
-        if (inst == null || !CarasDelStoryboard.TryGetValue(alias, out var emocion)) return;
+        if (inst == null) return;
+        bool hayEmocion = CarasDelStoryboard.TryGetValue(alias, out var emocion);
+        bool hayPiezas = PiezasDeCaraDelStoryboard.TryGetValue(alias, out var piezasPedidas);
+        if (!hayEmocion && !hayPiezas) return;
         foreach (var emo in inst.GetComponentsInChildren<NPCEmotionController>(true))
         {
             if (emo == null || emo.EmotionProfile == null) continue;
-            var datos = emo.EmotionProfile.GetEmotionData(emocion);
             var so = new SerializedObject(emo);
             string pOjos = so.FindProperty("eyePrefix")?.stringValue ?? "Eye";
             string pBoca = so.FindProperty("mouthPrefix")?.stringValue ?? "Mouth";
-            Elegir(inst, pOjos, datos.eyeMeshName);
-            Elegir(inst, pBoca, datos.mouthMeshName);
+            if (hayEmocion)
+            {
+                var datos = emo.EmotionProfile.GetEmotionData(emocion);
+                Elegir(inst, pOjos, datos.eyeMeshName);
+                Elegir(inst, pBoca, datos.mouthMeshName);
+            }
+            if (hayPiezas)
+            {
+                Elegir(inst, pOjos, piezasPedidas.ojos);
+                Elegir(inst, pBoca, piezasPedidas.boca);
+            }
         }
 
         static void Elegir(GameObject raiz, string prefijo, string malla)

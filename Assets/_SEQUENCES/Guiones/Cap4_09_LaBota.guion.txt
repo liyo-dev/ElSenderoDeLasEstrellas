@@ -1,0 +1,47 @@
+﻿# Cap. 4 · La bota: «Eso no sale en ningún mapa». Fin de la Primera Parte.
+GUION Cap4_09_LaBota
+ESCENA MainWorld
+ZONA Cap4Bota -187 -18 22
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_09_LaBota.asset
+TEXTO subtitulo
+RITMO entre_frases=0.5 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+liam    _LIAM    nombre=CHAR_LIAM color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+p_will      -186 -22.5
+p_liam      -184.4 -21
+p_estela    -188 -19.6
+camino      -190 -2
+p_estela_v  -188.6 -9
+p_will_v    -190 -11
+p_liam_v    -191.2 -13.4
+cam_final   -193 -27
+
+HILO
+@inicio
+will en p_will mirando p_liam
+& liam en p_liam mirando p_will
+& estela en p_estela mirando p_liam
+& bandas
+plano dos will liam
+will dice CAP4_BOTA_01 gesto=Greeting01_NoWeapon cara=alegre
+liam cara alegre
+liam dice CAP4_BOTA_02 cara=alegre
+plano medio estela
+estela gesto Laugh01
+estela dice CAP4_BOTA_03 cara=picaro
+plano medio liam
+liam dice CAP4_BOTA_04 cara=alegre
+
+@final
+estela anda a p_estela_v ritmo=paseo sin_esperar
+& will anda a p_will_v ritmo=paseo sin_esperar
+& liam anda a p_liam_v ritmo=paseo sin_esperar
+plano conjunto estela will liam desde=cam_final altura=2
+espera 4
+fundido cubre 2
+espera 2

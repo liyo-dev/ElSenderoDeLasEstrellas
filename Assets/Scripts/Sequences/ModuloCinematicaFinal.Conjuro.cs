@@ -242,8 +242,6 @@ public partial class ModuloCinematicaFinal
 
     private ConstelacionDeLaEstrella _constelacionPiedra;
 
-    /// El Tema Principal entra con el Archimago, desde el segundo justo para que su subida (1:55)
-    /// coincida con la carrera de Estela y Liam (etiqueta @carrera del guion).
     /// Lo que dura «Último Incantazione»: suena una sola vez y termina con el fundido del acto.
     private const float LargoDelIncantazione = 38.6f;
 
@@ -257,8 +255,6 @@ public partial class ModuloCinematicaFinal
         float desde = Mathf.Max(0f, LargoDelIncantazione - (fin - TiempoDelGuion()));
         _ctx?.Player?.PlayMusic("ULTIMO_INCANTAZIONE", false, desde > 0.5f ? 1.5f : 2.5f, desde);
     }
-
-    private void MusicaDelArchimago() => TemaACompas("EPILOGUE", "carrera", SubidaDelTema - 1.0f, 2.5f, 0f);
 
     private IEnumerator Co_EspirituArchimago()
     {

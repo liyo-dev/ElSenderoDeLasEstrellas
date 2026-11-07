@@ -32,7 +32,7 @@ public static class UmbralDelSendero
     const string NombreGenerado = "Umbral del Sendero (generado)";
     const string PlantillaDeSecuencia = "SEQ_PerasEldran";
 
-    public const string SenalCapituloAnterior = "CH_Cap2_BACK_1";
+    public const string SenalCapituloAnterior = "CH_Cap4_BACK_1";
     public const string SenalRequisitos = "SENDERO_REQUISITOS_CUMPLIDOS";
     public const string SenalRitualListo = "SENDERO_RITUAL_LISTO";
     public const string SenalConjuroAceptado = "SENDERO_CONJURO_ACEPTADO";
@@ -120,8 +120,8 @@ public static class UmbralDelSendero
         const float y = 0f;
         Poner(g, "sendero-inicio", "Inicio del Sendero", new Vector2(0, y), new StartNode(), "sendero-tras-capitulo");
         // Puente con el capítulo anterior: así «Probar desde el nodo» da por terminados los capítulos
-        // de antes (si no, arrancan desde su inicio y sale el prólogo). Hoy el último construido es el 2.
-        Poner(g, "sendero-tras-capitulo", "Tras el capítulo anterior (CH_Cap2_BACK_1)", new Vector2(160, y - 160),
+        // de antes (si no, arrancan desde su inicio y sale el prólogo). Hoy el último construido es el 4.
+        Poner(g, "sendero-tras-capitulo", "Tras el capítulo anterior (" + SenalCapituloAnterior + ")", new Vector2(160, y - 160),
             new WaitCustomEventNode { eventKey = SenalCapituloAnterior }, "sendero-requisitos");
         Poner(g, "sendero-requisitos", "Espera: libro prohibido y ritual (lo emite el capítulo de la Piedra)", new Vector2(320, y),
             new WaitCustomEventNode { eventKey = SenalRequisitos }, NodoRitualListo);

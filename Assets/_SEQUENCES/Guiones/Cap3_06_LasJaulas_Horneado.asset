@@ -1,0 +1,869 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_06_LasJaulas_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_06_LasJaulas
+  duracion: 24.606985
+  presentacion: 1
+  huella: "2026-11-07 17:23 \xB7 17f6b6d08993455005dd6f18d2629052"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -211, y: 21.78484, z: -128}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 8.131982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 10.706982
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 15.086982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 18.881983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    cabezas:
+    - t: 1.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 2.55
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 8.081982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 10.656981
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 15.036982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 17.13198
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 18.831984
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    animacion:
+    - fundido: 0
+      t: 1
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 1.08
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.25
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.5
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.58
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.045
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.681982
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.636982
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.081982
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.161982
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.331982
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.431984
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: cansado
+      dura: 0
+    - t: 1
+      emocion: cansado
+      dura: 1.6
+    - t: 2.5
+      emocion: triste
+      dura: 1.8949999
+    - t: 17.081982
+      emocion: triste
+      dura: 1.6
+    visible: []
+    deslizando: []
+  - id: NPC_Sargento
+    alias: sargento
+    colorDelNombre: {r: 0.654902, g: 0.7529412, b: 0.84705883, a: 1}
+    claveDelNombre: CHAR_SARGENTO
+    posiciones:
+    - t: 0
+      p: {x: -205.5, y: 22.014832, z: -136}
+    - t: 3.995
+      p: {x: -205.5, y: 22.014832, z: -136}
+    - t: 4.274871
+      p: {x: -205.65384, y: 22.021305, z: -135.74359}
+    - t: 4.492321
+      p: {x: -205.8077, y: 22.029331, z: -135.48718}
+    - t: 4.782751
+      p: {x: -206.03847, y: 22.041538, z: -135.10257}
+    - t: 5.072132
+      p: {x: -206.26923, y: 22.03724, z: -134.71794}
+    - t: 5.36151
+      p: {x: -206.5, y: 22.037514, z: -134.33333}
+    - t: 5.6508875
+      p: {x: -206.73077, y: 22.044167, z: -133.94872}
+    - t: 5.94026
+      p: {x: -206.96153, y: 22.050823, z: -133.5641}
+    - t: 6.2296376
+      p: {x: -207.1923, y: 22.043777, z: -133.17949}
+    - t: 6.5190153
+      p: {x: -207.42308, y: 22.02824, z: -132.79488}
+    - t: 6.8083878
+      p: {x: -207.65384, y: 22.012714, z: -132.41026}
+    - t: 7.097774
+      p: {x: -207.88461, y: 21.997421, z: -132.02563}
+    - t: 7.3871517
+      p: {x: -208.11539, y: 21.990898, z: -131.64102}
+    - t: 7.588879
+      p: {x: -208.26923, y: 21.984856, z: -131.38461}
+    - t: 7.8288107
+      p: {x: -208.42308, y: 21.983559, z: -131.1282}
+    - t: 7.981982
+      p: {x: -208.5, y: 21.98291, z: -131}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -211, y: 21.78484, z: -128}
+      actor: 
+    - t: 1.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.65
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.556982
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 14.936982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 17.231981
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.6000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 8.031982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.556982
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 14.986982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 17.181982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.781982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 1.48
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.098
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.981982
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.061982
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.306982
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.556982
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.636982
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 13.986982
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.936982
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.016982
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.13198
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.561981
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.731983
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.811983
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 22.356983
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 1.4200001
+      emocion: sorpresa
+      dura: 1.2
+    - t: 7.981982
+      emocion: preocupado
+      dura: 2.675
+    - t: 14.936982
+      emocion: triste
+      dura: 2.545
+    visible: []
+    deslizando: []
+  - id: NPC_GuardiaCruce1
+    alias: g1
+    colorDelNombre: {r: 0.62352943, g: 0.7058824, b: 0.78431374, a: 1}
+    claveDelNombre: CHAR_GUARDIA_CRUCE
+    posiciones:
+    - t: 0
+      p: {x: -204, y: 21.969784, z: -138}
+    - t: 3.995
+      p: {x: -204, y: 21.969784, z: -138}
+    - t: 4.273243
+      p: {x: -204.24706, y: 21.96687, z: -137.8353}
+    - t: 4.4895377
+      p: {x: -204.49411, y: 21.963902, z: -137.6706}
+    - t: 4.778123
+      p: {x: -204.8647, y: 21.95945, z: -137.42352}
+    - t: 5.0654716
+      p: {x: -205.23529, y: 21.954994, z: -137.17647}
+    - t: 5.3528204
+      p: {x: -205.60588, y: 21.955479, z: -136.92941}
+    - t: 5.640169
+      p: {x: -205.97647, y: 21.953068, z: -136.68236}
+    - t: 5.9275236
+      p: {x: -206.34706, y: 21.95129, z: -136.43529}
+    - t: 6.2148724
+      p: {x: -206.71765, y: 21.949509, z: -136.18823}
+    - t: 6.502221
+      p: {x: -207.08824, y: 21.9458, z: -135.94118}
+    - t: 6.7895617
+      p: {x: -207.45882, y: 21.921753, z: -135.69412}
+    - t: 7.076916
+      p: {x: -207.8294, y: 21.897694, z: -135.44705}
+    - t: 7.364265
+      p: {x: -208.2, y: 21.873638, z: -135.2}
+    - t: 7.6516137
+      p: {x: -208.57059, y: 21.878738, z: -134.95294}
+    - t: 7.9389625
+      p: {x: -208.94118, y: 21.858013, z: -134.70589}
+    - t: 8.226317
+      p: {x: -209.31177, y: 21.842258, z: -134.45882}
+    - t: 8.513667
+      p: {x: -209.68236, y: 21.833347, z: -134.21176}
+    - t: 8.801017
+      p: {x: -210.05295, y: 21.82444, z: -133.9647}
+    - t: 9.088358
+      p: {x: -210.42352, y: 21.792427, z: -133.71765}
+    - t: 9.375713
+      p: {x: -210.79411, y: 21.763157, z: -133.47058}
+    - t: 9.663063
+      p: {x: -211.1647, y: 21.772957, z: -133.22353}
+    - t: 9.950413
+      p: {x: -211.5353, y: 21.782757, z: -132.97647}
+    - t: 10.237762
+      p: {x: -211.90588, y: 21.774094, z: -132.72942}
+    - t: 10.525118
+      p: {x: -212.27647, y: 21.759392, z: -132.48235}
+    - t: 10.812468
+      p: {x: -212.64706, y: 21.74469, z: -132.23529}
+    - t: 11.099817
+      p: {x: -213.01765, y: 21.732319, z: -131.98824}
+    - t: 11.387158
+      p: {x: -213.38823, y: 21.723785, z: -131.74118}
+    - t: 11.674513
+      p: {x: -213.75882, y: 21.738483, z: -131.49411}
+    - t: 11.970986
+      p: {x: -214.12941, y: 21.753178, z: -131.24706}
+    - t: 12.209598
+      p: {x: -214.37646, y: 21.762978, z: -131.08235}
+    - t: 12.361855
+      p: {x: -214.5, y: 21.767876, z: -131}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -216, y: 21.427872, z: -126.5}
+      actor: 
+    - t: 15.206983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 17.351982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.001984
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    cabezas:
+    - t: 15.156982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 17.301983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.951984
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    animacion:
+    - fundido: 0
+      t: 15.636982
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.431984
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_ContrabandistaJefe
+    alias: jefe
+    colorDelNombre: {r: 0.7882353, g: 0.63529414, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -216, y: 21.427872, z: -126.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -211, y: 21.78484, z: -128}
+      actor: 
+    - t: 1.27
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.77
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 8.251983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 10.8269825
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 15.3269825
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 17.471981
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.121983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    cabezas:
+    - t: 1.22
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.72
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 8.2019825
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 10.776982
+      tipo: 1
+      rumbo: 0
+      punto: {x: -212.6, y: 21.749569, z: -124.3}
+      actor: 
+    - t: 15.276982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 17.421982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.071983
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Beg01_Loop
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 1.48
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.098
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.681982
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.636982
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.431984
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 1.4200001
+      emocion: sorpresa
+      dura: 1.2
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1
+    t1: 2.2
+    actor: Player
+    clave: CAP3_JAULAS_01
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2.5
+    t1: 3.995
+    actor: Player
+    clave: CAP3_JAULAS_02
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 7.981982
+    t1: 10.256982
+    actor: NPC_Sargento
+    clave: CAP3_JAULAS_03
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 10.556982
+    t1: 13.936982
+    actor: NPC_Sargento
+    clave: CAP3_JAULAS_04
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.936982
+    t1: 17.081982
+    actor: NPC_Sargento
+    clave: CAP3_JAULAS_05
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 17.081982
+    t1: 18.281982
+    actor: Player
+    clave: CAP3_JAULAS_06
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.731983
+    t1: 22.306984
+    actor: NPC_Sargento
+    clave: CAP3_JAULAS_07
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 7.981982
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 0
+      p: {x: -211.05826, y: 22.92852, z: -124.23009}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 7.981982
+    t1: 17.081982
+    tipo: 1
+    descripcion: conjunto de will y sargento
+    posiciones:
+    - t: 7.981982
+      p: {x: -212.70859, y: 23.692526, z: -123.79834}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Sargento
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0946447
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 17.081982
+    t1: 24.606985
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 17.081982
+      p: {x: -206.85013, y: 23.129562, z: -130.17822}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294456446550994
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294456446550995
+    linea: 33
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.936982
+    beat:
+      rid: 6540294456446550996
+    linea: 43
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 22.906984
+    beat:
+      rid: 6540294456446550997
+    linea: 51
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.606985
+    beat:
+      rid: 6540294456446550998
+    linea: 0
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: claro
+    posicion: {x: -215, y: 21.453735, z: -125}
+  - nombre: jaulas
+    posicion: {x: -212.6, y: 21.749569, z: -124.3}
+  - nombre: p_will
+    posicion: {x: -211, y: 21.78484, z: -128}
+  - nombre: p_sargento
+    posicion: {x: -205.5, y: 22.014832, z: -136}
+  - nombre: p_sarg_llega
+    posicion: {x: -208.5, y: 21.98291, z: -131}
+  - nombre: p_g1
+    posicion: {x: -204, y: 21.969784, z: -138}
+  - nombre: p_g1_llega
+    posicion: {x: -214.5, y: 21.767876, z: -131}
+  - nombre: p_jefe
+    posicion: {x: -216, y: 21.427872, z: -126.5}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446550994
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294456446550995
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 2787556212050310887, guid: 57970c6bb711ec24b8d98424b1806f3b, type: 3}
+        atActorId: 
+        markName: jaulas
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294456446550996
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: 
+        markName: jaulas
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294456446550997
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1.2
+        waitForEnd: 0
+    - rid: 6540294456446550998
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

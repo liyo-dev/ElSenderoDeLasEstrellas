@@ -8,7 +8,7 @@ using UnityEngine;
 /// un cuerpo): la malla del FBX pasa a ser una pieza más del modelo, junto a las de su categoría, con
 /// los huesos del propio modelo (por nombre). Queda apagada: la enciende el vestidor
 /// (<see cref="ModularAutoBuilder"/>) como cualquier otra, porque la reconoce por el nombre (Hair…, Body…).
-/// Si ya estaba, se rehace.
+/// Los huesos propios de la pieza que el modelo no tenga (una coleta) se le crean. Si ya estaba, se rehace.
 /// </summary>
 public static class PiezaNuevaDelModelo
 {
@@ -31,6 +31,8 @@ public static class PiezaNuevaDelModelo
         foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
             if (!huesos.ContainsKey(t.name) && t.GetComponent<Renderer>() == null) huesos[t.name] = t;
 
+        int creados = CrearHuesosQueFaltan(origen, huesos, informe, raiz.name);
+
         var padre = referencia.transform.parent;
         var vieja = padre.Find(pieza);
         if (vieja != null) Object.DestroyImmediate(vieja.gameObject);
@@ -52,8 +54,47 @@ public static class PiezaNuevaDelModelo
         smr.shadowCastingMode = referencia.shadowCastingMode;
         smr.receiveShadows = referencia.receiveShadows;
         go.SetActive(false);
-        informe.AppendLine($"{raiz.name}: pieza {pieza} añadida junto a {vecina}{(sinPareja > 0 ? $" ({sinPareja} huesos sin pareja)" : "")}.");
+        informe.AppendLine($"{raiz.name}: pieza {pieza} añadida junto a {vecina}{(creados > 0 ? $" ({creados} huesos nuevos)" : "")}{(sinPareja > 0 ? $" ({sinPareja} huesos sin pareja)" : "")}.");
         return true;
+    }
+
+    /// <summary>
+    /// Huesos propios de la pieza que el esqueleto del modelo no tiene (p. ej. ColetaBone01 bajo «head»):
+    /// se crean bajo su padre, en la pose de atado del FBX (sacada de las bindposes, en la escala del modelo),
+    /// de modo que en reposo la malla queda igual. Si ya están, se dejan.
+    /// </summary>
+    static int CrearHuesosQueFaltan(SkinnedMeshRenderer origen, Dictionary<string, Transform> huesos, System.Text.StringBuilder informe, string modelo)
+    {
+        var propios = origen.bones;
+        var bindposes = origen.sharedMesh.bindposes;
+        int creados = 0;
+        bool otraVuelta = true;
+        while (otraVuelta)
+        {
+            otraVuelta = false;
+            for (int i = 0; i < propios.Length; i++)
+            {
+                var b = propios[i];
+                if (b == null || huesos.ContainsKey(b.name) || b.parent == null) continue;
+                if (!huesos.TryGetValue(b.parent.name, out var padre)) continue;   // su padre aún no está: otra vuelta
+                var nuevo = new GameObject(b.name).transform;
+                nuevo.SetParent(padre, false);
+                int j = System.Array.FindIndex(propios, x => x == b.parent);
+                if (j >= 0 && j < bindposes.Length && i < bindposes.Length)
+                {
+                    var local = bindposes[j] * bindposes[i].inverse;   // el hueso respecto a su padre, en la pose de atado
+                    nuevo.localPosition = local.GetPosition();
+                    nuevo.localRotation = local.rotation;
+                    nuevo.localScale = local.lossyScale;
+                }
+                else { nuevo.localPosition = b.localPosition; nuevo.localRotation = b.localRotation; nuevo.localScale = b.localScale; }
+                huesos[b.name] = nuevo;
+                creados++;
+                otraVuelta = true;
+                informe.AppendLine($"{modelo}: hueso {b.name} creado bajo {padre.name}.");
+            }
+        }
+        return creados;
     }
 
     /// <summary>Enciende unas piezas y apaga otras en el modelo (su aspecto de partida).</summary>

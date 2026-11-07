@@ -26,6 +26,15 @@ public static class FotosDeEscaparate
         Horno.CarasDelStoryboard["liam"] = NPCEmotion.Thinking;
 
         Horno.ApuntesDelStoryboard.Clear();
+        // Estela sentada encima del respaldo con una rodilla subida (la izquierda, la del lado del buzón).
+        Horno.ApuntesDelStoryboard["estela"] = new()
+        {
+            // Rodilla izquierda muy subida (casi al pecho) y la pierna derecha colgando del respaldo.
+            (HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, new Vector3(-0.2f, 1f, 0.55f)),
+            (HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, new Vector3(-0.05f, -1f, 0.25f)),
+            (HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, new Vector3(0.1f, -0.1f, 1f)),
+            (HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, new Vector3(0.05f, -1f, -0.1f)),
+        };
     }
 
     /// La Estrella Fugaz de Will (su proyectil del juego) entre sus manos, quieta y brillando (solo para la foto: se crea y se borra).

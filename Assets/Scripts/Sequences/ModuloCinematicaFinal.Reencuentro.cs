@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sendero.Core.Feedback;
 
-/// Acto 5: Will vuelve por la luz del portal; Estela y Liam echan a correr cuando el Tema
-/// Principal empieza a subir (1:55) y los tres se abrazan cuando estalla (2:03). La carrera va en
-/// cámara lenta y su velocidad se ajusta sola para llegar justo con la música.
+/// Acto 5: Will vuelve por la luz del portal; Estela y Liam echan a correr cuando «Los Tres» (el
+/// trío de sus temas, que suena desde el acto 3) empieza a subir y los tres se abrazan cuando
+/// estalla el tema de Will. La carrera va en cámara lenta y su velocidad se ajusta sola para
+/// llegar justo con la música.
 public partial class ModuloCinematicaFinal
 {
-    /// Segundo del Tema Principal en que empieza la subida.
-    private const float SubidaDelTema = 115f;
-    /// Segundo del Tema Principal en que estalla.
-    private const float ExplosionDelTema = 123f;
+    /// Segundo de «Los Tres» en que empieza la subida.
+    private const float SubidaDelTema = 107f;
+    /// Segundo de «Los Tres» en que estalla el tema de Will.
+    private const float ExplosionDelTema = 112.5f;
     private const float CamaraLentaMinima = 0.18f;
 
     private float _escalaDeCarrera = 1f;

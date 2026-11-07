@@ -1,0 +1,467 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap4_07_LaManzana_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap4_07_LaManzana
+  duracion: 19.64785
+  presentacion: 0
+  huella: "2026-11-07 17:23 \xB7 0d57259e2dd5397da0402ffa4bb9a3af"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -102.4, y: 32.676292, z: 54.2}
+    - t: 7.75
+      p: {x: -102.4, y: 32.676292, z: 54.2}
+    - t: 8.012029
+      p: {x: -102.53846, y: 32.67003, z: 54.23077}
+    - t: 8.227743
+      p: {x: -102.676926, y: 32.663757, z: 54.26154}
+    - t: 8.596758
+      p: {x: -102.95385, y: 32.65122, z: 54.32308}
+    - t: 8.930489
+      p: {x: -103.23077, y: 32.63868, z: 54.384617}
+    - t: 9.264228
+      p: {x: -103.50769, y: 32.626144, z: 54.44615}
+    - t: 9.607812
+      p: {x: -103.784615, y: 32.613605, z: 54.50769}
+    - t: 10.015822
+      p: {x: -104.06154, y: 32.601067, z: 54.56923}
+    - t: 10.27785
+      p: {x: -104.2, y: 32.5948, z: 54.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -104, y: 32.47592, z: 52}
+      actor: 
+    - t: 4.95
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 5.1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 10.42785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 14.76785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    cabezas:
+    - t: 0.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 5.0499997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 6.6
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 10.37785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 12.6678505
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 14.71785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 0.08
+      tipo: 2
+      estado: SenseSomethingSearching_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.08
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.43
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.5499997
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.6299996
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.8
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.97785
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.61785
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.69785
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 13.86785
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.31785
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: pensativo
+      dura: 4.43
+    - t: 12.61785
+      emocion: alegre
+      dura: 1.6
+    visible: []
+    deslizando: []
+  - id: _ESTELA
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.62352943, b: 0.41960785, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: -105.4, y: 32.541428, z: 55}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -104, y: 32.47592, z: 52}
+      actor: 
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 6.7
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.76785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 0.10000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 5
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 6.6499996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.32785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.71785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 14.6678505
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 4.0299997
+      tipo: 2
+      estado: Pain01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.95
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.0299997
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.2
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.0299997
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.27785
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.35785
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.6678505
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 13.097851
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.61785
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.69785
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.69785
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 4.95
+      emocion: molesto
+      dura: 1.6
+    - t: 10.27785
+      emocion: triste
+      dura: 2.74
+    - t: 14.61785
+      emocion: agradecido
+      dura: 4.43
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0
+    t1: 4.0299997
+    actor: Player
+    clave: CAP4_MANZANA_01
+    gesto: SenseSomethingSearching_NoWeapon
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 4.95
+    t1: 6.1499996
+    actor: _ESTELA
+    clave: CAP4_MANZANA_02
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.5499997
+    t1: 7.75
+    actor: Player
+    clave: CAP4_MANZANA_03
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 10.27785
+    t1: 12.61785
+    actor: _ESTELA
+    clave: CAP4_MANZANA_04
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 12.61785
+    t1: 13.81785
+    actor: Player
+    clave: CAP4_MANZANA_05
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.61785
+    t1: 18.64785
+    actor: _ESTELA
+    clave: CAP4_MANZANA_06
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 12.61785
+    tipo: 1
+    descripcion: conjunto de will y estela
+    posiciones:
+    - t: 0
+      p: {x: -102.26935, y: 34.164562, z: 50.000435}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - _ESTELA
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1007211
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 12.61785
+    t1: 14.61785
+    tipo: 5
+    descripcion: 'dos: will y estela'
+    posiciones:
+    - t: 12.61785
+      p: {x: -105.630554, y: 33.358963, z: 52.30834}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - _ESTELA
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8441049
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 14.61785
+    t1: 19.64785
+    tipo: 3
+    descripcion: primer plano de estela
+    posiciones:
+    - t: 14.61785
+      p: {x: -105.19166, y: 33.37702, z: 52.06835}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.09, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: cenizas
+    posicion: {x: -104, y: 32.47592, z: 52}
+  - nombre: p_will
+    posicion: {x: -102.4, y: 32.676292, z: 54.2}
+  - nombre: p_estela
+    posicion: {x: -105.4, y: 32.541428, z: 55}
+  - nombre: p_will2
+    posicion: {x: -104.2, y: 32.5948, z: 54.6}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,37 @@
+# Cap. 3 · De noche, junto al fuego, pasa un contrabandista con jaulas tapadas. Por la manta sale una luz que respira.
+GUION Cap3_03_ElCarro
+ESCENA MainWorld
+ZONA Cap3Carro -120 -218 26
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_03_ElCarro.asset
+TEXTO bocadillo
+RITMO entre_frases=0.4 mismo_hablante=0.25
+
+REPARTO
+will  Player               nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+c1    NPC_Contrabandista1  nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
+
+PUNTOS
+fuego    -124 -213
+p_will   -122.5 -214.5
+c1_a     -106 -227
+c1_b     -116 -224
+c1_c     -132 -220
+
+HILO
+@inicio
+will en p_will mirando fuego
+& c1 en c1_a mirando c1_c
+plano medio will
+espera 1.2
+will mira c1_a
+will dice CAP3_CARRO_01 cara=sorpresa
+c1 anda a c1_b, c1_c ritmo=paseo sin_esperar
+plano conjunto will c1
+espera 1.6
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab" en=c1 lifetime=2.5
+will mira c1
+will dice CAP3_CARRO_02 cara=pensativo
+espera 2.5
+plano primer will
+will dice CAP3_CARRO_03 cara=decidido
+espera 0.5

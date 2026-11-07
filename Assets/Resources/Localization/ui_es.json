@@ -2244,6 +2244,54 @@
         {
             "key": "CONCURSO_MANTENER",
             "value": "Mantén {0} y suéltalo dentro de la zona."
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_NAME",
+            "value": "Hoja de avistamientos"
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_DESC",
+            "value": "Lo que la gente de la aldea del mar ha visto de los animales con aro: luces bajas en el bosque, un zorro asustado, un perro que se rascaba el cuello."
+        },
+        {
+            "key": "CAP3_ROTULO_COSTA",
+            "value": "Dos días de camino hacia la costa…"
+        },
+        {
+            "key": "CAP3_ROTULO_NOCHE",
+            "value": "Esa noche, camino del bosque…"
+        },
+        {
+            "key": "CAP3_TUTO_SEGUIR",
+            "value": "Sigue al carro sin acercarte: si te ven, tendrás que volver atrás."
+        },
+        {
+            "key": "CAP3_ROTULO_MANANA",
+            "value": "A la mañana siguiente…"
+        },
+        {
+            "key": "DEMO_FIN_ROTULO",
+            "value": "Fin de la Primera Parte. Gracias por jugar a la demo."
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_NAME",
+            "value": "Esquirla de cristal"
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_DESC",
+            "value": "Estaba entre las rocas del Gólem. Por un instante mostró un rostro."
+        },
+        {
+            "key": "CAP4_ROTULO_MANANA",
+            "value": "A la mañana siguiente…"
+        },
+        {
+            "key": "TUTORIAL_CAP4_CUPULA_ESTELAR",
+            "value": "Pulsa {BOTON} y teclea X, B, A: la Cúpula Estelar protege a quien esté debajo."
+        },
+        {
+            "key": "TUTORIAL_CAP4_LEVITACION",
+            "value": "Nuevo hechizo: Levitación. Ya está entre tus hechizos: lánzalo para flotar sobre el agua, el barro y los huecos."
         }
     ]
 }

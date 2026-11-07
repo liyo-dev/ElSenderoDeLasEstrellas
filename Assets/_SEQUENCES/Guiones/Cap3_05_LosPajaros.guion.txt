@@ -1,0 +1,68 @@
+﻿# Cap. 3 · La guardia del cruce detiene a los contrabandistas. Will abre las jaulas y los pájaros suben como chispas.
+GUION Cap3_05_LosPajaros
+ESCENA MainWorld
+ZONA Cap3Claro -212 -129 24
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_05_LosPajaros.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will      Player                  nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+sargento  NPC_Sargento            nombre=CHAR_SARGENTO color=A7C0D8 prefab=Assets/_NPCs/Guard.prefab
+g1        NPC_GuardiaCruce1       nombre=CHAR_GUARDIA_CRUCE color=9FB4C8 prefab=Assets/_NPCs/Guard.prefab
+g2        NPC_GuardiaCruce2       nombre=CHAR_GUARDIA_CRUCE color=9FB4C8 prefab=Assets/_NPCs/Guard.prefab
+jefe      NPC_ContrabandistaJefe  nombre=CHAR_CONTRABANDISTA color=C9A27A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
+c2        NPC_Contrabandista2     nombre=CHAR_CONTRABANDISTA color=A89C8A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
+
+PUNTOS
+claro        -215 -125
+jaulas       -212.6 -124.3
+p_will       -207.5 -132
+p_sargento   -210 -133.5
+p_g1         -217 -130.5
+p_g2         -211 -121.5
+p_jefe       -215.5 -127.5
+p_c2         -217.5 -125.5
+
+HILO
+@inicio
+will en p_will mirando claro
+& sargento en p_sargento mirando p_jefe
+& g1 en p_g1 mirando p_c2
+& g2 en p_g2 mirando p_jefe
+& jefe en p_jefe mirando p_sargento
+& c2 en p_c2 mirando p_g1
+& jefe bucle Beg01_Loop
+& c2 bucle Beg01_Loop
+& g1 bucle Idle_Battle_NoWeapon
+& g2 bucle Idle_Battle_NoWeapon
+plano general sargento jefe c2
+espera 1
+sargento dice CAP3_PAJAROS_01 cara=enfado
+jefe dice CAP3_PAJAROS_02 cara=miedo
+sargento dice CAP3_PAJAROS_03 cara=decidido
+
+@jaulas
+plano sigue will
+will anda a jaulas ritmo=prisa
+plano medio will
+will dice CAP3_PAJAROS_04 cara=alegre
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=jaulas lifetime=4
+& plano general will jaulas
+espera 1
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=jaulas lifetime=4
+espera 1
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_ellow.prefab" en=will lifetime=2.5
+will cara ilusionado
+espera 1.5
+
+@sargento
+will mira sargento
+sargento mira will
+plano dos will sargento
+sargento dice CAP3_PAJAROS_05 cara=aliviado
+sargento dice CAP3_PAJAROS_06 gesto=HeadNod01
+will dice CAP3_PAJAROS_07 cara=agradecido
+espera 0.8
+fundido cubre 1.2
+espera 1.2

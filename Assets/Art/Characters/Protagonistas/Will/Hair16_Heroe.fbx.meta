@@ -32,6 +32,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Panuelo
+    second: {fileID: 2100000, guid: 6fe1405a0ace935478c8a3b5d43586e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Pelo
     second: {fileID: 2100000, guid: 0b2a7b97828be934183f5920fefa00bf, type: 2}
   - first:

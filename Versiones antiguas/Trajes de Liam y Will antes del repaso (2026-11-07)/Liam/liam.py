@@ -1,0 +1,260 @@
+# Liam, aspecto nuevo: pelo castaño, juvenil, con un mechón que le cae entre los ojos (sin tapárselos), y
+# túnica marrón corta y juvenil con cinturón, pantalón y botas; la capucha (como en los dibujos de Raúl) va
+# aparte como accesorio, para que el jugador se la pueda quitar.
+# Sobre el esqueleto de RPG Tiny Hero (base.blend). Mira a -Y; su izquierda es +X.
+#   Hair15_Flequillo → malla pesada a «head» (pieza de pelo del modelo modular).
+#   Body22_Tunica    → las manos y el torso de Body05 con la ropa encima, pesado como él.
+#   AC12_Capucha     → la capucha, pesada a «head» (accesorio del modelo modular).
+import bpy, bmesh, math, sys
+from mathutils import Vector, Matrix, Euler
+args = sys.argv[sys.argv.index("--")+1:]
+BASE, SALIDA = args[0], args[1]
+bpy.ops.wm.open_mainfile(filepath=BASE)
+arm = bpy.data.objects["Armature"]; cuerpo = bpy.data.objects["Body05"]
+for o in list(bpy.data.objects):
+    if o.type == 'MESH' and o.name != "Body05": bpy.data.objects.remove(o)
+
+COLORES = {
+    "Pelo": (0.24, 0.12, 0.06, 1), "PeloClaro": (0.36, 0.2, 0.1, 1),
+    "Tunica": (0.52, 0.33, 0.17, 1), "TunicaOscura": (0.27, 0.17, 0.09, 1), "Camisa": (0.93, 0.88, 0.76, 1),
+    "Pantalon": (0.27, 0.27, 0.3, 1), "Cuero": (0.2, 0.12, 0.07, 1), "Dorado": (1.0, 0.8, 0.3, 1), "Gema": (0.9, 0.08, 0.15, 1),
+}
+MAT = {}
+for n, c in COLORES.items():
+    m = bpy.data.materials.new(n); m.use_nodes = True
+    m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = c
+    m.diffuse_color = c; MAT[n] = m
+
+GRUPOS = {"pelo": [], "traje": [], "capucha": []}
+def nueva(grupo, nombre, bm, mat, pesos=None, grosor=0.0):
+    me = bpy.data.meshes.new(nombre); bm.to_mesh(me); bm.free()
+    o = bpy.data.objects.new(nombre, me); bpy.context.scene.collection.objects.link(o)
+    o.data.materials.append(MAT[mat])
+    for p in o.data.polygons: p.use_smooth = True
+    if grosor:
+        s = o.modifiers.new("Grosor", 'SOLIDIFY'); s.thickness = grosor; s.offset = 1
+    GRUPOS[grupo].append((o, pesos)); return o
+
+def transformar(bm, centro, escala, rot):
+    M = Matrix.Translation(centro) @ Euler(rot).to_matrix().to_4x4() @ Matrix.Diagonal((*escala, 1))
+    bmesh.ops.transform(bm, matrix=M, verts=bm.verts)
+
+def esfera(g, nombre, centro, escala, mat, pesos, rot=(0, 0, 0)):
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=14, radius=1)
+    transformar(bm, centro, escala, rot); return nueva(g, nombre, bm, mat, pesos)
+
+def toro(g, nombre, centro, mayor, menor, mat, pesos, rot=(0, 0, 0), escala=(1, 1, 1)):
+    bpy.ops.mesh.primitive_torus_add(major_radius=mayor, minor_radius=menor, major_segments=28, minor_segments=10)
+    t = bpy.context.object; bm = bmesh.new(); bm.from_mesh(t.data); bpy.data.objects.remove(t)
+    transformar(bm, centro, escala, rot); return nueva(g, nombre, bm, mat, pesos)
+
+def torno(g, nombre, perfil, mat, pesos=None, seg=40, elip=0.92, cy=-0.01, onda=0.0, n_onda=8, grosor=0.0, abierto=None):
+    """abierto=(a0, a1): deja sin cerrar ese arco (radianes, 0 = +X, π/2 = +Y atrás) — para la capa."""
+    bm = bmesh.new(); filas = []
+    for f, (z, r) in enumerate(perfil):
+        u = f / max(1, len(perfil) - 1)
+        fila = []
+        for k in range(seg + (1 if abierto else 0)):
+            if abierto: a = abierto[0] + (abierto[1] - abierto[0]) * k / seg
+            else: a = 2*math.pi*k/seg
+            rr = r * (1 + onda * u * math.sin(n_onda * a))
+            fila.append(bm.verts.new((math.cos(a) * rr, cy + math.sin(a) * rr * elip, z)))
+        filas.append(fila)
+    n = len(filas[0])
+    for f in range(len(filas) - 1):
+        for k in range(n if not abierto else n - 1):
+            bm.faces.new((filas[f][k], filas[f][(k+1) % n], filas[f+1][(k+1) % n], filas[f+1][k]))
+    return nueva(g, nombre, bm, mat, pesos, grosor)
+
+def tubo(g, nombre, puntos, radios, mat, pesos, seg=14, cerrar=True):
+    """Tubo a lo largo de una curva de puntos, con su radio en cada punto (mechones, coleta)."""
+    bm = bmesh.new(); filas = []
+    pts = [Vector(p) for p in puntos]
+    if len(radios) != len(pts):   # se reparten los radios a lo largo del tubo
+        radios = [radios[min(len(radios)-1, round(i * (len(radios)-1) / max(1, len(pts)-1)))] for i in range(len(pts))]
+    # Marco que se transporta a lo largo de la curva (sin giros bruscos que retuerzan el tubo)
+    t_ant = None; a = None
+    for i, p in enumerate(pts):
+        t = (pts[min(i+1, len(pts)-1)] - pts[max(i-1, 0)]).normalized()
+        if a is None: a = Vector((1, 0, 0)) if abs(t.x) < 0.9 else Vector((0, 1, 0)); a = (a - t * a.dot(t)).normalized()
+        else: a = (t_ant.rotation_difference(t) @ a); a = (a - t * a.dot(t)).normalized()
+        t_ant = t; b = t.cross(a)
+        filas.append([bm.verts.new(p + (a * math.cos(2*math.pi*k/seg) + b * math.sin(2*math.pi*k/seg)) * radios[i]) for k in range(seg)])
+    for f in range(len(filas) - 1):
+        for k in range(seg):
+            bm.faces.new((filas[f][k], filas[f][(k+1) % seg], filas[f+1][(k+1) % seg], filas[f+1][k]))
+    if cerrar:
+        for fila, inv in ((filas[0], True), (filas[-1], False)):
+            c = bm.verts.new(sum((v.co for v in fila), Vector()) / len(fila))
+            for k in range(seg):
+                tri = (c, fila[k], fila[(k+1) % seg]); bm.faces.new(tri if not inv else tri[::-1])
+    return nueva(g, nombre, bm, mat, pesos)
+
+def curva(p0, p1, p2, n):
+    return [tuple((1-u)**2 * Vector(p0) + 2*(1-u)*u * Vector(p1) + u*u * Vector(p2)) for u in (i/(n-1) for i in range(n))]
+
+# ── Pelo (estilo del pack: un casquete con volumen y pocos mechones grandes en forma de pico, con caras
+#    planas; nada de capas de mechones finos) ──────────────────────────────────────────────────────────
+CAB = Vector((0, -0.015, 0.99)); H = {"head": 1.0}
+CENTRO_PELO = CAB + Vector((0, 0.03, 0.03))
+RAD = Vector((0.375, 0.355, 0.355))      # el casquete: algo mayor que la cabeza
+def punto(theta_g, phi_g, extra=1.0):
+    t, p = math.radians(theta_g), math.radians(phi_g)
+    return CENTRO_PELO + Vector((RAD.x * math.sin(t) * math.cos(p), RAD.y * math.sin(t) * math.sin(p), RAD.z * math.cos(t))) * extra
+def casquete(nombre, corte_cara, corte_nuca, mat):
+    """corte_cara: hasta qué altura (z relativa) llega por delante; corte_nuca: por detrás."""
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=20, v_segments=12, radius=1)
+    transformar(bm, CENTRO_PELO, tuple(RAD), (0, 0, 0))
+    quitar = []
+    for v in bm.verts:
+        d = v.co - CENTRO_PELO
+        delante = -d.y / RAD.y                      # 1 delante, -1 detrás
+        limite = corte_nuca + (corte_cara - corte_nuca) * max(0.0, delante)
+        if d.z < limite: quitar.append(v)
+    bmesh.ops.delete(bm, geom=quitar, context='VERTS')
+    o = nueva("pelo", nombre, bm, mat, H)
+    for p in o.data.polygons: p.use_smooth = False
+    return o
+def pico(nombre, theta_g, phi_g, direccion, largo, ancho, mat, lados=4, hundir=0.06):
+    """Un mechón en pico: pirámide que nace en la superficie del casquete y apunta a «direccion»."""
+    base = punto(theta_g, phi_g, 1.0 - hundir)
+    d = Vector(direccion).normalized()
+    a = d.orthogonal().normalized(); b = d.cross(a)
+    bm = bmesh.new()
+    anillo = [bm.verts.new(base + (a * math.cos(2*math.pi*k/lados + 0.4) + b * math.sin(2*math.pi*k/lados + 0.4)) * ancho) for k in range(lados)]
+    punta = bm.verts.new(base + d * largo)
+    for k in range(lados): bm.faces.new((anillo[k], anillo[(k+1) % lados], punta))
+    bm.faces.new(anillo[::-1])
+    o = nueva("pelo", nombre, bm, mat, H)
+    for p in o.data.polygons: p.use_smooth = False
+    return o
+def hacia(theta_g, phi_g, levantar=0.0, girar=(0, 0, 0)):
+    """Dirección «hacia fuera» del casquete en ese punto, levantada hacia arriba y desviada."""
+    n = (punto(theta_g, phi_g) - CENTRO_PELO).normalized()
+    return (n + Vector((0, 0, levantar)) + Vector(girar)).normalized()
+
+
+# Liam: castaño, corte redondo con volumen, mechones en pico que caen (no aplastados), flequillo con el
+# mechón del centro hasta el entrecejo, y dos pelillos de punta arriba
+casquete("Casquete", 0.12, -0.24, "Pelo")
+# alrededor: picos que caen hacia abajo y algo hacia fuera (dan el volumen de «champiñón» juvenil)
+for i, ph in enumerate(range(-10, 200, 21)):
+    pico(f"Vuelta{i}", 72, ph, hacia(72, ph, -1.8), 0.17, 0.12, "Pelo" if i % 2 else "PeloClaro")
+for i, ph in enumerate((-165, -150, -30, -15)):
+    pico(f"Patilla{i}", 76, ph, hacia(76, ph, -2.2), 0.2, 0.1, "Pelo")
+# flequillo: cuatro picos hacia abajo, y el del centro más largo (entre los ojos)
+for i, (ph, largo, gx) in enumerate(((-128, 0.2, -0.15), (-108, 0.22, -0.1), (-72, 0.22, 0.1), (-52, 0.2, 0.15))):
+    pico(f"Flequillo{i}", 58, ph, (gx, -0.6, -1), largo, 0.1, "Pelo")
+pico("Mechon", 52, -90, (0, -0.65, -1), 0.26, 0.075, "PeloClaro")
+# pelillos de punta
+pico("Pelillo0", 12, -100, (-0.35, 0.1, 1), 0.13, 0.03, "Pelo", lados=3)
+pico("Pelillo1", 14, -72, (0.4, 0.15, 1), 0.11, 0.028, "Pelo", lados=3)
+
+# ── Capucha (accesorio aparte: el jugador se la puede quitar en el armario) ──
+# Capucha puesta: una cáscara más grande que la cabeza y el pelo, algo alta y con un pico suave atrás;
+# abierta por delante con un corte limpio (la cara queda a la vista) y por abajo (el cuello). Va con la cabeza.
+CENTRO = CAB + Vector((0, 0.03, 0.04))
+bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=48, v_segments=28, radius=1)
+transformar(bm, CENTRO, (0.45, 0.445, 0.465), (0, 0, 0))
+for v in bm.verts:   # el pico: lo de arriba y atrás se estira hacia arriba y atrás
+    d = v.co - CENTRO
+    k = max(0.0, (d.y / 0.445) * 0.6 + (d.z / 0.465) * 0.8) ** 3
+    v.co += Vector((0, 0.09, 0.07)) * k
+NORMAL_CARA = Vector((0, -1, -0.25)).normalized()      # la abertura mira al frente y un poco abajo
+PUNTO_CARA = CENTRO + NORMAL_CARA * 0.29
+geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+r = bmesh.ops.bisect_plane(bm, geom=geom, plane_co=PUNTO_CARA, plane_no=NORMAL_CARA, clear_outer=True)
+geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+bmesh.ops.bisect_plane(bm, geom=geom, plane_co=CENTRO + Vector((0, 0, -0.39)), plane_no=Vector((0, 0, -1)), clear_outer=True)
+# Por debajo de la barbilla no queda nada: la capucha se abre por delante hasta el cuello
+geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+bmesh.ops.bisect_plane(bm, geom=geom, plane_co=CENTRO + Vector((0, -0.12, -0.22)), plane_no=Vector((0, -1, -1.2)).normalized(), clear_outer=True)
+borde = [v.co.copy() for v in bm.verts if abs((v.co - PUNTO_CARA).dot(NORMAL_CARA)) < 1e-4]
+nueva("capucha", "Capucha", bm, "Tunica", H, grosor=0.03)
+# Borde grueso alrededor de la cara, siguiendo el corte
+if borde:
+    c = sum(borde, Vector()) / len(borde)
+    eje_x = Vector((1, 0, 0)); eje_y = NORMAL_CARA.cross(eje_x).normalized()
+    ang = lambda p: math.atan2((p - c).dot(eje_y), (p - c).dot(eje_x))
+    pts = sorted(borde, key=ang)
+    # El borde ya no es un aro cerrado (abajo está abierto): empieza en el hueco más grande y no se cierra
+    huecos = [(ang(pts[(i + 1) % len(pts)]) - ang(pts[i])) % (2 * math.pi) for i in range(len(pts))]
+    k = max(range(len(pts)), key=lambda i: huecos[i])
+    pts = pts[k + 1:] + pts[:k + 1]
+    pts = [p + NORMAL_CARA * 0.005 for p in pts[::max(1, len(pts) // 40)]]
+    tubo("capucha", "BordeCapucha", [tuple(p) for p in pts], [0.026] * len(pts), "TunicaOscura", H, seg=10, cerrar=False)
+# ── Túnica juvenil (cuerpo): corta, a medio muslo, con cuello vuelto, cinturón de cuero y bolsita;
+# pantalón y botas altas a la vista
+torno("traje", "Cuello", [(0.755, 0.15), (0.73, 0.2), (0.7, 0.215)], "Camisa", seg=40, grosor=0.014)
+torno("traje", "Tunica", [(0.72, 0.15), (0.66, 0.198), (0.58, 0.206), (0.5, 0.194), (0.45, 0.19), (0.36, 0.21), (0.27, 0.228)],
+      "Tunica", grosor=0.008)
+toro("traje", "Bajo", (0, -0.01, 0.272), 0.226, 0.012, "TunicaOscura", None, escala=(1, 0.92, 1))
+cruce = curva((0.1, -0.17, 0.72), (-0.02, -0.215, 0.6), (-0.12, -0.195, 0.47), 8)
+tubo("traje", "Cruce", cruce, [0.014] * 8, "TunicaOscura", None)
+toro("traje", "Cinturon", (0, -0.01, 0.45), 0.197, 0.02, "Cuero", None, escala=(1, 0.92, 1))
+esfera("traje", "Hebilla", (0.05, -0.198, 0.45), (0.03, 0.014, 0.026), "Dorado", None)
+esfera("traje", "Bolsita", (-0.16, -0.1, 0.42), (0.045, 0.035, 0.05), "Cuero", {"pelvis": 1.0})
+for lado, s in (("l", 1), ("r", -1)):
+    tubo("traje", f"Manga_{lado}", [(0.17 * s, -0.003, 0.636), (0.3 * s, -0.003, 0.634), (0.42 * s, -0.003, 0.633), (0.455 * s, -0.003, 0.633)],
+         [0.072, 0.066, 0.06, 0.06], "Tunica", None, cerrar=False)
+    tubo("traje", f"Pernera_{lado}", [(0.098 * s, 0.003, 0.44), (0.103 * s, 0.0, 0.33), (0.11 * s, -0.001, 0.22), (0.116 * s, 0.004, 0.11)],
+         [0.092, 0.086, 0.078, 0.074], "Pantalon", None, cerrar=False)
+    bota = [(0.0, 0.082), (0.04, 0.087), (0.1, 0.074), (0.13, 0.076), (0.15, 0.084)]
+    o = torno("traje", f"Bota_{lado}", bota, "Cuero", None, seg=24, elip=1.0, cy=0.0)
+    for v in o.data.vertices: v.co.x += 0.118 * s
+    esfera("traje", f"Suela_{lado}", (0.118 * s, -0.03, 0.012), (0.088, 0.13, 0.014), "Cuero", {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
+    esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.085, 0.035), (0.07, 0.09, 0.044), "Cuero", {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
+
+# ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
+def pesar(lista):
+    for o, pesos in lista:
+        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
+            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
+        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
+        if pesos is None:
+            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
+            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
+            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
+            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
+            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
+        else:
+            for h, w in pesos.items():
+                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
+        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
+def unir(lista, nombre, extra=None):
+    bpy.ops.object.select_all(action='DESELECT')
+    objs = [o for o, _ in lista] + ([extra] if extra else [])
+    for o in objs: o.select_set(True)
+    bpy.context.view_layer.objects.active = extra or objs[0]
+    bpy.ops.object.join(); bpy.context.object.name = nombre
+    return bpy.context.object
+pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"]); pesar(GRUPOS["capucha"])
+# Primero los pesos (la ropa los copia del cuerpo entero, brazos y piernas incluidos); después
+# lo del cuerpo de debajo que queda tapado por el pantalón, las botas y las mangas se quita
+bm = bmesh.new(); bm.from_mesh(cuerpo.data)
+mw = cuerpo.matrix_world
+fuera = [v for v in bm.verts if (mw @ v.co).z < 0.42 or (0.19 < abs((mw @ v.co).x) < 0.455 and (mw @ v.co).z > 0.55)]
+bmesh.ops.delete(bm, geom=fuera, context='VERTS')
+bm.to_mesh(cuerpo.data); bm.free()
+# Nada del pelo puede quedar dentro de la cara: lo que se meta en la cabeza se saca a 1,4 cm de la piel
+from mathutils.bvhtree import BVHTree
+with bpy.data.libraries.load(BASE.replace("base.blend", "modular.blend")) as (fr, to): to.objects = ["Head01_Male", "Armature"]
+for o in to.objects: bpy.context.scene.collection.objects.link(o)
+bpy.context.view_layer.update()
+_cab = to.objects[0]; _bm = bmesh.new(); _bm.from_mesh(_cab.data); _bm.transform(_cab.matrix_world); _arbol = BVHTree.FromBMesh(_bm)
+_C = Vector((0, -0.013, 0.99))
+for o, _ in GRUPOS["pelo"]:
+    mw = o.matrix_world; inv = mw.inverted(); n = 0
+    for v in o.data.vertices:
+        p = mw @ v.co; t = (p - _C).normalized()
+        hit = _arbol.ray_cast(_C, t)
+        if hit[0] is not None and (p - _C).length < (hit[0] - _C).length + 0.014:
+            v.co = inv @ (hit[0] + t * 0.014); n += 1
+print("PELO SACADO DE LA CARA", n)
+_bm.free(); bpy.data.objects.remove(to.objects[0]); bpy.data.objects.remove(to.objects[1])
+unir(GRUPOS["pelo"], "Hair15_Flequillo")
+cuerpo.name = "Body22_Tunica"   # el cuerpo de debajo va dentro: manos y torso
+unir(GRUPOS["traje"], "Body22_Tunica", extra=cuerpo)
+unir(GRUPOS["capucha"], "AC12_Capucha")
+bpy.ops.wm.save_as_mainfile(filepath=SALIDA)
+print("LIAM", [(o.name, len(o.data.vertices), [m.name for m in o.data.materials]) for o in bpy.data.objects if o.type == 'MESH'])

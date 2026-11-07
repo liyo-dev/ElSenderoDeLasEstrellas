@@ -1,0 +1,1368 @@
+# Inventario de MainWorld
+
+Escenas abiertas: Start, Sendero, MainWorld
+
+## Arranques del grafo
+- CONFIG/_StartNarrative: Cap1, Misiones Secundarias, Cap2, Sendero
+
+## Puntos del roster (NpcSpawnPoint)
+- SPAWN_Oliver · (6, 26,4, -143,2) · --- NPC SPAWN POINTS ---/SP_Oliver
+- SPAWN__LIAM · (0, 0, 0) · --- NPC SPAWN POINTS ---/SP__LIAM
+- SPAWN_Eldran · (-1,9, 26,4, -142,8) · --- NPC SPAWN POINTS ---/SP_Eldran
+- SPAWN_Tabernera · (1244,9, 1000, 3,5) · --- NPC SPAWN POINTS ---/SP_Tabernera
+- SPAWN_Victoria · (-1, 26,4, -144,1) · --- NPC SPAWN POINTS ---/SP_Victoria
+- SPAWN_Tomasa · (16,7, 26,4, -136,8) · --- NPC SPAWN POINTS ---/SPAWN_Tomasa
+- SPAWN_Boticaria · (22,5, 26,3, -134,8) · --- NPC SPAWN POINTS ---/SPAWN_Boticaria
+- SPAWN_Renard · (-236,4, 26,3, 2,5) · --- NPC SPAWN POINTS ---/SPAWN_Renard
+- SPAWN_Erika · (-19,9, 23,4, -125,5) · --- NPC SPAWN POINTS ---/SPAWN_Erika
+- SPAWN_Aldona · (6,7, 29,4, -122,1) · --- NPC SPAWN POINTS ---/SPAWN_Aldona
+
+## Reproductores de cinemáticas (SequencePlayer)
+- SEQ_PerasEldran · SEQ_PerasEldran · GAMEPLAY/SECUENCIAS/SEQ_PerasEldran
+- SEQ_OliverSaludo · SEQ_OliverSaludo · GAMEPLAY/SECUENCIAS/SEQ_OliverSaludo
+
+## Compañeros y NPCs de la escena (NPCBehaviourManagerV2)
+
+## Arenas de jefe (BossArenaController)
+
+## Objetos con nombre de sitio (primeros 3 niveles y los que coinciden)
+- WORLD · (0, 0, 0) · hijos 40
+- WORLD/Pueblo inicial — Will — Demo 09 · (6,9, 26,3, -131,7) · hijos 571
+- WORLD/Pueblo inicial — Will — Demo 09/Directional Light · (4,1, 29,3, -136,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Bee01_P · (-5,9, 27,9, -101,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Smoke02_P · (-15, 37,4, -200,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Vegetables04_a01 (1) · (36,9, 26,8, -133,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Vegetables05_a01 (1) · (34,3, 26,8, -131,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Vegetables04_a01 · (37,8, 27, -133,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Vegetables05_a01 · (34,6, 26,8, -129,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Smoke03_P · (5,1, 26,3, -151) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chimney03 · (21,2, 26,5, -111,7) · hijos 1
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (109) · (4,4, 26,3, -175,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (108) · (10,4, 26,3, -174,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (156) · (12,2, 26,4, -172,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (155) · (16,1, 26,4, -171,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (107) · (25,6, 26,3, -167,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (18) · (25,5, 26,4, -164,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Signpost01_a02 (1) · (6,3, 26,5, -153,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel01_a01 (1) · (6,4, 26,3, -155,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Light02_b02 (4) · (13,7, 26,5, -154,1) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT35 · (15,3, 26,8, -161,5) · hijos 34
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT53 · (5,9, 26,5, -107,2) · hijos 39
+- WORLD/Pueblo inicial — Will — Demo 09/Cart17 · (16,7, 26,3, -106,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 (5) · (6,9, 26,5, -116) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (10) · (7,1, 26,5, -125,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a11 (3) · (-10,1, 26,5, -162,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (9) · (-10,4, 26,5, -161,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a06 · (19,7, 27,9, -161,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (8) · (18,5, 26,5, -158,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 (4) · (37,9, 26,5, -112,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 (3) · (18,3, 26,5, -118,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a11 (2) · (28,9, 26,5, -118,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (7) · (28,4, 26,5, -118,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 (2) · (8,5, 26,5, -94,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a11 (1) · (7,2, 26,5, -94,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (6) · (9,7, 26,5, -100,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (5) · (14,8, 26,5, -103,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a11 · (15,2, 26,5, -103,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 (5) · (8,2, 26,5, -110,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (4) · (8,6, 26,5, -113,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a10 (3) · (12,5, 26,5, -119,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a07 (3) · (13,2, 26,5, -120,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (3) · (17,2, 26,5, -130,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 (4) · (7,1, 26,5, -141,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a10 (2) · (9,8, 26,5, -151,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a07 (2) · (-6,3, 26,5, -149,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (2) · (1,2, 26,5, -136,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a10 (1) · (-0,1, 26,5, -139,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a08 · (-5, 26,4, -106,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a09 (1) · (-5,9, 26,4, -106,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (12) · (-41,2, 26,4, -117,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (11) · (19,1, 26,4, -157) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (10) · (43, 26,4, -128,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (9) · (-23,7, 26,3, -91,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (8) · (-24,9, 26,4, -140,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (7) · (-14,8, 26,4, -161) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (11) · (-31,2, 26,3, -142,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (1) · (-33,6, 26,3, -141,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (6) · (-35,6, 26,4, -139,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 · (-36,2, 26,3, -137) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (9) · (-38,2, 26,3, -110,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (12) · (32,5, 26,3, -104) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (7) · (-4, 26,3, -85,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (6) · (-44,3, 26,3, -101,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (5) · (-30,4, 26,3, -98,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (6) · (-32,3, 26,4, -100,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (5) · (-0,3, 26,4, -174,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (4) · (-24,3, 26,3, -156,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (4) · (7,2, 26,4, -168,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (3) · (17,5, 26,3, -156) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree03_c01 · (24,7, 26,3, -97,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree03_c02 (1) · (16,1, 26,4, -99,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree03_b01 · (6,4, 26,3, -95,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree03_c02 · (-6,6, 26,3, -152,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (2) · (18,5, 26,3, -98,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (2) · (0,5, 26,4, -88,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (1) · (15,3, 26,4, -94,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 · (41,2, 26,4, -137,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Scarecrow01_a01 · (-21,3, 26,6, -116,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 · (9,5, 26,3, -165,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Smoke01_P (1) · (1,2, 32,6, -114,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Petal02_P · (4,7, 26,7, -132,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Petal01_P · (8,4, 30,9, -129,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Point light · (8,5, 29,2, -129,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Dandelion01_P · (3,9, 26,3, -130,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly03_P (2) · (-17, 26,3, -141,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly02_P (1) · (3,3, 26,3, -161,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly01_P (3) · (-12,6, 26,3, -153,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly03_P (1) · (-12,6, 26,3, -101,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly03_P · (27,8, 26,3, -103,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly01_P (2) · (39,1, 26,3, -120,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly01_P (1) · (-4,2, 26,3, -98,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly02_P · (29,9, 26,3, -143,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Butterfly01_P · (-6,5, 26,3, -111,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Postbox01_g04 · (1,1, 26,6, -136,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Windmill03 · (-20,1, 30,5, -124,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT24 (1) · (-21,5, 26,5, -123,4) · hijos 5
+- WORLD/Pueblo inicial — Will — Demo 09/Flag01_b01 · (9,2, 26,4, -124,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods04_a04 (1) · (10,6, 26,5, -124,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_b01 · (10,7, 26,3, -125,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (5) · (9,7, 26,3, -125,2) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel03_a02 (1) · (2,8, 26,3, -143,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Postbox01_f07 · (9,4, 26,6, -109) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Postbox02_a06 · (7,9, 26,3, -133,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Postbox01_d03 · (-4,8, 26,6, -145,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock04_a08 · (-7,5, 26,5, -135) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock04_a01 · (12,1, 26,4, -131,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock04_a05 · (-9,3, 26,4, -136,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair02_b01 (2) · (6,3, 26,3, -126,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair02_b01 (1) · (12,6, 26,3, -130,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair02_b01 · (6,5, 26,3, -133,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Flowerpot03_c07 · (15, 26,3, -111) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Board03_b01 · (8,8, 26,4, -112,6) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Flowerpot03_g04 (1) · (5,8, 26,3, -118,5) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Flowerpot03_g04 · (4,6, 26,3, -120,6) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Pot02_g01 · (-1,1, 26,3, -130,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Pot01_d01 · (-1,1, 26,3, -131,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Pot01_f01 · (12,7, 26,3, -137,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Pot02_h01 · (13,2, 26,3, -137,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair04_a01 · (7,8, 26,3, -145,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair04_a03 · (7,4, 26,3, -144,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Table01_a01 · (8,7, 26,3, -146,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair04_a04 · (-1,1, 26,3, -135) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Table01_a02 · (15,2, 26,3, -110,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Chair01_a01 · (9,6, 26,3, -103,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom02_c03 (1) · (10,7, 26,4, -148,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom02_a03 · (8,5, 26,4, -113,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom03_a01 (1) · (0,2, 26,4, -129,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom04_a01 · (-4,7, 26,4, -150,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom02_a01 · (-6, 26,4, -143,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom01_a04 · (13,6, 26,5, -119) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom02_c03 · (8,9, 26,4, -96,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom03_a01 · (9,5, 26,5, -98,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass02_a02 (3) · (9,4, 26,4, -97) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a02 (4) · (10,2, 26,4, -100,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a01 (1) · (10, 26,3, -101,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass02_a02 (2) · (-1,2, 26,4, -136,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a02 (3) · (-0,6, 26,4, -135,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a02 (2) · (-0,5, 26,4, -148,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a02 (1) · (4,2, 26,4, -151) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass02_a02 (1) · (7, 26,4, -146,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a01 · (2,8, 26,3, -149,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass02_a02 · (17,5, 26,4, -130,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a02 · (9,2, 26,4, -105,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Signpost01_a02 · (10,2, 26,5, -102,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood02_a04 · (3,2, 26,3, -105,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood02_a05 · (16,7, 26,3, -114,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Signboard01_a01 · (7,1, 26,4, -146,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods04_a04 · (-1,2, 26,4, -134,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel02_a03 · (-3,3, 26,3, -135,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel01_a02 (2) · (3,5, 26,3, -123,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel01_a02 (1) · (8,4, 26,3, -110,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel03_a02 · (8,8, 26,3, -109,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel01_a02 · (14,9, 26,3, -109,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Barrel01_a01 · (15,3, 26,3, -109,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a05 (3) · (25,1, 27,8, -146,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a07 · (23,8, 26,5, -147,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood02_a02 · (9,2, 26,6, -98,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Trough03_a01 · (14, 26,3, -105,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Farm02_a01 (1) · (10,4, 26,6, -94,4) · hijos 1
+- WORLD/Pueblo inicial — Will — Demo 09/Farm02_a01 · (-3,3, 26,6, -125,5) · hijos 1
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 (3) · (26,1, 26,5, -96,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 (1) · (24,9, 26,5, -99,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a05 (2) · (36,1, 27,8, -107,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a02 (1) · (31, 26,5, -120,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 (2) · (-14,4, 26,5, -86,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 (4) · (-16,1, 26,5, -87,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a05 (1) · (-19,8, 27,8, -88,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 (1) · (-14,4, 26,5, -88,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 (3) · (3,1, 26,5, -164,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a09 · (-0,1, 26,5, -129,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a01 · (-6,4, 26,5, -116,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 (2) · (-5,7, 26,5, -151,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 (1) · (-4,7, 26,5, -150) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a02 · (11,2, 26,5, -149,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a05 · (-9,7, 27,8, -163,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a10 · (-21,3, 26,5, -153,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a12 · (-27,8, 26,5, -146,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a03 · (-26,9, 27,2, -147,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 (1) · (-22,7, 26,5, -137,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a08 · (13,2, 26,5, -93,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 · (14,7, 26,5, -95,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 · (22, 26,3, -114,6) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (6) · (-6,7, 26,3, -158,8) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (5) · (-4,1, 26,3, -159,4) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (1) · (22,4, 26,3, -116,5) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (4) · (-1,4, 26,3, -158,9) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (3) · (-2,7, 26,3, -156,2) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Hive01_a03 (2) · (-5,1, 26,3, -156,2) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Plant02_b09 · (8,5, 26,5, -129,6) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Wood07_a01 (1) · (2,4, 26,4, -122,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood07_a02 (1) · (-6,8, 26,4, -147,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood07_a02 · (-4,1, 26,4, -125) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Wood07_a01 · (-1, 26,4, -126,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (4) · (-10,5, 26,3, -128,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (3) · (-11, 26,3, -130,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (2) · (-5,9, 26,3, -127,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (1) · (-7,4, 26,3, -128,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 · (-9,9, 26,3, -115,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a03 (1) · (-8,2, 26,3, -116) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a04 · (-8,2, 26,3, -125,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (17) · (16,9, 26,5, -156,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (6) · (14,5, 26,5, -151,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (13) · (12,4, 26,5, -150,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (19) · (11, 26,5, -147,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (4) · (12,8, 26,5, -146,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (15) · (14,6, 26,5, -144,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (12) · (16,4, 26,5, -142,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (18) · (17,6, 26,5, -140) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (17) · (19, 26,5, -137,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (6) · (19,4, 26,5, -135) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Light02_b02 (3) · (6,4, 26,5, -141,6) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Light02_b02 (2) · (-5,6, 26,5, -150,2) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Light02_b02 (1) · (0,3, 26,5, -129,7) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Light02_b02 · (17,3, 26,5, -131,8) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (3) · (18, 26,3, -115) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (2) · (6,3, 26,3, -93,7) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (1) · (8,9, 26,3, -101,2) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Cart06 · (6,1, 26,3, -102,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Cart03 · (15,1, 26,3, -121,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 · (-7,6, 26,5, -141,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (6) · (17,4, 26,5, -133,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (2) · (15,8, 26,5, -123,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (5) · (13,5, 26,5, -122,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (4) · (14,1, 26,5, -119,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (5) · (16,8, 26,5, -115,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (4) · (14,7, 26,5, -117,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (3) · (8,4, 26,5, -97,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (4) · (9,1, 26,5, -99,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (3) · (9,5, 26,5, -102,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (4) · (-6,6, 26,5, -126,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (1) · (-1,8, 26,5, -128,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (2) · (-4, 26,5, -126,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (3) · (-4,3, 26,5, -121,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a09 · (-5,5, 26,4, -121,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing04_a01 · (-5,4, 26,3, -116,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (1) · (-17,5, 26,5, -111,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (2) · (-15,1, 26,5, -112,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 · (-12,6, 26,5, -113,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (2) · (-10,2, 26,5, -113,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (3) · (-7,9, 26,5, -115,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (1) · (-5,6, 26,5, -116,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 · (-3,1, 26,5, -123,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 · (3,4, 26,5, -123,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (2) · (1,6, 26,5, -124,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (1) · (-1, 26,5, -124,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (1) · (15,8, 26,5, -109,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (1) · (14,6, 26,5, -107,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 · (15,2, 26,5, -104,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 · (7,6, 26,5, -113,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 · (7,8, 26,5, -110,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 · (10,9, 26,3, -140,7) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Cart08 (1) · (12, 26,3, -139,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Cart08 · (12,5, 26,3, -127,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Building22_d02 · (12,3, 26,6, -140,4) · hijos 1
+- WORLD/Pueblo inicial — Will — Demo 09/Well02 · (1,8, 26,4, -144,5) · hijos 2
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT03 · (18,4, 26,6, -111) · hijos 10
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT01 · (-4,4, 26,6, -132,6) · hijos 12
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT05 · (-11,8, 26,6, -146,3) · hijos 18
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT09 · (2,5, 26,6, -116,4) · hijos 23
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT16 · (23,7, 26,7, -126,9) · hijos 69
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT36 · (15,7, 26,4, -136) · hijos 4
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT40 · (9,2, 26,4, -143) · hijos 20
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom02_a02 · (6,9, 26,4, -158,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Mushroom01_a05 · (11,4, 26,4, -150,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (2) · (17,5, 26,4, -158,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (3) · (6,6, 26,4, -164,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (2) · (6,8, 26,3, -161,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (1) · (-10,2, 26,5, -140,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (2) · (-13,4, 26,5, -140,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (3) · (-16,1, 26,5, -142,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (4) · (-17,7, 26,5, -144,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (5) · (-18,1, 26,5, -148) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (6) · (-17,2, 26,5, -151) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (7) · (-15, 26,5, -153,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (8) · (-11,9, 26,5, -154) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (9) · (-8,9, 26,5, -153,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (10) · (-6,9, 26,5, -150,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing03_a01 (11) · (-6, 26,5, -144,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (2) · (-14, 26,5, -103) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (5) · (-11,6, 26,5, -103,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (7) · (-9,2, 26,5, -105) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (6) · (-7, 26,5, -106,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (7) · (-3,3, 26,5, -98,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (8) · (-5,7, 26,5, -97,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (6) · (-8, 26,5, -96,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (3) · (-10,5, 26,5, -95,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (8) · (3,6, 26,5, -102,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (9) · (1,4, 26,5, -100,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (7) · (-1, 26,5, -99,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (3) · (-2,2, 26,5, -108,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (8) · (0,6, 26,5, -91,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (10) · (2,9, 26,5, -92,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (9) · (5,1, 26,5, -93,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (4) · (-9, 26,5, -87,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (9) · (-6,5, 26,5, -88,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (11) · (-4, 26,5, -89,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (10) · (-1,8, 26,5, -90,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (12) · (7,2, 26,5, -95,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (13) · (15,8, 26,5, -101,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a01 (5) · (15,3, 26,5, -99,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (11) · (-15,3, 26,5, -99,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (5) · (-16, 26,5, -101,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (10) · (-17,1, 26,5, -105) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (14) · (-17,8, 26,5, -107,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (12) · (-19,1, 26,5, -109,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (13) · (-14,3, 26,5, -96,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (15) · (-13, 26,5, -94,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (11) · (-12,3, 26,5, -91,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (16) · (-10,1, 26,5, -87,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (14) · (-11,3, 26,5, -89,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (18) · (-11, 26,5, -136,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (20) · (-10,5, 26,5, -133,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (14) · (-9,8, 26,5, -130,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (5) · (-16,7, 26,5, -136,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (19) · (-14, 26,5, -136,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (7) · (-11,4, 26,5, -136,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (15) · (-8,9, 26,5, -128,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (8) · (-3, 26,5, -138,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (20) · (-5,6, 26,5, -139,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (6) · (-8, 26,5, -139,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (9) · (-10,3, 26,5, -139,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (21) · (-5,8, 26,5, -149,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (10) · (-3,3, 26,5, -149,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (4) · (16,9, 26,3, -133,9) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Goods01_a05 (6) · (8,4, 26,3, -125,2) · hijos 3
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (22) · (30,1, 26,5, -124,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (16) · (35,4, 26,5, -126,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (11) · (32,7, 26,5, -125,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a02 (21) · (38,1, 26,5, -127) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a04 (5) · (17,5, 26,5, -99,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a02 (2) · (27,9, 26,5, -99,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a04 (12) · (0,7, 26,5, -134,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (23) · (0,5, 26,5, -136,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a06 (7) · (-0,4, 26,5, -138,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (58) · (-35,4, 26,4, -99,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (96) · (-21,5, 26,3, -85) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (95) · (43,1, 26,3, -157,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (94) · (30, 26,3, -164,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (122) · (30,9, 26,4, -161,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (71) · (-36,8, 26,3, -108,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (86) · (-39,9, 26,4, -108,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (85) · (-10,3, 26,4, -78,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (83) · (-16,1, 26,3, -81,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (67) · (-16,2, 26,3, -84,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (66) · (-13, 26,3, -86) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (65) · (-40,1, 26,3, -116,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (64) · (-41,4, 26,3, -121) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (81) · (-44, 26,4, -119,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (62) · (-31,7, 26,3, -140,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (80) · (-38,5, 26,4, -138,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (61) · (-38,5, 26,3, -135,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (79) · (-26,7, 26,4, -157,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (60) · (-24,1, 26,3, -154,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (78) · (-26,8, 26,4, -154,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (59) · (-26,3, 26,3, -151,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (58) · (-19,6, 26,3, -162,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (77) · (-13,9, 26,4, -162) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (57) · (-13,2, 26,3, -164,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (76) · (-11, 26,4, -162) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (60) · (-40,3, 26,3, -111,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (46) · (-45,5, 26,3, -116,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (45) · (-29,6, 26,3, -93,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (59) · (-27,3, 26,3, -96,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (43) · (-25,9, 26,3, -90,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (57) · (16,6, 26,3, -165,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (56) · (19,1, 26,4, -167,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (42) · (19,5, 26,3, -164,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (55) · (22,1, 26,3, -165,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (54) · (49,9, 26,3, -141,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (40) · (47,9, 26,3, -140,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (35) · (-47,4, 26,4, -115) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (30) · (-40,9, 26,3, -128,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (34) · (-34,5, 26,3, -102,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (29) · (-32,4, 26,3, -104,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (33) · (-20,1, 26,4, -90,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (28) · (-23,2, 26,3, -90,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (27) · (46,4, 26,3, -116,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (31) · (33,5, 26,4, -101,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (26) · (33,3, 26,3, -97,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (25) · (36,1, 26,3, -101,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (3) · (15,3, 26,3, -141,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (2) · (-5,3, 26,3, -143,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 · (7,8, 26,3, -115) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (1) · (-11,7, 26,4, -139,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 · (6,7, 26,4, -111,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (3) · (12, 26,3, -150,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (4) · (9,5, 26,4, -162,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (4) · (-14,1, 26,3, -138,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (5) · (13,5, 26,4, -119,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (5) · (39,2, 26,3, -108,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (6) · (18,7, 26,3, -132,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (7) · (7,7, 26,3, -98,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (1) · (14,9, 26,3, -102) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (4) · (9,7, 26,3, -148,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (8) · (-9,1, 26,4, -165,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (8) · (11,2, 26,3, -167,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (9) · (-6,4, 26,3, -166,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (9) · (-1,4, 26,3, -170) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (10) · (-4,4, 26,4, -169) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (10) · (-3,7, 26,3, -166,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (12) · (4, 26,4, -170,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (12) · (4,7, 26,3, -167) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (13) · (1,7, 26,3, -168,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (14) · (33,6, 26,4, -154,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (13) · (37,7, 26,3, -154,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (15) · (35,8, 26,4, -157,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (15) · (35,1, 26,3, -126,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (17) · (41,6, 26,4, -140,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (18) · (44,1, 26,4, -136,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (16) · (45,8, 26,3, -133,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (19) · (42,4, 26,4, -133,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (17) · (5,1, 26,3, -92,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (20) · (4, 26,4, -89,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (18) · (2,2, 26,3, -85,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (22) · (-1,1, 26,4, -85,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (23) · (11,6, 26,4, -89) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (19) · (16,2, 26,3, -89,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (24) · (13,6, 26,4, -91,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (20) · (16,5, 26,3, -96,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (21) · (-18, 26,3, -157,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (26) · (-21,1, 26,4, -158,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (22) · (-26,3, 26,3, -149,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (27) · (-28,5, 26,4, -147,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (28) · (-36,4, 26,4, -113) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (23) · (-34,6, 26,3, -110,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (24) · (-39,9, 26,3, -131,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (29) · (-32,1, 26,4, -136,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (5) · (15,8, 26,3, -115,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree07_b01 (6) · (-2,3, 26,3, -149,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (36) · (39,8, 26,4, -143,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (31) · (43,1, 26,3, -143,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (38) · (41,7, 26,4, -146,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (39) · (29,3, 26,4, -158,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (32) · (31, 26,3, -155,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (40) · (27,5, 26,4, -161,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (41) · (26,9, 26,3, -155,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (42) · (20,6, 26,4, -159,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (33) · (26,4, 26,3, -159,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (44) · (23,9, 26,4, -161,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (46) · (41,3, 26,4, -127) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (47) · (43,3, 26,4, -124,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (49) · (38,5, 26,4, -89,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (51) · (20, 26,4, -83,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (52) · (17,4, 26,4, -86,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (37) · (14,9, 26,3, -85,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (38) · (43,2, 26,3, -112,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (41) · (1,3, 26,3, -171,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (47) · (10, 26,3, -169,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (61) · (-8, 26,4, -169) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (62) · (-11,4, 26,4, -168,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (63) · (19, 26,4, -101,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (64) · (21,8, 26,4, -96,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (65) · (28,7, 26,4, -97,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (66) · (30, 26,4, -101,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (67) · (31, 26,4, -99,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (50) · (19, 26,3, -95,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (51) · (19,3, 26,3, -88,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (69) · (22,5, 26,4, -89,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (70) · (24,4, 26,4, -86,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (53) · (20,6, 26,3, -93,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (71) · (17,7, 26,4, -92,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (72) · (28,5, 26,4, -88,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (54) · (23,6, 26,3, -94,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (73) · (26,3, 26,4, -94,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (74) · (28,6, 26,4, -92,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (55) · (14,1, 26,3, -88,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (56) · (20,6, 26,3, -91,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (75) · (21,1, 26,4, -98,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (87) · (-11,4, 26,4, -174,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (88) · (-15,3, 26,4, -173,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (72) · (-3,8, 26,3, -175,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (73) · (-6,7, 26,3, -174,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (74) · (-18,4, 26,3, -181,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (92) · (5,7, 26,4, -189,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (93) · (14, 26,4, -183,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (76) · (10,3, 26,3, -182,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (96) · (6,6, 26,4, -183,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (101) · (51,8, 26,4, -131,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (102) · (-41,8, 26,4, -147,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (103) · (-42,3, 26,4, -142,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (104) · (-33,1, 26,4, -153,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (81) · (-34,2, 26,3, -149) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (82) · (-37,2, 26,3, -149,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (105) · (-41,2, 26,4, -153,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (106) · (-36,4, 26,4, -161,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (108) · (-56,1, 26,4, -129,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (109) · (-45,2, 26,4, -136,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (84) · (-46,6, 26,3, -130,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (86) · (-60,3, 26,3, -139,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (111) · (-54,4, 26,4, -145,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (118) · (-25,4, 26,4, -71,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (121) · (-29,3, 26,4, -83,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (126) · (-29,7, 26,3, -101,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (127) · (-25, 26,4, -101,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (128) · (11,8, 26,4, -85,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (99) · (0,7, 26,3, -82,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a02 (3) · (2,3, 26,6, -83,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a05 (4) · (11,5, 27,6, -83,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Rock02_a07 (1) · (1,7, 26,5, -79) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a04 (1) · (-10,1, 26,3, -127,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (5) · (-11,2, 26,3, -131,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a03 (2) · (-8,7, 26,3, -129,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a03 (3) · (-11,8, 26,3, -114,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (6) · (-19,1, 26,3, -108) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (7) · (-18,6, 26,3, -106,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (8) · (-17,5, 26,3, -102,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a03 (4) · (-17,9, 26,3, -104,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a04 (2) · (-33,4, 26,3, -135,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a04 (3) · (-38,6, 26,3, -129,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (9) · (-34,2, 26,3, -133,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Hay01_a02 (10) · (-35,2, 26,3, -134) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Scarecrow01_a01 (1) · (-5,6, 26,6, -102) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Scarecrow01_a01 (2) · (27,5, 26,6, -142,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (8) · (23,8, 26,3, -92,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (8) · (25,8, 26,4, -90,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (9) · (-6,4, 26,3, -171,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (21) · (-9,8, 26,4, -171,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (48) · (-3,5, 26,3, -172,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (49) · (-12,4, 26,3, -171,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (11) · (-16,2, 26,3, -170,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (10) · (40,4, 26,4, -150,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (1) · (40, 26,3, -153,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (24) · (0,1, 26,5, -109,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Cart10 (1) · (-3,1, 26,3, -140,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Flag01_b01 (1) · (8,1, 26,4, -94) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Flag01_b01 (2) · (12,2, 26,4, -92,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Smoke01_P (2) · (4,7, 33, -108,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (89) · (-41, 26,3, -150,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (130) · (-36,9, 26,4, -154,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (131) · (-35,3, 26,4, -164,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (132) · (-42,8, 26,4, -155,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (97) · (-36,7, 26,3, -158,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (133) · (-39,8, 26,4, -157,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (134) · (-38,3, 26,4, -146) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (135) · (-45,9, 26,4, -140,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (13) · (-8, 26,3, -185,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (45) · (-6,3, 26,4, -181,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (139) · (-10,1, 26,4, -182,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (14) · (-34,1, 26,3, -169,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (140) · (-24,3, 26,4, -174,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (141) · (-19,8, 26,4, -172,3) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (146) · (-33,6, 26,4, -84,2) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (147) · (-49,8, 26,4, -126,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (149) · (-42,2, 26,3, -163) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (103) · (-42,5, 26,3, -159,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (104) · (39,5, 24,9, -176,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (14) · (34,6, 25,8, -180,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (11) · (37,9, 24,9, -179,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (16) · (-30,8, 26,3, -149,9) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (12) · (-29,4, 26,3, -138,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/BuildingAT30 (1) · (3,1, 26,8, -156,3) · hijos 48
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b02 (17) · (23,6, 26,4, -158,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a08 (1) · (17, 26,4, -152,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a09 (2) · (15,8, 26,4, -152,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Grass01_a01 (2) · (1,8, 26,3, -157,4) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (25) · (18,2, 26,5, -158,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a03 (17) · (19,5, 26,5, -160,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_b01 (13) · (7,2, 26,3, -156,8) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a01 (63) · (12,3, 26,3, -147,5) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (7) · (8,3, 26,4, -159) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Tree01_a02 (153) · (12, 26,4, -164,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Railing01_a05 (26) · (6, 26,5, -154,1) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Smoke01_P (3) · (21, 31,6, -111,7) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Farm01_b01 (1) · (32,9, 26,4, -130,6) · hijos 10
+- WORLD/Pueblo inicial — Will — Demo 09/Farm01_b01 (2) · (38,6, 26,4, -132,4) · hijos 7
+- WORLD/Pueblo inicial — Will — Demo 09/Scarecrow01_a01 (3) · (32,9, 26,6, -130,6) · hijos 0
+- WORLD/Pueblo inicial — Will — Demo 09/Scarecrow01_a01 (4) · (38,8, 26,6, -132,3) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles · (0, 0, 0) · hijos 127
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 1 · (239,8, 5,2, -433,7) · hijos 13
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 2 · (210, 5,3, -390) · hijos 11
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 3 · (283,6, 5,2, -418,2) · hijos 38
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 4 · (305,1, 5,3, -430,8) · hijos 20
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 5 · (235,7, 5,2, -451,7) · hijos 29
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 6 · (302,4, 5,2, -451,3) · hijos 80
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 7 · (220, 5,3, -418) · hijos 5
+- WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 8 · (320, 5,2, -416,1) · hijos 40
+- WORLD/Pueblo pesquero — calles y muelles/Tablón de embarcadero · (270, 3,6, -452) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Tablón de muelle transversal · (249, 3,6, -484) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Pilote · (266,5, -0,3, -450) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Pilote transversal · (249, -0,3, -480,5) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Rampa de acceso al muelle · (270, 4,3, -455,5) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Velero del puerto · (270,5, 0,3, -498,5) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Barca de pesca · (282,2, -0,1, -472,1) · hijos 0
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 1 · (307,4, 5,3, -402,9) · hijos 11
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 2 · (294, 5,3, -403) · hijos 20
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 3 · (268,5, 5,3, -405,8) · hijos 20
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 4 · (317,3, 5,2, -430,4) · hijos 40
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 5 · (290,7, 5,3, -434,6) · hijos 11
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 6 · (220,7, 5,2, -434,7) · hijos 29
+- WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 7 · (300,4, 5,2, -419,5) · hijos 13
+- WORLD/Plaza del puerto — acceso al embarcadero · (270, 5, -433) · hijos 0
+- WORLD/Poza de la cascada · (191, 42, 249) · hijos 0
+- WORLD/Piedra Ancestral — Ruinas del Libro (isla, se llega en barco) · (565, 18, -505) · hijos 0
+- WORLD/Pueblo vecino — terraza sobre la playa · (0, 0, 0) · hijos 13
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 1 · (309,2, 23,2, -102,4) · hijos 13
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 2 · (330, 23,3, -93) · hijos 11
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 3 · (352,2, 23,2, -103,1) · hijos 38
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 4 · (357,6, 23,3, -127,8) · hijos 20
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 5 · (305,8, 23,2, -127,9) · hijos 29
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 6 · (336,5, 23,2, -141,1) · hijos 80
+- WORLD/Pueblo vecino — terraza sobre la playa/Pozo del pueblo vecino · (339, 23, -115) · hijos 2
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 1 · (293,5, 23,2, -94,2) · hijos 29
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 2 · (291,9, 23,3, -122,7) · hijos 20
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 3 · (372, 23,3, -115,6) · hijos 20
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 4 · (361,1, 23,3, -140,1) · hijos 20
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 5 · (298,7, 23,3, -79,3) · hijos 11
+- WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 6 · (317,1, 23,2, -79,2) · hijos 29
+- WORLD/Plaza del pueblo vecino — GDD 15 · (330, 23, -115) · hijos 0
+- WORLD/Reino — barrio de montaña y explanada real · (0, 0, 0) · hijos 25
+- WORLD/Reino — barrio de montaña y explanada real/Castillo — entrada despejada · (0, 112,2, 338) · hijos 0
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 1 · (-72,7, 112,2, 284,2) · hijos 13 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 2 · (-73,4, 112,2, 315,8) · hijos 38 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 3 · (-70,8, 112,3, 336,9) · hijos 20 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 4 · (-35,7, 112,2, 285,3) · hijos 29
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 5 · (-36, 112,3, 316) · hijos 5 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 6 · (-35,3, 112,2, 338,8) · hijos 13 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 7 · (34,6, 112,2, 285,8) · hijos 38 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 8 · (37,2, 112,3, 315,9) · hijos 20 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 9 · (35,7, 112,2, 337,7) · hijos 29
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 10 · (72, 112,3, 286) · hijos 5 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 11 · (72,7, 112,2, 317,8) · hijos 13 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 12 · (73,4, 112,2, 337,2) · hijos 38 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 13 · (-70,1, 104,3, 247,8) · hijos 20
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 14 · (-69,3, 104,2, 272,3) · hijos 29
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 15 · (70, 104,3, 249) · hijos 5 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 16 · (68,2, 104,2, 273,7) · hijos 13 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 17 · (40,4, 104,2, 247,2) · hijos 38
+- WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 18 · (39,1, 104,3, 275,2) · hijos 20
+- WORLD/Reino — barrio de montaña y explanada real/Taberna del mercado · (-38,5, 104,2, 263) · hijos 39 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Pozo de la plaza baja · (15, 104, 263) · hijos 2 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/Puesto del mercado · (-14, 101,1, 247) · hijos 0 · inactivo
+- WORLD/Reino — barrio de montaña y explanada real/PENDIENTE — sala del trono y calabozo (GDD 10–11) · (0, 112, 355) · hijos 0
+- WORLD/Plaza real — audiencia exterior y Demonio 2 (GDD 10–13) · (0, 112, 299) · hijos 0
+- WORLD/Plaza de la taberna — encuentro y persecución (GDD 9) · (0, 104, 259) · hijos 0
+- WORLD/Isla del hechicero — jungla (claro y cabaña) · (545, 16, -180) · hijos 2
+- WORLD/Isla del hechicero — jungla (claro y cabaña)/Casa del hechicero — exilio en la isla-jungla (GDD 15) · (544,8, 16,2, -172,6) · hijos 38
+- WORLD/Isla del hechicero — jungla (claro y cabaña)/Pozo del hechicero · (536, 16, -188) · hijos 2
+- WORLD/Isla secreta — cabaña del náufrago (no aparece en el mapa) · (560, 14, 470) · hijos 4
+- WORLD/Isla secreta — cabaña del náufrago (no aparece en el mapa)/Cabaña del náufrago — isla secreta · (557,4, 14,2, 474,7) · hijos 80
+- WORLD/Isla secreta — cabaña del náufrago (no aparece en el mapa)/Barril del náufrago · (553, 14, 465) · hijos 0
+- WORLD/Granjas de la cascada — campo de Erika (GDD) · (250, 38, 150) · hijos 7
+- WORLD/Granjas de la cascada — campo de Erika (GDD)/Casa de labranza 1 — campo de Erika · (211,2, 38,3, 159,9) · hijos 20
+- WORLD/Granjas de la cascada — campo de Erika (GDD)/Casa de labranza 2 · (272, 38,3, 138) · hijos 5
+- WORLD/Granjas de la cascada — campo de Erika (GDD)/Pozo de las granjas · (248, 38, 148) · hijos 2
+- WORLD/Granjas de la cascada — campo de Erika (GDD)/Barril de la granja · (236, 38, 140) · hijos 0
+- WORLD/Huerto grande — campo de Erika · (254, 38, 166) · hijos 0
+- WORLD/Huerto de la casa 1 · (208, 38, 142) · hijos 0
+- WORLD/Huerto junto al arroyo · (274, 38, 154) · hijos 0
+- WORLD/Claro de Estela — escenario GDD 7 · (-330, 36, 65) · hijos 0
+- WORLD/Descanso del camino — arena Golem GDD 8 · (-95, 32, 65) · hijos 0
+- WORLD/Pradera del despertar — arena Demonio 1 GDD 4–5 · (-62, 25, -61) · hijos 0
+- WORLD/Huerta del pueblo 1 · (84, 24, -177) · hijos 0
+- WORLD/Huerta del pueblo 2 · (102, 24, -177) · hijos 0
+- WORLD/Huerta del pueblo 3 · (120, 24, -177) · hijos 0
+- WORLD/Huerto del puerto · (232, 5, -405) · hijos 0
+- WORLD/Huerto del pueblo vecino · (300, 23, -140) · hijos 0
+- WORLD/Huerto del pueblo vecino 2 · (360, 23, -92) · hijos 0
+- WORLD/Huerto del Reino — terraza baja · (-30, 97,7, 240) · hijos 0 · inactivo
+- WORLD/Isla — terreno editable · (-650, -25, -650) · hijos 0
+- WORLD/Mar · (0, 0, 0) · hijos 0
+- WORLD/Río del bosque · (0, 0, 0) · hijos 0
+- WORLD/Arroyo de la ladera este · (0, 0, 0) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada · (0, 0, 0) · hijos 13
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Poza de la cascada — agua · (191, 40,8, 249) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Cascada — velo de agua · (179,6, 60, 271,7) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Cascada — salpicadura · (182,4, 41, 266,3) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Mirador de la cascada · (0, 0, 0) · hijos 14
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Santuario ancestral — recinto de piedra y ruinas · (0, 0, 0) · hijos 19
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Santuario ancestral — recinto de piedra y ruinas/Dintel conservado del santuario · (565, 22,1, -516) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Santuario ancestral — recinto de piedra y ruinas/Jamba de acceso al santuario · (557,5, 20, -516) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Ruta a las Ruinas — Rompiente, pasarelas y arrecife · (0, 0, 0) · hijos 102
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Las Hermanas — marcadores de recompensa · (0, 0, 0) · hijos 5
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Barca varada — playa de las Ruinas · (488,9, 4,3, -488,7) · hijos 0
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Faro (torre vigía) — cabo del puerto · (365, 16,4, -470) · hijos 2
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_2 — tablero de 4 m y accesos a ras · (0, 0, 0) · hijos 49
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_4 — tablero de 4 m y accesos a ras · (0, 0, 0) · hijos 77
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_5 — tablero de 4 m y accesos a ras · (0, 0, 0) · hijos 58
+- WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_8 — tablero de 4 m y accesos a ras · (0, 0, 0) · hijos 58
+- WORLD/Cabo del faro — basamento rocoso · (0, 0, 0) · hijos 0
+- WORLD/Bosque Prohibido y arboledas · (0, 0, 0) · hijos 1760
+- WORLD/Bosque Prohibido y arboledas/Tree03_e02 · (573,2, 18,1, -470,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_b01 · (-351,1, 31,2, -1,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_a01 · (-5,8, 39,1, 42,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_a02 · (-429,3, 28,7, 28,2) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_e01 · (503,7, 10,7, -525,8) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree06_a03 · (-361,1, 29,4, -33,8) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree01_a01 · (325,8, 25,3, -229,4) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_b01 · (-260,7, 26,2, -46,5) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree01_a02 · (1,7, 37,7, -348,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree06_a02 · (415,1, 39,6, 77,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree05_a01 · (-599,8, 15, 388,6) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree06_a01 · (306,7, 36,9, 107,5) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree07_b01 · (222,9, 25,2, -125,8) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_a02 · (370,4, 41,1, 96,2) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_c01 · (-398,7, 46,4, 71,6) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_d01 · (-562,8, 14,2, 398,8) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_d01 · (-188, 23,9, -66,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_a01 · (126,4, 34,5, 62) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_c01 · (-352,7, 27,2, -77,9) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_b01 · (596,5, 18,1, -496,6) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_d01 · (-403,3, 28,1, -20,2) · hijos 1
+- WORLD/Bosque Prohibido y arboledas/Tree05_b01 · (602,4, 19,3, -541,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_d02 · (600, 10, 484,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_a01 · (518,6, 11,4, -135,8) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree01_b02 · (508,9, 13,5, -145,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_c02 · (355,8, 25,5, -58,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_c02 · (395,9, 33,8, 103,5) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree07_a01 · (525,6, 12,6, -132,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree07_c01 · (526,1, 16,8, -544,2) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree01_b01 · (584,8, 15,1, -170,4) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_c01 · (520,6, 15,5, -145,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree03_f01 · (562,1, 17,8, -552,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_c02 · (546,2, 14,3, -206,3) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_c03 · (533, 9,8, -129) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_f01 · (532,7, 17,3, -483,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_a02 · (587,4, 17,1, -180,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_d03 · (590,2, 13,5, 456,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree04_a03 · (564,9, 14,8, -220,5) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_e01 · (598,2, 18, -536,1) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Tree02_e02 · (510,2, 13,8, -498,4) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Suelo vegetal — hierba y setas por paraje · (0, 0, 0) · hijos 1680
+- WORLD/Bosque Prohibido y arboledas/Rock03_a01 · (156,8, 59,6, 267) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Rock01_a01 · (161,9, 58,3, 290,2) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Rock02_a01 · (180,8, 59,6, 289,7) · hijos 0
+- WORLD/Bosque Prohibido y arboledas/Rock04_a01 · (192,4, 59,6, 288,4) · hijos 0
+- WORLD/Rocas de costa e islotes · (0, 0, 0) · hijos 201
+- WORLD/Rocas de costa e islotes/Rock02_a01 · (-396,3, 16, -487,7) · hijos 0
+- WORLD/Rocas de costa e islotes/Rock01_a01 · (-475,8, 19,1, -56,5) · hijos 0
+- WORLD/Rocas de costa e islotes/Rock03_a01 · (15,2, 25,1, -419,6) · hijos 0
+- WORLD/Rocas de costa e islotes/Rock04_a01 · (352,2, 4,9, -430,6) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros · (0, 0, 0) · hijos 482
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda · (231,9, 5, -433) · hijos 2
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Barriles del puerto · (258, 5, -448) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza · (-16, 112, 290) · hijos 1 · inactivo
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro · (-12, 104, 256) · hijos 0 · inactivo
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza · (-13,8, 104, 256) · hijos 0 · inactivo
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Cultivo · (80, 24, -187) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto grande — campo de Erika · (254, 38, 166) · hijos 50
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto de la casa 1 · (208, 38, 142) · hijos 20
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto junto al arroyo · (274, 38, 154) · hijos 24
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del puerto · (232, 0, -405) · hijos 16
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del pueblo vecino · (300, 0, -140) · hijos 21
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del pueblo vecino 2 · (360, 0, -92) · hijos 16
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del Reino — terraza baja · (-30, 0, 240) · hijos 21 · inactivo
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Árbol de jardín del Reino · (-87, 112,3, 324) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Flores del parterre · (-83,7, 112, 324) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Borde bajo del parterre · (-82,8, 112,1, 324) · hijos 0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino · (0, 0, 0) · hijos 98
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Tronco quemado — huella del paso de Estela · (-311, 37,9, 65) · hijos 0
+- WORLD/Goods · (0, 0, 0) · hijos 4
+- WORLD/Goods/Goods02_a02 · (-2,8, 26,3, -144,9) · hijos 0
+- WORLD/Goods/Goods02_a03 · (-2,8, 26,6, -144,9) · hijos 0
+- WORLD/Goods/Goods03_a03 · (-2,3, 26,3, -146,1) · hijos 0
+- WORLD/Goods/Goods02_a04 · (-3,1, 26,9, -140,7) · hijos 0
+- WORLD/Noche · Luciérnagas · (0, 0, 0) · hijos 40
+- WORLD/Noche · Luciérnagas/Luciérnagas 01 · (250,3, 45,1, 252,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 02 · (222,4, 42,6, 271,1) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 03 · (232,2, 42,7, 258,8) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 04 · (-202,7, 23,9, -58,6) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 05 · (-321,9, 59,9, 157,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 06 · (-277, 29,4, -11) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 07 · (489,7, 12, -182,3) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 08 · (-322,1, 60,9, 180,5) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 09 · (-395,7, 30, -36,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 10 · (-277,4, 62,2, 203,2) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 11 · (-417,8, 26,6, -33,9) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 12 · (-251,1, 50,1, 110,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 13 · (-323,1, 28,4, -12,2) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 14 · (516,3, 10,9, -134,2) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 15 · (-370,8, 56,5, 155,5) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 16 · (-300, 59,9, 224,9) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 17 · (396,3, 48,4, 35,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 18 · (-327,7, 60,2, 203,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 19 · (494,1, 11,1, -160,3) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 20 · (-371, 24,1, -128,6) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 21 · (-397,2, 48,9, 83,3) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 22 · (588,9, 11,2, 495,8) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 23 · (-301,3, 26, -86,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 24 · (372,4, 43,9, 81,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 25 · (-255,7, 26,3, -135) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 26 · (-401, 43,8, 63,5) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 27 · (537,6, 14,9, -136,2) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 28 · (-347, 26,6, -87,2) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 29 · (-302,4, 30,8, 8,8) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 30 · (-394,2, 24,2, -129,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 31 · (346,6, 41,2, 110,3) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 32 · (-297,6, 24,8, -133,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 33 · (-347,1, 57,9, 204,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 34 · (541,3, 16,8, -467,5) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 35 · (-346, 32,8, 9,4) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 36 · (274, 33,8, 56,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 37 · (-345,7, 28,4, -61,3) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 38 · (277,4, 32,6, -9,7) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 39 · (-371,7, 38,5, 35,6) · hijos 0
+- WORLD/Noche · Luciérnagas/Luciérnagas 40 · (-227,8, 26, -36,4) · hijos 0
+- WORLD/Vestido del mundo (generado) · (0, 0, 0) · hijos 39
+- WORLD/Vestido del mundo (generado)/Reino · (0, 0, 0) · hijos 16
+- WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Taberna de la plaza · (-33,2, 103,7, 259,7) · hijos 79
+- WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Cuerpo de guardia de la Puerta Real · (67,1, 104,1, 251,1) · hijos 17
+- WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Posada del Camino Real · (68,3, 104,1, 269,1) · hijos 46
+- WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Cuartel de la Guardia Real · (-42, 112, 337,2) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Mercado/Carreta de descarga de la posada · (57,3, 104,1, 263,5) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Terraza de la taberna · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Reino/Terraza de la taberna/Barril de la taberna · (-22,6, 103,6, 253,4) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Entrada del castillo/Armadura de la guardia · (-13, 112, 317,8) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Patio de armas de la guardia · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Reino/Patio de armas de la guardia/Armero de la guardia · (-36,5, 112, 328,7) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Patio de armas de la guardia/Barril de la guardia · (-37,2, 112, 323,4) · hijos 0
+- WORLD/Vestido del mundo (generado)/Reino/Rótulos de los oficios/Rótulo de «Posada del Camino Real» · (71,8, 106,2, 266,6) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Embarcadero y playa/Barca varada en la arena · (232,2, 3,5, -458,2) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Embarcadero y playa/Agua del puerto (para nadar) · (0, 0, 0) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Embarcadero y playa/Fondo no caminable del puerto · (270, -3,8, -488) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Plaza del puerto · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Plaza del puerto/Banco de la plaza del puerto · (255,3, 5,8, -425,8) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo pesquero/Plaza del puerto/Farola de la plaza del puerto · (256,3, 5,1, -446,3) · hijos 0
+- WORLD/Vestido del mundo (generado)/Pueblo vecino · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Granjas de la cascada · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Parajes entre zonas · (0, 0, 0) · hijos 12
+- WORLD/Vestido del mundo (generado)/Parajes entre zonas/Caserío abandonado · (0, 0, 0) · hijos 19
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era · (0, 0, 0) · hijos 14
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era/Ambiente de la laguna · (185,4, 25,5, -35,5) · hijos 0
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era/Sin arenas: laguna · (185,4, 29,5, -35,5) · hijos 0
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era/Árboles de la orilla/Bosquete 1 (oliva) · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era/Árboles de la orilla/Bosquete 2 (turquesa) · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Agua — Laguna de la Era/Árboles de la orilla/Bosquete 3 (oliva) · (0, 0, 0) · hijos 2
+- WORLD/Vestido del mundo (generado)/Vegetación — Jardines de palacio · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Jardín hundido de la taberna · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Vegetación — Jardín hundido de la taberna/Jardín hundido de la taberna · (0, 0, 0) · hijos 24
+- WORLD/Vestido del mundo (generado)/Vegetación — Paseo de ronda · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Vegetación — Setos al pie de la muralla · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Vegetación — Talud central · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Vegetación — Alameda de cipreses del Camino 10 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Pie del talud de la muralla · (0, 0, 0) · hijos 11
+- WORLD/Vestido del mundo (generado)/Vegetación — Setos al pie exterior de la muralla · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Vegetación — Setos al pie exterior de la muralla/Setos al pie exterior de la muralla · (0, 0, 0) · hijos 15
+- WORLD/Vestido del mundo (generado)/Vegetación — Camino del puerto · (0, 0, 0) · hijos 9
+- WORLD/Vestido del mundo (generado)/Vegetación — Camino de las granjas · (0, 0, 0) · hijos 12
+- WORLD/Vestido del mundo (generado)/Vegetación — Camino del Reino · (0, 0, 0) · hijos 10
+- WORLD/Vestido del mundo (generado)/Vegetación — Camino del varadero · (0, 0, 0) · hijos 14
+- WORLD/Vestido del mundo (generado)/Vegetación — Entrada al pueblo vecino · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Camino del borde del bosque · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo · (0, 0, 0) · hijos 11
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 1 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 2 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 3 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 4 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 5 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 6 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 7 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 8 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 9 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 10 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Pinar tras el castillo/Bosquete 11 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 1 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 3 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 4 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 5 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 6 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro oeste del Reino/Bosquete 7 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro este del Reino · (0, 0, 0) · hijos 2
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro este del Reino/Bosquete 2 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Hombro este del Reino/Bosquete 3 · (0, 0, 0) · hijos 9
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino · (0, 0, 0) · hijos 13
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 1 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 2 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 3 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 5 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 6 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 8 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 9 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 10 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 11 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 12 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 14 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 15 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Ladera de otoño de la subida al Reino/Bosquete 18 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Lazo oeste de la subida · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Lazo oeste de la subida/Bosquete 1 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Lazo oeste de la subida/Bosquete 4 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lazo oeste de la subida/Bosquete 7 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Lazo oeste de la subida/Bosquete 8 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas · (0, 0, 0) · hijos 13
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 1 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 6 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 7 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 8 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 9 · (0, 0, 0) · hijos 2
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 10 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 11 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 12 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 13 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 14 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 19 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 21 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Arboleda dorada de las granjas/Bosquete 22 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle · (0, 0, 0) · hijos 9
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 1 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 3 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 5 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 8 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 9 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 11 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 13 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 14 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del valle/Bosquete 16 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste · (0, 0, 0) · hijos 27
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 3 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 4 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 5 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 6 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 8 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 10 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 11 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 12 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 13 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 17 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 18 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 19 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 20 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 21 · (0, 0, 0) · hijos 9
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 22 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 24 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 25 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 26 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 27 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 28 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 29 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 30 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 33 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 35 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 36 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 37 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sureste/Bosquete 39 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur · (0, 0, 0) · hijos 14
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 1 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 2 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 4 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 9 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 10 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 11 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 12 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 13 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 14 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 16 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 17 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 18 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 19 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del sur/Bosquete 20 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will/Bosquete 2 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will/Bosquete 3 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will/Bosquete 4 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will/Bosquete 5 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Prados del oeste de Will/Bosquete 6 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur · (0, 0, 0) · hijos 18
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 1 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 2 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 3 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 4 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 5 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 6 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 7 · (0, 0, 0) · hijos 8
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 8 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 10 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 11 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 12 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 13 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 14 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 15 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 16 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 17 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 18 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Lomas de la costa sur/Bosquete 19 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del arroyo de las granjas · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del arroyo de las granjas/Bosquete 1 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del arroyo de las granjas/Bosquete 2 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Sotos del arroyo de las granjas/Bosquete 3 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero · (0, 0, 0) · hijos 15
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 1 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 2 · (0, 0, 0) · hijos 2
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 3 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 4 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 6 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 7 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 9 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 11 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 13 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 15 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 17 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 18 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 20 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 21 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Oeste: redil y varadero/Bosquete 22 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino · (0, 0, 0) · hijos 10
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 3 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 4 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 5 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 6 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 7 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 8 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 9 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 10 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 11 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino/Bosquete 12 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 1 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 2 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 4 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 6 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 7 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla del puerto/Bosquete 8 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 1 · (0, 0, 0) · hijos 6
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 3 · (0, 0, 0) · hijos 7
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 7 · (0, 0, 0) · hijos 3
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 8 · (0, 0, 0) · hijos 4
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 10 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Orla de las granjas/Bosquete 11 · (0, 0, 0) · hijos 5
+- WORLD/Vestido del mundo (generado)/Vegetación — Ribera del arroyo de la ladera este · (0, 0, 0) · hijos 2
+- WORLD/Vestido del mundo (generado)/Vegetación — Matas en los taludes · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo (generado)/Huella del vestido: 4ad7e155 · (0, 0, 0) · hijos 0
+- WORLD/Vestido del mundo — retirado (no tocar) · (0, 0, 0) · hijos 156
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-588445770 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1242562633 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1457370888 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1095341734 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-670679643 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171101286 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-622215853 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1944233604 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2116712850 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-151306728 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1134731293 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1424696774 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-383529146 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1875158276 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-68315543 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2015844949 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1038647615 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2016567792 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1604615587 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-872337041 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-886978617 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-717336065 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-195879774 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1679587172 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-773194482 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1808351418 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1323579262 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1925644532 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1857381876 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2042336894 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2091390692 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1557665472 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-179549512 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1893640470 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2072734580 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1845954385 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-918128064 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1069974288 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2040369309 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1660371492 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292410831 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1700034879 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1678770136 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-955442270 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-419839556 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1515941926 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-478676277 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11807782 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1237404658 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-835644257 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2137815452 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11088558 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1018726907 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1428384241 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2033238358 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-73861459 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1957935142 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1916522649 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-821672555 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-779869176 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1976461328 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1705309329 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1423526068 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1299366786 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1357382223 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1126058580 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-112455720 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-552057868 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292623309 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-502993528 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-388381330 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-604578057 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1245928550 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1778152803 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-298081033 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1977837815 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1725474946 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1956748350 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1354141356 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1107960922 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-841226745 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1454265263 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1275843771 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1140221202 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1046169261 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171053476 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2058267548 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1517614208 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-755186644 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2074180020 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1787387500 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2052172334 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-486097341 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1000690570 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-454130475 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-436201018 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1406043821 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-2053853164 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 15|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-120968-308719588 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 10|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-120968-1345986149 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 5|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-120968-1636494080 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 1|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-1369333109 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 6|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-494192784 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 11|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-1383503207 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 16|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-1250333761 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 3|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-1559300919 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 8|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-2072402894 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 2|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-1736079473 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 7|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-498938996 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 12|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-1967656357 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Taberna del mercado|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-105690-590308079 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Puesto del mercado|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-129324-1830131173 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Puesto del mercado|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-129324-1907345374 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Puesto del mercado|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-129324-65827326 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Pozo de la plaza baja|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-3121492967645770638-1135380709 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-235453608 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-2104361366 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-955529076 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-565968292 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-180351811 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-1014635298 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1169648809 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-213163482 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1984376844 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-190333535 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-48013430 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-133352801 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-135461554 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-284488517 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-307348485 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-484784497 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-789853879 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-818716301 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1178403513 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1199642923 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1265352144 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1468414292 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1538763636 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1693870373 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1710052126 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1810337931 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2062532947 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2107573914 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del Reino — terraza baja|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-204555797-0 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Huerto del Reino — terraza baja|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-376231937-0 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Suelo vegetal — hierba y setas por paraje/Grass02_a01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-122372-1779917379 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Suelo vegetal — hierba y setas por paraje/Mushroom01_b01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-118536-1178429901 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree07_b01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-127384-343186143 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree02_a01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-190448-489406424 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree01_a02|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-136938-676238648 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree07_b01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-127384-635394008 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree01_a02|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-136938-1738663727 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree03_a01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-123482-2064828946 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree07_b01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-127384-1031467940 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree01_a01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-122450-1493578769 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Bosque Prohibido y arboledas/Tree02_a01|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-190448-914829591 · (0, 0, 0) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar) · (0, 0, 0) · hijos 59
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle occidental 4|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-672896212 · (-36,3, 112,2, 286,7) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-207576678 · (-30,7, 112, 286) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa de la calle oriental 9|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-1318470300 · (36,3, 112,2, 336,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1927667604 · (41,3, 112, 337) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 13|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-194159626 · (-69,9, 104,3, 250,2) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 14|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-813061891 · (-70,7, 104,2, 271,7) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1006814776 · (-64,9, 104,2, 272) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 17|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-1833616045 · (39,2, 104,2, 245,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1209152642 · (45, 104, 247) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Reino — barrio de montaña y explanada real/Casa del mercado 18|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-749850723 · (38,9, 104,3, 272,8) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-118828298 · (43,2, 104, 274) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 1|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-1111929603 · (236,2, 5,2, -432,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-801208753 · (244,1, 5, -433) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 2|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-170512-684927230 · (210, 5,3, -390) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1202122048 · (216,1, 5,1, -390) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 3|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-1688243598 · (284,8, 5,2, -416,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-316787720 · (291, 5, -418) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 4|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-1148347116 · (304,9, 5,3, -433,2) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1892036920 · (309,2, 5, -432) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 5|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-1425527046 · (234,3, 5,2, -452,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1972614022 · (240,1, 5, -452) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Casa de pescadores 8|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-108400-804777048 · (320, 5,2, -415,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-397560896 · (325,2, 5, -416) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 1|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-170512-1089744880 · (307,4, 5,3, -402,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-913648594 · (313,4, 5, -402,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 2|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-492249436 · (291,6, 5,3, -402,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-27881154 · (297,7, 5, -403) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 3|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-1363141870 · (270,9, 5,3, -405,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-209234055 · (274,6, 5, -405,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 4|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-108400-1980917616 · (317,5, 5,2, -430,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1745992679 · (322,3, 5, -430,4) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 5|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-170512-1940249461 · (290,7, 5,3, -434,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1750853147 · (296,8, 5, -434,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 6|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-351996910 · (221,4, 5,2, -436) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-499254209 · (226,4, 5, -435,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo pesquero — calles y muelles/Vivienda complementaria 7|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-561045339 · (301,9, 5,2, -415,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1951538161 · (306,8, 5, -417,7) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 1|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-121444-703961313 · (306,8, 23,2, -103,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-271157047 · (314,9, 23, -103) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 2|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-170512-1998721903 · (330, 23,3, -93) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2122837272 · (336,1, 23,1, -93) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 3|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-188660-2072626933 · (353,9, 23,2, -101,2) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-429708316 · (360,3, 23, -103) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 4|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-876058443 · (356,4, 23,3, -126,2) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-217152951 · (361,8, 23, -127) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 5|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-795749622 · (306,2, 23,2, -128,1) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-971695434 · (311,7, 23, -128) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 1|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-589761724 · (294,2, 23,2, -95,5) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1809674989 · (299,2, 23, -94,9) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 2|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-1388410670 · (294,4, 23,3, -122,8) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-264194664 · (298, 23, -122,7) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 3|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-2110381726 · (369,5, 23,3, -115,5) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1942177621 · (375,6, 23, -115,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 4|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-162488-1727008280 · (358,6, 23,3, -140) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-485522435 · (364,7, 23, -140) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 5|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-170512-1168541228 · (298,7, 23,3, -79,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-37537629 · (304,7, 23, -79,3) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Pueblo vecino — terraza sobre la playa/Vivienda complementaria 6|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-153364-1898693000 · (317,7, 23,2, -80,6) · hijos 1
+- WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-153007046 · (322,8, 23, -79,9) · hijos 1
+- CONFIG · (0, 0, 0) · hijos 9
+- CONFIG/_GameSystems · (0, 0, 0) · hijos 0
+- CONFIG/Directional light · (-44,4, 78,7, 68,7) · hijos 0
+- CONFIG/_StartNarrative · (0, 0, 0) · hijos 0
+- CONFIG/Global Volume · (0, 0, 0) · hijos 0
+- CONFIG/DayNightSystem · (0, 0, 0) · hijos 0
+- CONFIG/_WILL · (-11, 39,5, -45,8) · hijos 1
+- CONFIG/_WILL/vBasicController_MaleCharacterPBR · (-11, 39,5, -45,8) · hijos 30
+- CONFIG/_WILL/vBasicController_MaleCharacterPBR/PortraitAnchor · (-11, 39, -44,3) · hijos 0
+- CONFIG/GrupoDelJugador · (0, 0, 0) · hijos 1
+- CONFIG/GrupoDelJugador/SpecialMeters · (0, 0, 0) · hijos 1
+- CONFIG/CamaraDelJugador · (28,2, 60,1, -72,1) · hijos 1
+- CONFIG/CamaraDelJugador/Hint Camera · (28,2, 60,1, -72,1) · hijos 0
+- CONFIG/Minimap · (0, 0, 0) · hijos 2
+- CONFIG/Minimap/MinimapCamera · (0, 0, 0) · hijos 0
+- CONFIG/Minimap/MinimapCanvas · (960, 540, 0) · hijos 1
+- GAMEPLAY · (0, 0, 0) · hijos 9
+- GAMEPLAY/ANCHORS · (0, 0, 0) · hijos 4
+- GAMEPLAY/ANCHORS/House_FrontDoor_Teleport_To_Bedroom · (-0,8, 26,9, -132,7) · hijos 0
+- GAMEPLAY/ANCHORS/Anchor_Eldran_Bosque · (25,8, 27, -82,6) · hijos 0
+- GAMEPLAY/ANCHORS/Anchor_Eldran_PuntoGuardado · (-5,2, 26,3, -81,1) · hijos 0
+- GAMEPLAY/ANCHORS/House_FrontDoor · (-0,2, 27, -132,5) · hijos 1 · inactivo
+- GAMEPLAY/CAPITULOS · (0, -1,1, 0) · hijos 1
+- GAMEPLAY/CAPITULOS/1 · (0, -1,1, 0) · hijos 1
+- GAMEPLAY/AI · (0, 0, 0) · hijos 1
+- GAMEPLAY/AI/NavMeshSurface_Auto · (0, 0, 0) · hijos 0
+- GAMEPLAY/BLOCKERS · (0, 0, 0) · hijos 5
+- GAMEPLAY/BLOCKERS/WoodsExitBlockerRight · (-69,4, -0,7, 94) · hijos 0 · inactivo
+- GAMEPLAY/BLOCKERS/WoodsExitBlockerLeft · (57,9, -0,7, 106) · hijos 0 · inactivo
+- GAMEPLAY/BLOCKERS/WoodsExitBlockerBottom · (5,3, -0,7, 261) · hijos 0 · inactivo
+- GAMEPLAY/BLOCKERS/Water - Blocker en el GO del agua · (0, 0, 0) · hijos 0
+- GAMEPLAY/BLOCKERS/DayOnlyInspectionTrigger - Blocker colocado en eventos  · (0, 0, 0) · hijos 0
+- GAMEPLAY/AMBIENTZONES · (0, 0, 0) · hijos 3
+- GAMEPLAY/AMBIENTZONES/Ambient_ForbidenWoods · (0, 0, 0) · hijos 0
+- GAMEPLAY/AMBIENTZONES/Ambient_WillTown · (-8, 0, -144) · hijos 0
+- GAMEPLAY/AMBIENTZONES/Ambient_VillageByTheSea · (270, 0, -424) · hijos 0
+- GAMEPLAY/SECUENCIAS · (0, 0, 0) · hijos 2
+- GAMEPLAY/SECUENCIAS/SEQ_PerasEldran · (0, 0, 0) · hijos 0
+- GAMEPLAY/SECUENCIAS/SEQ_OliverSaludo · (0, 0, 0) · hijos 0
+- GAMEPLAY/EVENTS · (0, 0, 0) · hijos 13
+- GAMEPLAY/EVENTS/WILL_EXITS_HOUSE_OLIVER_GREETING · (-0,6, 26,9, -132,4) · hijos 0
+- GAMEPLAY/EVENTS/WILL_EXITS · (-39,9, 1,9, 26,1) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/ESTELA_FOUND · (-452,9, 1,9, 463,1) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/EXIT_FROM_WOODS_ESTELA · (5,6, 1,9, 194) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/EVT_ARRESTADOS_OK · (-2,5, 1,9, -73,2) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/CAMERA_FOCUS_MOUNTAIN · (0, 54,8, 29,3) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/OPEN_THE_DOORS · (0, 0, 0) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/WE_HAVE_ESCAPE · (0, 0, 0) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/CLOSE_THE_DOORS_TRIGGER · (0, 1, -78,9) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/FUEGO_FATUO · (189, 0, 127,3) · hijos 0 · inactivo
+- GAMEPLAY/EVENTS/EVT_REINO_EXIT_BOUNDARY · (96,9, 0, 127,3) · hijos 1 · inactivo
+- GAMEPLAY/EVENTS/Mountain explosion · (201,4, 0, 11,2) · hijos 2 · inactivo
+- GAMEPLAY/EVENTS/DayOnlyInspectionTrigger · (221,2, 0, 124) · hijos 1 · inactivo
+- GAMEPLAY/SAVE POINTS · (0, 0, 0) · hijos 8
+- GAMEPLAY/SAVE POINTS/WillTown · (-5,2, 26,3, -81,1) · hijos 1
+- GAMEPLAY/SAVE POINTS/WillTown/Woods_Entrance_SavePoint · (-5,2, 26,3, -81,1) · hijos 6
+- GAMEPLAY/SAVE POINTS/WillTown/Woods_Entrance_SavePoint/SavePoint · (-5,2, 26,3, -81,1) · hijos 0
+- GAMEPLAY/SAVE POINTS/WoodsEntranceSavePoint (1) · (0, 0, 0) · hijos 5 · inactivo
+- GAMEPLAY/SAVE POINTS/WoodsEntranceSavePoint (1)/Woods_Entrance_SavePoint · (-14,4, 0,1, 210,4) · hijos 6 · inactivo
+- GAMEPLAY/SAVE POINTS/WoodsEntranceSavePoint (1)/Woods_Entrance_SavePoint/SavePoint · (-14,4, 0,1, 210,4) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/Town · (424,8, 0,2, -46,9) · hijos 5 · inactivo
+- GAMEPLAY/SAVE POINTS/Town/Town/SavePoint · (410,4, 0,3, 163,5) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/Rocks · (0, 0, 0) · hijos 1 · inactivo
+- GAMEPLAY/SAVE POINTS/Rocks/Rocks/SavePoint · (-481,9, 0,1, 48,8) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/Sendero · (0, 0, 0) · hijos 5 · inactivo
+- GAMEPLAY/SAVE POINTS/Sendero/Sendero/SavePoint · (306,1, 61,9, -934) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/Ruinas · (0, 0, 0) · hijos 5 · inactivo
+- GAMEPLAY/SAVE POINTS/Ruinas/Ruinas/SavePoint · (438,6, 0,1, -484,4) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/WoodsSavePoint · (0, 0, 0) · hijos 5 · inactivo
+- GAMEPLAY/SAVE POINTS/WoodsSavePoint/Woods_SavePoint · (-471,8, 0,1, 455,4) · hijos 6 · inactivo
+- GAMEPLAY/SAVE POINTS/WoodsSavePoint/Woods_SavePoint/SavePoint · (-471,8, 0,1, 455,4) · hijos 0 · inactivo
+- GAMEPLAY/SAVE POINTS/Castle · (1415,3, 1001, 7,9) · hijos 1 · inactivo
+- GAMEPLAY/SAVE POINTS/Castle/Castillo_SavePoint · (1417, 1001,1, 11,5) · hijos 6 · inactivo
+- GAMEPLAY/SAVE POINTS/Castle/Castillo_SavePoint/SavePoint · (1417, 1001,1, 11,5) · hijos 0 · inactivo
+- GAMEPLAY/Oficios del mercado · (0, 0, 0) · hijos 3
+- GAMEPLAY/Oficios del mercado/Oficio_Victoria · (0, 0, 0) · hijos 2
+- GAMEPLAY/Oficios del mercado/Oficio_Eldran · (0, 0, 0) · hijos 2
+- GAMEPLAY/Oficios del mercado/Oficio_Oliver · (0, 0, 0) · hijos 2
+- --- NPC SPAWN POINTS --- · (0, 0, 0) · hijos 10
+- --- NPC SPAWN POINTS ---/SP_Oliver · (6, 26,4, -143,2) · hijos 0
+- --- NPC SPAWN POINTS ---/SP__LIAM · (0, 0, 0) · hijos 0
+- --- NPC SPAWN POINTS ---/SP_Eldran · (-1,9, 26,4, -142,8) · hijos 0
+- --- NPC SPAWN POINTS ---/SP_Tabernera · (1244,9, 1000, 3,5) · hijos 0
+- --- NPC SPAWN POINTS ---/SP_Victoria · (-1, 26,4, -144,1) · hijos 0
+- --- NPC SPAWN POINTS ---/SPAWN_Tomasa · (16,7, 26,4, -136,8) · hijos 0
+- --- NPC SPAWN POINTS ---/SPAWN_Boticaria · (22,5, 26,3, -134,8) · hijos 0
+- --- NPC SPAWN POINTS ---/SPAWN_Renard · (-236,4, 26,3, 2,5) · hijos 0
+- --- NPC SPAWN POINTS ---/SPAWN_Erika · (-19,9, 23,4, -125,5) · hijos 0
+- --- NPC SPAWN POINTS ---/SPAWN_Aldona · (6,7, 29,4, -122,1) · hijos 0
+- Tesoros del pueblo (generado) · (0, 0, 0) · hijos 3
+- Tesoros del pueblo (generado)/Tesoro · canica de cristal · (-12,2, 26,3, -135,3) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · canica de cristal/Cofre · (-12,2, 26,3, -135,3) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · canica de cristal/Cuerpo sólido · (-12,2, 26,3, -135,3) · hijos 0
+- Tesoros del pueblo (generado)/Tesoro · piedra con agujero · (7,5, 26,3, -154,2) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · piedra con agujero/Cofre · (7,5, 26,3, -154,2) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · piedra con agujero/Cuerpo sólido · (7,5, 26,3, -154,2) · hijos 0
+- Tesoros del pueblo (generado)/Tesoro · moneda antigua · (-18, 26,3, -110,1) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · moneda antigua/Cofre · (-18, 26,3, -110,1) · hijos 2
+- Tesoros del pueblo (generado)/Tesoro · moneda antigua/Cuerpo sólido · (-18, 26,3, -110,1) · hijos 0

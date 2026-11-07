@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap3_01_ElEspejo
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: "Cap. 3: Tob\xEDas en el espejo"
+  summary: "Media sopa, la pesca y el dibujo de cuatro figuras. La llave del aro se calentar\xE1 cerca de Will."
+  signalIn: CAP3_ESPEJO_START
+  signalOut: CAP3_ESPEJO_DONE
+  musicId: 
+  presentacionDeTexto: 1
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap3_01_ElEspejo'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446550982
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446550982
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 051621e22d062c640a1f705f351f058a, type: 2}
+        empezarEn: 0

@@ -1,0 +1,52 @@
+# Cap. 3 · Tras la pelea en el claro. El humo trae a la guardia; han ardido jaulas. «Habría bastado con avisar».
+GUION Cap3_06_LasJaulas
+ESCENA MainWorld
+ZONA Cap3Claro -212 -129 24
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_06_LasJaulas.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will      Player                  nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+sargento  NPC_Sargento            nombre=CHAR_SARGENTO color=A7C0D8 prefab=Assets/_NPCs/Guard.prefab
+g1        NPC_GuardiaCruce1       nombre=CHAR_GUARDIA_CRUCE color=9FB4C8 prefab=Assets/_NPCs/Guard.prefab
+jefe      NPC_ContrabandistaJefe  nombre=CHAR_CONTRABANDISTA color=C9A27A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
+
+PUNTOS
+claro        -215 -125
+jaulas       -212.6 -124.3
+p_will       -211 -128
+p_sargento   -205.5 -136
+p_sarg_llega -208.5 -131
+p_g1         -204 -138
+p_g1_llega   -214.5 -131
+p_jefe       -216 -126.5
+
+HILO
+@inicio
+will en p_will mirando jaulas
+& jefe en p_jefe mirando p_will
+& jefe bucle Beg01_Loop
+& sargento en p_sargento mirando p_will
+& g1 en p_g1 mirando p_jefe
+plano medio will
+vfx "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Smoke_01.prefab" en=jaulas lifetime=4
+will cara cansado
+espera 1
+will dice CAP3_JAULAS_01 cara=cansado
+will dice CAP3_JAULAS_02 cara=triste
+sargento anda a p_sarg_llega ritmo=prisa
+& g1 anda a p_g1_llega ritmo=prisa
+plano conjunto will sargento
+sargento dice CAP3_JAULAS_03 cara=preocupado
+sargento dice CAP3_JAULAS_04 mira=jaulas
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=jaulas lifetime=3
+espera 1
+sargento mira will
+sargento dice CAP3_JAULAS_05 cara=triste
+plano primer will
+will dice CAP3_JAULAS_06 cara=triste
+sargento dice CAP3_JAULAS_07
+espera 0.6
+fundido cubre 1.2
+espera 1.2

@@ -63,6 +63,20 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("Tope de segundos del paseo. Si se agota, el NPC se queda donde esté y se sigue esperando a que llegue el jugador.")]
     public float duracionMaxima = 240f;
 
+    [Header("Seguir de lejos (sigilo)")]
+    [Min(0f)]
+    [Tooltip("Metros. Si es mayor que cero, el jugador sigue al NPC sin que le vea: si se acerca más que esto, " +
+             "el NPC dice 'avisoAlAcercarseKey' y el jugador vuelve a 'anclaDeVuelta'. Sin tope de velocidad. 0 = escolta normal.")]
+    public float distanciaMinima = 0f;
+
+    [NarrativeKey(NarrativeKeyKind.LocKey)]
+    [Tooltip("Lo que dice el NPC, en bocadillo, cuando el jugador se acerca demasiado (p. ej. «¿Quién anda ahí?»).")]
+    public string avisoAlAcercarseKey = "";
+
+    [NarrativeKey(NarrativeKeyKind.Anchor)]
+    [Tooltip("Marca (SpawnAnchor) a la que vuelve el jugador si se acerca demasiado. Vacío = no se mueve.")]
+    public string anclaDeVuelta = "";
+
     [Tooltip("Lo que se cuentan por el camino: un diálogo normal (hablante y texto por línea) que sale en bocadillos sobre quien habla mientras el NPC guía. Se pausa si el NPC se detiene a esperar al jugador o hay un menú abierto. Si llegan antes de acabarlo, lo terminan allí. Vacío = van en silencio.")]
     public DialogueAsset charla;
 
@@ -189,9 +203,18 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
                 pausaInicial: 1f));
         }
 
+        // Al empezar el seguimiento el NPC suele estar cerca (sale de una cinemática): se le da un
+        // momento para tomar distancia antes de que cuente que el jugador se acerca demasiado.
+        float sinVigilarHasta = Time.time + SegundosDeVentaja;
         while (!paseo.IsCompleted)
         {
-            LimitarJugador(npc, player, agent);
+            if (DeLejos)
+            {
+                if (Time.time >= sinVigilarHasta && player != null
+                    && (player.position - npc.transform.position).sqrMagnitude < distanciaMinima * distanciaMinima)
+                    yield return Co_Pillado(npc, player);
+            }
+            else LimitarJugador(npc, player, agent);
             if (paseo.WaitingForRetrievedDialogue)
             {
                 yield return Co_Llamar(npc, destino);
@@ -209,7 +232,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         float radio2 = radioLlegada * radioLlegada;
         while (player != null && (player.position - npc.transform.position).sqrMagnitude > radio2)
         {
-            LimitarJugador(npc, player, velocidadGuia);
+            if (!DeLejos) LimitarJugador(npc, player, velocidadGuia);
             MirarAlJugador(npc, player);
             yield return null;
         }
@@ -230,6 +253,35 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         _animTocado = null;
         _rutina = null;
         onReadyToAdvance?.Invoke();
+    }
+
+    private bool DeLejos => distanciaMinima > 0f;
+
+    /// Segundos al empezar en los que acercarse no cuenta (seguir de lejos).
+    private const float SegundosDeVentaja = 4f;
+
+    /// El jugador se ha acercado demasiado: el NPC lo nota, lo dice y el jugador vuelve a la marca
+    /// de vuelta. El NPC sigue su camino (se para a esperar como siempre si el jugador queda lejos).
+    private IEnumerator Co_Pillado(NPCBehaviourManagerV2 npc, Transform player)
+    {
+        npc.SimpleAnimator?.FaceTarget(player.position);
+        bool terminado = string.IsNullOrEmpty(avisoAlAcercarseKey) || !PresentadorDeLinea.Disponible;
+        if (!terminado)
+        {
+            var dicha = PresentadorDeLinea.Decir(new FraseADecir
+            {
+                clave = avisoAlAcercarseKey,
+                ancla = npc.transform,
+                duracion = duracionLlamada,
+                alTerminar = () => terminado = true,
+            });
+            terminado = !dicha.Dicha;
+            float limite = Time.unscaledTime + duracionLlamada + 0.5f;
+            while (!terminado && Time.unscaledTime < limite) yield return null;
+        }
+        if (!string.IsNullOrWhiteSpace(anclaDeVuelta) && player != null)
+            TeleportService.TeleportToAnchor(player.gameObject, anclaDeVuelta);
+        yield return new WaitForSecondsRealtime(1f);
     }
 
     /// Gira al NPC hacia el jugador mientras está parado; si se está moviendo, manda la marcha.

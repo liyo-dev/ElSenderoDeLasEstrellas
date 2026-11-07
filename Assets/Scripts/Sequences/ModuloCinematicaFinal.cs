@@ -140,7 +140,7 @@ public partial class ModuloCinematicaFinal : SequenceModule
         // Acto 2: el conjuro
         "SenderoDestruido", "MusicaDelConjuro", "ConjuroCirculos", "LevitarWill", "ConjuroClimax", "WillSeDesvanece",
         // Acto 3 y 4: Liam y el Archimago
-        "OcultarLiam", "LiamSeMaterializa", "MusicaDelArchimago", "EspirituArchimago", "ArchimagoSeHaceEstrella",
+        "OcultarLiam", "LiamSeMaterializa", "EspirituArchimago", "ArchimagoSeHaceEstrella",
         // Acto 5: el regreso
         "PortalDeRegreso", "EsperarSubidaDelTema", "CarreraAlAbrazo", "LagrimasAlCorrer", "SoltarAbrazo", "AbrazoEstelaWill",
         "AbrazoFinalDeLosTres", "TelonANegro", "LiamSinSentido", "LiamDespierta",
@@ -207,7 +207,6 @@ public partial class ModuloCinematicaFinal : SequenceModule
 
             case "OcultarLiam": OcultarLiam(); break;
             case "LiamSeMaterializa": Lanzar(Co_LiamSeMaterializa()); break;
-            case "MusicaDelArchimago": MusicaDelArchimago(); break;
             case "EspirituArchimago": Lanzar(Co_EspirituArchimago()); break;
             case "ArchimagoSeHaceEstrella": Lanzar(Co_ArchimagoSeHaceEstrella()); break;
 

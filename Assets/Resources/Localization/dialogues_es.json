@@ -2027,6 +2027,186 @@
         {
             "key": "PARQUE_NORIA_5_4",
             "value": "Os he visto saludar. Qué vergüenza."
+        },
+        {
+            "key": "CHAR_POSADERO",
+            "value": "Posadero"
+        },
+        {
+            "key": "CHAR_LUCIA",
+            "value": "Lucía"
+        },
+        {
+            "key": "CHAR_SARGENTO",
+            "value": "Sargento"
+        },
+        {
+            "key": "CHAR_GUARDIA_CRUCE",
+            "value": "Guardia"
+        },
+        {
+            "key": "CHAR_CONTRABANDISTA",
+            "value": "Contrabandista"
+        },
+        {
+            "key": "CHAR_TOBI",
+            "value": "Tobías"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_01",
+            "value": "Hace tres semanas, de noche, vi luces bajas moviéndose entre los árboles del bosque."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_02",
+            "value": "No eran faroles. Iban a la altura de la rodilla."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_03",
+            "value": "¿Y qué hacían?"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_04",
+            "value": "Se encendían y se apagaban, despacio. Como algo que respira dormido."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_01",
+            "value": "¡Yo vi al zorro! Junto a la cerca del huerto."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_02",
+            "value": "Llevaba un collar que brillaba. No me quiso morder."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_03",
+            "value": "Tenía más miedo que yo."
+        },
+        {
+            "key": "DLG_CAP3_HUERTO_01",
+            "value": "Huellas pequeñas y pelo rojizo enganchado en la madera."
+        },
+        {
+            "key": "DLG_CAP3_HUERTO_02",
+            "value": "Se ha rascado aquí con fuerza. Como si el collar le doliera."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_01",
+            "value": "Arañazos en la madera, a la altura del cuello de un perro."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_02",
+            "value": "Las marcas tienen líneas dentro. Como las del trozo del aro."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_03",
+            "value": "Y aquí, en la madera, todavía brillan un poco."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_01",
+            "value": "Un zorro asustado, un perro que se rascaba y luces que respiran. Lo he apuntado todo."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_02",
+            "value": "Se lo he contado a dos guardias y a un viajero. Ninguno me hizo caso."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_03",
+            "value": "Tú eres el primero que trae uno encima."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_04",
+            "value": "Si buscas a quien hace esos aros, mira hacia el Bosque Prohibido."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_05",
+            "value": "Y no te fíes del camino de noche. Por ahí pasan carros que no paran en ningún sitio."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_01",
+            "value": "¿Contrabandistas? ¿Por aquí? Chico, vete a dormir."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_02",
+            "value": "Llevan pájaros en jaulas. Mire esto."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_03",
+            "value": "Esto es una pluma de pájaro de luz. No se venden. No se pueden vender."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_04",
+            "value": "Vosotros dos, conmigo. Y tú, chico, enséñanos el camino."
+        },
+        {
+            "key": "DLG_CAP3_POSADERO_DESPUES_01",
+            "value": "Si das con quien hace los aros, vuelve y cuéntamelo. Invita la casa."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_DESPUES_01",
+            "value": "¿Viste lo de la cuchara? Casi. Mañana llega al pulgar."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_DESPUES_01",
+            "value": "Gracias a ti esos pájaros vuelan. Si pasas por el cruce, aquí estamos."
+        },
+        {
+            "key": "DLG_CAP3_GUARDIA_01",
+            "value": "Sin novedad en el cruce."
+        },
+        {
+            "key": "CAP3_AVISO_QUIEN",
+            "value": "¿Quién anda ahí?"
+        },
+        {
+            "key": "CAP3_BOC_ZARZA",
+            "value": "Hay una pluma enganchada en esa zarza…"
+        },
+        {
+            "key": "CAP3_BOC_PIEDRAS",
+            "value": "Tres piedras apiladas, para encontrar el sitio. Y ahora, al puesto de guardia."
+        },
+        {
+            "key": "DLG_CAP4_CARTA_01",
+            "value": "Una carta sin abrir para «Estela Marael». Remite: «Mamá»."
+        },
+        {
+            "key": "DLG_CAP4_CARTA_02",
+            "value": "Mejor no preguntar."
+        },
+        {
+            "key": "DLG_CAP4_APODOS_01",
+            "value": "Una tabla junto a la puerta con tres apodos tachados. El último dice «la Bruja del Postre»."
+        },
+        {
+            "key": "DLG_CAP4_CENA_01",
+            "value": "La cena. Negra por fuera y… negra por dentro."
+        },
+        {
+            "key": "DLG_CAP4_CENA_02",
+            "value": "¡Está quemada a propósito! Así sabe a hoguera."
+        },
+        {
+            "key": "DLG_CAP4_CAMA_01",
+            "value": "Un jergón entre las raíces. Huele a humo y a manzana."
+        },
+        {
+            "key": "DLG_CAP4_CAMA_02",
+            "value": "Duerme. Mañana empieza tu entrenamiento."
+        },
+        {
+            "key": "DLG_CAP4_BOTA_01",
+            "value": "¡La tengo! Enganchada entre dos ramas."
+        },
+        {
+            "key": "CAP4_BOC_CASA",
+            "value": "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón."
+        },
+        {
+            "key": "CAP4_BOC_BOTA",
+            "value": "¡Se la lleva el río! Voy a por ella, río abajo."
+        },
+        {
+            "key": "CAP4_BOC_FIGURA",
+            "value": "¡Te has salvado tú y has chamuscado a quien tenías que proteger!"
         }
     ]
 }

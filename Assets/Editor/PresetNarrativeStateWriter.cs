@@ -31,9 +31,16 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
 
     // ── INarrativeStateWriter ────────────────────────────────────────────────
 
-    public bool GetFlag(string key) => _dst.flags.Contains(key);
+    // Los flags narrativos (SetFlagNode y compañía) se guardan con el prefijo de NarrativeFlags,
+    // como en la partida (PartidaNarrativeData): así los encuentran el roster, los tramos y el
+    // propio grafo al cargar la prueba. Los de misión van sin prefijo (Bruto).
+    public bool GetFlag(string key) => _dst.flags.Contains(NarrativeFlags.Key(key));
 
-    public void SetFlag(string key, bool value)
+    public void SetFlag(string key, bool value) => Bruto(NarrativeFlags.Key(key), value);
+
+    private bool GetBruto(string key) => _dst.flags.Contains(key);
+
+    private void Bruto(string key, bool value)
     {
         if (value) { if (!_dst.flags.Contains(key)) _dst.flags.Add(key); }
         else _dst.flags.Remove(key);
@@ -41,7 +48,7 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
 
     public void StartQuest(string questId)
     {
-        if (!GetFlag($"QUEST_COMPLETED:{questId}")) SetFlag($"QUEST_ACTIVE:{questId}", true);
+        if (!GetBruto($"QUEST_COMPLETED:{questId}")) Bruto($"QUEST_ACTIVE:{questId}", true);
     }
 
     public void CompleteQuestSteps(string questId, IReadOnlyList<string> stepConditionIds, IReadOnlyList<int> stepIndices)
@@ -61,17 +68,17 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
                 if (string.IsNullOrWhiteSpace(conditionId)) continue;
                 int idx = System.Array.FindIndex(qd.steps, s => s.conditionId == conditionId);
                 if (idx < 0) Note($"El Condition ID '{conditionId}' no existe en los pasos de '{questId}'.");
-                else SetFlag($"QUEST_STEP_DONE:{questId}:{idx}", true);
+                else Bruto($"QUEST_STEP_DONE:{questId}:{idx}", true);
             }
         }
         else if (stepIndices != null)
         {
             foreach (var idx in stepIndices)
-                if (idx >= 0) SetFlag($"QUEST_STEP_DONE:{questId}:{idx}", true);
+                if (idx >= 0) Bruto($"QUEST_STEP_DONE:{questId}:{idx}", true);
         }
     }
 
-    public void CompleteQuest(string questId) => SetFlag($"QUEST_COMPLETED:{questId}", true);
+    public void CompleteQuest(string questId) => Bruto($"QUEST_COMPLETED:{questId}", true);
 
     public void AddItem(string itemId, int amount)
     {

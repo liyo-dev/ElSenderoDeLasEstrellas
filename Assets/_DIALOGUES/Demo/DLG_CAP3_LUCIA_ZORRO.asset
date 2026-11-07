@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d8708fd0f936346bad26dff04672db, type: 3}
+  m_Name: DLG_CAP3_LUCIA_ZORRO
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
+  lines:
+  - speakerNameId: CHAR_LUCIA
+    textId: DLG_CAP3_ZORRO_01
+    text: "\xA1Yo vi al zorro! Junto a la cerca del huerto."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 13
+  - speakerNameId: CHAR_LUCIA
+    textId: DLG_CAP3_ZORRO_02
+    text: Llevaba un collar que brillaba. No me quiso morder.
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_LUCIA
+    textId: DLG_CAP3_ZORRO_03
+    text: "Ten\xEDa m\xE1s miedo que yo."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 2
+  maxLinesPerPage: 0
+  isGroupConversation: 0

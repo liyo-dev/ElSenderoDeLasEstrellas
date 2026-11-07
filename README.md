@@ -8,11 +8,16 @@ RPG de acción/aventura en 3D, desarrollado en solitario por [Raúl Báez](https
 
 **Motor:** Unity 6 (6000.6.2f1) · **Render pipeline:** URP 17.6 · **Estado:** en desarrollo activo
 
-<!--
-TODO: capturas de pantalla / GIF de gameplay aquí.
-Sugerencias: una del mundo abierto, una de combate, una de diálogo con NPC.
-![Gameplay](docs/screenshots/gameplay.png)
--->
+<p align="center">
+  <img src="docs/screenshots/sendero-trio.jpg" width="100%" alt="Liam, Will y Estela en el Sendero">
+</p>
+<p align="center"><sub>Liam, Will y Estela en el Sendero (captura del motor, noviembre de 2026).</sub></p>
+
+<p align="center">
+  <img src="docs/screenshots/aldea.jpg" width="49%" alt="La aldea">
+  <img src="docs/screenshots/castillo.jpg" width="49%" alt="El castillo">
+</p>
+<p align="center"><sub>Gameplay en el mundo abierto (agosto de 2026, antes del rediseño de personajes).</sub></p>
 
 ---
 
@@ -52,9 +57,27 @@ Ante cualquier duda de arquitectura, se consulta `TDD.md` primero. Si vas a aña
 
 ## ✅ Estado del proyecto
 
-Estado revisado el **22 de octubre de 2026**: el trabajo reciente se ha centrado en el laboratorio de pruebas (mecánicas, cinemáticas y escenas de lucha montadas y probadas ahí antes de llevarlas a la campaña), en la rehacición del sistema de cinemáticas con guion horneado y en el ajuste fino de audio del prólogo. La historia principal está montada hasta el bloque 2.4 del capítulo 2 (preparación del viaje y despedida); los bloques 2.5–2.13 (aldea del mar, contrabandistas, Bosque Prohibido, Estela, Prueba de la campana, Gólem y vado) están sin construir. Los detalles y las comprobaciones pendientes están en `TRACKER.md`; un arreglo aplicado no implica que esté confirmado en juego.
+Estado revisado el **7 de noviembre de 2026**.
 
-La última auditoría general documentada es la del 12 de agosto (`TDD.md` § 19.4); sus conclusiones corresponden a esa fecha. Ya existe `Assets/Scripts/Editor/Tests/PlayerActionManagerTests.cs`. Esta revisión documental no ejecuta tests ni certifica una build; tampoco verifica que todo el contenido nuevo esté conectado a la historia principal.
+**Historia de la demo, montada de principio a fin:**
+
+- **Prólogo** rehecho: planos a la altura de los personajes, reacciones y vida de fondo, y postproceso de cine en las cinemáticas.
+- **Capítulos 1 y 2**, probados completos.
+- **Capítulo 3 · La pista del mar:** Tobías en el espejo, la aldea del mar con sus pistas y la acampada nocturna siguiendo a los contrabandistas, con una decisión que se toma jugando.
+- **Capítulo 4 · El Bosque Prohibido y el Gólem:** Estela entra en el grupo, la casa entre raíces, la Prueba de la campana, el combate contra el Gólem y la bifurcación donde se une Liam. La demo termina en la bota del vado y pasa a los créditos.
+
+**También en marcha:** Chuchelandia, el nivel del Sendero, la cinemática final y su música.
+
+**Arte de personajes:** rediseño de los protagonistas (trajes, pelo de Will, botas de Estela), caras con estilo anime sencillo y emociones para todo el reparto, y niños con cuerpo propio (Tobías y Nina).
+
+**Pendiente antes de publicar la demo:**
+
+- Jugar a mano los combates del jefe contrabandista y del Gólem.
+- Voces de los capítulos 3 y 4.
+- Cambiar el atrezo provisional (la casa de Estela y la bota).
+- Ficha y build de Steam.
+
+Los detalles y las comprobaciones pendientes están en `TRACKER.md`; un arreglo aplicado no implica que esté confirmado en juego. Esta revisión del README no ejecuta tests ni certifica una build.
 
 ## 🚀 Quick start
 
@@ -83,29 +106,34 @@ Detalle completo de cada sistema, reglas de rendimiento y bugs conocidos: ver `T
 Assets/
 ├── Scenes/
 │   ├── Systems/        ← Start, MainMenu, LoadingScreen
-│   ├── Worlds/         ← MainWorld y escenas de mundo
-│   ├── Cinematics/     ← cinemáticas y prólogo
-│   └── Test/           ← escenas de prueba
+│   ├── Worlds/         ← MainWorld, Chuchelandia, Laberinto…
+│   ├── Interior/       ← casa de Will, torre de Liam
+│   └── Test/           ← LAB, previa de la cinemática final, batalla final
 ├── Scripts/
 │   ├── Core/               ← GameBootService, Partida/, ServiceLocator, PlayerService, SaveSystem
 │   ├── Behaviour NPC/      ← FSM de NPCs
 │   ├── Narrative/          ← sistema legacy "Interactive"
 │   ├── NarrativeIntegration/ ← el juego conectado al grafo: adaptadores y nodos propios
+│   ├── Cinematics/, Sequences/ ← cinemáticas con guion horneado
+│   ├── Personajes/         ← grupo, caras y emociones
 │   ├── Quests/, Dialogue/, Audio/, Inventory/, Puzzle/, UI/, ...
 ├── NarrativeGraph/      ← núcleo genérico del grafo (Runtime/, Editor/) y assets del grafo
-├── _BootProfile/        ← presets de testing (ScriptableObjects)
+├── _SEQUENCES/          ← guiones de las cinemáticas
+├── _BOOTPROFILE/        ← presets de testing (ScriptableObjects)
 ├── Resources/Localization/  ← JSON de localización (ES/EN)
-└── Plugins/             ← Invector 3rd Person Controller, DOTween, etc.
+└── Plugins/             ← Invector, DOTween, Quibli, Dreamteck Splines…
+Tools/                   ← scripts de Blender (modelos de personajes), audio e iconos
 ```
 
 Árbol completo y detalle de cada carpeta: `TDD.md` § 2.
 
 ## 🎮 Stack técnico
 
-- Unity 6 · URP 17.5
-- Unity Input System 1.19 (input centralizado por eventos)
-- Cinemachine 3.1.7 · Timeline 1.8.12 · AI Navigation 2.0.13
-- Invector 3rd Person Controller (base de movimiento del jugador) · DOTween
+- Unity 6 (6000.6.2f1) · URP 17.6 · Shader Graph · VFX Graph
+- Input System 1.20 (input centralizado por eventos)
+- Cinemachine 6.6 · Timeline 6.6 · AI Navigation 2.0.14 · Recorder 5.1
+- Quibli (sombreado toon) · Invector 3rd Person Controller LITE (base de movimiento del jugador) · DOTween · Dreamteck Splines
+- Fuera de Unity: Blender (personajes generados por script en `Tools/Modelos/`), ElevenLabs (doblaje) y Suno (música)
 
 ## 📝 Convenciones de código (resumen)
 

@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1444,7 +1444,7 @@ internal sealed partial class Horno
             float mejor = float.NegativeInfinity;
             float mejorPiso = float.NegativeInfinity;
             int layerFloor = LayerMask.NameToLayer("Floor");
-            foreach (var h in Physics.RaycastAll(new Vector3(p.x, 2.5f, p.z), Vector3.down, 6f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var h in Physics.RaycastAll(new Vector3(p.x, 2.5f, p.z), Vector3.down, 6f, SinZonasDeAmbiente, QueryTriggerInteraction.Ignore))
             {
                 if (h.collider.gameObject.scene != EscenaDelGuion || !EsColliderDeSuelo(h.collider)) continue;
                 if ((layerFloor >= 0 && h.collider.gameObject.layer == layerFloor) || h.collider.name.IndexOf("Floor", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -1462,10 +1462,13 @@ internal sealed partial class Horno
         if (EscenaDelGuion.IsValid() && EscenaDelGuion.path.IndexOf("Interior", StringComparison.OrdinalIgnoreCase) >= 0)
             return new Vector3(p.x, p.y, p.z);
         float y = p.y;
-        bool hayNav = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas);
-        if (hayNav && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f) y = hit.position.y;
+        // El NavMesh solo cuenta si tiene un punto justo debajo: uno a varios metros (un saliente,
+        // una loma sin NavMesh) dejaría la altura en 0 y el rayo saldría desde bajo tierra.
+        bool hayNav = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas)
+                      && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f;
+        if (hayNav) y = hit.position.y;
         var desde = new Vector3(p.x, (hayNav ? y : (p.y == 0f ? 300f : p.y)) + 2.5f, p.z);
-        if (Physics.Raycast(desde, Vector3.down, out var rh, 6f + (p.y == 0f && !hayNav ? 600f : 0f), ~0, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(desde, Vector3.down, out var rh, 6f + (p.y == 0f && !hayNav ? 600f : 0f), SinZonasDeAmbiente, QueryTriggerInteraction.Ignore))
         {
             if (!hayNav || Mathf.Abs(rh.point.y - y) < 0.35f) y = rh.point.y;
         }

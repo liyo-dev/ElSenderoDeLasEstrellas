@@ -1,0 +1,731 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap4_09_LaBota_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap4_09_LaBota
+  duracion: 17.632668
+  presentacion: 1
+  huella: "2026-11-07 17:23 \xB7 09d0ce478a16a79faf25f428c322617b"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -186, y: 26.74144, z: -22.5}
+    - t: 11.132667
+      p: {x: -186, y: 26.74144, z: -22.5}
+    - t: 11.410339
+      p: {x: -186.04878, y: 26.734734, z: -22.359756}
+    - t: 11.64012
+      p: {x: -186.09756, y: 26.728024, z: -22.219513}
+    - t: 11.845512
+      p: {x: -186.14635, y: 26.721325, z: -22.079268}
+    - t: 12.211509
+      p: {x: -186.2439, y: 26.707909, z: -21.79878}
+    - t: 12.560887
+      p: {x: -186.34146, y: 26.694496, z: -21.518293}
+    - t: 12.910268
+      p: {x: -186.43903, y: 26.691025, z: -21.237804}
+    - t: 13.259646
+      p: {x: -186.53659, y: 26.700787, z: -20.957317}
+    - t: 13.609021
+      p: {x: -186.63414, y: 26.710548, z: -20.676828}
+    - t: 13.9584
+      p: {x: -186.7317, y: 26.72031, z: -20.396341}
+    - t: 14.307778
+      p: {x: -186.82927, y: 26.707382, z: -20.115854}
+    - t: 14.657159
+      p: {x: -186.92683, y: 26.68478, z: -19.835365}
+    - t: 15.006532
+      p: {x: -187.02438, y: 26.662174, z: -19.554878}
+    - t: 15.35591
+      p: {x: -187.12195, y: 26.652206, z: -19.274391}
+    - t: 15.705291
+      p: {x: -187.21951, y: 26.64732, z: -18.993902}
+    - t: 16.054668
+      p: {x: -187.31708, y: 26.64244, z: -18.713415}
+    - t: 16.404041
+      p: {x: -187.41463, y: 26.637558, z: -18.432926}
+    - t: 16.753418
+      p: {x: -187.51219, y: 26.632679, z: -18.15244}
+    - t: 17.102795
+      p: {x: -187.60976, y: 26.627792, z: -17.871952}
+    - t: 17.452175
+      p: {x: -187.70732, y: 26.608482, z: -17.591463}
+    - t: 17.801546
+      p: {x: -187.80487, y: 26.596287, z: -17.310976}
+    - t: 18.150927
+      p: {x: -187.90244, y: 26.583298, z: -17.030487}
+    - t: 18.500303
+      p: {x: -188, y: 26.564125, z: -16.75}
+    - t: 18.84968
+      p: {x: -188.09756, y: 26.544945, z: -16.469513}
+    - t: 19.19906
+      p: {x: -188.19513, y: 26.52578, z: -16.189024}
+    - t: 19.548431
+      p: {x: -188.29268, y: 26.5066, z: -15.908537}
+    - t: 19.89781
+      p: {x: -188.39024, y: 26.492783, z: -15.628049}
+    - t: 20.247189
+      p: {x: -188.48781, y: 26.492691, z: -15.347561}
+    - t: 20.596565
+      p: {x: -188.58537, y: 26.481148, z: -15.067074}
+    - t: 20.94594
+      p: {x: -188.68292, y: 26.46183, z: -14.786585}
+    - t: 21.295317
+      p: {x: -188.78049, y: 26.442528, z: -14.506098}
+    - t: 21.644695
+      p: {x: -188.87805, y: 26.423225, z: -14.22561}
+    - t: 21.994074
+      p: {x: -188.97562, y: 26.403923, z: -13.945122}
+    - t: 22.343445
+      p: {x: -189.07317, y: 26.389229, z: -13.664635}
+    - t: 22.692825
+      p: {x: -189.17073, y: 26.378105, z: -13.384146}
+    - t: 23.042202
+      p: {x: -189.2683, y: 26.366982, z: -13.103659}
+    - t: 23.39158
+      p: {x: -189.36586, y: 26.35585, z: -12.823171}
+    - t: 23.740953
+      p: {x: -189.46341, y: 26.342522, z: -12.542683}
+    - t: 24.09033
+      p: {x: -189.56097, y: 26.327358, z: -12.262196}
+    - t: 24.43971
+      p: {x: -189.65854, y: 26.312183, z: -11.981707}
+    - t: 24.789087
+      p: {x: -189.7561, y: 26.2947, z: -11.70122}
+    - t: 25.155085
+      p: {x: -189.85365, y: 26.276798, z: -11.420732}
+    - t: 25.360476
+      p: {x: -189.90244, y: 26.267857, z: -11.280487}
+    - t: 25.590256
+      p: {x: -189.95122, y: 26.258907, z: -11.140244}
+    - t: 25.867928
+      p: {x: -190, y: 26.24995, z: -11}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -184.4, y: 26.453026, z: -21}
+      actor: 
+    - t: 2.75
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 7.0576663
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 9.527666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    cabezas:
+    - t: 0.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 2.7
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 7.007666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 9.477666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 0.08
+      tipo: 2
+      estado: Greeting01_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.6499999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.3
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.607666
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.077666
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: alegre
+      dura: 3
+    visible: []
+    deslizando: []
+  - id: _ESTELA
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.62352943, b: 0.41960785, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: -188, y: 26.771149, z: -19.6}
+    - t: 11.132667
+      p: {x: -188, y: 26.771149, z: -19.6}
+    - t: 11.412021
+      p: {x: -188.00845, y: 26.76215, z: -19.450705}
+    - t: 11.643092
+      p: {x: -188.0169, y: 26.753147, z: -19.301409}
+    - t: 11.84959
+      p: {x: -188.02534, y: 26.744148, z: -19.152113}
+    - t: 12.217494
+      p: {x: -188.04225, y: 26.72615, z: -18.853521}
+    - t: 12.569341
+      p: {x: -188.05916, y: 26.708149, z: -18.55493}
+    - t: 12.921186
+      p: {x: -188.07605, y: 26.690151, z: -18.256338}
+    - t: 13.273033
+      p: {x: -188.09296, y: 26.673512, z: -17.957747}
+    - t: 13.62488
+      p: {x: -188.10986, y: 26.666222, z: -17.659155}
+    - t: 13.976726
+      p: {x: -188.12675, y: 26.637653, z: -17.360563}
+    - t: 14.328572
+      p: {x: -188.14366, y: 26.609093, z: -17.061972}
+    - t: 14.680419
+      p: {x: -188.16057, y: 26.580528, z: -16.76338}
+    - t: 15.032265
+      p: {x: -188.17746, y: 26.551964, z: -16.464788}
+    - t: 15.384111
+      p: {x: -188.19437, y: 26.5234, z: -16.166197}
+    - t: 15.735957
+      p: {x: -188.21127, y: 26.494843, z: -15.867606}
+    - t: 16.087803
+      p: {x: -188.22816, y: 26.46642, z: -15.569015}
+    - t: 16.43965
+      p: {x: -188.24507, y: 26.453785, z: -15.270423}
+    - t: 16.791498
+      p: {x: -188.26198, y: 26.42316, z: -14.971831}
+    - t: 17.143345
+      p: {x: -188.27887, y: 26.390064, z: -14.67324}
+    - t: 17.495193
+      p: {x: -188.29578, y: 26.356972, z: -14.374648}
+    - t: 17.847042
+      p: {x: -188.31268, y: 26.323883, z: -14.0760565}
+    - t: 18.198889
+      p: {x: -188.32957, y: 26.29079, z: -13.777465}
+    - t: 18.550737
+      p: {x: -188.34648, y: 26.257702, z: -13.478873}
+    - t: 18.902586
+      p: {x: -188.36339, y: 26.224606, z: -13.180282}
+    - t: 19.254433
+      p: {x: -188.38028, y: 26.198074, z: -12.88169}
+    - t: 19.60628
+      p: {x: -188.39719, y: 26.170185, z: -12.583099}
+    - t: 19.958128
+      p: {x: -188.4141, y: 26.139603, z: -12.284507}
+    - t: 20.309975
+      p: {x: -188.43098, y: 26.109028, z: -11.985915}
+    - t: 20.661821
+      p: {x: -188.44789, y: 26.078457, z: -11.687325}
+    - t: 21.01367
+      p: {x: -188.4648, y: 26.047886, z: -11.388733}
+    - t: 21.365517
+      p: {x: -188.48169, y: 26.017307, z: -11.09014}
+    - t: 21.717363
+      p: {x: -188.4986, y: 25.986732, z: -10.79155}
+    - t: 22.069212
+      p: {x: -188.5155, y: 25.954082, z: -10.492958}
+    - t: 22.421059
+      p: {x: -188.5324, y: 25.921227, z: -10.194366}
+    - t: 22.772907
+      p: {x: -188.5493, y: 25.895897, z: -9.895775}
+    - t: 23.126667
+      p: {x: -188.56621, y: 25.871658, z: -9.597183}
+    - t: 23.523233
+      p: {x: -188.5831, y: 25.847424, z: -9.298592}
+    - t: 23.754305
+      p: {x: -188.59155, y: 25.835304, z: -9.149296}
+    - t: 24.033659
+      p: {x: -188.6, y: 25.823185, z: -9}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -184.4, y: 26.453026, z: -21}
+      actor: 
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.87
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 9.647667
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    cabezas:
+    - t: 0.10000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.82
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 6.9576664
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    - t: 9.597667
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _LIAM
+    animacion:
+    - fundido: 0
+      t: 3.3
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.4849997
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.907666
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.987666
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.427667
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.077666
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 6.907666
+      emocion: picaro
+      dura: 2.87
+    visible: []
+    deslizando: []
+  - id: _LIAM
+    alias: liam
+    colorDelNombre: {r: 0.73333335, g: 0.627451, b: 1, a: 1}
+    claveDelNombre: CHAR_LIAM
+    posiciones:
+    - t: 0
+      p: {x: -184.4, y: 26.453026, z: -21}
+    - t: 12.732667
+      p: {x: -184.4, y: 26.453026, z: -21}
+    - t: 12.980697
+      p: {x: -184.51167, y: 26.472351, z: -20.932995}
+    - t: 13.187597
+      p: {x: -184.62335, y: 26.491688, z: -20.86599}
+    - t: 13.544699
+      p: {x: -184.8467, y: 26.530342, z: -20.731981}
+    - t: 13.858655
+      p: {x: -185.07005, y: 26.569008, z: -20.597971}
+    - t: 14.111463
+      p: {x: -185.25342, y: 26.60064, z: -20.485949}
+    - t: 14.40893
+      p: {x: -185.45575, y: 26.619534, z: -20.334549}
+    - t: 14.67435
+      p: {x: -185.62001, y: 26.61839, z: -20.18}
+    - t: 14.973574
+      p: {x: -185.7953, y: 26.612362, z: -19.995747}
+    - t: 15.2727995
+      p: {x: -185.9612, y: 26.604671, z: -19.802984}
+    - t: 15.620408
+      p: {x: -186.1483, y: 26.594776, z: -19.574306}
+    - t: 15.968017
+      p: {x: -186.3354, y: 26.58488, z: -19.345629}
+    - t: 16.315615
+      p: {x: -186.52249, y: 26.574982, z: -19.116951}
+    - t: 16.663225
+      p: {x: -186.7096, y: 26.576485, z: -18.888271}
+    - t: 17.010834
+      p: {x: -186.8967, y: 26.586086, z: -18.659594}
+    - t: 17.358442
+      p: {x: -187.0838, y: 26.59568, z: -18.430916}
+    - t: 17.70605
+      p: {x: -187.2709, y: 26.60527, z: -18.202238}
+    - t: 18.053648
+      p: {x: -187.458, y: 26.614876, z: -17.97356}
+    - t: 18.401257
+      p: {x: -187.6451, y: 26.622196, z: -17.744883}
+    - t: 18.748865
+      p: {x: -187.8322, y: 26.621544, z: -17.516205}
+    - t: 19.096476
+      p: {x: -188.0193, y: 26.620205, z: -17.287525}
+    - t: 19.444073
+      p: {x: -188.20639, y: 26.614655, z: -17.058847}
+    - t: 19.791681
+      p: {x: -188.3935, y: 26.609116, z: -16.83017}
+    - t: 20.13929
+      p: {x: -188.5806, y: 26.603565, z: -16.601492}
+    - t: 20.486898
+      p: {x: -188.7677, y: 26.598015, z: -16.372814}
+    - t: 20.834507
+      p: {x: -188.9548, y: 26.60027, z: -16.144136}
+    - t: 21.182106
+      p: {x: -189.14189, y: 26.615711, z: -15.915458}
+    - t: 21.529716
+      p: {x: -189.329, y: 26.63115, z: -15.68678}
+    - t: 21.877327
+      p: {x: -189.5161, y: 26.646599, z: -15.458102}
+    - t: 22.224937
+      p: {x: -189.7032, y: 26.661694, z: -15.2294235}
+    - t: 22.572536
+      p: {x: -189.89029, y: 26.661469, z: -15.000746}
+    - t: 22.920147
+      p: {x: -190.0774, y: 26.663631, z: -14.772068}
+    - t: 23.267757
+      p: {x: -190.2645, y: 26.672398, z: -14.543389}
+    - t: 23.615368
+      p: {x: -190.4516, y: 26.679749, z: -14.314712}
+    - t: 23.962978
+      p: {x: -190.6387, y: 26.676376, z: -14.086034}
+    - t: 24.313046
+      p: {x: -190.82579, y: 26.673, z: -13.857356}
+    - t: 24.706005
+      p: {x: -191.0129, y: 26.669624, z: -13.628677}
+    - t: 24.934858
+      p: {x: -191.10645, y: 26.667938, z: -13.5143385}
+    - t: 25.211325
+      p: {x: -191.2, y: 26.669094, z: -13.4}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -186, y: 26.74144, z: -22.5}
+      actor: 
+    - t: 0.27
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 7.177666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    cabezas:
+    - t: 0.22000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.6499999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 7.127666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 9.427667
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    animacion:
+    - fundido: 0
+      t: 2.6
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.6799998
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.535
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.607666
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.377666
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.457666
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.182667
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 2.6
+      emocion: alegre
+      dura: 0
+    - t: 2.6
+      emocion: alegre
+      dura: 2.285
+    - t: 9.377666
+      emocion: alegre
+      dura: 2.155
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0
+    t1: 2.6
+    actor: Player
+    clave: CAP4_BOTA_01
+    gesto: Greeting01_NoWeapon
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2.6
+    t1: 4.4849997
+    actor: _LIAM
+    clave: CAP4_BOTA_02
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.907666
+    t1: 9.377666
+    actor: _ESTELA
+    clave: CAP4_BOTA_03
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 9.377666
+    t1: 11.132667
+    actor: _LIAM
+    clave: CAP4_BOTA_04
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 4.4849997
+    tipo: 5
+    descripcion: 'dos: will y liam'
+    posiciones:
+    - t: 0
+      p: {x: -182.8338, y: 27.498682, z: -24.273949}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - _LIAM
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.838942
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 4.4849997
+    t1: 9.377666
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 4.4849997
+      p: {x: -187.34825, y: 27.674215, z: -23.834717}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 9.377666
+    t1: 11.132667
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 9.377666
+      p: {x: -186.42374, y: 27.348965, z: -17.664913}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - _LIAM
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1191353
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 11.132667
+    t1: 17.632668
+    tipo: 1
+    descripcion: conjunto de estela y will y liam
+    posiciones:
+    - t: 11.132667
+      p: {x: -193, y: 28.814205, z: -27}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    - Player
+    - _LIAM
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1258299
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294456446551031
+    linea: 29
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.132667
+    beat:
+      rid: 6540294456446551032
+    linea: 46
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: final
+    t: 11.132667
+  puntos:
+  - nombre: p_will
+    posicion: {x: -186, y: 26.74144, z: -22.5}
+  - nombre: p_liam
+    posicion: {x: -184.4, y: 26.453026, z: -21}
+  - nombre: p_estela
+    posicion: {x: -188, y: 26.771149, z: -19.6}
+  - nombre: camino
+    posicion: {x: -190, y: 25.461395, z: -2}
+  - nombre: p_estela_v
+    posicion: {x: -188.6, y: 25.823185, z: -9}
+  - nombre: p_will_v
+    posicion: {x: -190, y: 26.24995, z: -11}
+  - nombre: p_liam_v
+    posicion: {x: -191.2, y: 26.669094, z: -13.4}
+  - nombre: cam_final
+    posicion: {x: -193, y: 26.814205, z: -27}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446551031
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294456446551032
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 2
+        waitForEnd: 0

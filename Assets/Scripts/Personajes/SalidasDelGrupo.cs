@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.NPC;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
@@ -39,6 +39,42 @@ public static class SalidasDelGrupo
         if (retirarDeLaEscena) miembro.gameObject.SetActive(false);
         s_fuera[personaje] = miembro;
         return true;
+    }
+
+    /// <summary>
+    /// Lo une al grupo la primera vez: el compañero ya está en la escena (lo pone el roster) pero
+    /// todavía no es del grupo. Si estaba fuera por <see cref="Sacar"/>, lo devuelve. False si
+    /// ahora no se puede (aún no está en la escena o no se puede unir; se reintenta).
+    /// </summary>
+    public static bool Unir(Slot personaje)
+    {
+        if (personaje == Slot.Will || ControlDelJugador.MiembroDe(personaje) != null) return true;
+        if (s_fuera.ContainsKey(personaje)) return Devolver(personaje);
+        var miembro = FueraDelGrupo(personaje);
+        if (miembro == null) return false;
+        if (!miembro.gameObject.activeSelf) miembro.gameObject.SetActive(true);
+        return miembro.IsInParty || miembro.JoinParty();
+    }
+
+    /// <summary>
+    /// El compañero de ese personaje que está en la escena sin ser del grupo. Puede haber otros NPCs
+    /// con su nombre (los de un interior abierto en aditivo, como la torre de Liam): manda el de su
+    /// id de siempre («_LIAM», «_ESTELA»), luego uno de la escena activa y, si no, el primero.
+    /// </summary>
+    private static NPCPartyMember FueraDelGrupo(Slot personaje)
+    {
+        string nombre = ControlDelJugador.Nombre(personaje);
+        string id = "_" + nombre.ToUpperInvariant();
+        var activa = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        NPCPartyMember deLaEscena = null, primero = null;
+        foreach (var m in Object.FindObjectsByType<NPCPartyMember>(FindObjectsInactive.Include))
+        {
+            if (m == null || !string.Equals(m.DisplayName, nombre, System.StringComparison.OrdinalIgnoreCase)) continue;
+            if (m.NPCManager != null && m.NPCManager.PersistenceId == id) return m;
+            if (deLaEscena == null && m.gameObject.scene == activa) deLaEscena = m;
+            if (primero == null) primero = m;
+        }
+        return deLaEscena ?? primero;
     }
 
     /// <summary>Lo devuelve al grupo (y a la escena). False si ahora no se puede unir (se reintenta).</summary>

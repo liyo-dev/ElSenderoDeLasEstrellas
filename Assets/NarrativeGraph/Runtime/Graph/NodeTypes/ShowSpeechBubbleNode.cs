@@ -91,6 +91,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
         {
             onHidden = () =>
             {
+                if (done) return;
                 done = true;
                 _activeLine = null;
                 onReadyToAdvance?.Invoke();
@@ -104,13 +105,29 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
             onReadyToAdvance?.Invoke();
             return;
         }
-        if (!done) _activeLine = handle;
+        if (done) return;
+        _activeLine = handle;
+        // Si otra frase pisa el bocadillo, su aviso de fin no llega: pasado su tiempo (y un margen)
+        // el grafo sigue igualmente, para no quedarse esperando para siempre.
+        if (ctx?.Runner != null) ctx.Runner.StartCoroutine(Co_Seguro(++_vez, duration + MargenDeSeguridad, onHidden));
+    }
+
+    private const float MargenDeSeguridad = 3f;
+    [NonSerialized] private int _vez;
+
+    private System.Collections.IEnumerator Co_Seguro(int vez, float segundos, Action alAcabar)
+    {
+        yield return new UnityEngine.WaitForSecondsRealtime(segundos);
+        if (vez != _vez || _activeLine == null) yield break;
+        _activeLine = null;
+        alAcabar?.Invoke();
     }
 
     /// Si el runner abandona este nodo (StopExecution, cambio de escena…) mientras espera el
     /// bocadillo, el aviso de fin no llega: aquí se deja de esperar y se calla la voz.
     public override void Exit(NarrativeContext ctx)
     {
+        _vez++;
         if (_activeLine == null) return;
         _activeLine.Cancel();
         _activeLine = null;

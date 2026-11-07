@@ -2027,6 +2027,186 @@
         {
             "key": "PARQUE_NORIA_5_4",
             "value": "I saw you waving. How embarrassing."
+        },
+        {
+            "key": "CHAR_POSADERO",
+            "value": "Innkeeper"
+        },
+        {
+            "key": "CHAR_LUCIA",
+            "value": "Lucía"
+        },
+        {
+            "key": "CHAR_SARGENTO",
+            "value": "Sergeant"
+        },
+        {
+            "key": "CHAR_GUARDIA_CRUCE",
+            "value": "Guard"
+        },
+        {
+            "key": "CHAR_CONTRABANDISTA",
+            "value": "Smuggler"
+        },
+        {
+            "key": "CHAR_TOBI",
+            "value": "Tobías"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_01",
+            "value": "Three weeks ago, at night, I saw low lights moving between the forest trees."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_02",
+            "value": "They weren't lanterns. They were knee-high."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_03",
+            "value": "And what were they doing?"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_04",
+            "value": "They lit up and dimmed, slowly. Like something breathing in its sleep."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_01",
+            "value": "I saw the fox! By the garden fence."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_02",
+            "value": "It had a glowing collar. It didn't want to bite me."
+        },
+        {
+            "key": "DLG_CAP3_ZORRO_03",
+            "value": "It was more scared than me."
+        },
+        {
+            "key": "DLG_CAP3_HUERTO_01",
+            "value": "Small tracks, and reddish fur caught on the wood."
+        },
+        {
+            "key": "DLG_CAP3_HUERTO_02",
+            "value": "It scratched itself hard here. As if the collar hurt."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_01",
+            "value": "Scratches on the wood, at the height of a dog's neck."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_02",
+            "value": "The marks have lines inside them. Like the ones on the collar piece."
+        },
+        {
+            "key": "DLG_CAP3_COBERTIZO_03",
+            "value": "And here, on the wood, they still glow a little."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_01",
+            "value": "A frightened fox, a dog that kept scratching, and lights that breathe. I wrote it all down."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_02",
+            "value": "I told two guards and a traveller. None of them listened."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_03",
+            "value": "You're the first one to carry one."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_04",
+            "value": "If you're looking for whoever makes those collars, look toward the Forbidden Forest."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_05",
+            "value": "And don't trust the road at night. Carts go by there that never stop anywhere."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_01",
+            "value": "Smugglers? Around here? Go to bed, kid."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_02",
+            "value": "They're carrying birds in cages. Look at this."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_03",
+            "value": "This is a lightbird feather. They aren't sold. They can't be sold."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_04",
+            "value": "You two, with me. And you, kid, show us the way."
+        },
+        {
+            "key": "DLG_CAP3_POSADERO_DESPUES_01",
+            "value": "If you find whoever makes the collars, come back and tell me. On the house."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_DESPUES_01",
+            "value": "Did you see the spoon? Almost. Tomorrow it'll reach my thumb."
+        },
+        {
+            "key": "DLG_CAP3_SARGENTO_DESPUES_01",
+            "value": "Thanks to you those birds are flying. If you pass the crossroads, we're here."
+        },
+        {
+            "key": "DLG_CAP3_GUARDIA_01",
+            "value": "All quiet at the crossroads."
+        },
+        {
+            "key": "CAP3_AVISO_QUIEN",
+            "value": "Who's there?"
+        },
+        {
+            "key": "CAP3_BOC_ZARZA",
+            "value": "There's a feather caught in that bramble…"
+        },
+        {
+            "key": "CAP3_BOC_PIEDRAS",
+            "value": "Three stacked stones, to find the spot. Now, to the guard post."
+        },
+        {
+            "key": "DLG_CAP4_CARTA_01",
+            "value": "An unopened letter for \"Estela Marael\". Sender: \"Mum\"."
+        },
+        {
+            "key": "DLG_CAP4_CARTA_02",
+            "value": "Better not to ask."
+        },
+        {
+            "key": "DLG_CAP4_APODOS_01",
+            "value": "A board by the door with three crossed-out nicknames. The last one reads \"the Dessert Witch\"."
+        },
+        {
+            "key": "DLG_CAP4_CENA_01",
+            "value": "Dinner. Black on the outside and… black on the inside."
+        },
+        {
+            "key": "DLG_CAP4_CENA_02",
+            "value": "It's burnt on purpose! It tastes like a campfire."
+        },
+        {
+            "key": "DLG_CAP4_CAMA_01",
+            "value": "A straw mattress among the roots. It smells of smoke and apples."
+        },
+        {
+            "key": "DLG_CAP4_CAMA_02",
+            "value": "Sleep. Your training starts tomorrow."
+        },
+        {
+            "key": "DLG_CAP4_BOTA_01",
+            "value": "Got it! Caught between two branches."
+        },
+        {
+            "key": "CAP4_BOC_CASA",
+            "value": "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress."
+        },
+        {
+            "key": "CAP4_BOC_BOTA",
+            "value": "The river's taking it! I'll go after it, downstream."
+        },
+        {
+            "key": "CAP4_BOC_FIGURA",
+            "value": "You saved yourself and scorched the ones you were meant to protect!"
         }
     ]
 }

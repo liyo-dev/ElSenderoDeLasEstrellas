@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: BrazosCruzados_Prueba_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: BrazosCruzados_Prueba
+  duracion: 5.3
+  presentacion: 1
+  huella: "2026-11-07 12:28 \xB7 36399cc8a0931dc2b202612191a468a3"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 0, z: 5.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 1, z: -6}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Estela
+    alias: estela
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Estela
+    posiciones:
+    - t: 0
+      p: {x: 1.4, y: 0, z: 5.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 1, z: -6}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Liam
+    alias: liam
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Liam
+    posiciones:
+    - t: 0
+      p: {x: -1.4, y: 0, z: 5.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 1, z: -6}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  lineas: []
+  planos:
+  - focos:
+    - t: 0
+      p: {x: 0, y: 0.65, z: 5.6}
+    t0: 0
+    t1: 0.8
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 0.9, z: 2.4}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 0.8
+      p: {x: 0, y: 0.65, z: 5.6}
+    t0: 0.8
+    t1: 1.6
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 0.8
+      p: {x: 0, y: 0.85, z: 4.3}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 1.6
+      p: {x: 1.4, y: 0.65, z: 5.6}
+    t0: 1.6
+    t1: 2.4
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 1.6
+      p: {x: 1.4, y: 0.85, z: 4.3}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 1.4, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 2.4
+      p: {x: 0, y: 0.65, z: 5.6}
+    t0: 2.4
+    t1: 3.2
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 2.4
+      p: {x: -0.9, y: 0.9, z: 4.5}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 3.2
+      p: {x: -1.4, y: 0.65, z: 5.6}
+    t0: 3.2
+    t1: 4
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 3.2
+      p: {x: -3.3, y: 0.75, z: 5.6}
+    lente: 35
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: -1.4, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 4
+      p: {x: 1.4, y: 0.65, z: 5.6}
+    t0: 4
+    t1: 5.3
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 4
+      p: {x: 3.3, y: 0.75, z: 5.6}
+    lente: 35
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 1.4, y: 0.65, z: 5.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: b_liam
+    posicion: {x: -1.4, y: 0, z: 5.6}
+  - nombre: b_will
+    posicion: {x: 0, y: 0, z: 5.6}
+  - nombre: b_estela
+    posicion: {x: 1.4, y: 0, z: 5.6}
+  - nombre: al_frente
+    posicion: {x: 0, y: 1, z: -6}
+  - nombre: cam_frente
+    posicion: {x: 0, y: 0.9, z: 2.4}
+  - nombre: mira_frente
+    posicion: {x: 0, y: 0.65, z: 5.6}
+  - nombre: cam_will
+    posicion: {x: 0, y: 0.85, z: 4.3}
+  - nombre: mira_will
+    posicion: {x: 0, y: 0.65, z: 5.6}
+  - nombre: cam_estela
+    posicion: {x: 1.4, y: 0.85, z: 4.3}
+  - nombre: mira_estela
+    posicion: {x: 1.4, y: 0.65, z: 5.6}
+  - nombre: cam_will_34
+    posicion: {x: -0.9, y: 0.9, z: 4.5}
+  - nombre: cam_liam_l
+    posicion: {x: -3.3, y: 0.75, z: 5.6}
+  - nombre: mira_liam
+    posicion: {x: -1.4, y: 0.65, z: 5.6}
+  - nombre: cam_estela_l
+    posicion: {x: 3.3, y: 0.75, z: 5.6}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

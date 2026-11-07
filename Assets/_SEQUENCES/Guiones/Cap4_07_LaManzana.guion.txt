@@ -1,0 +1,36 @@
+# Cap. 4 · La manzana harinosa: Estela no quiere ayuda; la tercera vez, Will se sienta y comparten la última manzana.
+GUION Cap4_07_LaManzana
+ESCENA MainWorld
+ZONA Cap4Golem -104 60 24
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_07_LaManzana.asset
+TEXTO bocadillo
+RITMO entre_frases=0.4 mismo_hablante=0.25
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+
+PUNTOS
+cenizas    -104 52
+p_will     -102.4 54.2
+p_estela   -105.4 55
+p_will2    -104.2 54.6
+
+HILO
+@inicio
+will en p_will mirando cenizas
+& estela en p_estela mirando cenizas
+plano conjunto will estela
+will dice CAP4_MANZANA_01 cara=pensativo gesto=SenseSomethingSearching_NoWeapon
+estela gesto Pain01
+will mira estela
+estela dice CAP4_MANZANA_02 cara=molesto
+will dice CAP4_MANZANA_03
+will anda a p_will2 ritmo=paseo
+estela dice CAP4_MANZANA_04 cara=triste
+plano dos will estela
+will dice CAP4_MANZANA_05 cara=alegre
+espera 0.8
+plano primer estela
+estela dice CAP4_MANZANA_06 cara=agradecido
+espera 0.5

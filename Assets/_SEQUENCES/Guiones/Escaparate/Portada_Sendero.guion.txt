@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  ESCAPARATE · PORTADA DEL JUEGO
+#  Will, Liam y Estela en el borde de la plaza de llegada del Sendero, de tres cuartos hacia la
+#  cámara; detrás, el camino de luz que se pierde entre las estrellas y cielo libre arriba para
+#  el título. No es una cinemática del juego: solo sirve para sacar la portada (storyboard 4K).
+#  Eje de pantalla: Liam a la izquierda, Will en el centro, Estela a la derecha.
+#  Plano 1: abierto, con el camino detrás (formatos apaisados). Plano 2: más cerca (formatos verticales).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Portada_Sendero
+ESCENA Sendero
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will   prefab=Assets/Prefabs/_WILL.prefab
+estela  NPC_Estela  nombre=Estela prefab=Assets/Prefabs/_ESTELA.prefab
+liam    NPC_Liam    nombre=Liam   prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+# Plaza de llegada: centro (0 0), radio 9; el camino sale hacia +z. Will un paso por delante.
+b_liam      -1.05 5.8 0
+b_will       0.0 6.2 0
+b_estela     1.0 5.8 0
+# Alturas absolutas (altura=0 altura_foco=0 en los planos): el suelo de la plaza está en 0 y los tres miden algo más de 1 m.
+# A dónde miran: a la cámara.
+hacia_cam    0.3 -4 1.0
+caras        0.0 9.0 1.45
+cam_frente   0.3 -1.0 1.5
+cam_cerca    0.3 1.0 1.0
+mira_cerca   0.0 7.5 1.3
+
+HILO
+@inicio
+will en b_will mirando hacia_cam
+& estela en b_estela mirando hacia_cam
+& liam en b_liam mirando hacia_cam
+espera 0.1
+# Poses de portada (elegidas en el muestrario Portada_Poses): Will con su estrella entre las manos,
+# Liam de brazos cruzados (retoque de pose en PortadaDelJuego), Estela con el puño arriba (Cheer01 hacia los 0,45 s).
+will bucle CastingIdle01 congela
+& liam bucle Idle01 congela
+& estela bucle Cheer01 congela
+# La foto de cada plano sale a un tercio de su duración: planos cortos para que los dos
+# cojan el mismo momento de las poses (el puño de Estela arriba).
+espera 0.4
+plano fijo desde=cam_frente mira=caras lente=40 altura=0 altura_foco=0 quieta
+espera 0.1
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.1

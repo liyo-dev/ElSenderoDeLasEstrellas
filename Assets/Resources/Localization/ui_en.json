@@ -2244,6 +2244,54 @@
         {
             "key": "CONCURSO_MANTENER",
             "value": "Hold {0} and release it inside the zone."
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_NAME",
+            "value": "Sightings sheet"
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_DESC",
+            "value": "What the seaside villagers have seen of the collared animals: low lights in the forest, a frightened fox, a dog scratching its neck."
+        },
+        {
+            "key": "CAP3_ROTULO_COSTA",
+            "value": "Two days' walk to the coast…"
+        },
+        {
+            "key": "CAP3_ROTULO_NOCHE",
+            "value": "That night, on the forest road…"
+        },
+        {
+            "key": "CAP3_TUTO_SEGUIR",
+            "value": "Follow the cart without getting close: if they see you, you'll have to go back."
+        },
+        {
+            "key": "CAP3_ROTULO_MANANA",
+            "value": "The next morning…"
+        },
+        {
+            "key": "DEMO_FIN_ROTULO",
+            "value": "End of Part One. Thank you for playing the demo."
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_NAME",
+            "value": "Crystal shard"
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_DESC",
+            "value": "It was among the Golem's rocks. For a moment it showed a face."
+        },
+        {
+            "key": "CAP4_ROTULO_MANANA",
+            "value": "The next morning…"
+        },
+        {
+            "key": "TUTORIAL_CAP4_CUPULA_ESTELAR",
+            "value": "Press {BOTON} and type X, B, A: the Star Dome protects whoever is beneath it."
+        },
+        {
+            "key": "TUTORIAL_CAP4_LEVITACION",
+            "value": "New spell: Levitation. It's now among your spells: cast it to float over water, mud and gaps."
         }
     ]
 }

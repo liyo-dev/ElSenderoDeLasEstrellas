@@ -1,0 +1,912 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_02_LaPosada_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_02_LaPosada
+  duracion: 30.539
+  presentacion: 0
+  huella: "2026-11-07 17:23 \xB7 ae07d6975c5cfee7b46e5d9d354da85e"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 279, y: 5.003662, z: -425.3}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 281.2, y: 5.003662, z: -424.6}
+      actor: 
+    - t: 0.8
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 2.665
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 4.355
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 6.494
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 9.294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 12.514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 16.269
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 20.973999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 25.594
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    cabezas:
+    - t: 0.8
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 2.615
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 4.305
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 6.444
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 9.2439995
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 12.514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 16.219
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 18.144
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 20.924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 25.544
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    animacion:
+    - fundido: 0
+      t: 0.8
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 0.88
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.215
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.191
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.0439997
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.514
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.594
+      tipo: 2
+      estado: FoundSomething_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.969
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.769
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.094
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.174
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.873999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.524
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 26.144001
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 12.514
+      emocion: pensativo
+      dura: 2.805
+    - t: 16.68775
+      emocion: sorpresa
+      dura: 1.625
+    visible: []
+    deslizando: []
+  - id: NPC_Posadero
+    alias: posadero
+    colorDelNombre: {r: 0.90588236, g: 0.7882353, b: 0.627451, a: 1}
+    claveDelNombre: CHAR_POSADERO
+    posiciones:
+    - t: 0
+      p: {x: 281.2, y: 5.003662, z: -424.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 279, y: 5.003662, z: -425.3}
+      actor: 
+    - t: 0.95000005
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 4.475
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 6.614
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 9.4140005
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 10.694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 12.664
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.244
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 0.90000004
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.5649998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 4.4249997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 6.5639997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 9.364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 10.694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 12.613999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.168999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.194
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 20.873999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 25.494
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 2.5149999
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.5949998
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.255
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.803
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.624001
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.694
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.774
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.564
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 13.214
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.119
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.199
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.793999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.794
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.824
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.904
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.470667
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.293999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.444
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.524
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 27.824001
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 29.588999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 10.694
+      emocion: alegre
+      dura: 2.22
+    - t: 14.919
+      emocion: sorpresa
+      dura: 0
+    - t: 16.119
+      emocion: preocupado
+      dura: 2.025
+    - t: 20.824
+      emocion: preocupado
+      dura: 4.82
+    visible: []
+    deslizando: []
+  - id: NPC_Lucia
+    alias: lucia
+    colorDelNombre: {r: 0.9647059, g: 0.7176471, b: 0.7882353, a: 1}
+    claveDelNombre: CHAR_LUCIA
+    posiciones:
+    - t: 0
+      p: {x: 277.2, y: 5.003662, z: -425}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 279, y: 5.8478436, z: -427}
+      actor: 
+    - t: 2.7849998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 4.205
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.844
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 16.389
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 18.364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 21.094
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 25.714
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    cabezas:
+    - t: 2.735
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 4.255
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 6.394
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 9.194
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 10.794
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 16.339
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 18.314001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 21.044
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    - t: 25.664001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Posadero
+    animacion:
+    - fundido: 0
+      t: 3.191
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.205
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.285
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.7
+      tipo: 2
+      estado: CastingEnter01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.75
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.344
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.424
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.994
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.144
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.224
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.394
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.394
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.769
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.524
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 26.144001
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 4.205
+      emocion: alegre
+      dura: 1.8949999
+    - t: 5.7
+      emocion: decidido
+      dura: 0
+    - t: 6.344
+      emocion: decidido
+      dura: 3
+    - t: 9.144
+      emocion: triste
+      dura: 1.6
+    - t: 16.68775
+      emocion: sorpresa
+      dura: 1.625
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0.8
+    t1: 2.165
+    actor: Player
+    clave: CAP3_POSADA_01
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2.5149999
+    t1: 4.205
+    actor: NPC_Posadero
+    clave: CAP3_POSADA_02
+    gesto: HeadNod01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 4.205
+    t1: 5.7
+    actor: NPC_Lucia
+    clave: CAP3_POSADA_03
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.344
+    t1: 8.944
+    actor: NPC_Lucia
+    clave: CAP3_POSADA_04
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 9.144
+    t1: 10.344
+    actor: NPC_Lucia
+    clave: CAP3_POSADA_05
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 10.694
+    t1: 12.514
+    actor: NPC_Posadero
+    clave: CAP3_POSADA_06
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 12.514
+    t1: 14.919
+    actor: Player
+    clave: CAP3_POSADA_07
+    gesto: FoundSomething_NoWeapon
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 16.119
+    t1: 17.744
+    actor: NPC_Posadero
+    clave: CAP3_POSADA_08
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.094
+    t1: 20.824
+    actor: Player
+    clave: CAP3_POSADA_09
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 20.824
+    t1: 25.244
+    actor: NPC_Posadero
+    clave: CAP3_POSADA_10
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 25.444
+    t1: 29.539
+    actor: NPC_Posadero
+    clave: CAP3_POSADA_11
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 5.7
+    tipo: 1
+    descripcion: conjunto de will y posadero y lucia
+    posiciones:
+    - t: 0
+      p: {x: 279, y: 7.203662, z: -431}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Posadero
+    - NPC_Lucia
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0064166
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 5.7
+    t1: 12.514
+    tipo: 2
+    descripcion: medio de lucia
+    posiciones:
+    - t: 5.7
+      p: {x: 277.4, y: 6.203662, z: -428.6}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Lucia
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.77369976
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 12.514
+    t1: 14.919
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 12.514
+      p: {x: 278.4, y: 6.403662, z: -428.6}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 14.919
+    t1: 20.824
+    tipo: 3
+    descripcion: primer plano de posadero
+    posiciones:
+    - t: 14.919
+      p: {x: 280.2, y: 6.403662, z: -428.4}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Posadero
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1240083
+    encuadre: {x: 0.09, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 20.824
+    t1: 30.539
+    tipo: 1
+    descripcion: conjunto de will y posadero y lucia
+    posiciones:
+    - t: 20.824
+      p: {x: 279, y: 7.203662, z: -431}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Posadero
+    - NPC_Lucia
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0064166
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: trozo
+    t: 12.514
+  puntos:
+  - nombre: p_will
+    posicion: {x: 279, y: 5.003662, z: -425.3}
+  - nombre: p_posadero
+    posicion: {x: 281.2, y: 5.003662, z: -424.6}
+  - nombre: p_lucia
+    posicion: {x: 277.2, y: 5.003662, z: -425}
+  - nombre: mesa
+    posicion: {x: 279, y: 5.8478436, z: -427}
+  - nombre: cam_grupo
+    posicion: {x: 279, y: 5.003662, z: -431}
+  - nombre: cam_lucia
+    posicion: {x: 277.4, y: 5.003662, z: -428.6}
+  - nombre: cam_will
+    posicion: {x: 278.4, y: 5.003662, z: -428.6}
+  - nombre: cam_posad
+    posicion: {x: 280.2, y: 5.003662, z: -428.4}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

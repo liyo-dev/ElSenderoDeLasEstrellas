@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap4_02_LaManana
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: "Cap. 4: la ma\xF1ana en la casa"
+  summary: 'El cartel del FUTURO GRAN HECHICERO y la primera receta: protegerte y proteger a otro.'
+  signalIn: CAP4_MANANA_START
+  signalOut: CAP4_MANANA_DONE
+  musicId: 
+  presentacionDeTexto: 0
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap4_02_LaManana'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446551005
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446551005
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: a7bfc8382e40da64bb0f4f755706674f, type: 2}
+        empezarEn: 0

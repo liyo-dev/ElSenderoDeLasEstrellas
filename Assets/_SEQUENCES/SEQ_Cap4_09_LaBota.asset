@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap4_09_LaBota
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: 'Cap. 4: la bota'
+  summary: "\xABEso no sale en ning\xFAn mapa\xBB. Fin de la Primera Parte."
+  signalIn: CAP4_BOTA_START
+  signalOut: CAP4_BOTA_DONE
+  musicId: 
+  presentacionDeTexto: 1
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap4_09_LaBota'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446551033
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446551033
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 5c12db092a92a5b47a5c6fcb082f3508, type: 2}
+        empezarEn: 0

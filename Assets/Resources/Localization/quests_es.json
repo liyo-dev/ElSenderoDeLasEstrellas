@@ -549,6 +549,90 @@
         {"key":"CHUCHE_TROMPETILLAS_NAME","value":"Las trompetillas perdidas"},
         {"key":"CHUCHE_TROMPETILLAS_DESC","value":"El heraldo suplente necesita las trompetillas del ejército para anunciar a Su Alteza."},
         {"key":"CHUCHE_TROMPETILLAS_DETAIL","value":"El ejército de gominolas ha perdido cinco trompetillas por todo el reino: en lo alto, al otro lado de los saltos largos y donde solo se llega de un buen bote. Encuéntralas y devuélveselas al heraldo suplente."},
-        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Encuentra las trompetillas del ejército"}
+        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Encuentra las trompetillas del ejército"},
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_NAME",
+            "value": "Las marcas de hierro"
+        },
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_DESC",
+            "value": "Alguien pone aros de hierro a los animales. En la aldea del mar quizá sepan algo."
+        },
+        {
+            "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
+            "value": "Alguien pone aros de hierro a los animales. En la aldea del mar quizá sepan algo."
+        },
+        {
+            "key": "CAP3_LLEGAR_PASO",
+            "value": "Llega a la aldea del mar"
+        },
+        {
+            "key": "CAP3_POSADA_PASO",
+            "value": "Pregunta en la posada"
+        },
+        {
+            "key": "CAP3_PISTA_1_PASO",
+            "value": "Escucha lo que vio el posadero"
+        },
+        {
+            "key": "CAP3_PISTA_2_PASO",
+            "value": "Mira la cerca del huerto"
+        },
+        {
+            "key": "CAP3_PISTA_3_PASO",
+            "value": "Mira el cobertizo de las redes"
+        },
+        {
+            "key": "CAP3_HOJA_PASO",
+            "value": "Cuéntaselo al posadero"
+        },
+        {
+            "key": "CAP3_CARRO_PASO",
+            "value": "Sigue al carro sin que te vea"
+        },
+        {
+            "key": "CAP3_CLARO_PASO",
+            "value": "Decide qué hacer en el claro"
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_NAME",
+            "value": "La hechicera del bosque"
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_DESC",
+            "value": "En el Bosque Prohibido vive una hechicera que quizá sepa leer el aro."
+        },
+        {
+            "key": "CAP4_ENCUENTRA_A_ESTELA_DETAIL",
+            "value": "En el Bosque Prohibido vive una hechicera que quizá sepa leer el aro."
+        },
+        {
+            "key": "CAP4_ESTELA_PASO",
+            "value": "Encuentra a Estela en el Bosque Prohibido"
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_NAME",
+            "value": "Rumbo al Reino"
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_DESC",
+            "value": "Estela ayuda a Will. Primero, su entrenamiento; después, el camino del Reino."
+        },
+        {
+            "key": "CAP4_RUMBO_AL_REINO_DETAIL",
+            "value": "Estela ayuda a Will. Primero, su entrenamiento; después, el camino del Reino."
+        },
+        {
+            "key": "CAP4_CAMPANA_PASO",
+            "value": "Supera la prueba de la campana"
+        },
+        {
+            "key": "CAP4_GOLEM_PASO",
+            "value": "Cruza el bosque hacia el Reino"
+        },
+        {
+            "key": "CAP4_VADO_PASO",
+            "value": "Sigue el camino del río"
+        }
     ]
 }

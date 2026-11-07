@@ -1,0 +1,30 @@
+# Cap. 4 · La mañana en la casa entre raíces: el cartel y la primera receta.
+GUION Cap4_02_LaManana
+ESCENA MainWorld
+ZONA Cap4Casa -334 64 20
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_02_LaManana.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+
+PUNTOS
+cartel     -334 64
+p_will     -331.5 61.2
+p_estela   -333.8 66.6
+
+HILO
+@inicio
+will en p_will mirando cartel
+& estela en p_estela mirando p_will
+plano conjunto will estela
+espera 0.8
+will dice CAP4_MANANA_01 cara=confuso
+estela dice CAP4_MANANA_02 cara=picaro
+plano medio estela
+estela dice CAP4_MANANA_03 cara=decidido gesto=CastingEnter01
+estela dice CAP4_MANANA_04
+will dice CAP3_PAJAROS_07 cara=decidido gesto=HeadNod01
+espera 0.4

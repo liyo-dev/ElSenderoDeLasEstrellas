@@ -1,0 +1,558 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_04_ElClaro_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_04_ElClaro
+  duracion: 20.42
+  presentacion: 0
+  huella: "2026-11-07 17:23 \xB7 f5d6f5598598f4fcb8f6bbc45599ceef"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -205, y: 21.974178, z: -137}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -215, y: 21.453735, z: -125}
+      actor: 
+    - t: 8.45
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    cabezas:
+    - t: 8.4
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 14.495
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    animacion:
+    - fundido: 0
+      t: 9
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.445
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.525
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.73
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.279999
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.359999
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.529999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.73
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.81
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.47
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 13.445
+      emocion: enfado
+      dura: 0
+    - t: 14.445
+      emocion: enfado
+      dura: 1.6349999
+    - t: 16.279999
+      emocion: pensativo
+      dura: 0
+    - t: 16.279999
+      emocion: pensativo
+      dura: 1.6
+    - t: 17.73
+      emocion: decidido
+      dura: 2.09
+    visible: []
+    deslizando: []
+  - id: NPC_Contrabandista1
+    alias: c1
+    colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -212.5, y: 21.97435, z: -122.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -215, y: 21.453735, z: -125}
+      actor: 
+    - t: 5.5150003
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 8.570001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    cabezas:
+    - t: 5.465
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 8.52
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 11.09
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    animacion:
+    - fundido: 0
+      t: 6.065
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.04
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.12
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 13.495
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Contrabandista2
+    alias: c2
+    colorDelNombre: {r: 0.65882355, g: 0.6117647, b: 0.5411765, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -218, y: 21.516388, z: -127}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -213, y: 21.600903, z: -128.5}
+      actor: 
+    - t: 1.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 8.690001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 11.19
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
+    cabezas:
+    - t: 1.1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.4150004
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 8.64
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 11.139999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
+    animacion:
+    - fundido: 0
+      t: 5.3650002
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.445
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.9500003
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.74
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 5.3650002
+      emocion: molesto
+      dura: 2.935
+    visible: []
+    deslizando: []
+  - id: NPC_ContrabandistaJefe
+    alias: jefe
+    colorDelNombre: {r: 0.7882353, g: 0.63529414, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -213, y: 21.600903, z: -128.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -218, y: 21.516388, z: -127}
+      actor: 
+    - t: 1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 5.635
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 11.31
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
+    - t: 14.594999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.429998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 17.88
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 5.585
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 8.35
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
+    - t: 11.26
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
+    - t: 14.544999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.38
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 17.83
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 1
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 1.08
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.0150003
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.065
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.3
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.38
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.690001
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 11.74
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.938999
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 16.759998
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 16.699999
+      emocion: sorpresa
+      dura: 1.2
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1
+    t1: 4.965
+    actor: NPC_ContrabandistaJefe
+    clave: CAP3_CLARO_01
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 5.3650002
+    t1: 7.9
+    actor: NPC_Contrabandista2
+    clave: CAP3_CLARO_02
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 8.3
+    t1: 10.64
+    actor: NPC_ContrabandistaJefe
+    clave: CAP3_CLARO_03
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 11.04
+    t1: 13.445
+    actor: NPC_Contrabandista1
+    clave: CAP3_CLARO_04
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.445
+    t1: 15.679999
+    actor: Player
+    clave: CAP3_CLARO_05
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 16.279999
+    t1: 17.48
+    actor: Player
+    clave: CAP3_CLARO_06
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 17.73
+    t1: 19.42
+    actor: Player
+    clave: CAP3_CLARO_07
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 13.445
+    tipo: 0
+    descripcion: general de jefe y c2 y c1
+    posiciones:
+    - t: 0
+      p: {x: -218.7356, y: 25.746044, z: -136.22562}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - NPC_ContrabandistaJefe
+    - NPC_Contrabandista2
+    - NPC_Contrabandista1
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.71694684
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 13.445
+    t1: 20.42
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 13.445
+      p: {x: -207.23795, y: 22.842712, z: -135.17245}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: 0, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: will
+    t: 13.445
+  puntos:
+  - nombre: claro
+    posicion: {x: -215, y: 21.453735, z: -125}
+  - nombre: p_will
+    posicion: {x: -205, y: 21.974178, z: -137}
+  - nombre: p_c1
+    posicion: {x: -212.5, y: 21.97435, z: -122.5}
+  - nombre: p_c2
+    posicion: {x: -218, y: 21.516388, z: -127}
+  - nombre: p_jefe
+    posicion: {x: -213, y: 21.600903, z: -128.5}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

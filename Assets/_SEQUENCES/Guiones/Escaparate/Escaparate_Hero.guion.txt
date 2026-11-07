@@ -16,10 +16,10 @@ estela  NPC_Estela  nombre=Estela prefab=Assets/Prefabs/_ESTELA.prefab
 liam    NPC_Liam    nombre=Liam   prefab=Assets/Prefabs/_LIAM.prefab
 
 PUNTOS
-# Liam a la izquierda, de pie; Estela sentada en el banco de la fuente (Chair02_b01, centro 6.5 -133.3);
+# Liam a la izquierda, de pie; Estela sentada encima del respaldo del banco, con una rodilla subida, (Chair02_b01, centro 6.5 -133.3, arriba a 27.3), pegada al buzón;
 # Will a la derecha del todo, junto al buzón (Postbox02_a06, 7.9 -133.8).
 b_liam      2.4 -136.2
-b_estela    6.2 -133.42 26.62
+b_estela    6.95 -133.88 27.16
 b_will      9.4 -135.9
 caras_b     5.3 -135.8 27.3
 cam_b1      6.2 -146 27.2
@@ -32,7 +32,7 @@ will en b_will mirando cam_b1
 & estela en b_estela mirando cam_b1
 & liam en b_liam mirando cam_b1
 espera 0.1
-# Estela sentada en el banco, Liam en reposo , Will con las dos manos delante.
+# Estela sentada en el respaldo en plan chula, Liam en reposo , Will con las dos manos delante.
 will bucle CastingIdle01 congela
 & estela bucle SitMedium_Loop congela
 & liam bucle Idle01 congela

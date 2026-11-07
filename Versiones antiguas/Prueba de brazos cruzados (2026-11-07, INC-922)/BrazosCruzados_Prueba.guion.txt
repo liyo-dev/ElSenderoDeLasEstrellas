@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  ESCAPARATE · PRUEBA DE LA POSE DE BRAZOS CRUZADOS (INC-922)
+#  Will, Liam y Estela en la plaza de llegada del Sendero con «bucle BrazosCruzados».
+#  No es una cinemática del juego: solo sirve para mirar la pose en el storyboard.
+#  Planos: los tres de frente; Will y Estela de cerca; Will de tres cuartos; Liam y Estela de perfil.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION BrazosCruzados_Prueba
+ESCENA Sendero
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will   prefab=Assets/Prefabs/_WILL.prefab
+estela  NPC_Estela  nombre=Estela prefab=Assets/Prefabs/_ESTELA.prefab
+liam    NPC_Liam    nombre=Liam   prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+b_liam      -1.4 5.6 0
+b_will       0.0 5.6 0
+b_estela     1.4 5.6 0
+al_frente    0.0 -6 1.0
+cam_frente   0.0 2.4 0.9
+mira_frente  0.0 5.6 0.65
+cam_will     0.0 4.3 0.85
+mira_will    0.0 5.6 0.65
+cam_estela   1.4 4.3 0.85
+mira_estela  1.4 5.6 0.65
+cam_will_34 -0.9 4.5 0.9
+cam_liam_l  -3.3 5.6 0.75
+mira_liam   -1.4 5.6 0.65
+cam_estela_l 3.3 5.6 0.75
+
+HILO
+@inicio
+will en b_will mirando al_frente
+& estela en b_estela mirando al_frente
+& liam en b_liam mirando al_frente
+& will bucle BrazosCruzados
+& estela bucle BrazosCruzados
+& liam bucle BrazosCruzados
+& plano fijo desde=cam_frente mira=mira_frente lente=40 altura=0 altura_foco=0 quieta
+espera 0.8
+plano fijo desde=cam_will mira=mira_will lente=40 altura=0 altura_foco=0 quieta
+espera 0.8
+plano fijo desde=cam_estela mira=mira_estela lente=40 altura=0 altura_foco=0 quieta
+espera 0.8
+plano fijo desde=cam_will_34 mira=mira_will lente=40 altura=0 altura_foco=0 quieta
+espera 0.8
+plano fijo desde=cam_liam_l mira=mira_liam lente=35 altura=0 altura_foco=0 quieta
+espera 0.8
+plano fijo desde=cam_estela_l mira=mira_estela lente=35 altura=0 altura_foco=0 quieta
+espera 0.8

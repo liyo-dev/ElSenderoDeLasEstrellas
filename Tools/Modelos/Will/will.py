@@ -1,6 +1,6 @@
 # Will, aspecto nuevo: pelo rubio miel de héroe (su Hair01 de siempre con los picos hacia arriba y atrás y el
-# flequillo barrido de lado, de una pieza) y ropa de aventurero clásico sin bufanda: chaqueta corta roja abierta con ribete dorado y
-# mangas remangadas, camisa crema, cinturón con hebilla de estrella y bolsitas, guantes sin dedos, pantalón
+# flequillo barrido de lado, de una pieza) y ropa de aventurero clásico sin bufanda: chaqueta corta azul marino abierta con ribete dorado y
+# mangas remangadas, camisa crema, pañuelo azul claro al cuello, cinturón con hebilla de estrella y bolsitas, guantes sin dedos, pantalón
 # y botas altas con vuelta.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend). Mira a -Y; su izquierda es +X.
 #   Hair16_Heroe       → malla pesada a «head» (pieza de pelo del modelo modular).
@@ -20,7 +20,7 @@ for o in list(bpy.data.objects):
 COLORES = {
     "Pelo": (0.72, 0.44, 0.16, 1), "PeloClaro": (0.86, 0.6, 0.28, 1),
     "Chaqueta": (0.1, 0.16, 0.38, 1), "Camisa": (0.95, 0.9, 0.78, 1), "Pantalon": (0.62, 0.52, 0.4, 1) if PANTALON_CLARO else (0.3, 0.24, 0.18, 1),
-    "Cuero": (0.42, 0.25, 0.12, 1), "Dorado": (1.0, 0.8, 0.3, 1), "Guante": (0.25, 0.17, 0.12, 1),
+    "Cuero": (0.42, 0.25, 0.12, 1), "Dorado": (1.0, 0.8, 0.3, 1), "Guante": (0.25, 0.17, 0.12, 1), "Panuelo": (0.3, 0.62, 0.92, 1),
 }
 MAT = {}
 for n, c in COLORES.items():
@@ -283,22 +283,54 @@ for lado, s in (("l", 1), ("r", -1)):
 # Camisa crema por dentro (asoma por delante)
 torno("traje", "Camisa", [(0.75, 0.0), (0.745, 0.075), (0.73, 0.1), (0.715, 0.12), (0.68, 0.17), (0.6, 0.186), (0.52, 0.178), (0.46, 0.176), (0.4, 0.165), (0.37, 0.0)], "Camisa")
 for lado, s in (("l", 1), ("r", -1)):   # hombros: cierran el hueco entre la camisa y las mangas
-    esfera("traje", f"Hombro_{lado}", (0.17 * s, -0.003, 0.637), (0.07, 0.07, 0.07), "Chaqueta", None)   # azul y por dentro de la manga: si asoma, no mancha
-# Chaqueta corta roja, abierta por delante (deja ver la camisa), hasta la cadera, con ribete dorado
-torno("traje", "Chaqueta", [(0.73, 0.15), (0.69, 0.2), (0.6, 0.214), (0.52, 0.205), (0.44, 0.205), (0.36, 0.222)], "Chaqueta",
-      seg=40, grosor=0.01, abierto=(math.radians(-62), math.radians(242)))
-for lado, s in (("l", 1), ("r", -1)):
-    tubo("traje", f"Solapa_{lado}", curva((0.06 * s, -0.19, 0.72), (0.1 * s, -0.215, 0.56), (0.1 * s, -0.215, 0.36), 8), [0.016] * 8, "Dorado", None)
-toro("traje", "Bajo", (0, -0.01, 0.362), 0.222, 0.011, "Dorado", None, escala=(1, 0.92, 1))
-# Cinturón con hebilla de estrella y bolsitas
-toro("traje", "Cinturon", (0, -0.01, 0.45), 0.198, 0.022, "Cuero", None, escala=(1, 0.92, 1))
+    esfera("traje", f"Hombro_{lado}", (0.175 * s, -0.003, 0.637), (0.086, 0.084, 0.084), "Chaqueta", None)   # azul y por dentro de la manga: si asoma, no mancha
+# Chaqueta corta azul marino, abierta por delante (deja ver la camisa), hasta la cadera, con ribete dorado
+PERFIL_CHAQUETA = [(0.73, 0.15), (0.69, 0.2), (0.6, 0.214), (0.52, 0.205), (0.44, 0.205), (0.36, 0.222)]
+ABIERTO = (math.radians(-62), math.radians(242))
+torno("traje", "Chaqueta", PERFIL_CHAQUETA, "Chaqueta", seg=40, grosor=0.01, abierto=ABIERTO)
+def radio_chaqueta(z):
+    """Radio de la chaqueta a esa altura (interpolado en su perfil)."""
+    p = sorted(PERFIL_CHAQUETA)
+    if z <= p[0][0]: return p[0][1]
+    for (z0, r0), (z1, r1) in zip(p, p[1:]):
+        if z <= z1: return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
+    return p[-1][1]
+def sobre_chaqueta(a, z, fuera):
+    """Punto de la superficie de fuera de la chaqueta (ángulo a, altura z), separado «fuera» de ella."""
+    r = radio_chaqueta(z) + 0.01 + fuera
+    return (math.cos(a) * r, -0.01 + math.sin(a) * r * 0.92, z)
+# Ribete dorado pegado a la chaqueta: por los dos bordes de delante y por el bajo, solo donde hay chaqueta (nada
+# cruza por delante de la camisa ni queda flotando)
+for lado, a in (("l", ABIERTO[0]), ("r", ABIERTO[1])):
+    tubo("traje", f"Solapa_{lado}", [sobre_chaqueta(a, 0.725 - i * (0.725 - 0.365) / 11, 0.0) for i in range(12)], [0.011] * 12, "Dorado", None)
+tubo("traje", "Bajo", [sobre_chaqueta(ABIERTO[0] + (ABIERTO[1] - ABIERTO[0]) * k / 40, 0.365, 0.0) for k in range(41)], [0.011] * 41, "Dorado", None)
+# Cinturón por fuera de la chaqueta, con hebilla de estrella y bolsitas
+CINTURA = radio_chaqueta(0.45) + 0.018
+toro("traje", "Cinturon", (0, -0.01, 0.45), CINTURA, 0.02, "Cuero", None, escala=(1, 0.92, 1))
+Y_HEBILLA = -0.01 - CINTURA * 0.92 - 0.02
 estrella = [(0.035 * (1 if k % 2 == 0 else 0.45) * math.sin(k * math.pi / 5), 0.45 + 0.035 * (1 if k % 2 == 0 else 0.45) * math.cos(k * math.pi / 5)) for k in range(10)]
-bm = bmesh.new(); vs = [bm.verts.new((x, -0.205, z)) for x, z in estrella]; bm.faces.new(vs)
-bmesh.ops.extrude_face_region(bm, geom=bm.faces[:]); bmesh.ops.translate(bm, vec=(0, 0.012, 0), verts=[v for v in bm.verts if v.co.y < -0.2])
+bm = bmesh.new(); vs = [bm.verts.new((x, Y_HEBILLA, z)) for x, z in estrella]; bm.faces.new(vs)
+r = bmesh.ops.extrude_face_region(bm, geom=bm.faces[:])
+bmesh.ops.translate(bm, vec=(0, 0.014, 0), verts=[g for g in r["geom"] if isinstance(g, bmesh.types.BMVert)])
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
 nueva("traje", "Hebilla", bm, "Dorado", {"pelvis": 1.0})
-for lado, s in (("l", 1), ("r", -1)):
-    esfera("traje", f"Bolsita_{lado}", (0.17 * s, -0.09, 0.42), (0.045, 0.035, 0.05), "Cuero", {"pelvis": 1.0})
-
+# Pañuelo al cuello (como el del modelo de siempre): una banda alrededor del cuello y el pico por delante, sobre la chaqueta
+toro("traje", "PanueloCuello", (0, -0.01, 0.738), 0.152, 0.022, "Panuelo", {"spine_03": 0.5, "neck_01": 0.5}, escala=(1, 0.92, 1))
+bm = bmesh.new(); filas = []
+for i in range(7):
+    u = i / 6; z = 0.735 - 0.19 * u; ancho = 0.15 * (1 - u) ** 0.8
+    fila = []
+    for k in range(9):
+        x = ancho * (k / 4 - 1)
+        r0 = max(radio_chaqueta(z) + 0.01, 0.16)
+        y = -0.01 - math.sqrt(max(r0 * r0 - x * x, 0.0)) * 0.92 - 0.024   # por delante de la chaqueta y su ribete
+        fila.append(bm.verts.new((x, y, z)))
+    filas.append(fila)
+for i in range(6):
+    for k in range(8):
+        bm.faces.new((filas[i][k], filas[i+1][k], filas[i+1][k+1], filas[i][k+1]))
+bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
+nueva("traje", "PanueloPico", bm, "Panuelo", None, grosor=0.01)
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
 def pesar(lista):
     for o, pesos in lista:

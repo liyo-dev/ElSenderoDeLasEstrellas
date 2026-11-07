@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339f96974e841554e98a97b47f63f440, type: 3}
+  m_Name: Q_CAP4_ENCUENTRA_A_ESTELA
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questId: CAP4_ENCUENTRA_A_ESTELA
+  displayNameId: CAP4_ENCUENTRA_A_ESTELA_NAME
+  displayName: La hechicera del bosque
+  descriptionId: CAP4_ENCUENTRA_A_ESTELA_DESC
+  description: "En el Bosque Prohibido vive una hechicera que quiz\xE1 sepa leer el aro."
+  detailedDescriptionId: CAP4_ENCUENTRA_A_ESTELA_DETAIL
+  detailedDescription: "En el Bosque Prohibido vive una hechicera que quiz\xE1 sepa leer el aro."
+  steps:
+  - descriptionId: CAP4_ESTELA_PASO
+    description: Encuentra a Estela en el Bosque Prohibido
+    conditionId: CAP4_ESTELA

@@ -1,7 +1,7 @@
 # Estela, aspecto nuevo: pelo naranja con flequillo y coleta alta (con su lazo azul) y traje de hechicera
 # de aventuras (túnica corta, hombreras grandes con gema, capa, cinturón de bolsitas, guantes y botas).
 # Sobre el esqueleto de RPG Tiny Hero (base.blend). Mira a -Y; su izquierda es +X.
-#   Hair14_Coleta   → malla pesada a «head» (pieza de pelo del modelo modular).
+#   Hair14_Coleta   → malla pesada a «head»; la coleta, a sus huesos ColetaBone01-02 (pieza de pelo del modelo modular).
 #   Body21_Hechicera → el cuerpo Body09 (manos, torso y piernas) con el traje unido encima, pesado como él.
 #   Cloak04_Hechicera → la capa (forma y pesos de Cloak01, en crema), pieza de capa del modelo modular.
 import bpy, bmesh, math, sys
@@ -17,7 +17,7 @@ COLORES = {
     "Pelo": (0.9, 0.2, 0.05, 1), "PeloClaro": (1.0, 0.34, 0.1, 1), "LazoAzul": (0.2, 0.45, 0.95, 1),
     "Tunica": (0.18, 0.32, 0.72, 1), "Capa": (0.93, 0.86, 0.7, 1), "Hombrera": (0.32, 0.34, 0.42, 1),
     "Gema": (0.9, 0.08, 0.15, 1), "Cuero": (0.48, 0.28, 0.14, 1), "Dorado": (1.0, 0.8, 0.3, 1),
-    "Medias": (0.1, 0.12, 0.28, 1),
+    "Medias": (0.1, 0.12, 0.28, 1), "Botas": (0.09, 0.11, 0.3, 1),
 }
 MAT = {}
 for n, c in COLORES.items():
@@ -157,6 +157,10 @@ for lado, s in (("l", 1), ("r", -1)):
 cola = curva(nacimiento + Vector((0, 0.05, 0.03)), nacimiento + Vector((0, 0.4, 0.16)), nacimiento + Vector((0, 0.32, -0.85)), 12)
 tubo("pelo", "Coleta", cola, [0.09, 0.14, 0.16, 0.16, 0.155, 0.145, 0.13, 0.11, 0.09, 0.065, 0.035, 0.004], "Pelo", H)
 tubo("pelo", "ColetaMechon", [tuple(Vector(p) + Vector((0.03, 0.02, -0.02))) for p in cola[3:]], [0.05, 0.05, 0.045, 0.038, 0.03, 0.02, 0.004], "PeloClaro", H)
+# Huesos de la coleta, bajo «head»: en Unity los mueve MuelleDeHuesos (al correr se levanta hacia atrás y
+# no se mete en la capa). ColetaBone01 nace en la goma y llega a media coleta; ColetaBone02 sigue hasta la punta.
+COLETA = [Vector(p) for p in cola]
+HUESOS_COLETA = (("ColetaBone01", "head", COLETA[0], COLETA[5]), ("ColetaBone02", "ColetaBone01", COLETA[5], COLETA[11]))
 
 # ── Traje de hechicera ───────────────────────────────────────────────────────────────────
 # Túnica corta (cuerpo y falda hasta medio muslo), con ribete dorado abajo
@@ -177,12 +181,18 @@ for lado, s in (("l", 1), ("r", -1)):
     tubo("traje", f"Manga_{lado}", [(0.17 * s, -0.003, 0.636), (0.26 * s, -0.003, 0.635), (0.36 * s, -0.003, 0.634), (0.455 * s, -0.003, 0.633)],
          [0.075, 0.07, 0.062, 0.06], "Tunica", None, cerrar=False)
     toro("traje", f"Puno_{lado}", (0.45 * s, -0.003, 0.633), 0.058, 0.018, "Dorado", {f"lowerarm_{lado}": 1.0}, rot=(0, math.radians(90), 0))
-    # Botas altas con vuelta
-    bota = [(0.0, 0.085), (0.04, 0.09), (0.12, 0.075), (0.2, 0.072), (0.215, 0.085)]
-    o = torno("traje", f"Bota_{lado}", bota, "Cuero", None, seg=24, elip=1.0, cy=0.0)
+    # Botas de hechicera, a juego con los guantes: azul oscuro, finas en el tobillo, con la vuelta dorada
+    # acabada en pico por delante (no son las botas marrones de los chicos)
+    bota = [(0.0, 0.08), (0.035, 0.084), (0.08, 0.064), (0.15, 0.07), (0.215, 0.083)]
+    o = torno("traje", f"Bota_{lado}", bota, "Botas", None, seg=24, elip=1.0, cy=0.0)
     for v in o.data.vertices: v.co.x += 0.115 * s
-    esfera("traje", f"Suela_{lado}", (0.115 * s, -0.03, 0.012), (0.09, 0.13, 0.014), "Cuero", {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
-    esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.09, 0.035), (0.07, 0.09, 0.045), "Cuero", {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
+    toro("traje", f"VueltaBota_{lado}", (0.115 * s, 0.0, 0.214), 0.084, 0.013, "Dorado", None)
+    bm = bmesh.new()   # el pico de la vuelta, por delante de la caña
+    pts = [(0.115 * s - 0.045, -0.09, 0.222), (0.115 * s + 0.045, -0.09, 0.222), (0.115 * s, -0.078, 0.16)]
+    bm.faces.new([bm.verts.new(p) for p in (pts if s > 0 else pts[::-1])])
+    nueva("traje", f"PicoBota_{lado}", bm, "Dorado", None, grosor=0.01)
+    esfera("traje", f"Suela_{lado}", (0.115 * s, -0.035, 0.012), (0.08, 0.125, 0.013), "Botas", {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
+    esfera("traje", f"Puntera_{lado}", (0.12 * s, -0.095, 0.032), (0.06, 0.095, 0.04), "Botas", {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
 esfera("traje", "Broche", (0, -0.165, 0.705), (0.04, 0.02, 0.04), "Dorado", {"spine_03": 1.0})
 esfera("traje", "GemaBroche", (0, -0.18, 0.705), (0.022, 0.012, 0.022), "Gema", {"spine_03": 1.0})
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
@@ -210,7 +220,26 @@ def unir(lista, nombre, extra=None):
     return bpy.context.object
 # Primero los pesos (la ropa los copia del cuerpo entero); después se quita lo del cuerpo de debajo
 # que queda dentro de las botas (si no, asoma por la caña y parecen manchas)
+bpy.context.view_layer.objects.active = arm; bpy.ops.object.mode_set(mode='EDIT')
+for nombre, padre, a0, a1 in HUESOS_COLETA:
+    eb = arm.data.edit_bones.new(nombre); eb.head = arm.matrix_world.inverted() @ a0; eb.tail = arm.matrix_world.inverted() @ a1
+    eb.parent = arm.data.edit_bones[padre]; eb.use_deform = True
+bpy.ops.object.mode_set(mode='OBJECT')
 pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"])
+# La coleta (y su mechón claro) pasa de la cabeza a sus huesos a lo largo del tubo: la base con la cabeza,
+# el tramo de arriba con ColetaBone01 y la punta con ColetaBone02. La goma y el lazo siguen con la cabeza.
+def suave(a, b, x):
+    t = min(1.0, max(0.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
+for o, _ in GRUPOS["pelo"]:
+    if not o.name.startswith("Coleta"): continue
+    g = {n: o.vertex_groups.get(n) or o.vertex_groups.new(name=n) for n in ("head", "ColetaBone01", "ColetaBone02")}
+    for v in o.data.vertices:
+        i = min(range(len(COLETA)), key=lambda k: (COLETA[k] - v.co).length)
+        u = i / (len(COLETA) - 1)
+        w_cab = 1 - suave(0.0, 0.25, u); w_2 = suave(0.35, 0.65, u); w_1 = max(0.0, 1 - w_cab - w_2)
+        for n, w in (("head", w_cab), ("ColetaBone01", w_1), ("ColetaBone02", w_2)):
+            if w > 0: g[n].add([v.index], w, 'REPLACE')
+            else: g[n].remove([v.index])
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)
 mw = cuerpo.matrix_world
 # ... y lo de los brazos que tapan las mangas nuevas (las mangas abullonadas de la ropa de antes)

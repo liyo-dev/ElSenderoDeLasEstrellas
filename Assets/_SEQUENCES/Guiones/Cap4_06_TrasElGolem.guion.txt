@@ -1,0 +1,47 @@
+# Cap. 4 · Tras el Gólem: agotados, la esquirla con un rostro; Liam llega tarde y escribe en su cuaderno.
+GUION Cap4_06_TrasElGolem
+ESCENA MainWorld
+ZONA Cap4Golem -104 70 28
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_06_TrasElGolem.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+liam    _LIAM    nombre=CHAR_LIAM color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+rocas      -95 65
+p_will     -97.5 63
+p_estela   -99.6 64.4
+p_liam     -110 86
+mira_liam  -98 66
+
+HILO
+@inicio
+will en p_will mirando rocas
+& estela en p_estela mirando p_will
+& liam en p_liam mirando mira_liam
+& bandas
+plano dos will estela
+will cara cansado
+& estela cara cansado
+espera 0.8
+will dice CAP4_TRAS_GOLEM_01 cara=cansado
+estela dice CAP4_TRAS_GOLEM_02 cara=cansado
+will gesto Loot01_Begin
+plano medio will
+will dice CAP4_TRAS_GOLEM_03 cara=sorpresa
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_blue.prefab" en=will lifetime=1.6
+estela dice CAP4_TRAS_GOLEM_04 cara=preocupado
+
+@liam
+plano medio liam
+liam cara triste
+espera 1
+liam dice CAP4_TRAS_GOLEM_05 cara=triste
+espera 0.8
+fundido cubre 1.2
+espera 1.2
+bandas quita

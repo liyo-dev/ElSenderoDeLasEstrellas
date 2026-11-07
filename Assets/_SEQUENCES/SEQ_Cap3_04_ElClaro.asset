@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap3_04_ElClaro
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: 'Cap. 3: el claro'
+  summary: "Doce jaulas de p\xE1jaros de luz. A Will le arden las manos: \xAB\xBFDebes hacerlo?\xBB."
+  signalIn: CAP3_CLARO_START
+  signalOut: CAP3_CLARO_DONE
+  musicId: 
+  presentacionDeTexto: 0
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap3_04_ElClaro'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446550986
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446550986
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 13fb9ffc958e5ec4ba9fff18ca226cfd, type: 2}
+        empezarEn: 0

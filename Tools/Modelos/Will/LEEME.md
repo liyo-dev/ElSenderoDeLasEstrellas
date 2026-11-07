@@ -8,3 +8,4 @@
   (`PELO_ANGULO`, 45°), los vértices intermedios algo alisados (`PELO_ALISAR`) y los picos muy cortos aplanados
   (se veían como bultos). El anterior, en `Versiones antiguas/Pelo de Will con caras planas (2026-11-04)/`.
 - FBX en `Assets/Art/Characters/Protagonistas/Will/`. En Unity: *El Sendero ▸ Personajes ▸ Will: aspecto nuevo*.
+- 7 nov 2026 (INC-920): ribete dorado pegado a los bordes y al bajo de la chaqueta (antes flotaba delante y cruzaba la camisa), cinturón por fuera de la chaqueta, hombros más grandes y pañuelo azul claro al cuello, con el pico por delante (`Panuelo`). Lo anterior, en `Versiones antiguas/Trajes de Liam y Will antes del repaso (2026-11-07)/`.

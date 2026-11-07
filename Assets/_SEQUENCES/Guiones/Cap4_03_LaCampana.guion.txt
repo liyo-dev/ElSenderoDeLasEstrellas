@@ -1,0 +1,30 @@
+# Cap. 4 · Las reglas de la prueba de la campana.
+GUION Cap4_03_LaCampana
+ESCENA MainWorld
+ZONA Cap4Campana -330 74 22
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_03_LaCampana.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+
+PUNTOS
+campana    -330 86
+figuras    -330 76
+p_will     -330 60
+p_estela   -327.6 61.2
+
+HILO
+@inicio
+will en p_will mirando campana
+& estela en p_estela mirando p_will
+plano general will estela campana
+espera 0.6
+estela dice CAP4_CAMPANA_01 mira=campana
+estela dice CAP4_CAMPANA_02 cara=decidido
+plano dos will estela
+will dice CAP4_CAMPANA_03 cara=confuso
+estela dice CAP4_CAMPANA_04 cara=picaro
+espera 0.4

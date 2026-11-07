@@ -250,7 +250,7 @@
         },
         {
             "id": "EVT_GOLEM_01",
-            "text": "Esa estúpida va a arruinar mis planes..."
+            "text": "Lo siento. Necesito que pelees."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_01",
@@ -2247,6 +2247,422 @@
         {
             "id": "CHUCHELANDIA_PUERTA_CARTEL",
             "text": "¡ÁBREME!"
+        },
+        {
+            "id": "CAP3_ESPEJO_01",
+            "text": "Hoy me he tomado media sopa."
+        },
+        {
+            "id": "CAP3_ESPEJO_02",
+            "text": "¿Y la otra media?"
+        },
+        {
+            "id": "CAP3_ESPEJO_03",
+            "text": "La otra media ha ganado."
+        },
+        {
+            "id": "CAP3_ESPEJO_04",
+            "text": "Tobi… esa tos."
+        },
+        {
+            "id": "CAP3_ESPEJO_05",
+            "text": "Cuando vuelva iremos a pescar. Te lo prometo."
+        },
+        {
+            "id": "CAP3_ESPEJO_06",
+            "text": "No sabes pescar."
+        },
+        {
+            "id": "CAP3_ESPEJO_07",
+            "text": "Aprenderé. Dicen que el truco es tener paciencia."
+        },
+        {
+            "id": "CAP3_ESPEJO_08",
+            "text": "Te he hecho un dibujo. Somos nosotros pescando. Al cuarto no le he puesto cara: todavía no sé quién es."
+        },
+        {
+            "id": "CAP3_ESPEJO_09",
+            "text": "Ya lo sabrás."
+        },
+        {
+            "id": "CAP3_ESPEJO_10",
+            "text": "La llave del aro. Se calentará cada vez que esté cerca de él."
+        },
+        {
+            "id": "CAP3_ESPEJO_11",
+            "text": "Aguanta un poco más, Tobi."
+        },
+        {
+            "id": "CAP3_POSADA_01",
+            "text": "Una sopa, si alcanza."
+        },
+        {
+            "id": "CAP3_POSADA_02",
+            "text": "Alcanza. Pero no para pan."
+        },
+        {
+            "id": "CAP3_POSADA_03",
+            "text": "¡Mira! ¡Sé hacer magia!"
+        },
+        {
+            "id": "CAP3_POSADA_04",
+            "text": "La cuchara sube… sube… ¡hasta el pulgar!"
+        },
+        {
+            "id": "CAP3_POSADA_05",
+            "text": "Casi."
+        },
+        {
+            "id": "CAP3_POSADA_06",
+            "text": "No ha sido casi nada, Lucía."
+        },
+        {
+            "id": "CAP3_POSADA_07",
+            "text": "Busco a alguien que sepa qué es esto."
+        },
+        {
+            "id": "CAP3_POSADA_08",
+            "text": "¿De dónde has sacado eso?"
+        },
+        {
+            "id": "CAP3_POSADA_09",
+            "text": "Lo llevaba el demonio que atacó mi pueblo."
+        },
+        {
+            "id": "CAP3_POSADA_10",
+            "text": "Por aquí no han venido demonios. Pero animales con aros, sí. Varios."
+        },
+        {
+            "id": "CAP3_POSADA_11",
+            "text": "Pregunta por la aldea. La gente ve cosas, aunque no las cuente."
+        },
+        {
+            "id": "CAP3_CARRO_01",
+            "text": "¿Un carro, a estas horas?"
+        },
+        {
+            "id": "CAP3_CARRO_02",
+            "text": "Esa luz… sube y baja. Como si respirara."
+        },
+        {
+            "id": "CAP3_CARRO_03",
+            "text": "No es un farol. Vamos a ver adónde va. De lejos."
+        },
+        {
+            "id": "CAP3_CLARO_01",
+            "text": "Doce jaulas. En la capital pagan bien por plumas que brillan."
+        },
+        {
+            "id": "CAP3_CLARO_02",
+            "text": "No paran de brillar. Me ponen nervioso."
+        },
+        {
+            "id": "CAP3_CLARO_03",
+            "text": "Pues tápalos. Al amanecer, al barco."
+        },
+        {
+            "id": "CAP3_CLARO_04",
+            "text": "El perro no deja de gruñir al bosque."
+        },
+        {
+            "id": "CAP3_CLARO_05",
+            "text": "Me arden las manos…"
+        },
+        {
+            "id": "CAP3_CLARO_06",
+            "text": "«¿Debes hacerlo?»"
+        },
+        {
+            "id": "CAP3_CLARO_07",
+            "text": "Eso me preguntaría Eldran."
+        },
+        {
+            "id": "CAP3_PAJAROS_01",
+            "text": "¡Guardia del cruce! Que nadie se mueva."
+        },
+        {
+            "id": "CAP3_PAJAROS_02",
+            "text": "Solo son pájaros…"
+        },
+        {
+            "id": "CAP3_PAJAROS_03",
+            "text": "Pájaros que no se venden. Atadlos."
+        },
+        {
+            "id": "CAP3_PAJAROS_04",
+            "text": "Ya está. Volad."
+        },
+        {
+            "id": "CAP3_PAJAROS_05",
+            "text": "Avisaste en vez de liarte a golpes. Eso, chico, es lo difícil."
+        },
+        {
+            "id": "CAP3_PAJAROS_06",
+            "text": "Si vas al Bosque Prohibido, ve de día. Y no toques nada que brille."
+        },
+        {
+            "id": "CAP3_PAJAROS_07",
+            "text": "Gracias. Lo haré."
+        },
+        {
+            "id": "CAP3_JAULAS_01",
+            "text": "Ya está… ¿ya está?"
+        },
+        {
+            "id": "CAP3_JAULAS_02",
+            "text": "Las jaulas… no, no, no."
+        },
+        {
+            "id": "CAP3_JAULAS_03",
+            "text": "Hemos visto el humo desde el cruce."
+        },
+        {
+            "id": "CAP3_JAULAS_04",
+            "text": "Tres jaulas quemadas. Los demás pájaros se salvarán."
+        },
+        {
+            "id": "CAP3_JAULAS_05",
+            "text": "Habría bastado con avisar, chico."
+        },
+        {
+            "id": "CAP3_JAULAS_06",
+            "text": "Lo sé."
+        },
+        {
+            "id": "CAP3_JAULAS_07",
+            "text": "Ve de día al Bosque Prohibido. Y piensa antes de arder."
+        },
+        {
+            "id": "CAP4_ESTELA_01",
+            "text": "¿Y tú quién eres? ¿Otra pobre princesita perdida en el bosque?"
+        },
+        {
+            "id": "CAP4_ESTELA_02",
+            "text": "Me llamo Will. Busco a la hechicera Estela."
+        },
+        {
+            "id": "CAP4_ESTELA_03",
+            "text": "La tienes delante. Y si vienes a que convierta a alguien en sapo, ya no lo hago. El último acabó con vestido."
+        },
+        {
+            "id": "CAP4_ESTELA_04",
+            "text": "Impresionante."
+        },
+        {
+            "id": "CAP4_ESTELA_05",
+            "text": "Vengo a que leas esto."
+        },
+        {
+            "id": "CAP4_ESTELA_06",
+            "text": "Runas de sometimiento. El collar es la jaula; las runas, la orden. Y cada aro tiene una llave."
+        },
+        {
+            "id": "CAP4_ESTELA_07",
+            "text": "El monstruo no era tu demonio. Es quien le puso el aro."
+        },
+        {
+            "id": "CAP4_ESTELA_08",
+            "text": "Hay una magia que no sale de ti: la sacas de otro. La llaman oscura porque la fuerza no es tuya."
+        },
+        {
+            "id": "CAP4_ESTELA_09",
+            "text": "No acepto aprendices."
+        },
+        {
+            "id": "CAP4_ESTELA_10",
+            "text": "No vengo a aprender. Vengo a pedir ayuda. En la costa hay más animales con aro; lo he apuntado todo."
+        },
+        {
+            "id": "CAP4_ESTELA_11",
+            "text": "…Alguien está haciendo muchos."
+        },
+        {
+            "id": "CAP4_ESTELA_12",
+            "text": "Te ayudo. Eso es hacerte un favor. Y ya me lo cobraré."
+        },
+        {
+            "id": "CAP4_MANANA_01",
+            "text": "«ENTRENAMIENTO DEL FUTURO GRAN HECHICERO». ¿Por qué «futuro» va tan pequeño?"
+        },
+        {
+            "id": "CAP4_MANANA_02",
+            "text": "Porque es lo que más te queda."
+        },
+        {
+            "id": "CAP4_MANANA_03",
+            "text": "El fuego no es una cosa sola: puede empujar, cortar, iluminar o calentar."
+        },
+        {
+            "id": "CAP4_MANANA_04",
+            "text": "Hoy aprendes a protegerte. Y a proteger a otro, que es más difícil."
+        },
+        {
+            "id": "CAP4_CAMPANA_01",
+            "text": "¿Ves la campana? Llega hasta ella y tócala."
+        },
+        {
+            "id": "CAP4_CAMPANA_02",
+            "text": "Las figuras de barro son gente. No se chamusca a la gente."
+        },
+        {
+            "id": "CAP4_CAMPANA_03",
+            "text": "¿Y tú qué vas a hacer?"
+        },
+        {
+            "id": "CAP4_CAMPANA_04",
+            "text": "Molestarte."
+        },
+        {
+            "id": "CAP4_FIGURA_01",
+            "text": "¡Esa se cae!"
+        },
+        {
+            "id": "CAP4_FIGURA_02",
+            "text": "Eso no te lo he enseñado yo."
+        },
+        {
+            "id": "CAP4_FIGURA_03",
+            "text": "Ni yo sé qué ha sido."
+        },
+        {
+            "id": "CAP4_FIGURA_04",
+            "text": "Esta se parece a Eldran."
+        },
+        {
+            "id": "CAP4_FIGURA_05",
+            "text": "Le faltan orejas. Ya está."
+        },
+        {
+            "id": "CAP4_FIGURA_06",
+            "text": "¿Y esa de la capucha?"
+        },
+        {
+            "id": "CAP4_FIGURA_07",
+            "text": "Alguien que nos observa desde hace días. Lo noto en la nuca."
+        },
+        {
+            "id": "CAP4_FIGURA_08",
+            "text": "Lista. Más de lo que creía."
+        },
+        {
+            "id": "CAP4_GOLEM_01",
+            "text": "El miedo se aprende a llevar. Y si no, siempre te queda irte a vivir a un bosque."
+        },
+        {
+            "id": "CAP4_GOLEM_02",
+            "text": "¿Eso hiciste tú?"
+        },
+        {
+            "id": "CAP4_GOLEM_03",
+            "text": "Eso no se pregunta."
+        },
+        {
+            "id": "CAP4_GOLEM_04",
+            "text": "¡Al suelo! ¡Viene de la tierra!"
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_01",
+            "text": "Ya está… ¿Estás bien?"
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_02",
+            "text": "Tengo los dedos como corteza. Tú sangras por la nariz."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_03",
+            "text": "Mira esto, entre las rocas… Por un momento he visto una cara."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_04",
+            "text": "Un cristal de invocación. Alguien ha llamado a ese gólem."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_05",
+            "text": "No volver a utilizar seres vivos."
+        },
+        {
+            "id": "CAP4_MANZANA_01",
+            "text": "Cenizas todavía calientes. Alguien ha dormido aquí esta noche."
+        },
+        {
+            "id": "CAP4_MANZANA_02",
+            "text": "Puedo sola."
+        },
+        {
+            "id": "CAP4_MANZANA_03",
+            "text": "Ya lo sé."
+        },
+        {
+            "id": "CAP4_MANZANA_04",
+            "text": "Es la última manzana. Está harinosa."
+        },
+        {
+            "id": "CAP4_MANZANA_05",
+            "text": "Pues a medias."
+        },
+        {
+            "id": "CAP4_MANZANA_06",
+            "text": "Hacía mucho que nadie se ponía delante de mí. Gracias, idiota."
+        },
+        {
+            "id": "CAP4_BIFURCACION_01",
+            "text": "Por el río llegamos antes."
+        },
+        {
+            "id": "CAP4_BIFURCACION_02",
+            "text": "Por los pinos no nos mojamos. Y el mapa dice pinos."
+        },
+        {
+            "id": "CAP4_BIFURCACION_03",
+            "text": "Ni un paso más."
+        },
+        {
+            "id": "CAP4_BIFURCACION_04",
+            "text": "Tranquila. Solo quería ver lo que lleváis."
+        },
+        {
+            "id": "CAP4_BIFURCACION_05",
+            "text": "Enséñaselo. No se lo des."
+        },
+        {
+            "id": "CAP4_BIFURCACION_06",
+            "text": "Sujeción. Obediencia. Vínculo. Es un aro de los malos."
+        },
+        {
+            "id": "CAP4_BIFURCACION_07",
+            "text": "Me llamo Liam. Voy al Reino."
+        },
+        {
+            "id": "CAP4_BIFURCACION_08",
+            "text": "Nosotros también. Podemos viajar juntos hasta allí."
+        },
+        {
+            "id": "CAP4_BIFURCACION_09",
+            "text": "El hierro no lo toca nadie."
+        },
+        {
+            "id": "CAP4_BIFURCACION_10",
+            "text": "Por el río, entonces. Hay un vado."
+        },
+        {
+            "id": "CAP4_BIFURCACION_11",
+            "text": "¡Mi bota! ¡El barro se ha quedado con mi bota!"
+        },
+        {
+            "id": "CAP4_BOTA_01",
+            "text": "Toma. Estaba enganchada entre dos ramas."
+        },
+        {
+            "id": "CAP4_BOTA_02",
+            "text": "El mapa no indicaba el barro."
+        },
+        {
+            "id": "CAP4_BOTA_03",
+            "text": "Ni que fueras a perder una bota en él."
+        },
+        {
+            "id": "CAP4_BOTA_04",
+            "text": "Eso no sale en ningún mapa."
         }
     ]
 }

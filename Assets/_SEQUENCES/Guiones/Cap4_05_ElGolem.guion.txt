@@ -1,0 +1,42 @@
+# Cap. 4 · Camino del Reino: charla sobre el miedo; desde el saliente, Liam traza el pacto y el Gólem sale de la tierra.
+GUION Cap4_05_ElGolem
+ESCENA MainWorld
+ZONA Cap4Golem -104 70 28
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_05_ElGolem.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+liam    _LIAM    nombre=CHAR_LIAM color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+p_will     -106 62
+p_estela   -103.6 63.2
+centro     -95 65
+p_liam     -110 86
+manos_liam -110 85
+
+HILO
+@inicio
+will en p_will mirando centro
+& estela en p_estela mirando p_will
+& liam en p_liam mirando centro
+& bandas
+plano dos will estela
+estela dice CAP4_GOLEM_01 cara=pensativo
+will dice CAP4_GOLEM_02 cara=confuso
+estela dice CAP4_GOLEM_03 cara=molesto
+
+@liam
+plano medio liam
+liam gesto CastingEnter01
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=manos_liam lifetime=1.5
+liam dice EVT_GOLEM_01 cara=triste
+plano general will estela centro
+sacudida 1 1.2
+& vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Smoke ground.prefab" en=centro lifetime=2.5
+estela dice CAP4_GOLEM_04 cara=miedo
+espera 1
+bandas quita

@@ -1,0 +1,63 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  ESCAPARATE · MUESTRARIO DE POSES PARA LA PORTADA
+#  Will, Liam y Estela en el borde de la plaza de llegada del Sendero, de tres cuartos hacia la
+#  cámara; detrás, el camino de luz que se pierde entre las estrellas y cielo libre arriba para
+#  el título. No es una cinemática del juego: solo sirve para sacar la portada (storyboard 4K).
+#  Eje de pantalla: Liam a la izquierda, Will en el centro, Estela a la derecha.
+#  Plano 1: abierto, con el camino detrás (formatos apaisados). Plano 2: más cerca (formatos verticales).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Portada_Poses
+ESCENA Sendero
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will   prefab=Assets/Prefabs/_WILL.prefab
+estela  NPC_Estela  nombre=Estela prefab=Assets/Prefabs/_ESTELA.prefab
+liam    NPC_Liam    nombre=Liam   prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+# Plaza de llegada: centro (0 0), radio 9; el camino sale hacia +z. Will un paso por delante.
+b_liam      -1.3 5.6 0
+b_will       0.0 6.2 0
+b_estela     1.3 5.6 0
+# Alturas absolutas (altura=0 altura_foco=0 en los planos): el suelo de la plaza está en 0 y los tres miden algo más de 1 m.
+# A dónde miran: un poco a la derecha de la cámara, para que salgan de tres cuartos.
+hacia_cam    2.5 -4 1.0
+caras        0.0 9.0 1.45
+cam_frente   0.3 -1.0 1.5
+cam_cerca    0.3 1.0 1.0
+mira_cerca   0.0 7.5 1.3
+
+HILO
+@inicio
+will en b_will mirando hacia_cam
+& estela en b_estela mirando hacia_cam
+& liam en b_liam mirando hacia_cam
+espera 0.1
+# Tanda A: Will cargando magia a dos manos, Liam con una mano arriba, Estela desafiante.
+will bucle "HumanM@MagicAttackDirect2H01 - Load"
+& liam bucle "HumanM@MagicAttackCall1H01_L - Load"
+& estela bucle Challenging_NoWeapon
+& plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.4
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.4
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.4
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.4
+# Tanda B: Will victoria, Liam lanzando, Estela vitoreando.
+will bucle Victory_NoWeapon
+& liam bucle MagicSpecial congela
+& estela bucle Cheer01 congela
+& plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.35
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.35
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.35
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.35
+plano fijo desde=cam_cerca mira=mira_cerca lente=40 altura=0 altura_foco=0 quieta
+espera 0.4

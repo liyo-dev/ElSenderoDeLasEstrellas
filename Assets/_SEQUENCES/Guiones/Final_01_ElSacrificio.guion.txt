@@ -5,10 +5,12 @@
 #  Música:
 #    Acto 1  El portal ............... La Melodía de Liam; se apaga con la explosión (silencio).
 #    Acto 2  El conjuro .............. Ultimo Incantazione, entero (se apaga solo con el fundido).
-#    Acto 3  Liam vuelve ............. silencio; vuelve la Melodía de Liam donde se quedó.
-#    Acto 4  El Archimago ............ Tema Principal, desde el segundo que calcula el módulo para
-#    Acto 5  Will vuelve ............. que la subida (1:55) caiga en @carrera y el estallido (2:03)
-#                                      en @llegan, el abrazo de los tres.
+#    Actos 3 a 5 ..................... «Los Tres», el trío de los temas de Estela, Liam y Will, de
+#                                      una pieza: Estela sola mientras llora; el tema de Liam entra
+#                                      cuando él despierta; puente con el Archimago; el de Will rompe
+#                                      con su regreso. La subida (1:47) cae en @carrera y el
+#                                      estallido (1:52,5) en @llegan, el abrazo de los tres; la coda
+#                                      acompaña la grúa final hasta el negro.
 #  La carrera va en cámara lenta: el módulo frena el tiempo lo justo para llegar con la música.
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 
@@ -183,14 +185,12 @@ estela bucle Cry01_Loop fundido=0.5
 estela dice FINAL_ESTELA_PORTAL_05 sin_pose cara=llorando dura=2.0
 espera 0.2
 
-# Rota de dolor.
+# Rota de dolor. El llanto (7 s) entra con el plano, justo detrás del grito, y se apaga sobre
+# el negro, antes de que empiece el conjuro.
 plano medio estela solo desde=cam_a1_estela_llora altura=0.3 altura_foco=0.8 suave=0.4 lente=39
 estela cara llorando
-espera 2.2
-# Sigue llorando sin corte (el llanto entra antes de que acabe el grito) y se apaga sobre el
-# negro, antes de que empiece el conjuro.
 sonido Final_Estela_Llanto volume=0.75
-espera 2.6
+espera 4.8
 fundido cubre 2.5
 espera 4.7
 
@@ -282,16 +282,24 @@ liam en p_piedra_liam mirando estela
 liam bucle Die01Stay_NoWeapon congela
 efecto ModuleBeat routine=LiamSinSentido
 
+# Empieza «Los Tres» con el tema de Estela, sola.
+musica LOS_TRES fadeIn=2.0 continuarDondeIba=false
 plano general estela liam desde=cam_a3_general mira=p_a3_centro altura=2.4 altura_foco=0.6 lente=40 suave=0.6
 fundido entra 2.2
-sonido Final_Estela_Llanto volume=0.6
 espera 1.6
+
+# Su tema, y ella sola, rota, donde estuvo el portal. El llanto (7 s) va con el plano cerrado y
+# se apaga cuando baja la luz de Liam.
+plano medio estela solo desde=cam_a1_estela_llora altura=0.3 altura_foco=0.8 suave=0.4 lente=39
+sonido Final_Estela_Llanto volume=0.6
+espera 5.0
+plano general estela liam desde=cam_a3_general mira=p_a3_centro altura=2.4 altura_foco=0.6 lente=40 suave=0.6
+espera 2.0
 efecto ModuleBeat routine=LiamSeMaterializa
 sonido Hechizo_BrisaSanadora volume=0.85
 espera 3.8
 
-# Liam se levanta y vuelve su melodía, donde se quedó.
-musica LIAM_CRYSTAL fadeIn=3.0 continuarDondeIba=true
+# Liam se levanta cuando su tema entra en el trío.
 efecto ModuleBeat routine=LiamDespierta
 liam bucle Idle01
 liam gesto GetUp_NoWeapon
@@ -326,7 +334,6 @@ plano hombro estela liam lente=30 suave=0.25 distancia=2.8
 liam cara triste
 liam dice FINAL_LIAM_AWAKE_03 sin_pose gesto=Angry01 dura=3.5
 espera 0.2
-silencio 2.0
 espera 0.2
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
@@ -336,7 +343,6 @@ espera 0.2
 archimago aparece en p_piedra_archimago mirando p_estela_a4
 archimago bucle fly_idle
 efecto ModuleBeat routine=EspirituArchimago
-efecto ModuleBeat routine=MusicaDelArchimago
 estela mira archimago
 & liam mira archimago
 plano conjunto archimago estela liam desde=cam_a4_espaldas mira=p_piedra_archimago altura=1.5 altura_foco=1.7 lente=38 suave=0.4
@@ -500,11 +506,11 @@ espera 0.8
 liam anda a p_liam_abrazo_final ritmo=paseo llega_mirando=p_abrazo_final
 efecto ModuleBeat routine=AbrazoFinalDeLosTres
 liam cara alegre
-espera 2.6
-silencio 4.0
+# La coda de «Los Tres» acompaña la grúa y se apaga con el negro.
+espera 10.5
 efecto ModuleBeat routine=TelonANegro
-fundido cubre 3.0
-espera 3.4
+fundido cubre 4.0
+espera 5.4
 efecto ModuleBeat routine=SoltarAbrazo
 bandas quita
 efecto ModuleBeat routine=EncadenarParte2

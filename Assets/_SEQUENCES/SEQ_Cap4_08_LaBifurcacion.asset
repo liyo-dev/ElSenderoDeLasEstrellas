@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap4_08_LaBifurcacion
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: "Cap. 4: la bifurcaci\xF3n"
+  summary: Liam aparece, lee el trozo de lejos y se une hasta el Reino. En el vado, la corriente se lleva su bota.
+  signalIn: CAP4_BIFURCACION_START
+  signalOut: CAP4_BIFURCACION_DONE
+  musicId: 
+  presentacionDeTexto: 1
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap4_08_LaBifurcacion'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446551030
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446551030
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: adf5f78be6b16ae4881dca0de9df9412, type: 2}
+        empezarEn: 0

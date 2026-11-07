@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Eldran_Plaza
+  spawnAnchorId: Cap3_LlegadaCosta
   level: 1
   maxHP: 100
   currentHP: 100
@@ -41,6 +41,25 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION2
   - QUEST_ACTIVE:ELDRAN_MISSION3
   - QUEST_COMPLETED:ELDRAN_MISSION3
+  - NARRATIVE_FLAG:CAP2_INICIADO
+  - QUEST_ACTIVE:PREPARA_VIAJE
+  - QUEST_COMPLETED:PREPARA_VIAJE
+  - QUEST_STEP_DONE:PREPARA_VIAJE:0
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:1
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:2
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
+  - NARRATIVE_FLAG:CAP2_COMPLETADO
+  - NARRATIVE_FLAG:CAP3_INICIADO
+  - QUEST_ACTIVE:CAP3_MARCAS_DE_HIERRO
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:0
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:1
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:3
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:4
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:2
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:5
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:6
   abilities:
     swim: 1
     jump: 1
@@ -52,18 +71,26 @@ MonoBehaviour:
   appearance:
   - category: 2
     partName: Head01_Male
-  - category: 3
-    partName: Hair16_Heroe
-  - category: 0
-    partName: Body23_Aventurero
   - category: 4
     partName: Eye30
   - category: 5
     partName: Mouth20
+  - category: 3
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   unlockedWardrobeIds:
   - Body05
   inventoryItems:
   - itemId: coin
+    count: 1
+  - itemId: trozo_del_aro
+    count: 1
+  - itemId: pocionHP
+    count: 1
+  - itemId: panuelo_erika
+    count: 1
+  - itemId: hoja_avistamientos
     count: 1
   defeatedBossIds: []
   narrativeBlackboards:
@@ -79,16 +106,34 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap2-iniciado-flag
+      value: 
+    - key: __flowEnded
+      type: bool
+      value: 1
+  - graphLabel: Cap3
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: cap3-decide
   senalesEmitidas: []
-  npcPositions: []
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 25.8, y: 27.01, z: -82.61}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
+  - npcId: Contrabandista1
+    position: {x: -212, y: 21.687473, z: -129}
+    rotation: {x: 0, y: -0.38268346, z: -0, w: 0.9238795}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []
-  partyMemberIds:
-  - _ESTELA
-  - _LIAM
+  partyMemberIds: []
   activeCharacterSlot: 1
   unlockedTeleportPoints: []

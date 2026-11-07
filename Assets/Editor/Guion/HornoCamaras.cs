@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -455,7 +455,7 @@ internal sealed partial class Horno
     /// de la casa. Para las casas está el collider, que sí es exacto.
     private bool CamaraAdentro(Vector3 c)
     {
-        int mascara = ~(1 << 10);
+        int mascara = MascaraDeDecorado;
         if (Physics.CheckSphere(c, 0.3f, mascara, QueryTriggerInteraction.Ignore)) return true;
         foreach (var b in Cajas())
         {
@@ -742,13 +742,28 @@ internal sealed partial class Horno
         }
     }
 
+    /// Lo que cuenta como decorado para ver o tapar: todo menos la capa de suelo (10, Floor) y las
+    /// zonas de ambiente (capa AmbientZone: cajas sólidas que envuelven un pueblo entero para la
+    /// música y la luz; con ellas, cualquier cámara del pueblo estaría «dentro de algo»).
+    internal static int MascaraDeDecorado => ~(1 << 10) & SinZonasDeAmbiente;
+
+    /// Todas las capas menos las zonas de ambiente (para buscar el suelo, que sí es capa Floor).
+    internal static int SinZonasDeAmbiente
+    {
+        get
+        {
+            int ambiente = LayerMask.NameToLayer("AmbientZone");
+            return ambiente >= 0 ? ~(1 << ambiente) : ~0;
+        }
+    }
+
     private static bool Linea(Vector3 a, Vector3 b)
     {
         Vector3 d = b - a;
         float largo = d.magnitude;
         if (largo < 0.3f) return false;
-        // Se ignoran los últimos 40 cm y la capa de suelo (capa 10 Floor).
-        int mascara = ~(1 << 10);
+        // Se ignoran los últimos 40 cm, la capa de suelo y las zonas de ambiente.
+        int mascara = MascaraDeDecorado;
         return Physics.Raycast(a, d / largo, largo - 0.4f, mascara, QueryTriggerInteraction.Ignore);
     }
 

@@ -35,18 +35,19 @@ public static class AspectoDeProtagonista
         public Pieza[] Piezas;
         public string[] Apagar = new string[0];   // piezas de antes que deja de llevar (además de las de las mismas categorías)
         public (string material, Color color)[] Colores;
+        public string[] CadenaConMuelle = new string[0];   // huesos de sus piezas que se mueven con MuelleDeHuesos (la coleta), de la raíz a la punta
     }
 
     const string EscenaDelRegistro = "Assets/Scenes/Systems/Start.unity";
 
     public static void Aplicar(Ficha f)
     {
-        if (Application.isPlaying) { EditorUtility.DisplayDialog(f.Nombre, "Hazlo fuera de Play.", "Vale"); return; }
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar(f.Nombre, "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
         Aplicar(f, informe);
         AssetDatabase.SaveAssets();
         Debug.Log($"[AspectoDeProtagonista] {f.Nombre}: " + informe.ToString().Replace('\n', ' '));
-        EditorUtility.DisplayDialog($"{f.Nombre}: aspecto nuevo", informe.ToString(), "Vale");
+        OrdenesDelEditor.Avisar($"{f.Nombre}: aspecto nuevo", informe.ToString());   // desde el buzón va al registro (un diálogo lo bloquearía)
     }
 
     public static void Aplicar(Ficha f, StringBuilder informe)
@@ -94,6 +95,7 @@ public static class AspectoDeProtagonista
             {
                 bool ok = true;
                 foreach (var p in f.Piezas) ok &= PiezaNuevaDelModelo.Anadir(raiz, modelos[p.Nombre], p.Nombre, p.Vecina, informe);
+                if (ok) PonerMuelle(raiz, f.CadenaConMuelle, informe);
                 if (ok && f.Propios.Contains(ruta))
                 {
                     // Apaga lo que llevaba en esas categorías (y lo que pida la ficha) y enciende lo nuevo
@@ -108,6 +110,18 @@ public static class AspectoDeProtagonista
             finally { PrefabUtility.UnloadPrefabContents(raiz); }
         }
         return true;
+    }
+
+    /// <summary>Pone (o deja) en la raíz del modelo el <see cref="MuelleDeHuesos"/> con esa cadena, si el modelo tiene sus huesos.</summary>
+    static void PonerMuelle(GameObject raiz, string[] cadena, StringBuilder informe)
+    {
+        if (cadena == null || cadena.Length == 0) return;
+        var nombres = new HashSet<string>(raiz.GetComponentsInChildren<Transform>(true).Select(t => t.name));
+        if (!cadena.All(nombres.Contains)) { informe.AppendLine($"{raiz.name}: le faltan los huesos de {string.Join(", ", cadena)}; sin muelle."); return; }
+        var muelle = raiz.GetComponent<MuelleDeHuesos>();
+        if (muelle == null) muelle = raiz.AddComponent<MuelleDeHuesos>();
+        muelle.huesos = cadena.ToArray();
+        informe.AppendLine($"{raiz.name}: muelle en {string.Join(", ", cadena)}.");
     }
 
     static PartCategory? CategoriaDe(string pieza)
@@ -202,9 +216,11 @@ public static class AspectoDeProtagonista
             new Pieza { Nombre = "Cloak04_Hechicera", Categoria = PartCategory.Cloak, Vecina = "Cloak01|Body09" },
         },
         Apagar = new[] { "AC09_Ribbon" },   // la coleta ya lleva su lazo
+        CadenaConMuelle = new[] { "ColetaBone01", "ColetaBone02" },   // la coleta se levanta al correr y no se mete en la capa
         Colores = new[]
         {
             ("Medias", new Color(0.1f, 0.12f, 0.28f)),   // el trozo de pierna entre la túnica y las botas
+            ("Botas", new Color(0.09f, 0.11f, 0.3f)),   // a juego con los guantes, con la vuelta dorada
             ("Pelo", new Color(0.9f, 0.2f, 0.05f)), ("PeloClaro", new Color(1f, 0.34f, 0.1f)), ("LazoAzul", new Color(0.2f, 0.45f, 0.95f)),   // pelo zanahoria (Raúl, 1 nov)
             ("Tunica", new Color(0.18f, 0.32f, 0.72f)), ("Capa", new Color(0.93f, 0.86f, 0.7f)), ("Hombrera", new Color(0.32f, 0.34f, 0.42f)),
             ("Gema", new Color(0.9f, 0.08f, 0.15f)), ("Cuero", new Color(0.48f, 0.28f, 0.14f)), ("Dorado", new Color(1f, 0.8f, 0.3f)),
@@ -232,7 +248,7 @@ public static class AspectoDeProtagonista
         {
             ("Pelo", new Color(0.72f, 0.44f, 0.16f)), ("PeloClaro", new Color(0.86f, 0.6f, 0.28f)),   // rubio miel
             ("Chaqueta", new Color(0.1f, 0.16f, 0.38f)), ("Camisa", new Color(0.95f, 0.9f, 0.78f)), ("Pantalon", new Color(0.3f, 0.24f, 0.18f)),
-            ("Cuero", new Color(0.42f, 0.25f, 0.12f)), ("Dorado", new Color(1f, 0.8f, 0.3f)),
+            ("Cuero", new Color(0.42f, 0.25f, 0.12f)), ("Dorado", new Color(1f, 0.8f, 0.3f)), ("Panuelo", new Color(0.3f, 0.62f, 0.92f)),
         },
     };
 
@@ -258,7 +274,7 @@ public static class AspectoDeProtagonista
         {
             ("Pelo", new Color(0.24f, 0.12f, 0.06f)), ("PeloClaro", new Color(0.36f, 0.2f, 0.1f)),
             ("Tunica", new Color(0.52f, 0.33f, 0.17f)), ("TunicaOscura", new Color(0.27f, 0.17f, 0.09f)), ("Cuero", new Color(0.2f, 0.12f, 0.07f)),
-            ("Camisa", new Color(0.93f, 0.88f, 0.76f)), ("Pantalon", new Color(0.27f, 0.27f, 0.3f)), ("Dorado", new Color(1f, 0.8f, 0.3f)),
+            ("Pantalon", new Color(0.27f, 0.27f, 0.3f)), ("Dorado", new Color(1f, 0.8f, 0.3f)),
         },
     };
 }

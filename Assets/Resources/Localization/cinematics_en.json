@@ -250,7 +250,7 @@
         },
         {
             "id": "EVT_GOLEM_01",
-            "text": "That fool is going to ruin my plans..."
+            "text": "I'm sorry. I need you to fight."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_01",
@@ -2247,6 +2247,422 @@
         {
             "id": "CHUCHELANDIA_PUERTA_CARTEL",
             "text": "OPEN ME!"
+        },
+        {
+            "id": "CAP3_ESPEJO_01",
+            "text": "I had half my soup today."
+        },
+        {
+            "id": "CAP3_ESPEJO_02",
+            "text": "And the other half?"
+        },
+        {
+            "id": "CAP3_ESPEJO_03",
+            "text": "The other half won."
+        },
+        {
+            "id": "CAP3_ESPEJO_04",
+            "text": "Tobi… that cough."
+        },
+        {
+            "id": "CAP3_ESPEJO_05",
+            "text": "When I get back we'll go fishing. I promise."
+        },
+        {
+            "id": "CAP3_ESPEJO_06",
+            "text": "You don't know how to fish."
+        },
+        {
+            "id": "CAP3_ESPEJO_07",
+            "text": "I'll learn. They say the trick is patience."
+        },
+        {
+            "id": "CAP3_ESPEJO_08",
+            "text": "I made you a drawing. It's us, fishing. I didn't give the fourth one a face: I don't know who he is yet."
+        },
+        {
+            "id": "CAP3_ESPEJO_09",
+            "text": "You will."
+        },
+        {
+            "id": "CAP3_ESPEJO_10",
+            "text": "The collar's key. It'll grow warm whenever he's near."
+        },
+        {
+            "id": "CAP3_ESPEJO_11",
+            "text": "Hold on a little longer, Tobi."
+        },
+        {
+            "id": "CAP3_POSADA_01",
+            "text": "A soup, if this is enough."
+        },
+        {
+            "id": "CAP3_POSADA_02",
+            "text": "It's enough. But not for bread."
+        },
+        {
+            "id": "CAP3_POSADA_03",
+            "text": "Look! I can do magic!"
+        },
+        {
+            "id": "CAP3_POSADA_04",
+            "text": "The spoon goes up… up… all the way to my thumb!"
+        },
+        {
+            "id": "CAP3_POSADA_05",
+            "text": "Almost."
+        },
+        {
+            "id": "CAP3_POSADA_06",
+            "text": "That was almost nothing, Lucía."
+        },
+        {
+            "id": "CAP3_POSADA_07",
+            "text": "I'm looking for someone who knows what this is."
+        },
+        {
+            "id": "CAP3_POSADA_08",
+            "text": "Where did you get that?"
+        },
+        {
+            "id": "CAP3_POSADA_09",
+            "text": "The demon that attacked my village was wearing it."
+        },
+        {
+            "id": "CAP3_POSADA_10",
+            "text": "No demons have come this way. But collared animals have. Several."
+        },
+        {
+            "id": "CAP3_POSADA_11",
+            "text": "Ask around the village. People see things, even if they don't say."
+        },
+        {
+            "id": "CAP3_CARRO_01",
+            "text": "A cart, at this hour?"
+        },
+        {
+            "id": "CAP3_CARRO_02",
+            "text": "That light… it rises and falls. As if it were breathing."
+        },
+        {
+            "id": "CAP3_CARRO_03",
+            "text": "That's no lantern. Let's see where it goes. From a distance."
+        },
+        {
+            "id": "CAP3_CLARO_01",
+            "text": "Twelve cages. They pay well in the capital for feathers that glow."
+        },
+        {
+            "id": "CAP3_CLARO_02",
+            "text": "They won't stop glowing. They make me nervous."
+        },
+        {
+            "id": "CAP3_CLARO_03",
+            "text": "Then cover them. At dawn, to the boat."
+        },
+        {
+            "id": "CAP3_CLARO_04",
+            "text": "The dog won't stop growling at the forest."
+        },
+        {
+            "id": "CAP3_CLARO_05",
+            "text": "My hands are burning…"
+        },
+        {
+            "id": "CAP3_CLARO_06",
+            "text": "\"Should you?\""
+        },
+        {
+            "id": "CAP3_CLARO_07",
+            "text": "That's what Eldran would ask me."
+        },
+        {
+            "id": "CAP3_PAJAROS_01",
+            "text": "Crossroads guard! Nobody move."
+        },
+        {
+            "id": "CAP3_PAJAROS_02",
+            "text": "They're only birds…"
+        },
+        {
+            "id": "CAP3_PAJAROS_03",
+            "text": "Birds that aren't for sale. Tie them up."
+        },
+        {
+            "id": "CAP3_PAJAROS_04",
+            "text": "There. Fly."
+        },
+        {
+            "id": "CAP3_PAJAROS_05",
+            "text": "You warned us instead of throwing punches. That, kid, is the hard part."
+        },
+        {
+            "id": "CAP3_PAJAROS_06",
+            "text": "If you're going to the Forbidden Forest, go by day. And don't touch anything that glows."
+        },
+        {
+            "id": "CAP3_PAJAROS_07",
+            "text": "Thanks. I will."
+        },
+        {
+            "id": "CAP3_JAULAS_01",
+            "text": "That's it… is that it?"
+        },
+        {
+            "id": "CAP3_JAULAS_02",
+            "text": "The cages… no, no, no."
+        },
+        {
+            "id": "CAP3_JAULAS_03",
+            "text": "We saw the smoke from the crossroads."
+        },
+        {
+            "id": "CAP3_JAULAS_04",
+            "text": "Three cages burnt. The other birds will make it."
+        },
+        {
+            "id": "CAP3_JAULAS_05",
+            "text": "Warning us would have been enough, kid."
+        },
+        {
+            "id": "CAP3_JAULAS_06",
+            "text": "I know."
+        },
+        {
+            "id": "CAP3_JAULAS_07",
+            "text": "Go to the Forbidden Forest by day. And think before you burn."
+        },
+        {
+            "id": "CAP4_ESTELA_01",
+            "text": "And who are you? Another poor little princess lost in the woods?"
+        },
+        {
+            "id": "CAP4_ESTELA_02",
+            "text": "My name's Will. I'm looking for the sorceress Estela."
+        },
+        {
+            "id": "CAP4_ESTELA_03",
+            "text": "You're looking at her. And if you've come to have someone turned into a toad, I don't do that anymore. The last one ended up in a dress."
+        },
+        {
+            "id": "CAP4_ESTELA_04",
+            "text": "Impressive."
+        },
+        {
+            "id": "CAP4_ESTELA_05",
+            "text": "I came so you could read this."
+        },
+        {
+            "id": "CAP4_ESTELA_06",
+            "text": "Runes of subjugation. The collar is the cage; the runes, the command. And every collar has a key."
+        },
+        {
+            "id": "CAP4_ESTELA_07",
+            "text": "The monster wasn't your demon. It's whoever put the collar on him."
+        },
+        {
+            "id": "CAP4_ESTELA_08",
+            "text": "There's a kind of magic that doesn't come from you: you take it from someone else. They call it dark because the strength isn't yours."
+        },
+        {
+            "id": "CAP4_ESTELA_09",
+            "text": "I don't take apprentices."
+        },
+        {
+            "id": "CAP4_ESTELA_10",
+            "text": "I'm not here to learn. I'm here to ask for help. There are more collared animals on the coast; I wrote it all down."
+        },
+        {
+            "id": "CAP4_ESTELA_11",
+            "text": "…Someone is making a lot of them."
+        },
+        {
+            "id": "CAP4_ESTELA_12",
+            "text": "I'll help you. That's me doing you a favour. And I'll collect on it."
+        },
+        {
+            "id": "CAP4_MANANA_01",
+            "text": "\"TRAINING OF THE FUTURE GREAT WIZARD\". Why is \"future\" so small?"
+        },
+        {
+            "id": "CAP4_MANANA_02",
+            "text": "Because it's the part you're furthest from."
+        },
+        {
+            "id": "CAP4_MANANA_03",
+            "text": "Fire isn't just one thing: it can push, cut, light or warm."
+        },
+        {
+            "id": "CAP4_MANANA_04",
+            "text": "Today you learn to protect yourself. And to protect someone else, which is harder."
+        },
+        {
+            "id": "CAP4_CAMPANA_01",
+            "text": "See the bell? Get to it and ring it."
+        },
+        {
+            "id": "CAP4_CAMPANA_02",
+            "text": "The clay figures are people. You don't scorch people."
+        },
+        {
+            "id": "CAP4_CAMPANA_03",
+            "text": "And what are you going to do?"
+        },
+        {
+            "id": "CAP4_CAMPANA_04",
+            "text": "Get in your way."
+        },
+        {
+            "id": "CAP4_FIGURA_01",
+            "text": "That one's falling!"
+        },
+        {
+            "id": "CAP4_FIGURA_02",
+            "text": "I didn't teach you that."
+        },
+        {
+            "id": "CAP4_FIGURA_03",
+            "text": "I don't know what it was either."
+        },
+        {
+            "id": "CAP4_FIGURA_04",
+            "text": "This one looks like Eldran."
+        },
+        {
+            "id": "CAP4_FIGURA_05",
+            "text": "It needs ears. There."
+        },
+        {
+            "id": "CAP4_FIGURA_06",
+            "text": "And the one with the hood?"
+        },
+        {
+            "id": "CAP4_FIGURA_07",
+            "text": "Someone who's been watching us for days. I can feel it on the back of my neck."
+        },
+        {
+            "id": "CAP4_FIGURA_08",
+            "text": "Sharp. Sharper than I thought."
+        },
+        {
+            "id": "CAP4_GOLEM_01",
+            "text": "You learn to carry fear. And if not, you can always go and live in a forest."
+        },
+        {
+            "id": "CAP4_GOLEM_02",
+            "text": "Is that what you did?"
+        },
+        {
+            "id": "CAP4_GOLEM_03",
+            "text": "You don't ask that."
+        },
+        {
+            "id": "CAP4_GOLEM_04",
+            "text": "Get down! It's coming out of the ground!"
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_01",
+            "text": "It's over… Are you all right?"
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_02",
+            "text": "My fingers are like bark. Your nose is bleeding."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_03",
+            "text": "Look at this, among the rocks… For a moment I saw a face."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_04",
+            "text": "A summoning crystal. Someone called that golem."
+        },
+        {
+            "id": "CAP4_TRAS_GOLEM_05",
+            "text": "Never use living beings again."
+        },
+        {
+            "id": "CAP4_MANZANA_01",
+            "text": "Ashes still warm. Someone slept here last night."
+        },
+        {
+            "id": "CAP4_MANZANA_02",
+            "text": "I can manage."
+        },
+        {
+            "id": "CAP4_MANZANA_03",
+            "text": "I know."
+        },
+        {
+            "id": "CAP4_MANZANA_04",
+            "text": "It's the last apple. It's mealy."
+        },
+        {
+            "id": "CAP4_MANZANA_05",
+            "text": "Then we'll share it."
+        },
+        {
+            "id": "CAP4_MANZANA_06",
+            "text": "It's been a long time since anyone stood in front of me. Thanks, idiot."
+        },
+        {
+            "id": "CAP4_BIFURCACION_01",
+            "text": "We'll get there faster along the river."
+        },
+        {
+            "id": "CAP4_BIFURCACION_02",
+            "text": "Through the pines we won't get wet. And the map says pines."
+        },
+        {
+            "id": "CAP4_BIFURCACION_03",
+            "text": "Not one more step."
+        },
+        {
+            "id": "CAP4_BIFURCACION_04",
+            "text": "Easy. I only wanted to see what you're carrying."
+        },
+        {
+            "id": "CAP4_BIFURCACION_05",
+            "text": "Show it to him. Don't give it to him."
+        },
+        {
+            "id": "CAP4_BIFURCACION_06",
+            "text": "Restraint. Obedience. Bond. It's one of the bad ones."
+        },
+        {
+            "id": "CAP4_BIFURCACION_07",
+            "text": "My name's Liam. I'm going to the Kingdom."
+        },
+        {
+            "id": "CAP4_BIFURCACION_08",
+            "text": "So are we. We can travel there together."
+        },
+        {
+            "id": "CAP4_BIFURCACION_09",
+            "text": "Nobody touches the iron."
+        },
+        {
+            "id": "CAP4_BIFURCACION_10",
+            "text": "The river, then. There's a ford."
+        },
+        {
+            "id": "CAP4_BIFURCACION_11",
+            "text": "My boot! The mud's taken my boot!"
+        },
+        {
+            "id": "CAP4_BOTA_01",
+            "text": "Here. It was caught between two branches."
+        },
+        {
+            "id": "CAP4_BOTA_02",
+            "text": "The map didn't show the mud."
+        },
+        {
+            "id": "CAP4_BOTA_03",
+            "text": "Or that you'd lose a boot in it."
+        },
+        {
+            "id": "CAP4_BOTA_04",
+            "text": "That's not on any map."
         }
     ]
 }

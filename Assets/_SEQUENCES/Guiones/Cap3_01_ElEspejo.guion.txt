@@ -1,0 +1,73 @@
+# Cap. 3 · Tobías en el espejo (interludio). Liam habla con su hermano antes de seguir a Will.
+GUION Cap3_01_ElEspejo
+ESCENA TorreDeLiam
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_01_ElEspejo.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+liam LIAM_TORRE nombre=Liam color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+tobi TOBI_TORRE nombre=CHAR_TOBI color=C8D8FF prefab=Assets/_NPCs/_GrafoNarrativo/Tobi.prefab
+
+PUNTOS
+silla Silla_Liam
+manos -6000 6000.5 100.45
+cam_general -6001.4 5997.4 100
+cam_cara -6001.2 5998.9 100
+cam_llave -6000.65 5998.6 100
+cam_mapa -6000.6 6001.2 100
+cam_sienta -6001.3 5998.7 100
+foco_general -6000 6001 101.75
+detalle_llave -6000.15 5999.75 100.62
+cama_tobi -5988 6000.42 100.519
+pies_tobi -5988 5998.5
+
+HILO
+@inicio
+liam sienta silla ya
+& liam cara triste
+& tobi en cama_tobi mirando pies_tobi
+& tobi bucle SitGround_Loop
+& tobi cara cansado
+& bandas
+plano general liam mira=foco_general altura_foco=0 desde=cam_general altura=1.5 lente=65
+espera 2
+
+@sopa
+cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=3.2 dura=0.8
+tobi cara alegre
+tobi dice CAP3_ESPEJO_01 sin_pose
+plano primer liam desde=cam_cara altura=1.25 lente=40
+liam dice CAP3_ESPEJO_02 cara=pensativo sin_pose
+cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=3.6 dura=0.8
+tobi dice CAP3_ESPEJO_03 cara=alegre sin_pose
+tobi cara cansado
+espera 0.8
+liam dice CAP3_ESPEJO_04 cara=preocupado sin_pose
+
+@pesca
+plano medio liam desde=cam_sienta altura=1.25 lente=40
+liam dice CAP3_ESPEJO_05 cara=decidido sin_pose
+cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=3.4 dura=0.8
+tobi dice CAP3_ESPEJO_06 cara=alegre sin_pose
+liam dice CAP3_ESPEJO_07 cara=alegre sin_pose
+cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=4.4 dura=0.8
+tobi dice CAP3_ESPEJO_08 cara=pensativo sin_pose
+
+@dibujo
+plano detalle PROP_Mapa desde=cam_mapa altura=1.9 lente=65
+liam mira PROP_Mapa
+liam dice CAP3_ESPEJO_09 cara=triste sin_pose
+espera 1
+
+@llave
+plano detalle detalle_llave altura_foco=0 desde=cam_llave altura=1.0 lente=48
+liam mira PROP_Llave
+liam dice CAP3_ESPEJO_10 cara=decidido sin_pose
+espera 0.8
+plano primer liam desde=cam_cara altura=1.25 lente=40
+liam dice CAP3_ESPEJO_11 cara=triste sin_pose
+espera 1.2
+fundido cubre 1.5
+espera 1.5
+bandas quita

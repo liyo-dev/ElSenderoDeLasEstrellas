@@ -1,0 +1,56 @@
+# Cap. 4 · La bifurcación: el río o los pinos. Liam aparece, lee el trozo de lejos y se une hasta el Reino. En el vado pierde la bota.
+GUION Cap4_08_LaBifurcacion
+ESCENA MainWorld
+ZONA Cap4Bifurcacion -182 40 24
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_08_LaBifurcacion.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+liam    _LIAM    nombre=CHAR_LIAM color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+p_will      -180 40
+p_estela    -177.8 40.8
+p_estela2   -181.8 42.4
+p_liam_ini  -176.5 49.5
+p_liam      -178.5 45
+rio         -186 30
+
+HILO
+@inicio
+will en p_will mirando p_estela
+& estela en p_estela mirando p_will
+& liam en p_liam_ini mirando p_will
+& bandas
+plano dos will estela
+will dice CAP4_BIFURCACION_01 mira=estela
+estela dice CAP4_BIFURCACION_02 cara=molesto
+
+@liam
+liam anda a p_liam ritmo=paseo sin_esperar
+plano general will estela liam
+espera 1.5
+estela anda a p_estela2 ritmo=prisa
+estela mira liam
+& will mira liam
+estela dice CAP4_BIFURCACION_03 cara=enfado gesto=Challenging_NoWeapon
+liam dice CAP4_BIFURCACION_04 cara=pensativo
+estela dice CAP4_BIFURCACION_05 mira=will cara=decidido
+plano medio liam
+liam dice CAP4_BIFURCACION_06 cara=pensativo
+liam dice CAP4_BIFURCACION_07 cara=neutral
+plano conjunto will estela liam
+will dice CAP4_BIFURCACION_08 cara=alegre
+estela dice CAP4_BIFURCACION_09 cara=molesto
+liam dice CAP4_BIFURCACION_10 mira=rio
+espera 0.6
+fundido cubre 0.8
+espera 0.9
+fundido entra 0.8
+plano medio liam
+liam dice CAP4_BIFURCACION_11 cara=sorpresa
+espera 0.4
+bandas quita

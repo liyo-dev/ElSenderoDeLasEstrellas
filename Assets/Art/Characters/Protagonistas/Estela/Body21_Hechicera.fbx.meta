@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Botas
+    second: {fileID: 2100000, guid: c00b3dbba94d99242a85ef015906311f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Capa
     second: {fileID: 2100000, guid: e27115e20b4124c43b139f1c0497945e, type: 2}
   - first:

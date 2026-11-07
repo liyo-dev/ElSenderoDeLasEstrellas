@@ -1,0 +1,56 @@
+# Cap. 4 · El claro de los troncos quemados: Estela, el aro leído y «ya me lo cobraré».
+GUION Cap4_01_Estela
+ESCENA MainWorld
+ZONA Cap4Claro -326 70 26
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_01_Estela.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+
+PUNTOS
+tronco     -311 65
+p_will     -313.5 62.5
+p_estela   -320 64.5
+p_estela2  -315.6 63.6
+explosion  -318 70
+
+HILO
+@inicio
+will en p_will mirando explosion
+& estela en p_estela mirando explosion
+& bandas
+vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Smoke AOE explosion.prefab" en=explosion lifetime=3
+& sacudida 0.6 0.5
+plano general will estela
+espera 1.5
+estela mira will
+will mira estela
+plano medio estela
+estela dice CAP4_ESTELA_01 cara=picaro gesto=Challenging_NoWeapon
+plano medio will
+will dice CAP4_ESTELA_02 cara=sorpresa
+estela anda a p_estela2 ritmo=paseo
+plano dos will estela
+estela dice CAP4_ESTELA_03 cara=molesto
+will dice CAP4_ESTELA_04 cara=alegre gesto=HandClap01
+
+@aro
+will dice CAP4_ESTELA_05 gesto=FoundSomething_NoWeapon
+plano primer estela
+estela cara pensativo
+espera 1
+estela dice CAP4_ESTELA_06 cara=pensativo
+estela dice CAP4_ESTELA_07 cara=enfado
+estela dice CAP4_ESTELA_08 cara=preocupado
+plano dos will estela
+estela dice CAP4_ESTELA_09 cara=molesto gesto=HeadShake01
+will dice CAP4_ESTELA_10 cara=decidido
+plano primer estela
+estela dice CAP4_ESTELA_11 cara=preocupado
+espera 0.6
+estela dice CAP4_ESTELA_12 cara=picaro
+espera 0.6
+bandas quita

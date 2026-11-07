@@ -239,13 +239,13 @@ estela reposo
 estela corre a p_actua_will ritmo=prisa llega_mirando=tobias
 estela dice FINAL_ESTELA_RIO_02B sin_pose gesto=Talk03 cara=alegre
 +1.5 will cara enfado
-& tobias gesto Laugh01
+& tobias cara alegre
 espera 0.1
 estela corre a p_estela_detras_t p_estela_detras_l p_actua_liam ritmo=prisa llega_mirando=tobias
 estela dice FINAL_ESTELA_RIO_02C sin_pose gesto=Talk02 cara=picaro
 +0.5 sonido Final_Tobias_Carcajada volume=0.9
 & tobias cara alegre
-& tobias gesto Laugh01 veces=3
+& tobias gesto Laugh01 veces=2
 +1.6 liam levanta
 & liam cara enfado
 espera 0.1
@@ -270,7 +270,7 @@ espera 0.1
 
 plano medio estela solo desde=cam_r_estela_casi mira=p_actua_liam altura=1.15 altura_foco=1.0 lente=36 suave=0.2
 estela cara picaro
-estela dice FINAL_ESTELA_RIO_03 sin_pose gesto=Laugh01
+estela dice FINAL_ESTELA_RIO_03 sin_pose
 espera 0.2
 
 # Se ríen todos (y se oye) mientras empieza a anochecer; la cámara se aleja sobre el agua.
@@ -361,8 +361,8 @@ espera 0.8
 efecto ModuleBeat routine=WillYEstelaSeMiran
 will cara alegre
 & estela cara alegre
-will gesto Laugh01
-& estela gesto Laugh01
+will gesto Laugh01 veces=2
+& estela gesto Laugh01 veces=2
 sonido Final_Will_Risa volume=0.7
 sonido Final_Estela_Risa volume=0.7
 espera 1.4

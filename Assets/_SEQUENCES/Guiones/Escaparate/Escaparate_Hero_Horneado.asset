@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Escaparate_Hero
   duracion: 3.8
   presentacion: 1
-  huella: "2026-11-07 10:36 \xB7 c7a561dcaff0b7710cf3c19f64f4c92c"
+  huella: "2026-11-07 10:50 \xB7 3218a98f698e7dff054a00a8f01381b8"
   actores:
   - id: Player
     alias: will
@@ -47,7 +47,7 @@ MonoBehaviour:
     claveDelNombre: Estela
     posiciones:
     - t: 0
-      p: {x: 6.2, y: 26.62, z: -133.42}
+      p: {x: 6.95, y: 27.16, z: -133.88}
     miradas:
     - t: 0
       tipo: 1
@@ -120,7 +120,7 @@ MonoBehaviour:
   - nombre: b_liam
     posicion: {x: 2.4, y: 26.281815, z: -136.2}
   - nombre: b_estela
-    posicion: {x: 6.2, y: 26.62, z: -133.42}
+    posicion: {x: 6.95, y: 27.16, z: -133.88}
   - nombre: b_will
     posicion: {x: 9.4, y: 26.281815, z: -135.9}
   - nombre: caras_b

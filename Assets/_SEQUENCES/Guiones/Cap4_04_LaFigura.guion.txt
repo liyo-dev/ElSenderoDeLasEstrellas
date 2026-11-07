@@ -1,0 +1,56 @@
+# Cap. 4 · Final de la campana: una figura resbala, Will la sostiene en el aire sin saber cómo; rehacen las figuras; alguien les observa.
+GUION Cap4_04_LaFigura
+ESCENA MainWorld
+ZONA Cap4Campana -322 82 30
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_04_LaFigura.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+liam    _LIAM    nombre=CHAR_LIAM color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+campana    -330 86
+figura     -326 76
+p_will     -328.8 82.6
+p_estela   -331.8 81.4
+p_liam     -300 98
+mira_liam  -320 88
+
+HILO
+@inicio
+will en p_will mirando figura
+& estela en p_estela mirando figura
+& liam en p_liam mirando mira_liam
+& bandas
+plano conjunto will estela
+estela dice CAP4_FIGURA_01 cara=miedo
+will cara decidido
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_ellow.prefab" en=figura lifetime=2.5
+& lento 0.4 0.3
+espera 1.2
+lento 1 0.3
+plano medio estela
+estela dice CAP4_FIGURA_02 cara=sorpresa
+plano medio will
+will dice CAP4_FIGURA_03 cara=confuso
+
+@figuras
+plano dos will estela
+will dice CAP4_FIGURA_04 cara=alegre
+estela dice CAP4_FIGURA_05 cara=picaro gesto=Laugh01
+will dice CAP4_FIGURA_06 cara=pensativo
+estela dice CAP4_FIGURA_07 cara=preocupado
+estela mira mira_liam
+
+@liam
+plano medio liam
+liam cara pensativo
+espera 0.8
+liam dice CAP4_FIGURA_08 cara=pensativo
+espera 0.6
+fundido cubre 1.2
+espera 1.2
+bandas quita

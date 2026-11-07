@@ -1,0 +1,55 @@
+﻿# Cap. 3 · La posada de la aldea del mar: la sopa, la cuchara de Lucía y el trozo del aro.
+GUION Cap3_02_LaPosada
+ESCENA MainWorld
+ZONA Cap3Posada 279 -424 24
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_02_LaPosada.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.2
+
+REPARTO
+will      Player        nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+posadero  NPC_Posadero  nombre=CHAR_POSADERO color=E7C9A0 prefab=Assets/_NPCs/Manuel.prefab
+lucia     NPC_Lucia     nombre=CHAR_LUCIA color=F6B7C9 prefab=Assets/_NPCs/AmigaDelNiñoPez.prefab
+
+PUNTOS
+# La mesa de encuentro de la plaza (279, -427) queda al sur; el grupo, al norte de ella.
+p_will      279.0 -425.3
+p_posadero  281.2 -424.6
+p_lucia     277.2 -425.0
+mesa        279.0 -427.0
+# Cámaras al sur, por encima de la mesa: se ven las caras (Lucía mira a la mesa) y los perfiles.
+cam_grupo   279.0 -431.0
+cam_lucia   277.4 -428.6
+cam_will    278.4 -428.6
+cam_posad   280.2 -428.4
+
+HILO
+@inicio
+will en p_will mirando p_posadero
+& posadero en p_posadero mirando p_will
+& lucia en p_lucia mirando mesa
+plano conjunto will posadero lucia desde=cam_grupo altura=2.2
+espera 0.8
+will dice CAP3_POSADA_01 mira=posadero
+posadero dice CAP3_POSADA_02 gesto=HeadNod01
+lucia mira will
+lucia dice CAP3_POSADA_03 cara=alegre
+plano medio lucia desde=cam_lucia altura=1.2 solo
+lucia gesto CastingEnter01
+& lucia cara decidido
+lucia dice CAP3_POSADA_04 cara=decidido
+lucia dice CAP3_POSADA_05 cara=triste gesto=HeadShake01
+posadero dice CAP3_POSADA_06 mira=lucia cara=alegre
+
+@trozo
+plano medio will desde=cam_will altura=1.4 solo
+will dice CAP3_POSADA_07 mira=posadero cara=pensativo gesto=FoundSomething_NoWeapon
+plano primer posadero desde=cam_posad altura=1.4
+posadero cara sorpresa
+espera 1.2
+posadero dice CAP3_POSADA_08 cara=preocupado
+will dice CAP3_POSADA_09
+plano conjunto will posadero lucia desde=cam_grupo altura=2.2
+posadero dice CAP3_POSADA_10 cara=preocupado
+posadero dice CAP3_POSADA_11 gesto=Question01
+espera 0.5

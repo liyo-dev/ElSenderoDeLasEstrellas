@@ -1,6 +1,6 @@
 # Parte de horneado: Escaparate_Hero
 
-2026-11-07 10:36 · guion `Assets/_SEQUENCES/Guiones/Escaparate/Escaparate_Hero.guion.txt`
+2026-11-07 10:50 · guion `Assets/_SEQUENCES/Guiones/Escaparate/Escaparate_Hero.guion.txt`
 
 **0:03,8** de secuencia · 0 frases · 1 planos · 0 efectos · 3 personajes
 

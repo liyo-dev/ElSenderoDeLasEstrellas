@@ -81,6 +81,7 @@ public static class MontarCinematicaFinal
         }
 
         bool cambiado = AsegurarReglaDeMusica(perfil, "FINAL_ARCHIMAGO", "Assets/Audio/Music/Zonas/Umbral Entre Estrellas.mp3", 2.5f, 3f);
+        cambiado |= AsegurarReglaDeMusica(perfil, "LOS_TRES", "Assets/Audio/Music/Cinematicas/Los Tres.mp3", 2.5f, 3f);
         if (!cambiado) return;
         EditorUtility.SetDirty(perfil);
         AssetDatabase.SaveAssetIfDirty(perfil);

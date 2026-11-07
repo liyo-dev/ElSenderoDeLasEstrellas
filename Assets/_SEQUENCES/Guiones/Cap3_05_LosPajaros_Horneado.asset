@@ -1,0 +1,1208 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_05_LosPajaros_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_05_LosPajaros
+  duracion: 31.563759
+  presentacion: 1
+  huella: "2026-11-07 18:31 \xB7 e9e6d5037bbd8f3d256aac9ddc9e2330"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: -207.5, y: 22.043652, z: -132}
+    - t: 7.845
+      p: {x: -207.5, y: 22.043652, z: -132}
+    - t: 8.124023
+      p: {x: -207.66452, y: 22.04258, z: -131.75162}
+    - t: 8.340872
+      p: {x: -207.82903, y: 22.037628, z: -131.50322}
+    - t: 8.630334
+      p: {x: -208.0758, y: 22.020386, z: -131.13065}
+    - t: 8.918651
+      p: {x: -208.32259, y: 22.00961, z: -130.75807}
+    - t: 9.20697
+      p: {x: -208.56935, y: 22.005722, z: -130.38548}
+    - t: 9.495287
+      p: {x: -208.81613, y: 21.997501, z: -130.01291}
+    - t: 9.783612
+      p: {x: -209.06291, y: 21.964577, z: -129.64032}
+    - t: 10.071923
+      p: {x: -209.30968, y: 21.948643, z: -129.26775}
+    - t: 10.360249
+      p: {x: -209.55646, y: 21.943935, z: -128.89516}
+    - t: 10.64856
+      p: {x: -209.80322, y: 21.938122, z: -128.52258}
+    - t: 10.936885
+      p: {x: -210.05, y: 21.911072, z: -128.15}
+    - t: 11.225202
+      p: {x: -210.29678, y: 21.884026, z: -127.77742}
+    - t: 11.513516
+      p: {x: -210.54355, y: 21.856983, z: -127.40484}
+    - t: 11.801837
+      p: {x: -210.79033, y: 21.83532, z: -127.03226}
+    - t: 12.090148
+      p: {x: -211.0371, y: 21.830467, z: -126.65968}
+    - t: 12.3784685
+      p: {x: -211.28387, y: 21.832912, z: -126.2871}
+    - t: 12.666789
+      p: {x: -211.53065, y: 21.835354, z: -125.91452}
+    - t: 12.955104
+      p: {x: -211.77742, y: 21.8378, z: -125.54194}
+    - t: 13.243424
+      p: {x: -212.0242, y: 21.811752, z: -125.16936}
+    - t: 13.53289
+      p: {x: -212.27098, y: 21.780693, z: -124.796776}
+    - t: 13.74973
+      p: {x: -212.43549, y: 21.759987, z: -124.54839}
+    - t: 14.02876
+      p: {x: -212.6, y: 21.749569, z: -124.3}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -215, y: 21.453735, z: -125}
+      actor: 
+    - t: 1.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.1349998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 18.72876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 18.87876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.208757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    cabezas:
+    - t: 1.1
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.0849996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.7349997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.07876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 18.82876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.158758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 27.913757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    animacion:
+    - fundido: 0
+      t: 4.465
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.3349996
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.02876
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.10876
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.27876
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.42876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.758759
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 27.863758
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 27.943758
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 29.113758
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 14.02876
+      emocion: alegre
+      dura: 1.6
+    - t: 17.22876
+      emocion: ilusionado
+      dura: 0
+    - t: 27.863758
+      emocion: agradecido
+      dura: 1.6
+    visible: []
+    deslizando: []
+  - id: NPC_Sargento
+    alias: sargento
+    colorDelNombre: {r: 0.654902, g: 0.7529412, b: 0.84705883, a: 1}
+    claveDelNombre: CHAR_SARGENTO
+    posiciones:
+    - t: 0
+      p: {x: -210, y: 21.82594, z: -133.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -215.5, y: 21.502022, z: -127.5}
+      actor: 
+    - t: 4.255
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 14.17876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.72876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.013758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 4.205
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.685
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 14.128759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.778759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 23.108757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 27.963758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 1
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 1.08
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.5849998
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.465
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.6349998
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.7149997
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.895
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.50876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.72876
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.80876
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.375427
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 22.808758
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.058758
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.138758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 24.472092
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 27.463757
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.343758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 1
+      emocion: enfado
+      dura: 2.935
+    - t: 5.6349998
+      emocion: decidido
+      dura: 2.6100001
+    - t: 18.72876
+      emocion: aliviado
+      dura: 4.43
+    visible: []
+    deslizando: []
+  - id: NPC_GuardiaCruce1
+    alias: g1
+    colorDelNombre: {r: 0.62352943, g: 0.7058824, b: 0.78431374, a: 1}
+    claveDelNombre: CHAR_GUARDIA_CRUCE
+    posiciones:
+    - t: 0
+      p: {x: -217, y: 21.9155, z: -130.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -217.5, y: 21.39981, z: -125.5}
+      actor: 
+    - t: 1.27
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.375
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.9049997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.29876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.99876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.328758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 28.133759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.22
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.325
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 5.8549995
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.24876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 18.948761
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.278759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 28.08376
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Idle_Battle_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.465
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.3349996
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.50876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.42876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.758759
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.343758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_GuardiaCruce2
+    alias: g2
+    colorDelNombre: {r: 0.62352943, g: 0.7058824, b: 0.78431374, a: 1}
+    claveDelNombre: CHAR_GUARDIA_CRUCE
+    posiciones:
+    - t: 0
+      p: {x: -211, y: 22.392197, z: -121.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -215.5, y: 21.502022, z: -127.5}
+      actor: 
+    - t: 4.495
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 14.41876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.253757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 4.4449997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 14.36876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.203758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Idle_Battle_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.465
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.50876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.343758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_ContrabandistaJefe
+    alias: jefe
+    colorDelNombre: {r: 0.7882353, g: 0.63529414, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -215.5, y: 21.502022, z: -127.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -210, y: 21.82594, z: -133.5}
+      actor: 
+    - t: 1.39
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 6.0249996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.53876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.11876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.448757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 28.373758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.34
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.035
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 5.9749994
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.48876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.06876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.398758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 28.32376
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Beg01_Loop
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.3349996
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.50876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.42876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.758759
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.343758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 3.985
+      emocion: miedo
+      dura: 1.6
+    visible: []
+    deslizando: []
+  - id: NPC_Contrabandista2
+    alias: c2
+    colorDelNombre: {r: 0.65882355, g: 0.6117647, b: 0.5411765, a: 1}
+    claveDelNombre: CHAR_CONTRABANDISTA
+    posiciones:
+    - t: 0
+      p: {x: -217.5, y: 21.39981, z: -125.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -217, y: 21.9155, z: -130.5}
+      actor: 
+    - t: 1.51
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.1349998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 6.145
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.17876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.23876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.568758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 28.013758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.46
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 4.0849996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_ContrabandistaJefe
+    - t: 6.095
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 14.128759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.18876
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 23.518759
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
+    - t: 27.963758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Beg01_Loop
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.465
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.3349996
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.50876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.42876
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.758759
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.343758
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1
+    t1: 3.5349998
+    actor: NPC_Sargento
+    clave: CAP3_PAJAROS_01
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 3.985
+    t1: 5.185
+    actor: NPC_ContrabandistaJefe
+    clave: CAP3_PAJAROS_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 5.6349998
+    t1: 7.845
+    actor: NPC_Sargento
+    clave: CAP3_PAJAROS_03
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.02876
+    t1: 15.22876
+    actor: Player
+    clave: CAP3_PAJAROS_04
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.72876
+    t1: 22.758759
+    actor: NPC_Sargento
+    clave: CAP3_PAJAROS_05
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 23.058758
+    t1: 27.413757
+    actor: NPC_Sargento
+    clave: CAP3_PAJAROS_06
+    gesto: HeadNod01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 27.863758
+    t1: 29.063759
+    actor: Player
+    clave: CAP3_PAJAROS_07
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 7.845
+    tipo: 0
+    descripcion: general de sargento y jefe y c2
+    posiciones:
+    - t: 0
+      p: {x: -214.71414, y: 25.232681, z: -140.63873}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - NPC_Sargento
+    - NPC_ContrabandistaJefe
+    - NPC_Contrabandista2
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.7556324
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 7.845
+    t1: 14.02876
+    tipo: 7
+    descripcion: siguiendo a will
+    posiciones:
+    - t: 7.845
+      p: {x: -203.44312, y: 24.233353, z: -130.5191}
+    - t: 8.094999
+      p: {x: -203.54375, y: 24.237354, z: -130.36717}
+    - t: 8.344999
+      p: {x: -203.64648, y: 24.240911, z: -130.21205}
+    - t: 8.594999
+      p: {x: -203.75044, y: 24.24352, z: -130.0551}
+    - t: 8.844999
+      p: {x: -203.95064, y: 24.249023, z: -129.75285}
+    - t: 9.094999
+      p: {x: -204.16037, y: 24.254099, z: -129.43623}
+    - t: 9.344999
+      p: {x: -204.37422, y: 24.259642, z: -129.11339}
+    - t: 9.594999
+      p: {x: -204.58817, y: 24.265486, z: -128.79036}
+    - t: 9.844999
+      p: {x: -204.80214, y: 24.272156, z: -128.4673}
+    - t: 10.094999
+      p: {x: -205.01611, y: 24.279799, z: -128.14424}
+    - t: 10.344999
+      p: {x: -205.2301, y: 24.286428, z: -127.821175}
+    - t: 10.594999
+      p: {x: -205.44406, y: 24.29152, z: -127.498116}
+    - t: 10.844999
+      p: {x: -205.65804, y: 24.294561, z: -127.17506}
+    - t: 11.094999
+      p: {x: -205.872, y: 24.294405, z: -126.852}
+    - t: 11.344999
+      p: {x: -206.08598, y: 24.29105, z: -126.52893}
+    - t: 11.594999
+      p: {x: -206.29996, y: 24.286837, z: -126.20586}
+    - t: 11.844999
+      p: {x: -206.51395, y: 24.282187, z: -125.88279}
+    - t: 12.094999
+      p: {x: -206.72792, y: 24.27978, z: -125.55974}
+    - t: 12.344999
+      p: {x: -206.94191, y: 24.278852, z: -125.23667}
+    - t: 12.594999
+      p: {x: -207.15584, y: 24.278421, z: -124.91368}
+    - t: 12.844999
+      p: {x: -207.3688, y: 24.28253, z: -124.592125}
+    - t: 13.094999
+      p: {x: -207.57602, y: 24.29068, z: -124.2793}
+    - t: 13.344999
+      p: {x: -207.6817, y: 24.294031, z: -124.11973}
+    - t: 13.594999
+      p: {x: -207.78683, y: 24.29691, z: -123.96096}
+    - t: 13.844999
+      p: {x: -207.89111, y: 24.298954, z: -123.803566}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1333598
+    encuadre: {x: -0.13, y: 0}
+    suavidad: 0.35
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 14.02876
+    t1: 15.22876
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 14.02876
+      p: {x: -213.3206, y: 22.980251, z: -120.599144}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 15.22876
+    t1: 18.72876
+    tipo: 0
+    descripcion: general de will
+    posiciones:
+    - t: 15.22876
+      p: {x: -202.90024, y: 25.930882, z: -127.63643}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras:
+    - {x: -212.6, y: 21.749569, z: -124.3}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.890497
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 18.72876
+    t1: 31.563759
+    tipo: 5
+    descripcion: 'dos: will y sargento'
+    posiciones:
+    - t: 18.72876
+      p: {x: -202.3415, y: 23.629261, z: -126.36824}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Sargento
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8441927
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294459056455822
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.22876
+    beat:
+      rid: 6540294459056455823
+    linea: 50
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.22876
+    beat:
+      rid: 6540294459056455824
+    linea: 53
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 17.22876
+    beat:
+      rid: 6540294459056455825
+    linea: 55
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 29.863758
+    beat:
+      rid: 6540294459056455826
+    linea: 67
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 31.563759
+    beat:
+      rid: 6540294459056455827
+    linea: 0
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: jaulas
+    t: 7.845
+  - nombre: sargento
+    t: 18.72876
+  puntos:
+  - nombre: claro
+    posicion: {x: -215, y: 21.453735, z: -125}
+  - nombre: jaulas
+    posicion: {x: -212.6, y: 21.749569, z: -124.3}
+  - nombre: p_will
+    posicion: {x: -207.5, y: 22.043652, z: -132}
+  - nombre: p_sargento
+    posicion: {x: -210, y: 21.82594, z: -133.5}
+  - nombre: p_g1
+    posicion: {x: -217, y: 21.9155, z: -130.5}
+  - nombre: p_g2
+    posicion: {x: -211, y: 22.392197, z: -121.5}
+  - nombre: p_jefe
+    posicion: {x: -215.5, y: 21.502022, z: -127.5}
+  - nombre: p_c2
+    posicion: {x: -217.5, y: 21.39981, z: -125.5}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294459056455822
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294459056455823
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: 
+        markName: jaulas
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294459056455824
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: 
+        markName: jaulas
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294459056455825
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 7938384439400024403, guid: b6e54acc881a03c4a9719b161a25a3e3, type: 3}
+        atActorId: Player
+        markName: 
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 2.5
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294459056455826
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1.2
+        waitForEnd: 0
+    - rid: 6540294459056455827
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

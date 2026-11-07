@@ -78,14 +78,14 @@ MonoBehaviour:
   appearance:
   - category: 2
     partName: Head01_Male
-  - category: 3
-    partName: Hair16_Heroe
-  - category: 0
-    partName: Body23_Aventurero
   - category: 4
     partName: Eye30
   - category: 5
     partName: Mouth20
+  - category: 3
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   unlockedWardrobeIds:
   - Body05
   - Cloak02

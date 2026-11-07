@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Cap3_03_ElCarro
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: 'Cap. 3: el carro de noche'
+  summary: Un carro con jaulas tapadas pasa junto al fuego; por la manta sale una luz que respira.
+  signalIn: CAP3_CARRO_START
+  signalOut: CAP3_CARRO_DONE
+  musicId: 
+  presentacionDeTexto: 0
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Cap3_03_ElCarro'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294456446550985
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294456446550985
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 08ca562d7d2e65b4bb9373ffc735c9c0, type: 2}
+        empezarEn: 0

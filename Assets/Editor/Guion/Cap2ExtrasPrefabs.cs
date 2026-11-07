@@ -166,6 +166,9 @@ public static class Cap2ExtrasPrefabs
             caja.size = b.size;
             var arde = jaula.AddComponent<Burnable>();
             var estado = jaula.AddComponent<EstadoPersistente>();
+            // Sus UnityEvent no traen valor inicial: al añadirlos por código llegan nulos.
+            arde.onBurned ??= new UnityEvent();
+            estado.alRestaurar ??= new UnityEvent();
             var so = new SerializedObject(estado);
             so.FindProperty("idManual").stringValue = "CAP2_JAULA_" + (i + 1).ToString("00");
             so.ApplyModifiedPropertiesWithoutUndo();

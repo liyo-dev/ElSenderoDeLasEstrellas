@@ -23,6 +23,8 @@ public sealed class GrupoNode : NarrativeNode
         VuelveAlGrupo,
         /// <summary>Pasa a ir al mando.</summary>
         PasaAlMando,
+        /// <summary>Entra en el grupo por primera vez (el compañero ya está en la escena, fuera del grupo).</summary>
+        EntraEnElGrupo,
     }
 
     private const float SegundosDeReintento = 3f;
@@ -41,6 +43,7 @@ public sealed class GrupoNode : NarrativeNode
         string verbo = accion switch
         {
             Accion.VuelveAlGrupo => "Vuelve al grupo",
+            Accion.EntraEnElGrupo => "Entra en el grupo",
             Accion.PasaAlMando => "Pasa al mando",
             _ => retirarDeLaEscena ? "Sale del grupo y de la escena" : "Sale del grupo",
         };
@@ -80,6 +83,7 @@ public sealed class GrupoNode : NarrativeNode
     private bool Hacer(Slot slot) => accion switch
     {
         Accion.VuelveAlGrupo => SalidasDelGrupo.Devolver(slot),
+        Accion.EntraEnElGrupo => SalidasDelGrupo.Unir(slot),
         Accion.PasaAlMando => ControlDelJugador.PasarElMandoA(slot) && ControlDelJugador.Activo == slot
                               && (ActiveCharacterSwapper.Instance == null || ActiveCharacterSwapper.Instance.IsReady),
         _ => SalidasDelGrupo.Sacar(slot, retirarDeLaEscena),
@@ -91,6 +95,8 @@ public sealed class GrupoNode : NarrativeNode
         while (!Hacer(slot) && Time.unscaledTime < limite) yield return null;
         if (ControlDelJugador.Activo != slot && accion == Accion.PasaAlMando)
             Debug.LogWarning($"[GrupoNode] No se ha podido pasar el mando a {personaje}.");
+        if (accion == Accion.EntraEnElGrupo && !ControlDelJugador.EnElGrupo(slot))
+            Debug.LogWarning($"[GrupoNode] {personaje} no ha podido entrar en el grupo: no está en la escena.");
         _rutina = null;
         onReadyToAdvance?.Invoke();
     }

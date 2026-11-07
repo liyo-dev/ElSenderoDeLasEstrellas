@@ -30,6 +30,15 @@ MonoBehaviour:
     attackSeconds: 0.08
     releaseSeconds: 0.65
     holdAfterVoiceSeconds: 0.5
+  epicVoiceDuck:
+    enabled: 1
+    musicDb: -6
+    ambienceDb: -12
+    sfxDb: -4
+    voiceGainDb: 0
+    attackSeconds: 0.08
+    releaseSeconds: 0.65
+    holdAfterVoiceSeconds: 0.5
   battles:
   - battleId: Demon_1
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
@@ -499,14 +508,17 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
     fadeIn: 1.5
     fadeOut: 3
+    sinBucle: 0
   - sequenceId: MAGOOSCURO_REVEAL
     music: {fileID: 8300000, guid: 63822d4492ee1954abc25f7aa03af997, type: 3}
     fadeIn: 1
     fadeOut: 2.5
+    sinBucle: 0
   - sequenceId: MAGOOSCURO_CLIMAX
     music: {fileID: 8300000, guid: 0ba4e6cc6b6573a4d97ac1c6ec57b8ec, type: 3}
     fadeIn: 2
     fadeOut: 3
+    sinBucle: 0
   - sequenceId: ULTIMO_INCANTAZIONE
     music: {fileID: 8300000, guid: 511f6d60581e7864c9568c75b4b04b13, type: 3}
     fadeIn: 1.5
@@ -516,34 +528,42 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: LIAM_CRYSTAL
     music: {fileID: 8300000, guid: fe0855e721ee5cf4aa3e0430de965f55, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: ESTELA_APPEARS
     music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: TABERNA
     music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: COMER
     music: {fileID: 8300000, guid: f1b6b495ea9afd54ca743f778e2c2e4a, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: REINO_EXIT
     music: {fileID: 8300000, guid: 781689e46248308499a3914697668573, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: PROMO_1
     music: {fileID: 8300000, guid: 6904c00d6a7aa0848aa3348ca1abb7b4, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: MAGOOSCURO_VISION
     music: {fileID: 8300000, guid: 3cc104b44c356344eab24aa874ae8bb8, type: 3}
     fadeIn: 1
     fadeOut: 2
+    sinBucle: 0
   - sequenceId: EPILOGUE
     music: {fileID: 8300000, guid: a3cc4bb37e6b3b14885e644f20e9271a, type: 3}
     fadeIn: 1
@@ -553,16 +573,24 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: c11b574e92002c44a92772ec8eb12331, type: 3}
     fadeIn: 1.5
     fadeOut: 2.5
+    sinBucle: 0
   - sequenceId: PROLOGUE_DANCE
     music: {fileID: 8300000, guid: 741f5c2ab994d7e43b3fe2a6b792a897, type: 3}
     fadeIn: 1
     fadeOut: 1
+    sinBucle: 0
   - sequenceId: MANANA_DESPUES
     music: {fileID: 8300000, guid: 62884d4643e97fb4fb5014f5b0fb93ec, type: 3}
     fadeIn: 2
     fadeOut: 1.5
+    sinBucle: 0
   - sequenceId: FINAL_ARCHIMAGO
     music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
+    fadeIn: 2.5
+    fadeOut: 3
+    sinBucle: 1
+  - sequenceId: LOS_TRES
+    music: {fileID: 8300000, guid: 5e6162f8a059f3e4ab2857f4cc6ed411, type: 3}
     fadeIn: 2.5
     fadeOut: 3
     sinBucle: 1
