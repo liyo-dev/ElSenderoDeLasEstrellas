@@ -122,6 +122,14 @@ internal sealed partial class Horno
         anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
         anim.applyRootMotion = false;
         int capa = AnimatorLayerUtil.ResolveLayer(anim, estado, 0);
+        // Los gestos de la capa de tronco (UpperBody) no están en la capa 0: se buscan en las demás capas.
+        bool enOtraCapa = false;
+        if (capa < 0 && !string.IsNullOrEmpty(estado))
+        {
+            int hash = Animator.StringToHash(estado);
+            for (int i = 1; i < anim.layerCount; i++)
+                if (anim.HasState(i, hash)) { capa = i; enOtraCapa = true; break; }
+        }
         if (capa < 0 && !string.IsNullOrEmpty(clip.name))
             capa = AnimatorLayerUtil.ResolveLayer(anim, clip.name, 0);
         if (capa < 0)
@@ -130,7 +138,7 @@ internal sealed partial class Horno
             capa = AnimatorLayerUtil.ResolveLayer(anim, "Idle01", 0);
         if (capa < 0) { Debug.LogWarning($"[HornoProps] Fallback SampleAnimation en {pose.name} estado={estado} clip={clip.name}"); clip.SampleAnimation(anim.gameObject, t); return; }
         if (capa > 0) anim.SetLayerWeight(capa, 1f);
-        string estadoCandidato = AnimatorLayerUtil.ResolveLayer(anim, estado, 0) >= 0 ? estado
+        string estadoCandidato = enOtraCapa || AnimatorLayerUtil.ResolveLayer(anim, estado, 0) >= 0 ? estado
             : (AnimatorLayerUtil.ResolveLayer(anim, clip.name, 0) >= 0 ? clip.name
             : (AnimatorLayerUtil.ResolveLayer(anim, "Idle_Normal_NoWeapon", 0) >= 0 ? "Idle_Normal_NoWeapon" : "Idle01"));
         string estadoReal = AnimatorLayerUtil.ResolveStatePath(anim, estadoCandidato, capa);

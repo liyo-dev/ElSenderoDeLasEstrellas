@@ -106,12 +106,12 @@ public static class CarasDeLosNPCs
     [MenuItem("El Sendero/Personajes/Caras de los NPCs")]
     public static void Aplicar()
     {
-        if (Application.isPlaying) { EditorUtility.DisplayDialog("Caras de los NPCs", "Hazlo fuera de Play.", "Vale"); return; }
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Caras de los NPCs", "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
         Aplicar(informe);
         AssetDatabase.SaveAssets();
         Debug.Log("[CarasDeLosNPCs] " + informe.ToString().Replace('\n', ' '));
-        EditorUtility.DisplayDialog("Caras de los NPCs", informe.ToString(), "Vale");
+        OrdenesDelEditor.Avisar("Caras de los NPCs", informe.ToString());   // desde el buzón va al registro (un diálogo lo bloquearía)
     }
 
     public static void Aplicar(StringBuilder informe)

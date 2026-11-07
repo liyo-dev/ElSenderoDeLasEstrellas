@@ -14,9 +14,9 @@ estrechos). La cabeza no cambia de tamaño. Blender 5.2 (módulo `bpy`).
 | `exportar.py` | FBX: el esqueleto solo (`-`), unas mallas, o todas (`*`). |
 | `foto.py`, `juntar.py` | Fotos de comprobación (frente, tres cuartos, lado, espalda) y juntar piezas de otro .blend para la foto. |
 
-Caras: `../Caras/caras_set.py` con las variables de niño (ojos más grandes y bajos, boca más pequeña):
+Caras (estilo A desde INC-918, 7 nov 2026; todo junto en `caras_ninos.sh`): `../Caras/caras_set.py` con las variables de niño (ojos más grandes y bajos, boca más pequeña):
 `OJO_ESCALA=1.22 OJO_Z=0.93 OJO_X=0.13 BOCA_Z=0.825 BOCA_ESCALA=0.85 MEJILLAS=suave`, y después
-`cuerpo_nino.py` con su talla. Tobías: `Head01_Male chico marron 60 60`; Nina: `Head02_Female chicaC azul 70 70`.
+`cuerpo_nino.py` con su talla. Tobías: `Head01_Male chicoL marron 60 60` (`OJO_FORMA=chico`, como Liam); Nina: `Head02_Female chicaL azul 70 70` (`OJO_FORMA=redondo`, `EXTRAS=0`).
 
 FBX en `Assets/Art/Characters/Ninos/` (`Esqueleto_NinoMayor/Pequeno.fbx`, y por niño su pelo, cuerpo y caras).
 En Unity: *El Sendero ▸ Personajes ▸ Niños hechos en Blender (Tobías, Nina)* (`NinosHechosEnBlender`, `CuerpoDeNino`).

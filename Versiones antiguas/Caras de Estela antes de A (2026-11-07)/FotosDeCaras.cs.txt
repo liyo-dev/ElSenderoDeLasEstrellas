@@ -1,0 +1,228 @@
+#if UNITY_EDITOR
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
+
+/// Fotos de prueba de las caras (7 nov 2026, prueba del estilo B2 en Will): pone un protagonista, sin sus
+/// scripts, en la escena abierta, le pone cada emoción de su perfil y saca fotos con una cámara de URP
+/// (Quibli, luces y postproceso de la escena): de cerca, plano medio y a distancia de juego.
+/// En MainWorld va delante de la fuente de la plaza (el sitio del escaparate); en otra escena, al origen.
+/// Las fotos salen en «Guiones/_fotos_caras/<personaje>/». No deja nada en la escena (todo DontSave y se
+/// borra al acabar). Desde el buzón: «menu El Sendero/Personajes/Fotos de caras de Will (prueba)».
+public static class FotosDeCaras
+{
+    private static readonly NPCEmotion[] Emociones =
+    {
+        NPCEmotion.Neutral, NPCEmotion.Happy, NPCEmotion.Angry, NPCEmotion.Sad, NPCEmotion.Surprised,
+        NPCEmotion.Scared, NPCEmotion.Thinking, NPCEmotion.Crying,
+    };
+    private const int W = 1280, H = 720;
+
+    [MenuItem("El Sendero/Personajes/Fotos de caras de Will (prueba)")]
+    public static void Will() => Hacer("Assets/Prefabs/_WILL.prefab", "Will", false);
+
+    /// Lo mismo, con Liam y Estela a los lados (con su cara de reposo), para comparar a distancia de juego.
+    [MenuItem("El Sendero/Personajes/Fotos de caras de Will con Liam y Estela (prueba)")]
+    public static void WillConCompis() => Hacer("Assets/Prefabs/_WILL.prefab", "Will", true);
+
+    private static readonly (string ruta, float lado)[] Compis =
+        { ("Assets/Prefabs/_LIAM.prefab", -1.4f), ("Assets/Prefabs/_ESTELA.prefab", 1.4f) };
+
+    /// Pone un personaje (sin scripts, en reposo) dentro de «padre», a «x» metros a su derecha.
+    private static (GameObject inst, Animator anim, EmotionProfile perfil, List<Renderer> piezas) Poner(GameObject prefab, Transform padre, float x, Scene escena, StringBuilder informe)
+    {
+        var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
+        inst.hideFlags = HideFlags.DontSave;
+        inst.transform.SetParent(padre, false);
+        foreach (var mb in inst.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+        var anim = inst.GetComponentsInChildren<Animator>(true).FirstOrDefault(a => a != null && a.runtimeAnimatorController != null);
+        AnimationClip idle = anim == null ? null
+            : anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle_Normal"))
+              ?? anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle"));
+        if (idle != null)
+        {
+            try { Horno.MuestrearEstado(inst, idle, idle.name, 0.3f); }
+            catch (System.Exception ex) { informe.Append($"{prefab.name} sin pose ({ex.Message}) · "); }
+        }
+        inst.transform.localPosition = new Vector3(x, 0f, 0f); inst.transform.localRotation = Quaternion.identity;
+        var emo = inst.GetComponentInChildren<NPCEmotionController>(true);
+        var piezas = inst.GetComponentsInChildren<Renderer>(true)
+            .Where(r => r.name.StartsWith("Eye") || r.name.StartsWith("Mouth") || r.name.StartsWith("Fx")).ToList();
+        return (inst, anim, emo != null ? emo.EmotionProfile : null, piezas);
+    }
+
+    private static Renderer Cara(List<Renderer> piezas, string ojos, string boca, string fx)
+    {
+        Renderer ojo = null;
+        foreach (var r in piezas)
+        {
+            bool on = r.name == ojos || r.name == boca || r.name == fx;
+            r.gameObject.SetActive(on);
+            if (on) { r.enabled = true; if (r.name == ojos) ojo = r; }
+        }
+        return ojo;
+    }
+
+    private static float? Suelo(Vector2 xz, float cerca)
+    {
+        foreach (var hit in Physics.RaycastAll(new Vector3(xz.x, cerca + 6f, xz.y), Vector3.down, 30f, ~0, QueryTriggerInteraction.Ignore)
+                     .OrderBy(h => h.distance))
+            return hit.point.y;
+        return null;
+    }
+
+    /// ¿Le da el sol a la cara en ese punto? (rayo hacia la luz direccional; solo ve lo que tiene collider)
+    private static bool AlSol(Vector3 pie, Light sol) =>
+        sol == null || !Physics.Raycast(pie + Vector3.up * 1.2f, -sol.transform.forward, 300f, ~0, QueryTriggerInteraction.Ignore);
+
+    private static bool Libre(Vector3 pie) =>
+        !Physics.CheckCapsule(pie + Vector3.up * 0.4f, pie + Vector3.up * 1.4f, 0.35f, ~0, QueryTriggerInteraction.Ignore);
+
+    public static void Hacer(string rutaPrefab, string nombre, bool conCompis)
+    {
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Fotos de caras", "Hazlo fuera de Play."); return; }
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPrefab);
+        if (prefab == null) { OrdenesDelEditor.Avisar("Fotos de caras", "No encuentro " + rutaPrefab); return; }
+        var escena = SceneManager.GetSceneByName("MainWorld");          // si está cargada (aunque no sea la activa)
+        if (!escena.IsValid() || !escena.isLoaded) escena = SceneManager.GetActiveScene();
+        bool mundo = escena.name == "MainWorld";
+        Vector2 xz = mundo ? new Vector2(4.6f, -134.6f) : Vector2.zero;
+        Vector2 haciaCam = mundo ? new Vector2(3.4f, -145f) - xz : new Vector2(0f, -1f);
+        float y0 = mundo ? 26.3f : 0f, y = Suelo(xz, y0) ?? y0;
+        string sitio = "base";
+        // Sitio a mano: «Guiones/_fotos_caras/sitio.txt» con «x z». Si no, el primer sitio cerca de la base con sol
+        // en la cara (y en la de los compañeros) y sin nada encima.
+        var ci = System.Globalization.CultureInfo.InvariantCulture;
+        string fichero = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_fotos_caras", "sitio.txt");
+        var sol = RenderSettings.sun;
+        if (sol == null)
+            foreach (var raiz in escena.GetRootGameObjects())
+                foreach (var l in raiz.GetComponentsInChildren<Light>())
+                    if (sol == null && l.type == LightType.Directional && l.isActiveAndEnabled) sol = l;
+        Vector3 derecha = Vector3.Cross(Vector3.up, new Vector3(haciaCam.x, 0f, haciaCam.y).normalized);
+        if (File.Exists(fichero))
+        {
+            var p = File.ReadAllText(fichero).Split(new[] { ' ', '\n', '\r', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+            xz = new Vector2(float.Parse(p[0], ci), float.Parse(p[1], ci)); y = Suelo(xz, y0) ?? y0; sitio = "sitio.txt";
+            // tercer dato opcional: «sol» (de cara al sol, para que le dé en la cara) o el rumbo en grados (0 = +Z)
+            if (p.Length > 2 && p[2] == "sol" && sol != null) haciaCam = new Vector2(-sol.transform.forward.x, -sol.transform.forward.z).normalized;
+            else if (p.Length > 2 && float.TryParse(p[2], System.Globalization.NumberStyles.Float, ci, out var grados))
+                haciaCam = new Vector2(Mathf.Sin(grados * Mathf.Deg2Rad), Mathf.Cos(grados * Mathf.Deg2Rad));
+            derecha = Vector3.Cross(Vector3.up, new Vector3(haciaCam.x, 0f, haciaCam.y).normalized);
+        }
+        else if (mundo)
+        {
+            bool Bueno(Vector2 q, float h)
+            {
+                var pie = new Vector3(q.x, h, q.y);
+                if (!AlSol(pie, sol) || !Libre(pie)) return false;
+                if (!conCompis) return true;
+                foreach (var (_, lado) in Compis)
+                    if (!AlSol(pie + derecha * lado, sol) || !Libre(pie + derecha * lado)) return false;
+                return true;
+            }
+            bool hallado = Bueno(xz, y);
+            for (int r = 2; r <= 10 && !hallado; r += 2)
+                for (int k = 0; k < 12 && !hallado; k++)
+                {
+                    var cand = xz + new Vector2(Mathf.Cos(k * Mathf.PI / 6f), Mathf.Sin(k * Mathf.PI / 6f)) * r;
+                    var gy = Suelo(cand, y0);
+                    if (gy == null || Mathf.Abs(gy.Value - y0) > 1.5f || !Bueno(cand, gy.Value)) continue;
+                    xz = cand; y = gy.Value; hallado = true; sitio = $"al sol a {r} m de la base";
+                }
+            if (!hallado) sitio = "base (no encontré sitio al sol)";
+        }
+
+        string carpeta = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_fotos_caras", nombre);
+        Directory.CreateDirectory(carpeta);
+        foreach (var f in Directory.GetFiles(carpeta, "*.png")) File.Delete(f);
+
+        var informe = new StringBuilder();
+        var soporte = new GameObject("Fotos de caras · " + nombre) { hideFlags = HideFlags.DontSave };
+        SceneManager.MoveGameObjectToScene(soporte, escena);
+        var camGo = new GameObject("Fotos de caras · cámara") { hideFlags = HideFlags.HideAndDontSave };
+        var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+        var png = new Texture2D(W, H, TextureFormat.RGB24, false);
+        int n = 0;
+        try
+        {
+            soporte.transform.SetPositionAndRotation(new Vector3(xz.x, y, xz.y),
+                Quaternion.LookRotation(new Vector3(haciaCam.x, 0f, haciaCam.y).normalized, Vector3.up));
+            var (inst, anim, perfil, piezas) = Poner(prefab, soporte.transform, 0f, escena, informe);
+            if (perfil == null) { informe.Append("sin NPCEmotionController o sin perfil"); return; }
+            if (conCompis)
+                foreach (var (ruta, lado) in Compis)
+                {
+                    var pf = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+                    if (pf == null) { informe.Append($"no encuentro {ruta} · "); continue; }
+                    var c = Poner(pf, soporte.transform, lado, escena, informe);
+                    if (c.perfil != null) Cara(c.piezas, c.perfil.ojosDeReposoPorDefecto, c.perfil.bocaDeReposoPorDefecto, null);
+                }
+
+            var cam = camGo.AddComponent<Camera>();
+            cam.targetTexture = rt; cam.scene = escena; cam.nearClipPlane = 0.05f; cam.farClipPlane = 1500f;
+            var datos = camGo.AddComponent<UniversalAdditionalCameraData>();
+            var pila = VolumeManager.instance.isInitialized ? VolumeManager.instance.stack : null;
+            datos.renderPostProcessing = pila != null && pila.GetComponent<ColorAdjustments>() != null;
+            if (!datos.renderPostProcessing) informe.Append("sin postproceso (volúmenes no listos) · ");
+
+            // Centro de la cara: los ojos neutros
+            var ojoNeutro = Cara(piezas, perfil.ojosDeReposoPorDefecto, perfil.bocaDeReposoPorDefecto, null);
+            var cabeza = anim != null && anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.Head) : null;
+            Vector3 cara = ojoNeutro != null ? ojoNeutro.bounds.center
+                : (cabeza != null ? cabeza.position + Vector3.up * 0.15f : soporte.transform.position + Vector3.up * 1.3f);
+            Vector3 fwd = soporte.transform.forward;
+            var planos = new Dictionary<string, (Vector3 pos, Vector3 mira, float lente)>
+            {
+                ["cerca"] = (cara + fwd * 1.1f + Vector3.up * 0.02f, cara - Vector3.up * 0.04f, 28f),
+                ["medio"] = (cara + fwd * 2.4f + Vector3.up * 0.1f, cara - Vector3.up * 0.45f, 35f),
+                ["juego"] = (cara + fwd * 5f + Vector3.up * 1.5f, cara - Vector3.up * 0.5f, 50f),
+                ["juego_lejos"] = (cara + fwd * 7.5f + Vector3.up * 2.5f, cara - Vector3.up * 0.5f, 50f),
+            };
+
+            foreach (var e in Emociones)
+            {
+                string ojos = perfil.ojosDeReposoPorDefecto, boca = perfil.bocaDeReposoPorDefecto, fx = null;
+                if (e != NPCEmotion.Neutral)
+                {
+                    var d = perfil.GetEmotionData(e);
+                    if (!string.IsNullOrEmpty(d.eyeMeshName)) ojos = d.eyeMeshName;
+                    if (!string.IsNullOrEmpty(d.mouthMeshName)) boca = d.mouthMeshName;
+                    if (d.simbolos != null && d.simbolos.Length > 0) fx = d.simbolos[Mathf.Min(2, d.simbolos.Length - 1)];
+                }
+                Cara(piezas, ojos, boca, fx);
+                informe.Append($"{e}={ojos}/{boca}{(fx != null ? "/" + fx : "")} ");
+                foreach (var kv in planos)
+                {
+                    if (kv.Key != "cerca" && e != NPCEmotion.Neutral && e != NPCEmotion.Crying && e != NPCEmotion.Happy) continue;
+                    cam.transform.SetPositionAndRotation(kv.Value.pos, Quaternion.LookRotation(kv.Value.mira - kv.Value.pos, Vector3.up));
+                    cam.fieldOfView = kv.Value.lente;
+                    var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
+                    if (RenderPipeline.SupportsRenderRequest(cam, peticion)) RenderPipeline.SubmitRenderRequest(cam, peticion);
+                    else cam.Render();
+                    var previo = RenderTexture.active;
+                    RenderTexture.active = rt;
+                    png.ReadPixels(new Rect(0, 0, W, H), 0, 0);
+                    png.Apply();
+                    RenderTexture.active = previo;
+                    File.WriteAllBytes(Path.Combine(carpeta, $"{nombre}_{(int)e:00}_{e}_{kv.Key}.png"), png.EncodeToPNG());
+                    n++;
+                }
+            }
+        }
+        finally
+        {
+            Object.DestroyImmediate(soporte);
+            Object.DestroyImmediate(camGo);
+            rt.Release(); Object.DestroyImmediate(rt); Object.DestroyImmediate(png);
+            OrdenesDelEditor.Avisar("Fotos de caras", $"{n} fotos en {carpeta} (escena {escena.name}, {sitio}: x={xz.x:F1} z={xz.y:F1} y={y:F2}, sol={(sol != null ? sol.name + " hacia " + sol.transform.forward.ToString("F2") : "ninguno")}, mira hacia {haciaCam.x:F2},{haciaCam.y:F2}, compañeros={conCompis}) · {informe}");
+        }
+    }
+}
+#endif

@@ -1,0 +1,154 @@
+#if UNITY_EDITOR
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
+
+/// Fotos de prueba de las caras (7 nov 2026, prueba del estilo B2 en Will): pone un protagonista, sin sus
+/// scripts, en la escena abierta, le pone cada emoción de su perfil y saca fotos con una cámara de URP
+/// (Quibli, luces y postproceso de la escena): de cerca, plano medio y a distancia de juego.
+/// En MainWorld va delante de la fuente de la plaza (el sitio del escaparate); en otra escena, al origen.
+/// Las fotos salen en «Guiones/_fotos_caras/<personaje>/». No deja nada en la escena (todo DontSave y se
+/// borra al acabar). Desde el buzón: «menu El Sendero/Personajes/Fotos de caras de Will (prueba)».
+public static class FotosDeCaras
+{
+    private static readonly NPCEmotion[] Emociones =
+    {
+        NPCEmotion.Neutral, NPCEmotion.Happy, NPCEmotion.Angry, NPCEmotion.Sad, NPCEmotion.Surprised,
+        NPCEmotion.Scared, NPCEmotion.Thinking, NPCEmotion.Crying,
+    };
+    private const int W = 1280, H = 720;
+
+    [MenuItem("El Sendero/Personajes/Fotos de caras de Will (prueba)")]
+    public static void Will() => Hacer("Assets/Prefabs/_WILL.prefab", "Will");
+
+    public static void Hacer(string rutaPrefab, string nombre)
+    {
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Fotos de caras", "Hazlo fuera de Play."); return; }
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPrefab);
+        if (prefab == null) { OrdenesDelEditor.Avisar("Fotos de caras", "No encuentro " + rutaPrefab); return; }
+        var escena = SceneManager.GetSceneByName("MainWorld");          // si está cargada (aunque no sea la activa)
+        if (!escena.IsValid() || !escena.isLoaded) escena = SceneManager.GetActiveScene();
+        bool mundo = escena.name == "MainWorld";
+        Vector2 xz = mundo ? new Vector2(4.6f, -134.6f) : Vector2.zero;
+        Vector2 haciaCam = mundo ? new Vector2(3.4f, -145f) - xz : new Vector2(0f, -1f);
+        float y = mundo ? 26.3f : 0f;
+        foreach (var hit in Physics.RaycastAll(new Vector3(xz.x, y + 6f, xz.y), Vector3.down, 30f, ~0, QueryTriggerInteraction.Ignore)
+                     .OrderBy(h => h.distance))
+        { y = hit.point.y; break; }
+
+        string carpeta = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_fotos_caras", nombre);
+        Directory.CreateDirectory(carpeta);
+        foreach (var f in Directory.GetFiles(carpeta, "*.png")) File.Delete(f);
+
+        var informe = new StringBuilder();
+        var soporte = new GameObject("Fotos de caras · " + nombre) { hideFlags = HideFlags.DontSave };
+        SceneManager.MoveGameObjectToScene(soporte, escena);
+        var camGo = new GameObject("Fotos de caras · cámara") { hideFlags = HideFlags.HideAndDontSave };
+        var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+        var png = new Texture2D(W, H, TextureFormat.RGB24, false);
+        int n = 0;
+        try
+        {
+            soporte.transform.SetPositionAndRotation(new Vector3(xz.x, y, xz.y),
+                Quaternion.LookRotation(new Vector3(haciaCam.x, 0f, haciaCam.y).normalized, Vector3.up));
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
+            inst.hideFlags = HideFlags.DontSave;
+            inst.transform.SetParent(soporte.transform, false);
+            foreach (var mb in inst.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+
+            // Pose de reposo (como el storyboard)
+            var anim = inst.GetComponentsInChildren<Animator>(true).FirstOrDefault(a => a != null && a.runtimeAnimatorController != null);
+            AnimationClip idle = anim == null ? null
+                : anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle_Normal"))
+                  ?? anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle"));
+            if (idle != null)
+            {
+                try { Horno.MuestrearEstado(inst, idle, idle.name, 0.3f); }
+                catch (System.Exception ex) { informe.Append("sin pose (" + ex.Message + ") · "); }
+            }
+            inst.transform.localPosition = Vector3.zero; inst.transform.localRotation = Quaternion.identity;
+
+            var emo = inst.GetComponentInChildren<NPCEmotionController>(true);
+            var perfil = emo != null ? emo.EmotionProfile : null;
+            if (perfil == null) { informe.Append("sin NPCEmotionController o sin perfil"); return; }
+            var piezas = inst.GetComponentsInChildren<Renderer>(true)
+                .Where(r => r.name.StartsWith("Eye") || r.name.StartsWith("Mouth") || r.name.StartsWith("Fx")).ToList();
+
+            Renderer Cara(string ojos, string boca, string fx)
+            {
+                Renderer ojo = null;
+                foreach (var r in piezas)
+                {
+                    bool on = r.name == ojos || r.name == boca || r.name == fx;
+                    r.gameObject.SetActive(on);
+                    if (on) { r.enabled = true; if (r.name == ojos) ojo = r; }
+                }
+                return ojo;
+            }
+
+            var cam = camGo.AddComponent<Camera>();
+            cam.targetTexture = rt; cam.scene = escena; cam.nearClipPlane = 0.05f; cam.farClipPlane = 1500f;
+            var datos = camGo.AddComponent<UniversalAdditionalCameraData>();
+            var pila = VolumeManager.instance.isInitialized ? VolumeManager.instance.stack : null;
+            datos.renderPostProcessing = pila != null && pila.GetComponent<ColorAdjustments>() != null;
+            if (!datos.renderPostProcessing) informe.Append("sin postproceso (volúmenes no listos) · ");
+
+            // Centro de la cara: los ojos neutros
+            var ojoNeutro = Cara(perfil.ojosDeReposoPorDefecto, perfil.bocaDeReposoPorDefecto, null);
+            var cabeza = anim != null && anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.Head) : null;
+            Vector3 cara = ojoNeutro != null ? ojoNeutro.bounds.center
+                : (cabeza != null ? cabeza.position + Vector3.up * 0.15f : soporte.transform.position + Vector3.up * 1.3f);
+            Vector3 fwd = soporte.transform.forward;
+            var planos = new Dictionary<string, (Vector3 pos, Vector3 mira, float lente)>
+            {
+                ["cerca"] = (cara + fwd * 1.1f + Vector3.up * 0.02f, cara - Vector3.up * 0.04f, 28f),
+                ["medio"] = (cara + fwd * 2.4f + Vector3.up * 0.1f, cara - Vector3.up * 0.45f, 35f),
+                ["juego"] = (cara + fwd * 5f + Vector3.up * 1.5f, cara - Vector3.up * 0.5f, 50f),
+            };
+
+            foreach (var e in Emociones)
+            {
+                string ojos = perfil.ojosDeReposoPorDefecto, boca = perfil.bocaDeReposoPorDefecto, fx = null;
+                if (e != NPCEmotion.Neutral)
+                {
+                    var d = perfil.GetEmotionData(e);
+                    if (!string.IsNullOrEmpty(d.eyeMeshName)) ojos = d.eyeMeshName;
+                    if (!string.IsNullOrEmpty(d.mouthMeshName)) boca = d.mouthMeshName;
+                    if (d.simbolos != null && d.simbolos.Length > 0) fx = d.simbolos[Mathf.Min(2, d.simbolos.Length - 1)];
+                }
+                Cara(ojos, boca, fx);
+                informe.Append($"{e}={ojos}/{boca}{(fx != null ? "/" + fx : "")} ");
+                foreach (var kv in planos)
+                {
+                    if (kv.Key != "cerca" && e != NPCEmotion.Neutral && e != NPCEmotion.Crying && e != NPCEmotion.Happy) continue;
+                    cam.transform.SetPositionAndRotation(kv.Value.pos, Quaternion.LookRotation(kv.Value.mira - kv.Value.pos, Vector3.up));
+                    cam.fieldOfView = kv.Value.lente;
+                    var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
+                    if (RenderPipeline.SupportsRenderRequest(cam, peticion)) RenderPipeline.SubmitRenderRequest(cam, peticion);
+                    else cam.Render();
+                    var previo = RenderTexture.active;
+                    RenderTexture.active = rt;
+                    png.ReadPixels(new Rect(0, 0, W, H), 0, 0);
+                    png.Apply();
+                    RenderTexture.active = previo;
+                    File.WriteAllBytes(Path.Combine(carpeta, $"{nombre}_{(int)e:00}_{e}_{kv.Key}.png"), png.EncodeToPNG());
+                    n++;
+                }
+            }
+        }
+        finally
+        {
+            Object.DestroyImmediate(soporte);
+            Object.DestroyImmediate(camGo);
+            rt.Release(); Object.DestroyImmediate(rt); Object.DestroyImmediate(png);
+            OrdenesDelEditor.Avisar("Fotos de caras", $"{n} fotos en {carpeta} (escena {escena.name}, suelo y={y:F2}) · {informe}");
+        }
+    }
+}
+#endif

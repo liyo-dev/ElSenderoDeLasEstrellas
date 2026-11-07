@@ -3,6 +3,8 @@
 #   args: modular.blend (ModularCharacterPolyart.fbx importado tal cual), carpeta de salida de los FBX
 #   (p. ej. Assets/Art/Characters/NPCs/Caras/; los de los protagonistas, Caras_chic*, van luego a Protagonistas/Caras/).
 #   python kit_npcs.py -- modular.blend salida [clave …]   (sin claves: todos)
+#   Estilo de los ojos: variable de entorno ESTILO_OJO (a = «anime sencillo», por defecto desde el 7 nov 2026; anime; b2),
+#   con PESTANAS_A (tres por defecto) y OJO_A_ESCALA (0.9). Ver caras_lib.txt.
 # La tabla de qué NPC lleva cada juego está en Unity: Assets/Editor/Personajes/CarasDeLosNPCs.cs (mismas claves).
 import os, sys, subprocess
 D = os.path.dirname(os.path.abspath(__file__))
@@ -40,10 +42,14 @@ KIT = [
     ("Caras_NPC_h_pecas_azul",        "Head01_Male",   "chicoL", "chico",    "azul",   270, 0,   False, "pecas",        "fina",    False),   # Oliver
     ("Caras_NPC_m_pecas_marron",      "Head02_Female", "chicaL", "almendra", "marron", 280, 0,   False, "pecas+suave",  "fina",    False),   # Vicky
 ]
+# Ajustes sueltos por juego (variables de caras_lib): Estela, cejas 8 mm más bajas para que asomen bajo el flequillo
+# (más arriba quedaban más tapadas: las puntas del flequillo se ensanchan hacia arriba).
+AJUSTES = {"Caras_chica_marron": {"CEJA_DZ": "-0.008"}}
 os.makedirs(SALIDA, exist_ok=True)
 for fbx, cabeza, estilo, forma, iris, ojos, bocas, nino, mejillas, cejas, extras in KIT:
     if PEDIDOS and fbx not in PEDIDOS and fbx.replace("Caras_NPC_", "") not in PEDIDOS: continue
     env = dict(os.environ, MEJILLAS=mejillas, CEJAS=cejas, EXTRAS="1" if extras else "0", OJO_FORMA=forma, **(NINO if nino else {}))
+    env.update(AJUSTES.get(fbx, {}))
     blend = os.path.join(SALIDA, fbx + ".blend")
     subprocess.run([sys.executable, os.path.join(D, "caras_set.py"), "--", MOD, cabeza, estilo, iris, str(ojos), str(bocas), blend], env=env, check=True)
     subprocess.run([sys.executable, os.path.join(D, "exportar_caras.py"), "--", blend, os.path.join(SALIDA, fbx + ".fbx")], check=True)

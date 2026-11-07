@@ -196,6 +196,138 @@ def ojo_anime(lado, s, tipo):
             forma(f"Chispa{k2}_{lado}", [(c2[0], c2[1] + 0.02), (c2[0] + 0.005, c2[1] + 0.005), (c2[0] + 0.02, c2[1]), (c2[0] + 0.005, c2[1] - 0.005),
                                           (c2[0], c2[1] - 0.02), (c2[0] - 0.005, c2[1] - 0.005), (c2[0] - 0.02, c2[1]), (c2[0] - 0.005, c2[1] + 0.005)], BRILLA, 6)
 
+# ── Estilo de ojo (ESTILO_OJO) ──────────────────────────────────────────────────────────────────────────────────
+# anime: el ojo de anime de arriba (blanco, iris de dos tonos, dos brillos, línea gruesa) y la ceja en arco.
+# b2 («muñequito con iris», elegido por Raúl el 7 nov 2026): óvalo del color del iris, sin blanco ni línea de párpado,
+#   pupila oscura algo desplazada hacia abajo y un brillo; ceja de «rayita» corta que se inclina con la emoción.
+#   Mismas piezas y materiales (Iris, Negro para la pupila, Blanco para el brillo, Ceja), así que Unity no cambia.
+#   Cerrados / feliz / llorar: arcos finos. Va con OJO_ESCALA (niños).
+ESTILO_OJO = os.environ.get("ESTILO_OJO", "a").lower()   # a por defecto desde el 7 nov 2026 (INC-918)
+def _b2_recorte(g, tipo, cx, s, cz, rz):
+    """El párpado baja (enfado, cansado, pensar) o se inclina (enfado por dentro, triste y miedo por fuera)."""
+    caido = {"enfado": 0.32, "cansado": 0.5, "pensar": 0.2}.get(tipo, 0.0)
+    inclin = {"enfado": 0.06, "triste": -0.04, "miedo": -0.03}.get(tipo, 0.0)
+    if not (caido or inclin): return g
+    tope = cz + rz * (1 - 2 * caido)
+    lim = Polygon([(cx - 0.3 * s, tope - inclin * 3), (cx + 0.3 * s, tope + inclin * 3), (cx + 0.3 * s, cz - 1), (cx - 0.3 * s, cz - 1)]).buffer(0)
+    return g.intersection(lim)
+def ojo_b2(lado, s, tipo):
+    k = K / 1.25
+    cx = OJO_X * s * 0.92; cz = OJO_Z - 0.012 * k
+    rx, rz = (0.025 * k, 0.035 * k) if tipo in ("sorpresa", "miedo") else (0.03 * k, 0.043 * k)
+    if tipo == "cerrados":
+        forma(f"Ojo_{lado}", arco(cx, OJO_Z - 0.02 * k, 0.036 * k, 0.018 * k, 0.011 * k, sube=False), NEGRO, 1); return
+    if tipo in ("feliz", "guino_cerrado"):
+        forma(f"Ojo_{lado}", arco(cx, OJO_Z - 0.012 * k, 0.036 * k, 0.036 * k, 0.0132 * k), NEGRO, 1); return
+    ox, oz = (0.008 * s * k, 0.01 * k) if tipo == "pensar" else (0, 0)   # pensar: mira arriba y a un lado
+    g = Polygon(elipse(cx + ox, cz + oz, rx, rz, 32)).buffer(0)
+    if not ox: g = _b2_recorte(g, tipo, cx, s, cz, rz)                    # (pensar: el ojo entero, mirando arriba)
+    def dentro(p): return poli(Polygon(p).buffer(0).intersection(g))
+    p = poli(g)
+    if p: forma(f"Iris_{lado}", p, BRILLA if tipo == "conjuro" else IRIS, 1)
+    if tipo == "conjuro":
+        r1, r2 = 0.02 * k, 0.008 * k
+        est = [(cx + ox + (r1 if i % 2 == 0 else r2) * math.sin(i * math.pi / 5), cz + oz + (r1 if i % 2 == 0 else r2) * math.cos(i * math.pi / 5)) for i in range(10)]
+        forma(f"Estrella_{lado}", est, BLANCO, 3); return
+    pu = dentro(elipse(cx + ox, cz + oz - rz * 0.18, rx * 0.72, rz * 0.72))
+    if pu: forma(f"Pupila_{lado}", pu, NEGRO, 3)
+    b = dentro(elipse(cx + ox + rx * 0.35 * s, cz + oz + rz * 0.42, 0.0105 * k, 0.012 * k))
+    if b: forma(f"Brillo_{lado}", b, BLANCO, 4)
+def ceja_b(cx, cz, inclina, lado, n=12):
+    """Ceja de muñequito: rayita redondeada y corta (CEJAS gruesa/poblada la engordan un poco)."""
+    k = K / 1.25
+    gro = {"gruesa": 1.35, "poblada": 1.6}.get(os.environ.get("CEJAS", "fina"), 1.0)
+    cz = cz - 0.022 * k
+    a = math.radians(inclina)
+    g = affinity.scale(Point(0, 0).buffer(1, 12), 0.032 * k, 0.0075 * k * gro)
+    pts = [tuple(p) for p in list(g.exterior.coords)[:-1]]
+    return [(cx * 0.94 + lado * (x * math.cos(a) - z * math.sin(a)), cz + x * math.sin(a) + z * math.cos(a)) for x, z in pts]
+# a («anime sencillo», 7 nov 2026): el mismo contorno que el anime, más pequeño (OJO_A_ESCALA, 0.9 por defecto), blanco,
+#   iris de un tono, pupila, un brillo y línea de arriba fina sin punta larga; sin línea de abajo. Ceja de anime algo más
+#   baja y fina. Mismas piezas y materiales que el anime.
+ESC_OJO_A = float(os.environ.get("OJO_A_ESCALA", 0.9))   # 0.8 se perdía a distancia de juego
+_ceja_anime_orig = ceja_anime
+PESTANAS_A = os.environ.get("PESTANAS_A", "tres")   # chicas con A: «dos» (dos curvadas en la esquina) o «tres» (tres más cortas)
+def _pestana(nombre, bx, bz, ang, largo, curva, s, ancho=0.0065):
+    """Pestaña curvada y afilada: sale de (bx, bz) con el ángulo «ang» (grados, 0 = hacia fuera, 90 = arriba) y se curva hacia fuera."""
+    a0 = math.radians(ang); a1 = math.radians(ang - curva)
+    p0 = (bx, bz); p1 = (bx + math.cos(a0) * largo * 0.55 * s, bz + math.sin(a0) * largo * 0.55)
+    p2 = (p1[0] + math.cos(a1) * largo * 0.5 * s, p1[1] + math.sin(a1) * largo * 0.5)
+    cen = [tuple((1 - t) ** 2 * p0[j] + 2 * (1 - t) * t * p1[j] + t * t * p2[j] for j in (0, 1)) for t in [i / 8 for i in range(9)]]
+    izq, der = [], []
+    for i, (x, z) in enumerate(cen):
+        xa, za = cen[max(0, i - 1)]; xb, zb = cen[min(8, i + 1)]
+        dx, dz = xb - xa, zb - za; l = math.hypot(dx, dz) or 1
+        w = ancho * 0.5 * (1 - i / 8)
+        izq.append((x - dz / l * w, z + dx / l * w)); der.append((x + dz / l * w, z - dx / l * w))
+    forma(nombre, izq + der[::-1], NEGRO, 5)
+def ojo_a(lado, s, tipo):
+    from shapely.geometry import LineString
+    E = ESC_OJO_A * K / 1.25   # los niños (OJO_ESCALA), algo más grandes
+    cx = OJO_X * s
+    pts, rx, rz = contorno(cx, OJO_Z, s, E); rx *= E; rz *= E
+    if tipo in ("cerrados", "feliz", "guino_cerrado"):
+        if tipo == "cerrados":
+            forma(f"Ojo_{lado}", arco(cx, OJO_Z - 0.02, rx, 0.018, 0.011, sube=False), NEGRO, 1)
+            fin = (cx + rx * 0.95 * s, OJO_Z - 0.022)
+        else:
+            forma(f"Ojo_{lado}", arco(cx, OJO_Z - 0.012, rx, 0.036, 0.0132), NEGRO, 1)
+            fin = (cx + rx * 0.95 * s, OJO_Z - 0.006)
+        if CHICA:   # una pestaña en la punta de fuera
+            _pestana(f"PestanaC_{lado}", fin[0], fin[1], 35, 0.026 * E, 25, s)
+        return
+    ojo = _b2_recorte(Polygon(pts).buffer(0), tipo, cx, s, OJO_Z, rz)
+    def dentro(p): return poli(Polygon(p).buffer(0).intersection(ojo))
+    forma(f"Blanco_{lado}", poli(ojo), BLANCO, 0)
+    k = {"sorpresa": 0.6, "miedo": 0.5}.get(tipo, 0.86 if CHICA else 0.9) * E
+    irx, irz = 0.06 * k * (1.05 if CHICA else 1), 0.08 * k * (1.05 if CHICA else 1)
+    icx, icz = cx - 0.003 * s, OJO_Z - (0.008 if CHICA else 0.004)
+    if tipo == "pensar": icx, icz = icx + 0.012, icz + 0.01
+    iris = dentro(elipse(icx, icz, irx, irz, 32))
+    if iris: forma(f"Iris_{lado}", iris, BRILLA if tipo == "conjuro" else IRIS, 2)   # 2 (no 1): con el ojo recortado, el blanco asomaba por el iris
+    if tipo == "conjuro":
+        est = [(icx + (0.026 if i % 2 == 0 else 0.011) * E * math.sin(i * math.pi / 5), icz + (0.026 if i % 2 == 0 else 0.011) * E * math.cos(i * math.pi / 5)) for i in range(10)]
+        forma(f"Estrella_{lado}", est, BLANCO, 3)
+        for k2, (dx, dz) in enumerate(((1.6, 0.9), (-1.5, 1.0), (1.4, -0.8))):   # las chispas del conjuro, como en el anime
+            c2 = (cx + rx * dx * s, OJO_Z + rz * dz)
+            forma(f"Chispa{k2}_{lado}", [(c2[0], c2[1] + 0.02), (c2[0] + 0.005, c2[1] + 0.005), (c2[0] + 0.02, c2[1]), (c2[0] + 0.005, c2[1] - 0.005),
+                                          (c2[0], c2[1] - 0.02), (c2[0] - 0.005, c2[1] - 0.005), (c2[0] - 0.02, c2[1]), (c2[0] - 0.005, c2[1] + 0.005)], BRILLA, 6)
+    else:
+        pu = dentro(elipse(icx, icz - 0.003, irx * 0.42, irz * 0.46))
+        if pu: forma(f"Pupila_{lado}", pu, NEGRO, 3)
+        b1 = dentro(elipse(icx + 0.012 * s, icz + irz * 0.4, 0.011, 0.013))
+        if b1: forma(f"Brillo_{lado}", b1, BLANCO, 4)
+    x0, _, x1, _ = ojo.bounds
+    top = []
+    for j in range(1, 24):
+        x = x0 + (x1 - x0) * j / 24
+        cut = ojo.intersection(LineString([(x, OJO_Z - 1), (x, OJO_Z + 1)]))
+        if cut.is_empty: continue
+        zs = [c[1] for c in (cut.coords if cut.geom_type == "LineString" else [p for g in cut.geoms for p in g.coords])]
+        top.append((x, max(zs)))
+    top.sort(key=lambda p: p[0] * s)
+    if len(top) > 3:
+        gro = 0.0065
+        arriba = [(x, z + 0.0025) for x, z in top]; abajo = [(x, z - gro) for x, z in top][::-1]
+        ult = top[-1]
+        punta = (ult[0] + rx * 0.22 * s, ult[1] + rz * 0.1) if CHICA else (ult[0] + rx * 0.15 * s, ult[1] - rz * 0.05)   # chicas: hacia fuera y algo arriba
+        forma(f"Linea_{lado}", arriba + [punta] + abajo, NEGRO, 5)
+        if CHICA:   # pestañas sueltas y curvadas en la esquina de fuera (PESTANAS_A)
+            sets = {"tres": ((0.62, 62, 0.022), (0.78, 48, 0.026), (0.92, 32, 0.026)),
+                    "dos": ((0.72, 55, 0.03), (0.9, 32, 0.032))}.get(PESTANAS_A, ())
+            for j2, (fr, ang, largo) in enumerate(sets):
+                bx, bz = top[int(fr * (len(top) - 1))]
+                _pestana(f"Pestana{j2}_{lado}", bx, bz + 0.002, ang, largo * E / 0.9, 28, s)
+def ceja_a(cx, cz, inclina, lado, n=12):
+    """La ceja de anime, 8 mm más baja y un 20 % más fina."""
+    pts = _ceja_anime_orig(cx, cz - 0.008 + float(os.environ.get("CEJA_DZ", 0)), inclina, lado, n)   # CEJA_DZ: subir o bajar las cejas (Estela)
+    my = sum(p[1] for p in pts) / len(pts)
+    return [(x, my + (z - my) * 0.8) for x, z in pts]
+if ESTILO_OJO == "a":
+    ojo_anime, ceja_anime = ojo_a, ceja_a
+if ESTILO_OJO == "b2":
+    ojo_anime, ceja_anime = ojo_b2, ceja_b
+
 def ojos(tipo):
     # llorar: ojos cerrados con las cejas de triste (las lágrimas van aparte, en los símbolos Fx)
     gesto = "triste" if tipo == "llorar" else None

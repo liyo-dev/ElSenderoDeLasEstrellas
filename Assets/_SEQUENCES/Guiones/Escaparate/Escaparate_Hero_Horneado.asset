@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Escaparate_Hero_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Escaparate_Hero
-  duracion: 6.5
+  duracion: 3.8
   presentacion: 1
-  huella: "2026-11-07 08:11 \xB7 a4164da7d557b8421b0343f601544b17"
+  huella: "2026-11-07 10:36 \xB7 c7a561dcaff0b7710cf3c19f64f4c92c"
   actores:
   - id: Player
     alias: will
@@ -23,15 +23,21 @@ MonoBehaviour:
     claveDelNombre: Will
     posiciones:
     - t: 0
-      p: {x: 6, y: 26.281815, z: -114}
+      p: {x: 9.4, y: 26.281815, z: -135.9}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 6, y: 26.281815, z: -138}
+      punto: {x: 6.2, y: 27.2, z: -146}
       actor: 
     cabezas: []
-    animacion: []
+    animacion:
+    - fundido: 0
+      t: 0.1
+      tipo: 1
+      estado: CastingIdle01
+      congelar: 1
+      alFinal: 0
     caras: []
     visible: []
     deslizando: []
@@ -41,15 +47,21 @@ MonoBehaviour:
     claveDelNombre: Estela
     posiciones:
     - t: 0
-      p: {x: 7.6, y: 0, z: -113.6}
+      p: {x: 6.2, y: 26.62, z: -133.42}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 6, y: 26.281815, z: -138}
+      punto: {x: 6.2, y: 27.2, z: -146}
       actor: 
     cabezas: []
-    animacion: []
+    animacion:
+    - fundido: 0
+      t: 0.1
+      tipo: 1
+      estado: SitMedium_Loop
+      congelar: 1
+      alFinal: 0
     caras: []
     visible: []
     deslizando: []
@@ -59,78 +71,42 @@ MonoBehaviour:
     claveDelNombre: Liam
     posiciones:
     - t: 0
-      p: {x: 4.4, y: 0, z: -113.6}
+      p: {x: 2.4, y: 26.281815, z: -136.2}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 6, y: 26.281815, z: -138}
+      punto: {x: 6.2, y: 27.2, z: -146}
       actor: 
     cabezas: []
-    animacion: []
+    animacion:
+    - fundido: 0
+      t: 0.1
+      tipo: 1
+      estado: Idle01
+      congelar: 1
+      alFinal: 0
     caras: []
     visible: []
     deslizando: []
   lineas: []
   planos:
   - focos:
-    - t: 0
-      p: {x: 6, y: 27.481815, z: -138}
-    t0: 0
-    t1: 2
+    - t: 0.1
+      p: {x: 5.3, y: 28.5, z: -135.8}
+    t0: 0.1
+    t1: 3.8
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 0
-      p: {x: 6, y: 2, z: -106}
-    lente: 45
+    - t: 0.1
+      p: {x: 4.2, y: 28.75, z: -143}
+    lente: 46
     lenteFinal: 0
     sujetos: []
     pesos: []
     extras: []
-    focoFijo: {x: 6, y: 27.481815, z: -138}
-    alturaDelFoco: 0
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.6
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 2
-      p: {x: 6, y: 27.481815, z: -138}
-    t0: 2
-    t1: 4
-    tipo: 8
-    descripcion: fijo a el punto
-    posiciones:
-    - t: 2
-      p: {x: 11, y: 27.881815, z: -108}
-    lente: 40
-    lenteFinal: 0
-    sujetos: []
-    pesos: []
-    extras: []
-    focoFijo: {x: 6, y: 27.481815, z: -138}
-    alturaDelFoco: 0
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.6
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 4
-      p: {x: 6, y: 27.481815, z: -138}
-    t0: 4
-    t1: 6.5
-    tipo: 8
-    descripcion: fijo a el punto
-    posiciones:
-    - t: 4
-      p: {x: 2, y: 32.281815, z: -103}
-    lente: 50
-    lenteFinal: 0
-    sujetos: []
-    pesos: []
-    extras: []
-    focoFijo: {x: 6, y: 27.481815, z: -138}
+    focoFijo: {x: 5.3, y: 28.5, z: -135.8}
     alturaDelFoco: 0
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
@@ -141,20 +117,20 @@ MonoBehaviour:
   - nombre: inicio
     t: 0
   puntos:
-  - nombre: p_will
-    posicion: {x: 6, y: 26.281815, z: -114}
-  - nombre: p_estela
-    posicion: {x: 7.6, y: 0, z: -113.6}
-  - nombre: p_liam
-    posicion: {x: 4.4, y: 0, z: -113.6}
-  - nombre: pueblo
-    posicion: {x: 6, y: 26.281815, z: -138}
-  - nombre: cam_espalda
-    posicion: {x: 6, y: 0, z: -106}
-  - nombre: cam_34
-    posicion: {x: 11, y: 26.281815, z: -108}
-  - nombre: cam_alta
-    posicion: {x: 2, y: 26.281815, z: -103}
+  - nombre: b_liam
+    posicion: {x: 2.4, y: 26.281815, z: -136.2}
+  - nombre: b_estela
+    posicion: {x: 6.2, y: 26.62, z: -133.42}
+  - nombre: b_will
+    posicion: {x: 9.4, y: 26.281815, z: -135.9}
+  - nombre: caras_b
+    posicion: {x: 5.3, y: 27.3, z: -135.8}
+  - nombre: cam_b1
+    posicion: {x: 6.2, y: 27.2, z: -146}
+  - nombre: cam_b5
+    posicion: {x: 4.2, y: 27.2, z: -143}
+  - nombre: cam_b6
+    posicion: {x: 4.8, y: 27.2, z: -144}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2

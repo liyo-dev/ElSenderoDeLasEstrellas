@@ -89,11 +89,11 @@ public static class CarasDeLosProtagonistas
     [MenuItem("El Sendero/Personajes/Caras de los protagonistas")]
     public static void Aplicar()
     {
-        if (Application.isPlaying) { EditorUtility.DisplayDialog("Caras", "Hazlo fuera de Play.", "Vale"); return; }
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Caras", "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
         Aplicar(informe);
         Debug.Log("[CarasDeLosProtagonistas] " + informe.ToString().Replace('\n', ' '));
-        EditorUtility.DisplayDialog("Caras de los protagonistas", informe.ToString(), "Vale");
+        OrdenesDelEditor.Avisar("Caras de los protagonistas", informe.ToString());   // desde el buzón va al registro (un diálogo lo bloquearía)
     }
 
     public static void Aplicar(StringBuilder informe)

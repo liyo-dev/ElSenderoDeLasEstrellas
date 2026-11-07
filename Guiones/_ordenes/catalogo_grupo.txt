@@ -1,0 +1,393 @@
+## Assets/Prefabs/_WILL.prefab
+  capa=Base Layer estado=TakeDamage clip=GetHit01_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Sleeping_NoWeapon clip=Sleeping_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Swimming_Floating_NoWeapon clip=Swimming_Floating_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=Push_InPlace_NoWeapon clip=Push_InPlace_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=Dance_NoWeapon clip=Dance_NoWeapon largo=2,67 bucle=True
+  capa=Base Layer estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=LevelUp_NoWeapon clip=LevelUp_NoWeapon largo=2,33 bucle=True
+  capa=Base Layer estado=Die02_NoWeapon clip=Die02_NoWeapon largo=1,00 bucle=False
+  capa=Base Layer estado=fly_dive clip=fly_dive largo=0,03 bucle=False
+  capa=Base Layer estado=fly_idle clip=fly_idle largo=1,00 bucle=True
+  capa=Base Layer estado=ClimbDown_RM_NoWeapon clip=ClimbDown_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=ClimbUp_RM_NoWeapon clip=ClimbUp_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=Base Layer estado=TakeDamage_2 clip=GetHit02_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Victory_NoWeapon clip=Victory_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=InteractWithGateObject_NoWeapon clip=InteractWithGateObject_NoWeapon largo=2,00 bucle=True
+  capa=Base Layer estado=InteractWithPeople_NoWeapon clip=InteractWithPeople_NoWeapon largo=7,00 bucle=True
+  capa=Base Layer estado=Idle02 clip=HumanM@Idle02 largo=2,70 bucle=True
+  capa=Base Layer estado=Idle01 clip=HumanM@Idle01 largo=2,70 bucle=True
+  capa=Base Layer estado=Pain01 clip=HumanM@Pain01 largo=1,00 bucle=True
+  capa=Base Layer estado=SitGround_Begin clip=HumanM@SitGround01 - Begin largo=1,10 bucle=False
+  capa=Base Layer estado=SitGround_Loop clip=HumanM@SitGround01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitGround_Exit clip=HumanM@SitGround01 - Stop largo=1,53 bucle=False
+  capa=Base Layer estado=SitHigh_Begin clip=HumanM@SitHigh01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitHigh_Loop clip=HumanM@SitHigh01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitHigh_Exit clip=HumanM@SitHigh01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=SitLow_Begin clip=HumanM@SitLow01 - Begin largo=0,97 bucle=False
+  capa=Base Layer estado=SitLow_Loop clip=HumanM@SitLow01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitLow_Exit clip=HumanM@SitLow01 - Stop largo=1,13 bucle=False
+  capa=Base Layer estado=SitMedium_Begin clip=HumanM@SitMedium01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitMedium_Loop clip=HumanM@SitMedium01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitMedium_Exit clip=HumanM@SitMedium01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon 0 clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Idle03 clip=HumanM@Idle03 largo=2,67 bucle=False
+  capa=Base Layer estado=JumpStart_InPlace_NoWeapon clip=JumpStart_InPlace_NoWeapon largo=0,27 bucle=False
+  capa=Base Layer estado=JumpAir_InPlace_NoWeapon clip=JumpAir_InPlace_NoWeapon largo=0,50 bucle=True
+  capa=Base Layer estado=JumpEnd_InPlace_NoWeapon clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=JumpFull_InPlace_NoWeapon clip=JumpFull_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirSpin_InPlace_NoWeapon clip=JumpAirSpin_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=JumpFullSpin_InPlace_NoWeapon clip=JumpFullSpin_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirDoubleJump_InPlace_NoWeapon clip=JumpAirDoubleJump_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Landing clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=Die01Stay_NoWeapon clip=Die01Stay_NoWeapon largo=0,67 bucle=True
+  capa=Base Layer estado=GetUp_NoWeapon clip=GetUp_NoWeapon largo=0,83 bucle=False
+  capa=Base Layer estado=Die01_NoWeapon clip=Die01_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Loot01_Begin clip=HumanM@Loot01 - Begin largo=0,80 bucle=False
+  capa=Base Layer estado=Loot01_Loop clip=HumanM@Loot01 - Loop largo=1,40 bucle=True
+  capa=Base Layer estado=Loot01_Stop clip=HumanM@Loot01 - Stop largo=0,90 bucle=False
+  capa=Base Layer estado=Stun01 clip=HumanM@Stun01 largo=2,67 bucle=False
+  capa=Base Layer estado=Knockdown01_Ground clip=HumanM@Knockdown01 - Ground largo=1,73 bucle=True
+  capa=Base Layer estado=Knockdown01_StandUp clip=HumanM@Knockdown01 - StandUp largo=1,17 bucle=False
+  capa=Base Layer estado=Opening01_Begin clip=HumanM@Opening01 - Begin largo=0,63 bucle=False
+  capa=Base Layer estado=Opening01_Loop clip=HumanM@Opening01 - Loop largo=1,43 bucle=True
+  capa=Base Layer estado=Opening01_Stop clip=HumanM@Opening01 - Stop largo=0,77 bucle=False
+  capa=Base Layer estado=Derribo_Vuelo clip=Die01_NoWeapon largo=50,00 bucle=False
+  capa=Base Layer estado=LandLow clip=HumanM@Jump01 - Land largo=0,48 bucle=False
+  capa=Base Layer estado=JumpMove clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Jump clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Falling clip=HumanM@Fall01 largo=1,00 bucle=True
+  capa=Base Layer estado=Free Locomotion clip=(mezcla) Free Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Strafing Movement clip=(mezcla) Strafing Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Attack1 clip=Attack01_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack2 clip=Attack02_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack3 clip=Attack03_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack4 clip=Attack04_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=RollRGT_Battle_RM_NoWeapon clip=(mezcla) Blend Tree largo=0,00 bucle=True
+  capa=Base Layer estado=RollLFT_Battle_RM_NoWeapon clip=RollLFT_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollFWD_Battle_RM_NoWeapon clip=RollFWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollBWD_Battle_RM_NoWeapon clip=RollBWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=UpperBody estado=Greeting01_NoWeapon clip=Greeting01_NoWeapon largo=1,67 bucle=True
+  capa=UpperBody estado=HandWave01 clip=HumanM@HandWave01 largo=2,53 bucle=False
+  capa=UpperBody estado=HandWave02 clip=HumanM@HandWave02 largo=3,20 bucle=False
+  capa=UpperBody estado=HeadShake01 clip=HumanM@HeadShake01 largo=1,47 bucle=False
+  capa=UpperBody estado=HeadShake02 clip=HumanM@HeadShake02 largo=1,80 bucle=False
+  capa=UpperBody estado=HeadNod01 clip=HumanM@HeadNod01 largo=1,13 bucle=False
+  capa=UpperBody estado=Question01 clip=HumanM@Question01 largo=2,10 bucle=False
+  capa=UpperBody estado=Question02 clip=HumanM@Question02 largo=2,63 bucle=False
+  capa=UpperBody estado=Reverence01 clip=HumanM@Reverence01 largo=2,33 bucle=False
+  capa=UpperBody estado=Talk01 clip=HumanM@Talk01 largo=2,27 bucle=False
+  capa=UpperBody estado=Talk02 clip=HumanM@Talk02 largo=2,37 bucle=False
+  capa=UpperBody estado=Talk03 clip=HumanM@Talk03 largo=2,97 bucle=False
+  capa=UpperBody estado=Angry01 clip=HumanM@Angry01 largo=2,87 bucle=False
+  capa=UpperBody estado=Angry02 clip=HumanM@Angry02 largo=1,37 bucle=False
+  capa=UpperBody estado=Beg01 clip=HumanM@Beg01 largo=4,43 bucle=False
+  capa=UpperBody estado=Cheer01 clip=HumanM@Cheer01 largo=1,33 bucle=False
+  capa=UpperBody estado=Cheer02 clip=HumanM@Cheer02 largo=0,93 bucle=False
+  capa=UpperBody estado=Cry01 clip=HumanM@Cry01 largo=2,73 bucle=False
+  capa=UpperBody estado=Laugh01 clip=HumanM@Laugh01 largo=2,63 bucle=False
+  capa=UpperBody estado=Fear01 clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=HandClap01 clip=HumanM@HandClap01 largo=2,37 bucle=False
+  capa=UpperBody estado=IdleWounded01 clip=HumanM@IdleWounded01 largo=2,70 bucle=True
+  capa=UpperBody estado=FoundSomething_NoWeapon clip=FoundSomething_NoWeapon largo=2,33 bucle=False
+  capa=UpperBody estado=SenseSomethingStart_NoWeapon clip=SenseSomethingStart_NoWeapon largo=0,37 bucle=False
+  capa=UpperBody estado=DrinkPotion_NoWeapon clip=DrinkPotion_NoWeapon largo=2,33 bucle=True
+  capa=UpperBody estado=Eat_Begin clip=HumanM@Eat01_L largo=2,37 bucle=False
+  capa=UpperBody estado=Eat_Loop clip=HumanM@Eat01_R - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=UpperIdle clip= largo=0,00 bucle=False
+  capa=UpperBody estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=UpperBody estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=UpperBody estado=Idle_Battle_NoWeapon clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=Challenging_NoWeapon clip=Challenging_NoWeapon largo=3,00 bucle=True
+  capa=UpperBody estado=SenseSomethingSearching_NoWeapon clip=SenseSomethingSearching_NoWeapon largo=4,00 bucle=True
+  capa=UpperBody estado=Beg01_Loop clip=HumanM@Beg01 - Loop largo=2,53 bucle=True
+  capa=UpperBody estado=CastingEnter01 clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=CastingIdle01 clip=HumanM@CastingIdle01 largo=1,67 bucle=True
+  capa=UpperBody estado=CastingExit01 clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=CastingDamage01 clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=MagicAttackOmni01_Load clip=HumanM@MagicAttackOmni01 - Load largo=1,63 bucle=False
+  capa=UpperBody estado=Reverence01_Loop clip=HumanM@Reverence01 - Loop largo=1,17 bucle=True
+  capa=UpperBody estado=Laugh01_Loop clip=HumanM@Laugh01 - Loop largo=1,40 bucle=True
+  capa=UpperBody estado=Cry01_Loop clip=HumanM@Cry01 - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=ApretonDeManos_A clip=mixamo.com largo=4,37 bucle=False
+  capa=UpperBody estado=ClimaTaparse clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=MagicLeft clip=HumanM@MagicAttackDirect1H01_L largo=1,20 bucle=False
+  capa=UpperBody estado=MagicRight clip=HumanM@MagicAttackDirect1H01_R largo=1,20 bucle=False
+  capa=UpperBody estado=MagicSpecial clip=Combo05_RM_NoWeapon largo=1,33 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Cast clip=HumanM@MagicAttackDirect2H01 - Cast largo=0,97 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackOmni01 - Cast clip=HumanM@MagicAttackOmni01 - Cast largo=1,30 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Load clip=HumanM@MagicAttackDirect2H01 - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L - Load clip=HumanM@MagicAttackCall1H01_L - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L clip=HumanM@MagicAttackCall1H01_L largo=1,37 bucle=False
+  capa=UpperBody estado=ComboEnter clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=ComboIdle clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=ComboExit clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=ComboBreak clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=New State clip= largo=0,00 bucle=False
+  capa=UpperBody estado=CarryThrow_NoWeapon clip=CarryThrow_NoWeapon largo=1,00 bucle=False
+  capa=UpperBody estado=CarryMoveIdle_NoWeapon clip=CarryMoveIdle_NoWeapon largo=0,93 bucle=True
+  capa=UpperBody estado=CarryStart_NoWeapon clip=CarryStart_NoWeapon largo=1,00 bucle=False
+## Assets/Prefabs/_ESTELA.prefab
+  capa=Base Layer estado=TakeDamage clip=GetHit01_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Sleeping_NoWeapon clip=Sleeping_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Swimming_Floating_NoWeapon clip=Swimming_Floating_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=Push_InPlace_NoWeapon clip=Push_InPlace_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=Dance_NoWeapon clip=Dance_NoWeapon largo=2,67 bucle=True
+  capa=Base Layer estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=LevelUp_NoWeapon clip=LevelUp_NoWeapon largo=2,33 bucle=True
+  capa=Base Layer estado=Die02_NoWeapon clip=Die02_NoWeapon largo=1,00 bucle=False
+  capa=Base Layer estado=fly_dive clip=fly_dive largo=0,03 bucle=False
+  capa=Base Layer estado=fly_idle clip=fly_idle largo=1,00 bucle=True
+  capa=Base Layer estado=ClimbDown_RM_NoWeapon clip=ClimbDown_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=ClimbUp_RM_NoWeapon clip=ClimbUp_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=Base Layer estado=TakeDamage_2 clip=GetHit02_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Victory_NoWeapon clip=Victory_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=InteractWithGateObject_NoWeapon clip=InteractWithGateObject_NoWeapon largo=2,00 bucle=True
+  capa=Base Layer estado=InteractWithPeople_NoWeapon clip=InteractWithPeople_NoWeapon largo=7,00 bucle=True
+  capa=Base Layer estado=Idle02 clip=HumanM@Idle02 largo=2,70 bucle=True
+  capa=Base Layer estado=Idle01 clip=HumanM@Idle01 largo=2,70 bucle=True
+  capa=Base Layer estado=Pain01 clip=HumanM@Pain01 largo=1,00 bucle=True
+  capa=Base Layer estado=SitGround_Begin clip=HumanM@SitGround01 - Begin largo=1,10 bucle=False
+  capa=Base Layer estado=SitGround_Loop clip=HumanM@SitGround01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitGround_Exit clip=HumanM@SitGround01 - Stop largo=1,53 bucle=False
+  capa=Base Layer estado=SitHigh_Begin clip=HumanM@SitHigh01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitHigh_Loop clip=HumanM@SitHigh01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitHigh_Exit clip=HumanM@SitHigh01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=SitLow_Begin clip=HumanM@SitLow01 - Begin largo=0,97 bucle=False
+  capa=Base Layer estado=SitLow_Loop clip=HumanM@SitLow01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitLow_Exit clip=HumanM@SitLow01 - Stop largo=1,13 bucle=False
+  capa=Base Layer estado=SitMedium_Begin clip=HumanM@SitMedium01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitMedium_Loop clip=HumanM@SitMedium01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitMedium_Exit clip=HumanM@SitMedium01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon 0 clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Idle03 clip=HumanM@Idle03 largo=2,67 bucle=False
+  capa=Base Layer estado=JumpStart_InPlace_NoWeapon clip=JumpStart_InPlace_NoWeapon largo=0,27 bucle=False
+  capa=Base Layer estado=JumpAir_InPlace_NoWeapon clip=JumpAir_InPlace_NoWeapon largo=0,50 bucle=True
+  capa=Base Layer estado=JumpEnd_InPlace_NoWeapon clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=JumpFull_InPlace_NoWeapon clip=JumpFull_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirSpin_InPlace_NoWeapon clip=JumpAirSpin_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=JumpFullSpin_InPlace_NoWeapon clip=JumpFullSpin_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirDoubleJump_InPlace_NoWeapon clip=JumpAirDoubleJump_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Landing clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=Die01Stay_NoWeapon clip=Die01Stay_NoWeapon largo=0,67 bucle=True
+  capa=Base Layer estado=GetUp_NoWeapon clip=GetUp_NoWeapon largo=0,83 bucle=False
+  capa=Base Layer estado=Die01_NoWeapon clip=Die01_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Loot01_Begin clip=HumanM@Loot01 - Begin largo=0,80 bucle=False
+  capa=Base Layer estado=Loot01_Loop clip=HumanM@Loot01 - Loop largo=1,40 bucle=True
+  capa=Base Layer estado=Loot01_Stop clip=HumanM@Loot01 - Stop largo=0,90 bucle=False
+  capa=Base Layer estado=Stun01 clip=HumanM@Stun01 largo=2,67 bucle=False
+  capa=Base Layer estado=Knockdown01_Ground clip=HumanM@Knockdown01 - Ground largo=1,73 bucle=True
+  capa=Base Layer estado=Knockdown01_StandUp clip=HumanM@Knockdown01 - StandUp largo=1,17 bucle=False
+  capa=Base Layer estado=Opening01_Begin clip=HumanM@Opening01 - Begin largo=0,63 bucle=False
+  capa=Base Layer estado=Opening01_Loop clip=HumanM@Opening01 - Loop largo=1,43 bucle=True
+  capa=Base Layer estado=Opening01_Stop clip=HumanM@Opening01 - Stop largo=0,77 bucle=False
+  capa=Base Layer estado=Derribo_Vuelo clip=Die01_NoWeapon largo=50,00 bucle=False
+  capa=Base Layer estado=LandLow clip=HumanM@Jump01 - Land largo=0,48 bucle=False
+  capa=Base Layer estado=JumpMove clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Jump clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Falling clip=HumanM@Fall01 largo=1,00 bucle=True
+  capa=Base Layer estado=Free Locomotion clip=(mezcla) Free Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Strafing Movement clip=(mezcla) Strafing Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Attack1 clip=Attack01_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack2 clip=Attack02_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack3 clip=Attack03_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack4 clip=Attack04_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=RollRGT_Battle_RM_NoWeapon clip=(mezcla) Blend Tree largo=0,00 bucle=True
+  capa=Base Layer estado=RollLFT_Battle_RM_NoWeapon clip=RollLFT_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollFWD_Battle_RM_NoWeapon clip=RollFWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollBWD_Battle_RM_NoWeapon clip=RollBWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=UpperBody estado=Greeting01_NoWeapon clip=Greeting01_NoWeapon largo=1,67 bucle=True
+  capa=UpperBody estado=HandWave01 clip=HumanM@HandWave01 largo=2,53 bucle=False
+  capa=UpperBody estado=HandWave02 clip=HumanM@HandWave02 largo=3,20 bucle=False
+  capa=UpperBody estado=HeadShake01 clip=HumanM@HeadShake01 largo=1,47 bucle=False
+  capa=UpperBody estado=HeadShake02 clip=HumanM@HeadShake02 largo=1,80 bucle=False
+  capa=UpperBody estado=HeadNod01 clip=HumanM@HeadNod01 largo=1,13 bucle=False
+  capa=UpperBody estado=Question01 clip=HumanM@Question01 largo=2,10 bucle=False
+  capa=UpperBody estado=Question02 clip=HumanM@Question02 largo=2,63 bucle=False
+  capa=UpperBody estado=Reverence01 clip=HumanM@Reverence01 largo=2,33 bucle=False
+  capa=UpperBody estado=Talk01 clip=HumanM@Talk01 largo=2,27 bucle=False
+  capa=UpperBody estado=Talk02 clip=HumanM@Talk02 largo=2,37 bucle=False
+  capa=UpperBody estado=Talk03 clip=HumanM@Talk03 largo=2,97 bucle=False
+  capa=UpperBody estado=Angry01 clip=HumanM@Angry01 largo=2,87 bucle=False
+  capa=UpperBody estado=Angry02 clip=HumanM@Angry02 largo=1,37 bucle=False
+  capa=UpperBody estado=Beg01 clip=HumanM@Beg01 largo=4,43 bucle=False
+  capa=UpperBody estado=Cheer01 clip=HumanM@Cheer01 largo=1,33 bucle=False
+  capa=UpperBody estado=Cheer02 clip=HumanM@Cheer02 largo=0,93 bucle=False
+  capa=UpperBody estado=Cry01 clip=HumanM@Cry01 largo=2,73 bucle=False
+  capa=UpperBody estado=Laugh01 clip=HumanM@Laugh01 largo=2,63 bucle=False
+  capa=UpperBody estado=Fear01 clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=HandClap01 clip=HumanM@HandClap01 largo=2,37 bucle=False
+  capa=UpperBody estado=IdleWounded01 clip=HumanM@IdleWounded01 largo=2,70 bucle=True
+  capa=UpperBody estado=FoundSomething_NoWeapon clip=FoundSomething_NoWeapon largo=2,33 bucle=False
+  capa=UpperBody estado=SenseSomethingStart_NoWeapon clip=SenseSomethingStart_NoWeapon largo=0,37 bucle=False
+  capa=UpperBody estado=DrinkPotion_NoWeapon clip=DrinkPotion_NoWeapon largo=2,33 bucle=True
+  capa=UpperBody estado=Eat_Begin clip=HumanM@Eat01_L largo=2,37 bucle=False
+  capa=UpperBody estado=Eat_Loop clip=HumanM@Eat01_R - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=UpperIdle clip= largo=0,00 bucle=False
+  capa=UpperBody estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=UpperBody estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=UpperBody estado=Idle_Battle_NoWeapon clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=Challenging_NoWeapon clip=Challenging_NoWeapon largo=3,00 bucle=True
+  capa=UpperBody estado=SenseSomethingSearching_NoWeapon clip=SenseSomethingSearching_NoWeapon largo=4,00 bucle=True
+  capa=UpperBody estado=Beg01_Loop clip=HumanM@Beg01 - Loop largo=2,53 bucle=True
+  capa=UpperBody estado=CastingEnter01 clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=CastingIdle01 clip=HumanM@CastingIdle01 largo=1,67 bucle=True
+  capa=UpperBody estado=CastingExit01 clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=CastingDamage01 clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=MagicAttackOmni01_Load clip=HumanM@MagicAttackOmni01 - Load largo=1,63 bucle=False
+  capa=UpperBody estado=Reverence01_Loop clip=HumanM@Reverence01 - Loop largo=1,17 bucle=True
+  capa=UpperBody estado=Laugh01_Loop clip=HumanM@Laugh01 - Loop largo=1,40 bucle=True
+  capa=UpperBody estado=Cry01_Loop clip=HumanM@Cry01 - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=ApretonDeManos_A clip=mixamo.com largo=4,37 bucle=False
+  capa=UpperBody estado=ClimaTaparse clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=MagicLeft clip=HumanM@MagicAttackDirect1H01_L largo=1,20 bucle=False
+  capa=UpperBody estado=MagicRight clip=HumanM@MagicAttackDirect1H01_R largo=1,20 bucle=False
+  capa=UpperBody estado=MagicSpecial clip=Combo05_RM_NoWeapon largo=1,33 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Cast clip=HumanM@MagicAttackDirect2H01 - Cast largo=0,97 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackOmni01 - Cast clip=HumanM@MagicAttackOmni01 - Cast largo=1,30 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Load clip=HumanM@MagicAttackDirect2H01 - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L - Load clip=HumanM@MagicAttackCall1H01_L - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L clip=HumanM@MagicAttackCall1H01_L largo=1,37 bucle=False
+  capa=UpperBody estado=ComboEnter clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=ComboIdle clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=ComboExit clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=ComboBreak clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=New State clip= largo=0,00 bucle=False
+  capa=UpperBody estado=CarryThrow_NoWeapon clip=CarryThrow_NoWeapon largo=1,00 bucle=False
+  capa=UpperBody estado=CarryMoveIdle_NoWeapon clip=CarryMoveIdle_NoWeapon largo=0,93 bucle=True
+  capa=UpperBody estado=CarryStart_NoWeapon clip=CarryStart_NoWeapon largo=1,00 bucle=False
+## Assets/Prefabs/_LIAM.prefab
+  capa=Base Layer estado=TakeDamage clip=GetHit01_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Sleeping_NoWeapon clip=Sleeping_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Swimming_Floating_NoWeapon clip=Swimming_Floating_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=Push_InPlace_NoWeapon clip=Push_InPlace_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=Dance_NoWeapon clip=Dance_NoWeapon largo=2,67 bucle=True
+  capa=Base Layer estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=LevelUp_NoWeapon clip=LevelUp_NoWeapon largo=2,33 bucle=True
+  capa=Base Layer estado=Die02_NoWeapon clip=Die02_NoWeapon largo=1,00 bucle=False
+  capa=Base Layer estado=fly_dive clip=fly_dive largo=0,03 bucle=False
+  capa=Base Layer estado=fly_idle clip=fly_idle largo=1,00 bucle=True
+  capa=Base Layer estado=ClimbDown_RM_NoWeapon clip=ClimbDown_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=ClimbUp_RM_NoWeapon clip=ClimbUp_RM_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=Base Layer estado=TakeDamage_2 clip=GetHit02_NoWeapon largo=0,47 bucle=False
+  capa=Base Layer estado=Victory_NoWeapon clip=Victory_NoWeapon largo=1,67 bucle=True
+  capa=Base Layer estado=InteractWithGateObject_NoWeapon clip=InteractWithGateObject_NoWeapon largo=2,00 bucle=True
+  capa=Base Layer estado=InteractWithPeople_NoWeapon clip=InteractWithPeople_NoWeapon largo=7,00 bucle=True
+  capa=Base Layer estado=Idle02 clip=HumanM@Idle02 largo=2,70 bucle=True
+  capa=Base Layer estado=Idle01 clip=HumanM@Idle01 largo=2,70 bucle=True
+  capa=Base Layer estado=Pain01 clip=HumanM@Pain01 largo=1,00 bucle=True
+  capa=Base Layer estado=SitGround_Begin clip=HumanM@SitGround01 - Begin largo=1,10 bucle=False
+  capa=Base Layer estado=SitGround_Loop clip=HumanM@SitGround01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitGround_Exit clip=HumanM@SitGround01 - Stop largo=1,53 bucle=False
+  capa=Base Layer estado=SitHigh_Begin clip=HumanM@SitHigh01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitHigh_Loop clip=HumanM@SitHigh01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitHigh_Exit clip=HumanM@SitHigh01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=SitLow_Begin clip=HumanM@SitLow01 - Begin largo=0,97 bucle=False
+  capa=Base Layer estado=SitLow_Loop clip=HumanM@SitLow01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitLow_Exit clip=HumanM@SitLow01 - Stop largo=1,13 bucle=False
+  capa=Base Layer estado=SitMedium_Begin clip=HumanM@SitMedium01 - Begin largo=0,70 bucle=False
+  capa=Base Layer estado=SitMedium_Loop clip=HumanM@SitMedium01 - Loop largo=2,00 bucle=True
+  capa=Base Layer estado=SitMedium_Exit clip=HumanM@SitMedium01 - Stop largo=0,93 bucle=False
+  capa=Base Layer estado=Dizzy_NoWeapon 0 clip=Dizzy_NoWeapon largo=1,33 bucle=True
+  capa=Base Layer estado=Idle03 clip=HumanM@Idle03 largo=2,67 bucle=False
+  capa=Base Layer estado=JumpStart_InPlace_NoWeapon clip=JumpStart_InPlace_NoWeapon largo=0,27 bucle=False
+  capa=Base Layer estado=JumpAir_InPlace_NoWeapon clip=JumpAir_InPlace_NoWeapon largo=0,50 bucle=True
+  capa=Base Layer estado=JumpEnd_InPlace_NoWeapon clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=JumpFull_InPlace_NoWeapon clip=JumpFull_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirSpin_InPlace_NoWeapon clip=JumpAirSpin_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=JumpFullSpin_InPlace_NoWeapon clip=JumpFullSpin_InPlace_NoWeapon largo=0,80 bucle=True
+  capa=Base Layer estado=JumpAirDoubleJump_InPlace_NoWeapon clip=JumpAirDoubleJump_InPlace_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Landing clip=JumpEnd_InPlace_NoWeapon largo=0,40 bucle=False
+  capa=Base Layer estado=Die01Stay_NoWeapon clip=Die01Stay_NoWeapon largo=0,67 bucle=True
+  capa=Base Layer estado=GetUp_NoWeapon clip=GetUp_NoWeapon largo=0,83 bucle=False
+  capa=Base Layer estado=Die01_NoWeapon clip=Die01_NoWeapon largo=0,50 bucle=False
+  capa=Base Layer estado=Loot01_Begin clip=HumanM@Loot01 - Begin largo=0,80 bucle=False
+  capa=Base Layer estado=Loot01_Loop clip=HumanM@Loot01 - Loop largo=1,40 bucle=True
+  capa=Base Layer estado=Loot01_Stop clip=HumanM@Loot01 - Stop largo=0,90 bucle=False
+  capa=Base Layer estado=Stun01 clip=HumanM@Stun01 largo=2,67 bucle=False
+  capa=Base Layer estado=Knockdown01_Ground clip=HumanM@Knockdown01 - Ground largo=1,73 bucle=True
+  capa=Base Layer estado=Knockdown01_StandUp clip=HumanM@Knockdown01 - StandUp largo=1,17 bucle=False
+  capa=Base Layer estado=Opening01_Begin clip=HumanM@Opening01 - Begin largo=0,63 bucle=False
+  capa=Base Layer estado=Opening01_Loop clip=HumanM@Opening01 - Loop largo=1,43 bucle=True
+  capa=Base Layer estado=Opening01_Stop clip=HumanM@Opening01 - Stop largo=0,77 bucle=False
+  capa=Base Layer estado=Derribo_Vuelo clip=Die01_NoWeapon largo=50,00 bucle=False
+  capa=Base Layer estado=LandLow clip=HumanM@Jump01 - Land largo=0,48 bucle=False
+  capa=Base Layer estado=JumpMove clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Jump clip=HumanM@Jump01 - Begin largo=0,67 bucle=False
+  capa=Base Layer estado=Falling clip=HumanM@Fall01 largo=1,00 bucle=True
+  capa=Base Layer estado=Free Locomotion clip=(mezcla) Free Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Strafing Movement clip=(mezcla) Strafing Locomotion largo=0,00 bucle=True
+  capa=Base Layer estado=Attack1 clip=Attack01_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack2 clip=Attack02_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack3 clip=Attack03_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=Attack4 clip=Attack04_SwordAndShiled largo=0,53 bucle=True
+  capa=Base Layer estado=RollRGT_Battle_RM_NoWeapon clip=(mezcla) Blend Tree largo=0,00 bucle=True
+  capa=Base Layer estado=RollLFT_Battle_RM_NoWeapon clip=RollLFT_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollFWD_Battle_RM_NoWeapon clip=RollFWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=Base Layer estado=RollBWD_Battle_RM_NoWeapon clip=RollBWD_Battle_RM_NoWeapon largo=0,83 bucle=True
+  capa=UpperBody estado=Greeting01_NoWeapon clip=Greeting01_NoWeapon largo=1,67 bucle=True
+  capa=UpperBody estado=HandWave01 clip=HumanM@HandWave01 largo=2,53 bucle=False
+  capa=UpperBody estado=HandWave02 clip=HumanM@HandWave02 largo=3,20 bucle=False
+  capa=UpperBody estado=HeadShake01 clip=HumanM@HeadShake01 largo=1,47 bucle=False
+  capa=UpperBody estado=HeadShake02 clip=HumanM@HeadShake02 largo=1,80 bucle=False
+  capa=UpperBody estado=HeadNod01 clip=HumanM@HeadNod01 largo=1,13 bucle=False
+  capa=UpperBody estado=Question01 clip=HumanM@Question01 largo=2,10 bucle=False
+  capa=UpperBody estado=Question02 clip=HumanM@Question02 largo=2,63 bucle=False
+  capa=UpperBody estado=Reverence01 clip=HumanM@Reverence01 largo=2,33 bucle=False
+  capa=UpperBody estado=Talk01 clip=HumanM@Talk01 largo=2,27 bucle=False
+  capa=UpperBody estado=Talk02 clip=HumanM@Talk02 largo=2,37 bucle=False
+  capa=UpperBody estado=Talk03 clip=HumanM@Talk03 largo=2,97 bucle=False
+  capa=UpperBody estado=Angry01 clip=HumanM@Angry01 largo=2,87 bucle=False
+  capa=UpperBody estado=Angry02 clip=HumanM@Angry02 largo=1,37 bucle=False
+  capa=UpperBody estado=Beg01 clip=HumanM@Beg01 largo=4,43 bucle=False
+  capa=UpperBody estado=Cheer01 clip=HumanM@Cheer01 largo=1,33 bucle=False
+  capa=UpperBody estado=Cheer02 clip=HumanM@Cheer02 largo=0,93 bucle=False
+  capa=UpperBody estado=Cry01 clip=HumanM@Cry01 largo=2,73 bucle=False
+  capa=UpperBody estado=Laugh01 clip=HumanM@Laugh01 largo=2,63 bucle=False
+  capa=UpperBody estado=Fear01 clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=HandClap01 clip=HumanM@HandClap01 largo=2,37 bucle=False
+  capa=UpperBody estado=IdleWounded01 clip=HumanM@IdleWounded01 largo=2,70 bucle=True
+  capa=UpperBody estado=FoundSomething_NoWeapon clip=FoundSomething_NoWeapon largo=2,33 bucle=False
+  capa=UpperBody estado=SenseSomethingStart_NoWeapon clip=SenseSomethingStart_NoWeapon largo=0,37 bucle=False
+  capa=UpperBody estado=DrinkPotion_NoWeapon clip=DrinkPotion_NoWeapon largo=2,33 bucle=True
+  capa=UpperBody estado=Eat_Begin clip=HumanM@Eat01_L largo=2,37 bucle=False
+  capa=UpperBody estado=Eat_Loop clip=HumanM@Eat01_R - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=UpperIdle clip= largo=0,00 bucle=False
+  capa=UpperBody estado=DefendHit_NoWeapon clip=DefendHit_NoWeapon largo=0,33 bucle=False
+  capa=UpperBody estado=Defend_NoWeapon clip=Defend_NoWeapon largo=0,67 bucle=False
+  capa=UpperBody estado=Idle_Battle_NoWeapon clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=Challenging_NoWeapon clip=Challenging_NoWeapon largo=3,00 bucle=True
+  capa=UpperBody estado=SenseSomethingSearching_NoWeapon clip=SenseSomethingSearching_NoWeapon largo=4,00 bucle=True
+  capa=UpperBody estado=Beg01_Loop clip=HumanM@Beg01 - Loop largo=2,53 bucle=True
+  capa=UpperBody estado=CastingEnter01 clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=CastingIdle01 clip=HumanM@CastingIdle01 largo=1,67 bucle=True
+  capa=UpperBody estado=CastingExit01 clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=CastingDamage01 clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=MagicAttackOmni01_Load clip=HumanM@MagicAttackOmni01 - Load largo=1,63 bucle=False
+  capa=UpperBody estado=Reverence01_Loop clip=HumanM@Reverence01 - Loop largo=1,17 bucle=True
+  capa=UpperBody estado=Laugh01_Loop clip=HumanM@Laugh01 - Loop largo=1,40 bucle=True
+  capa=UpperBody estado=Cry01_Loop clip=HumanM@Cry01 - Loop largo=2,00 bucle=True
+  capa=UpperBody estado=ApretonDeManos_A clip=mixamo.com largo=4,37 bucle=False
+  capa=UpperBody estado=ClimaTaparse clip=HumanM@Fear01 largo=1,33 bucle=True
+  capa=UpperBody estado=MagicLeft clip=HumanM@MagicAttackDirect1H01_L largo=1,20 bucle=False
+  capa=UpperBody estado=MagicRight clip=HumanM@MagicAttackDirect1H01_R largo=1,20 bucle=False
+  capa=UpperBody estado=MagicSpecial clip=Combo05_RM_NoWeapon largo=1,33 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Cast clip=HumanM@MagicAttackDirect2H01 - Cast largo=0,97 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackOmni01 - Cast clip=HumanM@MagicAttackOmni01 - Cast largo=1,30 bucle=False
+  capa=UpperBody estado=HumanM@MagicAttackDirect2H01 - Load clip=HumanM@MagicAttackDirect2H01 - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L - Load clip=HumanM@MagicAttackCall1H01_L - Load largo=1,67 bucle=True
+  capa=UpperBody estado=HumanM@MagicAttackCall1H01_L clip=HumanM@MagicAttackCall1H01_L largo=1,37 bucle=False
+  capa=UpperBody estado=ComboEnter clip=HumanM@CastingEnter01 largo=0,70 bucle=False
+  capa=UpperBody estado=ComboIdle clip=Idle_Battle_NoWeapon largo=0,67 bucle=True
+  capa=UpperBody estado=ComboExit clip=HumanM@CastingExit01 largo=1,20 bucle=False
+  capa=UpperBody estado=ComboBreak clip=HumanM@CastingDamage01 largo=1,10 bucle=False
+  capa=UpperBody estado=New State clip= largo=0,00 bucle=False
+  capa=UpperBody estado=CarryThrow_NoWeapon clip=CarryThrow_NoWeapon largo=1,00 bucle=False
+  capa=UpperBody estado=CarryMoveIdle_NoWeapon clip=CarryMoveIdle_NoWeapon largo=0,93 bucle=True
+  capa=UpperBody estado=CarryStart_NoWeapon clip=CarryStart_NoWeapon largo=1,00 bucle=False

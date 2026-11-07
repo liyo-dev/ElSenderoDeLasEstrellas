@@ -80,12 +80,12 @@ public static class NinosHechosEnBlender
     [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina)")]
     public static void Aplicar()
     {
-        if (Application.isPlaying) { EditorUtility.DisplayDialog("Niños", "Hazlo fuera de Play.", "Vale"); return; }
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Niños", "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
         Aplicar(informe);
         AssetDatabase.SaveAssets();
         Debug.Log("[NinosHechosEnBlender] " + informe.ToString().Replace('\n', ' '));
-        EditorUtility.DisplayDialog("Niños hechos en Blender", informe.ToString(), "Vale");
+        OrdenesDelEditor.Avisar("Niños hechos en Blender", informe.ToString());   // desde el buzón va al registro (un diálogo lo bloquearía)
     }
 
     public static void Aplicar(StringBuilder informe)

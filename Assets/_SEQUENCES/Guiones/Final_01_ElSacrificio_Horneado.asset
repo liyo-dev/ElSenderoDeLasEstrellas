@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Final_01_ElSacrificio
   duracion: 231.79819
   presentacion: 1
-  huella: "2026-11-05 08:20 \xB7 8c93a71d2cbd9bc0b68f8b6d4c7d8754"
+  huella: "2026-11-07 10:31 \xB7 8c93a71d2cbd9bc0b68f8b6d4c7d8754"
   actores:
   - id: Player
     alias: will
@@ -1997,7 +1997,7 @@ MonoBehaviour:
     descripcion: general de will y liam
     posiciones:
     - t: 17.80204
-      p: {x: 6.5, y: 4.2, z: 1}
+      p: {x: 6.5, y: 33.082504, z: 1}
     lente: 46
     lenteFinal: 0
     sujetos:
@@ -2154,7 +2154,7 @@ MonoBehaviour:
     descripcion: general de will y liam
     posiciones:
     - t: 50.27095
-      p: {x: 6, y: 5, z: -2}
+      p: {x: 6, y: 33.393154, z: -2}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -2359,7 +2359,7 @@ MonoBehaviour:
     descripcion: general de will y liam
     posiciones:
     - t: 82.179016
-      p: {x: 4.5, y: 1, z: 1}
+      p: {x: 4.5, y: 30.13892, z: 1}
     lente: 50
     lenteFinal: 0
     sujetos:
@@ -2407,7 +2407,7 @@ MonoBehaviour:
     descripcion: general de will
     posiciones:
     - t: 88.779015
-      p: {x: 5, y: 7, z: -4}
+      p: {x: 5, y: 35.155693, z: -4}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2453,7 +2453,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de estela a liam
     posiciones:
     - t: 102.14568
-      p: {x: 201.25494, y: 1.3671578, z: 6.489534}
+      p: {x: 201.25989, y: 1.3671578, z: 6.4746785}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2462,7 +2462,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0959513
+    alturaDelFoco: 1.092276
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.3
     mezcla: 0
@@ -2474,7 +2474,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de liam a estela
     posiciones:
     - t: 106.11235
-      p: {x: 199.24039, y: 1.4468203, z: 7.4949946}
+      p: {x: 199.2318, y: 1.4468203, z: 7.4925566}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2483,7 +2483,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0858287
+    alturaDelFoco: 1.0792334
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.3
     mezcla: 0
@@ -2495,7 +2495,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de estela a liam
     posiciones:
     - t: 111.32786
-      p: {x: 201.25494, y: 1.3671578, z: 6.489534}
+      p: {x: 201.25989, y: 1.3671578, z: 6.4746785}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2504,7 +2504,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0959513
+    alturaDelFoco: 1.092276
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.25
     mezcla: 0
@@ -2516,7 +2516,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de liam a estela
     posiciones:
     - t: 113.14296
-      p: {x: 199.24039, y: 1.4468203, z: 7.4949946}
+      p: {x: 199.2318, y: 1.4468203, z: 7.4925566}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2525,7 +2525,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0858287
+    alturaDelFoco: 1.0792334
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.25
     mezcla: 0
@@ -2537,7 +2537,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de estela a liam
     posiciones:
     - t: 119.89521
-      p: {x: 201.25494, y: 1.3671578, z: 6.489534}
+      p: {x: 201.25989, y: 1.3671578, z: 6.4746785}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2546,7 +2546,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0959513
+    alturaDelFoco: 1.092276
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.25
     mezcla: 0
@@ -3005,7 +3005,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de estela a liam
     posiciones:
     - t: 206.85274
-      p: {x: 201.44083, y: 1.3671578, z: 5.211093}
+      p: {x: 201.4505, y: 1.3671578, z: 5.200819}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3014,7 +3014,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0959513
+    alturaDelFoco: 1.092276
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.3
     mezcla: 0
@@ -3026,7 +3026,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 209.95274
-      p: {x: 197.63708, y: 0.8970582, z: 1.5153236}
+      p: {x: 197.63708, y: 0.8921578, z: 1.5153236}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3035,7 +3035,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1075754
+    alturaDelFoco: 1.1039002
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.25
     mezcla: 0
@@ -3097,421 +3097,421 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381188
+      rid: 6540294449940660401
     linea: 104
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381189
+      rid: 6540294449940660402
     linea: 105
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381190
+      rid: 6540294449940660403
     linea: 106
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381191
+      rid: 6540294449940660404
     linea: 107
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381192
+      rid: 6540294449940660405
     linea: 108
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381193
+      rid: 6540294449940660406
     linea: 109
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381194
+      rid: 6540294449940660407
     linea: 115
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381195
+      rid: 6540294449940660408
     linea: 125
   - onlyIfFlag: 
     skipIfFlag: 
     t: 17.80204
     beat:
-      rid: 6540294404317381196
+      rid: 6540294449940660409
     linea: 152
   - onlyIfFlag: 
     skipIfFlag: 
     t: 25.10204
     beat:
-      rid: 6540294404317381197
+      rid: 6540294449940660410
     linea: 161
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.05204
     beat:
-      rid: 6540294404317381198
+      rid: 6540294449940660411
     linea: 163
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.05204
     beat:
-      rid: 6540294404317381199
+      rid: 6540294449940660412
     linea: 164
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.158707
     beat:
-      rid: 6540294404317381200
+      rid: 6540294449940660413
     linea: 172
   - onlyIfFlag: 
     skipIfFlag: 
     t: 35.294216
     beat:
-      rid: 6540294404317381201
+      rid: 6540294449940660414
     linea: 181
   - onlyIfFlag: 
     skipIfFlag: 
     t: 42.97095
     beat:
-      rid: 6540294404317381202
+      rid: 6540294449940660415
     linea: 192
   - onlyIfFlag: 
     skipIfFlag: 
     t: 45.57095
     beat:
-      rid: 6540294404317381203
+      rid: 6540294449940660416
     linea: 194
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294404317381204
+      rid: 6540294449940660417
     linea: 211
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294404317381205
+      rid: 6540294449940660418
     linea: 207
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294404317381206
+      rid: 6540294449940660419
     linea: 201
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294404317381207
+      rid: 6540294449940660420
     linea: 206
   - onlyIfFlag: 
     skipIfFlag: 
     t: 54.98064
     beat:
-      rid: 6540294404317381208
+      rid: 6540294449940660421
     linea: 219
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294404317381209
+      rid: 6540294449940660422
     linea: 229
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294404317381210
+      rid: 6540294449940660423
     linea: 230
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294404317381211
+      rid: 6540294449940660424
     linea: 231
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294404317381212
+      rid: 6540294449940660425
     linea: 232
   - onlyIfFlag: 
     skipIfFlag: 
     t: 69.54636
     beat:
-      rid: 6540294404317381213
+      rid: 6540294449940660426
     linea: 238
   - onlyIfFlag: 
     skipIfFlag: 
     t: 69.54636
     beat:
-      rid: 6540294404317381214
+      rid: 6540294449940660427
     linea: 239
   - onlyIfFlag: 
     skipIfFlag: 
     t: 77.76514
     beat:
-      rid: 6540294404317381215
+      rid: 6540294449940660428
     linea: 246
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294404317381216
+      rid: 6540294449940660429
     linea: 249
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294404317381217
+      rid: 6540294449940660430
     linea: 253
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294404317381218
+      rid: 6540294449940660431
     linea: 254
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294404317381219
+      rid: 6540294449940660432
     linea: 255
   - onlyIfFlag: 
     skipIfFlag: 
     t: 85.179016
     beat:
-      rid: 6540294404317381220
+      rid: 6540294449940660433
     linea: 260
   - onlyIfFlag: 
     skipIfFlag: 
     t: 92.97901
     beat:
-      rid: 6540294404317381221
+      rid: 6540294449940660434
     linea: 265
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381222
+      rid: 6540294449940660435
     linea: 286
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381223
+      rid: 6540294449940660436
     linea: 287
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381224
+      rid: 6540294449940660437
     linea: 283
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381225
+      rid: 6540294449940660438
     linea: 269
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381226
+      rid: 6540294449940660439
     linea: 275
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294404317381227
+      rid: 6540294449940660440
     linea: 276
   - onlyIfFlag: 
     skipIfFlag: 
     t: 96.57901
     beat:
-      rid: 6540294404317381228
+      rid: 6540294449940660441
     linea: 289
   - onlyIfFlag: 
     skipIfFlag: 
     t: 96.57901
     beat:
-      rid: 6540294404317381229
+      rid: 6540294449940660442
     linea: 290
   - onlyIfFlag: 
     skipIfFlag: 
     t: 100.37901
     beat:
-      rid: 6540294404317381230
+      rid: 6540294449940660443
     linea: 294
   - onlyIfFlag: 
     skipIfFlag: 
     t: 100.37901
     beat:
-      rid: 6540294404317381231
+      rid: 6540294449940660444
     linea: 295
   - onlyIfFlag: 
     skipIfFlag: 
     t: 123.59521
     beat:
-      rid: 6540294404317381232
+      rid: 6540294449940660445
     linea: 329
   - onlyIfFlag: 
     skipIfFlag: 
     t: 123.795204
     beat:
-      rid: 6540294404317381233
+      rid: 6540294449940660446
     linea: 338
   - onlyIfFlag: 
     skipIfFlag: 
     t: 123.795204
     beat:
-      rid: 6540294404317381234
+      rid: 6540294449940660447
     linea: 339
   - onlyIfFlag: 
     skipIfFlag: 
     t: 134.38364
     beat:
-      rid: 6540294404317381235
+      rid: 6540294449940660448
     linea: 356
   - onlyIfFlag: 
     skipIfFlag: 
     t: 137.11751
     beat:
-      rid: 6540294404317381236
+      rid: 6540294449940660449
     linea: 361
   - onlyIfFlag: 
     skipIfFlag: 
     t: 140.11751
     beat:
-      rid: 6540294404317381237
+      rid: 6540294449940660450
     linea: 368
   - onlyIfFlag: 
     skipIfFlag: 
     t: 153.13464
     beat:
-      rid: 6540294404317381238
+      rid: 6540294449940660451
     linea: 377
   - onlyIfFlag: 
     skipIfFlag: 
     t: 156.13464
     beat:
-      rid: 6540294404317381239
+      rid: 6540294449940660452
     linea: 384
   - onlyIfFlag: 
     skipIfFlag: 
     t: 165.56485
     beat:
-      rid: 6540294404317381240
+      rid: 6540294449940660453
     linea: 387
   - onlyIfFlag: 
     skipIfFlag: 
     t: 165.76485
     beat:
-      rid: 6540294404317381241
+      rid: 6540294449940660454
     linea: 392
   - onlyIfFlag: 
     skipIfFlag: 
     t: 177.36485
     beat:
-      rid: 6540294404317381242
+      rid: 6540294449940660455
     linea: 411
   - onlyIfFlag: 
     skipIfFlag: 
     t: 181.16486
     beat:
-      rid: 6540294404317381243
+      rid: 6540294449940660456
     linea: 423
   - onlyIfFlag: 
     skipIfFlag: 
     t: 193.51663
     beat:
-      rid: 6540294404317381244
+      rid: 6540294449940660457
     linea: 441
   - onlyIfFlag: 
     skipIfFlag: 
     t: 196.52213
     beat:
-      rid: 6540294404317381245
+      rid: 6540294449940660458
     linea: 452
   - onlyIfFlag: 
     skipIfFlag: 
     t: 196.52213
     beat:
-      rid: 6540294404317381246
+      rid: 6540294449940660459
     linea: 453
   - onlyIfFlag: 
     skipIfFlag: 
     t: 199.35275
     beat:
-      rid: 6540294404317381247
+      rid: 6540294449940660460
     linea: 462
   - onlyIfFlag: 
     skipIfFlag: 
     t: 199.35275
     beat:
-      rid: 6540294404317381248
+      rid: 6540294449940660461
     linea: 463
   - onlyIfFlag: 
     skipIfFlag: 
     t: 204.55275
     beat:
-      rid: 6540294404317381249
+      rid: 6540294449940660462
     linea: 474
   - onlyIfFlag: 
     skipIfFlag: 
     t: 223.54172
     beat:
-      rid: 6540294404317381250
+      rid: 6540294449940660463
     linea: 498
   - onlyIfFlag: 
     skipIfFlag: 
     t: 225.29819
     beat:
-      rid: 6540294404317381251
+      rid: 6540294449940660464
     linea: 501
   - onlyIfFlag: 
     skipIfFlag: 
     t: 227.8982
     beat:
-      rid: 6540294404317381252
+      rid: 6540294449940660465
     linea: 504
   - onlyIfFlag: 
     skipIfFlag: 
     t: 227.8982
     beat:
-      rid: 6540294404317381253
+      rid: 6540294449940660466
     linea: 505
   - onlyIfFlag: 
     skipIfFlag: 
     t: 227.8982
     beat:
-      rid: 6540294404317381254
+      rid: 6540294449940660467
     linea: 506
   - onlyIfFlag: 
     skipIfFlag: 
     t: 231.29819
     beat:
-      rid: 6540294404317381255
+      rid: 6540294449940660468
     linea: 508
   - onlyIfFlag: 
     skipIfFlag: 
     t: 231.29819
     beat:
-      rid: 6540294404317381256
+      rid: 6540294449940660469
     linea: 509
   - onlyIfFlag: 
     skipIfFlag: 
     t: 231.29819
     beat:
-      rid: 6540294404317381257
+      rid: 6540294449940660470
     linea: 510
   etiquetas:
   - nombre: inicio
@@ -3544,9 +3544,9 @@ MonoBehaviour:
   - nombre: cam_will_umbral_cerca
     posicion: {x: 0.25, y: 0, z: 6.6}
   - nombre: cam_a1_sendero_alto
-    posicion: {x: 6.5, y: 0, z: 1}
+    posicion: {x: 6.5, y: 28.882504, z: 1}
   - nombre: cam_a2_general
-    posicion: {x: 6, y: 0, z: -2}
+    posicion: {x: 6, y: 28.393154, z: -2}
   - nombre: cam_a2_will_frente
     posicion: {x: -1.1, y: 0, z: 2.8}
   - nombre: cam_a2_contrapicado
@@ -3558,11 +3558,11 @@ MonoBehaviour:
   - nombre: cam_a2_climax_frente
     posicion: {x: -1.4, y: 0, z: 3}
   - nombre: cam_a2_general_bajo
-    posicion: {x: 4.5, y: 0, z: 1}
+    posicion: {x: 4.5, y: 29.13892, z: 1}
   - nombre: cam_a2_will_cerca
     posicion: {x: -1.6, y: 0, z: 3.4}
   - nombre: cam_a2_final
-    posicion: {x: 5, y: 0, z: -4}
+    posicion: {x: 5, y: 28.155693, z: -4}
   - nombre: p_piedra_portal
     posicion: {x: 200, y: 0, z: 0.4}
   - nombre: p_piedra_estela
@@ -3661,7 +3661,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294404317381188
+    - rid: 6540294449940660401
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3669,7 +3669,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294404317381189
+    - rid: 6540294449940660402
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3678,7 +3678,7 @@ MonoBehaviour:
         fadeIn: 3
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294404317381190
+    - rid: 6540294449940660403
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3686,35 +3686,35 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 6540294404317381191
+    - rid: 6540294449940660404
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AmbientePiedra
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381192
+    - rid: 6540294449940660405
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrirPortalUmbral
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381193
+    - rid: 6540294449940660406
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ColapsoDelSendero
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381194
+    - rid: 6540294449940660407
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381195
+    - rid: 6540294449940660408
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3722,27 +3722,27 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.2
         waitForEnd: 0
-    - rid: 6540294404317381196
+    - rid: 6540294449940660409
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.3
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294404317381197
+    - rid: 6540294449940660410
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ExplosionEnElPortal
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381198
+    - rid: 6540294449940660411
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.35
-    - rid: 6540294404317381199
+    - rid: 6540294449940660412
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3751,21 +3751,21 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.8
         desdeSegundo: -1
-    - rid: 6540294404317381200
+    - rid: 6540294449940660413
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EstelaAlcanzaElPortal
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381201
+    - rid: 6540294449940660414
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EstelaDejaDeAlcanzar
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381202
+    - rid: 6540294449940660415
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3775,7 +3775,7 @@ MonoBehaviour:
         markName: 
         volume: 0.75
         tono: 1
-    - rid: 6540294404317381203
+    - rid: 6540294449940660416
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3783,7 +3783,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.5
         waitForEnd: 0
-    - rid: 6540294404317381204
+    - rid: 6540294449940660417
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3791,48 +3791,48 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2
         waitForEnd: 0
-    - rid: 6540294404317381205
+    - rid: 6540294449940660418
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: MusicaDelConjuro
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381206
+    - rid: 6540294449940660419
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SenderoDestruido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381207
+    - rid: 6540294449940660420
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381208
+    - rid: 6540294449940660421
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381209
+    - rid: 6540294449940660422
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ConjuroCirculos
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381210
+    - rid: 6540294449940660423
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LevitarWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381211
+    - rid: 6540294449940660424
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3842,13 +3842,13 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294404317381212
+    - rid: 6540294449940660425
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 4
         gananciaDb: 4
-    - rid: 6540294404317381213
+    - rid: 6540294449940660426
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3858,14 +3858,14 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294404317381214
+    - rid: 6540294449940660427
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.4
         duration: 1.5
         waitForEnd: 0
-    - rid: 6540294404317381215
+    - rid: 6540294449940660428
       type: {class: RespiroBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3876,20 +3876,20 @@ MonoBehaviour:
         ataque: 0.2
         fundido: 0.3
         esperar: 0
-    - rid: 6540294404317381216
+    - rid: 6540294449940660429
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381217
+    - rid: 6540294449940660430
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ConjuroClimax
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381218
+    - rid: 6540294449940660431
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3899,20 +3899,20 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294404317381219
+    - rid: 6540294449940660432
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.5
-    - rid: 6540294404317381220
+    - rid: 6540294449940660433
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: WillSeDesvanece
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381221
+    - rid: 6540294449940660434
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3920,7 +3920,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.4
         waitForEnd: 0
-    - rid: 6540294404317381222
+    - rid: 6540294449940660435
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3928,7 +3928,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.2
         waitForEnd: 0
-    - rid: 6540294404317381223
+    - rid: 6540294449940660436
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3938,14 +3938,14 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294404317381224
+    - rid: 6540294449940660437
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381225
+    - rid: 6540294449940660438
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3954,28 +3954,28 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 1
         desdeSegundo: -1
-    - rid: 6540294404317381226
+    - rid: 6540294449940660439
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AmbientePiedra
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381227
+    - rid: 6540294449940660440
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: OcultarLiam
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381228
+    - rid: 6540294449940660441
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSeMaterializa
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381229
+    - rid: 6540294449940660442
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3985,7 +3985,7 @@ MonoBehaviour:
         markName: 
         volume: 0.85
         tono: 1
-    - rid: 6540294404317381230
+    - rid: 6540294449940660443
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3994,14 +3994,14 @@ MonoBehaviour:
         fadeIn: 3
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294404317381231
+    - rid: 6540294449940660444
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamDespierta
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381232
+    - rid: 6540294449940660445
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4010,64 +4010,64 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 2
         desdeSegundo: -1
-    - rid: 6540294404317381233
+    - rid: 6540294449940660446
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EspirituArchimago
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381234
+    - rid: 6540294449940660447
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: MusicaDelArchimago
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381235
+    - rid: 6540294449940660448
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294404317381236
+    - rid: 6540294449940660449
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381237
+    - rid: 6540294449940660450
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294404317381238
+    - rid: 6540294449940660451
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381239
+    - rid: 6540294449940660452
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294404317381240
+    - rid: 6540294449940660453
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381241
+    - rid: 6540294449940660454
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ArchimagoSeHaceEstrella
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381242
+    - rid: 6540294449940660455
       type: {class: RespiroBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4078,41 +4078,41 @@ MonoBehaviour:
         ataque: 0.3
         fundido: 0.8
         esperar: 0
-    - rid: 6540294404317381243
+    - rid: 6540294449940660456
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PortalDeRegreso
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381244
+    - rid: 6540294449940660457
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EsperarSubidaDelTema
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381245
+    - rid: 6540294449940660458
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: CarreraAlAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381246
+    - rid: 6540294449940660459
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LagrimasAlCorrer
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381247
+    - rid: 6540294449940660460
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.25
-    - rid: 6540294404317381248
+    - rid: 6540294449940660461
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4122,28 +4122,28 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294404317381249
+    - rid: 6540294449940660462
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SoltarAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381250
+    - rid: 6540294449940660463
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrazoEstelaWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381251
+    - rid: 6540294449940660464
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrazoFinalDeLosTres
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381252
+    - rid: 6540294449940660465
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4152,14 +4152,14 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 4
         desdeSegundo: -1
-    - rid: 6540294404317381253
+    - rid: 6540294449940660466
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TelonANegro
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381254
+    - rid: 6540294449940660467
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4167,14 +4167,14 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 3
         waitForEnd: 0
-    - rid: 6540294404317381255
+    - rid: 6540294449940660468
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SoltarAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294404317381256
+    - rid: 6540294449940660469
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4182,7 +4182,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294404317381257
+    - rid: 6540294449940660470
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

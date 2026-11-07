@@ -1,10 +1,10 @@
 # Parte de horneado: Final_01_ElSacrificio
 
-2026-11-05 08:20 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
+2026-11-07 10:31 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
 
 **3:51,8** de secuencia · 32 frases · 49 planos · 70 efectos · 4 personajes
 
-Reparto medido (m): will 1,62/ojos 0,94 · estela 1,49/ojos 0,95 · liam 1,57/ojos 0,94 · archimago 1,57/ojos 0,94
+Reparto medido (m): will 1,62/ojos 0,93 · estela 1,49/ojos 0,94 · liam 1,57/ojos 0,93 · archimago 1,57/ojos 0,93
 
 ## Errores (0)
 
@@ -108,15 +108,15 @@ Reparto medido (m): will 1,62/ojos 0,94 · estela 1,49/ojos 0,95 · liam 1,57/oj
 | 1:36,6 | efecto | SFX: Hechizo_BrisaSanadora |
 | 1:40,4 | efecto | Música: LIAM_CRYSTAL |
 | 1:40,4 | efecto | Mecánica: LiamDespierta |
-| 1:42,1 | plano 22 | sobre el hombro de estela a liam · 4,0 s · lente 30° · coste 41: cara 41 |
+| 1:42,1 | plano 22 | sobre el hombro de estela a liam · 4,0 s · lente 30° · coste 40: cara 40 |
 | 1:42,1 | liam | «¿Estela...? ¿Qué...?» (3,0 s) |
-| 1:46,1 | plano 23 | sobre el hombro de liam a estela · 5,2 s · lente 30° · coste 23: cara 23 |
+| 1:46,1 | plano 23 | sobre el hombro de liam a estela · 5,2 s · lente 30° · coste 22: cara 22 |
 | 1:46,1 | estela | «Estás vivo... Estás vivo.» (5,0 s) |
-| 1:51,3 | plano 24 | sobre el hombro de estela a liam · 1,8 s · lente 30° · coste 41: cara 41 |
+| 1:51,3 | plano 24 | sobre el hombro de estela a liam · 1,8 s · lente 30° · coste 40: cara 40 |
 | 1:51,3 | liam | «¿Dónde está Will?» (1,5 s) |
-| 1:53,1 | plano 25 | sobre el hombro de liam a estela · 6,8 s · lente 30° · coste 23: cara 23 |
+| 1:53,1 | plano 25 | sobre el hombro de liam a estela · 6,8 s · lente 30° · coste 22: cara 22 |
 | 1:53,1 | estela | «Me empujó fuera. Se quedó dentro contigo... Y ahora tú estás aquí, y él no.» (6,5 s) |
-| 1:59,9 | plano 26 | sobre el hombro de estela a liam · 3,9 s · lente 30° · coste 41: cara 41 |
+| 1:59,9 | plano 26 | sobre el hombro de estela a liam · 3,9 s · lente 30° · coste 40: cara 40 |
 | 1:59,9 | liam | «Ese idiota...» (3,5 s) |
 | 2:03,6 | efecto | Música: parar (2s) |
 | 2:03,8 | plano 27 | conjunto de archimago y estela y liam · 6,2 s · lente 38° |
@@ -169,7 +169,7 @@ Reparto medido (m): will 1,62/ojos 0,94 · estela 1,49/ojos 0,95 · liam 1,57/oj
 | 3:19,4 | efecto | SFX: Prologue_ActorAppear |
 | 3:23,4 | plano 45 | dos: will y estela · 3,5 s · lente 40° |
 | 3:24,6 | efecto | Mecánica: SoltarAbrazo |
-| 3:26,9 | plano 46 | sobre el hombro de estela a liam · 3,1 s · lente 30° · coste 791: cara 782 |
+| 3:26,9 | plano 46 | sobre el hombro de estela a liam · 3,1 s · lente 30° · coste 790: cara 781 |
 | 3:26,9 | liam | «¿Cómo...? ¿El hechizo...?» (2,8 s) |
 | 3:30,0 | plano 47 | medio de will · 5,2 s · lente 30° · coste 157: cara 100, ángulo 51 |
 | 3:30,0 | will | «Me ha devuelto él. Fue lo último que hizo antes de irse.» (4,9 s) |

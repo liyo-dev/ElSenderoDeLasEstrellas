@@ -13,6 +13,66 @@ using UnityEngine.Rendering.Universal;
 /// Salida del horneado: comprobaciones, el asset, el parte y los dibujos.
 internal sealed partial class Horno
 {
+    /// Tamaño de cada foto del storyboard. Las fotos de escaparate (Rodaje) lo suben a 4K un momento.
+    internal static Vector2Int TamanoDelStoryboard = new Vector2Int(960, 540);
+
+    /// Cara que lleva cada actor (por alias) en las fotos del storyboard. Vacío = la de reposo.
+    /// Lo rellenan las fotos de escaparate (Rodaje); los guiones normales no lo tocan.
+    internal static readonly Dictionary<string, NPCEmotion> CarasDelStoryboard = new();
+
+    /// Retoques de pose para las fotos (por alias): giran huesos humanoides para apuntar del hueso a su
+    /// punta en una dirección del espacio del personaje (X a su derecha, Y arriba, Z al frente), en orden.
+    /// Sirve para poses que no tiene ningún clip (brazos cruzados, apoyarse). Solo lo usan las fotos de escaparate.
+    internal static readonly Dictionary<string, List<(HumanBodyBones hueso, HumanBodyBones punta, Vector3 direccion)>> ApuntesDelStoryboard = new();
+
+    private static void AplicarApuntesDelStoryboard(GameObject inst, Transform marco, string alias)
+    {
+        if (inst == null || !ApuntesDelStoryboard.TryGetValue(alias, out var apuntes)) return;
+        var anim = inst.GetComponentsInChildren<Animator>(true).FirstOrDefault(x => x != null && x.isHuman);
+        if (anim == null) return;
+        foreach (var (hueso, punta, direccion) in apuntes)
+        {
+            var h = anim.GetBoneTransform(hueso);
+            var p = anim.GetBoneTransform(punta);
+            if (h == null || p == null) continue;
+            Vector3 ahora = p.position - h.position;
+            Vector3 quiero = marco.TransformDirection(direccion);
+            if (ahora.sqrMagnitude < 1e-8f || quiero.sqrMagnitude < 1e-8f) continue;
+            h.rotation = Quaternion.FromToRotation(ahora, quiero) * h.rotation;
+        }
+    }
+
+    /// Pone en la instancia del storyboard los ojos y la boca de la emoción pedida para ese actor,
+    /// leyendo su EmotionProfile (los MonoBehaviour del storyboard están apagados).
+    private static void PonerCaraDelStoryboard(GameObject inst, string alias)
+    {
+        if (inst == null || !CarasDelStoryboard.TryGetValue(alias, out var emocion)) return;
+        foreach (var emo in inst.GetComponentsInChildren<NPCEmotionController>(true))
+        {
+            if (emo == null || emo.EmotionProfile == null) continue;
+            var datos = emo.EmotionProfile.GetEmotionData(emocion);
+            var so = new SerializedObject(emo);
+            string pOjos = so.FindProperty("eyePrefix")?.stringValue ?? "Eye";
+            string pBoca = so.FindProperty("mouthPrefix")?.stringValue ?? "Mouth";
+            Elegir(inst, pOjos, datos.eyeMeshName);
+            Elegir(inst, pBoca, datos.mouthMeshName);
+        }
+
+        static void Elegir(GameObject raiz, string prefijo, string malla)
+        {
+            if (string.IsNullOrEmpty(malla)) return;
+            var piezas = raiz.GetComponentsInChildren<Renderer>(true)
+                .Where(r => r != null && r.name.StartsWith(prefijo, StringComparison.Ordinal)).ToList();
+            if (!piezas.Any(r => r.name == malla)) return;
+            foreach (var r in piezas)
+            {
+                bool esta = r.name == malla;
+                r.gameObject.SetActive(esta);
+                r.enabled = esta;
+            }
+        }
+    }
+
     private const string RuidoDeMano = "Packages/com.unity.cinemachine/Presets/Noise/Handheld_normal_mild.asset";
 
     // ── Comprobaciones ──────────────────────────────────────────────────────────────────────
@@ -438,7 +498,7 @@ internal sealed partial class Horno
         var materiales = new List<Material>();
         var props = new Dictionary<string, (Transform original, GameObject copia, Vector3 pos, Quaternion giro, bool activo)>();
         var go = new GameObject("Storyboard · cámara") { hideFlags = HideFlags.HideAndDontSave };
-        const int W = 960, H = 540;
+        int W = TamanoDelStoryboard.x, H = TamanoDelStoryboard.y;
         var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
         var html = new StringBuilder("<!doctype html><meta charset='utf-8'><title>Storyboard</title><body style='background:#111;color:#eee;font-family:Segoe UI,Arial'>\n");
         html.Append($"<h1>Storyboard · {_g.nombre}</h1><div style='display:flex;flex-wrap:wrap;gap:14px'>\n");
@@ -489,6 +549,7 @@ internal sealed partial class Horno
                     if (pBoca != null) pBoca.SetActive(true);
                 }
                 if (!SeVe(inst)) PonerMuneco(inst, a, materiales);
+                PonerCaraDelStoryboard(inst, a.alias);
                 var anim = inst.GetComponent<Animator>();
                 if (anim == null || anim.runtimeAnimatorController == null)
                     anim = inst.GetComponentsInChildren<Animator>(true)
@@ -618,6 +679,7 @@ internal sealed partial class Horno
                             if (pBoca != null) pBoca.SetActive(true);
                         }
                         if (!SeVe(nuevoInst)) PonerMuneco(nuevoInst, a, materiales);
+                        PonerCaraDelStoryboard(nuevoInst, a.alias);
                         // Un prop que el actor llevaba en la mano (o encima) cuelga de su instancia: se suelta
                         // antes de rehacerla para que no se destruya con ella (lo vuelve a colocar su beat).
                         foreach (var prop in props.Values)
@@ -657,6 +719,7 @@ internal sealed partial class Horno
                     }
                     proxies[a].inst.transform.localPosition = Vector3.zero;
                     proxies[a].inst.transform.localRotation = Quaternion.identity;
+                    AplicarApuntesDelStoryboard(proxies[a].inst, soporte.transform, a.alias);
                 }
 
                 foreach (var kv in props)
