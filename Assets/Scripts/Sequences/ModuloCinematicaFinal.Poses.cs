@@ -5,8 +5,8 @@ using UnityEngine;
 /// Poses de suelo (sentado en el suelo, tumbado, dormido, de rodillas): las animaciones dejan el
 /// cuerpo por debajo de la raíz y, puestas a ras de suelo, los personajes se metían en la hierba.
 /// Aquí, después de la animación, se sube a cada uno lo justo para que el punto más bajo de su
-/// malla (la malla de verdad, deformada por la animación) quede encima del suelo, y a los
-/// sentados se les levanta la cabeza (las animaciones de sentado la llevan gacha).
+/// malla (la malla de verdad, deformada por la animación) quede encima del suelo. La postura de los
+/// sentados (espalda y cabeza) ya no es cosa de este módulo: la lleva PosturaDeSentado, para todos.
 /// También se mantienen cerrados los ojos de quien está sin sentido o dormido. Ver INC-866.
 public partial class ModuloCinematicaFinal
 {
@@ -16,7 +16,6 @@ public partial class ModuloCinematicaFinal
         "SitLow_Begin", "SitLow_Loop", "SitLow_Exit", "Sleeping_NoWeapon", "Die01Stay_NoWeapon", "Die01_NoWeapon",
         "Cry01", "Cry01_Loop",
     };
-    private static readonly string[] EstadosSentado = { "SitGround_Loop", "SitLow_Loop" };
     /// Tumbados que se quedan quietos del todo. Sus clips son bucles y la pose sostenida de los NPC
     /// solo congela los que no lo son: seguían en bucle (las piernas se cerraban y abrían) y, al
     /// acabar cada vuelta, `Knockdown01_Ground` salía sola por su transición a
@@ -27,8 +26,6 @@ public partial class ModuloCinematicaFinal
     private const float HolguraSobreElSuelo = 0.01f;
     /// Nunca se sube más que esto (si la medida diera más, se queda en este tope: no salta).
     private const float SubidaMaxima = 0.45f;
-    /// Cuánto se endereza la cabeza de los sentados (0 = nada, 1 = vertical del todo).
-    private const float CabezaAlFrente = 0.7f;
     /// Cada cuántos fotogramas se vuelve a medir la malla (las poses de suelo cambian despacio).
     private const int FotogramasEntreMedidas = 4;
     /// De cada malla se mira uno de cada tantos vértices: sobra para encontrar el punto más bajo.
@@ -41,7 +38,6 @@ public partial class ModuloCinematicaFinal
         public Transform raiz;
         public Animator animador;
         public SkinnedMeshRenderer[] mallas;
-        public Transform cuello, cabeza;
         public float subida;          // lo que lleva subido ahora
         public float objetivo;        // lo que dijo la última medida
         public Vector3 puesta;        // dónde se le dejó (con la subida)
@@ -56,7 +52,7 @@ public partial class ModuloCinematicaFinal
     private static readonly int HashDeReposo = Animator.StringToHash("Idle_Normal_NoWeapon");
 
     private readonly List<PoseDeSuelo> _posesDeSuelo = new();
-    private int[] _hashesDeSuelo, _hashesSentado, _hashesQuietos;
+    private int[] _hashesDeSuelo, _hashesQuietos;
     private readonly RaycastHit[] _impactos = new RaycastHit[8];
     private Mesh _mallaHorneada;
     private readonly List<Vector3> _vertices = new();
@@ -71,8 +67,6 @@ public partial class ModuloCinematicaFinal
         {
             _hashesDeSuelo = new int[EstadosDeSuelo.Length];
             for (int i = 0; i < EstadosDeSuelo.Length; i++) _hashesDeSuelo[i] = Animator.StringToHash(EstadosDeSuelo[i]);
-            _hashesSentado = new int[EstadosSentado.Length];
-            for (int i = 0; i < EstadosSentado.Length; i++) _hashesSentado[i] = Animator.StringToHash(EstadosSentado[i]);
             _hashesQuietos = new int[EstadosTumbadosQuietos.Length];
             for (int i = 0; i < EstadosTumbadosQuietos.Length; i++) _hashesQuietos[i] = Animator.StringToHash(EstadosTumbadosQuietos[i]);
         }
@@ -87,8 +81,6 @@ public partial class ModuloCinematicaFinal
                 raiz = raiz,
                 animador = anim,
                 mallas = raiz.GetComponentsInChildren<SkinnedMeshRenderer>(true),
-                cuello = anim.GetBoneTransform(HumanBodyBones.Neck),
-                cabeza = anim.GetBoneTransform(HumanBodyBones.Head),
                 npc = raiz.GetComponentInChildren<NPCSimpleAnimator>(true),
             });
         }
@@ -157,7 +149,6 @@ public partial class ModuloCinematicaFinal
             p.puesta = base_ + Vector3.up * p.subida;
             p.raiz.position = p.puesta;
             p.hayPuesta = true;
-            if (EsSentado(hash)) EnderezarCabeza(p);
         }
     }
 
@@ -230,12 +221,6 @@ public partial class ModuloCinematicaFinal
         return false;
     }
 
-    private bool EsSentado(int hash)
-    {
-        for (int i = 0; i < _hashesSentado.Length; i++) if (_hashesSentado[i] == hash) return true;
-        return false;
-    }
-
     /// La altura del suelo bajo la raíz: lo más alto que encuentra un rayo hacia abajo (desde un
     /// poco por encima de la raíz sin subir) que no sea de un personaje. Si no hay nada, la raíz.
     private float SueloBajo(Vector3 punto, float respaldo)
@@ -249,18 +234,6 @@ public partial class ModuloCinematicaFinal
             if (_impactos[i].point.y > mejor) mejor = _impactos[i].point.y;
         }
         return mejor > float.MinValue ? mejor : respaldo;
-    }
-
-    /// La cabeza de un sentado mira al frente: se lleva el eje cuello → cabeza hacia la vertical.
-    private static void EnderezarCabeza(PoseDeSuelo p)
-    {
-        if (p.cuello == null || p.cabeza == null) return;
-        Vector3 arriba = p.cabeza.position - p.cuello.position;
-        if (arriba.sqrMagnitude < 1e-6f) return;
-        Quaternion giro = Quaternion.FromToRotation(arriba.normalized, Vector3.up);
-        Quaternion parte = Quaternion.Slerp(Quaternion.identity, giro, CabezaAlFrente * 0.5f);
-        p.cuello.rotation = parte * p.cuello.rotation;
-        p.cabeza.rotation = parte * p.cabeza.rotation;
     }
 
     // ── Ojos cerrados ────────────────────────────────────────────────────────────────────────

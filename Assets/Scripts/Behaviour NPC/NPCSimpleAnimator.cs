@@ -147,6 +147,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     // Coroutines
     private Coroutine _oneShotCoroutine;
+    private int _oneShotLayer;
     private Coroutine _rotationCoroutine;
     private Coroutine _idleVariationCoroutine;
     private Coroutine _activityCoroutine;
@@ -295,6 +296,9 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     void Awake()
     {
+        // Sentado, la espalda y la cabeza se enderezan (las animaciones de sentado encorvan a los chibis).
+        PosturaDeSentado.Asegurar(gameObject);
+
         // Get components
         if (animator == null)
         {
@@ -684,6 +688,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // sin romper poses de otra capa (p.ej. un gesto de manos no debe interrumpir caer/volar en la capa base).
         PararLaPose(layer);
         
+        _oneShotLayer = layer;
         _oneShotCoroutine = StartCoroutine(PlayOneShotCoroutine(stateName, layer, onComplete, fundido));
     }
 
@@ -1035,7 +1040,15 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         _isInteracting = false;
 
-        if (!_isInBattle && !SosteniendoPose && _activityCoroutine == null &&
+        // Un gesto puntual en curso (p. ej. Oliver lanzando su hechizo justo cuando acaba de
+        // hablar) no se corta. Antes, cerrar la charla 0,05 s después de lanzar el gesto lo pisaba
+        // con el idle y no llegaba a verse. Si el gesto es de cuerpo entero (capa base), el propio
+        // one-shot devuelve al NPC a su reposo al acabar; si es de la capa de brazos, se deja esa
+        // capa en paz y solo la base vuelve al reposo.
+        bool gestoEnCurso = _oneShotCoroutine != null && !_isInBattle;
+        if (gestoEnCurso && _oneShotLayer == 0) return;
+
+        if (!gestoEnCurso && !_isInBattle && !SosteniendoPose && _activityCoroutine == null &&
             animator != null && upperBodyLayer > 0 && upperBodyLayer < animator.layerCount)
         {
             if (animator.HasState(upperBodyLayer, Animator.StringToHash("Empty")))

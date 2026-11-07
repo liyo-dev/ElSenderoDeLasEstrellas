@@ -1,0 +1,107 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 4 · EL VESTIDOR REAL
+#  Will (armadura de gominola y orejitas) y Liam (casaca y corazón en la cabeza) esperan delante del vestidor. Desde dentro
+#  llegan la Condesa Merengue, que dirige el vestido, y Estela, que protesta. Silencio y un «flup».
+#  «Le han puesto el lazo». Sale Estela de rosa, con el lazo del tamaño de un escudo. Will aguanta
+#  tres segundos; al cuarto se le escapa la risa y le rebota la armadura. «Estás muy rosa».
+#  «Os lleno de purpurina. Pero con mucha rabia».
+#  Adaptación: las voces de dentro que en la novela no tienen dueño son de la Condesa.
+#  Al empezar emite CHUCHE_ATUENDO_CANDIDATA (por si se prueba desde aquí); al acabar, la Condesa
+#  vuelve a su sitio de las clases (M_Clases_Condesa).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_04_ElVestidor
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Vestidor.asset
+TEXTO bocadillo
+RITMO entre_frases=0.3 mismo_hablante=0.25
+
+REPARTO
+will     Player                 nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela   Actor_Estela           nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab oculto
+liam     Actor_Liam             nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+condesa  Actor_CondesaMerengue  nombre=CHAR_CONDESA_MERENGUE color=FFF4F8 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_CondesaMerengue.prefab oculto
+
+PUNTOS
+p_will      M_Vestidor_Will
+p_liam      M_Vestidor_Liam
+p_puerta    M_Vestidor_Puerta
+p_dentro    M_Cine_Vestidor_Dentro
+p_fuera     M_Cine_Vestidor_Estela
+p_clases    M_Clases_Condesa
+
+HILO
+@inicio
+will en p_will mirando p_puerta
+& liam en p_liam mirando p_puerta
+& estela en p_dentro mirando p_puerta
+& condesa en p_dentro mirando p_puerta
+& efecto SenalBeat senal=CHUCHE_ATUENDO_CANDIDATA
+& plano conjunto will liam p_puerta
+& will cara neutral
+& liam cara molesto
+espera 1.2
+
+# Desde dentro.
+@voces
+condesa dice CHUCHELANDIA_VESTIDOR_01 sin_pose
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Object_Moving_Action-015.wav" volume=0.5
+estela dice CHUCHELANDIA_VESTIDOR_02 sin_pose
+condesa dice CHUCHELANDIA_VESTIDOR_03 sin_pose
+plano dos will liam
+& will cara sorpresa
+estela dice CHUCHELANDIA_VESTIDOR_04 sin_pose
+condesa dice CHUCHELANDIA_VESTIDOR_05 sin_pose
+estela dice CHUCHELANDIA_VESTIDOR_06 sin_pose dura=2.0
+espera 1.4
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Rope_Swirl(4).wav" volume=0.8
+espera 0.9
+plano medio liam solo
+liam dice CHUCHELANDIA_VESTIDOR_07 cara=neutral mira=p_puerta
+espera 0.5
+
+# Se abre la puerta.
+@sale
+plano conjunto will liam p_fuera rumbo=270 distancia=5.5
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-012.wav" volume=0.6
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_pink.prefab" en=p_puerta offset=0,1.2,0 lifetime=3
+& estela aparece en p_puerta mirando will
+& estela cara enfado
+estela anda a p_fuera ritmo=paseo llega_mirando=will
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=estela offset=0,1.4,0 lifetime=4
+plano medio estela solo
+espera 1.0
+
+# Will aguanta tres segundos.
+@aguanta
+plano medio will solo
+will cara picaro
+& liam cara neutral
+espera 3.0
+will gesto Laugh01
+& will cara alegre
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Plastic_Boing.wav" volume=0.8
+& efecto SaltoBeat actorId=Player altura=0.35 subida=0.2 caida=0.25
+& sonido Final_Will_Risa volume=0.7
+espera 0.4
+
+# Liam, con toda la seriedad del mundo.
+@rosa
+plano medio liam solo
+liam dice CHUCHELANDIA_VESTIDOR_08 cara=neutral mira=estela
+plano medio estela
+estela dice CHUCHELANDIA_VESTIDOR_09 cara=enfado gesto=Angry01 mira=liam
+# Levanta la mano: tres corazoncitos.
+plano conjunto estela will liam
+estela gesto MagicRight
+& vfx Assets/_VFX/Hechizos/VFX_Hechizo_CorazonEstelar_Impacto.prefab en=estela offset=0.3,1.4,0.5 lifetime=2.5
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Xylophone-011.wav" volume=0.6
+espera 1.2
+estela cara molesto
+estela dice CHUCHELANDIA_VESTIDOR_10 sin_pose
+espera 0.5
+estela dice CHUCHELANDIA_VESTIDOR_11 cara=enfado gesto=Angry02
+espera 0.8
+# La Condesa vuelve a su sitio de las clases (fuera de cuadro).
+condesa en p_clases
+& condesa aparece

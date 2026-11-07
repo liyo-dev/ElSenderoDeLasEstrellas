@@ -109,6 +109,11 @@ public sealed class SequenceContext
     public void AcompasarRelojAlTiempo() => _relojAlCompas++;
     public void SoltarRelojAlCompas() => _relojAlCompas = Math.Max(0, _relojAlCompas - 1);
 
+    /// ¿Se ha saltado la secuencia? Lo marca el reproductor al saltar, antes de soltarlo todo,
+    /// para que lo que se cierre a partir de ahí cumpla lo pendiente (SequenceBeat.CumplirAlSaltar).
+    public bool SeHaSaltado { get; private set; }
+    public void MarcarSalto() => SeHaSaltado = true;
+
     public SequenceContext(SequencePlayer player, SequenceStage stage)
     {
         Player = player;
@@ -323,6 +328,12 @@ public abstract class SequenceBeat
     /// enseñar el estado anterior durante el fundido y recomponerlo a la vista. Por defecto no
     /// hace nada.
     public virtual void Preparar(SequenceContext ctx) { }
+
+    /// Lo que este beat deja hecho aunque el jugador salte la secuencia antes de llegar a él. Lo
+    /// necesitan los beats cuyo efecto es un hecho de la historia que otros esperan (una señal que
+    /// abre un portal): saltar la escena tiene que dejar el mundo como si se hubiera visto. Se
+    /// llama con la pantalla cubierta y sin esperar a nada. Por defecto no hace nada.
+    public virtual void CumplirAlSaltar(SequenceContext ctx) { }
 
     /// ¿Este beat solo COLOCA cosas? Son los que se pueden ejecutar con la pantalla tapada:
     /// poner a alguien en su marca, volcar la carreta, cambiar la hora del día... Su resultado

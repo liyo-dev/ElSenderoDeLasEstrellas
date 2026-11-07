@@ -59,6 +59,15 @@ public class SenderoProgressionController : MonoBehaviour
     [SerializeField] private string _escenaPruebaEstela = "Chuchelandia";
     [SerializeField] private string _escenaPruebaLiam = "Parque";
 
+    // La vuelta de cada prueba: su salida pone el flag (PortalTrigger.setFlagOnEnter) y deja al
+    // grupo en el ancla de detrás de su puerta. Con eso el Sendero sabe por dónde va al recargarse.
+    public const string FlagPruebaWillHecha = "SENDERO_PRUEBA_WILL_HECHA";
+    public const string FlagPruebaEstelaHecha = "SENDERO_PRUEBA_ESTELA_HECHA";
+    public const string FlagPruebaLiamHecha = "SENDERO_PRUEBA_LIAM_HECHA";
+    public const string AnclaVueltaWill = "SenderoTrasPruebaWill";
+    public const string AnclaVueltaEstela = "SenderoTrasPruebaEstela";
+    public const string AnclaVueltaLiam = "SenderoTrasPruebaLiam";
+
     [Header("Señal de Batalla Final")]
     [SerializeField] private string _senialBatallaFinal = "SENDERO_FINAL_START";
 
@@ -103,10 +112,41 @@ public class SenderoProgressionController : MonoBehaviour
         if (_portalEstela != null) _portalEstela.SetActive(false);
         if (_portalLiam != null) _portalLiam.SetActive(false);
 
+        if (RetomarTrasPrueba()) return;
+
         if (_estado == EstadoSendero.Llegada)
         {
             StartCoroutine(Co_SecuenciaLlegadaYSellado());
         }
+    }
+
+    /// Al volver de una prueba (o cargar la partida en el Sendero) el recorrido sigue tras la
+    /// última prueba hecha: el portal de la Tierra ya está sellado y las puertas pasadas, apagadas.
+    /// Si se llega por la salida de esa prueba, su puerta se cierra a la espalda del grupo.
+    private bool RetomarTrasPrueba()
+    {
+        GameObject puerta; EstadoSendero enPrueba, siguiente; string ancla;
+        if (FlagDePartida.EstaPuesto(FlagPruebaLiamHecha))
+            (puerta, enPrueba, siguiente, ancla) = (_portalLiam, EstadoSendero.EnPruebaLiam, EstadoSendero.RupturaYReconciliacion, AnclaVueltaLiam);
+        else if (FlagDePartida.EstaPuesto(FlagPruebaEstelaHecha))
+            (puerta, enPrueba, siguiente, ancla) = (_portalEstela, EstadoSendero.EnPruebaEstela, EstadoSendero.HaciaPruebaLiam, AnclaVueltaEstela);
+        else if (FlagDePartida.EstaPuesto(FlagPruebaWillHecha))
+            (puerta, enPrueba, siguiente, ancla) = (_portalWill, EstadoSendero.EnPruebaWill, EstadoSendero.HaciaPruebaEstela, AnclaVueltaWill);
+        else
+            return false;
+
+        if (_portalOrigenTierra != null) _portalOrigenTierra.SetActive(false);
+        if (puerta != null && SpawnManager.CurrentAnchorId == ancla)
+        {
+            _estado = enPrueba;
+            puerta.SetActive(true);
+            StartCoroutine(Co_CerrarPortal(puerta, siguiente));
+        }
+        else
+        {
+            CambiarEstado(siguiente);
+        }
+        return true;
     }
 
     // El cuerpo del jugador lo da PlayerService: se toma al activarse y se renueva cuando se

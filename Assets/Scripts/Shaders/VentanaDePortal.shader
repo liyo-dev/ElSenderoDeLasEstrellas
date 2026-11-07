@@ -3,7 +3,7 @@
 //   · una RenderTexture de la cámara del otro lado, muestreada en coordenadas de pantalla;
 //   · una panorámica (equirrectangular) del otro mundo, muestreada con la dirección de la mirada
 //     girada por _GiroDeLaVista (_VISTA_PANORAMICA): no necesita el otro mundo cargado.
-// Recorta un óvalo con borde luminoso, y _Apertura lo cierra (0) o lo abre (1). _Destello lo lava
+// Recorta un óvalo (o un corazón, _FORMA_CORAZON) con borde luminoso, y _Apertura lo cierra (0) o lo abre (1). _Destello lo lava
 // hacia el color del borde (una explosión al otro lado).
 Shader "El Sendero/Ventana de portal"
 {
@@ -19,6 +19,7 @@ Shader "El Sendero/Ventana de portal"
         [Toggle] _EnPantalla ("Muestrear en coordenadas de pantalla", Float) = 1
         [Toggle(_VISTA_PANORAMICA)] _VistaPanoramica ("Vista panorámica del otro mundo", Float) = 0
         _Panorama ("Panorámica del otro mundo (equirrectangular)", 2D) = "black" {}
+        [Toggle(_FORMA_CORAZON)] _FormaCorazon ("Forma de corazón (si no, óvalo)", Float) = 0
     }
     SubShader
     {
@@ -32,6 +33,7 @@ Shader "El Sendero/Ventana de portal"
             #pragma vertex vert
             #pragma fragment frag
             #pragma shader_feature_local _VISTA_PANORAMICA
+            #pragma shader_feature_local _FORMA_CORAZON
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -64,12 +66,29 @@ Shader "El Sendero/Ventana de portal"
                 return o;
             }
 
+            // Distancia con signo a un corazón con la punta en (0,0) y los lóbulos arriba (Inigo Quilez).
+            float DistanciaAlCorazon(float2 p)
+            {
+                p.x = abs(p.x);
+                if (p.y + p.x > 1.0)
+                    return length(p - float2(0.25, 0.75)) - 0.35355339;
+                float2 a = p - float2(0.0, 1.0);
+                float2 b = p - 0.5 * max(p.x + p.y, 0.0);
+                return sqrt(min(dot(a, a), dot(b, b))) * sign(p.x - p.y);
+            }
+
             half4 frag(Salida i) : SV_Target
             {
                 float2 centro = (i.uv - 0.5) * 2.0;
                 float angulo = atan2(centro.y, centro.x + 1e-5);
                 float onda = sin(angulo * 7.0 + _Time.y * 2.3) * _Ondulacion + sin(angulo * 3.0 - _Time.y * 1.7) * _Ondulacion * 0.6;
+            #if defined(_FORMA_CORAZON)
+                // El corazón llena el quad; «r» vale 1 en su borde y ~0 en su centro, como en el óvalo,
+                // así la apertura, la ondulación y el borde funcionan igual.
+                float r = max(0.0, 1.0 + DistanciaAlCorazon(float2(centro.x * 0.62, (centro.y + 1.0) * 0.56 - 0.03)) * 2.9);
+            #else
                 float r = length(centro);
+            #endif
                 float limite = _Apertura * (1.0 + onda * _Apertura);
                 clip(limite - r);
 

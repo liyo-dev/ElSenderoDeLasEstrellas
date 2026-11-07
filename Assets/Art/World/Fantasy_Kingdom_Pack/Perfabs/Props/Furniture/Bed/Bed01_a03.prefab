@@ -200,7 +200,7 @@ MonoBehaviour:
   bedPosition: {fileID: 203020830509951505}
   sleepCameraAnchor: {fileID: 5661880240781306111}
   cameraTransitionSpeed: 2
-  sleepEmotion: 7
+  sleepEmotion: 18
   wakeUpPosition: {fileID: 1041254996337363729}
   wakeUpCameraAnchor: {fileID: 1846220991582729171}
   sleepOnStart: 1

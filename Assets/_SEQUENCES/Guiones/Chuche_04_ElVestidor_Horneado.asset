@@ -1,0 +1,1110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Chuche_04_ElVestidor_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Chuche_04_ElVestidor
+  duracion: 45.197514
+  presentacion: 0
+  huella: "2026-11-01 09:26 \xB7 d328aeab6eb2ffc37d83b4d5bb4501c8"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 100.19999, y: 14, z: 38.499996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    - t: 1.35
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 3.7920408
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.043878
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 9.264286
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 10.661429
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 13.991633
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.747143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.45364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 42.06221
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 1.3000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 3.7420409
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 6.993878
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 9.214286
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 10.611429
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 13.941633
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.697144
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.40364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 42.01221
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    animacion:
+    - fundido: 0
+      t: 4.3420405
+      tipo: 2
+      estado: SenseSomethingStart_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.593878
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.5531435
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.541634
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.297144
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.47493
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 39.00364
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 42.61221
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: neutral
+      dura: 0
+    - t: 4.2420406
+      emocion: sorpresa
+      dura: 2
+    - t: 9.114286
+      emocion: sorpresa
+      dura: 0
+    - t: 9.498286
+      emocion: sorpresa
+      dura: 1.0971428
+    - t: 25.47493
+      emocion: picaro
+      dura: 0
+    - t: 28.47493
+      emocion: alegre
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: 104.99999, y: 13.713801, z: 36.999996}
+    - t: 21.004082
+      p: {x: 104.99999, y: 13.713801, z: 36.999996}
+    - t: 21.275259
+      p: {x: 104.855545, y: 13.94128, z: 36.999996}
+    - t: 21.500034
+      p: {x: 104.711105, y: 14, z: 36.999996}
+    - t: 21.701136
+      p: {x: 104.56666, y: 14, z: 36.999996}
+    - t: 22.059769
+      p: {x: 104.27777, y: 14.057177, z: 36.999996}
+    - t: 22.399635
+      p: {x: 103.988884, y: 14.021251, z: 36.999996}
+    - t: 22.739502
+      p: {x: 103.7, y: 14.04273, z: 36.999996}
+    - t: 23.079376
+      p: {x: 103.4111, y: 14.06138, z: 36.999996}
+    - t: 23.419243
+      p: {x: 103.122215, y: 14.06138, z: 36.999996}
+    - t: 23.777876
+      p: {x: 102.83333, y: 14.06138, z: 36.999996}
+    - t: 23.978977
+      p: {x: 102.68888, y: 14.06138, z: 36.999996}
+    - t: 24.203753
+      p: {x: 102.54444, y: 14.06138, z: 36.999996}
+    - t: 24.47493
+      p: {x: 102.399994, y: 14.06138, z: 36.999996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    - t: 21.004082
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 24.47493
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 31.447596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 33.2829
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    cabezas:
+    - t: 13.891634
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 31.397596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 33.2829
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.353638
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion:
+    - fundido: 0
+      t: 31.997597
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.2829
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.362904
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 35.999638
+      tipo: 2
+      estado: MagicRight
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 36.049637
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 41.91221
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 41.99221
+      tipo: 2
+      estado: Angry02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 43.947514
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 21.004082
+      emocion: enfado
+      dura: 0
+    - t: 33.2829
+      emocion: enfado
+      dura: 3.1167347
+    - t: 38.30364
+      emocion: molesto
+      dura: 0
+    - t: 41.91221
+      emocion: enfado
+      dura: 2.3853061
+    visible:
+    - desde: 21.004082
+      hasta: 105.19751
+    deslizando: []
+  - id: Actor_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: CHAR_LIAM
+    posiciones:
+    - t: 0
+      p: {x: 100.19999, y: 14, z: 35.499996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    - t: 1.47
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 3.9120407
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.163878
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 9.384287
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 10.78143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 14.111634
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.597143
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    - t: 31.297596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 33.432903
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 38.57364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 42.18221
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 1.4200001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 3.8620408
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.113878
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 9.334287
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 10.73143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 14.061634
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 18.597143
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    - t: 31.297596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 33.382904
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 38.52364
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 42.13221
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    animacion:
+    - fundido: 0
+      t: 4.3420405
+      tipo: 2
+      estado: SenseSomethingStart_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.593878
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.5531435
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 14.541634
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.597143
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.677143
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.554081
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 31.297596
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 31.377596
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.3329
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.982903
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 39.00364
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 42.61221
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: molesto
+      dura: 0
+    - t: 4.2420406
+      emocion: sorpresa
+      dura: 2
+    - t: 9.498286
+      emocion: sorpresa
+      dura: 1.0971428
+    - t: 18.597143
+      emocion: neutral
+      dura: 2.306939
+    - t: 25.47493
+      emocion: neutral
+      dura: 0
+    - t: 31.297596
+      emocion: neutral
+      dura: 2.3853061
+    visible: []
+    deslizando: []
+  - id: Actor_CondesaMerengue
+    alias: condesa
+    colorDelNombre: {r: 1, g: 0.95686275, b: 0.972549, a: 1}
+    claveDelNombre: CHAR_CONDESA_MERENGUE
+    posiciones:
+    - t: 0
+      p: {x: 104.99999, y: 13.713801, z: 36.999996}
+    - t: 44.697514
+      p: {x: 104.99999, y: 13.713801, z: 36.999996}
+    - t: 44.698513
+      p: {x: 110.412, y: 16, z: -51.831}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 103.49999, y: 14.06138, z: 36.999996}
+      actor: 
+    cabezas:
+    - t: 10.56143
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion: []
+    caras: []
+    visible:
+    - desde: 44.697514
+      hasta: 105.19751
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1.2
+    t1: 3.3420408
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_VESTIDOR_01
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 3.6420407
+    t1: 6.593878
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.893878
+    t1: 9.114286
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_VESTIDOR_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 9.114286
+    t1: 10.21143
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_04
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 10.51143
+    t1: 13.541634
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_VESTIDOR_05
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 13.841634
+    t1: 16.297144
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_06
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.597143
+    t1: 20.504082
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_VESTIDOR_07
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 31.297596
+    t1: 33.2829
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_VESTIDOR_08
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 33.2829
+    t1: 35.999638
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_09
+    gesto: Angry01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 38.30364
+    t1: 41.41221
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_10
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 41.91221
+    t1: 43.897514
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_VESTIDOR_11
+    gesto: Angry02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 9.114286
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 0
+      p: {x: 96.04285, y: 17.264616, z: 49.691864}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras:
+    - {x: 103.49999, y: 14.06138, z: 36.999996}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0717652
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 9.114286
+    t1: 18.597143
+    tipo: 5
+    descripcion: 'dos: will y liam'
+    posiciones:
+    - t: 9.114286
+      p: {x: 103.52549, y: 15.459901, z: 38.91997}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.84078085
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 18.597143
+    t1: 21.004082
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 18.597143
+      p: {x: 102.65041, y: 14.958616, z: 36.613823}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 21.004082
+    t1: 24.47493
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 21.004082
+      p: {x: 96.61419, y: 15.947654, z: 38.789043}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras:
+    - {x: 102.399994, y: 14.06138, z: 36.999996}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0717652
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 24.47493
+    t1: 25.47493
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 24.47493
+      p: {x: 101.47104, y: 15.679884, z: 39.823246}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 25.47493
+    t1: 31.297596
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 25.47493
+      p: {x: 98.537926, y: 14.891166, z: 36.83793}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 31.297596
+    t1: 33.2829
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 31.297596
+      p: {x: 98.3804, y: 14.897236, z: 38.16873}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 33.2829
+    t1: 35.999638
+    tipo: 6
+    descripcion: sobre el hombro de liam a estela
+    posiciones:
+    - t: 33.2829
+      p: {x: 98.58111, y: 15.387252, z: 36.419773}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 35.999638
+    t1: 45.197514
+    tipo: 1
+    descripcion: conjunto de estela y will y liam
+    posiciones:
+    - t: 35.999638
+      p: {x: 96.92428, y: 15.947013, z: 37.836567}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.107609
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344611
+    linea: 39
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1.2
+    beat:
+      rid: 6540294313956344612
+    linea: 48
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 17.697144
+    beat:
+      rid: 6540294313956344613
+    linea: 57
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 21.004082
+    beat:
+      rid: 6540294313956344614
+    linea: 66
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 21.004082
+    beat:
+      rid: 6540294313956344615
+    linea: 67
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 21.004082
+    beat:
+      rid: 6540294313956344616
+    linea: 71
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 28.47493
+    beat:
+      rid: 6540294313956344617
+    linea: 83
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 28.47493
+    beat:
+      rid: 6540294313956344618
+    linea: 84
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 28.47493
+    beat:
+      rid: 6540294313956344619
+    linea: 85
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 35.999638
+    beat:
+      rid: 6540294313956344620
+    linea: 97
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 35.999638
+    beat:
+      rid: 6540294313956344621
+    linea: 98
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: voces
+    t: 1.2
+  - nombre: sale
+    t: 21.004082
+  - nombre: aguanta
+    t: 25.47493
+  - nombre: rosa
+    t: 31.297596
+  puntos:
+  - nombre: p_will
+    posicion: {x: 100.19999, y: 14, z: 38.499996}
+  - nombre: p_liam
+    posicion: {x: 100.19999, y: 14, z: 35.499996}
+  - nombre: p_puerta
+    posicion: {x: 103.49999, y: 14.06138, z: 36.999996}
+  - nombre: p_dentro
+    posicion: {x: 104.99999, y: 13.713801, z: 36.999996}
+  - nombre: p_fuera
+    posicion: {x: 102.399994, y: 14.06138, z: 36.999996}
+  - nombre: p_clases
+    posicion: {x: 110.412, y: 16, z: -51.831}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294313956344611
+      type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        senal: CHUCHE_ATUENDO_CANDIDATA
+    - rid: 6540294313956344612
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 35516e4b9e78e6452a3ea26209b1aa61, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.5
+        tono: 1
+    - rid: 6540294313956344613
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 904aab8dd539b6339b59bc7bbcce3d9c, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344614
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 1ae3b01669263db4dbfcee497885563c, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344615
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4109064841345302812, guid: 2a409ab125c5216449bc5f005ec045f0, type: 3}
+        atActorId: 
+        markName: M_Vestidor_Puerta
+        offset: {x: 0, y: 1.2, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344616
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: Actor_Estela
+        markName: 
+        offset: {x: 0, y: 1.4, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344617
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: f610393378cfa32a99e88c4e5d9af93b, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344618
+      type: {class: SaltoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        altura: 0.35
+        desplazamiento: 0
+        haciaElLado: 0
+        subida: 0.2
+        sostener: 0
+        caida: 0.25
+        poseSubida: JumpStart_InPlace_NoWeapon
+        poseAire: JumpAir_InPlace_NoWeapon
+        poseCaida: JumpEnd_InPlace_NoWeapon
+        parabola: 0
+        alturaMaximaDeAterrizaje: -1
+        poseEnElSuelo: 
+    - rid: 6540294313956344619
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Final_Will_Risa
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344620
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 7037865047022992450, guid: c5b10485b3aead6419ea5caa0e3f17ad, type: 3}
+        atActorId: Actor_Estela
+        markName: 
+        offset: {x: 0.3, y: 1.4, z: 0.5}
+        lifetime: 2.5
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344621
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 32f51d5a9b3358d1ea58f4dc3876817e, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1

@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Escaparate_Hero_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Escaparate_Hero
+  duracion: 6.5
+  presentacion: 1
+  huella: "2026-11-07 08:11 \xB7 a4164da7d557b8421b0343f601544b17"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 6, y: 26.281815, z: -114}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 6, y: 26.281815, z: -138}
+      actor: 
+    cabezas: []
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Estela
+    alias: estela
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Estela
+    posiciones:
+    - t: 0
+      p: {x: 7.6, y: 0, z: -113.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 6, y: 26.281815, z: -138}
+      actor: 
+    cabezas: []
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Liam
+    alias: liam
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: Liam
+    posiciones:
+    - t: 0
+      p: {x: 4.4, y: 0, z: -113.6}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 6, y: 26.281815, z: -138}
+      actor: 
+    cabezas: []
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  lineas: []
+  planos:
+  - focos:
+    - t: 0
+      p: {x: 6, y: 27.481815, z: -138}
+    t0: 0
+    t1: 2
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 0
+      p: {x: 6, y: 2, z: -106}
+    lente: 45
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 6, y: 27.481815, z: -138}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 2
+      p: {x: 6, y: 27.481815, z: -138}
+    t0: 2
+    t1: 4
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 2
+      p: {x: 11, y: 27.881815, z: -108}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 6, y: 27.481815, z: -138}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 4
+      p: {x: 6, y: 27.481815, z: -138}
+    t0: 4
+    t1: 6.5
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 4
+      p: {x: 2, y: 32.281815, z: -103}
+    lente: 50
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 6, y: 27.481815, z: -138}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: p_will
+    posicion: {x: 6, y: 26.281815, z: -114}
+  - nombre: p_estela
+    posicion: {x: 7.6, y: 0, z: -113.6}
+  - nombre: p_liam
+    posicion: {x: 4.4, y: 0, z: -113.6}
+  - nombre: pueblo
+    posicion: {x: 6, y: 26.281815, z: -138}
+  - nombre: cam_espalda
+    posicion: {x: 6, y: 0, z: -106}
+  - nombre: cam_34
+    posicion: {x: 11, y: 26.281815, z: -108}
+  - nombre: cam_alta
+    posicion: {x: 2, y: 26.281815, z: -103}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []

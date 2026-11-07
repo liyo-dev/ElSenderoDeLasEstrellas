@@ -18,8 +18,16 @@ public class SenalBeat : SequenceBeat
 
     public override IEnumerator Run(SequenceContext ctx)
     {
-        if (!string.IsNullOrWhiteSpace(senal))
-            DefaultNarrativeSignals.EnsureInstance()?.RaiseCustom(senal, "[SenalBeat]");
+        Emitir("[SenalBeat]");
         yield break;
+    }
+
+    /// La señal es un hecho de la historia: se emite también si el jugador salta la escena.
+    public override void CumplirAlSaltar(SequenceContext ctx) => Emitir("[SenalBeat] al saltar");
+
+    private void Emitir(string origen)
+    {
+        if (!string.IsNullOrWhiteSpace(senal))
+            DefaultNarrativeSignals.EnsureInstance()?.RaiseCustom(senal, origen);
     }
 }

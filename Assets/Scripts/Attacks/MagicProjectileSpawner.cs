@@ -289,7 +289,25 @@ public class MagicProjectileSpawner : MonoBehaviour
         GameObject go = Instantiate(spell.prefab, position, rotation);
         if (spell.useScaleOverride)
             go.transform.localScale = spell.scaleOverride;
+        if (spell.visualSustitutoEnVuelo)
+            Disfrazar(go, spell.visualSustitutoEnVuelo);
         return go;
+    }
+
+    private static readonly List<Renderer> _renderersDelDisfraz = new List<Renderer>();
+    private static readonly List<Light> _lucesDelDisfraz = new List<Light>();
+
+    /// Apaga lo que se ve del hechizo (renderers, partículas y luces) y le pega el efecto
+    /// sustituto: el proyectil o la zona sigue volando, chocando e impactando igual.
+    private static void Disfrazar(GameObject go, GameObject visual)
+    {
+        go.GetComponentsInChildren(true, _renderersDelDisfraz);
+        for (int i = 0; i < _renderersDelDisfraz.Count; i++) _renderersDelDisfraz[i].enabled = false;
+        _renderersDelDisfraz.Clear();
+        go.GetComponentsInChildren(true, _lucesDelDisfraz);
+        for (int i = 0; i < _lucesDelDisfraz.Count; i++) _lucesDelDisfraz[i].enabled = false;
+        _lucesDelDisfraz.Clear();
+        Instantiate(visual, go.transform, false);
     }
 
     private IEnumerator Co_SpawnWithCharge(MagicSpellSO spell, Transform originOverride, float damageMultiplier)

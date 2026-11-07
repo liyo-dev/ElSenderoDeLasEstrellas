@@ -77,7 +77,8 @@ public static partial class Partida
         p.flags = marcas;
     }
 
-    /// El preset guarda siempre la apariencia de Will, vaya quien vaya al mando.
+    /// El preset guarda siempre la apariencia de Will, vaya quien vaya al mando, y sin atuendos de
+    /// escena: con uno puesto se guarda la ropa de debajo.
     private static void VolcarApariencia(PlayerPresetSO p)
     {
         if (!PlayerService.TryGetComponent<ModularAutoBuilder>(out var builder, includeInactive: true, allowSceneLookup: true))
@@ -87,7 +88,10 @@ public static partial class Partida
         var mando = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
         if (mando == PartyControlManager.CharacterSlot.Will)
         {
-            seleccion = builder.GetSelection();
+            var registro = CharacterAppearanceRegistry.Instance;
+            seleccion = registro != null && registro.LlevaAtuendo(PartyControlManager.CharacterSlot.Will)
+                ? registro.RopaDeDebajo(PartyControlManager.CharacterSlot.Will)
+                : builder.GetSelection();
         }
         else
         {

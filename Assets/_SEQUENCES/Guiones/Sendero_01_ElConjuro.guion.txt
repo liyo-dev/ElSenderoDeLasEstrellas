@@ -40,15 +40,17 @@ bandas muestra
 plano general will desde=cam_general mira=p_piedra altura=4.5 altura_foco=2.2 lente=38 suave=0.8
 espera 2.0
 
-# Empieza el ritual: círculo bajo los pies y luz en las manos.
-plano medio will solo desde=cam_will_frente mira=p_will altura=1.3 altura_foco=1.2 lente=36 suave=0.4
-will bucle CastingIdle01
-will cara decidido
+# Empieza el ritual: círculo bajo los pies y luz en las manos. Al estilo de Lina: recita con los
+# ojos cerrados todo el conjuro y un gesto que solo crece: manos juntas en el pecho y, en la tercera
+# estrofa, brazos sobre la cabeza con la luz subiendo con ellos; abre los ojos en el grito.
+plano medio will solo desde=cam_will_frente mira=p_will altura=1.3 altura_foco=1.2 lente=36 suave=0.4 gira=-30
+will bucle Beg01_Loop
+will cara dormido
 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=p_will offset=0,0.05,0 lifetime=40 registrarComo=CIRCULO_CONJURO
 & sonido Prologo_MagiaLevitar volume=0.45
 & efecto ConjuroEnLasManosBeat actorId=will vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.4,0.2 avance=0.05 elevacion=0.03 duracion=1.5 periodo=1.2 escalaInicial=0.3 escalaFinal=0.7 registrarComo=LUZ_MANOS vidaEnPool=40
 efecto EfectoDeVozBeat preset=Epico gananciaDb=3
-will dice SENDERO_CONJURO_01 cara=decidido dura=6.5
+will dice SENDERO_CONJURO_01 cara=dormido dura=6.5
 espera 0.4
 
 # La Piedra despierta: una columna de luz la recorre y tiembla el suelo.
@@ -56,7 +58,7 @@ plano general will desde=cam_contrapicado mira=p_piedra altura=0.5 altura_foco=2
 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=p_piedra lifetime=2.4
 & sonido SFX_Prologo_Trueno_Lejano volume=0.45
 & sacudida 0.15 1.4
-will dice SENDERO_CONJURO_02 cara=decidido dura=6.5
+will dice SENDERO_CONJURO_02 cara=dormido dura=6.5
 espera 0.4
 
 # Nace un punto de luz delante de la Piedra, donde estará el portal, y crece con la frase.
@@ -66,7 +68,9 @@ vfx Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab en=p_portal offset=0,1.65,0 lif
 & efecto EscalarActorBeat actorId=SEMILLA_PORTAL escala=1.0 duracion=5.5
 & sonido Prologo_Carga volume=0.7
 & sacudida 0.25 1.6
-will dice SENDERO_CONJURO_03 cara=decidido dura=6.0
+will dice SENDERO_CONJURO_03 cara=dormido dura=6.0
+& will bucle MagicAttackOmni01_Load congela fundido=0.6
+& efecto ConjuroEnLasManosBeat actorId=will efectoRegistrado=LUZ_MANOS subirACabeza=true offset=0,0.4,0.2 offsetFinal=0,1.75,0.1 tiempoSubida=1.6 duracion=10 escalaInicial=0.7 escalaFinal=1.0
 espera 0.3
 
 # El grito.

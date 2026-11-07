@@ -20,12 +20,14 @@ MonoBehaviour:
   currentMP: 50
   ataque: 0
   defensa: 0
+  sintoniaPuntos: 0
+  sintoniaHitos: 0
+  sintoniaHitosPendientes: 0
   unlockedAbilities: 01000000i
   unlockedSpells: 0100000002000000i
   basicSpellIds: 0100000002000000i
-  legacyLeftSpellId: 0
-  legacyRightSpellId: 0
-  legacySpecialSpellId: 0
+  companionBasics: []
+  companionHealth: []
   flags:
   - SLEEP_DONE:PrologueBed
   - CINEMATIC_SEEN:Cinematic_DemonAppears
@@ -56,18 +58,16 @@ MonoBehaviour:
     sprint: 0
     shield: 1
   appearance:
-  - category: 0
-    partName: Body05
-  - category: 1
-    partName: Cloak02
   - category: 2
     partName: Head01_Male
   - category: 3
-    partName: Hair01
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   - category: 4
-    partName: Eye01
+    partName: Eye30
   - category: 5
-    partName: Mouth01
+    partName: Mouth20
   unlockedWardrobeIds:
   - Body05
   - Cloak02
@@ -146,6 +146,7 @@ MonoBehaviour:
     - key: __currentNodeGuid
       type: string
       value: 434108a8-8f50-407a-b807-74d22ff2a5ac
+  senalesEmitidas: []
   npcPositions:
   - npcId: _ELDRAN
     position: {x: -39.945, y: 1.224823, z: 26.09}
@@ -160,6 +161,7 @@ MonoBehaviour:
     hasActiveState: 0
     isActive: 1
   npcRelationships: []
+  objetosDelMundo: []
   consumedInteractableIds:
   - MainWorld:Carta_1231,6_1000,8_3,4
   completedInteractiveNarratives:

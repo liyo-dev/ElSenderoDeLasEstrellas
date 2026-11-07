@@ -6,10 +6,8 @@ using Invector.vCharacterController;
 /// El jugador a bordo de una embarcación.
 ///
 /// Mientras está a bordo el jugador queda colgado del puesto de conducción (hijo del barco),
-/// así que el barco se lo lleva, y su locomoción queda bloqueada: motor de Invector parado,
-/// CharacterController desactivado y Rigidbody cinemático. Es la misma técnica que usa
-/// <see cref="PlayerAmbientActivityHandler"/> para sentar al jugador en un banco, pero aquí el
-/// punto de apoyo se mueve con el barco en vez de estar quieto en el mundo.
+/// así que el barco se lo lleva, y su locomoción queda parada con <see cref="PasajeroJugador"/>
+/// (lo mismo que usan las atracciones montables).
 ///
 /// Al desembarcar se devuelve al jugador todo tal como estaba (padre, posición, física, input y
 /// modo de acción).
@@ -26,25 +24,17 @@ public class ConductorDeBarco : MonoBehaviour
              "la cámara de exploración se queda dentro de la barco.")]
     [SerializeField] private float distanciaExtraEnBarco = 1.6f;
 
-    private GameObject _jugador;
+    // Modo de acción propio: bloquea salto, sprint, voltereta, ataque, magia, porteo, trepar y
+    // volar. El movimiento NO se bloquea (el barco lo lee) ni la interacción (para volver a
+    // pulsar el botón y bajar).
+    private readonly PasajeroJugador _pasajero = new PasajeroJugador(ActionMode.Boating);
     private BarcoNavegable _barco;
-    private Transform _padreAnterior;
-    private CharacterController _controlador;
-    private Rigidbody _cuerpo;
-    private vThirdPersonMotor _motor;
-    private vThirdPersonInput _entrada;
-    private vThirdPersonController _controladorInvector;
-    private Animator _animador;
     private VolteretaDelJugador _voltereta;
-    private PlayerActionManager _acciones;
     private vThirdPersonCamera _camara;
     private float _distanciaDeCamaraNormal;
-    private bool _controladorEstabaActivo;
-    private bool _cuerpoEraCinematico;
-    private bool _motorEstabaBloqueado;
-    private bool _suppressEstabaActivo;
-    private bool _controladorInvectorEstabaActivo;
     private Coroutine _acercamiento;
+
+    private GameObject _jugador => _pasajero.Jugador;
 
     /// <summary>True mientras hay un jugador a bordo.</summary>
     public bool TieneConductor => _jugador != null;
@@ -62,19 +52,18 @@ public class ConductorDeBarco : MonoBehaviour
         // Si el modo de acción se ha reiniciado (muerte o respawn del jugador), el jugador ya no
         // está a bordo: se suelta para que no se quede bloqueado sin poder moverse.
         if (_jugador == null) return;
-        if (_acciones != null && !_acciones.IsInMode(ActionMode.Boating)) SoltarJugador();
+        var acciones = _pasajero.Acciones;
+        if (acciones != null && !acciones.IsInMode(ActionMode.Boating)) SoltarJugador();
     }
 
     /// <summary>Deja al jugador donde está y devuelve su control, sin moverlo de sitio.</summary>
     void SoltarJugador()
     {
         var t = _jugador != null ? _jugador.transform : null;
-        if (t != null) t.SetParent(_padreAnterior, true);
-        RestaurarJugador();
+        if (t != null) t.SetParent(_pasajero.PadreAnterior, true);
+        _pasajero.Devolver();
         AlejarCamara(false);
         DevolverMusicaDelLugar();
-        _jugador = null;
-        _padreAnterior = null;
     }
 
     /// <summary>
@@ -133,26 +122,9 @@ public class ConductorDeBarco : MonoBehaviour
         var nadadora = jugador.GetComponent<PlayerSwimmingController>();
         if (nadadora != null && nadadora.EstaEnElAgua) nadadora.SalirDelAgua();
 
-        _jugador = jugador;
-
+        _pasajero.Tomar(jugador);
         var t = jugador.transform;
-        _padreAnterior = t.parent;
-
-        _controlador = jugador.GetComponent<CharacterController>();
-        _cuerpo = jugador.GetComponent<Rigidbody>();
-        _motor = jugador.GetComponent<vThirdPersonMotor>();
-        _entrada = jugador.GetComponent<vThirdPersonInput>();
-        _controladorInvector = jugador.GetComponentInParent<vThirdPersonController>();
-        _animador = jugador.GetComponentInChildren<Animator>();
         _voltereta = jugador.GetComponentInParent<VolteretaDelJugador>();
-        _acciones = jugador.GetComponent<PlayerActionManager>();
-
-        BloquearJugador();
-
-        // Modo de acción propio: bloquea salto, sprint, voltereta, ataque, magia, porteo,
-        // trepar y volar. El movimiento NO se bloquea (el barco lo lee) ni la interacción
-        // (para poder volver a pulsar el botón y bajar).
-        _acciones?.PushMode(ActionMode.Boating);
 
         // Colgado del puesto: a partir de aquí el barco se lleva al jugador.
         t.SetParent(puesto, true);
@@ -177,7 +149,7 @@ public class ConductorDeBarco : MonoBehaviour
         }
 
         var t = _jugador.transform;
-        t.SetParent(_padreAnterior, true);
+        t.SetParent(_pasajero.PadreAnterior, true);
         t.position = destino;
 
         // Al bajar, el jugador mira hacia fuera del barco (hacia donde se baja), no de costado.
@@ -187,106 +159,15 @@ public class ConductorDeBarco : MonoBehaviour
             ? Quaternion.LookRotation(fuera.normalized, Vector3.up)
             : Quaternion.LookRotation(ProaMundo(), Vector3.up);
 
-        RestaurarJugador();
+        _pasajero.Devolver();
         AlejarCamara(false);
         DevolverMusicaDelLugar();
-
-        _jugador = null;
-        _padreAnterior = null;
     }
 
     void OnDisable()
     {
         // El barco se va (escena, destruction): el jugador no puede quedarse colgado.
         if (_jugador != null) SoltarJugador();
-    }
-
-    // ── Bloqueo del jugador ───────────────────────────────────────────────────
-
-    void BloquearJugador()
-    {
-        if (_controlador != null)
-        {
-            _controladorEstabaActivo = _controlador.enabled;
-            _controlador.enabled = false;
-        }
-
-        if (_cuerpo != null)
-        {
-            _cuerpoEraCinematico = _cuerpo.isKinematic;
-            // La velocidad se pone a cero ANTES de marcarlo cinemático: al revés, Unity avisa
-            // de que no se puede poner velocidad a un cuerpo cinemático.
-            _cuerpo.linearVelocity = Vector3.zero;
-            _cuerpo.isKinematic = true;
-        }
-
-        if (_motor != null)
-        {
-            _motorEstabaBloqueado = _motor.lockMovement;
-            _motor.lockMovement = true;
-        }
-
-        if (_entrada != null)
-        {
-            _suppressEstabaActivo = _entrada.SuppressMoveInput;
-            _entrada.SuppressMoveInput = true;
-        }
-
-        // El Animator del jugador lo lleva otro componente (el de animación de Invector), que sigue
-        // vivo aunque el motor esté parado: sin bajar el InputMagnitude a cero, Will se queda
-        // "caminando" en el sitio mientras va en el barco.
-        if (_animador != null)
-        {
-            try { _animador.SetFloat(vAnimatorParameters.InputMagnitude, 0f); } catch { }
-            try { _animador.SetFloat(vAnimatorParameters.InputHorizontal, 0f); } catch { }
-            try { _animador.SetFloat(vAnimatorParameters.InputVertical, 0f); } catch { }
-        }
-
-        // El controlador de Invector se apaga mientras dura el salto al barco: si siguiera
-        // vivo, el motor creería que el jugador sigue en el suelo y cortaría la voltereta.
-        if (_controladorInvector != null)
-        {
-            _controladorInvectorEstabaActivo = _controladorInvector.enabled;
-            _controladorInvector.enabled = false;
-        }
-    }
-
-    void RestaurarJugador()
-    {
-        if (_controlador != null)
-        {
-            if (_controladorEstabaActivo) _controlador.enabled = true;
-            _controladorEstabaActivo = false;
-        }
-
-        if (_cuerpo != null)
-        {
-            _cuerpo.isKinematic = _cuerpoEraCinematico;
-            _cuerpoEraCinematico = false;
-        }
-
-        if (_motor != null)
-        {
-            _motor.lockMovement = _motorEstabaBloqueado;
-            _motorEstabaBloqueado = false;
-        }
-
-        if (_entrada != null)
-        {
-            _entrada.SuppressMoveInput = _suppressEstabaActivo;
-            _suppressEstabaActivo = false;
-        }
-
-        if (_controladorInvector != null)
-        {
-            if (_controladorInvectorEstabaActivo) _controladorInvector.enabled = true;
-            _controladorInvectorEstabaActivo = false;
-        }
-
-        _acciones?.PopMode(ActionMode.Boating);
-
-        // Grace period para que el botón de salto no se dispare en el frame de la restauración.
-        Core.GamepadInputReader.IgnoreJumpButton(0.3f);
     }
 
     // ── El salto al puesto ───────────────────────────────────────────────────

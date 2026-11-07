@@ -3,8 +3,9 @@ using Game.NPC;
 using UnityEngine;
 
 /// <summary>
-/// Los actores del grafo en El Sendero: NPCs por su persistenceId (<see cref="NPCRegistry"/>),
-/// su icono de «tiene algo para ti» (<see cref="NarrativeActor"/>) y su colocación en marcas
+/// Los actores del grafo en El Sendero: NPCs por su persistenceId (<see cref="NPCRegistry"/>) y
+/// actores sin IA por su id (<see cref="NarrativeActor.TryGetSinIA"/>), su icono de «tiene algo
+/// para ti» (<see cref="NarrativeActor"/>) y la colocación y presencia de los NPCs en marcas
 /// (<see cref="SpawnAnchor"/>, con <see cref="SequenceActor"/> para moverlos).
 /// </summary>
 public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAttentionMarkers, INarrativeActorPlacement, INarrativeActorPresence
@@ -13,6 +14,7 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
 
     public Transform FindActor(string actorId)
     {
+        if (NarrativeActor.TryGetSinIA(actorId, out var sinIA)) return sinIA.transform;
         var npc = FindNpc(actorId);
         return npc != null ? npc.transform : null;
     }
@@ -39,6 +41,7 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
 
     static NarrativeActor FindNarrativeActor(string actorId)
     {
+        if (NarrativeActor.TryGetSinIA(actorId, out var sinIA)) return sinIA;
         var npc = FindNpc(actorId);
         var actor = npc != null ? npc.GetComponent<NarrativeActor>() : null;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -58,10 +61,26 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         if (applyLocationSettings && actorId == SequenceActor.PlayerId)
             TeleportService.TeleportToAnchor(actor.Transform.gameObject, markId, false);
         else
+        {
+            QuedarseEnLaMarca(actor.Manager);
             SequenceMovement.PlaceAt(actor, mark.transform.position, mark.GetCharacterRotation());
+        }
         if (makeVisible) actor.SetRenderingVisible(true);
         actor.ForzarEnElSuelo();
         return true;
+    }
+
+    /// Un acompañante que no es del trío (Will, Estela, Liam) y que la historia coloca en una marca
+    /// se queda en ella: sale del grupo y deja de seguir al jugador. Si no, el seguimiento lo
+    /// arrastra fuera de la marca y, al ser del grupo, no se le puede hablar (Interactable), así que
+    /// una charla que espere el grafo con él no llegaría nunca. Ver INC-904.
+    static void QuedarseEnLaMarca(NPCBehaviourManagerV2 npc)
+    {
+        if (npc == null || ControlDelJugador.PersonajeDe(npc.gameObject, out _)) return;
+        var miembro = npc.GetComponent<NPCPartyMember>();
+        if (miembro == null) return;
+        if (miembro.IsInParty) miembro.LeaveParty();
+        if (miembro.EstaSiguiendo) npc.ForceIdle();
     }
 
     // ── INarrativeActorPresence ──────────────────────────────────────────────────────────────

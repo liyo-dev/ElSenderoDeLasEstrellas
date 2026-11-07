@@ -5,7 +5,8 @@ using UnityEngine;
 /// Almacena y gestiona la apariencia visual de cada personaje del equipo.
 /// Actúa como puente entre el ModularAutoBuilder (único, en Will) y las
 /// apariencias individuales de Liam, Will y Estela, incluyendo cambios
-/// de vestuario durante la aventura.
+/// de vestuario durante la aventura. Los atuendos de escena (ropa encima que no se guarda) viven
+/// en CharacterAppearanceRegistry.Atuendos.cs.
 ///
 /// El ModularAutoBuilder se resuelve en tiempo de ejecución vía PlayerService,
 /// por lo que este componente no necesita referencias de escena al prefab de Will.
@@ -15,7 +16,7 @@ using UnityEngine;
 ///   CharacterAppearanceRegistry.Instance.UpdatePart(CharacterSlot.Estela, PartCategory.Hat, "Hat03");
 /// </summary>
 [DefaultExecutionOrder(-100)]
-public class CharacterAppearanceRegistry : MonoBehaviour
+public partial class CharacterAppearanceRegistry : MonoBehaviour
 {
     #region Singleton
     public static CharacterAppearanceRegistry Instance { get; private set; }
@@ -33,6 +34,14 @@ public class CharacterAppearanceRegistry : MonoBehaviour
     [Header("Apariencia inicial de Estela")]
     [Tooltip("Partes activas de Estela. Deben coincidir con los nombres en la jerarquía de Will.")]
     [SerializeField] private List<AppearanceEntry> estelaDefault = new();
+
+    [Tooltip("Juego de caras (perfil de emociones) de cada personaje, por su número de slot (Liam, Will, Estela). " +
+             "Al ponerle la apariencia a un cuerpo que se viste de varios personajes (el del jugador), se le pone también su cara. Vacío: no se cambia.")]
+    [SerializeField] private EmotionProfile[] perfilesDeCara = new EmotionProfile[3];
+
+    /// <summary>El juego de caras del personaje; null si no tiene uno propio.</summary>
+    public EmotionProfile PerfilDeCara(PartyControlManager.CharacterSlot slot)
+        => perfilesDeCara != null && (int)slot < perfilesDeCara.Length ? perfilesDeCara[(int)slot] : null;
 
     // Una entrada por slot (indexado por CharacterSlot int)
     private readonly Dictionary<PartCategory, string>[] _appearances = new Dictionary<PartCategory, string>[3];
@@ -83,8 +92,9 @@ public class CharacterAppearanceRegistry : MonoBehaviour
     // ─── API ──────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Aplica la apariencia almacenada del personaje al builder (cambia el modelo visual de Will).
-    /// Llama a DeactivateAllCategories() antes para limpiar el estado anterior.
+    /// Aplica la apariencia almacenada del personaje al builder (cambia el modelo visual de Will),
+    /// con los atuendos de escena que lleve encima. Llama a DeactivateAllCategories() antes para
+    /// limpiar el estado anterior.
     /// </summary>
     public void ApplyAppearance(PartyControlManager.CharacterSlot slot)
     {
@@ -101,7 +111,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         }
 
         EnsureWillSnapshot(b);
-        var app = _appearances[(int)slot];
+        var app = AparienciaVisible(slot);
 
         // Guardia crítica: no dejar al jugador invisible por datos vacíos/nulos.
         // Si la apariencia de Will está vacía, el switch aborta SIN deactivar nada.
@@ -136,6 +146,10 @@ public class CharacterAppearanceRegistry : MonoBehaviour
             _appearances[(int)slot] = b.GetSelection();
         }
 
+        RecordarLoMostrado(slot, b);
+        TenirCuerpoDelJugador(b, slot);
+        PonerSuCara(b, slot);
+
         // FIX AABB de culling atascado (ver ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange
         // para el detalle completo): toda aplicación de apariencia pasa por aquí, así que este es el
         // punto central para cubrir el bug "personaje flotando/desencajado tras cambiar de apariencia"
@@ -145,7 +159,8 @@ public class CharacterAppearanceRegistry : MonoBehaviour
 
     /// <summary>
     /// Lee la selección actual del builder y la guarda como apariencia de este slot.
-    /// Útil para capturar cambios de vestuario hechos desde el menú de inventario.
+    /// Útil para capturar cambios de vestuario hechos desde el menú de inventario. Con un atuendo
+    /// de escena puesto solo se guarda lo que haya cambiado el jugador, nunca el atuendo.
     /// </summary>
     public void CaptureCurrentAppearance(PartyControlManager.CharacterSlot slot)
     {
@@ -177,7 +192,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] CaptureCurrentAppearance({slot}) — capturando: [{string.Join(", ", System.Linq.Enumerable.Select(selection, kv => $"{kv.Key}:{kv.Value}"))}]");
 #endif
-        _appearances[(int)slot] = selection;
+        _appearances[(int)slot] = QuitarLoDelAtuendo(slot, selection);
     }
 
     /// <summary>
@@ -206,7 +221,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         CaptureCurrentAppearance(slot);
     }
 
-    /// <summary>Devuelve una copia del diccionario de apariencia del slot.</summary>
+    /// <summary>Devuelve una copia de la apariencia del slot: la ropa de debajo, sin atuendos de escena.</summary>
     public Dictionary<PartCategory, string> GetAppearance(PartyControlManager.CharacterSlot slot)
     {
         var src = _appearances[(int)slot];
@@ -276,6 +291,15 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         if (sel.Count == 0) return; // builder no listo aún; no marcar como tomado
         _appearances[(int)PartyControlManager.CharacterSlot.Will] = sel;
         _willSnapshotTaken = true;
+    }
+
+    /// <summary>El cuerpo que se acaba de vestir pone las caras del personaje (sus ojos y bocas por emoción).</summary>
+    private void PonerSuCara(ModularAutoBuilder cuerpo, PartyControlManager.CharacterSlot slot)
+    {
+        var perfil = PerfilDeCara(slot);
+        if (perfil == null || cuerpo == null) return;
+        var cara = cuerpo.GetComponentInParent<NPCEmotionController>() ?? cuerpo.GetComponentInChildren<NPCEmotionController>(true);
+        if (cara != null && cara.EmotionProfile != perfil) cara.SetEmotionProfile(perfil);
     }
 
     private static Dictionary<PartCategory, string> ToDict(List<AppearanceEntry> entries)

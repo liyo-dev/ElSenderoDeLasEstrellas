@@ -1563,6 +1563,690 @@
         {
             "id": "PRUEBA_WILL_PRIMERDIA_08",
             "text": "Neither did I."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_01",
+            "text": "Oh, no."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_02",
+            "text": "No. I mean it. No."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_03",
+            "text": "I like it."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_04",
+            "text": "You like anything you can eat."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_01",
+            "text": "Welcome to Chuchelandia!"
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_02",
+            "text": "By royal decree, no one shall leave the kingdom until the Heart Gate opens."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_03",
+            "text": "And the Heart Gate opens only for the most adorable princess in the kingdom."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_04",
+            "text": "Don't even think about it."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_05",
+            "text": "I didn't say anything."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_06",
+            "text": "You thought it very loudly."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_INTERESANTE",
+            "text": "Interesting."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_ESTELA_NO_INTERESANTE",
+            "text": "It is not interesting."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_01",
+            "text": "Neither knights nor pages can open the Heart Gate."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_02",
+            "text": "Only a princess."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_03",
+            "text": "There's no princess here."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_04",
+            "text": "A candidate! We have a candidate!"
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_05",
+            "text": "Idiot! Do something!"
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_06",
+            "text": "Don't say a word."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_07",
+            "text": "The little heart suits you."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_08",
+            "text": "I said don't say a word, bunny ears."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_09",
+            "text": "Nooooo! Put me dooown!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_01",
+            "text": "Arms up, Your Highness!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_02",
+            "text": "I'm not a Highness!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_03",
+            "text": "More ruffles!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_04",
+            "text": "MORE?!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_05",
+            "text": "The bow! Bring the big bow!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_06",
+            "text": "If you put that bow on me…"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_07",
+            "text": "They put the bow on her."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_08",
+            "text": "You're very pink."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_09",
+            "text": "One more word and I'll set you both on fire."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_10",
+            "text": "Fine. I'll cover you in glitter."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_11",
+            "text": "But with a lot of rage."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_01",
+            "text": "Her Highness Pompom! Princess of Chuchelandia and champion of tenderness four hundred years running!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_02",
+            "text": "Is that a bear?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_03",
+            "text": "That is the princess."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_04",
+            "text": "It's a bear."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_05",
+            "text": "It is the bear princess."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_06",
+            "text": "It's a bear with a tiara."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_07",
+            "text": "It. Is. The. Princess."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_08",
+            "text": "Well, it looks like a bear."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_09",
+            "text": "Is something wrong with him?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_10",
+            "text": "Nothing at all, Your Highness."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_11",
+            "text": "It's just that you are a rather… complicated candidate."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_12",
+            "text": "I'm just saying it's a bear."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_13",
+            "text": "And quite sticky."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_14",
+            "text": "What? I didn't do anything."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_15",
+            "text": "You called Her Highness a bear. Five times."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_16",
+            "text": "Five."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_17",
+            "text": "Because it IS a bear!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_18",
+            "text": "Six."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_19",
+            "text": "Send in the substitute!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_20",
+            "text": "That's three this week."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_21",
+            "text": "Is that her?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_22",
+            "text": "That's her."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_23",
+            "text": "Her Highness Pompom! Princess of Chuchelandia!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_24",
+            "text": "Mmmf!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_25",
+            "text": "To open the Heart Gate, the candidate must defeat the reigning princess in the Tenderness Duel."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_26",
+            "text": "And if I lose?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_27",
+            "text": "No one has ever defeated Her Highness."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_28",
+            "text": "That doesn't answer my question."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_29",
+            "text": "Yes, it does."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_01",
+            "text": "A princess curtsies like this."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_02",
+            "text": "Again. With less of an urge to fight."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_03",
+            "text": "I don't have an urge to fight."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_04",
+            "text": "Your Highness, you're clenching your fists."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_SALUDO_01",
+            "text": "The royal wave. The wrist turns gently, as if stroking the air."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_SALUDO_02",
+            "text": "That is shooing flies, Your Highness."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_RISITA_01",
+            "text": "The giggle. Tee-hee."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_RISITA_02",
+            "text": "Giggle: dangerous."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_01",
+            "text": "Finally, the princess offers a few loving words to her subjects."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_02",
+            "text": "You're all…"
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_03",
+            "text": "…squishy."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_BIEN_01",
+            "text": "Acceptable."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_BIEN_02",
+            "text": "You almost looked like a princess. Almost."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_FIN",
+            "text": "There is a great deal of work ahead."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA1",
+            "text": "First trial! The curtsy!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA2",
+            "text": "Second trial! The lullaby!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA3",
+            "text": "Third trial! The final trial! The puppy eyes!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA3_CIEN",
+            "text": "And in the final trial, every heart is worth a hundred!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_TURNO_POMPON",
+            "text": "Her Highness Pompom!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_TURNO_CANDIDATA",
+            "text": "The candidate!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_SIN_SENTIDO",
+            "text": "That makes no sense at all."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_FRESA_TRADICION",
+            "text": "It's tradition."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_WILL_COMO_VAMOS",
+            "text": "How are we doing?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_SESENTA_A_NUEVE",
+            "text": "Sixty to nine."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_WILL_A_FAVOR",
+            "text": "Sixty for who?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_PERDEMOS",
+            "text": "We're losing."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DIEZ",
+            "text": "10 hearts"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DOS",
+            "text": "2 hearts"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_UNO",
+            "text": "1 heart"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_ESTAS_BIEN",
+            "text": "Are you okay?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_MAS_UNO",
+            "text": "+1 (poor thing)"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO",
+            "text": "10 hearts + 1 drawn in pencil"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PANCARTA_ENTERA",
+            "text": "ESTELA, I'D LOVE YOU TO WIN!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_01",
+            "text": "Come on, Estela!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PANCARTA",
+            "text": "LOVE YOU!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_02",
+            "text": "Long live the happy couple!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_03",
+            "text": "This is not what we planned."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_04",
+            "text": "We didn't plan anything."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_05",
+            "text": "Well, there you go."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_06",
+            "text": "She's won."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_07",
+            "text": "Whoa, whoa, whoa…!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_08",
+            "text": "Will!"
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_01",
+            "text": "I think Pompom likes you."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_02",
+            "text": "One."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_03",
+            "text": "And you don't tell anyone."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_04",
+            "text": "Keep it. It looks better on you."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_05",
+            "text": "The most powerful and proudest sorceress in the group…"
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_06",
+            "text": "…officially crowned the most adorable princess of Chuchelandia."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_07",
+            "text": "With a record number of hearts."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_01",
+            "text": "I'm running in a seven-layer dress. Nobody say a word."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_02",
+            "text": "A page doesn't run. He advances with dignity."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_03",
+            "text": "This armor bounces on its own!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_01",
+            "text": "You lost to a gummy!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_02",
+            "text": "That bow is heavy, but it glides. Use it on the long jumps."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_03",
+            "text": "Again. And this time, no mercy."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_GANADA_01",
+            "text": "First! Ruffles and all."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_GANADA_02",
+            "text": "The gummy wants a rematch. I wouldn't give it one."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_WILL_REBOTA_01",
+            "text": "Waaah! That wasn't the way!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_WILL_REBOTA_02",
+            "text": "I'm fine! I think I'm on a different platform!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_LIAM_DIGNO_01",
+            "text": "Running with a heart on your head isn't dignified. Walking is."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_INICIO_01",
+            "text": "Climbing in a dress? The Countess doesn't teach this."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_REINTENTO_01",
+            "text": "It took the ladder! That's cheating!"
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_REINTENTO_02",
+            "text": "Less rage in your hands, more in your legs."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_GANADA_01",
+            "text": "From up here you all look tiny. I like it."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_INICIO_01",
+            "text": "My fire comes out as little hearts. Then they'll be hearts with good aim."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_REINTENTO_01",
+            "text": "Interesting."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_REINTENTO_02",
+            "text": "It is not interesting. Again."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_GANADA_01",
+            "text": "All popped! Well… all full of hearts."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_01",
+            "text": "The candidate! Will you sign my bow?"
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_02",
+            "text": "Her Highness has been winning for four hundred years. Without a hair out of place."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_03",
+            "text": "Have you tried the syrup river? No, don't swim in it. You'll stick."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_04",
+            "text": "Nobody gets angry here. Well, you do. You're the first."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_05",
+            "text": "They say the herald turns pink when he gets excited. And then… pop."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_06",
+            "text": "Countess Meringue never makes a sound when she sits. It's a gift."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_07",
+            "text": "When all the trumpets sound at once, step aside. Her Highness is coming."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_08",
+            "text": "The green gummy knight bounces beautifully. Is he single?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_01",
+            "text": "I'm the herald's substitute. Just in case."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_02",
+            "text": "The army has lost its trumpets all over the kingdom. Will you help me?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_03",
+            "text": "Without trumpets, Her Highness can't be announced. And that would be… a tragedy."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_EN_CURSO",
+            "text": "Any trumpets? They're golden, they shine and they go “toot-toot”."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_WILL",
+            "text": "A trumpet!"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_LIAM",
+            "text": "Another one. And it's sticky."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_ESTELA",
+            "text": "If I blow it, does glitter come out?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_TODAS",
+            "text": "That's all of them! Let's take them back."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_01",
+            "text": "All of them! Even the one with gum on it!"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_02",
+            "text": "Here, Your Highness. For the most… determined candidate."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_03",
+            "text": "Determined? I'll take it."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_DESPUES",
+            "text": "Toot-toot. They all play again! Thank you, Your Highness."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_PISTA",
+            "text": "Try to open the Door one at a time: switch characters with the D-pad."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_ESTELA_TOCAR",
+            "text": "I'm not touching that."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_PIRULETA_01",
+            "text": "A lollipop."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_PIRULETA_02",
+            "text": "Strawberry. I'm keeping it."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_WILL_RISITA",
+            "text": "Is it laughing at me?"
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_RISITA",
+            "text": "With good reason."
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_REVERENCIA",
+            "text": "The curtsy"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_SALUDO",
+            "text": "The royal wave"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_RISITA",
+            "text": "The giggle"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_CARINO",
+            "text": "Loving words"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_NANA",
+            "text": "The lullaby"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_OJITOS",
+            "text": "The puppy eyes"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_IDEA_01",
+            "text": "Hang on, Estela. I've got an idea."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_IDEA_02",
+            "text": "That worries me."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_MANTEL",
+            "text": "Grab the tablecloth from the banquet table."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_SIROPE",
+            "text": "Dip a finger in the syrup fountain and write."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_SILLA",
+            "text": "Climb onto the chair."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_MANTEL",
+            "text": "This'll do."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SIROPE",
+            "text": "In really big letters."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SILLA",
+            "text": "I'll hold the other end."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SOLO_WILL",
+            "text": "This is Will's job."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_CARTEL",
+            "text": "OPEN ME!"
         }
     ]
 }

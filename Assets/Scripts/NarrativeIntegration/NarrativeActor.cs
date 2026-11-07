@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Game.NPC;
 using Game.NPC.Common;
@@ -10,9 +11,15 @@ using Game.NPC.Common;
 /// Aporta el icono de «tiene algo para ti» (cabeza y minimapa) que pide el grafo mientras espera
 /// una charla con este NPC (<see cref="NpcNarrativeAdapter"/>), y acciones sencillas sobre
 /// <see cref="NPCSimpleAnimator"/> (mirar, hablar, gestos, emociones).
+///
+/// También sirve para un actor sin IA (una figura de un pack que solo habla): sin
+/// <see cref="NPCBehaviourManagerV2"/>, su id es <see cref="actorIdSinIA"/> y, al pulsar su
+/// <see cref="Interactable"/> (modo Custom), sigue el mismo protocolo de charla que un NPC: avisa al
+/// grafo (<see cref="AvisarDeLaCharla"/>) y, si el grafo no esperaba esa charla, dice su frase de pie
+/// (<see cref="NarrativeStandingLines"/>: la de una misión en curso o la de su agenda). El grafo lo
+/// encuentra y le pone el icono a través de <see cref="TryGetSinIA"/>.
 /// </summary>
 [DisallowMultipleComponent]
-[RequireComponent(typeof(NPCBehaviourManagerV2))]
 public class NarrativeActor : MonoBehaviour
 {
     [Header("Detección narrativa (sistema Interactive, congelado)")]
@@ -39,6 +46,20 @@ public class NarrativeActor : MonoBehaviour
              "vale para cualquier nodo de cualquier grafo.")]
     [SerializeField] private GameObject defaultQuestIconPrefab;
 
+    [Header("Actor sin IA")]
+    [Tooltip("Id del actor cuando el objeto no es un NPC con IA (sin NPCBehaviourManagerV2): con él el grafo lo encuentra, " +
+             "le pone el icono y le da sus frases como a un NPC. Hace falta un Interactable (modo Custom) en el mismo objeto. " +
+             "En un NPC con IA se usa su persistenceId y esto se ignora.")]
+    [SerializeField] private string actorIdSinIA;
+
+    // Actores sin IA activos, por id (los NPCs con IA están en NPCRegistry).
+    private static readonly Dictionary<string, NarrativeActor> s_sinIA = new();
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => s_sinIA.Clear();
+#endif
+
     public float NarrativeDetectionRange => narrativeDetectionRange;
     public bool WalkTowardsPlayerOnAlert => walkTowardsPlayerOnAlert;
     public float StopDistanceFromPlayer => stopDistanceFromPlayer;
@@ -58,19 +79,48 @@ public class NarrativeActor : MonoBehaviour
 
     private bool IsIconSuppressed => _isInDialogue || _cinematicActive || (_manager != null && _manager.IsInCombatOrAlert);
 
-    /// <summary>El persistenceId de <see cref="NPCBehaviourManagerV2"/> — no hay dos identidades.</summary>
-    public string ActorId => _manager != null ? _manager.PersistenceId : null;
+    /// <summary>El persistenceId de <see cref="NPCBehaviourManagerV2"/> — no hay dos identidades —, o el id de actor sin IA.</summary>
+    public string ActorId => _manager != null ? _manager.PersistenceId : actorIdSinIA;
+
+    /// <summary>El actor sin IA activo con ese id (los NPCs con IA se buscan en <see cref="NPCRegistry"/>).</summary>
+    public static bool TryGetSinIA(string actorId, out NarrativeActor actor)
+    {
+        actor = null;
+        return !string.IsNullOrEmpty(actorId) && s_sinIA.TryGetValue(actorId, out actor) && actor != null;
+    }
+
+    /// <summary>
+    /// Avisa al grafo de que el jugador habla con el actor (señal NPC_INTERACT_&lt;id&gt; de
+    /// <see cref="WaitNpcInteractionNode"/>). True si el grafo estaba esperando esa charla y se queda con ella.
+    /// </summary>
+    public static bool AvisarDeLaCharla(string actorId, string quien)
+    {
+        if (string.IsNullOrEmpty(actorId)) return false;
+        string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
+        var senales = DefaultNarrativeSignals.Instance;
+        // La reserva se consulta antes de emitir: el oyente puede retirarse al recibirla.
+        bool reservada = senales != null && senales.HasCustomListener(clave);
+        senales?.RaiseCustom(clave, $"Interacción con {quien}");
+        return reservada;
+    }
+
+    private Interactable _interactable;
 
     public NPCBehaviourManagerV2 Manager => _manager;
 
     private void Awake()
     {
         _manager = GetComponent<NPCBehaviourManagerV2>();
+        if (_manager == null) _interactable = GetComponent<Interactable>();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        if (_manager != null && string.IsNullOrEmpty(_manager.PersistenceId))
+        if (string.IsNullOrEmpty(ActorId))
         {
-            Debug.LogWarning($"[NarrativeActor:{name}] Este NPC no tiene persistenceId — el grafo no podrá referenciarlo por actorId.");
+            Debug.LogWarning($"[NarrativeActor:{name}] Sin id de actor (persistenceId del NPC o id de actor sin IA) — el grafo no podrá referenciarlo.");
+        }
+        else if (_manager == null && _interactable == null)
+        {
+            Debug.LogWarning($"[NarrativeActor:{name}] Actor sin IA sin Interactable: no se le puede hablar.");
         }
 #endif
     }
@@ -87,6 +137,12 @@ public class NarrativeActor : MonoBehaviour
         DialogueManager.OnDialogueStarted += HandleDialogueStarted;
         DialogueManager.OnDialogueClosed += HandleDialogueClosed;
         CinematicSequencerBase.OnAnySequenceActiveChanged += HandleCinematicActiveChanged;
+
+        if (_manager == null && !string.IsNullOrEmpty(actorIdSinIA))
+        {
+            s_sinIA[actorIdSinIA] = this;
+            if (_interactable != null) _interactable.OnInteract.AddListener(AlHablarle);
+        }
     }
 
     private void OnDisable()
@@ -94,6 +150,19 @@ public class NarrativeActor : MonoBehaviour
         DialogueManager.OnDialogueStarted -= HandleDialogueStarted;
         DialogueManager.OnDialogueClosed -= HandleDialogueClosed;
         CinematicSequencerBase.OnAnySequenceActiveChanged -= HandleCinematicActiveChanged;
+
+        if (_manager == null && !string.IsNullOrEmpty(actorIdSinIA))
+        {
+            if (s_sinIA.TryGetValue(actorIdSinIA, out var registrado) && registrado == this) s_sinIA.Remove(actorIdSinIA);
+            if (_interactable != null) _interactable.OnInteract.RemoveListener(AlHablarle);
+        }
+    }
+
+    /// <summary>Charla con un actor sin IA: primero el grafo; si no la esperaba, su frase de pie.</summary>
+    private void AlHablarle(GameObject quien)
+    {
+        if (AvisarDeLaCharla(ActorId, name)) return;
+        NarrativeStandingLines.TryPlay(ActorId, transform);
     }
 
     private void HandleDialogueStarted(Transform npcInvolved)

@@ -130,6 +130,16 @@ internal sealed class ActorH
     public Vector3 PosEn(float t) => pos.Count == 0 ? spawnPos : Interpolar.Posicion(pos, t);
     public Vector3 VelEn(float t) => Interpolar.Velocidad(pos, t);
     public readonly List<(float t0, float t1)> deslizando = new();
+
+    /// Un tramo en volandas («encima»): el actor va sobre los que lo llevan, a esa altura sobre ellos.
+    public sealed class Encima
+    {
+        public float t0, t1, altura, entra;
+        public List<ActorH> debajo;
+    }
+    public readonly List<Encima> encima = new();
+    /// Lo llevan en volandas: ni anda ni estorba a los que andan por debajo.
+    public bool LlevadoEn(float t) => encima.Any(e => t >= e.t0 && t < e.t1);
     public bool DeslizandoEn(float t) => deslizando.Any(d => t >= d.t0 && t < d.t1);
     public bool AndandoEn(float t) => VelEn(t).sqrMagnitude > 0.08f * 0.08f && !DeslizandoEn(t);
 
@@ -332,10 +342,12 @@ internal sealed partial class Horno
         EditorUtility.DisplayProgressBar("Hornear guion", "Tiempos y caminos…", 0.2f);
         Repartir();
         if (Errores.Count > 0) return null;
+        LlevarEncima();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Actuación…", 0.5f);
         Rematar();
         FinalizarProps();
+        BandasDeCinematica();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Cámaras…", 0.6f);
         _salida = ScriptableObject.CreateInstance<GuionHorneado>();
@@ -357,6 +369,17 @@ internal sealed partial class Horno
 
     // ── Reparto y puntos ────────────────────────────────────────────────────────────────────
 
+    /// ¿Lo encontrará la secuencia en juego? Por el escenario (SequenceStage) o por el registro de
+    /// NPCs, que los conoce por su persistenceId o, si no tienen, por el nombre del objeto.
+    private bool SeEncuentraEnJuego(string id)
+    {
+        if (_stage != null && _stage.Actors != null && _stage.Actors.Any(x => x.target != null && x.id?.Trim() == id)) return true;
+        foreach (var raiz in _escena.GetRootGameObjects())
+            foreach (var npc in raiz.GetComponentsInChildren<Game.NPC.NPCBehaviourManagerV2>(true))
+                if (npc.PersistenceId == id || (string.IsNullOrEmpty(npc.PersistenceId) && npc.gameObject.name == id)) return true;
+        return false;
+    }
+
     private void PrepararReparto()
     {
         var spawns = CapturaDeEscenario.RecogerSpawns(_escena);
@@ -373,6 +396,9 @@ internal sealed partial class Horno
                 a.prefab = s.prefab;
             }
             else Aviso($"línea {r.linea}: '{r.id}' no tiene punto de aparición en {_g.escena}; necesita un «en» al principio.");
+            if (s.persistenceId == null && r.id != SequenceActor.PlayerId && !SeEncuentraEnJuego(r.id))
+                Aviso($"línea {r.linea}: '{r.id}' no está en el escenario de la secuencia ni hay en {_g.escena} un NPC que se registre con ese id: " +
+                      "en juego no saldrá (salvo que lo traiga otra escena o el grafo). Ponlo en el SequenceStage con ese id.");
             // «prefab=Assets/…prefab»: medidas y animaciones de un personaje sin punto de aparición en la
             // escena (Will, o un NPC que llega por el grafo narrativo).
             if (r.opciones.TryGetValue("prefab", out var rutaPrefab))
@@ -617,6 +643,17 @@ internal sealed partial class Horno
             case "plano":
                 _planosPedidos.Add(new PlanoPedido { orden = o, t0 = t });
                 return 0f;
+            case "eje":
+            {
+                if (o.args.FirstOrDefault() == "libre") { PedirEjeDePantalla(t, null, null); return 0f; }
+                if (o.args.Count < 2 || !_actores.TryGetValue(o.args[0], out var izq) || !_actores.TryGetValue(o.args[1], out var der) || izq == der)
+                {
+                    Error($"{o}: «eje A B» necesita dos personajes del REPARTO (A sale a la izquierda), o «eje libre»");
+                    return 0f;
+                }
+                PedirEjeDePantalla(t, izq, der);
+                return 0f;
+            }
             case "efecto":
                 return Efecto(o, t);
             default:
@@ -645,6 +682,16 @@ internal sealed partial class Horno
                 var destinos = new List<Vector3>();
                 foreach (var n in o.args) { if (!Punto(n, o.linea, out var p)) return 0f; destinos.Add(p); }
                 if (destinos.Count == 0) { Error($"{o}: ¿a dónde?"); return 0f; }
+                // «formacion=X»: cada destino se desplaza lo que el actor está separado de X al salir,
+                // así un grupo que sale alrededor de alguien llega igual de colocado (los que llevan
+                // a otro en volandas).
+                if (o.opciones.TryGetValue("formacion", out var guia))
+                {
+                    if (!_actores.TryGetValue(guia, out var g) || g == a) { Error($"{o}: formacion={guia}: no es otro personaje del REPARTO"); return 0f; }
+                    Vector3 sitio = a.PosEn(t) - g.PosEn(t);
+                    sitio.y = 0f;
+                    for (int k = 0; k < destinos.Count; k++) destinos[k] += sitio;
+                }
                 string ritmo = o.Op("ritmo", o.verbo == "anda" ? "normal" : "corre");
                 float vel = Velocidad(ritmo, o);
                 SoltarBucleSiAnda(a, t, haraCuerpo: true);
@@ -671,6 +718,28 @@ internal sealed partial class Horno
                 a.deslizando.Add((t, t + dura + 0.05f));
                 if (o.opciones.TryGetValue("mirando", out var x) && Objetivo(x, o.linea, out var m)) a.Mirar(t, m);
                 return dura;
+            }
+            case "encima":
+            {
+                // «estela encima g1 g2 g3 g4 [altura=m] [entra=s] [dura=s]»: la llevan en volandas. Su
+                // camino lo calcula LlevarEncima cuando ya se sabe por dónde van los de debajo.
+                var debajo = new List<ActorH>();
+                foreach (var n in o.args)
+                {
+                    if (!_actores.TryGetValue(n, out var b) || b == a) { Error($"{o}: '{n}' no es otro personaje del REPARTO"); return 0f; }
+                    debajo.Add(b);
+                }
+                if (debajo.Count == 0) { Error($"{o}: ¿encima de quién?"); return 0f; }
+                a.Cortar(t);
+                a.encima.Add(new ActorH.Encima
+                {
+                    t0 = t,
+                    t1 = o.opciones.ContainsKey("dura") ? t + Mathf.Max(0.1f, o.OpF("dura", 0f)) : float.PositiveInfinity,
+                    altura = o.OpF("altura", 1.6f),
+                    entra = Mathf.Max(0f, o.OpF("entra", 0.4f)),
+                    debajo = debajo,
+                });
+                return 0f;
             }
             case "pasea":
             {
@@ -765,6 +834,42 @@ internal sealed partial class Horno
         }
         Error($"{o}: acción desconocida");
         return 0f;
+    }
+
+    /// Los que van en volandas («encima»): mientras dura, su camino es el centro de los que lo llevan
+    /// más la altura pedida, y al empezar sube hasta ahí en «entra» segundos. Sin «dura», hasta que
+    /// desaparece o acaba el guion. Va deslizándose (sin animación de andar) y el cuerpo mira a donde
+    /// diga su mirada. Se hace después de repartir el tiempo: hasta entonces no se sabe por dónde van.
+    private void LlevarEncima()
+    {
+        const float Paso = 0.1f;
+        foreach (var a in _actores.Values)
+            foreach (var e in a.encima)
+            {
+                if (float.IsInfinity(e.t1))
+                {
+                    e.t1 = _fin;
+                    foreach (var v in a.visibilidad)
+                        if (v.t > e.t0 && !v.visible) { e.t1 = v.t; break; }
+                }
+                if (e.t1 <= e.t0) continue;
+                Vector3 desde = a.PosEn(e.t0);
+                var despues = a.pos.Where(k => k.t > e.t1 + 1e-4f).ToList();
+                a.pos.RemoveAll(k => k.t > e.t0 + 1e-4f);
+                if (a.pos.Count == 0 || a.pos[a.pos.Count - 1].t < e.t0 - 1e-4f) a.pos.Add(new ClaveDePosicion(e.t0, desde));
+                for (float t = e.t0 + Paso; ; t += Paso)
+                {
+                    t = Mathf.Min(t, e.t1);
+                    Vector3 centro = Vector3.zero;
+                    foreach (var b in e.debajo) centro += b.PosEn(t);
+                    centro = centro / e.debajo.Count + Vector3.up * e.altura;
+                    float u = e.entra > 0f ? Mathf.Clamp01((t - e.t0) / e.entra) : 1f;
+                    a.pos.Add(new ClaveDePosicion(t, Vector3.Lerp(desde, centro, u * u * (3f - 2f * u))));
+                    if (t >= e.t1) break;
+                }
+                a.pos.AddRange(despues);
+                a.deslizando.Add((e.t0, e.t1 + 0.05f));
+            }
     }
 
     /// Sentado (un bucle «Sit…»): el cuerpo se queda como lo dejó el asiento. Ni las miradas de
@@ -874,7 +979,13 @@ internal sealed partial class Horno
             if (palabra != null) a.caras.Add(new OrdenDeCara { t = t, emocion = palabra, dura = dura + 0.4f });
         }
 
-        // Los que escuchan se giran hacia quien habla, cada uno a su ritmo.
+        // Si la frase señala algo del mundo («mira=» a un punto o a un objeto, no a otro personaje),
+        // los que la oyen miran también ahí y no a quien habla: todos miran el globo a la vez.
+        ClaveDeMirada? focoComun = null;
+        if (x != null && !_actores.ContainsKey(x) && Objetivo(x, o.linea, out var mf) && mf.tipo != TipoDeMirada.Rumbo)
+            focoComun = mf;
+
+        // Los que escuchan se giran hacia quien habla (o hacia lo que señala), cada uno a su ritmo.
         IEnumerable<ActorH> oyentes = Enumerable.Empty<ActorH>();
         if (o.opciones.TryGetValue("oyentes", out var lista))
         {
@@ -899,9 +1010,10 @@ internal sealed partial class Horno
             // La cabeza sigue a quien habla, también sentado (el cuerpo no se gira en el asiento);
             // tumbado, no. Cada uno a su ritmo.
             float tGiro = t + 0.15f + (k++ % 4) * 0.12f;
-            if (!Tumbado(b)) b.GirarCabeza(tGiro - 0.05f, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
+            var hacia = focoComun ?? new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id };
+            if (!Tumbado(b)) b.GirarCabeza(tGiro - 0.05f, hacia);
             if (Sentado(b) || EnPoseDeSuelo(b)) continue;
-            b.Mirar(tGiro, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
+            b.Mirar(tGiro, hacia);
 
             // Reacción corporal y facial del oyente si no está hablando él a la vez
             if (!b.habla.Any(h => t < h.t1 && t + dura > h.t0))
@@ -1136,6 +1248,32 @@ internal sealed partial class Horno
         return b;
     }
 
+    // ── Bandas de cine ──────────────────────────────────────────────────────────────────────
+
+    /// Una frase sale en bocadillo o en cinemática: un guion que dice frases en subtítulo es una
+    /// cinemática y lleva bandas de cine, porque el subtítulo va en la banda de abajo
+    /// (`SpeechBubbleUI`). Si el guion no da ninguna orden «bandas», las pone al empezar y las
+    /// quita al acabar; si las lleva él, el parte avisa de cada subtítulo que quede sin bandas.
+    /// Va antes de las cámaras: el encuadre cuenta con lo que tapan (`BandaEn`).
+    private void BandasDeCinematica()
+    {
+        var subtitulos = _lineas
+            .Where(l => (l.presentacion >= 0 ? (PresentacionDeTexto)l.presentacion : _g.texto) != PresentacionDeTexto.Bocadillo)
+            .ToList();
+        if (subtitulos.Count == 0) return;
+        if (!_efectos.Any(e => e.beat is BandasDeCineBeat))
+        {
+            float fin = _efectos.Count > 0 ? Mathf.Max(_fin, _efectos[_efectos.Count - 1].t) : _fin;
+            _efectos.Insert(0, new EfectoHorneado { t = 0f, beat = new BandasDeCineBeat { mostrar = true, esperar = false } });
+            _efectos.Add(new EfectoHorneado { t = fin, beat = new BandasDeCineBeat { mostrar = false, esperar = false } });
+            return;
+        }
+        foreach (var l in subtitulos)
+            if (BandaEn(l.t0) <= 0f)
+                Aviso($"{Tiempo(l.t0)}: {l.clave} sale en subtítulo sin bandas de cine. Con subtítulos el guion es una cinemática: " +
+                      "pon «bandas» antes de la frase o mueve el «bandas quita» detrás de ella.");
+    }
+
     // ── Efectos ─────────────────────────────────────────────────────────────────────────────
 
     private static Dictionary<string, Type> _tiposDeBeat;
@@ -1281,12 +1419,14 @@ internal sealed partial class Horno
         return o.OpF("dura", 0f);
     }
 
+    /// «en=X» de un efecto: un actor del REPARTO o un sitio. Un punto del guion que es una marca pasa
+    /// con el nombre de la marca, que es lo que el efecto busca en el escenario.
     private void RenombrarActorOMarca(Dictionary<string, string> campos)
     {
         if (!campos.TryGetValue("en", out var en)) return;
         campos.Remove("en");
         if (_actores.TryGetValue(en, out var a)) campos["atActorId"] = a.id;
-        else campos["markName"] = en;
+        else campos["markName"] = _g.puntos.FirstOrDefault(p => p.nombre == en)?.marca ?? en;
     }
 
     // ── Suelo ───────────────────────────────────────────────────────────────────────────────

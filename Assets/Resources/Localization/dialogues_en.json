@@ -33,10 +33,6 @@
             "value": "Fish Kid's Friend"
         },
         {
-            "key": "CHAR_DUQUE_REGALIZ",
-            "value": "Duke of Licorice"
-        },
-        {
             "key": "CHAR_ELDRAN",
             "value": "Eldran"
         },
@@ -83,10 +79,6 @@
         {
             "key": "CHAR_MANUEL",
             "value": "Manuel"
-        },
-        {
-            "key": "CHAR_MAZAPAN",
-            "value": "Marzipan Creature"
         },
         {
             "key": "CHAR_NIÑOPEZ",
@@ -339,74 +331,6 @@
         {
             "key": "DLG_ANTIPATICO_TURNIN_03",
             "value": "With them, you'll be able to jump. You're welcome, kid... Now get out of my sight."
-        },
-        {
-            "key": "DLG_CANDYLAND_01",
-            "value": "Everyone, rise! Candyland welcomes its new sovereign... the smiling Queen Estela!"
-        },
-        {
-            "key": "DLG_CANDYLAND_02",
-            "value": "His Grace the Duke of Licorice has spoken. Bow, commoners. I've already bowed three times myself, just in case."
-        },
-        {
-            "key": "DLG_CANDYLAND_03",
-            "value": "Liam? Since when do you talk... like that?"
-        },
-        {
-            "key": "DLG_CANDYLAND_04",
-            "value": "Since they gave me this doublet and a spun-sugar wig. It works."
-        },
-        {
-            "key": "DLG_CANDYLAND_05",
-            "value": "Smile, Your Majesty. NO ONE frowns here. Constant joy, article one of my kingdom."
-        },
-        {
-            "key": "DLG_CANDYLAND_06",
-            "value": "Excuse me? I don't smile on command, not for an entire kingdom of whipped cream."
-        },
-        {
-            "key": "DLG_CANDYLAND_07",
-            "value": "You dare defy me? Look closely at what awaits those who don't smile enough."
-        },
-        {
-            "key": "DLG_CANDYLAND_08",
-            "value": "I've... I've been trying to smile harder for three days..."
-        },
-        {
-            "key": "DLG_CANDYLAND_09",
-            "value": "That's the saddest thing I've ever heard. And believe me, I eat terribly when I'm sad.\nI'm not pretending to be \"sweet\" for anyone. I never have been, and I'm not starting today."
-        },
-        {
-            "key": "DLG_CANDYLAND_10",
-            "value": "That's the Estela we know."
-        },
-        {
-            "key": "DLG_CANDYLAND_11",
-            "value": "(quietly, dropping the courtier voice) For once, I agree with the plan to stop pretending. Though I'm keeping the doublet, it really does suit me."
-        },
-        {
-            "key": "DLG_CANDYLAND_12",
-            "value": "This is treason against the Crown of Candy! Guards... marzipan guards, arrest her!"
-        },
-        {
-            "key": "DLG_CANDYLAND_13",
-            "value": "Not a chance. No more pretending."
-        },
-        {
-            "key": "DLG_CANDYLAND_14",
-            "value": "Free! Finally I can frown in peace!"
-        },
-        {
-            "key": "DLG_CANDYLAND_15",
-            "value": "No... my kingdom of lies... it's crumbling..."
-        },
-        {
-            "key": "DLG_CANDYLAND_16",
-            "value": "One less kingdom faking it. Now... is anyone else hungry? All this licorice talk gave me a terrible craving."
-        },
-        {
-            "key": "DLG_CANDYLAND_17",
-            "value": "I'm going to pretend I didn't hear that."
         },
         {
             "key": "DLG_ELDRAN_ARRESTO_DESPEDIDA",
@@ -1899,6 +1823,210 @@
         {
             "key": "DLG_BOTICARIA_CHARLA_01",
             "value": "Do you still have the potion? Good. Keep it that way."
+        },
+        {
+            "key": "CHAR_POMPON",
+            "value": "Her Highness Pompom"
+        },
+        {
+            "key": "CHAR_CONDESA_MERENGUE",
+            "value": "Countess Meringue"
+        },
+        {
+            "key": "CHAR_HERALDO",
+            "value": "Herald"
+        },
+        {
+            "key": "CHAR_HERALDO_SUPLENTE",
+            "value": "Substitute Herald"
+        },
+        {
+            "key": "CHAR_JUEZ_PRESIDENTE",
+            "value": "Head Judge"
+        },
+        {
+            "key": "CHAR_JUEZ_MALVAVISCO",
+            "value": "Judge Marshmallow"
+        },
+        {
+            "key": "CHAR_JUEZ_LAGRIMITAS",
+            "value": "Judge Teardrop"
+        },
+        {
+            "key": "CHAR_GOMINOLA",
+            "value": "Gummy"
+        },
+        {
+            "key": "CHAR_GOMINOLAS",
+            "value": "Gummies"
+        },
+        {
+            "key": "CHAR_GOMINOLA_FRESA",
+            "value": "Strawberry Gummy"
+        },
+        {
+            "key": "PARQUE_BARCO_1_1",
+            "value": "Come on, come on! This is the one!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_2",
+            "value": "That angle… are you sure you thought this through?"
+        },
+        {
+            "key": "PARQUE_BARCO_1_3",
+            "value": "If you scream, Will, I'm telling the whole village."
+        },
+        {
+            "key": "PARQUE_BARCO_1_4",
+            "value": "Aaaah! My stomach stayed up there!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_5",
+            "value": "Higher!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_6",
+            "value": "Forty degrees. And climbing."
+        },
+        {
+            "key": "PARQUE_BARCO_1_7",
+            "value": "The ground… why is the ground moving?"
+        },
+        {
+            "key": "PARQUE_BARCO_1_8",
+            "value": "I haven't laughed this much in years."
+        },
+        {
+            "key": "PARQUE_BARCO_2_1",
+            "value": "This time, arms up. All three of us."
+        },
+        {
+            "key": "PARQUE_BARCO_2_2",
+            "value": "No hands!"
+        },
+        {
+            "key": "PARQUE_BARCO_2_4",
+            "value": "This… isn't so terrible."
+        },
+        {
+            "key": "PARQUE_BARCO_2_5",
+            "value": "Again. Now."
+        },
+        {
+            "key": "PARQUE_BARCO_3_1",
+            "value": "You two go. Someone has to save our spot."
+        },
+        {
+            "key": "PARQUE_BARCO_3_2",
+            "value": "Coward."
+        },
+        {
+            "key": "PARQUE_BARCO_3_3",
+            "value": "Liaaam! Look at us!"
+        },
+        {
+            "key": "PARQUE_BARCO_3_4",
+            "value": "Your screams were loud enough from down here too."
+        },
+        {
+            "key": "PARQUE_BARCO_4_1",
+            "value": "The stern is the worst part. That's why I sat us here."
+        },
+        {
+            "key": "PARQUE_BARCO_4_2",
+            "value": "… I miscalculated."
+        },
+        {
+            "key": "PARQUE_BARCO_4_3",
+            "value": "Ha! The genius!"
+        },
+        {
+            "key": "PARQUE_BARCO_4_4",
+            "value": "So how much had you calculated?"
+        },
+        {
+            "key": "PARQUE_BARCO_4_5",
+            "value": "Just enough to never do it again."
+        },
+        {
+            "key": "PARQUE_BARCO_5_1",
+            "value": "I'm not scared! It's the wind!"
+        },
+        {
+            "key": "PARQUE_BARCO_5_2",
+            "value": "Estela… you're crushing my arm."
+        },
+        {
+            "key": "PARQUE_BARCO_5_3",
+            "value": "Not a word. To anyone."
+        },
+        {
+            "key": "PARQUE_NORIA_1_1",
+            "value": "Nice and slow… I like this one."
+        },
+        {
+            "key": "PARQUE_NORIA_1_2",
+            "value": "Look. You can see the whole park from up here."
+        },
+        {
+            "key": "PARQUE_NORIA_1_3",
+            "value": "And the lights… they look like stars on the ground."
+        },
+        {
+            "key": "PARQUE_NORIA_1_4",
+            "value": "Thanks for bringing me."
+        },
+        {
+            "key": "PARQUE_NORIA_2_1",
+            "value": "One, two, three… Four hundred!"
+        },
+        {
+            "key": "PARQUE_NORIA_2_2",
+            "value": "A hundred and two. I counted them on the way up."
+        },
+        {
+            "key": "PARQUE_NORIA_2_3",
+            "value": "You're both unbearable. Both of you."
+        },
+        {
+            "key": "PARQUE_NORIA_3_1",
+            "value": "Why have we stopped?"
+        },
+        {
+            "key": "PARQUE_NORIA_3_2",
+            "value": "If anyone moves, I'll throw them off."
+        },
+        {
+            "key": "PARQUE_NORIA_3_3",
+            "value": "It's the stop at the top. For the view."
+        },
+        {
+            "key": "PARQUE_NORIA_4_1",
+            "value": "Liam, are you okay? You haven't said a word."
+        },
+        {
+            "key": "PARQUE_NORIA_4_2",
+            "value": "Yes. I was just… looking."
+        },
+        {
+            "key": "PARQUE_NORIA_4_3",
+            "value": "He's been off since we came in."
+        },
+        {
+            "key": "PARQUE_NORIA_5_1",
+            "value": "Pass. Ferris wheels are for little couples."
+        },
+        {
+            "key": "PARQUE_NORIA_5_2",
+            "value": "Then Liam and I are going!"
+        },
+        {
+            "key": "PARQUE_NORIA_5_3",
+            "value": "Estelaaa! Wave!"
+        },
+        {
+            "key": "PARQUE_NORIA_5_4",
+            "value": "I saw you waving. How embarrassing."
         }
     ]
 }

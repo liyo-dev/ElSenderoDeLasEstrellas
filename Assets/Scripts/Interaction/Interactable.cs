@@ -46,7 +46,7 @@ public class Interactable : MonoBehaviour
     public UnityEvent OnConfirm;
 
     [Header("Eventos opcionales")]
-    public UnityEvent<GameObject> OnInteract;
+    public UnityEvent<GameObject> OnInteract = new UnityEvent<GameObject>();
     public UnityEvent OnStarted;
     public UnityEvent OnFinished;
     public UnityEvent OnConsumed;

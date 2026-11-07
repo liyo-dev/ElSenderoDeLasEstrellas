@@ -11,20 +11,30 @@ internal sealed partial class Horno
     private readonly Dictionary<ActorH, GameObject> _poses = new();
     private readonly Dictionary<(ActorH, int), Vector3> _cabezas = new();
     private readonly List<string> _manipulaciones = new();
-    private readonly List<GameObject> _actoresDeEscenaApagados = new();
+    private readonly List<GameObject> _apagadosDuranteElHorneado = new();
 
+    /// Apaga mientras dura el horneado a los actores del escenario y al jugador que la escena tenga
+    /// puesto (se miden y se ven en copias de pose; si no, salen dos veces en el storyboard y tapan
+    /// planos), y los rótulos de maqueta (<see cref="RotuloDeMaqueta"/>: no salen en el storyboard ni
+    /// cuentan como decorado que tapa un plano). <see cref="LiberarPoses"/> los vuelve a encender.
     private void OcultarActoresDeEscena()
     {
-        if (_stage == null || _stage.Actors == null) return;
-        foreach (var a in _stage.Actors)
-        {
-            if (a.target != null && a.target.gameObject.activeSelf)
-            {
-                a.target.gameObject.SetActive(false);
-                _actoresDeEscenaApagados.Add(a.target.gameObject);
-            }
-        }
+        if (_stage != null && _stage.Actors != null)
+            foreach (var a in _stage.Actors)
+                if (a.target != null) Apagar(a.target.gameObject);
+        if (_actores.Values.Any(a => a.id == SequenceActor.PlayerId))
+            foreach (var jugador in GameObject.FindGameObjectsWithTag(GameTags.Player))
+                Apagar(jugador);
+        foreach (var rotulo in UnityEngine.Object.FindObjectsByType<RotuloDeMaqueta>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            Apagar(rotulo.gameObject);
         Physics.SyncTransforms();
+    }
+
+    private void Apagar(GameObject go)
+    {
+        if (!go.activeSelf) return;
+        go.SetActive(false);
+        _apagadosDuranteElHorneado.Add(go);
     }
 
     private GameObject PoseDe(ActorH actor)
@@ -43,8 +53,8 @@ internal sealed partial class Horno
     {
         foreach (var pose in _poses.Values) if (pose != null) UnityEngine.Object.DestroyImmediate(pose);
         _poses.Clear();
-        foreach (var go in _actoresDeEscenaApagados) if (go != null) go.SetActive(true);
-        _actoresDeEscenaApagados.Clear();
+        foreach (var go in _apagadosDuranteElHorneado) if (go != null) go.SetActive(true);
+        _apagadosDuranteElHorneado.Clear();
         Physics.SyncTransforms();
     }
 
@@ -86,6 +96,21 @@ internal sealed partial class Horno
             if (c != null && t - gesto.t <= c.length) MuestrearEstado(pose, c, gesto.estado, t - gesto.t);
         }
         pose.transform.SetPositionAndRotation(actor.PosEn(t), Quaternion.Euler(0f, actor.RumboEn(t, _actores), 0f));
+    }
+
+    /// La pose de andar de un personaje con su propia locomoción (IAnimacionDeCorredor): pone la
+    /// velocidad en sus parámetros y el Animator avanza desde su estado de entrada hasta una fase
+    /// del paso que cambia con t (los que andan juntos no salen con el mismo pie).
+    internal static void PoseDeAndar(Animator anim, IAnimacionDeCorredor andar, float metrosPorSegundo, float t)
+    {
+        anim.enabled = true;
+        anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+        anim.applyRootMotion = false;
+        anim.fireEvents = false; // la pose del storyboard no dispara eventos del clip (pasos, sonidos)
+        anim.Rebind();
+        andar.Avanzar(metrosPorSegundo, alInstante: true);
+        anim.Update(0f);
+        anim.Update(0.3f + Mathf.Repeat(t + anim.transform.position.x * 0.37f, 1f));
     }
 
     /// Evalúa el clip y el Avatar humanoide: las curvas de músculos necesitan el Animator.
@@ -143,9 +168,13 @@ internal sealed partial class Horno
         var prop = _stage != null ? _stage.Props.FirstOrDefault(p => p.id == id).target : null;
         if (prop == null) { Error($"{orden}: '{id}' no está en los objetos del SequenceStage."); return 0f; }
         var beat = new PropEnManoBeat { actorId = actor.id, propId = id, dejar = orden.verbo == "deja" };
+        // «mano=cabeza» se lo pone en la cabeza (un velo, algo pegado en la frente): el objeto va
+        // con el hueso de la cabeza y su pose dentro de él es la de sus hijos.
         string mano = orden.Op("mano", "derecha");
-        if (mano != "derecha" && mano != "izquierda") { Error($"{orden}: mano debe ser derecha o izquierda."); return 0f; }
-        beat.mano = mano == "izquierda" ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand;
+        if (mano != "derecha" && mano != "izquierda" && mano != "cabeza") { Error($"{orden}: mano debe ser derecha, izquierda o cabeza."); return 0f; }
+        if (mano == "cabeza" && orden.verbo == "deja") { Error($"{orden}: «deja» suelta con una mano, no con la cabeza."); return 0f; }
+        beat.mano = mano == "izquierda" ? HumanBodyBones.LeftHand : mano == "cabeza" ? HumanBodyBones.Head : HumanBodyBones.RightHand;
+        if (beat.mano == HumanBodyBones.Head) beat.offset = Vector3.zero;
         if (orden.opciones.TryGetValue("offset", out var offset) && Convertir(offset, typeof(Vector3), out var v, orden)) beat.offset = (Vector3)v;
         if (orden.opciones.TryGetValue("giro", out var giro) && Convertir(giro, typeof(Vector3), out var r, orden)) beat.giro = (Vector3)r;
         float dura = 0f;
@@ -161,8 +190,8 @@ internal sealed partial class Horno
             beat.tieneDestinoFinal = true;
             var pose = PoseDe(actor);
             var anim = pose.GetComponentInChildren<Animator>(true);
-            var hueso = anim != null && anim.isHuman ? anim.GetBoneTransform(beat.mano) : null;
-            if (hueso == null) { Error($"{orden}: el actor necesita un esqueleto humanoide con {beat.mano}."); return 0f; }
+            var hueso = HuesoDelActor.De(anim, beat.mano);
+            if (hueso == null) { Error($"{orden}: el actor no tiene hueso {beat.mano} (ni humanoide ni con ese nombre)."); return 0f; }
             string explicito = orden.Op("gesto");
             string[] candidatos = explicito != null ? new[] { explicito } : new[] { "Opening01_Begin", "Opening01_Stop", "Loot01_Begin", "Loot01_Stop", "InteractWithGateObject_NoWeapon" };
             float mejor = float.PositiveInfinity, segundo = 0f;
@@ -248,7 +277,8 @@ internal sealed partial class Horno
             {
                 var prop = _stage.Props.First(x => x.id == coger.propId).target;
                 coger.tieneDestinoFinal = true; coger.posicionFinal = prop.position; coger.giroFinal = prop.eulerAngles;
-                Aviso($"{coger.propId}: recogida sin «deja» posterior; al cerrar vuelve a su sitio inicial.");
+                coger.ocultoAlFinal = !prop.gameObject.activeSelf;
+                Aviso($"{coger.propId}: recogida sin «deja» posterior; al cerrar vuelve a su sitio inicial{(coger.ocultoAlFinal ? ", oculto como empezó" : "")}.");
             }
         }
     }

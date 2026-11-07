@@ -94,7 +94,7 @@ internal sealed partial class Horno
             bool separados = !pegadoAlSalir;
             for (float t = t0; t <= t1; t += PasoDeMuestreo)
             {
-                if (!b.VisibleEn(t)) continue;
+                if (!b.VisibleEn(t) || b.LlevadoEn(t)) continue;
                 Vector3 pa = Interpolar.Posicion(claves, t);
                 Vector3 pb = b.PosEn(t);
                 float d = Plano(pa - pb).magnitude;

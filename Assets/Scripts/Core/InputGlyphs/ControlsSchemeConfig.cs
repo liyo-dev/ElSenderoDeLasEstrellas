@@ -26,8 +26,8 @@ namespace Core.InputGlyphs
     /// partir de cero. Combate (INC-485): X serie (PlayerCombatInput), B defensa
     /// (PlayerShieldController), Y combo (ComboCastController), LB siguiente básico
     /// (PlayerCombatInput), RB siguiente objetivo (CombatCameraTargeting), LT+RT ataque de equipo
-    /// (DuoSpecialAttackSystem). Para rehacer el asset con esta lista: menú
-    /// El Sendero/Archivo/UI/Rehacer la pantalla de Controles (INC-485).
+    /// (DuoSpecialAttackSystem). El asset del juego es _UI/ControlsSchemeConfig.asset: el menú que
+    /// lo rehacía con esta lista ya no existe, así que una fila nueva se añade aquí Y en el asset.
     /// </summary>
     [CreateAssetMenu(menuName = "El Sendero/Controles/Esquema de Controles", fileName = "ControlsSchemeConfig")]
     public class ControlsSchemeConfig : ScriptableObject
@@ -59,6 +59,11 @@ namespace Core.InputGlyphs
                 // clave GLYPH_KEY_SPACE que ya usa InputGlyphLabels para Confirm.
                 Entry(InputGlyphNames.South, "CONTROLS_JUMP", "Saltar (en el aire: doble salto; otra vez: volar)",
                       keyboardLabelKey: "GLYPH_KEY_SPACE", keyboardOverride: "Espacio"),
+                // En vuelo los gatillos suben y bajan; el stick derecho queda solo para la cámara.
+                // En teclado RT es Mayús y LT es Ctrl (PlayerFlyingController.teclaSubir/teclaBajar). INC-895.
+                Entry(InputGlyphNames.TriggerRight, "CONTROLS_FLY_UP", "En vuelo: subir",
+                      keyboardLabelKey: "GLYPH_KEY_SHIFT", keyboardOverride: "Mayús"),
+                Entry(InputGlyphNames.TriggerLeft, "CONTROLS_FLY_DOWN", "En vuelo: bajar"),
                 Entry(InputGlyphNames.South, "CONTROLS_INTERACT", "Interactuar (NPCs, puertas, objetos)"),
                 // Reparto de combate de INC-486/491/493/494 (X serie, B defensa, Y combo, LB rota,
                 // LT+RT equipo). INC-485.

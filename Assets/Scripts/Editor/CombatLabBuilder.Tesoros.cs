@@ -116,8 +116,11 @@ public static partial class CombatLabBuilder
 
     /// Cofre o punto de tesoro con su Interactable (trigger en la capa Interactable) y, en el cofre,
     /// el cuerpo sólido en la capa Floor (se puede pisar y no tapa la vista del interactuable).
+    /// Un punto lleva un montículo con brillo o, si se da <paramref name="visualDelPunto"/>, ese objeto
+    /// (pasa a ser hijo del tesoro y es lo que desaparece al cogerlo).
     internal static Tesoro CrearTesoro(string nombre, Transform padre, Vector3 pie, float giro, string id, Tesoro.Forma forma,
-                                      string region = RegionLab)
+                                      string region = RegionLab, ModeloDeCofre modelo = ModeloDeCofre.Cajas,
+                                      GameObject visualDelPunto = null)
     {
         var raiz = new GameObject(nombre);
         raiz.transform.SetParent(padre);
@@ -137,8 +140,16 @@ public static partial class CombatLabBuilder
 
         if (forma == Tesoro.Forma.Cofre)
         {
-            var tapa = VisualDeCofre(raiz.transform);
+            var tapa = VisualDeCofre(raiz.transform, modelo);
             so.FindProperty("tapa").objectReferenceValue = tapa;
+        }
+        else if (visualDelPunto != null)
+        {
+            visualDelPunto.transform.SetParent(raiz.transform, true);
+            var ocultar = so.FindProperty("ocultarAlAbrir");
+            ocultar.arraySize = 1;
+            ocultar.GetArrayElementAtIndex(0).objectReferenceValue = visualDelPunto;
+            so.FindProperty("sfxAlAbrir").stringValue = "Coin";
         }
         else
         {
@@ -166,45 +177,109 @@ public static partial class CombatLabBuilder
         return tesoro;
     }
 
-    /// Cofre del pack de cajas (malla del cuerpo y de la tapa) o, si no está, dos cubos.
-    /// Devuelve la tapa, con el pivote en la bisagra.
-    private static Transform VisualDeCofre(Transform raiz)
+    /// Aspecto de un cofre: el modelo de cada uso (los tesoros del mundo, la colección de Oliver…).
+    internal enum ModeloDeCofre
     {
-        const float escala = 1.4f;
-        const string Carpeta = "Assets/Art/Items/Cartoony Fantasy Lowpoly Crates Package/";
-        var modelo = AssetDatabase.LoadAssetAtPath<GameObject>(Carpeta + "Meshes/Chest1.fbx");
-        var material = AssetDatabase.LoadAssetAtPath<Material>(Carpeta + "Materials/ChestMaterial.mat");
-        Transform cuerpoModelo = null, tapaModelo = null;
-        if (modelo != null)
-            foreach (var t in modelo.GetComponentsInChildren<Transform>(true))
-            {
-                if (t.name.StartsWith("chest body")) cuerpoModelo = t;
-                else if (t.name.StartsWith("lid")) tapaModelo = t;
-            }
+        /// <summary>Cofre morado del pack de cajas (tesoro normal).</summary>
+        Cajas,
+        /// <summary>Baúl de madera del pack Kingdom, el mismo que las casas del pueblo (colección de Oliver).</summary>
+        BaulDeMadera
+    }
 
-        var visual = new GameObject("Cofre").transform;
+    private const string NombreDelVisual = "Cofre";
+    private const string NombreDelSolido = "Cuerpo sólido";
+
+    /// Cambia el aspecto de un cofre ya colocado sin tocar su sitio, su giro ni su recompensa.
+    /// Devuelve false si ya tenía ese modelo.
+    internal static bool CambiarModeloDeCofre(Tesoro tesoro, ModeloDeCofre modelo)
+    {
+        if (tesoro == null || tesoro.Tipo != Tesoro.Forma.Cofre) return false;
+        var raiz = tesoro.transform;
+        var actual = raiz.Find(NombreDelVisual + "/Cuerpo")?.GetComponent<MeshFilter>();
+        var piezas = PiezasDelModelo(modelo);
+        if (actual != null && piezas.cuerpo != null && actual.sharedMesh == piezas.cuerpo.GetComponent<MeshFilter>().sharedMesh) return false;
+
+        for (int i = raiz.childCount - 1; i >= 0; i--)
+        {
+            var hijo = raiz.GetChild(i);
+            if (hijo.name == NombreDelVisual || hijo.name == NombreDelSolido) Object.DestroyImmediate(hijo.gameObject);
+        }
+        var so = new SerializedObject(tesoro);
+        so.FindProperty("tapa").objectReferenceValue = VisualDeCofre(raiz, modelo);
+        so.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(tesoro);
+        return true;
+    }
+
+    /// Mallas de origen (cuerpo y tapa), material forzado y escala de cada modelo de cofre. Cuerpo
+    /// y tapa salen null si falta el asset.
+    private static (Transform cuerpo, Transform tapa, Material material, float escala) PiezasDelModelo(ModeloDeCofre modelo)
+    {
+        GameObject fuente;
+        string cuerpoEmpieza, tapaEmpieza;
+        Material material = null;
+        float escala;
+        switch (modelo)
+        {
+            case ModeloDeCofre.BaulDeMadera:
+                fuente = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Chest01.prefab");
+                cuerpoEmpieza = "Chest01_a01";
+                tapaEmpieza = "Chest01_a02";
+                escala = 1.3f;
+                break;
+            default:
+                const string Carpeta = "Assets/Art/Items/Cartoony Fantasy Lowpoly Crates Package/";
+                fuente = AssetDatabase.LoadAssetAtPath<GameObject>(Carpeta + "Meshes/Chest1.fbx");
+                material = AssetDatabase.LoadAssetAtPath<Material>(Carpeta + "Materials/ChestMaterial.mat");
+                cuerpoEmpieza = "chest body";
+                tapaEmpieza = "lid";
+                escala = 1.4f;
+                break;
+        }
+
+        Transform cuerpo = null, tapa = null;
+        if (fuente != null)
+            foreach (var t in fuente.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.GetComponent<MeshFilter>() == null) continue;
+                if (t.name.StartsWith(cuerpoEmpieza)) cuerpo = t;
+                else if (t.name.StartsWith(tapaEmpieza)) tapa = t;
+            }
+        if (cuerpo == null || tapa == null) cuerpo = tapa = null;
+        return (cuerpo, tapa, material, escala);
+    }
+
+    /// Cuerpo y tapa del modelo elegido (o dos cubos si falta el asset), con su cuerpo sólido en
+    /// la capa Floor. Devuelve la tapa, con el pivote en la bisagra.
+    private static Transform VisualDeCofre(Transform raiz, ModeloDeCofre modelo)
+    {
+        var piezas = PiezasDelModelo(modelo);
+        Transform cuerpoModelo = piezas.cuerpo, tapaModelo = piezas.tapa;
+        Material material = piezas.material;
+        float escala = piezas.escala;
+
+        var visual = new GameObject(NombreDelVisual).transform;
         visual.SetParent(raiz, false);
         visual.localScale = Vector3.one * escala;
-        Transform tapa;
-        if (cuerpoModelo != null && tapaModelo != null &&
-            cuerpoModelo.GetComponent<MeshFilter>() != null && tapaModelo.GetComponent<MeshFilter>() != null)
+        Transform tapa, cuerpo;
+        if (cuerpoModelo != null && tapaModelo != null)
         {
-            // El asset viene con el pivote desplazado (el nodo del FBX está a 6,6 m de su origen):
-            // copiado tal cual, el cofre se dibujaba 9 m lejos de su ancla y se salía de la sala.
-            // Se ancla el cuerpo en su punto (centrado y apoyado en el suelo) y la tapa conserva su
-            // sitio respecto al cuerpo, que es donde está su bisagra.
+            // Los modelos traen el pivote donde quiso su autor (el del pack de cajas, a 6,6 m del
+            // origen; el baúl, en la bisagra): se ancla el cuerpo centrado y apoyado en el suelo, y
+            // la tapa conserva su sitio respecto al cuerpo, que es donde está su bisagra.
             var anclaje = AnclajeDelCuerpo(cuerpoModelo);
             var separacion = tapaModelo.localPosition - cuerpoModelo.localPosition;
-            CopiarMalla("Cuerpo", visual, cuerpoModelo, material, anclaje);
+            cuerpo = CopiarMalla("Cuerpo", visual, cuerpoModelo, material, anclaje).transform;
             tapa = CopiarMalla("Tapa", visual, tapaModelo, material, anclaje + separacion).transform;
         }
         else
         {
             var madera = GetMaterial("Lab_Madera", new Color(0.45f, 0.28f, 0.15f));
-            var cuerpo = CrearCubo("Cuerpo", visual, Vector3.zero, Vector3.one, madera, estatico: false);
-            cuerpo.transform.localPosition = new Vector3(0f, 0.2f, 0f);
-            cuerpo.transform.localScale = new Vector3(0.8f, 0.4f, 0.55f);
-            Object.DestroyImmediate(cuerpo.GetComponent<Collider>());
+            var cubo = CrearCubo("Cuerpo", visual, Vector3.zero, Vector3.one, madera, estatico: false);
+            cubo.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+            cubo.transform.localScale = new Vector3(0.8f, 0.4f, 0.55f);
+            Object.DestroyImmediate(cubo.GetComponent<Collider>());
+            cuerpo = cubo.transform;
             tapa = new GameObject("Tapa").transform;
             tapa.SetParent(visual, false);
             tapa.localPosition = new Vector3(0f, 0.4f, -0.275f);
@@ -214,15 +289,30 @@ public static partial class CombatLabBuilder
             Object.DestroyImmediate(hoja.GetComponent<Collider>());
         }
 
-        // Cuerpo sólido en la capa Floor.
-        var solido = new GameObject("Cuerpo sólido");
+        // Cuerpo sólido en la capa Floor, a la medida del cuerpo del modelo.
+        var solido = new GameObject(NombreDelSolido);
         solido.transform.SetParent(raiz, false);
         int capaSuelo = LayerMask.NameToLayer(CapaSuelo);
         if (capaSuelo >= 0) solido.layer = capaSuelo;
         var caja = solido.AddComponent<BoxCollider>();
-        caja.center = new Vector3(0f, 0.35f * escala, 0f);
-        caja.size = new Vector3(0.85f, 0.7f, 0.6f) * escala;
+        var limites = LimitesEn(raiz, cuerpo);
+        caja.center = limites.center;
+        caja.size = limites.size;
         return tapa;
+    }
+
+    /// Caja que ocupa la malla de <paramref name="objeto"/> en el espacio local de <paramref name="raiz"/>.
+    private static Bounds LimitesEn(Transform raiz, Transform objeto)
+    {
+        var malla = objeto.GetComponent<MeshFilter>()?.sharedMesh;
+        var b = malla != null ? malla.bounds : new Bounds(Vector3.zero, Vector3.one);
+        var limites = new Bounds(raiz.InverseTransformPoint(objeto.TransformPoint(b.min)), Vector3.zero);
+        for (int i = 0; i < 8; i++)
+        {
+            var esquina = new Vector3((i & 1) == 0 ? b.min.x : b.max.x, (i & 2) == 0 ? b.min.y : b.max.y, (i & 4) == 0 ? b.min.z : b.max.z);
+            limites.Encapsulate(raiz.InverseTransformPoint(objeto.TransformPoint(esquina)));
+        }
+        return limites;
     }
 
     /// Posición local del cuerpo del cofre para que quede centrado en su ancla y apoyado en el suelo.
@@ -245,7 +335,8 @@ public static partial class CombatLabBuilder
         copia.AddComponent<MeshFilter>().sharedMesh = origen.GetComponent<MeshFilter>().sharedMesh;
         var r = copia.AddComponent<MeshRenderer>();
         var rOrigen = origen.GetComponent<MeshRenderer>();
-        r.sharedMaterial = material != null ? material : (rOrigen != null ? rOrigen.sharedMaterial : null);
+        if (material != null) r.sharedMaterial = material;
+        else if (rOrigen != null) r.sharedMaterials = rOrigen.sharedMaterials;
         return copia;
     }
 

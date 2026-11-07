@@ -11,8 +11,39 @@ using UnityEngine;
 ///   personajes) · altura=m · distancia=m · lente=°
 ///   · zoom=° (lente al final) · lado=izq|der|frente|espalda · rumbo=° · picado · contrapicado
 ///   · mezcla=s · mano=0..1 · encuadre=izq|centro|der · mover=P (travelling hasta P) · suave=s · cruza
+///   · altura_final=m (con mover=: altura sobre el suelo al llegar; para bajar del cielo al sujeto)
+///   · gira=° (la cámara rodea al sujeto durante el plano; positivo, en el sentido del reloj visto desde arriba)
+/// Orden suelta: «eje A B» fija la dirección de pantalla desde ese momento (A siempre a la izquierda
+///   y B a la derecha, en todos los planos); «eje libre» la suelta.
 internal sealed partial class Horno
 {
+    /// Ejes de pantalla pedidos con «eje A B» (A a la izquierda); «eje libre» deja izq y der en null.
+    private readonly List<(float t, ActorH izq, ActorH der)> _ejesDePantalla = new();
+
+    internal void PedirEjeDePantalla(float t, ActorH izq, ActorH der) => _ejesDePantalla.Add((t, izq, der));
+
+    private bool EjeDePantallaEn(float t, out ActorH izq, out ActorH der)
+    {
+        izq = der = null;
+        float ultimo = float.MinValue;
+        foreach (var x in _ejesDePantalla)
+            if (x.t <= t + 0.01f && x.t >= ultimo) { ultimo = x.t; izq = x.izq; der = x.der; }
+        return izq != null && der != null;
+    }
+
+    /// Posición horizontal en pantalla (tangente) de un punto visto desde c mirando a foco.
+    /// NaN si el punto queda detrás de la cámara: entonces no tiene lado en la pantalla.
+    private static float XEnPantalla(Vector3 c, Vector3 foco, Vector3 p)
+    {
+        Vector3 delante = foco - c; delante.y = 0f;
+        if (delante.sqrMagnitude < 0.0001f) return float.NaN;
+        delante.Normalize();
+        Vector3 derecha = Vector3.Cross(Vector3.up, delante);
+        Vector3 d = p - c; d.y = 0f;
+        float fondo = Vector3.Dot(d, delante);
+        return fondo < 0.3f ? float.NaN : Vector3.Dot(d, derecha) / fondo;
+    }
+
     private sealed class Encuadre
     {
         public TipoDePlano tipo;
@@ -191,13 +222,16 @@ internal sealed partial class Horno
             else if (e.tipo == TipoDePlano.Hombro) Hombro(e);
             else Buscar(e);
             plano.posiciones.Add(new ClaveDePosicion(t0, e.camara));
-            bool fijo = o.opciones.ContainsKey("desde") || o.opciones.ContainsKey("mover") || o.Tiene("quieta");
+            bool fijo = o.opciones.ContainsKey("desde") || o.opciones.ContainsKey("mover") || o.opciones.ContainsKey("gira") || o.Tiene("quieta");
             if (!fijo && Acompana(e.tipo)) Acompanar(e, plano);
             if (o.opciones.TryGetValue("mover", out var mover) && Punto(mover, o.linea, out var pf))
             {
-                Vector3 fin = pf + Vector3.up * (e.camara.y - Suelo(e.camara).y);
+                Vector3 fin = o.opciones.ContainsKey("altura_final")
+                    ? Suelo(pf) + Vector3.up * o.OpF("altura_final", 1.5f)
+                    : pf + Vector3.up * (e.camara.y - Suelo(e.camara).y);
                 plano.posiciones.Add(new ClaveDePosicion(t1, fin));
             }
+            if (o.opciones.ContainsKey("gira")) Girar(e, plano, o.OpF("gira", 0f));
         }
 
         if (!o.opciones.ContainsKey("lente")) plano.lente = e.lente;
@@ -561,8 +595,35 @@ internal sealed partial class Horno
             if (comunes.Count > 0 && _anterior.tipo == e.tipo && Mathf.Abs(Mathf.DeltaAngle(_anterior.azimut, az)) < 30f)
                 coste += 260f;
         }
+        // Dirección de pantalla fija («eje A B»): A siempre a la izquierda de B.
+        if (EjeDePantallaEn(e.tRef, out var izq, out var der) && izq.VisibleEn(e.tRef) && der.VisibleEn(e.tRef)
+            && XEnPantalla(c, foco, izq.PosEn(e.tRef)) > XEnPantalla(c, foco, der.PosEn(e.tRef)) + 0.02f)
+            coste += 1500f;
         _d.eje = coste - antesDelEje;
         return coste;
+    }
+
+    /// «gira=°»: la cámara rodea el foco durante el plano, a la misma distancia y altura, con
+    /// arranque y frenada suaves.
+    private void Girar(Encuadre e, PlanoHorneado plano, float grados)
+    {
+        if (Mathf.Abs(grados) < 0.5f) return;
+        Vector3 centro = FocoDeMirada(e, e.t0);
+        Vector3 radio = e.camara - centro;
+        float alto = radio.y;
+        radio.y = 0f;
+        int pasos = Mathf.Max(4, Mathf.CeilToInt((e.t1 - e.t0) / 0.2f));
+        int dentro = 0;
+        plano.posiciones.Clear();
+        for (int i = 0; i <= pasos; i++)
+        {
+            float k = (float)i / pasos;
+            float suave = k * k * (3f - 2f * k);
+            Vector3 p = centro + Quaternion.AngleAxis(grados * suave, Vector3.up) * radio + Vector3.up * alto;
+            if (CamaraAdentro(p)) dentro++;
+            plano.posiciones.Add(new ClaveDePosicion(Mathf.Lerp(e.t0, e.t1, k), p));
+        }
+        if (dentro > 0) Aviso($"{e.o}: al girar, la cámara atraviesa el decorado en {dentro} de {pasos + 1} puntos. Prueba menos grados o el otro sentido.");
     }
 
     private List<Bounds> _cajas;
@@ -610,6 +671,9 @@ internal sealed partial class Horno
         foreach (var b in Cajas())
         {
             if (b.SqrDistance(c) > cerca * cerca) continue;
+            // La caja de una habitación o de una casa grande envuelve a la cámara que está dentro:
+            // no es algo que se meta delante (sus paredes, si cortan la vista, las ve Linea).
+            if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) > 4.5f && b.Contains(c)) continue;
             if (!GeometryUtility.TestPlanesAABB(planos, b)) continue;
             cubierto += Mathf.Max(AreaEnCuadro(b, c, inv, tanH, tanV), 0.02f);
         }

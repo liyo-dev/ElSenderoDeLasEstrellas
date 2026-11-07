@@ -18,16 +18,6 @@ MonoBehaviour:
   signalOut: AWAKEN_DONE
   musicId: AWAKEN
   presentacionDeTexto: 1
-  openingShot:
-    type: 3
-    subjectId: NPC_Eldran
-    secondaryId: Player
-    heightBias: 0
-    distanceScale: 1
-    fovOverride: 0
-    crossTheLine: 0
-    headroom: 1
-    encara: 1
   endStayBlack: 1
   skipMusicRestore: 0
   modulos: {fileID: 3468072592841052729, guid: 9c4f628711288c3498f463432caf410a, type: 3}

@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 /// El arte del Sendero (diseño: doc «El Sendero — diseño del arte del nivel», 30 oct 2026). Viste
 /// Sendero.unity con un camino de luz suspendido entre estrellas: cielo propio, suelo de luz con
-/// constelaciones que se encienden al pisar, cielos cosidos en el primer tramo, las tres puertas
+/// constelaciones que se encienden al pisar, las tres puertas
 /// repartidas por el camino y el altar que respira al final. Idempotente: todo lo generado cuelga de
 /// «Vestido del Sendero (generado)» y se rehace entero; se retoca en las tablas de abajo.
 ///
@@ -82,7 +82,7 @@ public static class VestidoDelSendero
         if (cerrar) escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Additive);
 
         var mundo = Buscar(escena, "SENDERO_WORLD");
-        foreach (var viejo in new[] { "COSMIC_ENVIRONMENT_3D", "SENDERO_CAMINO_ASTRAL", "PORTALES_CELESTIALES", "PLAZA_ALTAR_BLANCO", NombreRaiz })
+        foreach (var viejo in new[] { "COSMIC_ENVIRONMENT_3D", "SENDERO_CAMINO_ASTRAL", "PORTALES_CELESTIALES", "PLAZA_ALTAR_BLANCO", "StarWorldFootprintPool", NombreRaiz })
         {
             var t = Buscar(escena, viejo);
             if (t != null) UnityEngine.Object.DestroyImmediate(t.gameObject);
@@ -100,7 +100,6 @@ public static class VestidoDelSendero
         var muestras = Muestrear(Camino, 1f);
         Suelo(raiz, muestras, m);
         foreach (var p in Plazas) PlazaDeLuz(raiz, p, m);
-        CielosCosidos(raiz, m);
         Polvo(raiz, muestras);
         var luces = new GameObject[Puertas.Length];
         for (int i = 0; i < Puertas.Length; i++) luces[i] = PuertaDeLuz(raiz, Puertas[i], m, i);
@@ -127,7 +126,7 @@ public static class VestidoDelSendero
 
     sealed class Mats
     {
-        public Material cielo, suelo, cosidoAmanecer, cosidoNoche, altar, anilloAltar;
+        public Material cielo, suelo, altar, anilloAltar;
         public Material[] puerta, arco;
     }
 
@@ -171,8 +170,6 @@ public static class VestidoDelSendero
                 x.SetColor("_ColorBorde", new Color(2.2f, 1.45f, 0.5f));
                 x.SetColor("_ColorPulso", new Color(0.22f, 0.18f, 0.08f));
             }),
-            cosidoAmanecer = Mat("Sendero_CieloCosido_Amanecer", "Sendero/CieloCosido", x => { x.SetFloat("_Modo", 0); x.SetFloat("_Opacidad", 0.7f); }),
-            cosidoNoche = Mat("Sendero_CieloCosido_NocheDeLunas", "Sendero/CieloCosido", x => { x.SetFloat("_Modo", 1); x.SetFloat("_Opacidad", 0.85f); }),
             anilloAltar = Mat("Sendero_AnilloDelAltar", "Sendero/LuzSimple", x => { x.SetColor("_Color", new Color(1.6f, 1.4f, 1.0f, 1)); x.SetFloat("_Pulso", 0.25f); }),
         };
         // Piedra blanca con un brillo propio muy suave: lo único sólido y cálido del Sendero.
@@ -291,31 +288,7 @@ public static class VestidoDelSendero
         Pieza(Hijo(raiz, "Plazas"), "Plaza — " + p.nombre, malla, m.suelo, true);
     }
 
-    // ── Cielos cosidos, polvo y umbral ─────────────────────────────────────────────────────
-
-    static void CielosCosidos(Transform raiz, Mats m)
-    {
-        var padre = Hijo(raiz, "Cielos cosidos (primer tramo)");
-        // A la izquierda un amanecer, a la derecha una noche llena de lunas (novela XIX).
-        Panel(padre, "Amanecer", new Vector3(0, -4, 60), 95f, 145f, 215f, 48f, m.cosidoAmanecer);
-        Panel(padre, "Noche de lunas", new Vector3(0, -4, 60), 95f, -35f, 35f, 48f, m.cosidoNoche);
-    }
-
-    static void Panel(Transform padre, string nombre, Vector3 centro, float radio, float desdeGrados, float hastaGrados, float alto, Material mat)
-    {
-        var malla = new Malla();
-        const int Partes = 28;
-        for (int i = 0; i < Partes; i++)
-        {
-            float a0 = Mathf.Deg2Rad * Mathf.Lerp(desdeGrados, hastaGrados, i / (float)Partes);
-            float a1 = Mathf.Deg2Rad * Mathf.Lerp(desdeGrados, hastaGrados, (i + 1) / (float)Partes);
-            Vector3 d0 = new(Mathf.Cos(a0), 0, Mathf.Sin(a0)), d1 = new(Mathf.Cos(a1), 0, Mathf.Sin(a1));
-            Vector3 b0 = centro + d0 * radio, b1 = centro + d1 * radio, s0 = b0 + Vector3.up * alto, s1 = b1 + Vector3.up * alto;
-            float u0 = i / (float)Partes, u1 = (i + 1) / (float)Partes;
-            malla.Quad(b0, b1, s1, s0, -(d0 + d1).normalized, new Vector2(u0, 0), new Vector2(u1, 0), new Vector2(u1, 1), new Vector2(u0, 1));
-        }
-        Pieza(padre, nombre, malla, mat, false);
-    }
+    // ── Polvo y umbral ─────────────────────────────────────────────────────────────────────
 
     static void Polvo(Transform raiz, List<Muestra> muestras)
     {
@@ -463,6 +436,10 @@ public static class VestidoDelSendero
             t.rotation = Quaternion.LookRotation(Vector3.forward);
             r[i] = t;
         }
+        // Detrás de cada puerta se vuelve de su prueba: el mismo punto es su ancla de llegada.
+        string[] vueltas = { SenderoProgressionController.AnclaVueltaWill, SenderoProgressionController.AnclaVueltaEstela, SenderoProgressionController.AnclaVueltaLiam };
+        for (int i = 0; i < vueltas.Length; i++)
+            r[i + 1].gameObject.AddComponent<SpawnAnchor>().anchorId = vueltas[i];
         return r;
     }
 

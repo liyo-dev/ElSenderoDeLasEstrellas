@@ -1,0 +1,275 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 6 · «¡TE QUIERO!»  (cinemática de cine: bandas y subtítulos)
+#  Sigue a la parte jugable (Will coge el mantel, escribe con sirope y se sube a la silla).
+#  Will, en su silla, agita la pancarta: «¡ESTELA, TE QUIERO VER GANAR!». Estela se vuelve. Liam
+#  suspira y sube a la silla de al lado a sujetar la otra punta. La armadura de gominola rebota,
+#  Will rebota con ella, la silla se inclina, Liam lo agarra y los dos caen de espaldas, a cámara
+#  lenta, en la fuente de sirope. Silencio sobre la fuente. Salen pegados, envueltos en el mantel
+#  con una punta sobre la cabeza de Liam como un velo; Will lleva el corazón de Liam en la frente y
+#  solo se lee «¡TE QUIERO!». «¡Vivan los novios!» y confeti. «Esto no es lo que habíamos
+#  planeado». A Estela se le escapa un ruidito de cerdito y se dobla de risa (el lazo, torcido).
+#  El salón se queda en silencio; los jueces: diez, diez y diez más uno a lápiz. «Ha ganado».
+#  Atrezo (ChuchelandiaBuilder.AtrezoDeCine): la pancarta, el mantel de los novios, el velo, el
+#  corazón y el lazo son props del escenario; el velo, el corazón y el lazo se ponen en la cabeza
+#  con «coge … mano=cabeza». Los atuendos Novios y LazoTorcido quitan el corazón a Liam y el lazo
+#  a Estela mientras dura (AtuendoBeat). Las sillas y la pancarta se vuelcan en sus ejes
+#  (PropMoveBeat enSusEjes). Los cartelitos de los jueces van en bocadillo.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_06_TeQuiero
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_TeQuiero.asset
+TEXTO subtitulo
+RITMO entre_frases=0.3 mismo_hablante=0.25
+
+REPARTO
+will        Player                nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela      Actor_Estela          nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam        Actor_Liam            nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+pompon      Actor_Pompon          nombre=CHAR_POMPON color=FF5A6E prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Pompon.prefab
+presidente  Actor_JuezPresidente  nombre=CHAR_JUEZ_PRESIDENTE color=FFE08A prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_JuezPresidente.prefab
+malvavisco  Actor_JuezMarshie     nombre=CHAR_JUEZ_MALVAVISCO color=F8D8F0 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_JuezMarshie.prefab
+lagrimitas  Actor_JuezEyeBud      nombre=CHAR_JUEZ_LAGRIMITAS color=B8E6FF prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_JuezEyeBud.prefab
+g1          Actor_Gominola1       prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola1.prefab oculto
+g2          Actor_Gominola2       nombre=CHAR_GOMINOLA color=FF8FB1 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola2.prefab oculto
+g3          Actor_Gominola3       prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola3.prefab oculto
+
+PUNTOS
+p_centro      M_Duelo_Centro
+p_palco       M_Duelo_Palco
+p_juez1       M_Duelo_Juez1
+p_juez2       M_Duelo_Juez2
+p_juez3       M_Duelo_Juez3
+p_fuente      M_Duelo_Fuente
+p_silla_will  M_Cine_Salon_TeQuiero_Will
+p_silla_liam  M_Cine_Salon_TeQuiero_Liam
+p_junto_liam  M_Cine_Salon_TeQuiero_LiamJunto
+p_caida_will  M_Cine_Salon_Fuente_Will
+p_caida_liam  M_Cine_Salon_Fuente_Liam
+p_novio_will  M_Cine_Salon_Novios_Will
+p_novio_liam  M_Cine_Salon_Novios_Liam
+p_pompon      M_Cine_Salon_TeQuiero_Pompon
+cam_fuente    M_Cine_Salon_CamFuente
+cam_lado      M_Cine_Salon_CamFuenteLado
+p_pub1        M_Cine_Salon_Publico1
+p_pub2        M_Cine_Salon_Publico2
+p_pub3        M_Cine_Salon_Publico3
+
+HILO
+@inicio
+bandas muestra
+& will en p_silla_will mirando p_centro
+& liam en p_junto_liam mirando p_silla_will
+& estela en p_centro mirando p_palco
+& pompon en p_pompon mirando p_palco
+& presidente en p_juez2 mirando p_centro
+& malvavisco en p_juez1 mirando p_centro
+& lagrimitas en p_juez3 mirando p_centro
+& g1 en p_pub1 mirando p_centro
+& g2 en p_pub2 mirando p_centro
+& g3 en p_pub3 mirando p_centro
+& g1 aparece
+& g2 aparece
+& g3 aparece
+& prop PROP_Pancarta
+& efecto CuerpoSinFisicaBeat actorId=Player
+& efecto CuerpoSinFisicaBeat actorId=Actor_Liam
+& estela cara preocupado
+& liam cara cansado
+# Will, subido a su silla con la pancarta.
+will desliza aqui altura=0.48 dura=0.05
+plano conjunto will p_silla_will desde=cam_fuente altura=1.9 lente=32
+will dice CHUCHELANDIA_TEQUIERO_01 gesto=Cheer02 cara=ilusionado
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Pizzicato-005.wav" volume=0.6
+
+# Estela se vuelve y lo ve. Plano de reacción.
+@estela_se_vuelve
+plano medio estela solo altura=1.3 lente=30
+estela mira p_fuente
+& estela cara sorpresa
+espera 1.1
+estela cara enfado
+espera 0.6
+
+# Liam suspira y sube a la silla de al lado a sujetar la otra punta.
+@liam_sube
+plano conjunto liam p_silla_liam desde=cam_fuente altura=1.6 lente=30
+liam gesto HeadShake01
+espera 0.3
+liam desliza a p_silla_liam altura=0.48 dura=0.45
+& liam mira p_centro
+& liam gesto JumpFull_InPlace_NoWeapon
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Plastic_Boing.wav" volume=0.7
+espera 0.3
+
+# Los dos en las sillas: la pancarta entera, en el mundo.
+@pancarta
+plano conjunto will liam desde=cam_fuente altura=1.9 lente=30
+will gesto Cheer02
+& liam cara neutral
+espera 1.2
+
+# La armadura rebota. Will rebota con ella. Tensión cómica.
+@rebote
+will desliza aqui altura=0.3 dura=0.18 seco
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Pizzicato-006.wav" volume=0.7
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Metallic_Boing(6).wav" volume=0.8
+& efecto PropMoveBeat propId=PROP_Pancarta deltaPosicion=0,0.15,0 segundos=0.18 enSusEjes=true desdeDondeEstaba=true esperar=false
+will desliza aqui altura=-0.3 dura=0.2
+& efecto PropMoveBeat propId=PROP_Pancarta segundos=0.2 enSusEjes=true desdeDondeEstaba=true esperar=false
+& efecto PropMoveBeat propId=PROP_SillaWill deltaRotacion=-10,0,0 segundos=0.2 enSusEjes=true desdeDondeEstaba=true esperar=false
+will desliza aqui altura=0.42 dura=0.22 seco
+& efecto PropMoveBeat propId=PROP_Pancarta deltaPosicion=0,0.2,0 segundos=0.22 enSusEjes=true desdeDondeEstaba=true esperar=false
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Metallic_Boing(6).wav" volume=0.9
+& will cara sorpresa
+will dice CHUCHELANDIA_TEQUIERO_07 sin_pose
+& will desliza aqui altura=-0.42 dura=0.25
+& efecto PropMoveBeat propId=PROP_SillaWill deltaRotacion=-24,0,0 segundos=0.3 enSusEjes=true desdeDondeEstaba=true esperar=false
+& liam cara miedo
+& liam mira will
+liam dice CHUCHELANDIA_TEQUIERO_08 sin_pose
+
+# Liam lo agarra y los dos caen de espaldas a la fuente, a cámara lenta.
+@caida
+plano conjunto will liam p_fuente desde=cam_lado altura=1.2 lente=36
+will desliza a p_caida_will dura=1.6
+& liam desliza a p_caida_liam dura=1.6
+& lento 0.3 0.15
+& efecto MezclaBeat fuente=caida musicaDb=-14 fundido=0.3
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(4).wav" volume=0.8
+& liam mira p_centro
+& will bucle Falling fundido=0.2
+& liam bucle Falling fundido=0.2
+& efecto PropMoveBeat propId=PROP_SillaWill deltaRotacion=-85,0,0 segundos=1.1 enSusEjes=true desdeDondeEstaba=true apoyarEnElSuelo=true esperar=false
+& efecto PropMoveBeat propId=PROP_SillaLiam deltaRotacion=-85,0,0 segundos=1.2 enSusEjes=true desdeDondeEstaba=true apoyarEnElSuelo=true esperar=false
+& efecto PropMoveBeat propId=PROP_Pancarta deltaPosicion=0,-1.1,-1.2 deltaRotacion=-70,0,0 segundos=1.5 enSusEjes=true desdeDondeEstaba=true esperar=false
+desde @caida+1.25 will bucle Knockdown01_Ground fundido=0.25
+& liam bucle Knockdown01_Ground fundido=0.25
+
+# ¡Plof!
+@plof
+lento 1 0.1
+& vfx Assets/_NPCs/Chuchelandia/Atrezo/VFX_SalpicaduraDeSirope.prefab en=p_caida_will offset=0,0.3,0 lifetime=3
+& vfx Assets/_NPCs/Chuchelandia/Atrezo/VFX_SalpicaduraDeSirope.prefab en=p_caida_liam offset=0,0.3,0 lifetime=3
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Water_Splash-013.wav" volume=1
+& sacudida 0.2 0.45
+& efecto MezclaBeat fuente=caida quitar=true fundido=0.2
+& prop PROP_Pancarta oculto
++0.12 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Water_Splash-003.wav" volume=0.8
+espera 0.6
+
+# La fuente, quieta. Silencio. Unas burbujas. (Por debajo se preparan para salir.)
+@silencio_fuente
+plano fijo p_fuente desde=cam_fuente altura=1.3 altura_foco=0.8 lente=26
+will desaparece
+& liam desaparece
+& efecto MezclaBeat fuente=silencio musicaDb=-40 ambienteDb=-30 fundido=0.3
+& will en p_novio_will mirando p_centro
+& liam en p_novio_liam mirando p_centro
+& will reposo
+& liam reposo
+& efecto AtuendoBeat atuendo=Atuendo_Chuchelandia_Novios
+& prop PROP_MantelNovios
+& efecto PropMoveBeat propId=PROP_MantelNovios deltaPosicion=0,-1.6,0 segundos=0 desdeDondeEstaba=true
+& will coge PROP_CorazonDeLiam mano=cabeza
+& liam coge PROP_Velo mano=cabeza
+will desliza aqui altura=-1.6 dura=0.05
+& liam desliza aqui altura=-1.6 dura=0.05
+espera 0.6
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-001.wav" volume=0.6
+espera 0.55
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-002.wav" volume=0.7
+espera 0.45
+
+# Salen pegados. Solo se lee «¡TE QUIERO!» (el mismo plano, de frente y limpio).
+@salen
+will aparece
+& liam aparece
+& will cara confuso
+& liam cara molesto
+will desliza aqui altura=1.6 dura=0.4 seco
+& liam desliza aqui altura=1.6 dura=0.4 seco
+& efecto PropMoveBeat propId=PROP_MantelNovios segundos=0.4 desdeDondeEstaba=true suavizar=false esperar=false
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Mouth_harp_boing.wav" volume=0.8
+& vfx Assets/_NPCs/Chuchelandia/Atrezo/VFX_SalpicaduraDeSirope.prefab en=p_fuente offset=0,0.3,0.4 lifetime=3
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Water_Drip-004.wav" volume=0.7
+espera 1.4
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Water_Drip-005.wav" volume=0.6
+espera 0.9
+
+# «¡Vivan los novios!» Confeti.
+@novios
+plano medio g2 solo
+& efecto MezclaBeat fuente=silencio quitar=true fundido=0.6
+g2 dice CHUCHELANDIA_TEQUIERO_02 sin_pose
+& g2 gesto Jump
+plano dos liam will altura=1.2 lente=32
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=will offset=0.3,1.6,0 lifetime=3
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Balloon_Pop-003.wav" volume=0.6
+espera 0.5
+liam dice CHUCHELANDIA_TEQUIERO_03 cara=molesto mira=will sin_pose
+will dice CHUCHELANDIA_TEQUIERO_04 cara=cansado mira=liam sin_pose
+liam dice CHUCHELANDIA_TEQUIERO_05 cara=neutral sin_pose
+
+# Contraplano: Estela intenta aguantarse. Se le escapa un ruidito de cerdito por la nariz.
+@aguanta
+plano medio estela solo altura=1.3 lente=30
+estela cara molesto
+espera 1.1
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Animals(12)/Pig_-003.wav" volume=0.45
+& estela cara sorpresa
+& estela gesto Pain01
+espera 0.9
+
+# Se ríe hasta doblarse; el lazo se le va de lado.
+@risa
+plano conjunto estela solo altura=1.1 lente=36
+& efecto AtuendoBeat atuendo=Atuendo_Chuchelandia_LazoTorcido
+& estela coge PROP_LazoDeEstela mano=cabeza
+& estela cara alegre
+& sonido Final_Estela_Risa volume=0.9
+estela gesto Laugh01
+estela bucle Laugh01_Loop
+espera 1.8
+
+# El salón se queda en silencio.
+@silencio_salon
+plano general estela presidente malvavisco lagrimitas
+& efecto MezclaBeat fuente=salon musicaDb=-40 ambienteDb=-20 fundido=0.5
+estela reposo
+espera 1.2
+
+# Los cartelitos.
+@cartelitos
+plano conjunto presidente malvavisco lagrimitas
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Drum_Rolls-006.wav" volume=0.5
+espera 0.6
+lagrimitas dice CHUCHELANDIA_DUELO_CARTEL_DIEZ texto=bocadillo sin_pose dura=1.4
+malvavisco dice CHUCHELANDIA_DUELO_CARTEL_DIEZ texto=bocadillo sin_pose dura=1.4
+& malvavisco gesto Marshies_Jump
+presidente mira estela
+espera 1.0
+presidente dice CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO texto=bocadillo sin_pose dura=2.6
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Paper_Wrapping_&_Flip-017.wav" volume=0.6
+
+# Liam, todavía pegado a Will, hace la cuenta.
+@cuenta
+plano dos liam will altura=1.2 lente=32
+& efecto MezclaBeat fuente=salon quitar=true fundido=1.2
+liam dice CHUCHELANDIA_TEQUIERO_06 cara=sorpresa mira=estela sin_pose
+& will cara ilusionado
+espera 0.5
+
+# Pompón mira a Estela (sigue la cinemática de la victoria). Fuera de cuadro se recoge el atrezo.
+@final
+plano medio pompon solo altura=1.2 lente=32
+& prop PROP_MantelNovios oculto
+& prop PROP_Velo oculto
+& prop PROP_CorazonDeLiam oculto
+& prop PROP_LazoDeEstela oculto
+& efecto AtuendoBeat atuendo=Atuendo_Chuchelandia_Novios poner=false
+& efecto AtuendoBeat atuendo=Atuendo_Chuchelandia_LazoTorcido poner=false
+pompon mira estela
+& pompon gesto Jump
+espera 1.3
+bandas quita

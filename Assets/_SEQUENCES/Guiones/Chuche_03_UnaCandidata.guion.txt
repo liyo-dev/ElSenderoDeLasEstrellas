@@ -1,0 +1,157 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 3 · ¡UNA CANDIDATA!
+#  Tras los tres intentos con el candado, el heraldo lo explica con cierta lástima: ni caballeros
+#  ni pajes, solo una princesa. «Aquí no hay ninguna princesa». El heraldo mira el pergamino, la
+#  mira a ella y toca la trompetilla (la lleva siempre en la mano): el ejército de gominolas sale de detrás de las colinas, la
+#  sube a pulso y se la lleva en volandas hacia el castillo, boca arriba y pataleando, como a quien
+#  se tira al público en un concierto. «¡Noooooo! ¡Dejadmeeee!». «¡Idiota! ¡Haz algo!». Will hace
+#  algo: la despide con la mano. Al ejército le da tiempo a vestir también a los otros dos
+#  (CHUCHE_ATUENDO_CANDIDATA): armadura de gominola y orejitas de conejo para Will, y un corazón en
+#  la cabeza para Liam. «No digas nada».
+#  Estela se queda oculta hasta que sale del vestidor (Chuche_04_ElVestidor).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_03_UnaCandidata
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Candidata.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.3
+
+REPARTO
+will     Player              nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela   Actor_Estela        nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam     Actor_Liam          nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+heraldo  Actor_Heraldo       nombre=CHAR_HERALDO color=F2C38B prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Heraldo.prefab
+g1       Actor_Gominola1     nombre=CHAR_GOMINOLAS color=FF8FB1 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola1.prefab oculto
+g2       Actor_Gominola2     prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola2.prefab oculto
+g3       Actor_Gominola3     prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola3.prefab oculto
+g4       Actor_Gominola4     prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola4.prefab oculto
+
+PUNTOS
+p_will     M_Puerta_Will
+p_estela   M_Puerta_Estela
+p_liam     M_Puerta_Liam
+p_heraldo  M_Puerta_Heraldo
+p_puerta   M_Puerta_Corazon
+p_ej1      M_Cine_Puerta_Ejercito1
+p_ej2      M_Cine_Puerta_Ejercito2
+p_ej3      M_Cine_Puerta_Ejercito3
+p_ej4      M_Cine_Puerta_Ejercito4
+p_rodea1   M_Cine_Puerta_Rodea1
+p_rodea2   M_Cine_Puerta_Rodea2
+p_rodea3   M_Cine_Puerta_Rodea3
+p_rodea4   M_Cine_Puerta_Rodea4
+p_huida    M_Cine_Puerta_Huida
+
+HILO
+@inicio
+will en p_will mirando p_heraldo
+& estela en p_estela mirando p_heraldo
+& liam en p_liam mirando p_heraldo
+& heraldo en p_heraldo mirando estela
+& g1 en p_ej1 mirando p_estela
+& g2 en p_ej2 mirando p_estela
+& g3 en p_ej3 mirando p_estela
+& g4 en p_ej4 mirando p_estela
+& plano conjunto heraldo will estela liam
+& will cara cansado
+& liam cara molesto
+& estela cara enfado
+espera 0.6
+heraldo dice CHUCHELANDIA_CANDIDATA_01 sin_pose
+heraldo dice CHUCHELANDIA_CANDIDATA_02 sin_pose
+plano medio estela
+estela dice CHUCHELANDIA_CANDIDATA_03 cara=decidido gesto=HeadShake02 mira=heraldo
+
+# El pergamino. Estela. El pergamino. La trompetilla.
+@trompetilla
+plano medio heraldo solo
+heraldo mira p_puerta
+espera 0.9
+heraldo mira estela
+espera 0.9
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-009.wav" volume=0.8
+& heraldo gesto Trompeta
+espera 0.6
+
+# De detrás de las colinas sale el ejército entre confeti.
+@ejercito
+plano general estela will liam lado=frente altura=3.0 lente=36 quieta
+& g1 aparece
+& g2 aparece
+& g3 aparece
+& g4 aparece
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_directional_multicolor.prefab" en=p_ej1 offset=0,1,0 lifetime=4
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_directional_multicolor.prefab" en=p_ej3 offset=0,1,0 lifetime=4
+& sonido clip="Assets/Audio/Audio ithappy/Grummy/Grummy_Run.wav" volume=0.7
+& g1 corre a p_rodea1 llega_mirando=estela
+& g2 corre a p_rodea2 llega_mirando=estela
+& g3 corre a p_rodea3 llega_mirando=estela
+&& g4 corre a p_rodea4 llega_mirando=estela
+& estela cara sorpresa
+& will cara sorpresa
+& liam cara sorpresa
+plano conjunto estela g1 g2
+g1 dice CHUCHELANDIA_CANDIDATA_04 sin_pose
+& g2 gesto Jump
+& g3 gesto Jump
+& g4 gesto Jump
+
+# En volandas, como en un concierto: la suben a pulso, boca arriba y pataleando (el bucle de
+# Knockdown01_Ground mueve las piernas), y el ejército se la lleva en formación hacia el castillo.
+# Estela va «encima» de los cuatro: su camino es el centro de los que la llevan, que la sujetan con los
+# brazos arriba («Cargar»: su correr con los brazos en alto) mientras corren.
+@volandas
+plano general estela g1 g2 g3 g4 altura=2.4 lente=34
+estela bucle Knockdown01_Ground fundido=0.4
+& estela encima g1 g2 g3 g4 altura=1.85 entra=0.6
+& estela mira p_huida
+& estela cara enfado
+& g1 bucle Cargar fundido=0.3
+& g2 bucle Cargar fundido=0.3
+& g3 bucle Cargar fundido=0.3
+& g4 bucle Cargar fundido=0.3
+espera 0.7
+estela dice CHUCHELANDIA_CANDIDATA_09 sin_pose
+& g1 corre a p_huida formacion=estela ritmo=trote
+& g2 corre a p_huida formacion=estela ritmo=trote
+& g3 corre a p_huida formacion=estela ritmo=trote
+& g4 corre a p_huida formacion=estela ritmo=trote
+& sonido clip="Assets/Audio/Audio ithappy/Grummy/Grummy_Run.wav" volume=0.6
+estela dice CHUCHELANDIA_CANDIDATA_05 sin_pose cara=enfado
+
+# Will hace algo: la despide con la mano. Al fondo, el ejército se la lleva colina arriba.
+@despedida
+plano medio will solo
+will mira estela
+& will cara alegre
+& will gesto HandWave01
+espera 1.8
+plano general will estela g1 g2 g3 g4 altura=2.0 lente=34
+espera 1.8
+estela desaparece
+& g1 desaparece
+& g2 desaparece
+& g3 desaparece
+& g4 desaparece
+
+# Al ejército le da tiempo a vestir a los otros dos.
+@vestidos
+plano dos will liam
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=will offset=0,1.2,0 lifetime=3
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=liam offset=0,1.2,0 lifetime=3
+& efecto SenalBeat senal=CHUCHE_ATUENDO_CANDIDATA
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Plastic_Boing.wav" volume=0.7
+espera 1.0
+will mira liam
+& liam mira will
+plano medio liam
+liam dice CHUCHELANDIA_CANDIDATA_06 cara=molesto
+plano medio will
+will dice CHUCHELANDIA_CANDIDATA_07 cara=picaro
+plano medio liam
+liam dice CHUCHELANDIA_CANDIDATA_08 cara=enfado
+plano medio will
+will cara sorpresa
+& will gesto Question01
+espera 1.4

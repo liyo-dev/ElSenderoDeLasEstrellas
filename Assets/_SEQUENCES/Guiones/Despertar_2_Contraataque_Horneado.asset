@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Despertar_2_Contraataque
   duracion: 7.339473
   presentacion: 1
-  huella: "2026-10-27 11:54 \xB7 614a736534b133af2c722a654bc30e9e"
+  huella: "2026-10-31 20:29 \xB7 614a736534b133af2c722a654bc30e9e"
   actores:
   - id: Player
     alias: will
@@ -30,6 +30,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
+    cabezas: []
     animacion:
     - fundido: 0
       t: 0
@@ -125,7 +126,18 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 4.6
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 0.10000001
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -249,67 +261,67 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202741379040074
+      rid: 5630202842388365827
     linea: 33
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202741379040075
+      rid: 5630202842388365828
     linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202741379040076
+      rid: 5630202842388365829
     linea: 40
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.9
     beat:
-      rid: 5630202741379040077
+      rid: 5630202842388365830
     linea: 43
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202741379040078
+      rid: 5630202842388365831
     linea: 48
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202741379040079
+      rid: 5630202842388365832
     linea: 49
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202741379040080
+      rid: 5630202842388365833
     linea: 50
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202741379040081
+      rid: 5630202842388365834
     linea: 51
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202741379040082
+      rid: 5630202842388365835
     linea: 64
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202741379040083
+      rid: 5630202842388365836
     linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202741379040084
+      rid: 5630202842388365837
     linea: 66
   etiquetas:
   - nombre: inicio
@@ -343,7 +355,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202741379040074
+    - rid: 5630202842388365827
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -351,7 +363,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202741379040075
+    - rid: 5630202842388365828
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -365,7 +377,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202741379040076
+    - rid: 5630202842388365829
       type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -375,38 +387,40 @@ MonoBehaviour:
         fundido: 0.1
         duracion: 1.4
         esperar: 0
-    - rid: 5630202741379040077
+    - rid: 5630202842388365830
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: WillContraataca
         waitForEnd: 1
-    - rid: 5630202741379040078
+        detenerEscena: 0
+    - rid: 5630202842388365831
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: Aturdimiento
         waitForEnd: 1
-    - rid: 5630202741379040079
+        detenerEscena: 0
+    - rid: 5630202842388365832
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.5
         waitForEnd: 0
-    - rid: 5630202741379040080
+    - rid: 5630202842388365833
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 5630202741379040081
+    - rid: 5630202842388365834
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0
-    - rid: 5630202741379040082
+    - rid: 5630202842388365835
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -414,13 +428,14 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.25
         waitForEnd: 0
-    - rid: 5630202741379040083
+    - rid: 5630202842388365836
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: Tinnitus
         waitForEnd: 1
-    - rid: 5630202741379040084
+        detenerEscena: 0
+    - rid: 5630202842388365837
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -428,3 +443,4 @@ MonoBehaviour:
         musicId: 
         fadeIn: 0
         fadeOut: 1.5
+        desdeSegundo: -1

@@ -65,6 +65,19 @@ public enum NPCEmotion
     Annoyed = 14,
 
     [Tooltip("Agradecido - da las gracias, reconoce un favor. Cierre natural de una misión.")]
-    Grateful = 15
+    Grateful = 15,
+
+    // ── Ampliación 4 nov 2026: emociones con símbolos de anime (lágrimas) ──────────────────────
+
+    [Tooltip("Llorando - ojos cerrados con cejas de pena y lágrimas que caen. Más fuerte que Sad, " +
+             "que no lleva lágrimas: así no llora cada línea triste.")]
+    Crying = 16,
+
+    [Tooltip("Lágrimas de alegría - ojos de risa con lágrimas. Para los momentos de mucha emoción; " +
+             "Relieved y Grateful no las llevan.")]
+    HappyTears = 17,
+
+    [Tooltip("Dormido - ojos cerrados y cara tranquila, sin parpadeo. Tired es cansado pero despierto.")]
+    Asleep = 18
 }
 

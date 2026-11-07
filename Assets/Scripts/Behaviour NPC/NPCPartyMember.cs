@@ -335,6 +335,15 @@ namespace Game.NPC
                 LogWarning("NPC no está completamente inicializado, esperando...");
                 return false;
             }
+
+            // Al restaurar el equipo, un compañero retenido por una secuencia espera a que lo suelte:
+            // la escena manda en su sitio y en su NavMeshAgent (lo apaga para llevarlo por su camino),
+            // y unirse ahora lo recolocaría en el NavMesh a mitad de plano. PlayerParty lo reintenta.
+            if (isRestore && _npcManager.IsInCinematic)
+            {
+                Log("Retenido por una secuencia: se unirá al equipo cuando acabe");
+                return false;
+            }
             
             // ✅ FIX: Verificar que el NavMeshAgent esté en un NavMesh
             if (!_agent.isOnNavMesh)

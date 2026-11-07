@@ -418,7 +418,11 @@ public class PlayerPresetService : MonoBehaviour
             return;
         }
 
-        var selection = _appearanceBuilder.GetSelection();
+        // Con un atuendo de escena puesto, al preset va la ropa de debajo.
+        var registro = CharacterAppearanceRegistry.Instance;
+        var selection = registro != null && registro.LlevaAtuendo(PartyControlManager.CharacterSlot.Will)
+            ? registro.RopaDeDebajo(PartyControlManager.CharacterSlot.Will)
+            : _appearanceBuilder.GetSelection();
 
         if (preset.appearance == null)
             preset.appearance = new List<AppearanceEntry>();

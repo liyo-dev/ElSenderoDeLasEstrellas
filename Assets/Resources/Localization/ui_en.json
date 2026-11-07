@@ -273,6 +273,14 @@
             "value": "Jump (in the air: double jump; again: fly)"
         },
         {
+            "key": "CONTROLS_FLY_UP",
+            "value": "While flying: go up"
+        },
+        {
+            "key": "CONTROLS_FLY_DOWN",
+            "value": "While flying: go down"
+        },
+        {
             "key": "CONTROLS_MOVE",
             "value": "Move"
         },
@@ -1053,12 +1061,8 @@
             "value": "Graphics"
         },
         {
-            "key": "SETTINGS_INVERT_LOOK_FLIGHT",
-            "value": "Invert Y axis (flight)"
-        },
-        {
             "key": "SETTINGS_INVERT_LOOK_GROUND",
-            "value": "Invert Y axis (ground)"
+            "value": "Invert Y axis"
         },
         {
             "key": "Settings_Language",
@@ -2170,6 +2174,22 @@
             "value": "Lab"
         },
         {
+            "key": "TESORO_REGION_CHUCHELANDIA",
+            "value": "Chuchelandia"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_NAME",
+            "value": "Little trumpet"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_PLURAL",
+            "value": "Little trumpets"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_DESC",
+            "value": "A golden little trumpet from the gummy army. It goes “toot-toot” and is a bit sticky."
+        },
+        {
             "key": "TESORO_MAPA_LAB_NOMBRE",
             "value": "Treasure map (LAB)"
         },
@@ -2200,6 +2220,30 @@
         {
             "key": "ITEM_MONEDA_ANTIGUA_DESC",
             "value": "No one knows which kingdom it's from. It can't buy anything."
+        },
+        {
+            "key": "PRUEBA_YA",
+            "value": "Go!"
+        },
+        {
+            "key": "PRUEBA_PUESTO",
+            "value": "{0} of {1}"
+        },
+        {
+            "key": "CONCURSO_PUNTOS",
+            "value": "{0} points"
+        },
+        {
+            "key": "CONCURSO_EQUILIBRIO",
+            "value": "Keep your balance: correct with the left stick or the arrow keys."
+        },
+        {
+            "key": "CONCURSO_RITMO",
+            "value": "Press each button as it reaches the circle."
+        },
+        {
+            "key": "CONCURSO_MANTENER",
+            "value": "Hold {0} and release it inside the zone."
         }
     ]
 }

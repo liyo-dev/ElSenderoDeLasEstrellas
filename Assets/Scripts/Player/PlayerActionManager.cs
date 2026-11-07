@@ -295,6 +295,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
 
     public void PopMode(ActionMode mode)
     {
+        ActionMode antes = Top;
         for (int i = _stack.Count - 1; i >= 0; --i)
         {
             if (_stack[i] == mode)
@@ -308,6 +309,10 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         }
         if (_stack.Count == 0) _stack.Add(ActionMode.Default);
         ApplyTopMode();
+
+        // Vuelve el control tras un diálogo o una cinemática: el cuerpo, listo para andar (INC-901).
+        if (antes == ActionMode.Cinematic && Top == ActionMode.Default && _dialogueAnimator != null)
+            _dialogueAnimator.AlRecuperarElControl();
     }
 
     /// <summary>
@@ -355,13 +360,41 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         return fuentes.Count > 0;
     }
 
+    // Permisos que dan otros sistemas mientras dura algo (una zona de escalada, una prueba): la
+    // habilidad se puede usar aunque el preset no la tenga. Los bloqueos externos siguen mandando.
+    private readonly Dictionary<PlayerAbility, HashSet<UnityEngine.Object>> _permisosExternos =
+        new Dictionary<PlayerAbility, HashSet<UnityEngine.Object>>();
+
+    /// <summary>Permite una habilidad que el preset no tiene mientras <paramref name="fuente"/> no la retire.</summary>
+    public void AnadirPermiso(PlayerAbility habilidad, UnityEngine.Object fuente)
+    {
+        if (fuente == null) return;
+        if (!_permisosExternos.TryGetValue(habilidad, out var fuentes))
+            _permisosExternos[habilidad] = fuentes = new HashSet<UnityEngine.Object>();
+        fuentes.Add(fuente);
+    }
+
+    /// <summary>Quita el permiso que dio <paramref name="fuente"/>.</summary>
+    public void QuitarPermiso(PlayerAbility habilidad, UnityEngine.Object fuente)
+    {
+        if (_permisosExternos.TryGetValue(habilidad, out var fuentes)) fuentes.Remove(fuente);
+    }
+
+    /// <summary>true si alguna fuente externa (viva) permite la habilidad aunque el preset no la tenga.</summary>
+    public bool EstaPermitidaDesdeFuera(PlayerAbility habilidad)
+    {
+        if (!_permisosExternos.TryGetValue(habilidad, out var fuentes) || fuentes.Count == 0) return false;
+        fuentes.RemoveWhere(f => f == null);
+        return fuentes.Count > 0;
+    }
+
     public bool CanUse(PlayerAbility ability)
     {
         // Comprueba permisos globales aplicados desde preset u otros sistemas
         switch (ability)
         {
             case PlayerAbility.Jump:
-                if (!_allowJump)
+                if (!_allowJump && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
                     if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Jump deshabilitado por preset");
@@ -370,7 +403,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 }
                 break;
             case PlayerAbility.Fly:
-                if (!_allowFly)
+                if (!_allowFly && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
                     if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Fly deshabilitado por preset");
@@ -379,7 +412,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 }
                 break;
             case PlayerAbility.Climb:
-                if (!_allowClimb)
+                if (!_allowClimb && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
                     if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Climb deshabilitado por preset");
@@ -388,7 +421,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 }
                 break;
             case PlayerAbility.Magic:
-                if (!_allowMagic)
+                if (!_allowMagic && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
                     if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Magic deshabilitado por preset");
@@ -397,7 +430,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 }
                 break;
             case PlayerAbility.Sprint:
-                if (!_allowSprint)
+                if (!_allowSprint && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
                     if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Sprint deshabilitado por preset");

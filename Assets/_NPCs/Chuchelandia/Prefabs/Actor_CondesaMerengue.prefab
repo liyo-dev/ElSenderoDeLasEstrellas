@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3714604055579148761
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 213289483269663938, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a35813d821e0b044495e08e1b80d30b5, type: 2}
+    - target: {fileID: 5873151523525362437, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fffec78be4abfc04aba1dc456e4b3aa2, type: 2}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059009952576485048, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6871998112409381890, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      propertyPath: m_Name
+      value: Actor_CondesaMerengue
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6871998112409381890, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1812888109038701254}
+    - targetCorrespondingSourceObject: {fileID: 6871998112409381890, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5595581294235999810}
+  m_SourcePrefab: {fileID: 100100000, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+--- !u!95 &3564930137564130587 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 213289483269663938, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+  m_PrefabInstance: {fileID: 3714604055579148761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7841560157041831387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6871998112409381890, guid: 75a401e8d3b427341b2c4d29847a4f0a, type: 3}
+  m_PrefabInstance: {fileID: 3714604055579148761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1812888109038701254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7841560157041831387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b524d1d8fd2a446a86766e3789272b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimacionDeCorredorPorAnimator
+  animator: {fileID: 3564930137564130587}
+  parametroDeVelocidad: Speed
+  valorAlCorrer: 2
+  metrosPorSegundoDelClip: 2
+  acelerarLaAnimacion: 1
+  disparadorDeSalto: Jump
+  parametroDeTrepar: ClimbUp
+--- !u!114 &5595581294235999810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7841560157041831387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfaf586bac764232afb2f4e8f911bdbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimatorInvoker

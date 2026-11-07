@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap2_01_LosPlanesDeLiam
   duracion: 46.1702
   presentacion: 1
-  huella: "2026-10-27 11:53 \xB7 63a81953d7e6fe3f2bafd19d848460fc"
+  huella: "2026-10-31 20:29 \xB7 63a81953d7e6fe3f2bafd19d848460fc"
   actores:
   - id: LIAM_TORRE
     alias: liam
@@ -30,6 +30,7 @@ MonoBehaviour:
       rumbo: 180
       punto: {x: 0, y: 0, z: 0}
       actor: 
+    cabezas: []
     animacion:
     - fundido: 0
       t: 0
@@ -83,6 +84,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -5988, y: 0, z: 5998.5}
       actor: 
+    cabezas: []
     animacion:
     - fundido: 0
       t: 0
@@ -319,37 +321,37 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202741379040025
+      rid: 5630202842388365785
     linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
     t: 15.797959
     beat:
-      rid: 5630202741379040026
+      rid: 5630202842388365786
     linea: 48
   - onlyIfFlag: 
     skipIfFlag: 
     t: 20.560816
     beat:
-      rid: 5630202741379040027
+      rid: 5630202842388365787
     linea: 57
   - onlyIfFlag: 
     skipIfFlag: 
     t: 35.92204
     beat:
-      rid: 5630202741379040028
+      rid: 5630202842388365788
     linea: 81
   - onlyIfFlag: 
     skipIfFlag: 
     t: 44.1702
     beat:
-      rid: 5630202741379040029
+      rid: 5630202842388365789
     linea: 88
   - onlyIfFlag: 
     skipIfFlag: 
     t: 45.6702
     beat:
-      rid: 5630202741379040030
+      rid: 5630202842388365790
     linea: 90
   etiquetas:
   - nombre: inicio
@@ -391,7 +393,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202741379040025
+    - rid: 5630202842388365785
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -399,7 +401,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202741379040026
+    - rid: 5630202842388365786
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -412,13 +414,13 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202741379040027
+    - rid: 5630202842388365787
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloLlave
         active: 0
-    - rid: 5630202741379040028
+    - rid: 5630202842388365788
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -432,7 +434,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202741379040029
+    - rid: 5630202842388365789
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -440,7 +442,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.5
         waitForEnd: 0
-    - rid: 5630202741379040030
+    - rid: 5630202842388365790
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

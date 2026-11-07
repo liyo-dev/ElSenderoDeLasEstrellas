@@ -24,7 +24,7 @@ public class SleepTrigger : MonoBehaviour
 
     [Header("Expresión facial")]
     [Tooltip("Expresión de la cara mientras duerme. None mantiene la expresión actual.")]
-    public NPCEmotion sleepEmotion = NPCEmotion.Tired;
+    public NPCEmotion sleepEmotion = NPCEmotion.Asleep;
 
     [Header("Despertar")]
     [Tooltip("Posición en el suelo donde Will se coloca al despertar (pie de la cama). Sin esto, permanece en bedPosition.")]

@@ -7,7 +7,6 @@ using UnityEngine;
 namespace ExternalPropertyAttributes.Editor
 {
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(UnityEngine.Object), true)]
 	public class ExternalCustomInspector : UnityEditor.Editor
 	{
 		private List<SerializedProperty> _serializedProperties = new List<SerializedProperty>();

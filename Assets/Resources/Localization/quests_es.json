@@ -531,6 +531,24 @@
         {"key":"QUEST_RENARD_CONTRATO_2_NAME","value":"Donde no llega la luz"},
         {"key":"QUEST_RENARD_CONTRATO_2_DESC","value":"Renard te paga por acabar con quince arañas más del Bosque Prohibido."},
         {"key":"QUEST_RENARD_CONTRATO_2_DETAIL","value":"Derrota quince arañas del Bosque Prohibido y vuelve a hablar con Renard. Promete algo que guarda desde hace años."},
-        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Derrota arañas del Bosque Prohibido"}
+        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Derrota arañas del Bosque Prohibido"},
+        {"key":"CHUCHE_BIENVENIDA_NAME","value":"Bienvenidos a Chuchelandia"},
+        {"key":"CHUCHE_BIENVENIDA_DESC","value":"Un reino de golosinas detrás de la segunda puerta. Alguien tendrá que explicar qué pasa aquí."},
+        {"key":"CHUCHE_BIENVENIDA_DETAIL","value":"Detrás de la segunda puerta del Sendero hay un reino entero hecho de golosinas, y nadie os ha dicho todavía qué hacéis aquí ni cómo se sale. Echad un vistazo y buscad a alguien que lo sepa."},
+        {"key":"CHUCHE_PASO_INVESTIGAR","value":"Investigad el reino"},
+        {"key":"CHUCHE_PRUEBA_NAME","value":"La princesa más adorable"},
+        {"key":"CHUCHE_PRUEBA_DESC","value":"Nadie sale de Chuchelandia hasta que se abra la Puerta del Corazón."},
+        {"key":"CHUCHE_PRUEBA_DETAIL","value":"La Puerta del Corazón solo se abre ante la princesa más adorable del reino, y el reino ha decidido que es Estela. Supera las pruebas de candidata, aprende los modales de la Condesa Merengue y gana el Duelo de Ternura para volver al Sendero."},
+        {"key":"CHUCHE_PASO_PUERTA","value":"Intentad abrir la Puerta del Corazón"},
+        {"key":"CHUCHE_PASO_CARRERA","value":"Gana la carrera de obstáculos"},
+        {"key":"CHUCHE_PASO_ESCALADA","value":"Llega la primera a lo alto de la torre"},
+        {"key":"CHUCHE_PASO_PUNTERIA","value":"Revienta los globos del campo de tiro"},
+        {"key":"CHUCHE_PASO_CLASES","value":"Aprende los modales de la Condesa Merengue"},
+        {"key":"CHUCHE_PASO_DUELO","value":"Gana el Duelo de Ternura"},
+        {"key":"CHUCHE_PASO_VUELTA","value":"Cruza la Puerta del Corazón y vuelve al Sendero"},
+        {"key":"CHUCHE_TROMPETILLAS_NAME","value":"Las trompetillas perdidas"},
+        {"key":"CHUCHE_TROMPETILLAS_DESC","value":"El heraldo suplente necesita las trompetillas del ejército para anunciar a Su Alteza."},
+        {"key":"CHUCHE_TROMPETILLAS_DETAIL","value":"El ejército de gominolas ha perdido cinco trompetillas por todo el reino: en lo alto, al otro lado de los saltos largos y donde solo se llega de un buen bote. Encuéntralas y devuélveselas al heraldo suplente."},
+        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Encuentra las trompetillas del ejército"}
     ]
 }

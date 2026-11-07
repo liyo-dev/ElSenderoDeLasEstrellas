@@ -266,28 +266,9 @@ public static class PruebaDeWillBuilder
     /// <summary>Will, Estela y Liam en la entrada, mirando al norte; la cámara detrás.</summary>
     private static void Personajes(Scene escena, Sala entrada)
     {
-        Vector3 c = entrada.Centro;
-        var will = Instanciar("Assets/Prefabs/_WILL.prefab", "_WILL", escena, c + new Vector3(0f, 0.05f, -2.5f), Vector3.forward);
-        var estela = Instanciar("Assets/Prefabs/_ESTELA.prefab", "_ESTELA", escena, c + new Vector3(-1.4f, 0.05f, -1.2f), Vector3.forward);
-        var liam = Instanciar("Assets/Prefabs/_LIAM.prefab", "_LIAM", escena, c + new Vector3(1.4f, 0.05f, -1.2f), Vector3.forward);
-        foreach (var p in new[] { will, estela, liam })
+        var grupo = EscenaJugable.ColocarGrupo(escena, entrada.Centro + new Vector3(0f, 0.05f, -2.5f), Vector3.forward);
+        foreach (var p in grupo.Personajes)
             if (p != null) KitDeLaberintoDeEspejos.SinSombra(p);
-
-        Instanciar("Assets/Prefabs/CamaraDelJugador.prefab", "CamaraDelJugador", escena, c + new Vector3(0f, 2.6f, -4.3f), Vector3.forward);
-    }
-
-    private static GameObject Instanciar(string ruta, string nombre, Scene escena, Vector3 pos, Vector3 mirar)
-    {
-        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
-        if (prefab == null)
-        {
-            Debug.LogWarning($"[PruebaDeWillBuilder] No se encontró {ruta}.");
-            return null;
-        }
-        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
-        go.name = nombre;
-        go.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(mirar));
-        return go;
     }
 
     /// <summary>Los cubemaps de las sondas se rehacen en cada montaje: se quitan los de montajes anteriores.</summary>

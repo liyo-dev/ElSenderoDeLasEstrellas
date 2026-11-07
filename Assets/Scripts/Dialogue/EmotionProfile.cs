@@ -23,6 +23,11 @@ public class EmotionProfile : ScriptableObject
     public string ojosDeReposoPorDefecto = "Eye01";
     [Tooltip("Boca de reposo que se usa si no hay boca asignada ni una malla neutra activa, siempre que exista en el personaje.")]
     public string bocaDeReposoPorDefecto = "Mouth02";
+    [Header("Ojos cerrados")]
+    [Tooltip("Malla de ojos cerrados para el parpadeo de los personajes con este perfil. Vacío: la del NPCEmotionController.")]
+    public string ojosDelParpadeo = "";
+    [Tooltip("Expresiones de este perfil que ya son ojos cerrados (no se interrumpen con parpadeos). Vacío: las del NPCEmotionController.")]
+    public string[] ojosYaCerrados = new string[0];
     [Header("Reacciones")]
     [Tooltip("Segundos que dura la reacción antes de volver a reposo.")]
     [Min(0.1f)] public float segundosDeReaccion = 1.5f;
@@ -59,6 +64,9 @@ public class EmotionProfile : ScriptableObject
         new EmotionMeshData { emotion = NPCEmotion.Excited,    eyeMeshName = "Eye05", mouthMeshName = "Mouth03", bodyAnimStateName = "Cheer02" },
         new EmotionMeshData { emotion = NPCEmotion.Annoyed,    eyeMeshName = "Eye04", mouthMeshName = "Mouth07", bodyAnimStateName = "HeadShake01" },
         new EmotionMeshData { emotion = NPCEmotion.Grateful,   eyeMeshName = "Eye03", mouthMeshName = "Mouth09", bodyAnimStateName = "Reverence01" },
+        new EmotionMeshData { emotion = NPCEmotion.Crying,     eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
+        new EmotionMeshData { emotion = NPCEmotion.HappyTears, eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
+        new EmotionMeshData { emotion = NPCEmotion.Asleep,     eyeMeshName = "Eye09", mouthMeshName = "Mouth02", bodyAnimStateName = "" },
     };
 
     [Header("Animaciones Neutras (jugador)")]
@@ -113,6 +121,14 @@ public struct EmotionMeshData
 
     [Tooltip("Nombre del GameObject de boca a activar (ej: 'Mouth01', 'Mouth03'). Vacío = se usa la de la cara de reposo del personaje")]
     public string mouthMeshName;
+
+    [Header("Símbolo de anime")]
+    [Tooltip("Fotogramas del símbolo de esta emoción (lágrimas, gota de sudor, vena…): piezas Fx<NN> del personaje " +
+             "que se encienden una tras otra, en bucle, mientras dure la emoción. Uno solo = símbolo quieto. Vacío = sin símbolo.")]
+    public string[] simbolos;
+
+    [Tooltip("Segundos que dura cada fotograma del símbolo. 0 = el valor por defecto de NPCEmotionController.")]
+    [Min(0f)] public float segundosPorSimbolo;
 
     [Header("Animación Corporal (jugador)")]
     [Tooltip("Nombre del estado en el Animator Controller del jugador (ej: 'Cheer01', 'Cry01'). Vacío = no se reproduce ninguna animación, se mantiene el gesto/pose actual. Útil para emociones que solo deben cambiar la cara.")]

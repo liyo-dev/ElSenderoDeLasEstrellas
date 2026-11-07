@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Unity.AI.Navigation;
@@ -106,18 +107,30 @@ public static class MontarCinematicaFinal
             return;
         }
 
-        var escenaActiva = SceneManager.GetActiveScene();
-        var actorWill = GameObject.Find("Actor_Will");
-        var asientoPrueba = GameObject.Find("Asiento_Rio_Tobias");
-        if (!forzar &&
-            escenaActiva.path == RutaEscenaPreview &&
-            GameObject.Find("CINEMATICA_FINAL_ROOT") != null &&
-            actorWill != null &&
-            asientoPrueba != null &&
-            actorWill.GetComponentInChildren<SkinnedMeshRenderer>(true) != null)
+        // La escena montada es la buena (lleva ajustes de varias pasadas que el montaje desde cero no
+        // reproduce): si ya existe, solo se aseguran las definiciones y referencias, esté o no activa.
+        // Montarla desde cero la borra entera; eso solo lo hace el menú (forzar) o si aún no existe.
+        if (!forzar)
         {
-            AsegurarDefinicionesYReferencias();
-            return;
+            var escenaPreview = SceneManager.GetSceneByPath(RutaEscenaPreview);
+            bool montada = escenaPreview.IsValid() && escenaPreview.isLoaded &&
+                           escenaPreview.GetRootGameObjects().Any(r => r.name == "CINEMATICA_FINAL_ROOT");
+            if (!montada && File.Exists(RutaEscenaPreview) && (!escenaPreview.IsValid() || !escenaPreview.isLoaded))
+            {
+                escenaPreview = EditorSceneManager.OpenScene(RutaEscenaPreview, OpenSceneMode.Additive);
+                montada = escenaPreview.GetRootGameObjects().Any(r => r.name == "CINEMATICA_FINAL_ROOT");
+            }
+            if (montada)
+            {
+                var activa = SceneManager.GetActiveScene();
+                SceneManager.SetActiveScene(escenaPreview);
+                try { AsegurarDefinicionesYReferencias(); }
+                finally { if (activa.IsValid() && activa.isLoaded) SceneManager.SetActiveScene(activa); }
+                if (GameObject.Find("Actor_Will") == null || GameObject.Find("Asiento_Rio_Tobias") == null)
+                    Debug.LogWarning("[Cinemática Final] A la escena le falta Actor_Will o Asiento_Rio_Tobias. " +
+                                     "No la vuelvo a montar sola: si hace falta, usa el menú «Montar Escena de Cinemática Final».");
+                return;
+            }
         }
 
         ConstruirEscenaCompleta();

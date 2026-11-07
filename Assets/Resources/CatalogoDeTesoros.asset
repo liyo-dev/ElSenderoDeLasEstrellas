@@ -22,3 +22,18 @@ MonoBehaviour:
   - id: PUEBLO_COLECCION_MONEDA
     region: PUEBLO
     escena: Assets/Scenes/Worlds/MainWorld.unity
+  - id: CHUCHE_TROMPETILLA_1
+    region: CHUCHELANDIA
+    escena: Assets/Scenes/Worlds/Chuchelandia.unity
+  - id: CHUCHE_TROMPETILLA_2
+    region: CHUCHELANDIA
+    escena: Assets/Scenes/Worlds/Chuchelandia.unity
+  - id: CHUCHE_TROMPETILLA_3
+    region: CHUCHELANDIA
+    escena: Assets/Scenes/Worlds/Chuchelandia.unity
+  - id: CHUCHE_TROMPETILLA_4
+    region: CHUCHELANDIA
+    escena: Assets/Scenes/Worlds/Chuchelandia.unity
+  - id: CHUCHE_TROMPETILLA_5
+    region: CHUCHELANDIA
+    escena: Assets/Scenes/Worlds/Chuchelandia.unity

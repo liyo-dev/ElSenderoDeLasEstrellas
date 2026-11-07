@@ -1,0 +1,37 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  ESCAPARATE · HERO DE LA WEB
+#  Will, Estela y Liam en un alto, de espaldas, mirando el pueblo de Will. No es una cinemática
+#  del juego: solo sirve para sacar fotos de escaparate (storyboard a alta resolución).
+#  Eje de pantalla: Liam a la izquierda, Will en el centro, Estela a la derecha.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Escaparate_Hero
+ESCENA MainWorld
+ZONA Escaparate 6 -120 40
+TEXTO subtitulo
+
+REPARTO
+will    Player      nombre=Will   prefab=Assets/Prefabs/_WILL.prefab
+estela  NPC_Estela  nombre=Estela prefab=Assets/Prefabs/_ESTELA.prefab
+liam    NPC_Liam    nombre=Liam   prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+p_will      6 -114
+p_estela    7.6 -113.6
+p_liam      4.4 -113.6
+pueblo      6 -138
+cam_espalda 6 -106
+cam_34      11 -108
+cam_alta    2 -103
+
+HILO
+@inicio
+will en p_will mirando pueblo
+& estela en p_estela mirando pueblo
+& liam en p_liam mirando pueblo
+& plano fijo desde=cam_espalda mira=pueblo altura=2 lente=45 quieta
+espera 2
+plano fijo desde=cam_34 mira=pueblo altura=1.6 lente=40 quieta
+espera 2
+plano fijo desde=cam_alta mira=pueblo altura=6 lente=50 quieta
+espera 2

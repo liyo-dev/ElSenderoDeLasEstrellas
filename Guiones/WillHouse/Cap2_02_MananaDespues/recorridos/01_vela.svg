@@ -5,37 +5,72 @@
 <text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
 <line x1='0' y1='2048' x2='2048' y2='2048' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
 <text x='2' y='2046' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
-<polyline points='237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<text x='237060' y='-5210.4' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<text x='237060' y='-5210.4' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='237056' cy='-5222.4' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
-<line x1='237056' y1='-5222.4' x2='237040' y2='-5222.4' stroke='#ffd27a' stroke-width='2'/>
-<text x='237064' y='-5230.4' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
-<circle cx='237056' cy='-5222.4' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
-<polyline points='238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238383.7,-7995.152 238376.7,-7601.443 238367.7,-7097.892 238357.7,-6542.193 238347.5,-5970.095 238337.3,-5396.747 238327,-4823.397 238316.8,-4250.047 238306.6,-3676.699 238264.4,-3108.162 238056.4,-2664.101 237601.4,-2457.6 237155.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 236851.2,-2457.6 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
-<circle cx='238387.2' cy='-8192' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='238387.2' cy='-8192' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='238316.8' cy='-4250.034' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<text x='238320.8' y='-4238.034' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
-<circle cx='236851.2' cy='-2457.6' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='236851.2' cy='-2457.6' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='238387.2' cy='-8192' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
-<line x1='238387.2' y1='-8192' x2='238380.7' y2='-8177.4' stroke='#7ad7ff' stroke-width='2'/>
-<text x='238395.2' y='-8200' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
-<circle cx='236851.2' cy='-2457.6' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
-<polygon points='236339.2,-1536 234282.1,-4598.912 238134.4,-4759.433' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
-<circle cx='236339.2' cy='-1536' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
-<text x='236346.2' y='-1532' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>1</text>
-<polygon points='240025.6,409.6 233756.3,-3671.238 242713.8,-6571.146' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
-<circle cx='240025.6' cy='409.6' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
-<text x='240032.6' y='413.6' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>2</text>
-<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@vela  0:00,0 – 0:15,4</text>
+<polyline points='236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 236953.6,-3317.76 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='236957.6' y='-3305.76' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='236957.6' y='-3305.76' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='236957.6' y='-3305.76' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>20s</text>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='236953.6' cy='-3317.76' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='236957.6' y='-3305.76' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>30s</text>
+<circle cx='236953.6' cy='-3317.76' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
+<line x1='236953.6' y1='-3317.76' x2='236943.2' y2='-3329.889' stroke='#ffd27a' stroke-width='2'/>
+<text x='236961.6' y='-3325.76' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
+<circle cx='236953.6' cy='-3317.76' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
+<polyline points='238234,-8053.706 237915.5,-7766.198 237511.8,-7401.801 237086.1,-7017.566 236674.7,-6646.195 236325.3,-6330.831 236073,-6103.04 236073,-6103.04 236073,-6103.04 236073,-6103.04 236196.3,-6049.949 236555.9,-5895.206 237003.1,-5702.724 237506,-5486.292 238030.6,-5260.519 238550.4,-5019.507 238962.2,-4646.348 239235.7,-4172.313 239306,-3606.579 239175.8,-3055.89 238898.1,-2588.212 238478.5,-2207.097 237975.8,-1931.368 237473,-1655.639 236959.7,-1405.884 236415.8,-1257.016 235861.8,-1363.636 235398.5,-1696.538 235023.4,-2075.7 234706.9,-2404.538 234441.4,-2680.368 233987,-2255.847 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 233775.1,-2043.883 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='237086.1' cy='-7017.563' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='237506' cy='-5486.288' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='237472.9' cy='-1655.633' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='237476.9' y='-1643.633' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='233779.1' y='-2031.883' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>20s</text>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='233775.1' cy='-2043.883' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='233779.1' y='-2031.883' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>30s</text>
+<circle cx='238218.7' cy='-8039.876' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
+<line x1='238218.7' y1='-8039.876' x2='238206.8' y2='-8029.155' stroke='#7ad7ff' stroke-width='2'/>
+<text x='238226.7' y='-8047.876' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
+<circle cx='233775.1' cy='-2043.883' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
+<polygon points='234496,-6656 237169.5,-5547.339 234570.6,-3762.659' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='234496' cy='-6656' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='234503' y='-6652' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>1</text>
+<polygon points='242483.2,-6758.4 238582.5,-1782.818 236165.1,-6989.55' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='242483.2' cy='-6758.4' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='242490.2' y='-6754.4' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>2</text>
+<polygon points='235110.4,-6758.4 235934.8,-1928.273 231875.5,-3078.02' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='235110.4' cy='-6758.4' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='235117.4' y='-6754.4' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>3</text>
+<polygon points='232448,-5324.8 237378.7,-5452.983 235650.6,-1573.567' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='232448' cy='-5324.8' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='232455' y='-5320.8' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>4</text>
+<polygon points='235110.4,-6758.4 235934.8,-1928.273 231875.5,-3078.02' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='235110.4' cy='-6758.4' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='235117.4' y='-6754.4' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5</text>
+<polygon points='232448,-5324.8 237378.7,-5452.983 235650.6,-1573.567' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='232448' cy='-5324.8' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='232455' y='-5320.8' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6</text>
+<polygon points='233472,-6758.4 237279.9,-4369.299 232838.3,-2308.011' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='233472' cy='-6758.4' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='233479' y='-6754.4' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>7</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@vela  0:00,0 – 0:31,4</text>
 </svg>

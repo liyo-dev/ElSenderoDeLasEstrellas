@@ -131,13 +131,7 @@ namespace Game.NPC.Common
         {
             var manager = _context.Transform.GetComponent<NPCBehaviourManagerV2>();
             actorId = manager != null ? manager.PersistenceId : null;
-            if (string.IsNullOrEmpty(actorId)) return false;
-            string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
-            var senales = DefaultNarrativeSignals.Instance;
-            // La reserva se consulta antes de emitir: el oyente puede retirarse al recibirla.
-            bool reservada = senales != null && senales.HasCustomListener(clave);
-            senales?.RaiseCustom(clave, $"[NPCBrain] Interacción con {_context.Transform.name}");
-            return reservada;
+            return NarrativeActor.AvisarDeLaCharla(actorId, _context.Transform.name);
         }
         public bool HandleInteraction(GameObject interactor)
         {

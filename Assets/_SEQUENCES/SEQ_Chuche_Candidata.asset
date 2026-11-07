@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Chuche_Candidata
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: "Chuchelandia: \xA1una candidata!"
+  summary: "\xABSolo una princesa\xBB. El ej\xE9rcito de gominolas se lleva a Estela en volandas (\xAB\xA1Noooooo! \xA1Dejadmeeee!\xBB) y viste a Will y a Liam."
+  signalIn: CHUCHE_CINE_CANDIDATA_START
+  signalOut: CHUCHE_CINE_CANDIDATA_DONE
+  musicId: 
+  presentacionDeTexto: 0
+  endStayBlack: 0
+  skipMusicRestore: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Chuche_03_UnaCandidata'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 6540294313956344610
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294313956344610
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: b255456111c3e614aaf9dc2a745e9302, type: 2}
+        empezarEn: 0

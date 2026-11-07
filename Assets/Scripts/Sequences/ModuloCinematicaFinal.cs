@@ -734,11 +734,8 @@ public partial class ModuloCinematicaFinal : SequenceModule
         var liam = ResolverActor("liam", _liamActor);
         MostrarActorEntero(liam);
         var emotion = liam != null ? liam.GetComponentInChildren<NPCEmotionController>() : null;
-        if (emotion != null)
-        {
-            emotion.AplicarOjos("Eye09");
-            emotion.SetCaraDeFondo(this, NPCEmotion.Tired);
-        }
+        // Liam, caído: ojos cerrados de fondo (Asleep). Ver INC-913.
+        if (emotion != null) emotion.SetCaraDeFondo(this, NPCEmotion.Asleep);
     }
 
     private bool _encadenandoParte2;

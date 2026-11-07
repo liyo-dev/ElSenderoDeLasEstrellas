@@ -541,6 +541,13 @@ public class SetPropActiveBeat : SequenceBeat
         if (go.activeSelf != active) go.SetActive(active);
         yield break;
     }
+
+    /// Encender o apagar algo del decorado es estado del mundo: si se salta la escena, queda como al final.
+    public override void CumplirAlSaltar(SequenceContext ctx)
+    {
+        var objeto = ctx.GetActor(propId)?.Transform;
+        if (objeto != null && objeto.gameObject.activeSelf != active) objeto.gameObject.SetActive(active);
+    }
 }
 
 /// Mueve y/o gira un objeto del decorado, en relativo a donde esté.
@@ -560,11 +567,20 @@ public class PropMoveBeat : SequenceBeat
     [Tooltip("El id del objeto en la lista 'Objetos que la cámara puede encuadrar' del SequenceStage.")]
     public string propId;
 
-    [Tooltip("Cuánto se desplaza, en metros de mundo, desde donde esté ahora.")]
+    [Tooltip("Cuánto se desplaza, en metros, desde donde esté ahora: en ejes del mundo o, con " +
+             "'enSusEjes', en los del objeto.")]
     public Vector3 deltaPosicion = Vector3.zero;
 
-    [Tooltip("Cuánto gira, en grados, desde como esté ahora. El giro es sobre los ejes del mundo.")]
+    [Tooltip("Cuánto gira, en grados, desde como esté ahora: sobre los ejes del mundo o, con " +
+             "'enSusEjes', sobre los del objeto.")]
     public Vector3 deltaRotacion = Vector3.zero;
+
+    [Tooltip("EN SUS EJES. Los deltas van en los ejes del propio objeto (x a su derecha, y arriba, " +
+             "z adelante) en vez de en los del mundo. Es lo que hace falta para volcar algo hacia " +
+             "atrás o hacia un lado sin calcular a mano hacia dónde mira en la escena: una silla " +
+             "que se vuelca de espaldas es (-80, 0, 0) en sus ejes, mire a donde mire. No se usa " +
+             "con 'seguirActorId'.")]
+    public bool enSusEjes = false;
 
     [Tooltip("Cuánto tarda. 0 = instantáneo, que es lo que se usa para DEJAR PUESTO el estado " +
              "inicial (la carreta volcada) sin que se vea el movimiento.")]
@@ -602,7 +618,8 @@ public class PropMoveBeat : SequenceBeat
              "baja lo justo para que su parte más baja toque el suelo que tiene debajo.\n\n" +
              "Hace falta en cuanto hay un GIRO: la carreta gira sobre su pivot, que está en la base, " +
              "así que al volcarla 62 grados media carreta se mete en la tierra — y no hay número " +
-             "fijo que lo arregle, porque depende de cómo esté colocada. Esto no adivina: mide.")]
+             "fijo que lo arregle, porque depende de cómo esté colocada. Esto no adivina: mide. Mientras " +
+             "se mueve (al volcarse o pegado a un actor), tampoco deja que se meta en la tierra.")]
     public bool apoyarEnElSuelo = false;
 
     public override string Describe()
@@ -645,7 +662,8 @@ public class PropMoveBeat : SequenceBeat
             Quaternion giroHastaSeguir = desdeDondeEstaba && ctx.TryGetPoseInicial(propId, out _, out var poseSeguir)
                 ? Quaternion.Euler(deltaRotacion) * poseSeguir
                 : Quaternion.Euler(deltaRotacion) * t.rotation;
-            yield return SeguirA(t, quien.Transform, seguirOffset, giroHastaSeguir, Mathf.Max(0.01f, segundos));
+            yield return SeguirA(t, quien.Transform, seguirOffset, giroHastaSeguir, Mathf.Max(0.01f, segundos),
+                apoyarEnElSuelo ? PiezasDelCuerpo(t) : null);
             yield break;
         }
 
@@ -653,8 +671,7 @@ public class PropMoveBeat : SequenceBeat
         Quaternion giroHasta;
         if (desdeDondeEstaba && ctx.TryGetPoseInicial(propId, out Vector3 sitio, out Quaternion pose))
         {
-            hasta = sitio + deltaPosicion;
-            giroHasta = Quaternion.Euler(deltaRotacion) * pose;
+            Destino(sitio, pose, out hasta, out giroHasta);
         }
         else
         {
@@ -664,16 +681,24 @@ public class PropMoveBeat : SequenceBeat
                     "pero no se guardó (¿no está en la lista de objetos encuadrables del " +
                     "SequenceStage?). Se mueve con los deltas desde donde esté.");
 #endif
-            hasta = t.position + deltaPosicion;
-            giroHasta = Quaternion.Euler(deltaRotacion) * t.rotation;
+            Destino(t.position, t.rotation, out hasta, out giroHasta);
         }
 
         if (apoyarEnElSuelo) hasta = ApoyarEnElSuelo(t, hasta, giroHasta);
 
-        IEnumerator rutina = MoverA(t, hasta, giroHasta, Mathf.Max(0f, segundos), suavizar);
+        IEnumerator rutina = MoverA(t, hasta, giroHasta, Mathf.Max(0f, segundos), suavizar,
+            apoyarEnElSuelo ? PiezasDelCuerpo(t) : null);
 
         if (esperar) yield return ctx.Player.StartCoroutine(rutina);
         else ctx.Player.StartCoroutine(rutina);
+    }
+
+    /// Dónde y cómo acaba el objeto partiendo de esa pose: los deltas en ejes del mundo o, con
+    /// <see cref="enSusEjes"/>, en los del objeto. Lo usa también el storyboard del horneado.
+    public void Destino(Vector3 desde, Quaternion giro, out Vector3 hasta, out Quaternion giroHasta)
+    {
+        hasta = desde + (enSusEjes ? giro * deltaPosicion : deltaPosicion);
+        giroHasta = enSusEjes ? giro * Quaternion.Euler(deltaRotacion) : Quaternion.Euler(deltaRotacion) * giro;
     }
 
     private static readonly RaycastHit[] s_suelo = new RaycastHit[16];
@@ -687,40 +712,12 @@ public class PropMoveBeat : SequenceBeat
         t.GetPositionAndRotation(out Vector3 antes, out Quaternion giroAntes);
         t.SetPositionAndRotation(hasta, giroHasta);
 
-        // Solo el CUERPO: las piezas que le cuelgan como adorno (Carreta_Heno, Carreta_Verdura...)
-        // están medio metidas en la hierba a propósito, y si contaran el objeto entero acabaría
-        // flotando para que el heno no toque el suelo. Es el mismo fallo que INC-331 en el Editor.
-        string prefijoPieza = t.name + "_";
-        var renders = t.GetComponentsInChildren<Renderer>();
-        bool hay = false;
-        Bounds caja = default;
-        foreach (var r in renders)
-        {
-            if (r == null || !r.enabled || r is ParticleSystemRenderer) continue;
-            if (EsPiezaColgada(r.transform, t, prefijoPieza)) continue;
-            if (!hay) { caja = r.bounds; hay = true; }
-            else caja.Encapsulate(r.bounds);
-        }
+        bool hay = CajaDelCuerpo(PiezasDelCuerpo(t), out Bounds caja);
 
         t.SetPositionAndRotation(antes, giroAntes);
         if (!hay) return hasta;
 
-        // El suelo, buscado desde encima de la caja y saltándose el propio objeto.
-        Vector3 origen = new Vector3(caja.center.x, caja.max.y + 1f, caja.center.z);
-        int n = Physics.RaycastNonAlloc(origen, Vector3.down, s_suelo, caja.size.y + 6f,
-            ~0, QueryTriggerInteraction.Ignore);
-
-        float suelo = float.NegativeInfinity;
-        for (int i = 0; i < n; i++)
-        {
-            var c = s_suelo[i].collider;
-            if (c == null || c.transform.IsChildOf(t)) continue;
-            // Lo que esté por ENCIMA del objeto (una rama, un alero) no es su suelo.
-            if (s_suelo[i].point.y > caja.max.y) continue;
-            if (s_suelo[i].point.y > suelo) suelo = s_suelo[i].point.y;
-        }
-
-        if (float.IsNegativeInfinity(suelo))
+        if (!SueloBajo(t, caja, out float suelo))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PropMoveBeat] No encuentro suelo debajo de '{t.name}' para apoyarlo. " +
@@ -730,6 +727,64 @@ public class PropMoveBeat : SequenceBeat
         }
 
         return hasta + Vector3.up * (suelo - caja.min.y);
+    }
+
+    /// Solo el CUERPO: las piezas que le cuelgan como adorno (Carreta_Heno, Carreta_Verdura...)
+    /// están medio metidas en la hierba a propósito, y si contaran el objeto entero acabaría
+    /// flotando para que el heno no toque el suelo. Es el mismo fallo que INC-331 en el Editor.
+    private static List<Renderer> PiezasDelCuerpo(Transform t)
+    {
+        string prefijoPieza = t.name + "_";
+        var lista = new List<Renderer>();
+        foreach (var r in t.GetComponentsInChildren<Renderer>())
+        {
+            if (r == null || r is ParticleSystemRenderer) continue;
+            if (EsPiezaColgada(r.transform, t, prefijoPieza)) continue;
+            lista.Add(r);
+        }
+        return lista;
+    }
+
+    private static bool CajaDelCuerpo(List<Renderer> cuerpo, out Bounds caja)
+    {
+        bool hay = false;
+        caja = default;
+        foreach (var r in cuerpo)
+        {
+            if (r == null || !r.enabled) continue;
+            if (!hay) { caja = r.bounds; hay = true; }
+            else caja.Encapsulate(r.bounds);
+        }
+        return hay;
+    }
+
+    /// El suelo, buscado desde encima de la caja y saltándose el propio objeto.
+    private static bool SueloBajo(Transform t, Bounds caja, out float suelo)
+    {
+        Vector3 origen = new Vector3(caja.center.x, caja.max.y + 1f, caja.center.z);
+        int n = Physics.RaycastNonAlloc(origen, Vector3.down, s_suelo, caja.size.y + 6f,
+            ~0, QueryTriggerInteraction.Ignore);
+
+        suelo = float.NegativeInfinity;
+        for (int i = 0; i < n; i++)
+        {
+            var c = s_suelo[i].collider;
+            if (c == null || c.transform.IsChildOf(t)) continue;
+            // Lo que esté por ENCIMA del objeto (una rama, un alero) no es su suelo.
+            if (s_suelo[i].point.y > caja.max.y) continue;
+            if (s_suelo[i].point.y > suelo) suelo = s_suelo[i].point.y;
+        }
+        return !float.IsNegativeInfinity(suelo);
+    }
+
+    /// Mientras se mueve un objeto «apoyado en el suelo», ninguna parte de su cuerpo se mete en la
+    /// tierra: al girar sobre su pivot (volcarse) o al ir pegado a un actor por un camino con
+    /// desniveles, se sube lo justo. Nunca lo baja: un objeto que se levanta sigue en el aire.
+    private static void NoHundir(Transform t, List<Renderer> cuerpo)
+    {
+        if (cuerpo == null || !CajaDelCuerpo(cuerpo, out Bounds caja)) return;
+        if (SueloBajo(t, caja, out float suelo) && caja.min.y < suelo)
+            t.position += Vector3.up * (suelo - caja.min.y);
     }
 
     private static bool EsPiezaColgada(Transform x, Transform raiz, string prefijo)
@@ -745,7 +800,7 @@ public class PropMoveBeat : SequenceBeat
     /// Mueve el objeto pegado al actor: cada fotograma se coloca en su posición más el
     /// desplazamiento. Es lo que convierte «la carreta va sola» en «la carreta va empujada».
     private static IEnumerator SeguirA(Transform t, Transform quien, Vector3 offset,
-        Quaternion giroHasta, float duracion)
+        Quaternion giroHasta, float duracion, List<Renderer> cuerpo)
     {
         Quaternion giroDesde = t.rotation;
         float pasado = 0f;
@@ -756,17 +811,19 @@ public class PropMoveBeat : SequenceBeat
             float k = Mathf.Clamp01(pasado / duracion);
             t.position = quien.position + offset;
             t.rotation = Quaternion.Slerp(giroDesde, giroHasta, Mathf.SmoothStep(0f, 1f, k));
+            NoHundir(t, cuerpo);
             yield return null;
         }
         if (t != null && quien != null)
         {
             t.position = quien.position + offset;
             t.rotation = giroHasta;
+            NoHundir(t, cuerpo);
         }
     }
 
     private static IEnumerator MoverA(Transform t, Vector3 hasta, Quaternion giroHasta,
-        float duracion, bool suave)
+        float duracion, bool suave, List<Renderer> cuerpo)
     {
         Vector3 desde = t.position;
         Quaternion giroDesde = t.rotation;
@@ -787,6 +844,7 @@ public class PropMoveBeat : SequenceBeat
             if (suave) k = k * k * (3f - 2f * k);
             t.SetPositionAndRotation(Vector3.Lerp(desde, hasta, k),
                 Quaternion.Slerp(giroDesde, giroHasta, k));
+            NoHundir(t, cuerpo);
             yield return null;
         }
 

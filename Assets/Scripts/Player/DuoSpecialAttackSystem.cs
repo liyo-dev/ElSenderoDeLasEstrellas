@@ -203,7 +203,8 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
         _ltWasDown = lt;
         _rtWasDown = rt;
 
-        if (!GameState.CanProcessGameplayInput || ComboCastController.IsComposing)
+        // En vuelo los gatillos suben y bajan (PlayerFlyingController, INC-895): no son ataque de equipo.
+        if (!GameState.CanProcessGameplayInput || ComboCastController.IsComposing || JugadorVolando())
         {
             _pendingSide = 0;
             return;
@@ -227,6 +228,10 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
     }
 
     // ── Reglas ─────────────────────────────────────────────────────────────
+
+    private static bool JugadorVolando()
+        => PlayerService.TryGetComponent(out PlayerActionManager modos, allowSceneLookup: false)
+           && modos.IsInMode(ActionMode.Flying);
 
     /// <summary>Ataque del dúo entre estos dos personajes, o null si no hay.</summary>
     public SpecialAttackSO FindDuo(Slot a, Slot b)

@@ -15,6 +15,8 @@ public class PropEnManoBeat : SequenceBeat
     public Vector3 posicionFinal;
     public Vector3 giroFinal;
     public bool tieneDestinoFinal;
+    [Tooltip("Recogida sin suelta de un objeto que empezaba oculto: al cerrar vuelve a su sitio, pero oculto.")]
+    public bool ocultoAlFinal;
     public string gestoHorneado;
     public float segundoDelGesto;
     [Tooltip("Segundos que tarda el objeto en pasar de la mano a su apoyo al soltarlo.")]
@@ -39,7 +41,7 @@ public class PropEnManoBeat : SequenceBeat
             if (tieneDestinoFinal)
             {
                 prop.SetPositionAndRotation(posicionFinal, Quaternion.Euler(giroFinal));
-                if (!prop.gameObject.activeSelf) prop.gameObject.SetActive(true);
+                if (prop.gameObject.activeSelf == ocultoAlFinal) prop.gameObject.SetActive(!ocultoAlFinal);
             }
             if (cuerpo != null) cuerpo.isKinematic = cinematico;
         });
@@ -66,7 +68,7 @@ public class PropEnManoBeat : SequenceBeat
         }
 
         var anim = ctx.GetActor(actorId)?.AnimadorDeActuacion;
-        var hueso = anim != null && anim.isHuman ? anim.GetBoneTransform(mano) : null;
+        var hueso = HuesoDelActor.De(anim, mano);
         if (hueso == null) yield break;
         var cuerpo = prop.GetComponent<Rigidbody>();
         if (cuerpo != null) cuerpo.isKinematic = true;

@@ -464,21 +464,23 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
         {
         if (!parts.TryGetValue(cat, out var list) || list.Count == 0) return;
 
-        // apaga TODO lo de la categoría actual
-        foreach (var go in list) go.SetActive(false);
-
         // si piden "None"
         if (string.IsNullOrEmpty(nameOrNull))
         {
+            foreach (var go in list) go.SetActive(false);
             idx.Remove(cat);
             // coherencia con Bow -> apaga flechas
             if (cat == PartCategory.Bow) SetByName(PartCategory.Arrows, null);
             return;
         }
 
-    // encuentra el índice del elegido
+    // encuentra el índice del elegido. Si este modelo no tiene esa pieza (un NPC trae solo sus
+    // cuerpos, no los del armario entero), se queda con la que lleva: apagarla lo dejaba sin cuerpo.
     int i = list.FindIndex(g => g.name.Equals(nameOrNull, System.StringComparison.OrdinalIgnoreCase));
-    if (i < 0) { idx.Remove(cat); return; }
+    if (i < 0) return;
+
+    // apaga TODO lo de la categoría actual
+    foreach (var go in list) go.SetActive(false);
 
     var chosen = list[i];
 

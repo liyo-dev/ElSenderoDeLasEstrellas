@@ -298,6 +298,8 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private bool autoAdvance = true;
     [Tooltip("Índice del periodo inicial (0 = primero en la lista).")]
     [SerializeField] private int startingTimeIndex = 0;
+    [Tooltip("Punto de la franja inicial en el que arranca la escena (0 = su principio, 1 = su final). Con el ciclo parado marca la hora fija de la escena: con «Noche», 0,4 deja la luna alta.")]
+    [SerializeField, Range(0f, 1f)] private float progresoInicialDeLaFranja = 0f;
 
     [Header("Eventos")]
     [SerializeField] private UnityEvent<TimeOfDay> onTimeOfDayChanged;
@@ -994,6 +996,8 @@ public class DayNightCycle : MonoBehaviour
     void InitializeCycle()
     {
         ApplyTimeOfDay(_currentIndex, immediate: true, invokeEvents: false);
+        _timeElapsed = _currentDuration * progresoInicialDeLaFranja;
+        ActualizarDireccionesDeAstros();
     }
 
     public void AdvanceToNextPeriod()

@@ -1,0 +1,174 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 7 · VICTORIA Y SALIDA
+#  El reino estalla en aplausos y coronan a Estela (CHUCHE_ATUENDO_VICTORIA: la tiara en lugar
+#  del lazo). Pompón le ofrece su tiara minúscula y se le pega a la pierna; cuanto más tira ella,
+#  más feliz chapotea. «Creo que le caes bien». Un abrazo muy deprisa: «Uno. Y no se lo contéis a
+#  nadie». Le devuelve la tiara: «Quédatela. A ti te queda mejor».
+#  En la Puerta del Corazón el candado hace «clic». Al pasar el umbral, el vestido se deshace en
+#  purpurina (CHUCHE_VESTIDO_PURPURINA quita los atuendos). Liam la proclama princesa más adorable
+#  y se gana una colleja; Will, otra. Las dos manos de Estela se quedan pegadas.
+#  Termina delante del umbral: el portal al Sendero lo abre el grafo después (PRUEBA_ESTELA_SUPERADA).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_07_Victoria
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Victoria.asset
+TEXTO bocadillo
+RITMO entre_frases=0.3 mismo_hablante=0.25
+
+REPARTO
+will        Player                 nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela      Actor_Estela           nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam        Actor_Liam             nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+pompon      Actor_Pompon           nombre=CHAR_POMPON color=FF5A6E prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Pompon.prefab
+condesa     Actor_CondesaMerengue  nombre=CHAR_CONDESA_MERENGUE color=FFF4F8 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_CondesaMerengue.prefab
+g1          Actor_Gominola1        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola1.prefab oculto
+g2          Actor_Gominola2        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola2.prefab oculto
+g3          Actor_Gominola3        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola3.prefab oculto
+
+PUNTOS
+p_centro      M_Duelo_Centro
+p_trono       M_Duelo_Trono
+p_will        M_Cine_Salon_Victoria_Will
+p_liam        M_Cine_Salon_Victoria_Liam
+p_pompon      M_Cine_Salon_TeQuiero_Pompon
+p_pierna      M_Cine_Salon_Pierna
+p_condesa     M_Cine_Salon_Condesa
+p_pub1        M_Cine_Salon_Publico1
+p_pub2        M_Cine_Salon_Publico2
+p_pub3        M_Cine_Salon_Publico3
+p_puerta      M_Puerta_Corazon
+p_candado     M_Puerta_Candado
+p_will_p      M_Puerta_Will
+p_estela_p    M_Puerta_Estela
+p_liam_p      M_Puerta_Liam
+p_umbral_e    M_Cine_Puerta_Umbral_Estela
+p_umbral_w    M_Cine_Puerta_Umbral_Will
+p_umbral_l    M_Cine_Puerta_Umbral_Liam
+cam_lado      M_Cine_Salon_CamLado
+
+HILO
+@inicio
+estela en p_centro mirando p_will
+& will en p_will mirando p_centro
+& liam en p_liam mirando p_centro
+& pompon en p_pompon mirando p_centro
+& condesa en p_condesa mirando p_centro
+& g1 en p_pub1 mirando p_centro
+& g2 en p_pub2 mirando p_centro
+& g3 en p_pub3 mirando p_centro
+& g1 aparece
+& g2 aparece
+& g3 aparece
+# El reino entero estalla en aplausos: coronan a la candidata.
+& plano general estela will liam pompon
+& efecto SenalBeat senal=CHUCHE_ATUENDO_VICTORIA
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=estela offset=0,2.2,0 lifetime=4
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/Flash_ellow_pink.prefab" en=estela offset=0,1.8,0 lifetime=2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-009.wav" volume=0.8
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-013.wav" volume=0.6
+& g1 gesto Marshies_Happy_Dance
+& g2 gesto Jump
+& g3 gesto Marshies_Happy_Dance
+& estela cara sorpresa
+espera 2.0
+
+# Pompón baja hasta Estela, le ofrece la tiara minúscula y se le abraza a la pierna.
+@pompon
+plano conjunto estela pompon desde=cam_lado altura=1.8
+pompon anda a p_pierna ritmo=paseo llega_mirando=estela
+& pompon gesto Jump veces=2
+estela mira pompon
+& estela cara confuso
+pompon gesto Marshies_Happy_Dance
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-001.wav" volume=0.8
+espera 1.2
+# Cuanto más tira, más feliz chapotea Pompón.
+estela gesto Push_InPlace_NoWeapon
+& estela cara molesto
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-002.wav" volume=0.8
++0.5 pompon gesto Marshies_Happy_Dance
+espera 1.2
+plano dos will estela
+will dice CHUCHELANDIA_VICTORIA_01 cara=picaro mira=estela
+
+# Mira a un lado y a otro. Un abrazo muy deprisa.
+@abrazo
+plano medio estela desde=cam_lado altura=1.6 lente=26
+estela mira will
+espera 0.4
+estela mira liam
+espera 0.4
+estela mira pompon
+estela gesto Loot01_Begin
+& estela cara agradecido
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-001.wav" volume=0.6
+espera 0.3
+estela dice CHUCHELANDIA_VICTORIA_02 cara=molesto mira=will sin_pose
+estela dice CHUCHELANDIA_VICTORIA_03 cara=enfado gesto=Angry01 mira=liam
+# Pompón se despega solo. Ella le pone la tiara bien derecha.
+plano dos estela pompon desde=cam_lado altura=1.7
+pompon anda a p_pompon ritmo=paseo llega_mirando=estela
+estela gesto Greeting01_NoWeapon
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_pink.prefab" en=pompon offset=0,0.8,0 lifetime=2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-012.wav" volume=0.5
+estela dice CHUCHELANDIA_VICTORIA_04 cara=alegre mira=pompon
+& pompon gesto Marshies_Happy_Dance
+espera 0.8
+
+# Al fondo del valle, el candado hace «clic».
+@clic
+fundido cubre 0.5
+espera 0.5
+estela en p_estela_p mirando p_puerta
+& will en p_will_p mirando p_puerta
+& liam en p_liam_p mirando p_puerta
+& plano conjunto estela will liam p_candado rumbo=90 distancia=5 altura=2.4 lente=36 quieta
+& fundido entra 0.5
+espera 0.6
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/UI(27)/Clicks-008.wav" volume=1.0
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_pink.prefab" en=p_candado lifetime=2.5
+espera 1.2
+
+# Cruzan juntos. Al pasar el umbral, el vestido se deshace en purpurina.
+@umbral
+plano conjunto estela will liam
+estela anda a p_umbral_e ritmo=paseo
+& will anda a p_umbral_w ritmo=paseo
+& liam anda a p_umbral_l ritmo=paseo
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=estela offset=0,1.2,0 lifetime=4
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/Flash_ellow_pink.prefab" en=estela offset=0,1.0,0 lifetime=2
+& efecto SenalBeat senal=CHUCHE_VESTIDO_PURPURINA
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-013.wav" volume=0.6
+& estela cara sorpresa
+espera 1.0
+estela cara aliviado
+
+# La princesa más adorable de Chuchelandia.
+@collejas
+plano medio liam
+liam dice CHUCHELANDIA_VICTORIA_05 cara=picaro mira=estela
+liam dice CHUCHELANDIA_VICTORIA_06 cara=picaro mira=estela
+plano dos estela liam
+estela gesto Attack1
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Punch 01.wav" volume=0.4
++0.3 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Mouth_harp_boing.wav" volume=0.7
+& estela cara sorpresa
+& liam cara molesto
+espera 1.0
+plano medio will
+will dice CHUCHELANDIA_VICTORIA_07 cara=picaro mira=estela
+plano dos estela will
+estela gesto Attack2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Punch 02.wav" volume=0.4
++0.3 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Mouth_harp_boing(6).wav" volume=0.7
+& estela cara enfado
+& will cara sorpresa
+espera 1.2
+# Siguen así, con Estela en medio y una mano pegada a cada uno. Y purpurina en las cejas.
+plano conjunto estela will liam
+estela cara molesto
+& will cara alegre
+& liam cara neutral
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=estela offset=0,1.6,0.1 lifetime=3
+espera 2.0

@@ -20,12 +20,14 @@ MonoBehaviour:
   currentMP: 500
   ataque: 0
   defensa: 0
+  sintoniaPuntos: 0
+  sintoniaHitos: 0
+  sintoniaHitosPendientes: 0
   unlockedAbilities: 01000000i
   unlockedSpells: 03000000010000000200000004000000i
   basicSpellIds: 0100000002000000i
-  legacyLeftSpellId: 0
-  legacyRightSpellId: 0
-  legacySpecialSpellId: 0
+  companionBasics: []
+  companionHealth: []
   flags:
   - SLEEP_DONE:PrologueBed
   abilities:
@@ -37,23 +39,25 @@ MonoBehaviour:
     sprint: 1
     shield: 1
   appearance:
-  - category: 0
-    partName: Body05
   - category: 2
     partName: Head01_Male
   - category: 3
-    partName: Hair01
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   - category: 4
-    partName: Eye01
+    partName: Eye30
   - category: 5
-    partName: Mouth01
+    partName: Mouth20
   unlockedWardrobeIds:
   - Body05
   inventoryItems: []
   defeatedBossIds: []
   narrativeBlackboards: []
+  senalesEmitidas: []
   npcPositions: []
   npcRelationships: []
+  objetosDelMundo: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []

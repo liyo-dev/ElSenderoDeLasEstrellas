@@ -6,7 +6,10 @@ import shutil
 import urllib.request
 import urllib.error
 
-API_KEY = "sk_a52f16364fcd8815a1e5e4d308eb3b84f4f48f826fd5e1d2"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from clave_elevenlabs import clave_de_api  # noqa: E402
+API_KEY = clave_de_api()
 ROOT = r"c:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas"
 OUT_DIR = os.path.join(ROOT, "Assets", "Resources", "Voices", "es")
 BACKUP_DIR = os.path.join(ROOT, "Versiones antiguas", "Voces antes de redoblaje Slayers (2026-10-18)")

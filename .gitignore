@@ -163,3 +163,7 @@ Herramientas/Audio/_generaciones/
 # --- Buzón de órdenes del Editor: marcas de órdenes ya ejecutadas y órdenes en tránsito (no versionar) ---
 Guiones/_ordenes/*.hecha
 Guiones/_ordenes/*.orden
+
+# Clave de la API de ElevenLabs (Tools/Audio/clave_elevenlabs.py)
+Tools/Audio/elevenlabs.key
+tools/Audio/elevenlabs.key

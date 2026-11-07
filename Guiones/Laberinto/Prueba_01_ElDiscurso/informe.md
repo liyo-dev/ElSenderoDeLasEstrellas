@@ -1,6 +1,6 @@
 # Parte de horneado: Prueba_01_ElDiscurso
 
-2026-10-30 23:27 · guion `Assets/_SEQUENCES/Guiones/Prueba_01_ElDiscurso.guion.txt`
+2026-10-31 07:47 · guion `Assets/_SEQUENCES/Guiones/Prueba_01_ElDiscurso.guion.txt`
 
 **0:23,0** de secuencia · 5 frases · 6 planos · 0 efectos · 11 personajes
 

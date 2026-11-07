@@ -98,7 +98,7 @@ Liam posee magia propia, centrada en pactos, invocación y trampas. El límite n
 
 ### Estela
 
-Estela es una hechicera prodigiosa, impulsiva y franca. Su humor y su hambre alivian la tensión, pero no sustituyen su historia de duelo. La muerte de su hermana Mara sigue afectándola, en especial ante el azúcar caliente y la criatura de gominola de Chuchelandia.
+Estela es una hechicera prodigiosa, impulsiva y franca. Su humor y su hambre alivian la tensión, pero no sustituyen su historia de duelo. La muerte de su hermana Mara sigue afectándola, en especial ante el olor a azúcar quemado de las ferias.
 
 Su poder de área debe sentirse fuerte sin presentar el descontrol como algo inocuo. En la ruptura hiere accidentalmente a Will; después se responsabiliza del daño y decide no huir. El arco no exige que deje de estar triste, sino que pueda recordar a Mara sin reducir su vida al día en que murió.
 
@@ -152,8 +152,6 @@ El daño depende de la mecánica, la posición y la ventana del enemigo. Las reg
 | Araña | Distancia, esquiva y control de grupos pequeños. | Daño normal al cuerpo; no tiene una ventana elemental ni armadura frontal especial. Su acercamiento y preparación del ataque dejan leer cuándo apartarse y responder. |
 | Guardián de la Piedra | Cooperar antes de acceder a las fórmulas y leer el escenario reflejado. | Recibe daño normal; no se acredita un filtro de exposición. Will sostiene, Estela presiona y Liam busca aperturas. **Adaptación del juego:** en la novela examina a Will y se aparta. |
 | Mago Oscuro | Dominio del arsenal, defensa que devuelve proyectiles y uso del espacio. | Las espinas reducen el daño; devolver rayos rompe espinas y aturde. Sin espinas queda expuesto. En los pilares, romper anclas lo derriba; **Liam hace ×2,5 de daño a las anclas** por su personaje, no por su elemento. Tras regenerarse no recibe daño hasta Amanecer. El tramo completo está en 5.19. |
-
-El Duque de Regaliz, el Gólem de azúcar y la criatura de gominola pertenecen al diseño de Chuchelandia, descrito en 5.13.
 
 **Enemigos del mundo abierto (decididos, por construir).** La variedad está en el comportamiento: cada uno pide una respuesta distinta, sin debilidades elementales.
 
@@ -345,13 +343,25 @@ Los tres cruzan juntos. La primera prueba enfrenta a Will con recuerdos, no con 
 
 ### 5.15. Chuchelandia — novela XXI
 
-La segunda prueba pertenece a Estela, pero el grupo la afronta unido. El reino obliga a sus habitantes a declararse felices y castiga cualquier muestra de tristeza. A Estela le asignan el papel de reina; Will y Liam quedan disfrazados y pueden investigar el palacio y ayudar a quienes esconden lo que sienten. El antagonista no es solo un reino cursi: es una falsa misericordia que evita el dolor borrando la libertad de sentirlo.
+La segunda prueba es de Estela y la viven los tres juntos. Es un capítulo de comedia. Tras una puerta rosa, una ráfaga de purpurina y una fanfarria que desafina, se abre un reino de colinas de nube de azúcar, ríos de sirope y un castillo de piruletas gigantes. Un conejo heraldo les anuncia que nadie saldrá hasta que se abra la Puerta del Corazón, y que esa puerta solo se abre ante la princesa más adorable del reino. Los tres intentan abrirla a su manera: el fuego de Estela se deshace en purpurina y corazoncitos, la ganzúa de Liam se convierte en una piruleta y el candado se ríe de los empujones de Will.
 
-Estela debe enfrentarse a la pérdida de su hermana Mara y a la culpa que arrastra. El duelo contra el Duque de Regaliz y el Gólem de azúcar no la «cura» ni elimina su tristeza: le permite recordar a Mara sin fingir que solo existe el último día. La criatura de gominola es parte de ese conflicto y del desenlace del combate; no reducirla a un chiste o a un objeto coleccionable.
+El reino proclama a Estela candidata a la fuerza. La visten con un vestido rosa de siete volantes, una tiara de azúcar, zapatos de caramelo y un lazo del tamaño de un escudo; a Will le toca una armadura de gominola verde que rebota a cada paso y unas orejitas de conejo, y a Liam una casaca de paje con un corazón en la cabeza. La Condesa Merengue intenta enseñarle a ser princesa (la reverencia, el saludo real, la risita y unas palabras de cariño) y a Estela todo le sale con cara de pelea. Entonces llega Su Alteza Pompón, un osito diminuto de gominola roja con una tiara minúscula, campeona de ternura desde hace cuatrocientos años. Estela insiste en que «es un oso» hasta que el heraldo explota en confeti y lo sustituye un suplente que hace los anuncios de espaldas, por si acaso.
 
-**Diseño jugable:** exploración social con disfraces, pistas y personajes que necesitan ayuda; jefe de varias fases que conecta las mecánicas aprendidas por Estela con el apoyo de Will y Liam. Tras la victoria, dejar un momento jugable y tranquilo para hablar de Mara y permitir que los habitantes decidan si salen del reino.
+Para abrir la Puerta, Estela debe vencer a Pompón en el Duelo de Ternura, ante tres jueces y el reino entero: la reverencia, la canción de cuna y los ojitos. Pierde las tres rondas. Cuando todo parece perdido, Will y Liam se suben a las sillas con una pancarta escrita con sirope, caen de espaldas en la fuente y salen pegados bajo un mantel en el que solo se lee «¡TE QUIERO!». A Estela se le escapa la risa, y es la risa lo que gana el duelo. Pompón le regala la tiara y se le pega a la pierna; ella lo abraza una sola vez («Uno. Y no se lo contéis a nadie») y le devuelve la tiara. La Puerta hace «clic», el vestido vuelve a ser purpurina y salen con una mano de Estela pegada a cada uno.
 
-**Adaptación del juego:** se conserva el diseño de esta prueba y su puesta en escena del GDD. No se presenta como reproducción literal de la novela.
+La prueba no le pide a Estela que cambie ni que sea dulce: le permite reírse de sí misma delante de sus amigos. El recuerdo de la muerte de Mara no pertenece a esta prueba; aparece en la ruptura (5.18).
+
+**Diseño jugable:** sin combate y sin derrota. La comedia vive del ritmo, así que los chistes con remate son cinemática y lo jugable está donde el jugador provoca el chiste. Dentro del reino toda la magia de ataque sale en purpurina y corazoncitos y no hace daño. El recorrido:
+
+- **La Puerta del Corazón:** el jugador intenta abrirla con los tres, cambiando de personaje: el fuego de Estela, la ganzúa de Liam y el empujón de Will.
+- **Pruebas de candidata:** ya vestida, y antes de conocer a Pompón, Estela supera tres pruebas físicas. Una carrera de obstáculos por plataformas, puentes, trampolines y ascensores contra los habitantes del reino, en la que también corren Will y Liam (Will rebota de más con su armadura; Liam camina muy digno con su corazón en la cabeza) y que tiene que ganar Estela; la escalada de una torre de caramelo contra un rival; y una prueba de puntería en la que globos y dianas revientan en corazoncitos. El lazo gigante le deja planear en los saltos largos. Si no gana, se reintenta en el acto con un comentario del grupo.
+- **Clases de la Condesa Merengue:** son el tutorial del duelo. Cada lección enseña un control y sale mal de forma graciosa, sin penalizar.
+- **El reino libre:** exploración antes de que suenen las trompetillas, con una misión opcional.
+- **Duelo de Ternura:** minijuego de tres rondas. En cada una actúa primero Pompón y después Estela: en la reverencia mantiene el equilibrio contra el peso del lazo, en la canción de cuna pulsa a ritmo con la música y en los ojitos mantiene el puchero. Los jueces responden con cartelitos. No se puede perder ni ganar jugando bien: el marcador es el chiste, y así no se finge un control que el jugador no tiene.
+- **«¡TE QUIERO!»:** el jugador pasa a Will en el público: coge el mantel, escribe con sirope y se sube a la silla. La caída en la fuente, la pancarta y la risa de Estela son cinemática. El duelo lo ganan los amigos.
+- **Salida:** al cruzar la Puerta del Corazón, el grupo vuelve al Sendero.
+
+**Adaptación del juego:** las pruebas de candidata (carrera, escalada y puntería), la misión opcional del reino y los controles del duelo no están en la novela. Los habitantes del reino son personajes de gominola y caramelo del escenario que ya tiene el juego (el pack Sweet_Land) en lugar de peluches; el heraldo, la Condesa Merengue y los jueces conservan sus papeles y sus nombres, solo cambia su aspecto. Los atuendos de los tres se montan con prendas del armario del proyecto, se ponen al entrar en el reino y se quitan al salir; no se guardan en la partida. Las cinemáticas cortas del reino (llegada, pergamino, candidata, vestidor, Pompón y victoria) van dentro del juego, con bocadillos; «¡TE QUIERO!» es la única de cine, con bandas, subtítulos y la caída a cámara lenta. Como en el juego Liam lleva un corazón en la cabeza en lugar del cuerno de unicornio, Will sale de la fuente con el corazón de Liam pegado en la frente. En ese momento Estela lleva el lazo y todavía no la tiara (la recibe en la victoria), así que con la risa solo se le tuerce el lazo. En la caída se añaden dos exclamaciones («¡Uy, uy, uy…!» de Will y «¡Will!» de Liam). En inglés la pancarta dice «ESTELA, I'D LOVE YOU TO WIN!» para que, tras la caída, se lea «LOVE YOU!».
 
 ### 5.16. La feria y la pausa del grupo — novela XXII
 
@@ -599,7 +609,7 @@ Es una propuesta de composición (INC-188), separada de MainWorld. Una reserva e
 | Fuego Fatuo y Silas | Bosque oriental con rutas curvas, pueblo vecino, casa y taller temporal. |
 | Risco y Vega | Dos aldeas, presa, cauce compartido y rutas agrícolas; ubicación sin fijar en la maqueta. |
 | Piedra Ancestral | Isla sureste, ruinas, monolito, cámara del reflejo y arena del Guardián. |
-| Sendero y pruebas | Niveles separados de Eldoria; Chuchelandia, feria y Caja con observación exterior de Will y Estela. |
+| Sendero y pruebas | Niveles separados de Eldoria; Chuchelandia (Puerta del Corazón, vestidor, circuito de obstáculos, torre de caramelo, campo de tiro, salón del duelo y fuente de sirope), feria y Caja con observación exterior de Will y Estela. |
 | Tramo final | Preparación, arena del altar y umbral de resurrección; sin conducto de sombra ni biblioteca final. |
 | Pueblo Pesquero y playas | Viviendas, embarcadero y barco de Silas; playas legibles sin edificios falsos. |
 

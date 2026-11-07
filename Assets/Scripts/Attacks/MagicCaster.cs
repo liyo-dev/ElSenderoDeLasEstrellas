@@ -12,7 +12,8 @@ using Sendero.Core.Feedback;
 /// <see cref="Cast"/>: permisos, maná, giro hacia el objetivo, compromiso de
 /// movimiento, sostén en el aire, gesto de la capa superior y materialización en el spawner.
 /// En el aire, el tercer golpe de la serie es el remate aéreo si el básico lo tiene
-/// (<see cref="MagicSpellSO.remateAereo"/>).
+/// (<see cref="MagicSpellSO.remateAereo"/>). Donde haya una <see cref="TransformacionDeMagia"/>
+/// puesta (<see cref="AnadirTransformacion"/>), sale su copia transformada del hechizo.
 /// Ver INC-483, INC-484, INC-486 e INC-652.
 /// </summary>
 [DisallowMultipleComponent]
@@ -91,6 +92,11 @@ public class MagicCaster : MonoBehaviour
     private float _esperaDeAterrizajeHasta;
     private readonly Dictionary<MagicSpellSO, MagicSpellSO> _variantesEnPicado = new Dictionary<MagicSpellSO, MagicSpellSO>();
 
+    // Transformaciones puestas (zonas donde la magia sale de otra forma), por quién las puso; manda
+    // la última que afecte al hechizo. Sus copias de cada hechizo se hacen una vez y se reutilizan.
+    private readonly List<KeyValuePair<object, TransformacionDeMagia>> _transformaciones = new List<KeyValuePair<object, TransformacionDeMagia>>();
+    private readonly Dictionary<(TransformacionDeMagia, MagicSpellSO), MagicSpellSO> _variantesTransformadas = new Dictionary<(TransformacionDeMagia, MagicSpellSO), MagicSpellSO>();
+
     /// <summary>Cambió la lista de básicos o el activo.</summary>
     public event Action OnLoadoutChanged;
 
@@ -152,6 +158,49 @@ public class MagicCaster : MonoBehaviour
         foreach (var variante in _variantesEnPicado.Values)
             if (variante) Destroy(variante);
         _variantesEnPicado.Clear();
+        foreach (var variante in _variantesTransformadas.Values)
+            if (variante) Destroy(variante);
+        _variantesTransformadas.Clear();
+    }
+
+    // === Magia transformada ====================================================
+
+    /// <summary>
+    /// Desde ahora la magia sale como dice <paramref name="transformacion"/> (los hechizos a los que
+    /// afecte), hasta que <paramref name="quien"/> la quite. Con el mismo <paramref name="quien"/>
+    /// sustituye a la anterior.
+    /// </summary>
+    public void AnadirTransformacion(TransformacionDeMagia transformacion, object quien)
+    {
+        if (transformacion == null || quien == null) return;
+        QuitarTransformacion(quien);
+        _transformaciones.Add(new KeyValuePair<object, TransformacionDeMagia>(quien, transformacion));
+    }
+
+    /// <summary>Quita la transformación que puso <paramref name="quien"/>.</summary>
+    public void QuitarTransformacion(object quien)
+    {
+        for (int i = _transformaciones.Count - 1; i >= 0; i--)
+            if (_transformaciones[i].Key == quien) _transformaciones.RemoveAt(i);
+    }
+
+    /// El hechizo tal como sale ahora: su copia transformada si alguna transformación puesta le
+    /// afecta (la última), o el mismo hechizo.
+    private MagicSpellSO Transformado(MagicSpellSO spell)
+    {
+        for (int i = _transformaciones.Count - 1; i >= 0; i--)
+        {
+            var transformacion = _transformaciones[i].Value;
+            if (transformacion == null || !transformacion.Afecta(spell)) continue;
+            var clave = (transformacion, spell);
+            if (!_variantesTransformadas.TryGetValue(clave, out var variante) || !variante)
+            {
+                variante = transformacion.CrearVariante(spell);
+                _variantesTransformadas[clave] = variante;
+            }
+            return variante;
+        }
+        return spell;
     }
 
     void Update()
@@ -232,10 +281,11 @@ public class MagicCaster : MonoBehaviour
 
     // === Remate aéreo (INC-652) ================================================
 
+    // Con la magia transformada no hay remate en picado: sale el tercer golpe normal, transformado.
     private bool PuedeRematarEnElAire(MagicSpellSO spell) =>
         spell.kind == MagicKind.Projectile && spell.prefab && spawner && controller &&
         spell.remateAereo != null && spell.remateAereo.kind == MagicKind.Zone &&
-        controller.IsAirborne && !controller.suppressAirMovement;
+        controller.IsAirborne && !controller.suppressAirMovement && Transformado(spell) == spell;
 
     /// <summary>
     /// Tercer golpe de la serie en el aire: voltereta, el básico sale en picado hacia el suelo
@@ -375,7 +425,8 @@ public class MagicCaster : MonoBehaviour
 
         if (controller) PlayCastGesture(style, hand, castLock, toTarget);
 
-        var toSpawn = precise && spell.supportsPreciseMode ? spell.BuildPreciseVariant() : spell;
+        var queSale = Transformado(spell);
+        var toSpawn = precise && queSale.supportsPreciseMode ? queSale.BuildPreciseVariant() : queSale;
         if (spawner) spawner.Cast(toSpawn, hand, damageMultiplier);
 
         OnSpellCast?.Invoke(spell, hand);

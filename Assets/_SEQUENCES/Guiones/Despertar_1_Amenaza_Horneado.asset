@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Despertar_1_Amenaza
   duracion: 13.425511
   presentacion: 1
-  huella: "2026-10-27 11:54 \xB7 f9f6ea7d1768aecdf489ca0b6940a922"
+  huella: "2026-10-31 20:29 \xB7 f9f6ea7d1768aecdf489ca0b6940a922"
   actores:
   - id: Player
     alias: will
@@ -30,17 +30,49 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
+    - t: 1.35
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
     - t: 3.4046938
       tipo: 1
       rumbo: 0
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
+    - t: 6.754694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
     - t: 9.125512
       tipo: 1
       rumbo: 0
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
+    cabezas:
+    - t: 1.3000001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 3.604694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 6.704694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
     animacion:
+    - fundido: 0
+      t: 1.9000001
+      tipo: 2
+      estado: SenseSomethingStart_NoWeapon
+      congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 3.554694
       tipo: 3
@@ -60,12 +92,21 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
     - fundido: 0
+      t: 7.3046937
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
       t: 10.725512
       tipo: 1
       estado: Idle_Battle_NoWeapon
       congelar: 0
       alFinal: 0
     caras:
+    - t: 1.8000001
+      emocion: sorpresa
+      dura: 1.8546939
     - t: 3.4046938
       emocion: sorpresa
       dura: 0
@@ -114,11 +155,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
+    - t: 3.704694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 8.825512
       tipo: 1
       rumbo: 0
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
+    cabezas:
+    - t: 1.25
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 3.654694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 6.654694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     animacion:
     - fundido: 0
       t: 1.2
@@ -136,6 +198,12 @@ MonoBehaviour:
       t: 3.104694
       tipo: 4
       estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.139837
+      tipo: 2
+      estado: HeadNod01
       congelar: 0
       alFinal: 0
     caras:
@@ -356,85 +424,85 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202741379040060
+      rid: 5630202842388365813
     linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 5630202741379040061
+      rid: 5630202842388365814
     linea: 40
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 5630202741379040062
+      rid: 5630202842388365815
     linea: 41
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.054694
     beat:
-      rid: 5630202741379040063
+      rid: 5630202842388365816
     linea: 49
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.054694
     beat:
-      rid: 5630202741379040064
+      rid: 5630202842388365817
     linea: 50
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.254694
     beat:
-      rid: 5630202741379040065
+      rid: 5630202842388365818
     linea: 51
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.4046938
     beat:
-      rid: 5630202741379040066
+      rid: 5630202842388365819
     linea: 52
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.4046938
     beat:
-      rid: 5630202741379040067
+      rid: 5630202842388365820
     linea: 53
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.354694
     beat:
-      rid: 5630202741379040068
+      rid: 5630202842388365821
     linea: 62
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.354694
     beat:
-      rid: 5630202741379040069
+      rid: 5630202842388365822
     linea: 63
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.125512
     beat:
-      rid: 5630202741379040070
+      rid: 5630202842388365823
     linea: 71
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.825512
     beat:
-      rid: 5630202741379040071
+      rid: 5630202842388365824
     linea: 76
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.825512
     beat:
-      rid: 5630202741379040072
+      rid: 5630202842388365825
     linea: 77
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.825512
     beat:
-      rid: 5630202741379040073
+      rid: 5630202842388365826
     linea: 78
   etiquetas:
   - nombre: inicio
@@ -466,7 +534,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202741379040060
+    - rid: 5630202842388365813
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -474,14 +542,14 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202741379040061
+    - rid: 5630202842388365814
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.06
         duration: 1.8
         waitForEnd: 0
-    - rid: 5630202741379040062
+    - rid: 5630202842388365815
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -491,13 +559,13 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 5630202741379040063
+    - rid: 5630202842388365816
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 0.2
         rampDuration: 0
-    - rid: 5630202741379040064
+    - rid: 5630202842388365817
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -505,13 +573,14 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.15
         waitForEnd: 0
-    - rid: 5630202741379040065
+    - rid: 5630202842388365818
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LanzarProyectil
         waitForEnd: 1
-    - rid: 5630202741379040066
+        detenerEscena: 0
+    - rid: 5630202842388365819
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -519,32 +588,33 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.35
         waitForEnd: 0
-    - rid: 5630202741379040067
+    - rid: 5630202842388365820
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.08
         duration: 0.25
         waitForEnd: 0
-    - rid: 5630202741379040068
+    - rid: 5630202842388365821
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PausarProyectil
         waitForEnd: 1
-    - rid: 5630202741379040069
+        detenerEscena: 0
+    - rid: 5630202842388365822
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0
-    - rid: 5630202741379040070
+    - rid: 5630202842388365823
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 0.2
         rampDuration: 0
-    - rid: 5630202741379040071
+    - rid: 5630202842388365824
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -558,7 +628,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202741379040072
+    - rid: 5630202842388365825
       type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -568,7 +638,7 @@ MonoBehaviour:
         fundido: 0.1
         duracion: 1.8
         esperar: 0
-    - rid: 5630202741379040073
+    - rid: 5630202842388365826
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

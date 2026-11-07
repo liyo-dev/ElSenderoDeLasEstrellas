@@ -1161,6 +1161,60 @@ namespace Core
         }
     }
 
+    // ── Botones de cara para minijuegos ──────────────────────────────────────────────────────
+
+    /// <summary>Los cuatro botones de cara del mando, por su posición (como <c>InputGlyphNames</c>).</summary>
+    public enum BotonDeCara { Sur, Este, Oeste, Norte }
+
+    /// <summary>
+    /// El botón se ha pulsado este fotograma. Ignora la supresión de gameplay: es para minijuegos que
+    /// leen botones con el jugador bloqueado (en modo UI). Mando y teclado como dicen los glifos
+    /// (Sur = E o Espacio, Este = clic derecho, Oeste = clic izquierdo, Norte = Q).
+    /// </summary>
+    public static bool BotonDeCaraPulsado(BotonDeCara boton) => LeerBotonDeCara(boton, soloAlPulsar: true);
+
+    /// <summary>El botón está apretado ahora (mismas reglas que <see cref="BotonDeCaraPulsado"/>).</summary>
+    public static bool BotonDeCaraMantenido(BotonDeCara boton) => LeerBotonDeCara(boton, soloAlPulsar: false);
+
+    private static bool LeerBotonDeCara(BotonDeCara boton, bool soloAlPulsar)
+    {
+#if ENABLE_INPUT_SYSTEM
+        static bool Lee(ButtonControl b, bool alPulsar) => b != null && (alPulsar ? b.wasPressedThisFrame : b.isPressed);
+
+        var gp = GetGamepad();
+        if (gp != null)
+        {
+            ButtonControl b = boton switch
+            {
+                BotonDeCara.Este => gp.buttonEast,
+                BotonDeCara.Oeste => gp.buttonWest,
+                BotonDeCara.Norte => gp.buttonNorth,
+                _ => gp.buttonSouth,
+            };
+            if (Lee(b, soloAlPulsar)) return true;
+        }
+
+        var kb = Keyboard.current;
+        var mouse = Mouse.current;
+        switch (boton)
+        {
+            case BotonDeCara.Sur:
+                if (kb != null && (Lee(kb.eKey, soloAlPulsar) || Lee(kb.spaceKey, soloAlPulsar))) return true;
+                break;
+            case BotonDeCara.Este:
+                if (mouse != null && Lee(mouse.rightButton, soloAlPulsar)) return true;
+                break;
+            case BotonDeCara.Oeste:
+                if (mouse != null && Lee(mouse.leftButton, soloAlPulsar)) return true;
+                break;
+            case BotonDeCara.Norte:
+                if (kb != null && Lee(kb.qKey, soloAlPulsar)) return true;
+                break;
+        }
+#endif
+        return false;
+    }
+
     public static Vector2 Move
     {
         get
@@ -1198,6 +1252,28 @@ namespace Core
             return true;
 #endif
         return false;
+    }
+
+    /// <summary>
+    /// Presión del gatillo izquierdo del mando, de 0 a 1 (analógico). Solo mando: en teclado LT y RT
+    /// comparten Ctrl (ver <see cref="LeftTriggerHeld"/>), así que quien necesite distinguirlos en
+    /// teclado elige sus teclas. Respeta supresión de gameplay.
+    /// </summary>
+    public static float LeftTriggerValue => TriggerValue(left: true);
+
+    /// <summary>Presión del gatillo derecho, de 0 a 1. Ver <see cref="LeftTriggerValue"/>.</summary>
+    public static float RightTriggerValue => TriggerValue(left: false);
+
+    private static float TriggerValue(bool left)
+    {
+        if (IsGameplaySuppressed())
+            return 0f;
+#if ENABLE_INPUT_SYSTEM
+        var gp = GetGamepad();
+        if (gp != null)
+            return (left ? gp.leftTrigger : gp.rightTrigger).ReadValue();
+#endif
+        return 0f;
     }
 
     public static bool SprintHeld

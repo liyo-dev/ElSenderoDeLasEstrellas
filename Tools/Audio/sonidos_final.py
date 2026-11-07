@@ -9,10 +9,14 @@ Tools/Audio/generar_hechizo_slayers.py. Las claves de sonido (Final_*) están en
 import json
 import os
 import re
+import sys
 import shutil
 import subprocess
 import tempfile
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from clave_elevenlabs import clave_de_api  # noqa: E402
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DESTINO = os.path.join(RAIZ, "Assets", "Audio", "SFX_Final")
@@ -45,9 +49,6 @@ EFECTOS = [
 ]
 
 
-def clave_de_api():
-    texto = open(os.path.join(RAIZ, "Tools", "Audio", "generar_hechizo_slayers.py"), encoding="utf-8").read()
-    return re.search(r'API_KEY\s*=\s*"([^"]+)"', texto).group(1)
 
 
 def pedir(url, cuerpo, clave):

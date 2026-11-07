@@ -1,0 +1,4314 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Chuche_05_SuAltezaPompon_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Chuche_05_SuAltezaPompon
+  duracion: 99.72122
+  presentacion: 0
+  huella: "2026-11-01 09:26 \xB7 dda87fd8ca2455a073e9c47ee5b232bf"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 95.559326, y: 14, z: 1.6000001}
+    - t: 43.60994
+      p: {x: 95.559326, y: 14, z: 1.6000001}
+    - t: 43.94587
+      p: {x: 95.82599, y: 14, z: 1.4888891}
+    - t: 44.203403
+      p: {x: 96.09266, y: 14.000001, z: 1.3777779}
+    - t: 44.45461
+      p: {x: 96.35932, y: 14.000001, z: 1.2666669}
+    - t: 44.736263
+      p: {x: 96.62599, y: 14, z: 1.1555558}
+    - t: 44.92247
+      p: {x: 96.75932, y: 14, z: 1.1000003}
+    - t: 74.23786
+      p: {x: 96.75932, y: 14, z: 1.1000003}
+    - t: 74.51123
+      p: {x: 96.511955, y: 14, z: 1.2526318}
+    - t: 74.724075
+      p: {x: 96.26459, y: 14, z: 1.4052634}
+    - t: 75.00712
+      p: {x: 95.89353, y: 14, z: 1.6342107}
+    - t: 75.28841
+      p: {x: 95.522484, y: 14.036818, z: 1.8631581}
+    - t: 75.5697
+      p: {x: 95.15143, y: 14.036818, z: 2.0921054}
+    - t: 75.86103
+      p: {x: 94.78038, y: 14.036818, z: 2.3210528}
+    - t: 76.0957
+      p: {x: 94.53301, y: 14.036818, z: 2.4736845}
+    - t: 76.2452
+      p: {x: 94.409325, y: 14.036818, z: 2.5500002}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 87.059326, y: 15.791922, z: 3}
+      actor: 
+    - t: 8.642595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.65484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.73729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.707901
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.714024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.68076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 44.92247
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 47.996227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 48.946228
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.545002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.77684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.840515
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.59072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.105824
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 63.979294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.16623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.64174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.57398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.2452
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 76.3952
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.91204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.98387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 96.92102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    cabezas:
+    - t: 8.592595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.604841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.68729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.657902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.664024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.63076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 48.89623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.495003
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.72684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.790516
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.54072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.055824
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 63.929295
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.11623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.591736
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.52398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.3452
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.86204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.93387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 96.87102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion:
+    - fundido: 0
+      t: 9.1925955
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.204842
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.28729
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.257902
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.264023
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 49.496227
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 56.32684
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 60.04676
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 64.52929
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 67.486435
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 71.12398
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 76.2452
+      tipo: 2
+      estado: Defend_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 76.71541
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 84.462036
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 92.53387
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 97.471016
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 43.60994
+      emocion: miedo
+      dura: 0
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    - t: 76.2452
+      emocion: preocupado
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: 94.059326, y: 14.031625, z: 3.0000002}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 87.059326, y: 15.791922, z: 3}
+      actor: 
+    - t: 8.762596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 15.911371
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
+    - t: 17.774841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 19.255045
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.85729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 22.572596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.827902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 27.979942
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 30.51382
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 32.834023
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.80076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 40.311165
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 45.132553
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
+    - t: 51.665
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.89684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 59.71072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.225822
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.09929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.286224
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.761734
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.69398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 84.032036
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 90.31877
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.10387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 94.628975
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.712596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 15.911371
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
+    - t: 17.724842
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 19.255045
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.807291
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 22.572596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.777903
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 27.979942
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 30.51382
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 32.784023
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.75076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 40.311165
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 45.132553
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
+    - t: 48.846226
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 51.615
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.84684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.740513
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 59.66072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.175823
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.049286
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.23622
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.71173
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.643974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.295204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 83.98203
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 90.31877
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.05386
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 94.628975
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 9.1925955
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.911371
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.991371
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 17.55484
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.204842
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.255045
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 19.335045
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.63729
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.28729
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 22.572596
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 22.652596
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 24.6079
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.257902
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 27.979942
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 28.059942
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 30.51382
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 30.56382
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 30.59382
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 32.314022
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.264023
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 40.311165
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 40.391167
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 42.65994
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 45.132553
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 45.212555
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 47.246227
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 48.796227
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 48.87623
+      tipo: 2
+      estado: Question02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 51.145
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 52.095
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 56.32684
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 57.690514
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 57.770515
+      tipo: 2
+      estado: Angry02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 59.49072
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 60.04676
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 64.52929
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 67.486435
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 71.12398
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 74.23786
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 84.462036
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 90.31877
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 90.39877
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 91.88387
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 92.53387
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 94.628975
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 94.70898
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 96.82102
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 15.911371
+      emocion: confuso
+      dura: 1.9934694
+    - t: 19.255045
+      emocion: neutral
+      dura: 1.7322448
+    - t: 22.572596
+      emocion: neutral
+      dura: 2.3853061
+    - t: 27.979942
+      emocion: neutral
+      dura: 2.9338777
+    - t: 30.51382
+      emocion: confuso
+      dura: 2.1502042
+    - t: 40.311165
+      emocion: decidido
+      dura: 2.6987755
+    - t: 45.132553
+      emocion: neutral
+      dura: 2.4636736
+    - t: 47.996227
+      emocion: sorpresa
+      dura: 0
+    - t: 57.690514
+      emocion: enfado
+      dura: 2.1502042
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    - t: 74.23786
+      emocion: enfado
+      dura: 0
+    - t: 76.2452
+      emocion: molesto
+      dura: 1.5755101
+    - t: 90.31877
+      emocion: preocupado
+      dura: 1.915102
+    - t: 94.628975
+      emocion: molesto
+      dura: 2.5420408
+    visible: []
+    deslizando: []
+  - id: Actor_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: CHAR_LIAM
+    posiciones:
+    - t: 0
+      p: {x: 95.559326, y: 14, z: 4.3999996}
+    - t: 43.60994
+      p: {x: 95.559326, y: 14, z: 4.3999996}
+    - t: 43.84886
+      p: {x: 95.684326, y: 14, z: 4.4624996}
+    - t: 44.20683
+      p: {x: 95.934326, y: 14, z: 4.5874996}
+    - t: 44.535664
+      p: {x: 96.184326, y: 14, z: 4.7124996}
+    - t: 44.89363
+      p: {x: 96.434326, y: 14, z: 4.8374996}
+    - t: 45.132553
+      p: {x: 96.559326, y: 14, z: 4.8999996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 87.059326, y: 15.791922, z: 3}
+      actor: 
+    - t: 8.882596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.89484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.97729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.9479
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.95402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.920757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 45.132553
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 47.996227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 49.066227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 57.960514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 61.34582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.21929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.40623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.88174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.81398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.5152
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.15204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.22387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 96.77102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 8.832596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.844841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.92729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.897902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.904022
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.870758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.016228
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.735
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.676838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 57.910515
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.49072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 61.295822
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.16929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.356224
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.83173
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.76398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.465195
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.102036
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.17387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 96.77102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 9.1925955
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 18.204842
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.28729
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 25.257902
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 33.264023
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 49.496227
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 55.62684
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 55.70684
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 57.740513
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 58.390514
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 59.44072
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 59.52072
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 61.00582
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 61.655823
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 67.486435
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 71.12398
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 76.71541
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 84.462036
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 92.53387
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 96.77102
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 96.85102
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 98.57123
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 43.60994
+      emocion: preocupado
+      dura: 0
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 55.62684
+      emocion: pensativo
+      dura: 2.4636736
+    - t: 59.44072
+      emocion: neutral
+      dura: 1.915102
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    - t: 96.77102
+      emocion: neutral
+      dura: 2.1502042
+    visible: []
+    deslizando: []
+  - id: Actor_CondesaMerengue
+    alias: condesa
+    colorDelNombre: {r: 1, g: 0.95686275, b: 0.972549, a: 1}
+    claveDelNombre: CHAR_CONDESA_MERENGUE
+    posiciones:
+    - t: 0
+      p: {x: 93.45933, y: 14, z: 1.1000006}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 87.059326, y: 15.791922, z: 3}
+      actor: 
+    - t: 9.002596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 18.014841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 21.09729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 25.067902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 30.66382
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 40.461166
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 47.996227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 49.186226
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 56.016838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.080513
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.83072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 64.339294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.52623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 70.93398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.6352
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 90.46877
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 94.77898
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 8.952596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.964842
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 21.04729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 25.017902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 30.613821
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 32.61402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 35.580757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 40.411167
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 49.136227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.445
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 55.96684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.030514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.78072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.00582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 64.28929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.47623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.54174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 70.88398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.5852
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.81204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 90.41877
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 91.88387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 94.72897
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    animacion:
+    - fundido: 0
+      t: 60.955822
+      tipo: 2
+      estado: Marshies_Wave
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 31.113821
+      emocion: sorpresa
+      dura: 1.7502041
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    - t: 90.84906
+      emocion: sorpresa
+      dura: 1.515102
+    visible: []
+    deslizando: []
+  - id: Actor_Heraldo
+    alias: heraldo
+    colorDelNombre: {r: 0.9490196, g: 0.7647059, b: 0.54509807, a: 1}
+    claveDelNombre: CHAR_HERALDO
+    posiciones:
+    - t: 0
+      p: {x: 91.659325, y: 14, z: 1.5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 94.059326, y: 14.031625, z: 3.0000002}
+      actor: 
+    - t: 19.405045
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 22.722595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 28.129942
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 33.07402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 36.040756
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.542596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 17.55484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 19.355045
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 20.63729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 22.672596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 24.6079
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 28.079943
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 33.02402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.990757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 8.492596
+      tipo: 2
+      estado: Idle2
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 42.60994
+      tipo: 2
+      estado: Idle2
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible:
+    - desde: 0
+      hasta: 47.39623
+    deslizando: []
+  - id: Actor_HeraldoSuplente
+    alias: suplente
+    colorDelNombre: {r: 0.9098039, g: 0.6901961, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_HERALDO_SUPLENTE
+    posiciones:
+    - t: 0
+      p: {x: 88.559326, y: 15.032716, z: 5}
+    - t: 67.01623
+      p: {x: 88.559326, y: 15.032716, z: 5}
+    - t: 67.22088
+      p: {x: 88.66842, y: 15.218902, z: 4.9}
+    - t: 67.54169
+      p: {x: 88.8866, y: 14.702258, z: 4.7}
+    - t: 67.81155
+      p: {x: 89.10478, y: 14.592376, z: 4.5}
+    - t: 68.06892
+      p: {x: 89.32296, y: 14.5708, z: 4.3}
+    - t: 68.32629
+      p: {x: 89.541145, y: 14.456376, z: 4.1}
+    - t: 68.58366
+      p: {x: 89.75932, y: 14.411735, z: 3.9}
+    - t: 68.84103
+      p: {x: 89.97751, y: 14.031931, z: 3.7000003}
+    - t: 69.0984
+      p: {x: 90.19569, y: 14.026218, z: 3.5000002}
+    - t: 69.35577
+      p: {x: 90.41387, y: 14.024432, z: 3.3000004}
+    - t: 69.61314
+      p: {x: 90.63205, y: 14.027501, z: 3.1000004}
+    - t: 69.87051
+      p: {x: 90.850235, y: 14.031548, z: 2.9000003}
+    - t: 70.12788
+      p: {x: 91.06841, y: 14.035594, z: 2.7000003}
+    - t: 70.38525
+      p: {x: 91.2866, y: 14.036818, z: 2.5000005}
+    - t: 70.64262
+      p: {x: 91.504776, y: 14.036818, z: 2.3000004}
+    - t: 70.90176
+      p: {x: 91.72296, y: 14.036818, z: 2.1000004}
+    - t: 71.19258
+      p: {x: 91.94114, y: 14.036818, z: 1.9000005}
+    - t: 71.56662
+      p: {x: 92.159325, y: 14.036818, z: 1.7000005}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 69.82398
+      tipo: 1
+      rumbo: 0
+      punto: {x: 87.059326, y: 15.791922, z: 3}
+      actor: 
+    - t: 76.7552
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.27204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.34387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 67.06623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.47398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 76.7052
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.22204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.29387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion: []
+    caras: []
+    visible:
+    - desde: 67.01623
+      hasta: 159.72122
+    deslizando: []
+  - id: Actor_Pompon
+    alias: pompon
+    colorDelNombre: {r: 1, g: 0.3529412, b: 0.43137255, a: 1}
+    claveDelNombre: CHAR_POMPON
+    posiciones:
+    - t: 0
+      p: {x: 87.059326, y: 15.791922, z: 3}
+    - t: 1.2
+      p: {x: 87.059326, y: 15.791922, z: 3}
+    - t: 1.4801013
+      p: {x: 87.20933, y: 15.791922, z: 3}
+    - t: 1.7117465
+      p: {x: 87.35933, y: 15.791922, z: 3}
+    - t: 1.9187274
+      p: {x: 87.50932, y: 15.791922, z: 3}
+    - t: 2.2874768
+      p: {x: 87.809326, y: 15.754813, z: 3}
+    - t: 2.6404216
+      p: {x: 88.10933, y: 15.538042, z: 3}
+    - t: 2.9933574
+      p: {x: 88.409325, y: 15.591788, z: 3}
+    - t: 3.3463023
+      p: {x: 88.70933, y: 15.269125, z: 3.0000002}
+    - t: 3.699238
+      p: {x: 89.00932, y: 14.694415, z: 3.0000002}
+    - t: 4.0521827
+      p: {x: 89.309326, y: 14.664657, z: 3.0000002}
+    - t: 4.405127
+      p: {x: 89.60933, y: 14.529613, z: 3.0000002}
+    - t: 4.758063
+      p: {x: 89.909325, y: 14.394573, z: 3.0000002}
+    - t: 5.111007
+      p: {x: 90.20933, y: 14.029524, z: 3.0000002}
+    - t: 5.463943
+      p: {x: 90.50932, y: 14.029524, z: 3.0000002}
+    - t: 5.8168874
+      p: {x: 90.809326, y: 14.029524, z: 3.0000002}
+    - t: 6.169823
+      p: {x: 91.10932, y: 14.029524, z: 3.0000002}
+    - t: 6.5227675
+      p: {x: 91.409325, y: 14.029524, z: 3.0000002}
+    - t: 6.875712
+      p: {x: 91.70933, y: 14.029524, z: 3.0000005}
+    - t: 7.2286477
+      p: {x: 92.00932, y: 14.029524, z: 3.0000005}
+    - t: 7.583359
+      p: {x: 92.309326, y: 14.029524, z: 3.0000005}
+    - t: 7.98085
+      p: {x: 92.60932, y: 14.029524, z: 3.0000005}
+    - t: 8.212495
+      p: {x: 92.75932, y: 14.029524, z: 3.0000005}
+    - t: 8.492596
+      p: {x: 92.909325, y: 14.029524, z: 3.0000005}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 94.059326, y: 14.031625, z: 3.0000002}
+      actor: 
+    - t: 8.492596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 8.642595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 16.06137
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 17.65484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.73729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.707901
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.714024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.68076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 45.282555
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 49.306225
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.905
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 56.136837
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.200512
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.950718
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.46582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 63.979294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.16623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 69.00174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.57398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.3952
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.91204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.98387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.592595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 16.011372
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 17.604841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.68729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.657902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.664024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.63076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 45.232555
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 49.256226
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.855
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 56.086838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.150513
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.90072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.41582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 63.929295
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.11623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.95174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.52398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.3452
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.86204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.93387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 1.2
+      tipo: 2
+      estado: Jump
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.0093336
+      tipo: 2
+      estado: Jump
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 4.818667
+      tipo: 2
+      estado: Jump
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 77.42071
+      tipo: 2
+      estado: Marshies_Happy_Dance
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 16.469086
+      emocion: sorpresa
+      dura: 1.5934694
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    visible: []
+    deslizando: []
+  - id: Actor_Gominola1
+    alias: g1
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 90.559326, y: 14, z: 7.5999994}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 8.762596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.774841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.85729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.827902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.834023
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.80076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 48.946228
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.545002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.77684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.840515
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.59072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.105824
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.09929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.286224
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.64174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.69398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.5152
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.032036
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.10387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.712596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.724842
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.807291
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.777903
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.784023
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.75076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 48.89623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.495003
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.72684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.790516
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.54072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.055824
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.049286
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.23622
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.591736
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.643974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.465195
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.98203
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.05386
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 80.63004
+      tipo: 2
+      estado: Grummy_Defeat
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    visible:
+    - desde: 0
+      hasta: 159.72122
+    deslizando: []
+  - id: Actor_Gominola2
+    alias: g2
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 92.75932, y: 13.981142, z: 7.8999996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 8.882596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.89484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.97729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.9479
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.95402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.920757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.066227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.665
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.89684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.960514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.71072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.225822
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.21929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.40623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.761734
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.81398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.6352
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.15204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.22387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.832596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.844841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.92729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.897902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.904022
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.870758
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.016228
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.615
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.84684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 57.910515
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.66072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.175823
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.16929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.356224
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.71173
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.76398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.5852
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.102036
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.17387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 1.2
+      tipo: 2
+      estado: Marshies_Happy_Dance
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    visible:
+    - desde: 0
+      hasta: 159.72122
+    deslizando: []
+  - id: Actor_Gominola3
+    alias: g3
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 94.75932, y: 14, z: 7.7}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 9.002596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 18.014841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 21.09729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 25.067902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 33.07402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 36.040756
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.186226
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.785
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 56.016838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.080513
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.83072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.34582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.339294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.52623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.88174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.93398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.7552
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.27204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.34387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.952596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.964842
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 21.04729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 25.017902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 33.02402
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.990757
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.136227
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.735
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 55.96684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.030514
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.78072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.295822
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 64.28929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola4
+    - t: 67.47623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.83173
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.88398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.7052
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 84.22204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 92.29387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 2.6
+      tipo: 2
+      estado: Grummy_Defeat
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    visible:
+    - desde: 0
+      hasta: 159.72122
+    deslizando: []
+  - id: Actor_Gominola4
+    alias: g4
+    colorDelNombre: {r: 1, g: 0.56078434, b: 0.69411767, a: 1}
+    claveDelNombre: CHAR_GOMINOLA
+    posiciones:
+    - t: 0
+      p: {x: 95.95933, y: 14, z: -1.5999994}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 8.642595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.65484
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.73729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.707901
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.714024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.68076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.306225
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.905
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 56.136837
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.200512
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.950718
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.46582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 67.16623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 69.00174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.57398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.3952
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.91204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.98387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    cabezas:
+    - t: 8.592595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 17.604841
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 20.68729
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 24.657902
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Heraldo
+    - t: 32.664024
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 35.63076
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 49.256226
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 51.855
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 56.086838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 58.150513
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.90072
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 61.41582
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 63.87929
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 67.11623
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 68.95174
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 70.52398
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_HeraldoSuplente
+    - t: 76.3452
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 83.86204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    - t: 91.93387
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_CondesaMerengue
+    animacion:
+    - fundido: 0
+      t: 80.930046
+      tipo: 2
+      estado: Grummy_Defeat
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 49.396225
+      emocion: sorpresa
+      dura: 2
+    - t: 67.42766
+      emocion: sorpresa
+      dura: 1.1755102
+    visible:
+    - desde: 0
+      hasta: 159.72122
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 8.492596
+    t1: 15.911371
+    actor: Actor_Heraldo
+    clave: CHUCHELANDIA_POMPON_01
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 15.911371
+    t1: 17.50484
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_02
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 17.50484
+    t1: 19.255045
+    actor: Actor_Heraldo
+    clave: CHUCHELANDIA_POMPON_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 19.255045
+    t1: 20.58729
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_04
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 20.58729
+    t1: 22.572596
+    actor: Actor_Heraldo
+    clave: CHUCHELANDIA_POMPON_05
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 22.572596
+    t1: 24.557901
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_06
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 24.557901
+    t1: 27.979942
+    actor: Actor_Heraldo
+    clave: CHUCHELANDIA_POMPON_07
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 27.979942
+    t1: 30.51382
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_08
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 30.51382
+    t1: 32.264023
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_09
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 32.564022
+    t1: 35.280758
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_10
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 35.530758
+    t1: 40.311165
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_11
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 40.311165
+    t1: 42.60994
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_12
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 45.132553
+    t1: 47.196228
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_13
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 48.796227
+    t1: 51.095
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_14
+    gesto: Question02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 51.395
+    t1: 55.62684
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_15
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 55.62684
+    t1: 57.690514
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_POMPON_16
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 57.690514
+    t1: 59.44072
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_17
+    gesto: Angry02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 59.44072
+    t1: 60.955822
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_POMPON_18
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 60.955822
+    t1: 63.829292
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_19
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 63.829292
+    t1: 67.01623
+    actor: Actor_Gominola4
+    clave: CHUCHELANDIA_POMPON_20
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 67.01623
+    t1: 68.191734
+    actor: Actor_HeraldoSuplente
+    clave: CHUCHELANDIA_POMPON_21
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 68.49174
+    t1: 69.82398
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_22
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 70.42398
+    t1: 74.23786
+    actor: Actor_HeraldoSuplente
+    clave: CHUCHELANDIA_POMPON_23
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 76.2452
+    t1: 77.42071
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_24
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 83.76204
+    t1: 90.31877
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_25
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 90.31877
+    t1: 91.83387
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_26
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 91.83387
+    t1: 94.628975
+    actor: Actor_CondesaMerengue
+    clave: CHUCHELANDIA_POMPON_27
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 94.628975
+    t1: 96.77102
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_POMPON_28
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 96.77102
+    t1: 98.521225
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_POMPON_29
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 1.2
+    tipo: 0
+    descripcion: general de estela y pompon
+    posiciones:
+    - t: 0
+      p: {x: 98.886314, y: 17.128536, z: 6.9323997}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Actor_Pompon
+    pesos:
+    - 1
+    - 1
+    extras:
+    - {x: 87.059326, y: 15.791922, z: 3}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0039941
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 1.2
+    t1: 8.492596
+    tipo: 1
+    descripcion: conjunto de pompon y estela
+    posiciones:
+    - t: 1.2
+      p: {x: 88.127335, y: 15.9, z: 7.4695263}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Pompon
+    - Actor_Estela
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.2778106
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 8.492596
+    t1: 15.911371
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 8.492596
+      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 15.911371
+    t1: 17.50484
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 15.911371
+      p: {x: 92.8928, y: 14.83273, z: 5.240883}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 17.50484
+    t1: 19.255045
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 17.50484
+      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 19.255045
+    t1: 20.58729
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 19.255045
+      p: {x: 92.8928, y: 14.83273, z: 5.240883}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 20.58729
+    t1: 22.572596
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 20.58729
+      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 22.572596
+    t1: 24.557901
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 22.572596
+      p: {x: 92.8928, y: 14.83273, z: 5.240883}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 24.557901
+    t1: 27.979942
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 24.557901
+      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 27.979942
+    t1: 30.51382
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 27.979942
+      p: {x: 92.8928, y: 14.83273, z: 5.240883}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 30.51382
+    t1: 40.311165
+    tipo: 5
+    descripcion: 'dos: estela y condesa'
+    posiciones:
+    - t: 30.51382
+      p: {x: 92.14631, y: 15.008079, z: -0.47943664}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Actor_CondesaMerengue
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9522703
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 40.311165
+    t1: 42.60994
+    tipo: 6
+    descripcion: sobre el hombro de condesa a estela
+    posiciones:
+    - t: 40.311165
+      p: {x: 94.43292, y: 15.423565, z: -0.2804644}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 42.60994
+    t1: 43.60994
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 42.60994
+      p: {x: 92.05824, y: 15.18277, z: -1.5301089}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 43.60994
+    t1: 47.39623
+    tipo: 1
+    descripcion: conjunto de will y liam y estela
+    posiciones:
+    - t: 43.60994
+      p: {x: 99.22308, y: 17.01815, z: -1.2671177}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    - Actor_Estela
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.107609
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 47.39623
+    t1: 47.996227
+    tipo: 2
+    descripcion: medio de heraldo
+    posiciones:
+    - t: 47.39623
+      p: {x: 92.05824, y: 15.18277, z: -1.5301089}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Heraldo
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.4365191
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 47.996227
+    t1: 55.62684
+    tipo: 1
+    descripcion: conjunto de estela y condesa y liam y will
+    posiciones:
+    - t: 47.996227
+      p: {x: 100.05471, y: 17.0094, z: -0.19155335}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Actor_CondesaMerengue
+    - Actor_Liam
+    - Player
+    pesos:
+    - 1
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1014934
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 55.62684
+    t1: 57.690514
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 55.62684
+      p: {x: 96.193245, y: 14.934012, z: 2.6415443}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 57.690514
+    t1: 59.44072
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 57.690514
+      p: {x: 97.59752, y: 14.906876, z: 3.4491627}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 59.44072
+    t1: 60.955822
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 59.44072
+      p: {x: 94.29237, y: 14.897236, z: 5.20913}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 60.955822
+    t1: 63.829292
+    tipo: 1
+    descripcion: conjunto de condesa y estela
+    posiciones:
+    - t: 60.955822
+      p: {x: 92.65674, y: 17.047033, z: -2.5902536}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_CondesaMerengue
+    - Actor_Estela
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1312213
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 63.829292
+    t1: 67.01623
+    tipo: 2
+    descripcion: medio de g4
+    posiciones:
+    - t: 63.829292
+      p: {x: 93.319435, y: 15.1115465, z: -0.38563824}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Gominola4
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.3552045
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 67.01623
+    t1: 69.82398
+    tipo: 1
+    descripcion: conjunto de condesa y suplente
+    posiciones:
+    - t: 67.01623
+      p: {x: 87.76242, y: 15.9, z: -1.9128742}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_CondesaMerengue
+    - Actor_HeraldoSuplente
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.2687923
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 69.82398
+    t1: 74.23786
+    tipo: 1
+    descripcion: conjunto de suplente y estela
+    posiciones:
+    - t: 69.82398
+      p: {x: 89.9011, y: 15.9, z: -1.9446158}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_HeraldoSuplente
+    - Actor_Estela
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.3168676
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 74.23786
+    t1: 77.42071
+    tipo: 5
+    descripcion: 'dos: estela y will'
+    posiciones:
+    - t: 74.23786
+      p: {x: 97.94339, y: 14.883184, z: 3.2721267}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.84511876
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 77.42071
+    t1: 80.63004
+    tipo: 2
+    descripcion: medio de pompon
+    posiciones:
+    - t: 77.42071
+      p: {x: 94.02133, y: 15.1115465, z: 5.684617}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Pompon
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.3552045
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 80.63004
+    t1: 83.76204
+    tipo: 0
+    descripcion: general de estela y pompon y g1 y g2
+    posiciones:
+    - t: 80.63004
+      p: {x: 84.908646, y: 17.2, z: 9.533735}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Actor_Pompon
+    - Actor_Gominola1
+    - Actor_Gominola2
+    pesos:
+    - 1
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.042696
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 83.76204
+    t1: 90.31877
+    tipo: 5
+    descripcion: 'dos: condesa y estela'
+    posiciones:
+    - t: 83.76204
+      p: {x: 96.578835, y: 15.044675, z: 3.0747974}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_CondesaMerengue
+    - Actor_Estela
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9522703
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 90.31877
+    t1: 91.83387
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 90.31877
+      p: {x: 97.71403, y: 14.906876, z: 3.3181052}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 91.83387
+    t1: 94.628975
+    tipo: 2
+    descripcion: medio de condesa
+    posiciones:
+    - t: 91.83387
+      p: {x: 95.798195, y: 15.12928, z: 0.9968393}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_CondesaMerengue
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.2637982
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 94.628975
+    t1: 96.77102
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 94.628975
+      p: {x: 97.71403, y: 14.906876, z: 3.3181052}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: 0.13, y: -0.1}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 96.77102
+    t1: 99.72122
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 96.77102
+      p: {x: 96.06587, y: 14.933519, z: 2.6659138}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344623
+    linea: 66
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344624
+    linea: 69
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344625
+    linea: 70
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1.2
+    beat:
+      rid: 6540294313956344626
+    linea: 78
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2.6
+    beat:
+      rid: 6540294313956344627
+    linea: 81
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 20.58729
+    beat:
+      rid: 6540294313956344628
+    linea: 98
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 24.557901
+    beat:
+      rid: 6540294313956344629
+    linea: 103
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 27.979942
+    beat:
+      rid: 6540294313956344630
+    linea: 106
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 40.311165
+    beat:
+      rid: 6540294313956344631
+    linea: 113
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 42.60994
+    beat:
+      rid: 6540294313956344632
+    linea: 120
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 42.60994
+    beat:
+      rid: 6540294313956344633
+    linea: 118
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.39623
+    beat:
+      rid: 6540294313956344634
+    linea: 134
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.39623
+    beat:
+      rid: 6540294313956344635
+    linea: 135
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.39623
+    beat:
+      rid: 6540294313956344636
+    linea: 136
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.996227
+    beat:
+      rid: 6540294313956344637
+    linea: 138
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.996227
+    beat:
+      rid: 6540294313956344638
+    linea: 139
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 77.42071
+    beat:
+      rid: 6540294313956344639
+    linea: 190
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 77.82071
+    beat:
+      rid: 6540294313956344640
+    linea: 191
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 80.930046
+    beat:
+      rid: 6540294313956344641
+    linea: 196
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: alfombra
+    t: 1.2
+  - nombre: anuncio
+    t: 8.492596
+  - nombre: oso
+    t: 15.911371
+  - nombre: hinchado
+    t: 42.60994
+  - nombre: pop
+    t: 47.39623
+  - nombre: culpa
+    t: 47.996227
+  - nombre: suplente
+    t: 60.955822
+  - nombre: tapa
+    t: 74.23786
+  - nombre: chapoteo
+    t: 77.42071
+  - nombre: duelo
+    t: 83.76204
+  puntos:
+  - nombre: p_trono
+    posicion: {x: 87.059326, y: 15.791922, z: 3}
+  - nombre: p_centro
+    posicion: {x: 92.559326, y: 14.029524, z: 3.0000002}
+  - nombre: p_estela
+    posicion: {x: 94.059326, y: 14.031625, z: 3.0000002}
+  - nombre: p_will
+    posicion: {x: 95.559326, y: 14, z: 1.6000001}
+  - nombre: p_liam
+    posicion: {x: 95.559326, y: 14, z: 4.3999996}
+  - nombre: p_will_atras
+    posicion: {x: 96.75932, y: 14, z: 1.1000003}
+  - nombre: p_liam_atras
+    posicion: {x: 96.559326, y: 14, z: 4.8999996}
+  - nombre: p_will_tapa
+    posicion: {x: 94.409325, y: 14.036818, z: 2.5500002}
+  - nombre: p_condesa
+    posicion: {x: 93.45933, y: 14, z: 1.1000006}
+  - nombre: p_heraldo
+    posicion: {x: 91.659325, y: 14, z: 1.5}
+  - nombre: p_sup_entra
+    posicion: {x: 88.559326, y: 15.032716, z: 5}
+  - nombre: p_suplente
+    posicion: {x: 92.159325, y: 14.036818, z: 1.7000005}
+  - nombre: p_pompon
+    posicion: {x: 92.909325, y: 14.029524, z: 3.0000005}
+  - nombre: p_pub1
+    posicion: {x: 90.559326, y: 14, z: 7.5999994}
+  - nombre: p_pub2
+    posicion: {x: 92.75932, y: 13.981142, z: 7.8999996}
+  - nombre: p_pub3
+    posicion: {x: 94.75932, y: 14, z: 7.7}
+  - nombre: p_pub4
+    posicion: {x: 95.95933, y: 14, z: -1.5999994}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294313956344623
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1
+        duracion: 0
+        esperar: 0
+    - rid: 6540294313956344624
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 409ad536b56c4a1cbb63e97ffa133a89, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344625
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 63eb83614b43941f88fe467f2c69bc67, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344626
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: Actor_Pompon
+        markName: 
+        offset: {x: 0, y: 0.3, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344627
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 0662b5bbced8000f485a74c64d00d955, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344628
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1.06
+        duracion: 0.6
+        esperar: 0
+    - rid: 6540294313956344629
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1.12
+        duracion: 1.2
+        esperar: 0
+    - rid: 6540294313956344630
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1.18
+        duracion: 1
+        esperar: 0
+    - rid: 6540294313956344631
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1.3
+        duracion: 1.4
+        esperar: 0
+    - rid: 6540294313956344632
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: f42e922a88ca6870eab9624377c756b8, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344633
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1.45
+        duracion: 1.2
+        esperar: 0
+    - rid: 6540294313956344634
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
+        atActorId: 
+        markName: M_Cine_Salon_Heraldo
+        offset: {x: 0, y: 1, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344635
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 91937034e8690bab4a51993657db6c12, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.9
+        tono: 1
+    - rid: 6540294313956344636
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.2
+        duration: 0.4
+        waitForEnd: 0
+    - rid: 6540294313956344637
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 69f3fbe2647c1c3669b093044b706a09, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.35
+        tono: 1
+    - rid: 6540294313956344638
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Heraldo
+        escala: 1
+        duracion: 0
+        esperar: 0
+    - rid: 6540294313956344639
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 1c0370f9553392603b24a0fa17629e5a, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344640
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 53b8ec30283a23c4daf60d1b88d06ed5, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344641
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 124479732d0cc03c2b4343290cd121f2, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1

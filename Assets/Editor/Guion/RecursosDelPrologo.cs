@@ -147,8 +147,9 @@ public static class RecursosDelPrologo
         EditorUtility.SetDirty(perfil);
     }
 
-    /// Nina (NPC_Aldeano_05) es una niña del pueblo: coletas (Hair08), ropa de diario (Body04),
-    /// sin capa ni sombrero. Se monta sobre la aldeana genérica activando piezas del propio pack.
+    /// Nina (NPC_Aldeano_05) es una niña del pueblo. Si falta su prefab, se monta sobre la aldeana genérica
+    /// (coletas Hair08, ropa de diario Body04, sin capa ni sombrero); su aspecto de niña (cuerpo, pelo, vestido
+    /// y caras) lo pone después *El Sendero ▸ Personajes ▸ Niños hechos en Blender* (NinosHechosEnBlender).
     private static void AsegurarNina()
     {
         var roster = AssetDatabase.LoadAssetAtPath<NpcRosterSO>("Assets/Resources/NpcRosters/NpcRoster_PrologoValle.asset");

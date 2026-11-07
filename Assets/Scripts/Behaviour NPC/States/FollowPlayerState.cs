@@ -125,16 +125,56 @@ namespace Game.NPC.States
         private bool _isMovingSpecial;
         private float _swimInputMag;
 
+        // Seguimiento especial RELATIVO al jugador (INC-895). El jugador se mueve por Rigidbody en
+        // FixedUpdate (50 Hz, sin interpolación) y la cámara lo sigue en LateUpdate, así que Will
+        // avanza a saltos de 50 Hz y la cámara con él. Si el compañero se mueve en mundo a ritmo de
+        // frame, cada frame queda un poco adelantado o atrasado respecto a ese salto: a 12-18 m/s
+        // de vuelo se ve temblar. Guardando su posición como desplazamiento respecto al jugador,
+        // viaja en bloque con él (mismo salto que Will y la cámara) y solo se suaviza el hueco.
+        private Vector3 _specialFollowOffset;
+        private Vector3 _specialOffsetVel;     // velocidad interna del SmoothDamp del desplazamiento
+        private Vector3 _specialSmoothedVel;   // velocidad real en mundo, suavizada (animación/giro)
+        // Rumbo de la formación (grados), suavizado: al girar el jugador, los puestos dan la vuelta
+        // a su alrededor en arco. Sin esto el hueco se interpolaba en línea recta y en un giro
+        // cerrado el compañero cruzaba por encima de Will.
+        private float _formationYaw;
+        private float _formationYawVel;
+        // Distancia entre donde va el compañero y su puesto: si es grande está alcanzando al grupo.
+        private float _specialSlotError;
+        private int   _playerFlightLayerIndex;
+
+        // Estado de vuelo pedido al Animator del compañero (0 = ninguno) y desde cuándo, para
+        // pedirlo con fundido una sola vez, igual que PlayerFlyingController.PlayFlightState.
+        private int _flightStateRequested;
+        private float _flightStateSince;
+
+        // Fuera del NavMesh sin volar ni nadar (plataformas, escaleras, saltos): el compañero pisa
+        // el suelo Floor que tiene debajo de su puesto en vez de ir a la altura de Will.
+        private int   _mascaraDeSuelo = -1;
+        private bool  _pisandoSuelo;
+        private float _velYSuelo;
+        private const float SUELO_RAYO_ARRIBA    = 1.5f;  // desde cuánto por encima se busca el suelo
+        private const float SUELO_CAIDA_MAXIMA   = 4f;    // más abajo de Will que esto es un hueco: sigue su altura
+        private const float SUELO_SMOOTH_TIME    = 0.08f; // ajuste de altura (peldaños, rampas)
+
         private const float SPECIAL_FOLLOW_SPEED    = 8f;
-        private const float SPECIAL_FOLLOW_STOP_DIST = 1.5f;
-        // Histéresis para el estado "moviéndose" en seguimiento especial (vuelo/nado/plataforma).
-        // Con un único umbral, dist oscila frame a frame alrededor de él mientras el jugador nada
-        // a velocidad constante, y el compañero arranca/frena en seco (y el blend de animación
-        // salta entre 0 y el valor "moviéndose") en vez de decelerar suavemente. Con dos umbrales
-        // separados, una vez que empieza a moverse no se para hasta estar bastante más cerca, y
-        // viceversa.
-        private const float SPECIAL_FOLLOW_MOVE_ENTER = SPECIAL_FOLLOW_STOP_DIST * 0.65f;
-        private const float SPECIAL_FOLLOW_MOVE_EXIT   = SPECIAL_FOLLOW_STOP_DIST * 0.35f;
+        // Tiempo de ajuste del hueco con el jugador (formación) y tope de la corrección (m/s).
+        private const float SPECIAL_OFFSET_SMOOTH_TIME = 0.25f;
+        private const float FORMATION_YAW_SMOOTH_TIME  = 0.4f;
+        // Más lejos que esto de su puesto, el compañero está alcanzando al grupo: mira hacia donde
+        // va y vuela en picado aunque Will esté quieto. Más cerca, mira y posa como Will.
+        private const float SPECIAL_CATCH_UP_DIST = 2.5f;
+        private const float SPECIAL_OFFSET_MAX_SPEED   = SPECIAL_FOLLOW_SPEED * 1.5f;
+        // Histéresis de "moviéndose" sobre la velocidad real en mundo (m/s): con un único umbral
+        // el estado oscilaría y el blend/estado de animación saltaría entre quieto y moviéndose.
+        private const float SPECIAL_MOVE_SPEED_ENTER = 1.2f;
+        private const float SPECIAL_MOVE_SPEED_EXIT  = 0.5f;
+        private const float SPECIAL_VEL_SMOOTH_RATE  = 8f;   // /s
+        // Fundido entre fly_idle y fly_dive (el mismo que usa Will) y tiempo mínimo en un estado
+        // antes de cambiar: antes se cambiaba con Play en seco y un frame de pose erguida en mitad
+        // del picado se veía como un parpadeo.
+        private const float FLIGHT_STATE_CROSSFADE = 0.25f;
+        private const float FLIGHT_STATE_MIN_HOLD  = 0.3f;
         // Velocidad de interpolación del parámetro InputMagnitude del nado (unidades/seg).
         // Evita que el blend tree de nado salte en seco entre "quieto" y "nadando".
         private const float SWIM_INPUT_MAG_LERP_SPEED = 3f;
@@ -198,6 +238,7 @@ namespace Game.NPC.States
             _footVfxPs           = null;
             _isMovingSpecial     = false;
             _swimInputMag        = 0f;
+            _flightStateRequested = 0;
             _isFollowingSticky   = false;
             _speedSampleInitialized = false;
             _smoothedPlayerSpeed = 0f;
@@ -467,6 +508,45 @@ namespace Game.NPC.States
             return !NavMesh.SamplePosition(context.Player.position, out _, OFF_NAVMESH_THRESHOLD, NavMesh.AllAreas);
         }
 
+        /// <summary>
+        /// Altura del suelo Floor bajo un punto, buscando desde algo por encima de <paramref name="desdeY"/>.
+        /// Falso si no hay suelo o está más de SUELO_CAIDA_MAXIMA por debajo de Will (un hueco).
+        /// </summary>
+        private bool BuscarSuelo(Vector3 punto, float desdeY, float playerY, out float ySuelo)
+        {
+            if (_mascaraDeSuelo < 0) _mascaraDeSuelo = LayerMask.GetMask("Floor");
+            ySuelo = 0f;
+            float inicio = desdeY + SUELO_RAYO_ARRIBA;
+            float largo  = inicio - (playerY - SUELO_CAIDA_MAXIMA);
+            Vector3 origen = new Vector3(punto.x, inicio, punto.z);
+            if (Physics.Raycast(origen, Vector3.down, out RaycastHit hit, largo, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
+            {
+                ySuelo = hit.point.y;
+                return true;
+            }
+            // Sin Floor debajo (suelo de un pack que no se pasó a su capa, una pieza nueva…): vale cualquier
+            // superficie sólida que no sea un personaje. Si no, el compañero copiaba la altura y el estado
+            // «en el aire» de quien manejas y se quedaba flotando sin mover los pies.
+            if (_mascaraDeRespaldo == 0)
+                _mascaraDeRespaldo = ~LayerMask.GetMask("Player", "Enemy", "Projectile", "ProjectileEnemy", "UI", "Ignore Raycast",
+                                                        "Water", "InteractHint", "Minimap", "AmbientZone", "Weather", "UI_Portrait", "PauseUI");
+            int n = Physics.RaycastNonAlloc(origen, Vector3.down, _golpesDeSuelo, largo, _mascaraDeRespaldo, QueryTriggerInteraction.Ignore);
+            float mejor = float.NegativeInfinity;
+            for (int i = 0; i < n; i++)
+            {
+                var c = _golpesDeSuelo[i].collider;
+                if (c == null || c.attachedRigidbody != null && !c.attachedRigidbody.isKinematic) continue;
+                if (c.GetComponentInParent<UnityEngine.AI.NavMeshAgent>() != null || c.GetComponentInParent<CharacterController>() != null) continue;
+                if (_golpesDeSuelo[i].point.y > mejor) mejor = _golpesDeSuelo[i].point.y;
+            }
+            if (float.IsNegativeInfinity(mejor)) return false;
+            ySuelo = mejor;
+            return true;
+        }
+        private int _mascaraDeRespaldo;
+        private float _avisoSinSuelo;
+        private readonly RaycastHit[] _golpesDeSuelo = new RaycastHit[12];
+
         private void HandleSpecialFollow(NPCStateContext context, ActionMode playerMode)
         {
             bool modeChanged = playerMode != _lastSpecialMode;
@@ -481,6 +561,14 @@ namespace Game.NPC.States
                     _pathUpdateTimer = 0f;
                     _isWanderingNearPlayer = false;
                     _specialFollowPosition = context.Transform.position;
+                    _specialFollowOffset   = _specialFollowPosition - context.Player.position;
+                    _specialOffsetVel      = Vector3.zero;
+                    _specialSmoothedVel    = Vector3.zero;
+                    _formationYaw          = YawDe(context.Player.forward, context.Transform.eulerAngles.y);
+                    _formationYawVel       = 0f;
+                    _velYSuelo             = 0f;
+                    _pisandoSuelo          = false;
+                    _playerFlightLayerIndex = DetectFlightLayer(_playerAnimator);
 
                     if (context.Agent != null && context.Agent.isActiveAndEnabled)
                     {
@@ -511,6 +599,10 @@ namespace Game.NPC.States
             // Calcular posición objetivo y mover
             // Si el party member está en preparación para trepar, usamos la Y de la base
             // de escalada y fijamos la posición objetivo en la base hasta que esté listo.
+            _formationYaw = Mathf.SmoothDampAngle(_formationYaw,
+                YawDe(context.Player.forward, _formationYaw), ref _formationYawVel,
+                FORMATION_YAW_SMOOTH_TIME, Mathf.Infinity, Mathf.Max(Time.deltaTime, 0.0001f));
+
             Vector3 targetPos;
             if (_partyMember != null && _partyMember.IsWaitingForClimb)
             {
@@ -538,43 +630,61 @@ namespace Game.NPC.States
             // _specialFollowPosition es la posición "lógica" (sin bobbing) usada para toda la
             // navegación/formación. El offset visual de vuelo se aplica solo al final, sobre
             // el Transform real, para no contaminar los cálculos de distancia/destino.
-            Vector3 currentPos = _specialFollowPosition;
-            Vector3 delta      = targetPos - currentPos;
-            float   dist       = delta.magnitude;
+            // Se mueve en bloque con el jugador y solo se suaviza el hueco hasta su puesto (INC-895).
+            float   dt        = Mathf.Max(Time.deltaTime, 0.0001f);
+            Vector3 playerPos = context.Player.position;
+            Vector3 prevPos   = _specialFollowPosition;
+            _specialFollowOffset = Vector3.SmoothDamp(_specialFollowOffset, targetPos - playerPos,
+                ref _specialOffsetVel, SPECIAL_OFFSET_SMOOTH_TIME, SPECIAL_OFFSET_MAX_SPEED, dt);
+            _specialSlotError = Vector3.Distance(_specialFollowOffset, targetPos - playerPos);
+            _specialFollowPosition = playerPos + _specialFollowOffset;
 
-            // Histéresis: si ya se estaba moviendo, sigue hasta bajar de MOVE_EXIT;
-            // si estaba parado, no arranca hasta superar MOVE_ENTER. Evita el parpadeo
-            // frame a frame de isMoving (y el consiguiente movimiento/animación a trompicones)
-            // cuando dist oscila justo alrededor de un único umbral.
-            _isMovingSpecial = _isMovingSpecial
-                ? dist > SPECIAL_FOLLOW_MOVE_EXIT
-                : dist > SPECIAL_FOLLOW_MOVE_ENTER;
-            bool isMoving = _isMovingSpecial;
-
-            if (isMoving)
+            // Sin volar ni nadar, la altura no va con Will (que puede estar saltando o en otro
+            // peldaño): sale del suelo bajo el puesto, en mundo, para no subir y bajar con su salto.
+            _pisandoSuelo = false;
+            bool vaPorElSuelo = playerMode != ActionMode.Flying && playerMode != ActionMode.Swimming
+                             && (_partyMember == null || !_partyMember.IsWaitingForClimb);
+            if (vaPorElSuelo && BuscarSuelo(_specialFollowPosition, Mathf.Max(playerPos.y, prevPos.y), playerPos.y, out float ySuelo))
             {
-                // FIX (25 ago 2026): igual que en el seguimiento normal, la velocidad base sigue el
-                // ritmo real del jugador (nado lento, vuelo, plataformas) en vez de una constante
-                // fija — evita que el compañero adelante y frene en seco quien va despacio.
-                float baseSpecialSpeed = Mathf.Max(_smoothedPlayerSpeed * 1.15f, SPECIAL_FOLLOW_SPEED * 0.5f);
-                float speed = dist > SPECIAL_FOLLOW_STOP_DIST * 3f
-                    ? baseSpecialSpeed * 1.5f : baseSpecialSpeed;
-
-                _specialFollowPosition = currentPos + delta.normalized * Mathf.Min(speed * Time.deltaTime, dist);
-
-                if (context.Rigidbody != null && !context.Rigidbody.isKinematic)
-                    context.Rigidbody.linearVelocity = Vector3.zero;
-
-                Vector3 faceDir = delta; faceDir.y = 0f;
-                if (faceDir.sqrMagnitude > 0.01f)
-                    context.Animator?.FaceDirection(faceDir);
+                float y = Mathf.SmoothDamp(prevPos.y, ySuelo, ref _velYSuelo, SUELO_SMOOTH_TIME, Mathf.Infinity, dt);
+                _specialFollowPosition.y = y;
+                _specialFollowOffset.y   = y - playerPos.y;
+                _specialOffsetVel.y      = 0f;
+                _pisandoSuelo = true;
             }
             else
             {
-                if (context.Rigidbody != null && !context.Rigidbody.isKinematic)
-                    context.Rigidbody.linearVelocity = Vector3.zero;
-                RotateTowardsPlayer(context);
+                _velYSuelo = 0f;
+                if (vaPorElSuelo && Time.time > _avisoSinSuelo)
+                {
+                    _avisoSinSuelo = Time.time + 3f;
+                    Debug.LogWarning($"[Seguir] {context.Transform.name} no encuentra suelo bajo su puesto {_specialFollowPosition} (modo {playerMode}): va a la altura de {context.Player.name}.");
+                }
             }
+
+            Vector3 instantVel = (_specialFollowPosition - prevPos) / dt;
+            _specialSmoothedVel = Vector3.Lerp(_specialSmoothedVel, instantVel, Mathf.Clamp01(SPECIAL_VEL_SMOOTH_RATE * dt));
+            // Solo la componente horizontal: el balanceo de flotar en el aire (o el de la superficie
+            // del agua) también mueve en vertical y no debe contar como avanzar.
+            float worldSpeed = new Vector2(_specialSmoothedVel.x, _specialSmoothedVel.z).magnitude;
+
+            // Histéresis: si ya se estaba moviendo, sigue hasta bajar de MOVE_SPEED_EXIT; si estaba
+            // parado, no arranca hasta superar MOVE_SPEED_ENTER.
+            _isMovingSpecial = _isMovingSpecial
+                ? worldSpeed > SPECIAL_MOVE_SPEED_EXIT
+                : worldSpeed > SPECIAL_MOVE_SPEED_ENTER;
+            bool isMoving = _isMovingSpecial;
+
+            if (context.Rigidbody != null && !context.Rigidbody.isKinematic)
+                context.Rigidbody.linearVelocity = Vector3.zero;
+
+            // En su puesto mira hacia donde mira el grupo (rumbo suavizado), no hacia su propia
+            // velocidad: al girar, esa velocidad apunta de lado un momento y el cuerpo se torcía.
+            Vector3 faceDir = _specialSmoothedVel; faceDir.y = 0f;
+            if (_specialSlotError > SPECIAL_CATCH_UP_DIST && faceDir.sqrMagnitude > 0.01f)
+                context.Animator?.FaceDirection(faceDir);
+            else
+                context.Animator?.FaceDirection(Quaternion.Euler(0f, _formationYaw, 0f) * Vector3.forward);
 
             // Bobbing visual de vuelo: replica el movimiento arriba/abajo que PlayerFlyingController
             // aplica al jugador (Mathf.Sin sobre Time.time), para que los compañeros que vuelan
@@ -589,7 +699,7 @@ namespace Game.NPC.States
             }
             context.Transform.position = _specialFollowPosition + Vector3.up * bobOffset;
 
-            UpdateSpecialModeAnimation(context, playerMode, delta, isMoving);
+            UpdateSpecialModeAnimation(context, playerMode, _specialSmoothedVel, isMoving);
         }
 
         /// <summary>
@@ -620,7 +730,8 @@ namespace Game.NPC.States
                 case ActionMode.Flying:
                     _exitMode = mode;
                     TrySetBool(anim, HashIsFlying, true);
-                    TryPlay(anim, HashFlyIdle, _npcFlightLayerIndex);
+                    _flightStateRequested = 0;
+                    RequestFlightState(anim, HashFlyIdle, ignorarEspera: true);
                     SpawnFootVfx(context);
                     break;
 
@@ -663,7 +774,7 @@ namespace Game.NPC.States
 
         /// <summary>Actualización de animación cada frame según modo y movimiento.</summary>
         private void UpdateSpecialModeAnimation(NPCStateContext context, ActionMode mode,
-                                                Vector3 delta, bool isMoving)
+                                                Vector3 velocity, bool isMoving)
         {
             Animator anim = context.UnityAnimator;
             if (anim == null) return;
@@ -674,7 +785,7 @@ namespace Game.NPC.States
             switch (mode)
             {
                 case ActionMode.Flying:
-                    TryPlay(anim, isMoving ? HashFlyDive : HashFlyIdle, _npcFlightLayerIndex);
+                    RequestFlightState(anim, EstadoDeVueloDelGrupo(isMoving));
                     break;
 
                 case ActionMode.Swimming:
@@ -690,10 +801,10 @@ namespace Game.NPC.States
                     break;
 
                 case ActionMode.Climbing:
-                    if (Mathf.Abs(delta.y) > 0.05f)
+                    if (Mathf.Abs(velocity.y) > 0.05f)
                     {
                         anim.speed = 1f;
-                        TryCrossFade(anim, delta.y > 0f ? HashClimbUp : HashClimbDown, 0.05f, 0);
+                        TryCrossFade(anim, velocity.y > 0f ? HashClimbUp : HashClimbDown, 0.05f, 0);
                     }
                     else
                     {
@@ -703,9 +814,16 @@ namespace Game.NPC.States
                     break;
 
                 default:
-                    // Plataforma/salto sin NavMesh: locomoción normal + replicar estado aéreo del jugador
-                    context.Animator?.SetMovementSpeed(Mathf.Clamp01(delta.magnitude / 3f));
-                    if (_playerAnimator != null && anim != null)
+                    // Plataforma/salto sin NavMesh: locomoción normal; si pisa suelo, en el suelo;
+                    // si va sobre un hueco, replica el estado aéreo del jugador.
+                    Vector3 planarVel = velocity; planarVel.y = 0f;
+                    context.Animator?.SetMovementSpeed(Mathf.Clamp01(planarVel.magnitude / DEFAULT_RUN_SPEED));
+                    if (_pisandoSuelo)
+                    {
+                        TrySetBool(anim, HashIsGrounded, true);
+                        TrySetFloat(anim, HashGroundDist, 0f);
+                    }
+                    else if (_playerAnimator != null && anim != null)
                     {
                         bool playerGrounded = _playerAnimator.GetBool(HashIsGrounded);
                         float playerGroundDist = _playerAnimator.GetFloat(HashGroundDist);
@@ -731,6 +849,7 @@ namespace Game.NPC.States
             _inSpecialFollow = false;
             _lastSpecialMode = ActionMode.Default;
             _exitMode        = ActionMode.Default;
+            _flightStateRequested = 0;
 
             // Restaurar velocidad del animator (escalada la pausa)
             if (_animSpeedStored && anim != null)
@@ -807,30 +926,63 @@ namespace Game.NPC.States
         // =========================================================================
 
         /// <summary>
-        /// Posición de formación en 3D: detrás del jugador en XZ, misma Y.
-        /// idx 0: centro  idx 1: +0.8m  idx 2: -0.8m  idx 3: +1.6m …
+        /// Puesto en el seguimiento especial (vuelo, nado, plataformas): en V detrás del jugador,
+        /// orientada con el rumbo suavizado del grupo y a su misma altura.
+        /// Puesto 0: detrás a la derecha · 1: detrás a la izquierda · 2: segunda fila a la derecha…
+        /// Quien sigue sin estar en PlayerParty (p. ej. el NPC de Will) va al primer puesto libre
+        /// tras los del equipo; antes caía en el mismo sitio que el puesto 0 (detrás en el centro)
+        /// y además ese puesto, a un metro, se metía en el cuerpo de Will.
         /// </summary>
         private Vector3 GetFormationTarget3D(NPCStateContext context)
         {
-            float followDist = _config?.distanciaParaPararse ?? DEFAULT_STOP_DISTANCE;
-            Vector3 behind   = -context.Player.forward * (followDist * 0.8f);
-
-            int   partyIdx = _partyMember?.PartyIndex ?? 0;
-            float spread   = _config?.flightFormationSpread ?? 1.5f;
-            float lateral  = partyIdx == 0 ? 0f
-                : (partyIdx % 2 == 1 ? 1f : -1f) * spread * Mathf.Ceil(partyIdx * 0.5f);
-            Vector3 side = context.Player.right * lateral;
+            int   puesto  = _partyMember != null && _partyMember.PartyIndex >= 0 ? _partyMember.PartyIndex : 2;
+            float spread  = _config?.flightFormationSpread ?? 1.5f;
+            float detras  = _config?.flightFormationBack ?? 1.8f;
+            int   fila    = puesto / 2 + 1;
+            float lado    = puesto % 2 == 0 ? 1f : -1f;
+            Vector3 local = new Vector3(lado * spread * fila, 0f, -detras * fila);
+            Vector3 hueco = Quaternion.Euler(0f, _formationYaw, 0f) * local;
 
             // En el agua, a la altura de flote del jugador: si Will se zambulle, los demás no bucean con él.
             float y = _playerSwimming != null && _playerSwimming.EstaEnElAgua
                 ? _playerSwimming.AlturaDeFlote
                 : context.Player.position.y;
 
-            return new Vector3(
-                context.Player.position.x + behind.x + side.x,
-                y,
-                context.Player.position.z + behind.z + side.z
-            );
+            return new Vector3(context.Player.position.x + hueco.x, y, context.Player.position.z + hueco.z);
+        }
+
+        /// <summary>Rumbo (grados) de una dirección en el plano; si es vertical, el de respaldo.</summary>
+        private static float YawDe(Vector3 forward, float respaldo)
+        {
+            forward.y = 0f;
+            return forward.sqrMagnitude > 0.0001f
+                ? Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg
+                : respaldo;
+        }
+
+        /// <summary>
+        /// Pose de vuelo del compañero: la misma que lleva Will (picado o quieto), leída de su
+        /// Animator, para que el grupo cambie a la vez y no cada uno por su cuenta. Si Will está en
+        /// otra pose (p. ej. la de lanzar un hechizo) se mantiene la que había. Alcanzando al grupo
+        /// desde lejos, picado.
+        /// </summary>
+        private int EstadoDeVueloDelGrupo(bool isMoving)
+        {
+            if (_specialSlotError > SPECIAL_CATCH_UP_DIST) return HashFlyDive;
+            if (_playerAnimator != null)
+            {
+                try
+                {
+                    var info = _playerAnimator.IsInTransition(_playerFlightLayerIndex)
+                        ? _playerAnimator.GetNextAnimatorStateInfo(_playerFlightLayerIndex)
+                        : _playerAnimator.GetCurrentAnimatorStateInfo(_playerFlightLayerIndex);
+                    if (info.shortNameHash == HashFlyDive || info.shortNameHash == HashFlyIdle)
+                        return info.shortNameHash;
+                    if (_flightStateRequested != 0) return _flightStateRequested;
+                }
+                catch { }
+            }
+            return isMoving ? HashFlyDive : HashFlyIdle;
         }
 
         // =========================================================================
@@ -897,6 +1049,25 @@ namespace Game.NPC.States
             }
             catch { }
             return false;
+        }
+
+        /// <summary>
+        /// Pide un estado de vuelo con fundido, una sola vez por cambio (no cada frame: repetir el
+        /// CrossFade lo reiniciaría y durante el fundido el estado actual sigue siendo el anterior).
+        /// Tras un cambio espera FLIGHT_STATE_MIN_HOLD antes de aceptar otro. INC-895.
+        /// </summary>
+        private void RequestFlightState(Animator anim, int stateHash, bool ignorarEspera = false)
+        {
+            if (anim == null || stateHash == _flightStateRequested) return;
+            if (!ignorarEspera && Time.time - _flightStateSince < FLIGHT_STATE_MIN_HOLD) return;
+            try
+            {
+                if (!anim.HasState(_npcFlightLayerIndex, stateHash)) return;
+                anim.CrossFadeInFixedTime(stateHash, FLIGHT_STATE_CROSSFADE, _npcFlightLayerIndex);
+            }
+            catch { return; }
+            _flightStateRequested = stateHash;
+            _flightStateSince     = Time.time;
         }
 
         /// <summary>

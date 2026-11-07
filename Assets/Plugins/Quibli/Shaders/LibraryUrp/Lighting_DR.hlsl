@@ -6,6 +6,15 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 #endif
 
+// Unity 6.1 renamed the Forward+ light loop macros. Keep one code path for all supported URP versions.
+#if UNITY_VERSION >= 60001000
+#define QUIBLI_USE_CLUSTER_LIGHT_LOOP USE_CLUSTER_LIGHT_LOOP
+#define QUIBLI_CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK
+#else
+#define QUIBLI_USE_CLUSTER_LIGHT_LOOP USE_FORWARD_PLUS
+#define QUIBLI_CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+#endif
+
 inline half NdotLTransition(half3 normal, half3 lightDir, half selfShadingSize) {
     const half NdotL = dot(normal, lightDir);
     const half angleDiff = saturate((NdotL * 0.5 + 0.5) - selfShadingSize);
@@ -22,19 +31,6 @@ half3 LightingPhysicallyBased_DSTRM(Light light, InputData inputData) {
 
     const half NdotLTPrimary = NdotLTransitionPrimary(inputData.normalWS, light.direction);
     const half2 gradient_uv = half2(NdotLTPrimary, 0.5);
-    // FIX: SAMPLE_TEXTURE2D calcula derivadas de screen-space (ddx/ddy) para elegir el mip.
-    // Esta funcion se llama tambien dentro del bucle de luces adicionales (LIGHT_LOOP_BEGIN /
-    // USE_FORWARD_PLUS), cuyo numero de iteraciones varia por pixel. Combinado con el
-    // AlphaDiscard/clip() de StylizedInput.hlsl en materiales con Alpha Clipping activo (que
-    // descarta pixeles de forma desigual dentro del quad 2x2 que la GPU usa para las derivadas),
-    // el compilador lo marca como "gradient instruction used in a loop with varying iteration;
-    // partial derivatives may have undefined value" (Logs/shadercompiler-*.log, linea 25 de
-    // este archivo, cientos de variantes, desde que se importo Quibli). Resultado: mip de
-    // _GradientRamp indefinido por GPU/frame -> parpadeo en la banda de sombreado toon,
-    // mucho mas visible en objetos con Alpha Clipping (confirmado por Raul: desactivar Alpha
-    // Clipping en el material hace desaparecer el parpadeo). _GradientRamp es una rampa
-    // pequenya sin detalle direccional, asi que forzar LOD 0 explicito es seguro y elimina el UB
-    // sin tener que tocar Alpha Clipping en ningun material.
     half4 c = SAMPLE_TEXTURE2D_LOD(_GradientRamp, sampler_GradientRamp, gradient_uv, 0);
 
 #if defined(DR_GRADIENT_ON)
@@ -146,16 +142,22 @@ half4 UniversalFragment_DSTRM(InputData inputData, SurfaceData surfaceData, floa
     BRDFData brdfData;
     InitializeBRDFData(brdf, 1.0 - 1.0 / kDielectricSpec.a, 0, 0, surfaceData.alpha, brdfData);
     half3 color = GlobalIllumination(brdfData, inputData.bakedGI, 1.0, inputData.normalWS, inputData.viewDirectionWS);
-    color += LightingPhysicallyBased_DSTRM(mainLight, inputData);
+    uint meshRenderingLayers = GetMeshRenderingLayer();
+
+#ifdef _LIGHT_LAYERS
+    if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+#endif
+    {
+        color += LightingPhysicallyBased_DSTRM(mainLight, inputData);
+    }
 
 #ifdef _ADDITIONAL_LIGHTS
     const uint pixelLightCount = GetAdditionalLightsCount();
-    uint meshRenderingLayers = GetMeshRenderingLayer();
 
-    #if USE_FORWARD_PLUS
+    #if QUIBLI_USE_CLUSTER_LIGHT_LOOP
     for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
     {
-        FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+        QUIBLI_CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK
 
         Light light = GetAdditionalLight(lightIndex, inputData.positionWS, shadowMask);//, aoFactor);
         StylizeLight(light);

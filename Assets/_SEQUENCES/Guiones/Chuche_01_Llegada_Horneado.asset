@@ -1,0 +1,527 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Chuche_01_Llegada_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Chuche_01_Llegada
+  duracion: 13.403265
+  presentacion: 0
+  huella: "2026-11-01 09:26 \xB7 3b0a454d7ebe992485a7a1ec7aa2ccab"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 86.3, y: 14.620574, z: 214.40001}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
+    - t: 2.95
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 5.2002044
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.662449
+      tipo: 1
+      rumbo: 0
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
+    - t: 9.64102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 2.9
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 5.150204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.662449
+      tipo: 1
+      rumbo: 0
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
+    - t: 9.59102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    animacion:
+    - fundido: 0
+      t: 3.5
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.750204
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.662449
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.742449
+      tipo: 2
+      estado: Cheer01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.54102
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 10.19102
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    - t: 7.662449
+      emocion: ilusionado
+      dura: 2.2285714
+    visible: []
+    deslizando: []
+  - id: Actor_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: 88.05195, y: 14.613193, z: 215.97186}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
+    - t: 7.812449
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.49102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 2.85
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 5.1002045
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 7.762449
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.49102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 5.0502043
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.130204
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 7.712449
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 8.362449
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.49102
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.57102
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.153265
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    - t: 2.8
+      emocion: preocupado
+      dura: 2.1502042
+    - t: 5.0502043
+      emocion: enfado
+      dura: 3.012245
+    - t: 9.49102
+      emocion: molesto
+      dura: 3.012245
+    visible: []
+    deslizando: []
+  - id: Actor_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: CHAR_LIAM
+    posiciones:
+    - t: 0
+      p: {x: 84.053604, y: 14.660612, z: 213.69736}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
+    - t: 3.07
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 5.3202043
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.932449
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 3.02
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 5.270204
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 7.8824487
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 3.5
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.750204
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: sorpresa
+      dura: 0
+    - t: 9.49102
+      emocion: picaro
+      dura: 0
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 2.8
+    t1: 4.5502043
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_LLEGADA_01
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 5.0502043
+    t1: 7.662449
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_LLEGADA_02
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 7.662449
+    t1: 9.49102
+    actor: Player
+    clave: CHUCHELANDIA_LLEGADA_03
+    gesto: Cheer01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 9.49102
+    t1: 12.103265
+    actor: Actor_Estela
+    clave: CHUCHELANDIA_LLEGADA_04
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos:
+    - t: 0
+      p: {x: 140, y: 3.6196098, z: 120.00001}
+    t0: 0
+    t1: 2.8
+    tipo: 0
+    descripcion: general de will y estela y liam
+    posiciones:
+    - t: 0
+      p: {x: 82.34438, y: 17.584335, z: 221.35365}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Estela
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 140, y: 3.6196098, z: 120.00001}
+    alturaDelFoco: 0.8702643
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 2.8
+    t1: 7.662449
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 2.8
+      p: {x: 88.3588, y: 15.418468, z: 213.0156}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 7.662449
+    t1: 9.49102
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 7.662449
+      p: {x: 86.64341, y: 15.407724, z: 211.6561}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 9.49102
+    t1: 13.403265
+    tipo: 5
+    descripcion: 'dos: estela y will'
+    posiciones:
+    - t: 9.49102
+      p: {x: 89.38054, y: 15.359354, z: 212.7288}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.84511876
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344592
+    linea: 35
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344593
+    linea: 36
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344594
+    linea: 37
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344595
+    linea: 38
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1.5
+    beat:
+      rid: 6540294313956344596
+    linea: 44
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: oh_no
+    t: 2.8
+  puntos:
+  - nombre: p_will
+    posicion: {x: 86.3, y: 14.620574, z: 214.40001}
+  - nombre: p_estela
+    posicion: {x: 88.05195, y: 14.613193, z: 215.97186}
+  - nombre: p_liam
+    posicion: {x: 84.053604, y: 14.660612, z: 213.69736}
+  - nombre: p_valle
+    posicion: {x: 140, y: 2.4196098, z: 120.00001}
+  - nombre: cam_espalda
+    posicion: {x: 82.34438, y: 14.984336, z: 221.35365}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294313956344592
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
+        atActorId: 
+        markName: M_Llegada_Will
+        offset: {x: 0, y: 2.4, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344593
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: 
+        markName: M_Llegada_Estela
+        offset: {x: 0, y: 1.6, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344594
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+        atActorId: 
+        markName: M_Llegada_Liam
+        offset: {x: 0, y: 1.6, z: 0}
+        lifetime: 4
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344595
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 409ad536b56c4a1cbb63e97ffa133a89, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344596
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 9fd65274b44f2bcd585c5f233d3dd77d, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1

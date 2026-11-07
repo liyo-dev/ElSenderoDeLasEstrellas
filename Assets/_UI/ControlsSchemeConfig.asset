@@ -34,6 +34,20 @@ MonoBehaviour:
     keyboardLabelOverride: Espacio
     gamepadLabelKey: 
     gamepadLabelOverride: 
+  - descriptionKey: CONTROLS_FLY_UP
+    description: 'En vuelo: subir'
+    glyphName: interactable_rt
+    keyboardLabelKey: GLYPH_KEY_SHIFT
+    keyboardLabelOverride: "May\xFAs"
+    gamepadLabelKey: 
+    gamepadLabelOverride: 
+  - descriptionKey: CONTROLS_FLY_DOWN
+    description: 'En vuelo: bajar'
+    glyphName: interactable_lt
+    keyboardLabelKey: 
+    keyboardLabelOverride: 
+    gamepadLabelKey: 
+    gamepadLabelOverride: 
   - descriptionKey: CONTROLS_INTERACT
     description: Interactuar (NPCs, puertas, objetos)
     glyphName: interactable_A

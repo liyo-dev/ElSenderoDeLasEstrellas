@@ -30,6 +30,7 @@ internal sealed partial class Horno
                 {
                     var a = lista[i]; var b = lista[j];
                     if (!a.VisibleEn(t) || !b.VisibleEn(t)) continue;
+                    if (a.LlevadoEn(t) || b.LlevadoEn(t)) continue;
                     if (!a.AndandoEn(t) && !b.AndandoEn(t)) continue;
                     if (Plano(a.PosEn(t) - b.PosEn(t)).magnitude >= 0.5f) continue;
                     string clave = $"{a.alias}-{b.alias}-{(int)(t / 3f)}";
@@ -512,7 +513,13 @@ internal sealed partial class Horno
             cam.nearClipPlane = 0.1f;
             cam.farClipPlane = 1500f;
             var datos = go.AddComponent<UniversalAdditionalCameraData>();
-            datos.renderPostProcessing = true;
+            // Justo después de recompilar, el marco de volúmenes de URP puede no estar listo: su pila
+            // sale sin efectos y el postproceso revienta en cada foto (SetupColorLut). Entonces las
+            // fotos salen sin postproceso. Ver INC-890.
+            var pila = VolumeManager.instance.isInitialized ? VolumeManager.instance.stack : null;
+            datos.renderPostProcessing = pila != null && pila.GetComponent<ColorAdjustments>() != null;
+            if (!datos.renderPostProcessing)
+                Debug.LogWarning("[Horno] Los volúmenes de URP aún no están listos: el storyboard sale sin postproceso. Vuelve a hornear para verlo con él.");
             var png = new Texture2D(W, H, TextureFormat.RGB24, false);
 
             GameObject z1 = null, z2 = null, z3 = null;
@@ -611,6 +618,11 @@ internal sealed partial class Horno
                             if (pBoca != null) pBoca.SetActive(true);
                         }
                         if (!SeVe(nuevoInst)) PonerMuneco(nuevoInst, a, materiales);
+                        // Un prop que el actor llevaba en la mano (o encima) cuelga de su instancia: se suelta
+                        // antes de rehacerla para que no se destruya con ella (lo vuelve a colocar su beat).
+                        foreach (var prop in props.Values)
+                            if (prop.copia != null && prop.copia.transform.IsChildOf(kv.Value.inst.transform))
+                                prop.copia.transform.SetParent(null, true);
                         UnityEngine.Object.DestroyImmediate(kv.Value.inst);
                         proxies[a] = (soporte, nuevoInst, kv.Value.clip);
                         animator = nuevoInst.GetComponent<Animator>();
@@ -633,7 +645,12 @@ internal sealed partial class Horno
                         var elegido = animator?.runtimeAnimatorController?.animationClips.FirstOrDefault(c => c != null && c.name == estado.clip);
                         if (elegido != null) { clip = elegido; inicio = pose.t; congelar = pose.congelar; }
                     }
-                    if (clip != null && animator != null)
+                    // Andando, un personaje de pack enseña su paso (su IAnimacionDeCorredor pone la velocidad).
+                    var andar = pose.tipo != TipoDeAnimacion.Bucle && a.AndandoEn(t)
+                        ? proxies[a].inst.GetComponentInChildren<IAnimacionDeCorredor>(true) : null;
+                    if (andar != null && animator != null)
+                        PoseDeAndar(animator, andar, a.VelEn(t).magnitude, t);
+                    else if (clip != null && animator != null)
                     {
                         float sampleTime = congelar ? Mathf.Min(t - inicio, clip.length) : (t - inicio) % Mathf.Max(0.1f, clip.length);
                         MuestrearEstado(proxies[a].inst, clip, nombreEstado, sampleTime);
@@ -658,7 +675,8 @@ internal sealed partial class Horno
                             if (mover.suavizar) u = Mathf.SmoothStep(0f, 1f, u);
                             Vector3 desde = mover.desdeDondeEstaba ? kv.Value.pos : objeto.transform.position;
                             Quaternion rot = mover.desdeDondeEstaba ? kv.Value.giro : objeto.transform.rotation;
-                            objeto.transform.SetPositionAndRotation(desde + mover.deltaPosicion * u, Quaternion.Slerp(rot, Quaternion.Euler(mover.deltaRotacion) * rot, u));
+                            mover.Destino(desde, rot, out var hasta, out var giroHasta);
+                            objeto.transform.SetPositionAndRotation(Vector3.Lerp(desde, hasta, u), Quaternion.Slerp(rot, giroHasta, u));
                         }
                         if (!(efecto.beat is PropEnManoBeat mano) || mano.propId != kv.Key) continue;
                         activo = true;
@@ -673,7 +691,7 @@ internal sealed partial class Horno
                             if (actor != null && proxies.TryGetValue(actor, out var proxy))
                             {
                                 var animador = proxy.inst.GetComponentInChildren<Animator>(true);
-                                var hueso = animador != null && animador.isHuman ? animador.GetBoneTransform(mano.mano) : null;
+                                var hueso = HuesoDelActor.De(animador, mano.mano);
                                 NPCWorldPoint.ColocarPropEnMano(objeto.transform, hueso, mano.offset, mano.giro);
                             }
                         }

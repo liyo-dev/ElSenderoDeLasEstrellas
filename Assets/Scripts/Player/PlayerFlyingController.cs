@@ -10,8 +10,10 @@ using UnityEngine.Serialization;
 /// <summary>
 /// Controla el modo de vuelo del jugador (tipo Dragon Ball): se entra pulsando saltar en el aire
 /// después del doble salto (tercer toque, vThirdPersonController.OnJumpPressedWithoutAirJumps),
-/// el joystick izquierdo dirige y saltar de nuevo sale del vuelo. Al entrar, un pequeño impulso
-/// hacia arriba y un efecto preceden una espera corta antes de echar a volar.
+/// el joystick izquierdo dirige, RT sube y LT baja (analógicos: cuanto más se aprietan, más rápido;
+/// en teclado, teclaSubir/teclaBajar) y saltar de nuevo sale del vuelo. El stick derecho es solo
+/// cámara (INC-895; antes subía y bajaba con él). Al entrar, un pequeño impulso hacia arriba y un
+/// efecto preceden una espera corta antes de echar a volar.
 /// </summary>
 [DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(Animator))]
@@ -62,6 +64,14 @@ public class PlayerFlyingController : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
     [SerializeField] private float boostMultiplier = 1.5f;
 
+    [Header("Altura (gatillos)")]
+    [Tooltip("En teclado, tecla que hace de RT (subir). En mando se usan los gatillos, analógicos.")]
+    [SerializeField] private Key teclaSubir = Key.LeftShift;
+    [Tooltip("En teclado, tecla que hace de LT (bajar).")]
+    [SerializeField] private Key teclaBajar = Key.LeftCtrl;
+    [Tooltip("Por debajo de esta presión de gatillo (0-1) no se sube ni se baja.")]
+    [SerializeField, Range(0f, 0.5f)] private float zonaMuertaGatillos = 0.1f;
+
     [Header("Debug")]
     [SerializeField] private bool debugLogs = false;
 
@@ -87,13 +97,10 @@ public class PlayerFlyingController : MonoBehaviour
     private Transform _cameraTransform;
     private PlayerControls _controls;
     private InputAction _moveAction;
-    private InputAction _cameraAction;
     private InputAction _jumpAction;
     private bool _ownsControls;
 
     private Vector2 _moveInput;
-    private Vector2 _cameraInput;
-    private bool _jumpHeld;
     private bool _isFlying;
     private bool _extraGravitySuspended;
     private float _cachedExtraGravity;
@@ -208,7 +215,6 @@ public class PlayerFlyingController : MonoBehaviour
         }
 
         _moveAction = _controls.GamePlay.Move;
-        _cameraAction = _controls.GamePlay.CameraLook;
         _jumpAction = _controls.GamePlay.Jump;
 
         // Try to auto-detect the animator layer that contains the flight states
@@ -257,21 +263,13 @@ public class PlayerFlyingController : MonoBehaviour
         if (_ownsControls)
             _controls?.Enable();
         if (_jumpAction != null)
-        {
             _jumpAction.performed += OnJumpPerformed;
-            _jumpAction.canceled += OnJumpCanceled;
-        }
         if (_controller != null)
             _controller.OnJumpPressedWithoutAirJumps += OnJumpAfterDoubleJump;
         if (_moveAction != null)
         {
             _moveAction.performed += OnMovePerformed;
             _moveAction.canceled += OnMoveCanceled;
-        }
-        if (_cameraAction != null)
-        {
-            _cameraAction.performed += OnCameraPerformed;
-            _cameraAction.canceled += OnCameraCanceled;
         }
     }
 
@@ -283,21 +281,13 @@ public class PlayerFlyingController : MonoBehaviour
         StopFlightVfx();
 
         if (_jumpAction != null)
-        {
             _jumpAction.performed -= OnJumpPerformed;
-            _jumpAction.canceled -= OnJumpCanceled;
-        }
         if (_controller != null)
             _controller.OnJumpPressedWithoutAirJumps -= OnJumpAfterDoubleJump;
         if (_moveAction != null)
         {
             _moveAction.performed -= OnMovePerformed;
             _moveAction.canceled -= OnMoveCanceled;
-        }
-        if (_cameraAction != null)
-        {
-            _cameraAction.performed -= OnCameraPerformed;
-            _cameraAction.canceled -= OnCameraCanceled;
         }
 
         if (_ownsControls)
@@ -366,16 +356,12 @@ public class PlayerFlyingController : MonoBehaviour
 
      private void OnMovePerformed(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
     private void OnMoveCanceled(InputAction.CallbackContext ctx) => _moveInput = Vector2.zero;
-    private void OnCameraPerformed(InputAction.CallbackContext ctx) => _cameraInput = PlayerSettings.ApplyLookInversion(ctx.ReadValue<Vector2>(), true);
-    private void OnCameraCanceled(InputAction.CallbackContext ctx) => _cameraInput = Vector2.zero;
 
     // Saltar volando sale del vuelo. Entrar lo decide OnJumpAfterDoubleJump.
     private void OnJumpPerformed(InputAction.CallbackContext ctx)
     {
         if (_inputManager != null && !_inputManager.CanProcess(PlayerAbility.Jump))
             return;
-
-        _jumpHeld = true;
 
         if (_isFlying)
             ExitFlight();
@@ -410,8 +396,6 @@ public class PlayerFlyingController : MonoBehaviour
         if (!_isFlying && CanEnterFlight()) EnterFlight();
     }
 
-    private void OnJumpCanceled(InputAction.CallbackContext ctx) => _jumpHeld = false;
-
     private bool CanEnterFlight()
     {
         if (_actionManager != null && !_actionManager.CanFly())
@@ -437,7 +421,6 @@ public class PlayerFlyingController : MonoBehaviour
         _justEnteredFlight = true;
         _entroEnVueloEn = Time.time;
         _estadoDeVueloPedido = null;
-        _jumpHeld = false; // evitar que el primer frame se considere dive por mantener salto
         if (_inputController != null)
             _inputController.CancelPendingJump();
         GamepadInputReader.IgnoreJumpButton(0.3f);
@@ -445,8 +428,6 @@ public class PlayerFlyingController : MonoBehaviour
             _controller.suppressAirMovement = true;
         if (_actionManager != null)
             _actionManager.PushMode(ActionMode.Flying);
-        if (_inputController != null)
-            _inputController.DisableVerticalCameraRotation = true;
         if (_controller != null)
         {
             _controllerWasEnabled = _controller.enabled;
@@ -532,8 +513,6 @@ public class PlayerFlyingController : MonoBehaviour
 
         if (wasFlying && _actionManager != null)
             _actionManager.PopMode(ActionMode.Flying);
-        if (_inputController != null)
-            _inputController.DisableVerticalCameraRotation = false;
 
         float verticalVel = _rigidbody != null ? _rigidbody.linearVelocity.y : 0f;
         bool hardLanding = verticalVel <= hardLandingSpeed || IsGrounded();
@@ -627,16 +606,11 @@ public class PlayerFlyingController : MonoBehaviour
         float speedMul = _isBoosting ? boostMultiplier : 1f;
         Vector3 desired = planar * horizontalSpeed * speedMul;
 
-        float verticalInput = 0f;
-        // Solo el stick derecho controla altura, y solo mientras avanzas con el izquierdo.
-        if (planar.sqrMagnitude > 0.01f && Mathf.Abs(_cameraInput.y) > 0.1f)
-            verticalInput += _cameraInput.y * verticalSpeed;
+        // Altura con los gatillos (RT sube, LT baja), también quieto en el aire.
+        float altura = LeerAltura();
+        float verticalInput = altura >= 0f ? altura * verticalSpeed : altura * descendSpeed;
 
-        // Mantener salto para descender siempre (independiente del stick)
-        if (_jumpHeld)
-            verticalInput -= descendSpeed;
-
-        bool isIdleHover = planar.sqrMagnitude < 0.01f && !_jumpHeld && Mathf.Abs(verticalInput) < 0.1f;
+        bool isIdleHover = planar.sqrMagnitude < 0.01f && Mathf.Abs(verticalInput) < 0.1f;
 
          // Añadir control vertical del jugador
          desired += Vector3.up * verticalInput;
@@ -722,8 +696,6 @@ public class PlayerFlyingController : MonoBehaviour
             string next = ResolveFlightState();
             _animator.CrossFadeInFixedTime(next, castPoseCrossfade, locomotionLayerIndex);
             _estadoDeVueloPedido = next;
-            if (_inputController != null)
-                _inputController.DisableVerticalCameraRotation = !string.Equals(next, flyIdleState, StringComparison.Ordinal);
             _castPoseBlendUntil = Time.time + castPoseCrossfade;
             return;
         }
@@ -742,7 +714,7 @@ public class PlayerFlyingController : MonoBehaviour
         if (Time.time - _entroEnVueloEn < esperaAntesDeAvanzar) return flyIdleState;
 
         float verticalVel = _rigidbody != null ? _rigidbody.linearVelocity.y : 0f;
-        bool diving = (!_isPhysicsBobbingIdle && verticalVel < -0.5f) || _jumpHeld;
+        bool diving = !_isPhysicsBobbingIdle && verticalVel < -0.5f;
         bool stickMoved = _moveInput.sqrMagnitude > 0.01f;
         if (stickMoved || diving) return flyDiveState;
 
@@ -763,11 +735,25 @@ public class PlayerFlyingController : MonoBehaviour
             return;
         _estadoDeVueloPedido = stateName;
         _animator.CrossFadeInFixedTime(stateName, fundidoEntreEstadosDeVuelo, locomotionLayerIndex);
+    }
 
-        // Allow vertical camera rotation only in fly idle
-        bool isIdle = string.Equals(stateName, flyIdleState, StringComparison.Ordinal);
-        if (_inputController != null)
-            _inputController.DisableVerticalCameraRotation = !isIdle;
+    /// <summary>
+    /// Altura pedida, de -1 (bajar) a 1 (subir): RT menos LT con la presión de cada gatillo; en
+    /// teclado, teclaSubir/teclaBajar a tope. Fuera de juego (menús, diálogos) devuelve 0.
+    /// </summary>
+    private float LeerAltura()
+    {
+        if (!GameState.CanProcessGameplayInput) return 0f;
+        float subir = GamepadInputReader.RightTriggerValue;
+        float bajar = GamepadInputReader.LeftTriggerValue;
+        var teclado = Keyboard.current;
+        if (teclado != null)
+        {
+            if (teclaSubir != Key.None && teclado[teclaSubir].isPressed) subir = 1f;
+            if (teclaBajar != Key.None && teclado[teclaBajar].isPressed) bajar = 1f;
+        }
+        float altura = subir - bajar;
+        return Mathf.Abs(altura) < zonaMuertaGatillos ? 0f : Mathf.Clamp(altura, -1f, 1f);
     }
 
     private bool HasAnimatorState(string stateName)

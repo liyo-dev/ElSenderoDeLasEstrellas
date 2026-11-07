@@ -14,7 +14,7 @@ public class QuibliEditor : BaseShaderGUI {
     private static readonly Dictionary<string, bool> FoldoutStates =
         new Dictionary<string, bool> { { "Rendering options", false } };
 
-    private const string UnityVersion = "NLC6GR";
+    private const string UnityVersion = "NLC6GS";
 
     void DrawStandard(MaterialEditor editor, MaterialProperty property) {
         string displayName = property.displayName;

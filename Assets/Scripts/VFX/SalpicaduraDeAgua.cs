@@ -16,6 +16,10 @@ public sealed class SalpicaduraDeAgua : MonoBehaviour
     private Color colorOndas = new Color(1f, 1f, 1f, 0.8f);
     [SerializeField, Tooltip("Color de las burbujas.")]
     private Color colorBurbujas = new Color(0.9f, 0.97f, 1f, 0.8f);
+    [SerializeField, Tooltip("Fuerza (0-1) con la que salpica en su sitio al activarse: así sirve como VFX de un " +
+        "solo uso (VfxPoolService, la orden «vfx» de un guion) con otros colores, p. ej. sirope. Negativo: solo " +
+        "salpica cuando se le llama.")]
+    private float salpicarAlActivarse = -1f;
 
     private ParticleSystem _gotas;
     private ParticleSystem _ondas;
@@ -34,6 +38,19 @@ public sealed class SalpicaduraDeAgua : MonoBehaviour
 
         _burbujas = CrearSistema("Burbujas", MaterialPunto(), ParticleSystemRenderMode.Billboard, -0.15f, 120);
         ConfigurarDesvanecido(_burbujas, tamanoFinal: 1.2f);
+    }
+
+    private bool _salpicarPendiente;
+
+    // Al salir de un pool primero se activa y después se coloca: salpica en el LateUpdate de ese
+    // fotograma, ya en su sitio.
+    void OnEnable() => _salpicarPendiente = salpicarAlActivarse >= 0f;
+
+    void LateUpdate()
+    {
+        if (!_salpicarPendiente) return;
+        _salpicarPendiente = false;
+        Salpicar(transform.position, salpicarAlActivarse);
     }
 
     /// <summary>Salpicadura completa al entrar en el agua. <paramref name="fuerza"/> va de 0 (entrar andando) a 1 (caída desde muy alto).</summary>

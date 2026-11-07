@@ -1,10 +1,10 @@
 # Parte de horneado: Cap2_01_LosPlanesDeLiam
 
-2026-10-27 11:53 · guion `Assets/_SEQUENCES/Guiones/Cap2_01_LosPlanesDeLiam.guion.txt`
+2026-10-31 20:29 · guion `Assets/_SEQUENCES/Guiones/Cap2_01_LosPlanesDeLiam.guion.txt`
 
 **0:46,2** de secuencia · 7 frases · 7 planos · 6 efectos · 2 personajes
 
-Reparto medido (m): liam 1,51/ojos 0,94 · tobi 1,30/ojos 0,81
+Reparto medido (m): liam 1,51/ojos 0,94 · tobi 1,09/ojos 0,67
 
 ## Errores (0)
 

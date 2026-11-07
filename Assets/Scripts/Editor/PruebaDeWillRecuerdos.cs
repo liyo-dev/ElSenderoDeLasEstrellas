@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 /// el nivel, y tiene su propio menú para rehacer solo los recuerdos sobre la escena ya montada
 /// (sin volver a hornear los reflejos del palacio). El guion de cada recuerdo está en
 /// Assets/_SEQUENCES/Guiones y se hornea al terminar. Ver INC-881.
+/// También monta la salida de vuelta al Sendero en el punto «Salida al hub» (ver INC-890).
 /// </summary>
 public static class PruebaDeWillRecuerdos
 {
@@ -27,8 +28,9 @@ public static class PruebaDeWillRecuerdos
     public const string GuionDelDiscurso = "Assets/_SEQUENCES/Guiones/Prueba_01_ElDiscurso.guion.txt";
 
     private const string PrefijoDeRaiz = "Recuerdo · ";
+    private const string NombreSalida = "Salida al Sendero";
 
-    [MenuItem("El Sendero/Escenario/Prueba de Will: rehacer los recuerdos")]
+    [MenuItem("El Sendero/Escenario/Prueba de Will: rehacer los recuerdos y la salida")]
     public static void RehacerMenu()
     {
         if (Application.isPlaying) { Debug.LogWarning("[Recuerdos] Sal de Play para rehacer los recuerdos."); return; }
@@ -54,12 +56,41 @@ public static class PruebaDeWillRecuerdos
         Transform palacio = null;
         foreach (var raiz in escena.GetRootGameObjects())
         {
-            if (raiz.name.StartsWith(PrefijoDeRaiz)) Object.DestroyImmediate(raiz);
+            if (raiz.name.StartsWith(PrefijoDeRaiz) || raiz.name == NombreSalida) Object.DestroyImmediate(raiz);
             else if (raiz.name == "Palacio de espejos") palacio = raiz.transform;
         }
         if (palacio == null) { Debug.LogWarning("[Recuerdos] La escena no tiene «Palacio de espejos»: monta antes el nivel."); return; }
         Discurso(escena, Sala(palacio, "R3"), 1);
+        Salida(escena);
         EditorSceneManager.MarkSceneDirty(escena);
+    }
+
+    /// <summary>
+    /// El portal de vuelta al Sendero en el punto «Salida al hub»: la ventana con el Sendero dentro.
+    /// Al cruzarlo la prueba queda hecha (flag de la partida) y el grupo aparece detrás de la puerta
+    /// de Will, que se cierra a su espalda (SenderoProgressionController).
+    /// </summary>
+    private static void Salida(Scene escena)
+    {
+        Transform punto = null;
+        foreach (var raiz in escena.GetRootGameObjects())
+            if (raiz.name == "Puntos del nivel") punto = raiz.transform.Find("Salida al hub");
+        if (punto == null) { Debug.LogWarning("[Recuerdos] Falta el punto «Salida al hub»: monta antes el nivel."); return; }
+
+        var go = new GameObject(NombreSalida);
+        SceneManager.MoveGameObjectToScene(go, escena);
+        go.transform.SetPositionAndRotation(punto.position, punto.rotation);
+        VistaDelPortal.Ventana(go.transform, VistaDelPortal.HaciaElSendero, punto.forward, Vector3.forward);
+
+        var col = go.AddComponent<BoxCollider>();
+        col.isTrigger = true;
+        col.center = new Vector3(0f, 1.5f, 0f);
+        col.size = new Vector3(2.4f, 3f, 0.8f);
+        var portal = go.AddComponent<PortalTrigger>();
+        portal.targetSceneName = "Sendero";
+        portal.targetAnchorId = SenderoProgressionController.AnclaVueltaWill;
+        portal.setFlagOnEnter = SenderoProgressionController.FlagPruebaWillHecha;
+        QuitarRotulo(escena, "Salida al hub");
     }
 
     /// <summary>Hornea los guiones de los recuerdos (con storyboard) y guarda la escena si el horneado la ha tocado.</summary>

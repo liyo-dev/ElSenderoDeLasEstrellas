@@ -1,0 +1,57 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 1 · LLEGADA
+#  La puerta rosa los suelta en el reino con una ráfaga de purpurina y una fanfarria que
+#  desafina en la última nota. Estela ve las colinas de nube de azúcar y el castillo de
+#  piruletas: «Oh, no». A Will le gusta. Novela, cap. XXI.
+#  Las marcas M_Llegada_* y M_Cine_Llegada_* las pone «Chuchelandia: montar la prueba».
+#  Se hornea con «Chuchelandia: hornear las cinemáticas» (Chuchelandia abierta).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_01_Llegada
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Llegada.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.25
+
+REPARTO
+will    Player        nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  Actor_Estela  nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam    Actor_Liam    nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+p_will       M_Llegada_Will
+p_estela     M_Llegada_Estela
+p_liam       M_Llegada_Liam
+p_valle      M_Llegada_Valle
+cam_espalda  M_Cine_Llegada_CamEspalda
+
+HILO
+@inicio
+will en p_will mirando p_valle
+& estela en p_estela mirando p_valle
+& liam en p_liam mirando p_valle
+# De espaldas, el reino entero delante: purpurina y fanfarria.
+& plano general will estela liam desde=cam_espalda mira=p_valle altura=2.6 lente=40 quieta
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=p_will offset=0,2.4,0 lifetime=4
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=p_estela offset=0,1.6,0 lifetime=4
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=p_liam offset=0,1.6,0 lifetime=4
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-009.wav" volume=0.7
+& will cara sorpresa
+& estela cara sorpresa
+& liam cara sorpresa
+espera 1.5
+# La última nota desafina.
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_trumpet_fail(5).wav" volume=0.8
+espera 1.3
+
+@oh_no
+plano medio estela
+estela dice CHUCHELANDIA_LLEGADA_01 cara=preocupado sin_pose
+espera 0.5
+estela dice CHUCHELANDIA_LLEGADA_02 cara=enfado gesto=HeadShake01
+plano medio will
+will dice CHUCHELANDIA_LLEGADA_03 cara=ilusionado gesto=Cheer01 mira=p_valle
+plano dos estela will
+estela dice CHUCHELANDIA_LLEGADA_04 cara=molesto mira=will
+& liam cara picaro
+espera 0.8

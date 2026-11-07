@@ -1,6 +1,6 @@
 # Parte de horneado: Despertar_1_Amenaza
 
-2026-10-27 11:54 · guion `Assets/_SEQUENCES/Guiones/Despertar_1_Amenaza.guion.txt`
+2026-10-31 20:29 · guion `Assets/_SEQUENCES/Guiones/Despertar_1_Amenaza.guion.txt`
 
 **0:13,4** de secuencia · 3 frases · 7 planos · 14 efectos · 2 personajes
 
@@ -51,14 +51,17 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 
 ### will (Player)
 
+- 0:01,9 gesto SenseSomethingStart_NoWeapon
 - 0:03,6–0:05,0 habla
 - 0:03,6 gesto Talk01
+- 0:07,3 gesto HeadNod01
 - 0:10,7 bucle Idle_Battle_NoWeapon
 
 ### eldran (NPC_Eldran)
 
 - 0:01,2–0:03,1 habla
 - 0:01,3 gesto SenseSomethingStart_NoWeapon
+- 0:04,1 gesto HeadNod01
 - 0:06,4–0:08,9 anda de (25,7, -82,4) a (21,3, -85,7)
 - 0:06,6–0:08,7 habla
 

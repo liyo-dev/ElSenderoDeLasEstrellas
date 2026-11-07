@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6877255643681465064
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 419263113122960324, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 41a52a2d9b38dc8479878f4550082641, type: 2}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994758675517114814, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6375542278673650436, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      propertyPath: m_Name
+      value: Actor_JuezPresidente
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6375542278673650436, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7847157120730599298}
+    - targetCorrespondingSourceObject: {fileID: 6375542278673650436, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 803553196920867885}
+  m_SourcePrefab: {fileID: 100100000, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+--- !u!1 &507378979875647980 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6375542278673650436, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+  m_PrefabInstance: {fileID: 6877255643681465064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7847157120730599298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507378979875647980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b524d1d8fd2a446a86766e3789272b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimacionDeCorredorPorAnimator
+  animator: {fileID: 6530621908494414124}
+  parametroDeVelocidad: Speed
+  valorAlCorrer: 2
+  metrosPorSegundoDelClip: 2
+  acelerarLaAnimacion: 1
+  disparadorDeSalto: Jump
+  parametroDeTrepar: ClimbUp
+--- !u!114 &803553196920867885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507378979875647980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfaf586bac764232afb2f4e8f911bdbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimatorInvoker
+--- !u!95 &6530621908494414124 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 419263113122960324, guid: 45a60a83834a1394b9354460cc133f01, type: 3}
+  m_PrefabInstance: {fileID: 6877255643681465064}
+  m_PrefabAsset: {fileID: 0}

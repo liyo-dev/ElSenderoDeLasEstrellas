@@ -180,12 +180,12 @@ plano general estela solo desde=cam_a1_cenital mira=p_piedra_estela altura=6.5 a
 # El grito se le rompe en llanto: la voz sigue sollozando sobre el plano siguiente.
 efecto ModuleBeat routine=EstelaDejaDeAlcanzar
 estela bucle Cry01_Loop fundido=0.5
-estela dice FINAL_ESTELA_PORTAL_05 sin_pose cara=triste dura=2.0
+estela dice FINAL_ESTELA_PORTAL_05 sin_pose cara=llorando dura=2.0
 espera 0.2
 
 # Rota de dolor.
 plano medio estela solo desde=cam_a1_estela_llora altura=0.3 altura_foco=0.8 suave=0.4 lente=39
-estela cara triste
+estela cara llorando
 espera 2.2
 # Sigue llorando sin corte (el llanto entra antes de que acabe el grito) y se apaga sobre el
 # negro, antes de que empiece el conjuro.
@@ -221,26 +221,31 @@ will dice FINAL_WILL_CONJURO_01 cara=decidido dura=4.5
 espera 0.6
 
 # Los círculos se encienden bajo Will y Liam y el viento empieza a subir.
-plano general will liam desde=cam_a2_contrapicado mira=p_will_conjuro altura=0.35 altura_foco=1.9 lente=46 suave=0.5
+# Al estilo de Lina: recita con los ojos cerrados y las manos juntas mientras la cámara le rodea;
+# ojos cerrados todo el conjuro y un gesto que solo crece: manos juntas y, en la tercera estrofa,
+# brazos sobre la cabeza; abre los ojos en el grito.
+plano general will liam desde=cam_a2_contrapicado mira=p_will_conjuro altura=0.35 altura_foco=1.9 lente=46 suave=0.5 gira=20
+will bucle Beg01_Loop
 efecto ModuleBeat routine=ConjuroCirculos
 efecto ModuleBeat routine=LevitarWill
 sonido SFX_Prologo_Trueno_Lejano volume=0.45
 efecto EfectoDeVozBeat preset=Epico gananciaDb=4
-will dice FINAL_WILL_CONJURO_02 cara=decidido dura=6.0
+will dice FINAL_WILL_CONJURO_02 cara=dormido dura=6.0
 espera 0.8
 
 # Alrededor de Will, que ya flota.
 plano conjunto will liam desde=cam_a2_orbita_a mover=cam_a2_orbita_b mira=p_will_conjuro altura=1.7 altura_foco=2.3 lente=40 suave=0.4
 sonido Prologo_Carga volume=0.8
 sacudida 0.4 1.5
-will dice FINAL_WILL_CONJURO_03 cara=decidido dura=6.0
+will dice FINAL_WILL_CONJURO_03 cara=dormido dura=6.0
+& will bucle MagicAttackOmni01_Load congela fundido=0.6
 espera 0.8
 
 # El grito.
 plano medio will solo desde=cam_a2_climax_frente mira=p_will_conjuro altura=0.9 altura_foco=2.45 lente=36 suave=0.2
 efecto RespiroBeat musicaDb=-6 ambienteDb=-16 sfxDb=-8 duracion=0.8 ataque=0.2 fundido=0.3 esperar=false
 espera 0.6
-will dice FINAL_WILL_CONJURO_04 cara=decidido dura=3.5
+will dice FINAL_WILL_CONJURO_04 cara=enfado dura=3.5
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
 
 # La luz se lleva a Liam.
@@ -272,6 +277,7 @@ efecto ModuleBeat routine=OcultarLiam
 will desaparece
 estela en p_piedra_estela mirando p_piedra_portal
 estela bucle Cry01_Loop
+estela cara llorando
 liam en p_piedra_liam mirando estela
 liam bucle Die01Stay_NoWeapon congela
 efecto ModuleBeat routine=LiamSinSentido

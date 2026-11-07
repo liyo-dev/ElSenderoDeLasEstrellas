@@ -33,10 +33,6 @@
             "value": "Amiga del Niño Pez"
         },
         {
-            "key": "CHAR_DUQUE_REGALIZ",
-            "value": "Duque de Regaliz"
-        },
-        {
             "key": "CHAR_ELDRAN",
             "value": "Eldran"
         },
@@ -83,10 +79,6 @@
         {
             "key": "CHAR_MANUEL",
             "value": "Manuel"
-        },
-        {
-            "key": "CHAR_MAZAPAN",
-            "value": "Criatura de Mazapán"
         },
         {
             "key": "CHAR_NIÑOPEZ",
@@ -339,74 +331,6 @@
         {
             "key": "DLG_ANTIPATICO_TURNIN_03",
             "value": "Con ellas podrás saltar. De nada muchacho... Ahora fuera de mi vista."
-        },
-        {
-            "key": "DLG_CANDYLAND_01",
-            "value": "¡Todos en pie! Chuchelandia da la bienvenida a su nueva soberana... ¡la sonriente Reina Estela!"
-        },
-        {
-            "key": "DLG_CANDYLAND_02",
-            "value": "Su Alteza el Duque de Regaliz ha hablado. Inclínense, plebe. Yo ya me he inclinado tres veces, por si acaso."
-        },
-        {
-            "key": "DLG_CANDYLAND_03",
-            "value": "¿Liam? ¿Desde cuándo hablas... así?"
-        },
-        {
-            "key": "DLG_CANDYLAND_04",
-            "value": "Desde que me han dado esta casaca y una peluca de azúcar hilado. Funciona."
-        },
-        {
-            "key": "DLG_CANDYLAND_05",
-            "value": "Sonría, Majestad. Aquí NADIE frunce el ceño. Alegría constante, artículo primero de mi reino."
-        },
-        {
-            "key": "DLG_CANDYLAND_06",
-            "value": "¿Perdona? Yo no sonrío a la fuerza ni por un reino entero de nata montada."
-        },
-        {
-            "key": "DLG_CANDYLAND_07",
-            "value": "¿Se atreve a desobedecer? Mire bien lo que le espera a quien no sonríe lo suficiente."
-        },
-        {
-            "key": "DLG_CANDYLAND_08",
-            "value": "Llevo... llevo tres días intentando sonreír más fuerte..."
-        },
-        {
-            "key": "DLG_CANDYLAND_09",
-            "value": "Eso es lo más triste que he oído nunca. Y eso que yo como fatal cuando estoy triste.\nNo pienso fingir ser \"dulce\" para nadie. Nunca lo he sido y no pienso empezar hoy."
-        },
-        {
-            "key": "DLG_CANDYLAND_10",
-            "value": "Esa es la Estela que conocemos."
-        },
-        {
-            "key": "DLG_CANDYLAND_11",
-            "value": "(en voz baja, sin la voz de cortesano) Por una vez, coincido con el plan de no fingir nada. Aunque la casaca me la quedo, la verdad es que me favorece."
-        },
-        {
-            "key": "DLG_CANDYLAND_12",
-            "value": "¡Esto es traición a la Corona del Caramelo! ¡Guardias... guardias de mazapán, arréstenla!"
-        },
-        {
-            "key": "DLG_CANDYLAND_13",
-            "value": "Ni de broma. Se acabó fingir."
-        },
-        {
-            "key": "DLG_CANDYLAND_14",
-            "value": "¡Libre! ¡Por fin puedo fruncir el ceño en paz!"
-        },
-        {
-            "key": "DLG_CANDYLAND_15",
-            "value": "No... mi reino de mentiras... se desmorona..."
-        },
-        {
-            "key": "DLG_CANDYLAND_16",
-            "value": "Un reino menos fingiendo. Ahora... ¿alguien más tiene hambre? Todo esto de regaliz me ha dado un hambre horrible."
-        },
-        {
-            "key": "DLG_CANDYLAND_17",
-            "value": "Voy a fingir que no he oído eso."
         },
         {
             "key": "DLG_ELDRAN_ARRESTO_DESPEDIDA",
@@ -1899,6 +1823,210 @@
         {
             "key": "DLG_BOTICARIA_CHARLA_01",
             "value": "¿Todavía tienes la poción? Bien. Que siga así."
+        },
+        {
+            "key": "CHAR_POMPON",
+            "value": "Su Alteza Pompón"
+        },
+        {
+            "key": "CHAR_CONDESA_MERENGUE",
+            "value": "Condesa Merengue"
+        },
+        {
+            "key": "CHAR_HERALDO",
+            "value": "Heraldo"
+        },
+        {
+            "key": "CHAR_HERALDO_SUPLENTE",
+            "value": "Heraldo suplente"
+        },
+        {
+            "key": "CHAR_JUEZ_PRESIDENTE",
+            "value": "Juez presidente"
+        },
+        {
+            "key": "CHAR_JUEZ_MALVAVISCO",
+            "value": "Jueza Malvavisco"
+        },
+        {
+            "key": "CHAR_JUEZ_LAGRIMITAS",
+            "value": "Juez Lagrimitas"
+        },
+        {
+            "key": "CHAR_GOMINOLA",
+            "value": "Gominola"
+        },
+        {
+            "key": "CHAR_GOMINOLAS",
+            "value": "Gominolas"
+        },
+        {
+            "key": "CHAR_GOMINOLA_FRESA",
+            "value": "Gominola de fresa"
+        },
+        {
+            "key": "PARQUE_BARCO_1_1",
+            "value": "¡Venga, venga! ¡Este es el bueno!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_2",
+            "value": "Ese ángulo… ¿Seguro que lo has pensado bien?"
+        },
+        {
+            "key": "PARQUE_BARCO_1_3",
+            "value": "Si gritas, Will, lo cuento en el pueblo."
+        },
+        {
+            "key": "PARQUE_BARCO_1_4",
+            "value": "¡Aaaah! ¡Mi estómago se ha quedado arriba!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_5",
+            "value": "¡Más alto!"
+        },
+        {
+            "key": "PARQUE_BARCO_1_6",
+            "value": "Cuarenta grados. Y subiendo."
+        },
+        {
+            "key": "PARQUE_BARCO_1_7",
+            "value": "El suelo… ¿por qué se mueve el suelo?"
+        },
+        {
+            "key": "PARQUE_BARCO_1_8",
+            "value": "No me había reído tanto en años."
+        },
+        {
+            "key": "PARQUE_BARCO_2_1",
+            "value": "Esta vez, brazos arriba. Los tres."
+        },
+        {
+            "key": "PARQUE_BARCO_2_2",
+            "value": "¡Sin manos!"
+        },
+        {
+            "key": "PARQUE_BARCO_2_4",
+            "value": "Esto… no es tan terrible."
+        },
+        {
+            "key": "PARQUE_BARCO_2_5",
+            "value": "Otra. Ahora."
+        },
+        {
+            "key": "PARQUE_BARCO_3_1",
+            "value": "Id vosotros. Alguien tiene que guardar el sitio."
+        },
+        {
+            "key": "PARQUE_BARCO_3_2",
+            "value": "Cobarde."
+        },
+        {
+            "key": "PARQUE_BARCO_3_3",
+            "value": "¡Liaaam! ¡Míranos!"
+        },
+        {
+            "key": "PARQUE_BARCO_3_4",
+            "value": "Desde aquí abajo también se oían tus gritos."
+        },
+        {
+            "key": "PARQUE_BARCO_4_1",
+            "value": "Lo peor es la popa. Por eso nos he sentado aquí."
+        },
+        {
+            "key": "PARQUE_BARCO_4_2",
+            "value": "… He calculado mal."
+        },
+        {
+            "key": "PARQUE_BARCO_4_3",
+            "value": "¡Ja! ¡El genio!"
+        },
+        {
+            "key": "PARQUE_BARCO_4_4",
+            "value": "¿Y cuánto habías calculado?"
+        },
+        {
+            "key": "PARQUE_BARCO_4_5",
+            "value": "Lo justo para no volver a hacerlo."
+        },
+        {
+            "key": "PARQUE_BARCO_5_1",
+            "value": "¡No me da miedo! ¡Es el viento!"
+        },
+        {
+            "key": "PARQUE_BARCO_5_2",
+            "value": "Estela… me estás estrujando el brazo."
+        },
+        {
+            "key": "PARQUE_BARCO_5_3",
+            "value": "Ni una palabra. A nadie."
+        },
+        {
+            "key": "PARQUE_NORIA_1_1",
+            "value": "Despacito… Esta sí me gusta."
+        },
+        {
+            "key": "PARQUE_NORIA_1_2",
+            "value": "Mira. Desde aquí se ve todo el parque."
+        },
+        {
+            "key": "PARQUE_NORIA_1_3",
+            "value": "Y las luces… parecen estrellas en el suelo."
+        },
+        {
+            "key": "PARQUE_NORIA_1_4",
+            "value": "Gracias por traerme."
+        },
+        {
+            "key": "PARQUE_NORIA_2_1",
+            "value": "Una, dos, tres… ¡Cuatrocientas!"
+        },
+        {
+            "key": "PARQUE_NORIA_2_2",
+            "value": "Ciento dos. Las he contado al subir."
+        },
+        {
+            "key": "PARQUE_NORIA_2_3",
+            "value": "Sois insoportables. Los dos."
+        },
+        {
+            "key": "PARQUE_NORIA_3_1",
+            "value": "¿Por qué nos hemos parado?"
+        },
+        {
+            "key": "PARQUE_NORIA_3_2",
+            "value": "Si alguien se mueve, lo tiro."
+        },
+        {
+            "key": "PARQUE_NORIA_3_3",
+            "value": "Es la parada de arriba. Para la vista."
+        },
+        {
+            "key": "PARQUE_NORIA_4_1",
+            "value": "Liam, ¿estás bien? No has dicho nada."
+        },
+        {
+            "key": "PARQUE_NORIA_4_2",
+            "value": "Sí. Solo… estaba mirando."
+        },
+        {
+            "key": "PARQUE_NORIA_4_3",
+            "value": "Está raro desde que entramos."
+        },
+        {
+            "key": "PARQUE_NORIA_5_1",
+            "value": "Paso. Las norias son para parejitas."
+        },
+        {
+            "key": "PARQUE_NORIA_5_2",
+            "value": "¡Pues subimos Liam y yo!"
+        },
+        {
+            "key": "PARQUE_NORIA_5_3",
+            "value": "¡Estelaaa! ¡Saluda!"
+        },
+        {
+            "key": "PARQUE_NORIA_5_4",
+            "value": "Os he visto saludar. Qué vergüenza."
         }
     ]
 }

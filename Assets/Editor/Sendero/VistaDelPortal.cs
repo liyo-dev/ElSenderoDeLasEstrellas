@@ -30,6 +30,17 @@ public static class VistaDelPortal
 
     static readonly Color ColorDeLaLuz = new(0.45f, 0.75f, 1f);
 
+    /// La silueta de la ventana. El óvalo es el de siempre; las demás son variantes del mismo
+    /// material (misma panorámica) con su propio borde y su propia luz.
+    public enum Forma { Ovalo, Corazon }
+
+    /// Cómo se ve una variante: silueta, color del borde (HDR) y de la luz.
+    public readonly struct Aspecto
+    {
+        public readonly Forma forma; public readonly Color borde; public readonly Color luz;
+        public Aspecto(Forma forma, Color borde, Color luz) { this.forma = forma; this.borde = borde; this.luz = luz; }
+    }
+
     [MenuItem("El Sendero/Sendero/Vistas de los portales (fotografiar)")]
     public static void FotografiarLasVistas()
     {
@@ -84,15 +95,20 @@ public static class VistaDelPortal
     /// Ventana de pie sobre el suelo de <paramref name="padre"/>. <paramref name="entrada"/>: hacia dónde
     /// se camina para cruzar; <paramref name="miradaAlOtroLado"/>: hacia dónde se mira al aparecer allí.
     public static GameObject Ventana(Transform padre, string material, Vector3 entrada, Vector3 miradaAlOtroLado)
+        => Ventana(padre, material, entrada, miradaAlOtroLado, null);
+
+    /// Igual, con otro aspecto (silueta y colores). La panorámica es la del material base.
+    public static GameObject Ventana(Transform padre, string material, Vector3 entrada, Vector3 miradaAlOtroLado, Aspecto? aspecto)
     {
         var go = new GameObject("Ventana del portal");
         go.transform.SetParent(padre, false);
         go.transform.localPosition = new Vector3(0f, 1.65f, 0f);
         go.transform.rotation = Quaternion.LookRotation(entrada, Vector3.up);
-        go.transform.localScale = new Vector3(2.1f, 2.8f, 1f);
+        bool corazon = aspecto.HasValue && aspecto.Value.forma == Forma.Corazon;
+        go.transform.localScale = corazon ? new Vector3(2.9f, 2.8f, 1f) : new Vector3(2.1f, 2.8f, 1f);
         go.AddComponent<MeshFilter>().sharedMesh = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
         var mr = go.AddComponent<MeshRenderer>();
-        mr.sharedMaterial = Material(material);
+        mr.sharedMaterial = aspecto.HasValue ? Variante(material, aspecto.Value) : Material(material);
         mr.shadowCastingMode = ShadowCastingMode.Off;
         mr.receiveShadows = false;
 
@@ -102,7 +118,7 @@ public static class VistaDelPortal
         lgo.transform.position = go.transform.position - entrada.normalized * 1.2f;
         var luz = lgo.AddComponent<Light>();
         luz.type = LightType.Point;
-        luz.color = ColorDeLaLuz;
+        luz.color = aspecto.HasValue ? aspecto.Value.luz : ColorDeLaLuz;
         luz.intensity = 2.5f;
         luz.range = 9f;
         luz.shadows = LightShadows.None;
@@ -113,6 +129,28 @@ public static class VistaDelPortal
         so.FindProperty("luz").objectReferenceValue = luz;
         so.ApplyModifiedPropertiesWithoutUndo();
         return go;
+    }
+
+    /// Copia del material base con otra silueta y otro borde; se rehace cada vez para seguir a la
+    /// panorámica del base (la que pone FotografiarLasVistas).
+    static Material Variante(string nombre, Aspecto aspecto)
+    {
+        var baseMat = Material(nombre);
+        string sufijo = $"{aspecto.forma}_{ColorUtility.ToHtmlStringRGB(aspecto.luz)}";
+        string ruta = $"{Carpeta}/VentanaDePortal_{nombre}_{sufijo}.mat";
+        var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+        if (mat == null)
+        {
+            mat = new Material(baseMat) { name = $"VentanaDePortal_{nombre}_{sufijo}" };
+            AssetDatabase.CreateAsset(mat, ruta);
+        }
+        mat.CopyPropertiesFromMaterial(baseMat);
+        bool corazon = aspecto.forma == Forma.Corazon;
+        mat.SetFloat("_FormaCorazon", corazon ? 1f : 0f);
+        if (corazon) mat.EnableKeyword("_FORMA_CORAZON"); else mat.DisableKeyword("_FORMA_CORAZON");
+        mat.SetColor("_ColorDelBorde", aspecto.borde);
+        EditorUtility.SetDirty(mat);
+        return mat;
     }
 
     // ── Panorámicas ────────────────────────────────────────────────────────────────────────

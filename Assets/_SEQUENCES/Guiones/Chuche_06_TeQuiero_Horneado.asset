@@ -1,0 +1,2966 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Chuche_06_TeQuiero_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Chuche_06_TeQuiero
+  duracion: 49.687553
+  presentacion: 1
+  huella: "2026-11-01 09:26 \xB7 b25ad12416c51d1f560b5000a39f2233"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 96.19981, y: 14, z: 5.0318217}
+    - t: 0.025
+      p: {x: 96.19981, y: 14.24, z: 5.0318217}
+    - t: 0.05
+      p: {x: 96.19981, y: 14.48, z: 5.0318217}
+    - t: 8.350041
+      p: {x: 96.19981, y: 14.48, z: 5.0318217}
+    - t: 8.440042
+      p: {x: 96.19981, y: 14.705, z: 5.0318217}
+    - t: 8.530042
+      p: {x: 96.19981, y: 14.78, z: 5.0318217}
+    - t: 8.630042
+      p: {x: 96.19981, y: 14.629999, z: 5.0318217}
+    - t: 8.7300415
+      p: {x: 96.19981, y: 14.48, z: 5.0318217}
+    - t: 8.803375
+      p: {x: 96.19981, y: 14.713333, z: 5.0318217}
+    - t: 8.876708
+      p: {x: 96.19981, y: 14.8533325, z: 5.0318217}
+    - t: 8.950042
+      p: {x: 96.19981, y: 14.9, z: 5.0318217}
+    - t: 9.033375
+      p: {x: 96.19981, y: 14.791111, z: 5.0318217}
+    - t: 9.116709
+      p: {x: 96.19981, y: 14.588888, z: 5.0318217}
+    - t: 9.200042
+      p: {x: 96.19981, y: 14.48, z: 5.0318217}
+    - t: 13.06392
+      p: {x: 96.19981, y: 14.48, z: 5.0318217}
+    - t: 13.16392
+      p: {x: 96.2082, y: 14.474609, z: 5.0460443}
+    - t: 13.26392
+      p: {x: 96.23192, y: 14.459374, z: 5.0862393}
+    - t: 13.36392
+      p: {x: 96.26878, y: 14.435702, z: 5.1486955}
+    - t: 13.46392
+      p: {x: 96.31659, y: 14.405, z: 5.2297034}
+    - t: 13.56392
+      p: {x: 96.37315, y: 14.368671, z: 5.3255525}
+    - t: 13.66392
+      p: {x: 96.43629, y: 14.328125, z: 5.4325323}
+    - t: 13.76392
+      p: {x: 96.50381, y: 14.284765, z: 5.5469327}
+    - t: 13.86392
+      p: {x: 96.57351, y: 14.24, z: 5.665044}
+    - t: 13.96392
+      p: {x: 96.64321, y: 14.195234, z: 5.7831545}
+    - t: 14.06392
+      p: {x: 96.71073, y: 14.151875, z: 5.897555}
+    - t: 14.16392
+      p: {x: 96.773865, y: 14.111328, z: 6.0045347}
+    - t: 14.26392
+      p: {x: 96.83043, y: 14.075, z: 6.1003838}
+    - t: 14.36392
+      p: {x: 96.878235, y: 14.044297, z: 6.1813917}
+    - t: 14.46392
+      p: {x: 96.9151, y: 14.020625, z: 6.243848}
+    - t: 14.56392
+      p: {x: 96.93882, y: 14.00539, z: 6.284043}
+    - t: 14.66392
+      p: {x: 96.94721, y: 14, z: 6.2982655}
+    - t: 15.263921
+      p: {x: 96.94721, y: 14, z: 6.2982655}
+    - t: 15.28892
+      p: {x: 96.94721, y: 13.2, z: 6.2982655}
+    - t: 15.313921
+      p: {x: 96.94721, y: 12.4, z: 6.2982655}
+    - t: 16.913921
+      p: {x: 96.94721, y: 12.4, z: 6.2982655}
+    - t: 17.013922
+      p: {x: 96.94721, y: 13.099999, z: 6.2982655}
+    - t: 17.113922
+      p: {x: 96.94721, y: 13.6, z: 6.2982655}
+    - t: 17.21392
+      p: {x: 96.94721, y: 13.9, z: 6.2982655}
+    - t: 17.313921
+      p: {x: 96.94721, y: 14, z: 6.2982655}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 12.116776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 15.263921
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 19.76392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 22.876165
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 25.560043
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 28.96188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.57802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.27802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.67802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 9.000042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 12.066776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 14.31392
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    - t: 19.71392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 22.826166
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 25.560043
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 28.91188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.52802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.22802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.62802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion:
+    - fundido: 0
+      t: 0.05
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 0.13
+      tipo: 2
+      estado: Cheer02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 2.2420406
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.291374
+      tipo: 2
+      estado: Cheer02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.405634
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0.2
+      t: 13.06392
+      tipo: 1
+      estado: Falling
+      congelar: 0
+      alFinal: 0
+    - fundido: 0.25
+      t: 14.31392
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.263921
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.263921
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.313921
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 23.426167
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 29.449268
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 38.988018
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 43.22802
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0.05
+      emocion: ilusionado
+      dura: 2.5420408
+    - t: 8.7300415
+      emocion: sorpresa
+      dura: 0
+    - t: 16.913921
+      emocion: confuso
+      dura: 0
+    - t: 25.560043
+      emocion: cansado
+      dura: 3.351837
+    - t: 45.128017
+      emocion: ilusionado
+      dura: 0
+    visible:
+    - desde: 0
+      hasta: 15.263921
+    - desde: 16.913921
+      hasta: 109.68755
+    deslizando:
+    - desde: 0
+      hasta: 0.1
+    - desde: 8.350041
+      hasta: 8.580041
+    - desde: 8.530042
+      hasta: 8.780042
+    - desde: 8.7300415
+      hasta: 9.000042
+    - desde: 8.950042
+      hasta: 9.250042
+    - desde: 13.06392
+      hasta: 14.71392
+    - desde: 15.263921
+      hasta: 15.363921
+    - desde: 16.913921
+      hasta: 17.363922
+  - id: Actor_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: CHAR_ESTELA
+    posiciones:
+    - t: 0
+      p: {x: 92.559326, y: 14.029524, z: 3.0000002}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14, z: -0.5}
+      actor: 
+    - t: 0.2
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 2.1920407
+      tipo: 1
+      rumbo: 0
+      punto: {x: 97.059326, y: 14, z: 7}
+      actor: 
+    - t: 9.100041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.236777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.88392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.08188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.698017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.398018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.79802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    - t: 45.27802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    cabezas:
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.050041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.186777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.833921
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.031881
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.648018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.34802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.74802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    - t: 45.22802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion:
+    - fundido: 0
+      t: 9.650042
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 12.405634
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.313921
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 29.449268
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 31.50535
+      tipo: 2
+      estado: Pain01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 32.40535
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 34.82802
+      tipo: 1
+      estado: Laugh01_Loop
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 36.628017
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 38.988018
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 43.22802
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: preocupado
+      dura: 0
+    - t: 2.1920407
+      emocion: sorpresa
+      dura: 0
+    - t: 3.2920408
+      emocion: enfado
+      dura: 0
+    - t: 30.40535
+      emocion: molesto
+      dura: 0
+    - t: 31.50535
+      emocion: sorpresa
+      dura: 0
+    - t: 32.40535
+      emocion: alegre
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: Actor_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: CHAR_LIAM
+    posiciones:
+    - t: 0
+      p: {x: 94.22748, y: 14, z: 7.0249133}
+    - t: 5.541374
+      p: {x: 94.22748, y: 14, z: 7.0249133}
+    - t: 5.6313744
+      p: {x: 94.30823, y: 14.04992, z: 6.9575467}
+    - t: 5.721374
+      p: {x: 94.50079, y: 14.16896, z: 6.7969036}
+    - t: 5.811374
+      p: {x: 94.73064, y: 14.31104, z: 6.6051683}
+    - t: 5.9013743
+      p: {x: 94.9232, y: 14.430079, z: 6.4445252}
+    - t: 5.991374
+      p: {x: 95.00395, y: 14.48, z: 6.3771586}
+    - t: 13.06392
+      p: {x: 95.00395, y: 14.48, z: 6.3771586}
+    - t: 13.16392
+      p: {x: 95.01906, y: 14.474609, z: 6.383827}
+    - t: 13.26392
+      p: {x: 95.06176, y: 14.459374, z: 6.4026723}
+    - t: 13.36392
+      p: {x: 95.128105, y: 14.435702, z: 6.4319553}
+    - t: 13.46392
+      p: {x: 95.21416, y: 14.405, z: 6.469936}
+    - t: 13.56392
+      p: {x: 95.31598, y: 14.368671, z: 6.514875}
+    - t: 13.66392
+      p: {x: 95.42963, y: 14.328125, z: 6.565033}
+    - t: 13.76392
+      p: {x: 95.551155, y: 14.284765, z: 6.61867}
+    - t: 13.86392
+      p: {x: 95.67662, y: 14.24, z: 6.6740465}
+    - t: 13.96392
+      p: {x: 95.802086, y: 14.195234, z: 6.7294226}
+    - t: 14.06392
+      p: {x: 95.923615, y: 14.151875, z: 6.7830596}
+    - t: 14.16392
+      p: {x: 96.03726, y: 14.111328, z: 6.8332176}
+    - t: 14.26392
+      p: {x: 96.139084, y: 14.075, z: 6.8781567}
+    - t: 14.36392
+      p: {x: 96.225136, y: 14.044297, z: 6.916137}
+    - t: 14.46392
+      p: {x: 96.29148, y: 14.020625, z: 6.9454203}
+    - t: 14.56392
+      p: {x: 96.33418, y: 14.00539, z: 6.9642653}
+    - t: 14.66392
+      p: {x: 96.34929, y: 14, z: 6.970934}
+    - t: 15.263921
+      p: {x: 96.34929, y: 14, z: 6.970934}
+    - t: 15.28892
+      p: {x: 96.34929, y: 13.2, z: 6.970934}
+    - t: 15.313921
+      p: {x: 96.34929, y: 12.4, z: 6.970934}
+    - t: 16.913921
+      p: {x: 96.34929, y: 12.4, z: 6.970934}
+    - t: 17.013922
+      p: {x: 96.34929, y: 13.099999, z: 6.970934}
+    - t: 17.113922
+      p: {x: 96.34929, y: 13.6, z: 6.970934}
+    - t: 17.21392
+      p: {x: 96.34929, y: 13.9, z: 6.970934}
+    - t: 17.313921
+      p: {x: 96.34929, y: 14, z: 6.970934}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 96.19981, y: 14, z: 5.0318217}
+      actor: 
+    - t: 0.32
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 5.541374
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 8.950042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 13.06392
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 15.263921
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 20.00392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 22.726166
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 25.710043
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 38.818016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.518017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.91802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    - t: 45.128017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 0.26999998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.170042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.016777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 14.31392
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    - t: 19.95392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 22.726166
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 25.660044
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.86188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 38.768017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.468018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.86802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    - t: 45.128017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    animacion:
+    - fundido: 0
+      t: 3.8920407
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 5.541374
+      tipo: 2
+      estado: JumpFull_InPlace_NoWeapon
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 9.650042
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0.2
+      t: 13.06392
+      tipo: 1
+      estado: Falling
+      congelar: 0
+      alFinal: 0
+    - fundido: 0.25
+      t: 14.31392
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.263921
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 15.263921
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 20.313921
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 26.260044
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 38.988018
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 43.22802
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    caras:
+    - t: 0
+      emocion: cansado
+      dura: 0
+    - t: 6.291374
+      emocion: neutral
+      dura: 0
+    - t: 8.950042
+      emocion: miedo
+      dura: 0
+    - t: 16.913921
+      emocion: molesto
+      dura: 0
+    - t: 22.726166
+      emocion: molesto
+      dura: 2.9338777
+    - t: 28.81188
+      emocion: neutral
+      dura: 1.9934694
+    - t: 45.128017
+      emocion: sorpresa
+      dura: 2.1502042
+    visible:
+    - desde: 0
+      hasta: 15.263921
+    - desde: 16.913921
+      hasta: 109.68755
+    deslizando:
+    - desde: 5.541374
+      hasta: 6.041374
+    - desde: 13.06392
+      hasta: 14.71392
+    - desde: 15.263921
+      hasta: 15.363921
+    - desde: 16.913921
+      hasta: 17.363922
+  - id: Actor_Pompon
+    alias: pompon
+    colorDelNombre: {r: 1, g: 0.3529412, b: 0.43137255, a: 1}
+    claveDelNombre: CHAR_POMPON
+    posiciones:
+    - t: 0
+      p: {x: 90.95933, y: 14.036818, z: 2.1000004}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14, z: -0.5}
+      actor: 
+    - t: 0.44
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.340042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.356777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 20.12392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.20188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.938015
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.638016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 43.038017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    - t: 47.37822
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 0.39
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.290042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.306777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 20.073921
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.15188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.888016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.588017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.988018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion:
+    - fundido: 0
+      t: 47.37822
+      tipo: 2
+      estado: Jump
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_JuezPresidente
+    alias: presidente
+    colorDelNombre: {r: 1, g: 0.8784314, b: 0.5411765, a: 1}
+    claveDelNombre: CHAR_JUEZ_PRESIDENTE
+    posiciones:
+    - t: 0
+      p: {x: 92.559326, y: 14, z: -0.50000024}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.56
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.460042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.476777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.76392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.32188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.57802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.27802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 41.52802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    cabezas:
+    - t: 0.51
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.410042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.426777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.71392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.271881
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.52802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.22802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.57802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_JuezMarshie
+    alias: malvavisco
+    colorDelNombre: {r: 0.972549, g: 0.84705883, b: 0.9411765, a: 1}
+    claveDelNombre: CHAR_JUEZ_MALVAVISCO
+    posiciones:
+    - t: 0
+      p: {x: 90.559326, y: 14, z: -0.5000005}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.2
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.100041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.116776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.88392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 28.96188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.698017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 42.67802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.050041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.066776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.833921
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 28.91188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.648018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.178017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 42.62802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion:
+    - fundido: 0
+      t: 40.128017
+      tipo: 2
+      estado: Marshies_Jump
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_JuezEyeBud
+    alias: lagrimitas
+    colorDelNombre: {r: 0.72156864, g: 0.9019608, b: 1, a: 1}
+    claveDelNombre: CHAR_JUEZ_LAGRIMITAS
+    posiciones:
+    - t: 0
+      p: {x: 94.559326, y: 14, z: -0.49999982}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.32
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.220042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.236777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 20.00392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.08188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 40.398018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.79802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 0.26999998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.170042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.186777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.95392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.031881
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.478016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 40.34802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.74802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion: []
+    caras: []
+    visible: []
+    deslizando: []
+  - id: Actor_Gominola1
+    alias: g1
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 90.559326, y: 14, z: 7.5999994}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.44
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.340042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.356777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 20.12392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.20188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.818016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.518017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.91802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 0.39
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.290042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.306777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 20.073921
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 29.15188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.768017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.468018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.86802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion: []
+    caras: []
+    visible:
+    - desde: 0
+      hasta: 109.68755
+    deslizando: []
+  - id: Actor_Gominola2
+    alias: g2
+    colorDelNombre: {r: 1, g: 0.56078434, b: 0.69411767, a: 1}
+    claveDelNombre: CHAR_GOMINOLA
+    posiciones:
+    - t: 0
+      p: {x: 92.75932, y: 13.981142, z: 7.8999996}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.56
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.460042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.476777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 29.32188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.938015
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.638016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 43.038017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 0.51
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.410042
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.426777
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.66392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 29.271881
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.888016
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.588017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.988018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion:
+    - fundido: 0
+      t: 19.61392
+      tipo: 2
+      estado: Jump
+      congelar: 0
+      alFinal: 0
+    caras: []
+    visible:
+    - desde: 0
+      hasta: 109.68755
+    deslizando: []
+  - id: Actor_Gominola3
+    alias: g3
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: 
+    posiciones:
+    - t: 0
+      p: {x: 94.75932, y: 14, z: 7.7}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 0.2
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.100041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.116776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.76392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 28.96188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.57802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.27802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.67802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    cabezas:
+    - t: 0.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.050041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.066776
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 19.71392
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Gominola2
+    - t: 28.91188
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 38.52802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezEyeBud
+    - t: 40.22802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezMarshie
+    - t: 42.62802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_JuezPresidente
+    animacion: []
+    caras: []
+    visible:
+    - desde: 0
+      hasta: 109.68755
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0.05
+    t1: 2.1920407
+    actor: Player
+    clave: CHUCHELANDIA_TEQUIERO_01
+    gesto: Cheer02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 8.950042
+    t1: 11.666777
+    actor: Player
+    clave: CHUCHELANDIA_TEQUIERO_07
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 11.966777
+    t1: 13.06392
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_TEQUIERO_08
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 19.61392
+    t1: 22.226166
+    actor: Actor_Gominola2
+    clave: CHUCHELANDIA_TEQUIERO_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 22.726166
+    t1: 25.260044
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_TEQUIERO_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 25.560043
+    t1: 28.51188
+    actor: Player
+    clave: CHUCHELANDIA_TEQUIERO_04
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 28.81188
+    t1: 30.40535
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_TEQUIERO_05
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 38.428017
+    t1: 39.82802
+    actor: Actor_JuezEyeBud
+    clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ
+    gesto: 
+    sinPose: 1
+    presentacion: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 40.128017
+    t1: 41.52802
+    actor: Actor_JuezMarshie
+    clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ
+    gesto: 
+    sinPose: 1
+    presentacion: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 42.52802
+    t1: 45.128017
+    actor: Actor_JuezPresidente
+    clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO
+    gesto: 
+    sinPose: 1
+    presentacion: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 45.128017
+    t1: 46.87822
+    actor: Actor_Liam
+    clave: CHUCHELANDIA_TEQUIERO_06
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0.05
+    t1: 2.1920407
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 0.05
+      p: {x: 93.32228, y: 15.931307, z: 3.6781802}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras:
+    - {x: 96.19981, y: 14, z: 5.0318217}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0880126
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 2.1920407
+    t1: 3.8920407
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 2.1920407
+      p: {x: 97.24034, y: 15.336817, z: 3.3382933}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 3.8920407
+    t1: 6.291374
+    tipo: 1
+    descripcion: conjunto de liam
+    posiciones:
+    - t: 3.8920407
+      p: {x: 93.32228, y: 15.631308, z: 3.6781802}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras:
+    - {x: 95.00395, y: 14, z: 6.3771586}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0555179
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 6.291374
+    t1: 13.06392
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 6.291374
+      p: {x: 93.32228, y: 15.931307, z: 3.6781802}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0717652
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 13.06392
+    t1: 15.263921
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 13.06392
+      p: {x: 93.023315, y: 15.2, z: 9.433232}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras:
+    - {x: 97.059326, y: 14, z: 7}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0717652
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 15.263921
+    t1: 19.61392
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 15.263921
+      p: {x: 93.32228, y: 15.331307, z: 3.6781802}
+    lente: 26
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 97.059326, y: 14.8, z: 7}
+    alturaDelFoco: 0.8
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 19.61392
+    t1: 22.226166
+    tipo: 2
+    descripcion: medio de g2
+    posiciones:
+    - t: 19.61392
+      p: {x: 93.78415, y: 15.148364, z: 4.2022123}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Gominola2
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.3552045
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 22.226166
+    t1: 30.40535
+    tipo: 5
+    descripcion: 'dos: liam y will'
+    posiciones:
+    - t: 22.226166
+      p: {x: 94.06247, y: 15.236817, z: 4.3361416}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.84078085
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 30.40535
+    t1: 32.40535
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 30.40535
+      p: {x: 96.312454, y: 15.336818, z: 4.1000385}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1313343
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 32.40535
+    t1: 36.628017
+    tipo: 1
+    descripcion: conjunto de estela
+    posiciones:
+    - t: 32.40535
+      p: {x: 98.31595, y: 15.1, z: 4.6872606}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1792966
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 36.628017
+    t1: 37.82802
+    tipo: 0
+    descripcion: general de estela y presidente y malvavisco y lagrimitas
+    posiciones:
+    - t: 36.628017
+      p: {x: 98.776146, y: 17.17417, z: 6.4881396}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Actor_JuezPresidente
+    - Actor_JuezMarshie
+    - Actor_JuezEyeBud
+    pesos:
+    - 1
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9000475
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 37.82802
+    t1: 45.128017
+    tipo: 1
+    descripcion: conjunto de presidente y malvavisco y lagrimitas
+    posiciones:
+    - t: 37.82802
+      p: {x: 97.33861, y: 15.936816, z: 3.3738422}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_JuezPresidente
+    - Actor_JuezMarshie
+    - Actor_JuezEyeBud
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1342545
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 45.128017
+    t1: 47.37822
+    tipo: 5
+    descripcion: 'dos: liam y will'
+    posiciones:
+    - t: 45.128017
+      p: {x: 95.138885, y: 15.233612, z: 3.521565}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.84078085
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 47.37822
+    t1: 49.687553
+    tipo: 2
+    descripcion: medio de pompon
+    posiciones:
+    - t: 47.37822
+      p: {x: 90.52919, y: 15.2, z: 5.676589}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Pompon
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.3552045
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344643
+    linea: 60
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344644
+    linea: 74
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344645
+    linea: 75
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294313956344646
+    linea: 76
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.05
+    beat:
+      rid: 6540294313956344647
+    linea: 83
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 5.541374
+    beat:
+      rid: 6540294313956344648
+    linea: 102
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.350041
+    beat:
+      rid: 6540294313956344649
+    linea: 116
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.350041
+    beat:
+      rid: 6540294313956344650
+    linea: 117
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.350041
+    beat:
+      rid: 6540294313956344651
+    linea: 115
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.530042
+    beat:
+      rid: 6540294313956344652
+    linea: 119
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.530042
+    beat:
+      rid: 6540294313956344653
+    linea: 120
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.7300415
+    beat:
+      rid: 6540294313956344654
+    linea: 122
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.7300415
+    beat:
+      rid: 6540294313956344655
+    linea: 123
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 8.950042
+    beat:
+      rid: 6540294313956344656
+    linea: 127
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344657
+    linea: 144
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344658
+    linea: 145
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344659
+    linea: 143
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344660
+    linea: 138
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344661
+    linea: 137
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.06392
+    beat:
+      rid: 6540294313956344662
+    linea: 139
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344663
+    linea: 151
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344664
+    linea: 152
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344665
+    linea: 153
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344666
+    linea: 154
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344667
+    linea: 155
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344668
+    linea: 156
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.66392
+    beat:
+      rid: 6540294313956344669
+    linea: 157
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.78392
+    beat:
+      rid: 6540294313956344670
+    linea: 158
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344671
+    linea: 174
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344672
+    linea: 175
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344673
+    linea: 173
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344674
+    linea: 171
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344675
+    linea: 166
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.263921
+    beat:
+      rid: 6540294313956344676
+    linea: 172
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.913921
+    beat:
+      rid: 6540294313956344677
+    linea: 179
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.46392
+    beat:
+      rid: 6540294313956344678
+    linea: 181
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.913921
+    beat:
+      rid: 6540294313956344679
+    linea: 192
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.913921
+    beat:
+      rid: 6540294313956344680
+    linea: 193
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.913921
+    beat:
+      rid: 6540294313956344681
+    linea: 194
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 17.313921
+    beat:
+      rid: 6540294313956344682
+    linea: 195
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 18.71392
+    beat:
+      rid: 6540294313956344683
+    linea: 197
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 19.61392
+    beat:
+      rid: 6540294313956344684
+    linea: 203
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 22.226166
+    beat:
+      rid: 6540294313956344685
+    linea: 207
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 22.226166
+    beat:
+      rid: 6540294313956344686
+    linea: 208
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 31.50535
+    beat:
+      rid: 6540294313956344687
+    linea: 219
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 32.40535
+    beat:
+      rid: 6540294313956344688
+    linea: 230
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 32.40535
+    beat:
+      rid: 6540294313956344689
+    linea: 227
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 32.40535
+    beat:
+      rid: 6540294313956344690
+    linea: 228
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 36.628017
+    beat:
+      rid: 6540294313956344691
+    linea: 238
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 37.82802
+    beat:
+      rid: 6540294313956344692
+    linea: 245
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 42.52802
+    beat:
+      rid: 6540294313956344693
+    linea: 253
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 45.128017
+    beat:
+      rid: 6540294313956344694
+    linea: 258
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344695
+    linea: 270
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344696
+    linea: 269
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344697
+    linea: 271
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344698
+    linea: 267
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344699
+    linea: 266
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.37822
+    beat:
+      rid: 6540294313956344700
+    linea: 268
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 48.67822
+    beat:
+      rid: 6540294313956344701
+    linea: 275
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: estela_se_vuelve
+    t: 2.1920407
+  - nombre: liam_sube
+    t: 3.8920407
+  - nombre: pancarta
+    t: 6.291374
+  - nombre: rebote
+    t: 8.350041
+  - nombre: caida
+    t: 13.06392
+  - nombre: plof
+    t: 14.66392
+  - nombre: silencio_fuente
+    t: 15.263921
+  - nombre: salen
+    t: 16.913921
+  - nombre: novios
+    t: 19.61392
+  - nombre: aguanta
+    t: 30.40535
+  - nombre: risa
+    t: 32.40535
+  - nombre: silencio_salon
+    t: 36.628017
+  - nombre: cartelitos
+    t: 37.82802
+  - nombre: cuenta
+    t: 45.128017
+  - nombre: final
+    t: 47.37822
+  puntos:
+  - nombre: p_centro
+    posicion: {x: 92.559326, y: 14.029524, z: 3.0000002}
+  - nombre: p_palco
+    posicion: {x: 92.559326, y: 14, z: -0.5}
+  - nombre: p_juez1
+    posicion: {x: 90.559326, y: 14, z: -0.5000005}
+  - nombre: p_juez2
+    posicion: {x: 92.559326, y: 14, z: -0.50000024}
+  - nombre: p_juez3
+    posicion: {x: 94.559326, y: 14, z: -0.49999982}
+  - nombre: p_fuente
+    posicion: {x: 97.059326, y: 14, z: 7}
+  - nombre: p_silla_will
+    posicion: {x: 96.19981, y: 14, z: 5.0318217}
+  - nombre: p_silla_liam
+    posicion: {x: 95.00395, y: 14, z: 6.3771586}
+  - nombre: p_junto_liam
+    posicion: {x: 94.22748, y: 14, z: 7.0249133}
+  - nombre: p_caida_will
+    posicion: {x: 96.94721, y: 14, z: 6.2982655}
+  - nombre: p_caida_liam
+    posicion: {x: 96.34929, y: 14, z: 6.970934}
+  - nombre: p_novio_will
+    posicion: {x: 96.99704, y: 14, z: 6.5432496}
+  - nombre: p_novio_liam
+    posicion: {x: 96.59843, y: 14, z: 6.9916954}
+  - nombre: p_pompon
+    posicion: {x: 90.95933, y: 14.036818, z: 2.1000004}
+  - nombre: cam_fuente
+    posicion: {x: 93.32228, y: 14.031307, z: 3.6781802}
+  - nombre: cam_lado
+    posicion: {x: 93.023315, y: 14, z: 9.433232}
+  - nombre: p_pub1
+    posicion: {x: 90.559326, y: 14, z: 7.5999994}
+  - nombre: p_pub2
+    posicion: {x: 92.75932, y: 13.981142, z: 7.8999996}
+  - nombre: p_pub3
+    posicion: {x: 94.75932, y: 14, z: 7.7}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294313956344643
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294313956344644
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        active: 1
+    - rid: 6540294313956344645
+      type: {class: CuerpoSinFisicaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+    - rid: 6540294313956344646
+      type: {class: CuerpoSinFisicaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Liam
+    - rid: 6540294313956344647
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: c0654de58e91e03bf88d75b941d81074, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344648
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: f610393378cfa32a99e88c4e5d9af93b, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344649
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 0b8caaf0b7ceff2f0a21a08af89ffe28, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344650
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        deltaPosicion: {x: 0, y: 0.15, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 0.18
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344651
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: ec7d99bbc085b9870b46d2d5cab2f061, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344652
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 0.2
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344653
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_SillaWill
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: -10, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 0.2
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344654
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        deltaPosicion: {x: 0, y: 0.2, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 0.22
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344655
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 0b8caaf0b7ceff2f0a21a08af89ffe28, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.9
+        tono: 1
+    - rid: 6540294313956344656
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_SillaWill
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: -24, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 0.3
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344657
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_SillaLiam
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: -85, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 1.2
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 1
+    - rid: 6540294313956344658
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        deltaPosicion: {x: 0, y: -1.1, z: -1.2}
+        deltaRotacion: {x: -70, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 1.5
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344659
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_SillaWill
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: -85, y: 0, z: 0}
+        enSusEjes: 1
+        segundos: 1.1
+        suavizar: 1
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 1
+    - rid: 6540294313956344660
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: caida
+        musicaDb: -14
+        sfxDb: 0
+        ambienteDb: 0
+        fundido: 0.3
+        quitar: 0
+    - rid: 6540294313956344661
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        timeScale: 0.3
+        rampDuration: 0.15
+    - rid: 6540294313956344662
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 0662b5bbced8000f485a74c64d00d955, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344663
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        timeScale: 1
+        rampDuration: 0.1
+    - rid: 6540294313956344664
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 478840306234833659, guid: 6c48e9a4e3abd1240b24b2d92574c240, type: 3}
+        atActorId: 
+        markName: M_Cine_Salon_Fuente_Will
+        offset: {x: 0, y: 0.3, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344665
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 478840306234833659, guid: 6c48e9a4e3abd1240b24b2d92574c240, type: 3}
+        atActorId: 
+        markName: M_Cine_Salon_Fuente_Liam
+        offset: {x: 0, y: 0.3, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344666
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: c4a619d419f485e3c8274090402a9e52, type: 3}
+        atActorId: 
+        markName: 
+        volume: 1
+        tono: 1
+    - rid: 6540294313956344667
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.2
+        duration: 0.45
+        waitForEnd: 0
+    - rid: 6540294313956344668
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: caida
+        musicaDb: 0
+        sfxDb: 0
+        ambienteDb: 0
+        fundido: 0.2
+        quitar: 1
+    - rid: 6540294313956344669
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Pancarta
+        active: 0
+    - rid: 6540294313956344670
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 5613f2e09fe5d491789612c3870d24a3, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344671
+      type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        propId: PROP_CorazonDeLiam
+        dejar: 0
+        mano: 10
+        offset: {x: 0, y: 0, z: 0}
+        giro: {x: 0, y: 0, z: 0}
+        posicionFinal: {x: 0, y: 0, z: 0}
+        giroFinal: {x: 358.8174, y: 89.99998, z: 270}
+        tieneDestinoFinal: 1
+        ocultoAlFinal: 1
+        gestoHorneado: 
+        segundoDelGesto: 0
+        segundosDeApoyo: 0.25
+    - rid: 6540294313956344672
+      type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Liam
+        propId: PROP_Velo
+        dejar: 0
+        mano: 10
+        offset: {x: 0, y: 0, z: 0}
+        giro: {x: 0, y: 0, z: 0}
+        posicionFinal: {x: 0, y: 0, z: 0}
+        giroFinal: {x: -0, y: 90, z: 270}
+        tieneDestinoFinal: 1
+        ocultoAlFinal: 1
+        gestoHorneado: 
+        segundoDelGesto: 0
+        segundosDeApoyo: 0.25
+    - rid: 6540294313956344673
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_MantelNovios
+        deltaPosicion: {x: 0, y: -1.6, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        enSusEjes: 0
+        segundos: 0
+        suavizar: 1
+        esperar: 1
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344674
+      type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        atuendo: {fileID: 11400000, guid: 3978a78df0703984cba3ddf26cf727c1, type: 2}
+        poner: 1
+    - rid: 6540294313956344675
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: silencio
+        musicaDb: -40
+        sfxDb: 0
+        ambienteDb: -30
+        fundido: 0.3
+        quitar: 0
+    - rid: 6540294313956344676
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_MantelNovios
+        active: 1
+    - rid: 6540294313956344677
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 1c0370f9553392603b24a0fa17629e5a, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344678
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 53b8ec30283a23c4daf60d1b88d06ed5, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344679
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_MantelNovios
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        enSusEjes: 0
+        segundos: 0.4
+        suavizar: 0
+        esperar: 0
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 1
+        apoyarEnElSuelo: 0
+    - rid: 6540294313956344680
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: a7e51dec8e920174ea0a046c0a99d930, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 6540294313956344681
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 478840306234833659, guid: 6c48e9a4e3abd1240b24b2d92574c240, type: 3}
+        atActorId: 
+        markName: M_Duelo_Fuente
+        offset: {x: 0, y: 0.3, z: 0.4}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344682
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 2a7ec4ed00540ab6798c827c335ba49e, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.7
+        tono: 1
+    - rid: 6540294313956344683
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: f4e22805a19e3693192fe88bedb21d40, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344684
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: silencio
+        musicaDb: 0
+        sfxDb: 0
+        ambienteDb: 0
+        fundido: 0.6
+        quitar: 1
+    - rid: 6540294313956344685
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
+        atActorId: Player
+        markName: 
+        offset: {x: 0.3, y: 1.6, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 1
+    - rid: 6540294313956344686
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 91937034e8690bab4a51993657db6c12, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344687
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 3ccffda1d74936e14b1e62a982811153, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.45
+        tono: 1
+    - rid: 6540294313956344688
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Final_Estela_Risa
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.9
+        tono: 1
+    - rid: 6540294313956344689
+      type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        atuendo: {fileID: 11400000, guid: ff0477d63e72bb543bb14803cbe7c6ed, type: 2}
+        poner: 1
+    - rid: 6540294313956344690
+      type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Estela
+        propId: PROP_LazoDeEstela
+        dejar: 0
+        mano: 10
+        offset: {x: 0, y: 0, z: 0}
+        giro: {x: 0, y: 0, z: 0}
+        posicionFinal: {x: 0, y: 0, z: 0}
+        giroFinal: {x: 358.8174, y: 89.99998, z: 270}
+        tieneDestinoFinal: 1
+        ocultoAlFinal: 1
+        gestoHorneado: 
+        segundoDelGesto: 0
+        segundosDeApoyo: 0.25
+    - rid: 6540294313956344691
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: salon
+        musicaDb: -40
+        sfxDb: 0
+        ambienteDb: -20
+        fundido: 0.5
+        quitar: 0
+    - rid: 6540294313956344692
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: 0a3546cce732809ac9c6743b1dc61038, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.5
+        tono: 1
+    - rid: 6540294313956344693
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: 
+        clip: {fileID: 8300000, guid: b4bd0a23e7a9badd2ac97f8df9455012, type: 3}
+        atActorId: 
+        markName: 
+        volume: 0.6
+        tono: 1
+    - rid: 6540294313956344694
+      type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fuente: salon
+        musicaDb: 0
+        sfxDb: 0
+        ambienteDb: 0
+        fundido: 1.2
+        quitar: 1
+    - rid: 6540294313956344695
+      type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        atuendo: {fileID: 11400000, guid: 3978a78df0703984cba3ddf26cf727c1, type: 2}
+        poner: 0
+    - rid: 6540294313956344696
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_LazoDeEstela
+        active: 0
+    - rid: 6540294313956344697
+      type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        atuendo: {fileID: 11400000, guid: ff0477d63e72bb543bb14803cbe7c6ed, type: 2}
+        poner: 0
+    - rid: 6540294313956344698
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Velo
+        active: 0
+    - rid: 6540294313956344699
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_MantelNovios
+        active: 0
+    - rid: 6540294313956344700
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_CorazonDeLiam
+        active: 0
+    - rid: 6540294313956344701
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

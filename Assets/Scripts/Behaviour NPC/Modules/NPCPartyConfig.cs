@@ -143,6 +143,11 @@ namespace Game.NPC.Modules
         [Range(0.5f, 4f)]
         public float flightFormationSpread = 1.5f;
 
+        [Tooltip("Distancia hacia atrás de cada fila de la formación en V (vuelo, nado, plataformas), en metros. " +
+                 "Con menos de ~1,5 m el compañero se mete en el cuerpo del jugador en la pose de picado.")]
+        [Range(0.8f, 5f)]
+        public float flightFormationBack = 1.8f;
+
         [Tooltip("Amplitud (metros) del movimiento vertical oscilante mientras el compañero vuela. " +
                  "Por defecto igual al valor real configurado en _WILL.prefab (0.18), no al default " +
                  "del script PlayerFlyingController (0.8), que es mucho más exagerado.")]

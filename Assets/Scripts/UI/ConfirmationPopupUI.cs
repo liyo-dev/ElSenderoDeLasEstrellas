@@ -212,6 +212,25 @@ public class ConfirmationPopupUI : MonoBehaviour
         }
 
         ((RectTransform)boton.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ancho);
+        CentrarTintaEnBoton(texto);
+    }
+
+    // El centrado de TMP va por el avance de cada letra, no por lo que se ve: con letras de
+    // trazo asimétrico («Sí», la tilde) el texto quedaba visiblemente corrido dentro del botón.
+    // Se desplaza la etiqueta para que el centro del dibujo coincida con el centro del botón.
+    static void CentrarTintaEnBoton(TextMeshProUGUI texto)
+    {
+        var rt = texto.rectTransform;
+        var pos = rt.anchoredPosition;
+        pos.x = 0f;
+        rt.anchoredPosition = pos;
+        texto.ForceMeshUpdate();
+        if (texto.textInfo == null || texto.textInfo.characterCount == 0) return;
+        // textBounds está en el espacio local de la etiqueta; con pivote centrado y márgenes
+        // simétricos, el centro del botón es x = (0.5 - pivot.x) * ancho.
+        float centroCaja = (0.5f - rt.pivot.x) * rt.rect.width;
+        pos.x = centroCaja - texto.textBounds.center.x;
+        rt.anchoredPosition = pos;
     }
 
     void Update()
@@ -291,6 +310,10 @@ public class ConfirmationPopupUI : MonoBehaviour
     {
         var selectedBtn = confirm ? confirmButton : cancelButton;
         var unselectedBtn = confirm ? cancelButton : confirmButton;
+
+        // Cambiar de botón suena como en el resto de menús (mando, teclado o ratón).
+        // Al abrir (instant) no suena: ahí no ha habido cambio.
+        if (!instant) Core.GamepadInputReader.PlayUISound("UI_Navigate");
 
         if (unselectedBtn != null)
         {

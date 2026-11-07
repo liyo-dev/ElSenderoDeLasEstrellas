@@ -1,0 +1,95 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  EL SENDERO · EL CONJURO DE LA PIEDRA ANCESTRAL
+#  Will ha aceptado leer el ritual ante el monolito. Se coloca frente a la Piedra, se enciende el
+#  círculo bajo sus pies y recita el conjuro (SENDERO_CONJURO_01-04). La Piedra despierta, nace un
+#  punto de luz delante de ella y, con el grito, se abre la ventana del portal (la de la cinemática
+#  final, con el Sendero dentro). La señal SENDERO_PORTAL_ABIERTO la enciende: ActivoEnTramo la deja
+#  abierta y VentanaDePortal la abre desde un punto. Se hornea con:
+#    hornear Assets/_SEQUENCES/Guiones/Sendero_01_ElConjuro.guion.txt storyboard
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Sendero_01_ElConjuro
+ESCENA MainWorld
+ZONA PiedraAncestral 565 -505 22
+SECUENCIA Assets/_SEQUENCES/SEQ_SenderoConjuro.asset
+TEXTO subtitulo
+RITMO entre_frases=0.5 mismo_hablante=0.35
+
+REPARTO
+will  Player  nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+
+PUNTOS
+# El monolito está en (565, -505); la entrada del recinto, al sur (z -516). Suelo del claro a 18 m.
+# La ventana del portal está en p_portal, de pie, con el centro a 1,65 m del suelo.
+p_piedra         565.0 -505.0 18.0
+p_portal         565.0 -508.6 18.0
+p_will           565.0 -512.4 18.0
+p_will_cerca     565.0 -511.0 18.0
+cam_general      565.0 -524.0 18.0
+cam_will_frente  563.4 -509.8 18.0
+cam_contrapicado 566.6 -514.0 18.0
+cam_hombro       564.0 -514.6 18.0
+cam_lateral      558.6 -510.8 18.0
+cam_espalda      565.4 -516.2 18.0
+HILO
+@inicio
+will en p_will mirando p_piedra
+bandas muestra
+
+# El recinto: Will, pequeño, ante la Piedra. La cámara se acerca despacio.
+plano general will desde=cam_general mira=p_piedra altura=4.5 altura_foco=2.2 lente=38 suave=0.8
+espera 2.0
+
+# Empieza el ritual: círculo bajo los pies y luz en las manos.
+plano medio will solo desde=cam_will_frente mira=p_will altura=1.3 altura_foco=1.2 lente=36 suave=0.4
+will bucle CastingIdle01
+will cara decidido
+vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=p_will offset=0,0.05,0 lifetime=40 registrarComo=CIRCULO_CONJURO
+& sonido Prologo_MagiaLevitar volume=0.45
+& efecto ConjuroEnLasManosBeat actorId=will vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.4,0.2 avance=0.05 elevacion=0.03 duracion=1.5 periodo=1.2 escalaInicial=0.3 escalaFinal=0.7 registrarComo=LUZ_MANOS vidaEnPool=40
+efecto EfectoDeVozBeat preset=Epico gananciaDb=3
+will dice SENDERO_CONJURO_01 cara=decidido dura=6.5
+espera 0.4
+
+# La Piedra despierta: una columna de luz la recorre y tiembla el suelo.
+plano general will desde=cam_contrapicado mira=p_piedra altura=0.5 altura_foco=2.8 lente=42 suave=0.5
+vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=p_piedra lifetime=2.4
+& sonido SFX_Prologo_Trueno_Lejano volume=0.45
+& sacudida 0.15 1.4
+will dice SENDERO_CONJURO_02 cara=decidido dura=6.5
+espera 0.4
+
+# Nace un punto de luz delante de la Piedra, donde estará el portal, y crece con la frase.
+plano conjunto will desde=cam_lateral mira=p_portal altura=1.7 altura_foco=1.6 lente=36 suave=0.4
+vfx Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab en=p_portal offset=0,1.65,0 lifetime=40 registrarComo=SEMILLA_PORTAL
+& efecto EscalarActorBeat actorId=SEMILLA_PORTAL escala=0.2 duracion=0
+& efecto EscalarActorBeat actorId=SEMILLA_PORTAL escala=1.0 duracion=5.5
+& sonido Prologo_Carga volume=0.7
+& sacudida 0.25 1.6
+will dice SENDERO_CONJURO_03 cara=decidido dura=6.0
+espera 0.3
+
+# El grito.
+plano primer will solo desde=cam_will_frente mira=p_will altura=1.3 altura_foco=1.3 lente=30 suave=0.2
+efecto LineasDeConcentracionBeat mostrar=true duracion=2.8
+& efecto EscalarActorBeat actorId=SEMILLA_PORTAL escala=1.6 duracion=2.6
+will dice SENDERO_CONJURO_04 cara=enfado dura=2.8
+efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
+
+# Se abre el portal: de perfil, la luz se rompe en el óvalo con el Sendero dentro.
+plano conjunto will desde=cam_lateral mira=p_portal altura=1.6 altura_foco=1.65 lente=40 suave=0
+destello FFFFFFFF 0.35
+& efecto RecogerVfxBeat ids=SEMILLA_PORTAL|LUZ_MANOS
+& efecto SenalBeat senal=SENDERO_PORTAL_ABIERTO
+& sacudida 0.35 0.9
+& sonido Prologo_HechizoGrande volume=0.6
+will reposo
+espera 2.6
+
+# Por encima del hombro de Will: al otro lado, el camino de luz entre las estrellas.
+plano conjunto will desde=cam_espalda mira=p_portal altura=1.5 altura_foco=1.65 lente=34 suave=0.6
+efecto RecogerVfxBeat ids=CIRCULO_CONJURO
+will cara sorpresa
+espera 1.4
+will anda a p_will_cerca ritmo=paseo llega_mirando=p_portal
+espera 2.2

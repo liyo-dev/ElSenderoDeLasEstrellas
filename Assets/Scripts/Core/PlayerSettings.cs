@@ -9,7 +9,6 @@ public static class PlayerSettings
     public static event Action<string> LanguageChanged;
     public static event Action<AudioBus, float> VolumeChanged;
     public static event Action<bool> InvertLookChanged;
-    public static event Action<bool> InvertFlightLookChanged;
     public static event Action<bool> AvisosDeCombateChanged;
 
 #if UNITY_EDITOR
@@ -19,7 +18,6 @@ public static class PlayerSettings
         LanguageChanged = null;
         VolumeChanged = null;
         InvertLookChanged = null;
-        InvertFlightLookChanged = null;
         AvisosDeCombateChanged = null;
         _loaded = false;
         _data = null;
@@ -40,7 +38,6 @@ public static class PlayerSettings
         public float sfxVolume = 1f;
         public float musicVolume = 1f;
         public bool invertLook = false;
-        public bool invertFlightLook = false;
         public float lookSensitivity = 1f;
         public bool vibration = true;
         public bool subtitles = true;
@@ -110,15 +107,6 @@ public static class PlayerSettings
         }
     }
 
-    public static bool InvertFlightLook
-    {
-        get
-        {
-            EnsureLoaded();
-            return _data.invertFlightLook;
-        }
-    }
-
     public static float LookSensitivity
     {
         get
@@ -157,7 +145,7 @@ public static class PlayerSettings
         _data = LoadFromDisk();
         _loaded = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerSettings] Cargado: invertLook={_data.invertLook}, invertFlightLook={_data.invertFlightLook}");
+        Debug.Log($"[PlayerSettings] Cargado: invertLook={_data.invertLook}");
 #endif
     }
 
@@ -241,20 +229,6 @@ public static class PlayerSettings
         InvertLookChanged?.Invoke(invert);
     }
 
-    public static void SetInvertFlightLook(bool invert)
-    {
-        EnsureLoaded();
-        if (_data.invertFlightLook == invert)
-            return;
-
-        _data.invertFlightLook = invert;
-        SaveToDisk();
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerSettings] InvertFlightLook cambiado a: {invert}");
-#endif
-        InvertFlightLookChanged?.Invoke(invert);
-    }
-
     public static void SetLookSensitivity(float value)
     {
         EnsureLoaded();
@@ -299,11 +273,12 @@ public static class PlayerSettings
         Screen.fullScreen = enabled;
     }
 
-    public static Vector2 ApplyLookInversion(Vector2 lookInput, bool flightContext = false)
+    /// <summary>Invierte el eje Y de la cámara si el jugador lo tiene activado (vale en suelo y en
+    /// vuelo: desde INC-895 el stick derecho es solo cámara también volando).</summary>
+    public static Vector2 ApplyLookInversion(Vector2 lookInput)
     {
         EnsureLoaded();
-        bool invert = flightContext ? _data.invertFlightLook : _data.invertLook;
-        if (invert)
+        if (_data.invertLook)
             lookInput.y = -lookInput.y;
         return lookInput;
     }

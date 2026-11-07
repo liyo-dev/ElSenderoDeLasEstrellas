@@ -8,7 +8,8 @@ using Game.NPC.Common;
 ///
 /// - Los personajes van exactamente por el camino horneado (sin NavMeshAgent mientras dura el
 ///   guion: ni esquivan, ni se empujan, ni se atascan). La animación de andar sale de su velocidad
-///   real, con el mismo criterio que el resto del juego (NavMeshAgentUtility.FactorDeLocomocion).
+///   real (SequenceActor.Desplazarse): los personajes del juego con el mismo criterio que el resto
+///   del juego (NavMeshAgentUtility.FactorDeLocomocion), los de un pack con su IAnimacionDeCorredor.
 /// - Las frases empiezan en su segundo y duran lo que dura su voz.
 /// - Las cámaras las mueve Cinemachine (ver CamarasDeGuion) con la posición horneada.
 /// - Los efectos (VFX, sonidos, cut-ins...) son los beats de siempre, lanzados en su segundo.
@@ -227,6 +228,7 @@ public sealed class ReproductorDeGuion
     {
         if (_terminado) return;
         _terminado = true;
+        if (_ctx != null && _ctx.SeHaSaltado) CumplirAlSaltar(_g, _ctx, _iEfecto);
         Reanudar();
         CerrarLinea();
         SpeechBubbleUI.Instance?.Hide();
@@ -304,9 +306,25 @@ public sealed class ReproductorDeGuion
     private static bool EsDeEstado(SequenceBeat beat)
         => beat != null && beat.CambiaElEscenario;
 
-    private bool CumpleCondicion(string onlyIfFlag, string skipIfFlag)
-        => (string.IsNullOrWhiteSpace(onlyIfFlag) || _ctx.GetFlag(onlyIfFlag))
-           && (string.IsNullOrWhiteSpace(skipIfFlag) || !_ctx.GetFlag(skipIfFlag));
+    private bool CumpleCondicion(string onlyIfFlag, string skipIfFlag) => Cumple(_ctx, onlyIfFlag, skipIfFlag);
+
+    private static bool Cumple(SequenceContext ctx, string onlyIfFlag, string skipIfFlag)
+        => (string.IsNullOrWhiteSpace(onlyIfFlag) || ctx.GetFlag(onlyIfFlag))
+           && (string.IsNullOrWhiteSpace(skipIfFlag) || !ctx.GetFlag(skipIfFlag));
+
+    /// Al saltar la secuencia: cumple lo que dejan hecho los efectos que no han llegado a pasar,
+    /// desde el efecto «desde» (ver SequenceBeat.CumplirAlSaltar).
+    public static void CumplirAlSaltar(GuionHorneado g, SequenceContext ctx, int desde)
+    {
+        if (g?.efectos == null || ctx == null) return;
+        for (int i = Mathf.Max(0, desde); i < g.efectos.Count; i++)
+        {
+            var e = g.efectos[i];
+            if (e?.beat == null || !Cumple(ctx, e.onlyIfFlag, e.skipIfFlag)) continue;
+            try { e.beat.CumplirAlSaltar(ctx); }
+            catch (System.Exception ex) { Debug.LogException(ex); }
+        }
+    }
 
     private void Lanzar(EfectoHorneado e)
     {
@@ -595,7 +613,7 @@ public sealed class ReproductorDeGuion
                 Actor.ReleasePose(true);
                 Actor.PlayerAnimator?.ReturnToLocomotion(0.15f);
             }
-            Actor.SetMovementSpeed(moviendo ? NavMeshAgentUtility.FactorDeLocomocion(rapidez) : 0f);
+            Actor.Desplazarse(moviendo ? rapidez : 0f);
             if (moviendo != _moviendo)
             {
                 _moviendo = moviendo;

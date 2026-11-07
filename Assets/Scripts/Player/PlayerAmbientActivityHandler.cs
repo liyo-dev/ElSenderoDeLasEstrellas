@@ -48,6 +48,8 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
 
     void Awake()
     {
+        // Sentado, la espalda y la cabeza se enderezan, igual que los NPCs (PosturaDeSentado).
+        PosturaDeSentado.Asegurar(gameObject);
         _animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
         _actionManager = GetComponent<PlayerActionManager>();
         _cc = GetComponent<CharacterController>() ?? GetComponentInChildren<CharacterController>();

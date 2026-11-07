@@ -138,6 +138,7 @@ public sealed class PostprocesoDeEscena : MonoBehaviour
     private void Silenciar(Volume v)
     {
         if (v == null || !v.isGlobal || v == _base || v == _a || v == _b) return;
+        if (PostprocesoDeCinematica.EsSuVolumen(v)) return;
         if (!_pesos.ContainsKey(v)) _pesos.Add(v, v.weight);
         v.weight = 0;
     }

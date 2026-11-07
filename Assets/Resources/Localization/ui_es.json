@@ -273,6 +273,14 @@
             "value": "Saltar (en el aire: doble salto; otra vez: volar)"
         },
         {
+            "key": "CONTROLS_FLY_UP",
+            "value": "En vuelo: subir"
+        },
+        {
+            "key": "CONTROLS_FLY_DOWN",
+            "value": "En vuelo: bajar"
+        },
+        {
             "key": "CONTROLS_MOVE",
             "value": "Mover"
         },
@@ -1053,12 +1061,8 @@
             "value": "Gráficos"
         },
         {
-            "key": "SETTINGS_INVERT_LOOK_FLIGHT",
-            "value": "Invertir eje Y (vuelo)"
-        },
-        {
             "key": "SETTINGS_INVERT_LOOK_GROUND",
-            "value": "Invertir eje Y (suelo)"
+            "value": "Invertir eje Y"
         },
         {
             "key": "Settings_Language",
@@ -2170,6 +2174,22 @@
             "value": "Laboratorio"
         },
         {
+            "key": "TESORO_REGION_CHUCHELANDIA",
+            "value": "Chuchelandia"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_NAME",
+            "value": "Trompetilla"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_PLURAL",
+            "value": "Trompetillas"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_DESC",
+            "value": "Una trompetilla dorada del ejército de gominolas. Hace «tururú» y está un poco pegajosa."
+        },
+        {
             "key": "TESORO_MAPA_LAB_NOMBRE",
             "value": "Mapa del tesoro (LAB)"
         },
@@ -2200,6 +2220,30 @@
         {
             "key": "ITEM_MONEDA_ANTIGUA_DESC",
             "value": "Nadie sabe de qué reino es. No sirve para comprar nada."
+        },
+        {
+            "key": "PRUEBA_YA",
+            "value": "¡Ya!"
+        },
+        {
+            "key": "PRUEBA_PUESTO",
+            "value": "{0}.º de {1}"
+        },
+        {
+            "key": "CONCURSO_PUNTOS",
+            "value": "{0} puntos"
+        },
+        {
+            "key": "CONCURSO_EQUILIBRIO",
+            "value": "Mantén el equilibrio: corrige con el stick izquierdo o las flechas."
+        },
+        {
+            "key": "CONCURSO_RITMO",
+            "value": "Pulsa cada botón cuando llegue al círculo."
+        },
+        {
+            "key": "CONCURSO_MANTENER",
+            "value": "Mantén {0} y suéltalo dentro de la zona."
         }
     ]
 }

@@ -24,19 +24,17 @@ import csv
 import json
 import os
 import re
+import sys
 import urllib.parse
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from clave_elevenlabs import clave_de_api  # noqa: E402
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CASTING = os.path.join(RAIZ, "docs", "doblaje-sendero", "casting")
 
 
-def clave_de_api():
-    origen = os.path.join(RAIZ, "Tools", "Audio", "generar_hechizo_slayers.py")
-    m = re.search(r'API_KEY\s*=\s*"([^"]+)"', open(origen, encoding="utf-8").read())
-    if not m:
-        raise SystemExit(f"No encuentro API_KEY en {origen}")
-    return m.group(1)
 
 
 def buscar(clave, **filtros):

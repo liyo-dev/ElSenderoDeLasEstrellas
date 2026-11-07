@@ -37,9 +37,11 @@ using UnityEngine;
 ///   espera 1.5
 ///
 /// Órdenes de personaje: en P [mirando X] · anda|corre|huye a P1, P2 [ritmo=paseo|normal|prisa|trote|corre]
-///   [llega_mirando=X] · mira X · gesto G [veces=N] [dura=s] · bucle G [congela] · reposo ·
+///   [llega_mirando=X] [formacion=Y (llega colocado respecto a P como sale respecto a Y)] ·
+///   encima A B C… [altura=m] [entra=s] [dura=s] (en volandas: va sobre el centro de A, B, C…) · mira X · gesto G [veces=N] [dura=s] · bucle G [congela] · reposo ·
 ///   cara EMOCION [dura=s] · dice CLAVE [gesto=G] [mira=X] [oyentes=a,b|todos] [cara=E] [sin_pose] ·
-///   aparece [en P] [mirando X] · desaparece · charla con X [cada=s] · pasea por P1, P2 [ritmo=..] [pausa=s]
+///   aparece [en P] [mirando X] · desaparece · charla con X [cada=s] · pasea por P1, P2 [ritmo=..] [pausa=s] ·
+///   coge PROP [mano=derecha|izquierda|cabeza] [offset=x;y;z] [giro=x;y;z] · deja PROP en P [gesto=G]
 /// Otras: plano TIPO sujetos [opciones] · efecto ClaseDeBeat campo=valor ... [dura=s] · espera s
 /// Frases y efectos admiten onlyIfFlag=marca / skipIfFlag=marca; las alternativas pueden compartir instante con &.
 /// En «dice», dura=s reserva un tiempo de lectura y no recorta una voz más larga.
@@ -102,7 +104,7 @@ public sealed class GuionTexto
     private static readonly HashSet<string> VerbosDeActor = new()
     {
         "en", "anda", "corre", "huye", "mira", "gesto", "bucle", "reposo", "cara", "dice",
-        "aparece", "desaparece", "charla", "pasea", "desliza", "sienta", "levanta", "coge", "deja", "cabeza"
+        "aparece", "desaparece", "charla", "pasea", "desliza", "sienta", "levanta", "coge", "deja", "cabeza", "encima"
     };
 
     public static bool EsVerboDeActor(string v) => VerbosDeActor.Contains(v);
@@ -224,7 +226,7 @@ public sealed class GuionTexto
                     {
                         orden.verbo = tok[i].ToLowerInvariant();
                         orden.opciones = Opciones(tok, i + 1, out orden.args);
-                        if (orden.verbo != "plano" && orden.verbo != "efecto" && orden.verbo != "espera"
+                        if (orden.verbo != "plano" && orden.verbo != "efecto" && orden.verbo != "espera" && orden.verbo != "eje"
                             && !Azucar.Contains(orden.verbo))
                         {
                             g.errores.Add($"línea {numero}: no sé qué es «{tok[i]}» (¿un alias que falta en REPARTO?)");

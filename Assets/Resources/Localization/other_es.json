@@ -124,6 +124,18 @@
         {"key":"COLECCION_OLIVER_PAGINA_1","value":"Cosas raras del pueblo"},
         {"key":"COLECCION_OLIVER_FRASE_CANICA","value":"¡Una canica de cielo! Sabía que existían. Va en el centro de la página."},
         {"key":"COLECCION_OLIVER_FRASE_PIEDRA","value":"Si miras por el agujero, el pueblo parece otro. ¿Lo ves? Yo tampoco, pero da suerte."},
-        {"key":"COLECCION_OLIVER_FRASE_MONEDA","value":"No es de ningún reino que yo conozca. ¡Mejor! Las cosas raras valen más."}
+        {"key":"COLECCION_OLIVER_FRASE_MONEDA","value":"No es de ningún reino que yo conozca. ¡Mejor! Las cosas raras valen más."},
+        {
+            "key": "ATRACCION_SUBIR",
+            "value": "¿Subir a la atracción?"
+        },
+        {
+            "key": "ATRACCION_SUBIR_NORIA",
+            "value": "¿Subir a la noria?"
+        },
+        {
+            "key": "ATRACCION_SUBIR_BARCO",
+            "value": "¿Subir al barco vikingo?"
+        }
     ]
 }

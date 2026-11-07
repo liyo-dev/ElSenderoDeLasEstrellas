@@ -124,6 +124,18 @@
         {"key":"COLECCION_OLIVER_PAGINA_1","value":"Strange things from town"},
         {"key":"COLECCION_OLIVER_FRASE_CANICA","value":"A sky marble! I knew they existed. It goes in the middle of the page."},
         {"key":"COLECCION_OLIVER_FRASE_PIEDRA","value":"Look through the hole and the town looks different. See? Me neither, but it's lucky."},
-        {"key":"COLECCION_OLIVER_FRASE_MONEDA","value":"It's not from any kingdom I know. Even better! Strange things are worth more."}
+        {"key":"COLECCION_OLIVER_FRASE_MONEDA","value":"It's not from any kingdom I know. Even better! Strange things are worth more."},
+        {
+            "key": "ATRACCION_SUBIR",
+            "value": "Get on the ride?"
+        },
+        {
+            "key": "ATRACCION_SUBIR_NORIA",
+            "value": "Ride the Ferris wheel?"
+        },
+        {
+            "key": "ATRACCION_SUBIR_BARCO",
+            "value": "Ride the Viking ship?"
+        }
     ]
 }

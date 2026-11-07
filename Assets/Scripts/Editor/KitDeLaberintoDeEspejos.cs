@@ -281,10 +281,14 @@ public static class KitDeLaberintoDeEspejos
         return go.transform;
     }
 
-    /// <summary>Rótulo de maqueta flotando a 3 m, legible para quien mira hacia <paramref name="mirar"/>.</summary>
+    /// <summary>
+    /// Rótulo de maqueta flotando a 3 m, legible para quien mira hacia <paramref name="mirar"/>.
+    /// Solo se ve en el Editor fuera de Play (<see cref="RotuloDeMaqueta"/>, etiqueta EditorOnly).
+    /// </summary>
     public static void Rotulo(Transform padre, string texto, Vector3 pos, Vector3 mirar, float tamano = 6f)
     {
-        var go = new GameObject("Rótulo: " + texto);
+        var go = new GameObject("Rótulo: " + texto) { tag = "EditorOnly" };
+        go.AddComponent<RotuloDeMaqueta>();
         go.transform.SetParent(padre, false);
         go.transform.SetPositionAndRotation(pos + Vector3.up * 3f, Quaternion.LookRotation(mirar.sqrMagnitude > 0f ? mirar : Vector3.forward));
         var tmp = go.AddComponent<TextMeshPro>();

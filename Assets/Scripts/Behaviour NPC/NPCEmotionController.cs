@@ -18,6 +18,10 @@ public class NPCEmotionController : MonoBehaviour
     [Header("Búsqueda automática")]
     [SerializeField] private string eyePrefix = "Eye";
     [SerializeField] private string mouthPrefix = "Mouth";
+    [Tooltip("Prefijo de las piezas de símbolos de anime (lágrimas, sudor, vena…), que pone cada emoción del perfil.")]
+    [SerializeField] private string simboloPrefix = "Fx";
+    [Tooltip("Segundos por fotograma de un símbolo cuando su emoción no dice otra cosa.")]
+    [SerializeField, Min(0.02f)] private float segundosPorSimboloPorDefecto = 0.12f;
 
     [Header("Parpadeo automático")]
     [SerializeField] private bool parpadeoAutomatico = true;
@@ -55,6 +59,11 @@ public class NPCEmotionController : MonoBehaviour
     private Game.NPC.NPCBehaviourManagerV2 _npcManager;
     private readonly Dictionary<string, GameObject> _eyeMeshes = new Dictionary<string, GameObject>();
     private readonly Dictionary<string, GameObject> _mouthMeshes = new Dictionary<string, GameObject>();
+    private readonly Dictionary<string, GameObject> _simbolos = new Dictionary<string, GameObject>();
+    private string[] _fotogramasDelSimbolo;
+    private float _segundosPorFotograma, _proximoFotograma;
+    private int _fotograma;
+    private string _simboloVisible = "\0";   // ninguno resuelto todavía: el primer cambio repasa todas las piezas
     private string _ojosDeReposo, _bocaDeReposo, _bocaDeLaCara, _bocaDuranteHabla;
     private NPCEmotion _currentEmotion = NPCEmotion.Neutral;
     private bool _isInDialogue, _hablando, _controladorDeHablaResuelto, _esControladorDeHabla, _haTenidoVoz, _avisadoSinPerfil, _avisadoSinBocasDelHabla;
@@ -113,6 +122,7 @@ public class NPCEmotionController : MonoBehaviour
         {
             if (EsPiezaDelPrefijo(child.name, eyePrefix) && !_eyeMeshes.ContainsKey(child.name)) _eyeMeshes[child.name] = child.gameObject;
             if (EsPiezaDelPrefijo(child.name, mouthPrefix) && !_mouthMeshes.ContainsKey(child.name)) _mouthMeshes[child.name] = child.gameObject;
+            if (EsPiezaDelPrefijo(child.name, simboloPrefix) && !_simbolos.ContainsKey(child.name)) _simbolos[child.name] = child.gameObject;
             CacheMeshesRecursive(child);
         }
     }
@@ -187,6 +197,7 @@ public class NPCEmotionController : MonoBehaviour
         var datos = emotionProfile.GetEmotionData(emotion);
         AplicarCara(string.IsNullOrEmpty(datos.eyeMeshName) ? _ojosDeReposo : datos.eyeMeshName,
             string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
+        PonerSimbolo(datos.simbolos, datos.segundosPorSimbolo);
         FijarEmocion(emotion);
     }
 
@@ -196,10 +207,17 @@ public class NPCEmotionController : MonoBehaviour
         _currentEmotion = emocion;
         OnEmotionChanged?.Invoke(emocion);
     }
-    /// Sustituye los ojos sin cambiar boca, emoci?n ni pose.
+    /// Sustituye los ojos sin cambiar boca, emoción ni pose (hasta el próximo cambio de cara; el parpadeo los respeta).
+    /// Los ojos cerrados del pack («Eye09», el ojosDelParpadeo del controlador) valen como «los ojos cerrados de este
+    /// personaje»: si su perfil trae otros (los juegos de caras nuevos), se ponen esos.
     public void AplicarOjos(string malla)
     {
-        if (!string.IsNullOrEmpty(malla)) ActivateMesh(_eyeMeshes, malla, "ojos", false);
+        if (string.IsNullOrEmpty(malla)) return;
+        if (malla == ojosDelParpadeo) malla = OjosDelParpadeo;
+        if (!_eyeMeshes.ContainsKey(malla)) return;
+        _faseParpadeo = 0;
+        _ojosDeLaCara = malla;
+        ActivateMesh(_eyeMeshes, malla, "ojos", false);
     }
     public void Reaccionar(NPCEmotion emotion, float segundos = -1f)
     {
@@ -239,8 +257,14 @@ public class NPCEmotionController : MonoBehaviour
             var datos = emotionProfile.GetEmotionData(_caraDeFondo);
             AplicarCara(_fondoSuave || string.IsNullOrEmpty(datos.eyeMeshName) ? _ojosDeReposo : datos.eyeMeshName,
                 string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
+            // Un fondo suave es solo la boca: sin símbolo
+            if (_fondoSuave) PonerSimbolo(null, 0f); else PonerSimbolo(datos.simbolos, datos.segundosPorSimbolo);
         }
-        else AplicarCara(_ojosDeReposo, _bocaDeReposo);
+        else
+        {
+            AplicarCara(_ojosDeReposo, _bocaDeReposo);
+            PonerSimbolo(null, 0f);
+        }
         FijarEmocion(emocion);
     }
     private void AplicarCara(string ojos, string boca)
@@ -252,6 +276,35 @@ public class NPCEmotionController : MonoBehaviour
         ActivateMesh(_eyeMeshes, ojos, "ojos", false);
         _bocaDeLaCara = boca;
         if (!_hablando) ActivateMesh(_mouthMeshes, boca, "boca", false);
+    }
+    /// Enciende el primer fotograma del símbolo de la emoción (o apaga todos); los demás los pasa el tick.
+    private void PonerSimbolo(string[] fotogramas, float segundos)
+    {
+        _fotogramasDelSimbolo = _tieneOjos && fotogramas != null && fotogramas.Length > 0 ? fotogramas : null;
+        _segundosPorFotograma = segundos > 0f ? segundos : segundosPorSimboloPorDefecto;
+        _fotograma = 0;
+        _proximoFotograma = Time.unscaledTime + _segundosPorFotograma;
+        EncenderSimbolo(_fotogramasDelSimbolo != null ? _fotogramasDelSimbolo[0] : null);
+    }
+    private void EncenderSimbolo(string nombre)
+    {
+        if (nombre == _simboloVisible) return;
+        _simboloVisible = nombre;
+        foreach (var simbolo in _simbolos)
+        {
+            if (simbolo.Value == null) continue;
+            bool activa = simbolo.Key == nombre;
+            if (simbolo.Value.activeSelf != activa) simbolo.Value.SetActive(activa);
+        }
+    }
+    private void ActualizarSimbolo()
+    {
+        if (_fotogramasDelSimbolo == null || _fotogramasDelSimbolo.Length < 2) return;
+        float ahora = Time.unscaledTime;
+        if (ahora < _proximoFotograma) return;
+        _fotograma = (_fotograma + 1) % _fotogramasDelSimbolo.Length;
+        _proximoFotograma = ahora + _segundosPorFotograma;
+        EncenderSimbolo(_fotogramasDelSimbolo[_fotograma]);
     }
     private bool EsEsteHablante(Transform quien)
         => quien != null && (quien == transform || transform.IsChildOf(quien) || quien.IsChildOf(transform));
@@ -366,6 +419,7 @@ public class NPCEmotionController : MonoBehaviour
                 var cara = CarasActivas[i];
                 if (cara == null || !cara.isActiveAndEnabled) continue;
                 cara.ActualizarParpadeo();
+                cara.ActualizarSimbolo();
                 cara.ActualizarCara();
             }
         }
@@ -385,12 +439,16 @@ public class NPCEmotionController : MonoBehaviour
         }
         return false;
     }
+    /// Los ojos cerrados los pone el perfil si los trae (cada juego de caras tiene los suyos); si no, los de aquí.
+    private string OjosDelParpadeo => emotionProfile != null && !string.IsNullOrEmpty(emotionProfile.ojosDelParpadeo) ? emotionProfile.ojosDelParpadeo : ojosDelParpadeo;
+    private string[] OjosYaCerrados => emotionProfile != null && emotionProfile.ojosYaCerrados != null && emotionProfile.ojosYaCerrados.Length > 0 ? emotionProfile.ojosYaCerrados : ojosYaCerrados;
     private bool CaraConOjosCerrados()
     {
-        if (_ojosDeLaCara == ojosDelParpadeo) return true;
-        if (ojosYaCerrados == null) return false;
-        for (int i = 0; i < ojosYaCerrados.Length; i++)
-            if (_ojosDeLaCara == ojosYaCerrados[i]) return true;
+        if (_ojosDeLaCara == OjosDelParpadeo) return true;
+        var cerrados = OjosYaCerrados;
+        if (cerrados == null) return false;
+        for (int i = 0; i < cerrados.Length; i++)
+            if (_ojosDeLaCara == cerrados[i]) return true;
         return false;
     }
     private void ActualizarParpadeo()
@@ -414,8 +472,8 @@ public class NPCEmotionController : MonoBehaviour
             else { _faseParpadeo = 0; ProgramarParpadeo(); }
             return;
         }
-        if (!SeVenLosOjos() || string.IsNullOrEmpty(ojosDelParpadeo) ||
-            !_eyeMeshes.TryGetValue(ojosDelParpadeo, out var cerrados) || cerrados == null)
+        if (!SeVenLosOjos() || string.IsNullOrEmpty(OjosDelParpadeo) ||
+            !_eyeMeshes.TryGetValue(OjosDelParpadeo, out var cerrados) || cerrados == null)
         {
             _faseParpadeo = 0;
             ProgramarParpadeo();
@@ -423,7 +481,7 @@ public class NPCEmotionController : MonoBehaviour
         }
         if (_faseParpadeo == 0) _dobleParpadeo = Random.value < probabilidadDobleParpadeo;
         _faseParpadeo = _faseParpadeo == 2 ? 3 : 1;
-        ActivateMesh(_eyeMeshes, ojosDelParpadeo, "ojos", false);
+        ActivateMesh(_eyeMeshes, OjosDelParpadeo, "ojos", false);
         _proximoParpadeo = Time.time + Mathf.Max(0.01f, duracionParpadeo);
     }
     private void ActualizarCara()
@@ -458,6 +516,7 @@ public class NPCEmotionController : MonoBehaviour
     public bool IsInDialogue => _isInDialogue;
     public int EyeMeshCount => _eyeMeshes.Count;
     public int MouthMeshCount => _mouthMeshes.Count;
+    public int SimboloMeshCount => _simbolos.Count;
     public void ForceReset() => VolverAReposo();
     public void SetEmotionProfile(EmotionProfile profile)
     {

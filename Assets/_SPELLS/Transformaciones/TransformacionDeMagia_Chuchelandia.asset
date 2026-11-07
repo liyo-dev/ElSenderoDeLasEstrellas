@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586b23449d25de9419a74a9b013f8bb4, type: 3}
+  m_Name: TransformacionDeMagia_Chuchelandia
+  m_EditorClassIdentifier: Assembly-CSharp::TransformacionDeMagia
+  tipos: 000000000100000003000000i
+  elementos: 
+  hechizos: []
+  soloMagiaDeAtaque: 1
+  sinDano: 1
+  visualEnVuelo: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+  vfxAlSalir: {fileID: 0}
+  vfxDeImpacto: {fileID: 7037865047022992450, guid: c5b10485b3aead6419ea5caa0e3f17ad, type: 3}
+  vfxAlDesaparecer: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
+  sfxAlLanzar: 
+  sfxDeImpacto: 

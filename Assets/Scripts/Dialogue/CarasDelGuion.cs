@@ -32,6 +32,9 @@ public static class CarasDelGuion
         { NPCEmotion.Excited, "ilusionado" },
         { NPCEmotion.Annoyed, "molesto" },
         { NPCEmotion.Grateful, "agradecido" },
+        { NPCEmotion.Crying, "llorando" },
+        { NPCEmotion.HappyTears, "conmovido" },
+        { NPCEmotion.Asleep, "dormido" },
     };
 
     /// Las palabras que el juego entiende, con sus sinónimos.
@@ -53,6 +56,9 @@ public static class CarasDelGuion
         { "ilusionado", NPCEmotion.Excited },
         { "molesto", NPCEmotion.Annoyed },
         { "agradecido", NPCEmotion.Grateful },
+        { "llorando", NPCEmotion.Crying }, { "llorar", NPCEmotion.Crying }, { "llanto", NPCEmotion.Crying },
+        { "dormido", NPCEmotion.Asleep }, { "durmiendo", NPCEmotion.Asleep },
+        { "conmovido", NPCEmotion.HappyTears }, { "lagrimas de alegria", NPCEmotion.HappyTears }, { "lágrimas de alegría", NPCEmotion.HappyTears },
     };
 
     /// Traduce una palabra a la cara del juego. Acepta la palabra en castellano y el nombre del

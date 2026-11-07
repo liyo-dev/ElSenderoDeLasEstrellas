@@ -9,7 +9,8 @@ using UnityEngine;
 /// Monta las fases 2 y 3 del plan «NPCs vivos según la historia»: la revancha con Erika (pregunta
 /// de Sí / No y combate de práctica que se repite, con Esencia solo la primera vez), el álbum de
 /// Oliver en su prefab y las tres piezas de su colección escondidas en el pueblo. Ver INC-878.
-/// Se puede ejecutar varias veces: lo que ya está se deja como está.
+/// Se puede ejecutar varias veces: lo que ya está se deja como está; a los cofres ya colocados solo
+/// se les pone el baúl de madera si aún llevan otro modelo.
 public static class NpcsVivosMontaje
 {
     const string GrafoSecundario = "Assets/NarrativeGraph/Secundary.asset";
@@ -22,6 +23,8 @@ public static class NpcsVivosMontaje
     const string EscenaPueblo = "Assets/Scenes/Worlds/MainWorld.unity";
     const string SenalErikaDerrotada = "ERIKA_ENTRENAMIENTO_DERROTADA";
     const string RaizDeTesoros = "Tesoros del pueblo (generado)";
+    // Las piezas de Oliver van siempre en el mismo cofre, para que el jugador lo reconozca.
+    const CombatLabBuilder.ModeloDeCofre ModeloDeLaColeccion = CombatLabBuilder.ModeloDeCofre.BaulDeMadera;
 
     // Dónde se esconde cada pieza: junto a una marca o a un punto de aparición conocidos del pueblo.
     static readonly (string id, string nombre, string referencia, Vector3 desvio, string objeto)[] Piezas =
@@ -144,14 +147,20 @@ public static class NpcsVivosMontaje
         int capaSuelo = LayerMask.GetMask("Floor");
         foreach (var p in Piezas)
         {
-            if (contenedor.transform.Find(p.nombre) != null) { informe.Add($"Ya estaba: {p.nombre}."); continue; }
+            var existente = contenedor.transform.Find(p.nombre);
+            if (existente != null)
+            {
+                bool cambiado = CombatLabBuilder.CambiarModeloDeCofre(existente.GetComponent<Tesoro>(), ModeloDeLaColeccion);
+                informe.Add(cambiado ? $"{p.nombre}: ahora es el baúl de madera (mismo sitio y giro)." : $"Ya estaba: {p.nombre}.");
+                continue;
+            }
             var referencia = BuscarReferencia(raices, p.referencia);
             if (referencia == null) { informe.Add($"No encuentro «{p.referencia}» en MainWorld: {p.nombre} sin colocar."); continue; }
 
             var pie = referencia.position + p.desvio;
             if (Physics.Raycast(pie + Vector3.up * 30f, Vector3.down, out var golpe, 80f, capaSuelo == 0 ? ~0 : capaSuelo))
                 pie = golpe.point;
-            var tesoro = CombatLabBuilder.CrearTesoro(p.nombre, contenedor.transform, pie, 0f, p.id, Tesoro.Forma.Cofre, "PUEBLO");
+            var tesoro = CombatLabBuilder.CrearTesoro(p.nombre, contenedor.transform, pie, 0f, p.id, Tesoro.Forma.Cofre, "PUEBLO", ModeloDeLaColeccion);
             CombatLabBuilder.Recompensas(tesoro, new CombatLabBuilder.Premio(PickupEffectType.AddToInventory, p.objeto, 1));
             informe.Add($"{p.nombre}: junto a {p.referencia}, en {pie:F1}.");
         }

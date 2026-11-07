@@ -171,6 +171,49 @@ public class PlayerDialogueAnimator : MonoBehaviour
             animator.CrossFadeInFixedTime(hash, blend, 0, 0f);
     }
 
+    /// Deja el cuerpo listo para andar cuando el jugador recupera el control (fin de un diálogo o
+    /// de una cinemática). Un gesto o una emoción de la capa base sigue sonando hasta acabar su clip
+    /// aunque ya se pueda mover: durante esos segundos el cuerpo se desliza sin animar las piernas.
+    /// Si la capa base no está en la locomoción (ni en el aire, ni sentado), vuelve a ella; la capa
+    /// UpperBody vuelve a su reposo. Ver INC-901.
+    public void AlRecuperarElControl()
+    {
+        if (animator == null) return;
+        if (_ambientActivity != null && _ambientActivity.IsSeated) return;
+
+        if (_gestureCoroutine != null)
+        {
+            StopCoroutine(_gestureCoroutine);
+            _gestureCoroutine = null;
+        }
+
+        var actual = animator.IsInTransition(0) ? animator.GetNextAnimatorStateInfo(0) : animator.GetCurrentAnimatorStateInfo(0);
+        int hash = actual.shortNameHash;
+        if (hash != LocomocionHash && !EsEstadoDelAire(hash))
+            ReturnToLocomotion(0.15f);
+
+        if (animator.layerCount > CapaUpperBody && animator.HasState(CapaUpperBody, UpperIdleHash))
+        {
+            var arriba = animator.GetCurrentAnimatorStateInfo(CapaUpperBody);
+            if (arriba.shortNameHash != UpperIdleHash) animator.CrossFadeInFixedTime(UpperIdleHash, 0.15f, CapaUpperBody);
+        }
+    }
+
+    private static readonly int LocomocionHash = Animator.StringToHash(LocomotionState);
+    private static readonly int UpperIdleHash = Animator.StringToHash("UpperIdle");
+    private static readonly int[] EstadosDelAire =
+    {
+        Animator.StringToHash("Falling"), Animator.StringToHash("Jump"),
+        Animator.StringToHash("JumpMove"), Animator.StringToHash("Airborne"),
+    };
+
+    private static bool EsEstadoDelAire(int hash)
+    {
+        for (int i = 0; i < EstadosDelAire.Length; i++)
+            if (EstadosDelAire[i] == hash) return true;
+        return false;
+    }
+
     /// Estado de locomoción de la capa base del jugador — el mismo nombre que usan los NPCs
     /// (NPCSimpleAnimator.locomotionState) porque los dos Animator Controllers comparten el árbol.
     private const string LocomotionState = "Free Locomotion";

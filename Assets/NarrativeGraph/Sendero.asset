@@ -36,7 +36,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-inicio
-        position: {x: 0, y: 0}
+        position: {x: -1, y: 0}
         outputs:
         - sendero-tras-capitulo
     - rid: 5630202821400330501
@@ -50,7 +50,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-requisitos
-        position: {x: 320, y: 0}
+        position: {x: 760, y: 0}
         outputs:
         - sendero-ritual-listo
         eventKey: SENDERO_REQUISITOS_CUMPLIDOS
@@ -66,7 +66,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-ritual-listo
-        position: {x: 700, y: 0}
+        position: {x: 1140, y: 0}
         outputs:
         - sendero-espera-conjuro
         eventKey: SENDERO_RITUAL_LISTO
@@ -81,7 +81,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-espera-conjuro
-        position: {x: 1080, y: 0}
+        position: {x: 1520, y: 0}
         outputs:
         - sendero-cinematica-conjuro
         eventKey: SENDERO_CONJURO_ACEPTADO
@@ -97,7 +97,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-cinematica-conjuro
-        position: {x: 1460, y: 0}
+        position: {x: 1900, y: 0}
         outputs:
         - sendero-llegada
         cinematicName: El conjuro de la Piedra Ancestral
@@ -120,7 +120,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-llegada
-        position: {x: 1840, y: 0}
+        position: {x: 2280, y: 0}
         outputs: []
         eventKey: SENDERO_LLEGADA
         acceptEarlierEvent: 1
@@ -135,7 +135,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: sendero-tras-capitulo
-        position: {x: 160, y: -160}
+        position: {x: 380, y: 0}
         outputs:
         - sendero-requisitos
         eventKey: CH_Cap2_BACK_1

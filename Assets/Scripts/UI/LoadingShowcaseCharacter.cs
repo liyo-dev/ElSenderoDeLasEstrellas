@@ -8,14 +8,10 @@ using UnityEngine;
 /// reproduce un gesto gracioso propio (Animator Controller ligero "LoadingShowcase.controller",
 /// con estados Run / Gesture — nada que ver con el controller de gameplay del personaje real).
 ///
-/// IMPORTANTE — por qué esto NO es una instancia del prefab de gameplay a pelo:
-/// _WILL.prefab / _ESTELA.prefab / _LIAM.prefab arrastran ~30-40 scripts de gameplay
-/// (PlayerPresetService, controlador Invector, FSM, inventario, ServiceLocator...). Instanciar
-/// esos prefabs tal cual —aunque sea un momento, en una escena decorativa— dispara su Awake()
-/// real y puede pisar registros del ServiceLocator del jugador de verdad. Por eso este objeto
-/// vive sobre una copia recortada del héroe (PrefabInstance con m_RemovedComponents quitando
-/// todos esos scripts, dejando solo malla + Animator) — mismo patrón ya usado en
-/// Assets/Scenes/Systems/MainMenu.unity para los "héroes voladores" del menú principal.
+/// El modelo es un hijo enlazado a RetratoVivo_&lt;nombre&gt;.prefab (malla + Animator + cara, sin scripts de
+/// gameplay), el mismo de los retratos vivos: lo mantienen al día los menús de Personajes, así que
+/// aquí sale siempre el aspecto actual. No usar _WILL/_ESTELA/_LIAM.prefab: su Awake() real pisaría
+/// registros del jugador. Montaje: El Sendero ▸ Personajes ▸ Pantalla de carga: modelos al día.
 /// </summary>
 [DisallowMultipleComponent]
 public class LoadingShowcaseCharacter : MonoBehaviour

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee6f263ce9ca6974095c5691e0480d3c, type: 3}
+  m_Name: Atuendo_Chuchelandia_Candidata
+  m_EditorClassIdentifier: Assembly-CSharp::AtuendoDeEscena
+  personajes:
+  - personaje: 2
+    prendas:
+    - {fileID: 11400000, guid: 3177467a9e914b2781c0a918302fb622, type: 2}
+    - {fileID: 11400000, guid: 2a996704106747bbac874a015f69ba21, type: 2}
+    otrasPiezas:
+    - category: 1
+      partName: 
+    tintes: []
+    rasgos:
+      planear: 1
+      reboteExtra: 0
+    prendasSueltas:
+    - {fileID: 919132149155446097, guid: 6b3258fff81023943aa1894171090931, type: 3}
+  - personaje: 1
+    prendas: []
+    otrasPiezas: []
+    tintes: []
+    rasgos:
+      planear: 0
+      reboteExtra: 0.6
+    prendasSueltas:
+    - {fileID: 919132149155446097, guid: ebe1543bcb923944cb6f7ab2c027319f, type: 3}
+  - personaje: 0
+    prendas: []
+    otrasPiezas: []
+    tintes: []
+    rasgos:
+      planear: 0
+      reboteExtra: 0
+    prendasSueltas:
+    - {fileID: 919132149155446097, guid: 858782f26fd730d43a31f7f252373c4e, type: 3}

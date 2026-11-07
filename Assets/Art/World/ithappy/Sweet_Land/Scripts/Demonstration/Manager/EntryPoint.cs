@@ -12,6 +12,9 @@ namespace ithappy
             
             for (int i = 0; i < _characters.Length; i++)
             {
+                // El Sendero: los personajes retirados de la escena (inactivos) no se arrancan; si no, su
+                // NavMeshAgent apagado da errores de «not on NavMesh».
+                if (_characters[i] == null || !_characters[i].gameObject.activeInHierarchy) continue;
                 _characters[i].Initialize();
             }
 

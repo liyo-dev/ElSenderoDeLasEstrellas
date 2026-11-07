@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Eldran_PuntoGuardado
+  spawnAnchorId: Eldran_Plaza
   level: 1
   maxHP: 100
   currentHP: 100
@@ -42,24 +42,24 @@ MonoBehaviour:
   - QUEST_ACTIVE:ELDRAN_MISSION3
   - QUEST_COMPLETED:ELDRAN_MISSION3
   abilities:
-    swim: 0
-    jump: 0
-    climb: 0
+    swim: 1
+    jump: 1
+    climb: 1
     magic: 1
-    fly: 0
-    sprint: 0
-    shield: 0
+    fly: 1
+    sprint: 1
+    shield: 1
   appearance:
-  - category: 0
-    partName: Body05
   - category: 2
     partName: Head01_Male
   - category: 3
-    partName: Hair01
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   - category: 4
-    partName: Eye01
+    partName: Eye30
   - category: 5
-    partName: Mouth01
+    partName: Mouth20
   unlockedWardrobeIds:
   - Body05
   inventoryItems:
@@ -81,18 +81,14 @@ MonoBehaviour:
       type: string
       value: cap2-iniciado-flag
   senalesEmitidas: []
-  npcPositions:
-  - npcId: Eldran
-    position: {x: 25.8, y: 27.01, z: -82.61}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
+  npcPositions: []
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []
-  partyMemberIds: []
+  partyMemberIds:
+  - _ESTELA
+  - _LIAM
   activeCharacterSlot: 1
   unlockedTeleportPoints: []

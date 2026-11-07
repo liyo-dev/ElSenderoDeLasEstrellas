@@ -839,6 +839,39 @@ public class SequenceActor
         {
             NpcAnimator.ResetMovement();
         }
+        else
+        {
+            AnimacionDeAndar?.Avanzar(0f, alInstante: true);
+        }
+    }
+
+    private IAnimacionDeCorredor _animacionDeAndar;
+    private bool _animacionDeAndarResuelta;
+
+    /// La locomoción de un actor sin animador del juego (ni jugador ni NPC): un personaje de un pack
+    /// que trae su propio Animator, con sus parámetros como datos (<see cref="AnimacionDeCorredorPorAnimator"/>).
+    /// Null si no la tiene: entonces se desliza sin animación de andar.
+    public IAnimacionDeCorredor AnimacionDeAndar
+    {
+        get
+        {
+            if (!_animacionDeAndarResuelta && Transform != null)
+            {
+                _animacionDeAndarResuelta = true;
+                _animacionDeAndar = Transform.GetComponentInChildren<IAnimacionDeCorredor>(true);
+            }
+            return _animacionDeAndar;
+        }
+    }
+
+    /// Anima la locomoción según la velocidad real por el suelo, en m/s (0 = parado). El jugador y los
+    /// NPC del juego la llevan a su blend tree con el criterio de siempre
+    /// (<see cref="NavMeshAgentUtility.FactorDeLocomocion(float)"/>); el resto de personajes, con su
+    /// <see cref="AnimacionDeAndar"/>, que traduce los metros por segundo a sus propios parámetros.
+    public void Desplazarse(float metrosPorSegundo)
+    {
+        if (IsPlayer || NpcAnimator != null) SetMovementSpeed(NavMeshAgentUtility.FactorDeLocomocion(metrosPorSegundo));
+        else AnimacionDeAndar?.Avanzar(metrosPorSegundo);
     }
 
     public void StopMovement()

@@ -58,38 +58,99 @@ public static class ClimaDelCicloWiring
         return 1;
     }
 
-    private static Material CrearCielo(string nombre, Color cenit, Color horizonte, Color suelo,
-        Color resplandor, float fuerza, float cobertura, Color nube, Color sombra)
+    private const string CarpetaDeCielos = "Assets/Art/Cielo";
+    private const string ShaderDelCielo = "El Sendero/Cielo";
+
+    /// <summary>
+    /// El material de cielo <c>Assets/Art/Cielo/Cielo_&lt;nombre&gt;.mat</c> con el shader <c>El Sendero/Cielo</c>.
+    /// Si no existe se crea y <paramref name="colores"/> le pone sus valores; si existe se devuelve tal cual,
+    /// para que los retoques hechos en el Inspector se conserven.
+    /// </summary>
+    public static Material CieloDeEscena(string nombre, System.Action<Material> colores)
     {
-        string ruta = "Assets/Art/Cielo/Cielo_" + nombre + ".mat";
+        string ruta = CarpetaDeCielos + "/Cielo_" + nombre + ".mat";
         Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);
         if (material != null) return material;
-        Shader shader = Shader.Find("El Sendero/Cielo");
+        Shader shader = Shader.Find(ShaderDelCielo);
         if (shader == null)
         {
-            Debug.LogWarning("[Clima] No se encuentra El Sendero/Cielo; revisa la compilación del shader.");
+            Debug.LogWarning("[Clima] No se encuentra " + ShaderDelCielo + "; revisa la compilación del shader.");
             return null;
         }
+        if (!AssetDatabase.IsValidFolder("Assets/Art")) AssetDatabase.CreateFolder("Assets", "Art");
+        if (!AssetDatabase.IsValidFolder(CarpetaDeCielos)) AssetDatabase.CreateFolder("Assets/Art", "Cielo");
         material = new Material(shader);
-        material.SetColor("_ColorCenit", cenit);
-        material.SetColor("_ColorHorizonte", horizonte);
-        material.SetColor("_ColorSuelo", suelo);
-        material.SetColor("_ColorDeBrumaDelHorizonte", horizonte);
-        material.SetColor("_ColorDelResplandor", resplandor);
-        material.SetFloat("_FuerzaDelResplandor", fuerza);
-        material.SetFloat("_TamanoDelResplandor", 0.45f);
-        material.SetFloat("_NubosidadBase", cobertura);
-        material.SetColor("_ColorDeNubes", nube);
-        material.SetColor("_ColorDeNubesEnSombra", sombra);
+        colores?.Invoke(material);
         AssetDatabase.CreateAsset(material, ruta);
         EditorUtility.SetDirty(material);
         return material;
     }
 
+    private static Material CrearCielo(string nombre, Color cenit, Color horizonte, Color suelo,
+        Color resplandor, float fuerza, float cobertura, Color nube, Color sombra)
+    {
+        return CieloDeEscena(nombre, material =>
+        {
+            material.SetColor("_ColorCenit", cenit);
+            material.SetColor("_ColorHorizonte", horizonte);
+            material.SetColor("_ColorSuelo", suelo);
+            material.SetColor("_ColorDeBrumaDelHorizonte", horizonte);
+            material.SetColor("_ColorDelResplandor", resplandor);
+            material.SetFloat("_FuerzaDelResplandor", fuerza);
+            material.SetFloat("_TamanoDelResplandor", 0.45f);
+            material.SetFloat("_NubosidadBase", cobertura);
+            material.SetColor("_ColorDeNubes", nube);
+            material.SetColor("_ColorDeNubesEnSombra", sombra);
+        });
+    }
+
+    /// <summary>
+    /// Deja el ciclo de una escena en una hora fija y sin clima: una sola franja (con su cielo, su luz,
+    /// su ambiente y su niebla de distancia), el ciclo parado y el sorteo de clima apagado.
+    /// <paramref name="progreso"/> es el punto de la franja en el que se queda la hora (0 = su principio,
+    /// 1 = su final; ver <c>HoraDelDia</c>). Pone también el cielo, el sol, el ambiente y la niebla en
+    /// <see cref="RenderSettings"/> para que la vista del Editor se vea como en juego.
+    /// </summary>
+    public static void FijarHoraSinClima(DayNightCycle ciclo, DayNightCycle.TimeOfDaySettings franja, float progreso)
+    {
+        var so = new SerializedObject(ciclo);
+        SerializedProperty franjas = so.FindProperty("timeSettings");
+        franjas.arraySize = 1;
+        SerializedProperty unica = franjas.GetArrayElementAtIndex(0);
+        unica.FindPropertyRelative("timeOfDay").intValue = (int)franja.timeOfDay;
+        unica.FindPropertyRelative("skybox").objectReferenceValue = franja.skybox;
+        unica.FindPropertyRelative("lightColor").colorValue = franja.lightColor;
+        unica.FindPropertyRelative("lightIntensity").floatValue = franja.lightIntensity;
+        unica.FindPropertyRelative("ambientColor").colorValue = franja.ambientColor;
+        unica.FindPropertyRelative("ambientIntensity").floatValue = franja.ambientIntensity;
+        unica.FindPropertyRelative("fogColor").colorValue = franja.fogColor;
+        unica.FindPropertyRelative("fogDensity").floatValue = franja.fogDensity;
+        unica.FindPropertyRelative("duration").floatValue = franja.duration;
+        so.FindProperty("autoAdvance").boolValue = false;
+        so.FindProperty("sortearClima").boolValue = false;
+        so.FindProperty("startingTimeIndex").intValue = 0;
+        so.FindProperty("progresoInicialDeLaFranja").floatValue = Mathf.Clamp01(progreso);
+        so.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(ciclo);
+
+        if (franja.skybox != null) RenderSettings.skybox = franja.skybox;
+        var luz = so.FindProperty("directionalLight").objectReferenceValue as Light;
+        if (luz != null) RenderSettings.sun = luz;
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+        RenderSettings.ambientLight = franja.ambientColor * franja.ambientIntensity;
+        RenderSettings.fogColor = franja.fogColor;
+        RenderSettings.fogDensity = franja.fogDensity;
+        EditorSceneManager.MarkSceneDirty(ciclo.gameObject.scene);
+    }
+
+    /// <summary>Si el ciclo es de hora fija (una sola franja y parado): su cielo es el de la escena y no se cambia por el de la franja.</summary>
+    public static bool EsHoraFija(SerializedObject ciclo)
+    {
+        return !ciclo.FindProperty("autoAdvance").boolValue && ciclo.FindProperty("timeSettings").arraySize == 1;
+    }
+
     public static int CompletarCielos()
     {
-        if (!AssetDatabase.IsValidFolder("Assets/Art")) AssetDatabase.CreateFolder("Assets", "Art");
-        if (!AssetDatabase.IsValidFolder("Assets/Art/Cielo")) AssetDatabase.CreateFolder("Assets/Art", "Cielo");
         Material amanecer = CrearCielo("Amanecer", new Color(0.36f,0.50f,0.78f), new Color(1f,0.72f,0.55f),
             new Color(0.55f,0.50f,0.55f), new Color(1f,0.60f,0.35f), 0.8f, 0.25f, new Color(1f,0.86f,0.78f), new Color(0.55f,0.50f,0.62f));
         Material dia = CrearCielo("Dia", new Color(0.25f,0.52f,0.92f), new Color(0.72f,0.86f,0.98f),
@@ -109,7 +170,9 @@ public static class ClimaDelCicloWiring
                 var so = new SerializedObject(ciclo);
                 var franjas = so.FindProperty("timeSettings");
                 bool cambio = CompletarAstros(ciclo);
-                for (int j = 0; j < franjas.arraySize; j++)
+                // Una escena de hora fija lleva su propio cielo en su única franja.
+                int franjasConCieloPorHora = EsHoraFija(so) ? 0 : franjas.arraySize;
+                for (int j = 0; j < franjasConCieloPorHora; j++)
                 {
                     var franja = franjas.GetArrayElementAtIndex(j);
                     var tipo = (DayNightCycle.TimeOfDay)franja.FindPropertyRelative("timeOfDay").intValue;

@@ -52,6 +52,7 @@ Perfiles de personalidad y voces oficiales aprobadas en ElevenLabs (diseñadas c
 - **Nina** (Nina - Anime candidata 2 — U6p8vPqRYiiCAw7v94oR) — Niña del globo del campanario. Registro dulce, agudo, adorable y tierno estilo Ghibli.
 - **Liora** (Sara Martin - Gentle and Layered — KHCvMklQZZo0O30ERnVn) — Pareja del Archimago. Voz femenina madura, suave, cariñosa y protectora (conservada por Raúl).
 - **Tomasa** (Tomasa - Anime candidata 1 — 7F6LSLBol0zaPBiXCvwe) — Tallista del mercado (55-65 años, entrañable, humilde y risueña).
+- **Heraldo / heraldo suplente, Condesa Merengue y gominolas de Chuchelandia** — Ver la escena de Chuchelandia (casting en `docs/doblaje-sendero/casting/`).
 - **Resto de NPCs** — Voces de reparto peninsulares de resguardo (Julio para hombres maduros, Cristina para mujeres).
 
 ---
@@ -1374,6 +1375,545 @@ vuelvan a usar este lugar para su propio beneficio." `VOICE_VISION_MUST_END_SEND
 "Debes protegerlos.
 A ellos, y a toda la humanidad que vendrá después.
 Solo así demostrarás, de una vez por todas, quién eres de verdad." `VOICE_VISION_PROTECT_THEM`
+
+---
+
+# ESCENA: Chuchelandia — la prueba de Estela (novela XXI)
+
+Comedia. Fuente: novela, cap. XXI, recortada al ritmo del juego (los chistes con remate son cinemática). Textos en `cinematics_es.json` (`CHUCHELANDIA_*`), guiones en `Assets/_SEQUENCES/Guiones/Chuche_*.guion.txt`, lista para grabar en `docs/doblaje-sendero/chuchelandia_lineas.csv` y script `Tools/Audio/doblar_chuchelandia.py`. Sustituye a la escena 29 antigua (Duque de Regaliz), que ya no existe.
+
+**Reparto nuevo** (casting en `docs/doblaje-sendero/casting/`):
+- **Heraldo** — voz de juguete de cuerda: aguda, solemne, un poco metálica, muy seria con lo suyo. Casting «Heraldo».
+- **Heraldo suplente** — la misma voz que el heraldo (son idénticos), más nerviosa y con prisa.
+- **Condesa Merengue** — remilgada, precisa, muy educada incluso cuando riñe; vocaliza cada sílaba. Casting «Condesa Merengue».
+- **Gominolas** — voces agudas y alegres; para «a coro», varias tomas superpuestas. Casting «Gominolas».
+- **Su Alteza Pompón** — no habla: chapoteos felices (efecto de sonido).
+- **Jueces** — no hablan: levantan cartelitos.
+
+Sin voz (solo texto en pantalla): los cartelitos de los jueces, la pancarta, los títulos de las rondas (`TITULO_*`) y las pistas y avisos de lo jugable (`PUERTA_PISTA`, `TEQUIERO_PISTA_*`, `TEQUIERO_SOLO_WILL`).
+
+## 1 · Llegada (cinemática con bocadillos)
+
+La puerta rosa los suelta en el reino con una ráfaga de purpurina y una fanfarria que desafina en la última nota.
+
+**Estela** — [dismayed] [flat]
+"Oh, no." `CHUCHELANDIA_LLEGADA_01`
+
+**Estela** — [horrified] [firm]
+"No. De verdad que no." `CHUCHELANDIA_LLEGADA_02`
+
+**Will** — [delighted] [dreamy]
+"A mí me gusta." `CHUCHELANDIA_LLEGADA_03`
+
+**Estela** — [deadpan] [annoyed]
+"A ti te gusta todo lo que se pueda comer." `CHUCHELANDIA_LLEGADA_04`
+
+## 2 · El pergamino del heraldo (cinemática con bocadillos)
+
+Ante la Puerta del Corazón, el heraldo desenrolla un pergamino rosa que le llega a los pies. Lee con toda la solemnidad que le permite su voz de juguete de cuerda.
+
+**Heraldo** — [wind-up toy voice] [solemn] [squeaky]
+"¡Bienvenidos a Chuchelandia!" `CHUCHELANDIA_PERGAMINO_01`
+
+**Heraldo** — [solemn] [reading a scroll] [squeaky]
+"Por orden real, nadie abandonará el reino hasta que se abra la Puerta del Corazón." `CHUCHELANDIA_PERGAMINO_02`
+
+**Heraldo** — [solemn] [proud] [squeaky]
+"Y la Puerta del Corazón solo se abre ante la princesa más adorable del reino." `CHUCHELANDIA_PERGAMINO_03`
+
+**Estela** — [threatening] [flat]
+"Ni lo penséis." `CHUCHELANDIA_PERGAMINO_04`
+
+**Will** — [innocent] [too quickly]
+"Yo no he dicho nada." `CHUCHELANDIA_PERGAMINO_05`
+
+**Estela** — [dry] [annoyed]
+"Lo has pensado muy alto." `CHUCHELANDIA_PERGAMINO_06`
+
+## 2 · Los intentos con el candado (jugable)
+
+El fuego de Estela sale en purpurina y corazoncitos; suena un «¡tachán!» que no ha hecho nadie.
+
+**Liam** — [intrigued] [dry]
+"Interesante." `CHUCHELANDIA_PUERTA_LIAM_INTERESANTE`
+
+**Estela** — [annoyed] [through gritted teeth]
+"No es interesante." `CHUCHELANDIA_PUERTA_ESTELA_NO_INTERESANTE`
+
+Si Estela intenta abrirlo con las manos:
+
+**Estela** — [disgusted] [arms crossed]
+"Ni pienso tocarlo." `CHUCHELANDIA_PUERTA_ESTELA_TOCAR`
+
+La ganzúa de Liam: el candado escupe una piruleta.
+
+**Liam** — [puzzled] [dry]
+"Una piruleta." `CHUCHELANDIA_PUERTA_LIAM_PIRULETA_01`
+
+**Liam** — [pleased] [deadpan]
+"De fresa. Me la quedo." `CHUCHELANDIA_PUERTA_LIAM_PIRULETA_02`
+
+Will empuja la puerta: el candado se sacude y suelta una risita.
+
+**Will** — [offended] [confused]
+"¿Se está riendo de mí?" `CHUCHELANDIA_PUERTA_WILL_RISITA`
+
+**Liam** — [dry] [deadpan]
+"Con motivo." `CHUCHELANDIA_PUERTA_LIAM_RISITA`
+
+La pista para cambiar de personaje (`CHUCHELANDIA_PUERTA_PISTA`) es un aviso de texto: no se graba.
+
+## 3 · ¡Una candidata! (cinemática con bocadillos)
+
+El heraldo lo explica con cierta lástima. El ejército de gominolas sube a Estela a pulso y se la lleva en volandas, boca arriba y pataleando; a Will lo visten de caballero con orejitas de conejo y a Liam de paje con un corazón en la cabeza.
+
+**Heraldo** — [sympathetic] [squeaky]
+"Ni los caballeros ni los pajes pueden abrir la Puerta del Corazón." `CHUCHELANDIA_CANDIDATA_01`
+
+**Heraldo** — [sympathetic] [softly] [squeaky]
+"Solo una princesa." `CHUCHELANDIA_CANDIDATA_02`
+
+**Estela** — [firm] [crossing arms]
+"Aquí no hay ninguna princesa." `CHUCHELANDIA_CANDIDATA_03`
+
+**Gominolas (a coro)** — [excited crowd] [cheering] [high-pitched]
+"¡Una candidata! ¡Tenemos una candidata!" `CHUCHELANDIA_CANDIDATA_04`
+
+**Estela** — [screaming] [kicking] [being lifted and carried away]
+"¡Noooooo! ¡Dejadmeeee!" `CHUCHELANDIA_CANDIDATA_09`
+
+**Estela** — [shouts] [furious] [being carried away]
+"¡Idiota! ¡Haz algo!" `CHUCHELANDIA_CANDIDATA_05`
+
+**Liam** — [warning] [mortified] [low]
+"No digas nada." `CHUCHELANDIA_CANDIDATA_06`
+
+**Will** — [holding back a laugh] [sincere]
+"El corazoncito te favorece." `CHUCHELANDIA_CANDIDATA_07`
+
+**Liam** — [cold] [deadpan]
+"He dicho que no digas nada, orejitas." `CHUCHELANDIA_CANDIDATA_08`
+
+## 3 · El vestidor real (cinemática con bocadillos)
+
+Las primeras seis frases suenan desde dentro del vestidor, a través de la puerta (amortiguadas). La Condesa dirige el vestido.
+
+**Condesa Merengue** — [prim] [bossy] [muffled, behind a door]
+"¡Levante los brazos, alteza!" `CHUCHELANDIA_VESTIDOR_01`
+
+**Estela** — [shouts] [muffled, behind a door]
+"¡No soy alteza!" `CHUCHELANDIA_VESTIDOR_02`
+
+**Condesa Merengue** — [prim] [excited] [muffled]
+"¡Más volantes!" `CHUCHELANDIA_VESTIDOR_03`
+
+**Estela** — [outraged] [muffled]
+"¿¡Más!?" `CHUCHELANDIA_VESTIDOR_04`
+
+**Condesa Merengue** — [prim] [triumphant] [muffled]
+"¡El lazo! ¡Traed el lazo grande!" `CHUCHELANDIA_VESTIDOR_05`
+
+**Estela** — [threatening] [muffled] [trailing off]
+"Como me pongáis ese lazo…" `CHUCHELANDIA_VESTIDOR_06`
+
+**Liam** — [deadpan] [quiet]
+"Le han puesto el lazo." `CHUCHELANDIA_VESTIDOR_07`
+
+**Liam** — [completely serious] [deadpan]
+"Estás muy rosa." `CHUCHELANDIA_VESTIDOR_08`
+
+**Estela** — [seething] [quiet threat]
+"Una palabra más y os prendo fuego." `CHUCHELANDIA_VESTIDOR_09`
+
+**Estela** — [deflated] [grumbling]
+"Bueno. Os lleno de purpurina." `CHUCHELANDIA_VESTIDOR_10`
+
+**Estela** — [pause] [with great rage]
+"Pero con mucha rabia." `CHUCHELANDIA_VESTIDOR_11`
+
+## 4 · Pruebas de candidata: carrera (bocadillos de juego)
+
+Frases cortas mientras se juega. Estela corre con el vestido; Will rebota con la armadura; Liam camina muy digno con el cuerno.
+
+**Estela** — [grumbling] [determined]
+"Corro con un vestido de siete volantes. Que nadie diga nada." `CHUCHELANDIA_CARRERA_INICIO_01`
+
+**Liam** — [dignified] [dry]
+"Un paje no corre. Avanza con dignidad." `CHUCHELANDIA_CARRERA_INICIO_02`
+
+**Will** — [excited] [bouncing]
+"¡Esta armadura rebota sola!" `CHUCHELANDIA_CARRERA_INICIO_03`
+
+**Will** — [teasing] [laughing]
+"¡Te ha ganado una gominola!" `CHUCHELANDIA_CARRERA_REINTENTO_01`
+
+**Liam** — [helpful] [dry]
+"Ese lazo pesa, pero planea. Úsalo en los saltos largos." `CHUCHELANDIA_CARRERA_REINTENTO_02`
+
+**Estela** — [determined] [annoyed]
+"Otra vez. Y esta vez, sin piedad." `CHUCHELANDIA_CARRERA_REINTENTO_03`
+
+**Estela** — [triumphant] [proud]
+"¡Primera! Con volantes y todo." `CHUCHELANDIA_CARRERA_GANADA_01`
+
+**Liam** — [dry] [amused]
+"La gominola pide la revancha. Yo no se la daría." `CHUCHELANDIA_CARRERA_GANADA_02`
+
+**Will** — [yelling] [flying through the air]
+"¡Aaah! ¡No era por ahí!" `CHUCHELANDIA_CARRERA_WILL_REBOTA_01`
+
+**Will** — [dazed] [cheerful]
+"¡Estoy bien! ¡Creo que estoy en otra plataforma!" `CHUCHELANDIA_CARRERA_WILL_REBOTA_02`
+
+**Liam** — [dignified] [slow]
+"Correr con un corazón en la cabeza no es digno. Caminar, sí." `CHUCHELANDIA_CARRERA_LIAM_DIGNO_01`
+
+## 4 · Pruebas de candidata: escalada (bocadillos de juego)
+
+**Estela** — [skeptical] [dry]
+"¿Trepar en vestido? Esto no lo enseña la Condesa." `CHUCHELANDIA_TORRE_INICIO_01`
+
+**Will** — [indignant] [shouting up]
+"¡Ha subido por la escalera! ¡Eso es trampa!" `CHUCHELANDIA_TORRE_REINTENTO_01`
+
+**Liam** — [advising] [dry]
+"Menos rabia en las manos y más en las piernas." `CHUCHELANDIA_TORRE_REINTENTO_02`
+
+**Estela** — [smug] [satisfied]
+"Desde aquí arriba sois todos muy pequeñitos. Me gusta." `CHUCHELANDIA_TORRE_GANADA_01`
+
+## 4 · Pruebas de candidata: puntería (bocadillos de juego)
+
+**Estela** — [resigned] [determined]
+"Mi fuego sale en corazoncitos. Pues serán corazoncitos con puntería." `CHUCHELANDIA_TIRO_INICIO_01`
+
+**Liam** — [intrigued] [dry]
+"Interesante." `CHUCHELANDIA_TIRO_REINTENTO_01`
+
+**Estela** — [annoyed] [warning]
+"No es interesante. Otra vez." `CHUCHELANDIA_TIRO_REINTENTO_02`
+
+**Will** — [cheering] [then correcting himself]
+"¡Todos reventados! Bueno… todos llenos de corazones." `CHUCHELANDIA_TIRO_GANADA_01`
+
+## 5 · Clases de la Condesa Merengue (tutorial del duelo)
+
+La Condesa pronuncia cada palabra con el cuidado de quien coloca una guinda.
+
+**Condesa Merengue** — [prim] [precise]
+"Una princesa hace la reverencia así." `CHUCHELANDIA_CLASES_REVERENCIA_01`
+
+**Condesa Merengue** — [prim] [patient]
+"Otra vez. Con menos ganas de pelea." `CHUCHELANDIA_CLASES_REVERENCIA_02`
+
+**Estela** — [defensive] [through gritted teeth]
+"No tengo ganas de pelea." `CHUCHELANDIA_CLASES_REVERENCIA_03`
+
+**Condesa Merengue** — [prim] [gently pointed]
+"Alteza, está apretando los puños." `CHUCHELANDIA_CLASES_REVERENCIA_04`
+
+**Condesa Merengue** — [prim] [dreamy]
+"El saludo real. La muñeca gira con suavidad, como quien acaricia el aire." `CHUCHELANDIA_CLASES_SALUDO_01`
+
+**Condesa Merengue** — [prim] [dry]
+"Eso es espantar moscas, alteza." `CHUCHELANDIA_CLASES_SALUDO_02`
+
+**Condesa Merengue** — [prim] [tiny crystal giggle]
+"La risita. Jijí." `CHUCHELANDIA_CLASES_RISITA_01`
+
+**Liam** — [writing notes] [dry] [quiet]
+"Risita: peligrosa." `CHUCHELANDIA_CLASES_RISITA_02`
+
+**Condesa Merengue** — [prim] [ceremonial]
+"Por último, la princesa dedica unas palabras de cariño a sus súbditos." `CHUCHELANDIA_CLASES_CARINO_01`
+
+**Estela** — [hesitant] [long pause]
+"Sois…" `CHUCHELANDIA_CLASES_CARINO_02`
+
+**Estela** — [awkward] [forced sweetness]
+"Blanditos." `CHUCHELANDIA_CLASES_CARINO_03`
+
+**Condesa Merengue** — [prim] [reluctant approval]
+"Aceptable." `CHUCHELANDIA_CLASES_BIEN_01`
+
+**Condesa Merengue** — [prim] [faint praise]
+"Casi parecía una princesa. Casi." `CHUCHELANDIA_CLASES_BIEN_02`
+
+**Condesa Merengue** — [prim] [sighs]
+"Queda mucho trabajo por delante." `CHUCHELANDIA_CLASES_FIN`
+
+## 6 · El reino libre (habitantes, al hablarles)
+
+Gominolas del reino: voces agudas, alegres, un poco cotillas.
+
+**Gominola** — [starstruck] [high-pitched]
+"¡La candidata! ¿Me firma el lazo?" `CHUCHELANDIA_REINO_01`
+
+**Gominola** — [admiring] [high-pitched]
+"Su Alteza lleva cuatrocientos años ganando. Y sin despeinarse." `CHUCHELANDIA_REINO_02`
+
+**Gominola** — [friendly] [warning]
+"¿Ha probado el río de sirope? No, no se bañe. Se queda pegada." `CHUCHELANDIA_REINO_03`
+
+**Gominola** — [curious] [honest]
+"Aquí nadie se enfada. Bueno, usted. Usted es la primera." `CHUCHELANDIA_REINO_04`
+
+**Gominola** — [gossiping] [whispers]
+"Dicen que el heraldo se pone rosa cuando se emociona. Y luego… pop." `CHUCHELANDIA_REINO_05`
+
+**Gominola** — [admiring] [dreamy]
+"La Condesa Merengue nunca hace ruido al sentarse. Es un don." `CHUCHELANDIA_REINO_06`
+
+**Gominola** — [serious] [helpful]
+"Cuando suenen todas las trompetillas a la vez, apártese. Viene Su Alteza." `CHUCHELANDIA_REINO_07`
+
+**Gominola** — [giggling] [shy]
+"El caballero de gominola verde rebota muy bien. ¿Está soltero?" `CHUCHELANDIA_REINO_08`
+
+## 6 · Misión opcional: las trompetillas perdidas
+
+El heraldo suplente ya ronda por el reino, practicando anuncios por si acaso. Encarga la misión al hablarle; repite «¿Alguna trompetilla?» mientras sigue en curso. Las frases de recogida las dice quien vaya al mando al coger cada trompetilla.
+
+**Heraldo suplente** — [nervous] [squeaky]
+"Soy el suplente del heraldo. Por si acaso." `CHUCHELANDIA_TROMPETILLAS_ENCARGO_01`
+
+**Heraldo suplente** — [worried] [squeaky]
+"El ejército ha perdido sus trompetillas por todo el reino. ¿Me ayuda?" `CHUCHELANDIA_TROMPETILLAS_ENCARGO_02`
+
+**Heraldo suplente** — [dramatic] [squeaky]
+"Sin trompetillas no se puede anunciar a Su Alteza. Y eso sería… un drama." `CHUCHELANDIA_TROMPETILLAS_ENCARGO_03`
+
+**Heraldo suplente** — [hopeful] [squeaky]
+"¿Alguna trompetilla? Son doradas, brillan y hacen «tururú»." `CHUCHELANDIA_TROMPETILLAS_EN_CURSO`
+
+**Will** — [pleased]
+"¡Una trompetilla!" `CHUCHELANDIA_TROMPETILLAS_RECOGIDA_WILL`
+
+**Liam** — [disgusted] [dry]
+"Otra. Y está pegajosa." `CHUCHELANDIA_TROMPETILLAS_RECOGIDA_LIAM`
+
+**Estela** — [curious] [suspicious]
+"Si la soplo, ¿sale purpurina?" `CHUCHELANDIA_TROMPETILLAS_RECOGIDA_ESTELA`
+
+**Will** — [cheerful]
+"¡Ya están todas! Vamos a devolverlas." `CHUCHELANDIA_TROMPETILLAS_TODAS`
+
+**Heraldo suplente** — [overjoyed] [squeaky]
+"¡Todas! ¡Hasta la que tenía chicle!" `CHUCHELANDIA_TROMPETILLAS_ENTREGA_01`
+
+**Heraldo suplente** — [grateful] [careful] [squeaky]
+"Tome, alteza. Para la candidata más… decidida." `CHUCHELANDIA_TROMPETILLAS_ENTREGA_02`
+
+**Estela** — [shrugs] [satisfied]
+"¿Decidida? Me vale." `CHUCHELANDIA_TROMPETILLAS_ENTREGA_03`
+
+Si se le vuelve a hablar después:
+
+**Heraldo suplente** — [happy] [proud] [squeaky]
+"Tururú. ¡Ya suenan todas! Gracias, alteza." `CHUCHELANDIA_TROMPETILLAS_DESPUES`
+
+## 7 · Su Alteza Pompón (cinemática con bocadillos)
+
+El heraldo se va hinchando y cambiando de color con cada «es un oso» hasta que explota en confeti. El suplente anuncia de espaldas a Estela, por si acaso. Pompón no habla: chapotea (efecto de sonido).
+
+**Heraldo** — [proud] [booming] [squeaky]
+"¡Su Alteza Pompón! ¡Princesa de Chuchelandia y campeona de ternura durante cuatrocientos años seguidos!" `CHUCHELANDIA_POMPON_01`
+
+**Estela** — [confused] [flat]
+"¿Eso es un oso?" `CHUCHELANDIA_POMPON_02`
+
+**Heraldo** — [offended] [squeaky]
+"Es la princesa." `CHUCHELANDIA_POMPON_03`
+
+**Estela** — [flat] [certain]
+"Es un oso." `CHUCHELANDIA_POMPON_04`
+
+**Heraldo** — [tense] [squeaky]
+"Es la princesa oso." `CHUCHELANDIA_POMPON_05`
+
+**Estela** — [flat] [unimpressed]
+"Es un oso con una tiara." `CHUCHELANDIA_POMPON_06`
+
+**Heraldo** — [through gritted teeth] [slowly] [squeaky]
+"Es. La. Princesa." `CHUCHELANDIA_POMPON_07`
+
+**Estela** — [shrugs] [flat]
+"Pues tiene cara de oso." `CHUCHELANDIA_POMPON_08`
+
+**Estela** — [curious] [innocent]
+"¿Le pasa algo?" `CHUCHELANDIA_POMPON_09`
+
+**Condesa Merengue** — [prim] [polite] [tight smile]
+"No le pasa nada, alteza." `CHUCHELANDIA_POMPON_10`
+
+**Condesa Merengue** — [prim] [pointed] [pause]
+"Es solo que usted es una candidata… complicada." `CHUCHELANDIA_POMPON_11`
+
+**Estela** — [stubborn] [flat]
+"Yo solo digo que es un oso." `CHUCHELANDIA_POMPON_12`
+
+**Estela** — [matter-of-fact] [afterthought]
+"Y bastante pegajoso." `CHUCHELANDIA_POMPON_13`
+
+**Estela** — [defensive] [surprised]
+"¿Qué? Yo no he hecho nada." `CHUCHELANDIA_POMPON_14`
+
+**Condesa Merengue** — [prim] [reproachful] [brushing off confetti]
+"Le ha llamado oso a Su Alteza. Cinco veces." `CHUCHELANDIA_POMPON_15`
+
+**Liam** — [checking notes] [dry]
+"Cinco." `CHUCHELANDIA_POMPON_16`
+
+**Estela** — [exasperated] [shouts]
+"¡Es que es un oso!" `CHUCHELANDIA_POMPON_17`
+
+**Liam** — [deadpan] [instantly]
+"Seis." `CHUCHELANDIA_POMPON_18`
+
+**Condesa Merengue** — [prim] [weary] [calling out]
+"¡Que pase el suplente!" `CHUCHELANDIA_POMPON_19`
+
+**Gominola** — [resigned] [sweeping] [high-pitched]
+"Ya van tres esta semana." `CHUCHELANDIA_POMPON_20`
+
+**Heraldo suplente** — [whispers] [nervous] [squeaky]
+"¿Es ella?" `CHUCHELANDIA_POMPON_21`
+
+**Condesa Merengue** — [whispers] [grave]
+"Es ella." `CHUCHELANDIA_POMPON_22`
+
+**Heraldo suplente** — [nervous] [proud] [squeaky]
+"¡Su Alteza Pompón! ¡Princesa de Chuchelandia!" `CHUCHELANDIA_POMPON_23`
+
+**Estela** — [muffled] [mouth covered]
+"¡Mmmf!" `CHUCHELANDIA_POMPON_24`
+
+**Condesa Merengue** — [prim] [ceremonial]
+"Para abrir la Puerta del Corazón, la candidata debe vencer a la princesa reinante en el Duelo de Ternura." `CHUCHELANDIA_POMPON_25`
+
+**Estela** — [suspicious]
+"¿Y si pierdo?" `CHUCHELANDIA_POMPON_26`
+
+**Condesa Merengue** — [prim] [serene]
+"Nadie ha vencido nunca a Su Alteza." `CHUCHELANDIA_POMPON_27`
+
+**Estela** — [annoyed]
+"Eso no responde a mi pregunta." `CHUCHELANDIA_POMPON_28`
+
+**Liam** — [quietly] [dry]
+"Sí que la responde." `CHUCHELANDIA_POMPON_29`
+
+## 8 · El Duelo de Ternura (minijuego)
+
+Anuncia el suplente. Will y Liam cuchichean en primera fila. Los cartelitos de los jueces (DUELO_CARTEL_*) son texto: no se graban.
+
+**Heraldo suplente** — [announcing] [squeaky] [facing away]
+"¡Primera prueba! ¡La reverencia!" `CHUCHELANDIA_DUELO_RONDA1`
+
+**Heraldo suplente** — [announcing] [squeaky]
+"¡Segunda prueba! ¡La canción de cuna!" `CHUCHELANDIA_DUELO_RONDA2`
+
+**Heraldo suplente** — [announcing] [dramatic] [squeaky]
+"¡Tercera prueba! ¡La prueba final! ¡Los ojitos!" `CHUCHELANDIA_DUELO_RONDA3`
+
+**Heraldo suplente** — [announcing] [very excited] [squeaky]
+"¡Y en la prueba final, cada corazón vale por cien!" `CHUCHELANDIA_DUELO_RONDA3_CIEN`
+
+**Heraldo suplente** — [announcing] [squeaky]
+"¡Su Alteza Pompón!" `CHUCHELANDIA_DUELO_TURNO_POMPON`
+
+**Heraldo suplente** — [announcing] [nervous] [squeaky]
+"¡La candidata!" `CHUCHELANDIA_DUELO_TURNO_CANDIDATA`
+
+**Liam** — [flat] [unimpressed]
+"Eso no tiene ningún sentido." `CHUCHELANDIA_DUELO_LIAM_SIN_SENTIDO`
+
+**Gominola de fresa** — [cheerful] [matter-of-fact] [high-pitched]
+"Es la tradición." `CHUCHELANDIA_DUELO_FRESA_TRADICION`
+
+**Will** — [whispers] [hopeful]
+"¿Cómo vamos?" `CHUCHELANDIA_DUELO_WILL_COMO_VAMOS`
+
+**Liam** — [whispers] [checking notes] [dry]
+"Sesenta a nueve." `CHUCHELANDIA_DUELO_LIAM_SESENTA_A_NUEVE`
+
+**Will** — [whispers] [hopeful]
+"¿A favor de quién?" `CHUCHELANDIA_DUELO_WILL_A_FAVOR`
+
+**Liam** — [flat] [resigned]
+"Perdemos." `CHUCHELANDIA_DUELO_LIAM_PERDEMOS`
+
+## 9 · «¡TE QUIERO!» jugado (bocadillos, como Will)
+
+Tras el duelo, Will tiene una idea: coge el mantel, moja el dedo en la fuente de sirope y se sube a la silla. Las pistas de cada paso (`TEQUIERO_PISTA_*`) y el aviso «Esto es cosa de Will» (`TEQUIERO_SOLO_WILL`) son texto: no se graban.
+
+**Will** — [determined] [whispers]
+"Aguanta, Estela. Tengo una idea." `CHUCHELANDIA_TEQUIERO_IDEA_01`
+
+**Liam** — [worried] [deadpan]
+"Eso me preocupa." `CHUCHELANDIA_TEQUIERO_IDEA_02`
+
+**Will** — [satisfied] [quietly]
+"Esto servirá." `CHUCHELANDIA_TEQUIERO_MANTEL`
+
+**Will** — [concentrated] [proud]
+"Con letras bien grandes." `CHUCHELANDIA_TEQUIERO_SIROPE`
+
+**Liam** — [resigned] [dry]
+"Sujeto la otra punta." `CHUCHELANDIA_TEQUIERO_SILLA`
+
+## 9 · «¡TE QUIERO!» (cinemática de cine, con subtítulos)
+
+Will y Liam caen a cámara lenta en la fuente de sirope y salen pegados bajo el mantel. La pancarta (TEQUIERO_PANCARTA*) es texto escrito en el mantel: no se graba. El ruidito de cerdito y la risa de Estela son efectos (Pig_-003 y Final_Estela_Risa).
+
+**Will** — [shouts] [enthusiastic] [waving]
+"¡Vamos, Estela!" `CHUCHELANDIA_TEQUIERO_01`
+
+**Will** — [wobbling] [nervous] [bouncing]
+"¡Uy, uy, uy…!" `CHUCHELANDIA_TEQUIERO_07`
+
+**Liam** — [alarmed] [grabbing his arm]
+"¡Will!" `CHUCHELANDIA_TEQUIERO_08`
+
+**Gominola** — [shouts] [overjoyed] [high-pitched]
+"¡Vivan los novios!" `CHUCHELANDIA_TEQUIERO_02`
+
+**Liam** — [muffled, under a tablecloth] [deadpan]
+"Esto no es lo que habíamos planeado." `CHUCHELANDIA_TEQUIERO_03`
+
+**Will** — [sheepish] [dripping]
+"No habíamos planeado nada." `CHUCHELANDIA_TEQUIERO_04`
+
+**Liam** — [deadpan]
+"Pues ya ves." `CHUCHELANDIA_TEQUIERO_05`
+
+**Liam** — [quietly] [counting] [surprised]
+"Ha ganado." `CHUCHELANDIA_TEQUIERO_06`
+
+## 10 · Victoria y salida (cinemática con bocadillos)
+
+Pompón se le pega a la pierna. Después, ya en la Puerta del Corazón, el vestido se deshace en purpurina y llegan las collejas.
+
+**Will** — [amused] [warm]
+"Creo que le caes bien." `CHUCHELANDIA_VICTORIA_01`
+
+**Estela** — [quick] [embarrassed]
+"Uno." `CHUCHELANDIA_VICTORIA_02`
+
+**Estela** — [stern] [embarrassed]
+"Y no se lo contéis a nadie." `CHUCHELANDIA_VICTORIA_03`
+
+**Estela** — [softly] [gruff tenderness]
+"Quédatela. A ti te queda mejor." `CHUCHELANDIA_VICTORIA_04`
+
+**Liam** — [solemn] [teasing] [peeling caramel from hair]
+"La hechicera más poderosa y orgullosa del grupo…" `CHUCHELANDIA_VICTORIA_05`
+
+**Liam** — [solemn] [teasing]
+"…coronada oficialmente como la princesa más adorable de Chuchelandia." `CHUCHELANDIA_VICTORIA_06`
+
+**Will** — [teasing] [proud]
+"Con récord de corazones." `CHUCHELANDIA_VICTORIA_07`
 
 ---
 

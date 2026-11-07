@@ -1,0 +1,74 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 2 · EL PERGAMINO DEL HERALDO
+#  Delante de la Puerta del Corazón, el heraldo desenrolla un pergamino rosa y lee con su voz de
+#  juguete de cuerda: nadie sale hasta que se abra la Puerta, y solo se abre ante la princesa más
+#  adorable del reino. Will y Liam se vuelven a la vez hacia Estela. «Ni lo penséis».
+#  Después vienen los intentos jugables con el candado (fuego, ganzúa, empujón).
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_02_ElPergamino
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Pergamino.asset
+TEXTO bocadillo
+RITMO entre_frases=0.35 mismo_hablante=0.3
+
+REPARTO
+will     Player         nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela   Actor_Estela   nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam     Actor_Liam     nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+heraldo  Actor_Heraldo  nombre=CHAR_HERALDO color=F2C38B prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Heraldo.prefab
+
+PUNTOS
+p_will     M_Puerta_Will
+p_estela   M_Puerta_Estela
+p_liam     M_Puerta_Liam
+p_heraldo  M_Puerta_Heraldo
+p_puerta   M_Puerta_Corazon
+p_candado  M_Puerta_Candado
+cam_puerta M_Cine_Puerta_Cam
+
+HILO
+@inicio
+will en p_will mirando p_heraldo
+& estela en p_estela mirando p_heraldo
+& liam en p_liam mirando p_heraldo
+& heraldo en p_heraldo mirando will
+& plano general heraldo will estela liam lente=40
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-010.wav" volume=0.6
+& heraldo gesto Idle2
+espera 1.0
+
+# El pergamino, tan largo que le llega a las patas.
+@pergamino
+plano medio heraldo solo
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Paper_Wrapping_&_Flip-016.wav" volume=0.8
+espera 0.5
+heraldo dice CHUCHELANDIA_PERGAMINO_01 sin_pose
+heraldo dice CHUCHELANDIA_PERGAMINO_02 sin_pose
+heraldo dice CHUCHELANDIA_PERGAMINO_03 sin_pose
+
+# Señala el fondo del valle: la puerta con forma de corazón y su candado.
+@puerta
+plano general will estela liam p_puerta desde=cam_puerta altura=3.2 lente=34 quieta
+& heraldo mira p_puerta
+& will mira p_puerta
+& estela mira p_puerta
+& liam mira p_puerta
+espera 2.0
+
+# Will y Liam se vuelven a la vez hacia Estela.
+@miradas
+plano conjunto will estela liam lado=frente
+will mira estela
+& liam mira estela
+& will cara picaro
+& liam cara picaro
+& estela cara sorpresa
+espera 1.1
+plano medio estela
+estela dice CHUCHELANDIA_PERGAMINO_04 cara=enfado mira=will
+plano medio will solo rumbo=305
+will dice CHUCHELANDIA_PERGAMINO_05 cara=neutral gesto=HeadShake02 mira=estela
+plano medio estela
+estela dice CHUCHELANDIA_PERGAMINO_06 cara=molesto mira=will
+espera 0.6

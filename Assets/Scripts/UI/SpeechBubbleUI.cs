@@ -16,7 +16,6 @@ public class SpeechBubbleUI : MonoBehaviour
     CanvasGroup _grupoBocadillo, _grupoSubtitulo;
     RectTransform _rectBocadillo, _rectSubtitulo, _canvasSubtitulo;
     TextMeshProUGUI _textoBocadillo, _textoSubtitulo, _nombreSubtitulo;
-    Image _franjaSubtitulo;
     public static SpeechBubbleUI Instance { get; private set; }
 
 #if UNITY_EDITOR
@@ -108,12 +107,14 @@ public class SpeechBubbleUI : MonoBehaviour
     [Header("Fijo en pantalla (quien habla no está a la vista)")]
     [Tooltip("Dónde se queda el bocadillo cuando se muestra fijo en pantalla, en proporción del " +
              "canvas (0,0 abajo a la izquierda; 1,1 arriba a la derecha). En este modo el bocadillo " +
-             "no tiene pico: una fila de circulitos sube de él hasta el nombre de quien habla.")]
+             "no tiene pico y lleva encima el nombre de quien habla: pegado al papel si es una frase de " +
+             "alguien fuera de cuadro, o al final de una fila de circulitos si se pide a propósito " +
+             "(una voz a distancia).")]
     [SerializeField] Vector2 _posicionFija = new Vector2(0f, 0.70f);
     [Tooltip("Separación del borde de la pantalla, en píxeles de canvas.")]
     [SerializeField] float _margenFijo = 40f;
     [SerializeField] Color _colorNombre = new Color(1f, 0.85f, 0.35f);
-    [Tooltip("Color del contorno del bocadillo sin pico y de sus circulitos.")]
+    [Tooltip("Color del contorno de los circulitos (y del bocadillo sin pico con el arte antiguo).")]
     [SerializeField] Color _colorContornoADistancia = new Color(0.08f, 0.08f, 0.1f, 1f);
 
     Image _bubbleImage;
@@ -153,6 +154,9 @@ public class SpeechBubbleUI : MonoBehaviour
 
     // Fijo en pantalla en vez de seguir al personaje, con su nombre encima (ver Show()).
     bool _fijoEnPantalla;
+    // El nombre del modo fijo cuelga de una fila de circulitos (voz a distancia) en vez de ir
+    // pegado al papel.
+    bool _conCirculitos;
     TextMeshProUGUI _nombre;
 
     // Estilo «a distancia» del modo fijo: cuerpo sin pico y circulitos hasta el nombre.
@@ -335,7 +339,8 @@ public class SpeechBubbleUI : MonoBehaviour
         Rect canvasRect = _parentCanvasRect.rect;
         float halfWidth    = _bubbleRect.rect.width * 0.5f;
         float bottomMargin = _bubbleRect.rect.height * _bubbleRect.pivot.y;
-        float extraArriba  = (_fijoEnPantalla && _nombre != null && _nombre.gameObject.activeSelf) ? 60f : 0f;
+        float extraArriba  = !_fijoEnPantalla || _nombre == null || !_nombre.gameObject.activeSelf ? 0f
+                           : _conCirculitos ? 60f : _nombre.fontSize * 1.4f;
         float topMargin    = _bubbleRect.rect.height * (1f - _bubbleRect.pivot.y) + extraArriba;
 
         float minX = canvasRect.xMin + halfWidth;
@@ -385,6 +390,8 @@ public class SpeechBubbleUI : MonoBehaviour
     /// comentarios durante el juego (Eldran guiando un combate, INC-480 e INC-534). En cinemáticas
     /// se deja en false: ahí el pico señala al que habla.
     /// </param>
+    /// Un Subtitulo sin bandas de cine se enseña como bocadillo de habla (ver el principio del
+    /// método), nunca con los circulitos.
     /// Devuelve el turno de este bocadillo (ver Hide(int)).
     public int Show(Transform target, string text, float duration = 0f,
                      Action onComplete = null, string animTrigger = null, bool emphasis = false,
@@ -393,6 +400,19 @@ public class SpeechBubbleUI : MonoBehaviour
                      PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo,
                      Color colorDelNombre = default)
     {
+        // Una frase se ve de dos maneras: en bocadillo o en cinemática. El subtítulo vive en la
+        // banda de cine de abajo; sin bandas (una frase del juego de alguien lejos o fuera de
+        // cuadro, o un guion horneado sin ellas) sale en un bocadillo de habla, el mismo papel que
+        // los de encima de la cabeza: con su cola sobre quien habla si está en el encuadre y, si
+        // no, quieto en un lado de la pantalla con el nombre pegado encima. Los circulitos hasta
+        // el nombre son solo para quien pide fijoEnPantalla a propósito.
+        bool conCirculitos = fijoEnPantalla;
+        if (presentacion == PresentacionDeTexto.Subtitulo && !HayBandasDeCine)
+        {
+            presentacion = PresentacionDeTexto.Bocadillo;
+            fijoEnPantalla = !SeVeEnPantalla(target, worldOffset);
+            conCirculitos = false;
+        }
         CambiarPresentacion(presentacion, speakerName, colorDelNombre);
         if (_autoHideRoutine != null) { StopCoroutine(_autoHideRoutine); _autoHideRoutine = null; }
         _turno++;
@@ -403,10 +423,11 @@ public class SpeechBubbleUI : MonoBehaviour
         _offsetOverride = worldOffset;
         _isShowing = true;
         _fijoEnPantalla = fijoEnPantalla;
+        _conCirculitos = fijoEnPantalla && conCirculitos;
         if (presentacion == PresentacionDeTexto.Bocadillo)
         {
-            PonerNombre(fijoEnPantalla ? speakerName : null);
-            PonerEstiloADistancia(fijoEnPantalla);
+            PonerNombre(fijoEnPantalla ? speakerName : null, colorDelNombre);
+            PonerEstiloFijo(fijoEnPantalla);
         }
         // Frases de más de _maxLineas líneas: páginas (INC-435). La medición aplica el estilo
         // del papel por su cuenta; después se deja con cola o sin ella según el modo.
@@ -656,9 +677,24 @@ public class SpeechBubbleUI : MonoBehaviour
         ? MargenDeSombra + _grosorBorde
         : (_paddingConPico != null ? _paddingConPico.top : 0f);
 
+    /// Quien habla está dentro del encuadre: su bocadillo puede señalarle con la cola.
+    bool SeVeEnPantalla(Transform target, Vector3? worldOffset)
+    {
+        if (target == null) return false;
+        if (_cam == null) _cam = Camera.main;
+        if (_cam == null) return false;
+        Vector3 cabeza = target.position + (worldOffset ?? _worldOffset * TallaDeNino.FactorDe(target));
+        Vector3 v = _cam.WorldToViewportPoint(cabeza);
+        // Algo de margen por arriba: en un plano cerrado la cabeza roza el borde y el bocadillo
+        // se ajusta dentro del lienzo (ClampToCanvas).
+        return v.z > 0f && v.x > 0f && v.x < 1f && v.y > 0f && v.y < 1.15f;
+    }
+
     /// Nombre de quien habla encima del bocadillo. Solo en el modo fijo en pantalla: siguiendo al
     /// personaje, el pico ya dice quién es. No cuenta como línea del bocadillo (va fuera del layout).
-    void PonerNombre(string nombre)
+    /// Con circulitos va al final de la fila; sin ellos, pegado al borde de arriba del papel. Su
+    /// tamaño sigue al del texto del bocadillo.
+    void PonerNombre(string nombre, Color color)
     {
         if (string.IsNullOrEmpty(nombre))
         {
@@ -674,12 +710,9 @@ public class SpeechBubbleUI : MonoBehaviour
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0f, 0f);
-            rt.anchoredPosition = new Vector2(4f, AlturaNombre - DesplazamientoDelPapel);
-            rt.sizeDelta = new Vector2(400f, 40f);
 
             _nombre = go.AddComponent<TextMeshProUGUI>();
-            _nombre.font = _label.font;
-            _nombre.fontSize = _label.fontSize * 0.8f;
+            _nombre.font = _textoBocadillo.font;
             _nombre.fontStyle = FontStyles.Bold;
             _nombre.alignment = TextAlignmentOptions.BottomLeft;
             _nombre.textWrappingMode = TextWrappingModes.NoWrap;
@@ -689,16 +722,22 @@ public class SpeechBubbleUI : MonoBehaviour
             sombra.effectDistance = new Vector2(2f, -2f);
         }
 
-        _nombre.color = _colorNombre;
+        float tamano = (_usarArteGenerado ? TamanoDeTextoDelBocadillo : _tamanoTextoOriginal) * 0.8f;
+        _nombre.fontSize = tamano;
+        _nombre.rectTransform.sizeDelta = new Vector2(600f, tamano * 1.4f);
+        _nombre.rectTransform.anchoredPosition = _conCirculitos
+            ? new Vector2(4f, AlturaNombre - DesplazamientoDelPapel)
+            : new Vector2(DesplazamientoDelPapel + _radioEsquina * 0.5f, 4f - DesplazamientoDelPapel);
+        _nombre.color = color.a > 0f ? color : _colorNombre;
         _nombre.text = nombre;
         _nombre.gameObject.SetActive(true);
     }
 
-    /// Cuerpo sin pico (el relleno de abajo reservado al pico se iguala al de arriba) y los
-    /// circulitos que llevan al nombre. Con fijo = false deja el bocadillo con pico de siempre.
-    /// El padding solo se toca con el arte antiguo: con el papel dibujado por código el
-    /// hueco lo calcula AplicarEstilo().
-    void PonerEstiloADistancia(bool fijo)
+    /// Cuerpo sin pico (el relleno de abajo reservado al pico se iguala al de arriba) y, si se han
+    /// pedido (_conCirculitos), los circulitos que llevan al nombre. Con fijo = false deja el
+    /// bocadillo con pico de siempre. El padding solo se toca con el arte antiguo: con el papel
+    /// dibujado por código el hueco lo calcula AplicarEstilo().
+    void PonerEstiloFijo(bool fijo)
     {
         if (!_usarArteGenerado && _layout != null && _paddingConPico != null)
         {
@@ -708,7 +747,8 @@ public class SpeechBubbleUI : MonoBehaviour
                 : new RectOffset(_paddingConPico.left, _paddingConPico.right, arriba, _paddingConPico.bottom);
         }
 
-        if (fijo && _circulitos.Count == 0)
+        bool circulitos = fijo && _conCirculitos;
+        if (circulitos && _circulitos.Count == 0)
         {
             float subida = DesplazamientoDelPapel;
             foreach (var (centro, diametro) in Circulitos)
@@ -728,7 +768,7 @@ public class SpeechBubbleUI : MonoBehaviour
             }
         }
         foreach (var c in _circulitos)
-            if (c != null && c.gameObject.activeSelf != fijo) c.gameObject.SetActive(fijo);
+            if (c != null && c.gameObject.activeSelf != circulitos) c.gameObject.SetActive(circulitos);
     }
 
     /// Rectángulo redondeado blanco con contorno, en 9-slice: el bocadillo sin pico.
@@ -827,14 +867,17 @@ public class SpeechBubbleUI : MonoBehaviour
     /// porque el bocadillo dibujado por código no se trocea.
     void AplicarEstilo(bool conCola)
     {
-        if (_label == null) return;
+        // Solo el texto del BOCADILLO, nunca _label: Paginar() llama aquí para medir frases de
+        // bocadillo aunque la presentación activa sea un subtítulo, y entonces _label era el texto
+        // del subtítulo y se quedaba con la letra oscura del papel (subtítulos en negro).
+        if (_textoBocadillo == null) return;
 
         if (!_usarArteGenerado)
         {
             if (_layout != null && _paddingConPico != null) _layout.padding = _paddingConPico;
-            _label.margin = new Vector4(_labelHorizontalMargin, _label.margin.y,
-                                        _labelHorizontalMargin, _label.margin.w);
-            _label.fontSize = _tamanoTextoOriginal;
+            _textoBocadillo.margin = new Vector4(_labelHorizontalMargin, _textoBocadillo.margin.y,
+                                        _labelHorizontalMargin, _textoBocadillo.margin.w);
+            _textoBocadillo.fontSize = _tamanoTextoOriginal;
             if (_bubbleImage != null) _bubbleImage.type = Image.Type.Sliced;
             return;
         }
@@ -845,9 +888,9 @@ public class SpeechBubbleUI : MonoBehaviour
         int abajo = margen + (conCola ? Mathf.RoundToInt(_cola.y) : 0);
         if (_layout != null) _layout.padding = new RectOffset(margen, margen, margen, abajo);
 
-        _label.margin = new Vector4(0f, _label.margin.y, 0f, _label.margin.w);
-        _label.fontSize = TamanoDeTextoDelBocadillo;
-        _label.color = _colorTexto;
+        _textoBocadillo.margin = new Vector4(0f, _textoBocadillo.margin.y, 0f, _textoBocadillo.margin.w);
+        _textoBocadillo.fontSize = TamanoDeTextoDelBocadillo;
+        _textoBocadillo.color = _colorTexto;
         if (_bubbleImage != null) _bubbleImage.type = Image.Type.Simple;
     }
 
@@ -1065,7 +1108,7 @@ public class SpeechBubbleUI : MonoBehaviour
         _canvasSubtitulo.anchorMax = Vector2.one;
         _canvasSubtitulo.offsetMin = _canvasSubtitulo.offsetMax = Vector2.zero;
         Canvas.ForceUpdateCanvases();
-        var panel = new GameObject("Linea", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
+        var panel = new GameObject("Linea", typeof(RectTransform), typeof(CanvasGroup));
         panel.transform.SetParent(go.transform, false);
         _rectSubtitulo = (RectTransform)panel.transform;
         _grupoSubtitulo = panel.GetComponent<CanvasGroup>();
@@ -1074,8 +1117,6 @@ public class SpeechBubbleUI : MonoBehaviour
         _grupoSubtitulo.interactable = false;
         // Los grupos del HUD no ocultan el texto de la cinemática.
         _grupoSubtitulo.ignoreParentGroups = true;
-        _franjaSubtitulo = panel.GetComponent<Image>();
-        _franjaSubtitulo.raycastTarget = false;
         _textoSubtitulo = CrearTextoDeSubtitulo("Texto", _rectSubtitulo);
         _nombreSubtitulo = CrearTextoDeSubtitulo("Hablante", _rectSubtitulo);
         _nombreSubtitulo.fontSize = _textoBocadillo.fontSize * 0.75f;
@@ -1108,13 +1149,26 @@ public class SpeechBubbleUI : MonoBehaviour
         return normal * (presentacion == PresentacionDeTexto.SubtituloGrande ? 1.8f : 1f);
     }
 
+    /// Las bandas de cine están puestas o entrando: el subtítulo tiene dónde ir.
+    static bool HayBandasDeCine
+    {
+        get
+        {
+            var bandas = BandasDeCineUI.Instance;
+            return bandas != null && (bandas.AlturaVisible > 0.02f || bandas.AlturaObjetivo > 0.02f);
+        }
+    }
+
+    /// Alto de la banda de abajo en la que va el subtítulo (tanto por uno de la pantalla). Si las
+    /// bandas se retiran con la frase aún en pantalla, la frase se queda donde estaba la banda.
+    float _altoDeBanda = 0.13f;
+
     void ColocarSubtitulo()
     {
         if (_canvasSubtitulo == null || _rectSubtitulo == null || _textoSubtitulo == null || _nombreSubtitulo == null) return;
         bool grande = _presentacion == PresentacionDeTexto.SubtituloGrande;
-        var bandas = BandasDeCineUI.Instance;
-        bool hayBanda = bandas != null && (bandas.AlturaVisible > 0.02f || bandas.AlturaObjetivo > 0.02f);
-        float banda = hayBanda ? Mathf.Max(bandas.AlturaVisible, bandas.AlturaObjetivo) : 0f;
+        if (HayBandasDeCine)
+            _altoDeBanda = Mathf.Max(BandasDeCineUI.Instance.AlturaVisible, BandasDeCineUI.Instance.AlturaObjetivo);
         float altoCanvas = AlturaCanvasSubtitulo;
         float anchoCanvas = AnchoCanvasSubtitulo;
         float anchoMax = anchoCanvas * 0.75f;
@@ -1133,37 +1187,19 @@ public class SpeechBubbleUI : MonoBehaviour
         float paddingY = 6f;
         float altoTotal = altoTexto + altoNombre + espaciado + (paddingY * 2f);
 
-        float altoBanda = altoCanvas * banda;
+        float altoBanda = altoCanvas * _altoDeBanda;
 
         _rectSubtitulo.anchorMin = _rectSubtitulo.anchorMax = new Vector2(0.5f, grande ? 0.5f : 0f);
         _rectSubtitulo.pivot = new Vector2(0.5f, grande ? 0.5f : 0f);
 
-        float anchoCaja = anchoMax;
+        // Sin fondo propio: el subtítulo grande va en el centro y el normal, centrado en la banda
+        // de cine de abajo, que ya es negra.
+        _rectSubtitulo.sizeDelta = new Vector2(anchoMax, altoTotal);
+        _rectSubtitulo.anchoredPosition = grande
+            ? Vector2.zero
+            : new Vector2(0f, Mathf.Max(4f, (altoBanda - altoTotal) * 0.5f));
 
-        if (grande)
-        {
-            _rectSubtitulo.sizeDelta = new Vector2(anchoMax, altoTotal);
-            _rectSubtitulo.anchoredPosition = Vector2.zero;
-            _franjaSubtitulo.color = Color.clear;
-        }
-        else if (hayBanda)
-        {
-            // Dentro de la banda de cine: centrado vertical simétrico en la franja negra inferior
-            _rectSubtitulo.sizeDelta = new Vector2(anchoMax, altoTotal);
-            float yCentrado = (altoBanda - altoTotal) * 0.5f;
-            _rectSubtitulo.anchoredPosition = new Vector2(0f, Mathf.Max(4f, yCentrado));
-            _franjaSubtitulo.color = Color.clear; // La banda ya es 100% negra opaca; nunca dibujar caja gris
-        }
-        else
-        {
-            // Sin banda de cine: caja semitransparente suave ajustada al ancho del texto
-            anchoCaja = Mathf.Clamp(Mathf.Max(tamTexto.x, tieneNombre ? _nombreSubtitulo.preferredWidth : 0f) + 40f, 200f, anchoMax);
-            _rectSubtitulo.sizeDelta = new Vector2(anchoCaja, altoTotal);
-            _rectSubtitulo.anchoredPosition = new Vector2(0f, altoCanvas * 0.035f);
-            _franjaSubtitulo.color = new Color(0f, 0f, 0f, 0.55f);
-        }
-
-        float anchoContenido = hayBanda || grande ? anchoMax : anchoCaja;
+        float anchoContenido = anchoMax;
 
         // 1. Texto de diálogo en la parte inferior
         _textoSubtitulo.rectTransform.anchorMin = _textoSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);

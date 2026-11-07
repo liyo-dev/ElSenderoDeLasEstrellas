@@ -531,6 +531,24 @@
         {"key":"QUEST_RENARD_CONTRATO_2_NAME","value":"Where the Light Can't Reach"},
         {"key":"QUEST_RENARD_CONTRATO_2_DESC","value":"Renard will pay you to deal with fifteen more spiders in the Forbidden Forest."},
         {"key":"QUEST_RENARD_CONTRATO_2_DETAIL","value":"Defeat fifteen spiders in the Forbidden Forest and talk to Renard again. He promises something he's kept for years."},
-        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Defeat spiders in the Forbidden Forest"}
+        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Defeat spiders in the Forbidden Forest"},
+        {"key":"CHUCHE_BIENVENIDA_NAME","value":"Welcome to Chuchelandia"},
+        {"key":"CHUCHE_BIENVENIDA_DESC","value":"A kingdom of sweets behind the second door. Someone will have to explain what's going on here."},
+        {"key":"CHUCHE_BIENVENIDA_DETAIL","value":"Behind the Path's second door lies a whole kingdom made of sweets, and nobody has told you yet what you're doing here or how to get out. Take a look around and find someone who knows."},
+        {"key":"CHUCHE_PASO_INVESTIGAR","value":"Explore the kingdom"},
+        {"key":"CHUCHE_PRUEBA_NAME","value":"The Most Adorable Princess"},
+        {"key":"CHUCHE_PRUEBA_DESC","value":"No one leaves Chuchelandia until the Heart Gate opens."},
+        {"key":"CHUCHE_PRUEBA_DETAIL","value":"The Heart Gate only opens for the most adorable princess in the kingdom, and the kingdom has decided that's Estela. Pass the candidate trials, learn Countess Meringue's manners and win the Tenderness Duel to return to the Path."},
+        {"key":"CHUCHE_PASO_PUERTA","value":"Try to open the Heart Gate"},
+        {"key":"CHUCHE_PASO_CARRERA","value":"Win the obstacle race"},
+        {"key":"CHUCHE_PASO_ESCALADA","value":"Be the first to reach the top of the tower"},
+        {"key":"CHUCHE_PASO_PUNTERIA","value":"Pop the balloons at the shooting range"},
+        {"key":"CHUCHE_PASO_CLASES","value":"Learn Countess Meringue's manners"},
+        {"key":"CHUCHE_PASO_DUELO","value":"Win the Tenderness Duel"},
+        {"key":"CHUCHE_PASO_VUELTA","value":"Go through the Heart Gate and return to the Path"},
+        {"key":"CHUCHE_TROMPETILLAS_NAME","value":"The lost trumpets"},
+        {"key":"CHUCHE_TROMPETILLAS_DESC","value":"The substitute herald needs the army's trumpets to announce Her Highness."},
+        {"key":"CHUCHE_TROMPETILLAS_DETAIL","value":"The gummy army has lost five little trumpets all over the kingdom: up high, across the long jumps and where only a good bounce will take you. Find them and bring them back to the substitute herald."},
+        {"key":"CHUCHE_TROMPETILLAS_STEP","value":"Find the army's trumpets"}
     ]
 }

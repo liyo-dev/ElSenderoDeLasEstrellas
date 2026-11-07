@@ -20,12 +20,14 @@ MonoBehaviour:
   currentMP: 0
   ataque: 0
   defensa: 0
+  sintoniaPuntos: 0
+  sintoniaHitos: 0
+  sintoniaHitosPendientes: 0
   unlockedAbilities: 
   unlockedSpells: 
   basicSpellIds: 
-  legacyLeftSpellId: 0
-  legacyRightSpellId: 0
-  legacySpecialSpellId: 0
+  companionBasics: []
+  companionHealth: []
   flags:
   - SLEEP_DONE:PrologueBed
   - QUEST_ACTIVE:ELDRAN_MISSION1
@@ -38,16 +40,16 @@ MonoBehaviour:
     sprint: 0
     shield: 0
   appearance:
-  - category: 0
-    partName: Body05
   - category: 2
     partName: Head01_Male
   - category: 3
-    partName: Hair01
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   - category: 4
-    partName: Eye01
+    partName: Eye30
   - category: 5
-    partName: Mouth01
+    partName: Mouth20
   unlockedWardrobeIds:
   - Body05
   inventoryItems: []
@@ -93,6 +95,7 @@ MonoBehaviour:
     - key: __fork_434108a8-8f50-407a-b807-74d22ff2a5ac_3_node
       type: string
       value: fa24c4e1-e60f-4788-b4c0-a6d276e5cddb
+  senalesEmitidas: []
   npcPositions:
   - npcId: Sofia
     position: {x: 403.56, y: 0.14147949, z: 160.89}
@@ -113,6 +116,7 @@ MonoBehaviour:
     hasActiveState: 0
     isActive: 1
   npcRelationships: []
+  objetosDelMundo: []
   consumedInteractableIds:
   - MainWorld:Carta_1231,6_1000,8_3,4
   completedInteractiveNarratives:

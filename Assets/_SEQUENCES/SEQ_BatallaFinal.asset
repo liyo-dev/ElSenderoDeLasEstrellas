@@ -18,22 +18,6 @@ MonoBehaviour:
   signalOut: BATALLA_FINAL_COMBATE_START
   musicId: 
   presentacionDeTexto: 1
-  protagonistas:
-  - Player
-  - NPC_MagoOscuro
-  - NPC_Estela
-  - NPC_Liam
-  openingShotName: 
-  openingShot:
-    type: 3
-    subjectId: 
-    secondaryId: 
-    heightBias: 0
-    distanceScale: 1
-    fovOverride: 0
-    crossTheLine: 0
-    headroom: 1
-    encara: 1
   endStayBlack: 0
   skipMusicRestore: 0
   modulos: {fileID: 0}
@@ -42,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 5630202741379040024
+    - rid: 5630202842388365812
   references:
     version: 2
     RefIds:
-    - rid: 5630202741379040024
+    - rid: 5630202842388365812
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

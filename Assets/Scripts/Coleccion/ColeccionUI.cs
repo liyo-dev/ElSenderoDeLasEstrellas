@@ -5,11 +5,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static PiezasDeUI;
 
 /// <summary>
 /// Álbum de una <see cref="ColeccionDeObjetos"/>: las piezas de cada página (las que faltan, en
 /// sombra), la frase del coleccionista sobre la pieza elegida y el premio de la página. Se monta
-/// por código con un <see cref="EstiloDeMenuSencillo"/> al abrirse y se destruye al cerrarse.
+/// por código (<see cref="PiezasDeUI"/>) con un <see cref="EstiloDeMenuSencillo"/> al abrirse y se destruye al cerrarse.
 /// Mando: izquierda/derecha elige pieza, LB/RB cambia de página, B o Start cierra. Ratón: clic en
 /// las piezas, las flechas y Cerrar.
 /// </summary>
@@ -19,11 +20,12 @@ public sealed class ColeccionUI : MonoBehaviour
     private const float RetrasoAlSoltarElJuego = 0.2f;
     private const float RepeticionDeNavegacion = 0.22f;
     private const int PiezasPorFila = 3;
+    private const float GrosorDelMarco = 7f;
 
     private class Ranura
     {
         public RectTransform raiz;
-        public Image tarjeta, icono, chipNuevo;
+        public Image marco, tarjeta, icono, chipNuevo;
         public TextMeshProUGUI nombre;
     }
 
@@ -38,6 +40,9 @@ public sealed class ColeccionUI : MonoBehaviour
     private int _pagina, _seleccion;
     private float _ignorarHasta, _siguienteNavegacion;
     private bool _bloqueado;
+
+    // Silueta de la pieza que falta: clara y translúcida, para que se lea la forma sobre la tarjeta oscura.
+    private Color ColorDeSilueta => new Color(_estilo.colorTextoSuave.r, _estilo.colorTextoSuave.g, _estilo.colorTextoSuave.b, 0.3f);
 
     /// <summary>Abre el álbum. <paramref name="nuevas"/>: piezas recién entregadas (salen marcadas).</summary>
     public static ColeccionUI Abrir(ColeccionDeObjetos coleccion, EstiloDeMenuSencillo estilo, ICollection<PiezaDeColeccion> nuevas)
@@ -201,12 +206,11 @@ public sealed class ColeccionUI : MonoBehaviour
             bool elegida = i == _seleccion;
             r.icono.sprite = pieza.objeto != null ? pieza.objeto.icon : null;
             r.icono.enabled = r.icono.sprite != null;
-            r.icono.color = tiene ? Color.white : new Color(0f, 0f, 0f, 0.45f);
+            r.icono.color = tiene ? Color.white : ColorDeSilueta;
             r.nombre.text = tiene && pieza.objeto != null ? pieza.objeto.GetLocalizedName() : "???";
             r.nombre.color = tiene ? _estilo.colorTexto : _estilo.colorTextoSuave;
             r.chipNuevo.gameObject.SetActive(_nuevas.Contains(pieza));
-            r.tarjeta.color = elegida ? _estilo.colorResalte : Color.white;
-            r.raiz.localScale = Vector3.one * (elegida ? 1.06f : 1f);
+            r.marco.enabled = elegida;
         }
 
         var actual = _seleccion < piezas.Count ? piezas[_seleccion] : null;
@@ -226,14 +230,7 @@ public sealed class ColeccionUI : MonoBehaviour
 
     private void ConstruirInterfaz()
     {
-        _canvas = gameObject.AddComponent<Canvas>();
-        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        _canvas.sortingOrder = 400;
-        var escalador = gameObject.AddComponent<CanvasScaler>();
-        escalador.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        escalador.referenceResolution = new Vector2(1920f, 1080f);
-        escalador.matchWidthOrHeight = 0.5f;
-        gameObject.AddComponent<GraphicRaycaster>();
+        _canvas = Lienzo(gameObject, 400, conClic: true);
 
         var fondo = Imagen("Fondo", transform, null, new Color(0f, 0f, 0f, 0.6f));
         Estirar(fondo.rectTransform);
@@ -276,8 +273,14 @@ public sealed class ColeccionUI : MonoBehaviour
             float y = ((filas - 1) * 0.5f - fila) * (lado + separacion);
             var r = _ranuras[i];
             Colocar(r.raiz, new Vector2(0.5f, 0.5f), new Vector2(x, y), new Vector2(lado, lado));
-            Colocar(r.icono.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, lado * 0.08f), Vector2.one * lado * 0.58f);
-            Colocar(r.nombre.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, lado * 0.11f), new Vector2(lado - 16f, 34f));
+            Colocar(r.icono.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, lado * 0.1f), Vector2.one * lado * 0.56f);
+            // El nombre ocupa una franja fija al pie de la tarjeta, igual en todas.
+            var nombre = r.nombre.rectTransform;
+            nombre.anchorMin = Vector2.zero;
+            nombre.anchorMax = new Vector2(1f, 0f);
+            nombre.pivot = new Vector2(0.5f, 0f);
+            nombre.anchoredPosition = new Vector2(0f, lado * 0.07f);
+            nombre.sizeDelta = new Vector2(-24f, filas > 1 ? 26f : 34f);
             r.nombre.fontSize = filas > 1 ? 18f : 24f;
         }
     }
@@ -285,8 +288,17 @@ public sealed class ColeccionUI : MonoBehaviour
     private Ranura CrearRanura(int indice)
     {
         var r = new Ranura();
-        r.tarjeta = Imagen($"Pieza {indice + 1}", _rejilla, _estilo.tarjeta, Color.white);
-        r.raiz = r.tarjeta.rectTransform;
+        r.raiz = new GameObject($"Pieza {indice + 1}", typeof(RectTransform)).GetComponent<RectTransform>();
+        r.raiz.SetParent(_rejilla, false);
+        // La pieza elegida se marca con un borde del color de resalte detrás de la tarjeta; la
+        // tarjeta no cambia de color ni de tamaño.
+        r.marco = Imagen("Marco", r.raiz, _estilo.tarjeta, _estilo.colorResalte);
+        r.marco.raycastTarget = false;
+        Estirar(r.marco.rectTransform);
+        r.marco.rectTransform.offsetMin = new Vector2(-GrosorDelMarco, -GrosorDelMarco);
+        r.marco.rectTransform.offsetMax = new Vector2(GrosorDelMarco, GrosorDelMarco);
+        r.tarjeta = Imagen("Tarjeta", r.raiz, _estilo.tarjeta, Color.white);
+        Estirar(r.tarjeta.rectTransform);
         var boton = r.tarjeta.gameObject.AddComponent<Button>();
         boton.transition = Selectable.Transition.None;
         boton.onClick.AddListener(() => Elegir(indice));
@@ -294,6 +306,9 @@ public sealed class ColeccionUI : MonoBehaviour
         r.icono.preserveAspect = true;
         r.icono.raycastTarget = false;
         r.nombre = Texto("Nombre", r.raiz, "", _estilo.fuenteTexto, 24f, _estilo.colorTexto);
+        r.nombre.alignment = TextAlignmentOptions.Bottom;
+        r.nombre.textWrappingMode = TextWrappingModes.NoWrap;
+        r.nombre.overflowMode = TextOverflowModes.Ellipsis;
         r.chipNuevo = Imagen("Nuevo", r.raiz, _estilo.chip, _estilo.colorResalte);
         r.chipNuevo.raycastTarget = false;
         Colocar(r.chipNuevo.rectTransform, new Vector2(1f, 1f), new Vector2(-58f, -26f), new Vector2(110f, 38f));
@@ -310,46 +325,5 @@ public sealed class ColeccionUI : MonoBehaviour
         var t = Texto("Texto", imagen.transform, texto, _estilo.fuenteTitulo, 26f, _estilo.colorTexto);
         Estirar(t.rectTransform);
         return imagen.gameObject;
-    }
-
-    private static Image Imagen(string nombre, Transform padre, Sprite sprite, Color color)
-    {
-        var go = new GameObject(nombre, typeof(RectTransform), typeof(Image));
-        go.transform.SetParent(padre, false);
-        var imagen = go.GetComponent<Image>();
-        imagen.sprite = sprite;
-        imagen.color = color;
-        if (sprite != null && sprite.border != Vector4.zero) imagen.type = Image.Type.Sliced;
-        return imagen;
-    }
-
-    private static TextMeshProUGUI Texto(string nombre, Transform padre, string texto, TMP_FontAsset fuente, float tamano, Color color)
-    {
-        var go = new GameObject(nombre, typeof(RectTransform));
-        go.transform.SetParent(padre, false);
-        var t = go.AddComponent<TextMeshProUGUI>();
-        if (fuente != null) t.font = fuente;
-        t.text = texto;
-        t.fontSize = tamano;
-        t.color = color;
-        t.alignment = TextAlignmentOptions.Center;
-        t.textWrappingMode = TextWrappingModes.Normal;
-        t.raycastTarget = false;
-        return t;
-    }
-
-    private static void Colocar(RectTransform rt, Vector2 ancla, Vector2 posicion, Vector2 tamano)
-    {
-        rt.anchorMin = rt.anchorMax = ancla;
-        rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = posicion;
-        rt.sizeDelta = tamano;
-    }
-
-    private static void Estirar(RectTransform rt)
-    {
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.offsetMin = rt.offsetMax = Vector2.zero;
     }
 }

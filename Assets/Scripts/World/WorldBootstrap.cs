@@ -130,13 +130,15 @@ public class WorldBootstrap : MonoBehaviour
         Debug.Log($"[WorldBootstrap] 🌍 InitializeWorld() - Iniciando configuración del mundo");
 #endif
 
-        // BUGFIX: al inicializar el mundo siempre estamos en gameplay normal (nunca a mitad de
-        // una cinemática), así que este es un punto seguro para tirar de golpe cualquier flag de
-        // sesión estático que pudiera haber quedado "colgado" en true/incrementado por una sesión
-        // anterior cortada abruptamente (p.ej. cerrar la demo a mitad de una cinemática para ir a
-        // Créditos). Ver GameBootService.ResetTransientSessionState() para el detalle de qué se
-        // resetea y por qué.
-        GameBootService.ResetTransientSessionState();
+        // Punto seguro para tirar de golpe cualquier flag de sesión estático que pudiera haber
+        // quedado "colgado" por una sesión anterior cortada abruptamente (p.ej. cerrar la demo a
+        // mitad de una cinemática para ir a Créditos). Ver GameBootService.ResetTransientSessionState().
+        // Excepción: una cinemática de esta escena que ya está en marcha (la llegada a un nivel que
+        // salta al aparecer el grupo, antes de que el mundo termine de arrancar). Entonces la cámara
+        // reclamada, la fase de juego y el HUD oculto son suyos, no restos de otra sesión: limpiarlos
+        // le quitaría la cámara a mitad y al soltarla no se devolvería la cámara de juego (INC-889).
+        if (CinematicSequencerBase.RunningSequences.Count == 0)
+            GameBootService.ResetTransientSessionState();
 
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
@@ -401,6 +403,9 @@ public class WorldBootstrap : MonoBehaviour
         {
             // Debug.Log($"[WorldBootstrap] ✅ Ejecutando TeleportTo('{anchorId}')");
             SpawnManager.TeleportTo(anchorId, false);
+#if UNITY_EDITOR
+            StartCoroutine(DiagnosticoDeCaida(player, anchorId)); // Ver INC-890: quitar al cerrarla.
+#endif
         }
         else
         {
@@ -411,6 +416,30 @@ public class WorldBootstrap : MonoBehaviour
             yield return TeleportWhenActive(player, anchorId);
         }
     }
+
+#if UNITY_EDITOR
+    // Diagnóstico temporal de INC-890 (Will cae sin parar al probar desde un nodo).
+    private System.Collections.IEnumerator DiagnosticoDeCaida(GameObject player, string anchorId)
+    {
+        var ancla = SpawnManager.GetAnchor(anchorId);
+        foreach (float espera in new[] { 0f, 1f, 3f })
+        {
+            if (espera > 0f) yield return new WaitForSecondsRealtime(espera);
+            if (player == null) yield break;
+            Vector3 p = player.transform.position;
+            string suelo = Physics.Raycast(p + Vector3.up * 50f, Vector3.down, out var golpe, 200f, ~0, QueryTriggerInteraction.Ignore)
+                ? $"{golpe.collider.name} (capa {LayerMask.LayerToName(golpe.collider.gameObject.layer)}) en y={golpe.point.y:F2}"
+                : "nada";
+            var motor = player.GetComponentInChildren<Invector.vCharacterController.vThirdPersonMotor>(true);
+            var rb = player.GetComponentInChildren<Rigidbody>(true);
+            var cap = player.GetComponentInChildren<CapsuleCollider>(true);
+            Debug.Log($"[WorldBootstrap] DIAG caída +{espera}s: jugador '{player.name}' en {p:F2}, ancla '{anchorId}' en {(ancla != null ? ancla.transform.position.ToString("F2") : "NO ENCONTRADA")}, " +
+                      $"suelo bajo él: {suelo}, enElAire={(motor != null ? motor.IsAirborne.ToString() : "sin motor")}, " +
+                      $"rb kin={(rb != null ? rb.isKinematic.ToString() : "-")} vel={(rb != null ? rb.linearVelocity.ToString("F1") : "-")}, " +
+                      $"cápsula={(cap != null ? cap.enabled + " capa " + LayerMask.LayerToName(cap.gameObject.layer) : "-")}, timeScale={Time.timeScale}");
+        }
+    }
+#endif
 
     private System.Collections.IEnumerator TeleportWhenActive(GameObject player, string anchorId)
     {

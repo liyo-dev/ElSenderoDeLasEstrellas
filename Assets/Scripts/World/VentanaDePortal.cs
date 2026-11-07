@@ -73,7 +73,8 @@ public class VentanaDePortal : MonoBehaviour
 
     private void Fijar(float apertura, float destello)
     {
-        if (_renderer == null) Awake();
+        // Tras recompilar en el Editor, Unity conserva _renderer pero no el bloque (no se serializa) y no repite Awake.
+        if (_renderer == null || _bloque == null) Awake();
         _renderer.GetPropertyBlock(_bloque);
         _bloque.SetFloat(AperturaId, Mathf.Max(0f, apertura));
         _bloque.SetFloat(DestelloId, destello);

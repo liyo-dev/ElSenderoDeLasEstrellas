@@ -16,7 +16,7 @@ public static class FotosDelSendero
     static readonly (string nombre, Vector3 desde, Vector3 mira)[] Vistas =
     {
         ("01_llegada", new(0, 2.6f, -3), new(0, 2.2f, 40)),
-        ("02_cielos_cosidos", new(0, 2.8f, 30), new(-20, 6f, 70)),
+        ("02_primer_tramo", new(0, 2.8f, 30), new(-20, 6f, 70)),
         ("03_puerta_will", new(-3, 3.8f, 132), new(5.6f, 3.4f, 150)),
         ("04_camino_largo", new(0, 4.5f, 175), new(0, 3f, 280)),
         ("05_puerta_estela", new(-4, 5.2f, 284), new(5.6f, 4.8f, 300)),

@@ -1,0 +1,35 @@
+#if UNITY_EDITOR
+using System.Globalization;
+using System.IO;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+
+/// Diagnóstico temporal (INC-902): lanza los rayos de Guiones/_ordenes/rayos.txt («ax ay az bx by bz»
+/// por línea) y dice con qué chocan y si un punto está dentro de algo. Se retira al cerrar INC-902.
+public static class DiagnosticoDeRayos
+{
+    [MenuItem("El Sendero/Guion/Diagnóstico: rayos (INC-902)")]
+    public static void Lanzar()
+    {
+        string ruta = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_ordenes", "rayos.txt");
+        var sb = new StringBuilder();
+        var ci = CultureInfo.InvariantCulture;
+        foreach (var l in File.ReadAllLines(ruta))
+        {
+            var p = l.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (p.Length < 6) continue;
+            var a = new Vector3(float.Parse(p[0], ci), float.Parse(p[1], ci), float.Parse(p[2], ci));
+            var b = new Vector3(float.Parse(p[3], ci), float.Parse(p[4], ci), float.Parse(p[5], ci));
+            var d = b - a;
+            sb.Append($"[{l}] ");
+            foreach (var c in Physics.OverlapSphere(a, 0.3f, ~(1 << 10), QueryTriggerInteraction.Ignore))
+                sb.Append($"DENTRO:{c.name}({c.gameObject.scene.name}) ");
+            foreach (var h in Physics.RaycastAll(a, d.normalized, d.magnitude, ~(1 << 10), QueryTriggerInteraction.Ignore))
+                sb.Append($"CHOCA:{h.collider.name}({h.collider.gameObject.scene.name})@{h.distance:0.00} {h.point} ");
+            sb.Append(" | ");
+        }
+        OrdenesDelEditor.Avisar("Rayos", sb.ToString());
+    }
+}
+#endif

@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2cf50c26408f44b94bc1d5a44a9eab, type: 3}
+  m_Name: Repertorio_BarcoVikingo
+  m_EditorClassIdentifier: Assembly-CSharp::RepertorioDeAtraccion
+  id: barco_vikingo
+  escenitas:
+  - nombre: "El est\xF3mago de Will"
+    peso: 1
+    desdeElViaje: 1
+    hastaElViaje: 1
+    noSube: 0
+    seMarea: 1
+    segundosDeMareo: 5
+    golpes:
+    - momento: 0
+      quien: 1
+      clave: PARQUE_BARCO_1_1
+      texto: "\xA1Venga, venga! \xA1Este es el bueno!"
+      gesto: Cheer01
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+    - momento: 0
+      quien: 3
+      clave: PARQUE_BARCO_1_2
+      texto: "Ese \xE1ngulo\u2026 \xBFSeguro que lo has pensado bien?"
+      gesto: 
+      emocion: 9
+      espera: 0.2
+      aLaVez: 0
+    - momento: 1
+      quien: 2
+      clave: PARQUE_BARCO_1_3
+      texto: Si gritas, Will, lo cuento en el pueblo.
+      gesto: 
+      emocion: 8
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 1
+      clave: PARQUE_BARCO_1_4
+      texto: "\xA1Aaaah! \xA1Mi est\xF3mago se ha quedado arriba!"
+      gesto: Fear01
+      emocion: 5
+      espera: 0
+      aLaVez: 1
+    - momento: 2
+      quien: 2
+      clave: PARQUE_BARCO_1_5
+      texto: "\xA1M\xE1s alto!"
+      gesto: Cheer01
+      emocion: 1
+      espera: 1.2
+      aLaVez: 0
+    - momento: 3
+      quien: 3
+      clave: PARQUE_BARCO_1_6
+      texto: Cuarenta grados. Y subiendo.
+      gesto: 
+      emocion: 6
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 1
+      clave: PARQUE_BARCO_1_7
+      texto: "El suelo\u2026 \xBFpor qu\xE9 se mueve el suelo?"
+      gesto: 
+      emocion: 12
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 2
+      clave: PARQUE_BARCO_1_8
+      texto: "No me hab\xEDa re\xEDdo tanto en a\xF1os."
+      gesto: Laugh01
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+  - nombre: Brazos arriba
+    peso: 1
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 1
+      quien: 2
+      clave: PARQUE_BARCO_2_1
+      texto: Esta vez, brazos arriba. Los tres.
+      gesto: 
+      emocion: 10
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 1
+      clave: PARQUE_BARCO_2_2
+      texto: "\xA1Sin manos!"
+      gesto: Cheer01
+      emocion: 1
+      espera: 0
+      aLaVez: 1
+    - momento: 2
+      quien: 2
+      clave: 
+      texto: 
+      gesto: Cheer02
+      emocion: 1
+      espera: 0
+      aLaVez: 1
+    - momento: 2
+      quien: 3
+      clave: PARQUE_BARCO_2_4
+      texto: "Esto\u2026 no es tan terrible."
+      gesto: Cheer01
+      emocion: 4
+      espera: 0.6
+      aLaVez: 0
+    - momento: 4
+      quien: 2
+      clave: PARQUE_BARCO_2_5
+      texto: Otra. Ahora.
+      gesto: 
+      emocion: 1
+      espera: 0
+      aLaVez: 0
+  - nombre: Liam se queda abajo
+    peso: 0.6
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 3
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 0
+      quien: 3
+      clave: PARQUE_BARCO_3_1
+      texto: Id vosotros. Alguien tiene que guardar el sitio.
+      gesto: 
+      emocion: 0
+      espera: 0.2
+      aLaVez: 0
+    - momento: 0
+      quien: 2
+      clave: PARQUE_BARCO_3_2
+      texto: Cobarde.
+      gesto: 
+      emocion: 8
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 1
+      clave: PARQUE_BARCO_3_3
+      texto: "\xA1Liaaam! \xA1M\xEDranos!"
+      gesto: HandWave01
+      emocion: 1
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 3
+      clave: PARQUE_BARCO_3_4
+      texto: "Desde aqu\xED abajo tambi\xE9n se o\xEDan tus gritos."
+      gesto: 
+      emocion: 8
+      espera: 0
+      aLaVez: 0
+  - nombre: "El c\xE1lculo de Liam"
+    peso: 1
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 1
+      quien: 3
+      clave: PARQUE_BARCO_4_1
+      texto: "Lo peor es la popa. Por eso nos he sentado aqu\xED."
+      gesto: 
+      emocion: 10
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 3
+      clave: PARQUE_BARCO_4_2
+      texto: "\u2026 He calculado mal."
+      gesto: Fear01
+      emocion: 5
+      espera: 0
+      aLaVez: 0
+    - momento: 2
+      quien: 2
+      clave: PARQUE_BARCO_4_3
+      texto: "\xA1Ja! \xA1El genio!"
+      gesto: Laugh01
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+    - momento: 4
+      quien: 1
+      clave: PARQUE_BARCO_4_4
+      texto: "\xBFY cu\xE1nto hab\xEDas calculado?"
+      gesto: 
+      emocion: 8
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 3
+      clave: PARQUE_BARCO_4_5
+      texto: Lo justo para no volver a hacerlo.
+      gesto: 
+      emocion: 7
+      espera: 0.2
+      aLaVez: 0
+  - nombre: Estela no tiene miedo
+    peso: 1
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 2
+      quien: 2
+      clave: PARQUE_BARCO_5_1
+      texto: "\xA1No me da miedo! \xA1Es el viento!"
+      gesto: Fear01
+      emocion: 5
+      espera: 0
+      aLaVez: 0
+    - momento: 3
+      quien: 1
+      clave: PARQUE_BARCO_5_2
+      texto: "Estela\u2026 me est\xE1s estrujando el brazo."
+      gesto: 
+      emocion: 8
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 2
+      clave: PARQUE_BARCO_5_3
+      texto: Ni una palabra. A nadie.
+      gesto: 
+      emocion: 3
+      espera: 0
+      aLaVez: 0

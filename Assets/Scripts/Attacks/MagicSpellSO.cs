@@ -90,6 +90,11 @@ public class MagicSpellSO : ScriptableObject
     /// instancia en memoria, nunca algo que deba guardarse en el asset .asset original.
     [System.NonSerialized] public bool isRuntimePreciseInstance = false;
 
+    /// Efecto que sustituye a lo que se ve del prefab en vuelo (lo pone una TransformacionDeMagia en
+    /// su copia en memoria). MagicProjectileSpawner apaga lo visible del prefab y pega este efecto;
+    /// colisión, vuelo e impacto siguen siendo los del hechizo. Nunca se guarda en el asset.
+    [System.NonSerialized] public GameObject visualSustitutoEnVuelo;
+
     /// Crea, en runtime, una copia de este hechizo con daño/velocidad/escala ajustados según los
     /// multiplicadores 'precise*' de arriba -- para MagicCaster.CastResolvedSpell(slot, precise:
     /// true). No toca el asset original (Instantiate crea un ScriptableObject nuevo en memoria,
@@ -105,6 +110,7 @@ public class MagicSpellSO : ScriptableObject
         clone.useScaleOverride = true;
         clone.scaleOverride = (useScaleOverride ? scaleOverride : Vector3.one) * preciseScaleMultiplier;
         clone.isRuntimePreciseInstance = true;
+        clone.visualSustitutoEnVuelo = visualSustitutoEnVuelo;
         return clone;
     }
 

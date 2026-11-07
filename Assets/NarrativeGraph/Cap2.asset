@@ -21,15 +21,15 @@ MonoBehaviour:
   - rid: 5630202263296278917
   - rid: 5630202263296278918
   - rid: 5630202263296278919
-  - rid: 5630202743988421140
-  - rid: 5630202743988421141
-  - rid: 5630202743988421142
-  - rid: 5630202743988421143
-  - rid: 5630202743988421144
-  - rid: 5630202743988421145
-  - rid: 5630202743988421146
-  - rid: 5630202743988421147
-  - rid: 5630202743988421148
+  - rid: 5630202842388366159
+  - rid: 5630202842388366160
+  - rid: 5630202842388366161
+  - rid: 5630202842388366162
+  - rid: 5630202842388366163
+  - rid: 5630202842388366164
+  - rid: 5630202842388366165
+  - rid: 5630202842388366166
+  - rid: 5630202842388366167
   - rid: 5630202263296279101
   - rid: 5630202263296279079
   - rid: 5630202263296279102
@@ -55,11 +55,9 @@ MonoBehaviour:
   - rid: 5630202655468159109
   - rid: 5630202655468159110
   - rid: 5630202655468159111
-  - rid: 5630202705244324020
   - rid: 5630202718439342302
   - rid: 5630202718439342225
   - rid: 5630202718439342303
-  - rid: 5630202741379039245
   - rid: 5630202816662077838
   - rid: 5630202816662077839
   - rid: 5630202816662077840
@@ -193,7 +191,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-fork
-        position: {x: 7220, y: 0}
+        position: {x: 6460, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-0
         - cap2-prepara-viaje-boticaria-0
@@ -226,7 +224,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-0
-        position: {x: 7600, y: 0}
+        position: {x: 6840, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-1
         npcId: NPC_Victoria
@@ -244,7 +242,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-1
-        position: {x: 7980, y: 0}
+        position: {x: 7220, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-2
         dialogue: {fileID: 11400000, guid: fa547693d02e99e449e4b2ed340b54a9, type: 2}
@@ -261,7 +259,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-2
-        position: {x: 8360, y: 0}
+        position: {x: 7600, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-3
         wardrobeItem: {fileID: 11400000, guid: 7367f9d40af192b45aac491cf7b33acf, type: 2}
@@ -277,7 +275,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-3
-        position: {x: 8740, y: 0}
+        position: {x: 7980, y: 0}
         outputs:
         - cap2-prepara-viaje-victoria-4
         action: 0
@@ -300,7 +298,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-4
-        position: {x: 9120, y: 0}
+        position: {x: 8360, y: 0}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Victoria
@@ -322,7 +320,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-0
-        position: {x: 7600, y: 160}
+        position: {x: 6840, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-1
         npcId: NPC_Boticaria
@@ -340,7 +338,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-1
-        position: {x: 7980, y: 160}
+        position: {x: 7220, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-2
         dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
@@ -357,7 +355,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-2
-        position: {x: 8360, y: 160}
+        position: {x: 7600, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-3
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -375,7 +373,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 8740, y: 160}
+        position: {x: 7980, y: 160}
         outputs:
         - cap2-prepara-viaje-boticaria-4
         action: 0
@@ -398,7 +396,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-4
-        position: {x: 9120, y: 160}
+        position: {x: 8360, y: 160}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Boticaria
@@ -443,7 +441,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-0
-        position: {x: 7600, y: 320}
+        position: {x: 6840, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-desbloqueo
         npcId: NPC_Erika
@@ -461,7 +459,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-2
-        position: {x: 9120, y: 320}
+        position: {x: 8360, y: 320}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Erika
@@ -483,7 +481,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-motivos
-        position: {x: 8360, y: 640}
+        position: {x: 7600, y: 480}
         outputs:
         - cap2-prepara-viaje-completar
         dialogue: {fileID: 11400000, guid: e3e9c5d6b93ecac4087a29210890a696, type: 2}
@@ -500,7 +498,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-talk
-        position: {x: 8740, y: 640}
+        position: {x: 8740, y: 160}
         outputs:
         - cap2-despedida-oliver-dlg
         npcId: NPC_Oliver
@@ -518,7 +516,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-dlg
-        position: {x: 9120, y: 640}
+        position: {x: 9120, y: 0}
         outputs:
         - cap2-despedida-oliver-hecha
         dialogue: {fileID: 11400000, guid: 5630ba1303db3fd4086d7168d232b93c, type: 2}
@@ -535,7 +533,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-eldran-talk
-        position: {x: 8740, y: 800}
+        position: {x: 8740, y: 480}
         outputs:
         - cap2-despedida-eldran-dlg
         npcId: NPC_Eldran
@@ -553,7 +551,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-eldran-dlg
-        position: {x: 9120, y: 800}
+        position: {x: 9120, y: 320}
         outputs:
         - cap2-despedida-eldran-hecha
         dialogue: {fileID: 11400000, guid: 75d30b9b54e5dce49af4eefdea8d7ecd, type: 2}
@@ -570,7 +568,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-join
-        position: {x: 9880, y: 0}
+        position: {x: 9120, y: 160}
         outputs:
         - cap2-final-checkpoint
         flagKey: CAP2_COMPLETADO
@@ -586,7 +584,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-final-checkpoint
-        position: {x: 10260, y: 0}
+        position: {x: 9500, y: 160}
         outputs:
         - cap2-fin-senal
         checkpointId: CAP2_FIN
@@ -603,7 +601,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-encargo-hecho
-        position: {x: 9500, y: 0}
+        position: {x: 8740, y: 0}
         outputs: []
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
     - rid: 5630202655468159110
@@ -617,7 +615,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-espera
-        position: {x: 7600, y: 640}
+        position: {x: 6840, y: 480}
         outputs:
         - cap2-prepara-viaje-volver
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
@@ -634,7 +632,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-completar
-        position: {x: 7980, y: 640}
+        position: {x: 7980, y: 480}
         outputs:
         - cap2-despedida-fork
         standingActorId: 
@@ -645,24 +643,6 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 0
-    - rid: 5630202705244324020
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 15b.- Eldran sale a la plaza
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-eldran-a-pueblo
-        position: {x: 6840, y: 0}
-        outputs:
-        - cap2-prepara-viaje-fork
-        actorId: NPC_Eldran
-        markId: Eldran_Plaza
-        applyPlayerEnvironment: 0
-        showActor: 1
     - rid: 5630202718439342225
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
@@ -674,7 +654,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-item
-        position: {x: 8740, y: 320}
+        position: {x: 7980, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-2
         item: {fileID: 11400000, guid: 21c07b37d24802f4a8c2f9c9296320a6, type: 2}
@@ -692,7 +672,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-combate
-        position: {x: 8360, y: 320}
+        position: {x: 7600, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-item
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
@@ -708,7 +688,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-desbloqueo
-        position: {x: 7980, y: 320}
+        position: {x: 7220, y: 320}
         outputs:
         - cap2-prepara-viaje-erika-combate
         abilityKeysToUnlock: 06000000i
@@ -719,23 +699,100 @@ MonoBehaviour:
         oneShotFlag: 
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 1
-    - rid: 5630202741379039245
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+    - rid: 5630202816662077838
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 15a.- Will sale de casa (WILL_EXITS_HOUSE)
+        displayTitle: 25d.- Volver con Eldran
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-espera-salida
-        position: {x: 6460, y: 0}
+        guid: cap2-prepara-viaje-volver
+        position: {x: 7220, y: 480}
         outputs:
-        - cap2-eldran-a-pueblo
-        eventKey: WILL_EXITS_HOUSE
-        acceptEarlierEvent: 0
-    - rid: 5630202743988421140
+        - cap2-despedida-motivos
+        npcId: NPC_Eldran
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 5630202816662077839
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 26c.- Despedidas (en el orden que quiera)
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-fork
+        position: {x: 8360, y: 480}
+        outputs:
+        - cap2-despedida-oliver-talk
+        - cap2-despedida-eldran-talk
+        - cap2-despedida-espera
+    - rid: 5630202816662077840
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 32b.- Esperar las 2 despedidas
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-espera
+        position: {x: 8740, y: 320}
+        outputs:
+        - cap2-despedida-join
+        eventKey: CAP2_DESPEDIDA_HECHA
+        count: 2
+        questId: 
+    - rid: 5630202816662077841
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 29.- Despedida de Oliver hecha
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-oliver-hecha
+        position: {x: 9500, y: 0}
+        outputs: []
+        eventKey: CAP2_DESPEDIDA_HECHA
+    - rid: 5630202816662077842
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 32.- Despedida de Eldran hecha
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-despedida-eldran-hecha
+        position: {x: 9500, y: 320}
+        outputs: []
+        eventKey: CAP2_DESPEDIDA_HECHA
+    - rid: 5630202816662077843
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 35.- Fin del Cap. 2 (CH_Cap2_BACK_1)
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-fin-senal
+        position: {x: 9880, y: 0}
+        outputs: []
+        eventKey: CH_Cap2_BACK_1
+    - rid: 5630202842388366159
       type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 7.- Amanece tras la noche
@@ -751,7 +808,7 @@ MonoBehaviour:
         - cap2-manana-despues-8
         targetTime: 6
         immediate: 1
-    - rid: 5630202743988421141
+    - rid: 5630202842388366160
       type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "8.- Carga la habitaci\xF3n de Will"
@@ -768,7 +825,7 @@ MonoBehaviour:
         operacion: 0
         sceneName: WillHouse
         waitForCompletion: 1
-    - rid: 5630202743988421142
+    - rid: 5630202842388366161
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
@@ -786,7 +843,7 @@ MonoBehaviour:
         markId: Bedroom
         applyPlayerEnvironment: 1
         showActor: 0
-    - rid: 5630202743988421143
+    - rid: 5630202842388366162
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "10.- Eldran entra en la habitaci\xF3n"
@@ -799,12 +856,12 @@ MonoBehaviour:
         guid: cap2-manana-despues-10
         position: {x: 4180, y: 0}
         outputs:
-        - cap2-rotulo-manana-siguiente
+        - cap2-manana-despues-11
         actorId: NPC_Eldran
         markId: M_Manana_EldranPuerta
         applyPlayerEnvironment: 0
         showActor: 1
-    - rid: 5630202743988421144
+    - rid: 5630202842388366163
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
@@ -827,7 +884,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 5630202743988421145
+    - rid: 5630202842388366164
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 12.- Eldran queda junto a la mesa
@@ -845,7 +902,7 @@ MonoBehaviour:
         markId: M_Manana_EldranMesa
         applyPlayerEnvironment: 0
         showActor: 1
-    - rid: 5630202743988421146
+    - rid: 5630202842388366165
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 13.- Trozo del aro
@@ -863,7 +920,7 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 5630202743988421147
+    - rid: 5630202842388366166
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "14.- Prep\xE1rate para el viaje"
@@ -881,7 +938,7 @@ MonoBehaviour:
         giverId: NPC_Eldran
         inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
         noGiver: 0
-    - rid: 5630202743988421148
+    - rid: 5630202842388366167
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
@@ -894,100 +951,7 @@ MonoBehaviour:
         guid: cap2-manana-despues-15
         position: {x: 6080, y: 0}
         outputs:
-        - cap2-manana-espera-salida
+        - cap2-prepara-viaje-fork
         checkpointId: CAP2_MANANA_DESPUES
         spawnAnchorId: Bedroom
         sceneName: WillHouse
-    - rid: 5630202816662077838
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 25d.- Volver con Eldran
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-volver
-        position: {x: 7860, y: 640}
-        outputs:
-        - cap2-despedida-motivos
-        npcId: NPC_Eldran
-        acceptEarlierInteraction: 0
-        questIcon: {fileID: 0}
-        showMarker: 1
-    - rid: 5630202816662077839
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 26c.- Despedidas (en el orden que quiera)
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-fork
-        position: {x: 8240, y: 640}
-        outputs:
-        - cap2-despedida-oliver-talk
-        - cap2-despedida-eldran-talk
-        - cap2-despedida-espera
-    - rid: 5630202816662077840
-      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 32b.- Esperar las 2 despedidas
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-espera
-        position: {x: 8760, y: 900}
-        outputs:
-        - cap2-despedida-join
-        eventKey: CAP2_DESPEDIDA_HECHA
-        count: 2
-        questId: 
-    - rid: 5630202816662077841
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 29.- Despedida de Oliver hecha
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-oliver-hecha
-        position: {x: 9380, y: 640}
-        outputs: []
-        eventKey: CAP2_DESPEDIDA_HECHA
-    - rid: 5630202816662077842
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 32.- Despedida de Eldran hecha
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-despedida-eldran-hecha
-        position: {x: 9380, y: 800}
-        outputs: []
-        eventKey: CAP2_DESPEDIDA_HECHA
-    - rid: 5630202816662077843
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 35.- Fin del Cap. 2 (CH_Cap2_BACK_1)
-        chapter: Cap. 2
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-fin-senal
-        position: {x: 10520, y: 0}
-        outputs: []
-        eventKey: CH_Cap2_BACK_1

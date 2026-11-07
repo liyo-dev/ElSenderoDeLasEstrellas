@@ -28,10 +28,10 @@ public class ActivationCounter : MonoBehaviour
 
     [Header("Evento")]
     [Tooltip("Se invoca cuando se alcanza el número requerido de activaciones (también al restaurar desde preset)")]
-    public UnityEvent onRequirementMet;
+    public UnityEvent onRequirementMet = new UnityEvent();
 
     [Tooltip("Se invoca al llamar a Reset(). Conectar a ForceReset() de cada PressurePlate para que vuelvan a funcionar.")]
-    public UnityEvent onReset;
+    public UnityEvent onReset = new UnityEvent();
 
     [Header("Estado")]
     [SerializeField] private int currentCount;
@@ -39,6 +39,7 @@ public class ActivationCounter : MonoBehaviour
     private bool _isComplete;
 
     public int CurrentCount => currentCount;
+    public int RequiredCount => requiredCount;
     public bool IsComplete => _isComplete;
 
     string FlagKey => $"ACTIVATION_COMPLETE_{ResolveId()}";

@@ -1,0 +1,40 @@
+# ── Pelo (estilo del pack: un casquete con volumen y pocos mechones grandes en forma de pico, con caras
+#    planas; nada de capas de mechones finos) ──────────────────────────────────────────────────────────
+CAB = Vector((0, -0.015, 0.99)); H = {"head": 1.0}
+CENTRO_PELO = CAB + Vector((0, 0.03, 0.03))
+RAD = Vector((0.375, 0.355, 0.355))      # el casquete: algo mayor que la cabeza
+def punto(theta_g, phi_g, extra=1.0):
+    t, p = math.radians(theta_g), math.radians(phi_g)
+    return CENTRO_PELO + Vector((RAD.x * math.sin(t) * math.cos(p), RAD.y * math.sin(t) * math.sin(p), RAD.z * math.cos(t))) * extra
+def casquete(nombre, corte_cara, corte_nuca, mat):
+    """corte_cara: hasta qué altura (z relativa) llega por delante; corte_nuca: por detrás."""
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=20, v_segments=12, radius=1)
+    transformar(bm, CENTRO_PELO, tuple(RAD), (0, 0, 0))
+    quitar = []
+    for v in bm.verts:
+        d = v.co - CENTRO_PELO
+        delante = -d.y / RAD.y                      # 1 delante, -1 detrás
+        limite = corte_nuca + (corte_cara - corte_nuca) * max(0.0, delante)
+        if d.z < limite: quitar.append(v)
+    bmesh.ops.delete(bm, geom=quitar, context='VERTS')
+    o = nueva("pelo", nombre, bm, mat, H)
+    for p in o.data.polygons: p.use_smooth = False
+    return o
+def pico(nombre, theta_g, phi_g, direccion, largo, ancho, mat, lados=4, hundir=0.06):
+    """Un mechón en pico: pirámide que nace en la superficie del casquete y apunta a «direccion»."""
+    base = punto(theta_g, phi_g, 1.0 - hundir)
+    d = Vector(direccion).normalized()
+    a = d.orthogonal().normalized(); b = d.cross(a)
+    bm = bmesh.new()
+    anillo = [bm.verts.new(base + (a * math.cos(2*math.pi*k/lados + 0.4) + b * math.sin(2*math.pi*k/lados + 0.4)) * ancho) for k in range(lados)]
+    punta = bm.verts.new(base + d * largo)
+    for k in range(lados): bm.faces.new((anillo[k], anillo[(k+1) % lados], punta))
+    bm.faces.new(anillo[::-1])
+    o = nueva("pelo", nombre, bm, mat, H)
+    for p in o.data.polygons: p.use_smooth = False
+    return o
+def hacia(theta_g, phi_g, levantar=0.0, girar=(0, 0, 0)):
+    """Dirección «hacia fuera» del casquete en ese punto, levantada hacia arriba y desviada."""
+    n = (punto(theta_g, phi_g) - CENTRO_PELO).normalized()
+    return (n + Vector((0, 0, levantar)) + Vector(girar)).normalized()
+

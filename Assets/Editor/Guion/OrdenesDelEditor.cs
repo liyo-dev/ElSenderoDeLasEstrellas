@@ -20,11 +20,31 @@ using UnityEngine;
 ///   gemini RUTA.mp4 [fps=2]                 manda un vídeo a Gemini (resultado en Logs/Gemini/)
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
+///
+/// Mientras corre una orden no puede abrirse ningún diálogo (el Editor se quedaría esperando a un
+/// clic que nadie va a dar). Los menús que preguntan o informan con un diálogo usan
+/// <see cref="Confirmar"/> y <see cref="Avisar"/>: desde el buzón no preguntan (siguen adelante) y
+/// lo que habrían enseñado va al registro, detrás del resultado de la orden.
 [InitializeOnLoad]
 public static class OrdenesDelEditor
 {
     private static double s_siguiente;
     private static string Carpeta => Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_ordenes");
+    private static readonly System.Text.StringBuilder s_avisos = new();
+
+    /// ¿Se está ejecutando una orden del buzón?
+    public static bool EnOrden { get; private set; }
+
+    /// Pregunta con un diálogo; desde el buzón no pregunta y responde que sí.
+    public static bool Confirmar(string titulo, string mensaje, string aceptar, string cancelar = "Cancelar")
+        => EnOrden || EditorUtility.DisplayDialog(titulo, mensaje, aceptar, cancelar);
+
+    /// Informa con un diálogo; desde el buzón, el texto va al registro de la orden.
+    public static void Avisar(string titulo, string mensaje)
+    {
+        if (EnOrden) s_avisos.Append(titulo).Append(": ").Append(mensaje.Trim().Replace('\n', ' ')).Append(' ');
+        else EditorUtility.DisplayDialog(titulo, mensaje, "Aceptar");
+    }
 
     static OrdenesDelEditor()
     {
@@ -57,8 +77,12 @@ public static class OrdenesDelEditor
         catch { return; }
 
         string resultado;
+        s_avisos.Clear();
+        EnOrden = true;
         try { resultado = Ejecutar(orden); }
         catch (Exception ex) { resultado = "ERROR: " + ex.Message + "\n" + ex.StackTrace; }
+        finally { EnOrden = false; }
+        if (s_avisos.Length > 0) resultado += " · " + s_avisos;
         try
         {
             File.AppendAllText(Path.Combine(Carpeta, "registro.log"),

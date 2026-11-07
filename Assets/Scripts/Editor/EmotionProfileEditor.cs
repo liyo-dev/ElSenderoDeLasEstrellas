@@ -58,6 +58,9 @@ public class EmotionProfileEditor : Editor
                 new EmotionMeshData { emotion = NPCEmotion.Excited,    eyeMeshName = "Eye05", mouthMeshName = "Mouth03", bodyAnimStateName = "Cheer02" },
                 new EmotionMeshData { emotion = NPCEmotion.Annoyed,    eyeMeshName = "Eye04", mouthMeshName = "Mouth07", bodyAnimStateName = "HeadShake01" },
                 new EmotionMeshData { emotion = NPCEmotion.Grateful,   eyeMeshName = "Eye03", mouthMeshName = "Mouth09", bodyAnimStateName = "Reverence01" },
+                new EmotionMeshData { emotion = NPCEmotion.Crying,     eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
+                new EmotionMeshData { emotion = NPCEmotion.HappyTears, eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
+                new EmotionMeshData { emotion = NPCEmotion.Asleep,     eyeMeshName = "Eye09", mouthMeshName = "Mouth02", bodyAnimStateName = "" },
             };
 
             profile.neutralBodyAnims = new[] { "Talk01", "Talk02", "Talk03" };
@@ -98,6 +101,9 @@ public class EmotionProfileEditor : Editor
                 var variantsProp = element.FindPropertyRelative("bodyAnimVariants");
                 if (variantsProp != null)
                     EditorGUILayout.PropertyField(variantsProp, new GUIContent("🎲 Variantes"), true);
+
+                EditorGUILayout.PropertyField(element.FindPropertyRelative("simbolos"), new GUIContent("💧 Símbolo (fotogramas Fx)"), true);
+                EditorGUILayout.PropertyField(element.FindPropertyRelative("segundosPorSimbolo"), new GUIContent("⏱ Segundos por fotograma"));
 
                 EditorGUI.indentLevel--;
             }
@@ -149,6 +155,9 @@ public class EmotionProfileEditor : Editor
             case NPCEmotion.Excited: return "🤩 Excited (Emocionado)";
             case NPCEmotion.Annoyed: return "🙄 Annoyed (Molesto)";
             case NPCEmotion.Grateful: return "🙏 Grateful (Agradecido)";
+            case NPCEmotion.Crying: return "😭 Crying (Llorando)";
+            case NPCEmotion.HappyTears: return "🥲 HappyTears (Lágrimas de alegría)";
+            case NPCEmotion.Asleep: return "😴 Asleep (Dormido)";
             default: return emotion.ToString();
         }
     }
@@ -179,6 +188,7 @@ public class NPCEmotionControllerEditor : Editor
                 EditorGUILayout.LabelField("En Diálogo", controller.IsInDialogue ? "Sí" : "No");
                 EditorGUILayout.LabelField("Meshes Ojos", controller.EyeMeshCount.ToString());
                 EditorGUILayout.LabelField("Meshes Boca", controller.MouthMeshCount.ToString());
+                EditorGUILayout.LabelField("Meshes Símbolos", controller.SimboloMeshCount.ToString());
             }
             
             EditorGUILayout.Space();
@@ -212,6 +222,12 @@ public class NPCEmotionControllerEditor : Editor
             if (GUILayout.Button("Excited")) controller.SetEmotion(NPCEmotion.Excited);
             if (GUILayout.Button("Annoyed")) controller.SetEmotion(NPCEmotion.Annoyed);
             if (GUILayout.Button("Grateful")) controller.SetEmotion(NPCEmotion.Grateful);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Crying")) controller.SetEmotion(NPCEmotion.Crying);
+            if (GUILayout.Button("HappyTears")) controller.SetEmotion(NPCEmotion.HappyTears);
+            if (GUILayout.Button("Asleep")) controller.SetEmotion(NPCEmotion.Asleep);
             EditorGUILayout.EndHorizontal();
             
             if (GUILayout.Button("↩ Restaurar Original"))

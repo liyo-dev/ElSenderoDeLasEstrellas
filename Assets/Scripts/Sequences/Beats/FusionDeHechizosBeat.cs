@@ -25,6 +25,9 @@ public class FusionDeHechizosBeat : SequenceBeat
     [Min(0f)] public float duracionCrecimiento = 4f;
     [Min(0f)] public float duracionMezcla = 2f;
     [Min(0f)] public float duracionBlanco = 0.4f;
+    [Tooltip("Parte de la primera fase (0-0,9) en la que los efectos solo viajan hacia el encuentro, " +
+             "sin crecer: un hechizo que se lanza llega pequeño y crece una vez lanzado. 0 = viajan y crecen a la vez.")]
+    [Range(0f, 0.9f)] public float fraccionDeViaje = 0f;
     [Min(1f)] public float crecimientoA = 3f;
     [Min(1f)] public float crecimientoB = 3f;
     [Tooltip("Curva de crecimiento simultáneo, en tiempo real.")]
@@ -130,6 +133,9 @@ public class FusionDeHechizosBeat : SequenceBeat
             escala = instancia.localScale, posicionLocal = instancia.localPosition, radio = radio };
     }
 
+    private float Curva(float k)
+        => k >= 1f ? 1f : Mathf.Clamp01(curvaCrecimiento != null ? curvaCrecimiento.Evaluate(k) : k * k);
+
     private IEnumerator Fusionar(SequenceContext ctx)
     {
         Efecto a = Obtener(ctx, efectoARegistrado, prefabA, actorAId, offsetA, radioBaseA, "A");
@@ -196,11 +202,14 @@ public class FusionDeHechizosBeat : SequenceBeat
                 if (!a.Vigente || !b.Vigente) yield break;
                 t += Time.unscaledDeltaTime;
                 float k = duracion > 0f ? Mathf.Clamp01(t / duracion) : 1f;
-                float e = k >= 1f ? 1f : Mathf.Clamp01(curvaCrecimiento != null ? curvaCrecimiento.Evaluate(k) : k * k);
-                a.transform.position = Vector3.Lerp(origenA, centroA, e);
-                b.transform.position = Vector3.Lerp(origenB, centroB, e);
-                a.transform.localScale = a.escala * Mathf.Lerp(1f, factorA, e);
-                b.transform.localScale = b.escala * Mathf.Lerp(1f, factorB, e);
+                float kViaje = fraccionDeViaje > 0f ? Mathf.Clamp01(k / fraccionDeViaje) : k;
+                float kCrece = fraccionDeViaje > 0f ? Mathf.Clamp01((k - fraccionDeViaje) / (1f - fraccionDeViaje)) : k;
+                float viaje = fraccionDeViaje > 0f ? kViaje * kViaje * (3f - 2f * kViaje) : Curva(kViaje);
+                float crece = Curva(kCrece);
+                a.transform.position = Vector3.Lerp(origenA, centroA, viaje);
+                b.transform.position = Vector3.Lerp(origenB, centroB, viaje);
+                a.transform.localScale = a.escala * Mathf.Lerp(1f, factorA, crece);
+                b.transform.localScale = b.escala * Mathf.Lerp(1f, factorB, crece);
                 yield return null;
             } while (t < duracion);
 

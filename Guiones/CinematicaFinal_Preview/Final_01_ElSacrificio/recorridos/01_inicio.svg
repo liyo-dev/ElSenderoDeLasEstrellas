@@ -573,6 +573,7 @@
 <polygon points='70.687,62.92 54.28,61.272 66.346,47.012' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='70.687' cy='62.92' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='77.687' y='66.92' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>15</text>
+<polyline points='70.687,62.92 70.681,62.927 70.663,62.949 70.633,62.984 70.592,63.032 70.541,63.091 70.479,63.161 70.408,63.242 70.327,63.331 70.238,63.429 70.14,63.535 70.034,63.647 69.921,63.765 69.8,63.887 69.673,64.014 69.54,64.143 69.402,64.275 69.258,64.409 69.11,64.543 68.958,64.677 68.804,64.811 68.647,64.943 68.488,65.074 68.328,65.202 68.169,65.326 68.01,65.447 67.852,65.564 67.697,65.676 67.545,65.784 67.398,65.886 67.255,65.982 67.119,66.072 66.99,66.155 66.868,66.232 66.755,66.303 66.653,66.365 66.561,66.421 66.48,66.469 66.412,66.508 66.358,66.54 66.318,66.563 66.294,66.577 66.285,66.582 ' fill='none' stroke='#ffffff' stroke-width='1.5' stroke-opacity='0.7' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='4 3'/>
 <polygon points='70.687,41.624 65.112,57.143 54.46,44.554' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='70.687' cy='41.624' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='77.687' y='45.624' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>16</text>

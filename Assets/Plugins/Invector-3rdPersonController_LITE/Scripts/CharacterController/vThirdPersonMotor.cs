@@ -84,6 +84,8 @@ namespace Invector.vCharacterController
         public float groundMaxDistance = 0.5f;
         [Tooltip("Max angle to walk")]
         [Range(30, 80)] public float slopeLimit = 75f;
+        [Tooltip("Altura máxima (m) de un peldaño o bordillo que se sube andando, sin saltar. 0 = no sube ninguno.")]
+        [Range(0f, 0.6f)] public float alturaDePeldano = 0.45f;
         #endregion
 
         #region Components
@@ -162,6 +164,11 @@ namespace Invector.vCharacterController
         /// <summary>True si el personaje está apoyado en el suelo y no saltando.</summary>
         public bool PisandoSuelo => isGrounded && !isJumping;
         private float _airHoldUntil;                       // fin de la ventana de HoldAirborne()
+        private float _planeoHasta;                        // fin del planeo pedido con SostenerPlaneo()
+        private float _planeoCaida;                        // velocidad máxima de caída del planeo (m/s)
+        private float _planeoAvance;                       // velocidad mínima de avance del planeo (m/s)
+        private const float FrenadoDelPlaneo = 40f;        // m/s² con que frena una caída rápida al abrir el planeo
+        private const float VentanaDelPlaneo = 0.15f;      // segundos que dura cada petición de planeo
         protected int airJumpsUsed;                         // saltos en el aire gastados desde el último apoyo
         private float _actionCommitUntil;                   // fin de la ventana de CommitToAction()
         private Vector3 _commitFacing;                      // dirección hacia la que gira durante CommitToAction()
@@ -274,6 +281,27 @@ namespace Invector.vCharacterController
 
         /// <summary>True mientras el personaje está en el aire sostenido por HoldAirborne().</summary>
         public bool IsHoldingAirborne => !isGrounded && Time.time < _airHoldUntil;
+
+        /// <summary>True mientras planea (SostenerPlaneo renovado y sin tocar suelo ni volar).</summary>
+        public bool IsGliding => !isGrounded && !suppressAirMovement && Time.time < _planeoHasta;
+
+        /// <summary>
+        /// Planeo: mientras se renueve (cada paso de física, lo hace PlaneoDelJugador), la caída no
+        /// pasa de 'velocidadDeCaida' (una caída más rápida se frena en un momento), no hay gravedad
+        /// extra y en el aire avanza al menos a 'velocidadDeAvance' hacia donde mira. Se apaga solo
+        /// al tocar suelo o si deja de renovarse. Sin efecto en el suelo, con el controlador
+        /// deshabilitado, con el Rigidbody cinemático o en vuelo (suppressAirMovement).
+        /// </summary>
+        public void SostenerPlaneo(float velocidadDeCaida, float velocidadDeAvance)
+        {
+            if (!enabled || suppressAirMovement || isGrounded || _rigidbody == null || _rigidbody.isKinematic) return;
+            _planeoHasta = Time.time + VentanaDelPlaneo;
+            _planeoCaida = Mathf.Max(0.1f, velocidadDeCaida);
+            _planeoAvance = Mathf.Max(0f, velocidadDeAvance);
+        }
+
+        /// <summary>Termina el planeo en el acto: vuelve la caída normal.</summary>
+        public void SoltarPlaneo() => _planeoHasta = 0f;
 
         /// <summary>True mientras dura CommitToAction(): el input de movimiento se ignora.</summary>
         public bool IsActionCommitted => Time.time < _actionCommitUntil;
@@ -424,6 +452,49 @@ namespace Invector.vCharacterController
 
             if (!_rigidbody.isKinematic)
                 _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(targetVelocity);
+
+            if (!stopMove) SubirPeldano(_direction);
+        }
+
+        /// <summary>
+        /// La cápsula no sube escalones por sí sola: si delante, en la dirección en que se anda, hay un
+        /// escalón de suelo (groundLayer) de hasta <see cref="alturaDePeldano"/> con huella plana y sitio
+        /// encima para el personaje, lo pone sobre él. Vale para escaleras y bordillos de cualquier escena.
+        /// </summary>
+        private void SubirPeldano(Vector3 direccion)
+        {
+            if (alturaDePeldano <= 0f || _rigidbody == null || _rigidbody.isKinematic || _capsuleCollider == null) return;
+            direccion.y = 0f;
+            if (direccion.sqrMagnitude < 0.01f) return;
+            direccion.Normalize();
+
+            Vector3 pie = _rigidbody.position;
+            float radio = _capsuleCollider.radius;
+            float alcance = radio + 0.3f;
+
+            // Algo que corta el paso a ras de suelo y que no es una rampa que ya se sube andando.
+            if (!Physics.Raycast(pie + Vector3.up * 0.04f, direccion, out RaycastHit frente, alcance, groundLayer, QueryTriggerInteraction.Ignore)) return;
+            if (frente.normal.y > 0.7f) return;
+            // Por encima de la altura de un peldaño, libre (si no, es una pared).
+            if (Physics.Raycast(pie + Vector3.up * (alturaDePeldano + 0.04f), direccion, alcance, groundLayer, QueryTriggerInteraction.Ignore)) return;
+
+            // La huella del peldaño, un poco más allá de su borde.
+            Vector3 sobre = new Vector3(frente.point.x, pie.y + alturaDePeldano + 0.04f, frente.point.z) + direccion * 0.08f;
+            if (!Physics.Raycast(sobre, Vector3.down, out RaycastHit huella, alturaDePeldano + 0.04f, groundLayer, QueryTriggerInteraction.Ignore)) return;
+            if (huella.normal.y < 0.7f) return;
+            float subida = huella.point.y - pie.y;
+            if (subida < 0.03f || subida > alturaDePeldano) return;
+
+            // Que quepa el personaje encima.
+            Vector3 nuevoPie = pie + Vector3.up * (subida + 0.02f);
+            float alto = Mathf.Max(_capsuleCollider.height, radio * 2f);
+            Vector3 abajo = nuevoPie + Vector3.up * (radio + 0.05f) + direccion * 0.05f;
+            Vector3 cabeza = nuevoPie + Vector3.up * (alto - radio) + direccion * 0.05f;
+            if (Physics.CheckCapsule(abajo, cabeza, radio * 0.9f, groundLayer, QueryTriggerInteraction.Ignore)) return;
+
+            _rigidbody.position = nuevoPie;
+            Vector3 v = _rigidbody.linearVelocity;
+            if (v.y < 0f) { v.y = 0f; _rigidbody.linearVelocity = v; }
         }
 
         private Vector3 LimitarVelocidadDeMovimiento(Vector3 velocidad)
@@ -614,7 +685,7 @@ namespace Invector.vCharacterController
                 // Sostenido en el aire (HoldAirborne) solo se desplaza a una fracción de airSpeed.
                 float   horizSpeed  = IsHoldingAirborne
                     ? airSpeed * airHoldMoveFactor
-                    : Mathf.Max(currentHoriz.magnitude, airSpeed);
+                    : Mathf.Max(currentHoriz.magnitude, IsGliding ? Mathf.Max(airSpeed, _planeoAvance) : airSpeed);
                 Vector3 targetHoriz = facingDir * horizSpeed;
                 if (!IsFiniteVector(targetHoriz)) return;
 
@@ -652,6 +723,7 @@ namespace Invector.vCharacterController
             {
                 isGrounded = true;
                 _airHoldUntil = 0f;
+                _planeoHasta = 0f;
                 airJumpsUsed = 0;
                 if (!isJumping && groundDistance > 0.05f)
                     _rigidbody.AddForce(transform.up * (extraGravity * 2 * Time.deltaTime), ForceMode.VelocityChange);
@@ -672,6 +744,17 @@ namespace Invector.vCharacterController
                         vel.y = Mathf.MoveTowards(y, -airHoldFallSpeed, airHoldFallSpeed * 4f * Time.deltaTime);
                         _rigidbody.linearVelocity = vel;
                     }
+                }
+                else if (IsGliding)
+                {
+                    // Planeando: sin gravedad extra; si cae más rápido que el planeo, frena hasta él.
+                    var vel = _rigidbody.linearVelocity;
+                    if (IsFiniteVector(vel) && vel.y < -_planeoCaida)
+                    {
+                        vel.y = Mathf.MoveTowards(vel.y, -_planeoCaida, FrenadoDelPlaneo * Time.deltaTime);
+                        _rigidbody.linearVelocity = vel;
+                    }
+                    verticalVelocity = _rigidbody.linearVelocity.y;
                 }
                 else if (groundDistance >= groundMaxDistance)
                 {

@@ -25,8 +25,6 @@ public class SettingsMenuController : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private Button invertLookYesButton;
     [SerializeField] private Button invertLookNoButton;
-    [SerializeField] private Button invertFlightYesButton;
-    [SerializeField] private Button invertFlightNoButton;
     [SerializeField] private Slider lookSensitivitySlider;
 
     [Header("Accesibilidad / General")]
@@ -91,8 +89,6 @@ public class SettingsMenuController : MonoBehaviour
 
         WireBinaryButton(invertLookYesButton, () => OnInvertLookClicked(true));
         WireBinaryButton(invertLookNoButton, () => OnInvertLookClicked(false));
-        WireBinaryButton(invertFlightYesButton, () => OnInvertFlightClicked(true));
-        WireBinaryButton(invertFlightNoButton, () => OnInvertFlightClicked(false));
         if (lookSensitivitySlider)
             lookSensitivitySlider.onValueChanged.AddListener(v => HandleSliderChanged(lookSensitivitySlider, PlayerSettings.SetLookSensitivity, v));
         WireBinaryButton(vibrationYesButton, () => OnVibrationClicked(true));
@@ -261,8 +257,6 @@ public class SettingsMenuController : MonoBehaviour
 
         RemoveBinaryListener(invertLookYesButton);
         RemoveBinaryListener(invertLookNoButton);
-        RemoveBinaryListener(invertFlightYesButton);
-        RemoveBinaryListener(invertFlightNoButton);
         if (lookSensitivitySlider)
             lookSensitivitySlider.onValueChanged.RemoveAllListeners();
         RemoveBinaryListener(vibrationYesButton);
@@ -348,7 +342,6 @@ public class SettingsMenuController : MonoBehaviour
     public void SetSfxVolume(float value) => PlayerSettings.SetSfxVolume(value);
     public void SetMusicVolume(float value) => PlayerSettings.SetMusicVolume(value);
     public void SetInvertLook(bool invert) => PlayerSettings.SetInvertLook(invert);
-    public void SetInvertFlightLook(bool invert) => PlayerSettings.SetInvertFlightLook(invert);
     public void SetLookSensitivity(float value) => PlayerSettings.SetLookSensitivity(value);
     public void SetSubtitles(bool value) => PlayerSettings.SetSubtitles(value);
     public void SetVibration(bool value) => PlayerSettings.SetVibration(value);
@@ -368,7 +361,6 @@ public class SettingsMenuController : MonoBehaviour
             musicVolumeSlider.SetValueWithoutNotify(PlayerSettings.MusicVolume);
 
         UpdateBinaryGroup(invertLookYesButton, invertLookNoButton, PlayerSettings.InvertLook);
-        UpdateBinaryGroup(invertFlightYesButton, invertFlightNoButton, PlayerSettings.InvertFlightLook);
         if (lookSensitivitySlider)
             lookSensitivitySlider.SetValueWithoutNotify(PlayerSettings.LookSensitivity);
         UpdateBinaryGroup(vibrationYesButton, vibrationNoButton, PlayerSettings.Vibration);
@@ -466,15 +458,6 @@ public class SettingsMenuController : MonoBehaviour
 #endif
         PlayerSettings.SetInvertLook(invert);
         UpdateBinaryGroup(invertLookYesButton, invertLookNoButton, invert);
-    }
-
-    void OnInvertFlightClicked(bool invert)
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[SettingsMenu] OnInvertFlightClicked: {invert}");
-#endif
-        PlayerSettings.SetInvertFlightLook(invert);
-        UpdateBinaryGroup(invertFlightYesButton, invertFlightNoButton, invert);
     }
 
     void OnVibrationClicked(bool enabled)

@@ -18,18 +18,6 @@ MonoBehaviour:
   signalOut: FINAL_CREDITOS_START
   musicId: 
   presentacionDeTexto: 1
-  protagonistas: []
-  openingShotName: 
-  openingShot:
-    type: 3
-    subjectId: 
-    secondaryId: 
-    heightBias: 0
-    distanceScale: 1
-    fovOverride: 0
-    crossTheLine: 0
-    headroom: 1
-    encara: 1
   endStayBlack: 0
   skipMusicRestore: 0
   modulos: {fileID: 0}

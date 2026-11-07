@@ -41,6 +41,9 @@ import time
 import urllib.error
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from clave_elevenlabs import clave_de_api  # noqa: E402
+
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 VOCES = os.path.join(RAIZ, "Assets", "Resources", "Voices", "es")
 ORIGINALES = os.path.join(RAIZ, "Versiones antiguas", os.environ.get("CARPETA_ORIGINALES", "Voces antes de redoblaje Final (2026-10-29)"))
@@ -127,13 +130,6 @@ LINEAS = [
 ]
 
 
-def clave_de_api():
-    origen = os.path.join(RAIZ, "Tools", "Audio", "generar_hechizo_slayers.py")
-    texto = open(origen, encoding="utf-8").read()
-    m = re.search(r'API_KEY\s*=\s*"([^"]+)"', texto)
-    if not m:
-        raise SystemExit(f"No encuentro API_KEY en {origen}")
-    return m.group(1)
 
 
 def generar(clave_api, voz, texto, ajustes):

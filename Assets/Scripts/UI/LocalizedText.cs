@@ -63,7 +63,8 @@ public class LocalizedText : MonoBehaviour
     }
 
     [SerializeField] private string _key;
-    private TextMeshProUGUI _tmp;
+    // TextMeshPro de interfaz (TextMeshProUGUI) o del mundo (TextMeshPro: un rótulo, una pancarta).
+    private TMP_Text _tmp;
     private Text _legacyText;
     private Coroutine _waitRoutine;
     private bool _subscribed;
@@ -71,7 +72,7 @@ public class LocalizedText : MonoBehaviour
 
     void Awake()
     {
-        _tmp = GetComponent<TextMeshProUGUI>();
+        _tmp = GetComponent<TMP_Text>();
         if (_tmp == null)
             _legacyText = GetComponent<Text>();
 
@@ -80,7 +81,7 @@ public class LocalizedText : MonoBehaviour
         if (_tmp == null && _legacyText == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[LocalizedText] '{name}' no tiene TextMeshProUGUI ni Text (Legacy). Clave '{key}' no se aplicará.");
+            Debug.LogWarning($"[LocalizedText] '{name}' no tiene TextMeshPro ni Text (Legacy). Clave '{key}' no se aplicará.");
 #endif
             return;
         }

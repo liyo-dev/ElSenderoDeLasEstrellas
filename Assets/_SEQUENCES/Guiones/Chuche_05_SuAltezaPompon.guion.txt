@@ -1,0 +1,211 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  CHUCHELANDIA · 5 · SU ALTEZA POMPÓN
+#  Suenan todas las trompetillas y por la alfombra llega un osito diminuto de gominola roja con
+#  una tiara torcida. El heraldo lo anuncia; Estela insiste en que «es un oso» y el heraldo se
+#  hincha hasta explotar en confeti (contador de Liam: «Cinco»… «Seis»). «¡Que pase el
+#  suplente!»: otro heraldo idéntico, con banda, anuncia de espaldas por si acaso. Estela abre la
+#  boca y Will se la tapa. Pompón chapotea feliz. La Condesa explica el Duelo de Ternura.
+#  El heraldo queda oculto (ha explotado); las gominolas se quedan de público para el duelo.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Chuche_05_SuAltezaPompon
+ESCENA Chuchelandia
+SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Pompon.asset
+TEXTO bocadillo
+RITMO entre_frases=0.3 mismo_hablante=0.25
+
+REPARTO
+will      Player                 nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela    Actor_Estela           nombre=CHAR_ESTELA color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
+liam      Actor_Liam             nombre=CHAR_LIAM color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
+condesa   Actor_CondesaMerengue  nombre=CHAR_CONDESA_MERENGUE color=FFF4F8 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_CondesaMerengue.prefab
+heraldo   Actor_Heraldo          nombre=CHAR_HERALDO color=F2C38B prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Heraldo.prefab
+suplente  Actor_HeraldoSuplente  nombre=CHAR_HERALDO_SUPLENTE color=E8B07A prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_HeraldoSuplente.prefab oculto
+pompon    Actor_Pompon           nombre=CHAR_POMPON color=FF5A6E prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Pompon.prefab
+g1        Actor_Gominola1        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola1.prefab oculto
+g2        Actor_Gominola2        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola2.prefab oculto
+g3        Actor_Gominola3        prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola3.prefab oculto
+g4        Actor_Gominola4        nombre=CHAR_GOMINOLA color=FF8FB1 prefab=Assets/_NPCs/Chuchelandia/Prefabs/Actor_Gominola4.prefab oculto
+
+PUNTOS
+p_trono       M_Duelo_Trono
+p_centro      M_Duelo_Centro
+p_estela      M_Cine_Salon_Estela
+p_will        M_Cine_Salon_Will
+p_liam        M_Cine_Salon_Liam
+p_will_atras  M_Cine_Salon_WillAtras
+p_liam_atras  M_Cine_Salon_LiamAtras
+p_will_tapa   M_Cine_Salon_WillTapa
+p_condesa     M_Cine_Salon_Condesa
+p_heraldo     M_Cine_Salon_Heraldo
+p_sup_entra   M_Duelo_Suplente
+p_suplente    M_Cine_Salon_Suplente
+p_pompon      M_Cine_Salon_Pompon
+p_pub1        M_Cine_Salon_Publico1
+p_pub2        M_Cine_Salon_Publico2
+p_pub3        M_Cine_Salon_Publico3
+p_pub4        M_Cine_Salon_Publico4
+
+HILO
+@inicio
+will en p_will mirando p_trono
+& estela en p_estela mirando p_trono
+& liam en p_liam mirando p_trono
+& condesa en p_condesa mirando p_trono
+& heraldo en p_heraldo mirando p_estela
+& suplente en p_sup_entra mirando p_centro
+& pompon en p_trono mirando p_estela
+& g1 en p_pub1 mirando p_centro
+& g2 en p_pub2 mirando p_centro
+& g3 en p_pub3 mirando p_centro
+& g4 en p_pub4 mirando p_centro
+& g1 aparece
+& g2 aparece
+& g3 aparece
+& g4 aparece
+& efecto EscalarActorBeat actorId=Actor_Heraldo escala=1 duracion=0
+# Suenan todas las trompetillas a la vez.
+& plano general estela pompon p_trono
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-009.wav" volume=0.8
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Trumpet-010.wav" volume=0.6
+espera 1.2
+
+# Por la alfombra, dejando huellas relucientes.
+@alfombra
+plano conjunto pompon estela
+pompon anda a p_pompon ritmo=paseo llega_mirando=estela
+& pompon gesto Jump veces=3
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=pompon offset=0,0.3,0 lifetime=4
+& g2 gesto Marshies_Happy_Dance
++1.4 g3 gesto Grummy_Defeat
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(4).wav" volume=0.6
+
+@anuncio
+plano medio heraldo solo rumbo=30
+heraldo dice CHUCHELANDIA_POMPON_01 sin_pose
+& heraldo gesto Idle2
+
+# «Es un oso».
+@oso
+plano medio estela solo rumbo=280
+estela dice CHUCHELANDIA_POMPON_02 cara=confuso mira=pompon
+plano medio heraldo solo rumbo=30
+heraldo dice CHUCHELANDIA_POMPON_03 sin_pose
+plano medio estela solo rumbo=250
+estela dice CHUCHELANDIA_POMPON_04 cara=neutral mira=heraldo
+plano medio heraldo solo rumbo=30
+heraldo dice CHUCHELANDIA_POMPON_05 sin_pose
+& efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.06 duracion=0.6
+plano medio estela solo rumbo=250
+estela dice CHUCHELANDIA_POMPON_06 cara=neutral gesto=Question01 mira=heraldo
+plano medio heraldo solo rumbo=30
+heraldo dice CHUCHELANDIA_POMPON_07 sin_pose dura=2.4
+& efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.12 duracion=1.2
+plano medio estela solo rumbo=250
+estela dice CHUCHELANDIA_POMPON_08 cara=neutral mira=heraldo
+& efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.18 duracion=1.0
+plano dos estela condesa
+estela dice CHUCHELANDIA_POMPON_09 cara=confuso mira=condesa
+condesa dice CHUCHELANDIA_POMPON_10 sin_pose
+condesa dice CHUCHELANDIA_POMPON_11 sin_pose
+plano medio estela
+estela dice CHUCHELANDIA_POMPON_12 cara=decidido mira=condesa
+& efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.3 duracion=1.4
+
+# El heraldo se hincha un poco. Luego bastante. Liam da un paso atrás. Will, dos.
+@hinchado
+plano medio heraldo solo rumbo=30
+efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.45 duracion=1.2
+& heraldo gesto Idle2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_up(1).wav" volume=0.6
+espera 1.0
+plano conjunto will liam estela
+liam anda a p_liam_atras ritmo=paseo llega_mirando=heraldo
+&& will anda a p_will_atras ritmo=normal llega_mirando=heraldo
+& liam cara preocupado
+& will cara miedo
+estela dice CHUCHELANDIA_POMPON_13 cara=neutral mira=pompon
+espera 0.2
+
+# ¡Pop!
+@pop
+plano medio heraldo solo rumbo=30
+heraldo desaparece
+& vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=p_heraldo offset=0,1.0,0 lifetime=4
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Balloon_Pop-003.wav" volume=0.9
+& sacudida 0.2 0.4
+espera 0.6
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.35
+efecto EscalarActorBeat actorId=Actor_Heraldo escala=1 duracion=0
+
+# Todos se vuelven hacia Estela.
+@culpa
+plano conjunto estela condesa liam will
+will mira estela
+& liam mira estela
+& condesa mira estela
+& estela cara sorpresa
+espera 0.8
+estela dice CHUCHELANDIA_POMPON_14 gesto=Question02
+condesa dice CHUCHELANDIA_POMPON_15 sin_pose
+plano medio liam solo
+liam dice CHUCHELANDIA_POMPON_16 cara=pensativo
+plano medio estela
+estela dice CHUCHELANDIA_POMPON_17 cara=enfado gesto=Angry02
+plano medio liam solo
+liam dice CHUCHELANDIA_POMPON_18 cara=neutral pausa=0.1
+
+# El suplente.
+@suplente
+plano conjunto condesa estela
+condesa dice CHUCHELANDIA_POMPON_19 sin_pose
+& condesa gesto Marshies_Wave
+plano medio g4 solo
+g4 dice CHUCHELANDIA_POMPON_20 sin_pose
+plano conjunto condesa suplente
+suplente aparece
+& suplente anda a p_suplente ritmo=normal llega_mirando=condesa
+suplente dice CHUCHELANDIA_POMPON_21 sin_pose
+condesa dice CHUCHELANDIA_POMPON_22 sin_pose
+# Se pone de espaldas a Estela, por si acaso.
+plano conjunto suplente estela
+suplente mira p_trono
+espera 0.6
+suplente dice CHUCHELANDIA_POMPON_23 sin_pose
+
+# Estela abre la boca. Will se la tapa.
+@tapa
+plano dos estela will
+estela cara enfado
+& estela gesto Talk01
+&& will corre a p_will_tapa ritmo=prisa llega_mirando=estela
+estela dice CHUCHELANDIA_POMPON_24 sin_pose cara=molesto
+& will gesto Defend_NoWeapon
+& will cara preocupado
+
+# Pompón ladea la cabeza y hace un chapoteo feliz. Se desmayan tres gominolas más.
+@chapoteo
+plano medio pompon solo
+pompon gesto Marshies_Happy_Dance
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-001.wav" volume=0.8
++0.4 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Bubble-002.wav" volume=0.7
+espera 1.4
+plano general estela pompon g1 g2
+g1 gesto Grummy_Defeat
++0.3 g4 gesto Grummy_Defeat
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(6).wav" volume=0.6
+espera 1.2
+
+# El Duelo de Ternura.
+@duelo
+plano dos condesa estela
+condesa dice CHUCHELANDIA_POMPON_25 sin_pose
+plano medio estela
+estela dice CHUCHELANDIA_POMPON_26 cara=preocupado mira=condesa
+plano medio condesa solo
+condesa dice CHUCHELANDIA_POMPON_27 sin_pose
+plano medio estela
+estela dice CHUCHELANDIA_POMPON_28 cara=molesto mira=condesa
+plano medio liam solo
+liam dice CHUCHELANDIA_POMPON_29 cara=neutral mira=will
+espera 0.7

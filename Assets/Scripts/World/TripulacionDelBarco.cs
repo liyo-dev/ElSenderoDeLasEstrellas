@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.NPC;
-using Game.NPC.States;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Serialization;
 using Slot = PartyControlManager.CharacterSlot;
 
@@ -17,11 +15,9 @@ using Slot = PartyControlManager.CharacterSlot;
 /// (por defecto Estela se sienta y Will y Liam se quedan de pie, apoyados).
 ///
 /// Para llevarlos hasta el casco se usa el sistema oficial
-/// <see cref="NPCPartyMember.MoveToDialoguePosition"/>; al llegar se les toma el control (agente
-/// parado, rotación automática apagada y estado de diálogo anclado), se les cuelga de su puesto
-/// —que es hijo del barco, así que se mueven con él— y miran hacia la proa. Mientras están a bordo
-/// el barco los ancla con su clave (<see cref="Game.NPC.Common.NPCStateContext.Anclar"/>), para que
-/// ni el seguimiento del grupo ni el cambio de personaje los muevan de su sitio.
+/// <see cref="NPCPartyMember.MoveToDialoguePosition"/>; al llegar, <see cref="PasajeroNpc"/> (lo mismo
+/// que usan las atracciones montables) les toma el control, los ancla con la clave del barco y los
+/// cuelga de su puesto —hijo del barco, así que se mueven con él— mirando hacia la proa.
 /// </summary>
 [DisallowMultipleComponent]
 public class TripulacionDelBarco : MonoBehaviour
@@ -71,14 +67,12 @@ public class TripulacionDelBarco : MonoBehaviour
     /// <summary>Un compañero que sube al barco y todo lo que hay que devolverle al bajar.</summary>
     private sealed class Pasajero
     {
-        public NPCPartyMember Npc;
-        public NavMeshAgent Agente;
-        public NPCSimpleAnimator Animador;
+        public PasajeroNpc Llevado;
         public Transform Puesto;
-        public Transform PadreOriginal;
         public NPCAmbientActivity Pose;
-        public bool AgenteEstabaActivo;
 
+        public NPCPartyMember Npc => Llevado.Npc;
+        public NPCSimpleAnimator Animador => Llevado.Animador;
         public bool DePie => Pose == NPCAmbientActivity.None;
     }
 
@@ -137,7 +131,7 @@ public class TripulacionDelBarco : MonoBehaviour
         _subiendo = false;
 
         for (int i = 0; i < _pasajeros.Count; i++)
-            Soltar(_pasajeros[i], destino, i);
+            _pasajeros[i].Llevado.Soltar(destino, i);
 
         _pasajeros.Clear();
     }
@@ -161,16 +155,11 @@ public class TripulacionDelBarco : MonoBehaviour
             if (npc == null || npc.EstaCaido) continue;
             if (siguiente >= puestos.Length || puestos[siguiente] == null) continue;
 
-            var agente = npc.GetComponent<NavMeshAgent>();
             _pasajeros.Add(new Pasajero
             {
-                Npc = npc,
-                Agente = agente,
-                Animador = npc.GetComponentInChildren<NPCSimpleAnimator>(),
+                Llevado = new PasajeroNpc(npc, this),
                 Puesto = puestos[siguiente],
-                PadreOriginal = npc.transform.parent,
                 Pose = tripulacion[i].pose,
-                AgenteEstabaActivo = agente != null && agente.enabled,
             });
             siguiente++;
         }
@@ -204,11 +193,7 @@ public class TripulacionDelBarco : MonoBehaviour
 
         // Se ancla desde el primer momento: el grupo deja de reclamarlo mientras sube y, si
         // venía de combate, deja de estarlo: a bordo manda el barco, no AllyCombatState.
-        if (npc.NPCManager?.Context != null)
-        {
-            npc.NPCManager.Context.Anclar(this);
-            npc.NPCManager.Context.IsInCombat = false;
-        }
+        pasajero.Llevado.Anclar();
 
         // El estado de diálogo lo lleva andando hasta el casco. Para Will (no está en el party)
         // hace falta el permiso explícito de mantenerse, o volvería a Idle al primer frame.
@@ -224,35 +209,12 @@ public class TripulacionDelBarco : MonoBehaviour
 
         if (npc == null) yield break;
 
-        // A partir de aquí manda el barco: el estado de diálogo se ancla (deja de mirar al
-        // jugador y de moverse) y el agente deja de escribir la posición (si siguiera
-        // navegando, pelearía con el arco y se quedaría andando en el sitio todo el viaje).
-        if (npc.NPCManager?.Brain?.CurrentState is DialoguePositionState estadoDeDialogo)
-            estadoDeDialogo.Anclar();
-        else
-            npc.NPCManager?.ForceIdle();
-
-        var agente = pasajero.Agente;
-        if (agente != null)
-        {
-            if (agente.isOnNavMesh)
-            {
-                agente.isStopped = true;
-                agente.ResetPath();
-            }
-            agente.velocity = Vector3.zero;
-            agente.updatePosition = false;
-            agente.updateRotation = false;
-            agente.enabled = false;
-        }
+        // A partir de aquí manda el barco: el compañero deja de moverse por su cuenta.
+        pasajero.Llevado.TomarControl();
 
         var animador = pasajero.Animador;
         if (animador != null)
         {
-            animador.DisableAutoRotation();
-            animador.StopMovement();
-            animador.ForzarEnElSuelo();
-
             // La pose del puesto se pone al acabar el salto, no al aterrizar: si se cruzara antes,
             // cortaría el clip a media parábola. PlayOneShot avisa al terminar su clip. La
             // sentada no espera: su actividad ambiental lleva su propio tramo de entrada.
@@ -284,24 +246,12 @@ public class TripulacionDelBarco : MonoBehaviour
         if (npc == null) yield break;
 
         // Se cuelga de su puesto: el barco se lo lleva sin escribir su transform cada frame.
-        npc.transform.SetParent(pasajero.Puesto, false);
-        npc.transform.localPosition = Vector3.zero;
-        npc.transform.rotation = RotacionHaciaLaProa();
-
+        // Con salto, la pose de pie la pone su one-shot al acabar (DejarDePieEnElPuesto); una
+        // pose de actividad (sentarse) se pone ya: lleva su propio tramo de entrada.
+        pasajero.Llevado.Colgar(pasajero.Puesto, RotacionHaciaLaProa(), pasajero.Pose, ponerPoseYa: false);
         if (animador != null)
         {
-            // Cualquier actividad ambiental anterior (sentarse en el muelle, comer...) dejaría
-            // viva su corrutina y volvería a pisar la pose del puesto al terminar su Begin.
-            animador.DetenerActividadAmbiental();
-
-            // El arco manual deja desfasado el chequeo de suelo; sin esto, el «Any State → Falling»
-            // del Animator interrumpe la pose y parece que el compañero se mueve o convulsiona.
-            animador.ForzarEnElSuelo();
-            animador.QuitarRootMotion();
-
-            // Con salto, la pose de pie la pone su one-shot al acabar (DejarDePieEnElPuesto); una
-            // pose de actividad (sentarse) se pone ya: lleva su propio tramo de entrada.
-            if (!pasajero.DePie) animador.PlayAmbientActivity(pasajero.Pose);
+            if (!pasajero.DePie) pasajero.Llevado.PonerPose();
             else if (string.IsNullOrEmpty(estadoDelSalto)) DejarDePieEnElPuesto(pasajero);
         }
 
@@ -353,66 +303,6 @@ public class TripulacionDelBarco : MonoBehaviour
         animador.ForzarEnElSuelo();
         animador.QuitarRootMotion();
         animador.PlayIdleNormal();
-    }
-
-    /// <summary>Deja a un pasajero en tierra y le devuelve todo lo que se le quitó al subir.</summary>
-    void Soltar(Pasajero pasajero, Vector3 destino, int indice)
-    {
-        var npc = pasajero.Npc;
-        if (npc == null) return;
-
-        // La postura a bordo se apaga antes de devolverlo al grupo: si no, se queda sentado.
-        if (!pasajero.DePie && pasajero.Animador != null)
-            pasajero.Animador.StopAmbientActivity(pasajero.Pose);
-
-        npc.transform.SetParent(pasajero.PadreOriginal, true);
-
-        // Alrededor del punto de bajada, sobre el NavMesh más cercano (el muelle puede ser estrecho).
-        Vector3 salida = destino + Quaternion.Euler(0f, 120f * indice, 0f) * Vector3.forward * 0.7f;
-        if (NavMesh.SamplePosition(salida, out var navHit, 2f, NavMesh.AllAreas))
-            salida = navHit.position;
-        npc.transform.position = salida;
-
-        var agente = pasajero.Agente;
-        if (agente != null)
-        {
-            agente.enabled = pasajero.AgenteEstabaActivo;
-            if (agente.enabled)
-            {
-                agente.updatePosition = true;
-                agente.updateRotation = true;
-                agente.velocity = Vector3.zero;
-                if (agente.isOnNavMesh)
-                {
-                    agente.Warp(salida);
-                    agente.isStopped = false;
-                    agente.ResetPath();
-                }
-            }
-        }
-
-        if (pasajero.Animador != null)
-        {
-            pasajero.Animador.ForzarEnElSuelo();
-            pasajero.Animador.PlayIdleNormal();
-            pasajero.Animador.EnableAutoRotation();
-        }
-
-        // Suelta solo el ancla del barco: si otro sistema lo tenía anclado (modo Libre), sigue.
-        var contexto = npc.NPCManager != null ? npc.NPCManager.Context : null;
-        contexto?.Soltar(this);
-
-        bool siguiendo = PartyControlManager.Instance == null
-                         || PartyControlManager.Instance.IsPartyFollowing;
-
-        if (!siguiendo || (contexto != null && contexto.EstaAnclado))
-        {
-            npc.NPCManager?.ForceIdle();
-            return;
-        }
-
-        if (npc.IsInParty) npc.StartFollowing();
-        else npc.StartFollowingIgnorePartyCheck();
     }
 
     /// <summary>Rotación de pie mirando a la proa (la proa del modelo no tiene por qué ser +Z).</summary>

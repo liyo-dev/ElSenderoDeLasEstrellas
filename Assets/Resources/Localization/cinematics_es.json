@@ -1563,6 +1563,690 @@
         {
             "id": "PRUEBA_WILL_PRIMERDIA_08",
             "text": "Yo tampoco."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_01",
+            "text": "Oh, no."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_02",
+            "text": "No. De verdad que no."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_03",
+            "text": "A mí me gusta."
+        },
+        {
+            "id": "CHUCHELANDIA_LLEGADA_04",
+            "text": "A ti te gusta todo lo que se pueda comer."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_01",
+            "text": "¡Bienvenidos a Chuchelandia!"
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_02",
+            "text": "Por orden real, nadie abandonará el reino hasta que se abra la Puerta del Corazón."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_03",
+            "text": "Y la Puerta del Corazón solo se abre ante la princesa más adorable del reino."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_04",
+            "text": "Ni lo penséis."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_05",
+            "text": "Yo no he dicho nada."
+        },
+        {
+            "id": "CHUCHELANDIA_PERGAMINO_06",
+            "text": "Lo has pensado muy alto."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_INTERESANTE",
+            "text": "Interesante."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_ESTELA_NO_INTERESANTE",
+            "text": "No es interesante."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_01",
+            "text": "Ni los caballeros ni los pajes pueden abrir la Puerta del Corazón."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_02",
+            "text": "Solo una princesa."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_03",
+            "text": "Aquí no hay ninguna princesa."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_04",
+            "text": "¡Una candidata! ¡Tenemos una candidata!"
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_05",
+            "text": "¡Idiota! ¡Haz algo!"
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_06",
+            "text": "No digas nada."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_07",
+            "text": "El corazoncito te favorece."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_08",
+            "text": "He dicho que no digas nada, orejitas."
+        },
+        {
+            "id": "CHUCHELANDIA_CANDIDATA_09",
+            "text": "¡Noooooo! ¡Dejadmeeee!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_01",
+            "text": "¡Levante los brazos, alteza!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_02",
+            "text": "¡No soy alteza!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_03",
+            "text": "¡Más volantes!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_04",
+            "text": "¿¡Más!?"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_05",
+            "text": "¡El lazo! ¡Traed el lazo grande!"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_06",
+            "text": "Como me pongáis ese lazo…"
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_07",
+            "text": "Le han puesto el lazo."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_08",
+            "text": "Estás muy rosa."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_09",
+            "text": "Una palabra más y os prendo fuego."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_10",
+            "text": "Bueno. Os lleno de purpurina."
+        },
+        {
+            "id": "CHUCHELANDIA_VESTIDOR_11",
+            "text": "Pero con mucha rabia."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_01",
+            "text": "¡Su Alteza Pompón! ¡Princesa de Chuchelandia y campeona de ternura durante cuatrocientos años seguidos!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_02",
+            "text": "¿Eso es un oso?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_03",
+            "text": "Es la princesa."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_04",
+            "text": "Es un oso."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_05",
+            "text": "Es la princesa oso."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_06",
+            "text": "Es un oso con una tiara."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_07",
+            "text": "Es. La. Princesa."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_08",
+            "text": "Pues tiene cara de oso."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_09",
+            "text": "¿Le pasa algo?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_10",
+            "text": "No le pasa nada, alteza."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_11",
+            "text": "Es solo que usted es una candidata… complicada."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_12",
+            "text": "Yo solo digo que es un oso."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_13",
+            "text": "Y bastante pegajoso."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_14",
+            "text": "¿Qué? Yo no he hecho nada."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_15",
+            "text": "Le ha llamado oso a Su Alteza. Cinco veces."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_16",
+            "text": "Cinco."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_17",
+            "text": "¡Es que es un oso!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_18",
+            "text": "Seis."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_19",
+            "text": "¡Que pase el suplente!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_20",
+            "text": "Ya van tres esta semana."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_21",
+            "text": "¿Es ella?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_22",
+            "text": "Es ella."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_23",
+            "text": "¡Su Alteza Pompón! ¡Princesa de Chuchelandia!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_24",
+            "text": "¡Mmmf!"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_25",
+            "text": "Para abrir la Puerta del Corazón, la candidata debe vencer a la princesa reinante en el Duelo de Ternura."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_26",
+            "text": "¿Y si pierdo?"
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_27",
+            "text": "Nadie ha vencido nunca a Su Alteza."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_28",
+            "text": "Eso no responde a mi pregunta."
+        },
+        {
+            "id": "CHUCHELANDIA_POMPON_29",
+            "text": "Sí que la responde."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_01",
+            "text": "Una princesa hace la reverencia así."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_02",
+            "text": "Otra vez. Con menos ganas de pelea."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_03",
+            "text": "No tengo ganas de pelea."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_REVERENCIA_04",
+            "text": "Alteza, está apretando los puños."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_SALUDO_01",
+            "text": "El saludo real. La muñeca gira con suavidad, como quien acaricia el aire."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_SALUDO_02",
+            "text": "Eso es espantar moscas, alteza."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_RISITA_01",
+            "text": "La risita. Jijí."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_RISITA_02",
+            "text": "Risita: peligrosa."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_01",
+            "text": "Por último, la princesa dedica unas palabras de cariño a sus súbditos."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_02",
+            "text": "Sois…"
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_CARINO_03",
+            "text": "Blanditos."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_BIEN_01",
+            "text": "Aceptable."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_BIEN_02",
+            "text": "Casi parecía una princesa. Casi."
+        },
+        {
+            "id": "CHUCHELANDIA_CLASES_FIN",
+            "text": "Queda mucho trabajo por delante."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA1",
+            "text": "¡Primera prueba! ¡La reverencia!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA2",
+            "text": "¡Segunda prueba! ¡La canción de cuna!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA3",
+            "text": "¡Tercera prueba! ¡La prueba final! ¡Los ojitos!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_RONDA3_CIEN",
+            "text": "¡Y en la prueba final, cada corazón vale por cien!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_TURNO_POMPON",
+            "text": "¡Su Alteza Pompón!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_TURNO_CANDIDATA",
+            "text": "¡La candidata!"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_SIN_SENTIDO",
+            "text": "Eso no tiene ningún sentido."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_FRESA_TRADICION",
+            "text": "Es la tradición."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_WILL_COMO_VAMOS",
+            "text": "¿Cómo vamos?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_SESENTA_A_NUEVE",
+            "text": "Sesenta a nueve."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_WILL_A_FAVOR",
+            "text": "¿A favor de quién?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_LIAM_PERDEMOS",
+            "text": "Perdemos."
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DIEZ",
+            "text": "10 corazones"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DOS",
+            "text": "2 corazones"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_UNO",
+            "text": "1 corazón"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_ESTAS_BIEN",
+            "text": "¿Estás bien?"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_MAS_UNO",
+            "text": "+1 (pobrecita)"
+        },
+        {
+            "id": "CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO",
+            "text": "10 corazones + 1 dibujado a lápiz"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PANCARTA_ENTERA",
+            "text": "¡ESTELA, TE QUIERO VER GANAR!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_01",
+            "text": "¡Vamos, Estela!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PANCARTA",
+            "text": "¡TE QUIERO!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_02",
+            "text": "¡Vivan los novios!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_03",
+            "text": "Esto no es lo que habíamos planeado."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_04",
+            "text": "No habíamos planeado nada."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_05",
+            "text": "Pues ya ves."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_06",
+            "text": "Ha ganado."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_07",
+            "text": "¡Uy, uy, uy…!"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_08",
+            "text": "¡Will!"
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_01",
+            "text": "Creo que le caes bien."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_02",
+            "text": "Uno."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_03",
+            "text": "Y no se lo contéis a nadie."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_04",
+            "text": "Quédatela. A ti te queda mejor."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_05",
+            "text": "La hechicera más poderosa y orgullosa del grupo…"
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_06",
+            "text": "…coronada oficialmente como la princesa más adorable de Chuchelandia."
+        },
+        {
+            "id": "CHUCHELANDIA_VICTORIA_07",
+            "text": "Con récord de corazones."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_01",
+            "text": "Corro con un vestido de siete volantes. Que nadie diga nada."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_02",
+            "text": "Un paje no corre. Avanza con dignidad."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_INICIO_03",
+            "text": "¡Esta armadura rebota sola!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_01",
+            "text": "¡Te ha ganado una gominola!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_02",
+            "text": "Ese lazo pesa, pero planea. Úsalo en los saltos largos."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_REINTENTO_03",
+            "text": "Otra vez. Y esta vez, sin piedad."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_GANADA_01",
+            "text": "¡Primera! Con volantes y todo."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_GANADA_02",
+            "text": "La gominola pide la revancha. Yo no se la daría."
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_WILL_REBOTA_01",
+            "text": "¡Aaah! ¡No era por ahí!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_WILL_REBOTA_02",
+            "text": "¡Estoy bien! ¡Creo que estoy en otra plataforma!"
+        },
+        {
+            "id": "CHUCHELANDIA_CARRERA_LIAM_DIGNO_01",
+            "text": "Correr con un corazón en la cabeza no es digno. Caminar, sí."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_INICIO_01",
+            "text": "¿Trepar en vestido? Esto no lo enseña la Condesa."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_REINTENTO_01",
+            "text": "¡Ha subido por la escalera! ¡Eso es trampa!"
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_REINTENTO_02",
+            "text": "Menos rabia en las manos y más en las piernas."
+        },
+        {
+            "id": "CHUCHELANDIA_TORRE_GANADA_01",
+            "text": "Desde aquí arriba sois todos muy pequeñitos. Me gusta."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_INICIO_01",
+            "text": "Mi fuego sale en corazoncitos. Pues serán corazoncitos con puntería."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_REINTENTO_01",
+            "text": "Interesante."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_REINTENTO_02",
+            "text": "No es interesante. Otra vez."
+        },
+        {
+            "id": "CHUCHELANDIA_TIRO_GANADA_01",
+            "text": "¡Todos reventados! Bueno… todos llenos de corazones."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_01",
+            "text": "¡La candidata! ¿Me firma el lazo?"
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_02",
+            "text": "Su Alteza lleva cuatrocientos años ganando. Y sin despeinarse."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_03",
+            "text": "¿Ha probado el río de sirope? No, no se bañe. Se queda pegada."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_04",
+            "text": "Aquí nadie se enfada. Bueno, usted. Usted es la primera."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_05",
+            "text": "Dicen que el heraldo se pone rosa cuando se emociona. Y luego… pop."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_06",
+            "text": "La Condesa Merengue nunca hace ruido al sentarse. Es un don."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_07",
+            "text": "Cuando suenen todas las trompetillas a la vez, apártese. Viene Su Alteza."
+        },
+        {
+            "id": "CHUCHELANDIA_REINO_08",
+            "text": "El caballero de gominola verde rebota muy bien. ¿Está soltero?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_01",
+            "text": "Soy el suplente del heraldo. Por si acaso."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_02",
+            "text": "El ejército ha perdido sus trompetillas por todo el reino. ¿Me ayuda?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENCARGO_03",
+            "text": "Sin trompetillas no se puede anunciar a Su Alteza. Y eso sería… un drama."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_EN_CURSO",
+            "text": "¿Alguna trompetilla? Son doradas, brillan y hacen «tururú»."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_WILL",
+            "text": "¡Una trompetilla!"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_LIAM",
+            "text": "Otra. Y está pegajosa."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_RECOGIDA_ESTELA",
+            "text": "Si la soplo, ¿sale purpurina?"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_TODAS",
+            "text": "¡Ya están todas! Vamos a devolverlas."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_01",
+            "text": "¡Todas! ¡Hasta la que tenía chicle!"
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_02",
+            "text": "Tome, alteza. Para la candidata más… decidida."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_ENTREGA_03",
+            "text": "¿Decidida? Me vale."
+        },
+        {
+            "id": "CHUCHELANDIA_TROMPETILLAS_DESPUES",
+            "text": "Tururú. ¡Ya suenan todas! Gracias, alteza."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_PISTA",
+            "text": "Probad a abrir la Puerta uno a uno: cambia de personaje con la cruceta."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_ESTELA_TOCAR",
+            "text": "Ni pienso tocarlo."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_PIRULETA_01",
+            "text": "Una piruleta."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_PIRULETA_02",
+            "text": "De fresa. Me la quedo."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_WILL_RISITA",
+            "text": "¿Se está riendo de mí?"
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_LIAM_RISITA",
+            "text": "Con motivo."
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_REVERENCIA",
+            "text": "La reverencia"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_SALUDO",
+            "text": "El saludo real"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_RISITA",
+            "text": "La risita"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_CARINO",
+            "text": "Palabras de cariño"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_NANA",
+            "text": "La canción de cuna"
+        },
+        {
+            "id": "CHUCHELANDIA_TITULO_OJITOS",
+            "text": "Los ojitos"
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_IDEA_01",
+            "text": "Aguanta, Estela. Tengo una idea."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_IDEA_02",
+            "text": "Eso me preocupa."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_MANTEL",
+            "text": "Coge el mantel de la mesa del banquete."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_SIROPE",
+            "text": "Moja el dedo en la fuente de sirope y escribe."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_PISTA_SILLA",
+            "text": "Súbete a la silla."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_MANTEL",
+            "text": "Esto servirá."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SIROPE",
+            "text": "Con letras bien grandes."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SILLA",
+            "text": "Sujeto la otra punta."
+        },
+        {
+            "id": "CHUCHELANDIA_TEQUIERO_SOLO_WILL",
+            "text": "Esto es cosa de Will."
+        },
+        {
+            "id": "CHUCHELANDIA_PUERTA_CARTEL",
+            "text": "¡ÁBREME!"
         }
     ]
 }

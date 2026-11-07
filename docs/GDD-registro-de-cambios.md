@@ -1,5 +1,13 @@
 ## Registro de Cambios
 
+**31 de octubre de 2026 — Chuchelandia: orejitas para Will y corazón para Liam (INC-889).**
+
+A decisión de Raúl, como adaptación del juego, en el 5.15 Will lleva además unas orejitas de conejo con la armadura de gominola, y Liam un corazón en la cabeza en lugar del cuerno de unicornio. Cambian con ello las frases que lo nombran (ES/EN): «El corazoncito te favorece» / «He dicho que no digas nada, orejitas» (CHUCHELANDIA_CANDIDATA_07/08) y «Correr con un corazón en la cabeza no es digno» (CARRERA_LIAM_DIGNO_01). En la cinemática del ejército, las gominolas suben a Estela a pulso y se la llevan en volandas boca arriba, y ella grita «¡Noooooo! ¡Dejadmeeee!» (CHUCHELANDIA_CANDIDATA_09). La novela no cambia.
+
+**31 de octubre de 2026 — Chuchelandia se nivela con la novela: comedia y Duelo de Ternura.**
+
+A decisión de Raúl, Chuchelandia sigue el capítulo XXI de la novela más las adaptaciones del plan aprobado (`claude/chuchelandia-plan-de-desarrollo-2026-10-31.md`). Se reescribe el 5.15: la Puerta del Corazón, Estela candidata a la fuerza, las clases de la Condesa Merengue, Su Alteza Pompón y el Duelo de Ternura que se gana con la risa de Estela tras el «¡TE QUIERO!» de Will y Liam en la fuente. Diseño jugable sin combate ni derrota: intentos con los tres en la Puerta, pruebas de candidata (carrera, escalada y puntería), clases como tutorial, reino libre con misión opcional, duelo de tres rondas y el giro final jugado como Will; la magia de ataque sale en purpurina y corazoncitos. Como adaptación, el reparto usa los personajes de gominola de Sweet_Land en lugar de peluches y los atuendos salen del armario del proyecto. Desaparecen el Duque de Regaliz, el Gólem de azúcar, la criatura de gominola y el reino que castiga la tristeza: se quita su frase de la tabla de jefes, y en la ficha de Estela el recuerdo de Mara pasa al olor a azúcar quemado de las ferias (novela XXIV). La tabla de cobertura espacial (7.1) añade las zonas de Chuchelandia. El 5.16 (feria, que en la novela XXII es ahora «El parque de los que esperan») queda pendiente de nivelar aparte.
+
 **8 de octubre de 2026 — La discusión del principio se centra en la caja que falta (INC-696).**
 
 A petición de Raúl, la discusión de Eldran y Victoria deja las peras y gira en torno a la caja de manzanas que falta, en tono amistoso: Eldran no se enfada. Cambian los textos ES/EN de HOOK_DISCUSION_01–03 y PERAS_01–05 y se retiran PERAS_06/07, que no se usaban. Los gestos y la cara de la discusión pasan a ser de buen humor (SEQ_PerasEldran y DiscusionEnBucle). Las líneas se redoblan con las mismas voces. La novela no cambia: es una adaptación del juego.

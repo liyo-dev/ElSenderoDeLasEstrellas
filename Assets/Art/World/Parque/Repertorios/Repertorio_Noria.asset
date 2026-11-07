@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2cf50c26408f44b94bc1d5a44a9eab, type: 3}
+  m_Name: Repertorio_Noria
+  m_EditorClassIdentifier: Assembly-CSharp::RepertorioDeAtraccion
+  id: noria
+  escenitas:
+  - nombre: El parque desde arriba
+    peso: 1
+    desdeElViaje: 1
+    hastaElViaje: 1
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 1
+      quien: 1
+      clave: PARQUE_NORIA_1_1
+      texto: "Despacito\u2026 Esta s\xED me gusta."
+      gesto: 
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 2
+      clave: PARQUE_NORIA_1_2
+      texto: "Mira. Desde aqu\xED se ve todo el parque."
+      gesto: 
+      emocion: 0
+      espera: 0
+      aLaVez: 0
+    - momento: 2
+      quien: 1
+      clave: PARQUE_NORIA_1_3
+      texto: "Y las luces\u2026 parecen estrellas en el suelo."
+      gesto: 
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+    - momento: 3
+      quien: 3
+      clave: PARQUE_NORIA_1_4
+      texto: Gracias por traerme.
+      gesto: 
+      emocion: 2
+      espera: 0.4
+      aLaVez: 0
+  - nombre: Contar las luces
+    peso: 1
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 2
+      quien: 1
+      clave: PARQUE_NORIA_2_1
+      texto: "Una, dos, tres\u2026 \xA1Cuatrocientas!"
+      gesto: 
+      emocion: 1
+      espera: 0
+      aLaVez: 0
+    - momento: 2
+      quien: 3
+      clave: PARQUE_NORIA_2_2
+      texto: Ciento dos. Las he contado al subir.
+      gesto: 
+      emocion: 8
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 2
+      clave: PARQUE_NORIA_2_3
+      texto: Sois insoportables. Los dos.
+      gesto: 
+      emocion: 8
+      espera: 0.2
+      aLaVez: 0
+  - nombre: La parada de arriba
+    peso: 1
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 2
+      quien: 1
+      clave: PARQUE_NORIA_3_1
+      texto: "\xBFPor qu\xE9 nos hemos parado?"
+      gesto: Question01
+      emocion: 4
+      espera: 0
+      aLaVez: 0
+    - momento: 2
+      quien: 2
+      clave: PARQUE_NORIA_3_2
+      texto: Si alguien se mueve, lo tiro.
+      gesto: 
+      emocion: 3
+      espera: 0.2
+      aLaVez: 0
+    - momento: 3
+      quien: 3
+      clave: PARQUE_NORIA_3_3
+      texto: Es la parada de arriba. Para la vista.
+      gesto: 
+      emocion: 0
+      espera: 0
+      aLaVez: 0
+  - nombre: Liam se calla
+    peso: 0.7
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 0
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 2
+      quien: 1
+      clave: PARQUE_NORIA_4_1
+      texto: "Liam, \xBFest\xE1s bien? No has dicho nada."
+      gesto: 
+      emocion: 9
+      espera: 0
+      aLaVez: 0
+    - momento: 2
+      quien: 3
+      clave: PARQUE_NORIA_4_2
+      texto: "S\xED. Solo\u2026 estaba mirando."
+      gesto: 
+      emocion: 9
+      espera: 0.3
+      aLaVez: 0
+    - momento: 4
+      quien: 2
+      clave: PARQUE_NORIA_4_3
+      texto: "Est\xE1 raro desde que entramos."
+      gesto: 
+      emocion: 6
+      espera: 0
+      aLaVez: 0
+  - nombre: Estela se queda abajo
+    peso: 0.5
+    desdeElViaje: 2
+    hastaElViaje: 0
+    noSube: 2
+    seMarea: 0
+    segundosDeMareo: 5
+    golpes:
+    - momento: 0
+      quien: 2
+      clave: PARQUE_NORIA_5_1
+      texto: Paso. Las norias son para parejitas.
+      gesto: 
+      emocion: 8
+      espera: 0.2
+      aLaVez: 0
+    - momento: 0
+      quien: 1
+      clave: PARQUE_NORIA_5_2
+      texto: "\xA1Pues subimos Liam y yo!"
+      gesto: Cheer01
+      emocion: 1
+      espera: 0.2
+      aLaVez: 0
+    - momento: 2
+      quien: 1
+      clave: PARQUE_NORIA_5_3
+      texto: "\xA1Estelaaa! \xA1Saluda!"
+      gesto: HandWave01
+      emocion: 1
+      espera: 0
+      aLaVez: 0
+    - momento: 4
+      quien: 2
+      clave: PARQUE_NORIA_5_4
+      texto: "Os he visto saludar. Qu\xE9 verg\xFCenza."
+      gesto: 
+      emocion: 8
+      espera: 0
+      aLaVez: 0

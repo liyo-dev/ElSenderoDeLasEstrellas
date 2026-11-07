@@ -57,6 +57,13 @@ public class GuionBeat : SequenceBeat
         ctx.Player?.RegisterCleanup(_preparado.Terminar);
     }
 
+    /// Un guion que no ha llegado a empezar cumple lo de todos sus efectos. Si ya estaba montado,
+    /// lo cumple su reproductor al cerrarse.
+    public override void CumplirAlSaltar(SequenceContext ctx)
+    {
+        if (_preparado == null) ReproductorDeGuion.CumplirAlSaltar(guion, ctx, 0);
+    }
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (guion == null)

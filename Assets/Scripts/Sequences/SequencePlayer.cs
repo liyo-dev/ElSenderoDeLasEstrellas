@@ -71,6 +71,11 @@ public class SequencePlayer : CinematicSequencerBase
     // esperando un evento que no va a llegar nunca, y el capítulo no avanza sin ninguna pista.
     private bool _signalRaised;
 
+    // Fase y beat que se están reproduciendo (-1: ninguno pendiente). Al saltar, lo que viene
+    // detrás cumple lo suyo (CumplirLoQueQuedaba).
+    private int _faseEnCurso = -1;
+    private int _beatEnCurso = -1;
+
     // Las señales vienen del asset, no del Inspector: así una secuencia entera (contenido y
     // enganche con el grafo) se puede escribir como texto. Si el asset las deja vacías, se usan
     // las del Inspector heredadas de CinematicSequencerBase.
@@ -363,6 +368,8 @@ public class SequencePlayer : CinematicSequencerBase
         _endSignalOverride = null;
         _endScreenOverride = SequenceEndScreen.ComoElAsset;
         _signalRaised = false;
+        _faseEnCurso = 0;
+        _beatEnCurso = -1;
 
         try
         {
@@ -475,6 +482,8 @@ public class SequencePlayer : CinematicSequencerBase
                 if (Telon.Retiene(ClaveTelon) && !EsPreparacion(beat))
                     Telon.Soltar(ClaveTelon);
 
+                _faseEnCurso = p;
+                _beatEnCurso = b;
                 yield return beat.Run(_context);
             }
 
@@ -487,6 +496,8 @@ public class SequencePlayer : CinematicSequencerBase
                 break;
             }
         }
+
+        _faseEnCurso = -1;
 
         // La mecánica lanzada de fondo se para: a partir de aquí manda otra vez el juego.
         StopBackgroundRoutines();
@@ -646,6 +657,9 @@ public class SequencePlayer : CinematicSequencerBase
             DialogueManager.Instance.Close();
 
         SpeechBubbleUI.Instance?.Hide();
+        // Antes de soltar nada: el guion en marcha cumple lo suyo al cerrarse (ReleaseAllActors).
+        _context?.MarcarSalto();
+        CumplirLoQueQuedaba();
         ReleaseAllActors();
 
         // El cierre genérico de skip deja la pantalla cubierta a propósito. Estas secuencias no
@@ -654,6 +668,26 @@ public class SequencePlayer : CinematicSequencerBase
         // Si el objeto se está apagando (se descarga su escena), no puede arrancar corrutinas, y
         // la pantalla es de quien venga después: el prólogo acaba en blanco y lo destapa el grafo.
         if (isActiveAndEnabled) StartCoroutine(Co_RevealAfterSkip());
+    }
+
+    /// Saltar la secuencia no puede dejar sin hacer lo que la historia espera de ella: los beats
+    /// que no han llegado a correr cumplen lo suyo (SequenceBeat.CumplirAlSaltar). Ver INC-890.
+    private void CumplirLoQueQuedaba()
+    {
+        if (_definition?.phases == null || _context == null || _faseEnCurso < 0 || _endRequested) return;
+        for (int p = _faseEnCurso; p < _definition.phases.Count; p++)
+        {
+            var fase = _definition.phases[p];
+            if (fase?.beats == null) continue;
+            bool enCurso = p == _faseEnCurso && _beatEnCurso >= 0;
+            if (!enCurso && !fase.ShouldRun(_context)) continue;
+            for (int b = enCurso ? _beatEnCurso + 1 : 0; b < fase.beats.Count; b++)
+            {
+                try { fase.beats[b]?.CumplirAlSaltar(_context); }
+                catch (System.Exception e) { Debug.LogException(e); }
+            }
+        }
+        _faseEnCurso = -1;
     }
 
     private IEnumerator Co_RevealAfterSkip()
