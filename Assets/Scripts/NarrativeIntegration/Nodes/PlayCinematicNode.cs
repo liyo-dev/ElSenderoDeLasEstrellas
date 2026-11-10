@@ -70,6 +70,8 @@ public sealed class PlayCinematicNode : NarrativeNode, INarrativeStateEffect
     /// monta en vivo y usa su escenario).
     public void Project(INarrativeStateWriter state)
     {
+        state.MarkSignalRaised(signalIn);
+        state.MarkSignalRaised(signalDone);
         if (secuencia != null) secuencia.Project(new ScopedNarrativeStateWriter(state, secuencia.name, plantillaDeAjustes));
     }
 

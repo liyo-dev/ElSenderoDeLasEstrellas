@@ -11,7 +11,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Señales", "Esperar señal N veces", "Cuenta las veces que llega una señal y avanza al llegar al total. Puede marcar un paso de quest por cada una.")]
 [SavePoint("Seguro guardar mientras cuenta")]
-public sealed class WaitSignalCountNode : NarrativeNode
+public sealed class WaitSignalCountNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Signal)]
     [Tooltip("Señal que se cuenta. Quien la emite debe hacerlo en cada ocasión (no «una sola vez»).")]
@@ -37,6 +37,9 @@ public sealed class WaitSignalCountNode : NarrativeNode
         d.Field("veces", count.ToString());
         if (!string.IsNullOrEmpty(questId)) d.Quest(questId, "Marca un paso por señal en");
     }
+
+    /// Haber pasado de este nodo quiere decir que la señal llegó (las veces pedidas).
+    public void Project(INarrativeStateWriter state) => state.MarkSignalRaised(eventKey);
 
     public override void CollectWarnings(List<string> warnings)
     {

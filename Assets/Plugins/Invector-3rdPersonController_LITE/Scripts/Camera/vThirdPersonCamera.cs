@@ -1,4 +1,4 @@
-using Invector;
+﻿using Invector;
 using UnityEngine;
 
 public class vThirdPersonCamera : MonoBehaviour
@@ -28,6 +28,16 @@ public class vThirdPersonCamera : MonoBehaviour
     public LayerMask obstructionMask = ~0;
     public float obstructionCheckRadius = 0.15f;
     
+    [Header("Suelo")]
+    [Tooltip("Capas de suelo que la cámara no atraviesa: si el suelo se mete entre el personaje y la cámara, la cámara se acerca. Vacío = capa Floor. Ver INC-947")]
+    public LayerMask capasDeSuelo = 0;
+    [Tooltip("Holgura (radio de la esfera) que la cámara guarda con el suelo, en metros.")]
+    public float holguraConElSuelo = 0.3f;
+    [Tooltip("Segundos que tarda la cámara en acercarse o subirse cuando el suelo se le mete delante o debajo.")]
+    public float suavizadoAlChocarConElSuelo = 0.08f;
+    [Tooltip("Segundos que tarda en volver a su distancia y altura cuando el suelo deja de estorbar.")]
+    public float suavizadoAlSoltarElSuelo = 0.45f;
+
     [Header("Anulación de Lock-On")]
     public float overrideTargetHeightOffset = 1.5f;
 
@@ -50,6 +60,10 @@ public class vThirdPersonCamera : MonoBehaviour
     private float currentHeight;
     private float forward = -1f;
     private CameraOcclusionShadowsOnly _occlusionFader;
+    private int _mascaraDeSuelo;
+    // Ajuste por el suelo, suavizado (ver AjustarAlSuelo): distancia acortada y elevación de la cámara.
+    private float _distanciaPorSuelo = -1f, _velocidadDistanciaPorSuelo;
+    private float _elevacionPorSuelo, _velocidadElevacionPorSuelo;
     public static bool lockCameraForCinematic = false;
 
     // Override de zona ambiental
@@ -81,6 +95,8 @@ public class vThirdPersonCamera : MonoBehaviour
 
     private void BeginSmoothSnap()
     {
+        _distanciaPorSuelo = -1f;
+        _elevacionPorSuelo = 0f;
         _doSmoothSnap = true;
         _snapElapsed = 0f;
         _snapFromPos = transform.position;
@@ -107,7 +123,9 @@ public class vThirdPersonCamera : MonoBehaviour
 
         _occlusionFader = GetComponent<CameraOcclusionShadowsOnly>();
         if (_occlusionFader == null) _occlusionFader = gameObject.AddComponent<CameraOcclusionShadowsOnly>();
-        _occlusionFader.SetMask(obstructionMask);
+        _mascaraDeSuelo = capasDeSuelo.value != 0 ? capasDeSuelo.value : LayerMask.GetMask("Floor");
+        // El suelo nunca se disuelve: la cámara se queda por delante de él (ver AjustarAlSuelo).
+        _occlusionFader.SetMask(obstructionMask & ~_mascaraDeSuelo);
         _occlusionFader.SetRadius(obstructionCheckRadius);
 
         // Cambio de target implica teleport de cámara; no suavizar.
@@ -204,6 +222,38 @@ public class vThirdPersonCamera : MonoBehaviour
         mouseY = vExtensions.ClampAngle(mouseY, yMinLimit, yMaxLimit);
     }
 
+    /// <summary>
+    /// La cámara frente al suelo (terreno, calles, cuestas): si el suelo se mete entre el pivote y la
+    /// cámara, se acerca; si queda por encima del suelo que tiene debajo con menos holgura de la
+    /// debida, se eleva. Las dos cosas van suavizadas (rápido al chocar, despacio al soltar), para
+    /// que el suelo irregular no la haga dar tirones. Devuelve la distancia que hay que usar y deja
+    /// en <see cref="_elevacionPorSuelo"/> cuánto se sube. Ver INC-947 e INC-969.
+    /// </summary>
+    private float AjustarAlSuelo(Vector3 pivote, Vector3 direccion, float distanciaDeseada)
+    {
+        if (_mascaraDeSuelo == 0 || distanciaDeseada <= 0f) return distanciaDeseada;
+        float dt = Time.deltaTime;
+
+        float objetivo = distanciaDeseada;
+        if (Physics.SphereCast(pivote, holguraConElSuelo, direccion, out RaycastHit hit,
+                               distanciaDeseada, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
+            objetivo = Mathf.Max(0.5f, hit.distance);
+        if (_distanciaPorSuelo < 0f) _distanciaPorSuelo = objetivo;
+        _distanciaPorSuelo = Mathf.SmoothDamp(_distanciaPorSuelo, objetivo, ref _velocidadDistanciaPorSuelo,
+            objetivo < _distanciaPorSuelo ? suavizadoAlChocarConElSuelo : suavizadoAlSoltarElSuelo, Mathf.Infinity, dt);
+        float distancia = Mathf.Min(distanciaDeseada, _distanciaPorSuelo);
+
+        // Elevación: el suelo justo debajo de la cámara (el rayo sale de poco por encima, para no
+        // tomar como suelo un puente o un piso de arriba).
+        Vector3 camara = pivote + direccion * distancia;
+        float subir = 0f;
+        if (Physics.Raycast(camara + Vector3.up, Vector3.down, out RaycastHit abajo, 3f, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
+            subir = Mathf.Max(0f, abajo.point.y + holguraConElSuelo - camara.y);
+        _elevacionPorSuelo = Mathf.SmoothDamp(_elevacionPorSuelo, subir, ref _velocidadElevacionPorSuelo,
+            subir > _elevacionPorSuelo ? suavizadoAlChocarConElSuelo : suavizadoAlSoltarElSuelo, Mathf.Infinity, dt);
+        return distancia;
+    }
+
     void CameraMovement()
     {
         if (currentTarget == null) return;
@@ -260,10 +310,11 @@ public class vThirdPersonCamera : MonoBehaviour
         var finalCamDir = (forward * targetLookAt.forward) + (rightOffset * targetLookAt.right);
         finalCamDir = finalCamDir.normalized;
         
-        Vector3 camPos = current_cPos + (finalCamDir * distance);
+        float distanciaFinal = AjustarAlSuelo(current_cPos, finalCamDir, distance);
+        Vector3 camPos = current_cPos + (finalCamDir * distanciaFinal) + Vector3.up * _elevacionPorSuelo;
 
         var lookPoint = current_cPos + targetLookAt.forward * 2f;
-        lookPoint += (targetLookAt.right * Vector3.Dot(finalCamDir * (distance), targetLookAt.right));
+        lookPoint += (targetLookAt.right * Vector3.Dot(finalCamDir * distanciaFinal, targetLookAt.right));
         Quaternion camRot = Quaternion.LookRotation(lookPoint - camPos);
 
         if (_doSmoothSnap)

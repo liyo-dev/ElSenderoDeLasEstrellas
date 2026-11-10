@@ -146,8 +146,8 @@ public static class Cap2MananaDespues
         }
         if (aro == null)
         {
-            // El aro visible procede del catálogo de props; el collar del jefe es un efecto de partículas.
-            aro = ColocarPrefab("PROP_Aro", "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Ring01_a01.prefab",
+            // El aro roto del Demonio 1 (el arco y el trozo), ya a su tamaño: ver AroDelDemonioEnElCap2.
+            aro = ColocarPrefab("PROP_Aro", "Assets/Art/Items/AroDelDemonio/AroRoto.prefab",
                 new Vector3(116f, 0.72f, -0.5f), 0.35f);
             props.RemoveAt(props.Count - 1);
         }
@@ -182,13 +182,13 @@ public static class Cap2MananaDespues
             new PlaceActorNode { actorId = "Player", markId = "Bedroom", applyPlayerEnvironment = true },
             new PlaceActorNode { actorId = "NPC_Eldran", markId = "M_Manana_EldranPuerta", showActor = true },
             new PlayCinematicNode { cinematicName = "La mañana después", secuencia = def, signalIn = def.signalIn, signalDone = def.signalOut },
-            new PlaceActorNode { actorId = "NPC_Eldran", markId = "M_Manana_EldranMesa", showActor = true },
+            new PlaceActorNode { actorId = "NPC_Eldran", markId = Cap2EldranYAroINC962.MarcaEldran, showActor = true },
             new GiveInventoryItemNode { item = item, amount = 1, onlyOnce = true },
             new StartQuestNode { questId = quest.questId, giverId = "NPC_Eldran", inProgressDialogue = dialogo },
             new CheckpointNode { checkpointId = "CAP2_MANANA_DESPUES", spawnAnchorId = "Bedroom", sceneName = "WillHouse" }
         };
         string[] titulos = { "7.- Amanece tras la noche", "8.- Carga la habitación de Will", "9.- Will vuelve a WillHouse · Bedroom",
-            "10.- Eldran entra en la habitación", "11.- La mañana después (SEQ_MananaDespues)", "12.- Eldran queda junto a la mesa", "13.- Trozo del aro", "14.- Prepárate para el viaje", "15.- Cap. 2 · La mañana después" };
+            "10.- Eldran entra en la habitación", "11.- La mañana después (SEQ_MananaDespues)", "12.- Eldran espera junto a la casa de Will (sale en la cinemática)", "13.- Trozo del aro", "14.- Prepárate para el viaje", "15.- Cap. 2 · La mañana después" };
         for (int i = 0; i < tramo.Length; i++)
         {
             string id = i == 0 ? antiguo.guid : "cap2-manana-despues-" + (i + 7);
@@ -316,12 +316,13 @@ public static class Cap2MananaDespues
         // 1. Suelo de losas de piedra planas (Modular Castle floor2).
         // La malla floor2 tiene min.y=0 y max.y=2 (bloque de 2 m de grosor); colocarlo a Y=-2
         // hace que la superficie transitable quede exactamente a Y=0 nivelada con la escena.
+        // Cada losa mide 8 × 8 m: van una por cada 8 m, sin solaparse (si no, parpadean).
         string rutaFloor = "Assets/Art/World/Modular Castle/Assets/prefabs/floor2.prefab";
         var pfFloor = AssetDatabase.LoadAssetAtPath<GameObject>(rutaFloor);
         if (pfFloor != null)
         {
-            float[] xs = { 296f, 300f, 304f };
-            float[] zs = { 0f, 4f, 8f, 12f };
+            float[] xs = Cap2ExpedicionMedidas.XsDelSuelo;
+            float[] zs = Cap2ExpedicionMedidas.ZsDelSuelo;
             for (int i = 0; i < xs.Length; i++)
             {
                 for (int j = 0; j < zs.Length; j++)
@@ -345,9 +346,9 @@ public static class Cap2MananaDespues
         if (pfPillar1 != null && pfPillar2 != null)
         {
             Vector3[] posPillars = {
-                new Vector3(295.0f, 0f, 2f), new Vector3(305.0f, 0f, 2f),
-                new Vector3(295.0f, 0f, 6f), new Vector3(305.0f, 0f, 6f),
-                new Vector3(295.0f, 0f, 10f), new Vector3(305.0f, 0f, 10f)
+                new Vector3(295.0f, 0f, 2f), new Vector3(Cap2ExpedicionMedidas.XColumnasDerecha, 0f, 2f),
+                new Vector3(295.0f, 0f, 6f), new Vector3(Cap2ExpedicionMedidas.XColumnasDerecha, 0f, 6f),
+                new Vector3(295.0f, 0f, 10f), new Vector3(Cap2ExpedicionMedidas.XColumnasDerecha, 0f, 10f)
             };
             for (int k = 0; k < posPillars.Length; k++)
             {
@@ -357,7 +358,10 @@ public static class Cap2MananaDespues
                 go.name = id;
                 var t = go.transform;
                 t.SetParent(arq, false);
-                t.position = posPillars[k];
+                // Columnas seguidas del mismo lado, 3 cm hacia fuera una sí y otra no: sus caras se tocaban
+                // en el mismo plano y parpadeaban (INC-992).
+                float holgura = (k / 2) % 2 == 1 ? 0.03f : 0f;
+                t.position = posPillars[k] + new Vector3(k % 2 == 0 ? -holgura : holgura, 0f, 0f);
                 t.rotation = Quaternion.Euler(0f, (k % 2 == 0) ? 90f : -90f, 0f);
             }
         }
@@ -505,6 +509,16 @@ public static class Cap2MananaDespues
         var eldranGo = ColocarActor("Actor_EldranJoven", "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab", new Vector3(298.5f, 0f, 1.5f), 15f);
         var silasGo = ColocarActor("Actor_SilasJoven", "Assets/_NPCs/MagoPrimero.prefab", new Vector3(301.5f, 0f, 1.2f), -15f);
 
+        // 8b. El portal del umbral: Selene lo cruza y se cierra tras ella (INC-991). La vista es la de la Piedra,
+        // lo que buscaban.
+        var portal = new GameObject("Portal del umbral").transform;
+        portal.SetParent(arq, false);
+        portal.position = new Vector3(300f, 0f, 11.1f);
+        var ventana = VistaDelPortal.Ventana(portal, VistaDelPortal.HaciaLaPiedra, Vector3.forward, Vector3.forward);
+        var soVentana = new SerializedObject(ventana.GetComponent<VentanaDePortal>());
+        soVentana.FindProperty("seCierraTrasCruzarlo").objectReferenceValue = seleneGo.transform;
+        soVentana.ApplyModifiedPropertiesWithoutUndo();
+
         var bigote = eldranGo.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name.Contains("Mustache"));
         if (bigote != null) bigote.gameObject.SetActive(false);
 
@@ -538,16 +552,10 @@ public static class Cap2MananaDespues
             elem.FindPropertyRelative("id").stringValue = id;
             elem.FindPropertyRelative("target").objectReferenceValue = target;
             elem.FindPropertyRelative("eyeHeight").floatValue = 0f;
-            Animator animActivo = null;
-            var anims = target.GetComponentsInChildren<Animator>(true);
-            for (int i = 0; i < anims.Length; i++)
-            {
-                if (anims[i] != null && anims[i].runtimeAnimatorController != null)
-                {
-                    animActivo = anims[i];
-                    break;
-                }
-            }
+            // El que mueve el esqueleto (avatar humanoide): Silas (MagoPrimero) lleva más Animators en
+            // piezas sueltas y, con el primero que salía, andaba sin mover las piernas (INC-991).
+            var anims = target.GetComponentsInChildren<Animator>(true).Where(a => a != null && a.runtimeAnimatorController != null).ToArray();
+            Animator animActivo = anims.FirstOrDefault(a => a.avatar != null && a.avatar.isHuman) ?? anims.FirstOrDefault();
             elem.FindPropertyRelative("animator").objectReferenceValue = animActivo;
             elem.FindPropertyRelative("emotionController").objectReferenceValue = target.GetComponentInChildren<NPCEmotionController>(true);
         }
@@ -596,5 +604,16 @@ public static class Cap2MananaDespues
         PrefabUtility.SaveAsPrefabAsset(go, ruta);
         UnityEngine.Object.DestroyImmediate(go);
     }
+}
+
+/// Medidas del decorado del recuerdo de la expedición, compartidas por el montaje y sus arreglos.
+public static class Cap2ExpedicionMedidas
+{
+    /// Centros de las losas de suelo (8 × 8 m cada una, sin solaparse).
+    public static readonly float[] XsDelSuelo = { 296f, 304f };
+    public static readonly float[] ZsDelSuelo = { 0f, 8f, 16f };
+    /// Las columnas de la derecha (pillar2) son más anchas que las de la izquierda: van algo más
+    /// afuera para que el pasillo mida lo mismo a los dos lados de x = 300.
+    public const float XColumnasDerecha = 305.25f;
 }
 #endif

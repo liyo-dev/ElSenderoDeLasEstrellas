@@ -1,0 +1,1083 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_00_LaDespedida_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_00_LaDespedida
+  duracion: 67.069
+  presentacion: 1
+  huella: "2026-11-10 12:34 \xB7 511b1dcd5234837e74a8bd9fa6b2fcb3"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 53.4, y: 23.381378, z: -185}
+    - t: 49.006947
+      p: {x: 53.4, y: 23.381378, z: -185}
+    - t: 49.370323
+      p: {x: 53.525997, y: 23.37862, z: -185.25659}
+    - t: 49.653614
+      p: {x: 53.65199, y: 23.375862, z: -185.5132}
+    - t: 49.905083
+      p: {x: 53.777985, y: 23.3731, z: -185.76979}
+    - t: 50.153656
+      p: {x: 53.903976, y: 23.370342, z: -186.02638}
+    - t: 50.40224
+      p: {x: 54.029972, y: 23.367584, z: -186.28299}
+    - t: 50.650814
+      p: {x: 54.155968, y: 23.364822, z: -186.53958}
+    - t: 50.899387
+      p: {x: 54.28196, y: 23.362064, z: -186.79617}
+    - t: 51.147972
+      p: {x: 54.407955, y: 23.360207, z: -187.05278}
+    - t: 51.35835
+      p: {x: 54.518223, y: 23.359032, z: -187.26807}
+    - t: 51.614117
+      p: {x: 54.672817, y: 23.357574, z: -187.51802}
+    - t: 51.866722
+      p: {x: 54.859367, y: 23.356098, z: -187.74039}
+    - t: 52.12059
+      p: {x: 55.07148, y: 23.354614, z: -187.94064}
+    - t: 52.41812
+      p: {x: 55.348736, y: 23.35289, z: -188.14104}
+    - t: 52.668804
+      p: {x: 55.58634, y: 23.350937, z: -188.30429}
+    - t: 52.91948
+      p: {x: 55.823948, y: 23.348045, z: -188.46753}
+    - t: 53.170162
+      p: {x: 56.061554, y: 23.345154, z: -188.63078}
+    - t: 53.420845
+      p: {x: 56.29916, y: 23.342262, z: -188.79404}
+    - t: 53.671516
+      p: {x: 56.536762, y: 23.33937, z: -188.95728}
+    - t: 53.9222
+      p: {x: 56.77437, y: 23.33648, z: -189.12053}
+    - t: 54.172874
+      p: {x: 57.011974, y: 23.333614, z: -189.28377}
+    - t: 54.423557
+      p: {x: 57.24958, y: 23.332169, z: -189.44702}
+    - t: 54.674232
+      p: {x: 57.487186, y: 23.330723, z: -189.61026}
+    - t: 54.927544
+      p: {x: 57.72479, y: 23.329277, z: -189.77351}
+    - t: 55.212635
+      p: {x: 57.962395, y: 23.327831, z: -189.93675}
+    - t: 55.578575
+      p: {x: 58.2, y: 23.326385, z: -190.1}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 0.75
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 9.595714
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 15.029182
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 21.731428
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 29.165102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 33.762657
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 43.09654
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 55.578575
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 58.50924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 64.90924
+      tipo: 1
+      rumbo: 0
+      punto: {x: 63.6, y: 23.253124, z: -197.4}
+      actor: 
+    cabezas:
+    - t: 0.7
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 4.5504084
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 9.545713
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 14.979182
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 21.681429
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 29.115103
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 32.64388
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 33.712658
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 39.409595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 43.04654
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    animacion:
+    - fundido: 0
+      t: 1.3
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 4.500408
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 4.580408
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.095715
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 10.145714
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 15.579183
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 22.28143
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 29.715103
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 32.59388
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 32.67388
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 33.662655
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 34.312656
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 39.359596
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 39.439598
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 42.596535
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 43.646538
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 55.578575
+      tipo: 2
+      estado: HandWave01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 55.578575
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 55.658577
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 57.61388
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    caras:
+    - t: 1.2
+      emocion: sorpresa
+      dura: 2
+    - t: 4.500408
+      emocion: alegre
+      dura: 4.9453063
+    - t: 32.59388
+      emocion: preocupado
+      dura: 1.4187754
+    - t: 39.359596
+      emocion: pensativo
+      dura: 3.5869389
+    - t: 55.578575
+      emocion: alegre
+      dura: 2.3853061
+    - t: 63.109238
+      emocion: pensativo
+      dura: 0
+    - t: 65.00924
+      emocion: decidido
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Eldran
+    alias: eldran
+    colorDelNombre: {r: 0.61960787, g: 0.8392157, b: 1, a: 1}
+    claveDelNombre: CHAR_ELDRAN
+    posiciones:
+    - t: 0
+      p: {x: 55.5, y: 23.35646, z: -187}
+    - t: 58.50924
+      p: {x: 55.5, y: 23.35646, z: -187}
+    - t: 58.714687
+      p: {x: 55.39, y: 23.357216, z: -186.9}
+    - t: 59.03663
+      p: {x: 55.17, y: 23.35873, z: -186.7}
+    - t: 59.30738
+      p: {x: 54.95, y: 23.360245, z: -186.5}
+    - t: 59.565918
+      p: {x: 54.73, y: 23.362411, z: -186.3}
+    - t: 59.824455
+      p: {x: 54.51, y: 23.36544, z: -186.1}
+    - t: 60.083
+      p: {x: 54.29, y: 23.36847, z: -185.9}
+    - t: 60.341537
+      p: {x: 54.07, y: 23.371498, z: -185.7}
+    - t: 60.600075
+      p: {x: 53.85, y: 23.374527, z: -185.5}
+    - t: 60.858612
+      p: {x: 53.63, y: 23.377556, z: -185.3}
+    - t: 61.11715
+      p: {x: 53.41, y: 23.380585, z: -185.1}
+    - t: 61.375694
+      p: {x: 53.190002, y: 23.383614, z: -184.9}
+    - t: 61.63423
+      p: {x: 52.97, y: 23.386642, z: -184.7}
+    - t: 61.89277
+      p: {x: 52.75, y: 23.389671, z: -184.5}
+    - t: 62.151302
+      p: {x: 52.530003, y: 23.3927, z: -184.3}
+    - t: 62.40984
+      p: {x: 52.31, y: 23.39573, z: -184.1}
+    - t: 62.668385
+      p: {x: 52.09, y: 23.397728, z: -183.9}
+    - t: 62.92692
+      p: {x: 51.87, y: 23.397728, z: -183.7}
+    - t: 63.185455
+      p: {x: 51.65, y: 23.397728, z: -183.5}
+    - t: 63.443993
+      p: {x: 51.43, y: 23.397728, z: -183.3}
+    - t: 63.702526
+      p: {x: 51.210003, y: 23.397728, z: -183.1}
+    - t: 63.96107
+      p: {x: 50.99, y: 23.397728, z: -182.9}
+    - t: 64.21961
+      p: {x: 50.77, y: 23.397728, z: -182.7}
+    - t: 64.47815
+      p: {x: 50.550003, y: 23.397728, z: -182.5}
+    - t: 64.73669
+      p: {x: 50.33, y: 23.397728, z: -182.3}
+    - t: 64.995224
+      p: {x: 50.11, y: 23.397728, z: -182.1}
+    - t: 65.25377
+      p: {x: 49.89, y: 23.397728, z: -181.9}
+    - t: 65.51231
+      p: {x: 49.670002, y: 23.397728, z: -181.7}
+    - t: 65.77084
+      p: {x: 49.45, y: 23.397728, z: -181.5}
+    - t: 66.0416
+      p: {x: 49.230003, y: 23.397728, z: -181.3}
+    - t: 66.36355
+      p: {x: 49.010002, y: 23.397728, z: -181.1}
+    - t: 66.569
+      p: {x: 48.9, y: 23.397728, z: -181}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 4.6504083
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 32.74388
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 39.509598
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 55.728577
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 0.65000004
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 4.600408
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 9.495714
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 21.631428
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 29.065102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 32.693882
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 33.662655
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 39.4596
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 42.996536
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 55.678577
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0.6
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 0.68
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 4.1504083
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 5.200408
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.445714
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.525714
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 12.359048
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.879183
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.929183
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.959183
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 18.12585
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 21.381428
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 21.581429
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 21.661428
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 24.228096
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 27.444763
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 28.815102
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 29.015102
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 29.095102
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 32.64388
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 33.00139
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 33.612656
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 33.692657
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 36.15932
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 39.409595
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 40.059597
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 42.946537
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 43.02654
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 44.35987
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 46.97654
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 49.056946
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 55.578575
+      tipo: 2
+      estado: HandWave01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 56.278576
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    caras:
+    - t: 0.6
+      emocion: alegre
+      dura: 3.9004083
+    - t: 9.445714
+      emocion: alegre
+      dura: 5.8334694
+    - t: 14.879183
+      emocion: decidido
+      dura: 6.852245
+    - t: 21.581429
+      emocion: pensativo
+      dura: 7.5836735
+    - t: 29.015102
+      emocion: decidido
+      dura: 3.9787755
+    - t: 32.95045
+      emocion: sorpresa
+      dura: 1.0187755
+    - t: 33.612656
+      emocion: alegre
+      dura: 6.146939
+    - t: 42.946537
+      emocion: alegre
+      dura: 6.460408
+    visible:
+    - desde: 0
+      hasta: 62.70924
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0.6
+    t1: 4.100408
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_01
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 4.500408
+    t1: 9.045714
+    actor: Player
+    clave: CAP3_DESPEDIDA_02
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 9.445714
+    t1: 14.879183
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_03
+    gesto: Laugh01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.879183
+    t1: 21.331429
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_04
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 21.581429
+    t1: 28.765102
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_05
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 29.015102
+    t1: 32.59388
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_06
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 32.59388
+    t1: 33.612656
+    actor: Player
+    clave: CAP3_DESPEDIDA_07
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 33.612656
+    t1: 39.359596
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_08
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 39.359596
+    t1: 42.546535
+    actor: Player
+    clave: CAP3_DESPEDIDA_09
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 42.946537
+    t1: 49.006947
+    actor: NPC_Eldran
+    clave: CAP3_DESPEDIDA_10
+    gesto: HeadNod01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 55.578575
+    t1: 57.56388
+    actor: Player
+    clave: CAP3_DESPEDIDA_11
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 14.879183
+    tipo: 5
+    descripcion: 'dos: will y eldran'
+    posiciones:
+    - t: 0
+      p: {x: 51.859253, y: 24.253302, z: -188.72028}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Eldran
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8438755
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 14.879183
+    t1: 32.59388
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 14.879183
+      p: {x: 51.97545, y: 24.286499, z: -186.14714}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0953062
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 32.59388
+    t1: 33.612656
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 32.59388
+      p: {x: 54.50255, y: 24.245914, z: -188.74681}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 33.612656
+    t1: 39.359596
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 33.612656
+      p: {x: 54.476326, y: 24.287403, z: -183.52121}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0953062
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 39.359596
+    t1: 49.006947
+    tipo: 5
+    descripcion: 'dos: will y eldran'
+    posiciones:
+    - t: 39.359596
+      p: {x: 57.04075, y: 24.259428, z: -183.27972}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Eldran
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8438755
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 49.006947
+    t1: 62.50924
+    tipo: 0
+    descripcion: general de will y eldran
+    posiciones:
+    - t: 49.006947
+      p: {x: 66.076324, y: 26.520458, z: -185.845}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Eldran
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.87201035
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 62.50924
+    t1: 67.069
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 62.50924
+      p: {x: 56.75212, y: 24.245476, z: -186.61873}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294518730654193
+    linea: 29
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294518730654194
+    linea: 30
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 66.10924
+    beat:
+      rid: 6540294518730654195
+    linea: 72
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: consejo
+    t: 14.879183
+  - nombre: hasta_pronto
+    t: 33.612656
+  - nombre: camino
+    t: 49.006947
+  - nombre: se_va
+    t: 58.50924
+  puntos:
+  - nombre: p_eldran
+    posicion: {x: 55.5, y: 23.35646, z: -187}
+  - nombre: p_will
+    posicion: {x: 53.4, y: 23.381378, z: -185}
+  - nombre: p_camino
+    posicion: {x: 58.2, y: 23.32639, z: -190.1}
+  - nombre: e_vuelta
+    posicion: {x: 48.9, y: 23.397728, z: -181}
+  - nombre: p_puerto
+    posicion: {x: 63.6, y: 23.253124, z: -197.4}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294518730654193
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294518730654194
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 0
+        musicId: MANANA_DESPUES
+        fadeIn: 2.5
+        fadeOut: 0.5
+        desdeSegundo: -1
+    - rid: 6540294518730654195
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

@@ -40,6 +40,12 @@ namespace Sendero.UI
         [Tooltip("Texto opcional para mostrar MP numérico (ej: 50/50)")]
         [SerializeField] private TextMeshProUGUI manaText;
         
+        [Header("Barras apiladas")]
+        [Tooltip("Vida y maná por capas de color (cada capa, los puntos de EstiloDeBarrasApiladas), con «×N» al lado.")]
+        [SerializeField] private bool barrasApiladas = true;
+        [Tooltip("Tamaño del «×N» junto a cada barra.")]
+        [SerializeField] private float tamanoDelNumeroDeCapas = 22f;
+
         [Header("Configuración de Fade")]
         [Tooltip("Duración del fade in/out en segundos")]
         [SerializeField] private float fadeDuration = 0.5f;
@@ -47,6 +53,7 @@ namespace Sendero.UI
         // Referencias a sistemas del juego
         private PlayerHealthSystem _healthSystem;
         private ManaPool _manaPool;
+        private BarraApilada _barraDeVida, _barraDeMana;
         
         // Control de visibilidad
         private CanvasGroup _canvasGroup;
@@ -88,6 +95,7 @@ namespace Sendero.UI
 
             // Validar referencias críticas
             ValidateReferences();
+            CrearBarrasApiladas();
 
             // Se apunta al registro de lo que se esconde durante una cinemática. El registro
             // va con la vida del objeto, no con la del enabled: el HUD puede tener hijos
@@ -170,6 +178,16 @@ namespace Sendero.UI
         }
         
         #region Validación y Setup
+
+        private void CrearBarrasApiladas()
+        {
+            if (!barrasApiladas) return;
+            var estilo = EstiloDeBarrasApiladas.Actual;
+            if (healthFillImage != null)
+                _barraDeVida = new BarraApilada(healthFillImage, estilo.coloresDeVida, healthText != null ? healthText.font : null, tamanoDelNumeroDeCapas);
+            if (manaFillImage != null)
+                _barraDeMana = new BarraApilada(manaFillImage, estilo.coloresDeMana, manaText != null ? manaText.font : null, tamanoDelNumeroDeCapas);
+        }
         
         private void ValidateReferences()
         {
@@ -315,7 +333,10 @@ namespace Sendero.UI
                 maxHp = _healthSystem.MaxHealth;
             }
             
-            float targetFillAmount = maxHp > 0 ? currentHp / maxHp : 0f;
+            if (_barraDeVida != null) healthFillImage.DOKill();
+            float targetFillAmount = _barraDeVida != null
+                ? _barraDeVida.PrepararPara(currentHp)
+                : (maxHp > 0 ? currentHp / maxHp : 0f);
             float currentFillAmount = healthFillImage.fillAmount;
             
             // Detectar si es daño o curación
@@ -390,7 +411,10 @@ namespace Sendero.UI
                 maxMana = _manaPool.Max;
             }
 
-            float targetFillAmount = maxMana > 0 ? currentMana / maxMana : 0f;
+            if (_barraDeMana != null && _barraDeMana.CapasDe(currentMana) != _barraDeMana.Capas) manaFillImage.DOKill();
+            float targetFillAmount = _barraDeMana != null
+                ? _barraDeMana.PrepararPara(currentMana)
+                : (maxMana > 0 ? currentMana / maxMana : 0f);
             float currentFillAmount = manaFillImage.fillAmount;
 
             // Detectar si es gasto o regeneración

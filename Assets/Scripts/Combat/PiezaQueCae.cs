@@ -4,6 +4,7 @@ using UnityEngine;
 /// caer él: deja de seguir al esqueleto, cae con física, sus brillos se apagan poco a poco y,
 /// cuando se queda quieta en el suelo, se congela para no gastar física.
 /// Vive en la propia pieza: sigue funcionando aunque el personaje se destruya al morir.
+/// Si la historia dice que alguien la recoge, se retira al acabar su tramo «en el suelo».
 [DisallowMultipleComponent]
 public class PiezaQueCae : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class PiezaQueCae : MonoBehaviour
     [SerializeField, Min(0.01f)] private float masa = 1.5f;
     [Tooltip("Segundos máximos con física: pasado este tiempo (o antes, si se queda quieta) se congela.")]
     [SerializeField, Min(0.5f)] private float segundosConFisica = 8f;
+    [Tooltip("Tramo de la historia en el que la pieza caída sigue en el suelo. Al acabar (alguien la recoge) se retira. Sin condiciones de fin, se queda.")]
+    [SerializeField] private TramoDeHistoria enElSuelo = new();
 
     static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
@@ -27,6 +30,7 @@ public class PiezaQueCae : MonoBehaviour
     private Color[] _colorInicial;
     private float _tiempo;
     private bool _cayendo;
+    private bool _escuchaLaHistoria;
 
     /// Configura la pieza desde el montaje del prefab.
     public void Configurar(Mesh malla, Renderer[] queSeApagan, Color apagado)
@@ -34,6 +38,13 @@ public class PiezaQueCae : MonoBehaviour
         mallaDeChoque = malla;
         seApagan = queSeApagan;
         colorApagado = apagado;
+    }
+
+    /// Señales con las que la historia da la pieza por recogida (montaje del prefab).
+    public void RetirarConSenales(params string[] senales)
+    {
+        enElSuelo ??= new TramoDeHistoria();
+        enElSuelo.acabaConSenal = new System.Collections.Generic.List<string>(senales);
     }
 
     /// Suelta la pieza: sale del esqueleto (se queda en la misma escena), le da cuerpo físico y
@@ -71,6 +82,24 @@ public class PiezaQueCae : MonoBehaviour
         for (int i = 0; i < n; i++) _colorInicial[i] = brilloDeSalida;
         PintarApagado(0f);
         enabled = true;
+
+        // Si su tramo ya había acabado al caer (se rejuega el combate), se queda: solo la retira
+        // que el tramo acabe después de caer.
+        if (enElSuelo != null && enElSuelo.acabaConSenal.Count > 0 && !enElSuelo.HaAcabado())
+        {
+            DefaultNarrativeSignals.OnStateChanged += RevisarSiLaRecogen;
+            _escuchaLaHistoria = true;
+        }
+    }
+
+    private void RevisarSiLaRecogen()
+    {
+        if (enElSuelo.HaAcabado()) Destroy(gameObject);
+    }
+
+    void OnDestroy()
+    {
+        if (_escuchaLaHistoria) DefaultNarrativeSignals.OnStateChanged -= RevisarSiLaRecogen;
     }
 
     void Awake()

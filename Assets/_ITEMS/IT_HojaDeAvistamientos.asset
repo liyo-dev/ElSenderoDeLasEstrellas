@@ -21,7 +21,7 @@ MonoBehaviour:
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_HOJA_AVISTAMIENTOS_DESC
-  useDescription: 'Lo que la gente de la aldea del mar ha visto de los animales con aro: luces bajas en el bosque, un zorro asustado, un perro que se rascaba el cuello.'
+  useDescription: La hoja donde Will apunta lo que cuentan en la aldea del mar de los animales con aro.
   usageKind: 1
   buyPrice: 0
   sellValue: 0

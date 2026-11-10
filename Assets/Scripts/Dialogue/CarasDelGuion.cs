@@ -35,6 +35,7 @@ public static class CarasDelGuion
         { NPCEmotion.Crying, "llorando" },
         { NPCEmotion.HappyTears, "conmovido" },
         { NPCEmotion.Asleep, "dormido" },
+        { NPCEmotion.Frozen, "helado" },
     };
 
     /// Las palabras que el juego entiende, con sus sinónimos.
@@ -58,6 +59,7 @@ public static class CarasDelGuion
         { "agradecido", NPCEmotion.Grateful },
         { "llorando", NPCEmotion.Crying }, { "llorar", NPCEmotion.Crying }, { "llanto", NPCEmotion.Crying },
         { "dormido", NPCEmotion.Asleep }, { "durmiendo", NPCEmotion.Asleep },
+        { "helado", NPCEmotion.Frozen }, { "congelado", NPCEmotion.Frozen }, { "frio", NPCEmotion.Frozen }, { "frío", NPCEmotion.Frozen },
         { "conmovido", NPCEmotion.HappyTears }, { "lagrimas de alegria", NPCEmotion.HappyTears }, { "lágrimas de alegría", NPCEmotion.HappyTears },
     };
 

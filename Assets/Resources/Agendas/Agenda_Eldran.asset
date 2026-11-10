@@ -14,7 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AgendaDelActor
   actorId: NPC_Eldran
   entradas:
-  - nombre: Tras el Cap. 2 · en la capital
+  - nombre: "Cap. 2\u20133 \xB7 espera en la salida del pueblo"
+    tramo:
+      empiezaConSenal:
+      - CAP2_A_DESPEDIRSE
+      empiezaConMisionActiva: []
+      acabaConSenal:
+      - CAP3_CAMINO_EMPIEZA
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 1
+    marca: Eldran_SalidaDelPueblo
+    frases:
+    - {fileID: 11400000, guid: e5a5ab25ade5af24296628615c940816, type: 2}
+  - nombre: "Tras el Cap. 2 \xB7 en la capital"
     tramo:
       empiezaConSenal:
       - CH_Cap2_BACK_1

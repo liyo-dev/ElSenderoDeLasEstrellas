@@ -26,7 +26,7 @@ public sealed class AtuendoEnTramo : MonoBehaviour
 
     private void OnEnable()
     {
-        DefaultNarrativeSignals.HistoryChanged += Revisar;
+        DefaultNarrativeSignals.OnStateChanged += Revisar;
         DefaultNarrativeSignals.OnAfterReset += Revisar;
         GameBootService.OnProfileReady += Revisar;
         Revisar();
@@ -34,7 +34,7 @@ public sealed class AtuendoEnTramo : MonoBehaviour
 
     private void OnDisable()
     {
-        DefaultNarrativeSignals.HistoryChanged -= Revisar;
+        DefaultNarrativeSignals.OnStateChanged -= Revisar;
         DefaultNarrativeSignals.OnAfterReset -= Revisar;
         GameBootService.OnProfileReady -= Revisar;
         Quitar();

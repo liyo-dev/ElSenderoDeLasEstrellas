@@ -9,10 +9,11 @@ using Slot = PartyControlManager.CharacterSlot;
 /// <summary>
 /// Construye el prefab del informe de victoria (Resources/UI/InformeDeVictoria) con el aspecto de
 /// la maqueta aprobada (Claude outputs/victoria-informe-maqueta): panel de cristal de los menús,
-/// medallón con el retrato y el aro lavanda, una fila por estadística con las barras del HUD,
-/// pastilla dorada, botín con el marco dorado del grimorio y «Continuar». Deja además los
+/// medallón con el aro lavanda y el retrato vivo del personaje (recortado en círculo, con el fijo
+/// de la ficha debajo como respaldo), la fila de Sintonía Estelar con la barra del HUD, pastilla
+/// dorada y aviso de hito, botín con el marco dorado del grimorio y «Continuar». Deja además los
 /// sprites nuevos importados como Sprite y el retrato de cada ficha de personaje puesto.
-/// Idempotente: rehace el prefab entero cada vez. Ver INC-543.
+/// Idempotente: rehace el prefab entero cada vez. Ver INC-543 e INC-950.
 /// </summary>
 public static class InformeDeVictoriaBuilder
 {
@@ -27,13 +28,14 @@ public static class InformeDeVictoriaBuilder
     private const string BarraMagiaPath = "Assets/Art/UI/HUD/mp_bar_fill.png";
     private const string EstrellaPath = "Assets/Art/UI/HUD/estrella_equipo.png";
     private const string MarcoPath = "Assets/Art/UI/Grimorio/marco_icono.png";
+    private const string MaterialRetratoVivoPath = "Assets/Art/UI/Retratos/Grupo/RetratoDelGrupo.mat";
     private const string FuenteGruesaPath = "Assets/Plugins/Fonts/Nunito-ExtraBold SDF.asset";
     private const string FuentePath = "Assets/Plugins/Fonts/Nunito-Bold SDF.asset";
 
     // Medidas del panel (lienzo de referencia 1920×1080), las de la maqueta.
     private const float AnchoPanel = 660f;
     private const float PrimeraFila = 192f;
-    private const float PasoDeFila = 94f;
+    private const float AltoDeFila = 94f;
     private const float AnchoFila = 580f;
 
     private static readonly Color Tinta = new Color32(0xF4, 0xF0, 0xFF, 0xFF);
@@ -41,10 +43,11 @@ public static class InformeDeVictoriaBuilder
     private static readonly Color Lila = new Color32(0xCB, 0xB9, 0xFF, 0xFF);
     private static readonly Color FondoCirculo = new Color32(0x1D, 0x18, 0x38, 0xFF);
     private static readonly Color TextoPastilla = new Color32(0x3A, 0x24, 0x08, 0xFF);
+    private static readonly Color Oro = new Color32(0xFF, 0xD9, 0x8A, 0xFF);
 
     private static TMP_FontAsset _gruesa, _normal;
 
-    [MenuItem("El Sendero/UI/Crear o regenerar el informe de victoria (INC-543)")]
+    [MenuItem("El Sendero/UI/Crear o regenerar el informe de victoria")]
     public static void Montar()
     {
         var log = new StringBuilder("=== Informe de victoria (INC-543) ===\n");
@@ -76,7 +79,7 @@ public static class InformeDeVictoriaBuilder
             Debug.LogWarning(log.ToString());
         }
         EditorUtility.DisplayDialog("Informe de victoria", avisos.Count == 0
-            ? "Listo. Gana una batalla con premio (el Demonio 1) para verlo."
+            ? "Listo. Gana una batalla (el Demonio 1) para verlo."
             : "Hecho con avisos; mira la consola.", "OK");
     }
 
@@ -170,10 +173,14 @@ public static class InformeDeVictoriaBuilder
         var retrato = Imagen("Retrato", medallon, null, Color.white);
         retrato.rectTransform.sizeDelta = new Vector2(152f, 152f);
         retrato.preserveAspect = true;
+        var materialVivo = AssetDatabase.LoadAssetAtPath<Material>(MaterialRetratoVivoPath);
+        if (materialVivo == null) avisos.Add("No encuentro " + MaterialRetratoVivoPath + " (los retratos vivos saldrían con fondo negro).");
+        var retratoVivo = RetratoVivo(medallon, 148f, 176f, -10f, materialVivo, avisos);
         Imagen("Aro", medallon, Cargar(AroPath, avisos), Color.white).rectTransform.sizeDelta = new Vector2(196f, 196f);
 
         // Compañeros de la foto, en pequeño junto al medallón.
         var companeros = new Image[2];
+        var companerosVivos = new RawImage[2];
         for (int i = 0; i < 2; i++)
         {
             var mini = Vacio("Companero" + (i + 1), panelRt, new Vector2(93f + 63f * i, -79f), new Vector2(60f, 60f), new Vector2(0.5f, 0.5f));
@@ -181,6 +188,7 @@ public static class InformeDeVictoriaBuilder
             companeros[i] = Imagen("Retrato", mini, null, Color.white);
             companeros[i].rectTransform.sizeDelta = new Vector2(54f, 54f);
             companeros[i].preserveAspect = true;
+            companerosVivos[i] = RetratoVivo(mini, 54f, 64f, -4f, materialVivo, avisos);
             Imagen("Aro", mini, Cargar(Arte + "aro_fino.png", avisos), PaletaUI.Lavanda).rectTransform.sizeDelta = new Vector2(60f, 60f);
         }
 
@@ -195,43 +203,37 @@ public static class InformeDeVictoriaBuilder
         Imagen("Chispa1", panelRt, estrella, dorada, pos: new Vector2(196f, -28f), tam: new Vector2(30f, 30f), anclaArribaIzq: true);
         Imagen("Chispa2", panelRt, estrella, dorada, pos: new Vector2(560f, -58f), tam: new Vector2(24f, 24f), anclaArribaIzq: true);
 
-        var sepEstadisticas = Separador("SeparadorEstadisticas", panelRt, -162f, avisos);
+        var sepProgreso = Separador("SeparadorProgreso", panelRt, -162f, avisos);
 
-        // Filas de estadísticas.
-        var tipos = new[] { TipoDeEstadistica.Vida, TipoDeEstadistica.Magia, TipoDeEstadistica.Ataque, TipoDeEstadistica.Defensa };
-        var iconos = new[] { "icono_vida.png", "icono_magia.png", "icono_ataque.png", "icono_defensa.png" };
-        var rellenos = new[] { BarraVidaPath, BarraMagiaPath, BarraVidaPath, BarraMagiaPath };
-        var colores = new[] { Color.white, Color.white, new Color(1f, 0.55f, 0.58f, 1f), new Color(0.82f, 0.68f, 1f, 1f) };
-        var techos = new[] { 200f, 120f, 20f, 15f };
-        var filas = new List<(RectTransform raiz, TMP_Text nombre, TMP_Text valores, Image baseImg, Image gana, RectTransform pastilla, TMP_Text textoPastilla)>();
-        for (int i = 0; i < tipos.Length; i++)
-        {
-            var fila = Vacio("Fila" + tipos[i], panelRt, new Vector2(40f, -(PrimeraFila + i * PasoDeFila)), new Vector2(AnchoFila, 84f), new Vector2(0f, 1f));
-            Imagen("FondoIcono", fila, Cargar(Arte + "circulo.png", avisos), FondoCirculo, pos: new Vector2(23f, -42f), tam: new Vector2(46f, 46f), anclaArribaIzq: true);
-            Imagen("AroIcono", fila, Cargar(Arte + "aro_fino.png", avisos), new Color(PaletaUI.Lavanda.r, PaletaUI.Lavanda.g, PaletaUI.Lavanda.b, 0.8f), pos: new Vector2(23f, -42f), tam: new Vector2(46f, 46f), anclaArribaIzq: true);
-            Imagen("Icono", fila, Cargar(Arte + iconos[i], avisos), Color.white, pos: new Vector2(23f, -42f), tam: new Vector2(34f, 34f), anclaArribaIzq: true);
+        // Fila de Sintonía Estelar: estrella, nombre, «actual / umbral», barra, pastilla «+N» y aviso de hito.
+        var fila = Vacio("FilaSintonia", panelRt, new Vector2(40f, -PrimeraFila), new Vector2(AnchoFila, 84f), new Vector2(0f, 1f));
+        Imagen("FondoIcono", fila, Cargar(Arte + "circulo.png", avisos), FondoCirculo, pos: new Vector2(23f, -42f), tam: new Vector2(46f, 46f), anclaArribaIzq: true);
+        Imagen("AroIcono", fila, Cargar(Arte + "aro_fino.png", avisos), new Color(PaletaUI.Lavanda.r, PaletaUI.Lavanda.g, PaletaUI.Lavanda.b, 0.8f), pos: new Vector2(23f, -42f), tam: new Vector2(46f, 46f), anclaArribaIzq: true);
+        Imagen("Icono", fila, Cargar(EstrellaPath, avisos), Oro, pos: new Vector2(23f, -42f), tam: new Vector2(32f, 32f), anclaArribaIzq: true);
 
-            var nombre = Texto("Nombre", fila, _gruesa, 27f, Tinta, TextAlignmentOptions.Left, new Vector2(60f, -2f), new Vector2(240f, 36f), new Vector2(0f, 1f));
-            var valores = Texto("Valores", fila, _gruesa, 27f, Tinta, TextAlignmentOptions.Right, new Vector2(0f, -2f), new Vector2(280f, 36f), new Vector2(1f, 1f), ancla: new Vector2(1f, 1f));
+        var nombreSintonia = Texto("Nombre", fila, _gruesa, 27f, Tinta, TextAlignmentOptions.Left, new Vector2(60f, -2f), new Vector2(300f, 36f), new Vector2(0f, 1f));
+        nombreSintonia.text = "Sintonía Estelar";
+        var valores = Texto("Valores", fila, _gruesa, 27f, Tinta, TextAlignmentOptions.Right, new Vector2(0f, -2f), new Vector2(220f, 36f), new Vector2(1f, 1f), ancla: new Vector2(1f, 1f));
 
-            var barra = Imagen("Barra", fila, Cargar(BarraFondoPath, avisos), Color.white, Image.Type.Sliced, new Vector2(60f, -50f), new Vector2(AnchoFila - 60f - 96f, 22f), anclaArribaIzq: true, pivote: new Vector2(0f, 1f));
-            var relleno = Cargar(rellenos[i], avisos);
-            var gana = Relleno("Ganado", barra.rectTransform, relleno, Color.Lerp(colores[i], Color.white, 0.55f));
-            var baseImg = Relleno("Antes", barra.rectTransform, relleno, colores[i]);
+        var barra = Imagen("Barra", fila, Cargar(BarraFondoPath, avisos), Color.white, Image.Type.Sliced, new Vector2(60f, -50f), new Vector2(AnchoFila - 60f - 96f, 22f), anclaArribaIzq: true, pivote: new Vector2(0f, 1f));
+        var relleno = Cargar(BarraMagiaPath, avisos);
+        var colorSintonia = new Color(0.82f, 0.68f, 1f, 1f);
+        var gana = Relleno("Ganado", barra.rectTransform, relleno, Color.Lerp(Oro, Color.white, 0.25f));
+        var baseImg = Relleno("Antes", barra.rectTransform, relleno, colorSintonia);
 
-            var pastilla = Imagen("Pastilla", fila, Cargar(Arte + "pastilla_oro.png", avisos), Color.white, Image.Type.Sliced, new Vector2(-40f, -61f), new Vector2(78f, 34f), ancla: new Vector2(1f, 1f));
-            var brillo = pastilla.gameObject.AddComponent<Shadow>();
-            brillo.effectColor = new Color(1f, 0.82f, 0.48f, 0.45f);
-            brillo.effectDistance = new Vector2(0f, -2f);
-            var textoPastilla = Texto("Texto", pastilla.rectTransform, _gruesa, 22f, TextoPastilla, TextAlignmentOptions.Center, Vector2.zero, Vector2.zero);
-            Estirar(textoPastilla.rectTransform);
-            textoPastilla.text = "+10";
+        var pastilla = Imagen("Pastilla", fila, Cargar(Arte + "pastilla_oro.png", avisos), Color.white, Image.Type.Sliced, new Vector2(-40f, -61f), new Vector2(84f, 34f), ancla: new Vector2(1f, 1f));
+        var brillo = pastilla.gameObject.AddComponent<Shadow>();
+        brillo.effectColor = new Color(1f, 0.82f, 0.48f, 0.45f);
+        brillo.effectDistance = new Vector2(0f, -2f);
+        var textoPastilla = Texto("Texto", pastilla.rectTransform, _gruesa, 22f, TextoPastilla, TextAlignmentOptions.Center, Vector2.zero, Vector2.zero);
+        Estirar(textoPastilla.rectTransform);
+        textoPastilla.text = "+100";
 
-            filas.Add((fila, nombre, valores, baseImg, gana, pastilla.rectTransform, textoPastilla));
-        }
+        var aviso = Texto("Aviso", fila, _gruesa, 21f, Oro, TextAlignmentOptions.Left, new Vector2(60f, -96f), new Vector2(AnchoFila - 60f, 30f), new Vector2(0f, 0.5f));
+        aviso.text = "¡Sintonía completa! Elige más Vida o más Magia en Equipo";
 
         // Botín: separador y hasta cuatro huecos con el marco dorado.
-        var botin = Vacio("Botin", panelRt, new Vector2(0f, -(PrimeraFila + 4 * PasoDeFila)), new Vector2(AnchoPanel, 200f), new Vector2(0f, 1f));
+        var botin = Vacio("Botin", panelRt, new Vector2(0f, -(PrimeraFila + AltoDeFila)), new Vector2(AnchoPanel, 200f), new Vector2(0f, 1f));
         var sepBotin = Separador("SeparadorBotin", botin, -18f, avisos);
         var huecos = new List<(RectTransform raiz, Image icono, TMP_Text cantidad, TMP_Text nombre)>();
         for (int i = 0; i < 4; i++)
@@ -259,27 +261,25 @@ public static class InformeDeVictoriaBuilder
         so.FindProperty("panel").objectReferenceValue = panelRt;
         so.FindProperty("titulo").objectReferenceValue = titulo;
         so.FindProperty("subtitulo").objectReferenceValue = subtitulo;
-        so.FindProperty("separadorEstadisticas").objectReferenceValue = sepEstadisticas;
+        so.FindProperty("separadorProgreso").objectReferenceValue = sepProgreso;
         so.FindProperty("retrato").objectReferenceValue = retrato;
+        so.FindProperty("retratoVivo").objectReferenceValue = retratoVivo;
         var pComp = so.FindProperty("companeros");
         pComp.arraySize = companeros.Length;
         for (int i = 0; i < companeros.Length; i++) pComp.GetArrayElementAtIndex(i).objectReferenceValue = companeros[i];
+        var pCompVivos = so.FindProperty("companerosVivos");
+        pCompVivos.arraySize = companerosVivos.Length;
+        for (int i = 0; i < companerosVivos.Length; i++) pCompVivos.GetArrayElementAtIndex(i).objectReferenceValue = companerosVivos[i];
 
-        var pFilas = so.FindProperty("filas");
-        pFilas.arraySize = filas.Count;
-        for (int i = 0; i < filas.Count; i++)
-        {
-            var e = pFilas.GetArrayElementAtIndex(i);
-            e.FindPropertyRelative("tipo").enumValueIndex = (int)tipos[i];
-            e.FindPropertyRelative("raiz").objectReferenceValue = filas[i].raiz;
-            e.FindPropertyRelative("nombre").objectReferenceValue = filas[i].nombre;
-            e.FindPropertyRelative("valores").objectReferenceValue = filas[i].valores;
-            e.FindPropertyRelative("barraBase").objectReferenceValue = filas[i].baseImg;
-            e.FindPropertyRelative("barraGanada").objectReferenceValue = filas[i].gana;
-            e.FindPropertyRelative("pastilla").objectReferenceValue = filas[i].pastilla;
-            e.FindPropertyRelative("textoPastilla").objectReferenceValue = filas[i].textoPastilla;
-            e.FindPropertyRelative("techo").floatValue = techos[i];
-        }
+        var pSintonia = so.FindProperty("sintonia");
+        pSintonia.FindPropertyRelative("raiz").objectReferenceValue = fila;
+        pSintonia.FindPropertyRelative("nombre").objectReferenceValue = nombreSintonia;
+        pSintonia.FindPropertyRelative("valores").objectReferenceValue = valores;
+        pSintonia.FindPropertyRelative("barraBase").objectReferenceValue = baseImg;
+        pSintonia.FindPropertyRelative("barraGanada").objectReferenceValue = gana;
+        pSintonia.FindPropertyRelative("pastilla").objectReferenceValue = pastilla.rectTransform;
+        pSintonia.FindPropertyRelative("textoPastilla").objectReferenceValue = textoPastilla;
+        pSintonia.FindPropertyRelative("aviso").objectReferenceValue = aviso;
 
         so.FindProperty("bloqueBotin").objectReferenceValue = botin;
         so.FindProperty("separadorBotin").objectReferenceValue = sepBotin;
@@ -295,7 +295,7 @@ public static class InformeDeVictoriaBuilder
         }
         so.FindProperty("continuar").objectReferenceValue = continuar;
         so.FindProperty("primeraFila").floatValue = PrimeraFila;
-        so.FindProperty("pasoDeFila").floatValue = PasoDeFila;
+        so.FindProperty("altoDeFila").floatValue = AltoDeFila;
         so.ApplyModifiedPropertiesWithoutUndo();
 
         return raiz;
@@ -314,6 +314,26 @@ public static class InformeDeVictoriaBuilder
         t.fontStyle = FontStyles.UpperCase;
         t.characterSpacing = 14f;
         return t;
+    }
+
+    /// Retrato vivo recortado en círculo: máscara redonda de 'diametro' y, dentro, la imagen del
+    /// estudio algo mayor y bajada para que el corte del busto quede fuera del círculo.
+    private static RawImage RetratoVivo(RectTransform padre, float diametro, float lado, float bajada, Material material, List<string> avisos)
+    {
+        var mascara = Imagen("Mascara", padre, Cargar(Arte + "circulo.png", avisos), Color.white);
+        mascara.rectTransform.sizeDelta = new Vector2(diametro, diametro);
+        mascara.gameObject.AddComponent<Mask>().showMaskGraphic = false;
+        var go = new GameObject("RetratoVivo", typeof(RectTransform), typeof(CanvasRenderer), typeof(RawImage));
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(mascara.rectTransform, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(lado, lado);
+        rt.anchoredPosition = new Vector2(0f, bajada);
+        var raw = go.GetComponent<RawImage>();
+        raw.material = material;
+        raw.raycastTarget = false;
+        raw.enabled = false;
+        return raw;
     }
 
     private static Image Relleno(string nombre, RectTransform barra, Sprite sprite, Color color)

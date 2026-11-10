@@ -701,7 +701,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
     /// para que se lean como una guía estable y no compitan visualmente con las estrellas).</summary>
     void ApplyAlpha(float alpha)
     {
-        alpha *= 1f - (dayNightCycle != null ? dayNightCycle.Nublado : 0f);
+        alpha *= dayNightCycle != null ? dayNightCycle.VisibilidadDeLasEstrellas : 1f;
         float time = Time.time;
         for (int i = 0; i < _starRenderers.Count; i++)
         {

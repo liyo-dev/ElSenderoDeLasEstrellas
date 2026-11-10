@@ -23,7 +23,7 @@ public class ActivoEnTramo : MonoBehaviour
 
     private void OnEnable()
     {
-        DefaultNarrativeSignals.HistoryChanged += Revisar;
+        DefaultNarrativeSignals.OnStateChanged += Revisar;
         DefaultNarrativeSignals.OnAfterReset += Revisar;
         GameBootService.OnProfileReady += Revisar;
         _hayEstado = false;
@@ -32,7 +32,7 @@ public class ActivoEnTramo : MonoBehaviour
 
     private void OnDisable()
     {
-        DefaultNarrativeSignals.HistoryChanged -= Revisar;
+        DefaultNarrativeSignals.OnStateChanged -= Revisar;
         DefaultNarrativeSignals.OnAfterReset -= Revisar;
         GameBootService.OnProfileReady -= Revisar;
     }

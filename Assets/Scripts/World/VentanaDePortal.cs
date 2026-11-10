@@ -5,7 +5,8 @@ using UnityEngine;
 /// La ventana de un portal (shader «El Sendero/Ventana de portal» con vista panorámica): por el óvalo
 /// se ve el otro mundo con perspectiva, como por un hueco. Gira la panorámica para que mirar a través
 /// de la ventana sea mirar, allí, hacia donde se queda mirando quien cruza. Al encenderse durante el
-/// juego se abre desde un punto de luz; al cargar la escena (y en el Editor) aparece ya abierta.
+/// juego se abre desde un punto de luz; al cargar la escena (y en el Editor) aparece ya abierta. Con
+/// <see cref="seCierraTrasCruzarlo"/>, se cierra en cuanto ese personaje la atraviesa.
 /// </summary>
 [ExecuteAlways]
 [RequireComponent(typeof(MeshRenderer))]
@@ -27,9 +28,16 @@ public class VentanaDePortal : MonoBehaviour
     [Tooltip("Segundos desde que carga la escena durante los que la ventana aparece ya abierta, sin animación.")]
     [SerializeField] private float margenAlCargar = 1.5f;
 
+    [Tooltip("Quien cruza el portal: en cuanto pasa al otro lado de la ventana, el portal se cierra. Vacío = no se cierra solo.")]
+    [SerializeField] private Transform seCierraTrasCruzarlo;
+
+    [Tooltip("Segundos que tarda en cerrarse.")]
+    [SerializeField] private float segundosDeCierre = 1.2f;
+
     private MeshRenderer _renderer;
     private MaterialPropertyBlock _bloque;
     private Coroutine _apertura;
+    private Coroutine _cierre;
     private float _intensidadDeLaLuz;
 
     private void Awake()
@@ -48,6 +56,30 @@ public class VentanaDePortal : MonoBehaviour
     private void OnDisable()
     {
         if (_apertura != null) { StopCoroutine(_apertura); _apertura = null; }
+        if (_cierre != null) { StopCoroutine(_cierre); _cierre = null; }
+    }
+
+    private void Update()
+    {
+        if (!Application.isPlaying || seCierraTrasCruzarlo == null || _cierre != null) return;
+        if (Vector3.Dot(seCierraTrasCruzarlo.position - transform.position, transform.forward) <= 0f) return;
+        if (_apertura != null) { StopCoroutine(_apertura); _apertura = null; }
+        _cierre = StartCoroutine(Cerrar());
+    }
+
+    /// Se encoge hasta un punto de luz y se apaga.
+    private IEnumerator Cerrar()
+    {
+        float duracion = Mathf.Max(0.05f, segundosDeCierre);
+        for (float t = 0f; t < duracion; t += Time.deltaTime)
+        {
+            float k = t / duracion;
+            Fijar(1f - Mathf.SmoothStep(0f, 1f, k), Mathf.Sin(k * Mathf.PI) * 0.8f);
+            yield return null;
+        }
+        Fijar(0f, 0f);
+        _cierre = null;
+        gameObject.SetActive(false);
     }
 
     /// Nace como un punto de luz que se ensancha con un pequeño rebote; el destello se apaga a la vez.

@@ -55,6 +55,7 @@ Opening01_Begin
 Opening01_Loop
 Opening01_Stop
 Derribo_Vuelo
+BrazosCruzados
 LandLow
 JumpMove
 Jump
@@ -113,6 +114,7 @@ Laugh01_Loop
 Cry01_Loop
 ApretonDeManos_A
 ClimaTaparse
+ClimaFrio
 MagicLeft
 MagicRight
 MagicSpecial
@@ -185,6 +187,7 @@ Knockdown01_StandUp
 Opening01_Begin
 Opening01_Loop
 Opening01_Stop
+BrazosCruzados
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -235,6 +238,7 @@ Laugh01_Loop
 Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
+ClimaFrio
 MagicLeft
 MagicRight
 MagicSpecial
@@ -303,6 +307,7 @@ Knockdown01_StandUp
 Opening01_Begin
 Opening01_Loop
 Opening01_Stop
+BrazosCruzados
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -353,6 +358,7 @@ Laugh01_Loop
 Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
+ClimaFrio
 MagicLeft
 MagicRight
 MagicSpecial
@@ -421,6 +427,7 @@ Knockdown01_StandUp
 Opening01_Begin
 Opening01_Loop
 Opening01_Stop
+BrazosCruzados
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -471,6 +478,7 @@ Laugh01_Loop
 Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
+ClimaFrio
 MagicLeft
 MagicRight
 MagicSpecial

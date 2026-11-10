@@ -110,7 +110,8 @@ public class PlayerShieldController : MonoBehaviour
         AmenazasAlJugador.SegundosHastaAlcanzar(amenaza, CentroDeAtrapado, parryRadius, margenLateral);
 
     /// <summary>Segundos que dura la ventana de contraataque tras pulsar B.</summary>
-    public float VentanaDeContraataque => parryWindow;
+    public float VentanaDeContraataque => parryWindow
+        + (RasgosDePrenda.AlMandoLleva(RasgoDePrenda.ContraataqueMasAmplio) ? RasgosDePrenda.VentanaExtraDeContraataque : 0f);
 
     /// <summary>La ventana de contraataque está abierta.</summary>
     public bool IsParryWindowOpen => Time.time < _parryUntil;
@@ -245,7 +246,7 @@ public class PlayerShieldController : MonoBehaviour
     {
         if (Time.time < _parryCooldownUntil) return;
         if (_playerActionManager != null && !_playerActionManager.AllowShield) return;
-        _parryUntil = Time.time + parryWindow;
+        _parryUntil = Time.time + VentanaDeContraataque;
         _parryOpen = true;
         _parried = false;
         _pulsadoEn = Time.time;

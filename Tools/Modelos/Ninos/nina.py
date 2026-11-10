@@ -34,7 +34,8 @@ for v in pelo.data.vertices:
     if abs(v.co.x) > 0.18 and v.co.y > 0.12 and v.co.z < 0.8:                                    # coletas más grandes
         v.co = NUDO[s] + (v.co - NUDO[s]) * 1.2
 for s in (1, -1):
-    lazo("pelo", f"Lazo{'L' if s > 0 else 'R'}", NUDO[s] + Vector((0.05 * s, -0.02, 0.025)), "Lazo", tam=1.7, girar=math.radians(-55 * s))
+    lazo("pelo", f"Lazo{'L' if s > 0 else 'R'}", NUDO[s] + Vector((0.05 * s, -0.02, 0.025)), "Lazo", tam=1.7, girar=math.radians(-55 * s),
+         pesos={"head": 1.0})   # Ver INC-975
 
 # ── Ropa (medidas del adulto) ──
 toro("traje", "Cuello", (0, -0.012, 0.727), 0.152, 0.02, "Blusa", None, escala=(1, 0.92, 1))
@@ -68,9 +69,37 @@ for lado, s in (("l", 1), ("r", -1)):
 pesar(GRUPOS["pelo"], arm, cuerpo); pesar(GRUPOS["traje"], arm, cuerpo)
 recortar_cuerpo(cuerpo, lambda p: p.z < 0.44 or (0.19 < abs(p.x) < 0.445 and p.z > 0.55))
 print("PELO SACADO DE LA CARA", sacar_de_la_cara(GRUPOS["pelo"], cabeza))
+print("FLEQUILLO PEGADO", pegar_flequillo(GRUPOS["pelo"], cabeza))   # INC-934: de perfil se veía hueco
 unir(GRUPOS["pelo"], "Hair18_Coletas")
 cuerpo.name = "Body25_Vestido"
 unir(GRUPOS["traje"], "Body25_Vestido", extra=cuerpo)
 cuerpo_nino.reproporcionar(arm, "pequeno"); arm["talla"] = "pequeno"
+
+# ── Coletas más cortas y abiertas (INC-975): con la talla puesta colgaban hasta la cintura y se metían
+# en los hombros y los brazos. Por debajo del nudo se acortan al 58 % y se abren hacia fuera y atrás.
+pelo = bpy.data.objects["Hair18_Coletas"]; mw = pelo.matrix_world; mi = mw.inverted()
+nudo = {}
+for s in (1, -1):
+    pts = [mw @ v.co for v in pelo.data.vertices if (mw @ v.co).x * s > 0.17 and 0.50 < (mw @ v.co).z < 0.56]
+    nudo[s] = sum(pts, Vector()) / len(pts)
+for v in pelo.data.vertices:
+    p = mw @ v.co; s = 1 if p.x > 0 else -1
+    if abs(p.x) < 0.17 or p.z >= 0.53: continue
+    t = nudo[s].z - p.z
+    q = Vector((p.x + s * 0.07 * min(1.0, t / 0.3), p.y + 0.03 * min(1.0, t / 0.3), nudo[s].z - t * 0.58))
+    v.co = mi @ q
+# Los lazos, sobre el eje de la coleta ya abierta (se quedaban delante, INC-975).
+lazo_i = {i for p in pelo.data.polygons if pelo.data.materials[p.material_index].name == "Lazo" for i in p.vertices}
+for i in lazo_i:
+    v = pelo.data.vertices[i]; p = mw @ v.co; s = 1 if p.x > 0 else -1
+    v.co = mi @ (p + Vector((0.015 * s, 0.04, -0.01)))
+# Las manos del pack traen guante: color de piel (INC-975).
+nombres = {g.index: g.name for g in cuerpo.vertex_groups}
+mats = [m.name for m in cuerpo.data.materials]
+for p in cuerpo.data.polygons:
+    v = cuerpo.data.vertices[p.vertices[0]]
+    if mats[p.material_index] == "lambert1" and v.groups and nombres[max(v.groups, key=lambda g: g.weight).group].startswith(
+            ("hand", "index", "thumb", "middle", "ring", "pinky", "lowerarm")):
+        p.material_index = mats.index("Piel")
 bpy.ops.wm.save_as_mainfile(filepath=args[2])
 print("NINA", [(o.name, len(o.data.vertices)) for o in bpy.data.objects if o.type == 'MESH'])

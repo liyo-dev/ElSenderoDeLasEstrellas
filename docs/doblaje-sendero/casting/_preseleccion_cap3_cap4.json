@@ -1,0 +1,230 @@
+{
+ "Sargento": [
+  {
+   "muestra": "01 Pedro Alvera - Spanish Narrator (muestra).mp3",
+   "nombre": "Pedro Alvera - Spanish Narrator",
+   "acento": "peninsular",
+   "edad": "middle_aged",
+   "descripcion": "A warm, approachable, and credible voice in Peninsular Spanish. I tell stories naturally and explain ideas with clarity. Ideal for documentaries, educational co",
+   "voice_id": "Zn20oa3A71BRv09u2T0m",
+   "public_owner_id": "a5ec876608d0be60b1a550a9185ee0062b171f5dbbda25cf3b4e2ebf3ca4a4aa",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/761ed37eb7ee48ecaf396f3943d51ec3/voices/Zn20oa3A71BRv09u2T0m/QUNwZmoLmtzzOWqf2U5T.mp3"
+  },
+  {
+   "muestra": "02 Lucas - Clear, Conversational (muestra).mp3",
+   "nombre": "Lucas - Clear, Conversational",
+   "acento": "peninsular",
+   "edad": "middle_aged",
+   "descripcion": "A warm, natural, and versatile male voice with authentic Castilian Spanish pronunciation. Clear articulation, smooth delivery, and a friendly, confident tone.  ",
+   "voice_id": "HvGHhLAx7UNxYofHDPRW",
+   "public_owner_id": "c32c679b31d74b3fe54dedf3ecf7f40642ea79488143527ccf1cbf798e71d215",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/7371a360367644c897dffd231c0dd40d/voices/HvGHhLAx7UNxYofHDPRW/213be7b4-19cd-4487-9711-448bb53b7ad3.mp3"
+  },
+  {
+   "muestra": "03 Álvaro Sereno - Warm, Deep (muestra).mp3",
+   "nombre": "Álvaro Sereno - Warm, Deep",
+   "acento": "peninsular",
+   "edad": "middle_aged",
+   "descripcion": "A mature adult male voice speaking European Spanish with a clear Castilian accent and distinct “s” and “c/z” pronunciation. A warm, rounded, medium-low baritone",
+   "voice_id": "Fm7BveXW2pOo1gtPxYfM",
+   "public_owner_id": "3fed23e2fdc485f8243cc280612c66712fc499fd2ae3db3f3250306c165b1bb5",
+   "preview_url": "https://api.us.elevenlabs.io/v1/voices/Fm7BveXW2pOo1gtPxYfM/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3OGI1ZjUzYzcwZTI0M2NmYmNlYzFkODVjOWRkMzUwMyIsImZpbGVuYW1lIjoiNjMyN2VlNGItYzI4Zi00YzE0LWFhZmUtMWZjMzc4OTg3Y2IyLm1wMyIsInRpbWVzdGFtcCI6MTc5NDI5NDAwMDAwMDAwMH0%3D"
+  },
+  {
+   "muestra": "04 Julián - Calm & warm narrator (muestra).mp3",
+   "nombre": "Julián - Calm & warm narrator",
+   "acento": "peninsular",
+   "edad": "middle_aged",
+   "descripcion": "A mature male voice with a Peninsular Spanish accent—warm, unhurried, and approachable. Ideal for audiobooks, meditations, documentaries, philosophy, spirituali",
+   "voice_id": "VDqN2mmmJ4ajf7i2loiF",
+   "public_owner_id": "315102d4993d4d2ecbc65057463d658e209e679d0abf77b4c4b6ab570626024d",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/755b25bbf57d4b238a8cf951a307e42b/voices/VDqN2mmmJ4ajf7i2loiF/44133da9-5c3b-49f2-8fa3-acb27ce8bf10.mp3"
+  },
+  {
+   "muestra": "05 Pepe Pérez - Castilian Spanish (muestra).mp3",
+   "nombre": "Pepe Pérez - Castilian Spanish",
+   "acento": "peninsular",
+   "edad": "middle_aged",
+   "descripcion": "Natural and Pretty Voice for Narrations, Audiobooks, Docus and similar projects.",
+   "voice_id": "wE08CsISVmQQZBTsMI7Q",
+   "public_owner_id": "2d9aabbea9db815eeddcd3a33ae6662a3dc75698f2b7898fb88fede6244c2fed",
+   "preview_url": "https://api.us.elevenlabs.io/v1/voices/wE08CsISVmQQZBTsMI7Q/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIyM2E3OTNiODFlNTY0YjE1OTA5ZDJhMWY3MDZlMTQzNyIsImZpbGVuYW1lIjoiWDlMTU5xNGJoZlZlSzhhcEV3Q20ubXAzIiwidGltZXN0YW1wIjoxNzk0Mjk0MDAwMDAwMDAwfQ%3D%3D"
+  }
+ ],
+ "Posadero": [
+  {
+   "muestra": "01 Pablo - Upbeat (muestra).mp3",
+   "nombre": "Pablo - Upbeat",
+   "acento": "peninsular",
+   "edad": "old",
+   "descripcion": "Warm, approachable voice of a 55-year-old mature man with plenty of potential to develop. ",
+   "voice_id": "dabBScGPxrhZRE621vIm",
+   "public_owner_id": "fcca4eefe2c48c002fdecc69df614da1a9bb650bb02ed5cb71f898282d6ee8bd",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/664732cbe03e4144be4e07947f5762bf/voices/dabBScGPxrhZRE621vIm/f5e97b01-f477-43c4-8a75-64d25ba53b5f.mp3"
+  },
+  {
+   "muestra": "02 Julio (muestra).mp3",
+   "nombre": "Julio",
+   "acento": "peninsular",
+   "edad": "old",
+   "descripcion": "Mature male voice. Deep, clear, and with perfect diction. Speaking Peninsular Spanish. ",
+   "voice_id": "7qXldmK3yFlWBHejdkpP",
+   "public_owner_id": "ea5c04d5ee51c42a6564abd230946b5501439d4c3cb2b1cf4cad4bd9dc01cdeb",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/834bcb1474cc42969edc03951586ecf3/voices/7qXldmK3yFlWBHejdkpP/39b62952-9fcd-4b74-acc8-2273d0be9232.mp3"
+  },
+  {
+   "muestra": "03 Gork - Terrifying & Dark Creature (muestra).mp3",
+   "nombre": "Gork - Terrifying & Dark Creature",
+   "acento": "peninsular",
+   "edad": "old",
+   "descripcion": "Deep, dark, raspy, monstrous voice with wet growls, distorted breathing, and a terrifying tone. Sounds ancient, and barely human, with an unsettling mix of rage",
+   "voice_id": "PRfCKe8kdrG3nuXOAnoH",
+   "public_owner_id": "ef6104b140d4c80a3861ec345dc1a8c20a57f3ffada323886c61a973b3e5d9f7",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/337c24eedbff44069b5ad67bd5ab119d/voices/PRfCKe8kdrG3nuXOAnoH/LmnfBjHgHiKWg4WX1cf9.mp3"
+  },
+  {
+   "muestra": "04 Luis - Polished, Mature and Credible (muestra).mp3",
+   "nombre": "Luis - Polished, Mature and Credible",
+   "acento": "peninsular",
+   "edad": "old",
+   "descripcion": "Warm, semi-deep voice with authenticity and depth. At 62, I deliver credibility and humanity, with the versatility to sound friendly and engaging or strong and ",
+   "voice_id": "GojDwihhnL1f7RrBuXsJ",
+   "public_owner_id": "0accd5cfaaabc376ff2d1b8b731e572ff3e79be12691759ade3348ae0ffb7e9c",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/8f832f68794e4e7cb6cdb17339b25e9c/voices/GojDwihhnL1f7RrBuXsJ/4QJcYrdP20KGernlza4s.mp3"
+  },
+  {
+   "muestra": "05 Rafael - Expressive and Theatrical (muestra).mp3",
+   "nombre": "Rafael - Expressive and Theatrical",
+   "acento": "peninsular",
+   "edad": "old",
+   "descripcion": "Spanish Mature Storytelling, Expressive and Colourful voice, a bit raspy, ideal for inspiring epic tales and legends.",
+   "voice_id": "orF2qy9215xjwqqxqsWW",
+   "public_owner_id": "3fa50c02b2a258918cc661fdf2c741830fcffdbef10297caedb757166d9fff5c",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/70aeebf22b3d4b519e6b9d205612971d/voices/orF2qy9215xjwqqxqsWW/Ebnx2lg8i00UFK1bDKXe.mp3"
+  },
+  {
+   "muestra": "06 Parasyte - Dweller in the Deep-Dark (muestra).mp3",
+   "nombre": "Parasyte - Dweller in the Deep-Dark",
+   "acento": "british",
+   "edad": "old",
+   "descripcion": "Voice from deep-place, all wet-ragged and broken-wrong. Sometimes whisper-thin like spider silk, sometimes SHRIEK-loud like rusted metal. Vocal cords do things ",
+   "voice_id": "k1fCGnhRbXzd6bzwlD2B",
+   "public_owner_id": "e21da34db31d58704b7b2776dcf7db1c31b464e5bffd71727d5f1c4abafafa87",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/JkMtMybti7dSnGjkDsVqAkUgccE3/voices/k1fCGnhRbXzd6bzwlD2B/POb51TrJOk40JV2VyXpb.mp3"
+  }
+ ],
+ "Lucia": [
+  {
+   "muestra": "01 Katalina - Storyteller, Social Media (muestra).mp3",
+   "nombre": "Katalina - Storyteller, Social Media",
+   "acento": "latin american",
+   "edad": "young",
+   "descripcion": "A playful, expressive and warm storyteller voice. Perfect for kids content, animation, narration and social media. Bright, friendly and engaging, with a clear a",
+   "voice_id": "w5PKY7huSJMqJYezgUtI",
+   "public_owner_id": "2c115e400e4adb45fcf187b24f8e4fcffce2dedf49bfd587dbd7ca4ab9b35c3f",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/be7095f0832344639eb49eda9298dfb4/voices/w5PKY7huSJMqJYezgUtI/xNUxm9u7scS5OkR1NX5p.mp3"
+  },
+  {
+   "muestra": "02 Kate - Playful Latina Storyteller (muestra).mp3",
+   "nombre": "Kate - Playful Latina Storyteller",
+   "acento": "latin american",
+   "edad": "young",
+   "descripcion": "A playful, expressive and warm Latina storyteller voice. Perfect for kids content, animation, narration and social media. Bright, friendly and engaging, with a ",
+   "voice_id": "U9tZtg3uJtVgXPkvosWR",
+   "public_owner_id": "cf7dcfab33189bf7d48eb2e5e8505b724237d559ce6bfd665ea01e7ba53cb28d",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/eea6d757febd4e59821a7303fc5c6780/voices/U9tZtg3uJtVgXPkvosWR/5tcMuYTevFAxmeyZcV0Q.mp3"
+  },
+  {
+   "muestra": "03 Munni - Animated Kid Character (muestra).mp3",
+   "nombre": "Munni - Animated Kid Character",
+   "acento": "standard",
+   "edad": "young",
+   "descripcion": "Bright, lively, and childlike, capturing the real stumbles and run-on excitement of an actual kid talking, not a polished adult impression. Built for animated s",
+   "voice_id": "VOGEEZj2Kly5dP9LrQy8",
+   "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/VOGEEZj2Kly5dP9LrQy8/ZpEWx63YWxhcmNpYOe4t.mp3"
+  },
+  {
+   "muestra": "04 Gudiya - Innocent Kid Narrator (muestra).mp3",
+   "nombre": "Gudiya - Innocent Kid Narrator",
+   "acento": "indian",
+   "edad": "young",
+   "descripcion": "Cute, bubbly, and full of wonder — Gudiya narrates a story the way a genuinely curious child would, discovering it rather than performing it. Her sweet, natural",
+   "voice_id": "e3FEEanj39p8QCSMe8iV",
+   "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/e3FEEanj39p8QCSMe8iV/va8c2AlxrEdmpXVs0gq0.mp3"
+  },
+  {
+   "muestra": "05 Piku - Expressive Kid Character (muestra).mp3",
+   "nombre": "Piku - Expressive Kid Character",
+   "acento": "indian",
+   "edad": "young",
+   "descripcion": "Innocent, animated, and naturally dramatic — Piku brings childlike energy to every line, reacting with genuine surprise, excitement, or worry depending on the s",
+   "voice_id": "EeQEodFZVtBkjtgK3HBc",
+   "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/EeQEodFZVtBkjtgK3HBc/hMAP6LoA4398mWo70lu0.mp3"
+  }
+ ],
+ "Contrabandistas": [
+  {
+   "muestra": "01 Tom - Calm & Clarity (muestra).mp3",
+   "nombre": "Tom - Calm & Clarity",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "A calm, unhurried narrative voice [in the accent of Spain], recorded for storytelling and documentaries. Features a [warm/deep/clear…] tone, precise diction, an",
+   "voice_id": "B0r3rOF9WOwQ4BBKhRWO",
+   "public_owner_id": "e9cf4169af6da3314ff8f85ef502b0ef1b966bde737d00dd2c7daf6e9d7929f5",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/f407012c8d0045539778d0cae2ae71d6/voices/B0r3rOF9WOwQ4BBKhRWO/468e8d2c-d76b-45c4-8dfe-3189bdbcf40a.mp3"
+  },
+  {
+   "muestra": "02 Elias - Spanish, Natural, Storyteller (muestra).mp3",
+   "nombre": "Elias - Spanish, Natural, Storyteller",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "A natural, clear Mexican Spanish voice with an approachable, confident and professional delivery. Its smooth conversational pacing and clear articulation make i",
+   "voice_id": "rkete3wyUhPTNZKpj30r",
+   "public_owner_id": "16320b000051ba6fd0458e5f23b189e9d513b34434c6776da8c6a6c11f268231",
+   "preview_url": "https://api.us.elevenlabs.io/v1/voices/rkete3wyUhPTNZKpj30r/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJhZWI2ZGE3NDdhNTQ0ZTA1ODMwYzZiMzk1MjZiMWRiYyIsImZpbGVuYW1lIjoiWDdmeFRNNmszdVJ5TzIxVWZmdUoubXAzIiwidGltZXN0YW1wIjoxNzk0Mjk0MDAwMDAwMDAwfQ%3D%3D"
+  },
+  {
+   "muestra": "03 Nil - AI Agent & Customer Service (muestra).mp3",
+   "nombre": "Nil - AI Agent & Customer Service",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "The perfect voice for AI Voice Agents, Customer Service and Sales calls to create natural human-like conversations. Ideal for AI phone agents, customer support,",
+   "voice_id": "xuWkhjhJVDpt7iU0oRDd",
+   "public_owner_id": "46231efdaff48008dd5586316e9049a4bb9d25910df078cf5f0ff47c4b671d4f",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/6688b520ed8e40d18da29713b9c9f44a/voices/xuWkhjhJVDpt7iU0oRDd/Xd1YnNi05MemBhHGO6Ee.mp3"
+  },
+  {
+   "muestra": "04 David - Andalus Accent (muestra).mp3",
+   "nombre": "David - Andalus Accent",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "A male voice in his 30s with a clear, warm, and natural Spanish accent (Spain). Medium-low pitch, smooth and steady pacing, with a conversational and confident ",
+   "voice_id": "LG5CpCuzWTE7pUsAnHo2",
+   "public_owner_id": "12ba516567d7adfc0220a912eb0009859a577a46d511f00a64400eeb1e6991c3",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/fa3584efe17349e8969b5fef580215e4/voices/LG5CpCuzWTE7pUsAnHo2/e4e76af1-ddba-4583-a67d-d9de64e976e7.mp3"
+  },
+  {
+   "muestra": "05 Jota - Dynamic & Powerful storytelling (muestra).mp3",
+   "nombre": "Jota - Dynamic & Powerful storytelling",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "A great voice for your videos. ",
+   "voice_id": "d5UAjYhvzEX3wkRfxPTM",
+   "public_owner_id": "58be3cde655d8350be8564644e276948113b67c7991150a0ba9f7dc2b0168ed3",
+   "preview_url": "https://api.us.elevenlabs.io/v1/voices/d5UAjYhvzEX3wkRfxPTM/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlMDI2MzQ4NDZkNTM0YTU1YTQxNGQ2MDA2ZTk2Y2E0YyIsImZpbGVuYW1lIjoiYjUwM2JmYjUtNjE4MC00ZjlmLWFjZTMtZTkwOTU2NWM5MjQ2Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDI5NDAwMDAwMDAwMH0%3D"
+  },
+  {
+   "muestra": "06 Pablo - Friendly & Explanatory (muestra).mp3",
+   "nombre": "Pablo - Friendly & Explanatory",
+   "acento": "peninsular",
+   "edad": "young",
+   "descripcion": "A friendly, approachable, and explanatory voice of a 24-year-old man. ",
+   "voice_id": "6X3rSPfxjGvtcD9GxQcW",
+   "public_owner_id": "e99b02348f5de9f938557bc3d933295a978298bcb9cde95af0c7102560ece287",
+   "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/e3348114e612416ba16ef8d064afd4fa/voices/6X3rSPfxjGvtcD9GxQcW/ccb7d0d9-bdc2-438d-b820-cd3375c679aa.mp3"
+  }
+ ]
+}

@@ -116,8 +116,17 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
 
     public bool TryPlaceUnseen(string actorId, string markId)
     {
-        var mark = string.IsNullOrWhiteSpace(markId) ? null : SpawnAnchor.FindById(markId);
-        if (mark == null) return true; // Sin marca no hay nada que hacer; no se reintenta.
+        if (string.IsNullOrWhiteSpace(markId)) return true; // Sin marca no hay nada que hacer.
+        // La marca o el actor pueden no estar aún (la agenda empieza antes de cargar el mundo):
+        // se reintenta hasta que estén.
+        var mark = SpawnAnchor.FindById(markId);
+        if (mark == null) return false;
+
+        // Quien sigue al jugador siempre está cerca de él y nunca se le podría mover sin testigos:
+        // deja de seguirle ya y se le lleva a la marca cuando el jugador se aleje.
+        var npc = _retirados.TryGetValue(actorId, out var retirado) && retirado != null ? null : BuscarSinAviso(actorId);
+        if (npc != null) QuedarseEnLaMarca(npc);
+
         if (CercaDelJugador(mark.transform.position)) return false;
 
         if (_retirados.TryGetValue(actorId, out var go) && go != null)
@@ -127,8 +136,7 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         }
         else
         {
-            var npc = BuscarSinAviso(actorId);
-            if (npc == null) return true;
+            if (npc == null) return false;
             if (CercaDelJugador(npc.transform.position)) return false;
         }
         return TryPlace(actorId, markId, false, true);

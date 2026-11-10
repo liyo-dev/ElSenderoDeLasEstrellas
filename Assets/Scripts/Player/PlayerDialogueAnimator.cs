@@ -171,6 +171,17 @@ public class PlayerDialogueAnimator : MonoBehaviour
             animator.CrossFadeInFixedTime(hash, blend, 0, 0f);
     }
 
+    /// Devuelve la capa base a la locomoción sin cortar el gesto que suene en UpperBody: cierra un
+    /// gesto de cuerpo entero sin salida (Dizzy_NoWeapon) en mitad de una escena. Sentado no hace nada.
+    public void CerrarGestoDeCapaBase(float blend = 0.25f)
+    {
+        if (animator == null) return;
+        if (_ambientActivity != null && _ambientActivity.IsSeated) return;
+        int hash = Animator.StringToHash(LocomotionState);
+        if (animator.HasState(0, hash) && animator.GetCurrentAnimatorStateInfo(0).shortNameHash != hash)
+            animator.CrossFadeInFixedTime(hash, blend, 0, 0f);
+    }
+
     /// Deja el cuerpo listo para andar cuando el jugador recupera el control (fin de un diálogo o
     /// de una cinemática). Un gesto o una emoción de la capa base sigue sonando hasta acabar su clip
     /// aunque ya se pueda mover: durante esos segundos el cuerpo se desliza sin animar las piernas.

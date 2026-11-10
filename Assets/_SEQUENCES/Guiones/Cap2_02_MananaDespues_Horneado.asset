@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap2_02_MananaDespues_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap2_02_MananaDespues
-  duracion: 176.05247
+  duracion: 175.78581
   presentacion: 1
-  huella: "2026-10-31 21:25 \xB7 42e583f69a59d16327e6561a65a2efe5"
+  huella: "2026-11-08 13:47 \xB7 38d32c635d4eff1c12a642b8cb697cfe"
   actores:
   - id: Player
     alias: will
@@ -24,85 +24,97 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: 115.7, y: 0, z: 2.62}
-    - t: 31.429422
+    - t: 31.296087
       p: {x: 115.7, y: 0, z: 2.62}
-    - t: 31.776522
+    - t: 31.643187
       p: {x: 115.77, y: 0.000032278673, z: 2.336}
-    - t: 32.040985
+    - t: 31.90765
       p: {x: 115.84, y: 0.000032291086, z: 2.052}
-    - t: 32.295334
+    - t: 32.162
       p: {x: 115.91, y: 0.0000323035, z: 1.768}
-    - t: 32.5598
+    - t: 32.426464
       p: {x: 115.98, y: 0.000032315915, z: 1.484}
-    - t: 32.9069
+    - t: 32.773563
       p: {x: 116.05, y: 0.000032328328, z: 1.2}
-    - t: 33.190224
+    - t: 33.05689
       p: {x: 116.2059, y: 0.000016164164, z: 0.95909905}
-    - t: 33.47355
+    - t: 33.340214
       p: {x: 116.3618, y: 0.000032349388, z: 0.71819806}
-    - t: 33.54855
+    - t: 33.415215
       p: {x: 116.41152, y: 0.09143354, z: 0.6684796}
-    - t: 33.62355
+    - t: 33.490215
       p: {x: 116.520905, y: 0.29251617, z: 0.559099}
-    - t: 33.698547
+    - t: 33.565212
       p: {x: 116.63028, y: 0.4935988, z: 0.44971845}
-    - t: 33.77355
+    - t: 33.640213
       p: {x: 116.68, y: 0.585, z: 0.4}
-    - t: 56.546272
+    - t: 56.412937
       p: {x: 116.68, y: 0.585, z: 0.4}
-    - t: 56.64627
-      p: {x: 116.700195, y: 0.5933789, z: 0.4}
-    - t: 56.746273
-      p: {x: 116.75344, y: 0.61546874, z: 0.4}
-    - t: 56.84627
-      p: {x: 116.82871, y: 0.6466992, z: 0.4}
-    - t: 56.946274
+    - t: 56.512936
+      p: {x: 116.68685, y: 0.5878425, z: 0.4}
+    - t: 56.612938
+      p: {x: 116.70603, y: 0.5958017, z: 0.4}
+    - t: 56.712936
+      p: {x: 116.7355, y: 0.6080248, z: 0.4}
+    - t: 56.81294
+      p: {x: 116.77318, y: 0.6236589, z: 0.4}
+    - t: 56.912937
+      p: {x: 116.817024, y: 0.6418513, z: 0.4}
+    - t: 57.012936
+      p: {x: 116.86498, y: 0.66174924, z: 0.4}
+    - t: 57.112938
       p: {x: 116.915, y: 0.6825, z: 0.4}
-    - t: 57.046272
-      p: {x: 117.00129, y: 0.71830076, z: 0.4}
-    - t: 57.14627
-      p: {x: 117.07656, y: 0.7495312, z: 0.4}
-    - t: 57.246273
-      p: {x: 117.12981, y: 0.77162105, z: 0.4}
-    - t: 57.34627
+    - t: 57.212936
+      p: {x: 116.96502, y: 0.7032507, z: 0.4}
+    - t: 57.31294
+      p: {x: 117.01298, y: 0.72314864, z: 0.4}
+    - t: 57.412937
+      p: {x: 117.05682, y: 0.74134105, z: 0.4}
+    - t: 57.512936
+      p: {x: 117.094505, y: 0.7569752, z: 0.4}
+    - t: 57.612938
+      p: {x: 117.12397, y: 0.76919824, z: 0.4}
+    - t: 57.712936
+      p: {x: 117.14315, y: 0.7771574, z: 0.4}
+    - t: 57.81294
       p: {x: 117.15, y: 0.78, z: 0.4}
-    - t: 85.70179
+    - t: 85.56845
       p: {x: 117.15, y: 0.78, z: 0.4}
-    - t: 85.90179
+    - t: 85.76845
       p: {x: 117.07656, y: 0.7495312, z: 0.4}
-    - t: 86.10179
+    - t: 85.96845
       p: {x: 116.915, y: 0.6825, z: 0.4}
-    - t: 86.30179
+    - t: 86.16845
       p: {x: 116.75344, y: 0.61546874, z: 0.4}
-    - t: 86.50179
+    - t: 86.368454
       p: {x: 116.68, y: 0.585, z: 0.4}
-    - t: 113.31068
+    - t: 113.044
       p: {x: 116.68, y: 0.585, z: 0.4}
-    - t: 113.48568
+    - t: 113.219
       p: {x: 116.63028, y: 0.49359372, z: 0.44971845}
-    - t: 113.660675
+    - t: 113.394
       p: {x: 116.520905, y: 0.2925, z: 0.559099}
-    - t: 113.83568
+    - t: 113.569
       p: {x: 116.41152, y: 0.09140625, z: 0.6684796}
-    - t: 114.01067
+    - t: 113.743996
       p: {x: 116.3618, y: 0, z: 0.71819806}
-    - t: 119.68551
+    - t: 119.41883
       p: {x: 116.3618, y: 0, z: 0.71819806}
-    - t: 119.96503
+    - t: 119.69835
       p: {x: 116.247475, y: 0.000032341664, z: 0.8948588}
-    - t: 120.168106
+    - t: 119.90143
       p: {x: 116.14572, y: 0.000032334603, z: 1.0564021}
-    - t: 120.40559
+    - t: 120.13891
       p: {x: 116.03812, y: 0.00003232451, z: 1.2873528}
-    - t: 120.67056
+    - t: 120.403885
       p: {x: 115.95618, y: 0.000032311687, z: 1.5806636}
-    - t: 120.90327
+    - t: 120.63659
       p: {x: 115.89213, y: 0.00003230033, z: 1.8404976}
-    - t: 121.13975
+    - t: 120.87307
       p: {x: 115.82809, y: 0.000032288972, z: 2.1003318}
-    - t: 121.40706
+    - t: 121.14038
       p: {x: 115.76404, y: 0.000032277614, z: 2.3601658}
-    - t: 121.749115
+    - t: 121.48244
       p: {x: 115.7, y: 0.000032266256, z: 2.62}
     miradas:
     - t: 0
@@ -125,97 +137,97 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 7.3313785
+    - t: 7.198045
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 12.261869
+    - t: 12.128535
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 15.95187
+    - t: 15.818536
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 19.30187
+    - t: 19.168535
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 21.973095
+    - t: 21.83976
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 27.896156
+    - t: 27.762821
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 33.47355
+    - t: 33.340214
       tipo: 0
       rumbo: 315
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 85.70179
+    - t: 85.56845
       tipo: 0
       rumbo: 315
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 121.749115
+    - t: 121.48244
       tipo: 1
       rumbo: 0
-      punto: {x: 115.08, y: 0.691, z: 3.08}
+      punto: {x: 114.98, y: 0.691, z: 3.08}
       actor: 
-    - t: 128.2991
+    - t: 128.03244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 136.31195
+    - t: 136.04529
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 141.11848
+    - t: 140.85182
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 147.62971
+    - t: 147.36305
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 150.27971
+    - t: 150.01305
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 157.99257
+    - t: 157.7259
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 160.64256
+    - t: 160.3759
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 165.59909
+    - t: 165.33243
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 170.18243
+    - t: 169.91577
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 173.2491
+    - t: 172.98244
       tipo: 1
       rumbo: 0
       punto: {x: 116.4, y: 0, z: 5}
@@ -231,127 +243,127 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 12.211869
+    - t: 12.078535
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 15.95187
+    - t: 15.818536
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 19.251871
+    - t: 19.118536
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 21.973095
+    - t: 21.83976
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 27.846157
+    - t: 27.712822
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 34.17355
+    - t: 34.040215
       tipo: 1
       rumbo: 0
       punto: {x: 114.9, y: 0.92, z: 3.55}
       actor: 
-    - t: 38.706886
+    - t: 38.57355
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 44.871784
+    - t: 44.73845
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 49.358112
+    - t: 49.224777
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 56.546272
+    - t: 56.412937
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 86.50179
+    - t: 86.368454
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 90.25812
+    - t: 90.12478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 98.032814
+    - t: 97.899475
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 103.932816
+    - t: 103.79948
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 106.83282
+    - t: 106.69948
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 113.177345
+    - t: 112.91067
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 121.749115
+    - t: 121.48244
       tipo: 1
       rumbo: 0
-      punto: {x: 115.08, y: 0.691, z: 3.08}
+      punto: {x: 114.98, y: 0.691, z: 3.08}
       actor: 
-    - t: 128.2491
+    - t: 127.98244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 136.26195
+    - t: 135.99529
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 141.06848
+    - t: 140.80182
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 147.62971
+    - t: 147.36305
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 150.2297
+    - t: 149.96304
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 157.99257
+    - t: 157.7259
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 160.59256
+    - t: 160.3259
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 165.54909
+    - t: 165.28242
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -363,299 +375,341 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.88
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.05
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.81187
+      t: 12.678535
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.95187
+      t: 15.818536
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 16.03187
+      t: 15.898536
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.20187
+      t: 19.068535
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.851871
+      t: 19.718536
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 21.973095
+      t: 21.83976
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 22.053095
+      t: 21.91976
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 22.373095
+      t: 22.23976
       tipo: 2
       estado: CastingDamage01
       congelar: 0
       alFinal: 0
+      voz: hurt
     - fundido: 0
-      t: 23.773094
+      t: 23.63976
       tipo: 2
       estado: Cheer01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 24.973095
+      t: 24.83976
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 25.973095
+      t: 25.83976
       tipo: 2
       estado: Cheer02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 27.796156
+      t: 27.66282
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.446157
+      t: 28.312822
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 33.47355
+      t: 33.340214
       tipo: 2
       estado: SitMedium_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 34.13855
+      t: 34.005215
       tipo: 1
       estado: SitMedium_Loop
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 56.546272
+      voz: 
+    - fundido: 1.4
+      t: 56.412937
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
-      alFinal: 0
+      alFinal: 1
+      voz: 
     - fundido: 0.8
-      t: 85.70179
+      t: 85.56845
       tipo: 1
       estado: SitMedium_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 86.70179
+      t: 86.56845
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 113.07735
+      t: 112.81067
       tipo: 2
       estado: SitMedium_Exit
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 114.01068
+      t: 113.744
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 121.749115
+      t: 121.48244
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 121.82912
+      t: 121.56244
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 124.39578
+      t: 124.129105
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 128.19911
+      t: 127.93244
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 128.8491
+      t: 128.58244
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 136.86195
+      t: 136.59529
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 141.66849
+      t: 141.40182
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 147.62971
+      t: 147.36305
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 147.70972
+      t: 147.44305
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 150.17972
+      t: 149.91306
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 150.82971
+      t: 150.56305
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.99257
+      t: 157.7259
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 158.07257
+      t: 157.80591
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 158.29257
+      t: 158.02591
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 160.54257
+      t: 160.27591
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 161.19257
+      t: 160.9259
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 166.1491
+      t: 165.88243
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 175.55247
+      t: 175.28581
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0.8
       emocion: pensativo
       dura: 3.6000001
-    - t: 15.95187
+    - t: 15.818536
       emocion: ilusionado
       dura: 3.6000001
-    - t: 21.973095
+    - t: 21.83976
       emocion: ilusionado
       dura: 6.1730614
-    - t: 34.17355
+    - t: 34.040215
       emocion: pensativo
       dura: 3.9
-    - t: 56.546272
+    - t: 56.412937
       emocion: pensativo
       dura: 0
-    - t: 77.6169
+    - t: 77.48356
       emocion: pensativo
       dura: 3.6000001
-    - t: 86.50179
+    - t: 86.368454
       emocion: enfado
       dura: 3.4563267
-    - t: 103.932816
+    - t: 103.79948
       emocion: pensativo
       dura: 2.9
-    - t: 121.749115
+    - t: 121.48244
       emocion: preocupado
       dura: 6.8
-    - t: 147.62971
+    - t: 147.36305
       emocion: pensativo
       dura: 2.9
-    - t: 157.99257
+    - t: 157.7259
       emocion: decidido
       dura: 2.9
-    - t: 174.75247
+    - t: 174.48581
       emocion: pensativo
       dura: 0
     visible: []
     deslizando:
-    - desde: 33.47355
-      hasta: 33.823547
-    - desde: 56.546272
-      hasta: 57.39627
-    - desde: 85.70179
-      hasta: 86.55179
-    - desde: 113.31068
-      hasta: 114.06068
+    - desde: 33.340214
+      hasta: 33.690212
+    - desde: 56.412937
+      hasta: 57.862938
+    - desde: 85.56845
+      hasta: 86.41845
+    - desde: 113.044
+      hasta: 113.794
   - id: NPC_Eldran
     alias: eldran
     colorDelNombre: {r: 0.61960787, g: 0.8392157, b: 1, a: 1}
@@ -675,187 +729,187 @@ MonoBehaviour:
       p: {x: 115.47545, y: 0.000032198703, z: 4.1654544}
     - t: 6.5647116
       p: {x: 115.27, y: 0.00003220681, z: 3.98}
-    - t: 7.3313785
+    - t: 7.198045
       p: {x: 115.27, y: 0.00003220681, z: 3.98}
-    - t: 7.6267242
+    - t: 7.4933906
       p: {x: 115.52925, y: 0.000025049743, z: 3.868421}
-    - t: 7.8571935
+    - t: 7.72386
       p: {x: 115.78851, y: 0.000017892673, z: 3.7568421}
-    - t: 8.061502
+    - t: 7.9281693
       p: {x: 116.04777, y: 0.000010735604, z: 3.6452632}
-    - t: 8.263106
+    - t: 8.129773
       p: {x: 116.30702, y: 0.0000035785345, z: 3.5336843}
-    - t: 8.465988
+    - t: 8.332655
       p: {x: 116.56296, y: 0.00003223168, z: 3.411038}
-    - t: 8.740262
+    - t: 8.606929
       p: {x: 116.80408, y: 0.000032244414, z: 3.1197662}
-    - t: 9.007978
+    - t: 8.874645
       p: {x: 116.85, y: 0.000032260574, z: 2.75}
-    - t: 9.299575
+    - t: 9.166242
       p: {x: 116.75136, y: 0.000032277694, z: 2.358406}
-    - t: 9.59117
+    - t: 9.457837
       p: {x: 116.45544, y: 0.000032289703, z: 2.0836248}
-    - t: 9.868573
+    - t: 9.73524
       p: {x: 116.114914, y: 0.000032297867, z: 1.8968866}
-    - t: 10.145976
+    - t: 10.012643
       p: {x: 115.77439, y: 0.00003230603, z: 1.7101483}
-    - t: 10.376859
+    - t: 10.2435255
       p: {x: 115.46915, y: 0.000032310454, z: 1.6089308}
-    - t: 10.583144
+    - t: 10.449811
       p: {x: 115.18594, y: 0.000032308562, z: 1.652143}
-    - t: 10.814017
+    - t: 10.680684
       p: {x: 114.92479, y: 0.000032300362, z: 1.8397845}
-    - t: 11.018
+    - t: 10.884666
       p: {x: 114.74135, y: 0.00003229203, z: 2.030346}
-    - t: 11.259268
+    - t: 11.125935
       p: {x: 114.55791, y: 0.000032283704, z: 2.2209072}
-    - t: 11.411869
+    - t: 11.278536
       p: {x: 114.46619, y: 0.00003227954, z: 2.3161879}
-    - t: 11.486869
+    - t: 11.353536
       p: {x: 114.416466, y: 0.039089736, z: 2.2664695}
-    - t: 11.561869
+    - t: 11.428535
       p: {x: 114.30708, y: 0.12501614, z: 2.1570888}
-    - t: 11.636869
+    - t: 11.503536
       p: {x: 114.19771, y: 0.21094254, z: 2.0477083}
-    - t: 11.711869
+    - t: 11.578536
       p: {x: 114.14799, y: 0.25, z: 1.9979899}
-    - t: 37.906883
+    - t: 37.77355
       p: {x: 114.14799, y: 0.25, z: 1.9979899}
-    - t: 38.081882
+    - t: 37.948547
       p: {x: 114.19771, y: 0.2109375, z: 2.0477083}
-    - t: 38.25688
+    - t: 38.123547
       p: {x: 114.30708, y: 0.125, z: 2.1570888}
-    - t: 38.431885
+    - t: 38.29855
       p: {x: 114.416466, y: 0.0390625, z: 2.2664695}
-    - t: 38.606884
+    - t: 38.47355
       p: {x: 114.46619, y: 0, z: 2.3161879}
-    - t: 38.93567
+    - t: 38.802334
       p: {x: 114.75978, y: 0.000032279928, z: 2.3072846}
-    - t: 39.138683
+    - t: 39.00535
       p: {x: 114.98242, y: 0.000032282023, z: 2.259337}
-    - t: 39.426167
+    - t: 39.29283
       p: {x: 115.26759, y: 0.000032291944, z: 2.0324032}
-    - t: 39.63865
+    - t: 39.505314
       p: {x: 115.46291, y: 0.00003230048, z: 1.8370835}
-    - t: 39.85113
+    - t: 39.717796
       p: {x: 115.65823, y: 0.000032309017, z: 1.6417636}
-    - t: 40.060337
+    - t: 39.927002
       p: {x: 115.859634, y: 0.000032316868, z: 1.4621437}
-    - t: 40.292088
+    - t: 40.158752
       p: {x: 116.08031, y: 0.00003232366, z: 1.3068109}
-    - t: 40.51736
+    - t: 40.384026
       p: {x: 116.26797, y: 0.00003232876, z: 1.1901382}
-    - t: 40.657955
+    - t: 40.52462
       p: {x: 116.3618, y: 0.00003233131, z: 1.131802}
-    - t: 40.732956
+    - t: 40.59962
       p: {x: 116.41152, y: 0.091433525, z: 1.1815205}
-    - t: 40.807957
+    - t: 40.67462
       p: {x: 116.520905, y: 0.29251614, z: 1.290901}
-    - t: 40.882954
+    - t: 40.74962
       p: {x: 116.63028, y: 0.4935988, z: 1.4002815}
-    - t: 40.957954
+    - t: 40.82462
       p: {x: 116.68, y: 0.585, z: 1.45}
-    - t: 109.76615
+    - t: 109.63281
       p: {x: 116.68, y: 0.585, z: 1.45}
-    - t: 109.941154
+    - t: 109.807816
       p: {x: 116.63028, y: 0.49359372, z: 1.4002815}
-    - t: 110.11615
+    - t: 109.98281
       p: {x: 116.520905, y: 0.2925, z: 1.290901}
-    - t: 110.29115
+    - t: 110.157814
       p: {x: 116.41152, y: 0.09140625, z: 1.1815205}
-    - t: 110.46615
+    - t: 110.33281
       p: {x: 116.3618, y: 0, z: 1.131802}
-    - t: 110.77494
+    - t: 110.6416
       p: {x: 116.216225, y: 0.000032319953, z: 1.3915617}
-    - t: 111.01492
+    - t: 110.881584
       p: {x: 116.070656, y: 0.0000323086, z: 1.6513214}
-    - t: 111.2289
+    - t: 111.09556
       p: {x: 115.92508, y: 0.000032297245, z: 1.9110812}
-    - t: 111.44159
+    - t: 111.30825
       p: {x: 115.7795, y: 0.00003228589, z: 2.170841}
-    - t: 111.65428
+    - t: 111.52094
       p: {x: 115.633934, y: 0.000032274536, z: 2.4306006}
-    - t: 111.87694
+    - t: 111.7436
       p: {x: 115.48836, y: 0.000032263182, z: 2.6903603}
-    - t: 112.1417
+    - t: 112.00836
       p: {x: 115.34278, y: 0.000032251828, z: 2.95012}
-    - t: 112.31068
+    - t: 112.17734
       p: {x: 115.27, y: 0.00003224615, z: 3.08}
-    - t: 113.07735
+    - t: 112.81067
       p: {x: 115.27, y: 0.00003224615, z: 3.08}
-    - t: 113.426315
+    - t: 113.15964
       p: {x: 115.27501, y: 0.000024184612, z: 2.807736}
-    - t: 113.699356
+    - t: 113.43268
       p: {x: 115.28002, y: 0.000016123075, z: 2.5354722}
-    - t: 113.9405
+    - t: 113.67382
       p: {x: 115.285034, y: 0.000008061537, z: 2.2632084}
-    - t: 114.177284
+    - t: 113.91061
       p: {x: 115.29005, y: 0.000032293756, z: 1.9909444}
-    - t: 114.40453
+    - t: 114.137856
       p: {x: 115.25389, y: 0.000032304997, z: 1.7337291}
-    - t: 114.62182
+    - t: 114.35514
       p: {x: 115.039154, y: 0.00003230491, z: 1.7357099}
-    - t: 114.876434
+    - t: 114.60976
       p: {x: 114.83307, y: 0.000032296197, z: 1.9350652}
-    - t: 115.1435
+    - t: 114.87682
       p: {x: 114.64963, y: 0.000032287866, z: 2.1256266}
-    - t: 115.4841
+    - t: 115.21742
       p: {x: 114.46619, y: 0.00003227954, z: 2.3161879}
-    - t: 115.5591
+    - t: 115.29242
       p: {x: 114.416466, y: 0.039089736, z: 2.2664695}
-    - t: 115.6341
+    - t: 115.367424
       p: {x: 114.30708, y: 0.12501614, z: 2.1570888}
-    - t: 115.7091
+    - t: 115.44242
       p: {x: 114.19771, y: 0.21094254, z: 2.0477083}
-    - t: 115.7841
+    - t: 115.517426
       p: {x: 114.14799, y: 0.25, z: 1.9979899}
-    - t: 169.48244
+    - t: 169.21577
       p: {x: 114.14799, y: 0.25, z: 1.9979899}
-    - t: 169.65744
+    - t: 169.39078
       p: {x: 114.19771, y: 0.2109375, z: 2.0477083}
-    - t: 169.83244
+    - t: 169.56578
       p: {x: 114.30708, y: 0.125, z: 2.1570888}
-    - t: 170.00743
+    - t: 169.74077
       p: {x: 114.416466, y: 0.0390625, z: 2.2664695}
-    - t: 170.18243
+    - t: 169.91577
       p: {x: 114.46619, y: 0, z: 2.3161879}
-    - t: 170.46222
+    - t: 170.19556
       p: {x: 114.64963, y: 0.000032287866, z: 2.1256266}
-    - t: 170.6816
+    - t: 170.41493
       p: {x: 114.83307, y: 0.000032296197, z: 1.9350652}
-    - t: 170.90163
+    - t: 170.63496
       p: {x: 115.05261, y: 0.00003230525, z: 1.7279099}
-    - t: 171.1143
+    - t: 170.84764
       p: {x: 115.32479, y: 0.000032310298, z: 1.6124833}
-    - t: 171.32701
+    - t: 171.06035
       p: {x: 115.61902, y: 0.00003230903, z: 1.6414859}
-    - t: 171.54082
+    - t: 171.27415
       p: {x: 115.8879, y: 0.00003230331, z: 1.7723944}
-    - t: 171.81822
+    - t: 171.55156
       p: {x: 116.228424, y: 0.000032295146, z: 1.9591327}
-    - t: 172.10596
+    - t: 171.8393
       p: {x: 116.576, y: 0.00003228627, z: 2.1622393}
-    - t: 172.38737
+    - t: 172.12071
       p: {x: 116.80615, y: 0.000032272554, z: 2.4759583}
-    - t: 172.65776
+    - t: 172.3911
       p: {x: 116.85, y: 0.000032256205, z: 2.85}
-    - t: 172.87111
+    - t: 172.60445
       p: {x: 116.83721, y: 0.000032243162, z: 3.148335}
-    - t: 173.08366
+    - t: 172.817
       p: {x: 116.79883, y: 0.00003223027, z: 3.4433413}
-    - t: 173.29701
+    - t: 173.03035
       p: {x: 116.73485, y: 0.00003221752, z: 3.7350175}
-    - t: 173.58096
+    - t: 173.3143
       p: {x: 116.633125, y: 0.00003220072, z: 4.1192937}
-    - t: 173.86491
+    - t: 173.59825
       p: {x: 116.5314, y: 0.000032183925, z: 4.5035696}
-    - t: 174.11333
+    - t: 173.84666
       p: {x: 116.44354, y: 0.000032169217, z: 4.8400373}
-    - t: 174.36577
+    - t: 174.0991
       p: {x: 116.38614, y: 0.000032155003, z: 5.165201}
-    - t: 174.63152
+    - t: 174.36485
       p: {x: 116.35917, y: 0.00003214259, z: 5.449167}
-    - t: 174.75247
+    - t: 174.48581
       p: {x: 116.35, y: 0.000032138185, z: 5.55}
     miradas:
     - t: 0
@@ -871,29 +925,29 @@ MonoBehaviour:
     - t: 6.5647116
       tipo: 1
       rumbo: 0
-      punto: {x: 115.08, y: 0.691, z: 3.98}
+      punto: {x: 114.98, y: 0.691, z: 3.98}
       actor: 
-    - t: 11.411869
+    - t: 11.278536
       tipo: 0
       rumbo: 45.000004
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 38.606884
+    - t: 38.47355
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 40.657955
+    - t: 40.52462
       tipo: 0
       rumbo: 224.99998
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 112.31068
+    - t: 112.17734
       tipo: 1
       rumbo: 0
-      punto: {x: 115.08, y: 0.691, z: 3.08}
+      punto: {x: 114.98, y: 0.691, z: 3.08}
       actor: 
-    - t: 115.4841
+    - t: 115.21742
       tipo: 0
       rumbo: 45.000004
       punto: {x: 0, y: 0, z: 0}
@@ -909,152 +963,152 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.11187
+    - t: 11.978536
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 16.05187
+    - t: 15.918535
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 19.15187
+    - t: 19.018536
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 22.073095
+    - t: 21.93976
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.746157
+    - t: 27.612822
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 34.273552
+    - t: 34.140217
+      tipo: 1
+      rumbo: 0
+      punto: {x: 114.9, y: 0.92, z: 3.55}
+      actor: 
+    - t: 38.47355
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.606884
+    - t: 44.638447
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 44.771782
+    - t: 49.124775
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 49.25811
+    - t: 56.81294
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 56.946274
+    - t: 63.787632
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 63.920967
+    - t: 67.810486
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 67.943825
+    - t: 74.38355
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 74.51689
+    - t: 77.58356
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 77.716896
+    - t: 80.683556
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 80.816895
+    - t: 86.46845
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 86.60179
+    - t: 90.02478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 90.15812
+    - t: 97.79948
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 97.932816
+    - t: 103.899475
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 104.032814
+    - t: 106.59948
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 106.73282
+    - t: 112.81067
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 113.07735
+    - t: 121.582436
+      tipo: 1
+      rumbo: 0
+      punto: {x: 114.98, y: 0.691, z: 3.08}
+      actor: 
+    - t: 127.88244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 121.84911
+    - t: 135.8953
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 128.14911
+    - t: 140.70183
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 136.16196
+    - t: 147.46304
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 140.96849
+    - t: 149.86305
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 147.7297
+    - t: 157.8259
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 150.12971
+    - t: 160.2259
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 158.09256
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
-    - t: 160.49257
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
-    - t: 165.4491
+    - t: 165.18243
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1066,230 +1120,311 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.5647116
       tipo: 2
-      estado: Opening01_Stop
+      estado: Opening01_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 11.411869
+      t: 11.278536
       tipo: 2
       estado: SitMedium_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.076869
+      t: 11.943536
       tipo: 1
       estado: SitMedium_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.19187
+      t: 12.058536
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.23187
+      t: 19.098536
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 37.67355
+      t: 37.540215
       tipo: 2
       estado: SitMedium_Exit
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.606884
+      t: 38.47355
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 40.657955
+      t: 40.52462
       tipo: 2
       estado: SitMedium_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 41.322956
+      t: 41.18962
       tipo: 1
       estado: SitMedium_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 74.59689
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 106.81282
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 109.53282
-      tipo: 2
-      estado: SitMedium_Exit
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 110.466156
-      tipo: 0
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 112.31068
-      tipo: 2
-      estado: Opening01_Stop
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 115.4841
-      tipo: 2
-      estado: SitMedium_Begin
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 116.1491
-      tipo: 1
-      estado: SitMedium_Loop
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 128.22911
+      t: 44.71845
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 136.24196
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 141.0485
+      t: 49.204777
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 150.20972
+      t: 51.724773
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 56.89294
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 160.57257
+      t: 59.612938
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 165.5291
+      t: 63.867634
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 67.89049
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 70.21049
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 169.2491
+      t: 74.463554
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 106.67948
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 109.39948
       tipo: 2
       estado: SitMedium_Exit
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 170.18243
+      t: 110.33282
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 112.17734
+      tipo: 2
+      estado: Opening01_Begin
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 115.21742
+      tipo: 2
+      estado: SitMedium_Begin
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 115.88242
+      tipo: 1
+      estado: SitMedium_Loop
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 127.96244
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 135.9753
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 140.78183
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 149.94305
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 160.30591
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 165.26244
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 168.98244
+      tipo: 2
+      estado: SitMedium_Exit
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 169.91577
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
-    - t: 12.11187
+    - t: 11.978536
       emocion: triste
       dura: 4.24
-    - t: 19.15187
+    - t: 19.018536
       emocion: alegre
       dura: 3.2212245
-    - t: 27.746157
+    - t: 27.612822
       emocion: picaro
       dura: 4.0832653
-    - t: 38.606884
+    - t: 38.47355
       emocion: pensativo
       dura: 6.564898
-    - t: 44.771782
+    - t: 44.638447
       emocion: pensativo
       dura: 4.7363267
-    - t: 49.25811
+    - t: 49.124775
       emocion: triste
       dura: 7.6881633
-    - t: 56.946274
+    - t: 56.81294
       emocion: triste
       dura: 7.374694
-    - t: 63.920967
+    - t: 63.787632
       emocion: triste
       dura: 4.4228573
-    - t: 67.943825
+    - t: 67.810486
       emocion: triste
       dura: 6.1730614
-    - t: 74.51689
+    - t: 74.38355
       emocion: triste
       dura: 3.2
-    - t: 80.816895
+    - t: 80.683556
       emocion: picaro
       dura: 5.2848983
-    - t: 90.15812
+    - t: 90.02478
       emocion: pensativo
       dura: 7.374694
-    - t: 97.932816
+    - t: 97.79948
       emocion: triste
       dura: 3.6000001
-    - t: 106.73282
+    - t: 106.59948
       emocion: pensativo
       dura: 3.2
-    - t: 113.07735
+    - t: 112.81067
       emocion: neutral
       dura: 6.4081635
-    - t: 128.14911
+    - t: 127.88244
       emocion: neutral
       dura: 8.262857
-    - t: 136.16196
+    - t: 135.8953
       emocion: pensativo
       dura: 5.2065306
-    - t: 140.96849
+    - t: 140.70183
       emocion: picaro
       dura: 7.0612245
-    - t: 150.12971
+    - t: 149.86305
       emocion: picaro
       dura: 8.262857
-    - t: 160.49257
+    - t: 160.2259
       emocion: neutral
       dura: 5.2065306
-    - t: 165.4491
+    - t: 165.18243
       emocion: alegre
       dura: 4.2
     visible:
     - desde: 5.3
-      hasta: 174.75247
+      hasta: 174.48581
     deslizando:
-    - desde: 11.411869
-      hasta: 11.761869
-    - desde: 37.906883
-      hasta: 38.656883
-    - desde: 40.657955
-      hasta: 41.007954
-    - desde: 109.76615
-      hasta: 110.51615
-    - desde: 115.4841
-      hasta: 115.8341
-    - desde: 169.48244
-      hasta: 170.23244
+    - desde: 11.278536
+      hasta: 11.628536
+    - desde: 37.77355
+      hasta: 38.52355
+    - desde: 40.52462
+      hasta: 40.87462
+    - desde: 109.63281
+      hasta: 110.38281
+    - desde: 115.21742
+      hasta: 115.56742
+    - desde: 169.21577
+      hasta: 169.96577
   - id: Actor_Selene
     alias: selene
     colorDelNombre: {r: 0.9098039, g: 0.64705884, b: 1, a: 1}
@@ -1297,94 +1432,94 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: 300, y: 0, z: 3.5}
-    - t: 90.15812
+    - t: 90.02478
       p: {x: 300, y: 0, z: 3.5}
-    - t: 90.43822
-      p: {x: 300, y: -0.00000023841858, z: 3.65}
-    - t: 90.66986
-      p: {x: 300, y: -0.00000023841858, z: 3.8}
-    - t: 90.876854
-      p: {x: 300, y: -0.00000023841858, z: 3.95}
-    - t: 91.2456
-      p: {x: 300, y: 0, z: 4.25}
-    - t: 91.59853
-      p: {x: 300, y: 0, z: 4.55}
-    - t: 91.95147
-      p: {x: 300, y: 0, z: 4.85}
-    - t: 92.304405
-      p: {x: 300, y: 0, z: 5.15}
-    - t: 92.65734
-      p: {x: 300, y: -0.00000011920929, z: 5.4500003}
-    - t: 93.01028
-      p: {x: 300, y: -0.00000011920929, z: 5.75}
-    - t: 93.30439
-      p: {x: 300, y: -0.00000011920929, z: 6}
-    - t: 93.53968
-      p: {x: 300, y: -0.00000011920929, z: 6.2}
-    - t: 93.77497
-      p: {x: 300, y: -0.00000011920929, z: 6.4}
-    - t: 94.01026
-      p: {x: 300, y: -0.00000011920929, z: 6.6}
-    - t: 94.24555
-      p: {x: 300, y: -0.00000011920929, z: 6.7999997}
-    - t: 94.48084
-      p: {x: 300, y: -0.00000011920929, z: 7}
-    - t: 94.774956
-      p: {x: 300, y: -0.00000011920929, z: 7.25}
-    - t: 95.12789
-      p: {x: 300, y: -0.00000023841858, z: 7.5499997}
-    - t: 95.48083
-      p: {x: 300, y: -0.00000023841858, z: 7.85}
-    - t: 95.83376
-      p: {x: 300, y: 0, z: 8.15}
-    - t: 96.1867
-      p: {x: 300, y: 0, z: 8.45}
-    - t: 96.539635
-      p: {x: 300, y: 0, z: 8.75}
-    - t: 96.90838
-      p: {x: 300, y: 0, z: 9.05}
-    - t: 97.115364
-      p: {x: 300, y: 0, z: 9.2}
-    - t: 97.34701
-      p: {x: 300, y: -0.00000011920929, z: 9.35}
-    - t: 97.627106
-      p: {x: 300, y: -0.00000011920929, z: 9.5}
-    - t: 97.932816
-      p: {x: 300, y: -0.00000011920929, z: 9.5}
-    - t: 98.2082
-      p: {x: 300, y: -0.00000011219698, z: 9.6470585}
-    - t: 98.43622
-      p: {x: 300, y: -0.00000010518467, z: 9.794118}
-    - t: 98.6401
-      p: {x: 300, y: -0.00000009817236, z: 9.941176}
-    - t: 99.00351
-      p: {x: 300, y: -0.00000008414773, z: 10.235294}
-    - t: 99.34953
-      p: {x: 300, y: -0.00000007012311, z: 10.529411}
-    - t: 99.69556
-      p: {x: 300, y: -0.000000056098486, z: 10.823529}
-    - t: 100.04158
-      p: {x: 300, y: -0.000000042073864, z: 11.117647}
-    - t: 100.39028
-      p: {x: 300, y: -0.000000028049243, z: 11.411765}
-    - t: 100.78188
-      p: {x: 300, y: -0.0000000140246215, z: 11.705882}
-    - t: 101.0099
-      p: {x: 300, y: -0.0000000070123107, z: 11.8529415}
-    - t: 101.285286
-      p: {x: 300, y: -0.00000023841858, z: 12}
+    - t: 90.30488
+      p: {x: 300, y: 0.004562974, z: 3.65}
+    - t: 90.53652
+      p: {x: 300, y: 0.009125948, z: 3.8}
+    - t: 90.743515
+      p: {x: 300, y: 0.013688922, z: 3.95}
+    - t: 91.11226
+      p: {x: 300, y: 0.02281487, z: 4.25}
+    - t: 91.465195
+      p: {x: 300, y: 0.031940818, z: 4.55}
+    - t: 91.81813
+      p: {x: 300, y: 0.041066766, z: 4.85}
+    - t: 92.17107
+      p: {x: 300, y: 0.050192714, z: 5.15}
+    - t: 92.524
+      p: {x: 300, y: 0.05931866, z: 5.4500003}
+    - t: 92.87694
+      p: {x: 300, y: 0.06844461, z: 5.75}
+    - t: 93.17105
+      p: {x: 300, y: 0.07300758, z: 6}
+    - t: 93.40634
+      p: {x: 300, y: 0.07300758, z: 6.2}
+    - t: 93.64163
+      p: {x: 300, y: 0.07300758, z: 6.4}
+    - t: 93.87692
+      p: {x: 300, y: 0.07300758, z: 6.6}
+    - t: 94.11221
+      p: {x: 300, y: 0.07300758, z: 6.7999997}
+    - t: 94.3475
+      p: {x: 300, y: 0.07300758, z: 7}
+    - t: 94.64162
+      p: {x: 300, y: 0.07300758, z: 7.25}
+    - t: 94.99455
+      p: {x: 300, y: 0.07300758, z: 7.5499997}
+    - t: 95.34749
+      p: {x: 300, y: 0.07300758, z: 7.85}
+    - t: 95.700424
+      p: {x: 300, y: 0.07300758, z: 8.15}
+    - t: 96.05336
+      p: {x: 300, y: 0.07300758, z: 8.45}
+    - t: 96.406296
+      p: {x: 300, y: 0.07300758, z: 8.75}
+    - t: 96.77504
+      p: {x: 300, y: 0.07300758, z: 9.05}
+    - t: 96.982025
+      p: {x: 300, y: 0.07300758, z: 9.2}
+    - t: 97.21367
+      p: {x: 300, y: 0.07300758, z: 9.35}
+    - t: 97.49377
+      p: {x: 300, y: 0.07300758, z: 9.5}
+    - t: 97.79948
+      p: {x: 300, y: 0.07300758, z: 9.5}
+    - t: 98.07486
+      p: {x: 300, y: 0.07300758, z: 9.6470585}
+    - t: 98.30288
+      p: {x: 300, y: 0.07300758, z: 9.794118}
+    - t: 98.50676
+      p: {x: 300, y: 0.07300758, z: 9.941176}
+    - t: 98.87017
+      p: {x: 300, y: 0.07300758, z: 10.235294}
+    - t: 99.216194
+      p: {x: 300, y: 0.07300758, z: 10.529411}
+    - t: 99.56222
+      p: {x: 300, y: 0.07300758, z: 10.823529}
+    - t: 99.90824
+      p: {x: 300, y: 0.07300758, z: 11.117647}
+    - t: 100.25694
+      p: {x: 300, y: 0.07300758, z: 11.411765}
+    - t: 100.648544
+      p: {x: 300, y: 0.07300758, z: 11.705882}
+    - t: 100.876564
+      p: {x: 300, y: 0.07300758, z: 11.8529415}
+    - t: 101.15195
+      p: {x: 300, y: 0.07300758, z: 12}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 1.2, z: 11}
       actor: 
-    - t: 90.15812
+    - t: 90.02478
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 1.2, z: 11}
       actor: 
-    - t: 97.627106
+    - t: 97.49377
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 1.2, z: 11}
@@ -1392,15 +1527,16 @@ MonoBehaviour:
     cabezas: []
     animacion:
     - fundido: 0
-      t: 97.33281
+      t: 97.19947
       tipo: 2
       estado: SenseSomethingStart_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: gasp
     caras: []
     visible:
-    - desde: 90.15812
-      hasta: 98.532814
+    - desde: 90.02478
+      hasta: 98.399475
     deslizando: []
   - id: Actor_EldranJoven
     alias: eldran_joven
@@ -1408,66 +1544,66 @@ MonoBehaviour:
     claveDelNombre: Eldran
     posiciones:
     - t: 0
-      p: {x: 298.5, y: 0, z: 1.5}
-    - t: 90.15812
-      p: {x: 298.5, y: 0, z: 1.5}
-    - t: 90.43822
-      p: {x: 298.5, y: -0.00000011920929, z: 1.65}
-    - t: 90.66986
-      p: {x: 298.5, y: 0, z: 1.8}
-    - t: 90.876854
-      p: {x: 298.5, y: -0.00000011920929, z: 1.95}
-    - t: 91.2456
-      p: {x: 298.5, y: 0, z: 2.25}
-    - t: 91.59853
-      p: {x: 298.5, y: -0.00000011920929, z: 2.55}
-    - t: 91.95147
-      p: {x: 298.5, y: -0.00000011920929, z: 2.85}
-    - t: 92.304405
-      p: {x: 298.5, y: -0.00000023841858, z: 3.15}
-    - t: 92.65734
-      p: {x: 298.5, y: -0.00000023841858, z: 3.4499998}
-    - t: 93.01028
-      p: {x: 298.5, y: -0.00000023841858, z: 3.75}
-    - t: 93.37902
-      p: {x: 298.5, y: 0, z: 4.05}
-    - t: 93.586006
-      p: {x: 298.5, y: 0, z: 4.2}
-    - t: 93.81765
-      p: {x: 298.5, y: 0, z: 4.35}
-    - t: 94.09775
-      p: {x: 298.5, y: 0, z: 4.5}
-    - t: 97.932816
-      p: {x: 298.5, y: 0, z: 4.5}
-    - t: 98.18737
-      p: {x: 298.5, y: 0, z: 4.95}
-    - t: 98.44297
-      p: {x: 298.5, y: 0, z: 5.55}
-    - t: 98.69297
-      p: {x: 298.5, y: 0, z: 6.15}
-    - t: 98.94297
-      p: {x: 298.5, y: -0.00000011920929, z: 6.75}
-    - t: 99.14688
-      p: {x: 298.5, y: -0.00000023841858, z: 7.2}
-    - t: 99.328125
-      p: {x: 298.5, y: -0.00000023841858, z: 7.5}
+      p: {x: 298.7, y: 0, z: 1.5}
+    - t: 90.02478
+      p: {x: 298.7, y: 0, z: 1.5}
+    - t: 90.30488
+      p: {x: 298.7, y: 0.0036503791, z: 1.65}
+    - t: 90.53652
+      p: {x: 298.7, y: 0.0073007583, z: 1.8}
+    - t: 90.743515
+      p: {x: 298.7, y: 0.010951138, z: 1.95}
+    - t: 91.11226
+      p: {x: 298.7, y: 0.018251896, z: 2.25}
+    - t: 91.465195
+      p: {x: 298.7, y: 0.025552655, z: 2.55}
+    - t: 91.81813
+      p: {x: 298.7, y: 0.032853413, z: 2.85}
+    - t: 92.17107
+      p: {x: 298.7, y: 0.04015417, z: 3.15}
+    - t: 92.524
+      p: {x: 298.7, y: 0.047454927, z: 3.4499998}
+    - t: 92.87694
+      p: {x: 298.7, y: 0.054755688, z: 3.75}
+    - t: 93.24568
+      p: {x: 298.7, y: 0.06205645, z: 4.05}
+    - t: 93.45267
+      p: {x: 298.7, y: 0.06570683, z: 4.2}
+    - t: 93.68431
+      p: {x: 298.7, y: 0.0693572, z: 4.35}
+    - t: 93.96441
+      p: {x: 298.7, y: 0.07300758, z: 4.5}
+    - t: 97.79948
+      p: {x: 298.7, y: 0.07300758, z: 4.5}
+    - t: 98.05403
+      p: {x: 298.7, y: 0.07300758, z: 4.95}
+    - t: 98.30963
+      p: {x: 298.7, y: 0.07300758, z: 5.55}
+    - t: 98.55963
+      p: {x: 298.7, y: 0.07300758, z: 6.15}
+    - t: 98.80963
+      p: {x: 298.7, y: 0.07300758, z: 6.75}
+    - t: 99.01354
+      p: {x: 298.7, y: 0.07300758, z: 7.2}
+    - t: 99.194786
+      p: {x: 298.7, y: 0.07300758, z: 7.5}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 3.5}
       actor: 
-    - t: 90.15812
+    - t: 90.02478
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 3.5}
       actor: 
-    - t: 94.09775
+    - t: 93.96441
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 9.5}
       actor: 
-    - t: 99.328125
+    - t: 99.194786
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 12}
@@ -1475,21 +1611,30 @@ MonoBehaviour:
     cabezas: []
     animacion:
     - fundido: 0
-      t: 98.83282
+      t: 98.69948
       tipo: 2
       estado: DefendHit_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 101.13281
+      t: 99.00614
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 100.99947
       tipo: 2
       estado: Beg01
       congelar: 0
       alFinal: 0
+      voz: 
     caras: []
     visible:
-    - desde: 90.15812
-      hasta: 103.932816
+    - desde: 90.02478
+      hasta: 103.79948
     deslizando: []
   - id: Actor_SilasJoven
     alias: silas_joven
@@ -1497,82 +1642,82 @@ MonoBehaviour:
     claveDelNombre: Silas
     posiciones:
     - t: 0
-      p: {x: 301.5, y: 0, z: 1.2}
-    - t: 90.15812
-      p: {x: 301.5, y: 0, z: 1.2}
-    - t: 90.43822
-      p: {x: 301.5, y: 0, z: 1.35}
-    - t: 90.66986
-      p: {x: 301.5, y: -0.00000011920929, z: 1.5}
-    - t: 90.876854
-      p: {x: 301.5, y: -0.00000011920929, z: 1.65}
-    - t: 91.2456
-      p: {x: 301.5, y: -0.00000011920929, z: 1.95}
-    - t: 91.59853
-      p: {x: 301.5, y: 0, z: 2.25}
-    - t: 91.95147
-      p: {x: 301.5, y: -0.00000011920929, z: 2.55}
-    - t: 92.304405
-      p: {x: 301.5, y: -0.00000011920929, z: 2.85}
-    - t: 92.65734
-      p: {x: 301.5, y: -0.00000023841858, z: 3.1499999}
-    - t: 93.01028
-      p: {x: 301.5, y: -0.00000023841858, z: 3.4499998}
-    - t: 93.37902
-      p: {x: 301.5, y: -0.00000023841858, z: 3.75}
-    - t: 93.586006
-      p: {x: 301.5, y: -0.00000023841858, z: 3.8999999}
-    - t: 93.81765
-      p: {x: 301.5, y: 0, z: 4.0499997}
-    - t: 94.09775
-      p: {x: 301.5, y: 0, z: 4.2}
-    - t: 101.13281
-      p: {x: 301.5, y: 0, z: 4.2}
-    - t: 101.40604
-      p: {x: 301.4, y: 0, z: 4.4727273}
-    - t: 101.618774
-      p: {x: 301.3, y: 0, z: 4.7454543}
-    - t: 101.901665
-      p: {x: 301.15, y: 0, z: 5.1545453}
-    - t: 102.182785
-      p: {x: 301, y: -0.00000011920929, z: 5.5636363}
-    - t: 102.463905
-      p: {x: 300.85, y: -0.00000011920929, z: 5.972727}
-    - t: 102.74503
-      p: {x: 300.69998, y: 0, z: 6.381818}
-    - t: 103.03621
-      p: {x: 300.55, y: -0.00000011920929, z: 6.790909}
-    - t: 103.27077
-      p: {x: 300.44998, y: -0.00000023841858, z: 7.0636363}
-    - t: 103.42017
-      p: {x: 300.4, y: -0.00000023841858, z: 7.2}
+      p: {x: 301.3, y: 0, z: 1.2}
+    - t: 90.02478
+      p: {x: 301.3, y: 0, z: 1.2}
+    - t: 90.30488
+      p: {x: 301.3, y: 0.0036503791, z: 1.35}
+    - t: 90.53652
+      p: {x: 301.3, y: 0.0073007583, z: 1.5}
+    - t: 90.743515
+      p: {x: 301.3, y: 0.010951138, z: 1.65}
+    - t: 91.11226
+      p: {x: 301.3, y: 0.018251896, z: 1.95}
+    - t: 91.465195
+      p: {x: 301.3, y: 0.025552655, z: 2.25}
+    - t: 91.81813
+      p: {x: 301.3, y: 0.032853413, z: 2.55}
+    - t: 92.17107
+      p: {x: 301.3, y: 0.04015417, z: 2.85}
+    - t: 92.524
+      p: {x: 301.3, y: 0.047454927, z: 3.1499999}
+    - t: 92.87694
+      p: {x: 301.3, y: 0.054755688, z: 3.4499998}
+    - t: 93.24568
+      p: {x: 301.3, y: 0.06205645, z: 3.75}
+    - t: 93.45267
+      p: {x: 301.3, y: 0.06570683, z: 3.8999999}
+    - t: 93.68431
+      p: {x: 301.3, y: 0.0693572, z: 4.0499997}
+    - t: 93.96441
+      p: {x: 301.3, y: 0.07300758, z: 4.2}
+    - t: 100.99947
+      p: {x: 301.3, y: 0.07300758, z: 4.2}
+    - t: 101.27878
+      p: {x: 301.21426, y: 0.07300758, z: 4.485714}
+    - t: 101.49582
+      p: {x: 301.12857, y: 0.07300758, z: 4.7714286}
+    - t: 101.78561
+      p: {x: 301, y: 0.07300758, z: 5.2}
+    - t: 102.07428
+      p: {x: 300.87143, y: 0.07300758, z: 5.628571}
+    - t: 102.36295
+      p: {x: 300.74286, y: 0.07300758, z: 6.0571427}
+    - t: 102.65163
+      p: {x: 300.6143, y: 0.07300758, z: 6.485714}
+    - t: 102.853
+      p: {x: 300.52856, y: 0.07300758, z: 6.7714286}
+    - t: 103.09247
+      p: {x: 300.44284, y: 0.07300758, z: 7.0571427}
+    - t: 103.245316
+      p: {x: 300.4, y: 0.07300758, z: 7.2}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 3.5}
       actor: 
-    - t: 90.15812
+    - t: 90.02478
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 3.5}
       actor: 
-    - t: 94.09775
+    - t: 93.96441
       tipo: 1
       rumbo: 0
       punto: {x: 300, y: 0, z: 9.5}
       actor: 
-    - t: 103.42017
+    - t: 103.245316
       tipo: 1
       rumbo: 0
-      punto: {x: 298.5, y: 0, z: 7.5}
+      punto: {x: 298.7, y: 0, z: 7.5}
       actor: 
     cabezas: []
     animacion: []
     caras: []
     visible:
-    - desde: 90.15812
-      hasta: 103.932816
+    - desde: 90.02478
+      hasta: 103.79948
     deslizando: []
   lineas:
   - onlyIfFlag: 
@@ -1604,8 +1749,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 12.11187
-    t1: 15.95187
+    t0: 11.978536
+    t1: 15.818536
     actor: NPC_Eldran
     clave: EVT_MANANA_03
     gesto: HeadNod01
@@ -1613,8 +1758,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 15.95187
-    t1: 19.15187
+    t0: 15.818536
+    t1: 19.018536
     actor: Player
     clave: EVT_MANANA_04a
     gesto: Talk02
@@ -1622,8 +1767,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 19.15187
-    t1: 21.973095
+    t0: 19.018536
+    t1: 21.83976
     actor: NPC_Eldran
     clave: EVT_MANANA_04b
     gesto: HeadNod01
@@ -1631,8 +1776,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 21.973095
-    t1: 27.746157
+    t0: 21.83976
+    t1: 27.612822
     actor: Player
     clave: EVT_MANANA_04
     gesto: Talk03
@@ -1640,8 +1785,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 27.746157
-    t1: 31.429422
+    t0: 27.612822
+    t1: 31.296087
     actor: NPC_Eldran
     clave: EVT_MANANA_05
     gesto: 
@@ -1649,8 +1794,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 34.17355
-    t1: 37.67355
+    t0: 34.040215
+    t1: 37.540215
     actor: Player
     clave: EVT_MANANA_06
     gesto: 
@@ -1658,8 +1803,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 38.606884
-    t1: 44.771782
+    t0: 38.47355
+    t1: 44.638447
     actor: NPC_Eldran
     clave: EVT_MANANA_07
     gesto: 
@@ -1667,53 +1812,53 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 44.771782
-    t1: 49.10811
+    t0: 44.638447
+    t1: 48.974773
     actor: NPC_Eldran
     clave: EVT_MANANA_07b
-    gesto: 
+    gesto: Talk01
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 49.25811
-    t1: 56.546272
+    t0: 49.124775
+    t1: 56.412937
     actor: NPC_Eldran
     clave: EVT_MANANA_08
-    gesto: 
+    gesto: Talk02
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 56.946274
-    t1: 63.920967
+    t0: 56.81294
+    t1: 63.787632
     actor: NPC_Eldran
     clave: EVT_MANANA_09
-    gesto: 
+    gesto: Talk01
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 63.920967
-    t1: 67.943825
+    t0: 63.787632
+    t1: 67.810486
     actor: NPC_Eldran
     clave: EVT_MANANA_09b
-    gesto: 
+    gesto: Talk02
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 67.943825
-    t1: 73.71689
+    t0: 67.810486
+    t1: 73.58355
     actor: NPC_Eldran
     clave: EVT_MANANA_10
-    gesto: 
+    gesto: HeadShake01
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 74.51689
-    t1: 77.316895
+    t0: 74.38355
+    t1: 77.183556
     actor: NPC_Eldran
     clave: EVT_MANANA_10b
     gesto: HeadNod01
@@ -1721,8 +1866,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 77.6169
-    t1: 80.816895
+    t0: 77.48356
+    t1: 80.683556
     actor: Player
     clave: EVT_MANANA_11
     gesto: 
@@ -1730,8 +1875,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 80.816895
-    t1: 85.70179
+    t0: 80.683556
+    t1: 85.56845
     actor: NPC_Eldran
     clave: EVT_MANANA_11b
     gesto: 
@@ -1739,8 +1884,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 86.50179
-    t1: 89.55812
+    t0: 86.368454
+    t1: 89.42478
     actor: Player
     clave: EVT_MANANA_11c
     gesto: 
@@ -1748,8 +1893,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 90.15812
-    t1: 97.13281
+    t0: 90.02478
+    t1: 96.99947
     actor: NPC_Eldran
     clave: EVT_MANANA_12
     gesto: 
@@ -1757,8 +1902,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 97.932816
-    t1: 101.13281
+    t0: 97.79948
+    t1: 100.99947
     actor: NPC_Eldran
     clave: EVT_MANANA_13
     gesto: 
@@ -1766,8 +1911,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 103.932816
-    t1: 106.432816
+    t0: 103.79948
+    t1: 106.29948
     actor: Player
     clave: EVT_MANANA_14
     gesto: 
@@ -1775,8 +1920,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 106.73282
-    t1: 109.53282
+    t0: 106.59948
+    t1: 109.39948
     actor: NPC_Eldran
     clave: EVT_MANANA_15
     gesto: HeadNod01
@@ -1784,8 +1929,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 113.07735
-    t1: 119.08551
+    t0: 112.81067
+    t1: 118.81883
     actor: NPC_Eldran
     clave: EVT_MANANA_15b
     gesto: 
@@ -1793,8 +1938,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 121.749115
-    t1: 128.14911
+    t0: 121.48244
+    t1: 127.88244
     actor: Player
     clave: EVT_MANANA_16
     gesto: Talk02
@@ -1802,8 +1947,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 128.14911
-    t1: 136.01196
+    t0: 127.88244
+    t1: 135.7453
     actor: NPC_Eldran
     clave: EVT_MANANA_17
     gesto: Talk01
@@ -1811,8 +1956,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 136.16196
-    t1: 140.96849
+    t0: 135.8953
+    t1: 140.70183
     actor: NPC_Eldran
     clave: EVT_MANANA_18
     gesto: HeadShake01
@@ -1820,8 +1965,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 140.96849
-    t1: 147.62971
+    t0: 140.70183
+    t1: 147.36305
     actor: NPC_Eldran
     clave: EVT_MANANA_19
     gesto: Talk02
@@ -1829,8 +1974,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 147.62971
-    t1: 150.12971
+    t0: 147.36305
+    t1: 149.86305
     actor: Player
     clave: EVT_MANANA_20
     gesto: Talk02
@@ -1838,8 +1983,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 150.12971
-    t1: 157.99257
+    t0: 149.86305
+    t1: 157.7259
     actor: NPC_Eldran
     clave: EVT_MANANA_21
     gesto: Talk01
@@ -1847,8 +1992,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 157.99257
-    t1: 160.49257
+    t0: 157.7259
+    t1: 160.2259
     actor: Player
     clave: EVT_MANANA_22
     gesto: Talk03
@@ -1856,8 +2001,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 160.49257
-    t1: 165.2991
+    t0: 160.2259
+    t1: 165.03244
     actor: NPC_Eldran
     clave: EVT_MANANA_23
     gesto: HeadNod01
@@ -1865,8 +2010,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 165.4491
-    t1: 169.2491
+    t0: 165.18243
+    t1: 168.98244
     actor: NPC_Eldran
     clave: EVT_MANANA_24
     gesto: Talk01
@@ -1899,7 +2044,7 @@ MonoBehaviour:
     - t: 5.3
       p: {x: 115.6, y: 0.85, z: 3}
     t0: 5.3
-    t1: 12.11187
+    t1: 11.978536
     tipo: 1
     descripcion: conjunto de will y eldran
     posiciones:
@@ -1921,12 +2066,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 12.11187
-    t1: 15.95187
+    t0: 11.978536
+    t1: 15.818536
     tipo: 2
     descripcion: medio de eldran
     posiciones:
-    - t: 12.11187
+    - t: 11.978536
       p: {x: 114.8, y: 1.15, z: 4.3}
     lente: 34
     lenteFinal: 0
@@ -1942,12 +2087,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.95187
-    t1: 19.15187
+    t0: 15.818536
+    t1: 19.018536
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 15.95187
+    - t: 15.818536
       p: {x: 113.5, y: 1.15, z: 3.6}
     lente: 34
     lenteFinal: 0
@@ -1963,12 +2108,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 19.15187
-    t1: 21.973095
+    t0: 19.018536
+    t1: 21.83976
     tipo: 3
     descripcion: primer plano de eldran
     posiciones:
-    - t: 19.15187
+    - t: 19.018536
       p: {x: 114.8, y: 1.15, z: 4.3}
     lente: 34
     lenteFinal: 0
@@ -1984,12 +2129,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 21.973095
-    t1: 27.746157
+    t0: 21.83976
+    t1: 27.612822
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 21.973095
+    - t: 21.83976
       p: {x: 113.5, y: 1.15, z: 3.6}
     lente: 34
     lenteFinal: 0
@@ -2005,12 +2150,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 27.746157
-    t1: 31.429422
+    t0: 27.612822
+    t1: 31.296087
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 27.746157
+    - t: 27.612822
       p: {x: 114, y: 1.2, z: 4.3}
     lente: 44
     lenteFinal: 0
@@ -2028,12 +2173,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 31.429422
-    t1: 44.771782
+    t0: 31.296087
+    t1: 44.638447
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 31.429422
+    - t: 31.296087
       p: {x: 114.75, y: 1.05, z: 1.45}
     lente: 44
     lenteFinal: 0
@@ -2049,12 +2194,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 44.771782
-    t1: 56.946274
+    t0: 44.638447
+    t1: 56.81294
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 44.771782
+    - t: 44.638447
       p: {x: 114.6, y: 1.15, z: 0.92}
     lente: 44
     lenteFinal: 0
@@ -2072,12 +2217,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 56.946274
-    t1: 63.920967
+    t0: 56.81294
+    t1: 63.787632
     tipo: 2
     descripcion: medio de eldran
     posiciones:
-    - t: 56.946274
+    - t: 56.81294
       p: {x: 114.32, y: 1.05, z: 1.17}
     lente: 36
     lenteFinal: 0
@@ -2093,176 +2238,176 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 63.920967
-      p: {x: 117.52329, y: 0.7895908, z: 0.05845211}
-    - t: 63.970966
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.020966
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.07097
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.12097
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.170975
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.22098
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.27098
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.320984
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.37099
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.42099
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.47099
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.520996
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.571
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.621
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.671005
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.72101
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.77101
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.821014
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.87102
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.92102
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 64.97102
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.02103
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.07103
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.12103
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.171036
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.22104
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.27104
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.321045
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.37105
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.42105
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.471054
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.52106
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.57106
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.62106
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.67107
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.72107
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.77107
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.821075
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.87108
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.92108
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 65.971085
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.02109
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.07109
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.12109
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.1711
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.2211
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.2711
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.321106
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.37111
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.42111
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.471115
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.52112
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.57112
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.621124
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.67113
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.72113
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.77113
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.82114
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.87114
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.92114
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 66.971146
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.02115
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.07115
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.121155
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.17116
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.22116
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.271164
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.32117
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.37117
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.42117
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.471176
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.52118
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.57118
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.621185
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.67119
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.72119
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.771194
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.8212
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.8712
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.9212
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 67.943825
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    t0: 63.920967
-    t1: 67.943825
+    - t: 63.787632
+      p: {x: 117.5222, y: 0.7799013, z: 0.058468543}
+    - t: 63.83763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 63.88763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 63.93763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 63.98763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.03763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.08763
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.137634
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.18764
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.23764
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.28764
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.33765
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.38765
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.43765
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.487656
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.53766
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.58766
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.637665
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.68767
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.73767
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.787674
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.83768
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.88768
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.93768
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 64.987686
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.03769
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.08769
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.137695
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.1877
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.2377
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.287704
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.33771
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.38771
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.43771
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.48772
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.53772
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.58772
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.637726
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.68773
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.73773
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.787735
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.83774
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.88774
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.937744
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 65.98775
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.03775
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.08775
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.13776
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.18776
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.23776
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.287766
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.33777
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.38777
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.437775
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.48778
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.53778
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.58778
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.63779
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.68779
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.73779
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.787796
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.8378
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.8878
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.937805
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 66.98781
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.03781
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.087814
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.13782
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.18782
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.23782
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.28783
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.33783
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.38783
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.437836
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.48784
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.53784
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.587845
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.63785
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.68785
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.737854
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.78786
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 67.810486
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    t0: 63.787632
+    t1: 67.810486
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 63.920967
+    - t: 63.787632
       p: {x: 116.5, y: 2.3, z: 0.4}
     lente: 42
     lenteFinal: 0
@@ -2272,18 +2417,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 67.943825
-    t1: 77.6169
+    t0: 67.810486
+    t1: 77.48356
     tipo: 2
     descripcion: medio de eldran
     posiciones:
-    - t: 67.943825
+    - t: 67.810486
       p: {x: 114.32, y: 1.05, z: 1.17}
     lente: 36
     lenteFinal: 0
@@ -2299,142 +2444,142 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 77.6169
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.6669
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.7169
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.76691
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.81691
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.86691
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.916916
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 77.96692
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.01692
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.066925
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.11693
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.16693
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.216934
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.26694
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.31694
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.36694
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.41695
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.46695
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.51695
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.566956
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.61696
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.66696
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.716965
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.76697
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.81697
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.866974
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.91698
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 78.96698
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.01698
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.066986
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.11699
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.16699
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.216995
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.267
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.317
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.367004
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.41701
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.46701
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.51701
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.56702
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.61702
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.66702
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.717026
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.76703
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.81703
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.867035
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.91704
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 79.96704
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.017044
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.06705
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.11705
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.16705
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.21706
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.26706
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.31706
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.367065
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.41707
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.46707
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.517075
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.56708
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.61708
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.66708
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.71709
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.76709
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    - t: 80.816895
-      p: {x: 117.523285, y: 0.7895908, z: 0.058452126}
-    t0: 77.6169
-    t1: 80.816895
+    - t: 77.48356
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.53356
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.583565
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.63357
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.68357
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.733574
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.78358
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.83358
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.88358
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.933586
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 77.98359
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.03359
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.083595
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.1336
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.1836
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.233604
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.28361
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.33361
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.38361
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.43362
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.48362
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.53362
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.583626
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.63363
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.68363
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.733635
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.78364
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.83364
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.883644
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.93365
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 78.98365
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.03365
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.08366
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.13366
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.18366
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.233665
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.28367
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.33367
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.383675
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.43368
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.48368
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.53368
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.58369
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.63369
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.68369
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.733696
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.7837
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.8337
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.883705
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.93371
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 79.98371
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.033714
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.08372
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.13372
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.18372
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.23373
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.28373
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.33373
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.383736
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.43374
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.48374
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.533745
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.58375
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.63375
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    - t: 80.683556
+      p: {x: 117.522194, y: 0.7799014, z: 0.058468558}
+    t0: 77.48356
+    t1: 80.683556
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 77.6169
+    - t: 77.48356
       p: {x: 116.5, y: 2.3, z: 0.4}
     lente: 42
     lenteFinal: 0
@@ -2444,18 +2589,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 80.816895
-    t1: 85.70179
+    t0: 80.683556
+    t1: 85.56845
     tipo: 3
     descripcion: primer plano de eldran
     posiciones:
-    - t: 80.816895
+    - t: 80.683556
       p: {x: 114.32, y: 1.05, z: 1.17}
     lente: 32
     lenteFinal: 0
@@ -2471,12 +2616,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 85.70179
-    t1: 90.15812
+    t0: 85.56845
+    t1: 90.02478
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 85.70179
+    - t: 85.56845
       p: {x: 114.6, y: 1.15, z: 0.92}
     lente: 44
     lenteFinal: 0
@@ -2494,12 +2639,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 90.15812
-    t1: 97.13281
+    t0: 90.02478
+    t1: 96.99947
     tipo: 1
     descripcion: conjunto de selene y eldran_joven y silas_joven
     posiciones:
-    - t: 90.15812
+    - t: 90.02478
       p: {x: 300, y: 1.7, z: -0.8}
     lente: 46
     lenteFinal: 0
@@ -2519,12 +2664,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 97.13281
-    t1: 97.932816
+    t0: 96.99947
+    t1: 97.79948
     tipo: 2
     descripcion: medio de selene
     posiciones:
-    - t: 97.13281
+    - t: 96.99947
       p: {x: 301.4, y: 1.35, z: 10.8}
     lente: 40
     lenteFinal: 0
@@ -2534,18 +2679,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1217011
+    alturaDelFoco: 1.1379474
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 97.932816
-    t1: 101.13281
+    t0: 97.79948
+    t1: 100.99947
     tipo: 2
     descripcion: medio de eldran_joven
     posiciones:
-    - t: 97.932816
+    - t: 97.79948
       p: {x: 298.5, y: 1.35, z: 2.2}
     lente: 44
     lenteFinal: 0
@@ -2555,18 +2700,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0999023
+    alturaDelFoco: 1.0953062
     encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 101.13281
-    t1: 103.932816
+    t0: 100.99947
+    t1: 103.79948
     tipo: 5
     descripcion: 'dos: eldran_joven y silas_joven'
     posiciones:
-    - t: 101.13281
+    - t: 100.99947
       p: {x: 299.5, y: 1.2, z: 10.2}
     lente: 46
     lenteFinal: 0
@@ -2578,18 +2723,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8516894
+    alturaDelFoco: 0.8489317
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 103.932816
-    t1: 106.73282
+    t0: 103.79948
+    t1: 106.59948
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 103.932816
+    - t: 103.79948
       p: {x: 114.75, y: 1.05, z: 1.45}
     lente: 44
     lenteFinal: 0
@@ -2605,12 +2750,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 106.73282
-    t1: 109.53282
+    t0: 106.59948
+    t1: 109.39948
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 106.73282
+    - t: 106.59948
       p: {x: 114.6, y: 1.15, z: 0.92}
     lente: 44
     lenteFinal: 0
@@ -2628,12 +2773,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 109.53282
-    t1: 113.07735
+    t0: 109.39948
+    t1: 112.81067
     tipo: 0
     descripcion: general de will y eldran
     posiciones:
-    - t: 109.53282
+    - t: 109.39948
       p: {x: 114.5, y: 1.5, z: 4.3}
     lente: 42
     lenteFinal: 0
@@ -2651,31 +2796,31 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 113.07735
-    t1: 119.68551
+    t0: 112.81067
+    t1: 119.41883
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
-    - t: 113.07735
+    - t: 112.81067
       p: {x: 114.35, y: 1.1, z: 3.35}
     lente: 44
     lenteFinal: 0
     sujetos: []
     pesos: []
     extras: []
-    focoFijo: {x: 115.08, y: 0.691, z: 3.08}
+    focoFijo: {x: 114.98, y: 0.691, z: 3.08}
     alturaDelFoco: 0
     encuadre: {x: 0, y: -0.074}
     suavidad: 0
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 119.68551
-    t1: 121.749115
+    t0: 119.41883
+    t1: 121.48244
     tipo: 1
     descripcion: conjunto de will y eldran
     posiciones:
-    - t: 119.68551
+    - t: 119.41883
       p: {x: 114, y: 1.2, z: 4.3}
     lente: 44
     lenteFinal: 0
@@ -2693,12 +2838,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 121.749115
-    t1: 128.14911
+    t0: 121.48244
+    t1: 127.88244
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 121.749115
+    - t: 121.48244
       p: {x: 113.5, y: 1.15, z: 3.6}
     lente: 34
     lenteFinal: 0
@@ -2714,12 +2859,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 128.14911
-    t1: 140.96849
+    t0: 127.88244
+    t1: 140.70183
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 128.14911
+    - t: 127.88244
       p: {x: 114, y: 1.2, z: 4.3}
     lente: 44
     lenteFinal: 0
@@ -2737,12 +2882,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 140.96849
-    t1: 147.62971
+    t0: 140.70183
+    t1: 147.36305
     tipo: 3
     descripcion: primer plano de eldran
     posiciones:
-    - t: 140.96849
+    - t: 140.70183
       p: {x: 114.8, y: 1.15, z: 4.3}
     lente: 34
     lenteFinal: 0
@@ -2758,12 +2903,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 147.62971
-    t1: 150.12971
+    t0: 147.36305
+    t1: 149.86305
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 147.62971
+    - t: 147.36305
       p: {x: 113.5, y: 1.15, z: 3.6}
     lente: 34
     lenteFinal: 0
@@ -2779,12 +2924,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 150.12971
-    t1: 157.99257
+    t0: 149.86305
+    t1: 157.7259
     tipo: 5
     descripcion: 'dos: will y eldran'
     posiciones:
-    - t: 150.12971
+    - t: 149.86305
       p: {x: 114, y: 1.2, z: 4.3}
     lente: 44
     lenteFinal: 0
@@ -2802,12 +2947,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 157.99257
-    t1: 160.49257
+    t0: 157.7259
+    t1: 160.2259
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 157.99257
+    - t: 157.7259
       p: {x: 113.5, y: 1.15, z: 3.6}
     lente: 34
     lenteFinal: 0
@@ -2823,12 +2968,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 160.49257
-    t1: 169.2491
+    t0: 160.2259
+    t1: 168.98244
     tipo: 2
     descripcion: medio de eldran
     posiciones:
-    - t: 160.49257
+    - t: 160.2259
       p: {x: 114.8, y: 1.15, z: 4.3}
     lente: 34
     lenteFinal: 0
@@ -2844,14 +2989,14 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 169.2491
+    - t: 168.98244
       p: {x: 115.6, y: 0.85, z: 3}
-    t0: 169.2491
-    t1: 176.05247
+    t0: 168.98244
+    t1: 175.78581
     tipo: 1
     descripcion: conjunto de will y eldran
     posiciones:
-    - t: 169.2491
+    - t: 168.98244
       p: {x: 118.4, y: 1.05, z: 4.3}
     lente: 36
     lenteFinal: 0
@@ -2873,123 +3018,123 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202842388366168
-    linea: 104
+      rid: 6540294476782371417
+    linea: 105
   - onlyIfFlag: 
     skipIfFlag: 
     t: 4
     beat:
-      rid: 5630202842388366169
-    linea: 109
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366170
-    linea: 117
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366171
-    linea: 115
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366172
-    linea: 114
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366173
-    linea: 116
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366174
-    linea: 112
-  - onlyIfFlag: 
-    skipIfFlag: velaControlada
-    t: 4.3
-    beat:
-      rid: 5630202842388366175
-    linea: 111
-  - onlyIfFlag: velaControlada
-    skipIfFlag: 
-    t: 4.3
-    beat:
-      rid: 5630202842388366176
+      rid: 6540294476782371418
     linea: 110
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 5630202842388366177
+      rid: 6540294476782371419
+    linea: 118
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371420
+    linea: 116
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371421
+    linea: 115
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371422
+    linea: 117
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371423
     linea: 113
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371424
+    linea: 112
+  - onlyIfFlag: velaControlada
+    skipIfFlag: 
+    t: 4.3
+    beat:
+      rid: 6540294476782371425
+    linea: 111
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.3
+    beat:
+      rid: 6540294476782371426
+    linea: 114
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.5647116
     beat:
-      rid: 5630202842388366178
-    linea: 131
+      rid: 6540294476782371427
+    linea: 132
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 6.698045
+    t: 7.1813784
     beat:
-      rid: 5630202842388366179
-    linea: 133
+      rid: 6540294476782371428
+    linea: 134
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 90.15812
+    t: 90.02478
     beat:
-      rid: 5630202842388366180
-    linea: 201
+      rid: 6540294476782371429
+    linea: 206
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 90.15812
+    t: 90.02478
     beat:
-      rid: 5630202842388366181
-    linea: 202
+      rid: 6540294476782371430
+    linea: 207
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 103.932816
+    t: 103.79948
     beat:
-      rid: 5630202842388366182
-    linea: 240
+      rid: 6540294476782371431
+    linea: 245
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 103.932816
+    t: 103.79948
     beat:
-      rid: 5630202842388366183
-    linea: 241
+      rid: 6540294476782371432
+    linea: 246
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 112.44401
+    t: 112.79401
     beat:
-      rid: 5630202842388366184
-    linea: 253
+      rid: 6540294476782371433
+    linea: 258
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 175.55247
+    t: 175.28581
     beat:
-      rid: 5630202842388366185
-    linea: 293
+      rid: 6540294476782371434
+    linea: 298
   etiquetas:
   - nombre: vela
     t: 0
   - nombre: bollo
     t: 6.5647116
   - nombre: origen
-    t: 31.429422
+    t: 31.296087
   - nombre: eldran
-    t: 77.316895
+    t: 77.183556
   - nombre: aro
-    t: 109.53282
+    t: 109.39948
   - nombre: salida
-    t: 169.2491
+    t: 168.98244
   puntos:
   - nombre: will_mesa
     posicion: {x: 115.7, y: 0, z: 2.62}
@@ -3020,11 +3165,11 @@ MonoBehaviour:
   - nombre: eldran_a_cama
     posicion: {x: 115, y: 0, z: 2.3}
   - nombre: apoyo_bollo
-    posicion: {x: 115.08, y: 0.691, z: 3.98}
+    posicion: {x: 114.98, y: 0.691, z: 3.98}
   - nombre: dejar_bollo
     posicion: {x: 115.27, y: 0, z: 3.98}
   - nombre: apoyo_aro
-    posicion: {x: 115.08, y: 0.691, z: 3.08}
+    posicion: {x: 114.98, y: 0.691, z: 3.08}
   - nombre: dejar_aro
     posicion: {x: 115.27, y: 0, z: 3.08}
   - nombre: cam_vela
@@ -3054,9 +3199,9 @@ MonoBehaviour:
   - nombre: p_exp_selene_inicio
     posicion: {x: 300, y: 0, z: 3.5}
   - nombre: p_exp_eldran_inicio
-    posicion: {x: 298.5, y: 0, z: 1.5}
+    posicion: {x: 298.7, y: 0, z: 1.5}
   - nombre: p_exp_silas_inicio
-    posicion: {x: 301.5, y: 0, z: 1.2}
+    posicion: {x: 301.3, y: 0, z: 1.2}
   - nombre: p_exp_selene_paso
     posicion: {x: 300, y: 0, z: 6.5}
   - nombre: p_exp_selene_umbral
@@ -3064,11 +3209,11 @@ MonoBehaviour:
   - nombre: p_exp_selene_vacio
     posicion: {x: 300, y: 0, z: 12}
   - nombre: p_exp_eldran_paso
-    posicion: {x: 298.5, y: 0, z: 4.5}
+    posicion: {x: 298.7, y: 0, z: 4.5}
   - nombre: p_exp_eldran_alcance
-    posicion: {x: 298.5, y: 0, z: 7.5}
+    posicion: {x: 298.7, y: 0, z: 7.5}
   - nombre: p_exp_silas_paso
-    posicion: {x: 301.5, y: 0, z: 4.2}
+    posicion: {x: 301.3, y: 0, z: 4.2}
   - nombre: p_exp_silas_freno
     posicion: {x: 300.4, y: 0, z: 7.2}
   - nombre: p_exp_umbral
@@ -3085,7 +3230,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202842388366168
+    - rid: 6540294476782371417
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3093,7 +3238,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202842388366169
+    - rid: 6540294476782371418
       type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3112,7 +3257,7 @@ MonoBehaviour:
         successFlag: velaControlada
         tolerant: 1
         detenerEscena: 1
-    - rid: 5630202842388366170
+    - rid: 6540294476782371419
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3125,7 +3270,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202842388366171
+    - rid: 6540294476782371420
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3135,7 +3280,7 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 5630202842388366172
+    - rid: 6540294476782371421
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3145,7 +3290,7 @@ MonoBehaviour:
         markName: vela
         volume: 0.8
         tono: 1
-    - rid: 5630202842388366173
+    - rid: 6540294476782371422
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3155,7 +3300,7 @@ MonoBehaviour:
         repeats: 2
         holdSeconds: 0.6
         returnToNormalAfter: 0
-    - rid: 5630202842388366174
+    - rid: 6540294476782371423
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3168,7 +3313,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202842388366175
+    - rid: 6540294476782371424
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3181,7 +3326,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202842388366176
+    - rid: 6540294476782371425
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3194,7 +3339,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202842388366177
+    - rid: 6540294476782371426
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3207,7 +3352,7 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 1
-    - rid: 5630202842388366178
+    - rid: 6540294476782371427
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3216,7 +3361,7 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 5630202842388366179
+    - rid: 6540294476782371428
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3226,39 +3371,40 @@ MonoBehaviour:
         mano: 18
         offset: {x: 0, y: 0.04, z: 0.06}
         giro: {x: 0, y: 0, z: 0}
-        posicionFinal: {x: 115.08, y: 0.690995, z: 3.98}
+        posicionFinal: {x: 114.98, y: 0.690995, z: 3.98}
         giroFinal: {x: -0, y: 0, z: 0}
         tieneDestinoFinal: 1
-        gestoHorneado: Opening01_Stop
-        segundoDelGesto: 0.13333334
+        ocultoAlFinal: 0
+        gestoHorneado: Opening01_Begin
+        segundoDelGesto: 0.61666673
         segundosDeApoyo: 0.25
-    - rid: 5630202842388366180
+    - rid: 6540294476782371429
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 5630202842388366181
+    - rid: 6540294476782371430
       type: {class: PostprocesoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         perfil: {fileID: 11400000, guid: 201dd19f7f8e4bc4ba1b0c2a28f06a50, type: 2}
         transicion: 0.2
         esperar: 0
-    - rid: 5630202842388366182
+    - rid: 6540294476782371431
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 5630202842388366183
+    - rid: 6540294476782371432
       type: {class: PostprocesoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         perfil: {fileID: 11400000, guid: 106eacf28b0544b48a5acb7efc3ed589, type: 2}
         transicion: 1.2
         esperar: 0
-    - rid: 5630202842388366184
+    - rid: 6540294476782371433
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3268,13 +3414,14 @@ MonoBehaviour:
         mano: 18
         offset: {x: 0, y: 0.04, z: 0.06}
         giro: {x: 0, y: 0, z: 0}
-        posicionFinal: {x: 115.08, y: 0.7109722, z: 3.08}
+        posicionFinal: {x: 114.98, y: 0.6512251, z: 3.08}
         giroFinal: {x: -0, y: 0, z: 0}
         tieneDestinoFinal: 1
-        gestoHorneado: Opening01_Stop
-        segundoDelGesto: 0.13333334
+        ocultoAlFinal: 0
+        gestoHorneado: Opening01_Begin
+        segundoDelGesto: 0.61666673
         segundosDeApoyo: 0.25
-    - rid: 5630202842388366185
+    - rid: 6540294476782371434
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

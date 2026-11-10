@@ -31,13 +31,10 @@ public class BattleEncounterSO : ScriptableObject
     [Tooltip("Capa de suelo usada para asentar al enemigo en el terreno tras calcular su posición (raycast hacia abajo). Si se deja en 'Nothing', se usa la capa de suelo configurada en el BossArenaController de la escena.")]
     public LayerMask floorLayer;
 
-    [Header("Premio al ganar (INC-470 / INC-847)")]
-    [Tooltip("Puntos de Sintonía Estelar que otorga este combate (por defecto 100).")]
+    [Header("Premio al ganar")]
+    [Tooltip("Puntos de Sintonía Estelar que da este combate; salen en el informe de victoria. " +
+             "Las estadísticas no suben por combatir: cada hito de Sintonía se cambia por más vida o más magia.")]
     public int premioSintonia = 100;
-
-    [Tooltip("Lo que suben las estadísticas de Will al ganar este combate. Se suma una sola vez por " +
-             "batalla ganada y sale en el informe final.")]
-    public Estadisticas premioEstadisticas;
 
     [Header("Guía (INC-489)")]
     [Tooltip("Quién guía al jugador durante este combate y qué le dice. Vacío = nadie habla.")]

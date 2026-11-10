@@ -450,19 +450,10 @@ public class ShopUI : MonoBehaviour
         if (detailDescription == null || _selectedEntry?.item == null) return;
         string descripcion = _selectedEntry.item.GetLocalizedDescription();
         var pieza = _selectedEntry.item.wardrobeUnlock;
-        if (pieza != null && !pieza.Bonos.EsCero && _selectedEntry.item.usageKind != ItemData.ItemUsageKind.Consumable)
+        if (pieza != null && pieza.Rasgos.Count > 0 && _selectedEntry.item.usageKind != ItemData.ItemUsageKind.Consumable)
         {
-            var total = EstadisticasDelPersonaje.Total;
-            var equipado = EstadisticasDelPersonaje.TotalSiSeEquipa(pieza);
-            string comparacion = TextoDeEstadisticas.Comparacion(total, equipado);
-            if (!string.IsNullOrEmpty(comparacion))
-            {
-                string titulo = LocalizationManager.Instance != null
-                    ? LocalizationManager.Instance.Get("SHOP_IF_EQUIPPED", "Si te la equipas:") : "Si te la equipas:";
-                descripcion += "\n\n" + titulo + "\n" + comparacion;
-                string efectos = TextoDeEstadisticas.Efectos(total, equipado);
-                if (!string.IsNullOrEmpty(efectos)) descripcion += "\n" + efectos;
-            }
+            foreach (var rasgo in pieza.Rasgos)
+                descripcion += "\n<color=#6FDC8C>+ " + RasgosDePrenda.Texto(rasgo) + "</color>";
         }
         detailDescription.richText = true;
         var moneda = shopController != null ? shopController.CurrencyItem : null;

@@ -100,6 +100,10 @@ public static class MenuManager
         Debug.Log("[MenuManager] Intentando abrir menú: " + kind);
 #endif
 
+        // Los menús que abre el jugador no se abren durante una cinemática (ver INC-997).
+        if (CinematicSequencerBase.AnySequenceActive && EsMenuDelJugador(kind))
+            return false;
+
         // Clean up stale registrations by validating known menu instances.
         // If a menu was marked open in s_open but the actual UI reports closed,
         // reset the registration so it doesn't block new opens.
@@ -170,6 +174,11 @@ public static class MenuManager
         MenuOpened?.Invoke(kind);
         return true;
     }
+
+    /// <summary>Menús que abre el jugador con un botón (no la tienda, el diálogo ni el Game Over).</summary>
+    static bool EsMenuDelJugador(MenuKind kind) =>
+        kind == MenuKind.Pause || kind == MenuKind.Equipment || kind == MenuKind.Inventory ||
+        kind == MenuKind.Mission || kind == MenuKind.BigMap || kind == MenuKind.Collection;
 
     /// <summary>Mark a menu as closed.</summary>
     public static void Close(MenuKind kind)

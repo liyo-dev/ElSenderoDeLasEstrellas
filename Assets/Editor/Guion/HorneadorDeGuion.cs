@@ -140,6 +140,17 @@ internal sealed class ActorH
     public readonly List<Encima> encima = new();
     /// Lo llevan en volandas: ni anda ni estorba a los que andan por debajo.
     public bool LlevadoEn(float t) => encima.Any(e => t >= e.t0 && t < e.t1);
+
+    /// Un tramo de la mano de otro («de_la_mano»): va a su lado, al paso de quien le guía.
+    public sealed class DeLaMano
+    {
+        public float t0, t1, lado;
+        public ActorH guia;
+        public bool hecho;   // su camino ya está calculado (al soltarse)
+    }
+    public readonly List<DeLaMano> deLaMano = new();
+    /// Va de la mano de alguien: su camino es el de quien le guía y no estorba a los demás.
+    public bool DeLaManoEn(float t) => deLaMano.Any(e => t >= e.t0 && t < e.t1);
     public bool DeslizandoEn(float t) => deslizando.Any(d => t >= d.t0 && t < d.t1);
     public bool AndandoEn(float t) => VelEn(t).sqrMagnitude > 0.08f * 0.08f && !DeslizandoEn(t);
 
@@ -243,9 +254,12 @@ internal sealed class ActorH
     /// «A nadie»: la cabeza vuelve al frente.
     public static ClaveDeMirada CabezaAlFrente => new() { tipo = TipoDeMirada.Rumbo };
 
-    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f, bool alFinal = false)
+    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f, bool alFinal = false, string voz = null)
     {
-        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido, alFinal = alFinal });
+        // Un bucle o el reposo ya cierran el gesto de cuerpo entero que hubiera.
+        if (tipo == TipoDeAnimacion.Bucle || tipo == TipoDeAnimacion.Reposo)
+            anim.RemoveAll(x => x.tipo == TipoDeAnimacion.FinDeGesto && x.t > t - 1e-4f);
+        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido, alFinal = alFinal, voz = voz });
     }
 }
 
@@ -343,6 +357,7 @@ internal sealed partial class Horno
         Repartir();
         if (Errores.Count > 0) return null;
         LlevarEncima();
+        LlevarDeLaMano();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Actuación…", 0.5f);
         Rematar();
@@ -741,6 +756,28 @@ internal sealed partial class Horno
                 });
                 return 0f;
             }
+            case "de_la_mano":
+            {
+                // «clara de_la_mano madre [lado=der|izq] [dura=s]»: va al lado de la madre, cogida de
+                // su mano, adonde ande ella. Su camino lo calcula LlevarDeLaMano al final.
+                if (o.args.Count == 0 || !_actores.TryGetValue(o.args[0], out var guia) || guia == a)
+                { Error($"{o}: de_la_mano ¿de quién? (otro personaje del REPARTO)"); return 0f; }
+                SoltarBucleSiAnda(a, t, haraCuerpo: true);
+                a.Cortar(t);
+                a.deLaMano.Add(new ActorH.DeLaMano
+                {
+                    t0 = t, guia = guia, lado = o.Op("lado", "der") == "izq" ? -1f : 1f,
+                    t1 = o.opciones.ContainsKey("dura") ? t + Mathf.Max(0.1f, o.OpF("dura", 0f)) : float.PositiveInfinity,
+                });
+                return 0f;
+            }
+            case "suelta":
+            {
+                // Se calcula ya el tramo de la mano: lo que haga después sale de donde se ha soltado.
+                foreach (var m in a.deLaMano)
+                    if (!m.hecho && m.t0 <= t && m.t1 > t) { m.t1 = t; IrDeLaMano(a, m); }
+                return 0f;
+            }
             case "pasea":
             {
                 var puntos = new List<Vector3>();
@@ -772,10 +809,19 @@ internal sealed partial class Horno
                 if (!Estado(a, ref estado, o)) return 0f;
                 int veces = Mathf.Max(1, (int)o.OpF("veces", 1));
                 float largo = a.estados[estado].largo;
-                for (int i = 0; i < veces; i++) a.Animar(t + i * largo * 0.92f, TipoDeAnimacion.Gesto, estado);
+                // «voz=laugh» elige la reacción, «voz=no» la calla; sin nada, la que pide el gesto.
+                string voz = o.opciones.TryGetValue("voz", out var v) ? (v == "no" ? null : v)
+                    : ReaccionesDeEscena.VozParaGesto(estado);
+                // Otro gesto de cuerpo entero manda sobre el cierre pendiente del anterior.
+                if (a.estados[estado].cuerpoEntero)
+                    a.anim.RemoveAll(x => x.tipo == TipoDeAnimacion.FinDeGesto && x.t > t - 1e-4f);
+                for (int i = 0; i < veces; i++) a.Animar(t + i * largo * 0.92f, TipoDeAnimacion.Gesto, estado, voz: i == 0 ? voz : null);
                 float dura = o.opciones.ContainsKey("dura") ? o.OpF("dura", largo) : largo * veces * 0.92f;
-                if (a.bucle != null && a.estados[estado].cuerpoEntero)
-                    a.Animar(t + dura, TipoDeAnimacion.Bucle, a.bucle);
+                if (a.estados[estado].cuerpoEntero)
+                {
+                    if (a.bucle != null) a.Animar(t + dura, TipoDeAnimacion.Bucle, a.bucle);
+                    else a.Animar(t + dura, TipoDeAnimacion.FinDeGesto);
+                }
                 return dura;
             }
             case "bucle":
@@ -871,6 +917,58 @@ internal sealed partial class Horno
                 a.deslizando.Add((e.t0, e.t1 + 0.05f));
             }
     }
+
+    /// Los que van de la mano («de_la_mano»): mientras dura, su camino es el de quien les guía,
+    /// desplazado a su lado (perpendicular a hacia donde anda); llegan a ese sitio en 0,4 s y,
+    /// cuando quien guía se para, se quedan donde estaban. Pone los DeLaManoBeat de coger y soltar.
+    private void LlevarDeLaMano()
+    {
+        foreach (var a in _actores.Values)
+            foreach (var m in a.deLaMano)
+                if (!m.hecho) IrDeLaMano(a, m);
+    }
+
+    private void IrDeLaMano(ActorH a, ActorH.DeLaMano m)
+    {
+        const float Paso = 0.1f, Separacion = 0.55f, Entra = 0.4f;
+        m.hecho = true;
+        bool hastaElFinal = float.IsInfinity(m.t1);
+        if (hastaElFinal)
+        {
+            m.t1 = _fin;
+            foreach (var v in a.visibilidad)
+                if (v.t > m.t0 && !v.visible) { m.t1 = v.t; break; }
+        }
+        if (m.t1 <= m.t0) return;
+        Vector3 desde = a.PosEn(m.t0);
+        // Hacia dónde mira quien guía al empezar: el que va de su mano queda a ese lado.
+        Vector3 lateral = Plano(desde - m.guia.PosEn(m.t0));
+        lateral = lateral.sqrMagnitude > 1e-4f ? lateral.normalized * m.lado : Vector3.right;
+        Vector3 rumbo = Vector3.Cross(lateral * m.lado, Vector3.up) * m.lado;
+        var despues = a.pos.Where(k => k.t > m.t1 + 1e-4f).ToList();
+        a.pos.RemoveAll(k => k.t > m.t0 + 1e-4f);
+        if (a.pos.Count == 0 || a.pos[a.pos.Count - 1].t < m.t0 - 1e-4f) a.pos.Add(new ClaveDePosicion(m.t0, desde));
+        for (float t = m.t0 + Paso; ; t += Paso)
+        {
+            t = Mathf.Min(t, m.t1);
+            Vector3 vel = Plano(m.guia.VelEn(t));
+            if (vel.sqrMagnitude > 0.05f * 0.05f) rumbo = Vector3.Slerp(rumbo, vel.normalized, 0.35f);
+            Vector3 derecha = Vector3.Cross(Vector3.up, rumbo).normalized;
+            Vector3 sitio = m.guia.PosEn(t) + derecha * (Separacion * m.lado);
+            sitio.y = SueloEn(sitio, m.guia.PosEn(t).y);
+            float u = Mathf.Clamp01((t - m.t0) / Entra);
+            a.pos.Add(new ClaveDePosicion(t, Vector3.Lerp(desde, sitio, u * u * (3f - 2f * u))));
+            if (t >= m.t1) break;
+        }
+        a.pos.AddRange(despues);
+        _efectos.Add(new EfectoHorneado { t = m.t0, beat = new DeLaManoBeat { guiaId = m.guia.id, quienId = a.id, coger = true } });
+        if (!hastaElFinal || m.t1 < _fin - 0.01f)
+            _efectos.Add(new EfectoHorneado { t = m.t1, beat = new DeLaManoBeat { guiaId = m.guia.id, quienId = a.id, coger = false } });
+    }
+
+    /// Altura del NavMesh bajo un punto (o la que se dé si no hay).
+    private static float SueloEn(Vector3 p, float porDefecto)
+        => UnityEngine.AI.NavMesh.SamplePosition(p, out var hit, 1.0f, UnityEngine.AI.NavMesh.AllAreas) ? hit.position.y : porDefecto;
 
     /// Sentado (un bucle «Sit…»): el cuerpo se queda como lo dejó el asiento. Ni las miradas de
     /// las frases (la suya y la de quien le habla) ni un «mira» lo giran.

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339f96974e841554e98a97b47f63f440, type: 3}
+  m_Name: Q_CAP2_HORA_DE_PARTIR
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questId: CAP2_HORA_DE_PARTIR
+  displayNameId: CAP2_HORA_DE_PARTIR_NAME
+  displayName: Hora de partir
+  descriptionId: CAP2_HORA_DE_PARTIR_DESC
+  description: "Desp\xEDdete de Oliver y re\xFAnete con Eldran en la salida del pueblo."
+  detailedDescriptionId: CAP2_HORA_DE_PARTIR_DETAIL
+  detailedDescription: "Desp\xEDdete de Oliver y re\xFAnete con Eldran en la salida del pueblo."
+  steps:
+  - descriptionId: CAP2_ADIOS_OLIVER_PASO
+    description: "Desp\xEDdete de Oliver"
+    conditionId: CAP2_ADIOS_OLIVER
+  - descriptionId: CAP2_ADIOS_ELDRAN_PASO
+    description: "Re\xFAnete con Eldran en la salida del pueblo"
+    conditionId: CAP2_ADIOS_ELDRAN

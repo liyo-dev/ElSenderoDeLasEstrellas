@@ -5,7 +5,7 @@ using UnityEngine;
 ///
 /// Sin niveles numéricos clásicos: al derrotar enemigos y purificar amenazas se acumulan puntos
 /// de Sintonía Estelar. Al completarse la barra se alcanza un hito, que queda pendiente hasta que
-/// el jugador lo elige desde el menú de Equipo (PopupEleccionSintoniaUI) entre dos dones:
+/// el jugador lo elige en la pestaña Sintonía del menú de Start (VistaDeSintoniaDelMenu) entre dos dones:
 ///  - Vigor (+15 Vida Máxima para todo el grupo)
 ///  - Flujo (+10 Maná Máximo para todo el grupo)
 /// Los dones suben los máximos por el camino de siempre (EstadisticasDelPersonaje.Sumar, que los
@@ -32,8 +32,8 @@ public class SintoniaEstelarService : MonoBehaviour
         Flujo  // +10 Maná Máximo
     }
 
-    private const float VidaPorVigor = 15f;
-    private const float ManaPorFlujo = 10f;
+    public const float VidaPorVigor = 15f;
+    public const float ManaPorFlujo = 10f;
 
     [Header("Configuración de Umbrales")]
     [Tooltip("Puntos base necesarios para el primer hito de sintonía.")]
@@ -91,9 +91,10 @@ public class SintoniaEstelarService : MonoBehaviour
     // ─── Progresión y ganancias ─────────────────────────────────────────────
 
     /// <summary>
-    /// Suma puntos de sintonía estelar y evalúa si se alcanza uno o más hitos.
+    /// Suma puntos de sintonía estelar y evalúa si se alcanza uno o más hitos. Con
+    /// <paramref name="avisar"/> a false no saca el aviso de hito nuevo (el informe de victoria ya lo cuenta).
     /// </summary>
-    public void SumarSintonia(int puntos, Vector3? posicionOrigen = null)
+    public void SumarSintonia(int puntos, Vector3? posicionOrigen = null, bool avisar = true)
     {
         if (puntos <= 0) return;
 
@@ -115,22 +116,21 @@ public class SintoniaEstelarService : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SintoniaEstelarService] Nuevo hito alcanzado. Total hitos: {_hitosAlcanzados}, pendientes: {_hitosPendientes}");
 #endif
-            if (HudToastService.Instance != null)
+            if (avisar && HudToastService.Instance != null)
             {
-                HudToastService.Instance.ShowRaw("✨ ¡Nueva Sintonía Estelar disponible! (Menú de Equipo)", 3.5f);
+                HudToastService.Instance.ShowRaw("Sintonía completa · elige tu don en el menú, pestaña Sintonía", 3.5f);
             }
         }
     }
 
     /// <summary>
-    /// Fuerza un hito inmediato y abre la elección (pruebas y depuración).
+    /// Fuerza un hito inmediato (pruebas y depuración); se elige en la pestaña Sintonía del menú.
     /// </summary>
     public void ForzarHito()
     {
         _hitosAlcanzados++;
         _hitosPendientes++;
         GuardarEnPreset();
-        PopupEleccionSintoniaUI.Abrir();
     }
 
     /// <summary>

@@ -14,7 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AgendaDelActor
   actorId: NPC_Victoria
   entradas:
-  - nombre: Siempre · cuenta cosas de Eldran y de Will de pequeño
+  - nombre: "Cap. 2 \xB7 despedida de Will"
+    tramo:
+      empiezaConSenal:
+      - CAP2_A_DESPEDIRSE
+      empiezaConMisionActiva: []
+      acabaConSenal:
+      - CAP3_CAMINO_EMPIEZA
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 0
+    marca: 
+    frases:
+    - {fileID: 11400000, guid: 1b869c2307cca1545875dceec0e8c70b, type: 2}
+  - nombre: "Desde el Cap. 2 \xB7 charla con Oliver en su puesto"
+    tramo:
+      empiezaConSenal:
+      - CH_Cap1_BACK_1
+      empiezaConMisionActiva: []
+      acabaConSenal: []
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 1
+    marca: Cap2_VictoriaCharla
+    frases:
+    - {fileID: 11400000, guid: c51f775b69b84263afb700937be9f475, type: 2}
+    - {fileID: 11400000, guid: 61105504cb7c47a69c7035fca3a4287d, type: 2}
+    - {fileID: 11400000, guid: 2c621a06b999487d980e2d5e1e729c6c, type: 2}
+  - nombre: "Siempre \xB7 cuenta cosas de Eldran y de Will de peque\xF1o"
     tramo:
       empiezaConSenal: []
       empiezaConMisionActiva: []

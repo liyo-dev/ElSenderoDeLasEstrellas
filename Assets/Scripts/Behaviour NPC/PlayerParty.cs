@@ -1079,6 +1079,11 @@ namespace Game.NPC
         /// <summary>
         /// Reintenta restaurar los miembros pendientes.
         /// </summary>
+        /// Un nombre contiene al otro. Un nombre vacío no se parece a nada: si no, cualquier
+        /// compañero sin nombre «coincidiría» con el que se busca y entraría en el grupo (ver INC-1015).
+        private static bool Parecidos(string a, string b) =>
+            !string.IsNullOrEmpty(a) && !string.IsNullOrEmpty(b) && (a.Contains(b) || b.Contains(a));
+
         private void RetryPendingMembers()
         {
             if (_pendingMemberIds.Count == 0) return;
@@ -1137,7 +1142,7 @@ namespace Game.NPC
                     foreach (var regId in registeredIds)
                     {
                         var regIdClean = regId.ToLowerInvariant().Replace("_", "").Replace(" ", "");
-                        if (regIdClean.Contains(idLower) || idLower.Contains(regIdClean))
+                        if (Parecidos(regIdClean, idLower))
                         {
                             Log($"  🎯 Coincidencia parcial con: '{regId}'");
                             npcManager = NPCRegistry.Instance?.GetNPCByID(regId);
@@ -1176,8 +1181,7 @@ namespace Game.NPC
 
                         Log($"    Comparando con: GO='{pm.gameObject.name}' ({goNameClean}), DisplayName='{pm.DisplayName}' ({displayNameClean})");
 
-                        if (goNameClean.Contains(idLower) || idLower.Contains(goNameClean) ||
-                            (pm.DisplayName != null && (displayNameClean.Contains(idLower) || idLower.Contains(displayNameClean))))
+                        if (Parecidos(goNameClean, idLower) || Parecidos(displayNameClean, idLower))
                         {
                             Log($"  ✅ Encontrado en escena: '{pm.gameObject.name}'");
                             if (!HasMember(pm))
@@ -1921,7 +1925,7 @@ namespace Game.NPC
                 var idLower = id.ToLowerInvariant().TrimStart('_');
                 foreach (var regId in registeredIds)
                 {
-                    if (regId.ToLowerInvariant().Contains(idLower) || idLower.Contains(regId.ToLowerInvariant()))
+                    if (Parecidos(regId.ToLowerInvariant(), idLower))
                     {
                         Log($"  → Encontrado por coincidencia parcial: '{regId}'");
                         npcManager = NPCRegistry.Instance?.GetNPCByID(regId);

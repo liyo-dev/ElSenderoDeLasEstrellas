@@ -106,6 +106,7 @@ internal sealed partial class Horno
                     var a = lista[i]; var b = lista[j];
                     if (!a.VisibleEn(t) || !b.VisibleEn(t)) continue;
                     if (a.LlevadoEn(t) || b.LlevadoEn(t)) continue;
+                    if ((a.DeLaManoEn(t) && a.deLaMano.Any(m => m.guia == b)) || (b.DeLaManoEn(t) && b.deLaMano.Any(m => m.guia == a))) continue;
                     if (!a.AndandoEn(t) && !b.AndandoEn(t)) continue;
                     if (Plano(a.PosEn(t) - b.PosEn(t)).magnitude >= 0.5f) continue;
                     string clave = $"{a.alias}-{b.alias}-{(int)(t / 3f)}";

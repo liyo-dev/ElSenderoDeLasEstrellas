@@ -13,6 +13,9 @@ Con --disenar "descripción" no busca en la biblioteca: pide a ElevenLabs (dise�
 nuevas que encajen con la descripción y guarda lo que dicen. Para quedarse con una hay que guardarla
 en la cuenta con su generated_voice_id (python Tools\\Audio\\buscar_voces.py --guardar ID --nombre "…").
 Con --ids se prueban voces concretas de la biblioteca en vez de buscarlas.
+Con --escuchar no gasta créditos: en vez de hacer que cada candidata diga la frase, descarga la
+muestra que la propia voz trae en la biblioteca (su preview), para preseleccionar de oído cuando no
+quedan créditos. Luego se repite sin --escuchar, con --ids de las preseleccionadas, para oír la frase.
 
 Las tomas quedan en docs/doblaje-sendero/casting/<rol>/ con un indice.csv (nombre, acento, edad,
 descripción, id de la voz). Se prefieren las voces con acento peninsular; si no hay bastantes, se
@@ -88,14 +91,15 @@ def main():
     p.add_argument("--buscar", default=None, help="Texto libre (niño, abuela, teen…).")
     p.add_argument("--max", type=int, default=5)
     p.add_argument("--texto", default="", help="Frase que dice cada candidata (admite etiquetas [sad], [laughs]…).")
+    p.add_argument("--escuchar", action="store_true", help="Sin créditos: descarga la muestra de cada voz en vez de la frase.")
     a = p.parse_args()
 
     clave = clave_de_api()
     if a.guardar:
         guardar(clave, a.guardar, a.nombre or a.guardar, a.disenar)
         return
-    if not a.rol or not a.texto:
-        raise SystemExit("Faltan --rol y --texto.")
+    if not a.rol or (not a.texto and not a.escuchar):
+        raise SystemExit("Faltan --rol y --texto (o --escuchar).")
     carpeta = os.path.join(CASTING, a.rol)
     os.makedirs(carpeta, exist_ok=True)
 
@@ -128,14 +132,26 @@ def main():
 
     with open(os.path.join(carpeta, "indice.csv"), "a", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["muestra", "nombre", "acento", "edad", "descripcion", "voice_id", "public_owner_id"])
+        w.writerow(["muestra", "nombre", "acento", "edad", "descripcion", "voice_id", "public_owner_id", "preview_url"])
+        ya = len([x for x in os.listdir(carpeta) if x.endswith('.mp3') and not x.startswith('D')])
         for i, v in enumerate(candidatas, 1):
             nombre = re.sub(r'[\\/:*?"<>|]', "", v.get("name", "voz"))[:40].strip()
-            archivo = f"{len([x for x in os.listdir(carpeta) if x.endswith('.mp3') and not x.startswith('D')]) + 1:02d} {nombre}.mp3"
-            with open(os.path.join(carpeta, archivo), "wb") as mp3:
-                mp3.write(decir(clave, v["voice_id"], a.texto))
+            archivo = f"{ya + i:02d} {nombre}.mp3"
+            if a.escuchar:
+                if not v.get("preview_url"):
+                    print(f"{v.get('name')}: sin muestra en la biblioteca")
+                    continue
+                archivo = archivo[:-4] + " (muestra).mp3"
+                try:
+                    with urllib.request.urlopen(v["preview_url"], timeout=60) as r, open(os.path.join(carpeta, archivo), "wb") as mp3:
+                        mp3.write(r.read())
+                except OSError as e:   # la red no deja bajarla: queda el enlace en el índice
+                    print(f"{archivo}: no se pudo bajar ({e}); el enlace queda en indice.csv")
+            else:
+                with open(os.path.join(carpeta, archivo), "wb") as mp3:
+                    mp3.write(decir(clave, v["voice_id"], a.texto))
             w.writerow([archivo, v.get("name"), v.get("accent"), v.get("age"),
-                        (v.get("description") or "").replace("\n", " ")[:160], v["voice_id"], v.get("public_owner_id")])
+                        (v.get("description") or "").replace("\n", " ")[:160], v["voice_id"], v.get("public_owner_id"), v.get("preview_url")])
             print(f"{archivo}  ({v.get('accent')}, {v.get('age')})")
     print(f"Muestras en {carpeta}")
 

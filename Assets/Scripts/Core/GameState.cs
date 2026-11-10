@@ -123,11 +123,14 @@ public static class GameState
                                  GamePhase.GameOver,
                                  GamePhase.Inventory,
                                  GamePhase.Equipment,
-                                 GamePhase.QuestMenu);
+                                 GamePhase.QuestMenu)
+                          && !CinematicSequencerBase.AnySequenceActive;
             return result;
         }
     }
 
+    /// <summary>Los menús del jugador (inventario, misiones, mapa) no se abren durante una cinemática.</summary>
     public static bool CanOpenInventory
-        => CanProcessGameplayInput && !Is(GamePhase.Inventory) && !Is(GamePhase.Equipment) && !Is(GamePhase.QuestMenu);
+        => CanProcessGameplayInput && !Is(GamePhase.Inventory) && !Is(GamePhase.Equipment) && !Is(GamePhase.QuestMenu)
+           && !CinematicSequencerBase.AnySequenceActive;
 }

@@ -56,7 +56,7 @@ namespace Sendero.UI
     }
 
     /// Algo puntual que el retrato quiere que el personaje haga (además de cambiar de cara).
-    public enum ReaccionDeRetrato { Golpe = 0, Saludo = 1 }
+    public enum ReaccionDeRetrato { Golpe = 0, Saludo = 1, Victoria = 2 }
 
     /// Fuente de imagen que se mueve (un retrato vivo): necesita saber cuándo se ve, para no
     /// gastar en lo que no está en pantalla, y qué reacciones hacer.

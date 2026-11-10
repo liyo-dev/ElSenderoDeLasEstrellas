@@ -310,6 +310,7 @@ namespace Sendero.Narrative.Editor
             dst.unlockedWardrobeIds = new List<string>(cosmeticBase?.unlockedWardrobeIds ?? new List<string>());
 
             dst.flags = new List<string>();
+            dst.senalesEmitidas = new List<string>();
             dst.inventoryItems = new List<InventoryItemSave>();
             dst.defeatedBossIds = new List<string>();
             dst.consumedInteractableIds = new List<string>();

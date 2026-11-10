@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f8f69944e944edfa8a5ae2ccd7f2ac3, type: 3}
+  m_Name: Agenda_NPC_Eusebio
+  m_EditorClassIdentifier: Assembly-CSharp::AgendaDelActor
+  actorId: NPC_Eusebio
+  entradas:
+  - nombre: "Cap. 3 \xB7 la aldea del mar"
+    tramo:
+      empiezaConSenal:
+      - CAP3_ALDEA_EMPIEZA
+      empiezaConMisionActiva: []
+      acabaConSenal:
+      - CH_Cap3_BACK_1
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 0
+    marca: 
+    frases:
+    - {fileID: 11400000, guid: 3edd256d3283a434484b3486b6614500, type: 2}
+    - {fileID: 11400000, guid: 487a5ea3f668bfc4c914c2671d20ff56, type: 2}
+  - nombre: "Aldea del mar \xB7 siempre"
+    tramo:
+      empiezaConSenal: []
+      empiezaConMisionActiva: []
+      acabaConSenal: []
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 0
+    marca: 
+    frases:
+    - {fileID: 11400000, guid: 175d2db8707635f4187a6e6313e47aff, type: 2}
+    - {fileID: 11400000, guid: e4901166305eabf40839091ca7c9f3af, type: 2}

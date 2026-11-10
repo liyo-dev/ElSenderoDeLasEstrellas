@@ -341,7 +341,9 @@ public class SequenceActor
     }
 
     private Coroutine _poseDelJugador;
-    public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f, bool alFinal = false)
+    /// `fundirAlFinal`: con `alFinal`, en vez de saltar a la pose final se funde hacia ella durante
+    /// `fundido` segundos, reproduciendo el final del clip (recostarse en la cama sin tirarse de golpe).
+    public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f, bool alFinal = false, bool fundirAlFinal = false)
     {
         if (string.IsNullOrEmpty(stateName)) return;
         if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal, fundido: fundido, alFinal: alFinal); return; }
@@ -355,7 +357,16 @@ public class SequenceActor
         if (capa > 0) animador.SetLayerWeight(capa, 1f);
         string rutaEstado = AnimatorLayerUtil.ResolveStatePath(animador, stateName, capa);
         float targetNorm = stateName == "FoundSomething_NoWeapon" ? 0.65f : 0.98f;
-        if (alFinal)
+        bool fundeAlFinal = alFinal && fundirAlFinal && fundido > 0f;
+        if (fundeAlFinal)
+        {
+            // El clip entra a falta de `fundido` segundos de la pose final y llega a ella justo al
+            // acabar el fundido; ahí la sostiene la corrutina.
+            float largo = LargoDelClip(animador, stateName);
+            float desde = largo > 0f ? Mathf.Max(0f, targetNorm * largo - fundido) : 0f;
+            animador.CrossFadeInFixedTime(Animator.StringToHash(rutaEstado), fundido, capa, desde);
+        }
+        else if (alFinal)
         {
             animador.Play(Animator.StringToHash(rutaEstado), capa, targetNorm);
         }
@@ -363,7 +374,22 @@ public class SequenceActor
         {
             animador.CrossFadeInFixedTime(Animator.StringToHash(rutaEstado), fundido, capa, 0f);
         }
-        _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal, alFinal));
+        _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal, alFinal && !fundeAlFinal));
+    }
+
+    /// Duración del clip que reproduce el estado (por nombre de clip); 0 si no se encuentra.
+    private static float LargoDelClip(Animator animador, string estado)
+    {
+        var controlador = animador != null ? animador.runtimeAnimatorController : null;
+        if (controlador == null) return 0f;
+        AnimationClip parecido = null;
+        foreach (var clip in controlador.animationClips)
+        {
+            if (clip == null) continue;
+            if (clip.name == estado) return clip.length;
+            if (parecido == null && clip.name.EndsWith(estado, System.StringComparison.Ordinal)) parecido = clip;
+        }
+        return parecido != null ? parecido.length : 0f;
     }
 
     private System.Collections.IEnumerator SostenerPoseDelJugador(string nombre, bool congelar, bool alFinal = false)
@@ -879,6 +905,14 @@ public class SequenceActor
         if (Agent != null) NavMeshAgentUtility.HardStop(Agent);
         ResetMovement();
         NpcAnimator?.TransitionToIdle();
+    }
+
+    /// Cierra un gesto de cuerpo entero sin salida propia sin tocar la charla ni la pose: en Will la
+    /// capa base se queda en el gesto (Dizzy_NoWeapon) hasta que se le devuelve a la locomoción; los
+    /// NPCs vuelven solos desde NPCSimpleAnimator.
+    public void CerrarGestoDeCuerpoEntero()
+    {
+        if (IsPlayer && _poseDelJugador == null) PlayerAnimator?.CerrarGestoDeCapaBase();
     }
 
     /// Devuelve al actor a su pose normal, cerrando cualquier animación de cuerpo entero que se

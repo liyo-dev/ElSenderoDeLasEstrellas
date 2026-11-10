@@ -1,4 +1,4 @@
-# Cap. 4 · La mañana en la casa entre raíces: el cartel y la primera receta.
+﻿# Cap. 4 · La mañana en la casa entre raíces: el cartel y la primera receta.
 GUION Cap4_02_LaManana
 ESCENA MainWorld
 ZONA Cap4Casa -334 64 20
@@ -26,5 +26,5 @@ estela dice CAP4_MANANA_02 cara=picaro
 plano medio estela
 estela dice CAP4_MANANA_03 cara=decidido gesto=CastingEnter01
 estela dice CAP4_MANANA_04
-will dice CAP3_PAJAROS_07 cara=decidido gesto=HeadNod01
+will dice CAP4_MANANA_05 cara=decidido gesto=HeadNod01
 espera 0.4

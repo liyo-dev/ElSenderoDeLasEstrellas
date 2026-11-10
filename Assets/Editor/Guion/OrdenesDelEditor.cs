@@ -15,8 +15,14 @@ using UnityEngine;
 ///   menu El Sendero/Secuencias/...          ejecuta un menú del Editor
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
-///   escena Nombre [aditiva]                 abre una escena (solo si no hay cambios sin guardar)
+///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)
+///   catalogo nombre carpeta regex           foto de los prefabs de la carpeta cuyo nombre cumple el regex (hasta 12, en fila,
+///                                           con su nombre en el registro) → Guiones/_fotos/nombre.png; necesita una escena con luz abierta
+///   escena Nombre [aditiva]                 abre una escena (sola, solo si no hay cambios sin guardar; aditiva, siempre)
+///   cerrar Nombre [descartar]               cierra una escena abierta (con cambios sin guardar, solo con «descartar», que los tira)
 ///   camara_de_prueba                        en Play, crea una cámara principal si no hay ninguna
+///   foto nombre x y z mx my mz [lente]       foto en perspectiva desde (x,y,z) mirando a (mx,my,mz),
+///                                           con todas las escenas abiertas → Guiones/_fotos/nombre.png
 ///   gemini RUTA.mp4 [fps=2]                 manda un vídeo a Gemini (resultado en Logs/Gemini/)
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
@@ -121,6 +127,68 @@ public static class OrdenesDelEditor
         return sb.ToString();
     }
 
+    private static string Donde(string texto)
+    {
+        var sb = new System.Text.StringBuilder($"«{texto}»\n");
+        int n = 0;
+        for (int k = 0; k < UnityEngine.SceneManagement.SceneManager.sceneCount && n < 200; k++)
+        {
+            var esc = UnityEngine.SceneManagement.SceneManager.GetSceneAt(k);
+            if (!esc.isLoaded) continue;
+            foreach (var raiz in esc.GetRootGameObjects())
+                foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name.IndexOf(texto, StringComparison.OrdinalIgnoreCase) < 0) continue;
+                    string ruta = t.name; for (var q = t.parent; q != null; q = q.parent) ruta = q.name + "/" + ruta;
+                    sb.Append($"    {esc.name}/{ruta} pos={t.position:F2} rumbo={t.eulerAngles.y:F0} activo={t.gameObject.activeInHierarchy}\n");
+                    if (++n >= 200) break;
+                }
+        }
+        return sb.ToString();
+    }
+
+    private static string Catalogo(string resto)
+    {
+        var p = resto.Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+        if (p.Length < 3) return "catalogo nombre carpeta regex";
+        var regex = new System.Text.RegularExpressions.Regex(p[2]);
+        var rutas = new System.Collections.Generic.List<string>();
+        foreach (var guid in AssetDatabase.FindAssets("t:Prefab", new[] { p[1] }))
+        {
+            string r = AssetDatabase.GUIDToAssetPath(guid);
+            if (regex.IsMatch(Path.GetFileNameWithoutExtension(r))) rutas.Add(r);
+        }
+        rutas.Sort();
+        if (rutas.Count > 12) rutas.RemoveRange(12, rutas.Count - 12);
+        if (rutas.Count == 0) return "ningún prefab cumple " + p[2];
+        // Lejos de todo, en fila: cada pieza ocupa su ancho y un poco más.
+        var origen = new Vector3(9000f, 500f, 9000f);
+        var puestos = new System.Collections.Generic.List<GameObject>();
+        var sb = new System.Text.StringBuilder();
+        float x = 0f, alto = 1f;
+        try
+        {
+            foreach (var r in rutas)
+            {
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(r));
+                go.hideFlags = HideFlags.DontSave;
+                var b = new Bounds(go.transform.position, Vector3.zero);
+                foreach (var rr in go.GetComponentsInChildren<Renderer>()) b.Encapsulate(rr.bounds);
+                go.transform.position = origen + new Vector3(x + b.extents.x, 0f, 0f) - new Vector3(b.center.x - go.transform.position.x, b.min.y - go.transform.position.y, b.center.z - go.transform.position.z);
+                x += b.size.x + 0.5f;
+                alto = Mathf.Max(alto, b.size.y);
+                puestos.Add(go);
+                sb.Append(Path.GetFileNameWithoutExtension(r)).Append(' ');
+            }
+            float ancho = x;
+            var centro = origen + new Vector3(ancho * 0.5f, alto * 0.5f, 0f);
+            float dist = Mathf.Max(ancho * 0.75f, alto * 1.6f) + 2f;
+            string foto = CapturaDeEscenario.FotoDesde(p[0], centro + new Vector3(0f, alto * 0.25f, -dist), centro, 50f);
+            return $"foto en {foto ?? "(falló)"} · de izquierda a derecha: {sb}";
+        }
+        finally { foreach (var go in puestos) if (go != null) UnityEngine.Object.DestroyImmediate(go); }
+    }
+
     private static string Ejecutar(string orden)
     {
         string linea = orden.Split('\n')[0].Trim();
@@ -171,16 +239,21 @@ public static class OrdenesDelEditor
                 return "saliendo de Play";
             case "cerca":
                 return Cerca(resto);
+            case "donde":
+                return Donde(resto);
+            case "catalogo":
+                return Catalogo(resto);
             case "escena":
             {
                 if (Application.isPlaying) return "no se puede en Play";
-                for (int k = 0; k < UnityEngine.SceneManagement.SceneManager.sceneCount; k++)
+                var partes = resto.Split(' ');
+                bool aditiva = partes.Length > 1 && partes[1] == "aditiva";
+                // En aditivo no se cierra nada: los cambios sin guardar de las demás no corren peligro.
+                for (int k = 0; k < UnityEngine.SceneManagement.SceneManager.sceneCount && !aditiva; k++)
                 {
                     var esc = UnityEngine.SceneManagement.SceneManager.GetSceneAt(k);
                     if (esc.isDirty) return $"la escena {esc.name} tiene cambios sin guardar; no la cierro";
                 }
-                var partes = resto.Split(' ');
-                bool aditiva = partes.Length > 1 && partes[1] == "aditiva";
                 foreach (var guid in AssetDatabase.FindAssets($"{partes[0]} t:Scene"))
                 {
                     string ruta = AssetDatabase.GUIDToAssetPath(guid);
@@ -190,6 +263,28 @@ public static class OrdenesDelEditor
                     return "abierta " + ruta;
                 }
                 return "no encuentro la escena " + partes[0];
+            }
+            case "cerrar":
+            {
+                if (Application.isPlaying) return "no se puede en Play";
+                var partesCerrar = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (partesCerrar.Length == 0) return "falta el nombre de la escena";
+                bool descartar = partesCerrar.Length > 1 && partesCerrar[1] == "descartar";
+                var esc = UnityEngine.SceneManagement.SceneManager.GetSceneByName(partesCerrar[0]);
+                if (!esc.IsValid() || !esc.isLoaded) return "la escena " + partesCerrar[0] + " no está abierta";
+                if (esc.isDirty && !descartar) return $"la escena {esc.name} tiene cambios sin guardar; no la cierro (añade «descartar» para cerrarla sin guardar)";
+                if (UnityEngine.SceneManagement.SceneManager.sceneCount < 2) return "es la única escena abierta; no la cierro";
+                UnityEditor.SceneManagement.EditorSceneManager.CloseScene(esc, true);
+                return "cerrada " + esc.path;
+            }
+            case "foto":
+            {
+                var pf = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (pf.Length < 7) return "foto nombre x y z mx my mz [lente]";
+                var ci = System.Globalization.CultureInfo.InvariantCulture;
+                float F(int i) => float.Parse(pf[i], ci);
+                float lente = pf.Length > 7 ? F(7) : 40f;
+                return "foto en " + (CapturaDeEscenario.FotoDesde(pf[0], new Vector3(F(1), F(2), F(3)), new Vector3(F(4), F(5), F(6)), lente) ?? "(falló)");
             }
             case "camara_de_prueba":
             {

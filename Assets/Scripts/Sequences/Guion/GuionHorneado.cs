@@ -161,6 +161,8 @@ public enum TipoDeAnimacion
     /// Empieza a hablar (pose de conversación + boca), si está quieto.
     HablaEmpieza = 3,
     HablaTermina = 4,
+    /// Cierra un gesto de cuerpo entero sin salida propia (Dizzy_NoWeapon): vuelve a la locomoción.
+    FinDeGesto = 5,
 }
 
 [Serializable]
@@ -175,6 +177,8 @@ public struct OrdenDeAnimacion
     public bool congelar;
     [Tooltip("Si debe colocarse directamente en el fotograma final congelado desde el inicio.")]
     public bool alFinal;
+    [Tooltip("Reacción de voz que suena con el gesto (laugh, hurt, gasp...); vacío, sin voz.")]
+    public string voz;
 }
 
 [Serializable]

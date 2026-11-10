@@ -24,6 +24,7 @@ public sealed class ScopedNarrativeStateWriter : INarrativeStateWriter
         => _inner.CompleteQuestSteps(questId, stepConditionIds, stepIndices);
 
     public void CompleteQuest(string questId) => _inner.CompleteQuest(questId);
+    public void MarkSignalRaised(string key) => _inner.MarkSignalRaised(key);
     public void AddItem(string itemId, int amount) => _inner.AddItem(itemId, amount);
 
     public void PlaceActor(string actorId, NarrativeLocation location)

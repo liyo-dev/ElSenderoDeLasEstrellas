@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Camiseta
+    second: {fileID: 2100000, guid: b9dddc40bf568b449a56fe0e509282f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Chaqueta
     second: {fileID: 2100000, guid: f218590749c2aa143a5a5ce7d6f7b06a, type: 2}
   - first:

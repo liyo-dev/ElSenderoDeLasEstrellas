@@ -18,6 +18,13 @@ public class NPCWorldPoint : MonoBehaviour
     [Tooltip("Si es true, el NPC girará mirando en la dirección Forward de interactionPoint al llegar")]
     public bool overrideFacing = true;
 
+    [Header("Al levantarse")]
+    [Tooltip("Punto donde queda de pie quien se levanta. Vacío = en el suelo delante del asiento, a 'Distancia Al Levantarse'.")]
+    public Transform puntoAlLevantarse;
+
+    [Min(0f), Tooltip("Distancia hacia delante del asiento (según hacia dónde mira quien está sentado) a la que queda de pie al levantarse, si no hay 'Punto Al Levantarse'.")]
+    public float distanciaAlLevantarse = 0.45f;
+
     [Header("Interacción del Jugador")]
     [Tooltip("Distancia máxima desde el interactionPoint para que el jugador pueda activar este punto. " +
              "Evita que se pueda sentar desde muy lejos aunque esté dentro del rango global del InteractionDetector.")]
@@ -59,6 +66,18 @@ public class NPCWorldPoint : MonoBehaviour
         overrideFacing
             ? (interactionPoint != null ? interactionPoint.rotation : transform.rotation)
             : Quaternion.identity;
+
+    /// <summary>
+    /// Dónde queda de pie quien se levanta (a la altura del asiento; quien lo usa lo baja al suelo).
+    /// <paramref name="haciaDelante"/> es hacia dónde mira el ocupante sentado.
+    /// </summary>
+    public Vector3 PosicionAlLevantarse(Vector3 haciaDelante)
+    {
+        if (puntoAlLevantarse != null) return puntoAlLevantarse.position;
+        haciaDelante.y = 0f;
+        if (haciaDelante.sqrMagnitude < 0.0001f) return InteractionPosition;
+        return InteractionPosition + haciaDelante.normalized * distanciaAlLevantarse;
+    }
 
     // ── Registro estático ───────────────────────────────────────────────────────
     private static readonly List<NPCWorldPoint> _all = new List<NPCWorldPoint>();

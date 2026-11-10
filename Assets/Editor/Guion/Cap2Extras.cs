@@ -9,7 +9,7 @@ using UnityEngine;
 /// el título del desbloqueo del Cap. 1 y el contrato de señales del campamento de los
 /// contrabandistas (Cap2ExtrasPrefabs). Los bloques que este menú colgaba de Cap2.asset
 /// (contrabandistas, Cúpula Estelar y Levitación) viven ahora en Cap3.asset y Cap4.asset, que
-/// monta El Sendero ▸ Demo ▸ Montar los capítulos 3 y 4 (MontajeDeLaDemo). Ver INC-725 e INC-922.
+/// monta El Sendero ▸ Historia ▸ Montar los capítulos 3 y 4 (MontajeDeLosCapitulos). Ver INC-725 e INC-922.
 public static class Cap2Extras
 {
     const string GrafoCap1 = "Assets/NarrativeGraph/Cap1.asset";

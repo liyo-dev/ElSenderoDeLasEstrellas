@@ -398,13 +398,16 @@ public static class PoseSobreClip
     }
 
     /// <summary>
-    /// Pone en la capa base de <paramref name="ctrl"/> un estado <paramref name="nombre"/> con
-    /// <paramref name="clip"/>, sin transiciones (es una pose que se sostiene y se suelta desde
-    /// código). Si ya existe, solo le cambia el clip. Devuelve true si lo ha creado.
+    /// Pone en la capa <paramref name="capa"/> de <paramref name="ctrl"/> (vacío: la base) un estado
+    /// <paramref name="nombre"/> con <paramref name="clip"/>, sin transiciones (es una pose que se
+    /// sostiene y se suelta desde código). Si ya existe, solo le cambia el clip. Devuelve true si lo
+    /// ha creado; lanza si la capa no existe.
     /// </summary>
-    public static bool EstadoEnBucle(AnimatorController ctrl, string nombre, Motion clip)
+    public static bool EstadoEnBucle(AnimatorController ctrl, string nombre, Motion clip, string capa = null)
     {
-        var maquina = ctrl.layers[0].stateMachine;
+        var layer = string.IsNullOrEmpty(capa) ? ctrl.layers[0] : ctrl.layers.FirstOrDefault(l => l.name == capa);
+        if (layer == null) throw new System.InvalidOperationException($"{ctrl.name} no tiene la capa {capa}.");
+        var maquina = layer.stateMachine;
         var estado = maquina.states.FirstOrDefault(s => s.state.name == nombre).state;
         bool nuevo = estado == null;
         if (nuevo)

@@ -21,7 +21,7 @@ public static class CuerpoDeNino
     /// <param name="raiz">Raíz del prefab abierto (PrefabUtility.LoadPrefabContents).</param>
     /// <param name="rutaEsqueleto">FBX de la talla (solo el esqueleto).</param>
     /// <param name="rutaAvatar">Dónde se guarda su Avatar (.asset).</param>
-    public static bool Poner(GameObject raiz, string rutaEsqueleto, string rutaAvatar, StringBuilder informe)
+    public static bool Poner(GameObject raiz, string rutaEsqueleto, string rutaAvatar, StringBuilder informe, float brazosAbiertos = 0f)
     {
         var nino = AssetDatabase.LoadAssetAtPath<GameObject>(rutaEsqueleto);
         var adulto = AssetDatabase.LoadAssetAtPath<GameObject>(EsqueletoAdulto);
@@ -76,6 +76,7 @@ public static class CuerpoDeNino
             esqueleto.Add(new SkeletonBone { name = t.name, position = t.localPosition, rotation = giros.TryGetValue(t.name, out var g) ? g : t.localRotation, scale = t.localScale });
         }
         hd.skeleton = esqueleto.ToArray();
+        if (brazosAbiertos > 0f) AbrirLosBrazos(ref hd, brazosAbiertos);
         var avatar = AvatarBuilder.BuildHumanAvatar(modelo.gameObject, hd);
         if (avatar == null || !avatar.isValid || !avatar.isHuman) { informe.AppendLine($"{raiz.name}: no sale un Avatar humanoide válido; no se toca."); return false; }
         avatar.name = System.IO.Path.GetFileNameWithoutExtension(rutaAvatar);
@@ -90,6 +91,34 @@ public static class CuerpoDeNino
         so.ApplyModifiedPropertiesWithoutUndo();
         informe.AppendLine($"{raiz.name}: cuerpo de niño ({System.IO.Path.GetFileNameWithoutExtension(rutaEsqueleto)}, {factor:0.00} de un adulto) y su Avatar.");
         return true;
+    }
+
+    /// <summary>
+    /// Brazos que no bajan del todo: el tope de «brazo abajo» se queda en (1 - cuánto) del de Unity, así que
+    /// cualquier animación los deja algo separados del cuerpo. Para quien lleva falda de vuelo: con los
+    /// brazos pegados, las manos se metían dentro (Nina, Ver INC-1011).
+    /// </summary>
+    static void AbrirLosBrazos(ref HumanDescription hd, float cuanto)
+    {
+        var huesos = hd.human;
+        for (int i = 0; i < huesos.Length; i++)
+        {
+            if (huesos[i].humanName != "LeftUpperArm" && huesos[i].humanName != "RightUpperArm") continue;
+            int hueso = System.Array.IndexOf(HumanTrait.BoneName, huesos[i].humanName);
+            var limite = huesos[i].limit;
+            Vector3 min = Vector3.zero, max = Vector3.zero;
+            for (int dof = 0; dof < 3; dof++)
+            {
+                int musculo = HumanTrait.MuscleFromBone(hueso, dof);
+                if (musculo < 0) continue;
+                min[dof] = HumanTrait.GetMuscleDefaultMin(musculo);
+                max[dof] = HumanTrait.GetMuscleDefaultMax(musculo);
+                if (HumanTrait.MuscleName[musculo].Contains("Down-Up")) min[dof] *= 1f - cuanto;
+            }
+            limite.min = min; limite.max = max; limite.useDefaultValues = false;
+            huesos[i].limit = limite;
+        }
+        hd.human = huesos;
     }
 
     /// <summary>

@@ -144,3 +144,63 @@ MonoBehaviour:
     requireNavMesh: 1
     requiredFlag: 
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_PanaderaDelValle
+    prefab: {fileID: 6941739730369371496, guid: e6afdec867c986b42996d96e56eda690, type: 3}
+    gameObjectName: PanaderaDelValle
+    persistenceId: PanaderaDelValle
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_MadreDelValle
+    prefab: {fileID: 6941739730369371496, guid: 5f5e55de27d4aa448b0522b5ac36bfe9, type: 3}
+    gameObjectName: MadreDelValle
+    persistenceId: MadreDelValle
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_VecinoDelMirador
+    prefab: {fileID: 6941739730369371496, guid: 91419492190650940b22ee44bb4ab439, type: 3}
+    gameObjectName: VecinoDelMirador
+    persistenceId: VecinoDelMirador
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_LucasDelValle
+    prefab: {fileID: 5918245581987670834, guid: bee18207105e20c48a9eefdfa09e7acc, type: 3}
+    gameObjectName: LucasDelValle
+    persistenceId: LucasDelValle
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_AbuelaDelMirador
+    prefab: {fileID: 6941739730369371496, guid: b319403873be4b44aa1fe5beb5cea978, type: 3}
+    gameObjectName: AbuelaDelMirador
+    persistenceId: AbuelaDelMirador
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_VecinaDelMirador
+    prefab: {fileID: 6941739730369371496, guid: a47d192a6379d484e848a691788c2f20, type: 3}
+    gameObjectName: VecinaDelMirador
+    persistenceId: VecinaDelMirador
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0

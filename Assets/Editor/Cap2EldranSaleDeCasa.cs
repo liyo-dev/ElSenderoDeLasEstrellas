@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// Cap. 2, final de «La mañana después»: Eldran sale de casa a la vista dentro de la cinemática,
-/// así que al acabar ya está en la plaza del pueblo. El grafo lo coloca allí en el nodo 12 y se
+/// así que al acabar ya espera junto a la casa de Will (INC-962). El grafo lo coloca allí en el nodo 12 y se
 /// retiran la espera de «Will sale de casa» y la segunda colocación, que ya no hacen nada.
 /// Ver INC-903. Se puede ejecutar varias veces.
 public static class Cap2EldranSaleDeCasa
@@ -30,9 +30,9 @@ public static class Cap2EldranSaleDeCasa
 
         var colocar = grafo.FindNode(NodoColocar) as PlaceActorNode
             ?? throw new InvalidOperationException($"Falta el nodo {NodoColocar} en {Grafo}");
-        colocar.markId = "Eldran_Plaza";
+        colocar.markId = Cap2EldranYAroINC962.MarcaEldran;
         colocar.showActor = true;
-        colocar.displayTitle = "12.- Eldran ya está en la plaza (sale de casa en la cinemática)";
+        colocar.displayTitle = "12.- Eldran espera junto a la casa de Will (sale en la cinemática)";
 
         var retirar = new HashSet<string>(NodosSinUso);
         int quitados = grafo.nodes.RemoveAll(n => n != null && retirar.Contains(n.guid));

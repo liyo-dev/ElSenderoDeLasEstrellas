@@ -18,16 +18,6 @@ MonoBehaviour:
   signalOut: OLIVER_GREETING_DONE
   musicId: OLIVER_1
   presentacionDeTexto: 0
-  openingShot:
-    type: 0
-    subjectId: NPC_Oliver
-    secondaryId: Player
-    heightBias: 6
-    distanceScale: 1.3
-    fovOverride: 0
-    crossTheLine: 0
-    headroom: 1
-    encara: 0
   endStayBlack: 0
   skipMusicRestore: 0
   modulos: {fileID: 0}
@@ -36,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 5630202816662077818
+    - rid: 6540294476782371406
   references:
     version: 2
     RefIds:
-    - rid: 5630202816662077818
+    - rid: 6540294476782371406
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

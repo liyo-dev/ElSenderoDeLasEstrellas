@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap3_01_ElEspejo_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_01_ElEspejo
-  duracion: 38.089996
+  duracion: 38.285
   presentacion: 1
-  huella: "2026-11-07 17:23 \xB7 f56dfa3bb34cb56e32d18600a08661a1"
+  huella: "2026-11-08 13:11 \xB7 421a263dea78c2cb66627f385d86fcfd"
   actores:
   - id: LIAM_TORRE
     alias: liam
@@ -38,6 +38,7 @@ MonoBehaviour:
       estado: SitMedium_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: triste
@@ -59,8 +60,8 @@ MonoBehaviour:
       dura: 1.6
     - t: 28.435
       emocion: decidido
-      dura: 4.365
-    - t: 33.199997
+      dura: 4.56
+    - t: 33.395
       emocion: triste
       dura: 2.09
     visible: []
@@ -86,6 +87,7 @@ MonoBehaviour:
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: cansado
@@ -192,7 +194,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 28.435
-    t1: 32.399998
+    t1: 32.595
     actor: LIAM_TORRE
     clave: CAP3_ESPEJO_10
     gesto: 
@@ -200,8 +202,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 33.199997
-    t1: 34.889996
+    t0: 33.395
+    t1: 35.085
     actor: LIAM_TORRE
     clave: CAP3_ESPEJO_11
     gesto: 
@@ -296,7 +298,7 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 28.435
-    t1: 33.199997
+    t1: 33.395
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
@@ -314,12 +316,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 33.199997
-    t1: 38.089996
+    t0: 33.395
+    t1: 38.285
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
-    - t: 33.199997
+    - t: 33.395
       p: {x: -6001.2, y: 101.25, z: 5998.9}
     lente: 40
     lenteFinal: 0
@@ -339,44 +341,50 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550975
+      rid: 6540294476782371199
     linea: 32
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294476782371200
+    linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 6540294456446550976
-    linea: 37
+      rid: 6540294476782371201
+    linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 5.8199997
     beat:
-      rid: 6540294456446550977
-    linea: 42
+      rid: 6540294476782371202
+    linea: 44
   - onlyIfFlag: 
     skipIfFlag: 
     t: 13.1050005
     beat:
-      rid: 6540294456446550978
-    linea: 51
+      rid: 6540294476782371203
+    linea: 53
   - onlyIfFlag: 
     skipIfFlag: 
     t: 18.74
     beat:
-      rid: 6540294456446550979
-    linea: 54
+      rid: 6540294476782371204
+    linea: 56
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 36.089996
+    t: 36.285
     beat:
-      rid: 6540294456446550980
-    linea: 71
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 37.589996
-    beat:
-      rid: 6540294456446550981
+      rid: 6540294476782371205
     linea: 73
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 37.785
+    beat:
+      rid: 6540294476782371206
+    linea: 75
   etiquetas:
   - nombre: inicio
     t: 0
@@ -415,7 +423,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446550975
+    - rid: 6540294476782371199
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -423,7 +431,16 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446550976
+    - rid: 6540294476782371200
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 1
+        musicId: TOBIAS
+        fadeIn: 0
+        fadeOut: 0.5
+        desdeSegundo: -1
+    - rid: 6540294476782371201
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -437,7 +454,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 6540294456446550977
+    - rid: 6540294476782371202
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -451,7 +468,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 6540294456446550978
+    - rid: 6540294476782371203
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -465,7 +482,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 6540294456446550979
+    - rid: 6540294476782371204
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -479,7 +496,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 6540294456446550980
+    - rid: 6540294476782371205
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -487,7 +504,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.5
         waitForEnd: 0
-    - rid: 6540294456446550981
+    - rid: 6540294476782371206
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

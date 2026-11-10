@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Sendero.Core.Feedback;
 
-/// Hace crecer dos efectos existentes hasta mezclarlos y entrega el blanco al fundido oficial.
+/// Hace crecer dos efectos existentes hasta que chocan: los lleva al encuentro, los mezcla (si hay
+/// mezcla) y entrega el blanco al fundido oficial, o los consume en el choque para que la secuencia
+/// ponga el estallido y su propio fundido.
 [Serializable]
 public class FusionDeHechizosBeat : SequenceBeat
 {
@@ -43,6 +45,9 @@ public class FusionDeHechizosBeat : SequenceBeat
     public string eventKeySubida;
     public string eventKeyExplosion;
     public bool esperar = true;
+    [Tooltip("Al terminar pinta la pantalla de blanco con el fundido oficial. Desmarcado, los dos efectos " +
+             "se consumen donde se han encontrado y el estallido y el fundido los pone la secuencia.")]
+    public bool entregarBlanco = true;
 
     public override string Describe() => $"Fusión: {efectoARegistrado} + {efectoBRegistrado}";
 
@@ -62,6 +67,14 @@ public class FusionDeHechizosBeat : SequenceBeat
         public float radio;
         public bool creado;
         public bool Vigente => transform != null && pool != null && pool.ObtenerUso(transform) == uso;
+        /// Recoge el efecto donde está, sea de este beat o registrado por otro: se ha gastado en el choque.
+        public void Consumir()
+        {
+            if (!Vigente) return;
+            transform.localScale = escala;
+            transform.localPosition = posicionLocal;
+            pool.Recoger(transform, uso);
+        }
         public void Restaurar()
         {
             if (!Vigente)
@@ -213,53 +226,61 @@ public class FusionDeHechizosBeat : SequenceBeat
                 yield return null;
             } while (t < duracion);
 
-            velo = new GameObject("VeloDeFusion", typeof(RectTransform), typeof(Canvas));
-            velo.transform.SetParent(ctx.Player.transform, false);
-            var canvas = velo.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 9997;
-            var imagenGo = new GameObject("Remolino", typeof(RectTransform), typeof(RawImage));
-            imagenGo.transform.SetParent(velo.transform, false);
-            var imagen = imagenGo.GetComponent<RawImage>();
-            imagen.raycastTarget = false;
-            imagen.rectTransform.anchorMin = Vector2.zero;
-            imagen.rectTransform.anchorMax = Vector2.one;
-            imagen.rectTransform.offsetMin = imagen.rectTransform.offsetMax = Vector2.zero;
-            const int lado = 64;
-            textura = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
-            textura.wrapMode = TextureWrapMode.Clamp;
-            textura.filterMode = FilterMode.Bilinear;
-            imagen.texture = textura;
-            var pixeles = new Color32[lado * lado];
-            var camara = ctx.Player.CachedCamera;
-            t = 0f;
-            float proximoTemblor = 0f;
-            duracion = Mathf.Max(0f, duracionMezcla);
-            do
+            if (duracionMezcla > 0f)
             {
-                if (!a.Vigente || !b.Vigente) yield break;
-                t += Time.unscaledDeltaTime;
-                float k = duracion > 0f ? Mathf.Clamp01(t / duracion) : 1f;
-                float e = k * k * (3f - 2f * k);
-                a.transform.position = Vector3.Lerp(centroA, encuentro, e);
-                b.transform.position = Vector3.Lerp(centroB, encuentro, e);
-                float radioPantalla = RadioParaCubrir(camara, encuentro);
-                a.transform.localScale = a.escala * Mathf.Lerp(factorA, Mathf.Max(factorA, radioPantalla / a.radio), e);
-                b.transform.localScale = b.escala * Mathf.Lerp(factorB, Mathf.Max(factorB, radioPantalla / b.radio), e);
-                Pintar(pixeles, lado, t * velocidadRemolino);
-                textura.SetPixels32(pixeles); textura.Apply(false, false);
-                // El velo acompaña a la mezcla sin taparla: las dos esferas tienen que seguir leyéndose.
-                imagen.color = new Color(1f, 1f, 1f, k * 0.7f);
-                if (temblorMaximo > 0f && t >= proximoTemblor)
+                velo = new GameObject("VeloDeFusion", typeof(RectTransform), typeof(Canvas));
+                velo.transform.SetParent(ctx.Player.transform, false);
+                var canvas = velo.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.sortingOrder = 9997;
+                var imagenGo = new GameObject("Remolino", typeof(RectTransform), typeof(RawImage));
+                imagenGo.transform.SetParent(velo.transform, false);
+                var imagen = imagenGo.GetComponent<RawImage>();
+                imagen.raycastTarget = false;
+                imagen.rectTransform.anchorMin = Vector2.zero;
+                imagen.rectTransform.anchorMax = Vector2.one;
+                imagen.rectTransform.offsetMin = imagen.rectTransform.offsetMax = Vector2.zero;
+                const int lado = 64;
+                textura = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
+                textura.wrapMode = TextureWrapMode.Clamp;
+                textura.filterMode = FilterMode.Bilinear;
+                imagen.texture = textura;
+                var pixeles = new Color32[lado * lado];
+                var camara = ctx.Player.CachedCamera;
+                t = 0f;
+                float proximoTemblor = 0f;
+                duracion = Mathf.Max(0f, duracionMezcla);
+                do
                 {
-                    FeedbackService.CameraShake(camara, temblorMaximo * k, 0.12f);
-                    temblando = true; proximoTemblor = t + 0.12f;
-                }
-                yield return null;
-            } while (t < duracion);
+                    if (!a.Vigente || !b.Vigente) yield break;
+                    t += Time.unscaledDeltaTime;
+                    float k = duracion > 0f ? Mathf.Clamp01(t / duracion) : 1f;
+                    float e = k * k * (3f - 2f * k);
+                    a.transform.position = Vector3.Lerp(centroA, encuentro, e);
+                    b.transform.position = Vector3.Lerp(centroB, encuentro, e);
+                    float radioPantalla = RadioParaCubrir(camara, encuentro);
+                    a.transform.localScale = a.escala * Mathf.Lerp(factorA, Mathf.Max(factorA, radioPantalla / a.radio), e);
+                    b.transform.localScale = b.escala * Mathf.Lerp(factorB, Mathf.Max(factorB, radioPantalla / b.radio), e);
+                    Pintar(pixeles, lado, t * velocidadRemolino);
+                    textura.SetPixels32(pixeles); textura.Apply(false, false);
+                    // El velo acompaña a la mezcla sin taparla: las dos esferas tienen que seguir leyéndose.
+                    imagen.color = new Color(1f, 1f, 1f, k * 0.7f);
+                    if (temblorMaximo > 0f && t >= proximoTemblor)
+                    {
+                        FeedbackService.CameraShake(camara, temblorMaximo * k, 0.12f);
+                        temblando = true; proximoTemblor = t + 0.12f;
+                    }
+                    yield return null;
+                } while (t < duracion);
+            }
 
             if (!string.IsNullOrWhiteSpace(eventKeyExplosion))
                 AudioService.Instance?.PlaySFX(eventKeyExplosion, 1f, encuentro);
+            if (!entregarBlanco)
+            {
+                a.Consumir(); b.Consumir();
+                yield break;
+            }
             // El fundido oficial queda blanco; el siguiente ScreenFadeBeat puede destaparlo.
             fundiendo = true;
             yield return FeedbackService.ScreenFadeAsync(Color.white, Mathf.Max(0f, duracionBlanco), true);

@@ -1,0 +1,761 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
+#  Guion de rodaje. Se hornea con «El Sendero → Guion → 2. Hornear el guion del prólogo».
+#  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
+#  en Guiones/Prologo_Valle/Prologo_UltimaNoche/ (informe.md, recorridos/, storyboard/).
+#
+#  Cómo se lee: el HILO es lo que cuenta la historia, en orden. Cada personaje tiene además su
+#  PISTA, con lo que hace mientras tanto, para que nadie se quede parado.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Prologo_UltimaNoche
+ESCENA Prologo_Valle
+SECUENCIA Assets/_SEQUENCES/SEQ_Prologo_UltimaNoche.asset
+PREPARA RecursosDelPrologo
+TEXTO subtitulo
+RITMO entre_frases=0.3 mismo_hablante=0.15
+
+REPARTO
+archimago NPC_Archimago  nombre=Archimago color=FFD27A
+liora     NPC_Liora      nombre=Liora color=FFB3C7
+mago      NPC_MagoOscuro nombre="Mago Oscuro" color=B48CFF oculto
+nina      NPC_Aldeano_05 nombre=Nina
+v01       NPC_Aldeano_01 nombre=Vecino
+v02       NPC_Aldeano_02 nombre=Vecina
+v03       NPC_Aldeano_03 nombre=Vecino
+v04       NPC_Aldeano_04 nombre=Vecino
+v06       NPC_Aldeano_06 nombre=Vecino
+v07       NPC_Aldeano_07 nombre=Vecina
+v08       NPC_Aldeano_08 nombre=Vecino
+v09       NPC_Aldeano_09 nombre=Vecino
+v10       NPC_Aldeano_10 nombre=Vecino
+
+# ── Puntos (x z del mundo; ver Guiones/Prologo_Valle/escenario/planta_detalle.svg) ─────────
+PUNTOS
+plaza_archimago  6003.2 6002.3
+cart_maestro     6006.4 6000.6
+# El vecino de la carreta, al otro lado del carro y en campo abierto: dentro de la huella
+# de la carreta (x 6006,5-6010,1 · z 5995,3-5999,4) no había ni un ángulo de cámara limpio.
+v06_carro        6010.0 6000.4
+carreta          6008.4 5997.4 99.97
+nina_iglesia     5990.9 6001.0
+nina_carro       6004.9 5998.8
+globo            5987.4 6005.1 105.9
+cielo_globo      5989.5 6015.0 118.0
+bajo_iglesia     5991.8 5999.6
+v10_lena         5994.0 6002.8
+v02_horno        5996.1 6001.9
+junto_v02        5996.9 6001.0
+junto_v02_b      5995.2 6001.0
+horno            5995.6 6004.2
+k1               5995.5 5998.6
+k2               5997.0 5998.4
+k3               5996.6 6001.0
+k4               5994.8 6001.3
+k5               5997.3 5997.6
+v01_saluda       6002.3 6000.6
+v02_saluda       6004.3 6000.6
+v04_a            5997.8 5995.8
+v04_b            5999.9 5995.8
+v03_charla       6000.3 6004.9
+v09_charla       5998.9 6005.6
+liora_mesa       6012.5 6003.7
+v08_mesa         6011.4 6002.4
+mira_v03         6001.3 6000.9
+mira_v08         6002.3 6000.5
+centro_plaza     6001.5 6000.5
+# Grúa de apertura: baja del cielo (cam_cielo, a 10 m) hasta delante del maestro (cam_baja).
+cam_cielo        5999.6 5998.5
+cam_baja         6001.4 6000.4
+# Cámara del conjuro: al oeste del maestro, de perfil mientras lanza el conjuro, con la carreta
+# delante de él y algo apartada, sin taparle.
+cam_magia        6003.0 5998.6
+# Liora y Nina en el puente, desde el sur (al norte pasa la gente que huye).
+cam_lioranina    6016.4 5995.0
+# Liora en el puente, de frente: al nordeste de ella, con el Archimago fuera de cuadro a la izquierda.
+cam_liora_puente 6016.3 6000.2
+cam_general      6012.0 6001.0
+# El río
+rio_a_ini        6016.9 6002.7
+rio_l_ini        6015.8 6002.3
+rio_a_fin        6017.4 5998.3
+rio_l_fin        6016.1 5997.9
+rio_agua         6021.5 5996.0
+# La amenaza
+oeste            5925.0 6000.0
+cielo_oeste      5960.0 6000.0 135.0
+colina           5957.7 5996.9
+ladera           5968.0 6000.0
+entrada          5988.0 6000.5
+# La huida (tres carriles en el puente)
+arch_grita       6014.4 6000.3
+puente_n         6016.8 6001.3
+puente_c         6016.8 6000.4
+puente_s         6016.8 5999.5
+otro_lado_n      6030.0 6001.3
+otro_lado_c      6030.0 6000.4
+otro_lado_s      6030.0 5999.5
+liora_puente     6015.0 5997.8
+# Nina, al lado de Liora y del lado de la cámara del puente: detrás de ella no se la veía.
+nina_puente      6016.0 5998.2
+mira_k1          5993.4 5999.2
+mira_k2          5994.9 5998.4
+# Cámara de la Vecina: al oeste de ella, de tres cuartos (ella mira al maestro, al noroeste).
+cam_v02         6001.2 6001.0
+k6               5998.0 6000.2
+# El duelo
+duelo_a          6004.4 5999.8
+duelo_m          6000.8 5999.8
+choque           6002.6 5999.8
+arch_caida       6007.4 6000.2
+mago_retrocede   5998.7 5999.8
+# La bola del hechizo final sube desde el Archimago hasta aquí (4 m sobre el suelo).
+cielo_conjuro    6007.4 6000.2 104.0
+# El agujero negro: fijo en el cielo, por encima y por delante del Mago (que levita 3 m).
+# Está a 8 m del suelo (el valle está a 100 m de altura): con la cámara del duelo a ras de calle,
+# a 14,7 m, el agujero queda a 25° y el Mago a 7°: caben los dos en el mismo cuadro.
+agujero          6000.8 5999.8 108.0
+# Cámara del final: al este, detrás del Archimago y algo al norte (él a la izquierda), baja; el Mago
+# y el agujero al fondo, arriba.
+cam_final        6012.8 6001.2
+# ── Cámaras bajas, a la altura de los chibis, y puntos de la vida de fondo ──
+# La Vecina pasea por su esquina (k6-k7), lejos del centro de la plaza, donde va la cámara del saludo.
+k7               5998.6 5998.2
+# El niño (v01) se acerca a saludar al maestro.
+v01_mira         5998.6 6001.6
+# Cámara de los vecinos que ven llegar al maestro: desde su lado de la plaza, para verles la cara.
+# El carretero se acerca al maestro para darle las gracias; la cámara, al norte, con la carreta detrás.
+v06_gracias      6007.7 6000.9
+cam_gracias      6008.8 6004.2
+# El río: los dos de perfil desde la orilla sur, con el agua a un lado.
+cam_rio          6016.6 5994.6
+# El duelo de perfil, desde el norte (al sur hay un farol que se metía en el cuadro).
+cam_duelo_norte  6002.6 6004.6
+# La grieta: desde el norte, como todo el duelo (el maestro a la izquierda de la pantalla).
+cam_grieta       6003.4 6003.4
+# Vida de fondo: el humo del horno de la panadería y mariposas en las flores y en la ribera.
+humo_horno       5995.6 6003.9 101.3
+mariposas_a      6014.4 5993.9 100.8
+mariposas_b      6016.4 6003.0 100.9
+mariposas_c      6011.0 6004.2 100.9
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  PISTAS: lo que hace cada vecino mientras pasa la historia
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+PISTAS
+# Mañana: el pueblo ya está vivo cuando llega el Archimago.
+v01 0  en k1 mirando k2
+v01 +0.6 pasea por k2, k3, k4, k1 ritmo=trote pausa=0.4
+# La Vecina (v07) tiene su propia esquina en el centro de la plaza (k6 y centro_plaza): antes
+# paseaba por las mismas marcas que el vecino (k1-k5) y se cruzaban con él 13 veces, y se veían
+# superpuestos al fondo del plano de la carreta.
+v07 0  en k6 mirando centro_plaza
+v07 +1.6 pasea por k7, k6, k7, k6 ritmo=paseo pausa=0.8
+v10 0  en v10_lena mirando horno
+v10 0  bucle Opening01_Loop
+v02 0  en v02_horno mirando v10
+v02 +0.4 charla con v10 cada=3.4
+v03 0  en v03_charla mirando v09_charla
+v03 +0.2 charla con v09 cada=3.0
+v09 0  en v09_charla mirando v03_charla
+v09 +1.4 charla con v03 cada=3.6
+v04 0  en v04_a mirando v04_b
+v04 0  bucle Idle_Normal_NoWeapon
+v04 +0.8 pasea por v04_b, v04_a ritmo=paseo pausa=1.8
+v06 0  en v06_carro mirando carreta
+nina 0 en nina_iglesia mirando globo
+nina 0 bucle SenseSomethingSearching_NoWeapon
+liora 0 en liora_mesa mirando v08_mesa
+liora +0.5 charla con v08 cada=3.8
+v08 0  en v08_mesa mirando liora_mesa
+v08 +1.0 charla con liora cada=3.2
+mago 0 en colina mirando entrada
+
+# Los niños paran a saludar y vuelven a jugar.
+# La que dice «¡Muy buenas, maestro!» (v02) da un paso adelante: si no, dentro del grupo no se
+# sabe de quién es la voz. v01 se queda con los demás y solo mira al maestro.
+# Ven llegar al maestro: dejan lo que hacen, se vuelven y le saludan con la mano.
+v01 @entra+4.6     reposo
+v01 @entra+4.7     anda a v01_mira ritmo=trote llega_mirando=archimago
+v02 @entra+4.4     reposo
+v02 @entra+4.5     mira archimago
+v02 @entra+5.4     gesto HandWave02
+v07 @entra+5.0     reposo
+v07 @entra+5.1     mira archimago
+v07 @entra+6.0     gesto HandWave01
+v10 @saludo+2.2    gesto HeadNod01
+v01 @saludo_fin+0.6  pasea por k2, k3, k4, k1 ritmo=trote pausa=0.5
+v01 @saludo_fin+1.4  pasea por k4, k1, k5, k1 ritmo=trote pausa=0.8
+v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago
+v02 @saludo_fin+0.8 pasea por v02_horno ritmo=paseo pausa=1.4
+v07 @saludo_fin+1.2  pasea por k6, k7, k6, k7 ritmo=paseo pausa=0.8
+# El carretero suelta la carreta cuando llega el maestro: se queda de pie junto a ella, mirando
+# las asas, y salta para intentar bajarla.
+v06 @carreta_magia mira carreta
+v06 @carreta_magia+0.2 bucle Idle_Normal_NoWeapon
+v06 @carreta_magia+0.7 gesto FoundSomething_NoWeapon
+v06 @carreta_magia+2.7 gesto Cheer01
+# Los de la plaza se paran a mirar la carreta flotando y aplauden cuando aterriza.
+v04 @carreta_magia     reposo
+v04 @carreta_magia+0.1 mira carreta
+v04 @carreta_magia+2.9 gesto HandClap01
+v04 @globo_sube        pasea por v04_b, v04_a ritmo=paseo pausa=1.8
+v03 @carreta_magia+0.5 mira carreta
+v09 @carreta_magia+0.8 mira carreta
+v09 @carreta_magia+2.8 gesto HandClap01
+v03 @carreta_magia+3.4 charla con v09 cada=3.0
+v09 @carreta_magia+4.0 charla con v03 cada=3.6
+# El globo: se acercan a mirar.
+v03 @globo_sube-4.0 anda a mira_v03 ritmo=prisa llega_mirando=cielo_globo
+v08 @globo_sube-8.0 anda a mira_v08 ritmo=prisa llega_mirando=cielo_globo
+v10 @globo_sube+0.6 reposo
+v10 @globo_sube+0.7 mira cielo_globo
+v02 @globo_sube+0.8 mira cielo_globo
+v01 @globo_sube    anda a mira_k1 ritmo=trote llega_mirando=cielo_globo
+v07 @globo_sube+0.3 anda a mira_k2 ritmo=trote llega_mirando=cielo_globo
+v01 @globo_fin+0.2 gesto Cheer02
+v01 @globo_fin+1.5 pasea por k1, k2, k5, k2 ritmo=trote pausa=0.5
+v10 @globo_fin+0.3 gesto HandClap01
+v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9
+archimago @globo_sube+3.2 gesto Laugh01
+v03 @globo_fin     charla con v08 cada=3.0
+v08 @globo_fin+0.5 charla con v03 cada=3.0
+nina @globo_fin    anda a junto_v02_b ritmo=trote llega_mirando=v02
+v02 @globo_fin+1.5 charla con nina cada=3.0
+nina @globo_fin+5  charla con v02 cada=2.6
+v06 @globo_fin     anda a v06_carro ritmo=paseo llega_mirando=carreta
+v06 +0.2           bucle Opening01_Loop
+
+# El cielo cambia: todos paran y miran al oeste.
+v01 @cielo+0.3  reposo
+v01 @cielo+0.3  anda a junto_v02 ritmo=trote llega_mirando=oeste
+v07 @cielo+0.5  anda a k6 ritmo=trote llega_mirando=oeste
+v02 @cielo+0.4  reposo
+v02 @cielo+0.5  gesto SenseSomethingStart_NoWeapon
+v02 @cielo+0.6  mira oeste
+v10 @cielo+0.6  mira oeste
+v03 @cielo+0.2  reposo
+v03 @cielo+0.3  mira oeste
+v08 @cielo+0.5  reposo
+v08 @cielo+0.6  mira oeste
+v09 @cielo+0.4  reposo
+v09 @cielo+0.5  mira oeste
+nina @cielo+0.3 reposo
+nina @cielo+0.4 mira oeste
+v06 @cielo+0.5  reposo
+v06 @cielo+0.6  mira oeste
+v04 @cielo+0.2  reposo
+v04 @cielo+0.3  mira oeste
+v03 @llegada+0.6  gesto Fear01
+v09 @llegada+0.9  gesto Fear01
+v02 @llegada+0.5  bucle Fear01
+v10 @llegada+0.8  gesto FoundSomething_NoWeapon
+
+# La huida: cada uno por su carril del puente, hasta la otra orilla.
+v06  @huida+0.0 huye a puente_s, otro_lado_s, M_Lejos_01
+v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02
+v09  @huida+0.4 huye a puente_n, otro_lado_n, M_Lejos_03
+v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04
+v08  @huida+1.1 huye a puente_s, otro_lado_s, M_Lejos_05
+v02  @huida+1.4 huye a puente_n, otro_lado_n, M_Lejos_06
+v10  @huida+1.7 huye a puente_c, otro_lado_c, M_Lejos_07
+v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08
+v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09
+nina @huida+0.6 huye a nina_puente ritmo=trote llega_mirando=liora
+nina @huida+4.0 cara miedo
+nina @huida+4.1 gesto SenseSomethingStart_NoWeapon
+# Al otro lado, de espaldas al pueblo no: mirando lo que pasa.
+v06  @duelo mira oeste
+v04  @duelo mira oeste
+v09  @duelo mira oeste
+v03  @duelo mira oeste
+v08  @duelo mira oeste
+v02  @duelo mira oeste
+v10  @duelo mira oeste
+v01  @duelo mira oeste
+v07  @duelo mira oeste
+v02  @duelo+0.5 bucle Beg01_Loop
+v08  @duelo+0.9 bucle Fear01
+v09  @duelo+1.2 bucle Fear01
+v03  @ultimo+4.0 bucle Reverence01_Loop
+v10  @ultimo+5.0 bucle Beg01_Loop
+v03  @cielo+1.2 gesto FoundSomething_NoWeapon
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  HILO PRINCIPAL
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+HILO
+
+# ── 1. UN DÍA CUALQUIERA ──────────────────────────────────────────────────────────────────
+@inicio
+bandas muestra
+efecto EfectoDeVozBeat preset=ExteriorDia
+ambiente AMBIENTE eventKey=Ambience_Prologo_Pueblo volumen=0.5
+# El mismo look de cine que el resto de cinemáticas (PostprocesoDeCinematica va encima).
+postproceso Assets/Resources/Postproceso/PerfilDeCinematica.asset
+hora Morning immediate=true
+# La carreta ya está volcada en su marca cuando empieza el día.
+efecto PropMoveBeat propId=PROP_Carreta deltaRotacion=0,0,62 segundos=0 desdeDondeEstaba=true apoyarEnElSuelo=true
+efecto SetPropActiveBeat propId=PROP_Nube_Oeste active=false
+efecto SetPropActiveBeat propId=PROP_Nube_Este active=false
+efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
+archimago en plaza_archimago mirando cam_baja
+# Vida de fondo: humo del horno de la panadería y mariposas en las flores y en la ribera. Las
+# mariposas se recogen cuando llega la tormenta; el humo, con la explosión.
+vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Smoke02_P.prefab en=humo_horno lifetime=220 registrarComo=HUMO_HORNO
+vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly01_P.prefab en=mariposas_a lifetime=110 registrarComo=MARIPOSAS_A
+vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly02_P.prefab en=mariposas_b lifetime=110 registrarComo=MARIPOSAS_B
+vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly03_P.prefab en=mariposas_c lifetime=110 registrarComo=MARIPOSAS_C
+
+# Apertura: las nubes se abren y la cámara baja del cielo directa al maestro, que ya está en la
+# plaza. Los vecinos se vuelven a saludarle mientras llega la cámara (pistas con @entra).
+@entra
+plano medio archimago desde=cam_cielo altura=10 mover=cam_baja altura_final=1.15 altura_foco=1.0 lente=40 suave=1.2
+espera 5.5
+@saludo
+# Mismo sitio en el que acaba la grúa: no se nota el corte.
+plano medio archimago solo desde=cam_baja altura=1.15 altura_foco=1.0 lente=40
+archimago dice PROLOGO_MANANA_INTRO gesto=Talk01 cara=alegre
+# Solo el maestro y la Vecina: v01 anda por el otro lado de la plaza y, al meterlo en el plano,
+# la cámara se alejaba y el grupo entero quedaba en miniatura. La voz de v01 sale del grupo.
+# La Vecina (v02), de frente y a su altura: el contraplano sobre el hombro del maestro dejaba su
+# sombrero en primer plano y el maestro diminuto al fondo.
+plano medio v02 solo desde=cam_v02 altura=1.0 altura_foco=1.0 lente=38
+v01 dice PROLOGO_MANANA_SALUDO_1 gesto=HandWave01 mira=archimago cara=alegre
+& archimago mira v02
+v02 dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
+@saludo_fin
+
+# La carreta.
+plano medio v06 solo lado=der altura=1.0 altura_foco=1.0 lente=38
+v06 dice PROLOGO_FAVOR_CARRETA gesto=Question01 mira=archimago cara=preocupado
+& archimago mira v06
+# El carretero salta para alcanzar las asas. No llega, y por eso ha pedido ayuda. Aqui se le ve de
+# cerca, y baja despacio: de suddeno parecia que se caia.
+efecto SaltoBeat actorId=v06 altura=1.2 desplazamiento=0.5 subida=0.45 sostener=0.4 caida=0.6
+# El maestro se acerca a la carreta (plano que lo acompaña) y solo entonces se encuadra a los dos:
+# con el plano puesto antes, la cámara tenía que encuadrar a alguien que andaba y el maestro
+# quedaba en el borde del cuadro, de espaldas.
+# Un solo plano desde el oeste para la ida y el conjuro: el plano medio que le acompañaba
+# acababa con la cámara dentro de la carreta volcada.
+plano conjunto archimago carreta desde=cam_magia altura=1.0 altura_foco=1.6 lente=46
+archimago anda a cart_maestro ritmo=normal llega_mirando=carreta
+espera 0.5
+
+@carreta_magia
+archimago gesto MagicRight
+& archimago cara alegre dura=3
++0.3 sonido Prologo_MagiaLevitar en=archimago
+# La carreta se levanta con el remolino y el sonido; sin bola de luz delante del maestro (la
+# chispa blanca que se veía en el plano).
+# El remolino debajo de la carreta: es lo que la levanta.
++0.4 vfx "Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab" en=carreta offset=0,0.2,0 lifetime=2.8
++0.6 efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=0,1.5,0 segundos=1.4 desdeDondeEstaba=true esperar=false
+espera 1.6
+efecto PropMoveBeat propId=PROP_Carreta segundos=0.9 desdeDondeEstaba=true apoyarEnElSuelo=true esperar=false
++0.85 sonido Prologo_CarretaCae en=PROP_Carreta
+espera 0.7
+# El carretero celebra la carreta ya en el suelo.
+desde @carreta_magia+2.6 plano medio v06 solo lado=frente altura=1.0 altura_foco=1.0 lente=38
+# El carretero se acerca a darle las gracias; los dos de perfil y la carreta, ya derecha, detrás.
+v06 anda a v06_gracias ritmo=normal llega_mirando=archimago
+& archimago mira v06
+plano dos archimago v06 desde=cam_gracias altura=1.1 altura_foco=1.0 lente=38
+v06 dice PROLOGO_CARRETA_GRACIAS gesto=HeadNod01 mira=archimago cara=agradecido
+& archimago gesto HeadNod01
+
+# El globo de Nina, atascado en el campanario.
+desde @carreta_magia+0.4 nina reposo
+desde @carreta_magia+0.5 nina anda a nina_carro ritmo=trote llega_mirando=archimago
+plano hombro archimago nina lente=30
+-0.2 nina dice PROLOGO_FAVOR_GLOBO gesto=Beg01 mira=archimago cara=preocupado
+& archimago mira nina
+plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago mira globo
+& hora AfterNoon transitionSeconds=12
+archimago bucle CastingIdle01
+&& archimago dice PROLOGO_MANANA_GLOBO_OK mira=globo cara=decidido
++0.4 sonido Prologo_MagiaLevitar en=archimago
+# Sin bola de luz delante del maestro: el globo sube con su movimiento y el sonido.
+@globo_sube
+efecto PropMoveBeat propId=PROP_Globo deltaPosicion=2,22,1 segundos=8 esperar=false
+plano general PROP_Globo desde=bajo_iglesia altura=1.1 lente=48 suave=0.4
+archimago reposo
+& archimago mira cielo_globo
+espera 2.6
+plano conjunto nina v03 v08 lado=frente altura=0.8 altura_foco=1.3 lente=40
+nina dice PROLOGO_GLOBO_VECINO_1 gesto=Cheer01 mira=cielo_globo cara=ilusionado
+v03 dice PROLOGO_GLOBO_VECINO_2 gesto=FoundSomething_NoWeapon mira=cielo_globo cara=alegre
+v08 dice PROLOGO_GLOBO_VECINO_3 gesto=Cheer02 mira=cielo_globo cara=alegre
+& archimago cara alegre
+@globo_fin
+plano medio archimago solo lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago gesto HeadNod01
+desde @globo_fin+2 prop PROP_Globo oculto
+espera 1.2
+
+# ── 2. EL RÍO ─────────────────────────────────────────────────────────────────────────────
+@rio
+ambiente AMBIENTE sonar=false fundido=3
+ambiente AMBIENTE_RIO eventKey=Ambience_Prologo_Rio volumen=0.55
+hora Sunset transitionSeconds=6
+archimago en rio_a_ini mirando rio_a_fin
+liora en rio_l_ini mirando rio_l_fin
+efecto SolDeFondoBeat colocar=true ladoDeLaCamara=270 elevacion=7 segundos=2 enCuadro=true posicionX=0.72 alturaDeSalida=0.88 alturaDePuesta=0.42 puesta=19
+plano sigue liora lado=izq distancia=5 mezcla=1.2
+espera 1.0
+@rio_paseo
+archimago anda a rio_a_fin ritmo=paseo llega_mirando=liora sin_esperar
+&& liora anda a rio_l_fin ritmo=paseo llega_mirando=archimago
+desde @rio_paseo+0.6 liora dice PROLOGO_PLAZA_LIORA_1 mira=archimago cara=pensativo
+plano medio archimago solo lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago dice PROLOGO_PLAZA_ARCHIMAGO gesto=Talk02 cara=cansado
+plano medio liora solo lado=der altura=1.0 altura_foco=1.0 lente=38
+liora dice PROLOGO_PLAZA_LIORA_2 gesto=Talk01 cara=preocupado
+plano dos archimago liora desde=cam_rio altura=1.0 altura_foco=0.95 lente=40
+archimago mira rio_agua
+& liora mira archimago
+espera 2.2
+
+# ── 3. ALGO CAMBIA EN EL CIELO ────────────────────────────────────────────────────────────
+@cielo
+ambiente AMBIENTE_RIO sonar=false fundido=2.5
+sonido SFX_Prologo_Viento volume=0.7
+clima Viento
+clima Tormenta immediate=true
+hora Night transitionSeconds=3
+efecto SolDeFondoBeat colocar=false segundos=8
+efecto RecogerVfxBeat ids=MARIPOSAS_A|MARIPOSAS_B|MARIPOSAS_C
+silencio 3
+plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago mira oeste
+& archimago cara preocupado
++0.5 liora mira oeste
++0.5 liora cara miedo
+& liora gesto SenseSomethingStart_NoWeapon
+espera 1.6
+plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40
+efecto RayoBeat cantidad=2 intervalo=1.1 alFondoDelPlano=true conTrueno=true volumen=1 destello=true trueno=SFX_Prologo_Trueno_1
+espera 2.8
+plano conjunto v02 v10 v01 nina lado=frente contrapicado
+espera 2.0
+
+# ── 4. LA LLEGADA ─────────────────────────────────────────────────────────────────────────
+@llegada
+efecto EfectoDeVozBeat preset=ExteriorNoche
+mago aparece en colina mirando entrada
+& mago bucle Challenging_NoWeapon
+plano conjunto mago contrapicado lente=30 suave=0.4
+destello C8D2FFFF 0.18
+& efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=1 destello=true trueno=SFX_Prologo_Trueno_2
+& sonido Prologo_Golpe en=mago
+sacudida 0.55 0.6
++0.3 sonido Prologo_PresenciaOscura en=mago
++0.4 musica MAGOOSCURO_REVEAL fadeOut=0
++0.6 ambiente TORMENTA eventKey=Ambience_Prologo_Tormenta volumen=0.5
++0.6 clima Lluvia
+espera 2.6
+plano primer mago lado=der altura=0.85 altura_foco=1.15 lente=34
+mago cara picaro
+espera 2.2
+plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago cara decidido
+espera 1.0
+mago reposo
+# Baja la colina hacia el pueblo: travelling de frente, desde abajo (lo que gustaba de Prologo5).
+mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar
+plano sigue mago lado=frente distancia=5 altura=0.9
+espera 3.5
+
+# ── 5. LA ORDEN DE EVACUAR ────────────────────────────────────────────────────────────────
+@evacuar
+# La tormenta no para: truenos de cuando en cuando (INC-592).
+desde @evacuar+0.6 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.85 trueno=SFX_Prologo_Trueno_3
+ambiente PANICO eventKey=Ambience_Prologo_Panico volumen=0.6
+prop PROP_Incendio
+archimago mira liora
+& liora mira archimago
+plano medio liora solo lado=izq altura=1.0 altura_foco=1.0 lente=38
+liora dice PROLOGO_DESPEDIDA_LIORA_1 gesto=Question01 cara=miedo
+plano medio archimago solo lado=izq altura=1.0 altura_foco=1.0 lente=38
+archimago dice PROLOGO_DESPEDIDA_ARCHIMAGO_1 gesto=HeadShake01 cara=preocupado
+plano medio archimago lado=frente altura=1.0 altura_foco=1.0 lente=38
+archimago anda a arch_grita ritmo=prisa llega_mirando=centro_plaza
+@huida
+desde @huida+3 sonido SFX_Prologo_Trueno_Lejano volume=0.6
+archimago dice PROLOGO_HORA_ARCHIMAGO gesto=Challenging_NoWeapon cara=decidido
+plano general v06 v04 v09 v03 lado=frente altura=2.0 lente=40 suave=0.8
+espera 1.6
+archimago mira liora
+liora anda a liora_puente ritmo=prisa llega_mirando=archimago sin_esperar
+plano dos archimago liora altura=1.0 altura_foco=1.0 lente=40
+liora dice PROLOGO_DESPEDIDA_LIORA_2 gesto=Question02 cara=miedo
+archimago dice PROLOGO_DESPEDIDA_ARCHIMAGO gesto=HeadNod01 cara=decidido
+# Plano medio de Liora con su cara: la cámara al nordeste de ella, fuera de la línea del
+# Archimago (que está al norte) y de Nina (que se ha apartado).
+plano medio liora solo desde=cam_liora_puente altura=1.0 altura_foco=1.0 lente=38
+liora dice PROLOGO_DESPEDIDA_LIORA gesto=Beg01 cara=triste
+liora dice PROLOGO_DESPEDIDA_ELEGIR gesto=Talk03 cara=triste
+plano medio archimago solo lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago gesto HeadNod01
+& archimago cara triste
+espera 0.8
+# El miedo de Nina se cuenta con su cara (rayitas de susto), de frente y a su altura.
+plano primer nina lado=frente altura=0.75 altura_foco=0.85 lente=34
+nina cara miedo
+& nina mira liora
+espera 1.3
+plano conjunto liora nina desde=cam_lioranina altura=1.0 altura_foco=0.9 lente=40
+# «¡Vamos, Nina!» mirando a Nina y «Ten mucho cuidado» al Archimago: la mirada se gira a mitad
+# de frase, así que seiece en dos (la frase es una sola pista de voz).
+liora mira nina
++1.3 liora mira archimago
+liora dice PROLOGO_EVACUACION_LIORA gesto=Talk01 cara=decidido
+liora huye a puente_c, otro_lado_c, M_Lejos_10 sin_esperar
+& nina huye a puente_n, otro_lado_n, M_Puente_06 sin_esperar
+plano sigue archimago lado=espalda distancia=3.6 altura=1.8
+# Los dos van a la vez a su sitio: el Archimago de espaldas y, a mitad, el Mago de frente.
+@acercan
+desde @acercan+1.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.9 trueno=SFX_Prologo_Trueno_1
+archimago anda a duelo_a ritmo=normal llega_mirando=duelo_m sin_esperar
+&& mago anda a duelo_m ritmo=normal llega_mirando=duelo_a
+desde @acercan+4.5 plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.0 lente=46
+desde @acercan+4.5 musica MAGOOSCURO_CLIMAX fadeOut=0
+desde @acercan+2 ambiente PANICO sonar=false fundido=4
+
+# ── 6. EL DUELO ───────────────────────────────────────────────────────────────────────────
+@duelo
+# Desde aquí hasta el final, el Archimago sale siempre a la izquierda y el Mago a la derecha.
+eje archimago mago
+desde @duelo+0.2 sonido SFX_Prologo_Trueno_Lejano volume=0.45
+plano hombro archimago mago lente=30 distancia=3.2
+efecto MezclaBeat fuente=primeraVozOscura musicaDb=-10 ambienteDb=-3 fundido=0.35
+mago dice PROLOGO_DUELO_MAGO gesto=Talk02 mira=archimago cara=picaro
+plano medio mago solo lado=izq altura=0.9 altura_foco=1.15 lente=38
+mago dice PROLOGO_DUELO_MAGO_2 cara=picaro
+efecto MezclaBeat fuente=primeraVozOscura quitar=true fundido=0.7
+plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
+archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
+
+# El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
+plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.0 lente=46 mano=0.25
+mago gesto MagicRight
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
++0.3 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
++0.3 archimago gesto Defend_NoWeapon
++0.8 sonido Prologo_EscudoBloquea en=archimago
++0.8 destello BFB3FFFF 0.12
++0.8 sacudida 0.35 0.4
+espera 1.4
+# La respuesta del Archimago, en el mismo dos de perfil: la bola cruza la pantalla hacia el Mago.
+archimago gesto MagicLeft
++0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
++0.85 mago gesto TakeDamage
+espera 1.8
+@choque
+plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.1 lente=38 mano=0.3
+mago gesto MagicSpecial
+& archimago gesto MagicSpecial
+# Los dos rayos salen de las manos y se encuentran en el centro (antes solo había el gesto).
++0.2 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=choque lifetime=3 registrarComo=PUNTO_CHOQUE
++0.55 efecto SpellBeat lanzaId=archimago objetivoId=PUNTO_CHOQUE vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" sfxLanzamiento=Prologo_HechizoArchimago velocidad=4.5 tiempoDeCarga=0.1 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
++0.55 efecto SpellBeat lanzaId=mago objetivoId=PUNTO_CHOQUE vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab sfxLanzamiento=Prologo_BolaDeFuego velocidad=11.5 tiempoDeCarga=0.1 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
++0.1 sonido Prologo_Carga
++0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.05,0 lifetime=2.2
++0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=mago offset=0,0.05,0 lifetime=2.2
++0.7 sonido SFX_Prologo_Latigazo volume=0.9
++0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.3,0 lifetime=1.2
++0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash purple.prefab" en=mago offset=0,1.3,0 lifetime=1.2
++1.0 sonido Prologo_Choque
++1.0 efecto LineasDeConcentracionBeat mostrar=true duracion=1.0
++1.0 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy explosion.prefab" en=choque offset=0,1.6,0 lifetime=2.0
++1.0 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=choque lifetime=2.2
++1.0 destello FFFFFFFF 0.28
++1.0 sacudida 0.75 1.0
++1.1 sonido Prologue_WarClashStinger_A
+espera 2.6
+# La grieta: el Archimago sale despedido.
+plano medio mago lado=izq altura=1.0 altura_foco=1.05 lente=38 mano=0.3
+mago gesto MagicRight
++0.2 sonido Prologo_SueloSeAbre en=mago
++0.25 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash purple.prefab" en=mago offset=0,1.2,0 lifetime=1.2
++0.25 sonido SFX_Prologo_Latigazo volume=0.9
+plano conjunto archimago desde=cam_grieta altura=0.9 altura_foco=0.9 lente=42 mano=0.3
++0.3 vfx Assets/_SPELLS/Prefabs/MagoOscuroGrieta.prefab en=archimago lifetime=2.4
++0.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Ground AOE explosion.prefab" en=archimago lifetime=2.0
++0.5 sacudida 0.7 0.9
++0.5 sonido Prologo_ImpactoHechizo en=archimago
++0.55 sonido SFX_Prologo_Impacto volume=0.8
++0.55 archimago desliza a arch_caida dura=0.35 seco mirando=mago
++0.55 archimago bucle Pain01
+espera 2.0
+
+# ── 7. EL ÚLTIMO HECHIZO ──────────────────────────────────────────────────────────────────
+@ultimo
+desde @ultimo+3.6 efecto RayoBeat cantidad=2 intervalo=0.7 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_2
+plano primer mago lado=frente altura=0.75 altura_foco=1.2 lente=36
+mago dice PROLOGO_MAGO_VALLE cara=enfado
+# Sin «mira=»: el punto del autor manda sobre la mirada, y el Mago y el agujero no caben
+# juntos en el mismo punto. Sin «mira=», el foco es el promedio del Mago y del agujero (que se
+# nombra aquí), y la cámara los abarca a los dos.
+plano general archimago mago desde=cam_final agujero altura_foco=0 altura=0.9 lente=46 suave=0.5
+# Brazos arriba mientras lo conjura (se queda con los brazos en alto).
+mago bucle JumpAir_InPlace_NoWeapon congela
+& mago bucle FoundSomething_NoWeapon congela al_final
+& mago desliza aqui altura=3 dura=2.6
++0.1 sonido Prologo_Despegue en=mago
++0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=mago offset=0,0.2,0 lifetime=1.6
++0.6 sonido Prologo_HechizoGrande en=mago volume=0.6
++0.8 sonido SFX_Prologo_AgujeroNegro_Carga volume=0.5
++0.8 ambiente AGUJERO_NEGRO eventKey=SFX_Prologo_AgujeroNegro_Bucle volumen=0.12
++0.8 vfx Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab en=agujero lifetime=160 registrarComo=CARGA_ESFERA
++0.85 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=0.35 duracion=0
++0.9 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.0 duracion=3.5
++1.0 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=agujero offset=0,-1.3,0 lifetime=160 registrarComo=CARGA_CRECE
++1.0 sacudida 0.35 1.6
+espera 3.4
+
+# El Archimago se alza en guardia e inicia el cántico de invocación.
+plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 zoom=34
+archimago reposo
+archimago bucle CastingIdle01
+& archimago mira mago
+& liora mira centro_plaza
+& nina mira centro_plaza
++0.2 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Healing circle.prefab" en=archimago offset=0,0.05,0 lifetime=75 registrarComo=CIRCULO_PLEGARIA
++0.2 sonido Prologo_MagiaLevitar en=archimago volume=0.5
+# "No daré ni un paso atrás... ¡Liora! ¡Nina!": la voz a pelo. Sin eco y sin música de
+# fondo: la frase sola, y el silencio alrededor es lo que hace que pese.
+efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
+efecto MezclaBeat fuente=plegaria musicaDb=-20 sfxDb=-4 ambienteDb=-14 fundido=0.6
+archimago dice PROLOGO_PLEGARIA_01 cara=decidido
++3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
++5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
+
+# El paso al conjuro: fundido a negro y, al descubrir, el tema del duelo se funde con
+# Ultimo Incantazione y la voz se abre en el eco. El tema entra 3 s antes de la frase.
+efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true dura=1.35
+efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
+efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
+
+plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=46
+efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
+& vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=agujero offset=0,-1.3,0 lifetime=160 registrarComo=CARGA_REFUERZO
+& sacudida 0.25 1.0
+espera 1.4
+
+# Estrofa 1 del cántico: invocación solemne a la luz ancestral.
+# Al estilo de Lina (referencia: el conjuro de Slayers), un único gesto que va creciendo, sin
+# volver atrás: ojos cerrados todo el cántico; primero las manos juntas en el pecho con el orbe
+# cargándose entre ellas; en la tercera estrofa alza los brazos sobre la cabeza y el orbe sube
+# con ellos, y ahí se queda creciendo. Abre los ojos en un primer plano justo antes del grito,
+# y con el grito el orbe sale al cielo pequeño y crece una vez arriba.
+plano primer archimago lado=der altura=0.8 altura_foco=1.05 lente=34 gira=-35
+archimago bucle Beg01_Loop
+& efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.52,0.22 avance=0.05 elevacion=0.03 duracion=34 periodo=1.4 escalaInicial=0.15 escalaFinal=1.2 registrarComo=BOLA_PROTECTORA vidaEnPool=90
+# La plegaria va sin música: Ultimo Incantazione entra en el hechizo, con el grito.
+archimago dice PROLOGO_PLEGARIA_02 cara=dormido
++0.4 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.08,0 lifetime=60 registrarComo=CIRCULO_CONJURO
++0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
+
+# Estrofa 2: llama a lo que aún no existe y la energía despierta en sus manos.
+plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 gira=-35 mano=0.15
+archimago dice PROLOGO_PLEGARIA_03 cara=dormido
++3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_1
++3.5 sonido Prologo_Carga volume=0.5
++3.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.25,0 lifetime=1.6
++5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
++5.6 sacudida 0.35 1.2
+
+plano general mago desde=cam_final agujero altura_foco=0 altura=0.9 lente=46
+& efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_3
+espera 1.2
+
+# Estrofa 3: ofrece su vida y su alma como sello.
+plano primer archimago lado=der altura=0.8 altura_foco=1.05 lente=34 gira=-35 mano=0.2
+archimago dice PROLOGO_PLEGARIA_04 cara=dormido
+& archimago bucle MagicAttackOmni01_Load congela fundido=0.6
+& efecto ConjuroEnLasManosBeat actorId=archimago efectoRegistrado=BOLA_PROTECTORA subirACabeza=true offset=0,0.52,0.22 offsetFinal=0,1.75,0.1 tiempoSubida=1.6 duracion=18 escalaInicial=0.73 escalaFinal=1.3
++3.5 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=archimago lifetime=2.2
++3.5 sonido Prologo_MagiaLevitar en=archimago volume=0.55
++3.5 sacudida 0.3 0.9
+
+# Estrofa 4: clímax del cántico; líneas de concentración y poder desbordado.
+plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 zoom=32 mano=0.3
+efecto LineasDeConcentracionBeat mostrar=true
+&& archimago dice PROLOGO_PLEGARIA_05 cara=dormido
++3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
++3.5 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.6 duracion=1.4
++3.5 sonido Prologo_Carga volume=0.5
++3.5 sacudida 0.5 1.6
+
+# Silencio íntimo antes del estallido: se despide de Liora en voz baja.
+plano primer archimago lado=der altura=0.95 altura_foco=1.05 lente=34 suave=0.3
+efecto LineasDeConcentracionBeat mostrar=false
+
+# Con los brazos en alto y los ojos cerrados, llora al despedirse de Liora.
+archimago dice PROLOGO_PLEGARIA_06 cara=llorando
+espera 0.35
+
+# Duelo de miradas en franja (Mago Oscuro y Archimago) y el grito final.
+efecto MezclaBeat fuente=plegaria quitar=true fundido=0.3
+efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
+
+# El Mago Oscuro no habla aquí: su voz no se oye en el conjuro.
+# cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0 volumen=0.5
+# & sonido Prologo_Carga volume=0.4
+& efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
+cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1 volumen=0.5
+# El respiro: un instante de silencio antes del grito, para que entre grande.
+# No aparta la música: el tema entra justo en el hechizo y tiene que oírse.
+efecto RespiroBeat musicaDb=0 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
+@hechizo
+# El tema del duelo se apaga 3 s antes del fundido a negro; el del conjuro entra con
+# ese fundido a negro, 2,7 s antes de la frase de la Luz.
+desde @hechizo-41.4 silencio 3
+desde @hechizo-38.4 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.3
+desde @hechizo-38.4 musica ULTIMO_INCANTAZIONE fadeIn=0.3 continuarDondeIba=false
+# Abre los ojos: primer plano de frente, justo antes del grito.
+plano primer archimago lado=frente altura=1.05 altura_foco=1.1 lente=26
++0.45 archimago cara enfado
+espera 1.0
+
+# El grito: brazos arriba y el orbe sale al cielo pequeño; una vez arriba, crece hasta el blanco.
+plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
+archimago dice PROLOGO_HECHIZO cara=enfado
++0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
++0.3 sacudida 0.45 2.0
++0.3 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,0.76,0 puntoDeEncuentro=cielo_conjuro fraccionDeViaje=0.35 duracionCrecimiento=3.0 duracionMezcla=1.8 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.5 esperar=false
+# La lucha: cortes cada vez más rápidos y el temblor que crece hasta el blanco.
+desde @hechizo+2.9 plano primer archimago lado=der altura=0.8 altura_foco=1.05 lente=34 zoom=26 mano=0.65
+desde @hechizo+2.9 sacudida 0.55 1.3
+desde @hechizo+2.9 efecto LineasDeConcentracionBeat mostrar=true duracion=3.8
+desde @hechizo+4.2 plano primer mago lado=izq contrapicado lente=30 zoom=24 mano=0.65
+
+
+desde @hechizo+4.2 sacudida 0.7 1.2
+desde @hechizo+5.4 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.75 lente=48 mano=0.85
+desde @hechizo+5.4 sacudida 0.95 1.4
+desde @hechizo+6.0 destello FFFFFFFF 0.14
+# Hasta que la fusión llega al blanco (sube 1 s, crece 2 s, se mezcla 1,8 s): si la explosión
+# entra antes, recoge el orbe a medio subir y no se le ve crecer.
+espera 3.4
+
+# ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
+@explosion
+ambiente AGUJERO_NEGRO sonar=false fundido=0.3
+efecto RecogerVfxBeat ids=CARGA_ESFERA|CARGA_CRECE|CARGA_REFUERZO|CIRCULO_PLEGARIA|CIRCULO_CONJURO|BOLA_PROTECTORA|HUMO_HORNO
+
+efecto MezclaBeat fuente=grito quitar=true fundido=0.6
+efecto LineasDeConcentracionBeat mostrar=false fundido=0
+efecto ScreenFadeBeat fadeIn=true color=FFFFFFFF duration=1.2 waitForEnd=false
+ambiente TORMENTA sonar=false fundido=0.2
++1.2 hora Morning immediate=true esLaHoraDeVolver=true
++0.4 sacudida 0.9 1.6
+# Tras el estallido, silencio: la música se va y no queda ningún SFX largo que se cuele
+# en la habitación de Will.
++0.9 silencio 1.2
+espera 3.0
+bandas quita

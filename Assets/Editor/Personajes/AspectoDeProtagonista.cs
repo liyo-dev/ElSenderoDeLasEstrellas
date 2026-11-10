@@ -21,11 +21,15 @@ public static class AspectoDeProtagonista
         public string Nombre;              // nombre de la malla en el FBX y de la pieza en el modelo
         public PartCategory Categoria;
         public string Vecina;              // pieza que ya tiene el modelo, a cuyo lado va («A|B»: la primera que exista)
+        public bool DeSerie = true;        // la lleva puesta de partida; si no, solo queda en su armario (la chaqueta de Will)
+        public string NombreEnArmario;     // prenda del armario (WardrobeItemSO, solo para él); vacío: no es ropa (el pelo)
+        public string Descripcion;
     }
 
     public sealed class Ficha
     {
         public string Nombre;              // para los mensajes
+        public PartyControlManager.CharacterSlot Personaje;   // de quién es su ropa en el armario
         public string Carpeta;             // donde están los FBX (<pieza>.fbx) y donde van sus materiales
         public string CampoDePartida;      // estelaDefault, liamDefault… (vacío: el de Will sale del propio modelo del jugador)
         public string PrefabPropio;        // su NPC (de él sale el material de estilo)
@@ -53,11 +57,12 @@ public static class AspectoDeProtagonista
     public static void Aplicar(Ficha f, StringBuilder informe)
     {
         if (!PonerPiezas(f, informe)) return;
+        ArmarioDeLosProtagonistas.PrendasDe(f, informe);
         if (!string.IsNullOrEmpty(f.CampoDePartida)) CambiarAspectoDePartida(f, informe);
         else
         {
             // Will: su aspecto de partida es el de los presets del jugador (PlayerPresetSO.appearance)
-            var poner = f.Piezas.ToDictionary(p => p.Categoria, p => p.Nombre);
+            var poner = f.Piezas.Where(p => p.DeSerie).ToDictionary(p => p.Categoria, p => p.Nombre);
             var quitar = f.Apagar.Select(n => (PartCategory?)CategoriaDe(n)).Where(c => c.HasValue && !poner.ContainsKey(c.Value)).Select(c => c.Value);
             ActualizarPresetsDelJugador(poner, quitar, informe);
         }
@@ -87,7 +92,8 @@ public static class AspectoDeProtagonista
             modelos[p.Nombre] = AssetDatabase.LoadAssetAtPath<GameObject>(fbx);
         }
 
-        var nombres = f.Piezas.Select(p => p.Nombre).ToArray();
+        var nombres = f.Piezas.Where(p => p.DeSerie).Select(p => p.Nombre).ToArray();
+        var todas = f.Piezas.Select(p => p.Nombre).ToArray();
         foreach (var ruta in f.Modelos)
         {
             var raiz = PrefabUtility.LoadPrefabContents(ruta);
@@ -101,8 +107,9 @@ public static class AspectoDeProtagonista
                     // Apaga lo que llevaba en esas categorías (y lo que pida la ficha) y enciende lo nuevo
                     var apagar = new List<string>(f.Apagar);
                     foreach (var r in raiz.GetComponentsInChildren<Renderer>(true))
-                        if (r.gameObject.activeSelf && !nombres.Contains(r.name) && f.Piezas.Any(p => r.name.StartsWith(Prefijo(p.Categoria))))
+                        if (r.gameObject.activeSelf && !nombres.Contains(r.name) && f.Piezas.Any(p => p.DeSerie && r.name.StartsWith(Prefijo(p.Categoria))))
                             apagar.Add(r.name);
+                    apagar.AddRange(todas.Except(nombres));   // lo que no es de serie, guardado en el armario
                     PiezaNuevaDelModelo.Encender(raiz, nombres, apagar);
                 }
                 PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
@@ -179,8 +186,9 @@ public static class AspectoDeProtagonista
                 var e = lista.GetArrayElementAtIndex(i);
                 entradas.Add((e.FindPropertyRelative("category").intValue, e.FindPropertyRelative("partName").stringValue));
             }
-            entradas.RemoveAll(e => f.Piezas.Any(p => (int)p.Categoria == e.cat) || f.Apagar.Contains(e.pieza));
-            foreach (var p in f.Piezas) entradas.Add(((int)p.Categoria, p.Nombre));
+            var deSerie = f.Piezas.Where(p => p.DeSerie).ToArray();
+            entradas.RemoveAll(e => deSerie.Any(p => (int)p.Categoria == e.cat) || f.Apagar.Contains(e.pieza));
+            foreach (var p in deSerie) entradas.Add(((int)p.Categoria, p.Nombre));
             lista.arraySize = entradas.Count;
             for (int i = 0; i < entradas.Count; i++)
             {
@@ -203,6 +211,7 @@ public static class AspectoDeProtagonista
     public static Ficha FichaEstela => new Ficha
     {
         Nombre = "Estela",
+        Personaje = PartyControlManager.CharacterSlot.Estela,
         Carpeta = "Assets/Art/Characters/Protagonistas/Estela",
         CampoDePartida = "estelaDefault",
         PrefabPropio = "Assets/Prefabs/_ESTELA.prefab",
@@ -212,8 +221,10 @@ public static class AspectoDeProtagonista
         Piezas = new[]
         {
             new Pieza { Nombre = "Hair14_Coleta", Categoria = PartCategory.Hair, Vecina = "Hair08" },
-            new Pieza { Nombre = "Body21_Hechicera", Categoria = PartCategory.Body, Vecina = "Body09" },
-            new Pieza { Nombre = "Cloak04_Hechicera", Categoria = PartCategory.Cloak, Vecina = "Cloak01|Body09" },
+            new Pieza { Nombre = "Body21_Hechicera", Categoria = PartCategory.Body, Vecina = "Body09",
+                        NombreEnArmario = "Traje de hechicera", Descripcion = "Túnica corta azul con ribete dorado, hombreras y botas a juego." },
+            new Pieza { Nombre = "Cloak04_Hechicera", Categoria = PartCategory.Cloak, Vecina = "Cloak01|Body09",
+                        NombreEnArmario = "Capa de hechicera", Descripcion = "La capa crema de Estela, de los hombros a las rodillas." },
         },
         Apagar = new[] { "AC09_Ribbon" },   // la coleta ya lleva su lazo
         CadenaConMuelle = new[] { "ColetaBone01", "ColetaBone02" },   // la coleta se levanta al correr y no se mete en la capa
@@ -232,6 +243,7 @@ public static class AspectoDeProtagonista
     public static Ficha FichaWill => new Ficha
     {
         Nombre = "Will",
+        Personaje = PartyControlManager.CharacterSlot.Will,
         Carpeta = "Assets/Art/Characters/Protagonistas/Will",
         CampoDePartida = null,   // Will empieza con lo que lleva puesto el modelo del jugador
         PrefabPropio = "Assets/Prefabs/_WILL.prefab",
@@ -241,13 +253,18 @@ public static class AspectoDeProtagonista
         Piezas = new[]
         {
             new Pieza { Nombre = "Hair16_Heroe", Categoria = PartCategory.Hair, Vecina = "Hair01" },
-            new Pieza { Nombre = "Body23_Aventurero", Categoria = PartCategory.Body, Vecina = "Body05" },
+            new Pieza { Nombre = "Body23_Aventurero", Categoria = PartCategory.Body, Vecina = "Body05",
+                        NombreEnArmario = "Ropa de aventurero", Descripcion = "Camiseta azul marino con ribete dorado y el pañuelo de siempre al cuello." },
+            // Raúl (8 nov): la chaqueta deja de ir puesta y queda en su armario. Es otro cuerpo (la misma ropa con la
+            // chaqueta encima), no una pieza de capa: así se puede llevar con la capa.
+            new Pieza { Nombre = "Body24_AventureroChaqueta", Categoria = PartCategory.Body, Vecina = "Body05", DeSerie = false,
+                        NombreEnArmario = "Ropa de aventurero con chaqueta", Descripcion = "La camiseta de siempre con la chaqueta corta azul marino encima, abierta y remangada." },
         },
-        Apagar = new[] { "Cloak01", "Cloak02", "Cloak03" },   // la capa roja de antes no va con la chaqueta
+        Apagar = new[] { "Cloak01", "Cloak02", "Cloak03" },   // empieza sin capa
         Colores = new[]
         {
             ("Pelo", new Color(0.72f, 0.44f, 0.16f)), ("PeloClaro", new Color(0.86f, 0.6f, 0.28f)),   // rubio miel
-            ("Chaqueta", new Color(0.1f, 0.16f, 0.38f)), ("Camisa", new Color(0.95f, 0.9f, 0.78f)), ("Pantalon", new Color(0.3f, 0.24f, 0.18f)),
+            ("Chaqueta", new Color(0.1f, 0.16f, 0.38f)), ("Camiseta", new Color(0.1f, 0.16f, 0.38f)), ("Pantalon", new Color(0.3f, 0.24f, 0.18f)),
             ("Cuero", new Color(0.42f, 0.25f, 0.12f)), ("Dorado", new Color(1f, 0.8f, 0.3f)), ("Panuelo", new Color(0.3f, 0.62f, 0.92f)),
         },
     };
@@ -257,6 +274,7 @@ public static class AspectoDeProtagonista
     public static Ficha FichaLiam => new Ficha
     {
         Nombre = "Liam",
+        Personaje = PartyControlManager.CharacterSlot.Liam,
         Carpeta = "Assets/Art/Characters/Protagonistas/Liam",
         CampoDePartida = "liamDefault",
         PrefabPropio = "Assets/Prefabs/_LIAM.prefab",
@@ -266,9 +284,11 @@ public static class AspectoDeProtagonista
         Piezas = new[]
         {
             new Pieza { Nombre = "Hair15_Flequillo", Categoria = PartCategory.Hair, Vecina = "Hair02" },
-            new Pieza { Nombre = "Body22_Tunica", Categoria = PartCategory.Body, Vecina = "Body12" },
+            new Pieza { Nombre = "Body22_Tunica", Categoria = PartCategory.Body, Vecina = "Body12",
+                        NombreEnArmario = "Túnica de viaje", Descripcion = "Túnica marrón corta con cinturón, pantalón y botas." },
             // La capucha es un accesorio: el jugador se la puede quitar en el armario (sale el pelo entero)
-            new Pieza { Nombre = "AC12_Capucha", Categoria = PartCategory.Accessory, Vecina = "AC03_BlackGlass|AC01_Heart|Body12" },
+            new Pieza { Nombre = "AC12_Capucha", Categoria = PartCategory.Accessory, Vecina = "AC03_BlackGlass|AC01_Heart|Body12",
+                        NombreEnArmario = "Capucha", Descripcion = "La capucha de Liam. Sin ella se le ve el flequillo." },
         },
         Colores = new[]
         {

@@ -241,6 +241,8 @@ public class NPCEmotionController : MonoBehaviour
         _fondoSuave = suave;
         if (aplicarAhora) VolverAReposo();
     }
+    /// Quién ha puesto la cara de fondo (null si nadie): para no quitársela a otro sistema.
+    public object PropietarioDeCaraDeFondo => _propietarioDeFondo;
     public void ClearCaraDeFondo(object propietario)
     {
         if (!ReferenceEquals(_propietarioDeFondo, propietario)) return;

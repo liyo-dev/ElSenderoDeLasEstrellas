@@ -45,6 +45,8 @@ public class AmbientZone : MonoBehaviour
 
     // --- Estado activo ---
     private static AmbientZone _currentActiveZone;
+    // El último lugar cuyo nombre salió en pantalla: no se repite al salir y volver a entrar.
+    private static AmbientPreset _ultimoLugarNombrado;
     private static Tween _currentTween;
     private static Tween _overlayTween;
     private static AudioClip _previousMusic;
@@ -77,6 +79,7 @@ public class AmbientZone : MonoBehaviour
     {
         _defaultsCaptured = false;
         _currentActiveZone = null;
+        _ultimoLugarNombrado = null;
         _currentTween = null;
         _overlayTween = null;
         _previousMusic = null;
@@ -189,6 +192,27 @@ public class AmbientZone : MonoBehaviour
         _currentActiveZone = this;
         ApplyZoneTransition();
         StartCoroutine(DeferredMusicTransition());
+        NombrarElLugar();
+    }
+
+    /// <summary>
+    /// Si el jugador sigue dentro y ninguna zona manda (acaba de salir de otra que se solapaba con
+    /// esta), esta toma el relevo sin esperar a que vuelva a entrar. Ver INC-973.
+    /// </summary>
+    private void OnTriggerStay(Collider other)
+    {
+        if (_currentActiveZone != null && (_currentActiveZone == this || _currentActiveZone.priority >= priority)) return;
+        if (!other.CompareTag(GameTags.Player)) return;
+        OnTriggerEnter(other);
+    }
+
+    /// <summary>El nombre del lugar, como rótulo, al entrar en un lugar con nombre distinto del último.</summary>
+    private void NombrarElLugar()
+    {
+        if (ambientPreset == null || string.IsNullOrEmpty(ambientPreset.nombreDelLugar)) return;
+        if (_ultimoLugarNombrado == ambientPreset || HudToastService.Instance == null) return;
+        _ultimoLugarNombrado = ambientPreset;
+        HudToastService.Instance.Show(ambientPreset.nombreDelLugar, 3.5f);
     }
 
     private System.Collections.IEnumerator DeferredMusicTransition()

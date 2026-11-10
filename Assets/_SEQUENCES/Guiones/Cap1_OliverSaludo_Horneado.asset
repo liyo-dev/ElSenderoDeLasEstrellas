@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap1_OliverSaludo
   duracion: 37.244564
   presentacion: 0
-  huella: "2026-10-30 17:50 \xB7 3bda3859603c4f42ce490aec95eda17e"
+  huella: "2026-11-08 13:45 \xB7 62e65826f0fed8a1b5eff3fa6b9be59e"
   actores:
   - id: Player
     alias: will
@@ -103,90 +103,119 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.680264
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 12.380264
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.68802
       tipo: 2
       estado: TakeDamage_2
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 15.117353
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.588019
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 16.78802
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.588018
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
       t: 20.010685
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.090685
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 22.924019
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 25.912113
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.912115
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 33.612114
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.14293
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.22293
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 36.39456
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 2.56
       emocion: sorpresa
@@ -306,156 +335,196 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.08
       tipo: 2
       estado: Cheer02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.2133334
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 2.61
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.9872036
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.0672035
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.600537
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.530265
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.680264
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.760264
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.18802
       tipo: 2
       estado: MagicSpecial
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.23802
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.68802
       tipo: 2
       estado: TakeDamage_2
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 15.117353
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.588019
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 16.78802
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.588018
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
       t: 20.010685
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.710686
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.212114
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.292114
       tipo: 2
       estado: Cheer01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 27.825447
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 30.342113
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 32.662113
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 32.912113
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 32.992115
       tipo: 2
       estado: HandWave01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 34.84293
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.62358
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: alegre
@@ -549,7 +618,7 @@ MonoBehaviour:
     descripcion: general de oliver y will
     posiciones:
     - t: 0
-      p: {x: -7.0284643, y: 34.17793, z: -152.88678}
+      p: {x: -7.0284643, y: 33.484787, z: -152.88678}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -560,7 +629,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.89611506
+    alturaDelFoco: 0.9139301
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -583,7 +652,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1405101
+    alturaDelFoco: 1.1631837
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -593,26 +662,32 @@ MonoBehaviour:
     skipIfFlag: 
     t: 14.68802
     beat:
-      rid: 5630202816662077814
+      rid: 6540294476782371401
     linea: 52
   - onlyIfFlag: 
     skipIfFlag: 
     t: 14.68802
     beat:
-      rid: 5630202816662077815
-    linea: 53
+      rid: 6540294476782371402
+    linea: 54
   - onlyIfFlag: 
     skipIfFlag: 
     t: 14.68802
     beat:
-      rid: 5630202816662077816
-    linea: 54
+      rid: 6540294476782371403
+    linea: 55
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 14.68802
+    beat:
+      rid: 6540294476782371404
+    linea: 56
   - onlyIfFlag: 
     skipIfFlag: 
     t: 32.612114
     beat:
-      rid: 5630202816662077817
-    linea: 73
+      rid: 6540294476782371405
+    linea: 76
   etiquetas:
   - nombre: inicio
     t: 0
@@ -635,7 +710,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202816662077814
+    - rid: 6540294476782371401
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -648,7 +723,20 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202816662077815
+    - rid: 6540294476782371402
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 5435998012328932994, guid: d8703a33a4eb0b84a875202fde23e8f7, type: 3}
+        atActorId: NPC_Oliver
+        markName: 
+        offset: {x: 0, y: 1.1, z: 0}
+        lifetime: 1.2
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+        escala: 0.5
+    - rid: 6540294476782371403
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -658,14 +746,14 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 5630202816662077816
+    - rid: 6540294476782371404
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.4
         waitForEnd: 0
-    - rid: 5630202816662077817
+    - rid: 6540294476782371405
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

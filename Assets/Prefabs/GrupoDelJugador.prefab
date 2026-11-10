@@ -164,6 +164,12 @@ MonoBehaviour:
   unlockAllByDefault: 0
   initialUnlocked:
   - {fileID: 11400000, guid: 2631dadb4faec8f46a9d16a4535fd5de, type: 2}
+  - {fileID: 11400000, guid: e6aa2ffb454fa854b9337864a144a83f, type: 2}
+  - {fileID: 11400000, guid: af22349d7493b6c48bc4c60e4060c326, type: 2}
+  - {fileID: 11400000, guid: abe31d6ad42b13e4286f78eb19694a01, type: 2}
+  - {fileID: 11400000, guid: 6fc59175356913442a856c09047a8194, type: 2}
+  - {fileID: 11400000, guid: a42602fa23aed2c478f030128485bc01, type: 2}
+  - {fileID: 11400000, guid: fd5890b935457414fab45973f61414a2, type: 2}
 --- !u!114 &1759466094439441556
 MonoBehaviour:
   m_ObjectHideFlags: 0

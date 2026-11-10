@@ -1,4 +1,4 @@
-﻿# Cap. 3 · La posada de la aldea del mar: la sopa, la cuchara de Lucía y el trozo del aro.
+﻿# Cap. 3 · La posada de la aldea del mar: Will pregunta por el trozo del aro, le suenan las tripas y Lucía intenta subir la cuchara.
 GUION Cap3_02_LaPosada
 ESCENA MainWorld
 ZONA Cap3Posada 279 -424 24
@@ -30,26 +30,37 @@ will en p_will mirando p_posadero
 & lucia en p_lucia mirando mesa
 plano conjunto will posadero lucia desde=cam_grupo altura=2.2
 espera 0.8
-will dice CAP3_POSADA_01 mira=posadero
-posadero dice CAP3_POSADA_02 gesto=HeadNod01
-lucia mira will
-lucia dice CAP3_POSADA_03 cara=alegre
-plano medio lucia desde=cam_lucia altura=1.2 solo
-lucia gesto CastingEnter01
-& lucia cara decidido
-lucia dice CAP3_POSADA_04 cara=decidido
-lucia dice CAP3_POSADA_05 cara=triste gesto=HeadShake01
-posadero dice CAP3_POSADA_06 mira=lucia cara=alegre
-
-@trozo
 plano medio will desde=cam_will altura=1.4 solo
-will dice CAP3_POSADA_07 mira=posadero cara=pensativo gesto=FoundSomething_NoWeapon
+will dice CAP3_POSADA_01 mira=posadero cara=pensativo gesto=FoundSomething_NoWeapon
 plano primer posadero desde=cam_posad altura=1.4
 posadero cara sorpresa
 espera 1.2
-posadero dice CAP3_POSADA_08 cara=preocupado
-will dice CAP3_POSADA_09
+posadero dice CAP3_POSADA_02 cara=preocupado
+will dice CAP3_POSADA_03
+posadero dice CAP3_POSADA_04 cara=preocupado
+
+@tripas
 plano conjunto will posadero lucia desde=cam_grupo altura=2.2
-posadero dice CAP3_POSADA_10 cara=preocupado
-posadero dice CAP3_POSADA_11 gesto=Question01
+espera 0.6
+posadero dice CAP3_POSADA_05 cara=alegre
+will dice CAP3_POSADA_06 cara=confuso gesto=Talk01
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Coin_Shaking-002.wav" volume=0.7
+posadero dice CAP3_POSADA_07 gesto=HeadNod01
+
+@cuchara
+lucia mira will
+lucia dice CAP3_POSADA_08 cara=alegre
+plano medio lucia desde=cam_lucia altura=1.2 solo
+lucia gesto CastingEnter01
+& lucia cara decidido
+lucia dice CAP3_POSADA_09 cara=decidido
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab" en=mesa lifetime=1.5
+espera 0.8
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(4).wav" volume=0.6
+lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
+will dice CAP3_POSADA_11 mira=lucia cara=alegre
+
+@pista
+plano conjunto will posadero lucia desde=cam_grupo altura=2.2
+posadero dice CAP3_POSADA_12 mira=will gesto=Question01
 espera 0.5

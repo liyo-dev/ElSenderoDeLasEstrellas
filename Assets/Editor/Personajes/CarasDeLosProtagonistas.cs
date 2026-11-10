@@ -70,6 +70,7 @@ public static class CarasDeLosProtagonistas
         (NPCEmotion.Surprised, 4, 4), (NPCEmotion.Scared, 5, 6), (NPCEmotion.Thinking, 6, 0), (NPCEmotion.Tired, 7, 0),
         (NPCEmotion.Smirk, -1, 7), (NPCEmotion.Worried, 2, 6), (NPCEmotion.Determined, 3, 0), (NPCEmotion.Relieved, 1, 1),
         (NPCEmotion.Confused, 6, 6), (NPCEmotion.Excited, 4, 2), (NPCEmotion.Annoyed, 7, 3), (NPCEmotion.Grateful, 1, 1),
+        (NPCEmotion.Frozen, 2, 6),
     };
 
     // Los símbolos de anime de cada juego: fotogramas Fx<ojos×10 + primero…>, en el orden de SIMBOLOS de Tools/Modelos/Caras
@@ -80,7 +81,7 @@ public static class CarasDeLosProtagonistas
     static readonly (NPCEmotion emocion, string simbolo)[] SimboloDeCadaEmocion =
     {
         (NPCEmotion.Angry, "vena"), (NPCEmotion.Scared, "susto"), (NPCEmotion.Worried, "sudor"),
-        (NPCEmotion.Crying, "lagrimas"), (NPCEmotion.HappyTears, "lagrimas"),
+        (NPCEmotion.Crying, "lagrimas"), (NPCEmotion.HappyTears, "lagrimas"), (NPCEmotion.Frozen, "susto"),
     };
     // Si el perfil base aún no trae una emoción nueva, toma el gesto del cuerpo de su pariente
     static readonly (NPCEmotion nueva, NPCEmotion pariente)[] GestoDePariente =

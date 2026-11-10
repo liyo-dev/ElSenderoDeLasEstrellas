@@ -46,7 +46,7 @@
         },
         {
             "id": "EVT_08",
-            "text": "¡Will! Usa tu magia, presiona <sprite name=\"interactable_x\"> y derrota al demonio."
+            "text": "¡Usa tu magia, presiona <sprite name=\"interactable_x\"> y derrota al demonio!"
         },
         {
             "id": "EVT_09",
@@ -78,7 +78,7 @@
         },
         {
             "id": "EVT_AWAKEN_06",
-            "text": "¡Will apartate!"
+            "text": "¡Apártate!"
         },
         {
             "id": "EVT_ELDRAN_CHEER_01",
@@ -110,7 +110,7 @@
         },
         {
             "id": "EVT_ELDRAN_AHORA_01",
-            "text": "¡Ahora, Will! ¡El aro brilla!"
+            "text": "¡Ahora! ¡El aro brilla!"
         },
         {
             "id": "EVT_ELDRAN_AHORA_02",
@@ -142,7 +142,7 @@
         },
         {
             "id": "EVT_ELDRAN_CASI",
-            "text": "¡Ya casi es tuyo! ¡Un último esfuerzo, Will!"
+            "text": "¡Ya casi es tuyo! ¡Un último esfuerzo, muchacho!"
         },
         {
             "id": "EVT_ELDRAN_RECUERDA_ARO",
@@ -218,7 +218,7 @@
         },
         {
             "id": "EVT_ELDRAN_GUIA_LLAMADA",
-            "text": "¡Por aquí, Will!"
+            "text": "¡Por aquí!"
         },
         {
             "id": "EVT_ESTELA_ARAÑA_1",
@@ -2286,7 +2286,7 @@
         },
         {
             "id": "CAP3_ESPEJO_10",
-            "text": "La llave del aro. Se calentará cada vez que esté cerca de él."
+            "text": "La llave del aro. Se calentará cada vez que el chico esté cerca."
         },
         {
             "id": "CAP3_ESPEJO_11",
@@ -2294,47 +2294,47 @@
         },
         {
             "id": "CAP3_POSADA_01",
-            "text": "Una sopa, si alcanza."
+            "text": "Perdone. ¿Sabe usted qué es esto?"
         },
         {
             "id": "CAP3_POSADA_02",
-            "text": "Alcanza. Pero no para pan."
-        },
-        {
-            "id": "CAP3_POSADA_03",
-            "text": "¡Mira! ¡Sé hacer magia!"
-        },
-        {
-            "id": "CAP3_POSADA_04",
-            "text": "La cuchara sube… sube… ¡hasta el pulgar!"
-        },
-        {
-            "id": "CAP3_POSADA_05",
-            "text": "Casi."
-        },
-        {
-            "id": "CAP3_POSADA_06",
-            "text": "No ha sido casi nada, Lucía."
-        },
-        {
-            "id": "CAP3_POSADA_07",
-            "text": "Busco a alguien que sepa qué es esto."
-        },
-        {
-            "id": "CAP3_POSADA_08",
             "text": "¿De dónde has sacado eso?"
         },
         {
-            "id": "CAP3_POSADA_09",
+            "id": "CAP3_POSADA_03",
             "text": "Lo llevaba el demonio que atacó mi pueblo."
         },
         {
-            "id": "CAP3_POSADA_10",
+            "id": "CAP3_POSADA_04",
             "text": "Por aquí no han venido demonios. Pero animales con aros, sí. Varios."
         },
         {
+            "id": "CAP3_POSADA_05",
+            "text": "…¿Eso han sido tus tripas?"
+        },
+        {
+            "id": "CAP3_POSADA_06",
+            "text": "La comida de la mochila se me acabó ayer. ¿Me alcanza esto para una sopa?"
+        },
+        {
+            "id": "CAP3_POSADA_07",
+            "text": "Alcanza. Pero no para pan."
+        },
+        {
+            "id": "CAP3_POSADA_08",
+            "text": "¡Yo sé hacer magia! Mira la cuchara."
+        },
+        {
+            "id": "CAP3_POSADA_09",
+            "text": "Va a subir… subir… hasta el pulgar."
+        },
+        {
+            "id": "CAP3_POSADA_10",
+            "text": "Casi."
+        },
+        {
             "id": "CAP3_POSADA_11",
-            "text": "Pregunta por la aldea. La gente ve cosas, aunque no las cuente."
+            "text": "¿Casi? Yo a tu edad no movía ni una miga."
         },
         {
             "id": "CAP3_CARRO_01",
@@ -2406,7 +2406,7 @@
         },
         {
             "id": "CAP3_JAULAS_01",
-            "text": "Ya está… ¿ya está?"
+            "text": "Se acabó…"
         },
         {
             "id": "CAP3_JAULAS_02",
@@ -2486,7 +2486,7 @@
         },
         {
             "id": "CAP4_MANANA_02",
-            "text": "Porque es lo que más te queda."
+            "text": "Porque es lo que más lejos te queda."
         },
         {
             "id": "CAP4_MANANA_03",
@@ -2538,7 +2538,7 @@
         },
         {
             "id": "CAP4_FIGURA_07",
-            "text": "Alguien que nos observa desde hace días. Lo noto en la nuca."
+            "text": "Alguien que nos observa desde ayer. Lo noto en la nuca."
         },
         {
             "id": "CAP4_FIGURA_08",
@@ -2646,7 +2646,7 @@
         },
         {
             "id": "CAP4_BIFURCACION_11",
-            "text": "¡Mi bota! ¡El barro se ha quedado con mi bota!"
+            "text": "¡Mi bota! ¡Se me ha salido en el vado!"
         },
         {
             "id": "CAP4_BOTA_01",
@@ -2654,15 +2654,75 @@
         },
         {
             "id": "CAP4_BOTA_02",
-            "text": "El mapa no indicaba el barro."
+            "text": "El vado cubría más de lo que parecía."
         },
         {
             "id": "CAP4_BOTA_03",
-            "text": "Ni que fueras a perder una bota en él."
+            "text": "Por los pinos no nos habríamos mojado."
         },
         {
             "id": "CAP4_BOTA_04",
-            "text": "Eso no sale en ningún mapa."
+            "text": "Tampoco salía en el mapa que alguien iría a por mi bota."
+        },
+        {
+            "id": "CAP3_POSADA_12",
+            "text": "Come algo y luego pregunta por la aldea. La gente ve cosas, aunque no las cuente."
+        },
+        {
+            "id": "CAP4_MANANA_05",
+            "text": "Vale. ¿Por dónde empiezo?"
+        },
+        {
+            "id": "CAP4_GOLEM_05",
+            "text": "¿Tú no tienes miedo nunca?"
+        },
+        {
+            "id": "CAP4_MANZANA_07",
+            "text": "¿Estás bien? Apóyate en mí."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_01",
+            "text": "Ya estás aquí. ¿Te has despedido de todos?"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_02",
+            "text": "De casi todos. Tomasa quería venderme otra cosa inútil."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_03",
+            "text": "Esa mujer no descansa. Escucha, que esto es importante."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_04",
+            "text": "Estela no acepta aprendices. Si te presentas con un trozo de hierro y buena cara, te cerrará la puerta."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_05",
+            "text": "Pero en la aldea del mar han visto más animales con aros como ese. Ve allí primero, pregunta y apúntalo todo."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_06",
+            "text": "Llévale algo que no pueda ignorar. Así te escuchará."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_07",
+            "text": "¿Y tú?"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_08",
+            "text": "Yo me voy al Reino, a contarle al Rey lo de los aros. Cuando tengas algo, búscame allí."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_09",
+            "text": "Entonces no es una despedida."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_10",
+            "text": "Claro que no. Es un «hasta pronto». Anda, tira, que se te va el día."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_11",
+            "text": "¡Hasta pronto, Eldran!"
         }
     ]
 }

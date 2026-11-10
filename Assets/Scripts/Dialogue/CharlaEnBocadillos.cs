@@ -3,8 +3,10 @@ using System.Collections;
 using Game.NPC;
 using UnityEngine;
 
-/// Una conversación (DialogueAsset) dicha en bocadillos sobre la cabeza de quien habla mientras el
-/// jugador sigue jugando: lo que se cuentan por el camino al seguir a un NPC, por ejemplo. Se
+/// Una conversación (DialogueAsset) dicha en bocadillos fijos a un lado de la pantalla, con el
+/// nombre de quien habla, mientras el jugador sigue jugando: lo que se cuentan por el camino al
+/// seguir a un NPC, por ejemplo. Quietos y a un lado no tapan lo que hay delante; un bocadillo
+/// sobre la cabeza de quien guía taparía el camino. Es el mismo modo que la guía de combate. Se
 /// escribe como cualquier diálogo (speakerNameId + textId por línea). Solo avanza mientras
 /// 'puedeHablar' lo permite (el jugador va cerca, no hay un menú abierto); si una línea se corta a
 /// medias, se repite cuando se puede volver a hablar. Cada línea sale por PresentadorDeLinea
@@ -43,7 +45,14 @@ public sealed class CharlaEnBocadillos
             var linea = _dialogo.lines[_linea];
             Transform quien = Hablante(linea);
             var dicha = quien != null
-                ? PresentadorDeLinea.Decir(new FraseADecir { clave = linea.textId, textoPorDefecto = linea.text, ancla = quien })
+                ? PresentadorDeLinea.Decir(new FraseADecir
+                {
+                    clave = linea.textId,
+                    textoPorDefecto = linea.text,
+                    ancla = quien,
+                    fijoEnPantalla = true,
+                    nombreDelHablante = NombreDelHablante(linea),
+                })
                 : LineaDicha.Nada;
             if (!dicha.Dicha)
             {
@@ -143,6 +152,16 @@ public sealed class CharlaEnBocadillos
                 if (Es(npc, id)) return npc.transform;
             }
         return null;
+    }
+
+    /// Nombre que se enseña sobre el bocadillo fijo: el de la línea; si no lo trae, el del jugador
+    /// (el personaje que lleva) o el del NPC principal.
+    private string NombreDelHablante(DialogueLine linea)
+    {
+        string nombre = PresentadorDeLinea.NombreDelHablante(linea.speakerNameId);
+        if (!string.IsNullOrEmpty(nombre)) return nombre;
+        if (linea.isPlayerSpeaking) return ControlDelJugador.Nombre(ControlDelJugador.Activo);
+        return _principal != null ? PresentadorDeLinea.NombreDelHablante(_principal.DialogueCharacterId) : null;
     }
 
     private static bool Es(NPCBehaviourManagerV2 npc, string id)

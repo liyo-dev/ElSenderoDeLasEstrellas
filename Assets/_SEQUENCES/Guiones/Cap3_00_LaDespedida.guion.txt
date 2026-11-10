@@ -1,0 +1,72 @@
+# Cap. 3 · La despedida en la salida del pueblo (INC-967). Eldran explica por qué ir antes a la aldea
+# del mar (Estela no acepta aprendices: hay que llevarle pruebas de los aros) y se despide con un
+# «hasta pronto»: él se va al Reino. Will baja por el camino del puerto, se gira y saluda, y Eldran
+# vuelve por el pueblo hacia el Reino. Suena la melodía de Eldran.
+GUION Cap3_00_LaDespedida
+ESCENA MainWorld
+ZONA Cap3Despedida 57 -189 26
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_00_LaDespedida.asset
+TEXTO subtitulo
+RITMO entre_frases=0.4 mismo_hablante=0.25
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=CHAR_ELDRAN color=9ED6FF prefab=Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
+
+PUNTOS
+p_eldran  Eldran_SalidaDelPueblo
+p_will    Will_SalidaDelPueblo
+p_camino  Cap3_Despedida_Camino
+# Vuelta de Eldran hacia el pueblo (al noroeste), camino del Reino: se aleja hacia los árboles.
+e_vuelta  48.9 -181.0
+# Camino del puerto, más abajo: adonde mira Will al echar a andar.
+p_puerto  63.6 -197.4
+
+HILO
+@inicio
+will en p_will mirando eldran
+& eldran en p_eldran mirando will
+& bandas
+& musica MANANA_DESPUES fadeIn=2.5 continuarDondeIba=false
+plano dos will eldran
+espera 0.6
+eldran dice CAP3_DESPEDIDA_01 cara=alegre
+will dice CAP3_DESPEDIDA_02 cara=alegre
+eldran dice CAP3_DESPEDIDA_03 gesto=Laugh01 cara=alegre
+
+@consejo
+plano medio eldran
+eldran dice CAP3_DESPEDIDA_04 cara=decidido
+eldran dice CAP3_DESPEDIDA_05 cara=pensativo
+eldran dice CAP3_DESPEDIDA_06 cara=decidido
+plano primer will
+will dice CAP3_DESPEDIDA_07 cara=preocupado
+
+@hasta_pronto
+plano medio eldran
+eldran dice CAP3_DESPEDIDA_08 cara=alegre
+plano dos will eldran
+will dice CAP3_DESPEDIDA_09 cara=pensativo
+eldran dice CAP3_DESPEDIDA_10 gesto=HeadNod01 cara=alegre
+
+@camino
+plano general will eldran
+will anda a p_camino ritmo=normal
+will mira eldran
+will gesto HandWave01
+& eldran gesto HandWave01
+& will dice CAP3_DESPEDIDA_11 cara=alegre
+espera 0.6
+
+@se_va
+# Eldran se da la vuelta y se va hacia el pueblo; Will le mira irse. Ya fuera de cuadro (plano de
+# Will, con Eldran a la espalda de la cámara) desaparece; la agenda lo retira del todo al alejarse Will.
+will mira eldran
+& eldran anda a e_vuelta ritmo=normal
+desde @se_va+4.0 plano medio will
+desde @se_va+4.2 eldran desaparece
+desde @se_va+4.6 will cara pensativo
+desde @se_va+6.4 will mira p_puerto
+desde @se_va+6.5 will cara decidido
+espera 7.6
+bandas quita

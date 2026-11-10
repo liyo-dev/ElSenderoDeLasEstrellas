@@ -27,6 +27,7 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
         _dst.unlockedSpells ??= new List<SpellId>();
         _dst.abilities ??= new PlayerAbilities();
         _dst.npcPositions ??= new List<PlayerPresetSO.NpcPosEntry>();
+        _dst.senalesEmitidas ??= new List<string>();
     }
 
     // ── INarrativeStateWriter ────────────────────────────────────────────────
@@ -106,6 +107,12 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
     public void SetActorActive(string actorId, bool active)
     {
         if (!string.IsNullOrWhiteSpace(actorId)) _activeStates[actorId] = active;
+    }
+
+    // Las señales ya emitidas van con la partida (senalesEmitidas), igual que al guardar.
+    public void MarkSignalRaised(string key)
+    {
+        if (!string.IsNullOrWhiteSpace(key) && !_dst.senalesEmitidas.Contains(key)) _dst.senalesEmitidas.Add(key);
     }
 
     public void Note(string message) => Notes.Add(message);

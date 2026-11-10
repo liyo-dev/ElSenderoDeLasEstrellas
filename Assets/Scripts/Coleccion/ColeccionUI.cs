@@ -290,9 +290,9 @@ public sealed class ColeccionUI : MonoBehaviour
         var r = new Ranura();
         r.raiz = new GameObject($"Pieza {indice + 1}", typeof(RectTransform)).GetComponent<RectTransform>();
         r.raiz.SetParent(_rejilla, false);
-        // La pieza elegida se marca con un borde del color de resalte detrás de la tarjeta; la
-        // tarjeta no cambia de color ni de tamaño.
-        r.marco = Imagen("Marco", r.raiz, _estilo.tarjeta, _estilo.colorResalte);
+        // La pieza elegida se marca con un borde liso del color de resalte detrás de la tarjeta (el
+        // sprite de la tarjeta, teñido, salía naranja arriba y verde abajo); la tarjeta no cambia.
+        r.marco = Imagen("Marco", r.raiz, RectanguloRedondeado, _estilo.colorResalte);
         r.marco.raycastTarget = false;
         Estirar(r.marco.rectTransform);
         r.marco.rectTransform.offsetMin = new Vector2(-GrosorDelMarco, -GrosorDelMarco);
@@ -311,6 +311,7 @@ public sealed class ColeccionUI : MonoBehaviour
         r.nombre.overflowMode = TextOverflowModes.Ellipsis;
         r.chipNuevo = Imagen("Nuevo", r.raiz, _estilo.chip, _estilo.colorResalte);
         r.chipNuevo.raycastTarget = false;
+        AjustarBordesAlAlto(r.chipNuevo, 38f);
         Colocar(r.chipNuevo.rectTransform, new Vector2(1f, 1f), new Vector2(-58f, -26f), new Vector2(110f, 38f));
         var textoNuevo = Texto("Texto", r.chipNuevo.transform, ColeccionDeObjetos.Texto("COLECCION_NUEVO", "¡Nuevo!"), _estilo.fuenteTitulo, 20f, new Color(0.15f, 0.1f, 0.25f, 1f));
         Estirar(textoNuevo.rectTransform);
@@ -321,6 +322,7 @@ public sealed class ColeccionUI : MonoBehaviour
     {
         var imagen = Imagen(nombre, padre, _estilo.boton, Color.white);
         Colocar(imagen.rectTransform, ancla, posicion, tamano);
+        AjustarBordesAlAlto(imagen, tamano.y);
         imagen.gameObject.AddComponent<Button>().onClick.AddListener(alPulsar);
         var t = Texto("Texto", imagen.transform, texto, _estilo.fuenteTitulo, 26f, _estilo.colorTexto);
         Estirar(t.rectTransform);

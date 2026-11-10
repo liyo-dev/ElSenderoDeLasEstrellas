@@ -54,15 +54,13 @@ namespace Sendero.UI
         [SerializeField] private Color colorDelGolpe = new Color(1f, 0.18f, 0.18f, 1f);
 
         [Header("Barras de vida y maná")]
-        [Tooltip("Muestra la vida y el maná del personaje al pie de su retrato (cada uno tiene los suyos, INC-717). Crecen con el retrato: las del que va al mando se ven más grandes.")]
+        [Tooltip("Muestra la vida y el maná del personaje al pie de su retrato, apiladas por capas de color (EstiloDeBarrasApiladas) (cada uno tiene los suyos, INC-717). Crecen con el retrato: las del que va al mando se ven más grandes.")]
         [SerializeField] private bool mostrarBarras = true;
         [Tooltip("Ancho y alto de cada barra con escala 1 (unidades del canvas).")]
         [SerializeField] private Vector2 tamanoDeBarra = new Vector2(190f, 12f);
         [Tooltip("Altura de las barras sobre el borde del panel.")]
         [SerializeField] private float alturaDeLasBarras = 12f;
-        [SerializeField] private Color colorDeVida = new Color(0.36f, 0.85f, 0.42f, 1f);
         [SerializeField] private Color colorDeVidaBaja = new Color(0.95f, 0.32f, 0.25f, 1f);
-        [SerializeField] private Color colorDeMana = new Color(0.36f, 0.62f, 1f, 1f);
         [SerializeField] private Color colorDeFondoDeBarra = new Color(0f, 0f, 0f, 0.6f);
 
         [Header("Tiempos")]
@@ -89,8 +87,17 @@ namespace Sendero.UI
         private ExpresionDeRetrato _expresion = (ExpresionDeRetrato)(-1);
         private float _saturacion = 1f, _brillo = 1f;
 
-        private RectTransform _barras, _rellenoDeVida, _rellenoDeMana;
-        private Image _imagenDeVida;
+        private RectTransform _barras;
+        private CapaDeBarra _vida, _mana;
+
+        /// Una barra del retrato: el relleno de la capa de arriba, la capa de debajo y el «×N».
+        private sealed class CapaDeBarra
+        {
+            public RectTransform relleno;
+            public Image imagen, debajo;
+            public TextMeshProUGUI numero;
+            public int capas = -1;
+        }
 
         private Tween _tCarrusel, _tEscala, _tAspecto, _tHalo, _tCaido, _tGiro, _tSalto, _tSacudida, _tDestello, _tRespiracion, _tCara;
 
@@ -207,19 +214,29 @@ namespace Sendero.UI
         }
 
         /// Vida y maná (0..1) en las barras del pie del retrato; vida baja en rojo.
+        /// Pone la vida y el maná (en puntos) apilados por capas; con vida baja, la capa de arriba en rojo.
         public void PonerBarras(float vida, float mana, bool vidaBaja)
         {
             if (!mostrarBarras) return;
             CrearBarras();
-            Llenar(_rellenoDeVida, vida);
-            Llenar(_rellenoDeMana, mana);
-            if (_imagenDeVida != null) _imagenDeVida.color = vidaBaja ? colorDeVidaBaja : colorDeVida;
+            var estilo = EstiloDeBarrasApiladas.Actual;
+            Llenar(_vida, vida, estilo, estilo.coloresDeVida, vidaBaja);
+            Llenar(_mana, mana, estilo, estilo.coloresDeMana, false);
         }
 
-        private static void Llenar(RectTransform relleno, float parte)
+        private void Llenar(CapaDeBarra barra, float valor, EstiloDeBarrasApiladas estilo, Color[] colores, bool enRojo)
         {
-            if (relleno == null) return;
-            relleno.localScale = new Vector3(Mathf.Clamp01(parte), 1f, 1f);
+            if (barra == null || barra.relleno == null) return;
+            int capas = estilo.Capas(valor);
+            barra.relleno.localScale = new Vector3(estilo.ParteDeArriba(valor), 1f, 1f);
+            barra.imagen.color = enRojo ? colorDeVidaBaja : EstiloDeBarrasApiladas.ColorDeCapa(colores, capas - 1);
+            if (capas == barra.capas) return;
+            barra.capas = capas;
+            bool varias = capas > 1;
+            if (barra.debajo.gameObject.activeSelf != varias) barra.debajo.gameObject.SetActive(varias);
+            if (varias) barra.debajo.color = EstiloDeBarrasApiladas.ColorDeCapa(colores, capas - 2);
+            if (barra.numero.gameObject.activeSelf != varias) barra.numero.gameObject.SetActive(varias);
+            if (varias) barra.numero.text = "×" + capas;
         }
 
         private void CrearBarras()
@@ -233,12 +250,13 @@ namespace Sendero.UI
             _barras.sizeDelta = new Vector2(tamanoDeBarra.x, tamanoDeBarra.y * 2f + 4f);
             _barras.anchoredPosition = new Vector2(0f, alturaDeLasBarras);
             _barras.SetAsLastSibling();
-            _rellenoDeMana = Barra("Mana", 0f, colorDeMana, out _);
-            _rellenoDeVida = Barra("Vida", tamanoDeBarra.y + 4f, colorDeVida, out _imagenDeVida);
+            _mana = Barra("Mana", 0f);
+            _vida = Barra("Vida", tamanoDeBarra.y + 4f);
         }
 
-        private RectTransform Barra(string nombre, float y, Color color, out Image relleno)
+        private CapaDeBarra Barra(string nombre, float y)
         {
+            var barra = new CapaDeBarra();
             var fondo = new GameObject(nombre, typeof(RectTransform), typeof(Image));
             var rtFondo = (RectTransform)fondo.transform;
             rtFondo.SetParent(_barras, false);
@@ -251,18 +269,43 @@ namespace Sendero.UI
             imgFondo.color = colorDeFondoDeBarra;
             imgFondo.raycastTarget = false;
 
-            var lleno = new GameObject("Relleno", typeof(RectTransform), typeof(Image));
-            var rt = (RectTransform)lleno.transform;
-            rt.SetParent(rtFondo, false);
+            barra.debajo = Relleno("Capa de debajo", rtFondo);
+            barra.debajo.gameObject.SetActive(false);
+            barra.imagen = Relleno("Relleno", rtFondo);
+            barra.relleno = barra.imagen.rectTransform;
+
+            var numero = new GameObject("Capas (×N)", typeof(RectTransform));
+            var rtNumero = (RectTransform)numero.transform;
+            rtNumero.SetParent(rtFondo, false);
+            rtNumero.anchorMin = rtNumero.anchorMax = new Vector2(1f, 0.5f);
+            rtNumero.pivot = new Vector2(0f, 0.5f);
+            rtNumero.anchoredPosition = new Vector2(4f, 0f);
+            rtNumero.sizeDelta = new Vector2(tamanoDeBarra.y * 3.5f, tamanoDeBarra.y * 1.8f);
+            barra.numero = numero.AddComponent<TextMeshProUGUI>();
+            barra.numero.font = TMP_Settings.defaultFontAsset;
+            barra.numero.fontSize = tamanoDeBarra.y * 1.25f;
+            barra.numero.fontStyle = FontStyles.Bold;
+            barra.numero.color = EstiloDeBarrasApiladas.Actual.colorDelNumero;
+            barra.numero.alignment = TextAlignmentOptions.MidlineLeft;
+            barra.numero.textWrappingMode = TextWrappingModes.NoWrap;
+            barra.numero.raycastTarget = false;
+            numero.SetActive(false);
+            return barra;
+        }
+
+        private static Image Relleno(string nombre, RectTransform fondo)
+        {
+            var go = new GameObject(nombre, typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(fondo, false);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
             rt.pivot = new Vector2(0f, 0.5f);
             rt.offsetMin = new Vector2(1.5f, 1.5f);
             rt.offsetMax = new Vector2(-1.5f, -1.5f);
-            relleno = lleno.GetComponent<Image>();
-            relleno.color = color;
-            relleno.raycastTarget = false;
-            return rt;
+            var imagen = go.GetComponent<Image>();
+            imagen.raycastTarget = false;
+            return imagen;
         }
 
         /// Le acaban de dar: sacudida, destello rojo y cara de dolor un momento.

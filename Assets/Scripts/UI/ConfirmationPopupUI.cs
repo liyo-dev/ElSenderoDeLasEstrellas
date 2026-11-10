@@ -17,6 +17,8 @@ using UnityEngine.InputSystem;
 public class ConfirmationPopupUI : MonoBehaviour
 {
     public static ConfirmationPopupUI Instance { get; private set; }
+    /// El popup está en pantalla esperando respuesta.
+    public bool Visible => _isShown;
 
     [Header("Referencias")]
     [SerializeField] private GameObject panel;
@@ -132,6 +134,10 @@ public class ConfirmationPopupUI : MonoBehaviour
         _shownAt = Time.unscaledTime;
         if (panel) panel.SetActive(true);
         AjustarBotonesAlTexto();
+
+        // Sonido de abrir, el mismo que los demás paneles (TeleportUI, mapa). Va aquí y no en quien
+        // lo abre para que todos los popups suenen igual; quien lo abre no pone el suyo (INC-931).
+        Core.GamepadInputReader.PlayUISound("UI_Open");
 
         SelectButton(_confirmSelected);
         AnimateSelection(_confirmSelected, instant: true);

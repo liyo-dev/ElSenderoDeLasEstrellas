@@ -45,6 +45,10 @@ public class AmbientPreset : ScriptableObject
     [Tooltip("Debe coincidir con el 'Zone Id' en AudioGraphProfile → Ambient Zones.")]
     public string musicZoneId = "";
 
+    [Header("Nombre del lugar")]
+    [Tooltip("Clave de texto del nombre del lugar: sale como rótulo al entrar en la zona. Vacío = sin rótulo.")]
+    public string nombreDelLugar = "";
+
     [Header("Cámara")]
     [Tooltip("Si está activo, la zona anula la configuración de la cámara del jugador al entrar.")]
     public bool controlCamera = false;

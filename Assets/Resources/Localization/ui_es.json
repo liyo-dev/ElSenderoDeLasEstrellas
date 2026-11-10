@@ -77,8 +77,16 @@
             "value": "¡Victoria!"
         },
         {
-            "key": "BATTLE_REPORT_STATS",
-            "value": "Estadísticas"
+            "key": "BATTLE_REPORT_PROGRESS",
+            "value": "Progreso"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA",
+            "value": "Sintonía Estelar"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA_HITO",
+            "value": "¡Sintonía completa! Elige Vida o Magia en el menú"
         },
         {
             "key": "BATTLE_REPORT_LOOT",
@@ -2251,11 +2259,7 @@
         },
         {
             "key": "ITEM_HOJA_AVISTAMIENTOS_DESC",
-            "value": "Lo que la gente de la aldea del mar ha visto de los animales con aro: luces bajas en el bosque, un zorro asustado, un perro que se rascaba el cuello."
-        },
-        {
-            "key": "CAP3_ROTULO_COSTA",
-            "value": "Dos días de camino hacia la costa…"
+            "value": "La hoja donde Will apunta lo que cuentan en la aldea del mar de los animales con aro."
         },
         {
             "key": "CAP3_ROTULO_NOCHE",
@@ -2292,6 +2296,34 @@
         {
             "key": "TUTORIAL_CAP4_LEVITACION",
             "value": "Nuevo hechizo: Levitación. Ya está entre tus hechizos: lánzalo para flotar sobre el agua, el barro y los huecos."
+        },
+        {
+            "key": "CAP3_ROTULO_ACAMPADA",
+            "value": "Esa noche, a medio camino de la costa…"
+        },
+        {
+            "key": "REQUISITO_FALTA_PRENDA",
+            "value": "Para pasar hace falta llevar algo que {0}."
+        },
+        {
+            "key": "RASGO_VIENTOMASBARATO",
+            "value": "Los hechizos de Viento cuestan menos maná"
+        },
+        {
+            "key": "RASGO_CONTRAATAQUEMASAMPLIO",
+            "value": "Más margen para devolver ataques"
+        },
+        {
+            "key": "RASGO_PLANEAR",
+            "value": "Permite planear"
+        },
+        {
+            "key": "RASGO_REBOTEEXTRA",
+            "value": "Rebota más alto en trampolines"
+        },
+        {
+            "key": "LUGAR_ALDEA_DEL_MAR",
+            "value": "Aldea del mar"
         }
     ]
 }

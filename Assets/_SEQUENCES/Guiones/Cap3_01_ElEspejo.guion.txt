@@ -30,6 +30,8 @@ liam sienta silla ya
 & tobi bucle SitGround_Loop
 & tobi cara cansado
 & bandas
+# El tema de Tobías: la escena es de los dos hermanos, no del camino de Will.
+& musica TOBIAS
 plano general liam mira=foco_general altura_foco=0 desde=cam_general altura=1.5 lente=65
 espera 2
 

@@ -58,8 +58,8 @@ Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de El
 51,2. Mañana de Will,SEQ_PerasEldran,PERAS_VICTORIA_QUEDATE,Victoria,"Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis.","NUEVO: Victoria se queda con Oliver, no hace falta marca para el -- se une"
 52,2. Mañana de Will,tutorial/pensamiento,NIGHTMARE_AGAIN,Will (pensamiento),Otra vez esa pesadilla.,"Si prefieres no doblar pensamientos, sáltala"
 53,3. Eldran y la caja,SEQ_EldranCaja,DLG_ELDRAN_CAJA_LLAMADA,Eldran,¡Will! ¡Espera!,"Will, espera! - Cheer01 dos veces, el primer ciclo se pierde con la transicion de entrada (como Oliver)"
-54,3. Eldran y la caja,Cap1.asset,EVT_ELDRAN_GUIA_LLAMADA,Eldran,"¡Por aquí, Will!",
-55,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_01,Eldran,"Esto es un Punto de Guardado, Will.",
+54,3. Eldran y la caja,Cap1.asset,EVT_ELDRAN_GUIA_LLAMADA,Eldran,"¡Por aquí!",
+55,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_01,Eldran,"Mira, esto es un Punto de Guardado.",
 56,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_02,Eldran,"Aquí podrás guardar tu partida y descansar para recuperar fuerzas, así que no dudes en usarlo cuando lo necesites.",
 57,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_04,Eldran,"Venga, sigamos, que ya queda poco.",
 58,3. Eldran y la caja,DG_ELDRAN_CHARLA_VICTORIA.asset,DLG_ELDRAN_CHARLA_VICTORIA_01,Will,¿Y la otra caja?,
@@ -71,7 +71,7 @@ Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de El
 64,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_02,Eldran,"Ahí dentro está la caja, con las manzanas. ¿Puedes ir a por ella?",
 65,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_03,Will,Claro. ¿Dónde la busco?,
 66,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_04,Eldran,"Al pie de un fresno, junto al camino. Te espero aquí.",
-67,3. Eldran y la caja,DLG_ELDRAN_SIGUEME_INPROGRESS.asset,DLG_ELDRAN_SIGUEME_INPROGRESS_01,Eldran,"No te quedes atrás, Will. Ya casi estamos.",
+67,3. Eldran y la caja,DLG_ELDRAN_SIGUEME_INPROGRESS.asset,DLG_ELDRAN_SIGUEME_INPROGRESS_01,Eldran,"No te quedes atrás. Ya casi estamos.",
 68,3. Eldran y la caja,DLG_ELDRAN_WILL_MISSION1_INPROGRESS.asset,DLG_ELDRAN_WILL_MISSION1_INPROGRESS_01,Eldran,"¿Todavía no te la has gastado? Una tontería, Will, lo que tú quieras.",
 69,3. Eldran y la caja,DLG_ELDRAN_WILL_MISSION1_INPROGRESS.asset,DLG_ELDRAN_WILL_MISSION1_INPROGRESS_02,Eldran,Date una vuelta por los puestos del mercado; seguro que algo te llama.,
 70,3. Eldran y la caja,DLG_ELDRAN_MISSION2_INPROGRESS.asset,DLG_ELDRAN_MISSION2_INPROGRESS_01,Eldran,La caja está al pie de un fresno.,
@@ -81,15 +81,15 @@ Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de El
 74,3. Eldran y la caja,DLG_ELDRAN_MISSION2_TURNIN.asset,DLG_ELDRAN_MISSION2_TURNIN_03,Eldran,"Toma, unas monedas por tu ayuda.",
 75,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_01,Eldran,"¡Will, cuidado!","EVT_AWAKEN_01 = Will, cuidado!"
 76,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_02,Will,¡...!,EVT_AWAKEN_02 = ...! Will se queda mudo.
-77,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_06,Eldran,¡Will apartate!,EVT_AWAKEN_06 = Will apartate! Ya existia en el json y nadie lo usaba.
+77,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_06,Eldran,¡Apártate!,EVT_AWAKEN_06 = Will apartate! Ya existia en el json y nadie lo usaba.
 78,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_03,Will,¡NOO!,EVT_AWAKEN_03 = NOO!
 79,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_05,Will,¿Qué... qué acabo de hacer?,EVT_AWAKEN_05 = Que... que acabo de hacer?
 80,5. Demonio,DLG_ELDRAN_MISSION3_INPROGRESS.asset,DLG_ELDRAN_MISSION3_INPROGRESS_01,Eldran,"¡Ahora no, Will! ¡Atento al aro de su cuello!",
 81,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_10,Eldran,El ataque del demonio ha despertado tu magia.,frase de combate (suena según lo que haga el jugador)
-82,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_08,Eldran,"¡Will! Usa tu magia, presiona y derrota al demonio.",frase de combate (suena según lo que haga el jugador)
+82,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_08,Eldran,"¡Usa tu magia, presiona y derrota al demonio!",frase de combate (suena según lo que haga el jugador)
 83,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_HINT_ARO,Eldran,¡Fíjate en el aro de runas de su cuello! Solo le haces daño cuando brilla.,frase de combate (suena según lo que haga el jugador)
 84,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_GUIA_RITMO,Eldran,Esquiva su ataque y dispara justo después: se queda agotado y el aro sigue brillando.,frase de combate (suena según lo que haga el jugador)
-85,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_AHORA_01,Eldran,"¡Ahora, Will! ¡El aro brilla!",frase de combate (suena según lo que haga el jugador)
+85,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_AHORA_01,Eldran,"¡Ahora! ¡El aro brilla!",frase de combate (suena según lo que haga el jugador)
 86,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_AHORA_02,Eldran,¡Brilla! ¡Dispara ya!,frase de combate (suena según lo que haga el jugador)
 87,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_ACIERTO_01,Eldran,¡Eso es! ¡Así se le hace daño!,frase de combate (suena según lo que haga el jugador)
 88,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CHEER_01,Eldran,"¡Así se hace, Will! ¡Lo tienes!",frase de combate (suena según lo que haga el jugador)
@@ -101,7 +101,7 @@ Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de El
 94,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_HINT_ORBES,Eldran,¡Suelta orbes cuando le aciertas! Los naranjas te curan y los azules te dan magia. ¡Recógelos!,frase de combate (suena según lo que haga el jugador)
 95,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_FASE_2,Eldran,¡Se ha enfurecido! Ahora también lanza fuego de lejos: ¡no te quedes quieto!,frase de combate (suena según lo que haga el jugador)
 96,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_FASE_3,Eldran,¡Está desesperado! Mira las sombras del suelo: ¡de ahí caerá su magia!,frase de combate (suena según lo que haga el jugador)
-97,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CASI,Eldran,"¡Ya casi es tuyo! ¡Un último esfuerzo, Will!",frase de combate (suena según lo que haga el jugador)
+97,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CASI,Eldran,"¡Ya casi es tuyo! ¡Un último esfuerzo, muchacho!",frase de combate (suena según lo que haga el jugador)
 98,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_RECUERDA_ARO,Eldran,No malgastes tu magia: espera a que brille el aro.,frase de combate (suena según lo que haga el jugador)
 99,6. Liam y la bola de cristal,LiamCrystalBallSequencer.cs,EVT_LIAM_CRYSTAL_01,Liam,Y ese es el chico de corazón puro que abrirá el Sendero.,
 100,6. Liam y la bola de cristal,LiamCrystalBallSequencer.cs,EVT_LIAM_CRYSTAL_02,Liam,Me alegra que ese demonio haya despertado su magia.,

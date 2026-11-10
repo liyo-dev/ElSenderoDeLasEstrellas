@@ -87,16 +87,6 @@ public static class EstadisticasDelPersonaje
 
     public static Estadisticas Total => Base + Bonos;
 
-    /// Calcula la sustitución de una prenda sin cambiar el equipo ni las fuentes registradas.
-    public static Estadisticas TotalSiSeEquipa(WardrobeItemSO pieza)
-    {
-        var total = Total;
-        if (pieza == null) return total;
-        var actuales = PlayerService.TryGetComponent(out ModularAutoBuilder constructor)
-            ? constructor.BonosDeCategoria(pieza.Category) : default;
-        return total - actuales + pieza.Bonos;
-    }
-
     /// Suma a la base (un premio de combate, un don de Sintonía): el ataque y la defensa aquí, la
     /// vida y la magia a los tres personajes por SaludDelGrupo. Devuelve el total de antes y el de
     /// después del que va al mando, para contarlo en el informe.

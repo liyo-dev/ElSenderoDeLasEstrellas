@@ -503,6 +503,10 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 6308d1134e303e84494c440ca94aba77, type: 3}
   - eventKey: SpecialAttack_Trio_Bucle
     sfx: {fileID: 8300000, guid: 83def554885275545a1d534824725972, type: 3}
+  - eventKey: SFX_Pueblo_Contraventana_Abre
+    sfx: {fileID: 8300000, guid: db4ecc404e82e490aa2bfc722a9115b2, type: 3}
+  - eventKey: SFX_Pueblo_Contraventana_Golpe
+    sfx: {fileID: 8300000, guid: 94c903b0eac2ca271b3077c4709d4db0, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
@@ -594,3 +598,23 @@ MonoBehaviour:
     fadeIn: 2.5
     fadeOut: 3
     sinBucle: 1
+  - sequenceId: PROLOGO_CLIMAX
+    music: {fileID: 8300000, guid: f26f5564206d4267bdbe552c18322247, type: 3}
+    fadeIn: 0.3
+    fadeOut: 2
+    sinBucle: 1
+  - sequenceId: CORA_DEL_CANTICO
+    music: {fileID: 8300000, guid: 8e5d7c971af8e3f42b0757e14d47f4ae, type: 3}
+    fadeIn: 1
+    fadeOut: 2
+    sinBucle: 0
+  - sequenceId: ESTELA_FURIOSA
+    music: {fileID: 8300000, guid: 7eb1b7c0d589a3b458134ef956f69bb2, type: 3}
+    fadeIn: 1
+    fadeOut: 2
+    sinBucle: 0
+  - sequenceId: TOBIAS
+    music: {fileID: 8300000, guid: 8e63bf0204db797478d778ef7b3c6821, type: 3}
+    fadeIn: 1
+    fadeOut: 2
+    sinBucle: 0

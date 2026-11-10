@@ -692,10 +692,14 @@ public sealed class ReproductorDeGuion
                     Actor.ForzarEnElSuelo();
                     break;
                 case TipoDeAnimacion.Bucle:
-                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f, o.alFinal);
+                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f, o.alFinal, fundirAlFinal: o.fundido > 0f);
                     break;
                 case TipoDeAnimacion.Gesto:
                     Actor.PlayGesture(o.estado);
+                    if (!string.IsNullOrEmpty(o.voz)) ReaccionesDeEscena.Sonar(Actor, o.voz);
+                    break;
+                case TipoDeAnimacion.FinDeGesto:
+                    Actor.CerrarGestoDeCuerpoEntero();
                     break;
                 case TipoDeAnimacion.HablaEmpieza:
                     Actor.BeginInteraction();

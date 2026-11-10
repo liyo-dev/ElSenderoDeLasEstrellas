@@ -92,7 +92,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-inicio
-        position: {x: 0, y: 0}
+        position: {x: 0, y: 183}
         outputs:
         - chuche-tras-sendero
     - rid: 6540294316048253033
@@ -137,7 +137,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-mision
-        position: {x: 1520, y: 240}
+        position: {x: 3800, y: 0}
         outputs:
         - chuche-puerta-intentos
         questId: CHUCHE_PRUEBA_ESTELA
@@ -193,7 +193,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-mando-will-pergamino
-        position: {x: 380, y: 240}
+        position: {x: 2660, y: 0}
         outputs:
         - chuche-cine-heraldo
         accion: 2
@@ -210,7 +210,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-heraldo
-        position: {x: 760, y: 240}
+        position: {x: 3040, y: 0}
         outputs:
         - chuche-paso-investigar
         cinematicName: 'Chuchelandia: el pergamino del heraldo'
@@ -233,7 +233,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-puerta-intentos
-        position: {x: 1900, y: 240}
+        position: {x: 4180, y: 0}
         outputs:
         - chuche-paso-puerta
         eventKey: CHUCHE_PUERTA_INTENTOS
@@ -249,7 +249,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-puerta
-        position: {x: 0, y: 480}
+        position: {x: 4560, y: 0}
         outputs:
         - chuche-mando-will-ejercito
         standingActorId: 
@@ -271,7 +271,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-mando-will-ejercito
-        position: {x: 380, y: 480}
+        position: {x: 4940, y: 0}
         outputs:
         - chuche-cine-ejercito
         accion: 2
@@ -288,7 +288,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-ejercito
-        position: {x: 760, y: 480}
+        position: {x: 5320, y: 0}
         outputs:
         - chuche-estela-sale
         cinematicName: "Chuchelandia: \xA1una candidata!"
@@ -311,7 +311,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-estela-sale
-        position: {x: 1140, y: 480}
+        position: {x: 5700, y: 0}
         outputs:
         - chuche-atuendo-candidata
         accion: 0
@@ -328,7 +328,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-atuendo-candidata
-        position: {x: 1520, y: 480}
+        position: {x: 6080, y: 0}
         outputs:
         - chuche-vestidor-empieza
         eventKey: CHUCHE_ATUENDO_CANDIDATA
@@ -343,7 +343,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-vestidor-empieza
-        position: {x: 1900, y: 480}
+        position: {x: 6460, y: 0}
         outputs:
         - chuche-vestidor-llegar
         eventKey: CHUCHE_VESTIDOR_EMPIEZA
@@ -358,7 +358,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-vestidor-llegar
-        position: {x: 0, y: 720}
+        position: {x: 6840, y: 0}
         outputs:
         - chuche-estela-vuelve
         eventKey: CHUCHE_VESTIDOR_LLEGADA
@@ -374,7 +374,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-estela-vuelve
-        position: {x: 380, y: 720}
+        position: {x: 7220, y: 0}
         outputs:
         - chuche-mando-will-vestidor
         accion: 1
@@ -391,7 +391,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-mando-will-vestidor
-        position: {x: 760, y: 720}
+        position: {x: 7600, y: 0}
         outputs:
         - chuche-cine-vestidor
         accion: 2
@@ -408,7 +408,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-vestidor
-        position: {x: 1140, y: 720}
+        position: {x: 7980, y: 0}
         outputs:
         - chuche-carrera-empieza
         cinematicName: 'Chuchelandia: el vestidor real'
@@ -431,7 +431,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-carrera-empieza
-        position: {x: 1520, y: 720}
+        position: {x: 8360, y: 0}
         outputs:
         - chuche-carrera
         eventKey: CHUCHE_CARRERA_EMPIEZA
@@ -446,7 +446,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-carrera
-        position: {x: 1900, y: 720}
+        position: {x: 8740, y: 0}
         outputs:
         - chuche-paso-carrera
         eventKey: CHUCHE_CARRERA_GANADA
@@ -462,7 +462,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-carrera
-        position: {x: 0, y: 960}
+        position: {x: 9120, y: 0}
         outputs:
         - chuche-escalada-empieza
         standingActorId: 
@@ -484,7 +484,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-escalada-empieza
-        position: {x: 380, y: 960}
+        position: {x: 9500, y: 0}
         outputs:
         - chuche-escalada
         eventKey: CHUCHE_ESCALADA_EMPIEZA
@@ -499,7 +499,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-escalada
-        position: {x: 760, y: 960}
+        position: {x: 9880, y: 0}
         outputs:
         - chuche-paso-escalada
         eventKey: CHUCHE_ESCALADA_GANADA
@@ -515,7 +515,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-escalada
-        position: {x: 1140, y: 960}
+        position: {x: 10260, y: 0}
         outputs:
         - chuche-punteria-empieza
         standingActorId: 
@@ -537,7 +537,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-punteria-empieza
-        position: {x: 1520, y: 960}
+        position: {x: 10640, y: 0}
         outputs:
         - chuche-punteria
         eventKey: CHUCHE_PUNTERIA_EMPIEZA
@@ -552,7 +552,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-punteria
-        position: {x: 1900, y: 960}
+        position: {x: 11020, y: 0}
         outputs:
         - chuche-paso-punteria
         eventKey: CHUCHE_PUNTERIA_GANADA
@@ -568,7 +568,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-punteria
-        position: {x: 0, y: 1200}
+        position: {x: 11400, y: 0}
         outputs:
         - chuche-clases-empieza
         standingActorId: 
@@ -590,7 +590,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-clases-empieza
-        position: {x: 380, y: 1200}
+        position: {x: 11780, y: 0}
         outputs:
         - chuche-clases-llegar
         eventKey: CHUCHE_CLASES_EMPIEZA
@@ -605,7 +605,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-clases-llegar
-        position: {x: 760, y: 1200}
+        position: {x: 12160, y: 0}
         outputs:
         - chuche-clases
         eventKey: CHUCHE_CLASES_LLEGADA
@@ -621,7 +621,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-clases
-        position: {x: 1140, y: 1200}
+        position: {x: 12540, y: 0}
         outputs:
         - chuche-paso-clases
         eventKey: CHUCHE_CLASES_HECHAS
@@ -637,7 +637,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-clases
-        position: {x: 1520, y: 1200}
+        position: {x: 12920, y: 0}
         outputs:
         - chuche-reino-libre
         standingActorId: 
@@ -659,7 +659,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-reino-libre
-        position: {x: 1900, y: 1200}
+        position: {x: 13300, y: 0}
         outputs:
         - chuche-reino-fork
         eventKey: CHUCHE_REINO_LIBRE
@@ -674,7 +674,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-reino-fork
-        position: {x: 0, y: 1440}
+        position: {x: 13680, y: 0}
         outputs:
         - chuche-salon-llegar
         - chuche-tromp-hablar
@@ -689,7 +689,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-salon-llegar
-        position: {x: 380, y: 1440}
+        position: {x: 14060, y: 0}
         outputs:
         - chuche-mando-will-pompon
         eventKey: CHUCHE_SALON_LLEGADA
@@ -705,7 +705,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-mando-will-pompon
-        position: {x: 760, y: 1440}
+        position: {x: 14440, y: 0}
         outputs:
         - chuche-cine-pompon
         accion: 2
@@ -722,7 +722,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-pompon
-        position: {x: 1140, y: 1440}
+        position: {x: 14820, y: 0}
         outputs:
         - chuche-duelo-empieza
         cinematicName: "Chuchelandia: Su Alteza Pomp\xF3n"
@@ -745,7 +745,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-duelo-empieza
-        position: {x: 1520, y: 1440}
+        position: {x: 15200, y: 0}
         outputs:
         - chuche-duelo
         eventKey: CHUCHE_DUELO_EMPIEZA
@@ -760,7 +760,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-duelo
-        position: {x: 1900, y: 1440}
+        position: {x: 15580, y: 0}
         outputs:
         - chuche-te-quiero
         eventKey: CHUCHE_DUELO_TERMINADO
@@ -776,7 +776,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-te-quiero
-        position: {x: 0, y: 1680}
+        position: {x: 15960, y: 0}
         outputs:
         - chuche-cine-te-quiero
         eventKey: CHUCHE_TE_QUIERO_HECHO
@@ -792,7 +792,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-te-quiero
-        position: {x: 380, y: 1680}
+        position: {x: 16340, y: 0}
         outputs:
         - chuche-paso-duelo
         cinematicName: "Chuchelandia: \xA1TE QUIERO!"
@@ -815,7 +815,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-duelo
-        position: {x: 760, y: 1680}
+        position: {x: 16720, y: 0}
         outputs:
         - chuche-cine-victoria
         standingActorId: 
@@ -837,7 +837,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cine-victoria
-        position: {x: 1140, y: 1680}
+        position: {x: 17100, y: 0}
         outputs:
         - chuche-atuendo-victoria
         cinematicName: 'Chuchelandia: victoria'
@@ -860,7 +860,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-atuendo-victoria
-        position: {x: 1520, y: 1680}
+        position: {x: 17480, y: 0}
         outputs:
         - chuche-superada
         eventKey: CHUCHE_ATUENDO_VICTORIA
@@ -875,7 +875,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-superada
-        position: {x: 1900, y: 1680}
+        position: {x: 17860, y: 0}
         outputs:
         - chuche-salida
         eventKey: PRUEBA_ESTELA_SUPERADA
@@ -890,7 +890,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-salida
-        position: {x: 0, y: 1920}
+        position: {x: 18240, y: 0}
         outputs:
         - chuche-cierre
         eventKey: CHUCHE_SALIDA
@@ -906,7 +906,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-cierre
-        position: {x: 380, y: 1920}
+        position: {x: 18620, y: 0}
         outputs: []
         standingActorId: 
         standingDialogue: {fileID: 0}
@@ -927,7 +927,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-hablar
-        position: {x: 0, y: 2400}
+        position: {x: 14060, y: 177}
         outputs:
         - chuche-tromp-encargo
         npcId: Actor_HeraldoSuplente
@@ -945,7 +945,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-encargo
-        position: {x: 380, y: 2400}
+        position: {x: 14440, y: 160}
         outputs:
         - chuche-tromp-mision
         dialogue: {fileID: 11400000, guid: 298b5780f28e13544ac4299bbe0c128e, type: 2}
@@ -962,7 +962,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-mision
-        position: {x: 760, y: 2400}
+        position: {x: 14820, y: 213}
         outputs:
         - chuche-tromp-buscar
         questId: CHUCHE_TROMPETILLAS
@@ -980,7 +980,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-buscar
-        position: {x: 1140, y: 2400}
+        position: {x: 15200, y: 177}
         outputs:
         - chuche-tromp-recoger
         eventKey: CHUCHE_TROMPETILLAS_BUSCAR
@@ -995,7 +995,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-recoger
-        position: {x: 1520, y: 2400}
+        position: {x: 15580, y: 177}
         outputs:
         - chuche-tromp-todas
         eventKey: CHUCHE_TROMPETILLA
@@ -1012,7 +1012,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-todas
-        position: {x: 1900, y: 2400}
+        position: {x: 15960, y: 177}
         outputs:
         - chuche-tromp-volver
         dialogue: {fileID: 11400000, guid: c36e7b885e322c443bc5e6d052a39dab, type: 2}
@@ -1029,7 +1029,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-volver
-        position: {x: 0, y: 2640}
+        position: {x: 16340, y: 213}
         outputs:
         - chuche-tromp-entrega
         npcId: Actor_HeraldoSuplente
@@ -1047,7 +1047,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-entrega
-        position: {x: 380, y: 2640}
+        position: {x: 16720, y: 207}
         outputs:
         - chuche-tromp-devolver
         dialogue: {fileID: 11400000, guid: 7907c310544c596478349a54199e50df, type: 2}
@@ -1064,7 +1064,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-devolver
-        position: {x: 760, y: 2640}
+        position: {x: 17100, y: 213}
         outputs:
         - chuche-tromp-cierre
         item: {fileID: 11400000, guid: 806a08f28d0be234d9b8d0af41d07255, type: 2}
@@ -1088,7 +1088,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-cierre
-        position: {x: 1140, y: 2640}
+        position: {x: 17480, y: 177}
         outputs:
         - chuche-tromp-premio
         standingActorId: Actor_HeraldoSuplente
@@ -1109,7 +1109,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-tromp-premio
-        position: {x: 1520, y: 2640}
+        position: {x: 17860, y: 177}
         outputs: []
         item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
         amount: 30
@@ -1126,7 +1126,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-nota-sendero
-        position: {x: 0, y: -240}
+        position: {x: 0, y: 0}
         outputs: []
         note: "Conexi\xF3n con el Sendero: el grafo arranca al cargar Chuchelandia (su NarrativeGraphStarter) y emite PRUEBA_ESTELA_EMPIEZA (el grupo llega al ancla \xABChuchelandiaLlegada\xBB). Al final se emite PRUEBA_ESTELA_SUPERADA, que abre el portal de vuelta (flag SENDERO_PRUEBA_ESTELA_HECHA, ancla SenderoTrasPruebaEstela)."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
@@ -1141,7 +1141,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-nota-maqueta
-        position: {x: 1140, y: -240}
+        position: {x: 0, y: 343}
         outputs: []
         note: "Escena: las llegadas son disparadores en \xABChuchelandia (generado)/Disparadores\xBB; lo jugable est\xE1 en \xABPruebas\xBB (carrera, escalada, punter\xEDa, candado, clases, duelo y \xAB\xA1TE QUIERO!\xBB), cada cosa activa solo en su tramo y emitiendo su se\xF1al al acabar. Las cinem\xE1ticas son guiones horneados (Chuche_*.guion.txt, men\xFA \xABChuchelandia: hornear las cinem\xE1ticas\xBB). Cada tramo empieza en un nodo \xAB(probar desde aqu\xED)\xBB que emite su se\xF1al *_EMPIEZA. Antes de las cinem\xE1ticas que cuentan con Will, un nodo de grupo le pasa el mando."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
@@ -1174,7 +1174,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-heraldo-hablar
-        position: {x: 0, y: 240}
+        position: {x: 2280, y: 0}
         outputs:
         - chuche-mando-will-pergamino
         npcId: Actor_Heraldo
@@ -1192,7 +1192,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: chuche-paso-investigar
-        position: {x: 1140, y: 240}
+        position: {x: 3420, y: 0}
         outputs:
         - chuche-mision
         standingActorId: 

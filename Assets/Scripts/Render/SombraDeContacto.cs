@@ -130,6 +130,7 @@ public sealed class SombraDeContacto : MonoBehaviour
         if (Mathf.Abs(valor - _opacidadAplicada) > 0.01f)
         {
             _opacidadAplicada = valor;
+            _bloque ??= new MaterialPropertyBlock();   // tras recompilar en Play se pierde
             _bloque.SetFloat(OpacidadId, valor);
             _renderer.SetPropertyBlock(_bloque);
         }

@@ -556,11 +556,11 @@
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DESC",
-            "value": "Someone is putting iron collars on animals. The seaside village might know something."
+            "value": "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals."
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
-            "value": "Someone is putting iron collars on animals. The seaside village might know something."
+            "value": "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals."
         },
         {
             "key": "CAP3_LLEGAR_PASO",
@@ -633,6 +633,26 @@
         {
             "key": "CAP4_VADO_PASO",
             "value": "Follow the river road"
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_NAME",
+            "value": "Time to leave"
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_DESC",
+            "value": "Say goodbye to Oliver and meet Eldran at the edge of the village."
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_DETAIL",
+            "value": "Say goodbye to Oliver and meet Eldran at the edge of the village."
+        },
+        {
+            "key": "CAP2_ADIOS_OLIVER_PASO",
+            "value": "Say goodbye to Oliver"
+        },
+        {
+            "key": "CAP2_ADIOS_ELDRAN_PASO",
+            "value": "Meet Eldran at the edge of the village"
         }
     ]
 }

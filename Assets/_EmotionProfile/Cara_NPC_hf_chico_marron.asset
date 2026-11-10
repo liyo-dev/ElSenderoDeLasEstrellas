@@ -209,6 +209,15 @@ MonoBehaviour:
     segundosPorSimbolo: 0
     bodyAnimStateName: 
     bodyAnimVariants: []
+  - emotion: 19
+    eyeMeshName: Eye182
+    mouthMeshName: Mouth46
+    simbolos:
+    - Fx1811
+    - Fx1812
+    segundosPorSimbolo: 0.07
+    bodyAnimStateName: 
+    bodyAnimVariants: []
   neutralBodyAnims:
   - Talk01
   - Talk02

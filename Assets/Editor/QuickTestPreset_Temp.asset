@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Cap3_LlegadaCosta
+  spawnAnchorId: Eldran_Plaza
   level: 1
   maxHP: 100
   currentHP: 100
@@ -43,6 +43,7 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION3
   - NARRATIVE_FLAG:CAP2_INICIADO
   - QUEST_ACTIVE:PREPARA_VIAJE
+  - NARRATIVE_FLAG:GRIMORIO_RECIBIDO
   - QUEST_COMPLETED:PREPARA_VIAJE
   - QUEST_STEP_DONE:PREPARA_VIAJE:0
   - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
@@ -50,16 +51,9 @@ MonoBehaviour:
   - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
   - QUEST_STEP_DONE:PREPARA_VIAJE:2
   - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
+  - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
+  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
   - NARRATIVE_FLAG:CAP2_COMPLETADO
-  - NARRATIVE_FLAG:CAP3_INICIADO
-  - QUEST_ACTIVE:CAP3_MARCAS_DE_HIERRO
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:0
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:1
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:3
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:4
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:2
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:5
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:6
   abilities:
     swim: 1
     jump: 1
@@ -71,14 +65,14 @@ MonoBehaviour:
   appearance:
   - category: 2
     partName: Head01_Male
-  - category: 4
-    partName: Eye30
-  - category: 5
-    partName: Mouth20
   - category: 3
     partName: Hair16_Heroe
   - category: 0
     partName: Body23_Aventurero
+  - category: 4
+    partName: Eye30
+  - category: 5
+    partName: Mouth20
   unlockedWardrobeIds:
   - Body05
   inventoryItems:
@@ -89,8 +83,6 @@ MonoBehaviour:
   - itemId: pocionHP
     count: 1
   - itemId: panuelo_erika
-    count: 1
-  - itemId: hoja_avistamientos
     count: 1
   defeatedBossIds: []
   narrativeBlackboards:
@@ -114,26 +106,44 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap3-decide
-  senalesEmitidas: []
-  npcPositions:
-  - npcId: Eldran
-    position: {x: 25.8, y: 27.01, z: -82.61}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
-  - npcId: Contrabandista1
-    position: {x: -212, y: 21.687473, z: -129}
-    rotation: {x: 0, y: -0.38268346, z: -0, w: 0.9238795}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
+      value: cap3-flag
+  senalesEmitidas:
+  - PROLOGUE_START
+  - PROLOGUE_DONE
+  - will_wake_up
+  - HOOK_DISCUSION_START
+  - HOOK_DISCUSION_DONE
+  - WILL_EXITS_HOUSE
+  - WILL_EXITS_HOUSE_OLIVER_GREETING
+  - OLIVER_GREETING_START
+  - OLIVER_GREETING_DONE
+  - OLIVER_JOIN_PARTY
+  - WILL_REACHED_ELDRAN
+  - PERAS_START
+  - PERAS_DONE
+  - ESTRELLA_COMPRADA
+  - ELDRAN_CAJA_START
+  - ELDRAN_CAJA_DONE
+  - CAP1_CAJA_ELDRAN
+  - AWAKEN_START
+  - AWAKEN_DONE
+  - CH_Cap1_BACK_1
+  - LIAM_CRYSTAL_START
+  - LIAM_CRYSTAL_DONE
+  - MANANA_DESPUES_START
+  - MANANA_DESPUES_DONE
+  - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
+  - ERIKA_ENTRENAMIENTO_DERROTADA
+  - CAP2_A_DESPEDIRSE
+  - CH_Cap2_BACK_1
+  npcPositions: []
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []
-  partyMemberIds: []
+  partyMemberIds:
+  - _ESTELA
+  - _LIAM
   activeCharacterSlot: 1
   unlockedTeleportPoints: []

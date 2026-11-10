@@ -142,15 +142,15 @@ public sealed class ResultadoDeBatalla
 {
     public string BattleId { get; }
     public BattleEncounterSO Encuentro { get; }
-    public IReadOnlyList<SubidaDeEstadistica> Subidas => _subidas;
+    /// La Sintonía Estelar que ha dado la batalla, si ha dado alguna.
+    public SintoniaGanada? Sintonia { get; private set; }
     public IReadOnlyList<PremioDelBotin> Botin => _botin;
     /// Quién sale en la foto de victoria: primero el personaje al mando, después los compañeros.
     public IReadOnlyList<PartyControlManager.CharacterSlot> EnLaFoto => _enLaFoto;
 
     /// Hay algo que contar en el informe.
-    public bool HayPremios => _subidas.Count > 0 || _botin.Count > 0;
+    public bool HayPremios => (Sintonia.HasValue && Sintonia.Value.puntos > 0) || _botin.Count > 0;
 
-    private readonly List<SubidaDeEstadistica> _subidas = new();
     private readonly List<PremioDelBotin> _botin = new();
     private readonly List<PartyControlManager.CharacterSlot> _enLaFoto = new();
 
@@ -160,9 +160,9 @@ public sealed class ResultadoDeBatalla
         Encuentro = encuentro;
     }
 
-    public void AnotarSubida(SubidaDeEstadistica subida)
+    public void AnotarSintonia(SintoniaGanada sintonia)
     {
-        if (!Mathf.Approximately(subida.antes, subida.despues)) _subidas.Add(subida);
+        if (sintonia.puntos > 0) Sintonia = sintonia;
     }
 
     public void AnotarBotin(PremioDelBotin premio)
@@ -193,18 +193,25 @@ public sealed class ResultadoDeBatalla
 
 public enum TipoDeEstadistica { Vida, Magia, Ataque, Defensa }
 
-/// Una estadística que ha cambiado con la batalla: cuánto valía antes y cuánto después.
-public readonly struct SubidaDeEstadistica
+/// La Sintonía Estelar ganada en una batalla: cómo estaba la barra antes y cómo queda, y cuántos
+/// hitos nuevos se han completado (cada uno se cambia en Equipo por más vida o más magia).
+public readonly struct SintoniaGanada
 {
-    public readonly TipoDeEstadistica tipo;
-    public readonly float antes;
-    public readonly float despues;
+    public readonly int puntos;
+    public readonly int antes;
+    public readonly int umbralAntes;
+    public readonly int despues;
+    public readonly int umbralDespues;
+    public readonly int hitosNuevos;
 
-    public SubidaDeEstadistica(TipoDeEstadistica tipo, float antes, float despues)
+    public SintoniaGanada(int puntos, int antes, int umbralAntes, int despues, int umbralDespues, int hitosNuevos)
     {
-        this.tipo = tipo;
+        this.puntos = puntos;
         this.antes = antes;
+        this.umbralAntes = umbralAntes;
         this.despues = despues;
+        this.umbralDespues = umbralDespues;
+        this.hitosNuevos = hitosNuevos;
     }
 }
 

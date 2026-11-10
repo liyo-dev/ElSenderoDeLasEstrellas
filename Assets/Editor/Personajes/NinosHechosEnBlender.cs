@@ -24,6 +24,7 @@ public static class NinosHechosEnBlender
         public string Esqueleto;     // su talla
         public Color Iris;
         public int Ojos, Bocas;      // su juego de caras: Eye<Ojos>…, Mouth<Bocas>… en Caras_<Nombre>.fbx
+        public float BrazosAbiertos; // 0 = como el pack; ver CuerpoDeNino.AbrirLosBrazos
     }
 
     static Nino[] Ninos => new[]
@@ -55,7 +56,7 @@ public static class NinosHechosEnBlender
         // Nina, la hija de Liora y el Archimago (niña pequeña, el prólogo): coletas cobrizas con lazos y vestido de aldea
         new Nino
         {
-            Esqueleto = EsqueletoPequeno, Iris = new Color(0.22f, 0.42f, 0.72f), Ojos = 70, Bocas = 70,
+            Esqueleto = EsqueletoPequeno, Iris = new Color(0.22f, 0.42f, 0.72f), Ojos = 70, Bocas = 70, BrazosAbiertos = 0.35f,
             Ficha = new Ficha
             {
                 Nombre = "Nina", Carpeta = Carpeta + "/Nina",
@@ -75,9 +76,23 @@ public static class NinosHechosEnBlender
                 },
             },
         },
+        // Lucas, el hijo pequeño que va de la mano de su madre a por el pan en el prólogo (talla de Nina):
+        // pelo y ropa de crío del pack (Hair02, Body03), que ya se ajustan a su cuerpo de niño. Ver RecursosDelPrologo.
+        new Nino
+        {
+            Esqueleto = EsqueletoPequeno, Iris = new Color(0.3f, 0.5f, 0.75f), Ojos = 70, Bocas = 70,
+            Ficha = new Ficha
+            {
+                Nombre = "Lucas", Carpeta = Carpeta + "/Lucas",
+                PrefabPropio = "Assets/_NPCs/NonInteractable/LucasDelValle.prefab", CuerpoDeAntes = "Body03",
+                Modelos = new[] { "Assets/_NPCs/NonInteractable/LucasDelValle.prefab" }, Propios = new[] { "Assets/_NPCs/NonInteractable/LucasDelValle.prefab" },
+                Piezas = new Pieza[0],
+                Colores = new (string, Color)[0],
+            },
+        },
     };
 
-    [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina)")]
+    [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina, Lucas)")]
     public static void Aplicar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Niños", "Hazlo fuera de Play."); return; }
@@ -114,7 +129,7 @@ public static class NinosHechosEnBlender
             var raiz = PrefabUtility.LoadPrefabContents(prefab);
             try
             {
-                ok = CuerpoDeNino.Poner(raiz, n.Esqueleto, $"{f.Carpeta}/Avatar_{f.Nombre}.asset", informe);
+                ok = CuerpoDeNino.Poner(raiz, n.Esqueleto, $"{f.Carpeta}/Avatar_{f.Nombre}.asset", informe, n.BrazosAbiertos);
                 // Las cejas van en las caras nuevas: fuera las del pelo del pack, que movía CejasPorEmocion
                 foreach (var c in raiz.GetComponentsInChildren<CejasPorEmocion>(true)) Object.DestroyImmediate(c, true);
                 if (ok) PrefabUtility.SaveAsPrefabAsset(raiz, prefab);

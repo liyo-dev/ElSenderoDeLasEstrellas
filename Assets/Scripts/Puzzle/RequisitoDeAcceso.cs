@@ -3,7 +3,8 @@ using UnityEngine;
 
 /// <summary>
 /// Lo que hace falta para pasar o usar algo: habilidades desbloqueadas, objetos en la bolsa del
-/// grupo, hechizos aprendidos (Amanecer, por ejemplo) y/o flags de la partida (una misión hecha…).
+/// grupo, hechizos aprendidos (Amanecer, por ejemplo), prendas con un rasgo puestas en el personaje
+/// al mando (unas botas para la ceniza, <see cref="RasgoDePrenda"/>) y/o flags de la partida.
 /// Lo usan las barreras, los tesoros y los puzles para saber si el jugador puede, y qué decirle
 /// si no.
 /// </summary>
@@ -17,6 +18,8 @@ public sealed class RequisitoDeAcceso
     public const string AvisoDeObjeto = "REQUISITO_FALTA_OBJETO";
     /// <summary>Aviso de hechizo que falta (sin nombrarlo, para no adelantar nada).</summary>
     public const string AvisoDeHechizo = "REQUISITO_FALTA_HECHIZO";
+    /// <summary>Aviso de prenda que falta; el texto lleva {0} para lo que hace la prenda.</summary>
+    public const string AvisoDePrenda = "REQUISITO_FALTA_PRENDA";
 
     [Tooltip("Habilidades que tienen que estar desbloqueadas.")]
     public AbilityKey[] habilidades = Array.Empty<AbilityKey>();
@@ -27,13 +30,16 @@ public sealed class RequisitoDeAcceso
     [Tooltip("Hechizos que tiene que haber aprendido el grupo.")]
     public SpellId[] hechizos = Array.Empty<SpellId>();
 
+    [Tooltip("Rasgos que tiene que dar la ropa que lleva puesta el personaje al mando.")]
+    public RasgoDePrenda[] rasgos = Array.Empty<RasgoDePrenda>();
+
     [Tooltip("Flags de la partida que tienen que estar puestos (misión hecha, mecanismo activado…).")]
     public string[] flags = Array.Empty<string>();
 
     [Tooltip("Clave de texto del aviso. Vacía = automática según lo primero que falte.")]
     public string claveDeAviso;
 
-    public bool Vacio => Longitud(habilidades) == 0 && Longitud(objetos) == 0 && Longitud(hechizos) == 0 && Longitud(flags) == 0;
+    public bool Vacio => Longitud(habilidades) == 0 && Longitud(objetos) == 0 && Longitud(hechizos) == 0 && Longitud(flags) == 0 && Longitud(rasgos) == 0;
 
     public bool Cumple()
     {
@@ -42,6 +48,7 @@ public sealed class RequisitoDeAcceso
                 if (!UnlockService.HasAbility(habilidades[i])) return false;
         if (PrimerObjetoQueFalta() != null) return false;
         if (FaltaAlgunHechizo()) return false;
+        if (PrimerRasgoQueFalta(out _)) return false;
         if (flags != null)
             for (int i = 0; i < flags.Length; i++)
                 if (!string.IsNullOrEmpty(flags[i]) && !UnlockService.HasFlag(flags[i])) return false;
@@ -59,6 +66,7 @@ public sealed class RequisitoDeAcceso
                     return PrefijoDeAviso + habilidades[i].ToString().ToUpperInvariant();
         if (PrimerObjetoQueFalta() != null) return AvisoDeObjeto;
         if (FaltaAlgunHechizo()) return AvisoDeHechizo;
+        if (PrimerRasgoQueFalta(out _)) return AvisoDePrenda;
         return AvisoGenerico;
     }
 
@@ -68,10 +76,22 @@ public sealed class RequisitoDeAcceso
         string clave = ClaveDeLoQueFalta();
         if (string.IsNullOrEmpty(clave)) return string.Empty;
         string texto = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(clave, clave) : clave;
+        if (clave == AvisoDePrenda && PrimerRasgoQueFalta(out var rasgo))
+            return texto.Contains("{0}") ? string.Format(texto, RasgosDePrenda.Texto(rasgo).ToLowerInvariant()) : texto;
         if (clave != AvisoDeObjeto) return texto;
         var falta = PrimerObjetoQueFalta();
         string nombre = falta != null ? falta.GetLocalizedName() : string.Empty;
         return texto.Contains("{0}") ? string.Format(texto, nombre) : texto;
+    }
+
+    /// El primer rasgo que pide y que la ropa del personaje al mando no da.
+    public bool PrimerRasgoQueFalta(out RasgoDePrenda rasgo)
+    {
+        rasgo = default;
+        if (rasgos == null) return false;
+        for (int i = 0; i < rasgos.Length; i++)
+            if (!RasgosDePrenda.AlMandoLleva(rasgos[i])) { rasgo = rasgos[i]; return true; }
+        return false;
     }
 
     /// <summary>Muestra en el HUD lo que falta (si falta algo).</summary>

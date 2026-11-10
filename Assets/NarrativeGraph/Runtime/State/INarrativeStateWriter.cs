@@ -63,6 +63,10 @@ public interface INarrativeStateWriter
 
     void CompleteQuest(string questId);
 
+    /// Señal que ya se ha emitido al llegar aquí. Quien consulta «si ya pasó» (los tramos de
+    /// historia) la encuentra al cargar; no deja nada pendiente para quien la espera.
+    void MarkSignalRaised(string key);
+
     void AddItem(string itemId, int amount);
 
     /// Dónde queda el actor. Si varios nodos lo colocan, manda el último proyectado.

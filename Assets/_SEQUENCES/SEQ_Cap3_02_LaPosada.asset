@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_Cap3_02_LaPosada
   m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
   displayName: 'Cap. 3: la posada'
-  summary: "Una sopa si alcanza, la cuchara de Luc\xEDa y el trozo del aro sobre la mesa."
+  summary: "Will pregunta por el trozo del aro, le suenan las tripas (una sopa, si alcanza) y Luc\xEDa intenta subir la cuchara."
   signalIn: CAP3_POSADA_START
   signalOut: CAP3_POSADA_DONE
   musicId: 
@@ -26,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 6540294456446550983
+    - rid: 6540294472562115420
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446550983
+    - rid: 6540294472562115420
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

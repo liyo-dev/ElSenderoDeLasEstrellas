@@ -15,6 +15,7 @@ public static class RecursosDelPrologo
     private const string CarpetaPack = "Assets/Audio/FREE SOUND PACK_TM(355)/";
     public const string RutaAtardecer = "Assets/Art/World/Prologo_Valle/Prologo_Atardecer.asset";
     public const string RutaNina = "Assets/_NPCs/NonInteractable/Nina_Prologo.prefab";
+    public const string RutaLucas = "Assets/_NPCs/NonInteractable/LucasDelValle.prefab";
 
     private static readonly (string clave, string ruta)[] Sonidos =
     {
@@ -62,8 +63,20 @@ public static class RecursosDelPrologo
         ("SFX_Prologo_LuchaFinal", "Assets/Audio/SFX_Prologo/Disenados/SFX_Lucha_Final.wav"),
         ("SFX_Prologo_ExplosionFinal", "Assets/Audio/SFX_Prologo/Disenados/SFX_Explosion_Final_DBZ.wav"),
         ("SFX_Prologo_SilencioBlanco", "Assets/Audio/SFX_Prologo/Disenados/SFX_Silencio_Blanco.wav"),
+        // El pueblo (vestido del prólogo): contraventanas y puertas.
+        ("SFX_Pueblo_Contraventana_Abre", CarpetaPack + "Misc(58)/Wood_Scratching-009.wav"),
+        ("SFX_Pueblo_Contraventana_Golpe", CarpetaPack + "Misc(58)/Wood_Hit-023.wav"),
     };
 
+    /// Músicas propias del prólogo (reglas de secuencia del perfil de audio; suenan una vez).
+    /// PROLOGO_CLIMAX: la plegaria, el grito y el estallido, montada a medida (golpe a los 48,4 s). Ver INC-940.
+    private static readonly (string id, string ruta, float fadeIn, float fadeOut)[] Musicas =
+    {
+        ("PROLOGO_CLIMAX", "Assets/Audio/Music/Cinematicas/Protegelos a todos (climax del prologo).mp3", 0.3f, 2f),
+    };
+
+    /// Lo mismo que hace el horneado antes de hornear, suelto (p. ej. para crear un personaje nuevo antes de vestirlo).
+    [MenuItem("El Sendero/Guion/Prólogo: preparar recursos (sonidos, VFX, niños)", priority = 1)]
     public static void Asegurar()
     {
         AsegurarSonidos();
@@ -74,6 +87,7 @@ public static class RecursosDelPrologo
         try { PrologoPostprocesoSueno.CrearPerfiles(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Perfiles: " + ex.Message); }
         AsegurarAtardecer();
         AsegurarNina();
+        AsegurarLucas();
         AssetDatabase.SaveAssets();
     }
 
@@ -89,6 +103,16 @@ public static class RecursosDelPrologo
             var existente = perfil.eventSfx.Find(e => e != null && string.Equals(e.eventKey, clave, System.StringComparison.OrdinalIgnoreCase));
             if (existente != null) { if (existente.sfx == clip) continue; existente.sfx = clip; }
             else perfil.eventSfx.Add(new AudioGraphProfile.EventSfx { eventKey = clave, sfx = clip });
+            cambiado = true;
+        }
+        foreach (var (id, ruta, fadeIn, fadeOut) in Musicas)
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(ruta);
+            if (clip == null) { Debug.LogWarning($"[Prólogo] Falta la música '{ruta}' para '{id}'."); continue; }
+            var regla = perfil.sequences.Find(r => r != null && string.Equals(r.sequenceId, id, System.StringComparison.OrdinalIgnoreCase));
+            if (regla != null && regla.music == clip) continue;
+            if (regla == null) { regla = new AudioGraphProfile.SequenceRule { sequenceId = id }; perfil.sequences.Add(regla); }
+            regla.music = clip; regla.fadeIn = fadeIn; regla.fadeOut = fadeOut; regla.sinBucle = true;
             cambiado = true;
         }
         if (cambiado) EditorUtility.SetDirty(perfil);
@@ -150,37 +174,57 @@ public static class RecursosDelPrologo
     /// Nina (NPC_Aldeano_05) es una niña del pueblo. Si falta su prefab, se monta sobre la aldeana genérica
     /// (coletas Hair08, ropa de diario Body04, sin capa ni sombrero); su aspecto de niña (cuerpo, pelo, vestido
     /// y caras) lo pone después *El Sendero ▸ Personajes ▸ Niños hechos en Blender* (NinosHechosEnBlender).
-    private static void AsegurarNina()
+    private static void AsegurarNina() => AsegurarNinoDelValle("NPC_Aldeano_05", null, RutaNina, "Hair08", "Body04", "Vecina");
+
+    /// Lucas, el niño que va de la mano de su madre a por el pan: sobre la misma base que Nina, con
+    /// pelo corto (Hair02) y ropa de crío (Body03); su cuerpo de niño, de NinosHechosEnBlender. Sale en SPAWN_LucasDelValle.
+    private static void AsegurarLucas() => AsegurarNinoDelValle("LucasDelValle", "SPAWN_LucasDelValle", RutaLucas, "Hair02", "Body03", "Vecino");
+
+    /// Un niño o una niña del valle sobre la aldeana genérica MC01 (1) 6 (con ese pelo y esa ropa), con su
+    /// entrada en el roster del valle (si no la tiene y se da <paramref name="spawnId"/>, se crea).
+    private static void AsegurarNinoDelValle(string id, string spawnId, string ruta, string pelo, string ropa, string voz)
     {
         var roster = AssetDatabase.LoadAssetAtPath<NpcRosterSO>("Assets/Resources/NpcRosters/NpcRoster_PrologoValle.asset");
-        var nina = roster != null ? roster.entries.Find(e => e != null && e.persistenceId == "NPC_Aldeano_05") : null;
-        if (nina == null) { Debug.LogWarning("[Prólogo] No encuentro a Nina (NPC_Aldeano_05) en el roster del valle."); return; }
-        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaNina);
+        if (roster == null) { Debug.LogWarning("[Prólogo] No encuentro el roster del valle."); return; }
+        var entrada = roster.entries.Find(e => e != null && e.persistenceId == id);
+        if (entrada == null && string.IsNullOrEmpty(spawnId)) { Debug.LogWarning($"[Prólogo] No encuentro a {id} en el roster del valle."); return; }
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
         if (prefab == null)
         {
             var original = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath("232061d19d07fce4a801b15fcf95b75c"));
-            if (original == null) { Debug.LogWarning("[Prólogo] Falta la aldeana genérica MC01 (1) 6 para hacer a Nina."); return; }
+            if (original == null) { Debug.LogWarning($"[Prólogo] Falta la aldeana genérica MC01 (1) 6 para hacer a {id}."); return; }
             var instancia = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(original));
             try
             {
-                bool pelo = false, cuerpo = false;
+                bool tienePelo = false, cuerpo = false;
                 foreach (var t in instancia.GetComponentsInChildren<Transform>(true))
                 {
                     string n = t.name;
-                    if (n.StartsWith("Hair") && n.Length == 6) { t.gameObject.SetActive(n == "Hair08"); pelo |= n == "Hair08"; }
-                    else if (n.StartsWith("Body") && n.Length == 6) { t.gameObject.SetActive(n == "Body04"); cuerpo |= n == "Body04"; }
+                    if (n.StartsWith("Hair") && n.Length == 6) { t.gameObject.SetActive(n == pelo); tienePelo |= n == pelo; }
+                    else if (n.StartsWith("Body") && n.Length == 6) { t.gameObject.SetActive(n == ropa); cuerpo |= n == ropa; }
                     else if (n.StartsWith("Cloak") || n.StartsWith("Hat") || n.StartsWith("HeadArmor") || n.StartsWith("AC0"))
                         t.gameObject.SetActive(false);
                 }
-                if (!pelo || !cuerpo) { Debug.LogWarning("[Prólogo] La aldeana genérica no tiene Hair08 o Body04."); return; }
-                prefab = PrefabUtility.SaveAsPrefabAsset(instancia, RutaNina);
+                if (!tienePelo || !cuerpo) { Debug.LogWarning($"[Prólogo] La aldeana genérica no tiene {pelo} o {ropa}."); return; }
+                prefab = PrefabUtility.SaveAsPrefabAsset(instancia, ruta);
             }
             finally { PrefabUtility.UnloadPrefabContents(instancia); }
         }
-        if (prefab != null && nina.prefab != prefab)
+        if (prefab == null) return;
+        if (entrada == null)
         {
-            Undo.RecordObject(roster, "Nina con su aspecto propio");
-            nina.prefab = prefab;
+            Undo.RecordObject(roster, $"{id} en el roster del valle");
+            roster.entries.Add(new NpcRosterSO.Entry
+            {
+                enabled = true, spawnId = spawnId, prefab = prefab, gameObjectName = id, persistenceId = id,
+                vozDeReacciones = voz, startActive = true, requireNavMesh = false,
+            });
+            EditorUtility.SetDirty(roster);
+        }
+        else if (entrada.prefab != prefab)
+        {
+            Undo.RecordObject(roster, $"{id} con su aspecto propio");
+            entrada.prefab = prefab;
             EditorUtility.SetDirty(roster);
         }
     }

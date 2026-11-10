@@ -121,7 +121,7 @@ Perfiles de personalidad y voces oficiales aprobadas en ElevenLabs (diseñadas c
 "El suelo tiembla y una figura oscura emerge entre humo y fuego: un demonio." `EVT_07`
 
 **Eldran** — [shouts]
-"¡Will! Usa tu magia, presiona el botón de ataque y derrota al demonio." `EVT_08`
+"¡Usa tu magia, presiona el botón de ataque y derrota al demonio!" `EVT_08`
 
 **Voz Misteriosa** — [awe]
 "¡Qué interesante!" `EVT_09`
@@ -300,7 +300,7 @@ Voz: seco, desganado, cero paciencia — se ablanda un poco solo al final.
 "¡Muy bien, Will! Por cierto... ven conmigo, quiero enseñarte algo antes de irme." `DLG_ELDRAN_MISSION3_COMEWITHME_01`
 
 **Eldran**
-"Esto es un Punto de Guardado, Will." `DLG_ELDRAN_SAVEPOINT_01`
+"Mira, esto es un Punto de Guardado." `DLG_ELDRAN_SAVEPOINT_01`
 
 **Eldran**
 "Aquí podrás guardar tu partida y descansar para recuperar tu salud y tu maná, así que no dudes en usarlo cuando lo necesites." `DLG_ELDRAN_SAVEPOINT_02`

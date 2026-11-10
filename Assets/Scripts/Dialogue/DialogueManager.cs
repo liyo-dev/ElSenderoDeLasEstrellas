@@ -1157,6 +1157,32 @@ public class DialogueManager : MonoBehaviour
         PintarPagina(line, true);
     }
 
+    static readonly Vector3[] s_esquinas = new Vector3[4];
+    float _margenDerechoDelPrefab = float.NaN;
+
+    /// <summary>
+    /// Deja libre a la derecha del texto el hueco del botón A de pasar página, para que las frases
+    /// largas no queden debajo de él (INC-983). Se mide en cada página: la caja puede cambiar de tamaño.
+    /// </summary>
+    void ReservarSitioParaElBotonA()
+    {
+        if (submitHint == null || !(submitHint.transform is RectTransform boton)) return;
+        var texto = bodyText.rectTransform;
+        boton.GetWorldCorners(s_esquinas);
+        Vector3 abajoIzq = texto.InverseTransformPoint(s_esquinas[0]);
+        Vector3 arribaDer = texto.InverseTransformPoint(s_esquinas[2]);
+        Rect caja = texto.rect;
+        bool seCruzan = abajoIzq.x < caja.xMax && arribaDer.x > caja.xMin && abajoIzq.y < caja.yMax && arribaDer.y > caja.yMin;
+        var margen = bodyText.margin;
+        if (float.IsNaN(_margenDerechoDelPrefab)) _margenDerechoDelPrefab = margen.z;
+        float derecha = seCruzan ? Mathf.Max(_margenDerechoDelPrefab, caja.xMax - abajoIzq.x + 8f) : _margenDerechoDelPrefab;
+        if (!Mathf.Approximately(margen.z, derecha))
+        {
+            margen.z = derecha;
+            bodyText.margin = margen;
+        }
+    }
+
     void PintarPagina(DialogueLine line, bool reproducirVoz)
     {
         // La medición de TMP respeta el ancho, la fuente y la localización actuales.
@@ -1165,6 +1191,7 @@ public class DialogueManager : MonoBehaviour
         if (bodyText)
         {
             StopTypewriter();
+            ReservarSitioParaElBotonA();
             bodyText.text = _currentText;
             int limite = _current != null ? _current.maxLinesPerPage : 0;
             if (limite > 0)

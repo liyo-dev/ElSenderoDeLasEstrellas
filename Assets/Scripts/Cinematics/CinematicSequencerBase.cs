@@ -409,6 +409,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         LockCinematic();
         yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
         {
+            PrepararEscenaEnElCorte();
             BeginCinematic();
             // El interior se aplica en el cut point, con la pantalla cubierta:
             // si se aplica tras el reveal se ve el skybox exterior un instante
@@ -416,6 +417,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             additionalOnCut?.Invoke();
         });
     }
+
+    /// Lo que la escena de la cinemática cambia para todo lo que se ve (escena activa, cielo, luz).
+    /// Se llama en el cut point de la entrada, con la pantalla cubierta, antes de activar la cámara
+    /// y de aplicar el interior: hecho antes se vería sobre la escena del jugador. Ver INC-956.
+    protected virtual void PrepararEscenaEnElCorte() { }
 
     /// Aplica el entorno interior con la pantalla cubierta. Debe llamarse después
     /// de BeginCinematic() (que activa el override en EnvironmentController).
@@ -497,6 +503,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         {
             tm.onTransitionCutPointReached -= cutHandler;
             _activeTransitionCutHandler = null;
+            // En la entrada, si la cinemática destapa en su primer plano, la pantalla se queda en
+            // negro desde el corte hasta ese plano: la transición se abre sola al acabar y, si el
+            // primer plano tarda, enseñaba la cámara del jugador con el cielo y la luz de la escena
+            // de la cinemática (el mundo en negro con Will y los cofres). Ver INC-987.
+            if (recogerPantallaTapada && SueltaElTelonEnSuPrimerPlano) Telon.Cerrar(ClaveTelon);
             onCutPoint?.Invoke();
         };
         endHandler = () =>

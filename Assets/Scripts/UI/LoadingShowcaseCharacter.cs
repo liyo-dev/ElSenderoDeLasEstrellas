@@ -12,6 +12,11 @@ using UnityEngine;
 /// gameplay), el mismo de los retratos vivos: lo mantienen al día los menús de Personajes, así que
 /// aquí sale siempre el aspecto actual. No usar _WILL/_ESTELA/_LIAM.prefab: su Awake() real pisaría
 /// registros del jugador. Montaje: El Sendero ▸ Personajes ▸ Pantalla de carga: modelos al día.
+///
+/// La cara acompaña al movimiento (INC-930): mientras corre va cambiando por <see cref="carasCorriendo"/>
+/// en bucle, y al girarse sigue <see cref="carasDelGesto"/> desde el principio, quedándose con la última.
+/// Las caras las pone el <see cref="NPCEmotionController"/> del modelo, así que salen del perfil de cara
+/// del personaje (con sus símbolos de anime). Las listas son datos de cada personaje en la escena.
 /// </summary>
 [DisallowMultipleComponent]
 public class LoadingShowcaseCharacter : MonoBehaviour
@@ -36,8 +41,27 @@ public class LoadingShowcaseCharacter : MonoBehaviour
              "del escenario de carga, no ninguna otra cámara de la escena.")]
     public string renderLayerName = "UI_Portrait";
 
+    /// Una cara durante un rato.
+    [System.Serializable]
+    public struct CaraDurante
+    {
+        public NPCEmotion emocion;
+        [Min(0.05f)] public float segundos;
+    }
+
+    [Header("Caras (INC-930)")]
+    [Tooltip("Caras mientras corre, en bucle. Vacío = cara de reposo.")]
+    public CaraDurante[] carasCorriendo = new CaraDurante[0];
+    [Tooltip("Caras desde que se gira hacia cámara; la última se queda puesta. Vacío = no cambia.")]
+    public CaraDurante[] carasDelGesto = new CaraDurante[0];
+
     Animator _animator;
     Coroutine _turnRoutine;
+    NPCEmotionController _cara;
+    CaraDurante[] _carasActuales;
+    bool _carasEnBucle;
+    int _indiceDeCara = -1;
+    float _proximaCara;
 
     static readonly int HashReveal = Animator.StringToHash("Reveal");
     static readonly int HashGestureIndex = Animator.StringToHash("GestureIndex");
@@ -45,6 +69,11 @@ public class LoadingShowcaseCharacter : MonoBehaviour
     void Awake()
     {
         ApplyRenderLayerRecursive();
+
+        // Sin EmpezarCaras: el NPCEmotionController del modelo (hijo) puede no haber hecho aún su Awake.
+        _cara = GetComponentInChildren<NPCEmotionController>(true);
+        _carasActuales = carasCorriendo;
+        _carasEnBucle = true;
 
         _animator = GetComponentInChildren<Animator>(true);
         if (!_animator)
@@ -92,14 +121,45 @@ public class LoadingShowcaseCharacter : MonoBehaviour
             _animator.Update(0f);
             _animator.SetInteger(HashGestureIndex, gestureIndex);
         }
+        EmpezarCaras(carasCorriendo, true);
     }
 
     /// <summary>Se gira hacia cámara y dispara su gesto gracioso.</summary>
     public void PlayReveal()
     {
         if (_animator) _animator.SetTrigger(HashReveal);
+        if (carasDelGesto != null && carasDelGesto.Length > 0) EmpezarCaras(carasDelGesto, false);
         if (_turnRoutine != null) StopCoroutine(_turnRoutine);
         _turnRoutine = StartCoroutine(TurnToCamera());
+    }
+
+    // La primera cara se pone en el primer Update y no en Awake: el Start del NPCEmotionController
+    // vuelve a la cara de reposo y la pisaría.
+    void EmpezarCaras(CaraDurante[] caras, bool enBucle)
+    {
+        _carasActuales = caras;
+        _carasEnBucle = enBucle;
+        _indiceDeCara = -1;
+        _proximaCara = 0f;
+        if (_cara && (caras == null || caras.Length == 0)) _cara.VolverAReposo();
+    }
+
+    void Update()
+    {
+        if (!_cara || _carasActuales == null || _carasActuales.Length == 0) return;
+        float ahora = Time.unscaledTime;
+        if (_indiceDeCara >= 0 && ahora < _proximaCara) return;
+
+        int siguiente = _indiceDeCara + 1;
+        if (siguiente >= _carasActuales.Length)
+        {
+            if (!_carasEnBucle) { _proximaCara = float.PositiveInfinity; return; }
+            siguiente = 0;
+        }
+        _indiceDeCara = siguiente;
+        var cara = _carasActuales[siguiente];
+        _proximaCara = ahora + Mathf.Max(0.05f, cara.segundos);
+        _cara.SetEmotion(cara.emocion);
     }
 
     IEnumerator TurnToCamera()

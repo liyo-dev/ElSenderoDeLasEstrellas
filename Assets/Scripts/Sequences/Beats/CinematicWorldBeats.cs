@@ -101,6 +101,9 @@ public class NubesDeAperturaBeat : SequenceBeat
         der.transform.localRotation = Quaternion.identity;
         izq.transform.localScale = Vector3.one;
         der.transform.localScale = Vector3.one;
+        // Cuelgan de la lente: su sombra caía sobre el pueblo como una mancha pixelada (INC-1005).
+        foreach (var r in izq.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        foreach (var r in der.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
         // ── Que TAPEN la pantalla (INC-394) ──────────────────────────────────────────────────
         //

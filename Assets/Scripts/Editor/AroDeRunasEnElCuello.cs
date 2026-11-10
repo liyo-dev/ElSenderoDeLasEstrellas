@@ -13,6 +13,9 @@ using UnityEngine.Rendering;
 public static class AroDeRunasEnElCuello
 {
     const string Prefab = "Assets/Prefabs/Enemy/Demon.prefab";
+    /// Eldran recoge el aro roto del camino mientras Will duerme: las piezas caídas se retiran al
+    /// empezar el Cap. 2 (la escena de Liam o, si se arranca más tarde, la mañana después). Ver INC-962.
+    public static readonly string[] SenalesQueRecogenElAro = { "LIAM_CRYSTAL_START", "MANANA_DESPUES_START" };
     const string Carpeta = "Assets/Art/Items/AroDelDemonio";
     const string NombreModelo = "Modelo del aro";
 
@@ -62,12 +65,17 @@ public static class AroDeRunasEnElCuello
             float radio = radioPiel * Holgura / (1f - Grosor);
 
             // ── Colgar el aro del cuello ──
-            var glows = new List<(Transform t, Vector3 escala)>();
+            // Los brillos sueltos (el aro de luces azules de antes) se quitan: la ventana de daño la
+            // enseñan las runas del propio modelo, que se encienden. Ver INC-985.
             var so = new SerializedObject(aro);
             var glowProp = so.FindProperty("glowVisuals");
             for (int i = 0; i < glowProp.arraySize; i++)
                 if (glowProp.GetArrayElementAtIndex(i).objectReferenceValue is GameObject g)
-                    glows.Add((g.transform, g.transform.lossyScale));
+                {
+                    var instancia = PrefabUtility.GetOutermostPrefabInstanceRoot(g);
+                    Object.DestroyImmediate(instancia != null && instancia != raiz ? instancia : g);
+                }
+            glowProp.arraySize = 0;
 
             var t = aro.transform;
             t.SetParent(cuello, false);
@@ -79,16 +87,6 @@ public static class AroDeRunasEnElCuello
 
             var esfera = aro.GetComponent<SphereCollider>();
             if (esfera) { esfera.center = Vector3.zero; esfera.radius = radio * (1f + Grosor) * 1.25f; }
-
-            foreach (var (g, escala) in glows)
-            {
-                g.SetParent(t, false);
-                g.localPosition = Vector3.zero;
-                g.localRotation = Quaternion.identity;
-                g.localScale = Vector3.one;
-                var l = g.lossyScale;
-                g.localScale = new Vector3(escala.x / Mathf.Max(1e-5f, l.x), escala.y / Mathf.Max(1e-5f, l.y), escala.z / Mathf.Max(1e-5f, l.z));
-            }
 
             // ── El modelo ──
             var viejo = t.Find(NombreModelo);
@@ -111,7 +109,7 @@ public static class AroDeRunasEnElCuello
 
             PrefabUtility.SaveAsPrefabAsset(raiz, Prefab);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[AroDelCuello] Aro puesto en '{cuello.name}': radio {radio:0.000} m (cuello {radioPiel:0.000} m), {glows.Count} brillo(s) recolocado(s).");
+            Debug.Log($"[AroDelCuello] Aro puesto en '{cuello.name}': radio {radio:0.000} m (cuello {radioPiel:0.000} m).");
         }
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }
@@ -119,7 +117,7 @@ public static class AroDeRunasEnElCuello
     // ── Medida ──
 
     /// Corta la malla del cuerpo en rodajas a lo largo del cuello y se queda con la más estrecha:
-    /// su centro y su radio (percentil 80 de las distancias al centro, para no contar cuernos o alas).
+    /// su centro y su radio (la mediana de las distancias al centro, para no contar cuernos o alas).
     static bool MedirCuello(GameObject raiz, Vector3 cuello, Vector3 eje, float largo, out Vector3 centro, out float radio)
     {
         centro = cuello; radio = 0f;
@@ -159,7 +157,8 @@ public static class AroDeRunasEnElCuello
             dist.Clear();
             foreach (var d in rodaja) dist.Add((d - c).magnitude);
             dist.Sort();
-            float r = dist[(int)(dist.Count * 0.8f)];
+            // Mediana: con un percentil alto contaban el pelo, la papada o los cuernos y el aro quedaba holgado (INC-985).
+            float r = dist[(int)(dist.Count * 0.5f)];
             if (!hay || r < radio) { hay = true; radio = r; centro = p + c; }
         }
         return hay && radio > 1e-4f;
@@ -188,6 +187,7 @@ public static class AroDeRunasEnElCuello
 
         var pieza = go.AddComponent<PiezaQueCae>();
         pieza.Configurar(mallaHierro, new Renderer[] { mr }, new Color(0.06f, 0.03f, 0.02f));
+        pieza.RetirarConSenales(SenalesQueRecogenElAro);
         return pieza;
     }
 

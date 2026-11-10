@@ -125,7 +125,7 @@ public sealed class EstrellasFugaces : MonoBehaviour
     {
         if (DayNightCycle.NocheActual < desde) return false;
         var ciclo = DayNightCycle.Instance;
-        if (ciclo != null && (ciclo.PesoDePrecipitacion >= 0.1f || ciclo.Nublado >= 0.35f)) return false;
+        if (ciclo != null && (ciclo.PesoDePrecipitacion >= 0.1f || ciclo.VisibilidadDeLasEstrellas < 0.5f)) return false;
         var entorno = EnvironmentController.Instance;
         return entorno == null || !entorno.IsEffectivelyInterior;
     }

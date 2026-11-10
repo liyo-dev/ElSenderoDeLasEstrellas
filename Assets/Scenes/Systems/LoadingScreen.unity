@@ -599,6 +599,16 @@ MonoBehaviour:
   revealYaw: 180
   turnDuration: 0.25
   renderLayerName: UI_Portrait
+  carasCorriendo:
+  - emocion: 14
+    segundos: 1.3
+  - emocion: 10
+    segundos: 1.1
+  carasDelGesto:
+  - emocion: 8
+    segundos: 1.2
+  - emocion: 13
+    segundos: 1
 --- !u!114 &59924957964429231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,6 +626,18 @@ MonoBehaviour:
   revealYaw: 180
   turnDuration: 0.25
   renderLayerName: UI_Portrait
+  carasCorriendo:
+  - emocion: 10
+    segundos: 1.2
+  - emocion: 13
+    segundos: 0.8
+  carasDelGesto:
+  - emocion: 13
+    segundos: 0.8
+  - emocion: 8
+    segundos: 1.1
+  - emocion: 1
+    segundos: 1
 --- !u!108 &473124863638204329
 Light:
   m_ObjectHideFlags: 0
@@ -848,6 +870,18 @@ MonoBehaviour:
   revealYaw: 180
   turnDuration: 0.25
   renderLayerName: UI_Portrait
+  carasCorriendo:
+  - emocion: 9
+    segundos: 1.4
+  - emocion: 7
+    segundos: 1.1
+  - emocion: 5
+    segundos: 0.5
+  carasDelGesto:
+  - emocion: 11
+    segundos: 0.9
+  - emocion: 1
+    segundos: 1
 --- !u!1 &3220443757946401804
 GameObject:
   m_ObjectHideFlags: 0

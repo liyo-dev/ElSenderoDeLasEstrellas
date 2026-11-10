@@ -3374,6 +3374,7 @@ GameObject:
   - component: {fileID: 6353187348953647502}
   - component: {fileID: -4024873495936589470}
   - component: {fileID: 4563352444881994866}
+  - component: {fileID: 7734037018848265691}
   m_Layer: 8
   m_Name: Guard
   m_TagString: Untagged
@@ -3545,6 +3546,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -3562,6 +3564,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &4563352444881994866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3614,6 +3617,24 @@ MonoBehaviour:
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7734037018848265691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6212661583293693831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
+  narrativeDetectionRange: 10
+  walkTowardsPlayerOnAlert: 1
+  stopDistanceFromPlayer: 2
+  narrativeAlertIconPrefab: {fileID: 0}
+  defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
+  actorIdSinIA: 
 --- !u!1 &6230429580550391881
 GameObject:
   m_ObjectHideFlags: 0

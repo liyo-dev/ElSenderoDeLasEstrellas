@@ -428,6 +428,10 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Min(0f)] private float duracionDelFundidoDelCielo = 45f;
     [SerializeField, Min(0.01f)] private float duracionDeNublarse = 40f;
     [SerializeField, Min(0.01f)] private float duracionDeDespejarse = 60f;
+    [Tooltip("Nubosidad del clima a la que las estrellas empiezan a taparse.")]
+    [SerializeField, Range(0f, 1f)] private float nubosidadQueEmpiezaATaparEstrellas = 0.12f;
+    [Tooltip("Nubosidad del clima a la que las estrellas ya no se ven: las nubes del cielo las tapan del todo antes de cubrirlo entero.")]
+    [SerializeField, Range(0f, 1f)] private float nubosidadQueTapaLasEstrellas = 0.4f;
     [SerializeField] private Color colorDeNubesDeLluvia = new Color(0.52f, 0.58f, 0.66f);
     [SerializeField] private Color colorDeNubesDeTormenta = new Color(0.22f, 0.27f, 0.34f);
     [SerializeField] private Color colorDeNubesDeNieve = new Color(0.86f, 0.88f, 0.92f);
@@ -612,6 +616,10 @@ public class DayNightCycle : MonoBehaviour
     private float _baseLightIntensity = -1f;
 
     public float Nublado { get; private set; }
+    /// Cuánto se ven las estrellas (0-1) según lo cubierto que está el cielo. Las estrellas son objetos
+    /// delante del cielo y las nubes pintadas no las tapan, así que se apagan aquí antes de que se cubra.
+    public float VisibilidadDeLasEstrellas => 1f - Mathf.SmoothStep(0f, 1f,
+        Mathf.InverseLerp(nubosidadQueEmpiezaATaparEstrellas, Mathf.Max(nubosidadQueEmpiezaATaparEstrellas + 0.01f, nubosidadQueTapaLasEstrellas), Nublado));
     public float PesoDeTormenta { get; private set; }
     public float PesoDeNieve { get; private set; }
     public float PesoDePrecipitacion { get; private set; }
@@ -1332,12 +1340,16 @@ public class DayNightCycle : MonoBehaviour
         _rainCoroutine = null;
     }
 
+    const float NubosidadQueEmpiezaALlover = 0.45f;
+
     IEnumerator CloudBuildUpRoutine()
     {
         _isCloudBuildingUp = true;
         _despejadoPendiente = true;
         RaiseCloudsBuildingUp();
-        while (Nublado < 0.8f) yield return null;
+        // La lluvia empieza con el cielo a medio cubrir: esperar a tenerlo casi cerrado dejaba medio
+        // minuto de cielo de lluvia sin que cayera una gota. Ver INC-984.
+        while (Nublado < NubosidadQueEmpiezaALlover) yield return null;
         _isCloudBuildingUp = false;
     }
 

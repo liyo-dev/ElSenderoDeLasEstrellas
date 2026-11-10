@@ -14,7 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AgendaDelActor
   actorId: NPC_Boticaria
   entradas:
-  - nombre: Siempre · la poción
+  - nombre: "Cap. 2 \xB7 despedida de Will"
+    tramo:
+      empiezaConSenal:
+      - CAP2_A_DESPEDIRSE
+      empiezaConMisionActiva: []
+      acabaConSenal:
+      - CAP3_CAMINO_EMPIEZA
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 0
+    marca: 
+    frases:
+    - {fileID: 11400000, guid: e68fb6d7f8f019149b87b79ab415a12d, type: 2}
+  - nombre: "Siempre \xB7 la poci\xF3n"
     tramo:
       empiezaConSenal: []
       empiezaConMisionActiva: []

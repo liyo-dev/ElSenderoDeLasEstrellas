@@ -67,6 +67,7 @@ public class EmotionProfile : ScriptableObject
         new EmotionMeshData { emotion = NPCEmotion.Crying,     eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
         new EmotionMeshData { emotion = NPCEmotion.HappyTears, eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
         new EmotionMeshData { emotion = NPCEmotion.Asleep,     eyeMeshName = "Eye09", mouthMeshName = "Mouth02", bodyAnimStateName = "" },
+        new EmotionMeshData { emotion = NPCEmotion.Frozen,     eyeMeshName = "Eye02", mouthMeshName = "Mouth06", bodyAnimStateName = "" },
     };
 
     [Header("Animaciones Neutras (jugador)")]

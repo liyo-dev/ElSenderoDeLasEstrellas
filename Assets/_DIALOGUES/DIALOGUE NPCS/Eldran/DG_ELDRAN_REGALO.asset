@@ -55,3 +55,19 @@ MonoBehaviour:
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 0
+  - speakerNameId: CHAR_ELDRAN
+    textId: DLG_ELDRAN_REGALO_07
+    text: 
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_WILL
+    textId: DLG_ELDRAN_REGALO_08
+    text: 
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 0
+  maxLinesPerPage: 0
+  isGroupConversation: 0

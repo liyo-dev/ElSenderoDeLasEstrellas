@@ -302,7 +302,7 @@ public class MagicCaster : MonoBehaviour
             Log($"No se puede rematar con {spell.displayName}: {reason}");
             return false;
         }
-        if (manaPool && !manaPool.TrySpend(spell.manaCost))
+        if (manaPool && !manaPool.TrySpend(RasgosDePrenda.CosteDeMana(spell)))
         {
             Log($"Sin maná para rematar con {spell.displayName} (coste {spell.manaCost})");
             return false;
@@ -404,7 +404,7 @@ public class MagicCaster : MonoBehaviour
             return false;
         }
 
-        if (manaPool && !manaPool.TrySpend(spell.manaCost))
+        if (manaPool && !manaPool.TrySpend(RasgosDePrenda.CosteDeMana(spell)))
         {
             Log($"Sin maná para {spell.displayName} (coste {spell.manaCost})");
             return false;
@@ -589,9 +589,10 @@ public class MagicCaster : MonoBehaviour
         // aire sí (INC-483).
         if (controller && !controller.IsAirborne && controller.stopMove) { reason = "Bloqueado contra una pared"; return false; }
 
-        if (manaPool && manaPool.Current < spell.manaCost)
+        float coste = RasgosDePrenda.CosteDeMana(spell);
+        if (manaPool && manaPool.Current < coste)
         {
-            reason = $"Maná insuficiente ({spell.manaCost:F1} requerido, {manaPool.Current:F1} disponible)";
+            reason = $"Maná insuficiente ({coste:F1} requerido, {manaPool.Current:F1} disponible)";
             return false;
         }
 

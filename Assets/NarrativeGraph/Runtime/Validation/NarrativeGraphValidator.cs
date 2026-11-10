@@ -213,6 +213,7 @@ public static class NarrativeGraphValidator
         public void SetFlag(string key, bool value) { }
         public void CompleteQuestSteps(string questId, IReadOnlyList<string> stepConditionIds, IReadOnlyList<int> stepIndices) { }
         public void CompleteQuest(string questId) { }
+        public void MarkSignalRaised(string key) { }
         public void AddItem(string itemId, int amount) { }
         public void PlaceActor(string actorId, NarrativeLocation location) { }
         public void SetActorActive(string actorId, bool active) { }

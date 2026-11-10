@@ -61,6 +61,7 @@ public class EmotionProfileEditor : Editor
                 new EmotionMeshData { emotion = NPCEmotion.Crying,     eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
                 new EmotionMeshData { emotion = NPCEmotion.HappyTears, eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
                 new EmotionMeshData { emotion = NPCEmotion.Asleep,     eyeMeshName = "Eye09", mouthMeshName = "Mouth02", bodyAnimStateName = "" },
+                new EmotionMeshData { emotion = NPCEmotion.Frozen,     eyeMeshName = "Eye02", mouthMeshName = "Mouth06", bodyAnimStateName = "" },
             };
 
             profile.neutralBodyAnims = new[] { "Talk01", "Talk02", "Talk03" };
@@ -158,6 +159,7 @@ public class EmotionProfileEditor : Editor
             case NPCEmotion.Crying: return "😭 Crying (Llorando)";
             case NPCEmotion.HappyTears: return "🥲 HappyTears (Lágrimas de alegría)";
             case NPCEmotion.Asleep: return "😴 Asleep (Dormido)";
+            case NPCEmotion.Frozen: return "🥶 Frozen (Helado)";
             default: return emotion.ToString();
         }
     }
@@ -228,6 +230,7 @@ public class NPCEmotionControllerEditor : Editor
             if (GUILayout.Button("Crying")) controller.SetEmotion(NPCEmotion.Crying);
             if (GUILayout.Button("HappyTears")) controller.SetEmotion(NPCEmotion.HappyTears);
             if (GUILayout.Button("Asleep")) controller.SetEmotion(NPCEmotion.Asleep);
+            if (GUILayout.Button("Frozen")) controller.SetEmotion(NPCEmotion.Frozen);
             EditorGUILayout.EndHorizontal();
             
             if (GUILayout.Button("↩ Restaurar Original"))

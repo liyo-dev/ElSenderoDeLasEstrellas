@@ -1,10 +1,10 @@
 # Parte de horneado: Cap1_OliverSaludo
 
-2026-10-30 17:50 · guion `Assets/_SEQUENCES/Guiones/Cap1_OliverSaludo.guion.txt`
+2026-11-08 13:45 · guion `Assets/_SEQUENCES/Guiones/Cap1_OliverSaludo.guion.txt`
 
-**0:37,2** de secuencia · 7 frases · 2 planos · 4 efectos · 2 personajes
+**0:37,2** de secuencia · 7 frases · 2 planos · 5 efectos · 2 personajes
 
-Reparto medido (m): will 1,55/ojos 0,93 · oliver 1,70/ojos 0,94
+Reparto medido (m): will 1,62/ojos 0,93 · oliver 1,70/ojos 0,94
 
 ## Errores (0)
 
@@ -33,6 +33,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · oliver 1,70/ojos 0,94
 | 0:11,7 | oliver | «He aprendido un hechizo nuevo. Mira.» (2,5 s) · pose |
 | 0:14,2 | **@hechizo** |  |
 | 0:14,7 | efecto | VFX: FX_Smoke_Small en NPC_Oliver |
+| 0:14,7 | efecto | VFX: Sparks explode red en NPC_Oliver |
 | 0:14,7 | efecto | SFX: SpellFail |
 | 0:14,7 | efecto | Sacudida de cámara (0,35, 0,4s) |
 | 0:20,0 | will | «¡Ja, sigues igual! ¿Por qué discuten Eldran y Victoria? Se les oye desde aquí.» (5,9 s) · pose |

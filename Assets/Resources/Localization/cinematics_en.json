@@ -46,7 +46,7 @@
         },
         {
             "id": "EVT_08",
-            "text": "Will! Use your magic, press <sprite name=\"interactable_x\"> and defeat the demon!"
+            "text": "Use your magic, press <sprite name=\"interactable_x\"> and defeat the demon!"
         },
         {
             "id": "EVT_09",
@@ -78,7 +78,7 @@
         },
         {
             "id": "EVT_AWAKEN_06",
-            "text": "Will, get out of the way!"
+            "text": "Get out of the way!"
         },
         {
             "id": "EVT_ELDRAN_CHEER_01",
@@ -110,7 +110,7 @@
         },
         {
             "id": "EVT_ELDRAN_AHORA_01",
-            "text": "Now, Will! The ring is glowing!"
+            "text": "Now! The ring is glowing!"
         },
         {
             "id": "EVT_ELDRAN_AHORA_02",
@@ -142,7 +142,7 @@
         },
         {
             "id": "EVT_ELDRAN_CASI",
-            "text": "He's almost done! One last push, Will!"
+            "text": "He's almost done! One last push, lad!"
         },
         {
             "id": "EVT_ELDRAN_RECUERDA_ARO",
@@ -218,7 +218,7 @@
         },
         {
             "id": "EVT_ELDRAN_GUIA_LLAMADA",
-            "text": "This way, Will!"
+            "text": "This way!"
         },
         {
             "id": "EVT_ESTELA_ARAÑA_1",
@@ -2286,7 +2286,7 @@
         },
         {
             "id": "CAP3_ESPEJO_10",
-            "text": "The collar's key. It'll grow warm whenever he's near."
+            "text": "The collar's key. It'll grow warm whenever the boy is near."
         },
         {
             "id": "CAP3_ESPEJO_11",
@@ -2294,47 +2294,47 @@
         },
         {
             "id": "CAP3_POSADA_01",
-            "text": "A soup, if this is enough."
+            "text": "Excuse me. Do you know what this is?"
         },
         {
             "id": "CAP3_POSADA_02",
-            "text": "It's enough. But not for bread."
-        },
-        {
-            "id": "CAP3_POSADA_03",
-            "text": "Look! I can do magic!"
-        },
-        {
-            "id": "CAP3_POSADA_04",
-            "text": "The spoon goes up… up… all the way to my thumb!"
-        },
-        {
-            "id": "CAP3_POSADA_05",
-            "text": "Almost."
-        },
-        {
-            "id": "CAP3_POSADA_06",
-            "text": "That was almost nothing, Lucía."
-        },
-        {
-            "id": "CAP3_POSADA_07",
-            "text": "I'm looking for someone who knows what this is."
-        },
-        {
-            "id": "CAP3_POSADA_08",
             "text": "Where did you get that?"
         },
         {
-            "id": "CAP3_POSADA_09",
+            "id": "CAP3_POSADA_03",
             "text": "The demon that attacked my village was wearing it."
         },
         {
-            "id": "CAP3_POSADA_10",
+            "id": "CAP3_POSADA_04",
             "text": "No demons have come this way. But collared animals have. Several."
         },
         {
+            "id": "CAP3_POSADA_05",
+            "text": "…Was that your stomach?"
+        },
+        {
+            "id": "CAP3_POSADA_06",
+            "text": "The food in my bag ran out yesterday. Is this enough for a soup?"
+        },
+        {
+            "id": "CAP3_POSADA_07",
+            "text": "It's enough. But not for bread."
+        },
+        {
+            "id": "CAP3_POSADA_08",
+            "text": "I can do magic! Watch the spoon."
+        },
+        {
+            "id": "CAP3_POSADA_09",
+            "text": "It's going to rise… rise… all the way to my thumb."
+        },
+        {
+            "id": "CAP3_POSADA_10",
+            "text": "Almost."
+        },
+        {
             "id": "CAP3_POSADA_11",
-            "text": "Ask around the village. People see things, even if they don't say."
+            "text": "Almost? At your age I couldn't move a crumb."
         },
         {
             "id": "CAP3_CARRO_01",
@@ -2406,7 +2406,7 @@
         },
         {
             "id": "CAP3_JAULAS_01",
-            "text": "That's it… is that it?"
+            "text": "It's over…"
         },
         {
             "id": "CAP3_JAULAS_02",
@@ -2538,7 +2538,7 @@
         },
         {
             "id": "CAP4_FIGURA_07",
-            "text": "Someone who's been watching us for days. I can feel it on the back of my neck."
+            "text": "Someone who's been watching us since yesterday. I can feel it on the back of my neck."
         },
         {
             "id": "CAP4_FIGURA_08",
@@ -2646,7 +2646,7 @@
         },
         {
             "id": "CAP4_BIFURCACION_11",
-            "text": "My boot! The mud's taken my boot!"
+            "text": "My boot! It came off in the ford!"
         },
         {
             "id": "CAP4_BOTA_01",
@@ -2654,15 +2654,75 @@
         },
         {
             "id": "CAP4_BOTA_02",
-            "text": "The map didn't show the mud."
+            "text": "The ford was deeper than it looked."
         },
         {
             "id": "CAP4_BOTA_03",
-            "text": "Or that you'd lose a boot in it."
+            "text": "We wouldn't have got wet through the pines."
         },
         {
             "id": "CAP4_BOTA_04",
-            "text": "That's not on any map."
+            "text": "The map didn't say anyone would go after my boot, either."
+        },
+        {
+            "id": "CAP3_POSADA_12",
+            "text": "Eat something, then ask around the village. People see things, even if they don't say."
+        },
+        {
+            "id": "CAP4_MANANA_05",
+            "text": "All right. Where do I start?"
+        },
+        {
+            "id": "CAP4_GOLEM_05",
+            "text": "Aren't you ever scared?"
+        },
+        {
+            "id": "CAP4_MANZANA_07",
+            "text": "Are you all right? Lean on me."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_01",
+            "text": "There you are. Have you said goodbye to everyone?"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_02",
+            "text": "Almost everyone. Tomasa wanted to sell me another useless thing."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_03",
+            "text": "That woman never rests. Listen, this is important."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_04",
+            "text": "Estela doesn't take apprentices. Turn up with a piece of iron and a nice smile and she'll shut the door on you."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_05",
+            "text": "But at the seaside village they've seen more animals with collars like that one. Go there first, ask around and write it all down."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_06",
+            "text": "Bring her something she can't ignore. Then she'll listen."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_07",
+            "text": "And you?"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_08",
+            "text": "I'm going to the Kingdom, to tell the King about the collars. When you have something, find me there."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_09",
+            "text": "So this isn't goodbye."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_10",
+            "text": "Of course not. It's a \"see you soon\". Go on, off you go, the day's slipping away."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_11",
+            "text": "See you soon, Eldran!"
         }
     ]
 }

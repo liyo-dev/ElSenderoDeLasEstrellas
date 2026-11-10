@@ -28,6 +28,8 @@ namespace Sendero.UI
         private readonly float[] _vida = { 1f, 1f, 1f };
         private readonly float[] _mana = { 1f, 1f, 1f };
         private readonly bool[] _caido = new bool[Personajes];
+        private readonly float[] _vidaPuntos = new float[Personajes];
+        private readonly float[] _manaPuntos = new float[Personajes];
 
         private SaludDelGrupo _salud;
         private DuoSpecialAttackSystem _equipo;
@@ -40,6 +42,10 @@ namespace Sendero.UI
         /// Maná de 0 a 1 (0 si no tiene maná).
         public float Mana(Slot personaje) => _mana[(int)personaje];
         public bool Caido(Slot personaje) => _caido[(int)personaje];
+        /// Vida en puntos (para las barras apiladas por capas).
+        public float VidaEnPuntos(Slot personaje) => _vidaPuntos[(int)personaje];
+        /// Maná en puntos (para las barras apiladas por capas).
+        public float ManaEnPuntos(Slot personaje) => _manaPuntos[(int)personaje];
         /// La carga de equipo está llena y hay compañeros con quien lanzar el trío.
         public bool TrioListo => _trioListo;
 
@@ -109,16 +115,22 @@ namespace Sendero.UI
             Poner((int)personaje,
                   vidaMax > 0f ? _salud.Vida(personaje) / vidaMax : 0f,
                   manaMax > 0f ? _salud.Mana(personaje) / manaMax : 0f,
+                  Mathf.Max(0f, _salud.Vida(personaje)),
+                  Mathf.Max(0f, _salud.Mana(personaje)),
                   _salud.Caido(personaje));
         }
 
-        private void Poner(int slot, float vida, float mana, bool caido)
+        private void Poner(int slot, float vida, float mana, float vidaPuntos, float manaPuntos, bool caido)
         {
             vida = Mathf.Clamp01(vida);
             mana = Mathf.Clamp01(mana);
-            if (Mathf.Approximately(_vida[slot], vida) && Mathf.Approximately(_mana[slot], mana) && _caido[slot] == caido) return;
+            if (Mathf.Approximately(_vida[slot], vida) && Mathf.Approximately(_mana[slot], mana)
+                && Mathf.Approximately(_vidaPuntos[slot], vidaPuntos) && Mathf.Approximately(_manaPuntos[slot], manaPuntos)
+                && _caido[slot] == caido) return;
             _vida[slot] = vida;
             _mana[slot] = mana;
+            _vidaPuntos[slot] = vidaPuntos;
+            _manaPuntos[slot] = manaPuntos;
             _caido[slot] = caido;
             SaludCambiada?.Invoke((Slot)slot);
         }

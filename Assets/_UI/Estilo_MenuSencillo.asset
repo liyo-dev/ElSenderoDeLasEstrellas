@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EstiloDeMenuSencillo
   fondo: {fileID: 21300000, guid: c6c7b1f8a18140a3a869b36c992812ff, type: 3}
   panel: {fileID: 21300000, guid: 6f186041e5b3439483fbd258603b26ef, type: 3}
-  tarjeta: {fileID: 21300000, guid: fc2b3e18d26a40258431206a7fc75065, type: 3}
+  tarjeta: {fileID: 21300000, guid: 550ba9fb6d7b439da282fe1d35c2e0ce, type: 3}
   chip: {fileID: 21300000, guid: 68dfa8cdf7824401be4630b5a4f37d97, type: 3}
   boton: {fileID: 21300000, guid: 4ed36212bff5425ca241216e5648f355, type: 3}
   fuenteTitulo: {fileID: 11400000, guid: 21a67e0dff06da94d848f1cf0d0074f8, type: 2}

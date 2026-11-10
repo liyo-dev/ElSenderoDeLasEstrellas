@@ -116,7 +116,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Posadero
-    prefab: {fileID: 6523536033449891113, guid: b1696cfbbee704a408e6d7926dc5e991, type: 3}
+    prefab: {fileID: 6941739730369371496, guid: 0cef7213ab9b3c24593ba632864b8c3e, type: 3}
     gameObjectName: Posadero
     persistenceId: NPC_Posadero
     vozDeReacciones: Vecino
@@ -203,4 +203,54 @@ MonoBehaviour:
     startActive: 1
     requireNavMesh: 0
     requiredFlag: NARRATIVE_FLAG:ESTELA_APARECE
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Remedios
+    prefab: {fileID: 6941739730369371496, guid: 4d2cfd0a6c17bc1408038c2e3f31e8c2, type: 3}
+    gameObjectName: Remedios
+    persistenceId: NPC_Remedios
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Anselmo
+    prefab: {fileID: 6941739730369371496, guid: e3fc55e7b6e617441b26ec3b190c64cd, type: 3}
+    gameObjectName: Anselmo
+    persistenceId: NPC_Anselmo
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Engracia
+    prefab: {fileID: 6941739730369371496, guid: 5382bbe5ae6f0394d97ea24485057765, type: 3}
+    gameObjectName: Engracia
+    persistenceId: NPC_Engracia
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Eusebio
+    prefab: {fileID: 6941739730369371496, guid: fb5436ad1892a784fb3881d7809c026f, type: 3}
+    gameObjectName: Eusebio
+    persistenceId: NPC_Eusebio
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Fermin
+    prefab: {fileID: 6941739730369371496, guid: 63eb67bfba3557d4591ee078f4056779, type: 3}
+    gameObjectName: Fermin
+    persistenceId: NPC_Fermin
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
     invertCondition: 0

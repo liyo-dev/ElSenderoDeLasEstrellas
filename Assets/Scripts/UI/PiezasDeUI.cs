@@ -49,6 +49,47 @@ public static class PiezasDeUI
         return t;
     }
 
+    /// <summary>
+    /// Escala los bordes de una imagen troceada para que quepan en <paramref name="alto"/>: un sprite
+    /// de 240 px de alto puesto a 64 conserva las esquinas redondas en vez de aplastarlas.
+    /// </summary>
+    public static void AjustarBordesAlAlto(Image imagen, float alto)
+    {
+        if (imagen.sprite == null || imagen.type != Image.Type.Sliced || alto <= 0f) return;
+        imagen.pixelsPerUnitMultiplier = Mathf.Max(1f, imagen.sprite.rect.height / alto);
+    }
+
+    private static Sprite s_rectanguloRedondeado;
+
+    /// <summary>
+    /// Rectángulo blanco de esquinas redondas (troceado), para marcos y resaltes que se tiñen de
+    /// un solo color sin el degradado de los sprites del menú. Se genera una vez.
+    /// </summary>
+    public static Sprite RectanguloRedondeado
+    {
+        get
+        {
+            if (s_rectanguloRedondeado != null) return s_rectanguloRedondeado;
+            const int lado = 72, radio = 30, borde = 32;
+            var tex = new Texture2D(lado, lado, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            var px = new Color32[lado * lado];
+            for (int y = 0; y < lado; y++)
+            for (int x = 0; x < lado; x++)
+            {
+                // Distancia al centro de la esquina más cercana (0 en los tramos rectos).
+                float dx = Mathf.Max(0f, Mathf.Max(radio - (x + 0.5f), (x + 0.5f) - (lado - radio)));
+                float dy = Mathf.Max(0f, Mathf.Max(radio - (y + 0.5f), (y + 0.5f) - (lado - radio)));
+                float alfa = Mathf.Clamp01(radio - Mathf.Sqrt(dx * dx + dy * dy) + 0.5f);
+                px[y * lado + x] = new Color32(255, 255, 255, (byte)(alfa * 255f));
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            s_rectanguloRedondeado = Sprite.Create(tex, new Rect(0, 0, lado, lado), new Vector2(0.5f, 0.5f), 100f,
+                                                   0, SpriteMeshType.FullRect, new Vector4(borde, borde, borde, borde));
+            return s_rectanguloRedondeado;
+        }
+    }
+
     /// <summary>Ancla en un punto del padre, con el pivote en el centro.</summary>
     public static void Colocar(RectTransform rt, Vector2 ancla, Vector2 posicion, Vector2 tamano)
     {

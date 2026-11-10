@@ -7,7 +7,7 @@ using UnityEngine;
 // caché de partes esté lista cuando PlayerPresetService aplica la apariencia del preset.
 [DefaultExecutionOrder(-60)]
 [DisallowMultipleComponent]
-public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
+public class ModularAutoBuilder : MonoBehaviour
 {
     // Prefijos -> categorías (case-insensitive)
     // IMPORTANTE: Orden importa - más específicos primero
@@ -51,68 +51,43 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
     public bool randomizeAtAwake = false;      // déjalo en false hasta que veas todo ok
     public bool preserveActivePartsOnAwake = true;  // mantiene las partes activas del prefab
 
-    // Solo el cuerpo registrado como jugador aporta los bonos de su selección actual.
-    private Estadisticas _bonos;
-    private bool _fuenteRegistrada;
-    public Estadisticas Bonos => _bonos;
+    // Rasgos de las prendas puestas (RasgosDePrenda); se recalculan al cambiar de ropa.
+    private readonly List<RasgoDePrenda> _rasgos = new();
+    public IReadOnlyList<RasgoDePrenda> RasgosPuestos => _rasgos;
+    public bool LlevaRasgo(RasgoDePrenda rasgo) => _rasgos.Contains(rasgo);
 
     void OnEnable()
     {
-        PlayerService.OnPlayerRegistered += RegistrarBonos;
-        PlayerService.OnPlayerUnregistered += QuitarBonos;
         WardrobeService.OnWardrobeItemUnlocked += AlDesbloquearPrenda;
-        if (PlayerService.HasInstance) RegistrarBonos(PlayerService.Player);
+        ActualizarRasgos();
     }
 
     void OnDisable()
     {
-        PlayerService.OnPlayerRegistered -= RegistrarBonos;
-        PlayerService.OnPlayerUnregistered -= QuitarBonos;
         WardrobeService.OnWardrobeItemUnlocked -= AlDesbloquearPrenda;
-        if (_fuenteRegistrada) EstadisticasDelPersonaje.QuitarFuente(this);
-        _fuenteRegistrada = false;
-        _bonos = default;
     }
 
-    void QuitarBonos() => RegistrarBonos(null);
+    void AlDesbloquearPrenda(WardrobeItemSO item) => ActualizarRasgos();
 
-    void RegistrarBonos(GameObject jugador)
-    {
-        bool propio = jugador != null && (transform == jugador.transform || transform.IsChildOf(jugador.transform));
-        if (!propio)
-        {
-            if (_fuenteRegistrada) EstadisticasDelPersonaje.QuitarFuente(this);
-            _fuenteRegistrada = false;
-            _bonos = default;
-            return;
-        }
-        ActualizarBonos();
-        if (!_fuenteRegistrada)
-        {
-            _fuenteRegistrada = true;
-            EstadisticasDelPersonaje.RegistrarFuente(this);
-        }
-    }
-
-    void AlDesbloquearPrenda(WardrobeItemSO item) => ActualizarBonos();
-
-    /// Devuelve lo que aporta la pieza equipada en esta categoría.
-    public Estadisticas BonosDeCategoria(PartCategory categoria)
+    /// La prenda puesta en esa categoría (null si no hay o no tiene asset de armario).
+    public WardrobeItemSO PrendaDeCategoria(PartCategory categoria)
     {
         if (!idx.TryGetValue(categoria, out int indice) ||
             !parts.TryGetValue(categoria, out var lista) || indice < 0 || indice >= lista.Count)
-            return default;
-        var pieza = WardrobeItemSO.FindPart(categoria, lista[indice].name);
-        return pieza != null ? pieza.Bonos : default;
+            return null;
+        return WardrobeItemSO.FindPart(categoria, lista[indice].name);
     }
-    void ActualizarBonos()
+
+    void ActualizarRasgos()
     {
-        var suma = default(Estadisticas);
+        _rasgos.Clear();
         foreach (var seleccion in idx)
-            suma += BonosDeCategoria(seleccion.Key);
-        var diferencia = suma - _bonos;
-        _bonos = suma;
-        if (_fuenteRegistrada && !diferencia.EsCero) EstadisticasDelPersonaje.AvisarCambioDeBonos();
+        {
+            var prenda = PrendaDeCategoria(seleccion.Key);
+            if (prenda == null) continue;
+            foreach (var r in prenda.Rasgos)
+                if (!_rasgos.Contains(r)) _rasgos.Add(r);
+        }
     }
 
     void Awake()
@@ -208,7 +183,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
                 go.SetActive(false);
         
         idx.Clear();
-        ActualizarBonos();
+        ActualizarRasgos();
         
         // Reactiva solo las que estaban activas y registra su índice
         foreach (var kvp in activePartsDetected)
@@ -296,7 +271,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
         foreach (var list in parts.Values)
             foreach (var go in list) go.SetActive(false);
         idx.Clear();
-        ActualizarBonos();
+        ActualizarRasgos();
     }
 
     void EnsureHolderActive(string holderName)
@@ -338,7 +313,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
             foreach (var go in list)
                 go.SetActive(false);
         idx.Clear();
-        ActualizarBonos();
+        ActualizarRasgos();
     }
 
     public void ApplySelection(Dictionary<PartCategory, string> sel)
@@ -407,7 +382,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
                 kv.Value[i].SetActive(false);
         }
         idx.Clear();
-        ActualizarBonos();
+        ActualizarRasgos();
 
         ApplySelection(new Dictionary<PartCategory, string>(_initialSelection));
     }
@@ -535,7 +510,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
         SetByName(PartCategory.Arrows, null);
     }
         }
-        finally { ActualizarBonos(); }
+        finally { ActualizarRasgos(); }
     }
 
 

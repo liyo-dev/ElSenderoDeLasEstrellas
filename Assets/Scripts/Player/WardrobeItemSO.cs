@@ -15,8 +15,11 @@ public class WardrobeItemSO : ScriptableObject
     [TextArea]
     [SerializeField] private string description;
     [SerializeField] private Sprite icon;
-    [Tooltip("Estadísticas que aporta esta prenda mientras está equipada.")]
-    [SerializeField] private Estadisticas bonos;
+    [Tooltip("Rasgos que da esta prenda mientras está puesta (RasgosDePrenda). Sin rasgos: solo cambia el aspecto.")]
+    [SerializeField] private List<RasgoDePrenda> rasgos = new();
+    [Tooltip("Quién se la puede poner. Vacío: todos (la ropa de la tienda). Las prendas hechas a la medida de un " +
+             "personaje (su traje, su capa) solo para él.")]
+    [SerializeField] private PartyControlManager.CharacterSlot[] soloPara = new PartyControlManager.CharacterSlot[0];
 
     static readonly Dictionary<string, WardrobeItemSO> Registry = new Dictionary<string, WardrobeItemSO>();
 
@@ -26,7 +29,11 @@ public class WardrobeItemSO : ScriptableObject
     public string DisplayName => string.IsNullOrEmpty(displayName) ? partName : displayName;
     public string Description => description;
     public Sprite Icon => icon;
-    public Estadisticas Bonos => bonos;
+    public IReadOnlyList<RasgoDePrenda> Rasgos => rasgos ?? (rasgos = new List<RasgoDePrenda>());
+
+    /// <summary>¿Se la puede poner ese personaje? Sin restricción (<c>soloPara</c> vacío), cualquiera.</summary>
+    public bool PuedeLlevarla(PartyControlManager.CharacterSlot personaje)
+        => soloPara == null || soloPara.Length == 0 || System.Array.IndexOf(soloPara, personaje) >= 0;
 
     public static WardrobeItemSO FindPart(PartCategory category, string part)
     {

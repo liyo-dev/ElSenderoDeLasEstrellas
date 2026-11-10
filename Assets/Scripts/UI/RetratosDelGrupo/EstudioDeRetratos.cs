@@ -86,10 +86,20 @@ namespace Sendero.UI
             public int estadoBase = EstadoNormal;
             public float finDeReaccion;
             public Dictionary<PartCategory, string> ropaAplicada;
+            // Cuerpo entero (menú de Equipo): otra pareja de cámaras con el personaje completo.
+            public Camera camaraCuerpo, camaraCuerpoFondo;
+            public RenderTexture texturaCuerpo, texturaCuerpoFondo;
+            public HashSet<object> miranCuerpo;
+            public bool cuerpoVisible;
+            public float giroDelCuerpo;
+            public Quaternion rotacionBase;
+            public bool Activa => visible || cuerpoVisible;
         }
 
         private readonly Copia[] _copias = new Copia[3];
         private readonly bool[] _fallida = new bool[3];
+        private readonly bool[] _loMiraElHud = new bool[3];
+        private readonly HashSet<object>[] _loMiran = new HashSet<object>[3];
         private Light[] _luces;
         private Light _solApagado;
         private int _camarasVisibles;
@@ -109,28 +119,159 @@ namespace Sendero.UI
             return true;
         }
 
+        /// Lo pide el HUD (un retrato por personaje). Se suma a quien lo pida con <see cref="MostrarPara"/>.
         public void Mostrar(Slot personaje, bool visible)
         {
+            int i = (int)personaje;
+            _loMiraElHud[i] = visible;
+            AplicarVisibilidad(i);
+        }
+
+        /// Otra pieza de UI (el informe de victoria) que enseña el retrato vivo de un personaje: la
+        /// copia se filma mientras la mire el HUD o alguien que la haya pedido aquí con su clave.
+        public void MostrarPara(Slot personaje, object quien, bool visible)
+        {
+            if (quien == null) return;
+            int i = (int)personaje;
+            var mirones = _loMiran[i] ??= new HashSet<object>();
+            if (visible) mirones.Add(quien); else mirones.Remove(quien);
+            AplicarVisibilidad(i);
+        }
+
+        /// La imagen viva del personaje con la cara que ya tenga (la que le haya puesto el HUD), sin
+        /// cambiársela. False si el estudio no está o la copia no se puede crear.
+        public bool TryObtenerSinCambiarCara(Slot personaje, out ImagenDeRetrato imagen)
+        {
+            imagen = default;
+            if (!isActiveAndEnabled) return false;
+            var c = Asegurar((int)personaje);
+            if (c == null) return false;
+            imagen = new ImagenDeRetrato(c.textura, new Rect(0f, 0f, 1f, 1f), 1f, fraccionBajoElBorde, c.texturaDelFondo);
+            return true;
+        }
+
+        // ─── Cuerpo entero ─────────────────────────────────────────────────────
+
+        /// El personaje de cuerpo entero (para el menú de Equipo), con la ropa que lleva. Se filma
+        /// mientras alguien lo pida con <see cref="MostrarCuerpoEnteroPara"/>.
+        public bool TryObtenerCuerpoEntero(Slot personaje, out ImagenDeRetrato imagen)
+        {
+            imagen = default;
+            if (!isActiveAndEnabled) return false;
+            var c = Asegurar((int)personaje);
+            if (c == null) return false;
+            CrearCamarasDeCuerpo(c);
+            float aspecto = c.texturaCuerpo.width / (float)c.texturaCuerpo.height;
+            imagen = new ImagenDeRetrato(c.texturaCuerpo, new Rect(0f, 0f, 1f, 1f), aspecto, 0f, c.texturaCuerpoFondo);
+            return true;
+        }
+
+        public void MostrarCuerpoEnteroPara(Slot personaje, object quien, bool visible)
+        {
+            if (quien == null) return;
+            int i = (int)personaje;
+            var c = visible && isActiveAndEnabled ? Asegurar(i) : _copias[i];
+            if (c == null) return;
+            c.miranCuerpo ??= new HashSet<object>();
+            if (visible) c.miranCuerpo.Add(quien); else c.miranCuerpo.Remove(quien);
+            bool ver = c.miranCuerpo.Count > 0;
+            if (ver == c.cuerpoVisible || c.raiz == null) return;
+            if (ver) CrearCamarasDeCuerpo(c);
+            c.cuerpoVisible = ver;
+            _camarasVisibles += ver ? 1 : -1;
+            if (c.camaraCuerpo != null) c.camaraCuerpo.enabled = ver;
+            if (c.camaraCuerpoFondo != null) c.camaraCuerpoFondo.enabled = ver;
+            if (ver)
+            {
+                c.rotacionBase = c.raiz.transform.rotation;
+                c.giroDelCuerpo = 0f;
+                if (!c.raiz.activeSelf) c.raiz.SetActive(true);
+                PonerEstado(c, c.estadoBase, 0f);
+                SincronizarRopa(i, c);
+            }
+            else
+            {
+                c.raiz.transform.rotation = c.rotacionBase;
+                QuitarPruebas((Slot)i);
+                if (!c.visible && c.raiz.activeSelf) c.raiz.SetActive(false);
+            }
+        }
+
+        /// Gira la copia de cuerpo entero (stick derecho en el menú de Equipo).
+        public void GirarCuerpoEntero(Slot personaje, float grados)
+        {
             var c = _copias[(int)personaje];
-            if (c == null) { if (visible && isActiveAndEnabled) c = Asegurar((int)personaje); if (c == null) return; }
+            if (c == null || !c.cuerpoVisible || c.raiz == null) return;
+            c.giroDelCuerpo += grados;
+            c.raiz.transform.rotation = Quaternion.Euler(0f, c.giroDelCuerpo, 0f) * c.rotacionBase;
+        }
+
+        /// Se prueba una prenda en la copia (no en el personaje de verdad): para ver cómo queda
+        /// antes de ponérsela. <see cref="QuitarPruebas"/> vuelve a la ropa real.
+        public void ProbarPrenda(Slot personaje, PartCategory categoria, string pieza)
+        {
+            var c = _copias[(int)personaje];
+            if (c == null || c.ropa == null) return;
+            c.ropa.SetByName(categoria, pieza);
+            c.ropa.RefreshRendererBoundsAfterAppearanceChange();
+        }
+
+        public void QuitarPruebas(Slot personaje)
+        {
+            int i = (int)personaje;
+            var c = _copias[i];
+            if (c == null) return;
+            c.ropaAplicada = null;
+            SincronizarRopa(i, c);
+        }
+
+        private void CrearCamarasDeCuerpo(Copia c)
+        {
+            if (c.camaraCuerpo != null) return;
+            bool estaba = c.raiz.activeSelf;
+            if (!estaba) c.raiz.SetActive(true);
+            var limites = Limites(c.raiz);
+            if (!estaba) c.raiz.SetActive(false);
+            float alto = limites.size.y * 1.1f;
+            var centro = limites.center;
+            var vista = Quaternion.Euler(inclinacion * 0.5f, giro + 180f, 0f);
+            float distancia = Mathf.Max(limites.size.magnitude, 0.5f) * 2f;
+            var posicion = centro - vista * Vector3.forward * distancia;
+            int layer = LayerMask.NameToLayer(capa);
+            int mascara = layer >= 0 ? 1 << layer : ~0;
+            c.camaraCuerpo = CrearCamara(c.raiz.name + " (cuerpo)", posicion, vista, alto * 0.5f, distancia, mascara, Color.black, out c.texturaCuerpo, 600, 800);
+            c.camaraCuerpoFondo = CrearCamara(c.raiz.name + " (cuerpo, fondo)", posicion, vista, alto * 0.5f, distancia, mascara, Color.white, out c.texturaCuerpoFondo, 600, 800);
+        }
+
+        private void AplicarVisibilidad(int i)
+        {
+            bool visible = _loMiraElHud[i] || (_loMiran[i] != null && _loMiran[i].Count > 0);
+            var c = _copias[i];
+            if (c == null) { if (visible && isActiveAndEnabled) c = Asegurar(i); if (c == null) return; }
             if (c.visible == visible) return;
             // Al salir del Play, el retrato puede pedir que lo escondan con las copias ya destruidas.
             if (c.raiz == null || c.camara == null || c.camaraDelFondo == null) return;
             c.visible = visible;
             _camarasVisibles += visible ? 1 : -1;
-            if (c.raiz.activeSelf != visible) c.raiz.SetActive(visible);
+            bool activa = visible || c.cuerpoVisible;
+            if (c.raiz.activeSelf != activa) c.raiz.SetActive(activa);
             c.camara.enabled = visible;
             c.camaraDelFondo.enabled = visible;
             // El que acaba de aparecer es el siguiente en dibujarse.
-            if (visible) _turno = ((int)personaje + _copias.Length - 1) % _copias.Length;
-            if (visible) { PonerEstado(c, c.estadoBase, 0f); SincronizarRopa((int)personaje, c); }
+            if (visible) _turno = (i + _copias.Length - 1) % _copias.Length;
+            if (visible) { PonerEstado(c, c.estadoBase, 0f); SincronizarRopa(i, c); }
         }
 
         public void Reaccionar(Slot personaje, ReaccionDeRetrato reaccion)
         {
             var c = _copias[(int)personaje];
             if (c == null || !c.visible || c.expresion == ExpresionDeRetrato.Caido) return;
-            int estado = reaccion == ReaccionDeRetrato.Golpe ? EstadoGolpe : EstadoSaludo;
+            int estado = reaccion switch
+            {
+                ReaccionDeRetrato.Golpe => EstadoGolpe,
+                ReaccionDeRetrato.Victoria => EstadoVictoria,
+                _ => EstadoSaludo
+            };
             PlayOnce(c, estado);
             if (c.cara != null)
                 c.cara.Reaccionar(reaccion == ReaccionDeRetrato.Golpe ? NPCEmotion.Scared : NPCEmotion.Happy, 0.7f);
@@ -144,21 +285,40 @@ namespace Sendero.UI
             DontDestroyOnLoad(gameObject);
         }
 
+        /// El estudio en marcha (el de Start), para la UI que quiere retratos vivos fuera del HUD.
+        public static EstudioDeRetratos Activo { get; private set; }
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics() => Activo = null;
+#endif
+
         private void OnEnable()
         {
+            Activo = this;
             RenderPipelineManager.beginCameraRendering += AntesDeDibujar;
             RenderPipelineManager.endCameraRendering += DespuesDeDibujar;
         }
 
         private void OnDisable()
         {
+            if (Activo == this) Activo = null;
             RenderPipelineManager.beginCameraRendering -= AntesDeDibujar;
             RenderPipelineManager.endCameraRendering -= DespuesDeDibujar;
             RestaurarSol();
             for (int i = 0; i < _copias.Length; i++)
             {
                 var c = _copias[i];
-                if (c == null || !c.visible) continue;
+                if (c == null) continue;
+                if (c.cuerpoVisible)
+                {
+                    c.cuerpoVisible = false;
+                    c.miranCuerpo?.Clear();
+                    if (c.camaraCuerpo != null) c.camaraCuerpo.enabled = false;
+                    if (c.camaraCuerpoFondo != null) c.camaraCuerpoFondo.enabled = false;
+                    if (c.raiz != null) c.raiz.transform.rotation = c.rotacionBase;
+                }
+                if (!c.visible) { if (c.raiz != null) c.raiz.SetActive(false); continue; }
                 c.visible = false;
                 if (c.camara != null) c.camara.enabled = false;
                 if (c.camaraDelFondo != null) c.camaraDelFondo.enabled = false;
@@ -177,6 +337,10 @@ namespace Sendero.UI
                 if (c.camaraDelFondo != null) c.camaraDelFondo.targetTexture = null;
                 if (c.textura != null) { c.textura.Release(); Destroy(c.textura); }
                 if (c.texturaDelFondo != null) { c.texturaDelFondo.Release(); Destroy(c.texturaDelFondo); }
+                if (c.camaraCuerpo != null) c.camaraCuerpo.targetTexture = null;
+                if (c.camaraCuerpoFondo != null) c.camaraCuerpoFondo.targetTexture = null;
+                if (c.texturaCuerpo != null) { c.texturaCuerpo.Release(); Destroy(c.texturaCuerpo); }
+                if (c.texturaCuerpoFondo != null) { c.texturaCuerpoFondo.Release(); Destroy(c.texturaCuerpoFondo); }
                 if (c.raiz != null) Destroy(c.raiz);
             }
         }
@@ -189,14 +353,14 @@ namespace Sendero.UI
             for (int i = 0; i < _copias.Length; i++)
             {
                 var c = _copias[i];
-                if (c == null || !c.visible || c.finDeReaccion <= 0f || ahora < c.finDeReaccion) continue;
+                if (c == null || !c.Activa || c.finDeReaccion <= 0f || ahora < c.finDeReaccion) continue;
                 c.finDeReaccion = 0f;
                 PonerEstado(c, c.estadoBase, fundido);
             }
             if (ahora < _proximaRopa) return;
             _proximaRopa = ahora + Mathf.Max(0.25f, sincronizarRopaCada);
             for (int i = 0; i < _copias.Length; i++)
-                if (_copias[i] != null && _copias[i].visible) SincronizarRopa(i, _copias[i]);
+                if (_copias[i] != null && _copias[i].Activa) SincronizarRopa(i, _copias[i]);
         }
 
         /// Deja encendidas solo las dos cámaras del retrato al que le toca este fotograma.
@@ -285,7 +449,7 @@ namespace Sendero.UI
         /// copia comparten posición, encuadre y capa y solo cambian el fondo; el retrato compara sus
         /// dos imágenes para quedarse con la transparencia.
         private Camera CrearCamara(string nombre, Vector3 posicion, Quaternion rotacion, float tamano,
-            float distancia, int mascara, Color fondo, out RenderTexture textura)
+            float distancia, int mascara, Color fondo, out RenderTexture textura, int ancho = 0, int alto = 0)
         {
             var camGo = new GameObject("Cámara de retrato de " + nombre, typeof(Camera), typeof(UniversalAdditionalCameraData));
             camGo.transform.SetParent(transform, false);
@@ -312,7 +476,7 @@ namespace Sendero.UI
             datos.volumeLayerMask = 0;
             int renderer = IndiceDelRendererDeRetratos();
             if (renderer >= 0) datos.SetRenderer(renderer);
-            textura = new RenderTexture(resolucion, resolucion, 24, RenderTextureFormat.ARGB32)
+            textura = new RenderTexture(ancho > 0 ? ancho : resolucion, alto > 0 ? alto : resolucion, 24, RenderTextureFormat.ARGB32)
                 { name = "Retrato vivo de " + nombre, antiAliasing = 4 };
             textura.Create();
             camara.targetTexture = textura;
@@ -461,7 +625,10 @@ namespace Sendero.UI
         private bool EsCamaraDelEstudio(Camera camara)
         {
             for (int i = 0; i < _copias.Length; i++)
-                if (_copias[i] != null && (_copias[i].camara == camara || _copias[i].camaraDelFondo == camara)) return true;
+            {
+                var c = _copias[i];
+                if (c != null && (c.camara == camara || c.camaraDelFondo == camara || c.camaraCuerpo == camara || c.camaraCuerpoFondo == camara)) return true;
+            }
             return false;
         }
 

@@ -169,8 +169,11 @@ torno("traje", "Tunica", [(0.715, 0.13), (0.68, 0.185), (0.6, 0.205), (0.52, 0.1
 toro("traje", "Ribete", (0, -0.01, 0.272), 0.243, 0.013, "Dorado", None, escala=(1, 0.92, 1))
 # Cinturón con hebilla-gema y bolsitas
 toro("traje", "Cinturon", (0, -0.01, 0.46), 0.19, 0.022, "Cuero", None, escala=(1, 0.92, 1))
-esfera("traje", "Hebilla", (0, -0.19, 0.46), (0.045, 0.02, 0.04), "Dorado", None)
-esfera("traje", "GemaHebilla", (0, -0.205, 0.46), (0.025, 0.012, 0.025), "Gema", None)
+# La hebilla y su gema llevan los pesos medios de la túnica en el cinturón, iguales en todos sus vértices: copiar los
+# del cuerpo vértice a vértice los mezcla de forma distinta en una pieza tan pequeña y la estira al mover el tronco.
+PESOS_CINTURON = {"pelvis": 0.74, "spine_03": 0.26}
+esfera("traje", "Hebilla", (0, -0.19, 0.46), (0.045, 0.02, 0.04), "Dorado", PESOS_CINTURON)
+esfera("traje", "GemaHebilla", (0, -0.205, 0.46), (0.025, 0.012, 0.025), "Gema", PESOS_CINTURON)
 for lado, s in (("l", 1), ("r", -1)):
     esfera("traje", f"Bolsita_{lado}", (0.17 * s, -0.08, 0.43), (0.045, 0.035, 0.05), "Cuero", {"pelvis": 1.0})
     esfera("traje", f"GemaBolsita_{lado}", (0.18 * s, -0.115, 0.44), (0.016, 0.01, 0.016), "Gema", {"pelvis": 1.0})

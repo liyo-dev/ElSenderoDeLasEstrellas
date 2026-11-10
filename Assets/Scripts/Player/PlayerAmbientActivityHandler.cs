@@ -234,11 +234,12 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         leaving.Release(transform);
         leaving.DetachProp();
 
+        Vector3 posicionDePie = CalcularPosicionDePie(leaving);
         string exitState = GetActivityExitState(leaving.activityType);
         if (!string.IsNullOrEmpty(exitState) && HasState(exitState))
-            StartCoroutine(PlayExitAndUnlock(exitState));
+            StartCoroutine(PlayExitAndUnlock(exitState, posicionDePie));
         else
-            StartCoroutine(ReturnToGroundAndUnlock());
+            StartCoroutine(ReturnToGroundAndUnlock(posicionDePie, 0.12f));
     }
 
     // ── Internals ────────────────────────────────────────────────────────────────
@@ -361,26 +362,25 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         _activityCoroutine = null;
     }
 
-    private IEnumerator PlayExitAndUnlock(string exitState)
+    // El cuerpo baja del asiento al suelo mientras dura la animación de levantarse, no después:
+    // así no queda un instante de pie a la altura del asiento (flotando). Ver INC-942.
+    private IEnumerator PlayExitAndUnlock(string exitState, Vector3 posicionDePie)
     {
         CrossFade(exitState, 0.2f);
         yield return null;
-        yield return new WaitForSeconds(Mathf.Max(0.1f, GetClipLength(exitState)));
-        yield return ReturnToGroundAndUnlock();
+        yield return ReturnToGroundAndUnlock(posicionDePie, Mathf.Max(0.1f, GetClipLength(exitState)));
     }
 
-    // Vuelve suavemente a la posición de pie para que la cámara no dé un golpe seco
-    // al teleportar a Will de la altura del asiento al suelo.
-    private IEnumerator ReturnToGroundAndUnlock()
+    // Lleva al personaje suavemente a su sitio de pie (sin golpe seco de cámara) y le devuelve el control.
+    private IEnumerator ReturnToGroundAndUnlock(Vector3 posicionDePie, float duracion)
     {
-        const float duration = 0.12f;
         var startPos = transform.position;
-        for (float t = 0f; t < duration; t += Time.deltaTime)
+        for (float t = 0f; t < duracion; t += Time.deltaTime)
         {
-            transform.position = Vector3.Lerp(startPos, _preSnapPosition, t / duration);
+            transform.position = Vector3.Lerp(startPos, posicionDePie, Mathf.SmoothStep(0f, 1f, t / duracion));
             yield return null;
         }
-        transform.position = _preSnapPosition;
+        transform.position = posicionDePie;
         RestoreCC();
         // FIX (16 ago 2026): "Will se levanta de la cama pero se queda con la animación de
         // dormir puesta" — este es el camino normal de StopActivity() para actividades SIN
@@ -398,6 +398,36 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         ReturnAnimatorToLocomotion();
         _actionManager?.PopMode(ActionMode.UsingWorldPoint);
     }
+
+    // Sitio de pie al levantarse: en el suelo delante del asiento. Si ahí no hay suelo a la altura
+    // de donde estaba antes de sentarse, o hay algo a la altura del cuerpo (la mesa), vuelve a donde estaba.
+    private Vector3 CalcularPosicionDePie(NPCWorldPoint asiento)
+    {
+        Vector3 delante = asiento.PosicionAlLevantarse(transform.forward);
+        LayerMask suelo = _motor != null ? _motor.groundLayer : (LayerMask)Physics.DefaultRaycastLayers;
+
+        if (!Physics.Raycast(delante + Vector3.up * 1f, Vector3.down, out RaycastHit hit, 3f, suelo, QueryTriggerInteraction.Ignore))
+            return _preSnapPosition;
+        if (Mathf.Abs(hit.point.y - _preSnapPosition.y) > AlturaMaximaDeDesnivel)
+            return _preSnapPosition;
+
+        Vector3 abajo = hit.point + Vector3.up * (AlturaLibreDesde + RadioLibre);
+        Vector3 arriba = hit.point + Vector3.up * (AlturaLibreHasta - RadioLibre);
+        int n = Physics.OverlapCapsuleNonAlloc(abajo, arriba, RadioLibre, _bufferHueco, suelo, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++)
+        {
+            var c = _bufferHueco[i];
+            if (c.transform.IsChildOf(transform)) continue;
+            return _preSnapPosition;
+        }
+        return hit.point;
+    }
+
+    private const float AlturaMaximaDeDesnivel = 0.35f;
+    private const float AlturaLibreDesde = 0.6f;   // por encima del asiento de la silla
+    private const float AlturaLibreHasta = 1.3f;
+    private const float RadioLibre = 0.2f;
+    private readonly Collider[] _bufferHueco = new Collider[8];
 
     private void ForceRelease()
     {

@@ -55,8 +55,6 @@ public static partial class VestidoDelMundo
     private const string MuroDerruido = Tiny + "BuildingUtilityDeco/Wall01.prefab";
     private const string MuroEnL = Tiny + "BuildingUtilityDeco/Wall02.prefab";
     private const string MuroCurvo = Tiny + "BuildingUtilityDeco/Wall03.prefab";
-    /// Vano de puerta abierto en un muro (Modular Castle va a doble escala: se mide por su alto).
-    private const string Vano = ModularCastle + "doorway1.prefab";
     private const string PozoViejo = Tiny + "BuildingUtilityDeco/Well01.prefab";
     private const string ValladoRecto = Tiny + "BuildingUtilityDeco/WoodFence01.prefab";
     private const string Losas = Tiny + "Rock/CobbleStoneCircle01.prefab";
@@ -216,11 +214,12 @@ public static partial class VestidoDelMundo
         if (a != null) CopiarMaterialesDelVecino(o, a, prefab);
     }
 
-    /// Casa fuerte en ruinas: muro delantero con su vano de entrada (la puerta de un muro, nunca una puerta
-    /// suelta), muros caídos, pórtico de columnas rotas, una columna tumbada y un árbol que ha crecido dentro.
+    /// Casa fuerte en ruinas, sin puerta (INC-996): muro delantero partido con un hueco de escombro donde
+    /// estuvo la entrada, muros caídos, pórtico de columnas rotas, una columna tumbada y un árbol que ha
+    /// crecido dentro.
     private static void RecetaCasaFuerte(Obra o, Transform g, Paraje p)
     {
-        PP(o, g, p, Vano, "Vano de la entrada", 0f, 7.5f, 0f, 4.6f, Medida.Alto, hundir: 0.35f);
+        PP(o, g, p, MuroDerruido, "Entrada derrumbada", 0f, 8.2f, 8f, hundir: 1.4f, inclinar: 7f);
         PP(o, g, p, MuroDerruido, "Muro delantero", -5.3f, 7.5f, 90f, hundir: 0.5f);
         PP(o, g, p, MuroDerruido, "Muro delantero", 5.3f, 7.5f, 270f, hundir: 0.8f, inclinar: 3f);
         PP(o, g, p, MuroDerruido, "Muro derruido", -7.5f, 0.5f, 0f, hundir: 0.6f);

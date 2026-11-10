@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_Cap4_09_LaBota
   m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
   displayName: 'Cap. 4: la bota'
-  summary: "\xABEso no sale en ning\xFAn mapa\xBB. Fin de la Primera Parte."
+  summary: "\xABTampoco sal\xEDa en el mapa que alguien ir\xEDa a por mi bota\xBB. Fin de la Primera Parte."
   signalIn: CAP4_BOTA_START
   signalOut: CAP4_BOTA_DONE
   musicId: 

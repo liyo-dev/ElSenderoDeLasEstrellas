@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Señales", "Esperar señal", "Espera una señal custom (sticky: si ya se disparó, pasa de largo).")]
 [SavePoint("Seguro guardar mientras espera eventos")]
-public sealed class WaitCustomEventNode : NarrativeNode
+public sealed class WaitCustomEventNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Signal)]
     public string eventKey;
@@ -14,6 +14,9 @@ public sealed class WaitCustomEventNode : NarrativeNode
     public bool acceptEarlierEvent = true;
 
     public override void Describe(INarrativeNodeDescriber d) => d.Signal(eventKey, SignalRole.Escucha);
+
+    /// Haber pasado de este nodo quiere decir que la señal llegó.
+    public void Project(INarrativeStateWriter state) => state.MarkSignalRaised(eventKey);
 
     public override void CollectWarnings(List<string> warnings)
     {

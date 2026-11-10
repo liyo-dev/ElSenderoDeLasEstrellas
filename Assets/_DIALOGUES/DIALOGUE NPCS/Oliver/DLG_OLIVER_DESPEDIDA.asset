@@ -35,6 +35,13 @@ MonoBehaviour:
     lookAtOverrideId: 
     emotion: 15
   - speakerNameId: CHAR_OLIVER
+    textId: DLG_OLIVER_DESPEDIDA_05
+    text: "Y si por ah\xED ves algo raro, tr\xE1emelo. Para la colecci\xF3n."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 13
+  - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_DESPEDIDA_04
     text: 
     portrait: {fileID: 0}

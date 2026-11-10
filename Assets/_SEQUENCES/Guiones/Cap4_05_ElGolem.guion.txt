@@ -1,4 +1,4 @@
-# Cap. 4 · Camino del Reino: charla sobre el miedo; desde el saliente, Liam traza el pacto y el Gólem sale de la tierra.
+﻿# Cap. 4 · Camino del Reino: charla sobre el miedo; desde el saliente, Liam traza el pacto y el Gólem sale de la tierra.
 GUION Cap4_05_ElGolem
 ESCENA MainWorld
 ZONA Cap4Golem -104 70 28
@@ -25,6 +25,7 @@ will en p_will mirando centro
 & liam en p_liam mirando centro
 & bandas
 plano dos will estela
+will dice CAP4_GOLEM_05 mira=estela cara=preocupado
 estela dice CAP4_GOLEM_01 cara=pensativo
 will dice CAP4_GOLEM_02 cara=confuso
 estela dice CAP4_GOLEM_03 cara=molesto

@@ -1,0 +1,471 @@
+# Marcas de MainWorld
+
+## Marcas (SpawnAnchor)
+- Cap2_OliverCharla: (-2,6, 26,3, -144) · GAMEPLAY/Oficios del mercado/Cap2_OliverCharla
+- Cap2_VictoriaCharla: (-1, 26,3, -144,1) · GAMEPLAY/Oficios del mercado/Cap2_VictoriaCharla
+- Cap3_Acampada: (-122,5, 13,1, -214,5) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Acampada
+- Cap3_Aldea: (262, 5,2, -414) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Aldea
+- Cap3_Amanecer: (-96, 24,7, -126) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Amanecer
+- Cap3_Claro: (-215, 21,5, -125) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Claro
+- Cap3_Claro_Llegada: (-212, 21,7, -129) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Claro_Llegada
+- Cap3_LlegadaCosta: (222, 8,5, -378) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_LlegadaCosta
+- Cap3_Matorral: (-205, 22, -137) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Matorral
+- Cap3_Posada: (279, 5, -425,4) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Posada
+- Cap3_Puesto: (-90, 25,1, -124) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Puesto
+- Cap3_Ruta1: (-150, 14,6, -192) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Ruta1
+- Cap3_Ruta2: (-182, 20,3, -162) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Ruta2
+- Cap3_Ruta3: (-203, 21,9, -140) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Ruta3
+- Cap3_Seguir_Vuelta: (-112, 12,9, -224) · Capítulos de la demo (generado)/Cap3 · marcas/Cap3_Seguir_Vuelta
+- Cap4_Bifurcacion: (-180, 30,5, 40) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Bifurcacion
+- Cap4_Bosque_Entrada: (-140, 22,3, -110) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Bosque_Entrada
+- Cap4_Bota: (-184, 26,6, -24) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Bota
+- Cap4_Campana: (-330, 36,9, 86) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Campana
+- Cap4_Campana_Salida: (-330, 36, 60) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Campana_Salida
+- Cap4_Casa: (-346, 36, 62) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Casa
+- Cap4_Claro_Estela: (-322, 36,3, 66) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Claro_Estela
+- Cap4_Claro_Will: (-313, 36, 62) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Claro_Will
+- Cap4_Golem_Entrada: (-125, 31,8, 60) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Golem_Entrada
+- Cap4_LiamBifurcacion: (-176,5, 29,9, 49,5) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_LiamBifurcacion
+- Cap4_LiamLoma: (-300, 39,1, 98) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_LiamLoma
+- Cap4_LiamSaliente: (-110, 38,2, 86) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_LiamSaliente
+- Cap4_Manzana: (-104, 32,5, 52) · Capítulos de la demo (generado)/Cap4 · marcas/Cap4_Manzana
+- Eldran_Bosque: (25,8, 27, -82,6) · GAMEPLAY/ANCHORS/Anchor_Eldran_Bosque
+- Eldran_JuntoACasaDeWill: (0,6, 26,3, -130,9) · Marcas de la historia (Cap. 2)/Eldran_JuntoACasaDeWill
+- Eldran_Plaza: (-1,9, 26,4, -142,8) · --- NPC SPAWN POINTS ---/SP_Eldran
+- Eldran_PuntoGuardado: (-5,2, 26,3, -81,1) · GAMEPLAY/ANCHORS/Anchor_Eldran_PuntoGuardado
+- House_FrontDoor: (-0,2, 27, -132,5) · GAMEPLAY/ANCHORS/House_FrontDoor
+- PiedraAncestral: (565, 18,1, -519,5) · WORLD/Hitos del mapa — faro, velero, puentes, cascada/Santuario ancestral — recinto de piedra y ruinas/Umbral del Sendero (generado)/Ancla de prueba — PiedraAncestral
+
+## Puntos del roster (NpcSpawnPoint)
+- SPAWN__ESTELA: (-322, 36,3, 66)
+- SPAWN__LIAM: (-300, 39,1, 98)
+- SPAWN_Aldona: (6,7, 29,4, -122,1)
+- SPAWN_Boticaria: (22,5, 26,3, -134,8)
+- SPAWN_Contrabandista1: (-105, 14,6, -228)
+- SPAWN_Contrabandista2: (-218, 21,5, -127)
+- SPAWN_ContrabandistaJefe: (-213, 21,6, -128)
+- SPAWN_Eldran: (-1,9, 26,4, -142,8)
+- SPAWN_Erika: (-19,9, 23,4, -125,5)
+- SPAWN_GuardiaCruce1: (-92, 24,9, -118)
+- SPAWN_GuardiaCruce2: (-93, 24,7, -129)
+- SPAWN_Lucia: (277,2, 5, -425)
+- SPAWN_Oliver: (6, 26,4, -143,2)
+- SPAWN_Posadero: (281,2, 5, -424,6)
+- SPAWN_Renard: (-236,4, 26,3, 2,5)
+- SPAWN_Sargento: (-87, 25, -121)
+- SPAWN_Tabernera: (1244,9, 1000, 3,5)
+- SPAWN_Tomasa: (16,7, 26,4, -136,8)
+- SPAWN_Victoria: (-1, 26,4, -144,1)
+
+## Zonas y raíces
+- WORLD: (0, 0, 0)
+- CONFIG: (0, 0, 0)
+- GAMEPLAY: (0, 0, 0)
+- --- NPC SPAWN POINTS ---: (0, 0, 0)
+- Tesoros del pueblo (generado): (0, 0, 0)
+- Marcas de la historia (Cap. 2): (0, 0, 0)
+- Capítulos de la demo (generado): (0, 0, 0)
+
+## Filtro «salida|exit|puerta|gate|camino|road|path|puente|bridge|pesquer|fisher|savepoint|village|pueblo|zona»
+- Pueblo inicial — Will — Demo 09: (6,9, 26,3, -131,7) · WORLD/Pueblo inicial — Will — Demo 09
+- Pueblo pesquero — calles y muelles: (0, 0, 0) · WORLD/Pueblo pesquero — calles y muelles
+- Pueblo vecino — terraza sobre la playa: (0, 0, 0) · WORLD/Pueblo vecino — terraza sobre la playa
+- Vivienda del pueblo vecino 1: (309,2, 23,2, -102,4) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 1
+- Vivienda del pueblo vecino 2: (330, 23,3, -93) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 2
+- Vivienda del pueblo vecino 3: (352,2, 23,2, -103,1) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 3
+- Vivienda del pueblo vecino 4: (357,6, 23,3, -127,8) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 4
+- Vivienda del pueblo vecino 5: (305,8, 23,2, -127,9) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 5
+- Vivienda del pueblo vecino 6: (336,5, 23,2, -141,1) · WORLD/Pueblo vecino — terraza sobre la playa/Vivienda del pueblo vecino 6
+- Pozo del pueblo vecino: (339, 23, -115) · WORLD/Pueblo vecino — terraza sobre la playa/Pozo del pueblo vecino
+- Plaza del pueblo vecino — GDD 15: (330, 23, -115) · WORLD/Plaza del pueblo vecino — GDD 15
+- Descanso del camino — arena Golem GDD 8: (-95, 32, 65) · WORLD/Descanso del camino — arena Golem GDD 8
+- Huerta del pueblo 1: (84, 24, -177) · WORLD/Huerta del pueblo 1
+- Huerta del pueblo 2: (102, 24, -177) · WORLD/Huerta del pueblo 2
+- Huerta del pueblo 3: (120, 24, -177) · WORLD/Huerta del pueblo 3
+- Huerto del pueblo vecino: (300, 23, -140) · WORLD/Huerto del pueblo vecino
+- Huerto del pueblo vecino 2: (360, 23, -92) · WORLD/Huerto del pueblo vecino 2
+- Hitos del mapa — faro, velero, puentes, cascada: (0, 0, 0) · WORLD/Hitos del mapa — faro, velero, puentes, cascada
+- Puente_camino_2 — tablero de 4 m y accesos a ras: (0, 0, 0) · WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_2 — tablero de 4 m y accesos a ras
+- Puente_camino_4 — tablero de 4 m y accesos a ras: (0, 0, 0) · WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_4 — tablero de 4 m y accesos a ras
+- Puente_camino_5 — tablero de 4 m y accesos a ras: (0, 0, 0) · WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_5 — tablero de 4 m y accesos a ras
+- Puente_camino_8 — tablero de 4 m y accesos a ras: (0, 0, 0) · WORLD/Hitos del mapa — faro, velero, puentes, cascada/Puente_camino_8 — tablero de 4 m y accesos a ras
+- Vida de los pueblos — huertas, enseres y claros: (0, 0, 0) · WORLD/Vida de los pueblos — huertas, enseres y claros
+- Huerto del pueblo vecino: (300, 0, -140) · WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del pueblo vecino
+- Huerto del pueblo vecino 2: (360, 0, -92) · WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del pueblo vecino 2
+- Obstáculo: Puerta Real, jamba oeste: (83,8, 106,9, 241,7) · WORLD/Vestido del mundo (generado)/Reino/Muralla/Obstáculos de navegación/Obstáculo: Puerta Real, jamba oeste
+- Obstáculo: Puerta Real, jamba este: (101,9, 106,9, 241,7) · WORLD/Vestido del mundo (generado)/Reino/Muralla/Obstáculos de navegación/Obstáculo: Puerta Real, jamba este
+- Puerta Real: (78,8, 97,4, 241,7) · WORLD/Vestido del mundo (generado)/Reino/Muralla/Puerta Real
+- Cuerpo de guardia de la Puerta Real: (67,1, 104,1, 251,1) · WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Cuerpo de guardia de la Puerta Real
+- Posada del Camino Real: (68,3, 104,1, 269,1) · WORLD/Vestido del mundo (generado)/Reino/Casas nuevas/Posada del Camino Real
+- Puerta Real: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Reino/Puerta Real
+- Estandarte de la Puerta Real: (88,3, 103,1, 246,6) · WORLD/Vestido del mundo (generado)/Reino/Puerta Real/Estandarte de la Puerta Real
+- Estandarte de la Puerta Real: (97,4, 104,2, 246,6) · WORLD/Vestido del mundo (generado)/Reino/Puerta Real/Estandarte de la Puerta Real
+- Rótulo de «Posada del Camino Real»: (71,8, 106,2, 266,6) · WORLD/Vestido del mundo (generado)/Reino/Rótulos de los oficios/Rótulo de «Posada del Camino Real»
+- Rótulo de «Posada del Camino Real»: (71,8, 106,2, 266,4) · WORLD/Vestido del mundo (generado)/Reino/Rótulos de los oficios/Rótulo de «Posada del Camino Real»
+- Puertas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Reino/Puertas
+- Maceta de la puerta: (-40,4, 112, 287,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-40,4, 112, 284,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-40,5, 112, 282,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-40,5, 112, 281,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (40,4, 112, 335,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (40,4, 112, 338,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-68,2, 104, 253) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-71,8, 104, 253) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-73,3, 104, 253,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Maceta de la puerta: (-71,8, 104, 267,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-68,2, 104, 267,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-73,6, 104, 267,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (40,8, 104, 252,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (37,2, 104, 252,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (37,2, 104, 270) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (40,8, 104, 270) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-37,8, 104, 254,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-37,8, 104, 258,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-37,7, 103,5, 253,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-37,7, 103, 252,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-50,2, 104, 255,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-53,8, 104, 255,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-55,3, 104, 255,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-56,3, 104, 255,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-60,2, 104, 255,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-63,8, 104, 255,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-76,2, 104, 255,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-79,8, 104, 255,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-74,7, 104, 255,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-73,7, 104, 255,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-64,1, 104, 263) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-60,5, 104, 263) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-65,9, 104, 262,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (27,1, 104, 261,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (30,7, 104, 261,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (32,5, 104, 261,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (45,7, 104, 261,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (49,3, 104, 261,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (50,8, 104, 261,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (51,8, 104, 261,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (56,3, 104,1, 254,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (52,7, 104, 254,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (50,9, 104, 254,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (72, 104, 249,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (72, 104, 252,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (72,2, 104, 247,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (68, 104,2, 265,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (71,6, 104,3, 265,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (73,1, 104,2, 265,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (74,1, 104,3, 265,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-31,2, 112, 307,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-31,2, 112, 310,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-31, 112, 312,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (32,4, 112, 312,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (32,4, 112, 309,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (32,3, 112, 307,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (32,3, 112, 306,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (36,4, 112, 293,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (32,8, 112, 293,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (77,3, 112, 284,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (77,3, 112, 288,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (77,4, 111,9, 283,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (77,4, 111,8, 282,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (48, 112, 295,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (44,4, 112, 295,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (42,9, 112, 296) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (41,9, 112, 296) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (60,7, 112, 295,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (57,1, 112, 295,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (55,3, 112, 295,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (44,2, 112, 304) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (47,8, 112, 304) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (49,3, 112, 303,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (50,3, 112, 303,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (61,9, 112, 304,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (65,5, 112, 303,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (60,1, 112, 304,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (75,7, 112, 302,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (78,9, 112, 300,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (85,9, 111,7, 297,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (88,4, 111,5, 294,9) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (89,6, 111,3, 293,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-45,1, 112, 294,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-48,7, 112, 294,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-50,2, 112, 294,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-51,2, 112, 294,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-56,2, 112, 296,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-59,8, 112, 296,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-61,6, 112, 296,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-69,2, 112, 296,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-72,8, 112, 296,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-74,6, 112, 296,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-48,5, 112, 303,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-44,9, 112, 303,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-43,1, 112, 303,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-65,2, 112, 303,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-61,6, 112, 303,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-59,8, 112, 303,1) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-77,8, 112, 303,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-74,2, 112, 303,4) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-79,3, 112, 303,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-80,3, 112, 303,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-89,6, 112, 303,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-86, 112, 303,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-91,1, 112, 303,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-92,1, 112, 303,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-98,4, 112, 304,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-94,8, 112, 304,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (-100,2, 112, 304) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (-43,8, 112, 330,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-40,2, 112, 330,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-38,7, 112, 330,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-37,7, 112, 330,5) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (-50, 112, 327,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-50, 112, 324,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-63,3, 112, 323,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-63,3, 112, 326,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-62,3, 112, 338,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (-62,3, 112, 341,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (-62,2, 112, 336,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (-62,2, 112, 335,7) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (50,8, 112, 322,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (50,8, 112, 325,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (51, 112, 327,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (58, 112, 325,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (58, 112, 322,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (57,9, 112, 327,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (57,9, 112, 328,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (66,9, 112, 326,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (66,9, 112, 323,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (67,7, 112, 340,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (67,7, 112, 337,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (50,7, 112, 335) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (50,7, 112, 338,6) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (57,2, 112, 337,8) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (57,2, 112, 334,2) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (57,1, 112, 339,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (57,1, 112, 340,3) · WORLD/Vestido del mundo (generado)/Reino/Puertas/Caja junto a la puerta
+- Accesos de las puertas: (0,2, 103,9, 293,9) · WORLD/Vestido del mundo (generado)/Reino/Pavimento/Accesos de las puertas
+- Pueblo pesquero: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo pesquero
+- Puertas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas
+- Maceta de la puerta: (236,2, 5, -437,8) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (239,8, 5, -437,8) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (241,6, 5, -438) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (208,2, 5, -395,2) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (211,8, 5, -395,2) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (283,2, 5, -423,1) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (286,8, 5, -423,1) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (288,6, 5, -423,3) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (303,2, 5, -436) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (306,8, 5, -436) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (301,4, 5, -436,2) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (233,2, 5, -456,4) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (236,8, 5, -456,4) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (303,2, 5, -456,4) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (306,8, 5, -456,4) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (301,7, 5, -456,5) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (300,7, 5, -456,5) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (218,2, 5, -423,7) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (221,8, 5, -423,7) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (318,2, 5, -420) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (321,8, 5, -420) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (302,2, 5, -401,1) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (302,2, 5, -404,7) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (288,8, 5, -401,2) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (288,8, 5, -404,8) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (288,7, 5, -406,3) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (288,7, 5, -407,3) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (273,7, 5, -407,7) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (273,7, 5, -404,1) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (273,8, 5, -402,6) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (273,8, 5, -401,6) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (313,3, 5, -428,6) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (313,3, 5, -432,2) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (313,1, 5, -426,8) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (285,6, 5, -432,8) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (285,6, 5, -436,4) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (285,4, 5, -431) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (225,5, 5, -437,1) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (225,5, 5, -433,5) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (225,7, 5, -438,9) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (296,3, 5, -415,9) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Maceta de la puerta: (296,3, 5, -419,5) · WORLD/Vestido del mundo (generado)/Pueblo pesquero/Puertas/Maceta de la puerta
+- Pueblo vecino: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo vecino
+- Puertas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas
+- Maceta de la puerta: (311,3, 23, -106,9) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (313,1, 23, -103,7) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (313,9, 23, -102,4) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (314,3, 23, -101,6) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (328,2, 23, -98,2) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (331,8, 23, -98,2) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (326,4, 23, -98,4) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (347,3, 23, -104,3) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (348,9, 23, -107,6) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (346,5, 23, -103) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (346,1, 23, -102,1) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (353,8, 23, -123,6) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (352,3, 23, -126,9) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (311, 23, -127,3) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (309,3, 23, -124,2) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Barril junto a la puerta: (311,8, 23, -128,6) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Barril junto a la puerta
+- Caja junto a la puerta: (312,3, 23, -129,5) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Caja junto a la puerta
+- Maceta de la puerta: (335,1, 23, -136,2) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (331,5, 23, -136,7) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (298,3, 23, -96,7) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (298,3, 23, -93,1) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (298,5, 23, -91,3) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (297,1, 23, -124,5) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (297,1, 23, -120,9) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (366,8, 23, -113,8) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (366,8, 23, -117,4) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (355,9, 23, -138,2) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (355,9, 23, -141,8) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (303,8, 23, -81,1) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (303,8, 23, -77,5) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (321,9, 23, -81,7) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Maceta de la puerta: (321,9, 23, -78,1) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (322,1, 23, -83,5) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Puertas/Banco junto a la puerta
+- Plaza del pueblo vecino: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Plaza del pueblo vecino
+- Vida del pueblo: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Pueblo vecino/Vida del pueblo
+- Puertas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas
+- Maceta de la puerta: (214, 38, 158,2) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas/Maceta de la puerta
+- Maceta de la puerta: (214, 38, 161,8) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas/Maceta de la puerta
+- Banco junto a la puerta: (214,2, 38, 163,6) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas/Banco junto a la puerta
+- Maceta de la puerta: (266,3, 38, 139,8) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas/Maceta de la puerta
+- Maceta de la puerta: (266,3, 38, 136,2) · WORLD/Vestido del mundo (generado)/Granjas de la cascada/Puertas/Maceta de la puerta
+- Parajes entre zonas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Parajes entre zonas
+- Vegetación — Alameda de cipreses del Camino 10: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Alameda de cipreses del Camino 10
+- Vegetación — Camino del puerto: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Camino del puerto
+- Vegetación — Camino de las granjas: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Camino de las granjas
+- Vegetación — Camino del Reino: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Camino del Reino
+- Vegetación — Camino del varadero: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Camino del varadero
+- Vegetación — Entrada al pueblo vecino: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Entrada al pueblo vecino
+- Vegetación — Camino del borde del bosque: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Camino del borde del bosque
+- Vegetación — Orla del pueblo vecino: (0, 0, 0) · WORLD/Vestido del mundo (generado)/Vegetación — Orla del pueblo vecino
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-588445770: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-588445770
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1242562633: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1242562633
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1457370888: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1457370888
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1095341734: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1095341734
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-670679643: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-670679643
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171101286: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171101286
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-622215853: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-622215853
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1944233604: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1944233604
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2116712850: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2116712850
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-151306728: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-151306728
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1134731293: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1134731293
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1424696774: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1424696774
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-383529146: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-383529146
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1875158276: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1875158276
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-68315543: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-68315543
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2015844949: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2015844949
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1038647615: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1038647615
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2016567792: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2016567792
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1604615587: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1604615587
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-872337041: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-872337041
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-886978617: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-886978617
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-717336065: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-717336065
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-195879774: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-195879774
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1679587172: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1679587172
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-773194482: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-773194482
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1808351418: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1808351418
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1323579262: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1323579262
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1925644532: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1925644532
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1857381876: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1857381876
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2042336894: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2042336894
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2091390692: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2091390692
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1557665472: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1557665472
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-179549512: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-179549512
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1893640470: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1893640470
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2072734580: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2072734580
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1845954385: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1845954385
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-918128064: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-918128064
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1069974288: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1069974288
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2040369309: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2040369309
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1660371492: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1660371492
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292410831: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292410831
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1700034879: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1700034879
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1678770136: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1678770136
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-955442270: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-955442270
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-419839556: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-419839556
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1515941926: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1515941926
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-478676277: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-478676277
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11807782: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11807782
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1237404658: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1237404658
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-835644257: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-835644257
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2137815452: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2137815452
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11088558: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-11088558
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1018726907: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1018726907
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1428384241: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1428384241
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2033238358: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2033238358
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-73861459: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-73861459
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1957935142: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1957935142
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1916522649: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1916522649
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-821672555: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-821672555
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-779869176: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-779869176
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1976461328: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1976461328
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1705309329: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1705309329
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1423526068: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1423526068
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1299366786: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1299366786
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1357382223: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1357382223
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1126058580: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1126058580
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-112455720: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-112455720
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-552057868: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-552057868
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292623309: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1292623309
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-502993528: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-502993528
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-388381330: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-388381330
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-604578057: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-604578057
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1245928550: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1245928550
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1778152803: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1778152803
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-298081033: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-298081033
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1977837815: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1977837815
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1725474946: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1725474946
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1956748350: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1956748350
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1354141356: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1354141356
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1107960922: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1107960922
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-841226745: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-841226745
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1454265263: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1454265263
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1275843771: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1275843771
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1140221202: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1140221202
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1046169261: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1046169261
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171053476: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-171053476
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2058267548: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2058267548
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1517614208: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1517614208
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-755186644: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-755186644
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2074180020: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2074180020
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1787387500: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-1787387500
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2052172334: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Lienzo de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-112300-2052172334
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-486097341: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-486097341
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1000690570: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1000690570
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-454130475: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-454130475
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-436201018: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-436201018
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1406043821: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-1406043821
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-2053853164: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Muralla del Reino/Torre de muralla|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-194758-2053853164
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-235453608: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-235453608
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-2104361366: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-2104361366
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-955529076: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-955529076
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-565968292: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Farol de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-167752-565968292
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-180351811: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-180351811
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-1014635298: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Mesa de encuentro|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-109958-1014635298
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1169648809: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1169648809
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-213163482: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-213163482
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1984376844: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-1984376844
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-190333535: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Asiento de plaza|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-175592-190333535
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-48013430: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-48013430
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-133352801: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-133352801
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-135461554: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-135461554
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-284488517: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-284488517
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-307348485: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-307348485
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-484784497: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-484784497
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-789853879: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-789853879
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-818716301: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-818716301
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1178403513: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1178403513
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1199642923: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1199642923
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1265352144: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1265352144
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1468414292: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1468414292
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1538763636: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1538763636
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1693870373: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1693870373
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1710052126: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1710052126
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1810337931: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1810337931
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2062532947: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2062532947
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2107573914: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-2107573914
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del Reino — terraza baja|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-204555797-0: (0, 0, 0) · WORLD/Vestido del mundo — retirado (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Huerto del Reino — terraza baja|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-204555797-0
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-207576678: (-30,7, 112, 286) · WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-207576678
+- WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1927667604: (41,3, 112, 337) · WORLD/Vestido del mundo — giro original de las casas (no tocar)/WORLD/Vida de los pueblos — huertas, enseres y claros/Maceta junto a vivienda|GlobalObjectId_V1-2-4847edc72f9f7ce49a94d9e03f0992ef-195988-1927667604
+
+Terreno Isla — terreno editable: origen (-650, -25, -650), tamaño (1300.00, 300.00, 1300.00)

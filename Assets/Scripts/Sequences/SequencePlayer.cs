@@ -38,6 +38,9 @@ public class SequencePlayer : CinematicSequencerBase
              "que queda raro aunque sea comportamiento normal.")]
     [SerializeField] private float _idleGraceAfterSequence = 3.5f;
 
+    /// El jugador ya ha vuelto a su pose normal al recuperar el control (antes de la gracia de los NPCs).
+    private bool _jugadorDevuelto;
+
     [Tooltip("Duración del fundido que retira el negro al saltar la secuencia con el botón global " +
              "de skip. El cierre genérico de skip de la clase base deja la pantalla cubierta a " +
              "propósito (pensado para secuencias cuyo sistema siguiente gestiona su propio reveal); " +
@@ -250,15 +253,6 @@ public class SequencePlayer : CinematicSequencerBase
     {
         if (_stage == null) _stage = GetComponent<SequenceStage>();
 
-        if (_stage != null)
-        {
-            // La escena de la cinematica pasa a ser la ACTIVA mientras dura. Unity coge el skybox, la
-            // niebla y la luz ambiente de la escena activa, y el prologo se carga en aditivo mientras la
-            // activa sigue siendo la del jugador -- durante el sueno, la habitacion de Will, que es un
-            // interior sin cielo. De ahi el cielo negro del valle. Se devuelve sola al terminar.
-            CinematicTimeOfDay.ActivarEscena(_stage.gameObject.scene);
-        }
-
         // _cinematicCamera es un campo protegido heredado de CinematicSequencerBase: si no se
         // asignó en el Inspector, se toma el del SequenceStage. Debe quedar resuelto ANTES de
         // base.Awake(), porque el corte de apertura durante el fundido lo usa directamente.
@@ -280,6 +274,24 @@ public class SequencePlayer : CinematicSequencerBase
 #endif
 
         base.Awake();
+    }
+
+    /// Con la pantalla ya cubierta, la escena de la cinemática pasa a mandar. Se marca ACTIVA mientras
+    /// dura: Unity coge el skybox, la niebla y la luz ambiente de la escena activa, y el prólogo se
+    /// carga en aditivo mientras la activa sigue siendo la del jugador (la habitación de Will, un
+    /// interior sin cielo). Y, si ocurre al aire libre, se fuerza que se vea el cielo; una secuencia
+    /// de interior no lo fuerza porque el interior lo aplica la clase base justo después, y así no
+    /// se le cuelgan lluvia ni niebla. Ver CinematicTimeOfDay.
+    ///
+    /// Va en el corte y no antes: hasta aquí la pantalla enseña la escena del jugador, y cambiar la
+    /// escena activa al cargar la de la cinemática en aditivo le quitaba el cielo y la luz ambiente
+    /// durante el fundido de entrada (INC-956). Tampoco en Awake por otro motivo: entre que el
+    /// SequencePlayer despierta y que la secuencia arranca, el jugador puede haber entrado en una
+    /// casa, que es lo que pasa en el prólogo.
+    protected override void PrepararEscenaEnElCorte()
+    {
+        if (_stage != null) CinematicTimeOfDay.ActivarEscena(_stage.gameObject.scene);
+        if (!OcurreEnInterior) CinematicTimeOfDay.MostrarExterior(CachedCamera);
     }
 
     /// El telón lo suelta el propio bucle de beats, en el primer plano. Ver Co_Play.
@@ -354,13 +366,6 @@ public class SequencePlayer : CinematicSequencerBase
             }
         }
 
-        // Que se vea el cielo. Va AQUI y no en Awake: entre que el SequencePlayer despierta y que
-        // la secuencia arranca, el jugador puede haber entrado en una casa -- que es justo lo que
-        // pasa en el prologo, donde Will se va a dormir despues. Ver CinematicTimeOfDay.MostrarExterior.
-        // Una secuencia de interior no fuerza el cielo: el interior se aplica en el corte (ver
-        // Co_BeginCinematicWithTransition) y así no se le cuelgan lluvia ni niebla.
-        if (!OcurreEnInterior) CinematicTimeOfDay.MostrarExterior(CachedCamera);
-
         // EndSequenceBeat escribe estos campos para cerrar por una rama concreta. Si la secuencia
         // se relanza (p.ej. retry tras fallo de panic input), deben partir de cero o la segunda
         // ejecución salta todos los beats y levanta la señal de rama errónea de inmediato.
@@ -368,6 +373,7 @@ public class SequencePlayer : CinematicSequencerBase
         _endSignalOverride = null;
         _endScreenOverride = SequenceEndScreen.ComoElAsset;
         _signalRaised = false;
+        _jugadorDevuelto = false;
         _faseEnCurso = 0;
         _beatEnCurso = -1;
 
@@ -542,6 +548,13 @@ public class SequencePlayer : CinematicSequencerBase
         if (stayBlack) yield return Co_EndCinematicStayBlack(skipMusic ? null : RestoreMusic);
         else yield return Co_EndCinematicWithTransition(skipMusic ? null : RestoreMusic);
 
+        // El jugador ya tiene el control: su animación de andar se suelta ahora, no tras la gracia
+        // de los NPCs. StopMovement la dejó forzada a cero y, mientras tanto, se movía sin mover
+        // las piernas (al guiarle un NPC nada más acabar la escena, por ejemplo). Ver INC-948.
+        foreach (var actor in _context.ResolvedActors)
+            if (actor.IsPlayer) actor.ReturnToNormalPose();
+        _jugadorDevuelto = true;
+
         // La señal de salida va EN CUANTO la pantalla vuelve al gameplay (INC-359). Antes iba
         // detrás de la gracia de 3,5 s de abajo, y todo lo que el grafo hace al acabar una escena
         // —el cartel de «Nueva misión», el tutorial, que Oliver se una al grupo— llegaba tres
@@ -631,6 +644,13 @@ public class SequencePlayer : CinematicSequencerBase
             // Si otro sistema ya se lo ha llevado (el grafo lo manda a guiar al jugador en cuanto
             // se levanta la señal de salida), pararlo aquí le rompería el camino. Ver INC-461.
             if (actor.LoHaTomadoOtroSistema)
+            {
+                actor.Release();
+                continue;
+            }
+
+            // Devolverle a la locomoción otra vez, ya andando, le daría un tirón.
+            if (actor.IsPlayer && _jugadorDevuelto)
             {
                 actor.Release();
                 continue;

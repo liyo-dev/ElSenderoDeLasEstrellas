@@ -158,27 +158,35 @@
         },
         {
             "key": "DLG_ELDRAN_REGALO_01",
-            "value": "When you turn eighteen, what would you like me to get you?"
+            "value": "Your birthday's just around the corner. What would you like me to get you?"
         },
         {
             "key": "DLG_ELDRAN_REGALO_02",
-            "value": "Eighteen’s still a long way off. You don’t have to get me anything."
+            "value": "Nothing, really. I don't need anything."
         },
         {
             "key": "DLG_ELDRAN_REGALO_03",
-            "value": "Here. Buy yourself something silly. It’s an early birthday present."
+            "value": "I knew you'd say that. Listen, Will, you need to think about yourself a little. You spend all day helping everyone else and there's hardly any time left for something you enjoy."
         },
         {
             "key": "DLG_ELDRAN_REGALO_04",
-            "value": "Why would I want that?"
+            "value": "Well… but I like helping people."
         },
         {
             "key": "DLG_ELDRAN_REGALO_05",
-            "value": "Because I want you to have something for yourself, even if it’s something silly."
+            "value": "I know, and that's what I love most about you. But here, this coin is your birthday present, a little early. And it's also an exercise."
         },
         {
             "key": "DLG_ELDRAN_REGALO_06",
-            "value": "Well, let’s see what I can find."
+            "value": "An exercise?"
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_07",
+            "value": "I want you to buy something that's no use at all. None at all, mind. Because I can already see you spending it on something to help someone."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_08",
+            "value": "All right, all right… something that's no use at all. Let's see what I can find."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",
@@ -574,7 +582,7 @@
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_01",
-            "value": "This is a Save Point, Will."
+            "value": "Look, this is a Save Point."
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_02",
@@ -1346,7 +1354,7 @@
         },
         {
             "key": "DLG_ELDRAN_SIGUEME_INPROGRESS_01",
-            "value": "Don't fall behind, Will. We're almost there."
+            "value": "Don't fall behind. We're almost there."
         },
         {
             "key": "DLG_ELDRAN_CHARLA_VICTORIA_01",
@@ -1490,27 +1498,27 @@
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_01",
-            "value": "They say you are leaving the village, Will. Before crossing those gates, you must learn to defend yourself: I attack, you hold."
+            "value": "So you are leaving the village, Will. Before you head out those gates, Eldran asked me to give you this."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_02",
-            "value": "See that book on your belt? That is your spellbook. Mages do not make up spells from thin air: they awaken the pages of their grimoire. This page resonates with your power... it is the PRISM BALL."
+            "value": "Your grimoire. Every spell you learn is written in its pages: your Astral Flame is already there. And look, another one has just awakened: the PRISM BALL."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_03",
-            "value": "When awakened, the spellbook binds it to your memory. Select it in battle with <sprite name=\"interactable_lb\"> and fire with <sprite name=\"interactable_x\">."
+            "value": "You carry it in your inventory: press <sprite name=\"start\"> and go to Spells. In battle, pick the spell with <sprite name=\"interactable_lb\"> and cast it with <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_04",
-            "value": "And if I strike you head-on, hold <sprite name=\"interactable_b\"> to raise your PROTECTION. Time your block right, and you will parry the blow!"
+            "value": "Now for my part: when I attack, hold <sprite name=\"interactable_b\"> to raise your PROTECTION. Time it just right, and you will strike me back."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_05",
-            "value": "I can feel the page resonating in my hands! I am ready, Erika!"
+            "value": "My very own grimoire! All right, Erika. Whenever you are ready."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_06",
-            "value": "Then show me your guard! Let us see if you can keep up with me!"
+            "value": "On guard, then! Let us see how long you last."
         },
         {
             "key": "DLG_ERIKA_DESPUES_01",
@@ -1526,23 +1534,19 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "You have a cloak, a potion and a handkerchief. What is missing is the important part: knowing why you are leaving."
+            "value": "Cloak, potion, handkerchief… you've got everything. But you're missing the most important thing: knowing why you're leaving."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
-            "value": "Make a list of reasons. When you doubt, read it."
+            "value": "Out there you're going to have doubts, Will. And when you do, you need to be very clear about your reasons."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_03",
-            "value": "To find Estela. And to understand what is happening to me."
+            "value": "To find Estela. And to understand what's happening to me."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_04",
-            "value": "Good reasons. Make sure they are yours, not mine."
-        },
-        {
-            "key": "DLG_ELDRAN_BRUJULA_01",
-            "value": "And take this compass. It always points the way back home."
+            "value": "Good reasons. And they're yours, not mine. Hold on to them."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_01",
@@ -1559,22 +1563,6 @@
         {
             "key": "DLG_OLIVER_DESPEDIDA_04",
             "value": "You had better. See you soon."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_01",
-            "value": "I have to go to the capital. Some things can only be settled there."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_02",
-            "value": "I trust you, even if I do not like what it makes me let go of."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_03",
-            "value": "Thank you for raising me, Eldran."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_04",
-            "value": "Go on. The door of home will always be open."
         },
         {
             "key": "CHAR_ERIKA",
@@ -1810,7 +1798,7 @@
         },
         {
             "key": "DLG_OLIVER_CHARLA_01",
-            "value": "Found anything strange out there? If it's really strange, I want it for my collection."
+            "value": "Did you know I collect strange things? I'm missing three from the village: a marble, a stone with a hole and an old coin. If you find them, bring them to me!"
         },
         {
             "key": "DLG_OLIVER_CHARLA_02",
@@ -2054,19 +2042,19 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "Three weeks ago, at night, I saw low lights moving between the forest trees."
+            "value": "And you? Have you seen anything strange?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "They weren't lanterns. They were knee-high."
+            "value": "Three weeks ago, at night, I saw low lights moving between the forest trees."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "And what were they doing?"
+            "value": "They weren't lanterns. They were knee-high."
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "They lit up and dimmed, slowly. Like something breathing in its sleep."
+            "value": "And what were they doing?"
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
@@ -2094,11 +2082,11 @@
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
-            "value": "The marks have lines inside them. Like the ones on the collar piece."
+            "value": "It left traces of iron on the wood. With the same lines as the collar piece."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_03",
-            "value": "And here, on the wood, they still glow a little."
+            "value": "And the lines still glow a little."
         },
         {
             "key": "DLG_CAP3_HOJA_01",
@@ -2110,7 +2098,7 @@
         },
         {
             "key": "DLG_CAP3_HOJA_03",
-            "value": "You're the first one to carry one."
+            "value": "And you're the first to bring a piece of one of those collars."
         },
         {
             "key": "DLG_CAP3_HOJA_04",
@@ -2207,6 +2195,174 @@
         {
             "key": "CAP4_BOC_FIGURA",
             "value": "You saved yourself and scorched the ones you were meant to protect!"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_05",
+            "value": "They lit up and dimmed, slowly. Like something breathing in its sleep."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_05",
+            "value": "Go on, say goodbye to everyone. Oliver would never forgive me if you left without a word."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_06",
+            "value": "I'll wait for you at the edge of the village."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_05",
+            "value": "And if you see anything odd out there, bring it to me. For the collection."
+        },
+        {
+            "key": "DLG_CAP2_ELDRAN_ESPERA_01",
+            "value": "Have you said goodbye to Oliver yet? Go on. I'm not going anywhere."
+        },
+        {
+            "key": "DLG_CAP2_OLIVER_TRAS_ADIOS_01",
+            "value": "Still here? Eldran is waiting at the edge of the village. And remember: anything odd!"
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_01",
+            "value": "Leaving already? Oh, Will… Eat properly and keep warm at night."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_02",
+            "value": "And don't listen to Eldran if he says he isn't worried. He is, a lot."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_03",
+            "value": "I will, Victoria. Thanks for everything."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_ERIKA_01",
+            "value": "Keep your guard up and don't strike first. And bring that scarf back, it's mine."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_BOTICARIA_01",
+            "value": "That potion is for real trouble, mind. Not for a scrape."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_TOMASA_01",
+            "value": "Off on a trip? If you find anything useless out there, you know where to sell it."
+        },
+        {
+            "key": "CAP3_BOC_ACAMPADA",
+            "value": "Tomorrow I reach the coast. I hope someone there knows something about these collars."
+        },
+        {
+            "key": "CHAR_REMEDIOS",
+            "value": "Remedios"
+        },
+        {
+            "key": "CHAR_ANSELMO",
+            "value": "Anselmo"
+        },
+        {
+            "key": "CHAR_ENGRACIA",
+            "value": "Engracia"
+        },
+        {
+            "key": "CHAR_EUSEBIO",
+            "value": "Eusebio"
+        },
+        {
+            "key": "CHAR_FERMIN",
+            "value": "Fermín"
+        },
+        {
+            "key": "DLG_POSADERO_01",
+            "value": "Come in, come in. There's always room here, and hot soup."
+        },
+        {
+            "key": "DLG_REMEDIOS_01",
+            "value": "Careful, my hands are full."
+        },
+        {
+            "key": "DLG_ANSELMO_01",
+            "value": "The sea is calm today."
+        },
+        {
+            "key": "DLG_ENGRACIA_01",
+            "value": "Remedies, potions and something to eat. What can I get you?"
+        },
+        {
+            "key": "DLG_EUSEBIO_01",
+            "value": "Morning, lad."
+        },
+        {
+            "key": "DLG_FERMIN_01",
+            "value": "Nice day for a walk."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_C3_1_01",
+            "value": "The collared animals? Ask at the inn. I don't even have time to scratch myself."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
+            "value": "A dog with a strange collar spent the whole night scratching against the net shed. I heard it from home."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_1_01",
+            "value": "These crates won't carry themselves. I wish."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_2_01",
+            "value": "If the sea is kind, there's fish. If not, there are crates anyway."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_C3_1_01",
+            "value": "The gulls haven't flown toward the forest for weeks. Not even they trust it."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_C3_2_01",
+            "value": "Lights between the trees? The only lights I trust are the lighthouse's."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_1_01",
+            "value": "Forty years on this pier and the sea still surprises me."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_2_01",
+            "value": "Keep it down, you'll scare the fish. Well, whatever fish are left."
+        },
+        {
+            "key": "DLG_ALDEA_ENGRACIA_1_01",
+            "value": "Remedies, potions and something to eat. What can I get you?"
+        },
+        {
+            "key": "DLG_ALDEA_ENGRACIA_2_01",
+            "value": "Whatever I don't have, I order from the Kingdom. It takes a while, but it gets here."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
+            "value": "Lucía says she saw a fox with a collar by the garden fence. That girl sees all sorts… but this time I believe her."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
+            "value": "In my day, demons stayed in fairy tales."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_1_01",
+            "value": "Sit down a while, lad. You can see the whole harbour from this bench."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_2_01",
+            "value": "My wife used to say the sea smells of promises. I say it smells of sardines."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_C3_1_01",
+            "value": "Carts go down the forest road at night. I shut my window and that's that."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_C3_2_01",
+            "value": "Have you tried the inn's soup? It gives you strength enough to move a spoon."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_1_01",
+            "value": "Nice day for a walk. Every day's a nice day for a walk around here."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_2_01",
+            "value": "If you're after the shop, Engracia's stall is on the west side of the square."
         }
     ]
 }

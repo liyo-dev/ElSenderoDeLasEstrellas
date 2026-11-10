@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,6 +37,16 @@ public static class FotosDeCaras
     [MenuItem("El Sendero/Personajes/Fotos de caras de Liam con Will y Estela (prueba)")]
     public static void LiamConCompis() => Hacer(LIAM, "Liam", new[] { WILL, ESTELA });
 
+    /// El grupo abrazándose de frío (estado UpperBody.ClimaFrio) con la cara de helado, de frente y de tres
+    /// cuartos, en «Guiones/_fotos_caras/Frio/». Sin la tiritona ni los hombros encogidos, que se ponen en juego.
+    [MenuItem("El Sendero/Personajes/Fotos del grupo con frío (prueba)")]
+    public static void GrupoConFrio()
+    {
+        var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(AbrazarseDeFrio.RutaDelClip);
+        if (clip == null) { OrdenesDelEditor.Avisar("Fotos de caras", "Falta " + AbrazarseDeFrio.RutaDelClip + ": pasa antes el menú de abrazarse de frío."); return; }
+        Hacer(WILL, "Frio", new[] { LIAM, ESTELA }, cuerpo: (ClimaSobreElJugador.EstadoDeFrio, clip), soloEmocion: NPCEmotion.Frozen);
+    }
+
     /// Hoja de caras: la cara neutra de cerca de los NPCs con caras nuevas y de los niños, uno a uno, en
     /// «Guiones/_fotos_caras/NPCs/». Si un NPC no se ve en el Editor (o no tiene perfil), lo dice en el informe.
     [MenuItem("El Sendero/Personajes/Hoja de caras de los NPCs y los niños (prueba)")]
@@ -61,12 +71,14 @@ public static class FotosDeCaras
         "_GrafoNarrativo/Boticaria", "_GrafoNarrativo/Selene", "Tendera", "Nora", "WoodsGuard", "Roberto", "Pueblo/Jorge",
         "NonInteractable/TownNpc#4", "NiñoPez", "AmigaDelNiñoPez", "_GrafoNarrativo/Tobi", "NonInteractable/Nina_Prologo",
         "Assets/Prefabs/_WILL_ORIGINAL.prefab",
+        "AldeaDelMar/Posadero", "AldeaDelMar/Remedios", "AldeaDelMar/Anselmo", "AldeaDelMar/Engracia", "AldeaDelMar/Eusebio", "AldeaDelMar/Fermin",
     };
 
     private const string WILL = "Assets/Prefabs/_WILL.prefab", LIAM = "Assets/Prefabs/_LIAM.prefab", ESTELA = "Assets/Prefabs/_ESTELA.prefab";
 
     /// Pone un personaje (sin scripts, en reposo) dentro de «padre», a «x» metros a su derecha.
-    private static (GameObject inst, Animator anim, EmotionProfile perfil, List<Renderer> piezas) Poner(GameObject prefab, Transform padre, float x, Scene escena, StringBuilder informe)
+    private static (GameObject inst, Animator anim, EmotionProfile perfil, List<Renderer> piezas) Poner(GameObject prefab, Transform padre, float x, Scene escena, StringBuilder informe,
+        (string estado, AnimationClip clip)? cuerpo = null)
     {
         var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
         inst.hideFlags = HideFlags.DontSave;
@@ -80,6 +92,11 @@ public static class FotosDeCaras
         {
             try { Horno.MuestrearEstado(inst, idle, idle.name, 0.3f); }
             catch (System.Exception ex) { informe.Append($"{prefab.name} sin pose ({ex.Message}) · "); }
+        }
+        if (cuerpo != null)
+        {
+            try { Horno.MuestrearEstado(inst, cuerpo.Value.clip, cuerpo.Value.estado, 0.5f); }
+            catch (System.Exception ex) { informe.Append($"{prefab.name} sin {cuerpo.Value.estado} ({ex.Message}) · "); }
         }
         inst.transform.localPosition = new Vector3(x, 0f, 0f); inst.transform.localRotation = Quaternion.identity;
         var emo = inst.GetComponentInChildren<NPCEmotionController>(true);
@@ -115,7 +132,10 @@ public static class FotosDeCaras
     private static bool Libre(Vector3 pie) =>
         !Physics.CheckCapsule(pie + Vector3.up * 0.4f, pie + Vector3.up * 1.4f, 0.35f, ~0, QueryTriggerInteraction.Ignore);
 
-    public static void Hacer(string rutaPrefab, string nombre, string[] rutasCompis, bool hoja = false)
+    /// <param name="cuerpo">Estado del Animator (y su clip) que se pone a todos encima del reposo.</param>
+    /// <param name="soloEmocion">Solo esa emoción, también en los compañeros, y en todos los planos.</param>
+    public static void Hacer(string rutaPrefab, string nombre, string[] rutasCompis, bool hoja = false,
+        (string estado, AnimationClip clip)? cuerpo = null, NPCEmotion? soloEmocion = null)
     {
         bool conCompis = rutasCompis != null && rutasCompis.Length > 0;
         var Compis = conCompis ? rutasCompis.Select((r, i) => (ruta: r, lado: i == 0 ? -1.4f : 1.4f)).ToArray() : new (string ruta, float lado)[0];
@@ -187,15 +207,21 @@ public static class FotosDeCaras
         {
             soporte.transform.SetPositionAndRotation(new Vector3(xz.x, y, xz.y),
                 Quaternion.LookRotation(new Vector3(haciaCam.x, 0f, haciaCam.y).normalized, Vector3.up));
-            var (inst, anim, perfil, piezas) = Poner(prefab, soporte.transform, 0f, escena, informe);
+            var (inst, anim, perfil, piezas) = Poner(prefab, soporte.transform, 0f, escena, informe, cuerpo);
             if (perfil == null) { informe.Append("sin NPCEmotionController o sin perfil"); return; }
             if (conCompis)
                 foreach (var (ruta, lado) in Compis)
                 {
                     var pf = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
                     if (pf == null) { informe.Append($"no encuentro {ruta} · "); continue; }
-                    var c = Poner(pf, soporte.transform, lado, escena, informe);
-                    if (c.perfil != null) Cara(c.piezas, c.perfil.ojosDeReposoPorDefecto, c.perfil.bocaDeReposoPorDefecto, null);
+                    var c = Poner(pf, soporte.transform, lado, escena, informe, cuerpo);
+                    if (c.perfil == null) continue;
+                    var dc = soloEmocion != null ? c.perfil.GetEmotionData(soloEmocion.Value) : default;
+                    if (soloEmocion != null && dc.emotion == soloEmocion.Value)
+                        Cara(c.piezas, string.IsNullOrEmpty(dc.eyeMeshName) ? c.perfil.ojosDeReposoPorDefecto : dc.eyeMeshName,
+                            string.IsNullOrEmpty(dc.mouthMeshName) ? c.perfil.bocaDeReposoPorDefecto : dc.mouthMeshName,
+                            dc.simbolos != null && dc.simbolos.Length > 0 ? dc.simbolos[0] : null);
+                    else Cara(c.piezas, c.perfil.ojosDeReposoPorDefecto, c.perfil.bocaDeReposoPorDefecto, null);
                 }
 
             var cam = camGo.AddComponent<Camera>();
@@ -218,6 +244,11 @@ public static class FotosDeCaras
                 ["juego"] = (cara + fwd * 5f + Vector3.up * 1.5f, cara - Vector3.up * 0.5f, 50f),
                 ["juego_lejos"] = (cara + fwd * 7.5f + Vector3.up * 2.5f, cara - Vector3.up * 0.5f, 50f),
             };
+            if (cuerpo != null)
+            {
+                Vector3 lado = soporte.transform.right;
+                planos["tres_cuartos"] = (cara + (fwd * 2.2f + lado * 1.5f) + Vector3.up * 0.1f, cara - Vector3.up * 0.4f, 35f);
+            }
 
             // Las emociones del perfil (todas las que tenga, en orden) y, después, los ojos del juego que no usa ninguna
             // emoción (p. ej. el conjuro de Estela), con la boca de reposo.
@@ -249,6 +280,11 @@ public static class FotosDeCaras
                     tomas.Add(($"ojo_{r.name}", 100 + Num(r.name), r.name, perfil.bocaDeReposoPorDefecto, null, false));
                 }
             if (hoja) tomas.RemoveAll(x => x.nombre != "00_Neutral");
+            if (soloEmocion != null)
+            {
+                tomas.RemoveAll(x => x.orden != (int)soloEmocion.Value);
+                for (int i = 0; i < tomas.Count; i++) { var tm = tomas[i]; tm.lejos = true; tomas[i] = tm; }
+            }
             foreach (var toma in tomas)
             {
                 Cara(piezas, toma.ojos, toma.boca, toma.fx);

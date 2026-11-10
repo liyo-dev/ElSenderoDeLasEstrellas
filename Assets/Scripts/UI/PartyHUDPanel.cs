@@ -249,7 +249,7 @@ namespace Sendero.UI
             var s = (Slot)slot;
             bool caido = estado.Caido(s);
             bool cansado = !caido && estado.Vida(s) <= vidaBaja;
-            r.PonerBarras(estado.Vida(s), estado.Mana(s), cansado);
+            r.PonerBarras(estado.VidaEnPuntos(s), estado.ManaEnPuntos(s), cansado);
             // El maná cambia a menudo (se regenera): el aspecto del retrato solo si cambia la vida baja o la caída.
             if (_saludMostrada[slot] && _cansadoMostrado[slot] == cansado && _caidoMostrado[slot] == caido) return;
             _saludMostrada[slot] = true;

@@ -17,6 +17,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     {
         Instance = null;
         OnAfterReset = null;
+        OnStateChanged = null;
     }
     #endif
 
@@ -61,6 +62,20 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     /// vuelvan a suscribirse tras el borrado de suscriptores que hace el reset.
     /// </summary>
     public static event Action OnAfterReset;
+
+    /// <summary>
+    /// Se dispara cuando cambia algo que se puede consultar del estado de la historia: una señal
+    /// emitida, consumida, reencolada o descartada, o una misión iniciada o completada a través de
+    /// esta clase. No dice qué ha cambiado: quien escucha vuelve a consultar. Existe también en
+    /// builds (a diferencia de <c>HistoryChanged</c>, que es solo de diagnóstico).
+    /// </summary>
+    public static event Action OnStateChanged;
+
+    static void NotifyStateChanged()
+    {
+        try { OnStateChanged?.Invoke(); }
+        catch (Exception e) { Debug.LogException(e); }
+    }
 
     // ── Observabilidad (Editor + Development builds) ─────────────
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -165,8 +180,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     public void UnraiseCustom(string key)
     {
         if (string.IsNullOrWhiteSpace(key)) return;
-        _raised.Remove(key);
-        _pending.Remove(key);
+        bool cambia = _raised.Remove(key) | _pending.Remove(key);
+        if (cambia) NotifyStateChanged();
     }
 
     /// <summary>
@@ -289,9 +304,14 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         Debug.Log($"[Signals] StartQuest {questId} (svc={(QS!=null?QS.GetType().Name:"NULL")})");
 #endif
         QS?.StartQuest(questId);
+        NotifyStateChanged();
     }
 
-    public void CompleteQuest(string questId) => QS?.Complete(questId);
+    public void CompleteQuest(string questId)
+    {
+        QS?.Complete(questId);
+        NotifyStateChanged();
+    }
 
     public void CompleteQuestStep(string questId, int stepIndex)
     {
@@ -342,6 +362,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
             RecordWithContext(key, SignalStatus.Queued, "sin oyentes, guardado en _pending y _raised", context);
 #endif
         }
+        NotifyStateChanged();
     }
 
     public void OnCustom(string key, Action cb)
@@ -361,6 +382,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
             Record(key, SignalStatus.Consumed, $"consumido desde {src} al suscribirse");
 #endif
             try { cb(); } catch (Exception e) { Debug.LogException(e); }
+            NotifyStateChanged();
             return;
         }
 
@@ -384,6 +406,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Record(key, SignalStatus.Queued, "reencolada sin invocar (consumidor la descartó, ver RequeueCustom)");
 #endif
+        NotifyStateChanged();
     }
 
     public void OffCustom(string key, Action cb)

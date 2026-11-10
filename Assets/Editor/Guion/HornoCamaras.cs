@@ -642,6 +642,7 @@ internal sealed partial class Horno
             {
                 if (!r.enabled || r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer) continue;
                 if (r.gameObject.layer == 10 || r.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                if (r.GetComponentInParent<NoTapaLaCamara>() != null) continue;   // guirnaldas y cuerdas
                 var b = r.bounds;
                 if (b.size.y < 0.4f) continue;                          // suelo, alfombras, charcos
                 if (Mathf.Max(b.size.x, b.size.z) > 14f) continue;      // terreno, río

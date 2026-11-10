@@ -10,7 +10,7 @@ using Game.NPC.States;
 /// El NPC camina delante. Si el jugador se queda atrás, se para, le espera y le dice la frase de
 /// 'llamadaKey' en un bocadillo cada pocos segundos; sigue cuando llega. Mientras el jugador va
 /// cerca, no puede ir más rápido que el NPC (así no le adelanta, INC-536), y si hay 'charla', la
-/// van diciendo en bocadillos por el camino (INC-537). El nodo avanza cuando el NPC ha llegado a
+/// van diciendo por el camino en bocadillos fijos a un lado, para no tapar la vista (INC-537, INC-1002). El nodo avanza cuando el NPC ha llegado a
 /// la marca, el jugador está a 'radioLlegada' de él y la charla ha terminado. Ya en la marca, el
 /// NPC se vuelve hacia el jugador y le sigue con la mirada mientras llega y terminan la charla. El
 /// paseo lo hace CinematicState.LeadPlayerToAnchorSequence; la llamada y la charla salen por
@@ -272,6 +272,8 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
             {
                 clave = avisoAlAcercarseKey,
                 ancla = npc.transform,
+                fijoEnPantalla = true,
+                nombreDelHablante = PresentadorDeLinea.NombreDelHablante(npc.DialogueCharacterId),
                 duracion = duracionLlamada,
                 alTerminar = () => terminado = true,
             });
@@ -383,6 +385,8 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         {
             clave = llamadaKey,
             ancla = npc.transform,
+            fijoEnPantalla = true,
+            nombreDelHablante = PresentadorDeLinea.NombreDelHablante(npc.DialogueCharacterId),
             duracion = duracionLlamada,
             alTerminar = () => terminado = true,
         });

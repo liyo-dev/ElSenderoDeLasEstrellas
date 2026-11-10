@@ -1304,7 +1304,7 @@ namespace Game.NPC.States
         }
 
         // Gesto con el que el NPC llama al jugador que se ha quedado atrás: levanta el brazo
-        // mientras dice su frase («¡Por aquí, Will!»). Vive en la capa UpperBody del Animator de
+        // mientras dice su frase («¡Por aquí!»). Vive en la capa UpperBody del Animator de
         // los NPCs (NPC_NoWeapon). Raúl, 26 sep 2026: «cuando el NPC al que tengo que seguir diga
         // "por aquí" o lo que toque, que haga la animación de levantar el brazo».
         private const string GESTO_LLAMADA = "HandWave01";

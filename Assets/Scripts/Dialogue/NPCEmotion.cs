@@ -78,6 +78,10 @@ public enum NPCEmotion
     HappyTears = 17,
 
     [Tooltip("Dormido - ojos cerrados y cara tranquila, sin parpadeo. Tired es cansado pero despierto.")]
-    Asleep = 18
+    Asleep = 18,
+
+    [Tooltip("Helado - muerto de frío: cara de pena con la boca temblando y rayitas azules. La pone " +
+             "ClimaSobreElJugador al grupo cuando está quieto bajo la lluvia o la nieve.")]
+    Frozen = 19
 }
 

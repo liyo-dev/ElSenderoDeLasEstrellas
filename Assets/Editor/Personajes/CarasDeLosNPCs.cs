@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -81,6 +81,10 @@ public static class CarasDeLosNPCs
         ("NonInteractable/TownNpc#6", "h_almendra_marron"), ("NonInteractable/TownNpc#8", "h_almendra_verde"),
         ("NonInteractable/TownNpc#9", "h_chico_azul"), ("NonInteractable/TownNpc#10", "h_chico_gris"),
         ("Ladron1", "h_chico_oscuro"), ("Ladron2", "h_almendra_ambar"),
+        ("AldeaDelMar/Posadero", "h_almendra_ambar"), ("AldeaDelMar/Anselmo", "h_tostado_marron"),
+        ("AldeaDelMar/Eusebio", "h_mayor_ambar"), ("AldeaDelMar/Fermin", "h_chico_azul"),
+        ("NonInteractable/VecinoDelMirador", "h_tostado_marron"),
+        ("NonInteractable/AbuelaDelMirador", "m_mayor_azul"), ("NonInteractable/VecinaDelMirador", "m_pecas_marron"),
         // Hombres con cabeza de mujer
         ("King", "hf_mayor_marron"), ("Pueblo/Jorge", "hf_chico_marron"), ("Rudolfo", "hf_chico_marron"),
         ("Roberto", "hf_almendra_gris"), ("Combat/Mago #2", "hf_almendra_gris"),
@@ -91,8 +95,10 @@ public static class CarasDeLosNPCs
         ("Pueblo/Generados/Tomasa", "m_almendra_marron"), ("Pueblo/MC01 (1) 6", "m_afilado_verde"),
         ("Sara", "m_almendra_azul"), ("Sofia", "m_almendra_oscuro"), ("Tabernera", "m_almendra_marron"),
         ("Tendera", "m_afilado_verde"), ("Verónica", "m_almendra_azul"),
+        ("AldeaDelMar/Remedios", "m_pecas_marron"), ("AldeaDelMar/Engracia", "m_almendra_azul"),
         ("NonInteractable/Guerrero#1", "m_almendra_oscuro"), ("NonInteractable/Guerrero#3", "m_almendra_azul"),
         ("NonInteractable/TownNpc#2", "m_almendra_marron"), ("NonInteractable/TownNpc#7", "m_almendra_oscuro"),
+        ("NonInteractable/PanaderaDelValle", "m_mayor_azul"), ("NonInteractable/MadreDelValle", "m_pecas_marron"),
         // Mujer con cabeza de hombre
         ("NonInteractable/TownNpc#4", "mh_almendra_marron"),
         // Niños (con su cuerpo de adulto encogido hasta que tengan cuerpo de niño propio)

@@ -24,6 +24,15 @@ public static class GrimorioDelPersonaje
     static void ResetStatics() => UltimoAprendido = SpellId.None;
 #endif
 
+    /// Flag de la partida que dice que Will ya tiene el grimorio: se lo da Erika en el Cap. 2.
+    /// Hasta entonces el libro no se abre ni sale en la pestaña Hechizos. Ver INC-961.
+    public const string FlagGrimorioRecibido = "GRIMORIO_RECIBIDO";
+
+    /// Will tiene el grimorio: se lo ha dado Erika o el Cap. 2 ya está cerrado (partidas guardadas
+    /// antes de que existiera el flag).
+    public static bool TieneGrimorio =>
+        NarrativeFlags.Has(FlagGrimorioRecibido) || NarrativeFlags.Has("CAP2_COMPLETADO");
+
     // ── Datos ─────────────────────────────────────────────────────────────
 
     public static SpellLibrarySO Biblioteca

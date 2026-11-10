@@ -77,8 +77,16 @@
             "value": "Victory!"
         },
         {
-            "key": "BATTLE_REPORT_STATS",
-            "value": "Stats"
+            "key": "BATTLE_REPORT_PROGRESS",
+            "value": "Progress"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA",
+            "value": "Star Attunement"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA_HITO",
+            "value": "Attunement complete! Choose Health or Magic in the menu"
         },
         {
             "key": "BATTLE_REPORT_LOOT",
@@ -2251,11 +2259,7 @@
         },
         {
             "key": "ITEM_HOJA_AVISTAMIENTOS_DESC",
-            "value": "What the seaside villagers have seen of the collared animals: low lights in the forest, a frightened fox, a dog scratching its neck."
-        },
-        {
-            "key": "CAP3_ROTULO_COSTA",
-            "value": "Two days' walk to the coast…"
+            "value": "The sheet where Will writes down what the seaside villagers tell him about the collared animals."
         },
         {
             "key": "CAP3_ROTULO_NOCHE",
@@ -2292,6 +2296,34 @@
         {
             "key": "TUTORIAL_CAP4_LEVITACION",
             "value": "New spell: Levitation. It's now among your spells: cast it to float over water, mud and gaps."
+        },
+        {
+            "key": "CAP3_ROTULO_ACAMPADA",
+            "value": "That night, halfway to the coast…"
+        },
+        {
+            "key": "REQUISITO_FALTA_PRENDA",
+            "value": "You need to be wearing something that {0}."
+        },
+        {
+            "key": "RASGO_VIENTOMASBARATO",
+            "value": "Wind spells cost less mana"
+        },
+        {
+            "key": "RASGO_CONTRAATAQUEMASAMPLIO",
+            "value": "More time to return attacks"
+        },
+        {
+            "key": "RASGO_PLANEAR",
+            "value": "Lets you glide"
+        },
+        {
+            "key": "RASGO_REBOTEEXTRA",
+            "value": "Bounces higher on springs"
+        },
+        {
+            "key": "LUGAR_ALDEA_DEL_MAR",
+            "value": "Seaside Village"
         }
     ]
 }

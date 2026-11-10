@@ -176,6 +176,36 @@ def sacar_de_la_cara(lista, cabeza, margen=0.014):
                 v.co = inv @ (hit[0] + t * margen); n += 1
     bm.free(); return n
 
+def _suave(x):
+    x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+
+def pegar_flequillo(lista, cabeza, atras=0.055, holgura=0.012):
+    """Echa hacia atrás el flequillo de los pelos del pack, que queda a unos 10 cm de la frente: de perfil se ve
+    el fondo entre el flequillo y la cabeza (INC-934). Desplazamiento suave hacia atrás, entero en el borde
+    del flequillo y nada en la coronilla ni detrás de las orejas, sin acercar ningún punto a menos de
+    «holgura» de la cabeza. Las medidas van en proporción a la cabeza: vale con la talla de adulto o de niño."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    cm = cabeza.evaluated_get(dg).to_mesh()
+    hv = [cabeza.matrix_world @ v.co for v in cm.vertices]
+    arbol = BVHTree.FromPolygons(hv, [p.vertices[:] for p in cm.polygons])
+    z0 = min(p.z for p in hv); alto = max(p.z for p in hv) - z0
+    yd = min(p.y for p in hv); yc = sum(p.y for p in hv) / len(hv)
+    n = 0
+    for o, _ in lista:
+        mw = o.matrix_world; inv = mw.inverted()
+        for v in o.data.vertices:
+            p = mw @ v.co
+            f = (p.z - z0) / alto
+            w = (1 - _suave((f - 0.72) / 0.3)) * _suave((yc - p.y) / max(0.01, yc - yd))
+            if w <= 0.001: continue
+            paso = atras * w
+            loc, nor, _i, _d = arbol.find_nearest(p)
+            fuera = (p - loc).dot(nor)
+            acerca = max(0.0, -nor.y) * paso
+            if acerca > 0 and fuera - acerca < holgura: paso *= max(0.0, fuera - holgura) / acerca
+            v.co = inv @ (p + Vector((0, paso, 0))); n += 1
+    return n
+
 def pelo_del_pack(fbx, nombre, mat, g="pelo"):
     """Un pelo del pack (HeadParts/HairNN.fbx, en el espacio del hueso de la cabeza) como malla del kit, colocado
     sobre la cabeza del adulto y pesado a «head», para deformarlo a gusto."""

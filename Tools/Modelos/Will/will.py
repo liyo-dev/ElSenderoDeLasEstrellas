@@ -1,16 +1,16 @@
 # Will, aspecto nuevo: pelo rubio miel de héroe (su Hair01 de siempre con los picos hacia arriba y atrás y el
-# flequillo barrido de lado, de una pieza) y ropa de aventurero clásico sin bufanda: chaqueta corta azul marino abierta con ribete dorado y
-# mangas remangadas, camisa crema, pañuelo azul claro al cuello, cinturón con hebilla de estrella y bolsitas, guantes sin dedos, pantalón
-# y botas altas con vuelta.
+# flequillo barrido de lado, de una pieza) y ropa de aventurero: camiseta de manga corta azul marino con ribete dorado,
+# pañuelo azul claro al cuello, cinturón con hebilla de estrella, pantalón y botas altas con vuelta. La chaqueta corta
+# (azul marino, abierta, ribete dorado, mangas remangadas) es una prenda aparte del armario.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend). Mira a -Y; su izquierda es +X.
 #   Hair16_Heroe       → malla pesada a «head» (pieza de pelo del modelo modular).
-#   Body23_Aventurero  → las manos y el torso de Body05 con la ropa nueva encima, pesado como él.
+#   Body23_Aventurero  → las manos de Body05 con la ropa nueva (camiseta), pesado como él.
+#   Body24_AventureroChaqueta → lo mismo con la chaqueta encima (otro cuerpo del armario: así se puede llevar capa).
 import bpy, bmesh, math, sys
 from mathutils import Vector, Matrix, Euler
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 import os
-MANGA_LARGA = os.environ.get("WILL_MANGA", "corta") == "larga"   # Raúl se quedó con la manga corta remangada
 PANTALON_CLARO = os.environ.get("WILL_PANTALON", "") == "claro"
 bpy.ops.wm.open_mainfile(filepath=BASE)
 arm = bpy.data.objects["Armature"]; cuerpo = bpy.data.objects["Body05"]
@@ -19,7 +19,7 @@ for o in list(bpy.data.objects):
 
 COLORES = {
     "Pelo": (0.72, 0.44, 0.16, 1), "PeloClaro": (0.86, 0.6, 0.28, 1),
-    "Chaqueta": (0.1, 0.16, 0.38, 1), "Camisa": (0.95, 0.9, 0.78, 1), "Pantalon": (0.62, 0.52, 0.4, 1) if PANTALON_CLARO else (0.3, 0.24, 0.18, 1),
+    "Chaqueta": (0.1, 0.16, 0.38, 1), "Camiseta": (0.1, 0.16, 0.38, 1), "Piel": (0.894, 0.659, 0.388, 1), "Pantalon": (0.62, 0.52, 0.4, 1) if PANTALON_CLARO else (0.3, 0.24, 0.18, 1),
     "Cuero": (0.42, 0.25, 0.12, 1), "Dorado": (1.0, 0.8, 0.3, 1), "Guante": (0.25, 0.17, 0.12, 1), "Panuelo": (0.3, 0.62, 0.92, 1),
 }
 MAT = {}
@@ -28,7 +28,7 @@ for n, c in COLORES.items():
     m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = c
     m.diffuse_color = c; MAT[n] = m
 
-GRUPOS = {"pelo": [], "traje": []}
+GRUPOS = {"pelo": [], "traje": [], "chaqueta": []}
 def nueva(grupo, nombre, bm, mat, pesos=None, grosor=0.0):
     me = bpy.data.meshes.new(nombre); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new(nombre, me); bpy.context.scene.collection.objects.link(o)
@@ -207,6 +207,16 @@ for v in bm.verts:
         v.co = normal.lerp(frente, w)
     else:
         v.co = normal
+# La nuca no baja de la base del cráneo: si colgara más, se mete en el cuello de la ropa y el pañuelo y,
+# al girar la cabeza, solo asoma la punta y parece un trozo de pelo suelto (ver INC-943). Lo que queda por
+# debajo de PELO_NUCA_Z sube con un tope suave (exponencial, sin escalón) y se vuelve a pegar por fuera de la cabeza.
+NUCA_Z = float(os.environ.get("PELO_NUCA_Z", "0.78")); NUCA_B = 0.04
+for v in bm.verts:
+    d = v.co.z - NUCA_Z
+    if d < NUCA_B and (v.co - C).normalized().y > -0.2:
+        v.co.z = NUCA_Z + NUCA_B * math.exp(d / NUCA_B - 1.0)
+        t = (v.co - C).normalized(); R = radio(t) + PEGADO
+        if (v.co - C).length < R: v.co = C + t * R
 # Raúl (4 nov): «lo hacemos homogéneo»: los picos se quedan como estaban, pero se les reparte un poco la forma
 # (sus vértices intermedios se alisan hacia sus vecinos; raíces y puntas no se mueven) para que no queden caras
 # torcidas sueltas. PELO_ALISAR=0 lo apaga.
@@ -260,77 +270,91 @@ for f in pelo.data.polygons:
 for g in list(pelo.vertex_groups): pelo.vertex_groups.remove(g)
 GRUPOS["pelo"].append((pelo, H))
 
-# ── Ropa de aventurero ───────────────────────────────────────────────────────────────────
+# ── Ropa de aventurero (8 nov 2026, Raúl: «demasiado gordo», «la camiseta se mete en la piel» en las manos;
+#    «prefiero una camiseta chula corta con su pañuelito» y la chaqueta como prenda del armario) ─────────
+# Proporciones del cuerpo de siempre (Body05): torso de ~0,17 de radio, brazo de ~0,07 y muñeca de ~0,068.
+CAMISETA = [(0.75, 0.0), (0.745, 0.07), (0.735, 0.11), (0.72, 0.14), (0.69, 0.163), (0.63, 0.17), (0.56, 0.165),
+            (0.49, 0.16), (0.43, 0.172), (0.375, 0.188)]
+ELIP = 0.9
+def radio_camiseta(z):
+    p = sorted(CAMISETA)
+    if z <= p[0][0]: return p[0][1]
+    for (z0, r0), (z1, r1) in zip(p, p[1:]):
+        if z <= z1: return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
+    return p[-1][1]
+torno("traje", "Camiseta", CAMISETA, "Camiseta", elip=ELIP)
+toro("traje", "BajoCamiseta", (0, -0.01, 0.378), 0.188, 0.011, "Dorado", None, escala=(1, ELIP, 1))   # ribete del bajo
+Z_BRAZO = 0.633
 for lado, s in (("l", 1), ("r", -1)):
-    # Mangas de la camisa (hasta la muñeca) y las de la chaqueta, remangadas hasta el codo
-    if MANGA_LARGA:   # chaqueta con manga entera hasta la muñeca (sin nada en la muñeca)
-        tubo("traje", f"MangaChaqueta_{lado}", [(0.17 * s, -0.003, 0.637), (0.26 * s, -0.003, 0.636), (0.35 * s, -0.003, 0.634), (0.455 * s, -0.003, 0.633)],
-             [0.084, 0.078, 0.072, 0.068], "Chaqueta", None, cerrar=False)
-    else:
-        tubo("traje", f"Camisa_{lado}", [(0.3 * s, -0.003, 0.634), (0.42 * s, -0.003, 0.633), (0.455 * s, -0.003, 0.633)],
-             [0.062, 0.058, 0.058], "Camisa", None, cerrar=False)   # empieza dentro del remangado: bajo la chaqueta no hay crema
-        tubo("traje", f"MangaChaqueta_{lado}", [(0.17 * s, -0.003, 0.637), (0.26 * s, -0.003, 0.636), (0.33 * s, -0.003, 0.635)],
-             [0.082, 0.078, 0.075], "Chaqueta", None, cerrar=False)
-        toro("traje", f"Remangado_{lado}", (0.335 * s, -0.003, 0.635), 0.075, 0.018, "Chaqueta", {f"upperarm_{lado}": 0.5, f"lowerarm_{lado}": 0.5}, rot=(0, math.radians(90), 0))
+    # Manga corta: del hombro a medio brazo, con ribete dorado
+    tubo("traje", f"Manga_{lado}", [(0.15 * s, -0.003, Z_BRAZO + 0.004), (0.22 * s, -0.003, Z_BRAZO + 0.002), (0.275 * s, -0.003, Z_BRAZO)],
+         [0.08, 0.079, 0.077], "Camiseta", None, cerrar=False)
+    toro("traje", f"RibeteManga_{lado}", (0.274 * s, -0.003, Z_BRAZO), 0.077, 0.011, "Dorado", None, rot=(0, math.radians(90), 0))
+    esfera("traje", f"Hombro_{lado}", (0.16 * s, -0.003, Z_BRAZO + 0.006), (0.082, 0.08, 0.08), "Camiseta", None)
+    # Brazo de piel: nace dentro de la manga y entra en la mano con el radio del borde de la mano (~0,07), para que
+    # la muñeca no haga escalón; el tubo es de piel y la manga queda por fuera, así la ropa no se mete en la piel.
+    tubo("traje", f"Brazo_{lado}", [(0.24 * s, -0.003, Z_BRAZO), (0.3 * s, -0.002, Z_BRAZO), (0.36 * s, 0.0, Z_BRAZO), (0.42 * s, -0.002, Z_BRAZO - 0.003), (0.475 * s, -0.003, Z_BRAZO - 0.005)],
+         [0.068, 0.067, 0.067, 0.069, 0.07], "Piel", None, cerrar=False)
     # Pantalón y botas altas con vuelta
-    tubo("traje", f"Pernera_{lado}", [(0.098 * s, 0.003, 0.44), (0.103 * s, 0.0, 0.33), (0.11 * s, -0.001, 0.24), (0.115 * s, 0.003, 0.2)],
-         [0.092, 0.086, 0.078, 0.075], "Pantalon", None, cerrar=False)
+    tubo("traje", f"Pernera_{lado}", [(0.096 * s, 0.003, 0.41), (0.103 * s, 0.0, 0.33), (0.11 * s, -0.001, 0.24), (0.115 * s, 0.003, 0.2)],
+         [0.082, 0.082, 0.076, 0.074], "Pantalon", None, cerrar=False)
     bota = [(0.0, 0.082), (0.04, 0.087), (0.1, 0.074), (0.18, 0.072), (0.21, 0.08), (0.235, 0.088)]
     o = torno("traje", f"Bota_{lado}", bota, "Cuero", None, seg=24, elip=1.0, cy=0.0)
     for v in o.data.vertices: v.co.x += 0.118 * s
     esfera("traje", f"Suela_{lado}", (0.118 * s, -0.03, 0.012), (0.088, 0.13, 0.014), "Cuero", {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
     esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.085, 0.035), (0.07, 0.09, 0.044), "Cuero", {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
-# Camisa crema por dentro (asoma por delante)
-torno("traje", "Camisa", [(0.75, 0.0), (0.745, 0.075), (0.73, 0.1), (0.715, 0.12), (0.68, 0.17), (0.6, 0.186), (0.52, 0.178), (0.46, 0.176), (0.4, 0.165), (0.37, 0.0)], "Camisa")
-for lado, s in (("l", 1), ("r", -1)):   # hombros: cierran el hueco entre la camisa y las mangas
-    esfera("traje", f"Hombro_{lado}", (0.175 * s, -0.003, 0.637), (0.086, 0.084, 0.084), "Chaqueta", None)   # azul y por dentro de la manga: si asoma, no mancha
-# Chaqueta corta azul marino, abierta por delante (deja ver la camisa), hasta la cadera, con ribete dorado
-PERFIL_CHAQUETA = [(0.73, 0.15), (0.69, 0.2), (0.6, 0.214), (0.52, 0.205), (0.44, 0.205), (0.36, 0.222)]
-ABIERTO = (math.radians(-62), math.radians(242))
-torno("traje", "Chaqueta", PERFIL_CHAQUETA, "Chaqueta", seg=40, grosor=0.01, abierto=ABIERTO)
-def radio_chaqueta(z):
-    """Radio de la chaqueta a esa altura (interpolado en su perfil)."""
-    p = sorted(PERFIL_CHAQUETA)
-    if z <= p[0][0]: return p[0][1]
-    for (z0, r0), (z1, r1) in zip(p, p[1:]):
-        if z <= z1: return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
-    return p[-1][1]
-def sobre_chaqueta(a, z, fuera):
-    """Punto de la superficie de fuera de la chaqueta (ángulo a, altura z), separado «fuera» de ella."""
-    r = radio_chaqueta(z) + 0.01 + fuera
-    return (math.cos(a) * r, -0.01 + math.sin(a) * r * 0.92, z)
-# Ribete dorado pegado a la chaqueta: por los dos bordes de delante y por el bajo, solo donde hay chaqueta (nada
-# cruza por delante de la camisa ni queda flotando)
-for lado, a in (("l", ABIERTO[0]), ("r", ABIERTO[1])):
-    tubo("traje", f"Solapa_{lado}", [sobre_chaqueta(a, 0.725 - i * (0.725 - 0.365) / 11, 0.0) for i in range(12)], [0.011] * 12, "Dorado", None)
-tubo("traje", "Bajo", [sobre_chaqueta(ABIERTO[0] + (ABIERTO[1] - ABIERTO[0]) * k / 40, 0.365, 0.0) for k in range(41)], [0.011] * 41, "Dorado", None)
-# Cinturón por fuera de la chaqueta, con hebilla de estrella y bolsitas
-CINTURA = radio_chaqueta(0.45) + 0.018
-toro("traje", "Cinturon", (0, -0.01, 0.45), CINTURA, 0.02, "Cuero", None, escala=(1, 0.92, 1))
-Y_HEBILLA = -0.01 - CINTURA * 0.92 - 0.02
-estrella = [(0.035 * (1 if k % 2 == 0 else 0.45) * math.sin(k * math.pi / 5), 0.45 + 0.035 * (1 if k % 2 == 0 else 0.45) * math.cos(k * math.pi / 5)) for k in range(10)]
+# Cinturón con hebilla de estrella
+CINTURA = radio_camiseta(0.45) + 0.012
+toro("traje", "Cinturon", (0, -0.01, 0.45), CINTURA, 0.018, "Cuero", None, escala=(1, ELIP, 1))
+Y_HEBILLA = -0.01 - CINTURA * ELIP - 0.018
+estrella = [(0.033 * (1 if k % 2 == 0 else 0.45) * math.sin(k * math.pi / 5), 0.45 + 0.033 * (1 if k % 2 == 0 else 0.45) * math.cos(k * math.pi / 5)) for k in range(10)]
 bm = bmesh.new(); vs = [bm.verts.new((x, Y_HEBILLA, z)) for x, z in estrella]; bm.faces.new(vs)
 r = bmesh.ops.extrude_face_region(bm, geom=bm.faces[:])
-bmesh.ops.translate(bm, vec=(0, 0.014, 0), verts=[g for g in r["geom"] if isinstance(g, bmesh.types.BMVert)])
+bmesh.ops.translate(bm, vec=(0, 0.012, 0), verts=[g for g in r["geom"] if isinstance(g, bmesh.types.BMVert)])
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
 nueva("traje", "Hebilla", bm, "Dorado", {"pelvis": 1.0})
-# Pañuelo al cuello (como el del modelo de siempre): una banda alrededor del cuello y el pico por delante, sobre la chaqueta
-toro("traje", "PanueloCuello", (0, -0.01, 0.738), 0.152, 0.022, "Panuelo", {"spine_03": 0.5, "neck_01": 0.5}, escala=(1, 0.92, 1))
+# Pañuelo al cuello: banda alrededor del cuello y el pico por delante, sobre la camiseta
+toro("traje", "PanueloCuello", (0, -0.01, 0.738), 0.14, 0.022, "Panuelo", {"spine_03": 0.5, "neck_01": 0.5}, escala=(1, ELIP, 1))
 bm = bmesh.new(); filas = []
 for i in range(7):
-    u = i / 6; z = 0.735 - 0.19 * u; ancho = 0.15 * (1 - u) ** 0.8
+    u = i / 6; z = 0.735 - 0.17 * u; ancho = 0.12 * (1 - u) ** 0.8
     fila = []
     for k in range(9):
         x = ancho * (k / 4 - 1)
-        r0 = max(radio_chaqueta(z) + 0.01, 0.16)
-        y = -0.01 - math.sqrt(max(r0 * r0 - x * x, 0.0)) * 0.92 - 0.024   # por delante de la chaqueta y su ribete
+        r0 = max(radio_camiseta(z), 0.14)
+        y = -0.01 - math.sqrt(max(r0 * r0 - x * x, 0.0)) * ELIP - 0.012
         fila.append(bm.verts.new((x, y, z)))
     filas.append(fila)
 for i in range(6):
     for k in range(8):
         bm.faces.new((filas[i][k], filas[i+1][k], filas[i+1][k+1], filas[i][k+1]))
 bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
-nueva("traje", "PanueloPico", bm, "Panuelo", None, grosor=0.01)
+nueva("traje", "PanueloPico", bm, "Panuelo", None, grosor=0.008)
+
+# ── Chaqueta (va en Body24_AventureroChaqueta: la camiseta con la chaqueta encima) ──────────────────────────────────────────────
+# Corta, azul marino, abierta por delante (deja ver la camiseta, el pañuelo y la hebilla), con ribete dorado y
+# las mangas remangadas hasta el codo. Va por encima de la camiseta y del cinturón, sin engordar la silueta.
+PERFIL_CHAQUETA = [(0.725, 0.16), (0.69, 0.185), (0.62, 0.19), (0.54, 0.185), (0.47, 0.192), (0.42, 0.2), (0.37, 0.212)]
+ABIERTO = (math.radians(-55), math.radians(235))
+torno("chaqueta", "Chaqueta", PERFIL_CHAQUETA, "Chaqueta", seg=40, elip=ELIP, grosor=0.008, abierto=ABIERTO)
+def radio_chaqueta(z):
+    p = sorted(PERFIL_CHAQUETA)
+    if z <= p[0][0]: return p[0][1]
+    for (z0, r0), (z1, r1) in zip(p, p[1:]):
+        if z <= z1: return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
+    return p[-1][1]
+def sobre_chaqueta(a, z, fuera):
+    r = radio_chaqueta(z) + 0.008 + fuera
+    return (math.cos(a) * r, -0.01 + math.sin(a) * r * ELIP, z)
+for lado, a in (("l", ABIERTO[0]), ("r", ABIERTO[1])):
+    tubo("chaqueta", f"Solapa_{lado}", [sobre_chaqueta(a, 0.72 - i * (0.72 - 0.375) / 11, 0.0) for i in range(12)], [0.01] * 12, "Dorado", None)
+tubo("chaqueta", "BajoChaqueta", [sobre_chaqueta(ABIERTO[0] + (ABIERTO[1] - ABIERTO[0]) * k / 40, 0.372, 0.0) for k in range(41)], [0.01] * 41, "Dorado", None)
+for lado, s in (("l", 1), ("r", -1)):
+    tubo("chaqueta", f"MangaChaqueta_{lado}", [(0.15 * s, -0.003, Z_BRAZO + 0.004), (0.24 * s, -0.003, Z_BRAZO + 0.002), (0.32 * s, -0.003, Z_BRAZO)],
+         [0.1, 0.098, 0.096], "Chaqueta", None, cerrar=False)
+    toro("chaqueta", f"Remangado_{lado}", (0.322 * s, -0.003, Z_BRAZO), 0.096, 0.016, "Chaqueta", {f"upperarm_{lado}": 0.5, f"lowerarm_{lado}": 0.5}, rot=(0, math.radians(90), 0))
+    esfera("chaqueta", f"HombroChaqueta_{lado}", (0.16 * s, -0.003, Z_BRAZO + 0.008), (0.1, 0.098, 0.098), "Chaqueta", None)
+
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
 def pesar(lista):
     for o, pesos in lista:
@@ -354,17 +378,32 @@ def unir(lista, nombre, extra=None):
     bpy.context.view_layer.objects.active = extra or objs[0]
     bpy.ops.object.join(); bpy.context.object.name = nombre
     return bpy.context.object
-pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"])
+# La piel de los brazos usa el material del propio cuerpo (el de las manos y la cabeza) con sus UV puestas en
+# el color de piel de la textura: así es exactamente el mismo tono que las manos.
+uv_cuerpo = cuerpo.data.uv_layers.active
+piel_uv = None
+for p in cuerpo.data.polygons:
+    if abs((cuerpo.matrix_world @ p.center).x) > 0.5:
+        piel_uv = tuple(uv_cuerpo.data[p.loop_indices[0]].uv); break
+for o, _ in GRUPOS["traje"]:
+    if o.data.materials[0].name.startswith("Piel"):
+        o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
+        uv = o.data.uv_layers.new(name=uv_cuerpo.name)
+        for d in uv.data: d.uv = piel_uv
+pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"]); pesar(GRUPOS["chaqueta"])
 # Primero los pesos (la ropa los copia del cuerpo entero, brazos y piernas incluidos); después
-# lo del cuerpo de debajo que queda tapado por el pantalón, las botas y las mangas se quita
+# del cuerpo de Body05 solo se quedan las manos: su torso lleva pintada la ropa vieja y asomaba por la camisa
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)
 mw = cuerpo.matrix_world
-# del cuerpo de Body05 solo se quedan las manos: su torso lleva pintada la ropa vieja y asomaba por la camisa
 fuera = [v for v in bm.verts if abs((mw @ v.co).x) < 0.445]
 bmesh.ops.delete(bm, geom=fuera, context='VERTS')
 bm.to_mesh(cuerpo.data); bm.free()
 unir(GRUPOS["pelo"], "Hair16_Heroe")
-cuerpo.name = "Body23_Aventurero"   # el cuerpo de debajo va dentro: manos y torso
-unir(GRUPOS["traje"], "Body23_Aventurero", extra=cuerpo)
+cuerpo.name = "Body23_Aventurero"   # el cuerpo de debajo va dentro: las manos
+camiseta = unir(GRUPOS["traje"], "Body23_Aventurero", extra=cuerpo)
+# La versión con chaqueta es otro cuerpo entero (la misma ropa con la chaqueta encima), no una pieza suelta: así va en
+# el hueco de cuerpo del armario y deja libre el de la capa (Raúl, 8 nov: chaqueta y capa a la vez).
+copia = camiseta.copy(); copia.data = camiseta.data.copy(); bpy.context.scene.collection.objects.link(copia)
+unir(GRUPOS["chaqueta"], "Body24_AventureroChaqueta", extra=copia)
 bpy.ops.wm.save_as_mainfile(filepath=SALIDA)
 print("WILL", [(o.name, len(o.data.vertices), [m.name for m in o.data.materials]) for o in bpy.data.objects if o.type == 'MESH'])

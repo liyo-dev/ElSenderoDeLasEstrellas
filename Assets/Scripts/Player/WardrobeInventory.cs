@@ -259,6 +259,39 @@ public class WardrobeInventory : MonoBehaviour
         return _entries.TryGetValue(category, out var list) ? list : Array.Empty<WardrobeEntry>();
     }
 
+    /// <summary>
+    /// La ropa que se tiene es del grupo, pero cada cuerpo solo puede llevar lo suyo: de lo desbloqueado en
+    /// esa categoría, lo que ese personaje puede ponerse (<see cref="WardrobeItemSO.PuedeLlevarla"/>) y su
+    /// cuerpo tiene (<see cref="ModularAutoBuilder.GetOptions"/>), más lo que lleva puesto ahora.
+    /// </summary>
+    public List<WardrobeEntry> GetOptionsFor(PartCategory category, ModularAutoBuilder cuerpo, PartyControlManager.CharacterSlot personaje)
+    {
+        var resultado = new List<WardrobeEntry>();
+        var piezas = cuerpo != null ? cuerpo.GetOptions(category) : null;
+        if (piezas == null) return resultado;
+        bool Tiene(string pieza)
+        {
+            for (int i = 0; i < piezas.Count; i++)
+                if (string.Equals(piezas[i], pieza, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
+        foreach (var entry in GetUnlockedOptions(category))
+        {
+            if (!Tiene(entry.partName)) continue;
+            var item = WardrobeItemSO.FindPart(category, entry.partName);
+            if (item != null && !item.PuedeLlevarla(personaje)) continue;
+            resultado.Add(entry);
+        }
+        var puesta = cuerpo.GetSelection();
+        if (puesta != null && puesta.TryGetValue(category, out var actual) && !string.IsNullOrEmpty(actual)
+            && !resultado.Exists(e => string.Equals(e.partName, actual, StringComparison.OrdinalIgnoreCase)))
+        {
+            var item = WardrobeItemSO.FindPart(category, actual);
+            resultado.Add(item != null ? CreateEntry(item) : new WardrobeEntry { category = category, partName = actual, displayName = actual });
+        }
+        return resultado;
+    }
+
     public bool HasOptions(PartCategory category)
     {
         return _entries.TryGetValue(category, out var list) && list.Count > 0;

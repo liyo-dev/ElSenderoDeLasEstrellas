@@ -363,6 +363,51 @@ public static class CapturaDeEscenario
         finally { EditorSceneManager.ClosePreviewScene(escena); }
     }
 
+    // ── Foto en perspectiva (buzón: «foto») ───────────────────────────────────────────────
+
+    /// Foto desde un punto mirando a otro, con todo lo que haya abierto en el Editor (sin Play).
+    /// Sirve para revisar un decorado sin hornear una secuencia. Devuelve la ruta del PNG.
+    public static string FotoDesde(string nombre, Vector3 desde, Vector3 mira, float lente, int ancho = 1280, int alto = 720)
+    {
+        string carpeta = Path.Combine(CarpetaDeGuiones, "_fotos");
+        Directory.CreateDirectory(carpeta);
+        string ruta = Path.Combine(carpeta, nombre + ".png");
+        var go = new GameObject("Foto del buzón") { hideFlags = HideFlags.HideAndDontSave };
+        var rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+        try
+        {
+            var cam = go.AddComponent<Camera>();
+            cam.fieldOfView = lente;
+            cam.aspect = (float)ancho / alto;
+            cam.nearClipPlane = 0.1f;
+            cam.farClipPlane = 2000f;
+            cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation((mira - desde).sqrMagnitude > 1e-4f ? mira - desde : Vector3.forward));
+            cam.targetTexture = rt;
+            var datos = go.AddComponent<UniversalAdditionalCameraData>();
+            datos.renderPostProcessing = true;
+            datos.renderShadows = true;
+            var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
+            if (RenderPipeline.SupportsRenderRequest(cam, peticion)) RenderPipeline.SubmitRenderRequest(cam, peticion);
+            else cam.Render();
+            var png = new Texture2D(ancho, alto, TextureFormat.RGB24, false);
+            var previo = RenderTexture.active;
+            RenderTexture.active = rt;
+            png.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
+            png.Apply();
+            RenderTexture.active = previo;
+            File.WriteAllBytes(ruta, png.EncodeToPNG());
+            Object.DestroyImmediate(png);
+            return ruta;
+        }
+        catch (System.Exception e) { Debug.LogWarning("[Foto] " + e.Message); return null; }
+        finally
+        {
+            Object.DestroyImmediate(go);
+            rt.Release();
+            Object.DestroyImmediate(rt);
+        }
+    }
+
     // ── Foto cenital ────────────────────────────────────────────────────────────────────────
 
     public static void Fotografiar(Scene escena, Rect area, string ruta, out int ancho, out int alto)

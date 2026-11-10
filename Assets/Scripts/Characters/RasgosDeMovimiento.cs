@@ -26,13 +26,19 @@ public struct RasgosDeMovimiento
         reboteExtra = Mathf.Max(0f, a.reboteExtra) + Mathf.Max(0f, b.reboteExtra)
     };
 
-    /// <summary>Los rasgos del personaje al mando (los que le dan sus atuendos puestos).</summary>
+    /// <summary>Los rasgos del personaje al mando: los de sus atuendos de escena y los de sus prendas (<see cref="RasgosDePrenda"/>).</summary>
     public static RasgosDeMovimiento AlMando
     {
         get
         {
             var registro = CharacterAppearanceRegistry.Instance;
-            return registro != null ? registro.RasgosDe(ControlDelJugador.Activo) : default;
+            var deAtuendos = registro != null ? registro.RasgosDe(ControlDelJugador.Activo) : default;
+            var dePrendas = new RasgosDeMovimiento
+            {
+                planear = RasgosDePrenda.AlMandoLleva(RasgoDePrenda.Planear),
+                reboteExtra = RasgosDePrenda.AlMandoLleva(RasgoDePrenda.ReboteExtra) ? RasgosDePrenda.ReboteExtraConRasgo : 0f
+            };
+            return Sumar(deAtuendos, dePrendas);
         }
     }
 }

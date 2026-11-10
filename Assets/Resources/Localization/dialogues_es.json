@@ -158,27 +158,35 @@
         },
         {
             "key": "DLG_ELDRAN_REGALO_01",
-            "value": "Cuando cumplas dieciocho, ¿qué te gustaría que te regalara?"
+            "value": "Ya mismo es tu cumpleaños. ¿Qué quieres que te regale?"
         },
         {
             "key": "DLG_ELDRAN_REGALO_02",
-            "value": "Todavía falta mucho. No hace falta que me regales nada."
+            "value": "Nada, de verdad. No necesito nada."
         },
         {
             "key": "DLG_ELDRAN_REGALO_03",
-            "value": "Toma. Cómprate una tontería. Es mi regalo por adelantado."
+            "value": "Ya sabía yo que dirías eso. A ver, Will, tienes que pensar un poco en ti. Te pasas el día ayudando a los demás y apenas te queda tiempo para hacer algo que te guste."
         },
         {
             "key": "DLG_ELDRAN_REGALO_04",
-            "value": "¿Y para qué quiero eso?"
+            "value": "Bueno… pero es que me gusta ayudar a la gente."
         },
         {
             "key": "DLG_ELDRAN_REGALO_05",
-            "value": "Porque quiero que tengas algo para ti, aunque sea una tontería."
+            "value": "Lo sé, y eso es lo que más me gusta de ti. Pero toma, esta moneda es mi regalo por adelantado. Y también un ejercicio."
         },
         {
             "key": "DLG_ELDRAN_REGALO_06",
-            "value": "Bueno, a ver qué encuentro."
+            "value": "¿Un ejercicio?"
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_07",
+            "value": "Quiero que te compres algo que no sirva para nada. Para nada, ¿eh? Que ya te veo gastándotela en algo para ayudar a alguien."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_08",
+            "value": "Vale, vale… algo que no sirva para nada. A ver qué encuentro."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",
@@ -574,7 +582,7 @@
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_01",
-            "value": "Esto es un Punto de Guardado, Will."
+            "value": "Mira, esto es un Punto de Guardado."
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_02",
@@ -1346,7 +1354,7 @@
         },
         {
             "key": "DLG_ELDRAN_SIGUEME_INPROGRESS_01",
-            "value": "No te quedes atrás, Will. Ya casi estamos."
+            "value": "No te quedes atrás. Ya casi estamos."
         },
         {
             "key": "DLG_ELDRAN_CHARLA_VICTORIA_01",
@@ -1490,27 +1498,27 @@
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_01",
-            "value": "Dicen que te vas del pueblo, Will. Antes de cruzar esas puertas, necesitas saber defenderte de verdad: yo ataco, tú aguantas."
+            "value": "Así que te vas del pueblo, Will. Pues antes de salir por esas puertas, Eldran me pidió que te diera esto."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_02",
-            "value": "¿Ves ese libro al cinto? Es tu grimorio. Los magos no inventan la magia del aire: despiertan las páginas de su libro. Esta página resuena con tu energía... es la BOLA PRISMA."
+            "value": "Tu grimorio. Cada hechizo que aprendas queda escrito en sus páginas: ahí está ya tu Llama Astral. Y mira, se acaba de despertar otra: la BOLA PRISMA."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_03",
-            "value": "Al despertar la página, el grimorio la fija en tu memoria. Elígela en combate con <sprite name=\"interactable_lb\"> y dispara con <sprite name=\"interactable_x\">."
+            "value": "Lo llevas en el inventario: pulsa <sprite name=\"start\"> y entra en Hechizos. En combate, elige el hechizo con <sprite name=\"interactable_lb\"> y lánzalo con <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_04",
-            "value": "Y si te ataco de frente, mantén <sprite name=\"interactable_b\"> para alzar tu PROTECCIÓN. ¡Si bloqueas en el momento exacto, devolverás el golpe!"
+            "value": "Y ahora lo mío: cuando te ataque, mantén <sprite name=\"interactable_b\"> para alzar tu PROTECCIÓN. Si lo haces justo a tiempo, me devolverás el golpe."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_05",
-            "value": "¡Siento cómo la página resuena en mis manos! ¡Estoy listo, Erika!"
+            "value": "¡Mi propio grimorio! Vale, Erika. Cuando quieras."
         },
         {
             "key": "DLG_ERIKA_ENTRENAMIENTO_06",
-            "value": "¡Pues demuéstralo en guardia! ¡A ver si aguantas mi ritmo!"
+            "value": "¡En guardia, entonces! A ver cuánto aguantas."
         },
         {
             "key": "DLG_ERIKA_DESPUES_01",
@@ -1526,23 +1534,19 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "Ya tienes capa, poción y pañuelo. Falta lo importante: saber por qué te vas."
+            "value": "Capa, poción, pañuelo… ya llevas de todo. Pero te falta lo más importante: saber por qué te vas."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
-            "value": "Haz una lista de motivos. Cuando dudes, léela."
+            "value": "Ahí fuera vas a dudar, Will. Y cuando dudes, tienes que tener muy claros tus motivos."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_03",
-            "value": "Encontrar a Estela. Y entender qué me pasa."
+            "value": "Encontrar a Estela. Y entender qué me está pasando."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_04",
-            "value": "Buenos motivos. Que sean tuyos, no míos."
-        },
-        {
-            "key": "DLG_ELDRAN_BRUJULA_01",
-            "value": "Y llévate esta brújula. Siempre apunta al camino de vuelta a casa."
+            "value": "Buenos motivos. Y son tuyos, no míos. No los sueltes."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_01",
@@ -1559,22 +1563,6 @@
         {
             "key": "DLG_OLIVER_DESPEDIDA_04",
             "value": "Más te vale. Nos vemos pronto."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_01",
-            "value": "Tengo que ir a la capital. Hay cosas que solo se arreglan allí."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_02",
-            "value": "Confío en ti, aunque no me guste lo que eso me obliga a soltar."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_03",
-            "value": "Gracias por criarme, Eldran."
-        },
-        {
-            "key": "DLG_ELDRAN_DESPEDIDA_04",
-            "value": "Anda, ve. La puerta de casa siempre estará abierta."
         },
         {
             "key": "CHAR_ERIKA",
@@ -1810,7 +1798,7 @@
         },
         {
             "key": "DLG_OLIVER_CHARLA_01",
-            "value": "¿Has encontrado algo raro por ahí? Si es raro de verdad, lo quiero para mi colección."
+            "value": "¿Sabes que colecciono cosas raras? Me faltan tres del pueblo: una canica, una piedra con agujero y una moneda antigua. Si las encuentras, ¡tráemelas!"
         },
         {
             "key": "DLG_OLIVER_CHARLA_02",
@@ -2054,19 +2042,19 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "Hace tres semanas, de noche, vi luces bajas moviéndose entre los árboles del bosque."
+            "value": "¿Y usted? ¿Ha visto algo raro?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "No eran faroles. Iban a la altura de la rodilla."
+            "value": "Hace tres semanas, de noche, vi luces bajas moviéndose entre los árboles del bosque."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "¿Y qué hacían?"
+            "value": "No eran faroles. Iban a la altura de la rodilla."
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "Se encendían y se apagaban, despacio. Como algo que respira dormido."
+            "value": "¿Y qué hacían?"
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
@@ -2094,11 +2082,11 @@
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
-            "value": "Las marcas tienen líneas dentro. Como las del trozo del aro."
+            "value": "Ha dejado restos de hierro en la madera. Con las mismas líneas que el trozo del aro."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_03",
-            "value": "Y aquí, en la madera, todavía brillan un poco."
+            "value": "Y las líneas todavía brillan un poco."
         },
         {
             "key": "DLG_CAP3_HOJA_01",
@@ -2110,7 +2098,7 @@
         },
         {
             "key": "DLG_CAP3_HOJA_03",
-            "value": "Tú eres el primero que trae uno encima."
+            "value": "Y tú eres el primero que trae un trozo de esos aros."
         },
         {
             "key": "DLG_CAP3_HOJA_04",
@@ -2207,6 +2195,174 @@
         {
             "key": "CAP4_BOC_FIGURA",
             "value": "¡Te has salvado tú y has chamuscado a quien tenías que proteger!"
+        },
+        {
+            "key": "DLG_CAP3_LUCES_05",
+            "value": "Se encendían y se apagaban, despacio. Como algo que respira dormido."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_05",
+            "value": "Anda, ve a despedirte de la gente. Oliver no me perdonaría que te fueras sin decirle nada."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_06",
+            "value": "Yo te espero en la salida del pueblo."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_05",
+            "value": "Y si por ahí ves algo raro, tráemelo. Para la colección."
+        },
+        {
+            "key": "DLG_CAP2_ELDRAN_ESPERA_01",
+            "value": "¿Ya te has despedido de Oliver? Ve, anda. Yo no me muevo de aquí."
+        },
+        {
+            "key": "DLG_CAP2_OLIVER_TRAS_ADIOS_01",
+            "value": "¿Sigues aquí? Eldran te espera en la salida del pueblo. ¡Y acuérdate de lo raro!"
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_01",
+            "value": "¿Ya te vas? Ay, Will… Come bien y abrígate por las noches."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_02",
+            "value": "Y no le hagas caso a Eldran si dice que no se preocupa. Se preocupa, y mucho."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_VICTORIA_03",
+            "value": "Lo haré, Victoria. Gracias por todo."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_ERIKA_01",
+            "value": "Guardia alta y no te lances el primero. Y vuelve con ese pañuelo, que es mío."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_BOTICARIA_01",
+            "value": "La poción es para un apuro de verdad, ¿eh? No para una rozadura."
+        },
+        {
+            "key": "DLG_CAP2_ADIOS_TOMASA_01",
+            "value": "¿Te vas de viaje? Si encuentras por ahí algo que no sirva para nada, ya sabes dónde venderlo."
+        },
+        {
+            "key": "CAP3_BOC_ACAMPADA",
+            "value": "Mañana llego a la costa. Ojalá alguien allí sepa algo de estos aros."
+        },
+        {
+            "key": "CHAR_REMEDIOS",
+            "value": "Remedios"
+        },
+        {
+            "key": "CHAR_ANSELMO",
+            "value": "Anselmo"
+        },
+        {
+            "key": "CHAR_ENGRACIA",
+            "value": "Engracia"
+        },
+        {
+            "key": "CHAR_EUSEBIO",
+            "value": "Eusebio"
+        },
+        {
+            "key": "CHAR_FERMIN",
+            "value": "Fermín"
+        },
+        {
+            "key": "DLG_POSADERO_01",
+            "value": "Pasa, pasa. Aquí siempre hay sitio y sopa caliente."
+        },
+        {
+            "key": "DLG_REMEDIOS_01",
+            "value": "Cuidado, que voy cargada."
+        },
+        {
+            "key": "DLG_ANSELMO_01",
+            "value": "El mar está tranquilo hoy."
+        },
+        {
+            "key": "DLG_ENGRACIA_01",
+            "value": "Remedios, pociones y algo de comer. ¿Qué te pongo?"
+        },
+        {
+            "key": "DLG_EUSEBIO_01",
+            "value": "Buenos días, chico."
+        },
+        {
+            "key": "DLG_FERMIN_01",
+            "value": "Buen día para pasear."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_C3_1_01",
+            "value": "¿Lo de los animales con aro? Pregunta en la posada. Yo no tengo tiempo ni de rascarme."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
+            "value": "Un perro con collar raro se pasó la noche rascándose contra el cobertizo de las redes. Lo oí desde casa."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_1_01",
+            "value": "Estas cajas no se van a llevar solas. Ojalá."
+        },
+        {
+            "key": "DLG_ALDEA_REMEDIOS_2_01",
+            "value": "Si el mar está bueno, hay pescado. Si no, hay cajas igual."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_C3_1_01",
+            "value": "Hace semanas que las gaviotas no vuelan hacia el bosque. Ni ellas se fían."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_C3_2_01",
+            "value": "¿Luces entre los árboles? Yo solo me fío de las del faro."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_1_01",
+            "value": "Cuarenta años en este muelle y el mar todavía me sorprende."
+        },
+        {
+            "key": "DLG_ALDEA_ANSELMO_2_01",
+            "value": "No hagas ruido, que espantas a los peces. Bueno, a los que queden."
+        },
+        {
+            "key": "DLG_ALDEA_ENGRACIA_1_01",
+            "value": "Remedios, pociones y algo de comer. ¿Qué te pongo?"
+        },
+        {
+            "key": "DLG_ALDEA_ENGRACIA_2_01",
+            "value": "Lo que no tenga lo pido al Reino. Tarda, pero llega."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
+            "value": "Lucía dice que vio un zorro con collar junto a la cerca del huerto. Esa niña ve muchas cosas… pero esta vez la creo."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
+            "value": "En mis tiempos, los demonios se quedaban en los cuentos."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_1_01",
+            "value": "Siéntate un rato, chico. Desde este banco se ve todo el puerto."
+        },
+        {
+            "key": "DLG_ALDEA_EUSEBIO_2_01",
+            "value": "Mi mujer decía que el mar huele a promesas. Yo digo que huele a sardina."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_C3_1_01",
+            "value": "Por el camino del bosque pasan carros de noche. Yo cierro la ventana y en paz."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_C3_2_01",
+            "value": "¿Has probado la sopa de la posada? Da fuerzas hasta para mover una cuchara."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_1_01",
+            "value": "Buen día para pasear. Aquí todos los días son buenos para pasear."
+        },
+        {
+            "key": "DLG_ALDEA_FERMIN_2_01",
+            "value": "Si buscas la tienda, Engracia tiene el puesto al oeste de la plaza."
         }
     ]
 }

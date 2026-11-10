@@ -87,7 +87,7 @@ public sealed class CombatLabBootstrap : MonoBehaviour
     /// Maná mínimo del laboratorio: cubre dos lanzamientos del hechizo más caro de la biblioteca.
     private const float ManaMinimoDePrueba = 50f;
 
-    /// El laboratorio trabaja con todas las habilidades y con maná. Se escribe en el preset de la
+    /// El laboratorio trabaja con todas las habilidades, con maná y con el grimorio. Se escribe en el preset de la
     /// sesión (copia en memoria: no toca el perfil ni la partida) y no en los componentes, porque
     /// cualquier re-aplicación posterior del preset (equipar en el menú de Start, cambiar de ropa,
     /// recoger una página) vuelve a leerlo y, con la magia apagada, deja el maná a 0. Ver INC-522.
@@ -116,5 +116,8 @@ public sealed class CombatLabBootstrap : MonoBehaviour
             preset.maxMP = Mathf.Max(ManaMinimoDePrueba, masCaro * 2f);
         }
         preset.currentMP = preset.maxMP;
+
+        // El grimorio se ve desde el principio (en la historia se lo da Erika). Ver INC-961.
+        NarrativeFlags.Set(GrimorioDelPersonaje.FlagGrimorioRecibido, true);
     }
 }

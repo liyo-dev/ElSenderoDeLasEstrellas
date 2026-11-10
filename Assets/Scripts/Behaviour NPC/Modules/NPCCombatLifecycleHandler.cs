@@ -1735,6 +1735,12 @@ namespace Game.NPC.Modules
             var col = GetComponent<CapsuleCollider>();
             if (col) { col.enabled = true; col.isTrigger = true; }
 
+            // Damageable.Die deja el Rigidbody sin detección de colisiones: sin ella el detector
+            // de interacción no encuentra al NPC y no sale el botón A. Sigue cinemático para que
+            // el trigger no lo deje caer. Ver INC-963.
+            var rb = GetComponent<Rigidbody>();
+            if (rb) rb.detectCollisions = true;
+
             // 3. Configurar Componente Interactable
             var interactable = GetComponent<Interactable>();
             if (!interactable) interactable = gameObject.AddComponent<Interactable>();
@@ -1800,10 +1806,11 @@ namespace Game.NPC.Modules
             Debug.Log($"[Lifecycle] 🔄 Resucitando {name}...");
             #endif
             
-            // 1. Restaurar vida
+            // 1. Restaurar vida, colisionador y Rigidbody (Heal no hace nada sobre un Damageable
+            // muerto, y Die le apagó el colisionador y la detección de colisiones). Ver INC-963.
             if (_damageable != null)
             {
-                _damageable.Heal(_damageable.Max); // Curar al máximo
+                _damageable.Revive(_damageable.Max);
             }
             
             // 2. Restaurar estado

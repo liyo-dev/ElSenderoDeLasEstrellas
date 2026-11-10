@@ -556,11 +556,11 @@
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DESC",
-            "value": "Alguien pone aros de hierro a los animales. En la aldea del mar quizá sepan algo."
+            "value": "Estela no acepta aprendices. Eldran cree que te escuchará si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
-            "value": "Alguien pone aros de hierro a los animales. En la aldea del mar quizá sepan algo."
+            "value": "Estela no acepta aprendices. Eldran cree que te escuchará si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
         },
         {
             "key": "CAP3_LLEGAR_PASO",
@@ -633,6 +633,26 @@
         {
             "key": "CAP4_VADO_PASO",
             "value": "Sigue el camino del río"
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_NAME",
+            "value": "Hora de partir"
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_DESC",
+            "value": "Despídete de Oliver y reúnete con Eldran en la salida del pueblo."
+        },
+        {
+            "key": "CAP2_HORA_DE_PARTIR_DETAIL",
+            "value": "Despídete de Oliver y reúnete con Eldran en la salida del pueblo."
+        },
+        {
+            "key": "CAP2_ADIOS_OLIVER_PASO",
+            "value": "Despídete de Oliver"
+        },
+        {
+            "key": "CAP2_ADIOS_ELDRAN_PASO",
+            "value": "Reúnete con Eldran en la salida del pueblo"
         }
     ]
 }
