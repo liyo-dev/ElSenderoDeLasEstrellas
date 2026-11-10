@@ -114,7 +114,7 @@ Silas es un hechicero, antiguo amigo de Eldran y dueño de una colección de rel
 
 ### Tobías
 
-Hermano menor de Liam. Tiene doce años y una enfermedad que consume su corazón y su magia. Los sanadores solo consiguen retrasarla. Habla con Liam a través del espejo; prefiere que su hermano vuelva antes que verlo arriesgarse sin límite. La cura final conserva sus recuerdos, su voluntad y su identidad. En el epílogo aprende a pescar con el grupo.
+Hermano menor de Liam. Tiene doce años y una enfermedad que consume su corazón y su magia. Los sanadores solo consiguen retrasarla. Habla con Liam a través del espejo; prefiere que su hermano vuelva antes que verlo arriesgarse sin límite. La cura final conserva sus recuerdos, su voluntad y su identidad. En el epílogo aprende a pescar con el grupo. **Adaptación del juego:** no hay «dibujo de los cuatro»; en el epílogo Tobías le regala a Will un dibujo suyo, como haría cualquier niño, y Estela se burla de él (INC-1020).
 
 ### El Rey
 
@@ -262,7 +262,7 @@ Will viaja en solitario hacia la costa buscando pistas sobre los aros y las pers
 | Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
 |---|---|---|---|
 | **3.0** | La despedida en la salida del pueblo | Cinemática | Eldran explica por qué ir antes a la aldea del mar: Estela no acepta aprendices; si Will le lleva pruebas de los aros, le escuchará. Él se va al Reino a contárselo al Rey: «es un hasta pronto». Empieza «Las marcas de hierro». (INC-967) |
-| **3.1** | Camino del puerto a pie; acampada a mitad de camino y, mientras Will duerme, Liam habla con Tobías por el espejo | Exploración + cinemática de interludio | Sin saltos a la costa: se va andando. Para quién busca la cura Liam y su dilema interno. Pendiente (INC-967, tanda 2): animal con aro, puzle con Llama Astral, mago rival, enemigos y cofres en el camino. |
+| **3.1** | Camino del puerto a pie; al pasar por la mitad del camino, interludio: Liam habla con Tobías por el espejo (sin rótulos ni cambio de hora) | Exploración + cinemática de interludio | Sin saltos a la costa: se va andando. Para quién busca la cura Liam y su dilema interno. Pendiente (INC-967, tanda 2): animal con aro, puzle con Llama Astral, mago rival, enemigos y cofres en el camino. |
 | **3.2** | Will reúne pistas en la aldea del mar | Investigación | Escuchar, inspeccionar y unir pistas en la hoja de avistamientos. |
 | **3.3** | Sigue el carro de los contrabandistas y decide cómo actuar | Sigilo ligero y decisión | Aplicar la lección de Eldran: combate opcional, evitable, con consecuencias según la elección (avisar a la guardia o combatir; jaulas quemadas). |
 

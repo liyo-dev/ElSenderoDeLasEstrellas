@@ -139,14 +139,16 @@ public class DialogueHeadLook : MonoBehaviour
     public float MaxYaw => maxYaw;
     public float YawCutoffMargin => yawCutoffMargin;
     public float MaxWeight => maxWeight;
+    public float MaxPitch => maxPitch;
 
     /// Cambia el alcance del giro. Las cinemáticas con guion lo amplían (alguien sentado mira a
-    /// quien tiene al lado) y lo devuelven al acabar.
-    public void FijarAlcance(float yaw, float margenDeCorte, float peso)
+    /// quien tiene al lado o a lo que tiene sobre la mesa) y lo devuelven al acabar.
+    public void FijarAlcance(float yaw, float margenDeCorte, float peso, float inclinacion)
     {
         maxYaw = yaw;
         yawCutoffMargin = margenDeCorte;
         maxWeight = Mathf.Clamp01(peso);
+        maxPitch = inclinacion;
     }
 
     public void SetTarget(Transform target)

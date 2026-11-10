@@ -90,9 +90,23 @@ public static class NinosHechosEnBlender
                 Colores = new (string, Color)[0],
             },
         },
+        // Lucía, la niña de la posada de la aldea del mar (talla de Nina): coletas y ropa de diario del pack
+        // (Hair08, Body04), que se ajustan a su cuerpo de niña. Prefab de PersonajesConAspectoFijo.
+        new Nino
+        {
+            Esqueleto = EsqueletoPequeno, Iris = new Color(0.36f, 0.52f, 0.3f), Ojos = 70, Bocas = 70, BrazosAbiertos = 0.35f,
+            Ficha = new Ficha
+            {
+                Nombre = "Lucia", Carpeta = Carpeta + "/Lucia",
+                PrefabPropio = "Assets/_NPCs/AldeaDelMar/Lucia.prefab", CuerpoDeAntes = "Body04",
+                Modelos = new[] { "Assets/_NPCs/AldeaDelMar/Lucia.prefab" }, Propios = new[] { "Assets/_NPCs/AldeaDelMar/Lucia.prefab" },
+                Piezas = new Pieza[0],
+                Colores = new (string, Color)[0],
+            },
+        },
     };
 
-    [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina, Lucas)")]
+    [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina, Lucas, Lucía)")]
     public static void Aplicar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Niños", "Hazlo fuera de Play."); return; }

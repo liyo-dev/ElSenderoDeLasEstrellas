@@ -2262,12 +2262,8 @@
             "value": "The sheet where Will writes down what the seaside villagers tell him about the collared animals."
         },
         {
-            "key": "CAP3_ROTULO_NOCHE",
-            "value": "That night, on the forest road…"
-        },
-        {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Follow the cart without getting close: if they see you, you'll have to go back."
+            "value": "Follow him without being seen. When he stops to look back, hide in a bush or behind a wall."
         },
         {
             "key": "CAP3_ROTULO_MANANA",
@@ -2298,10 +2294,6 @@
             "value": "New spell: Levitation. It's now among your spells: cast it to float over water, mud and gaps."
         },
         {
-            "key": "CAP3_ROTULO_ACAMPADA",
-            "value": "That night, halfway to the coast…"
-        },
-        {
             "key": "REQUISITO_FALTA_PRENDA",
             "value": "You need to be wearing something that {0}."
         },
@@ -2324,6 +2316,14 @@
         {
             "key": "LUGAR_ALDEA_DEL_MAR",
             "value": "Seaside Village"
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA_NOCHE",
+            "value": "It's already night: go to the campfire to wait for the cart. If you'd rather keep exploring by day, press {BOTON} by any campfire to rest until morning."
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA",
+            "value": "Press {BOTON} by a campfire to rest: by day, time passes until night; at night, until morning."
         }
     ]
 }

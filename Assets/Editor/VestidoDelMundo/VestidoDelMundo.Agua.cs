@@ -52,10 +52,11 @@ public static partial class VestidoDelMundo
     static partial void PonerAgua(Obra o)
     {
         Aguas.PonerLagunas(o);
+        Aguas.PonerRios(o);
     }
 
     /// Todo lo del agua, en su propia clase para que sus nombres no se crucen con los de las otras partes del vestido.
-    private static class Aguas
+    private static partial class Aguas
     {
         // ── Datos ────────────────────────────────────────────────────────────────────────────
 

@@ -19,7 +19,18 @@ MonoBehaviour:
       empiezaConSenal: []
       empiezaConMisionActiva: []
       acabaConSenal:
-      - CAP3_NOCHE_EMPIEZA
+      - CAP3_CAE_LA_NOCHE
+      acabaConMisionIniciada: []
+      acabaConMisionCompletada: []
+    presencia: 2
+    marca: 
+    frases: []
+  - nombre: "Cap. 3 \xB7 fuera del claro"
+    tramo:
+      empiezaConSenal:
+      - CAP3_EN_EL_CLARO
+      empiezaConMisionActiva: []
+      acabaConSenal: []
       acabaConMisionIniciada: []
       acabaConMisionCompletada: []
     presencia: 2

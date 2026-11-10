@@ -1,66 +1,106 @@
-﻿# Cap. 3 · La posada de la aldea del mar: Will pregunta por el trozo del aro, le suenan las tripas y Lucía intenta subir la cuchara.
+﻿# Cap. 3 · La posada de la aldea del mar. Es la hora de comer en la terraza: Benito y Rosario comen en
+# la mesa de al lado y Lucía, en su mesita, mira fijamente su
+# cuchara. Will llega, pregunta por el trozo del aro, le suenan las tripas y pide una sopa.
+# Lucía hace subir la cuchara de verdad (un palmo, temblando) hasta que se le cae: «Casi».
 GUION Cap3_02_LaPosada
 ESCENA MainWorld
-ZONA Cap3Posada 279 -424 24
+ZONA Cap3Posada 280 -427 24
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_02_LaPosada.asset
 TEXTO bocadillo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO
 will      Player        nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
-posadero  NPC_Posadero  nombre=CHAR_POSADERO color=E7C9A0 prefab=Assets/_NPCs/Manuel.prefab
-lucia     NPC_Lucia     nombre=CHAR_LUCIA color=F6B7C9 prefab=Assets/_NPCs/AmigaDelNiñoPez.prefab
+posadero  NPC_Posadero  nombre=CHAR_POSADERO color=E7C9A0 prefab=Assets/_NPCs/AldeaDelMar/Posadero.prefab
+lucia     NPC_Lucia     nombre=CHAR_LUCIA color=F6B7C9 prefab=Assets/_NPCs/AldeaDelMar/Lucia.prefab
 
 PUNTOS
-# La mesa de encuentro de la plaza (279, -427) queda al sur; el grupo, al norte de ella.
-p_will      279.0 -425.3
-p_posadero  281.2 -424.6
-p_lucia     277.2 -425.0
-mesa        279.0 -427.0
-# Cámaras al sur, por encima de la mesa: se ven las caras (Lucía mira a la mesa) y los perfiles.
-cam_grupo   279.0 -431.0
-cam_lucia   277.4 -428.6
-cam_will    278.4 -428.6
-cam_posad   280.2 -428.4
+# La terraza: la mesa de encuentro (279, −427). Will y el posadero hablan al sur de la mesa, a la vista.
+# Lucía es más baja que las mesas: come en su mesita (277,3, −429,7), con su cuenco y la cuchara
+# (PROP_Cuchara) delante. Al este, Benito y Rosario comiendo.
+w_entra       275.0 -433.0
+p_will        279.0 -429.4
+p_posadero    280.5 -428.5
+p_lucia       277.3 -429.05
+mesa          279.0 -427.0
+cuchara       277.15 -429.62
+puerta        284.9 -420.6
+# Cámara baja al sureste de la mesita: la cuchara delante y Lucía detrás, de frente.
+cam_cuchara   278.0 -431.1
 
 HILO
 @inicio
-will en p_will mirando p_posadero
-& posadero en p_posadero mirando p_will
-& lucia en p_lucia mirando mesa
-plano conjunto will posadero lucia desde=cam_grupo altura=2.2
-espera 0.8
-plano medio will desde=cam_will altura=1.4 solo
-will dice CAP3_POSADA_01 mira=posadero cara=pensativo gesto=FoundSomething_NoWeapon
-plano primer posadero desde=cam_posad altura=1.4
+# La terraza a la hora de comer; Will entra desde la plaza.
+will en w_entra mirando p_posadero
+& posadero en p_posadero mirando mesa
+& lucia en p_lucia mirando cuchara
+& prop PROP_SopaWill oculto
+& prop PROP_BrilloCuchara oculto
+plano general will posadero lucia lente=38
+will anda a p_will ritmo=paseo
+will mira posadero
+& posadero mira will
+espera 0.3
+
+@pregunta
+plano dos will posadero
+will dice CAP3_POSADA_01 cara=pensativo gesto=FoundSomething_NoWeapon
+plano medio posadero
 posadero cara sorpresa
-espera 1.2
+espera 1.0
 posadero dice CAP3_POSADA_02 cara=preocupado
-will dice CAP3_POSADA_03
-posadero dice CAP3_POSADA_04 cara=preocupado
+plano medio will
+will dice CAP3_POSADA_03 cara=triste
+plano medio posadero
+posadero dice CAP3_POSADA_04 cara=preocupado gesto=HeadShake01
 
 @tripas
-plano conjunto will posadero lucia desde=cam_grupo altura=2.2
-espera 0.6
+plano conjunto will posadero lucia
+sonido clip="Assets/Audio/Fantasy Sfx/Mp3/Dragon_Growl_00.mp3" volume=0.25
+& lucia mira will
+& will cara sorpresa
+espera 0.9
 posadero dice CAP3_POSADA_05 cara=alegre
 will dice CAP3_POSADA_06 cara=confuso gesto=Talk01
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Coin_Shaking-002.wav" volume=0.7
-posadero dice CAP3_POSADA_07 gesto=HeadNod01
+posadero dice CAP3_POSADA_07 gesto=HeadNod01 cara=alegre
+posadero anda a puerta ritmo=normal
+& will mira lucia
 
 @cuchara
-lucia mira will
-lucia dice CAP3_POSADA_08 cara=alegre
-plano medio lucia desde=cam_lucia altura=1.2 solo
-lucia gesto CastingEnter01
+# Lucía le enseña su magia: la cuchara sube de verdad, tiembla y se cae en la mesa.
+plano dos will lucia
+lucia dice CAP3_POSADA_08 cara=alegre mira=will
+lucia mira cuchara
 & lucia cara decidido
-lucia dice CAP3_POSADA_09 cara=decidido
-vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab" en=mesa lifetime=1.5
-espera 0.8
-sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(4).wav" volume=0.6
-lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
-will dice CAP3_POSADA_11 mira=lucia cara=alegre
-
-@pista
-plano conjunto will posadero lucia desde=cam_grupo altura=2.2
-posadero dice CAP3_POSADA_12 mira=will gesto=Question01
+& lucia gesto CastingEnter01
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-012.wav" volume=0.45
 espera 0.5
+plano detalle PROP_Cuchara lucia desde=cam_cuchara altura=1.0 lente=34
+prop PROP_BrilloCuchara
+& lucia bucle CastingIdle01
+& efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.24,0 deltaRotacion=0,0,12 segundos=2.6 desdeDondeEstaba=true esperar=false
+lucia dice CAP3_POSADA_09 cara=decidido
+efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-24 segundos=0.18 desdeDondeEstaba=true esperar=true
+efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,20 segundos=0.18 desdeDondeEstaba=true esperar=true
+efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,-0.24,0 deltaRotacion=0,0,-8 segundos=0.22 suavizar=false desdeDondeEstaba=true esperar=false
+& prop PROP_BrilloCuchara oculto
+& lucia gesto CastingExit01
+espera 0.2
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.4
+plano medio lucia
+lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
+plano dos will lucia
+will dice CAP3_POSADA_11 mira=lucia cara=alegre
+lucia dice CAP3_POSADA_13 cara=alegre gesto=Cheer01
+
+@sopa
+# El posadero vuelve con la sopa de Will y le da el consejo.
+posadero anda a p_posadero ritmo=normal
+& will mira posadero
+prop PROP_SopaWill
+plano dos will posadero
+posadero dice CAP3_POSADA_12 mira=will gesto=Talk01 cara=alegre
+will gesto HeadNod01
+& will cara alegre
+espera 0.6

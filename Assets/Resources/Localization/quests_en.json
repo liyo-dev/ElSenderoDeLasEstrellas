@@ -580,7 +580,7 @@
         },
         {
             "key": "CAP3_PISTA_3_PASO",
-            "value": "Look at the net shed"
+            "value": "Look at the house with the lobster pots"
         },
         {
             "key": "CAP3_HOJA_PASO",
@@ -653,6 +653,14 @@
         {
             "key": "CAP2_ADIOS_ELDRAN_PASO",
             "value": "Meet Eldran at the edge of the village"
+        },
+        {
+            "key": "CAP3_BOSQUE_PASO",
+            "value": "Take the road toward the Forbidden Forest"
+        },
+        {
+            "key": "CAP3_NOCHE_PASO",
+            "value": "Wait for the cart by the fire at night"
         }
     ]
 }

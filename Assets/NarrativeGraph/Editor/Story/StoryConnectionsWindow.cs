@@ -55,7 +55,7 @@ namespace NarrativeGraphEditor.Story
             if (sheet != null) root.styleSheets.Add(sheet);
             root.AddToClassList("story-root");
 
-            var scroll = new ScrollView();
+            var scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
             scroll.AddToClassList("story-panel__scroll");
             root.Add(scroll);
 

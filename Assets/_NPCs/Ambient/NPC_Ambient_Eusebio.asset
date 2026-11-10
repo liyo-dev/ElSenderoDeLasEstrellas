@@ -20,7 +20,7 @@ MonoBehaviour:
   maxIdleTime: 3
   walkSpeed: 1.5
   minAnimSpeed: 0.25
-  ambientActivity: 3
+  ambientActivity: 4
   permitirTrabajo: 0
   puestoId: 
   canSeekShelter: 0

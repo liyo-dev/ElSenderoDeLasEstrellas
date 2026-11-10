@@ -2042,71 +2042,71 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "And you? Have you seen anything strange?"
+            "value": "Have you seen any of those animals yourself?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "Three weeks ago, at night, I saw low lights moving between the forest trees."
+            "value": "Animals, no. But a few weeks back, one night I couldn't sleep, I saw lights on the forest road."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "They weren't lanterns. They were knee-high."
+            "value": "They weren't lanterns. They were almost at ground level, all bunched together."
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "And what were they doing?"
+            "value": "Fireflies?"
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
-            "value": "I saw the fox! By the garden fence."
+            "value": "Are you looking for the fox with the collar too? I saw it!"
         },
         {
             "key": "DLG_CAP3_ZORRO_02",
-            "value": "It had a glowing collar. It didn't want to bite me."
+            "value": "It was at the garden fence, rubbing its neck against the wood. Like this, look."
         },
         {
             "key": "DLG_CAP3_ZORRO_03",
-            "value": "It was more scared than me."
+            "value": "I said \"here, boy\" and it ran off. I think it was more scared than me."
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Small tracks, and reddish fur caught on the wood."
+            "value": "Reddish fur caught on the wood… and small tracks."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
-            "value": "It scratched itself hard here. As if the collar hurt."
+            "value": "It rubbed itself here until the fur came off. As if the collar hurt it."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
-            "value": "Scratches on the wood, at the height of a dog's neck."
+            "value": "Look at these scratches. Right at the height of a dog's neck."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
-            "value": "It left traces of iron on the wood. With the same lines as the collar piece."
+            "value": "And this… it's bits of iron. They have the same lines as my piece of the collar."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_03",
-            "value": "And the lines still glow a little."
+            "value": "They're still glowing."
         },
         {
             "key": "DLG_CAP3_HOJA_01",
-            "value": "A frightened fox, a dog that kept scratching, and lights that breathe. I wrote it all down."
+            "value": "Well, lad? Found anything?"
         },
         {
             "key": "DLG_CAP3_HOJA_02",
-            "value": "I told two guards and a traveller. None of them listened."
+            "value": "The fox rubbed itself on the fence until its fur came off. And a dog left bits of iron on the house with the lobster pots."
         },
         {
             "key": "DLG_CAP3_HOJA_03",
-            "value": "And you're the first to bring a piece of one of those collars."
+            "value": "With the same lines as this. And they're still glowing."
         },
         {
             "key": "DLG_CAP3_HOJA_04",
-            "value": "If you're looking for whoever makes those collars, look toward the Forbidden Forest."
+            "value": "I've been telling people for weeks and nobody listens. Not even the guards at the crossroads."
         },
         {
             "key": "DLG_CAP3_HOJA_05",
-            "value": "And don't trust the road at night. Carts go by there that never stop anywhere."
+            "value": "And now you turn up with a piece of one of those collars in your pocket."
         },
         {
             "key": "DLG_CAP3_SARGENTO_01",
@@ -2126,11 +2126,11 @@
         },
         {
             "key": "DLG_CAP3_POSADERO_DESPUES_01",
-            "value": "If you find whoever makes the collars, come back and tell me. On the house."
+            "value": "When you find out who makes those collars, come back and tell me. The soup's on me."
         },
         {
             "key": "DLG_CAP3_LUCIA_DESPUES_01",
-            "value": "Did you see the spoon? Almost. Tomorrow it'll reach my thumb."
+            "value": "This morning the spoon went up one more finger! A whole finger!"
         },
         {
             "key": "DLG_CAP3_SARGENTO_DESPUES_01",
@@ -2198,7 +2198,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_05",
-            "value": "They lit up and dimmed, slowly. Like something breathing in its sleep."
+            "value": "Fireflies don't all light up at once. That rose and fell, slowly… like something breathing in its sleep."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_05",
@@ -2243,10 +2243,6 @@
         {
             "key": "DLG_CAP2_ADIOS_TOMASA_01",
             "value": "Off on a trip? If you find anything useless out there, you know where to sell it."
-        },
-        {
-            "key": "CAP3_BOC_ACAMPADA",
-            "value": "Tomorrow I reach the coast. I hope someone there knows something about these collars."
         },
         {
             "key": "CHAR_REMEDIOS",
@@ -2298,7 +2294,7 @@
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
-            "value": "A dog with a strange collar spent the whole night scratching against the net shed. I heard it from home."
+            "value": "Last night a dog with a strange collar spent hours scratching against the house with the lobster pots, the one with the thatched roof. I didn't sleep a wink."
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_1_01",
@@ -2334,7 +2330,7 @@
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
-            "value": "Lucía says she saw a fox with a collar by the garden fence. That girl sees all sorts… but this time I believe her."
+            "value": "Lucía, the little girl from the inn, says she saw a fox with a collar at the garden fence. That girl sees all sorts… but this time I believe her."
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
@@ -2363,6 +2359,90 @@
         {
             "key": "DLG_ALDEA_FERMIN_2_01",
             "value": "If you're after the shop, Engracia's stall is on the west side of the square."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_06",
+            "value": "I'm taking it to Estela, the sorceress of the Forbidden Forest. With all this, maybe she'll listen to me."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_07",
+            "value": "The Forbidden Forest? Then watch yourself on the road."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_08",
+            "value": "Lately carts go by at night, with their loads covered. They don't even stop to water the mules."
+        },
+        {
+            "key": "CAP3_BOC_ESPERAR",
+            "value": "The innkeeper said those carts come by at night. I'll wait here, by the fire."
+        },
+        {
+            "key": "CHAR_BENITO",
+            "value": "Benito"
+        },
+        {
+            "key": "CHAR_ROSARIO",
+            "value": "Rosario"
+        },
+        {
+            "key": "DLG_BENITO_01",
+            "value": "A day's fishing and a hot meal. I don't ask for more."
+        },
+        {
+            "key": "DLG_ROSARIO_01",
+            "value": "Best soup on the coast, this. Only soup on the coast, too."
+        },
+        {
+            "key": "DLG_LUCIA_01",
+            "value": "Hi! My mum says not to talk to strangers… but you don't look like a stranger."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_C3_1_01",
+            "value": "Animals with collars? As long as nobody puts one on my cat…"
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_C3_2_01",
+            "value": "If you want to know anything about this village, ask Remedios. She never sleeps."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_1_01",
+            "value": "A day's fishing and a hot meal. I don't ask for more."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_2_01",
+            "value": "Today's soup has a bit of everything. Don't ask what."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_C3_1_01",
+            "value": "Lucía talks about nothing but that fox. And the spoon, of course."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_C3_2_01",
+            "value": "Ever since those animals turned up, I lock the henhouse twice over."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_1_01",
+            "value": "Best soup on the coast, this. Only soup on the coast, too."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_2_01",
+            "value": "Sit down, love, food goes down better sitting."
+        },
+        {
+            "key": "DLG_CAP3_PILLADO_01",
+            "value": "Were you following me, kid? Bad idea."
+        },
+        {
+            "key": "DLG_CAP3_PILLADO_02",
+            "value": "That light you're carrying is no lantern. What are you hiding?"
+        },
+        {
+            "key": "DLG_CAP3_CARRETERO_VENCIDO_01",
+            "value": "Ow… my head… Fine, fine, I'll stay right here."
+        },
+        {
+            "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
+            "value": "He came from the forest. The others must be out there."
         }
     ]
 }

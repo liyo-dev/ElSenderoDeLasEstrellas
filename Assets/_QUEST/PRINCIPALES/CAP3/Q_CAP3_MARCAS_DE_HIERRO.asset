@@ -33,11 +33,17 @@ MonoBehaviour:
     description: Mira la cerca del huerto
     conditionId: CAP3_PISTA_2
   - descriptionId: CAP3_PISTA_3_PASO
-    description: Mira el cobertizo de las redes
+    description: Mira la casa de las nasas
     conditionId: CAP3_PISTA_3
   - descriptionId: CAP3_HOJA_PASO
     description: "Cu\xE9ntaselo al posadero"
     conditionId: CAP3_HOJA
+  - descriptionId: CAP3_BOSQUE_PASO
+    description: Ve por el camino hacia el Bosque Prohibido
+    conditionId: CAP3_BOSQUE
+  - descriptionId: CAP3_NOCHE_PASO
+    description: Espera el carro de noche junto al fuego
+    conditionId: CAP3_NOCHE
   - descriptionId: CAP3_CARRO_PASO
     description: Sigue al carro sin que te vea
     conditionId: CAP3_CARRO

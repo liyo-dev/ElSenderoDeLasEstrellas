@@ -580,7 +580,7 @@
         },
         {
             "key": "CAP3_PISTA_3_PASO",
-            "value": "Mira el cobertizo de las redes"
+            "value": "Mira la casa de las nasas"
         },
         {
             "key": "CAP3_HOJA_PASO",
@@ -653,6 +653,14 @@
         {
             "key": "CAP2_ADIOS_ELDRAN_PASO",
             "value": "Reúnete con Eldran en la salida del pueblo"
+        },
+        {
+            "key": "CAP3_BOSQUE_PASO",
+            "value": "Ve por el camino hacia el Bosque Prohibido"
+        },
+        {
+            "key": "CAP3_NOCHE_PASO",
+            "value": "Espera el carro de noche junto al fuego"
         }
     ]
 }

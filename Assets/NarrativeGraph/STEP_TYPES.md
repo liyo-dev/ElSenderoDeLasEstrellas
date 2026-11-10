@@ -185,6 +185,14 @@ Cuenta las veces que llega una señal y avanza al llegar al total. Puede marcar 
 
 ## Cinemáticas
 
+### Lanzar y esperar (`RunAndWaitNode`)
+Pide a un sistema del juego que empiece algo (cinemática, minijuego, combate…) y espera a que avise de que ha terminado.
+- `label` (text): What it is, for people: 'Farewell at the gate', 'Fishing minigame'...
+- `startSignal` (text): Signal raised to start it. Example: FAREWELL_START
+- `doneSignal` (text): Signal the system raises when it finishes. Example: FAREWELL_DONE
+- `failedSignal` (text): Optional: signal raised if it goes wrong or is cancelled (second way out).
+- ways out: Hecho / Fallo
+
 ### Reproducir cinemática (`PlayCinematicNode`)
 Emite la señal de entrada de un Sequencer y espera su señal de fin (Hecho) o de fallo.
 - `cinematicName` (text): Nombre legible (solo para el editor): 'Despertar de la estrella', 'Taberna'...
@@ -197,6 +205,13 @@ Emite la señal de entrada de un Sequencer y espera su señal de fin (Hecho) o d
 - `distanciaMaxima` (number)
 - `distanciaDeAparicion` (number)
 - ways out: Hecho / Fallo
+
+### Reproducir Timeline (`PlayTimelineNode`)
+Reproduce una Timeline de la escena y espera a que termine.
+- `directorObject` (text): Name of the object with the PlayableDirector, in any loaded scene.
+- `timeline` (PlayableAsset asset): Optional: Timeline to play. Empty = the one the director already has.
+- `lockPlayer` (yes/no): Lock the player while it plays (needs the Player connection).
+- ways out: Hecho / No encontrada
 
 ## Combate
 

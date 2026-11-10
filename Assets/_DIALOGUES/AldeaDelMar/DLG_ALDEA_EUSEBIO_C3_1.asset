@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_EUSEBIO
     textId: DLG_ALDEA_EUSEBIO_C3_1_01
-    text: "Luc\xEDa dice que vio un zorro con collar junto a la cerca del huerto. Esa ni\xF1a ve muchas cosas\u2026 pero esta vez la creo."
+    text: "Luc\xEDa, la cr\xEDa de la posada, dice que vio un zorro con collar en la cerca del huerto. Esa ni\xF1a ve muchas cosas\u2026 pero esta vez la creo."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

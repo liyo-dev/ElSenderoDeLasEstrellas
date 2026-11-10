@@ -30,6 +30,7 @@ MonoBehaviour:
       data:
         displayTitle: Inicio del Sendero
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -44,6 +45,7 @@ MonoBehaviour:
       data:
         displayTitle: "Espera: libro prohibido y ritual (lo emite el cap\xEDtulo de la Piedra)"
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -60,6 +62,7 @@ MonoBehaviour:
       data:
         displayTitle: "La Piedra admite el conjuro (probar desde aqu\xED)"
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -75,6 +78,7 @@ MonoBehaviour:
       data:
         displayTitle: Will acepta leer el conjuro ante la Piedra
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -91,6 +95,7 @@ MonoBehaviour:
       data:
         displayTitle: "Cinem\xE1tica: el conjuro abre el portal"
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -114,6 +119,7 @@ MonoBehaviour:
       data:
         displayTitle: Llegada al Sendero
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -129,6 +135,7 @@ MonoBehaviour:
       data:
         displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap4_BACK_1)"
         chapter: Sendero
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1

@@ -36,13 +36,21 @@ namespace NarrativeGraphEditor
             if (EditorPrefs.GetBool(EnabledKey, false)) Start();
         }
 
-        [MenuItem(MenuPath)]
-        static void ToggleMenu()
+        /// Whether outside tools may connect. Kept per user.
+        public static bool Enabled
         {
-            bool on = !EditorPrefs.GetBool(EnabledKey, false);
-            EditorPrefs.SetBool(EnabledKey, on);
-            if (on) Start(); else Stop();
+            get => EditorPrefs.GetBool(EnabledKey, false);
+            set
+            {
+                EditorPrefs.SetBool(EnabledKey, value);
+                if (value) Start(); else Stop();
+            }
         }
+
+        public static bool Listening => s_listener != null && s_listener.IsListening;
+
+        [MenuItem(MenuPath)]
+        static void ToggleMenu() => Enabled = !Enabled;
 
         [MenuItem(MenuPath, true)]
         static bool ToggleMenuCheck()

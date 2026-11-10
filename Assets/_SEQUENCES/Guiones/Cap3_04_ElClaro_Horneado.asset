@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_04_ElClaro
   duracion: 20.42
   presentacion: 0
-  huella: "2026-11-07 17:23 \xB7 f5d6f5598598f4fcb8f6bbc45599ceef"
+  huella: "2026-11-10 22:29 \xB7 82d75d2c2618074b246bb1f2efa6d3d0"
   actores:
   - id: Player
     alias: will
@@ -53,60 +53,70 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.445
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.525
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.73
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.279999
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.359999
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.529999
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.73
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.81
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 19.47
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 13.445
       emocion: enfado
@@ -123,73 +133,6 @@ MonoBehaviour:
     - t: 17.73
       emocion: decidido
       dura: 2.09
-    visible: []
-    deslizando: []
-  - id: NPC_Contrabandista1
-    alias: c1
-    colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
-    claveDelNombre: CHAR_CONTRABANDISTA
-    posiciones:
-    - t: 0
-      p: {x: -212.5, y: 21.97435, z: -122.5}
-    miradas:
-    - t: 0
-      tipo: 1
-      rumbo: 0
-      punto: {x: -215, y: 21.453735, z: -125}
-      actor: 
-    - t: 5.5150003
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista2
-    - t: 8.570001
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
-    cabezas:
-    - t: 5.465
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista2
-    - t: 8.52
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
-    - t: 11.09
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
-    animacion:
-    - fundido: 0
-      t: 6.065
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 11.04
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 11.12
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 13.495
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    caras: []
     visible: []
     deslizando: []
   - id: NPC_Contrabandista2
@@ -210,16 +153,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 8.690001
+    - t: 8.570001
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 11.19
+    - t: 11.04
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista1
+      actor: NPC_ContrabandistaJefe
     cabezas:
     - t: 1.1
       tipo: 2
@@ -231,16 +174,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 8.64
+    - t: 8.52
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 11.139999
+    - t: 11.04
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista1
+      actor: NPC_ContrabandistaJefe
     animacion:
     - fundido: 0
       t: 5.3650002
@@ -248,30 +191,49 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.445
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.9500003
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 11.74
-      tipo: 2
-      estado: HeadShake01
+      t: 11.04
+      tipo: 3
+      estado: 
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 11.12
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 13.495
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
     - t: 5.3650002
       emocion: molesto
@@ -296,16 +258,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Contrabandista2
-    - t: 5.635
+    - t: 5.5150003
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Contrabandista2
-    - t: 11.31
+    - t: 11.19
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista1
+      actor: NPC_Contrabandista2
     - t: 14.594999
       tipo: 2
       rumbo: 0
@@ -327,7 +289,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Contrabandista2
-    - t: 5.585
+    - t: 5.465
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -336,12 +298,12 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista1
-    - t: 11.26
+      actor: NPC_Contrabandista2
+    - t: 11.139999
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista1
+      actor: NPC_Contrabandista2
     - t: 14.544999
       tipo: 2
       rumbo: 0
@@ -364,60 +326,70 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.08
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.0150003
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.065
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.3
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.38
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.690001
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.74
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.938999
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.759998
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 16.699999
       emocion: sorpresa
@@ -456,7 +428,7 @@ MonoBehaviour:
     skipIfFlag: 
     t0: 11.04
     t1: 13.445
-    actor: NPC_Contrabandista1
+    actor: NPC_Contrabandista2
     clave: CAP3_CLARO_04
     gesto: Talk03
     sinPose: 0
@@ -493,23 +465,21 @@ MonoBehaviour:
     t0: 0
     t1: 13.445
     tipo: 0
-    descripcion: general de jefe y c2 y c1
+    descripcion: general de jefe y c2
     posiciones:
     - t: 0
-      p: {x: -218.7356, y: 25.746044, z: -136.22562}
+      p: {x: -219.70468, y: 25.848007, z: -137.10616}
     lente: 42
     lenteFinal: 0
     sujetos:
     - NPC_ContrabandistaJefe
     - NPC_Contrabandista2
-    - NPC_Contrabandista1
     pesos:
-    - 1
     - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.71694684
+    alturaDelFoco: 0.7186191
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -546,8 +516,6 @@ MonoBehaviour:
     posicion: {x: -215, y: 21.453735, z: -125}
   - nombre: p_will
     posicion: {x: -205, y: 21.974178, z: -137}
-  - nombre: p_c1
-    posicion: {x: -212.5, y: 21.97435, z: -122.5}
   - nombre: p_c2
     posicion: {x: -218, y: 21.516388, z: -127}
   - nombre: p_jefe

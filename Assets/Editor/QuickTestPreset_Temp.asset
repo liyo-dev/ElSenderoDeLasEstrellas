@@ -75,6 +75,7 @@ MonoBehaviour:
     partName: Mouth20
   unlockedWardrobeIds:
   - Body05
+  - Cloak02
   inventoryItems:
   - itemId: coin
     count: 1
@@ -84,7 +85,8 @@ MonoBehaviour:
     count: 1
   - itemId: panuelo_erika
     count: 1
-  defeatedBossIds: []
+  defeatedBossIds:
+  - Demon_1
   narrativeBlackboards:
   - graphLabel: Cap1
     blackboardData:
@@ -125,6 +127,7 @@ MonoBehaviour:
   - ELDRAN_CAJA_START
   - ELDRAN_CAJA_DONE
   - CAP1_CAJA_ELDRAN
+  - NPC_INTERACT_NPC_Eldran
   - AWAKEN_START
   - AWAKEN_DONE
   - CH_Cap1_BACK_1
@@ -132,11 +135,21 @@ MonoBehaviour:
   - LIAM_CRYSTAL_DONE
   - MANANA_DESPUES_START
   - MANANA_DESPUES_DONE
+  - NPC_INTERACT_NPC_Victoria
+  - NPC_INTERACT_NPC_Boticaria
+  - NPC_INTERACT_NPC_Erika
   - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
   - ERIKA_ENTRENAMIENTO_DERROTADA
   - CAP2_A_DESPEDIRSE
+  - NPC_INTERACT_NPC_Oliver
   - CH_Cap2_BACK_1
-  npcPositions: []
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
+    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

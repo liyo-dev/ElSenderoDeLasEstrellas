@@ -15,35 +15,35 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_LUCES_01
-    text: "\xBFY usted? \xBFHa visto algo raro?"
+    text: "\xBFY usted ha visto alguno de esos animales?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_LUCES_02
-    text: "Hace tres semanas, de noche, vi luces bajas movi\xE9ndose entre los \xE1rboles del bosque."
+    text: "Animales no. Pero hace unas semanas, una noche que no pod\xEDa dormir, vi luces en el camino del bosque."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_LUCES_03
-    text: No eran faroles. Iban a la altura de la rodilla.
+    text: No eran faroles. Iban casi a ras de suelo, todas juntas.
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_LUCES_04
-    text: "\xBFY qu\xE9 hac\xEDan?"
+    text: "\xBFLuci\xE9rnagas?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 6
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_LUCES_05
-    text: "Se encend\xEDan y se apagaban, despacio. Como algo que respira dormido."
+    text: "Las luci\xE9rnagas no se encienden todas a la vez. Aquello sub\xEDa y bajaba despacio\u2026 como algo que respira dormido."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

@@ -2277,14 +2277,6 @@
             "text": "Aprenderé. Dicen que el truco es tener paciencia."
         },
         {
-            "id": "CAP3_ESPEJO_08",
-            "text": "Te he hecho un dibujo. Somos nosotros pescando. Al cuarto no le he puesto cara: todavía no sé quién es."
-        },
-        {
-            "id": "CAP3_ESPEJO_09",
-            "text": "Ya lo sabrás."
-        },
-        {
             "id": "CAP3_ESPEJO_10",
             "text": "La llave del aro. Se calentará cada vez que el chico esté cerca."
         },
@@ -2294,7 +2286,7 @@
         },
         {
             "id": "CAP3_POSADA_01",
-            "text": "Perdone. ¿Sabe usted qué es esto?"
+            "text": "Perdone… ¿sabe qué es esto?"
         },
         {
             "id": "CAP3_POSADA_02",
@@ -2302,11 +2294,11 @@
         },
         {
             "id": "CAP3_POSADA_03",
-            "text": "Lo llevaba el demonio que atacó mi pueblo."
+            "text": "Lo llevaba puesto el demonio que atacó mi pueblo."
         },
         {
             "id": "CAP3_POSADA_04",
-            "text": "Por aquí no han venido demonios. Pero animales con aros, sí. Varios."
+            "text": "Demonios por aquí, no. Pero animales con un aro como ese… unos cuantos."
         },
         {
             "id": "CAP3_POSADA_05",
@@ -2314,19 +2306,19 @@
         },
         {
             "id": "CAP3_POSADA_06",
-            "text": "La comida de la mochila se me acabó ayer. ¿Me alcanza esto para una sopa?"
+            "text": "Se me acabó la comida ayer… ¿Me llega con esto para una sopa?"
         },
         {
             "id": "CAP3_POSADA_07",
-            "text": "Alcanza. Pero no para pan."
+            "text": "Para sopa, sí. Para pan, no."
         },
         {
             "id": "CAP3_POSADA_08",
-            "text": "¡Yo sé hacer magia! Mira la cuchara."
+            "text": "¿Quieres ver magia? Mira la cuchara."
         },
         {
             "id": "CAP3_POSADA_09",
-            "text": "Va a subir… subir… hasta el pulgar."
+            "text": "Sube… sube… hasta el pulgar…"
         },
         {
             "id": "CAP3_POSADA_10",
@@ -2666,7 +2658,7 @@
         },
         {
             "id": "CAP3_POSADA_12",
-            "text": "Come algo y luego pregunta por la aldea. La gente ve cosas, aunque no las cuente."
+            "text": "Tómate la sopa y luego pregunta por ahí. Aquí la gente ve muchas cosas, aunque luego no las cuente."
         },
         {
             "id": "CAP4_MANANA_05",
@@ -2723,6 +2715,10 @@
         {
             "id": "CAP3_DESPEDIDA_11",
             "text": "¡Hasta pronto, Eldran!"
+        },
+        {
+            "id": "CAP3_POSADA_13",
+            "text": "¿De verdad? ¡Pues mañana llego al pulgar!"
         }
     ]
 }

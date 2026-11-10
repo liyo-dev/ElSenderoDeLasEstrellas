@@ -8,29 +8,27 @@ RITMO entre_frases=0.4 mismo_hablante=0.25
 
 REPARTO
 will  Player                   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
-c1    NPC_Contrabandista1      nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
 c2    NPC_Contrabandista2      nombre=CHAR_CONTRABANDISTA color=A89C8A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
 jefe  NPC_ContrabandistaJefe   nombre=CHAR_CONTRABANDISTA color=C9A27A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
 
 PUNTOS
+# El contrabandista del seguimiento no sale: se queda fuera del claro (o aturdido en el camino).
 claro     -215 -125
 p_will    -205 -137
-p_c1      -212.5 -122.5
 p_c2      -218 -127
 p_jefe    -213 -128.5
 
 HILO
 @inicio
 will en p_will mirando claro
-& c1 en p_c1 mirando claro
 & c2 en p_c2 mirando p_jefe
 & jefe en p_jefe mirando p_c2
-plano general jefe c2 c1
+plano general jefe c2
 espera 1
 jefe dice CAP3_CLARO_01 mira=c2
 c2 dice CAP3_CLARO_02 cara=molesto
 jefe dice CAP3_CLARO_03 gesto=HeadShake01
-c1 dice CAP3_CLARO_04
+c2 dice CAP3_CLARO_04 mira=jefe
 
 @will
 plano primer will

@@ -19,7 +19,7 @@ MonoBehaviour:
       empiezaConSenal: []
       empiezaConMisionActiva: []
       acabaConSenal:
-      - CAP3_NOCHE_EMPIEZA
+      - CAP3_CAE_LA_NOCHE
       acabaConMisionIniciada: []
       acabaConMisionCompletada: []
     presencia: 2

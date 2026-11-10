@@ -59,9 +59,9 @@ MonoBehaviour:
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294518730653830
-  - rid: 6540294518730653831
-  - rid: 6540294518730653832
+  - rid: 6540294530920088329
+  - rid: 6540294530920088330
+  - rid: 6540294530920088331
   applicableSceneNames: []
   references:
     version: 2
@@ -71,6 +71,7 @@ MonoBehaviour:
       data:
         displayTitle: 0.- Inicio
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -85,6 +86,7 @@ MonoBehaviour:
       data:
         displayTitle: 1.- Esperar fin del Cap. 1
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -101,6 +103,7 @@ MonoBehaviour:
       data:
         displayTitle: "2.- Cap. 2 \xB7 Inicio (tras el Demonio)"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -118,6 +121,7 @@ MonoBehaviour:
       data:
         displayTitle: 3.- Carga la torre de Liam (TorreDeLiam)
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -135,6 +139,7 @@ MonoBehaviour:
       data:
         displayTitle: 4.- Los planes de Liam (LIAM_CRYSTAL_START)
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -150,6 +155,7 @@ MonoBehaviour:
       data:
         displayTitle: 5.- Espera fin de la escena de Liam (LIAM_CRYSTAL_DONE)
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -166,6 +172,7 @@ MonoBehaviour:
       data:
         displayTitle: 6.- Descarga la torre de Liam
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -183,6 +190,7 @@ MonoBehaviour:
       data:
         displayTitle: "16.- Prep\xE1rate para el viaje \xB7 encargos en paralelo"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -200,6 +208,7 @@ MonoBehaviour:
       data:
         displayTitle: 1b.- Comienza el Cap. 2
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -216,6 +225,7 @@ MonoBehaviour:
       data:
         displayTitle: 17.- Hablar con Victoria
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -234,6 +244,7 @@ MonoBehaviour:
       data:
         displayTitle: 18.- Victoria entrega la capa
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -251,6 +262,7 @@ MonoBehaviour:
       data:
         displayTitle: 19.- Desbloquear capa de principiante
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -267,6 +279,7 @@ MonoBehaviour:
       data:
         displayTitle: "20.- Tutorial \xB7 equipar la capa"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -290,6 +303,7 @@ MonoBehaviour:
       data:
         displayTitle: "21.- Completar encargo \xB7 capa"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -312,6 +326,7 @@ MonoBehaviour:
       data:
         displayTitle: 22.- Hablar con la boticaria
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -330,6 +345,7 @@ MonoBehaviour:
       data:
         displayTitle: "23.- La \xFAnica poci\xF3n de vida"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -347,6 +363,7 @@ MonoBehaviour:
       data:
         displayTitle: "24.- Recibir poci\xF3n de vida"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -365,6 +382,7 @@ MonoBehaviour:
       data:
         displayTitle: "25.- Tutorial \xB7 usar consumibles"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -388,6 +406,7 @@ MonoBehaviour:
       data:
         displayTitle: "26.- Completar encargo \xB7 poci\xF3n"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -410,6 +429,7 @@ MonoBehaviour:
       data:
         displayTitle: "10b.- R\xF3tulo \xB7 A la ma\xF1ana siguiente\u2026"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -433,6 +453,7 @@ MonoBehaviour:
       data:
         displayTitle: 22b.- Hablar con Erika
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -451,6 +472,7 @@ MonoBehaviour:
       data:
         displayTitle: "24b.- Completar encargo \xB7 entrenamiento Erika"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -473,6 +495,7 @@ MonoBehaviour:
       data:
         displayTitle: '26.- Eldran: la lista de motivos'
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -490,6 +513,7 @@ MonoBehaviour:
       data:
         displayTitle: 27.- Hablar con Oliver (despedida)
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -508,6 +532,7 @@ MonoBehaviour:
       data:
         displayTitle: '28.- Oliver: nos vemos pronto'
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -525,6 +550,7 @@ MonoBehaviour:
       data:
         displayTitle: 33.- Cap. 2 completado - Eldran espera en la salida del pueblo
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -541,6 +567,7 @@ MonoBehaviour:
       data:
         displayTitle: 34.- Cap. 2 - Fin (Checkpoint)
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -558,6 +585,7 @@ MonoBehaviour:
       data:
         displayTitle: "25.- Encargo terminado (se\xF1al)"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -572,6 +600,7 @@ MonoBehaviour:
       data:
         displayTitle: 25b.- Esperar los 3 encargos
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -589,6 +618,7 @@ MonoBehaviour:
       data:
         displayTitle: "26b.- Completar misi\xF3n \xB7 Prep\xE1rate para el viaje"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -611,6 +641,7 @@ MonoBehaviour:
       data:
         displayTitle: "23b-4.- Recibir Pa\xF1uelo de Erika"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -629,6 +660,7 @@ MonoBehaviour:
       data:
         displayTitle: 23b.- Esperar fin del combate con Erika
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -645,6 +677,7 @@ MonoBehaviour:
       data:
         displayTitle: "22b-1.- Aprender Protecci\xF3n y Bola Prisma"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -667,6 +700,7 @@ MonoBehaviour:
       data:
         displayTitle: 25d.- Volver con Eldran
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -685,6 +719,7 @@ MonoBehaviour:
       data:
         displayTitle: 35.- Fin del Cap. 2 (CH_Cap2_BACK_1)
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -699,6 +734,7 @@ MonoBehaviour:
       data:
         displayTitle: 22b-0.- Erika da el grimorio
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -715,6 +751,7 @@ MonoBehaviour:
       data:
         displayTitle: 7.- Amanece tras la noche
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -731,6 +768,7 @@ MonoBehaviour:
       data:
         displayTitle: "8.- Carga la habitaci\xF3n de Will"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -748,6 +786,7 @@ MonoBehaviour:
       data:
         displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -766,6 +805,7 @@ MonoBehaviour:
       data:
         displayTitle: "10.- Eldran entra en la habitaci\xF3n"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -784,6 +824,7 @@ MonoBehaviour:
       data:
         displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -807,6 +848,7 @@ MonoBehaviour:
       data:
         displayTitle: "12.- Eldran espera junto a la casa de Will (sale en la cinem\xE1tica)"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -825,6 +867,7 @@ MonoBehaviour:
       data:
         displayTitle: 13.- Trozo del aro
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -843,6 +886,7 @@ MonoBehaviour:
       data:
         displayTitle: "14.- Prep\xE1rate para el viaje"
         chapter: Cap. 2
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
@@ -861,6 +905,7 @@ MonoBehaviour:
       data:
         displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -873,11 +918,12 @@ MonoBehaviour:
         checkpointId: CAP2_MANANA_DESPUES
         spawnAnchorId: Bedroom
         sceneName: WillHouse
-    - rid: 6540294518730653830
+    - rid: 6540294530920088329
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -888,11 +934,12 @@ MonoBehaviour:
         outputs:
         - cap2-adios-mision
         eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294518730653831
+    - rid: 6540294530920088330
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "26e.- Misi\xF3n: hora de partir"
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -906,11 +953,12 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294518730653832
+    - rid: 6540294530920088331
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: '29.- Paso: despedirse de Oliver'
         chapter: Cap. 2
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1

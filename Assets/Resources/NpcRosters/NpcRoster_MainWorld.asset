@@ -126,7 +126,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Lucia
-    prefab: {fileID: 3592848395794621156, guid: 6b0a15551992dff4d8342e0e8aaca85c, type: 3}
+    prefab: {fileID: 6941739730369371496, guid: 14ba08e32be09684b9cc227880877f9c, type: 3}
     gameObjectName: Lucia
     persistenceId: NPC_Lucia
     vozDeReacciones: Vecina
@@ -252,5 +252,25 @@ MonoBehaviour:
     vozDeReacciones: Vecino
     startActive: 1
     requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Benito
+    prefab: {fileID: 6941739730369371496, guid: d9f21bb967bf80b42815fe357a672069, type: 3}
+    gameObjectName: Benito
+    persistenceId: NPC_Benito
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Rosario
+    prefab: {fileID: 6941739730369371496, guid: 9066a8590ac4a3f4087fe7832083bb73, type: 3}
+    gameObjectName: Rosario
+    persistenceId: NPC_Rosario
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
     requiredFlag: 
     invertCondition: 0

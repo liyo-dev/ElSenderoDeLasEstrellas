@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_REMEDIOS
     textId: DLG_ALDEA_REMEDIOS_C3_2_01
-    text: "Un perro con collar raro se pas\xF3 la noche rasc\xE1ndose contra el cobertizo de las redes. Lo o\xED desde casa."
+    text: "Anoche un perro con un collar raro se pas\xF3 horas rasc\xE1ndose contra la casa de las nasas, la del tejado de paja. No me dej\xF3 pegar ojo."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

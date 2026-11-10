@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-07 17:23 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-10 21:59 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
 **0:13,6** de secuencia · 3 frases · 3 planos · 1 efectos · 2 personajes
 
@@ -9,13 +9,12 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97
 ## Errores (0)
 
 
-## Avisos (6)
+## Avisos (5)
 
 - línea 10: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
-- línea 27: will dice CAP3_CARRO_01 cara=sorpresa: la frase CAP3_CARRO_01 no tiene voz en Voices/es; le doy 1,6 s por su texto
-- línea 28: c1 anda a c1_b, c1_c ritmo=paseo sin_esperar: un punto queda fuera del NavMesh (-116,0, -224,0); voy en línea recta
-- línea 33: will dice CAP3_CARRO_02 cara=pensativo: la frase CAP3_CARRO_02 no tiene voz en Voices/es; le doy 2,6 s por su texto
-- línea 36: will dice CAP3_CARRO_03 cara=decidido: la frase CAP3_CARRO_03 no tiene voz en Voices/es; le doy 3,1 s por su texto
+- línea 33: will dice CAP3_CARRO_01 cara=sorpresa: la frase CAP3_CARRO_01 no tiene voz en Voices/es; le doy 1,6 s por su texto
+- línea 39: will dice CAP3_CARRO_02 cara=pensativo: la frase CAP3_CARRO_02 no tiene voz en Voices/es; le doy 2,6 s por su texto
+- línea 42: will dice CAP3_CARRO_03 cara=decidido: la frase CAP3_CARRO_03 no tiene voz en Voices/es; le doy 3,1 s por su texto
 - No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.
 
 ## Silencios largos entre frases (2)
@@ -28,12 +27,12 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
-| 0:00,0 | plano 1 | medio de will · 2,8 s · lente 30° · coste 2: ángulo 2 |
+| 0:00,0 | plano 1 | medio de will · 2,8 s · lente 30° |
 | 0:01,2 | will | «¿Un carro, a estas horas?» (1,6 s) · pose |
-| 0:02,8 | plano 2 | conjunto de will y c1 · 6,7 s · lente 34° · coste 341: cara 268, ángulo 68 |
+| 0:02,8 | plano 2 | conjunto de will y c1 · 6,7 s · lente 34° |
 | 0:04,4 | will | «Esa luz… sube y baja. Como si respirara.» (2,6 s) · pose |
 | 0:04,4 | efecto | VFX: Sparkle_ellow en NPC_Contrabandista1 |
-| 0:09,5 | plano 3 | primer plano de will · 4,1 s · lente 24° · coste 20: ángulo 20 |
+| 0:09,5 | plano 3 | primer plano de will · 4,1 s · lente 24° · coste 2: ángulo 2 |
 | 0:09,5 | will | «No es un farol. Vamos a ver adónde va. De lejos.» (3,1 s) · pose |
 
 ## Qué hace cada personaje

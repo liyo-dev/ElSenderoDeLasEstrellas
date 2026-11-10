@@ -96,14 +96,12 @@ public static partial class MontajeDeLosCapitulos
         M(Cap3, MarcaEldranSalida, 55.5f, -187f, 317f);
         M(Cap3, MarcaWillSalida, 53.4f, -185f, 137f);
         M(Cap3, "Cap3_Despedida_Camino", 58.2f, -190.1f, 137f);
-        // La acampada, a un lado del camino a mitad de viaje (entre 138,−261 y 157,−278).
+        // Punto de guardado a un lado del camino, a mitad de viaje (entre 138,−261 y 157,−278).
         M(Cap3, MarcaAcampadaCamino, 150f, -266.5f, 45f);
-        s_atrezo.Add(new Atrezo { Cap = Cap3, Nombre = "Hoguera de la acampada del camino", Prefab = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Campfire01_a01.prefab",
-            Pos = new Vector3(151.5f, float.NaN, -264.8f), Rumbo = 0f, Tamano = 1.2f, Tramo = Tramo(SD.Acampada, S3.Aldea) });
-        // A mitad del camino del puerto: radio ancho para que no se escape quien vaya campo a través.
+        // A mitad del camino del puerto salta el interludio de Tobías; radio ancho para que no se escape quien vaya campo a través.
         s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "A mitad del camino del puerto", Senal = SD.Acampada, Mision = MisionCap3,
             Pos = new Vector3(130f, float.NaN, -253f), Radio = 22f, Tramo = Tramo(SD.Camino, SD.Acampada) });
-        informe.AppendLine("Despedida: misión «Hora de partir», frases de despedida, cinemática y acampada del camino.");
+        informe.AppendLine("Despedida: misión «Hora de partir», frases de despedida, cinemática e interludio de Tobías a mitad del camino.");
     }
 
     /// <summary>Los pasos del Cap. 3 desde la salida del pueblo hasta que Will sigue hacia la aldea.</summary>
@@ -116,21 +114,13 @@ public static partial class MontajeDeLosCapitulos
         P("mision", "Misión: las marcas de hierro (aviso de misión nueva)", new StartQuestNode { questId = MisionCap3, noGiver = true }),
         P("camino", "3.1 · Camino del puerto, a pie (probar desde aquí)", Emitir(SD.Camino)),
         P("camino-punto", "3.1 · Punto de guardado: la salida del pueblo", Punto("CAP3_SALIDA", MarcaWillSalida)),
-        // La acampada a mitad de camino y Tobías
-        P("acampada-llega", "3.1 · Llega a mitad de camino", Esperar(SD.Acampada)),
-        P("acampada-rotulo", "3.1 · Rótulo: esa noche", Rotulo("CAP3_ROTULO_ACAMPADA", "Esa noche, a medio camino de la costa…", "That night, halfway to the coast…")),
-        P("acampada-hora", "3.1 · Se hace de noche", new SetTimeOfDayNode { targetTime = DayNightCycle.TimeOfDay.Night, immediate = true }),
-        P("acampada-will", "3.1 · Will acampa junto al camino", Llevar("Player", MarcaAcampadaCamino)),
-        P("acampada-destapa", "3.1 · Se destapa la pantalla en la acampada", Destapar()),
-        P("acampada-dice", "3.1 · Will, junto al fuego", Bocadillo("CAP3_BOC_ACAMPADA", "Mañana llego a la costa. Ojalá alguien allí sepa algo de estos aros.", "Tomorrow I reach the coast. I hope someone there knows something about these collars.", 3.5f)),
-        P("espejo-carga", "3.1 · Mientras Will duerme: carga la torre de Liam (probar desde aquí)", new AdditiveSceneNode { operacion = AdditiveSceneNode.Operacion.Cargar, sceneName = "TorreDeLiam", waitForCompletion = true }),
+        // A mitad de camino salta el interludio de Tobías y se sigue andando, sin rótulos ni cambio de hora.
+        P("acampada-llega", "3.1 · Pasa por la mitad del camino", Esperar(SD.Acampada)),
+        P("espejo-carga", "3.1 · Interludio: carga la torre de Liam (probar desde aquí)", new AdditiveSceneNode { operacion = AdditiveSceneNode.Operacion.Cargar, sceneName = "TorreDeLiam", waitForCompletion = true }),
         P("espejo", "3.1 · Cinemática: Tobías en el espejo", Cinematica("CAP3_ESPEJO")),
         P("espejo-descarga", "3.1 · Descarga la torre de Liam", new AdditiveSceneNode { operacion = AdditiveSceneNode.Operacion.Descargar, sceneName = "TorreDeLiam", waitForCompletion = true }),
-        P("camino-rotulo", "3.1 · Rótulo: a la mañana siguiente", Rotulo("CAP3_ROTULO_MANANA", "A la mañana siguiente…", "The next morning…")),
-        P("camino-hora", "3.1 · Amanece", new SetTimeOfDayNode { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true }),
-        P("camino-will", "3.1 · Will recoge la acampada", Llevar("Player", MarcaAcampadaCamino)),
-        P("camino-destapa", "3.1 · Se destapa la pantalla", Destapar()),
-        P("camino-punto2", "3.1 · Punto de guardado: la acampada del camino", Punto("CAP3_ACAMPADA_CAMINO", MarcaAcampadaCamino)),
+        P("camino-destapa", "3.1 · Se destapa la pantalla y se sigue andando", Destapar()),
+        P("camino-punto2", "3.1 · Punto de guardado: a mitad del camino", Punto("CAP3_ACAMPADA_CAMINO", MarcaAcampadaCamino)),
     };
 
     /// <summary>

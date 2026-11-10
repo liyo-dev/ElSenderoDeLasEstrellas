@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_POSADERO_DESPUES_01
-    text: "Si das con quien hace los aros, vuelve y cu\xE9ntamelo. Invita la casa."
+    text: "Cuando sepas qui\xE9n hace esos aros, vuelve y me lo cuentas. La sopa la pongo yo."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

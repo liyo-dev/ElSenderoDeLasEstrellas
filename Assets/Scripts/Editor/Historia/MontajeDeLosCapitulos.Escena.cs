@@ -31,7 +31,8 @@ public static partial class MontajeDeLosCapitulos
     /// lo marca y le flota encima el icono de «aquí» hasta que ese paso de la misión se cumple.
     /// </summary>
     private sealed class Inspeccion { public string Cap, Nombre, Dialogo, Senal, Mision; public int Paso = -1; public Vector3 Pos; public TramoDeHistoria Tramo; }
-    private sealed class Atrezo { public string Cap, Nombre, Prefab; public Vector3 Pos; public float Rumbo, Tamano; public bool Colision; public TramoDeHistoria Tramo; }
+    /// <summary>Una pieza de atrezo. Con <c>Escondite</c>, no choca y es un sitio donde no se ve al jugador (sigilo).</summary>
+    private sealed class Atrezo { public string Cap, Nombre, Prefab; public Vector3 Pos; public float Rumbo, Tamano; public bool Colision, Escondite; public TramoDeHistoria Tramo; }
     private sealed class Cine
     {
         public string Cap, Clave, Guion, Nombre, Resumen, Escena = "MainWorld", Plantilla;
@@ -559,7 +560,21 @@ public static partial class MontajeDeLosCapitulos
         }
         var bb = Limites(go);
         go.transform.position += Vector3.up * (go.transform.position.y - bb.min.y);
+        if (a.Escondite) HacerEscondite(go);
         return go;
+    }
+
+    // Trigger del tamaño de la pieza (y al menos de la altura de alguien agachado) con su Escondite.
+    private static void HacerEscondite(GameObject go)
+    {
+        foreach (var c in go.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
+        var b = Limites(go);
+        Vector3 escala = go.transform.lossyScale;
+        var caja = go.AddComponent<BoxCollider>();
+        caja.isTrigger = true;
+        caja.center = go.transform.InverseTransformPoint(b.center + Vector3.up * Mathf.Max(0f, 1.6f - b.size.y) * 0.5f);
+        caja.size = new Vector3(b.size.x / escala.x, Mathf.Max(b.size.y, 1.6f) / escala.y, b.size.z / escala.z);
+        go.AddComponent<Escondite>();
     }
 
     private static Bounds Limites(GameObject go)

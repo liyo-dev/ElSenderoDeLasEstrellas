@@ -15,7 +15,6 @@ manos -6000 6000.5 100.45
 cam_general -6001.4 5997.4 100
 cam_cara -6001.2 5998.9 100
 cam_llave -6000.65 5998.6 100
-cam_mapa -6000.6 6001.2 100
 cam_sienta -6001.3 5998.7 100
 foco_general -6000 6001 101.75
 detalle_llave -6000.15 5999.75 100.62
@@ -53,21 +52,16 @@ liam dice CAP3_ESPEJO_05 cara=decidido sin_pose
 cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=3.4 dura=0.8
 tobi dice CAP3_ESPEJO_06 cara=alegre sin_pose
 liam dice CAP3_ESPEJO_07 cara=alegre sin_pose
-cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=4.4 dura=0.8
-tobi dice CAP3_ESPEJO_08 cara=pensativo sin_pose
-
-@dibujo
-plano detalle PROP_Mapa desde=cam_mapa altura=1.9 lente=65
-liam mira PROP_Mapa
-liam dice CAP3_ESPEJO_09 cara=triste sin_pose
-espera 1
+espera 1.2
 
 @llave
+# Liam está sentado: la llave está delante, a su izquierda, así que la mira con la cabeza.
 plano detalle detalle_llave altura_foco=0 desde=cam_llave altura=1.0 lente=48
-liam mira PROP_Llave
+liam cabeza PROP_Llave
 liam dice CAP3_ESPEJO_10 cara=decidido sin_pose
 espera 0.8
 plano primer liam desde=cam_cara altura=1.25 lente=40
+liam cabeza manos
 liam dice CAP3_ESPEJO_11 cara=triste sin_pose
 espera 1.2
 fundido cubre 1.5

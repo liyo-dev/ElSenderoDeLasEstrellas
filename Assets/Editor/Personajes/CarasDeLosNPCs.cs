@@ -83,6 +83,7 @@ public static class CarasDeLosNPCs
         ("Ladron1", "h_chico_oscuro"), ("Ladron2", "h_almendra_ambar"),
         ("AldeaDelMar/Posadero", "h_almendra_ambar"), ("AldeaDelMar/Anselmo", "h_tostado_marron"),
         ("AldeaDelMar/Eusebio", "h_mayor_ambar"), ("AldeaDelMar/Fermin", "h_chico_azul"),
+        ("AldeaDelMar/Benito", "h_tostado_marron"),
         ("NonInteractable/VecinoDelMirador", "h_tostado_marron"),
         ("NonInteractable/AbuelaDelMirador", "m_mayor_azul"), ("NonInteractable/VecinaDelMirador", "m_pecas_marron"),
         // Hombres con cabeza de mujer
@@ -96,6 +97,7 @@ public static class CarasDeLosNPCs
         ("Sara", "m_almendra_azul"), ("Sofia", "m_almendra_oscuro"), ("Tabernera", "m_almendra_marron"),
         ("Tendera", "m_afilado_verde"), ("Verónica", "m_almendra_azul"),
         ("AldeaDelMar/Remedios", "m_pecas_marron"), ("AldeaDelMar/Engracia", "m_almendra_azul"),
+        ("AldeaDelMar/Rosario", "m_almendra_marron"),
         ("NonInteractable/Guerrero#1", "m_almendra_oscuro"), ("NonInteractable/Guerrero#3", "m_almendra_azul"),
         ("NonInteractable/TownNpc#2", "m_almendra_marron"), ("NonInteractable/TownNpc#7", "m_almendra_oscuro"),
         ("NonInteractable/PanaderaDelValle", "m_mayor_azul"), ("NonInteractable/MadreDelValle", "m_pecas_marron"),

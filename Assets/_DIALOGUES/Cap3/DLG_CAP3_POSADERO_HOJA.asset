@@ -13,37 +13,58 @@ MonoBehaviour:
   m_Name: DLG_CAP3_POSADERO_HOJA
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   lines:
-  - speakerNameId: CHAR_WILL
+  - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_HOJA_01
-    text: Un zorro asustado, un perro que se rascaba y luces que respiran. Lo he apuntado todo.
+    text: "\xBFQu\xE9, chico? \xBFHas sacado algo en claro?"
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_HOJA_02
+    text: El zorro se rascaba contra la cerca hasta arrancarse el pelo. Y un perro ha dejado restos de hierro en la casa de las nasas.
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 6
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_HOJA_03
+    text: "Con las mismas rayas que esto. Y todav\xEDa brillan."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_POSADERO
-    textId: DLG_CAP3_HOJA_02
-    text: Se lo he contado a dos guardias y a un viajero. Ninguno me hizo caso.
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_POSADERO
-    textId: DLG_CAP3_HOJA_03
-    text: "Y t\xFA eres el primero que trae un trozo de esos aros."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_HOJA_04
-    text: Si buscas a quien hace esos aros, mira hacia el Bosque Prohibido.
+    text: "Llevo semanas cont\xE1ndolo y nadie me hace caso. Ni los guardias del cruce."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 14
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_HOJA_05
-    text: "Y no te f\xEDes del camino de noche. Por ah\xED pasan carros que no paran en ning\xFAn sitio."
+    text: "Y ahora apareces t\xFA con un trozo de esos aros en el bolsillo."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_HOJA_06
+    text: Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido. Con todo esto, a lo mejor me escucha.
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 10
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_HOJA_07
+    text: "\xBFAl Bosque Prohibido? Pues ve con ojo por el camino."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 9
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_HOJA_08
+    text: "\xDAltimamente pasan carros de noche, con la carga tapada. No paran ni para dar de beber a las mulas."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

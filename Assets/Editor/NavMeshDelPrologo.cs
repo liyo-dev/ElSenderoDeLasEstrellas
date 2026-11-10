@@ -220,9 +220,9 @@ public static class NavMeshDelPrologo
 
         if (superficies.Count == 0)
         {
-            EditorUtility.DisplayDialog("NavMesh",
+            OrdenesDelEditor.Avisar("NavMesh",
                 "No hay ninguna NavMeshSurface en las escenas abiertas. Abre Prologo_Valle (y " +
-                "MainWorld si quieres las dos) y vuelve a darle.", "Vale");
+                "MainWorld si quieres las dos) y vuelve a darle.");
             return;
         }
 
@@ -239,10 +239,10 @@ public static class NavMeshDelPrologo
         EditorUtility.ClearProgressBar();
         AssetDatabase.SaveAssets();
 
-        EditorUtility.DisplayDialog("NavMesh",
+        OrdenesDelEditor.Avisar("NavMesh",
             $"{hechas} superficie(s) rehorneadas. Guarda las escenas con Ctrl+S.\n\n" +
             "Con el NavMesh al día, los NPCs rodean la carreta y a la gente en vez de atravesarlas " +
             "o subírseles encima. En el valle se hornea con los colliders: la hierba ya no cuenta " +
-            "como escalón, así que dejan de ir en fila por el camino y de dar saltitos.", "Vale");
+            "como escalón, así que dejan de ir en fila por el camino y de dar saltitos.");
     }
 }

@@ -1,16 +1,26 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Game.NPC;
 using Game.NPC.Modules;
+using Sendero.Core.Feedback;
 
 /// <summary>
 /// Nodo que inicia un combate o duelo contra un NPC (usando su FSM de combate)
 /// y opcionalmente espera a que sea derrotado para avanzar en el grafo.
+/// Sale por «Gana» al vencerle. Si la salida «Pierde» está conectada, caer en el combate no lleva
+/// a la pantalla de derrota: el grupo se levanta curado tras un fundido a negro, el NPC vuelve a
+/// estar en paz y el grafo sigue por «Pierde» (p. ej. para repetir el tramo).
 /// </summary>
 [Serializable]
-[NarrativeNodeInfo("Combate", "Iniciar combate NPC", "Pone a un NPC en combate contra el jugador y opcionalmente espera a que sea derrotado.")]
-public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
+[NarrativeNodeInfo("Combate", "Iniciar combate NPC", "Pone a un NPC en combate contra el jugador y opcionalmente espera a que sea derrotado. Con «Pierde» conectada, perder sigue por ahí en vez de ir a la pantalla de derrota.")]
+public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect, IRespuestaALaDerrota
 {
+    private static readonly string[] Puertos = { "Gana", "Pierde" };
+    private const int PuertoGana = 0;
+    private const int PuertoPierde = 1;
+    private const float FundidoAlPerder = 0.6f;
+
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("persistenceId del NPC (el mismo que usa NPCBehaviourManagerV2 / NarrativeActor).")]
     public string npcId;
@@ -31,6 +41,20 @@ public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
     [NonSerialized] private INarrativeSignals _signals;
     [NonSerialized] private string _registeredKey;
     [NonSerialized] private NPCBehaviourManagerV2 _cachedManager;
+    [NonSerialized] private NarrativeContext _ctx;
+    [NonSerialized] private Action _onReady;
+    [NonSerialized] private bool _respondeALaDerrota;
+
+    public override string[] GetOutputPorts() => Puertos;
+
+    /// La proyección supone que se gana.
+    public override int ProjectionPort => PuertoGana;
+
+    public override string DescribeDecision()
+        => $"Combate \"{displayTitle}\" (guid {guid}) contra '{npcId}': ¿gana el jugador? Salidas: Gana / Pierde.";
+
+    // «Pierde» conectada: perder no va a la pantalla de derrota.
+    private bool PerderSigueElGrafo => outputs != null && outputs.Count > PuertoPierde && !string.IsNullOrEmpty(outputs[PuertoPierde]);
 
     public void Project(INarrativeStateWriter state)
     {
@@ -110,9 +134,16 @@ public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
                 {
                     NarrativeLog.Info($"[StartNpcCombatNode:{guid}] NPC '{npcId}' derrotado. Avanzando.");
                     CleanupCombatState();
-                    onReadyToAdvance?.Invoke();
+                    AdvanceThrough(ctx, onReadyToAdvance, PuertoGana);
                 };
                 _signals.OnCustom(_registeredKey, _onDefeatedCb);
+                if (PerderSigueElGrafo)
+                {
+                    _ctx = ctx;
+                    _onReady = onReadyToAdvance;
+                    GameOverManager.RegistrarRespuestaALaDerrota(this);
+                    _respondeALaDerrota = true;
+                }
             }
             else
             {
@@ -145,13 +176,51 @@ public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
 
         if (!waitForDefeat)
         {
-            onReadyToAdvance?.Invoke();
+            AdvanceThrough(ctx, onReadyToAdvance, PuertoGana);
         }
     }
 
     public override void Exit(NarrativeContext ctx)
     {
         SafeUnsubscribe();
+    }
+
+    /// El grupo ha caído en este combate y «Pierde» está conectada.
+    public bool Responder()
+    {
+        var runner = _ctx?.Runner;
+        if (runner == null) return false;
+        runner.StartCoroutine(Co_AlPerder(_ctx, _onReady));
+        return true;
+    }
+
+    private IEnumerator Co_AlPerder(NarrativeContext ctx, Action onReady)
+    {
+        SafeUnsubscribe();
+        yield return FeedbackService.ScreenFadeAsync(Color.black, FundidoAlPerder, fadeIn: true);
+
+        GameOverManager.Instance?.ForceResetState();
+        if (PlayerService.TryGetComponent(out PlayerActionManager modos, allowSceneLookup: false))
+            modos.ResetToDefault();
+        SaludDelGrupo.Instance?.CurarATodos();
+
+        if (_cachedManager != null)
+        {
+            var dmg = _cachedManager.GetComponent<Damageable>();
+            var config = _cachedManager.Configuration?.combatConfig;
+            float hp = config != null ? config.health : 100f;
+            if (dmg != null) dmg.SetMaxAndCurrent(hp, hp);
+            int interactableLayer = LayerMask.NameToLayer("Interactable");
+            if (interactableLayer >= 0) _cachedManager.gameObject.layer = interactableLayer;
+            _cachedManager.ForceIdle();
+        }
+
+        NarrativeLog.Info($"[StartNpcCombatNode:{guid}] El grupo ha caído contra '{npcId}'. Sigue por «Pierde».");
+        AdvanceThrough(ctx, onReady, PuertoPierde);
+        yield return null;
+        // Si el siguiente paso ya ha destapado o vuelto a tapar la pantalla, manda el suyo.
+        if (FeedbackService.IsScreenFaded)
+            yield return FeedbackService.ScreenFadeAsync(Color.black, FundidoAlPerder, fadeIn: false);
     }
 
     private void CleanupCombatState()
@@ -171,6 +240,11 @@ public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
 
     private void SafeUnsubscribe()
     {
+        if (_respondeALaDerrota)
+        {
+            GameOverManager.QuitarRespuestaALaDerrota(this);
+            _respondeALaDerrota = false;
+        }
         if (_signals != null && _onDefeatedCb != null && !string.IsNullOrEmpty(_registeredKey))
         {
             _signals.OffCustom(_registeredKey, _onDefeatedCb);

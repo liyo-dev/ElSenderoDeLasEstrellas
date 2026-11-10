@@ -15,10 +15,10 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_LUCIA
     textId: DLG_CAP3_LUCIA_DESPUES_01
-    text: "\xBFViste lo de la cuchara? Casi. Ma\xF1ana llega al pulgar."
+    text: "\xA1Esta ma\xF1ana la cuchara ha subido un dedo m\xE1s! \xA1Un dedo entero!"
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 13
   maxLinesPerPage: 0
   isGroupConversation: 0

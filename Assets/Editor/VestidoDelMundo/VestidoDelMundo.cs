@@ -81,9 +81,9 @@ public static partial class VestidoDelMundo
     private static void MenuQuitar()
     {
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
-        if (!EditorUtility.DisplayDialog("Quitar el vestido de MainWorld",
+        if (!OrdenesDelEditor.Confirmar("Quitar el vestido de MainWorld",
                 "Se borra «" + NombreRaiz + "» con sus mallas, lo retirado vuelve a la escena, las casas vuelven a su giro original y el suelo vuelve a la copia guardada.\n\n" +
-                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." + AvisosAntesDeBorrar(escena), "Quitar", "Cancelar"))
+                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." + AvisosAntesDeBorrar(escena), "Quitar"))
             return;
 
         var informe = new List<string>();
@@ -129,7 +129,7 @@ public static partial class VestidoDelMundo
         if (detalles)
         {
             string avisos = AvisosAntesDeBorrar(escena);
-            if (avisos.Length > 0 && !EditorUtility.DisplayDialog("Vestido de MainWorld", avisos.TrimStart(), "Rehacer igualmente", "Cancelar"))
+            if (avisos.Length > 0 && !OrdenesDelEditor.Confirmar("Vestido de MainWorld", avisos.TrimStart(), "Rehacer igualmente"))
                 return;
         }
         var informe = new List<string> { $"Vestido de MainWorld — {DateTime.Now:yyyy-MM-dd HH:mm}" };
@@ -247,7 +247,7 @@ public static partial class VestidoDelMundo
         terreno = null;
         if (EditorApplication.isPlayingOrWillChangePlaymode)
         {
-            EditorUtility.DisplayDialog("Vestido de MainWorld", "Sal de Play antes de usar esta herramienta.", "Vale");
+            OrdenesDelEditor.Avisar("Vestido de MainWorld", "Sal de Play antes de usar esta herramienta.");
             return false;
         }
         escena = SceneManager.GetSceneByPath(RutaEscena);
@@ -258,9 +258,9 @@ public static partial class VestidoDelMundo
         }
         else if (escena.isDirty)
         {
-            if (!EditorUtility.DisplayDialog("Vestido de MainWorld",
+            if (!OrdenesDelEditor.Confirmar("Vestido de MainWorld",
                     "MainWorld tiene cambios sin guardar. La herramienta guarda la escena al terminar, con tus cambios incluidos.",
-                    "Seguir", "Cancelar"))
+                    "Seguir"))
                 return false;
         }
         foreach (GameObject raiz in escena.GetRootGameObjects())
@@ -268,7 +268,7 @@ public static partial class VestidoDelMundo
                 if (t.terrainData != null && AssetDatabase.GetAssetPath(t.terrainData) == RutaTerreno) { terreno = t; break; }
         if (terreno == null)
         {
-            EditorUtility.DisplayDialog("Vestido de MainWorld", "No encuentro en MainWorld el Terrain que usa " + RutaTerreno + ". No se ha cambiado nada.", "Vale");
+            OrdenesDelEditor.Avisar("Vestido de MainWorld", "No encuentro en MainWorld el Terrain que usa " + RutaTerreno + ". No se ha cambiado nada.");
             return false;
         }
         return true;
@@ -558,6 +558,6 @@ public static partial class VestidoDelMundo
         }
         catch (IOException) { }
         string resumen = informe.Count > 18 ? string.Join("\n", informe.Take(18)) + "\n… (informe completo en la consola y en " + CarpetaCopias + "/Informe.txt)" : texto;
-        EditorUtility.DisplayDialog(titulo, resumen, "Vale");
+        OrdenesDelEditor.Avisar(titulo, resumen);
     }
 }

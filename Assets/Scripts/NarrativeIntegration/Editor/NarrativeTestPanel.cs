@@ -32,8 +32,6 @@ namespace Sendero.Narrative.Editor
         readonly TextField _spawnField;
         readonly DropdownField _anchorDropdown;
         readonly Label _labelWarning;
-        readonly Toggle _fastForwardToggle;
-        readonly Toggle _autoRestoreToggle;
 
 
         public NarrativeTestPanel()
@@ -155,31 +153,13 @@ namespace Sendero.Narrative.Editor
             });
             body.Add(combo);
 
-            // ── Fast-Forward ────────────────────────────────────────────
-            var forward = Section("Progreso previo");
-            var help = new Label("Simula el camino desde el inicio del grafo hasta el nodo: quests, objetos, " +
-                                 "flags, habilidades y dónde queda cada actor. Si el camino pasa por una decisión " +
-                                 "(flag, quest, pregunta...) se para y te lo avisa en vez de adivinar.");
-            help.AddToClassList("narrative-test__hint");
-            forward.Add(help);
-
-            _fastForwardToggle = new Toggle("Autocompletar progreso previo") { value = _config.fastForward };
-            _fastForwardToggle.RegisterValueChangedCallback(evt => { _config.fastForward = evt.newValue; _config.Save(); });
-            forward.Add(_fastForwardToggle);
-
-            var previewBtn = new Button(Preview) { text = "Vista previa (sin lanzar Play)" };
-            previewBtn.AddToClassList("narrative-test__small-button");
-            forward.Add(previewBtn);
-
+            // ── Camino hasta aquí ───────────────────────────────────────
+            // La historia anterior al paso se pone sola al empezar. Aquí solo sale lo que pide
+            // una decisión tuya (varias ramas llegan al paso) o lo que la prueba no puede poner.
+            var forward = Section("Camino hasta aquí");
             _previewBox = new VisualElement();
             _previewBox.AddToClassList("narrative-test__preview");
             forward.Add(_previewBox);
-
-            // ── Al salir ────────────────────────────────────────────────
-            var exit = Section("Al salir");
-            _autoRestoreToggle = new Toggle("Restaurar boot preset original") { value = _config.autoRestore };
-            _autoRestoreToggle.RegisterValueChangedCallback(evt => { _config.autoRestore = evt.newValue; _config.Save(); });
-            exit.Add(_autoRestoreToggle);
 
             // ── Lanzar ──────────────────────────────────────────────────
             var actions = new VisualElement();
@@ -255,6 +235,7 @@ namespace Sendero.Narrative.Editor
                 : node.displayTitle;
             _targetLabel.text = $"Nodo: {title}";
             RefreshPlayButton();
+            Preview();
         }
 
         /// <summary>Lanza una prueba desde el nodo indicado (o para la que esté en curso).</summary>
@@ -345,48 +326,41 @@ namespace Sendero.Narrative.Editor
 
         void Preview()
         {
-            if (_graph == null || string.IsNullOrEmpty(_targetGuid))
-            {
-                SetStatus("Selecciona un nodo antes de previsualizar.");
-                return;
-            }
+            _previewBox.Clear();
+            if (_graph == null || string.IsNullOrEmpty(_targetGuid)) return;
+            _config.fastForward = true;
             ApplyPreview(NarrativeTestLauncher.Preview(_graph, _targetGuid, _config));
-            SetStatus("Vista previa calculada.");
         }
 
         void ApplyPreview(NarrativeFastForwardPreview preview)
         {
             _previewBox.Clear();
             if (preview == null) return;
-            if (!preview.ran)
+            if (!preview.reachedTarget)
             {
-                AddPreviewLine("Fast-Forward desactivado.", "is-muted");
+                AddPreviewLine("Este paso no está conectado al inicio: se empezará sin la historia anterior.", "is-warning");
                 return;
             }
 
-            if (preview.reachedTarget)
-                AddPreviewLine($"Camino reconstruido hasta «{preview.objectiveTitle}».", "is-ok");
-            else
-                AddPreviewLine("Este nodo no está conectado al inicio del grafo: no hay camino que reconstruir.", "is-error");
-            foreach (var d in preview.decisions)
+            bool anything = false;
+            foreach (var d in preview.decisions.Where(d => !d.Forced && d.PortsToTarget != null && d.PortsToTarget.Length > 1))
+            {
                 AddDecision(d);
+                anything = true;
+            }
             foreach (var w in preview.warnings.Take(6))
+            {
                 AddPreviewLine("⚠ " + w, "is-warning");
-            foreach (var a in preview.actors.Take(6))
-                AddPreviewLine("· " + a, "is-muted");
-            foreach (var n in preview.notes.Take(4))
-                AddPreviewLine("· " + n, "is-muted");
+                anything = true;
+            }
+            if (!anything)
+                AddPreviewLine("La historia hasta este paso se pone sola al empezar. Lo ves entero en «Mundo aquí».", "is-muted");
         }
 
         /// Una decisión del camino. Si varias ramas llevan al nodo, se puede elegir cuál se reconstruye.
         void AddDecision(NarrativeStateProjector.Decision d)
         {
-            if (d.Forced || d.PortsToTarget == null || d.PortsToTarget.Length < 2)
-            {
-                AddPreviewLine($"· «{d.Title}»: {d.ChosenOption}{(d.Forced ? " (el nodo está en esa rama)" : "")}", "is-muted");
-                return;
-            }
-
+            AddPreviewLine($"Varias ramas llegan aquí. ¿Por cuál vienes en «{d.Title}»?", "is-muted");
             var row = new VisualElement();
             row.AddToClassList("narrative-test__decision");
             row.Add(new Label($"«{d.Title}»"));

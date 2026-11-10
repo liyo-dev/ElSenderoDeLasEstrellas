@@ -25,7 +25,6 @@ namespace NarrativeGraphEditor.Story
         NarrativeInspectorPanel _inspector;
         VisualElement _stepTab;
         StoryAssistantPanel _assistant;
-        const string AssistantPref = "NarrativeGraph.Assistant.Visible";
         VisualElement _stepWarnings;
         StoryWorldPanel _world;
         VisualElement _side;
@@ -110,6 +109,7 @@ namespace NarrativeGraphEditor.Story
             _outline.AddClicked += () => _canvas.OpenAddAtCenter();
             _outline.WordClicked += word => _search.value = word;
             body.Add(_outline);
+            body.Add(new StorySplitter(_outline, true, "NarrativeGraph.Editor.OutlineWidth", 240f, 180f, 480f));
 
             _canvas = new StoryCanvas();
             _canvas.SelectionChanged += OnSelectionChanged;
@@ -118,6 +118,7 @@ namespace NarrativeGraphEditor.Story
             body.Add(_canvas);
 
             BuildSide(body);
+            body.Insert(body.IndexOf(_side), new StorySplitter(_side, false, "NarrativeGraph.Editor.SideWidth", 360f, 280f, 760f));
 
             Undo.undoRedoPerformed += OnUndoRedo;
             root.schedule.Execute(Poll).Every(300);
@@ -131,6 +132,7 @@ namespace NarrativeGraphEditor.Story
         {
             Undo.undoRedoPerformed -= OnUndoRedo;
             StoryBreakpoints.Hit -= OnBreakpointHit;
+            StoryAssistantSettings.Changed -= OnAssistantSettings;
             SaveNow();
         }
 
@@ -175,10 +177,15 @@ namespace NarrativeGraphEditor.Story
             layout.AddToClassList("story-button");
             bar.Add(layout);
 
-            var lang = new Button(() => { StoryText.English = !StoryText.English; var g = _graph; Close(); OpenGraph(g); }) { text = StoryText.English ? "ES" : "EN" };
-            lang.tooltip = StoryText.T("Cambiar el idioma del editor", "Change the editor language");
-            lang.AddToClassList("story-button");
-            bar.Add(lang);
+            var settings = new Button(() => StorySettingsWindow.Open(() => _graph, () => { var g = _graph; Close(); OpenGraph(g); }))
+            {
+                text = "⚙",
+                tooltip = StoryText.T("Ajustes y herramientas: idioma, asistente, exportar textos, conexiones del juego…",
+                                      "Settings and tools: language, assistant, export texts, game connections…"),
+            };
+            settings.AddToClassList("story-button");
+            settings.AddToClassList("story-toolbar__settings");
+            bar.Add(settings);
 
             _play = new Button(() => PlayFrom(_canvas.Primary));
             _play.AddToClassList("story-button--primary");
@@ -227,9 +234,12 @@ namespace NarrativeGraphEditor.Story
             };
             AddTab(StoryText.T("Mundo aquí", "World here"), _world);
             _assistant = new StoryAssistantPanel { Graph = () => _graph };
+            _assistant.SettingsRequested += () => StorySettingsWindow.Open(() => _graph, () => { var g = _graph; Close(); OpenGraph(g); });
+            StoryAssistantSettings.Changed -= OnAssistantSettings;
+            StoryAssistantSettings.Changed += OnAssistantSettings;
             _assistant.Changed += () => { _canvas.Rebuild(); OnSelectionChanged(_canvas.Primary); ScheduleSave(); };
             AddTab(StoryText.T("Asistente", "Assistant"), _assistant);
-            ShowAssistantTab(EditorPrefs.GetBool(AssistantPref, false));
+            ShowAssistantTab(StoryAssistantSettings.Visible);
 
             _gameTabs.Clear();
             foreach (var tab in NarrativeEditorExtensions.CreateAll<NarrativeGraphSideTab>().OrderBy(t => t.Order))
@@ -248,6 +258,15 @@ namespace NarrativeGraphEditor.Story
             content.AddToClassList("story-side__content");
             _side.Add(content);
             _tabs.Add((button, content));
+        }
+
+        void OnAssistantSettings()
+        {
+            if (_assistant == null) return;
+            bool visible = StoryAssistantSettings.Visible;
+            bool wasHidden = _tabs.Any(t => t.content == _assistant && t.button.style.display == DisplayStyle.None);
+            ShowAssistantTab(visible);
+            if (visible && wasHidden) ShowTab(_assistant);
         }
 
         void ShowAssistantTab(bool visible)
@@ -308,21 +327,6 @@ namespace NarrativeGraphEditor.Story
             }
             _graphMenu.menu.AppendSeparator();
             _graphMenu.menu.AppendAction(StoryText.T("Nuevo grafo…", "New graph…"), _ => CreateGraph());
-            _graphMenu.menu.AppendAction(StoryText.T("Mostrar el asistente", "Show the assistant"), _ =>
-                {
-                    bool on = !EditorPrefs.GetBool(AssistantPref, false);
-                    EditorPrefs.SetBool(AssistantPref, on);
-                    ShowAssistantTab(on);
-                    if (on) ShowTab(_assistant);
-                },
-                _ => EditorPrefs.GetBool(AssistantPref, false) ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal);
-            _graphMenu.menu.AppendAction(StoryText.T("Copiar el capítulo como texto", "Copy the chapter as text"),
-                _ => EditorGUIUtility.systemCopyBuffer = NarrativeGraphText.Chapter(_graph),
-                _ => _graph != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            _graphMenu.menu.AppendAction(StoryText.T("Conexiones del juego…", "Game connections…"), _ => StoryConnectionsWindow.Open());
-            _graphMenu.menu.AppendAction(StoryText.T("Exportar textos para traducir y doblar…", "Export texts for translation and voice…"),
-                _ => StoryScriptExport.ExportWithDialog(_graph),
-                _ => _graph != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             _graphMenu.text = _graph != null ? _graph.name : StoryText.T("Elegir grafo", "Pick a graph");
         }
 
@@ -474,8 +478,8 @@ namespace NarrativeGraphEditor.Story
                 ShowTab(tab);
                 return;
             }
-            Debug.LogWarning(StoryText.T("Este proyecto no tiene ninguna pestaña que lance pruebas desde un paso.",
-                                         "This project has no tab that starts tests from a step."));
+            if (!NarrativePlayLaunchers.Current.Launch(_graph, node.guid, null, out var message) && !string.IsNullOrEmpty(message))
+                Debug.LogWarning("[Narrative Graph] " + message);
         }
 
         // ── Play mode ────────────────────────────────────────────────────────

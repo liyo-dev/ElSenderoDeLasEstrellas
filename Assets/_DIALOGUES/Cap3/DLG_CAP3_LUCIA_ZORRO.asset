@@ -15,21 +15,21 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_LUCIA
     textId: DLG_CAP3_ZORRO_01
-    text: "\xA1Yo vi al zorro! Junto a la cerca del huerto."
+    text: "\xBFT\xFA tambi\xE9n buscas al zorro del collar? \xA1Yo lo vi!"
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 13
   - speakerNameId: CHAR_LUCIA
     textId: DLG_CAP3_ZORRO_02
-    text: Llevaba un collar que brillaba. No me quiso morder.
+    text: "Estaba en la cerca del huerto, rasc\xE1ndose el cuello contra la madera. As\xED, mira."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_LUCIA
     textId: DLG_CAP3_ZORRO_03
-    text: "Ten\xEDa m\xE1s miedo que yo."
+    text: "Le dije \xABven, bonito\xBB y sali\xF3 corriendo. Creo que ten\xEDa m\xE1s miedo que yo."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

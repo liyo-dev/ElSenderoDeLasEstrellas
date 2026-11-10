@@ -418,14 +418,16 @@ public sealed class ReproductorDeGuion
         private int _cabezaAplicada = -1;
         private DialogueHeadLook _cabeza;
         private Transform _marcaDeCabeza;
-        private float _yawPrevio, _cortePrevio, _pesoPrevio;
+        private float _yawPrevio, _cortePrevio, _pesoPrevio, _inclinacionPrevia;
         private bool _alcanceCambiado;
 
         // En las cinemáticas la cabeza llega más lejos que en una conversación (sentado se mira a
-        // quien está al lado) y se nota más; al soltar al actor se devuelve lo que tenía.
+        // quien está al lado y a lo que hay sobre la mesa: una bola queda unos 40° por debajo de
+        // los ojos) y se nota más; al soltar al actor se devuelve lo que tenía.
         private const float YawDeCabeza = 65f;
         private const float CorteDeCabeza = 45f;
         private const float PesoDeCabeza = 0.85f;
+        private const float InclinacionDeCabeza = 50f;
         private float _rumbo;
         private bool _moviendo;
         private bool _visible = true;
@@ -664,7 +666,8 @@ public sealed class ReproductorDeGuion
             {
                 _alcanceCambiado = true;
                 _yawPrevio = _cabeza.MaxYaw; _cortePrevio = _cabeza.YawCutoffMargin; _pesoPrevio = _cabeza.MaxWeight;
-                _cabeza.FijarAlcance(YawDeCabeza, CorteDeCabeza, PesoDeCabeza);
+                _inclinacionPrevia = _cabeza.MaxPitch;
+                _cabeza.FijarAlcance(YawDeCabeza, CorteDeCabeza, PesoDeCabeza, InclinacionDeCabeza);
             }
             _cabeza.SetTarget(hacia);
         }
@@ -674,7 +677,7 @@ public sealed class ReproductorDeGuion
             if (_cabeza != null)
             {
                 _cabeza.SetTarget(null);
-                if (_alcanceCambiado) _cabeza.FijarAlcance(_yawPrevio, _cortePrevio, _pesoPrevio);
+                if (_alcanceCambiado) _cabeza.FijarAlcance(_yawPrevio, _cortePrevio, _pesoPrevio, _inclinacionPrevia);
             }
             _alcanceCambiado = false;
             _cabezaAplicada = -1;

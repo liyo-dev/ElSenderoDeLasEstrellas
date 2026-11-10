@@ -64,7 +64,6 @@ namespace Sendero.Narrative.Editor
             routeChoices.Add(new RouteChoice { nodeGuid = nodeGuid, port = port });
             Save();
         }
-        public bool autoRestore = true;
 
         const string PrefsKey = "Sendero.Narrative.TestConfig";
 
@@ -145,10 +144,42 @@ namespace Sendero.Narrative.Editor
         public const string QuickTestPresetPath = "Assets/Editor/QuickTestPreset_Temp.asset";
         const string ProfilePath = "Assets/_BootProfile/GameBootProfile.asset";
 
-        static PlayerPresetSO _originalBootPreset;
-        static bool _originalUsePreset;
-        static bool _needsRestore;
+        const string StartScenePath = "Assets/Scenes/Systems/Start.unity";
+
+        // Lo que hay que restaurar al salir de Play. Va en SessionState porque al entrar en Play
+        // Unity recarga los scripts y los campos estáticos se pierden: así se quedaba el
+        // bootPreset apuntando a QuickTest_Temp.
+        const string KeyNeedsRestore = "NarrativeTest.NeedsRestore";
+        const string KeyOriginalPreset = "NarrativeTest.OriginalPreset";
+        const string KeyOriginalUsePreset = "NarrativeTest.OriginalUsePreset";
         static bool _launching;
+
+        static bool _needsRestore
+        {
+            get => SessionState.GetBool(KeyNeedsRestore, false);
+            set => SessionState.SetBool(KeyNeedsRestore, value);
+        }
+
+        static PlayerPresetSO _originalBootPreset
+        {
+            get
+            {
+                var path = AssetDatabase.GUIDToAssetPath(SessionState.GetString(KeyOriginalPreset, string.Empty));
+                return string.IsNullOrEmpty(path) ? null : AssetDatabase.LoadAssetAtPath<PlayerPresetSO>(path);
+            }
+            set
+            {
+                // Si el original ya era el temporal (de una prueba que no se restauró), no hay original.
+                var path = value != null ? AssetDatabase.GetAssetPath(value) : string.Empty;
+                SessionState.SetString(KeyOriginalPreset, path == QuickTestPresetPath || path.Length == 0 ? string.Empty : AssetDatabase.AssetPathToGUID(path));
+            }
+        }
+
+        static bool _originalUsePreset
+        {
+            get => SessionState.GetBool(KeyOriginalUsePreset, false);
+            set => SessionState.SetBool(KeyOriginalUsePreset, value);
+        }
 
         public static bool IsPlaying => EditorApplication.isPlaying;
         public static bool NeedsRestore => _needsRestore;
@@ -201,7 +232,8 @@ namespace Sendero.Narrative.Editor
 
             _originalBootPreset = profile.bootPreset;
             _originalUsePreset = profile.usePresetInsteadOfSave;
-            _needsRestore = cfg.autoRestore;
+            // Al salir de Play siempre se deja la partida de arranque como estaba.
+            _needsRestore = true;
 
             var tempPreset = AssetDatabase.LoadAssetAtPath<PlayerPresetSO>(QuickTestPresetPath);
             if (tempPreset == null)
@@ -254,6 +286,12 @@ namespace Sendero.Narrative.Editor
                 ? $"{selectedNode.GetType().Name} \"{selectedNode.displayTitle}\""
                 : objetivo;
             status = $"Lanzando Play desde {nodeDesc} en {graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
+
+            // La prueba siempre arranca por la escena Start, que es la que tiene el GameBootService
+            // que lee el perfil, aunque en el editor esté abierta otra escena.
+            var start = AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(StartScenePath);
+            if (start != null) UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = start;
+            else Debug.LogWarning($"[QuickTest] No encuentro {StartScenePath}: se arranca por la escena abierta.");
 
             EditorApplication.isPlaying = true;
             return true;
@@ -394,6 +432,7 @@ namespace Sendero.Narrative.Editor
             {
                 profile.bootPreset = _originalBootPreset;
                 profile.usePresetInsteadOfSave = _originalUsePreset;
+                UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
                 EditorUtility.SetDirty(profile);
                 AssetDatabase.SaveAssets();
                 Debug.Log("[QuickTest] bootPreset restaurado al original.");

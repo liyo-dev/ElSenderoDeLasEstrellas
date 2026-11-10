@@ -111,6 +111,28 @@ public static class PersonajesConAspectoFijo
             Piezas = new[] { "Head01_Male", "Hair12", "Body15", "Eye01", "Mouth02" },
             Lineas = new[] { "DLG_FERMIN_01" }, Pasea = true, RadioDePaseo = 8f,
         };
+        yield return new Personaje
+        {
+            // Pescador comiendo en la terraza de la posada.
+            Nombre = "Benito", Ruta = Aldea + "Benito.prefab", IdPersonaje = "CHAR_BENITO", IdPersistencia = "NPC_Benito",
+            Piezas = new[] { "Head01_Male", "Hair11", "Body03", "AC11_Mustache02", "Eye01", "Mouth02" },
+            Lineas = new[] { "DLG_BENITO_01" }, Pasea = false, Actividad = NPCAmbientActivity.SitMedium, BuscaRefugio = false,
+        };
+        yield return new Personaje
+        {
+            // Vecina comiendo en la terraza de la posada, enfrente de Benito.
+            Nombre = "Rosario", Ruta = Aldea + "Rosario.prefab", IdPersonaje = "CHAR_ROSARIO", IdPersistencia = "NPC_Rosario", Voz = "Vecina",
+            Piezas = new[] { "Head02_Female", "Hair02", "Body05", "Eye07", "Mouth03" },
+            Lineas = new[] { "DLG_ROSARIO_01" }, Pasea = false, Actividad = NPCAmbientActivity.SitMedium, BuscaRefugio = false,
+        };
+        yield return new Personaje
+        {
+            // Lucía, la niña de la posada (la que intenta subir la cuchara): coletas rubias y ropa de diario.
+            // Su cuerpo de niña (talla pequeña) y sus caras los pone NinosHechosEnBlender.
+            Nombre = "Lucia", Ruta = Aldea + "Lucia.prefab", IdPersonaje = "CHAR_LUCIA", IdPersistencia = "NPC_Lucia", Voz = "Vecina",
+            Piezas = new[] { "Head02_Female", "Hair08", "Body04", "Eye07", "Mouth03" },
+            Lineas = new[] { "DLG_LUCIA_01" }, Pasea = false, BuscaRefugio = false, EsNino = true,
+        };
 
         // ── El pueblo del prólogo: la vida de fondo de la mañana (guion Prologo_UltimaNoche). No hablan;
         // los mueve el guion. Su sitio de salida lo pone *Prólogo: vestir el pueblo*. El niño que va de la

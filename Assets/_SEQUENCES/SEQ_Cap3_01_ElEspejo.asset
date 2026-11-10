@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_Cap3_01_ElEspejo
   m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
   displayName: "Cap. 3: Tob\xEDas en el espejo"
-  summary: "Media sopa, la pesca y el dibujo de cuatro figuras. La llave del aro se calentar\xE1 cerca de Will."
+  summary: "Media sopa y la promesa de ir a pescar. La llave del aro se calentar\xE1 cerca de Will."
   signalIn: CAP3_ESPEJO_START
   signalOut: CAP3_ESPEJO_DONE
   musicId: 

@@ -2277,14 +2277,6 @@
             "text": "I'll learn. They say the trick is patience."
         },
         {
-            "id": "CAP3_ESPEJO_08",
-            "text": "I made you a drawing. It's us, fishing. I didn't give the fourth one a face: I don't know who he is yet."
-        },
-        {
-            "id": "CAP3_ESPEJO_09",
-            "text": "You will."
-        },
-        {
             "id": "CAP3_ESPEJO_10",
             "text": "The collar's key. It'll grow warm whenever the boy is near."
         },
@@ -2294,7 +2286,7 @@
         },
         {
             "id": "CAP3_POSADA_01",
-            "text": "Excuse me. Do you know what this is?"
+            "text": "Excuse me… do you know what this is?"
         },
         {
             "id": "CAP3_POSADA_02",
@@ -2306,7 +2298,7 @@
         },
         {
             "id": "CAP3_POSADA_04",
-            "text": "No demons have come this way. But collared animals have. Several."
+            "text": "No demons around here. But animals with a collar like that… quite a few."
         },
         {
             "id": "CAP3_POSADA_05",
@@ -2314,19 +2306,19 @@
         },
         {
             "id": "CAP3_POSADA_06",
-            "text": "The food in my bag ran out yesterday. Is this enough for a soup?"
+            "text": "My food ran out yesterday… Is this enough for a soup?"
         },
         {
             "id": "CAP3_POSADA_07",
-            "text": "It's enough. But not for bread."
+            "text": "For soup, yes. For bread, no."
         },
         {
             "id": "CAP3_POSADA_08",
-            "text": "I can do magic! Watch the spoon."
+            "text": "Want to see some magic? Watch the spoon."
         },
         {
             "id": "CAP3_POSADA_09",
-            "text": "It's going to rise… rise… all the way to my thumb."
+            "text": "Up… up… all the way to my thumb…"
         },
         {
             "id": "CAP3_POSADA_10",
@@ -2666,7 +2658,7 @@
         },
         {
             "id": "CAP3_POSADA_12",
-            "text": "Eat something, then ask around the village. People see things, even if they don't say."
+            "text": "Have your soup, then ask around. People here see plenty, even if they don't say so."
         },
         {
             "id": "CAP4_MANANA_05",
@@ -2723,6 +2715,10 @@
         {
             "id": "CAP3_DESPEDIDA_11",
             "text": "See you soon, Eldran!"
+        },
+        {
+            "id": "CAP3_POSADA_13",
+            "text": "Really? Then tomorrow I'll reach my thumb!"
         }
     ]
 }

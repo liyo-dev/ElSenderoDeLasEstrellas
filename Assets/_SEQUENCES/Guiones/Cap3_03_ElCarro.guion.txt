@@ -1,7 +1,7 @@
 # Cap. 3 · De noche, junto al fuego, pasa un contrabandista con jaulas tapadas. Por la manta sale una luz que respira.
 GUION Cap3_03_ElCarro
 ESCENA MainWorld
-ZONA Cap3Carro -120 -218 26
+ZONA Cap3Carro -104 -214 28
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_03_ElCarro.asset
 TEXTO bocadillo
 RITMO entre_frases=0.4 mismo_hablante=0.25
@@ -11,22 +11,28 @@ will  Player               nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.
 c1    NPC_Contrabandista1  nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
 
 PUNTOS
-fuego    -124 -213
-p_will   -122.5 -214.5
-c1_a     -106 -227
-c1_b     -116 -224
-c1_c     -132 -220
+# Acampada en la orilla este, junto al camino que cruza el puente del camino 5 (el cauce queda al oeste).
+# El contrabandista baja por el camino desde el noreste y cruza el puente; ahí lo recoge el seguimiento.
+fuego    -99.5 -206.5
+p_will   -101 -208.5
+c1_a     -86 -204.6
+c1_b     -104.5 -218.5
+c1_c     -116 -226
+# Al oeste de Will, junto al talud: Will de espaldas a un lado y el camino por donde baja el contrabandista al fondo.
+cam_camino -107 -211.5
+# Al este de Will, donde las flores no le tapan la cara.
+cam_will   -96.8 -208.4
 
 HILO
 @inicio
 will en p_will mirando fuego
 & c1 en c1_a mirando c1_c
-plano medio will
+plano medio will desde=cam_will altura=1.6
 espera 1.2
 will mira c1_a
 will dice CAP3_CARRO_01 cara=sorpresa
 c1 anda a c1_b, c1_c ritmo=paseo sin_esperar
-plano conjunto will c1
+plano conjunto will c1 desde=cam_camino altura=3.2
 espera 1.6
 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab" en=c1 lifetime=2.5
 will mira c1

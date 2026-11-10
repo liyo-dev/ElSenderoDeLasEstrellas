@@ -2262,12 +2262,8 @@
             "value": "La hoja donde Will apunta lo que cuentan en la aldea del mar de los animales con aro."
         },
         {
-            "key": "CAP3_ROTULO_NOCHE",
-            "value": "Esa noche, camino del bosque…"
-        },
-        {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Sigue al carro sin acercarte: si te ven, tendrás que volver atrás."
+            "value": "Síguele sin que te vea. Cuando se pare a mirar atrás, escóndete en un matorral o detrás de una pared."
         },
         {
             "key": "CAP3_ROTULO_MANANA",
@@ -2298,10 +2294,6 @@
             "value": "Nuevo hechizo: Levitación. Ya está entre tus hechizos: lánzalo para flotar sobre el agua, el barro y los huecos."
         },
         {
-            "key": "CAP3_ROTULO_ACAMPADA",
-            "value": "Esa noche, a medio camino de la costa…"
-        },
-        {
             "key": "REQUISITO_FALTA_PRENDA",
             "value": "Para pasar hace falta llevar algo que {0}."
         },
@@ -2324,6 +2316,14 @@
         {
             "key": "LUGAR_ALDEA_DEL_MAR",
             "value": "Aldea del mar"
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA_NOCHE",
+            "value": "Ya es de noche: acércate a la hoguera para esperar el carro. Si prefieres seguir explorando de día, pulsa {BOTON} junto a cualquier hoguera para descansar hasta la mañana."
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA",
+            "value": "Pulsa {BOTON} junto a una hoguera para descansar: de día pasa el tiempo hasta la noche, y de noche hasta la mañana."
         }
     ]
 }

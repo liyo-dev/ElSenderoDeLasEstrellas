@@ -2042,71 +2042,71 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "¿Y usted? ¿Ha visto algo raro?"
+            "value": "¿Y usted ha visto alguno de esos animales?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "Hace tres semanas, de noche, vi luces bajas moviéndose entre los árboles del bosque."
+            "value": "Animales no. Pero hace unas semanas, una noche que no podía dormir, vi luces en el camino del bosque."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "No eran faroles. Iban a la altura de la rodilla."
+            "value": "No eran faroles. Iban casi a ras de suelo, todas juntas."
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "¿Y qué hacían?"
+            "value": "¿Luciérnagas?"
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
-            "value": "¡Yo vi al zorro! Junto a la cerca del huerto."
+            "value": "¿Tú también buscas al zorro del collar? ¡Yo lo vi!"
         },
         {
             "key": "DLG_CAP3_ZORRO_02",
-            "value": "Llevaba un collar que brillaba. No me quiso morder."
+            "value": "Estaba en la cerca del huerto, rascándose el cuello contra la madera. Así, mira."
         },
         {
             "key": "DLG_CAP3_ZORRO_03",
-            "value": "Tenía más miedo que yo."
+            "value": "Le dije «ven, bonito» y salió corriendo. Creo que tenía más miedo que yo."
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Huellas pequeñas y pelo rojizo enganchado en la madera."
+            "value": "Pelo rojizo enganchado en la madera… y huellas pequeñas."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
-            "value": "Se ha rascado aquí con fuerza. Como si el collar le doliera."
+            "value": "Se ha rascado aquí hasta arrancarse el pelo. Como si el collar le hiciera daño."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
-            "value": "Arañazos en la madera, a la altura del cuello de un perro."
+            "value": "Mira qué arañazos. Justo a la altura del cuello de un perro."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
-            "value": "Ha dejado restos de hierro en la madera. Con las mismas líneas que el trozo del aro."
+            "value": "Y esto… son restos de hierro. Tienen las mismas rayas que mi trozo de aro."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_03",
-            "value": "Y las líneas todavía brillan un poco."
+            "value": "Todavía brillan."
         },
         {
             "key": "DLG_CAP3_HOJA_01",
-            "value": "Un zorro asustado, un perro que se rascaba y luces que respiran. Lo he apuntado todo."
+            "value": "¿Qué, chico? ¿Has sacado algo en claro?"
         },
         {
             "key": "DLG_CAP3_HOJA_02",
-            "value": "Se lo he contado a dos guardias y a un viajero. Ninguno me hizo caso."
+            "value": "El zorro se rascaba contra la cerca hasta arrancarse el pelo. Y un perro ha dejado restos de hierro en la casa de las nasas."
         },
         {
             "key": "DLG_CAP3_HOJA_03",
-            "value": "Y tú eres el primero que trae un trozo de esos aros."
+            "value": "Con las mismas rayas que esto. Y todavía brillan."
         },
         {
             "key": "DLG_CAP3_HOJA_04",
-            "value": "Si buscas a quien hace esos aros, mira hacia el Bosque Prohibido."
+            "value": "Llevo semanas contándolo y nadie me hace caso. Ni los guardias del cruce."
         },
         {
             "key": "DLG_CAP3_HOJA_05",
-            "value": "Y no te fíes del camino de noche. Por ahí pasan carros que no paran en ningún sitio."
+            "value": "Y ahora apareces tú con un trozo de esos aros en el bolsillo."
         },
         {
             "key": "DLG_CAP3_SARGENTO_01",
@@ -2126,11 +2126,11 @@
         },
         {
             "key": "DLG_CAP3_POSADERO_DESPUES_01",
-            "value": "Si das con quien hace los aros, vuelve y cuéntamelo. Invita la casa."
+            "value": "Cuando sepas quién hace esos aros, vuelve y me lo cuentas. La sopa la pongo yo."
         },
         {
             "key": "DLG_CAP3_LUCIA_DESPUES_01",
-            "value": "¿Viste lo de la cuchara? Casi. Mañana llega al pulgar."
+            "value": "¡Esta mañana la cuchara ha subido un dedo más! ¡Un dedo entero!"
         },
         {
             "key": "DLG_CAP3_SARGENTO_DESPUES_01",
@@ -2198,7 +2198,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_05",
-            "value": "Se encendían y se apagaban, despacio. Como algo que respira dormido."
+            "value": "Las luciérnagas no se encienden todas a la vez. Aquello subía y bajaba despacio… como algo que respira dormido."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_05",
@@ -2243,10 +2243,6 @@
         {
             "key": "DLG_CAP2_ADIOS_TOMASA_01",
             "value": "¿Te vas de viaje? Si encuentras por ahí algo que no sirva para nada, ya sabes dónde venderlo."
-        },
-        {
-            "key": "CAP3_BOC_ACAMPADA",
-            "value": "Mañana llego a la costa. Ojalá alguien allí sepa algo de estos aros."
         },
         {
             "key": "CHAR_REMEDIOS",
@@ -2298,7 +2294,7 @@
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
-            "value": "Un perro con collar raro se pasó la noche rascándose contra el cobertizo de las redes. Lo oí desde casa."
+            "value": "Anoche un perro con un collar raro se pasó horas rascándose contra la casa de las nasas, la del tejado de paja. No me dejó pegar ojo."
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_1_01",
@@ -2334,7 +2330,7 @@
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
-            "value": "Lucía dice que vio un zorro con collar junto a la cerca del huerto. Esa niña ve muchas cosas… pero esta vez la creo."
+            "value": "Lucía, la cría de la posada, dice que vio un zorro con collar en la cerca del huerto. Esa niña ve muchas cosas… pero esta vez la creo."
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
@@ -2363,6 +2359,90 @@
         {
             "key": "DLG_ALDEA_FERMIN_2_01",
             "value": "Si buscas la tienda, Engracia tiene el puesto al oeste de la plaza."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_06",
+            "value": "Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido. Con todo esto, a lo mejor me escucha."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_07",
+            "value": "¿Al Bosque Prohibido? Pues ve con ojo por el camino."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_08",
+            "value": "Últimamente pasan carros de noche, con la carga tapada. No paran ni para dar de beber a las mulas."
+        },
+        {
+            "key": "CAP3_BOC_ESPERAR",
+            "value": "El posadero dijo que esos carros pasan de noche. Esperaré aquí, junto al fuego."
+        },
+        {
+            "key": "CHAR_BENITO",
+            "value": "Benito"
+        },
+        {
+            "key": "CHAR_ROSARIO",
+            "value": "Rosario"
+        },
+        {
+            "key": "DLG_BENITO_01",
+            "value": "Un día de pesca y un plato caliente. No pido más."
+        },
+        {
+            "key": "DLG_ROSARIO_01",
+            "value": "Aquí se come la mejor sopa de la costa. Y la única, también."
+        },
+        {
+            "key": "DLG_LUCIA_01",
+            "value": "¡Hola! Mi madre dice que no hable con forasteros… pero tú no pareces forastero."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_C3_1_01",
+            "value": "¿Animales con aro? Mientras no le pongan uno a mi gato…"
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_C3_2_01",
+            "value": "Si quieres saber algo de este pueblo, pregúntale a Remedios. No duerme nunca."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_1_01",
+            "value": "Un día de pesca y un plato caliente. No pido más."
+        },
+        {
+            "key": "DLG_ALDEA_BENITO_2_01",
+            "value": "La sopa de hoy lleva de todo. No preguntes qué."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_C3_1_01",
+            "value": "Lucía no habla de otra cosa que del zorro. Y de la cuchara, claro."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_C3_2_01",
+            "value": "Desde que se ven esos animales, cierro el gallinero con dos vueltas de llave."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_1_01",
+            "value": "Aquí se come la mejor sopa de la costa. Y la única, también."
+        },
+        {
+            "key": "DLG_ALDEA_ROSARIO_2_01",
+            "value": "Siéntate, hombre, que de pie se come peor."
+        },
+        {
+            "key": "DLG_CAP3_PILLADO_01",
+            "value": "¿Me venías siguiendo, crío? Mala idea."
+        },
+        {
+            "key": "DLG_CAP3_PILLADO_02",
+            "value": "Esa luz que llevas no es un farol. ¿Qué escondes?"
+        },
+        {
+            "key": "DLG_CAP3_CARRETERO_VENCIDO_01",
+            "value": "Ay… mi cabeza… Vale, vale, me quedo aquí quieto."
+        },
+        {
+            "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
+            "value": "Venía del bosque. Los demás tienen que estar por ahí."
         }
     ]
 }

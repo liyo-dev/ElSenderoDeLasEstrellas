@@ -43,7 +43,7 @@ public static class CapturaDeEscenario
         var escena = AbrirEscena(nombreEscena);
         if (!escena.IsValid() || !escena.isLoaded)
         {
-            EditorUtility.DisplayDialog("Captura", $"No he podido abrir la escena '{nombreEscena}'.", "Vale");
+            OrdenesDelEditor.Avisar("Captura", $"No he podido abrir la escena '{nombreEscena}'.");   // desde el buzón, al registro (un diálogo lo bloquearía)
             return null;
         }
 
@@ -62,7 +62,7 @@ public static class CapturaDeEscenario
         }
         if (!zona.HasValue && marcas.Count == 0 && spawns.Count == 0)
         {
-            EditorUtility.DisplayDialog("Captura", "La escena no tiene marcas ni puntos de aparición.", "Vale");
+            OrdenesDelEditor.Avisar("Captura", "La escena no tiene marcas ni puntos de aparición.");
             return null;
         }
 

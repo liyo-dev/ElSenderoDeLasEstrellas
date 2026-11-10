@@ -46,6 +46,9 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     private const float TiempoMaximoSalida = 1f;
     private const float EmpujeContraElBorde = 0.3f;
     private const float VelocidadPasarElBorde = 2.2f;
+    // Sin saber nadar, solo se devuelve al jugador a la orilla si la tiene así de cerca (m): más
+    // lejos es que ha llegado al agua de otra forma (una caída) y no se le arrastra.
+    private const float DistanciaMaximaALaOrilla = 2f;
 
     [Header("Animación")]
     [SerializeField] private int locomotionLayerIndex = 0;
@@ -77,6 +80,10 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     private float alturaMaximaSalida = 0.9f;
     [SerializeField, Tooltip("Velocidad con la que se impulsa hacia arriba para subir al borde (m/s).")]
     private float velocidadSubirBorde = 3f;
+
+    [Header("Sin saber nadar")]
+    [SerializeField, Tooltip("Sin la habilidad de nadar, el jugador no entra en agua con más fondo que esto (m): se queda en la orilla.")]
+    private float fondoMaximoSinNadar = 0.6f;
 
     [Header("Ondas al nadar")]
     [SerializeField, Tooltip("Segundos entre ondas mientras nada.")]
@@ -135,6 +142,9 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     private bool _airTuningApplied;
     private PlayerControls _controls;
     private bool _ownsControls;
+    private Vector3 _posicionEnLaOrilla;
+    private bool _hayPosicionEnLaOrilla;
+    private bool _frenadoEnLaOrilla;
 
     /// <summary>True mientras está en el agua (zambulléndose o flotando).</summary>
     public bool EstaEnElAgua => _fase != Fase.Fuera;
@@ -230,7 +240,15 @@ public sealed class PlayerSwimmingController : MonoBehaviour
             // agua y pelearía con la conducción por el Rigidbody.
             if (_actionManager != null && _actionManager.IsInMode(ActionMode.Boating)) return;
 
-            if (hasSurface && ShouldEnter(surfaceY) && (_actionManager == null || _actionManager.CanSwim()))
+            bool puedeNadar = _actionManager == null || _actionManager.CanSwim();
+            _frenadoEnLaOrilla = hasSurface && !puedeNadar && DemasiadoHondoParaAndar(surfaceY);
+            if (!_frenadoEnLaOrilla)
+            {
+                _posicionEnLaOrilla = transform.position;
+                _hayPosicionEnLaOrilla = true;
+            }
+
+            if (hasSurface && puedeNadar && ShouldEnter(surfaceY))
                 EnterSwimming(surfaceY);
             return;
         }
@@ -270,8 +288,13 @@ public sealed class PlayerSwimmingController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_fase == Fase.Fuera || _rigidbody == null)
+        if (_rigidbody == null)
             return;
+        if (_fase == Fase.Fuera)
+        {
+            QuedarseEnLaOrilla();
+            return;
+        }
 
         float dt = Time.fixedDeltaTime;
         var vel = _rigidbody.linearVelocity;
@@ -643,6 +666,31 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         if (_tieneOffsetCuello)
             return surfaceY + cuelloSobreElAgua - _offsetCuello;
         return surfaceY - surfaceOffset;
+    }
+
+    // Sin saber nadar: el agua le cubre más de lo que se puede andar y está pisando el fondo
+    // (en el aire, volando o saltando un arroyo, no cuenta).
+    bool DemasiadoHondoParaAndar(float surfaceY)
+    {
+        if (_thirdPersonController != null && !_thirdPersonController.PisandoSuelo) return false;
+        if (_actionManager != null && _actionManager.IsInMode(ActionMode.Flying)) return false;
+        return TryGetSueloBajo(out float sueloY) && surfaceY - sueloY > fondoMaximoSinNadar;
+    }
+
+    // Sin saber nadar, el agua honda hace de pared: el jugador vuelve al último sitio donde
+    // hacía pie.
+    void QuedarseEnLaOrilla()
+    {
+        if (!_frenadoEnLaOrilla || !_hayPosicionEnLaOrilla) return;
+        Vector3 p = _rigidbody.position;
+        Vector3 vuelta = _posicionEnLaOrilla - p;
+        vuelta.y = 0f;
+        if (vuelta.sqrMagnitude > DistanciaMaximaALaOrilla * DistanciaMaximaALaOrilla) return;
+        _rigidbody.position = new Vector3(_posicionEnLaOrilla.x, p.y, _posicionEnLaOrilla.z);
+        var v = _rigidbody.linearVelocity;
+        v.x = 0f;
+        v.z = 0f;
+        _rigidbody.linearVelocity = v;
     }
 
     bool ShouldEnter(float surfaceY)

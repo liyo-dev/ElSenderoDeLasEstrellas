@@ -15,21 +15,21 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_COBERTIZO_01
-    text: "Ara\xF1azos en la madera, a la altura del cuello de un perro."
+    text: "Mira qu\xE9 ara\xF1azos. Justo a la altura del cuello de un perro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 6
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_COBERTIZO_02
-    text: "Ha dejado restos de hierro en la madera. Con las mismas l\xEDneas que el trozo del aro."
+    text: "Y esto\u2026 son restos de hierro. Tienen las mismas rayas que mi trozo de aro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_COBERTIZO_03
-    text: "Y las l\xEDneas todav\xEDa brillan un poco."
+    text: "Todav\xEDa brillan."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 

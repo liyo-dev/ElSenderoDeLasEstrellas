@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
@@ -23,17 +24,19 @@ namespace NarrativeGraphEditor.Story
         public StoryWorldPanel()
         {
             AddToClassList("story-panel");
-            _scroll = new ScrollView(ScrollViewMode.Vertical);
+            _scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
             _scroll.AddToClassList("story-panel__scroll");
             Add(_scroll);
         }
 
         public void Show(NarrativeGraph graph, StoryStructure structure, NarrativeNode node)
         {
+            bool other = node != _node;
             _graph = graph;
             _structure = structure;
             _node = node;
             Rebuild();
+            if (other) _scroll.scrollOffset = Vector2.zero;
         }
 
         public void Rebuild()

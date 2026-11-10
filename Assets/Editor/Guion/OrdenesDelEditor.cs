@@ -16,6 +16,8 @@ using UnityEngine;
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
 ///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)
+///   rayo X Z                                lo que atraviesa un rayo vertical en ese punto, de arriba abajo
+///                                           (colliders, triggers incluidos, con su capa y altura)
 ///   catalogo nombre carpeta regex           foto de los prefabs de la carpeta cuyo nombre cumple el regex (hasta 12, en fila,
 ///                                           con su nombre en el registro) → Guiones/_fotos/nombre.png; necesita una escena con luz abierta
 ///   escena Nombre [aditiva]                 abre una escena (sola, solo si no hay cambios sin guardar; aditiva, siempre)
@@ -123,6 +125,23 @@ public static class OrdenesDelEditor
                     if (col != null) sb.Append($" collider={col.GetType().Name} on={col.enabled}");
                     sb.Append("\n");
                 }
+        }
+        return sb.ToString();
+    }
+
+    private static string Rayo(string resto)
+    {
+        var p = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var ci = System.Globalization.CultureInfo.InvariantCulture;
+        float x = float.Parse(p[0], ci), z = float.Parse(p[1], ci);
+        var golpes = Physics.RaycastAll(new Vector3(x, 1000f, z), Vector3.down, 2000f, ~0, QueryTriggerInteraction.Collide);
+        Array.Sort(golpes, (a, b) => a.distance.CompareTo(b.distance));
+        var sb = new System.Text.StringBuilder($"{x} {z}: {golpes.Length} golpes\n");
+        foreach (var g in golpes)
+        {
+            var t = g.collider.transform;
+            string ruta = t.name; for (var q = t.parent; q != null; q = q.parent) ruta = q.name + "/" + ruta;
+            sb.Append($"    y={g.point.y:F2} {ruta} capa={LayerMask.LayerToName(t.gameObject.layer)} {g.collider.GetType().Name} trigger={g.collider.isTrigger}\n");
         }
         return sb.ToString();
     }
@@ -241,6 +260,8 @@ public static class OrdenesDelEditor
                 return Cerca(resto);
             case "donde":
                 return Donde(resto);
+            case "rayo":
+                return Rayo(resto);
             case "catalogo":
                 return Catalogo(resto);
             case "escena":

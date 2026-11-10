@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Z_PruebaSentados_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Z_PruebaSentados
+  duracion: 2.5
+  presentacion: 0
+  huella: "2026-11-10 22:10 \xB7 9cb5b6d44cdb30ceee1e4d8b20c2bea3"
+  actores:
+  - id: NPC_Eusebio
+    alias: eusebio
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: CHAR_EUSEBIO
+    posiciones:
+    - t: 0
+      p: {x: 255.52, y: 6.01, z: -425.8}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 260, y: 5.7471466, z: -425.8}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: SitHigh_Loop
+      congelar: 0
+      alFinal: 0
+      voz: 
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Benito
+    alias: benito
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: CHAR_BENITO
+    posiciones:
+    - t: 0
+      p: {x: 283.12, y: 5.84, z: -430.8}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 290, y: 5.003662, z: -430.8}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: SitHigh_Loop
+      congelar: 0
+      alFinal: 0
+      voz: 
+    caras: []
+    visible: []
+    deslizando: []
+  - id: NPC_Rosario
+    alias: rosario
+    colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+    claveDelNombre: CHAR_ROSARIO
+    posiciones:
+    - t: 0
+      p: {x: 285.1, y: 5.21, z: -430.8}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 278, y: 5.003662, z: -430.8}
+      actor: 
+    cabezas: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: SitHigh_Loop
+      congelar: 0
+      alFinal: 0
+      voz: 
+    caras: []
+    visible: []
+    deslizando: []
+  lineas: []
+  planos:
+  - focos: []
+    t0: 0
+    t1: 1
+    tipo: 2
+    descripcion: medio de eusebio
+    posiciones:
+    - t: 0
+      p: {x: 258.3, y: 7.0059786, z: -428.2}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eusebio
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0952129
+    encuadre: {x: -0.13, y: -0.16}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 1
+    t1: 2.5
+    tipo: 5
+    descripcion: 'dos: benito y rosario'
+    posiciones:
+    - t: 1
+      p: {x: 283.2, y: 6.603662, z: -435.5}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - NPC_Benito
+    - NPC_Rosario
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.86481315
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos: []
+  etiquetas:
+  - nombre: a
+    t: 0
+  puntos:
+  - nombre: p_eus
+    posicion: {x: 255.52, y: 6.01, z: -425.8}
+  - nombre: m_eus
+    posicion: {x: 260, y: 5.7471466, z: -425.8}
+  - nombre: p_ben
+    posicion: {x: 283.12, y: 5.84, z: -430.8}
+  - nombre: m_ben
+    posicion: {x: 290, y: 5.003662, z: -430.8}
+  - nombre: p_ros
+    posicion: {x: 285.1, y: 5.21, z: -430.8}
+  - nombre: m_ros
+    posicion: {x: 278, y: 5.003662, z: -430.8}
+  - nombre: c_eus
+    posicion: {x: 258.3, y: 5.7059784, z: -428.2}
+  - nombre: c_ter
+    posicion: {x: 283.2, y: 5.003662, z: -435.5}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds: []
