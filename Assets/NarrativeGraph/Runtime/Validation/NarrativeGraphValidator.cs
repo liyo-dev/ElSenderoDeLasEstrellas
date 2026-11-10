@@ -215,6 +215,9 @@ public static class NarrativeGraphValidator
         public void CompleteQuest(string questId) { }
         public void MarkSignalRaised(string key) { }
         public void AddItem(string itemId, int amount) { }
+        public void RemoveItem(string itemId, int amount) { }
+        public void EnsureItem(string itemId, int amount) { }
+        public void SetFact(string category, string key, string value) { }
         public void PlaceActor(string actorId, NarrativeLocation location) { }
         public void SetActorActive(string actorId, bool active) { }
         public void Note(string message) { }

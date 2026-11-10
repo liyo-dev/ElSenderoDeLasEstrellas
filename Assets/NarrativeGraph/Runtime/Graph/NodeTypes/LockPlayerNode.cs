@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Jugador", "Bloquear / soltar jugador", "Bloquea o libera el control del jugador.")]
+[NarrativeNoWorldEffect]
 public sealed class LockPlayerNode : NarrativeNode
 {
     public bool bloquear = true;

@@ -11,6 +11,7 @@ using UnityEngine;
 /// mantiene tapada. El texto lo dibuja el INarrativeTitleCardPresenter que registre el juego.
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Rótulo sobre la pantalla", "Texto centrado sobre la pantalla tapada, p. ej. «A la mañana siguiente…».")]
+[NarrativeNoWorldEffect]
 public sealed class TitleCardNode : NarrativeNode
 {
     [Tooltip("Texto de respaldo si no hay ID de localización o no se encuentra.")]

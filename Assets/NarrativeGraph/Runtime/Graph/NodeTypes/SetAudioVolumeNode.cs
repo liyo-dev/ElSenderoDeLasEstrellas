@@ -7,6 +7,7 @@ using UnityEngine;
 /// exactamente al volumen del jugador.
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Volumen", "")]
+[NarrativeNoWorldEffect]
 public sealed class SetAudioVolumeNode : NarrativeNode
 {
     /// Clave que usan los nodos de audio del grafo si no se indica otra.

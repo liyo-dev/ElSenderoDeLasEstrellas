@@ -10,6 +10,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Enfocar cámara", "Mueve la cámara a un punto de interés.")]
+[NarrativeNoWorldEffect]
 public sealed class FocusCameraNode : NarrativeNode
 {
     [Tooltip("Id del punto de interés de la escena al que cortar la cámara.")]

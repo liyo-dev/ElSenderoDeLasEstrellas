@@ -11,7 +11,7 @@ using UnityEngine.Serialization;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Combate", "Iniciar batalla", "Arranca una arena de batalla y espera la victoria.")]
-public sealed class StartBattleNode : NarrativeNode
+public sealed class StartBattleNode : NarrativeNode, INarrativeStateEffect
 {
     [Tooltip("ID de la batalla (coincide con BossArenaController.BattleId).")]
     public string battleId;
@@ -51,6 +51,15 @@ public sealed class StartBattleNode : NarrativeNode
 
     public override void Describe(INarrativeNodeDescriber d)
         => d.Line("⚔ " + (string.IsNullOrEmpty(battleId) ? "(sin battleId)" : battleId), NarrativeTextTone.Strong);
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (useBattleById && !string.IsNullOrWhiteSpace(battleId))
+            state.SetFact(HechosDelSendero.BatallaGanada, battleId, HechosDelSendero.Si);
+        if (!completeMission || string.IsNullOrWhiteSpace(missionStringId)) return;
+        if (missionId >= 0) state.CompleteQuestSteps(missionStringId, null, new[] { missionId });
+        else state.CompleteQuest(missionStringId);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

@@ -19,7 +19,7 @@ using UnityEngine.SceneManagement;
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Escena aditiva (cargar/descargar)",
     "Carga o descarga una escena en aditivo desde el grafo.")]
-public sealed class AdditiveSceneNode : NarrativeNode
+public sealed class AdditiveSceneNode : NarrativeNode, INarrativeStateEffect
 {
     public enum Operacion
     {
@@ -40,6 +40,12 @@ public sealed class AdditiveSceneNode : NarrativeNode
              "marcado si lo siguiente que hace el grafo depende de que la escena ya esté ahí, que " +
              "es el caso normal: cargar la escena y justo después emitir la señal que la pone en marcha.")]
     public bool waitForCompletion = true;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(sceneName))
+            state.SetFact(NarrativeCoreFacts.Scene, sceneName, operacion == Operacion.Cargar ? NarrativeCoreFacts.Loaded : null);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

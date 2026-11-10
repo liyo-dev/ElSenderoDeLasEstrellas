@@ -71,13 +71,14 @@ MonoBehaviour:
       data:
         displayTitle: 14.- Oliver saluda a Will (SEQ_OliverSaludo)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 32febd1e-bce7-478d-aab9-792eddddd73d
-        position: {x: 6080, y: 0}
+        position: {x: 0, y: 440}
         outputs:
         - aaccfcd4-a7bc-4732-b4b6-86e6c183db03
         cinematicName: Oliver saluda a Will
@@ -94,13 +95,14 @@ MonoBehaviour:
       data:
         displayTitle: 13.- Will se acerca -> Oliver saluda (WILL_EXITS_HOUSE_OLIVER_GREETING)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a468c3fc-72f5-4541-b174-81017ba71bc2
-        position: {x: 5700, y: 0}
+        position: {x: 1960, y: 242}
         outputs:
         - 32febd1e-bce7-478d-aab9-792eddddd73d
         eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
@@ -110,13 +112,14 @@ MonoBehaviour:
       data:
         displayTitle: CAPITULO 1
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 9e38723a-5600-4f47-8ee5-8bb367338d1c
-        position: {x: 0, y: 0}
+        position: {x: 0, y: 44}
         outputs:
         - 28e514c7-46f5-45ec-bd9b-3aa29d2317b5
     - rid: 6000000000000000003
@@ -124,13 +127,14 @@ MonoBehaviour:
       data:
         displayTitle: 5.- Pulsar A para despertar
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d206615e-7e83-4d62-bd5a-d6e04d6b237b
-        position: {x: 2280, y: 0}
+        position: {x: 1680, y: 44}
         outputs:
         - 3f6b2c1e-8a47-4d59-b0c3-5e7a9d1f2b64
         action: 0
@@ -147,13 +151,14 @@ MonoBehaviour:
       data:
         displayTitle: 6.- Pensamiento Will
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 95228e84-0a1a-4e3b-9ef9-e36ad502e222
-        position: {x: 3040, y: 0}
+        position: {x: 0, y: 242}
         outputs:
         - 80e2bd55-eb2e-4c36-b5cf-a789104718aa
         targetTag: Player
@@ -169,13 +174,14 @@ MonoBehaviour:
       data:
         displayTitle: '7.- Mueve el Joystick '
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 05d8c990-c631-4ddd-8aff-4092490214c8
-        position: {x: 4560, y: 0}
+        position: {x: 1120, y: 242}
         outputs:
         - 81686a85-c370-4681-974b-777faf8b089b
         action: 0
@@ -192,13 +198,14 @@ MonoBehaviour:
       data:
         displayTitle: 21.- HAY QUE BUSCAR LA CAJA BAJO UN ARBOL
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        position: {x: 13680, y: 0}
+        position: {x: 840, y: 892}
         outputs:
         - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
         questId: ELDRAN_MISSION2
@@ -210,13 +217,14 @@ MonoBehaviour:
       data:
         displayTitle: 23.- Recoge la caja
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        position: {x: 14060, y: 0}
+        position: {x: 1120, y: 892}
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
@@ -226,30 +234,33 @@ MonoBehaviour:
       data:
         displayTitle: 26.- Habla con Eldran (entrega)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        position: {x: 15200, y: 0}
+        position: {x: 1960, y: 892}
         outputs:
         - e10bdcbf-059f-40f6-bfcf-7799abe09913
         npcId: NPC_Eldran
         acceptEarlierInteraction: 0
         questIcon: {fileID: 6303534759802428624, guid: e3166847a7c81b443bdbe623a681ae52, type: 3}
+        showMarker: 1
     - rid: 6000000000000000016
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 27.- DLG_ELDRAN_MISSION2_TURNIN
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e10bdcbf-059f-40f6-bfcf-7799abe09913
-        position: {x: 15580, y: 0}
+        position: {x: 0, y: 1090}
         outputs:
         - bfb7330e-0489-4388-bcab-d6305b68a97a
         dialogue: {fileID: 11400000, guid: ccf34efc36cfcf24caa59ea5fe1817a5, type: 2}
@@ -260,13 +271,14 @@ MonoBehaviour:
       data:
         displayTitle: 28.- Completa ELDRAN_MISSION2
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bfb7330e-0489-4388-bcab-d6305b68a97a
-        position: {x: 15960, y: 0}
+        position: {x: 280, y: 1090}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
         standingActorId: 
@@ -281,13 +293,14 @@ MonoBehaviour:
       data:
         displayTitle: 18.- La moneda de Eldran, adelantada (IT_Coin x1)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 041162d9-cc08-4d17-ae7c-6067257e952b
-        position: {x: 9500, y: 0}
+        position: {x: 0, y: 666}
         outputs:
         - a856e804-7ab5-4aaf-a241-774bce56c27f
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
@@ -299,13 +312,14 @@ MonoBehaviour:
       data:
         displayTitle: "30.- SE DESBLOQUEA EL ATAQUE M\xC1GICO Y LLAMA ASTRAL"
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 16720, y: 0}
+        position: {x: 840, y: 1090}
         outputs:
         - d1785c09-9503-4d7b-a24e-682424ca83a7
         abilityKeysToUnlock: 03000000i
@@ -321,13 +335,14 @@ MonoBehaviour:
       data:
         displayTitle: 31.- HAY QUE DERROTAR AL DEMONIO
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d1785c09-9503-4d7b-a24e-682424ca83a7
-        position: {x: 17100, y: 0}
+        position: {x: 1120, y: 1090}
         outputs:
         - 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
         questId: ELDRAN_MISSION3
@@ -339,13 +354,14 @@ MonoBehaviour:
       data:
         displayTitle: '32.- ARENA DE BATALLA: DEMONIO'
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 17480, y: 0}
+        position: {x: 1400, y: 1090}
         outputs:
         - dedc7fec-da78-4587-82a4-341ca93c8eaa
         battleId: Demon_1
@@ -362,13 +378,14 @@ MonoBehaviour:
       data:
         displayTitle: '33.- Demonio derrotado: completa ELDRAN_MISSION3'
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: dedc7fec-da78-4587-82a4-341ca93c8eaa
-        position: {x: 17860, y: 0}
+        position: {x: 1680, y: 1090}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
         standingActorId: 
@@ -383,13 +400,14 @@ MonoBehaviour:
       data:
         displayTitle: Fin Cap. 1 -> puente (CH_Cap1_BACK_1)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 18240, y: 0}
+        position: {x: 1960, y: 1090}
         outputs: []
         eventKey: CH_Cap1_BACK_1
     - rid: 6000000000000000029
@@ -397,13 +415,14 @@ MonoBehaviour:
       data:
         displayTitle: 2.- ARRANCA EL SUENO DEL PROLOGO (PROLOGUE_START)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5fa39087-b517-4cc6-b333-0841e33ef2aa
-        position: {x: 760, y: 0}
+        position: {x: 560, y: 44}
         outputs:
         - 413efe3c-2b7f-4292-b70b-c48b3b78f39a
         eventKey: PROLOGUE_START
@@ -412,13 +431,14 @@ MonoBehaviour:
       data:
         displayTitle: 3.- Espera fin del sueno (PROLOGUE_DONE)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 413efe3c-2b7f-4292-b70b-c48b3b78f39a
-        position: {x: 1140, y: 0}
+        position: {x: 840, y: 44}
         outputs:
         - 72854966-4210-4108-aa56-b1f0cb33d3bb
         eventKey: PROLOGUE_DONE
@@ -428,13 +448,14 @@ MonoBehaviour:
       data:
         displayTitle: 24.- Entrega la caja a Eldran
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 14440, y: 0}
+        position: {x: 1400, y: 892}
         outputs:
         - da4a9b32-670c-4724-ab44-6743e2c728d1
         npcId: NPC_Eldran
@@ -450,13 +471,14 @@ MonoBehaviour:
       data:
         displayTitle: 25.- Tutorial icono 'habla conmigo' (caja de Eldran)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 14820, y: 0}
+        position: {x: 1680, y: 892}
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         action: 0
@@ -473,13 +495,14 @@ MonoBehaviour:
       data:
         displayTitle: 8.- LA DISCUSION EN LA VENTANA (HOOK_DISCUSION_START)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 80e2bd55-eb2e-4c36-b5cf-a789104718aa
-        position: {x: 3420, y: 0}
+        position: {x: 280, y: 242}
         outputs:
         - bab7b6d6-bc6c-4021-890e-2617155a6862
         eventKey: HOOK_DISCUSION_START
@@ -488,13 +511,14 @@ MonoBehaviour:
       data:
         displayTitle: 9.- Espera fin de la discusion (HOOK_DISCUSION_DONE)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bab7b6d6-bc6c-4021-890e-2617155a6862
-        position: {x: 3800, y: 0}
+        position: {x: 560, y: 242}
         outputs:
         - c748956c-7df0-4031-8789-65aab639f278
         eventKey: HOOK_DISCUSION_DONE
@@ -504,13 +528,14 @@ MonoBehaviour:
       data:
         displayTitle: 10.- SAL A VER QUE PASA (WILL_MISSION0)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c748956c-7df0-4031-8789-65aab639f278
-        position: {x: 4180, y: 0}
+        position: {x: 840, y: 242}
         outputs:
         - 05d8c990-c631-4ddd-8aff-4092490214c8
         questId: WILL_MISSION0
@@ -522,13 +547,14 @@ MonoBehaviour:
       data:
         displayTitle: 11.- Will sale de casa (WILL_EXITS_HOUSE)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 81686a85-c370-4681-974b-777faf8b089b
-        position: {x: 4940, y: 0}
+        position: {x: 1400, y: 242}
         outputs:
         - f1f3bb59-d765-41ae-a849-2b3035f2b905
         eventKey: WILL_EXITS_HOUSE
@@ -538,13 +564,14 @@ MonoBehaviour:
       data:
         displayTitle: 12.- Completa WILL_MISSION0
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f1f3bb59-d765-41ae-a849-2b3035f2b905
-        position: {x: 5320, y: 0}
+        position: {x: 1680, y: 242}
         outputs:
         - a468c3fc-72f5-4541-b174-81017ba71bc2
         standingActorId: 
@@ -559,13 +586,14 @@ MonoBehaviour:
       data:
         displayTitle: 15.- LA DISCUSION SE RESUELVE (PERAS_START)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d8370db5-0930-49a6-b96c-70e9f05977bd
-        position: {x: 8360, y: 0}
+        position: {x: 1680, y: 440}
         outputs:
         - 18a57f1d-20e3-4539-b920-ac49b3750703
         eventKey: PERAS_START
@@ -574,13 +602,14 @@ MonoBehaviour:
       data:
         displayTitle: 16.- Espera fin de SEQ_PerasEldran (PERAS_DONE)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18a57f1d-20e3-4539-b920-ac49b3750703
-        position: {x: 8740, y: 0}
+        position: {x: 1960, y: 440}
         outputs:
         - 041162d9-cc08-4d17-ae7c-6067257e952b
         eventKey: PERAS_DONE
@@ -590,13 +619,14 @@ MonoBehaviour:
       data:
         displayTitle: 19.- ALGO INUTIL - compra en el mercado (WILL_MISSION1)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a856e804-7ab5-4aaf-a241-774bce56c27f
-        position: {x: 9880, y: 0}
+        position: {x: 280, y: 666}
         outputs:
         - 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
         questId: WILL_MISSION1
@@ -608,13 +638,14 @@ MonoBehaviour:
       data:
         displayTitle: 20.- Espera la compra de la estrella (ESTRELLA_COMPRADA)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
-        position: {x: 10260, y: 0}
+        position: {x: 560, y: 666}
         outputs:
         - f393b1c0-87f6-4793-a705-a151a01af989
         eventKey: ESTRELLA_COMPRADA
@@ -624,13 +655,14 @@ MonoBehaviour:
       data:
         displayTitle: 14b.- Busca a Eldran (ELDRAN_MISSION1)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: aaccfcd4-a7bc-4732-b4b6-86e6c183db03
-        position: {x: 6460, y: 0}
+        position: {x: 280, y: 440}
         outputs:
         - 486dfd45-dc63-438c-ae05-f2f8a045b36a
         questId: ELDRAN_MISSION1
@@ -642,13 +674,14 @@ MonoBehaviour:
       data:
         displayTitle: 14c.- Oliver se une al grupo (OLIVER_JOIN_PARTY)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 486dfd45-dc63-438c-ae05-f2f8a045b36a
-        position: {x: 6840, y: 0}
+        position: {x: 560, y: 440}
         outputs:
         - 36c16794-69b8-4e90-bb85-dc80d58b76ae
         eventKey: OLIVER_JOIN_PARTY
@@ -657,13 +690,14 @@ MonoBehaviour:
       data:
         displayTitle: 14d.- Tutorial minimapa (busca a Eldran)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 36c16794-69b8-4e90-bb85-dc80d58b76ae
-        position: {x: 7220, y: 0}
+        position: {x: 840, y: 440}
         outputs:
         - aede8111-3544-4dfc-a11e-bd1189819797
         action: 0
@@ -680,13 +714,14 @@ MonoBehaviour:
       data:
         displayTitle: 14e.- Will llega hasta Eldran (WILL_REACHED_ELDRAN)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: aede8111-3544-4dfc-a11e-bd1189819797
-        position: {x: 7600, y: 0}
+        position: {x: 1120, y: 440}
         outputs:
         - ce67dfa7-968b-420d-87e6-f46ad317d154
         eventKey: WILL_REACHED_ELDRAN
@@ -696,13 +731,14 @@ MonoBehaviour:
       data:
         displayTitle: 14f.- Completa ELDRAN_MISSION1
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: ce67dfa7-968b-420d-87e6-f46ad317d154
-        position: {x: 7980, y: 0}
+        position: {x: 1400, y: 440}
         outputs:
         - d8370db5-0930-49a6-b96c-70e9f05977bd
         standingActorId: 
@@ -717,13 +753,14 @@ MonoBehaviour:
       data:
         displayTitle: 20b.- Completa WILL_MISSION1
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f393b1c0-87f6-4793-a705-a151a01af989
-        position: {x: 10640, y: 0}
+        position: {x: 840, y: 666}
         outputs:
         - 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
         standingActorId: 
@@ -738,13 +775,14 @@ MonoBehaviour:
       data:
         displayTitle: 1.- Carga el valle del prologo (Prologo_Valle)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 28e514c7-46f5-45ec-bd9b-3aa29d2317b5
-        position: {x: 380, y: 0}
+        position: {x: 280, y: 44}
         outputs:
         - 5fa39087-b517-4cc6-b333-0841e33ef2aa
         operacion: 0
@@ -755,13 +793,14 @@ MonoBehaviour:
       data:
         displayTitle: 3b.- Descarga el valle del prologo
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 72854966-4210-4108-aa56-b1f0cb33d3bb
-        position: {x: 1520, y: 0}
+        position: {x: 1120, y: 44}
         outputs:
         - 85279f14-0f9a-4376-8ca3-126ecb12b966
         operacion: 1
@@ -772,13 +811,14 @@ MonoBehaviour:
       data:
         displayTitle: "20c.- Eldran le llama: \xABVen, s\xEDgueme\xBB (SEQ_EldranCaja)"
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
-        position: {x: 11020, y: 0}
+        position: {x: 1120, y: 666}
         outputs:
         - 004d01ec-565b-4943-8661-88335a7b0057
         cinematicName: Eldran viene a pedir la caja
@@ -795,13 +835,14 @@ MonoBehaviour:
       data:
         displayTitle: 29.- DESPERTAR MAGICO (SEQ_StarAwakening)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 16340, y: 0}
+        position: {x: 560, y: 1090}
         outputs:
         - e7e8e2f2-6e54-4490-97b1-fd48323945a4
         cinematicName: El Despertar de la Estrella
@@ -818,13 +859,14 @@ MonoBehaviour:
       data:
         displayTitle: 20d.- Sigue a Eldran hasta el punto de guardado de la entrada
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
-        position: {x: 11780, y: 0}
+        position: {x: 1680, y: 666}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
         npcId: NPC_Eldran
@@ -838,19 +880,23 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 3
         duracionMaxima: 240
+        distanciaMinima: 0
+        avisoAlAcercarseKey: 
+        anclaDeVuelta: 
         charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 20d2.- Eldran explica el punto de guardado (DG_ELDRAN_PUNTO_GUARDADO)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
-        position: {x: 12160, y: 0}
+        position: {x: 1960, y: 666}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
         dialogue: {fileID: 11400000, guid: 0666c4491bbda38479c192cdef5bb094, type: 2}
@@ -861,13 +907,14 @@ MonoBehaviour:
       data:
         displayTitle: 20d3.- Sigue a Eldran hasta el bosque
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
-        position: {x: 12540, y: 0}
+        position: {x: 0, y: 892}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
         npcId: NPC_Eldran
@@ -881,19 +928,23 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 3
         duracionMaxima: 240
+        distanciaMinima: 0
+        avisoAlAcercarseKey: 
+        anclaDeVuelta: 
         charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 20e.- En el bosque, Eldran pide la caja (DG_ELDRAN_CAJA)
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
-        position: {x: 12920, y: 0}
+        position: {x: 280, y: 892}
         outputs:
         - 474b5be0-7a90-4148-8790-6f8fad1783a8
         dialogue: {fileID: 11400000, guid: aa47a70e31624274ab9b052905b3fc79, type: 2}
@@ -904,13 +955,14 @@ MonoBehaviour:
       data:
         displayTitle: "20c2.- SIGUE A ELDRAN A VER QU\xC9 QUIERE (ELDRAN_SIGUEME)"
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 004d01ec-565b-4943-8661-88335a7b0057
-        position: {x: 11400, y: 0}
+        position: {x: 1400, y: 666}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
         questId: ELDRAN_SIGUEME
@@ -922,13 +974,14 @@ MonoBehaviour:
       data:
         displayTitle: "20e2.- Completa ELDRAN_SIGUEME (ya sabe qu\xE9 quiere)"
         chapter: Cap. 1
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 474b5be0-7a90-4148-8790-6f8fad1783a8
-        position: {x: 13300, y: 0}
+        position: {x: 560, y: 892}
         outputs:
         - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
         standingActorId: 
@@ -943,13 +996,14 @@ MonoBehaviour:
       data:
         displayTitle: 4.- Se destapa la habitacion de Will (Easy Transitions)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 85279f14-0f9a-4376-8ca3-126ecb12b966
-        position: {x: 1900, y: 0}
+        position: {x: 1400, y: 44}
         outputs:
         - d206615e-7e83-4d62-bd5a-d6e04d6b237b
         color: {r: 0, g: 0, b: 0, a: 1}
@@ -963,13 +1017,14 @@ MonoBehaviour:
       data:
         displayTitle: 5b.- Will ya esta de pie (will_wake_up)
         chapter: Cap. 1
+        section: 
         blockSaving: 1
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 3f6b2c1e-8a47-4d59-b0c3-5e7a9d1f2b64
-        position: {x: 2660, y: 0}
+        position: {x: 1960, y: 44}
         outputs:
         - 95228e84-0a1a-4e3b-9ef9-e36ad502e222
         eventKey: will_wake_up

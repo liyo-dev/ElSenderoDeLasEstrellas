@@ -11,6 +11,7 @@ using System;
 [Serializable]
 [NarrativeNodeInfo("Flujo", "Fork (en paralelo)", "Todas las salidas arrancan a la vez y siguen en paralelo.")]
 [SavePoint("Instantáneo")]
+[NarrativeNoWorldEffect]
 public sealed class ForkNode : NarrativeNode
 {
     public override bool BranchesInParallel => true;

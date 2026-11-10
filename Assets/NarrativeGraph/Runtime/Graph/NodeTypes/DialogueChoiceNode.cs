@@ -8,6 +8,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Pregunta con respuestas", "Muestra una pregunta con dos opciones; cada opción es una salida distinta.")]
 [UnsafeForSave("Hay una UI modal abierta")]
+[NarrativeNoWorldEffect]
 public sealed class DialogueChoiceNode : NarrativeNode
 {
     [Header("Pregunta")]

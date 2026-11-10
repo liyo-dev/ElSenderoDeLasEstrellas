@@ -69,6 +69,18 @@ public interface INarrativeStateWriter
 
     void AddItem(string itemId, int amount);
 
+    /// Removes up to <paramref name="amount"/> units of an item (handed over or consumed).
+    void RemoveItem(string itemId, int amount);
+
+    /// Makes sure the player owns at least <paramref name="amount"/> units: the story waited for
+    /// the item, so by now it has been obtained, whoever gave it.
+    void EnsureItem(string itemId, int amount);
+
+    /// A fact the core does not model and each game names for itself (party, time of day,
+    /// wardrobe…). <paramref name="category"/> groups related facts; a null value clears the fact.
+    /// A writer that does not know a category should Note it instead of failing.
+    void SetFact(string category, string key, string value);
+
     /// Dónde queda el actor. Si varios nodos lo colocan, manda el último proyectado.
     void PlaceActor(string actorId, NarrativeLocation location);
 

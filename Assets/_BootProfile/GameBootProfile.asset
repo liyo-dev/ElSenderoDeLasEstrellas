@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameBootProfile
   sceneToLoad: MainMenu
   defaultPlayerPreset: {fileID: 11400000, guid: c0f280fecc17c3f4fbcbe7f0d274f342, type: 2}
-  usePresetInsteadOfSave: 1
+  usePresetInsteadOfSave: 0
   bootPreset: {fileID: 11400000, guid: 3ca5cf3bb3db9d9459994b478ca3f446, type: 2}
   allowAutoSaves: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 /// Pone una pista de música con fundido. La música siempre suena en bucle.
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Música", "")]
+[NarrativeNoWorldEffect]
 public sealed class PlayMusicNode : NarrativeNode
 {
     public AudioClip clip;

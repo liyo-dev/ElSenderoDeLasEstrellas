@@ -4,6 +4,7 @@ using UnityEngine;
 /// Voz sin posición (por el bus de diálogo).
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Voz", "")]
+[NarrativeNoWorldEffect]
 public sealed class PlayVoiceNode : NarrativeNode
 {
     public AudioClip clip;

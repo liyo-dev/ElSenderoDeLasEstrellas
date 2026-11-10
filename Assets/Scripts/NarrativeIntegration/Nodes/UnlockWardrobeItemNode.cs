@@ -3,11 +3,16 @@ using UnityEngine;
 
 [Serializable]
 [NarrativeNodeInfo("Jugador", "Desbloquear vestuario", "")]
-public sealed class UnlockWardrobeItemNode : NarrativeNode
+public sealed class UnlockWardrobeItemNode : NarrativeNode, INarrativeStateEffect
 {
     [Header("Vestuario")]
     public WardrobeItemSO wardrobeItem;
     public bool logWarnings = true;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (wardrobeItem != null) state.SetFact(HechosDelSendero.Vestuario, wardrobeItem.WardrobeId, HechosDelSendero.Si);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

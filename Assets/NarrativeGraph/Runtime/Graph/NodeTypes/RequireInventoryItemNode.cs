@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Objetos", "Requiere objeto", "Comprueba/consume un objeto del inventario; salida alternativa si falta.")]
-public sealed class RequireInventoryItemNode : NarrativeNode
+public sealed class RequireInventoryItemNode : NarrativeNode, INarrativeRouteEffect
 {
     [Header("Item requerido")]
     public NarrativeItemAsset item;
@@ -43,6 +43,22 @@ public sealed class RequireInventoryItemNode : NarrativeNode
 
     public override string DescribeDecision()
         => $"Requiere objeto \"{displayTitle}\" (guid {guid}): necesita '{(item != null ? item.ItemId : "<sin objeto>")}' x{requiredAmount}.";
+
+    public void ProjectRoute(INarrativeStateWriter state, int chosenPort)
+    {
+        bool success = !useAlternateOutputOnMissing || chosenPort != alternateOutputIndex;
+        if (!success) return;
+
+        if (item != null)
+        {
+            state.EnsureItem(item.ItemId, requiredAmount);
+            if (consumeOnSuccess) state.RemoveItem(item.ItemId, requiredAmount);
+        }
+        if (string.IsNullOrWhiteSpace(questId)) return;
+        if (completeQuestInstead) state.CompleteQuest(questId);
+        else if (questStepIndex >= 0) state.CompleteQuestSteps(questId, null, new[] { questStepIndex });
+        else if (autoStartQuestIfInactive) state.StartQuest(questId);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

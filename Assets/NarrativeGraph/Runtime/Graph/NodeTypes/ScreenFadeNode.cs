@@ -10,6 +10,7 @@ using UnityEngine;
 /// cuando la pantalla está destapada.
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Fundido de pantalla", "")]
+[NarrativeNoWorldEffect]
 public sealed class ScreenFadeNode : NarrativeNode
 {
     public Color color = Color.black;

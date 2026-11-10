@@ -19,7 +19,7 @@ namespace NarrativeGraphEditor
     /// puertos con nombre (Sí/No...). Cada salida tiene su propia bolita para que las líneas nazcan
     /// ordenadas por la posición del destino y no se crucen al salir.
     /// </summary>
-    public class NodeView : Node
+    public class NodeView : Node, INarrativeNodeHost
     {
         public NarrativeNode Model { get; private set; }
         public Port Input { get; private set; }

@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Minijuegos", "Minijuego pilla-pilla", "")]
+[NarrativeNoWorldEffect]
 public sealed class StartTagMinigameNode : NarrativeNode
 {
     [Tooltip("ID del minijuego (coincide con TagMinigameController.MinigameId).")]

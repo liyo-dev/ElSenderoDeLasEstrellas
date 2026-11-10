@@ -105,8 +105,13 @@ namespace Sendero.Narrative.Editor
             detectAnchors.AddToClassList("narrative-test__small-button");
             where.Add(detectAnchors);
 
-            // ── Cuerpo del jugador ──────────────────────────────────────
-            var body = Section("Cuerpo del jugador");
+            // ── Cómo empieza el jugador ─────────────────────────────────
+            // El grupo, las habilidades que da la historia, objetos y misiones salen del grafo
+            // (progreso previo). Aquí solo lo que el grafo no decide.
+            var body = Section("Cómo empieza el jugador");
+            var bodyHint = new Label("El grupo, las misiones, los objetos y las habilidades que da la historia hasta este punto se ponen solos con el progreso previo. Aquí solo lo que la historia no decide.");
+            bodyHint.AddToClassList("narrative-test__hint");
+            body.Add(bodyHint);
             var level = new IntegerField("Nivel") { value = _config.level };
             level.RegisterValueChangedCallback(evt => { _config.level = evt.newValue; _config.Save(); });
             body.Add(level);
@@ -117,7 +122,7 @@ namespace Sendero.Narrative.Editor
             mp.RegisterValueChangedCallback(evt => { _config.maxMP = evt.newValue; _config.Save(); });
             body.Add(mp);
 
-            body.Add(new Label("Habilidades") { name = "abilities-title" });
+            body.Add(new Label("Habilidades de más para probar") { name = "abilities-title" });
             var abilities = new VisualElement();
             abilities.AddToClassList("narrative-test__grid");
             abilities.Add(AbilityToggle("Saltar", _config.abilityJump, v => _config.abilityJump = v));
@@ -128,9 +133,6 @@ namespace Sendero.Narrative.Editor
             abilities.Add(AbilityToggle("Escudo", _config.abilityShield, v => _config.abilityShield = v));
             abilities.Add(AbilityToggle("Magia (casts)", _config.abilityMagic, v => _config.abilityMagic = v));
             body.Add(abilities);
-            var grupo = new Toggle("Estela y Liam en el grupo") { value = _config.grupoCompleto };
-            grupo.RegisterValueChangedCallback(evt => { _config.grupoCompleto = evt.newValue; _config.Save(); });
-            body.Add(grupo);
 
             body.Add(new Label("Hechizos equipados") { name = "spells-title" });
             _config.EnsureSpellSlots();
@@ -154,7 +156,7 @@ namespace Sendero.Narrative.Editor
             body.Add(combo);
 
             // ── Fast-Forward ────────────────────────────────────────────
-            var forward = Section("Progreso previo (Fast-Forward)");
+            var forward = Section("Progreso previo");
             var help = new Label("Simula el camino desde el inicio del grafo hasta el nodo: quests, objetos, " +
                                  "flags, habilidades y dónde queda cada actor. Si el camino pasa por una decisión " +
                                  "(flag, quest, pregunta...) se para y te lo avisa en vez de adivinar.");
@@ -362,16 +364,45 @@ namespace Sendero.Narrative.Editor
                 return;
             }
 
-            if (preview.warnings.Count == 0 && preview.reachedTarget)
-                AddPreviewLine("Camino simulado sin bifurcaciones.", "is-ok");
-            if (!preview.reachedTarget)
-                AddPreviewLine("No se pudo llegar al nodo automáticamente: el camino tiene una bifurcación.", "is-error");
+            if (preview.reachedTarget)
+                AddPreviewLine($"Camino reconstruido hasta «{preview.objectiveTitle}».", "is-ok");
+            else
+                AddPreviewLine("Este nodo no está conectado al inicio del grafo: no hay camino que reconstruir.", "is-error");
+            foreach (var d in preview.decisions)
+                AddDecision(d);
             foreach (var w in preview.warnings.Take(6))
                 AddPreviewLine("⚠ " + w, "is-warning");
             foreach (var a in preview.actors.Take(6))
                 AddPreviewLine("· " + a, "is-muted");
             foreach (var n in preview.notes.Take(4))
                 AddPreviewLine("· " + n, "is-muted");
+        }
+
+        /// Una decisión del camino. Si varias ramas llevan al nodo, se puede elegir cuál se reconstruye.
+        void AddDecision(NarrativeStateProjector.Decision d)
+        {
+            if (d.Forced || d.PortsToTarget == null || d.PortsToTarget.Length < 2)
+            {
+                AddPreviewLine($"· «{d.Title}»: {d.ChosenOption}{(d.Forced ? " (el nodo está en esa rama)" : "")}", "is-muted");
+                return;
+            }
+
+            var row = new VisualElement();
+            row.AddToClassList("narrative-test__decision");
+            row.Add(new Label($"«{d.Title}»"));
+            foreach (var port in d.PortsToTarget)
+            {
+                int captured = port;
+                var b = new Button(() =>
+                {
+                    _config.SetRouteChoice(d.NodeGuid, captured);
+                    Preview();
+                }) { text = d.Options[port] };
+                b.AddToClassList("narrative-test__small-button");
+                b.SetEnabled(port != d.ChosenPort);
+                row.Add(b);
+            }
+            _previewBox.Add(row);
         }
 
         void AddPreviewLine(string text, string modifier)

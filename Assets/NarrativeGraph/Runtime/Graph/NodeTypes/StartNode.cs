@@ -3,6 +3,7 @@ using System;
 
 [Serializable]
 [NarrativeNodeInfo("Flujo", "Inicio", "Punto de entrada del grafo.")]
+[NarrativeNoWorldEffect]
 public sealed class StartNode : NarrativeNode
 {
     public override bool IsGraphEntry => true;

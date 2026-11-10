@@ -26,6 +26,9 @@ public sealed class ScopedNarrativeStateWriter : INarrativeStateWriter
     public void CompleteQuest(string questId) => _inner.CompleteQuest(questId);
     public void MarkSignalRaised(string key) => _inner.MarkSignalRaised(key);
     public void AddItem(string itemId, int amount) => _inner.AddItem(itemId, amount);
+    public void RemoveItem(string itemId, int amount) => _inner.RemoveItem(itemId, amount);
+    public void EnsureItem(string itemId, int amount) => _inner.EnsureItem(itemId, amount);
+    public void SetFact(string category, string key, string value) => _inner.SetFact(category, key, value);
 
     public void PlaceActor(string actorId, NarrativeLocation location)
         => _inner.PlaceActor(actorId, location.IsUnboundLocal ? NarrativeLocation.InScope(_scope, location.Mark, _fallbackScope) : location);

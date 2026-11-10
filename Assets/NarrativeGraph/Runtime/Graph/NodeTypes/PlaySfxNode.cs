@@ -4,6 +4,7 @@ using UnityEngine;
 /// Efecto de sonido sin posición.
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Efecto de sonido", "")]
+[NarrativeNoWorldEffect]
 public sealed class PlaySfxNode : NarrativeNode
 {
     public AudioClip clip;

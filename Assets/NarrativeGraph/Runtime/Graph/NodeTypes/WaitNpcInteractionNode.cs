@@ -18,7 +18,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("NPCs", "Esperar hablar con NPC", "Se queda esperando hasta que el jugador interactúa con el NPC indicado.")]
 [SavePoint("Seguro guardar mientras espera")]
-public sealed class WaitNpcInteractionNode : NarrativeNode
+public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("Id persistente del actor.")]
@@ -49,6 +49,11 @@ public sealed class WaitNpcInteractionNode : NarrativeNode
     [NonSerialized] private INarrativeSignals _signals;
     [NonSerialized] private Action _handler;
     [NonSerialized] private string _key;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(npcId)) state.MarkSignalRaised(SignalKeyFor(npcId));
+    }
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {

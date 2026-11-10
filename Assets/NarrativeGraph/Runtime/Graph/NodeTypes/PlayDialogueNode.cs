@@ -9,6 +9,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Diálogo", "Reproduce un diálogo (con cámara sobre el actor si se indica uno).")]
+[NarrativeNoWorldEffect]
 public sealed class PlayDialogueNode : NarrativeNode
 {
     [Header("Diálogo")]

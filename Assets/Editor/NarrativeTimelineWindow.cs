@@ -658,26 +658,10 @@ public class NarrativeTimelineWindow : EditorWindow
     }
 
     private void OpenInGraphEditor(NarrativeGraph graph, NarrativeNode node)
-    {
-        var window = GetWindow<NarrativeGraphWindow>();
-        window.LoadGraph(graph);
-        window.Focus();
-    }
+        => NarrativeGraphEditor.Story.StoryGraphWindow.OpenAt(graph, node?.guid);
 
     private void LaunchQuickTest(NarrativeGraph graph, NarrativeNode node, string graphLabel)
-    {
-        var quickTestType = typeof(NarrativeQuickTestWindow);
-        var method = quickTestType.GetMethod("OpenWithNode",
-            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-        if (method != null)
-        {
-            method.Invoke(null, new object[] { graph, node, graphLabel });
-        }
-        else
-        {
-            Debug.LogWarning("[NarrativeTimeline] NarrativeQuickTestWindow.OpenWithNode no encontrado.");
-        }
-    }
+        => NarrativeGraphEditor.Story.StoryGraphWindow.PlayFromStep(graph, node?.guid);
 
     // ─── Edges ───
 

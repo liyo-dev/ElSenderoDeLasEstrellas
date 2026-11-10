@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Texto dramático", "Texto a pantalla completa (sueños, títulos).")]
+[NarrativeNoWorldEffect]
 public sealed class DramaticTextNode : NarrativeNode
 {
     [Tooltip("Secuencia de frases dramáticas a mostrar.")]

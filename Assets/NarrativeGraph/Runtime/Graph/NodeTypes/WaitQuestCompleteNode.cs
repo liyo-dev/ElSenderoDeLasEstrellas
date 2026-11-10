@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 [NarrativeNodeInfo("Quests", "Esperar quest completada", "Se queda esperando hasta que la quest esté completada.")]
 [SavePoint("Seguro guardar mientras espera quests")]
-public sealed class WaitQuestCompleteNode : NarrativeNode
+public sealed class WaitQuestCompleteNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Quest)]
     public string questId;
@@ -22,6 +22,11 @@ public sealed class WaitQuestCompleteNode : NarrativeNode
     public override void CollectWarnings(List<string> warnings)
     {
         if (string.IsNullOrWhiteSpace(questId)) warnings.Add("questId vacío");
+    }
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(questId)) state.CompleteQuest(questId);
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

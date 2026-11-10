@@ -241,6 +241,11 @@ public class NarrativeRunner : MonoBehaviour
         return true;
     }
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+    /// Raised when any runner enters a step (main flow or a parallel branch). For tools only.
+    public static event System.Action<NarrativeRunner, NarrativeNode> StepEntered;
+#endif
+
     public void GoTo(NarrativeNode node)
     {
         _current?.Exit(_ctx);
@@ -258,6 +263,9 @@ public class NarrativeRunner : MonoBehaviour
 #endif
         Blackboard.Set(CurrentNodeKey, _current.guid);
         if (Blackboard.Get<bool>(FlowEndedKey, false)) Blackboard.Set(FlowEndedKey, false);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        StepEntered?.Invoke(this, _current);
+#endif
         _current.Enter(_ctx, () =>
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -497,6 +505,9 @@ public class NarrativeRunner : MonoBehaviour
             // El nodo queda registrado como «esperando» mientras dure el WaitUntil de abajo, para
             // que StopExecution() le llame a Exit() si el runner se para a mitad de espera.
             _activeBranchNodes.Add(node);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            StepEntered?.Invoke(this, node);
+#endif
             try
             {
                 node.Enter(_ctx, () =>

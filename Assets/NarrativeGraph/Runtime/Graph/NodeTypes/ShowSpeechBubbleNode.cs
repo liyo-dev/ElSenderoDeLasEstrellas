@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Bocadillo", "Frase corta sobre la cabeza de un personaje.")]
+[NarrativeNoWorldEffect]
 public sealed class ShowSpeechBubbleNode : NarrativeNode
 {
     [Tooltip("Tag del GameObject sobre el que aparece el bocadillo (ej: 'Player').")]

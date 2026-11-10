@@ -7,13 +7,16 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Hora del día", "")]
-public sealed class SetTimeOfDayNode : NarrativeNode
+public sealed class SetTimeOfDayNode : NarrativeNode, INarrativeStateEffect
 {
     [Tooltip("Periodo del día al que transicionar.")]
     public DayNightCycle.TimeOfDay targetTime = DayNightCycle.TimeOfDay.Night;
 
     [Tooltip("Si true, aplica el cambio instantáneamente sin transición suave de luz.")]
     public bool immediate = false;
+
+    public void Project(INarrativeStateWriter state)
+        => state.SetFact(HechosDelSendero.HoraDelDia, HechosDelSendero.Actual, targetTime.ToString());
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Fin de la demo", "En la build de la demo, guarda y lleva a los créditos. En el juego completo no hace nada y sigue.")]
+[NarrativeNoWorldEffect]
 public sealed class FinDeLaDemoNode : NarrativeNode
 {
     [Tooltip("Escena a la que se va al terminar la demo.")]

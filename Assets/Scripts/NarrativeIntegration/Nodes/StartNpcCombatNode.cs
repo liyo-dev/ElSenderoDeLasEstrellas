@@ -9,7 +9,7 @@ using Game.NPC.Modules;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Combate", "Iniciar combate NPC", "Pone a un NPC en combate contra el jugador y opcionalmente espera a que sea derrotado.")]
-public sealed class StartNpcCombatNode : NarrativeNode
+public sealed class StartNpcCombatNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("persistenceId del NPC (el mismo que usa NPCBehaviourManagerV2 / NarrativeActor).")]
@@ -31,6 +31,12 @@ public sealed class StartNpcCombatNode : NarrativeNode
     [NonSerialized] private INarrativeSignals _signals;
     [NonSerialized] private string _registeredKey;
     [NonSerialized] private NPCBehaviourManagerV2 _cachedManager;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!waitForDefeat || string.IsNullOrWhiteSpace(npcId)) return;
+        state.MarkSignalRaised(!string.IsNullOrEmpty(defeatEventKey) ? defeatEventKey : $"NPC_DEFEATED_{npcId}");
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

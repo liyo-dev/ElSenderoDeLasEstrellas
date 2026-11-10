@@ -19,6 +19,9 @@ public abstract class NarrativeNode
     // Capítulo al que pertenece este nodo (para organización visual en el editor)
     public string chapter = "";
 
+    [Tooltip("Section of the chapter this step belongs to. Steps of the same section are drawn together.")]
+    public string section = "";
+
     [Tooltip("Si esta marcado, el jugador NO podra guardar partida mientras esta en este nodo narrativo.")]
     public bool blockSaving = false;
 

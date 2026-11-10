@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Popup de lore", "")]
+[NarrativeNoWorldEffect]
 public sealed class ShowLorePopupNode : NarrativeNode
 {
     [Tooltip("Configuración del popup: entradas con retrato, hablante y texto.")]

@@ -13,6 +13,7 @@ using UnityEngine.UI;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Aviso de tutorial", "Muestra un botón/instrucción en pantalla.")]
+[NarrativeNoWorldEffect]
 public sealed class TutorialPromptNode : NarrativeNode
 {
     public enum PromptAction { Show, Hide }

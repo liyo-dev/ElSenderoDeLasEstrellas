@@ -21,7 +21,7 @@ using Game.NPC;
 [Serializable]
 [NarrativeNodeInfo("NPCs", "Esperar entrega de objeto", "Espera a que el jugador le entregue por proximidad un objeto llevado en brazos a un NPC: el objeto desaparece con VFX/SFX, el NPC se gira y hace un gesto, y queda el icono de 'habla conmigo'.")]
 [SavePoint("Seguro guardar mientras espera")]
-public sealed class WaitItemDeliveryNode : NarrativeNode
+public sealed class WaitItemDeliveryNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("persistenceId del NPC que recibe el objeto (el mismo que usa NPCBehaviourManagerV2).")]
@@ -52,6 +52,13 @@ public sealed class WaitItemDeliveryNode : NarrativeNode
 
     [NonSerialized] private NpcItemDeliveryDetector _detector;
     [NonSerialized] private Action _ready;
+
+    /// El objeto llevado en brazos desaparece del mundo al entregarlo.
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(npcId))
+            state.SetFact(HechosDelSendero.Entrega, npcId, expectedItemType.ToString());
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

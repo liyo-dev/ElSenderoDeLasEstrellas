@@ -26,10 +26,10 @@ namespace NarrativeGraphEditor
 
         NarrativeGraph _graph;
         SerializedObject _so;
-        NodeView _current;
+        INarrativeNodeHost _current;
 
         /// <summary>Se dispara cuando el usuario cambia un campo del nodo (para refrescar la tarjeta).</summary>
-        public event Action<NodeView> NodeFieldChanged;
+        public event Action<INarrativeNodeHost> NodeFieldChanged;
         /// <summary>Pide a la ventana que centre/seleccione otro nodo.</summary>
         public event Action<string> NavigateToNode;
 
@@ -39,7 +39,7 @@ namespace NarrativeGraphEditor
             _header = new Label("Nada seleccionado");
             _header.AddToClassList("narrative-inspector__header");
             Add(_header);
-            _scroll = new ScrollView(ScrollViewMode.Vertical);
+            _scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
             _scroll.AddToClassList("narrative-inspector__scroll");
             Add(_scroll);
             _body = new VisualElement();
@@ -54,7 +54,7 @@ namespace NarrativeGraphEditor
             Show(null);
         }
 
-        public void Show(NodeView view)
+        public void Show(INarrativeNodeHost view)
         {
             _current = view;
             _body.Clear();
@@ -146,10 +146,12 @@ namespace NarrativeGraphEditor
 
         void ShowEmpty()
         {
-            _header.text = "Nada seleccionado";
+            _header.text = Story.StoryText.T("Ningún paso elegido", "No step selected");
             _header.style.borderLeftColor = new StyleColor(new Color(0.4f, 0.4f, 0.4f));
             _body.Clear();
-            var hint = new Label("Selecciona un nodo para ver y editar su contenido.\n\nConsejos:\n• Doble clic en el lienzo o botón derecho → añadir nodo.\n• Arrastra desde un puerto para conectar.\n• Enter en la búsqueda salta entre coincidencias.");
+            var hint = new Label(Story.StoryText.T(
+                "Elige un paso en el lienzo o en el índice para editarlo.\n\n• A o doble clic en un hueco: añadir un paso.\n• Arrastra desde el borde de una tarjeta: conectar, o crear el siguiente paso si lo sueltas en un hueco.\n• El + de una conexión mete un paso en medio.",
+                "Pick a step on the canvas or in the index to edit it.\n\n• A or double-click an empty spot: add a step.\n• Drag from the edge of a card: connect, or create the next step if you drop it on an empty spot.\n• The + on a connection inserts a step in between."));
             hint.AddToClassList("narrative-inspector__hint");
             _body.Add(hint);
         }
@@ -187,7 +189,7 @@ namespace NarrativeGraphEditor
         /// Sustituye una lista de enum en crudo por etiquetas con botón de quitar y un desplegable
         /// para añadir (sin repetir valores ni ofrecer «None»).
         /// </summary>
-        void BuildChipList(VisualElement root, NarrativeNode node, FieldInfo field, NarrativeChipListAttribute attr, NodeView view)
+        void BuildChipList(VisualElement root, NarrativeNode node, FieldInfo field, NarrativeChipListAttribute attr, INarrativeNodeHost view)
         {
             var enumType = field.FieldType.GetGenericArguments()[0];
             var box = new VisualElement();

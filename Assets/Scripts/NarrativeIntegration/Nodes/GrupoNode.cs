@@ -13,7 +13,7 @@ using Slot = PartyControlManager.CharacterSlot;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Grupo", "Entrar o salir del grupo", "Un compañero sale del grupo (y, si se pide, de la escena) o vuelve a él; o un personaje pasa a ir al mando.")]
-public sealed class GrupoNode : NarrativeNode
+public sealed class GrupoNode : NarrativeNode, INarrativeStateEffect
 {
     public enum Accion
     {
@@ -54,6 +54,18 @@ public sealed class GrupoNode : NarrativeNode
     {
         if (!ControlDelJugador.SlotDeNombre(personaje, out var slot)) warnings.Add($"«{personaje}» no es del grupo (Will, Estela o Liam)");
         else if (slot == Slot.Will && accion != Accion.PasaAlMando) warnings.Add("Will no sale ni entra en el grupo");
+    }
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (string.IsNullOrWhiteSpace(personaje)) return;
+        string estado = accion switch
+        {
+            Accion.VuelveAlGrupo or Accion.EntraEnElGrupo => HechosDelSendero.EnElGrupo,
+            Accion.PasaAlMando => HechosDelSendero.AlMando,
+            _ => retirarDeLaEscena ? HechosDelSendero.FueraDeLaEscena : HechosDelSendero.FueraDelGrupo,
+        };
+        state.SetFact(HechosDelSendero.Grupo, personaje, estado);
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

@@ -8,6 +8,7 @@ using UnityEngine;
 /// cualquiera de los dos deshace lo que dejó el otro con la misma clave.
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Silenciar", "")]
+[NarrativeNoWorldEffect]
 public sealed class MuteAudioNode : NarrativeNode
 {
     public NarrativeAudioBus bus = NarrativeAudioBus.Master;

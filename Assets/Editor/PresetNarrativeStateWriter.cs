@@ -93,6 +93,78 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
         else _dst.inventoryItems.Add(new InventoryItemSave { itemId = itemId, count = amount });
     }
 
+    public void RemoveItem(string itemId, int amount)
+    {
+        int idx = _dst.inventoryItems.FindIndex(e => e.itemId == itemId);
+        if (idx < 0) return;
+        var entry = _dst.inventoryItems[idx];
+        entry.count -= amount;
+        if (entry.count <= 0) _dst.inventoryItems.RemoveAt(idx);
+        else _dst.inventoryItems[idx] = entry;
+    }
+
+    public void EnsureItem(string itemId, int amount)
+    {
+        int idx = _dst.inventoryItems.FindIndex(e => e.itemId == itemId);
+        int owned = idx >= 0 ? _dst.inventoryItems[idx].count : 0;
+        if (owned < amount) AddItem(itemId, amount - owned);
+    }
+
+    // Hechos con categoría: los del núcleo y los que añaden los nodos de El Sendero (HechosDelSendero).
+    public void SetFact(string category, string key, string value)
+    {
+        if (string.IsNullOrWhiteSpace(key)) return;
+        switch (category)
+        {
+            case HechosDelSendero.Grupo: AplicarGrupo(key, value); break;
+            case HechosDelSendero.BatallaGanada: Lista(_dst.defeatedBossIds ??= new List<string>(), key, value != null); break;
+            case HechosDelSendero.Vestuario: Lista(_dst.unlockedWardrobeIds ??= new List<string>(), key, value != null); break;
+            case HechosDelSendero.HoraDelDia:
+                Note($"La hora del día queda en «{value}», pero la partida no la guarda: la prueba empieza con la hora por defecto.");
+                break;
+            case HechosDelSendero.Entrega:
+                Note($"Se entregó un objeto ({value}) a '{key}': el objeto del mundo no se retira en la prueba.");
+                break;
+            case NarrativeCoreFacts.Scene:
+                if (value != null) Note($"La escena '{key}' estaría cargada en este punto; la prueba solo carga la del Spawn Anchor.");
+                break;
+            case NarrativeCoreFacts.Counter: AplicarContador(key, value); break;
+            default:
+                Note($"Hecho «{category}/{key}» sin traducción a la partida de El Sendero.");
+                break;
+        }
+    }
+
+    // Sin almacén propio, NarrativeCounters guarda cada contador como el flag «#nombre=valor».
+    void AplicarContador(string contador, string cambio)
+    {
+        string prefijo = NarrativeFlags.Key("#" + contador + "=");
+        int actual = 0;
+        var viejo = _dst.flags.Find(f => f.StartsWith(prefijo, System.StringComparison.Ordinal));
+        if (viejo != null)
+        {
+            int.TryParse(viejo.Substring(prefijo.Length), out actual);
+            _dst.flags.Remove(viejo);
+        }
+        int nuevo = NarrativeCoreFacts.ApplyCounter(actual, cambio);
+        if (nuevo != 0) _dst.flags.Add(prefijo + nuevo);
+    }
+
+    void AplicarGrupo(string personaje, string estado)
+    {
+        if (!ControlDelJugador.SlotDeNombre(personaje, out var slot)) { Note($"«{personaje}» no es del grupo."); return; }
+        if (estado == HechosDelSendero.AlMando) { _dst.activeCharacterSlot = (int)slot; return; }
+        if (slot == PartyControlManager.CharacterSlot.Will) return;
+        _dst.partyMemberIds ??= new List<string>();
+        Lista(_dst.partyMemberIds, "_" + personaje.ToUpperInvariant(), estado == HechosDelSendero.EnElGrupo);
+    }
+
+    static void Lista(List<string> lista, string id, bool presente)
+    {
+        if (presente) { if (!lista.Contains(id)) lista.Add(id); }
+        else lista.Remove(id);
+    }
+
     public void PlaceActor(string actorId, NarrativeLocation location)
     {
         if (string.IsNullOrWhiteSpace(actorId) || !location.IsValid) return;

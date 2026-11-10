@@ -62,7 +62,7 @@ namespace NarrativeGraphEditor
         string _lastCurrentGuid;
         readonly HashSet<string> _visitedNodes = new();
 
-        [MenuItem("Tools/Narrative Graph/Abrir editor %#n")]
+        [MenuItem("Tools/Narrative Graph/Editor anterior")]
         public static void OpenWindow()
         {
             var w = GetWindow<NarrativeGraphWindow>();
@@ -77,7 +77,6 @@ namespace NarrativeGraphEditor
             GetWindow<NarrativeGraphWindow>().LoadGraph(graph);
         }
 
-        [UnityEditor.Callbacks.OnOpenAsset]
         // Unity 6000.6: la conversión int → EntityId es error de compilación; el callback ya
         // recibe el EntityId directamente.
         static bool OnOpenAsset(EntityId entityId, int line)
@@ -131,7 +130,7 @@ namespace NarrativeGraphEditor
             _gameTabs.Clear();
 
             _inspector = new NarrativeInspectorPanel();
-            _inspector.NodeFieldChanged += OnNodeFieldChanged;
+            _inspector.NodeFieldChanged += host => OnNodeFieldChanged(host as NodeView);
             _inspector.NavigateToNode += FocusNode;
             AddSideTab("Nodo", _inspector);
 

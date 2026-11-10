@@ -37,6 +37,33 @@ namespace Sendero.Narrative.Editor
         public SpellId comboSpellId = SpellId.None;
 
         public bool fastForward = true;
+
+        /// Rama elegida en las decisiones del camino cuando varias llevan al nodo de la prueba.
+        public List<RouteChoice> routeChoices = new();
+
+        [Serializable]
+        public struct RouteChoice
+        {
+            public string nodeGuid;
+            public int port;
+        }
+
+        public Dictionary<string, int> RouteChoicesMap()
+        {
+            var map = new Dictionary<string, int>();
+            if (routeChoices == null) return map;
+            foreach (var c in routeChoices)
+                if (!string.IsNullOrEmpty(c.nodeGuid)) map[c.nodeGuid] = c.port;
+            return map;
+        }
+
+        public void SetRouteChoice(string nodeGuid, int port)
+        {
+            routeChoices ??= new List<RouteChoice>();
+            routeChoices.RemoveAll(c => c.nodeGuid == nodeGuid);
+            routeChoices.Add(new RouteChoice { nodeGuid = nodeGuid, port = port });
+            Save();
+        }
         public bool autoRestore = true;
 
         const string PrefsKey = "Sendero.Narrative.TestConfig";
@@ -87,6 +114,8 @@ namespace Sendero.Narrative.Editor
         public bool reachedTarget;
         public string objectiveTitle = "";
         public readonly List<string> warnings = new();
+        /// Decisiones del camino hasta el nodo (las de capítulos previos incluidas).
+        public readonly List<NarrativeStateProjector.Decision> decisions = new();
         public readonly List<string> actors = new();
         public readonly List<string> notes = new();
     }
@@ -99,6 +128,7 @@ namespace Sendero.Narrative.Editor
             var preview = NarrativeTestLauncher.Preview(graph, nodeGuid, NarrativeTestConfig.Load());
             actors.AddRange(preview.actors);
             warnings.AddRange(preview.warnings);
+            warnings.AddRange(preview.decisions.Select(d => d.ToString()));
         }
     }
 
@@ -131,6 +161,8 @@ namespace Sendero.Narrative.Editor
         {
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            // Para el editor de historia, los capítulos son los grafos que registra el Hub.
+            NarrativeChapterChain.ChapterFilter = g => !string.IsNullOrEmpty(DetectGraphLabel(g));
         }
 
         static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -250,10 +282,11 @@ namespace Sendero.Narrative.Editor
             var writer = new PresetNarrativeStateWriter(dst);
             var objetivo = nodeGuid;
             var previos = CapitulosPrevios(graph, ref objetivo);
+            var elecciones = cfg.RouteChoicesMap();
             foreach (var previo in previos)
             {
-                var anterior = NarrativeStateProjector.Project(previo.grafo, previo.puenteGuid, writer);
-                preview.warnings.AddRange(anterior.Decisions.Select(d => $"[{previo.label}] {d}"));
+                var anterior = NarrativeStateProjector.Project(previo.grafo, previo.puenteGuid, writer, elecciones);
+                preview.decisions.AddRange(anterior.Decisions);
                 preview.notes.Add($"Capítulo previo '{previo.label}' dado por terminado y su progreso proyectado.");
             }
             if (objetivo != nodeGuid)
@@ -262,10 +295,10 @@ namespace Sendero.Narrative.Editor
                 preview.notes.Add($"Se empieza tras el puente del capítulo previo: '{puente?.displayTitle}'.");
             }
 
-            var result = NarrativeStateProjector.Project(graph, objetivo, writer);
+            var result = NarrativeStateProjector.Project(graph, objetivo, writer, elecciones);
             preview.actors.AddRange(writer.ApplyActorPlacements(new OpenScenesNarrativeWorld()));
             preview.reachedTarget = result.ReachedTarget;
-            preview.warnings.AddRange(result.Decisions);
+            preview.decisions.AddRange(result.Decisions);
             preview.notes.AddRange(writer.Notes);
             preview.objectiveTitle = graph.FindNode(objetivo)?.displayTitle ?? "";
             return preview;
@@ -397,75 +430,10 @@ namespace Sendero.Narrative.Editor
         public static List<CapituloPrevio> CapitulosPrevios(NarrativeGraph grafo, ref string objetivoGuid)
         {
             var resultado = new List<CapituloPrevio>();
-            if (grafo == null || string.IsNullOrEmpty(objetivoGuid)) return resultado;
-
-            var emisores = new Dictionary<string, CapituloPrevio>();
-            foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
-            {
-                var otro = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-                if (otro == null || otro == grafo || otro.nodes == null) continue;
-                var label = DetectGraphLabel(otro);
-                if (string.IsNullOrEmpty(label)) continue;
-                foreach (var emite in otro.nodes)
-                {
-                    if (emite == null) continue;
-                    foreach (var senal in _refs.Collect(emite).Signals)
-                        if (senal.Role == SignalRole.Emite && !string.IsNullOrEmpty(senal.Key) && !emisores.ContainsKey(senal.Key))
-                            emisores.Add(senal.Key, new CapituloPrevio { grafo = otro, label = label, puenteGuid = emite.guid });
-                }
-            }
-
-            bool EsPuente(NarrativeNode n) => EsperaSenalDe(n, emisores, out _);
-            var nodo = grafo.FindNode(objetivoGuid);
-            bool cruzaPuente = false;
-            while (nodo != null && (nodo.IsGraphEntry || EsPuente(nodo)) && nodo.outputs != null && nodo.outputs.Count == 1)
-            {
-                cruzaPuente |= EsPuente(nodo);
-                nodo = grafo.FindNode(nodo.outputs[0]);
-            }
-            if (cruzaPuente && nodo != null) objetivoGuid = nodo.guid;
-
-            AnadirPrevios(grafo, objetivoGuid, emisores, resultado, new HashSet<NarrativeGraph> { grafo });
+            // Solo cuentan los capítulos que el Hub de Start.unity registra.
+            foreach (var c in NarrativeChapterChain.Before(grafo, ref objetivoGuid, g => !string.IsNullOrEmpty(DetectGraphLabel(g))))
+                resultado.Add(new CapituloPrevio { grafo = c.Graph, label = DetectGraphLabel(c.Graph), puenteGuid = c.BridgeGuid });
             return resultado;
-        }
-
-        static void AnadirPrevios(NarrativeGraph grafo, string hastaGuid, Dictionary<string, CapituloPrevio> emisores,
-            List<CapituloPrevio> resultado, HashSet<NarrativeGraph> vistos)
-        {
-            var recorridos = new HashSet<string>();
-            var cola = new Queue<string>();
-            cola.Enqueue(grafo.startNodeGuid);
-            while (cola.Count > 0)
-            {
-                var guid = cola.Dequeue();
-                if (string.IsNullOrEmpty(guid) || guid == hastaGuid || !recorridos.Add(guid)) continue;
-                var n = grafo.FindNode(guid);
-                if (n == null) continue;
-                if (EsperaSenalDe(n, emisores, out var previo) && vistos.Add(previo.grafo))
-                {
-                    AnadirPrevios(previo.grafo, previo.puenteGuid, emisores, resultado, vistos);
-                    resultado.Add(previo);
-                }
-                if (n.outputs != null)
-                    foreach (var o in n.outputs) cola.Enqueue(o);
-            }
-        }
-
-        static readonly NarrativeNodeReferences _refs = new();
-
-        /// <summary>
-        /// true si el nodo espera una señal que emite otro capítulo; <paramref name="previo"/> es ese
-        /// capítulo.
-        /// </summary>
-        static bool EsperaSenalDe(NarrativeNode n, Dictionary<string, CapituloPrevio> emisores, out CapituloPrevio previo)
-        {
-            previo = null;
-            if (n == null) return false;
-            foreach (var senal in _refs.Collect(n).Signals)
-                if (senal.Role == SignalRole.Escucha && !string.IsNullOrEmpty(senal.Key) && emisores.TryGetValue(senal.Key, out previo))
-                    return true;
-            previo = null;
-            return false;
         }
 
         /// <summary>Etiqueta con la que el NarrativeGraphHub de Start.unity registra el grafo, o null.</summary>

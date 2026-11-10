@@ -11,6 +11,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Quests", "Según estado de quest", "Bifurca por el estado actual de una quest (no iniciada / activa / pasos listos / completada).")]
 [SavePoint("Solo consulta estado; seguro para guardar")]
+[NarrativeNoWorldEffect]
 public sealed class BranchQuestStateNode : NarrativeNode
 {
     [NarrativeKey(NarrativeKeyKind.Quest)]

@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Objetos", "Esperar objeto", "Espera a que el jugador consiga un objeto.")]
 [SavePoint("Seguro guardar mientras espera item")]
-public sealed class WaitForItemAddedNode : NarrativeNode
+public sealed class WaitForItemAddedNode : NarrativeNode, INarrativeStateEffect
 {
     [Header("Item Configuration")]
     [Tooltip("El objeto que debe entrar en el inventario")]
@@ -33,6 +33,11 @@ public sealed class WaitForItemAddedNode : NarrativeNode
     {
         if (debugLogs)
             NarrativeLog.Info($"[WaitForItemAdded:{guid}] {msg}");
+    }
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (itemToWaitFor != null) state.EnsureItem(itemToWaitFor.ItemId, minimumAmount > 0 ? minimumAmount : 1);
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

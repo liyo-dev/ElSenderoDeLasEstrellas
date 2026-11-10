@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Flujo", "Según flag", "Bifurca Sí/No según un flag narrativo (o una señal ya disparada).")]
 [SavePoint("Solo consulta estado; seguro para guardar")]
-public sealed class BranchFlagNode : NarrativeNode
+public sealed class BranchFlagNode : NarrativeNode, INarrativeRouteEffect
 {
     [NarrativeKey(NarrativeKeyKind.Flag)]
     [Tooltip("Clave del flag (SetFlagNode) o de la señal a comprobar.")]
@@ -24,6 +24,14 @@ public sealed class BranchFlagNode : NarrativeNode
 
     public override string DescribeDecision()
         => $"Según flag \"{displayTitle}\" (guid {guid}): comprueba '{flagKey}'{(invert ? " (invertido)" : "")}. Salidas: Sí / No.";
+
+    /// The branch taken tells what the flag was worth at that point.
+    public void ProjectRoute(INarrativeStateWriter state, int chosenPort)
+    {
+        if (string.IsNullOrWhiteSpace(flagKey) || chosenPort < 0 || chosenPort > 1) return;
+        bool yes = chosenPort == 0;
+        state.SetFlag(flagKey, invert ? !yes : yes);
+    }
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {

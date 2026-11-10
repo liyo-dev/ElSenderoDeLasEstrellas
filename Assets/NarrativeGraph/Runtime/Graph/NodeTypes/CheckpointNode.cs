@@ -12,6 +12,7 @@ using UnityEngine;
 [Serializable]
 [NarrativeNodeInfo("Flujo", "Checkpoint (prueba)", "Punto desde el que se puede arrancar el juego en el menú de test.")]
 [SavePoint("Instantáneo")]
+[NarrativeNoWorldEffect]
 public sealed class CheckpointNode : NarrativeNode
 {
     [Tooltip("Identificador estable y legible: 'ANTES_DEL_PUENTE'.")]

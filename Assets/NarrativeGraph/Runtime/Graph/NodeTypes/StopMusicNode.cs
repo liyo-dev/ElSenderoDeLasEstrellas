@@ -3,6 +3,7 @@ using System;
 /// Para la música con fundido.
 [Serializable]
 [NarrativeNodeInfo("Audio y cine", "Parar música", "")]
+[NarrativeNoWorldEffect]
 public sealed class StopMusicNode : NarrativeNode
 {
     public float fadeSeconds = 0.5f;

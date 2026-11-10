@@ -3,6 +3,7 @@ using UnityEngine;
 
 [Serializable]
 [NarrativeNodeInfo("Notas", "Nota", "Comentario libre en el grafo. No se ejecuta.")]
+[NarrativeNoWorldEffect]
 public class GraphNoteNode : NarrativeNode
 {
     [TextArea(3, 12)] public string note;
