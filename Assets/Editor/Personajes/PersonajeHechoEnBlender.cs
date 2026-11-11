@@ -85,6 +85,9 @@ public static class PersonajeHechoEnBlender
         return true;
     }
 
+    /// <summary>El tono de piel de la textura de colores del pack: las piezas de piel hechas aparte van en el mismo.</summary>
+    public static readonly Color PielDelPack = new Color32(246, 190, 150, 255);
+
     /// <summary>Material de un color liso con el shader y los ajustes de <paramref name="estilo"/> (sin su textura).</summary>
     public static Material Liso(Material estilo, string ruta, Color color)
     {

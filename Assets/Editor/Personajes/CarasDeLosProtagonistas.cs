@@ -32,16 +32,17 @@ public static class CarasDeLosProtagonistas
     {
         public Slot Personaje; public string Nombre; public int Ojos, Bocas;
         public int Llorar = 9;       // índice de los ojos de llorar (el último del juego: después de los extras, si los hay)
+        public int BocaDeReposo;     // índice de la boca que lleva sin emoción (0 = la recta; 7 = la sonrisa pequeña)
         public string[] Modelos;     // los suyos: se les pone su perfil y su cara neutra
     }
 
     static readonly Juego[] Juegos =
     {
-        new Juego { Personaje = Slot.Will, Nombre = "Will", Ojos = 30, Bocas = 20,
+        new Juego { Personaje = Slot.Will, Nombre = "Will", Ojos = 30, Bocas = 20, BocaDeReposo = 7,
                     Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_WILL_NPC.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" } },
         new Juego { Personaje = Slot.Liam, Nombre = "Liam", Ojos = 20, Bocas = 20,
                     Modelos = new[] { "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab" } },
-        new Juego { Personaje = Slot.Estela, Nombre = "Estela", Ojos = 40, Bocas = 40, Llorar = 12,
+        new Juego { Personaje = Slot.Estela, Nombre = "Estela", Ojos = 40, Bocas = 40, Llorar = 12, BocaDeReposo = 7,
                     Modelos = new[] { "Assets/Prefabs/_ESTELA.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab" } },
     };
 
@@ -127,7 +128,7 @@ public static class CarasDeLosProtagonistas
         {
             var extras = j.Personaje == Slot.Estela   // sus extra: pícara con guiño y colmillo, emocionada con colmillo
                 ? new[] { (NPCEmotion.Smirk, 9, 10), (NPCEmotion.Excited, 4, 10) } : null;
-            var perfil = Perfil(j.Nombre, j.Ojos, j.Bocas, informe, extras, j.Llorar);
+            var perfil = Perfil(j.Nombre, j.Ojos, j.Bocas, informe, extras, j.Llorar, j.BocaDeReposo);
             if (perfil == null) continue;
             perfiles[j.Personaje] = perfil;
             foreach (var ruta in j.Modelos)
@@ -135,7 +136,7 @@ public static class CarasDeLosProtagonistas
                 var raiz = PrefabUtility.LoadPrefabContents(ruta);
                 try
                 {
-                    PonerCara(raiz, perfil, j.Ojos, j.Bocas);
+                    PonerCara(raiz, perfil, j.Ojos, j.Bocas + j.BocaDeReposo);
                     PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
                 }
                 finally { PrefabUtility.UnloadPrefabContents(raiz); }
@@ -146,7 +147,7 @@ public static class CarasDeLosProtagonistas
         Registro(perfiles, informe);
         var will = Juegos.First(j => j.Personaje == Slot.Will);
         AspectoDeProtagonista.ActualizarPresetsDelJugador(new Dictionary<PartCategory, string>
-            { { PartCategory.Eyes, $"Eye{will.Ojos}" }, { PartCategory.Mouth, $"Mouth{will.Bocas}" } }, new[] { PartCategory.Eyebrow }, informe);
+            { { PartCategory.Eyes, $"Eye{will.Ojos}" }, { PartCategory.Mouth, $"Mouth{will.Bocas + will.BocaDeReposo}" } }, new[] { PartCategory.Eyebrow }, informe);
         AssetDatabase.SaveAssets();
     }
 
@@ -168,7 +169,7 @@ public static class CarasDeLosProtagonistas
         var colores = new[]
         {
             ("Negro", new Color(0.08f, 0.05f, 0.06f)), ("Iris", iris), ("Blanco", Color.white), ("Boca", new Color(0.45f, 0.1f, 0.12f)),
-            ("Lengua", new Color(0.95f, 0.45f, 0.45f)), ("Ceja", new Color(0.25f, 0.14f, 0.08f)), ("Piel", new Color(1f, 0.82f, 0.7f)),
+            ("Lengua", new Color(0.95f, 0.45f, 0.45f)), ("Ceja", new Color(0.25f, 0.14f, 0.08f)), ("Piel", PersonajeHechoEnBlender.PielDelPack),
             ("Rubor", new Color(1f, 0.55f, 0.6f)), ("RuborFuerte", new Color(0.95f, 0.3f, 0.38f)), ("Brilla", new Color(1f, 0.85f, 0.2f)),
             ("Tostado", new Color(0.93f, 0.6f, 0.47f)), ("Peca", new Color(0.72f, 0.44f, 0.3f)), ("Arruga", new Color(0.78f, 0.56f, 0.48f)),
             ("Lagrima", new Color(0.4f, 0.7f, 1f)), ("Vena", new Color(0.86f, 0.16f, 0.2f)), ("Susto", new Color(0.42f, 0.48f, 0.86f)),
@@ -208,8 +209,9 @@ public static class CarasDeLosProtagonistas
     /// Perfil de emociones Cara_&lt;nombre&gt; (copia de NpcEmotionProfile) con un juego de caras: ojos
     /// Eye&lt;ojos&gt;…+8 (y los de llorar, Eye&lt;ojos + llorar&gt;) y bocas Mouth&lt;bocas&gt;…+9 en el orden de arriba,
     /// con los símbolos Fx&lt;ojos×10…&gt;; «extras» cambia el ojo y la boca de alguna emoción (índices dentro del juego).
+    /// «bocaDeReposo»: índice de la boca que lleva sin emoción (0 = la recta).
     /// </summary>
-    public static EmotionProfile Perfil(string nombre, int ojos, int bocas, StringBuilder informe, (NPCEmotion emocion, int ojo, int boca)[] extras = null, int llorar = 9)
+    public static EmotionProfile Perfil(string nombre, int ojos, int bocas, StringBuilder informe, (NPCEmotion emocion, int ojo, int boca)[] extras = null, int llorar = 9, int bocaDeReposo = 0)
     {
         var baseP = AssetDatabase.LoadAssetAtPath<EmotionProfile>(PerfilBase);
         if (baseP == null) { informe.AppendLine($"No encuentro {PerfilBase}."); return null; }
@@ -220,9 +222,9 @@ public static class CarasDeLosProtagonistas
         string O(int i) => $"Eye{ojos + i}";
         string B(int i) => $"Mouth{bocas + i}";
         p.ojosNeutros = new[] { O(0) };
-        p.bocasNeutras = new[] { B(0), B(1) };
+        p.bocasNeutras = new[] { B(0), B(1), B(bocaDeReposo) }.Distinct().ToArray();
         p.ojosDeReposoPorDefecto = O(0);
-        p.bocaDeReposoPorDefecto = B(0);
+        p.bocaDeReposoPorDefecto = B(bocaDeReposo);
         p.bocaHablandoEntreabierta = B(8);
         p.bocaHablandoAbierta = B(9);
         p.ojosDelParpadeo = O(8);

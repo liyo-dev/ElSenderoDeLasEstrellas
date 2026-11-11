@@ -200,7 +200,8 @@ public static class FotosDeCaras
         var soporte = new GameObject("Fotos de caras · " + nombre) { hideFlags = HideFlags.DontSave };
         SceneManager.MoveGameObjectToScene(soporte, escena);
         var camGo = new GameObject("Fotos de caras · cámara") { hideFlags = HideFlags.HideAndDontSave };
-        var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+        // Sin MSAA: con multimuestra el contorno de tinta no se dibuja y la foto no sería la del juego.
+        var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 1 };
         var png = new Texture2D(W, H, TextureFormat.RGB24, false);
         int n = 0;
         try
@@ -230,6 +231,8 @@ public static class FotosDeCaras
             var pila = VolumeManager.instance.isInitialized ? VolumeManager.instance.stack : null;
             datos.renderPostProcessing = pila != null && pila.GetComponent<ColorAdjustments>() != null;
             if (!datos.renderPostProcessing) informe.Append("sin postproceso (volúmenes no listos) · ");
+            datos.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+            datos.antialiasingQuality = AntialiasingQuality.High;
 
             // Centro de la cara: los ojos neutros
             var ojoNeutro = Cara(piezas, perfil.ojosDeReposoPorDefecto, perfil.bocaDeReposoPorDefecto, null);

@@ -18,8 +18,9 @@ MonoBehaviour:
   bocasNeutras:
   - Mouth40
   - Mouth41
+  - Mouth47
   ojosDeReposoPorDefecto: Eye40
-  bocaDeReposoPorDefecto: Mouth40
+  bocaDeReposoPorDefecto: Mouth47
   ojosDelParpadeo: Eye48
   ojosYaCerrados:
   - Eye41

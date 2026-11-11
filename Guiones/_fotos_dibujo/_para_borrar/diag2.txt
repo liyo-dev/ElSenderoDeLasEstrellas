@@ -1,0 +1,29 @@
+
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG] add tipo=Game post=True msaa=1 aj=1/2/RGBA(0.200, 0.150, 0.220, 1.000)/act=True
+[DIAG] rec back=False depth=True normales=True aj=1/2/RGBA(0.200, 0.150, 0.220, 1.000) alto=720
+[DIAG] add tipo=Game post=True msaa=1 aj=1/2/RGBA(0.200, 0.150, 0.220, 1.000)/act=True
+[DIAG] rec back=False depth=True normales=True aj=1/2/RGBA(0.200, 0.150, 0.220, 1.000) alto=720

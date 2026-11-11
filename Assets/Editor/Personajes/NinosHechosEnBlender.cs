@@ -71,7 +71,7 @@ public static class NinosHechosEnBlender
                 {
                     ("Pelo", new Color(0.56f, 0.26f, 0.11f)), ("Lazo", new Color(0.9f, 0.32f, 0.4f)),
                     ("Vestido", new Color(0.86f, 0.47f, 0.42f)), ("VestidoOscuro", new Color(0.66f, 0.3f, 0.28f)), ("Blusa", new Color(0.97f, 0.93f, 0.84f)),
-                    ("Delantal", new Color(0.96f, 0.92f, 0.82f)), ("Piel", new Color(1f, 0.82f, 0.7f)), ("Media", new Color(0.97f, 0.97f, 0.95f)),
+                    ("Delantal", new Color(0.96f, 0.92f, 0.82f)), ("Piel", PersonajeHechoEnBlender.PielDelPack), ("Media", new Color(0.97f, 0.97f, 0.95f)),
                     ("Zapato", new Color(0.42f, 0.24f, 0.14f)), ("Suela", new Color(0.2f, 0.12f, 0.08f)),
                 },
             },

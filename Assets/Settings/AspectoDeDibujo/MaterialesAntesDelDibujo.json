@@ -1,0 +1,4408 @@
+{
+    "materiales": [
+        {
+            "guid": "a7b67f3429d686f40a97dd811f6404bc",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e89e96bdf3a1e5c48b49fcdb11c1d89f",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "fffec78be4abfc04aba1dc456e4b3aa2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c55ee96645b57684da7796aff2e10d8b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d8f16b3f51896db4ba818f5df216fdc8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a8e162ad61e8ea34595c318a55c7527e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "701ce561e57adbc419b21898a17d7c36",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "892334a20f537e449b125db6f3bcf4c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "23892fa5dc3aacb44afd84af9903d54b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5f59811cbfb8be34fae53c3d54287d27",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8e8b9fec352b137449a8cbe1ac0d3384",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1584f986f7238f8418d8e7990d10cd12",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "495b23efee9924b4ca80ec03ff538db6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "479d9b2f96d671d4dae5bd653dc4ff3e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2d77e61be6482ca4e9fec485127fec9b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "925dfa8ecd228d64f83e3cb8430b7bd1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1245bf3eca4998045aa5a4b9efa61b1e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3eab7b0873a89b6449570ec131cda6bc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d99e3c70c9262244e8825c773dd1068a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "29a94282c4e058c458fcd6bcbba461f4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bc50273e62cb01b4094e0e6cd1f1a7f7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dda89a27448ca4042bdc2b18864b4d0e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8eb02e978617c724897c6d4cb174208d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "03faa12bfcd180040b762cc5b67f47fe",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2673453289941d04285a2b72b2106847",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d67125e0cc29d6a448c37394563dffba",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "335730da595ff6949b89fc0cc9665dc8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "21ac35e88f484be4997c9f609ec4bb59",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9a5441b42a52b12409495f2818f807d3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b1010e4332b30d4468ea4002df03215e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3f75f7ed27ea1f64c98b4f79480240df",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "c86f43fcf0452084fa80e5bccb376486",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "c961bb452348a1047804240751534961",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "c475c5dfe1d606c4eaa561a6392aa6e3",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "b70b609dc0c740a499a8f64367bd6f31",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e72128092798262458c2f5c3f0cf7ce0",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "c325543740044b5449db6129d1b95b02",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "bf7e33393eebe3c49ba611845c8c4fd8",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "14a923d75bee0904087be6008a771982",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "bf0b339ceb2534e4e920b8564d0217bc",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "d340068af754b3d4f9708bdef0ab99c5",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "02ae1407bf5b5f84891365f264c199cb",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "8d7010cfdcb6471489f27ddba391b00e",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "9df196788b704824baa973d9353fb9e3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc7ec33700c750c4c84bc3a77a9659c8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "94fe9177967a86b499b7adc1ff6ad4fb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "54807ea1e154d5346b55d549f5cc91f0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "92fa35aa74d45b548a0ceba3c822bbec",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "f46d773e46c23f24a96ca8349145148d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "41b3b460cf67db941b3af9d5cdc147cc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "f37ea2bd19136a2469ed0e0758f4ce30",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2cd9eb6d5338a40479ec964f98b0e5f0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "34d1e5abb166bc3448074e6fc5e1d5e9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "22755097fa321f04e8f677e667704b58",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "c8a253bc1d9e7814a87d01583a336bd9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "63d68c3ba5d7b90418069b96d9c35a4a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "957781e2e64d0264f970dde36a30bd93",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d6645a3db55ef0c478638eaddedb98ff",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5db3adf260dc3c24aaa5e8e5d16cefd4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "53508ca0e9b9ca94d9733ea1de730af3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "7138340a0d0f5ad43999a6d29c3d7253",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "399016a51c93e984eac130563ebe47a0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "fecee374b5f232a4fa34719d72f3a7a6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "c47a7fa4371bf674d82dbf5ed0dffa7d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "d9b6ad72ea76bbf47beb5a5b47c6acc5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "e78f0d2e753a63f4ca3555c719e6a3db",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "c28c4dc1dd72d6f48a01508965cced48",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "c411f35c4d8055544808b103209a7d76",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "f75e403527e098d4bb66320833b375fe",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "e3f37bbdd8630bd4c8a1c6c4311b5a55",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "ab962e00d18cf7b4f9c3067c7a18c166",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "14d31ac8abfff17478dee454347fa3de",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "e331f4d835fe1d44a9a55530f11c338a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f4bf87e6de18f94f855a180cd75a5a5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cd76f2a34ecf07e4b94fe48df274c454",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8a8bd4ad0c2b27d41b2432871bf3f7fd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d21c596200b3b844bb4abaa1bc79bb5f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "39db03550d47b1b42b8b40c3528d2989",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4ed7f8497e3b92545a29959e05ed7f2f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "05e75bb0a135a79499edf6c1feb23413",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4cec165a0111c8c41bc06c8967860ae9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dd67f20bc6caba94489d1d025e50e92f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dde8f18bcbc23094f9eb3b919f765274",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7bd26475bc5a6aa4387a5505a689968a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "beeda354d77f1a84fbb4ea95adfab585",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b63d84f4f12a7d44699afed81e3073ed",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e2c11e8ec9ec4a141839d06d014e9c2e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5f1874e850772d24ca630e75303e8ddc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2ffdd2a456189e342be785aff932188f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "23276e830974e704e8db5531a20c223b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9cbd6bebe6ea6d9419bbe4d07c397328",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "100c58699450cd448a96553cdb1c7b9d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fc0cf422336c0dd408c394baee0b4176",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4460af3c8376f9a469437c1aaf6b3ad3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0aefe83b75c325f48894e407ece33cbf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "454b22523e05e7b4f962326fa4dde32b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eff6d626101368a4db1f7a069aaad144",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "08f40f4dc7353fa478216151ebea315b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "736b2bea5afc80449987bc89b6cbc5aa",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3bc52b3fcc3f2eb45a3660036d95c6e0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9f7b92cbb1276f94088f4e9eac9e3165",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6d598821890e8b44384145b229038240",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "02ae3256e6822bb4baff5f7fbe47cc9e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "465083387de56fa4fb409a59d759949e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ea1882b5e7b73ee4bb71ab2dff3e4513",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6dca8abeafd4f47458fe22288d17f837",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "26cf6db936a5d8245bd474fe1acbdb47",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "75169790caf14914c931f599a422bc41",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0ee1c9724ecb7234189a072d61b1e2a4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "35a3652e894a530468a18f13bf339aab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "539b91429602e1f47a72e8d27e20333d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d6fa55dae723b724181be613f0aea026",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f2eb4623f8b5e2541b65456a1b682d1f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4b84025ef42691a4aa69767047e15c5e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "00fa3cb2f7ade144a89f30dd175af802",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "87c054c8eb34c6c479956d6c9c26e52d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c8e68c2fad8edcc49a7cb7a65596c20a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "133abd6d648e22a469e55e12f8927a18",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8ad987765c0e7bf4d85c25d40b831c00",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "72a560dcf066f5844987dbe2a50c5527",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "95a67b3e675917144ac3a7e3d3e20e86",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c7068bddefd9d204284bed48ab04c0d5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "246dd91267528404685c5af20207dcdc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "909db00dc35573048bc1e298b8a101e8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "73686dacebf1b174f8336204ee1bbc63",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2a75b055c3b9c25459fa782f91876f30",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7724d1aa79a46244285ad3f8aea5423d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "43e66bf97ed78c04fb3d67410d05e638",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5579fdb7498074240bde8ac15f584af3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f9597766234e96f418ddb4a4f6ac7aca",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "138c95143561d384095785f19ec6f7d0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e6b431303d72f7c47b48717dd39b1b46",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "132f8f27eecdc8841bf808022e0c7965",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5061db05282b9e2488c2956c72669dd2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6cbf5f38668826446954299973c12c6b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c0dae86702208fb439af052c4cce3266",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c2d3f0c1c08f2044b9f7aaab212004d6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3e88fa045913ca64f9bb0e8125b9a4fd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5325b9484e13ffd49a7af712cc9546cf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3fbc8e7f96110774c9d0725d8a995265",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "99714ffc9d83fa740bdfa75045aaf0a6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a7a2e6c24821da94ba586502d8887ee6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a6c8c398feb0d464fac7f5476c778839",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2525bd4f17291f94d8f619ae519b8f5b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "30d91c0a4e7280645b93d6033945d566",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9b55c4fa50044e1439990c93526160fc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ba6e11e00b82be24c9eaa030f7dd938b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3813a4e16007e9640a54c2d17f1d6dc9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5a3c53c6bf4bd854484678aab9908be8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6d6e03a9e60d5da4ba68575da17b399a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8c046fef6f31131449f53791335c54af",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "396db7e9a0ac70941825f7699e11a860",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5529c6dd7225d41478158241f17edbf8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c12bc150e478b4e4892d3e70ae7b76e7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "206cd4c0e07f7344798fb1ece02b1d81",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b3e97a3c2893da64f8bc97994b16d1b7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "14098aa16444c5b4fae14618bc90c6e1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "55b902b273f1ce741bdcebcf53fd7455",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "da387f87e657a9e4a94112a29863f6aa",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e56f51b151f6f1a41bff6ed10ad85b67",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7fa52384752cb7e4c80dbc6e41a0efc8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f3a1e6d54343f44d9caa545e5a1d358",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "17e2f5cc9764211439bbb6e5b21c8abb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc732eac401727c49b6c802076764aa2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a9b3a1ee1894a484d8974037c09e88ca",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e1ebf339b9adae64ea15805929e2d290",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1f7a785b3c25e3b41b6fc729e04f732c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a59fe7054ab128c4ea46edee5f20ed45",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c3c7f2ed76516824b97d641df91bdc4a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "db1e1ff57112d8749b68b91f6f3e98ae",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cb25e61863748c646964f7f8e1e529ef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2c9a5b31b3e07ae42abe8eb85e8865a3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "abf53524917dbc74bbfca8b6cdcfd689",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dc117a913de9f0a43a7f441142bb80b6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ec1c4456ae4190143af8fcbbbd88859d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5bfeef423e32f4241a20ea94a565e2c2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4a9e71cad03f71446984bf9ebe0f5b0b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "18abeee8814d0564eaf9cb753fe22b5f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4e23b0a44d0b3d04796cbaf19b559861",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0a76ef1365e60284490f78795b3fd974",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc9a02767717d174fb5144669fd967d1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e5a7eb834cfae714e96aa784f92e4119",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "10fa1bcfa703473479bd12f55545777e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4bd60d483246d0b45b8007c3848a63ad",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b1bdad26978f84e41ad79a04d6e882af",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b13c35e8086e7a3408fd1057c59652dc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f40229a947d06d945bfd3d3eda1a9ba5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cd4f00022cb619e4282afc066bfe98b7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6e4caf848abd621479a9e419218765dc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "229c078ebe5b2c44d837f28ba5b870da",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "97b4380674db6c24aa81e70c0fa94c02",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ade94cedc3108c4498e03919c5cd8c2a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c2be6ddc3eb002345923b78c6e9d1163",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2a0630d45771fa441bbb8f891ab1c1f7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "96bd177c22d5e184ea1005e77d9a6335",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f34cbdb10d144b4b9cfd8f0730e7150",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2f8360b555eacfe43aebcd8c9964233f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a2a234e92eec4184ca46bdc043f09780",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "33b9104d122e62a4393bf020c9c98ab8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3e7f3dbf55031204ea346e84ab68e393",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a5def783da9b2e840ba9947953aa12b7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e8c7156e66b2b5f4fa371ef883fe0bb3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b703ad7db2a29074db58776c2d6ff66f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0ca66c235193a34429472df1dc2e0614",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "31e98c4ff73ae694fa253336075c61a4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "737dedeb4b5529242bdda86f98fd25f9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cd5d187c9b4d79f45a6c874a29fb1a74",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1c9ee1b0dc84d724f88ab11dac616865",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "550225f12b7dcba4e9a5d69787fa6439",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1de34cf4184326b449d07e7b6ec5c763",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f292928b32569ec4e8ae186d09828355",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a9be39584403d3842b730c52a41497b2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7a2aab19c576e584095941378ee119f5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84aeed2f8c6d85c4b8703f31632542bd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c0c9e54f3f46b6f4b958601567845aa2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d1d158da5ff54de43ae61f53f823c37f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "285476a3097e6694ba61119adeb703fc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f4e91f0acb453447888125b29e3b528",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f38599d358eb5dc41be71d90a66b14c6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ad5dddd3db14caa4fa6fde86bf9a1525",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6e505f798a11b9248ae7f9de3d35281e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "72aa8a6525c34604c9db68d73a0a0397",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e2a0baed9788d5243a22f81941f0a268",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ac5f131dd3eb5f74999c8f25b9b2e9ea",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a93068e734703b4448d22b149059f4d9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "59dac20e93fc0954a8c2195f2f665bb8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bf26ab60f70ff3d41b5731f954bcd345",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "64a3cce67ebebf44ab045c4a93134740",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9fed2d95304a6b246bc3a443c9515e05",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6ff9dd9624c122e47bbdac90cff48481",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "57dba4399f4f7234f9f7e0746fe2120a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3a5014716f1334e45a8008ee8279fbfe",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "daa5ca44e09782d4aab67d5b7be9c5bc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "914c5f5bc210ab74fbf8384ff645aa4c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6f04b0199e9a2d643ba26bf99d5333ca",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4ce5c43757679cb4f9530192d4e62865",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c348cd819a22fd240baa531b325435a4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5e211ad59dd9cc843992b5fc5270faf6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fd3236fd4e48cc440acbbffadd793aae",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0cdb9d56cde4c7843bf096250593c1a0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "39b818ee07bd4cc43b6ea90a8f300897",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d91f0cb0c7961f348b73d62d8ced9cb7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "70e482a858b935248a61ec8967c727c2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84082a5d0abf96b40b1f6c63708f5929",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9590874900bf5de48a6abd5b39087e53",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cae069ae44db79a458fbac5de37d5ef0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d19fc188636c6b44484701469c55607d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3ac53d5953be3e14aa57b090cba52546",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2440108ba5603e9458883b8a9313be33",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "20b6f56af8804f04aab59ad185895369",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9d08f53b5b3a27745af15ad69a81ef93",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5f670912d790e7e439c91ad7221092c3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "655ae38c3472dfd49884d9fce6e78c73",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a2ebc4eabe127c041a426cd7c6a7ee79",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5b9a4a4fbd5a8814f8809b672ceb38fc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4d9c57f1e4aa7eb478bbbed58402ab62",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bf0a681b608cff046bd95ef4a74413f6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9c0bc30e0b80c374287603061f7744a8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d8a2d683b0e9ce345bedf48fbfdf5c9e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "985727593c5fb424282d4efa82488621",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9a2e3a716f8761d4fa3bd07660ddfcc7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "af8db47e4c3844a4a889e42a175f5409",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b5b01cc9ed9db75418a52f4dd12a7f91",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e1822702c119f1d48b5ceb8cd44f42a7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "48c924d64cd0595408de5dceadb951e2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eb1064bba57aabb48af50f852390b38d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b86c6d10b8ab947499fb5de09bf511dc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7623616e1bc962049b00d62312bb47dd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0db883ae0431700448d6df79eb38f45c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1613b8b9f8671d54eac93fe1538edf7d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "85ac34cf2ceadce4a8bc054f36658a18",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5108f4f5fea8a6b4ca45226c3cefb911",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f6f79965272ca764980032a08b39d9dd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fe2f5c8d147ac6d42aade63063224f8c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "55a012368cb8ed740ba86eb5d473e800",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1ab194bc2f1aa5f4784d1261ab01fdb8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a6806082ac47db94a812ea71ffc91e77",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "19831ced6a94a5b45b0b6bd73bb4a1a1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "384c8cc20487ba849ba8bfab7c1cbe7e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1ecead3c1bb2a3a49b47dd2c4268ba8e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eefbd5b2791eb814bb0306aa663072b9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cb4be81e8ece2274fbef51d54156746d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1428856460f3c3348a8a1a9731e41837",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1a41b0bf159e6da46b5ce657d5a463e5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "56e6d22f1c606ef4380a11e9c0c6ff60",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d6ce3a52d66096c4d8eaf2e97119727c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8623c909910544c4099b876d7cc65904",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cd3f6495b5f17594db1511b1eaa2e633",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "afe242911e750034791af63d1356ef7a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a86fe1808888f9548ac663fb35e8d0ef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eb665c13fdb30c74a817465f4a9e84d8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1e30fab741529f14799182c393f47a2a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1ecc5032666b92746bf26549e4d3272d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1370f6a39ccbac44dbed46af7e6a8c6b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4414a15a8f66edf4487b007d106ce515",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bff402882959e6b44aabd9e757de29e3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6c1ef87467d70a94b8efac435410f446",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7237406f950332840b4e44f25c7cf10d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ecfe82e6b9f8a4841b22a0447813ca83",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f3d1bcf8c4fe9c4eb8e242760af0c05",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bfcee458c19b0c14abef9178cd5ed339",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "45a6af176180a48439971da9879ac1ab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1c7ae9fe38893d644ab555b753cc11c0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "355ee1f719b6e6340a2819c7d81d4097",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b533fccdd49ca5b4399033a5ef602891",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6f14b380b246503489260529c9a97382",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0eac5cd044a7192428704c691f47040a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f46e23ba244a309488599c9b05d63481",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "61a45bf95e6e60e4d81573e110f7bfa3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84a39f10c1a29da44a1f8ade575a5f34",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "246146b7075d40f4292beba585e6eaaf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e09bd46e5967ded49a38adf9fe187f48",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "82a70051b0b793144aaa619332c81823",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5b627c4a95cbd504e9881f5a433d0bfa",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a5198fa3a2f627948859f660ac14789a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "096995f949cfb1a4aaac9b07847d38b0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ef347d597c79ceb468ad0de9ec3354bc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d42b84f3c90f0ec4eba9d07a228c8f96",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7d11a3bdef0f62d46846df038a1c1d0c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "394093caa65dfe84bb7101502d1b2bf3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6ddc1e2f994d02245bcde27e6dc9a0b8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "300c50cb4a40f21479bf0a15933e8375",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "06606d05ad3791444ab2ec6964c5a2d7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eb1dbbf29cd1f264cab8e75427266418",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e14d6f9a99e3a1a408d06e9b6bb35e5e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a03b31756439aed418b6afe36c1b7ecc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2e085d54f184ca548b1a69be4e378e5b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c422ab24a788fbc4089137c118a68148",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2dc252208844f044085fb3a432da7476",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9af176f2312b77e4d983c5b60d07c4b2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "369fb33a9971e8b43a3e9787a7f57705",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8d016c3ef41a24d46b2e5a69280fd9b6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eaa644c2cfa832846b6d842df54dc9fd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a0c042800b015ee4d8b4d8a429db7e00",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a665160a96374734b826e878008122d9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "10dc7d6161eaa5b48ab84bb8ca23e693",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "61bac78f0042558419e9dfc10756f7a1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8a2cc4d3ee3f46045b20b0fa999fb78c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "da7248e179d9fe24db366ba6c0bfff71",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "177de3315d606554c8d199e59a74ad6b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d00eb02bf98a8dd4699844ba7f95852a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "09cb65593b424ed47beb1d81c0e02ce9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "93865e9541b8677468ce4e471894c398",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bf2d3f9fa719c41409fced7292f03ab0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ec55de1277a10384b9860ea770752cd2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3f071e3fc35a5fc4c86fdab2dd295244",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9fd0c56efb7848e488ad2db405aa2698",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "35ce07194fb400743976cbc889d4d230",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8fb3530eed1031f48b83870325171d7f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a6483eaceac815346989faa01668dd69",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "53ee1d75bb191d64aa6c74579513684c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c1b3f036e57432445b4f8b072fdd7957",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ce34e20c315d1984fa47779d4820a93e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "875987b56be396445b28aa08d937a3a3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7fb29ecf84cbb764284929b326002a99",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fbc30fb98485d8049886f5e49a6f6473",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b21f20f02d20b0a438b18d2f247adbcc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bb535a5b5d5e50540b2e76cc60d77c31",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "aebeef16221547a48ac081cb98915cef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f05a78fa1fa24bd4ea29b84aea2948ec",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1318591566338684aae6c8444c47e3f0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6d052fb8f91ece74b9e53af0892e1e3a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "79ab24883cbc7d54d807e55dd739fbe6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc638e2242665ce49aa034656af14be5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "baf2d9ef481cd5345836462935bd4c44",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d991171f3afca0b4b877c2fdd421db91",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "85eba8d4b8db6494497fae6cc9259658",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "78cd1d6a796e43b4b83b251696188cb1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "797740e07c6480f43aa57fb9213bafc2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "be1832c63df6e224c83f63fd809fa796",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b4bc23441d21ee5479c2342f18e0154d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b246f5b4ec2f7a84894c044edf28ed79",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ef88148ca8e929a4198292967db2f58e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a896cd98c1cda3147b2967fbfbaff4a9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "99c11d10687370342a1066726e37d8dc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8953061518d91984481eeec1d8aec1e3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a70820be9bb69084a9ea0a2a8cdddfce",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5a11e7f7a643c02438e67d533745224e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "db8b20e315f393f4db5020c65900074e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4cf13a2cec1a4a442a4905e64549822b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ab4f4bc86a7c6244cba97b7fcae19ab7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d1bc78a9ff594f340be52cc3238bef2e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9ba86c4304f154240836e97a8446e930",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bda42296c359acb40b15a32d120b4f9a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0e6be4c250ec41545813c8726e8cdaf3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "959597fd10753b040a57b1c5b0201916",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8e013d54f261ae14cb2e7ab9e9454270",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ef4364fba4073a34dbfa52acfdaa66da",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0fbace68d3d015d4bb3fb8f59d75f53e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2dd56841b775f81478203720f158bedb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b5f21f29375cb9049bb3bb1a0929efdf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "78d2e4c0020f75c419d9d7e8bb4e3524",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ea38890c421350d4182ff7031fc0bf60",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "888d19640ca300e4db90bb0f41474c03",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d1b220ef2f9347945bd8254b8c6b8370",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b8c2cd9e17b0a2744935b9e37e8af5a7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ff141f0ee3f8af24eb655170ef7b94d8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "65d456127c7d30c4c9de5c68297de7bb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b75e541757b7c444d9f7985bdd01bb9d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "66747dfd61e98c94e84dbdc28b75f9bd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f6d6fc95965236d43979fcb9eccc2fe7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "91f08d6506a725444842ee093a3ee560",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ee804bf9e0a765a45a333b64bc5216a5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c08592487640f76449285e8ff0eb383f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fcc21ee388ab91b42b41e970fac522ff",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2150f55d146676a408263a8a16636bc2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "95c2a89664cbfaa419ee4a45dab9fd14",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "091628deeba14dd44af565096ec6cc31",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bb20cf3aa9d96524f9dc995b7fc5f2cf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "afdadb06728b7cb4ca703ed46695e58f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c09f6b06fed16d245bd480204294189f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b03ec96428accd240b1aea788a0aaae8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d4e5960e601f63e41ac1fbd7a6055233",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "efae4196436238f4fa97c695cf4ddc31",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bafc8bc41eb9d144b8acdd722f7f66fe",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "12c3ed4917f1cf34ebf221123e9cdf01",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e70b1375660d47d4fb509da773b42a40",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bf100daac722e7f4e8e837fde555703f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b325a338406ceea4299840f1dd32ef65",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "64ad45068695c7f4c9859578af7c6911",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8ddad5845a22c5645a0c5372fa418fb2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c8f258f65b81e1b40aa3d2a04ac724db",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "75c367bc076a8294ea7b67638fac0e0a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "afc9b3c4031656d4c8507d2685f5cad3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "45a6e32048b506e49a7c4513cf196329",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d39847018fef2db41a507a92ee4ecdb0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c6f3f6a7fa8ee4141befd68f257e392f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4cc79e6462f68be438f9370881e3c19a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5c88a9578d7fdd14497b29469b1b72cc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "155ef9fe929c21b4096416a55557ffb8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "23a4f538125dd7646b6dee376625caf6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4e78b91f57a880e4dba59cc4c06b7018",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a0efb95ad1166d6459ef4afd395270d8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "73e3d1aba532eb348b995611cd928eac",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ba0296c84a7736f42bb4885cafc7fbdf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "042b8ba3ad5cf4a44a9a4cbe314d94e1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "314c92fb4fc844e4488b7bd6f7f56793",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9630620d9a01255458e28fdfd9a86190",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f2099836c5213ef42a3be4ab38e57a31",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc9af8064beb540448fda0d4e76d195c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e6c09e43bb9e1c54abfa76c9c94175be",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1704f4ff707c0bd4e8b09174265f4c39",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c7c899501f8b73c4d9ce531078c139b3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "168fc295daa81ac48b1a3bbc6f3508e7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9b69a61d263163c4da21c8a98f3292db",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ab38cb40a6289214ba2bab6c35fbe580",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "72da32bd34d61f94aa5f6bc299542d2a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4e5a901cfe152e74fbaa529007ea0042",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "13b2a9c4e07ac724b802f735fb8a00f7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "13be5321ce8bd5e489ce361bdc363a30",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1627bd5fa155f7e4084ae8becb6019ac",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e21c4c07ee680974888c63e8803943c2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "02243974581238e4bad82e845d1a3908",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0e6b8274acaa6cc44a8cb718fa21795f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "12ff62f6df4b4984980dadb1137f3e50",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b58f50d4f1c369b43b1d43c0a02afe9a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0fd8148fc068a8344a8ae8a9518716a9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1cfc75b7eb1d96b41be46ce3f70f4817",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a8774d05fd376f244b43f459a2915157",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "06febd4e9bb874d4caff7536cc544b55",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2e9d1bcd99b6bc54fabab89627913b3b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "70091b4cdf6b6124e93bea253e9e9670",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b5134e3bb7ffea84fbc773a9e0d26d65",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ad022ceeeee02f24681db090f80018b0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d64fd3e3916d0eb4e98d605dfe77fb30",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "17a6a04922c64a44fbb95dd330af3403",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6e5c78904596b6f469fa31cd6ca5c4a4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1aaad9c7c54cae44ebd832fe68b55fce",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c9c67136776a0ab43a426abea9d4ed43",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f9b1e78fadef4954fbadf58ad373fe09",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ca9ffc9de0fb3cd45af937017cc021b7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "95ba944b3a3903a4ca4e7af1cf493569",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7f9b1d8fad5c31d428b5e68e1d0d1081",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "622ca616b3f36ba4cb3a9e576ded7306",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bd8ebb39fe678ab47ae4b1bbdd901100",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "51b9ccc9534f2e1489dbe9ee4a1b521e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3d8f8fc7237b2cd45a3ab86dbf6c6f22",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6a1e4d9dfce52ea41bf4f5766236074b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3b16397c5cc53dc4d8cfccccd28bb662",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ebb8481bc1cb08c45a2f66f0fbce7380",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1977976add1352249b898d4f4f5ac79e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5655f0ad834e4e341b146ae260713460",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d2910227a59b5734fab4792896d40e4d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e30b12ac85c721e4b83101eca4a2de03",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dce64a9128b705449930e19daff9523d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "67437ae4b1d25914284e48afe1ea708e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "83c9257b0444cd045b5db5f23e7c1043",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "804f01bb9eea58047adfec0a6a794a4f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "726c4665d4b1f594b9aa3c64a2813fa2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9f31de32597ed834e8a9b315230af912",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8857b35467ecc1b4abf58c3738e1c7bf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "510b58681b6bf984781fcb415e3a7cef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c1f61f9d978144c42970bbbf8026fb28",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d07dbc1371b25984faa93def8764fd4c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "38ee8ef7474742647abeab7958e2d953",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dd6c7fb74f88af748b73b4778cbba2c5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fc7d065288005f140a7470a8ef4d3e72",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d6f76c88dc333ed4b9e7770c6887a689",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5a2f70931c3624543ac55b2557dcb41b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5d93daf5115984a418b267221d95e880",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9d5e8e80adfe7c74a86940c1e4637269",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "91abf45e380bc3846a73bd02eead0945",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dd987c00267024943bb788aac238bedc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c0e908fbcabf96d43882614eff228799",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "94f5c3733b85737418748df57530e426",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cf6d8a5b4a9adb54db25dfc685b01b4f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6ed9d4cf0bfc2bf4598d53a97e8a1655",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5581d6c591f917246924b9b3b93f2ee3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "36ce23cba4f17ef469ed47e04defb70d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bbb8d342a564824498bd2131f2215e0f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ad112d2bf7430cc4eaac8a3bd975f72e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b55779d1ab273014eb53e0089e67eab5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "87dcd69d8ea0beb40b69318cd097599a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a2fdcdaf291470f49bfef73a25f01fe3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ede9e400ed94d9447bafb970b15d5a1a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "49ace03e18314ae488a21d60889619f8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6481eb1930f71ff4a8c1a4b490d31a33",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0427d6facecb778469bd972ed6267948",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ee50628b856b3734e84d9de8b82a575b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7408666b38694f94b81e384107015144",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2e1c51d9ab6815a4c82fb6222f9cfa7b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1b7b20d75e646f94d9d4c870910cb7e6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fde0d38fa3d2ed14f8195b7a79f92373",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d533e24380d0eb94dbc5cf6a21a81dcf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "311a1ece7af9a7d45bca8e3d12922266",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "738b61859decc2848b9661f9906b0812",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ed001bf10591fea4aa5ac0dc1289bb7f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8a97cee8b445929429760975103228b1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7b88f46d5a01012478e328ca35911e79",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "967c380c98a859b43a79c5a9f974c630",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7b563f76c5f7c8e41960d4ef5bd0e68b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "60b98c04e40193b43840fc035bba0f22",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c8c6007ac20b42c469886e2c04473d08",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b4747782a03a7fc4ca0622b556644bff",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "74accb374fe38ae49955ea529d739242",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "07f4487078816f64795725469c112c46",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1a4a3dc43b636b847a30b07ec4182036",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f8130e2a09efea444adb3ae261a469d2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d1eb45b0eb2d3a044a6b376b01afdc6c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e76c9894500d69a44bdb12e6978b5613",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7d8317597e363e54080093caa361a497",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8c4fab7976bac2943b8418e94c2480c4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8eb2a543a3b90e04b92daa930eab8b3a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "195a059a09e9ba245bf65acfb5be6ffd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fdb2d78b64ca44740990f27492f17ea6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "15eae962df40fb94cab04d053ef355a9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0b30fe35a9b8a09458de93190ffc168b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7d3d0d4a5e87d054a974a006126ee9bd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "192284f56c8a1f24187fdf07cdd71737",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a6f54fc8b2f3d4e4a84396f78f390da9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4cfff7ae49eb32d40af4a1afb70dbf59",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5f5974ea70a864c48a8841d6527730ed",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "56ba1e7ff6a2cbd4c9b066a685ce9466",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fb932e8812c585546b2cb7f015186df6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7094698e2d17bb946a2331cdf47ae4e8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c30be9f1cd7f7434595b1fa12840b24a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6f1224a432b502c408c55f31e3fa5575",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1b665a8706590724aadde23d8a0e6092",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a09775a7a06180b429dc0fec1b38948f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "701c7f9a9e504494f8071819a3e84cab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4c41741d015101d4da192239629e5821",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9e420e06178ff76468277d8671bd46a6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c31b6adaa573f6545a0b3d8a27b71526",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8efe5401936883a4db968aa00eab0204",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2c12d0127622e544c960b7c4ebfa5b8f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "18bc8aaf8482fbe46a9432759a8424c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c594087b9bed9d349880c3bda0c444b0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cf56ee1f87768f441b5ef992da532396",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1185062b25354b54db44e5b2c52d8e43",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "30c6774b409f97d47819a7fa6c13def2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc9d41b9d961b44498b22898c3cf8d72",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d61c662288e52ca4dbcf59f335623b8f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "66feddf6fab645a4b8a6745d28b448b8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "82d2f28fbd11f324d9da38621d74180d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3cd7a3956e0b0534581ade24099ed7e5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0a02598c286149840be662833e4c331a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "569203f2ab11e6b41a2c1cf4e69c9cd3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c8c42d3f16519e14ca86aa5a18ebf2f6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "fd6b023a766d24b4ca649792aee341d1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "00588d190ce542146b307c276b39e957",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5579f3756a2c3724e8f424217be9e5d7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "905bb738ecf9c1c419c81e1c091685ea",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f75962c2c747ebc46a124d5ab82b65f8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "490a4e7c7012d6d488596af33e283dcd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "91611d7c46d04db42b8ffcfecaeade82",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9ec82b7835e18ca47948ab0bc4720930",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "33f801e36de1ecd4e84575dcb0025153",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e6b989f9f0020df44b7064e8eb898a2c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "af5d50e1db91f97448bcf394138ec345",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b754a42c7440c2941b03a6abf6cabb99",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7314aa3150c780b40921d44c1c6a6d36",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b0b386ef95fbe5a4ca0bc291fc937790",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5d9fc4fdc0739d942a5292685f3f58f5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dd191f03a5a69d342a42fc592bfe9a30",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9f5e7317490afa946b3f57d1a127b500",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6697fc215cbc2a0429ab99f1b7ab2231",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "58ee35f9dbc23904290d72ed081e037e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8e56577d29bce0b4eb703a665d891435",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b3c1e6abd6038d4489b9a8639ec6c4e8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f5a4735b967ab5e478c8088ecae3e171",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0f99d7fc799fbbb40a22a5eb989f93d8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c5cbf36cc97f92e41b019c992f8ef58a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1d72d1325fc08534a8f8360a31480b3e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "03d39c2e85f5efc4f9f44781e4cb371f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "200fbb79349662148bb61e53ca95c5fd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c00b3dbba94d99242a85ef015906311f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e27115e20b4124c43b139f1c0497945e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "aca005283e8239a439de480f8916c8bd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e7fad7681300a40428e0cf4b367acb9a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8355968d072a32c4eadcc2e473cacd68",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a4b4281ffc10a754b8c2b0fd52bf7cad",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ed5fbb4bd184d7c44a6f58e0be0ee39a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "99d300c1fcf5158458463f45271d9367",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4c800753e0ceac44896c61b2278b8258",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4f2cf05c6b95c094ab3f63554af1c5c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "59ec287fa06204346904356ca2d64a6a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7df1528e93a756f4890b448527b9ec16",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d5ad0f4a3a6b83d4582a8b240c3df023",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84a4c2551f275c34cb01ec5870bf188d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4e854c547c01d694dbc1a24f02754852",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "82dba01faf9df304098177327e288a68",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "32d585a103fec5d4381618bc787d13c8",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5fe94a145b9d9414a84024b7467034c4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8067723b73a538946b3ffbab0d01352a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f6161580018f6534eb716ea5c35dd34d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1db022a9615bad2449e3aa54810e607b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8d560577e77990e4982e262475672006",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8bb187bc0210d3043a347c7491ac125b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9185937f01a016c4291cf3768797cb58",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "38ba132107bbd514fb0851ec660a56fc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "48bac299dd7a13f4e8ad832e76b86369",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d015d1c58cf76be4eabb0a2d1833462e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1635850d936da8841a5d464426442595",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "66955dc9cb1a2ad47bdcb6ce0171a3cd",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dee330fdc93ea0a4eb1ccb7a6ec10c35",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4d230bf80ba759d4b88883b3bf3feb88",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ed1c34906e566ad45b712fb9e2c58081",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a0a71fc0604ec64498475ae3d7f9b35f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "82a2c37d291eaba4cbfccafed879845d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8024ed7f416b2b64da766f90b66de21f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4abf5a38b71aadd4289e9daf631e9987",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "86b049e8575294a40b98d02018a4124f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "02f7c5e130b296e498eb76a3bebab614",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0893525c74afb944486f4309f439381f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c7a4169a468d35a4b9d9eabee48cb0a0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bfcd99c64d89578429d95ed4cff967ec",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "18910e53380f1bc429655696b5773fee",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a92c4b449d37ddf418fc65c841b363d3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "50299e26de339ee4c86507af8d08c002",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3b3c61aa4be80d0478d8e46a9cf03dbf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a2950f44a42b2374fbcac8aca9aead36",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a148f8f6c857e174186b04735d3e15ce",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f6dd28661051a874f986cf8c3b7e840f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4303777be62712e41afbab41522aaee0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e5c87b6a774bd3e47b4e6230c8ba885e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "e9c751e2f4ed2a347aa75e86c325e421",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "96247c3d5b3938d4ba8dd4b23246da69",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5529d44aaf9f59e42bc3f838f254df25",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4a7b9faecba349445b79f66fd7cab716",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b9dddc40bf568b449a56fe0e509282f1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f218590749c2aa143a5a5ce7d6f7b06a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8771f5fcec3061440a6e9483b5d0fb56",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b5f8ec1553c95dd4a824dee176e9c5b1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "83239db5612451b46817d462d962cea0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bcf7cc54a96475a4984cbd04707f3e75",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "664968d34068eec4886f8a734371eba5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "4ec69845caec6814c9378b44f22cbdd7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6553a091bab7fb1469b67deabc3455f3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c0bf51f7378bc6c4093ceb4c30d89068",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "219d4663ea8e0cb4181c2d1915889ab7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "bfdb096831a18094d9e815deb39c715f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0195a86c5166cc24283724c06c7a0fc5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dd3611063bb46e242804c27c865def01",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9530af5c292191a479f2ca6a0474a01a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "eee1f86f6dc1c5843991736f3ba78b7a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9962cf6c5d56dcf4e8e35594690e1b10",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0fd570d0e3d3c024bbd2db261899d490",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1586b4e0360d19b44b4471262ba79436",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d8a9fb079e192504a89cae8690295eab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5cc21eff23dd2b348af195a9a04e1f20",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8352d7b18cee0394386108df333528ce",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6fe1405a0ace935478c8a3b5d43586e3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0b2a7b97828be934183f5920fefa00bf",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d879e78bd20a56544be501c9a4484880",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f323cced30244554986ee5e9f5dd8b67",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c3fd57b71d0d4a96ab0e9d87bb7d7804",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "146ca486924177b48b85db63cfd5d7ab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "348eeda6cad5d86469a42deac7177e6f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc73c96474aa433e8b99209fccd68cdb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f1724eecaf9d4e7e93cc07cfcb6b4b97",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c53f4460964feec49ad2382c30535a26",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "ff7afc0d2ed831b44afc6fc2f30913b9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "c75f55233d1d78147917f0504b36229d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "07331aad0291ae64cb091418f4c9da4b",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "124674cf07a479740871e01a76336390",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "580d7e954bbff174794836248c2cc077",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "295821634a833294693d2f4e873f36c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7669597e2cd68b246afed9abf2c0d93f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "20c593a79fdf4ef428dca41cc02d4628",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "54c8451b55ffecb48864cfb6ba684d60",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "20893d5872b396849be6d600f7d2d333",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "86b9460a9415e6746990f17338b0983a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "cc8a51c4b5b76014c9105371a1c7e4ab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "343eff862a6fdc4488166336b384b599",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "baad6da1a44654943a490d203abf3016",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "00b1f04e236a49f4fb8726309e867105",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "6985a704f084ff54db0f568741e83b4d",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "dc6b304131b49b441a8dc0494073c6c4",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "26e5e8ab4e3c4f14394d2ec8b3e64224",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "b9d2d695e9c1a5a489f076dbf9e502a7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9ace5fe86cdcfb743a5781fb4d722598",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "cd3af6ee857f9c24cad91cee1da84707",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2e7c65eb37e333b4ab6fb81aee2138c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c4ae6dbd031313e43b593829c17dcfa9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b4cc32d9199baba49b012ac5296f4bb7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "068022df207620a41a8cc1c35a7880d9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c48369744e6540146b673c1205c4727b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "69e1c322bb19ffc4596dfeac2fd451d0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a2bee2f335f6cdf4f8c6009cd7188bc9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a61f1a63c760beb4ea1fee51a7915101",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "95758c39fd133524d8b5350b2e9be7ff",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2147a1fab87581c4fa4899499ff0411a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2248972af89825947b59ce02e824b172",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5a6070f734103f2418182466ef8be3fe",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f3ed960dc8b06f042895beaedf74c94e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "dcf7fdd4b29a73b44ac6004a3a4b8388",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "df775f9cbfa37294682dd3f6e1be264b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "c7671d512cd8bef47a45371a0272c604",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "d3930a9ce264110479ca76df7bb4dd95",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "771362182165ca0489e6b1529b9c172f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "d6941a3daece8204693603f0d8bee3ac",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "028bd54f96227d14ea2d9672bbf25067",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "9028ac7f412419546875f149506f5848",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "d09e729178c05b442bc9a2b9dd301deb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "4cdc4417d2b997e49ad14362f4e07181",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "35e4552830f018b44affa9077241dcd3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "170980c61de946c4a9146f593dd860ea",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "d9821ddec37f87c4e905e52b90fdf30b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "49414269cee0e544eb31f4a5b0cf18c2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "abb94f7be61e7b3499e73b81a6ea7be0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b0528bdd80bb16d499875c7140ebb666",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1a453ea1b5e17244aaf9ea2b0c2142bb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "95e3f6e458be57a4a8194eefb5a639be",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d2f59afce90f18c46baa1d33946d95cb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "02217290848f4184b8829c3d16498488",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "25fab220c0eac5f459ce3413d40f4426",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "476580edf92994a43a54a00de0b9938d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "af04b969c84d8854a888c947f172e40d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "afec6e54e6396864fa4a5ad9af4d8deb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84d350150f1d3024da08aa0ea74ae4e0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "25282be3f34b8f741ba34f6bd3f708ce",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8ccbc6711c26b694b9c1e12d81445e05",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7465249f62d12bd40aede3053db48d88",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "079c4fccd18dc1745a6ded0c60efa0ba",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7b2d45cf1c6929243a484cf32ad9ff50",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "efeaf76701a23fe449de2207f9af25f5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9b923cd8ce7e05e49b30d7156d2cc8b1",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5e62309c524b4b94aaa9013143ccbf17",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "317a997008ea038499ec8df6cee70dc2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b9664a559b3304f4ea25ba47b6b5c7f0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ad0974441f0ed61458db1b71f87d29be",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "f803b207ea218a7499c97b1a6c21ab3a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "859e137f66c4e2049989ba00039eaaf4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3dc32bce418a76545a0a3566aacfc222",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "df342bc1c167c0d46a187908e33c5bcc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "12d81ce3733cc8b4c98a5c738d54729c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ab9aaa4e089b22c479a76158557b60c2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "15471ad8800b6d94da1683b3326004db",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ac6a8797723ac124084bb38b7212adbc",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9393b33fd71d39441a0f0a33221277a6",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9e6f558bc28fd4c4095d061589b8890a",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6d9be44be4c80864a828e7f59ffe7965",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "9dfe095db4d633d4db9dccbb823c2a24",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "72f445fef8019584a84beb496a2ac491",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3f102fb7b47a42f42adddc868da6537a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "861c685a1fdd4b644a91848f8e9fea6f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "ec1932a9de1fe9a41a4c923b6728ba0a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "6697bc312cb52454190d150ab2a7b2ef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "4413559089e4c1b4fab21475fe46925c",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "83dff0c096683a3468e2533701946e92",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "f57eeaf1143edf14493296a73684dfc4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "a6a256d6350cf3d48ab9d93af63efab4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "05841457bf5260a44a816f3ed9dd18ee",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "bac20755e9fccc54aa34007c5fcbe9ca",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 3000
+        },
+        {
+            "guid": "e2bda41e843db24499462c5cbacf967f",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d1d2bc208b3bca34bbafd69467fbf7c7",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "940197d24a84c2a4eae8e504e208d30d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "a13db22829c3cf14fb8104c4a5ace421",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "325c61caf4d89524d8325d546f41123b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "4212c9e0b644fc54eba16d24a6156ed9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e0e60af817d546a38248f3cbc1c785c3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 3000
+        },
+        {
+            "guid": "843f3e5a24cf414caa240b231ad0669d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "b096064956d544d7a806f1c7fd240329",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "45500141132040abbcdf0cf88158df82",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "3fb96cd8969746be8d06818552e9a280",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "6b7e8843268c49438315a048b13b5dc4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "1dddddab0a48410d8f6550f286915d11",
+            "shader": "Quibli/Stylized Lit",
+            "cola": -1
+        },
+        {
+            "guid": "fd67ff84674204c4e9052066dcd4166d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "d797f368f5f85764dab5522df134e6ad",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "c841bf3b43b0d384f8385a433f6b1faa",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "75911830f8adabe4982e5aa7abe4308b",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5aac36810f389594da004dfb49c1f62e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a0cbd150be5a3f441a897c9a93144555",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2a0d7423c793c9e40910b4da7a62c9f9",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "8382263631af44b47b085fe669c1e7f3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "ac35514637db55c4ebcc00555fba11d0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7c2fcb078da344d44bf1815c83c4fc2e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "079b9e9732501d94bb57b16d12d08cf5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2376835a7fd6b72479c520f9a8f31eab",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7f7f7bcb06d27b64cb736048b9091ade",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "2ec2bf796e3c6be40aa830492c8332bb",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7fb2b43ad3eeb2f4bb14cff490629d04",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a845754da413fa4409e9b3405185aeef",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1075f9e9241584b44a595c32c8f0b88a",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "a421661a8c5dd514fbd5c62f311570e4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "52a01d2858ac3594fbc279663fba15d6",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "3fc7d62cc0c86854fa28a3b277c5c7ed",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "a0d5f6cdfe0ff8148adae9e31b6a0abc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "1ce61e4580ad14a49b593d1db9b8250d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2450
+        },
+        {
+            "guid": "912f2578cb86a0e4c9c457c863f6a7a4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "84021538fa741cb4493b433d4bac21fc",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "958f01b9e5802974cbb02eba0de8f059",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "29f2a05c442c1994091df49e46d8f5f5",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "14c46f206899b9a4489a4832138cce10",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "5cb05ae808a00fd439979aa07796eb47",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "762b17812fb8e5440a87a70fa0af54ab",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "f136c764383697f469cb30fcba56597d",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "18bf04c656d61df4585143ef01436a65",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "1f25e4f99c2d76b4296b77323bbedfa2",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "6761889e328f4b848adedd20369ee26e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 3000
+        },
+        {
+            "guid": "bd8c0886d26984c4fb5b1e9110b248f6",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "09a6ee9b1568ac54592a57be6c771ead",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "9a249f09a94fa9a40bf48edce5227322",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "8248a4fa655783a47b692ebe0dd97c29",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "9a33bf38e9ee5664cac06d669c7efb9e",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "190690c8f42c1854891b37dcd41dca73",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "ee04c09819ad82b48a76d96f42570df9",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "58e6905d68b8af34e8ea7caa2768d586",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "9f89bba9f6a324b4eb46186768b23158",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "384bd2db23718734ca23bb69c11645fd",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e0183ff3559fdec4887b7f69b508eb09",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "383e5292f67b9f349a40b6174125f0c8",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "98d0283c9a6112c41afb5889f7c9fde6",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "4e12a165089604d4d8573408b7a05a7b",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "119a7cfb734fc4a4482242333f7ee421",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "aa4f862acc8a15d4db63863493260216",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "fc33a2cbd9e9e5640837d28d69cefc93",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "4c355087fb826be45b569977501f1f59",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "5bca20649c57eaf489c0a0cf3fad2a37",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "8992f67e2ce29d34eafbc8c31c958761",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "08dbb5fa1e8bad64297c404a9b304720",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "29bd769129bf24f419cac9750d3908c2",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "2868d6f0558ecc9449ffc355006671ce",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "1122a553d8f15fe41847ca980972d1c2",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "540f90e1fd0354d409f653d3feb570a8",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "daa2a62bd8d4206458516c601fc0dc58",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "a465b92901ac84246b286f206460151a",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "8ad5d5eba77a99646959aacd1dd409c9",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "a3e1720ab8255cf438007835ec7f1fee",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "baef449113e1be943a2f06bfb6ec0e41",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "f33991274cb50c047b101035d76c934e",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "b9e8e2fc0724d5941ad454b0ddf9d947",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "87581598ca4dc924595656b2aee21006",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "0a0d2c0d0d149664b9e28b74cc6db9f4",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "40478c4f367e77847ab20c8c94dd0cfc",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "b43ea3a9d4ba26843b2bb898007457d4",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "4a4de0978333a434796c39fbb213bd5f",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "f4ba8c241fda6af4196de14f1ea32abe",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "01bf9d4cc81e06947b0ad8f5572526d3",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7c6b3b4386bf88247a8af07bcc12a8f0",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "guid": "7b1e982fd2b647e4997a0f81de94597e",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e57b83d6e267ff64baaf9217786c7b30",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "65e190c5fdd0b9e45bec470c681f1c2b",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "dd7db0b41889d9d45b3e94030e36c07f",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "e15e608b29eb63d41b5433f3e5fd5ff6",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "274e7648a516bb1459ea5a8ceae878a3",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "72aa7555ba957bd46b955c96cbfef86d",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "091e6686e1ed4044c87d379ba2666d72",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "44750de99f0c6014c83f04573a478d03",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        }
+    ],
+    "hayContorno": true,
+    "contornoIntensidad": 0.699999988079071,
+    "contornoGrosor": 1.0,
+    "contornoTinta": {
+        "r": 0.36000001430511475,
+        "g": 0.3799999952316284,
+        "b": 0.5,
+        "a": 1.0
+    }
+}

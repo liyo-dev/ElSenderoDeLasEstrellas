@@ -4425,6 +4425,20 @@ Propuesta y diagnóstico completos: doc de proyecto `propuesta-outline-quibli-y-
 
 ---
 
+### 26.4 Aspecto de dibujo (INC-1042)
+- **Shader** `El Sendero/Dibujo` (`Assets/Shaders/Dibujo/`: `Dibujo.shader`, `DibujoEntrada.hlsl` con el CBUFFER por material, `DibujoLuz.hlsl` con la luz). Pases: ForwardLit (`UniversalForwardOnly`, Forward+), ShadowCaster, DepthOnly y DepthNormals (los tres de URP). Compatible con SRP Batcher.
+- **Luz:** `iluminado = smoothstep(umbral ± suavidad, N·L)` (y la sombra proyectada, si el material la recibe). Color = `lerp(albedo × tinteDeSombra, albedo, iluminado) × luz`, con `luz = sol (teñido solo en parte) + término constante de la luz ambiente`, recortada a `topeDeLuz`. Las luces puntuales suman una mancha plana. El SSAO solo oscurece en la medida de `oclusion`.
+- **Material:** `albedo = lerp(1, textura, _TextureImpact) × _Tinte`. `_BaseColor` existe pero no tiñe (igual que en Quibli: el código que lo escribe sigue sin efecto); `_Brillo` enciende el brillo de pelo. Conserva los nombres de Quibli/URP para recorte, emisión (`_EMISSION`, variante siempre compilada por las ventanas de noche), colores de vértice, `_Cull`, transparencia y `_ReceiveShadows`.
+- **Ajustes globales:** `AspectoDeDibujo` (ScriptableObject en `Assets/Resources/Dibujo/AspectoDeDibujo.asset`). `Aplicar()` pone los globales `_Dibujo*`; se aplica al arrancar el juego (`BeforeSceneLoad`), al cargar el Editor y en `OnValidate`. Sin aplicar, el shader usa valores de fábrica. Menú *El Sendero ▸ Aspecto de dibujo ▸ Abrir los ajustes del aspecto*.
+- **Paso de materiales:** `PasoAlAspectoDeDibujo` (*El Sendero ▸ Aspecto de dibujo*). *Pasar…* recorre los `.mat` de `Assets/` con `Quibli/Stylized Lit`, `URP/Lit` o `URP/Simple Lit` (fuera de `Plugins/`, `VFX/`, `_VFX/`, `Art/VFX/`, `TextMesh Pro/`; los transparentes de URP no), cambia el shader, pone `_Tinte` (el punto más claro de la rampa de Quibli, o el `_BaseColor` de URP) y `_Brillo` si el nombre es de pelo, y apunta el shader anterior en `Assets/Settings/AspectoDeDibujo/MaterialesAntesDelDibujo.json`. *Volver…* devuelve cada material a su shader (sus propiedades de antes siguen en el material) y el contorno a como estaba. Se puede repetir al añadir packs.
+- **Contorno:** `ContornoDeTinta` con intensidad 1, grosor 2 y tinta (0,20 · 0,15 · 0,22), en el perfil por defecto y como valores por defecto de la clase.
+- **Piel:** el tono sale de dos celdas de `RPG Tiny Hero Duo/Texture/Albedo.png` (piel y nariz), compartidas por todos los personajes del pack.
+- **Tonos de piel de los NPCs (INC-1043):** `TonosDePiel` hace por tono una copia de `Albedo.png` con las dos celdas cambiadas (`Assets/Art/Characters/NPCs/Piel/Albedo_<tono>.png`) y copias de los materiales del NPC que la usan (`…/Piel/Materiales/<material>__<tono>.mat`, con el GUID del original en `userData`); también las piezas `_Piel` y `_Arruga` de la cara. La tabla `Reparto` dice qué NPC lleva cada tono.
+- **No pasado:** terreno (TerrainLit), shaders de grafo de Quibli (hierba, follaje, nubes), cielo, agua, VFX. `ElSendero.shadervariants` no incluye aún el shader nuevo.
+- **Fotos:** `CapturaDeEscenario.FotoDesde` y `FotosDeCaras` dibujan sin MSAA (con MSAA el contorno se salta). Aun así el contorno no sale de forma fiable en una foto suelta; con el aviso «Ran out of Graphics Ring Buffer space» en consola, abrir Unity con `Abrir-Unity-BufferFix.bat`.
+
+---
+
 ## 27. Rediseño del 29 oct 2026: dueños nuevos (INC-867)
 
 Revisión de código en busca de basura, duplicados y contradicciones, seguida de un rediseño por fases para que cada responsabilidad tenga **un solo dueño**. Seguimiento y pruebas en juego: `TRACKER.md` INC-867. Lo retirado está en `Versiones antiguas/Herramientas de un solo uso (2026-10-29)/` y `Versiones antiguas/Codigo sin uso (2026-10-29)/`.

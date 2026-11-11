@@ -75,6 +75,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     [SerializeField, Range(5f, 120f)] private float maxIdleVariationInterval = 20f;
     [Tooltip("Variación individual de velocidad solo en los estados idle preparados por el menú de animación.")]
     [SerializeField, Range(0f, 0.05f)] private float variacionVelocidadIdle = 0.05f;
+    [Tooltip("Segundos que tarda en soltarse un gesto de medio cuerpo al acabar. Con 0 se suelta de golpe.")]
+    [SerializeField, Range(0f, 0.6f)] private float salidaDeGesto = 0.25f;
     private static readonly int VariacionIdleHash = Animator.StringToHash("VariacionIdle");
     private int _ultimaVariacionIdle = -1;
     
@@ -148,6 +150,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     // Coroutines
     private Coroutine _oneShotCoroutine;
     private int _oneShotLayer;
+    private Coroutine _salidaDeGesto;
+    private int _capaQueSeSuelta = -1;
     private Coroutine _rotationCoroutine;
     private Coroutine _idleVariationCoroutine;
     private Coroutine _activityCoroutine;
@@ -382,6 +386,11 @@ public class NPCSimpleAnimator : MonoBehaviour
     void OnDisable()
     {
         PararLaPose();
+        // Una capa a medio soltar se quedaría con peso al apagarse el componente.
+        if (_capaQueSeSuelta > 0 && animator != null && _capaQueSeSuelta < animator.layerCount)
+            animator.SetLayerWeight(_capaQueSeSuelta, 0f);
+        _salidaDeGesto = null;
+        _capaQueSeSuelta = -1;
     }
 
     void OnDestroy()
@@ -682,7 +691,10 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (_oneShotCoroutine != null)
         {
             StopCoroutine(_oneShotCoroutine);
+            // El gesto cortado estaba en otra capa de medio cuerpo: se suelta, o se quedaría puesto.
+            if (_oneShotLayer > 0 && _oneShotLayer != layer) SoltarCapa(_oneShotLayer);
         }
+        if (_capaQueSeSuelta == layer) DejarDeSoltar();
 
         // Y cualquier pose sostenida en este layer: un gesto nuevo manda sobre la pose que hubiera en su misma capa,
         // sin romper poses de otra capa (p.ej. un gesto de manos no debe interrumpir caer/volar en la capa base).
@@ -747,6 +759,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 
         if (_oneShotCoroutine != null && layer == 0) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
         PararLaPose(layer);
+        if (_capaQueSeSuelta == layer) DejarDeSoltar();
 
         _posesSostenidas[layer] = stateName;
         _congelarPoseAlFinal[layer] = congelarAlFinal;
@@ -949,7 +962,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             }
             else if (animator != null && layer < animator.layerCount)
             {
-                animator.SetLayerWeight(layer, 0f);
+                SoltarCapa(layer);
             }
         }
         else if (_isInteracting)
@@ -958,6 +971,54 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
         
         _oneShotCoroutine = null;
+    }
+
+    /// Baja el peso de una capa de medio cuerpo hasta 0 en `salidaDeGesto` segundos, para que el
+    /// final de un gesto se funda con la pose de debajo en vez de saltar a ella.
+    private void SoltarCapa(int layer)
+    {
+        DejarDeSoltar();
+        if (animator == null || layer <= 0 || layer >= animator.layerCount) return;
+        if (salidaDeGesto <= 0f || !isActiveAndEnabled)
+        {
+            animator.SetLayerWeight(layer, 0f);
+            return;
+        }
+        _capaQueSeSuelta = layer;
+        _salidaDeGesto = StartCoroutine(SoltarCapaPocoAPoco(layer));
+    }
+
+    /// Deja de soltar la capa que se estuviera soltando (un gesto o una pose nuevos la toman).
+    private void DejarDeSoltar()
+    {
+        if (_salidaDeGesto != null) StopCoroutine(_salidaDeGesto);
+        _salidaDeGesto = null;
+        _capaQueSeSuelta = -1;
+    }
+
+    private IEnumerator SoltarCapaPocoAPoco(int layer)
+    {
+        float desde = animator.GetLayerWeight(layer);
+        float puesto = desde;
+        float transcurrido = 0f;
+        while (transcurrido < salidaDeGesto)
+        {
+            yield return null;
+            if (animator == null) break;
+            // Otro sistema ha cambiado el peso de la capa: es suya, ya no se suelta.
+            if (Mathf.Abs(animator.GetLayerWeight(layer) - puesto) > 0.001f)
+            {
+                _salidaDeGesto = null;
+                _capaQueSeSuelta = -1;
+                yield break;
+            }
+            transcurrido += Time.deltaTime;
+            puesto = Mathf.Lerp(desde, 0f, Mathf.SmoothStep(0f, 1f, transcurrido / salidaDeGesto));
+            animator.SetLayerWeight(layer, puesto);
+        }
+        if (animator != null) animator.SetLayerWeight(layer, 0f);
+        _salidaDeGesto = null;
+        _capaQueSeSuelta = -1;
     }
     
     #endregion

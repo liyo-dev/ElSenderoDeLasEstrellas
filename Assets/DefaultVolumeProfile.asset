@@ -154,13 +154,13 @@ MonoBehaviour:
   active: 1
   intensidad:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 1
   tinta:
     m_OverrideState: 1
-    m_Value: {r: 0.36, g: 0.38, b: 0.5, a: 1}
+    m_Value: {r: 0.2, g: 0.15, b: 0.22, a: 1}
   grosor:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   umbralDeSilueta:
     m_OverrideState: 1
     m_Value: 0.06

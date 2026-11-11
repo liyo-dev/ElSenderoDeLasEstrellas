@@ -373,7 +373,8 @@ public static class CapturaDeEscenario
         Directory.CreateDirectory(carpeta);
         string ruta = Path.Combine(carpeta, nombre + ".png");
         var go = new GameObject("Foto del buzón") { hideFlags = HideFlags.HideAndDontSave };
-        var rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+        // Sin MSAA: con multimuestra el contorno de tinta no se dibuja y la foto no sería la del juego.
+        var rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32) { antiAliasing = 1 };
         try
         {
             var cam = go.AddComponent<Camera>();
@@ -386,6 +387,8 @@ public static class CapturaDeEscenario
             var datos = go.AddComponent<UniversalAdditionalCameraData>();
             datos.renderPostProcessing = true;
             datos.renderShadows = true;
+            datos.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+            datos.antialiasingQuality = AntialiasingQuality.High;
             var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
             if (RenderPipeline.SupportsRenderRequest(cam, peticion)) RenderPipeline.SubmitRenderRequest(cam, peticion);
             else cam.Render();

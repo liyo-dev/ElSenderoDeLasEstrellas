@@ -1,0 +1,10 @@
+
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=CamaraDelJugador
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Hint Camera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=MinimapCamera
+[DIAG-CONTORNO] entra pase=True mat=True shader=True cam=Foto del buzón
+[DIAG-CONTORNO] add tipo=Game post=True msaa=1 activo=True
+[DIAG-CONTORNO] rec back=False depth=True normales=True

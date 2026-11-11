@@ -18,8 +18,9 @@ MonoBehaviour:
   bocasNeutras:
   - Mouth20
   - Mouth21
+  - Mouth27
   ojosDeReposoPorDefecto: Eye30
-  bocaDeReposoPorDefecto: Mouth20
+  bocaDeReposoPorDefecto: Mouth27
   ojosDelParpadeo: Eye38
   ojosYaCerrados:
   - Eye31

@@ -168,7 +168,13 @@ public static class CarasDeLosNPCs
             finally { PrefabUtility.UnloadPrefabContents(raiz); }
         }
         informe.Insert(0, $"{hechos} de {Reparto.Length} NPCs con cara nueva.\n");
+        // Las piezas de la cara llegan con la piel del pack: después, cada NPC a su tono.
+        TonosDePiel.Aplicar(informe, RutasDeLosNPCs());
     }
+
+    /// Los prefabs de los NPCs del reparto.
+    public static IEnumerable<string> RutasDeLosNPCs() =>
+        Reparto.Select(r => r.npc.StartsWith("Assets/") ? r.npc : $"Assets/_NPCs/{r.npc}.prefab");
 
     static bool Vestir(GameObject raiz, Juego j, List<(GameObject modelo, string nombre)> piezas, EmotionProfile perfil,
                        Material estilo, string npc, StringBuilder informe)

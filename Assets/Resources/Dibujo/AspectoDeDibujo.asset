@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3a358e05611cad429edda13900f92c2, type: 3}
+  m_Name: AspectoDeDibujo
+  m_EditorClassIdentifier: Assembly-CSharp::AspectoDeDibujo
+  tinteDeSombra: {r: 0.72, g: 0.62, b: 0.8, a: 1}
+  umbral: 0.05
+  suavidad: 0.02
+  saturacionDeSombra: 1.15
+  tinteDeLaLuz: 0.35
+  topeDeLuz: 1
+  ambiente: 1
+  lucesPuntuales: 1
+  oclusion: 0.4
+  umbralDelBrillo: 0.92
+  fuerzaDelBrillo: 0.35
