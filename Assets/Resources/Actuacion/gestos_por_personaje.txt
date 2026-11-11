@@ -1,0 +1,9 @@
+# La versión de cada gesto que le va a cada personaje (ver GestosPorPersonaje.cs).
+# id del actor, y gesto=variante separados por espacios. Quien no esté aquí hace el gesto tal cual.
+#
+# Risas: Laugh01 es la de por defecto; Laugh_Risita, contenida; Laugh_Carcajada, a lo grande.
+_LIAM            Laugh01=Laugh_Risita
+NPC_Eldran       Laugh01=Laugh_Risita
+NPC_Archimago    Laugh01=Laugh_Risita
+NPC_Liora        Laugh01=Laugh_Risita
+NPC_MagoOscuro   Laugh01=Laugh_Carcajada

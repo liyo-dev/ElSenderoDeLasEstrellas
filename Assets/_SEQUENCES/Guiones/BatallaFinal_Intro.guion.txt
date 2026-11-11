@@ -100,7 +100,8 @@ estela dice BF_INTRO_ESTELA_01 gesto=Question01
 # Tramo 2: Confrontación con el Mago Oscuro
 plano medio mago contrapicado desde=cam_mago_amenaza lente=38 suave=0.8
 mago cara enfadado
-mago dice BF_INTRO_MAGO_01 gesto=Talk01
+mago dice BF_INTRO_MAGO_01
+& mago bucle ManosALaEspalda fundido=0.5
 
 plano medio will sobre=mago suave=0.6
 will cara triste
@@ -121,6 +122,7 @@ plano primer mago desde=cam_mago_holandes lente=36
 mago cara enfadado
 mago dice BF_INTRO_MAGO_03 gesto=Talk02
 mago dice BF_INTRO_MAGO_04 gesto=Angry01
+& mago reposo
 
 # Tramo 3: Despertar de la luz pura en el pecho de Will (antes del Vacío Tibio)
 plano medio will sobre=mago suave=0.4
@@ -156,6 +158,7 @@ will cara sorpresa
 archimago aparece en p_vacio_archimago mirando will
 archimago mira will
 archimago cara neutral
+& archimago bucle ManosALaEspalda
 
 plano conjunto will archimago lado=sur lente=42 suave=1.0
 fundido entra 0.85 color=FAF5EB
@@ -182,23 +185,28 @@ will dice BF_VISION_AM_I_YOU gesto=Question01
 plano medio archimago suave=0.4
 archimago cara alegre
 archimago dice BF_VISION_TWO_SOULS gesto=Talk01
+& archimago bucle ManoAlPecho fundido=0.6
 
 plano primer will suave=0.4
 will cara triste
 will dice BF_VISION_FEAR gesto=HeadShake01
+& will bucle Cabizbajo fundido=0.6
 
 plano medio archimago suave=0.4
 archimago cara neutral
-archimago dice BF_VISION_ALONE_MISTAKE gesto=Talk02
+archimago dice BF_VISION_ALONE_MISTAKE
+& archimago bucle Cabizbajo fundido=0.8
 
 # Primer plano emotivo de Will comprendiendo que no está solo
 plano primer will suave=0.4
 will cara decidido
 will dice BF_VISION_NOT_ALONE sin_pose
+& will bucle ManoAlPecho fundido=0.4
 espera 0.25
 
 plano medio archimago lado=sur suave=0.4
 archimago cara alegre
+& archimago reposo
 archimago dice BF_VISION_CREATE_SPELLS gesto=Talk01
 
 # Entrega del alma de luz pura
@@ -265,7 +273,8 @@ will dice BF_MOMENT_WILL_EXPLAIN_LATER gesto=Talk02
 plano medio estela sobre=will
 estela mira will
 estela cara picaro
-estela dice BF_MOMENT_ESTELA_BETTER gesto=Talk01
+estela dice BF_MOMENT_ESTELA_BETTER
+& estela bucle BrazosEnJarras fundido=0.3
 
 # Reacción cómica de Liam con franja anime y gota de sudor en 3D
 plano primer liam lado=sur suave=0.3
@@ -278,6 +287,7 @@ cutin quita
 will mira mago
 & estela mira mago
 & liam mira mago
+& estela reposo
 
 # Plano heroico final del trío al completo
 plano fijo desde=cam_heroe_trio mira=mira_heroe_trio altura=0 altura_foco=0 lente=32 suave=0.6

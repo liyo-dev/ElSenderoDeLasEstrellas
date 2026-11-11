@@ -106,7 +106,9 @@ bandas
 plano medio will vela desde=cam_vela altura=1.10 altura_foco=1.10 lente=44 suave=0
 espera 0.8
 # Primero se ve qué intenta Will; la prueba espera al jugador hasta 10 s.
+# Se concentra con las manos recogidas ante el pecho, como ha visto hacer en los cuentos.
 will dice EVT_MANANA_00 mira=vela cara=pensativo dura=3.2
+& will bucle Conjuro_Recogerse fundido=0.5
 efecto InputPromptBeat mode=HoldRelease actionRef=Assets/_SEQUENCES/Guiones/EntradaMantenerSoltar.asset holdSeconds=0.8 maxHoldSeconds=2.2 windowSeconds=10 successFlag=velaControlada tolerant=true detenerEscena=true promptTextId=TUTORIAL_VELA dura=0.3
 efecto VfxBeat vfxPrefab=Assets/_VFX/MananaDespues/VFX_VelaPequena.prefab markName=vela lifetime=400 onlyIfFlag=velaControlada
 efecto VfxBeat vfxPrefab=Assets/_VFX/Hechizos/VFX_Hechizo_Destello_Fuego.prefab markName=vela lifetime=1.5 skipIfFlag=velaControlada
@@ -117,6 +119,7 @@ efecto SfxBeat eventKey=Player_Damage atActorId=will volume=0.9 skipIfFlag=velaC
 efecto GestureBeat actorId=will gesture=CastingDamage01 repeats=2 holdSeconds=0.6 skipIfFlag=velaControlada
 efecto VfxBeat vfxPrefab=Assets/_VFX/MananaDespues/VFX_VelaPequena.prefab markName=vela lifetime=400 skipIfFlag=velaControlada
 espera 1.0
+will reposo
 # Eldran entra por la puerta (a la derecha del cuadro), deja el bollo en la mesa y se sienta en
 # la silla rodeando a Will por el este. Will se vuelve hacia él.
 eldran en puerta mirando will
@@ -136,8 +139,10 @@ eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4
 & will mira eldran
 plano medio eldran solo desde=cam_eldran_silla altura=1.15 altura_foco=0.95 lente=34 encuadre=centro suave=0
 eldran dice EVT_MANANA_03 mira=will cara=triste gesto=HeadNod01 dura=3.5
+& eldran bucle ManoAlPecho fundido=0.5
 plano medio will solo desde=cam_will_mesa altura=1.15 altura_foco=1.15 lente=34 encuadre=centro suave=0
 will dice EVT_MANANA_04a mira=eldran cara=ilusionado dura=3.2
+& eldran reposo brazos
 plano primer eldran solo desde=cam_eldran_silla altura=1.15 altura_foco=0.95 lente=34 encuadre=centro suave=0
 eldran dice EVT_MANANA_04b mira=will cara=alegre gesto=HeadNod01 dura=2.6
 plano medio will solo desde=cam_will_mesa altura=1.15 altura_foco=1.15 lente=34 encuadre=centro suave=0
@@ -185,12 +190,14 @@ eldran dice EVT_MANANA_10 mira=will cara=triste gesto=HeadShake01 dura=4.5
 # Un breve silencio reflexivo antes de la promesa.
 espera 0.8
 eldran dice EVT_MANANA_10b mira=will cara=triste gesto=HeadNod01 dura=2.8
+& eldran bucle ManoAlPecho fundido=0.6
 
 @eldran
 # Will, aún recostado en la cama, pregunta a Eldran.
 espera 0.3
 plano primer will solo desde=cam_picado altura=2.30 lente=42 quieta suave=0
 will dice EVT_MANANA_11 mira=eldran cara=pensativo dura=3.2
+& eldran reposo brazos
 plano primer eldran solo desde=cam_eldran_cama altura=1.05 altura_foco=0.85 lente=32 suave=0
 eldran dice EVT_MANANA_11b mira=will cara=picaro dura=3.0
 # Will se incorpora enfadado en el filo de la cama:
@@ -235,6 +242,7 @@ eldran dice EVT_MANANA_13 mira=will cara=triste dura=3.2
 plano dos eldran_joven silas_joven desde=cam_exp_dolor altura=1.20 lente=46
 eldran_joven gesto Beg01 dura=1.8
 & silas_joven anda a p_exp_silas_freno ritmo=prisa llega_mirando=p_exp_eldran_alcance
++1.2 eldran_joven bucle Cabizbajo fundido=0.6
 espera 1.0
 
 # ── RETORNO AL PRESENTE (HABITACIÓN DE WILL) ──
@@ -249,6 +257,7 @@ will dice EVT_MANANA_14 mira=eldran cara=pensativo dura=2.5
 espera 0.3
 plano dos will eldran desde=cam_cama_dos altura=1.15 altura_foco=0.75 lente=44 suave=0
 eldran dice EVT_MANANA_15 mira=will cara=pensativo gesto=HeadNod01 dura=2.8
+& eldran bucle Cabizbajo fundido=0.6
 
 @aro
 # Eldran se levanta de la cama y viene hacia la mesa a dejar el aro.
@@ -272,11 +281,14 @@ eldran dice EVT_MANANA_17 mira=will cara=neutral gesto=Talk01 dura=4.8
 eldran dice EVT_MANANA_18 mira=will cara=pensativo gesto=HeadShake01 dura=3.5
 plano primer eldran solo desde=cam_eldran_silla altura=1.15 altura_foco=0.95 lente=34 encuadre=centro suave=0
 eldran dice EVT_MANANA_19 mira=will cara=picaro gesto=Talk02 dura=3.8
+# Will, escéptico, se cruza de brazos; los suelta para decidirse.
++1.5 will bucle BrazosCruzados fundido=0.6
 plano primer will solo desde=cam_will_mesa altura=1.15 altura_foco=1.15 lente=34 encuadre=centro suave=0
 will dice EVT_MANANA_20 mira=eldran cara=pensativo dura=2.5
 plano dos will eldran desde=cam_mesa_dos altura=1.20 altura_foco=1.00 lente=44 suave=0
 eldran dice EVT_MANANA_21 mira=will cara=picaro gesto=Talk01 dura=4.2
 plano primer will solo desde=cam_will_mesa altura=1.15 altura_foco=1.15 lente=34 encuadre=centro suave=0
+& will reposo
 will dice EVT_MANANA_22 mira=eldran cara=decidido dura=2.5
 +0.3 will gesto HeadNod01
 plano medio eldran solo desde=cam_eldran_silla altura=1.15 altura_foco=0.95 lente=34 encuadre=centro suave=0

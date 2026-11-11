@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Despertar_4_SinReaccion_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Despertar_4_SinReaccion
-  duracion: 1.8
+  duracion: 1.88
   presentacion: 1
-  huella: "2026-10-30 17:28 \xB7 c3905ca1e0c7f855404837da5f9019bc"
+  huella: "2026-11-11 18:12 \xB7 06a52a0ea244d2d8449c2585391e58da"
   actores:
   - id: Player
     alias: will
@@ -31,7 +31,14 @@ MonoBehaviour:
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
     cabezas: []
-    animacion: []
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 2
+      estado: Fear01
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: miedo
@@ -60,7 +67,7 @@ MonoBehaviour:
   planos:
   - focos: []
     t0: 0
-    t1: 1.8
+    t1: 1.88
     tipo: 2
     descripcion: medio de will
     posiciones:
@@ -74,7 +81,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
@@ -84,32 +91,32 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202816662077752
+      rid: 6540294550018327060
     linea: 32
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202816662077753
-    linea: 37
+      rid: 6540294550018327061
+    linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202816662077754
-    linea: 38
+      rid: 6540294550018327062
+    linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.1
     beat:
-      rid: 5630202816662077755
-    linea: 33
+      rid: 6540294550018327063
+    linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.3
     beat:
-      rid: 5630202816662077756
-    linea: 40
+      rid: 6540294550018327064
+    linea: 41
   etiquetas:
   - nombre: inicio
     t: 0
@@ -130,33 +137,33 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202816662077752
+    - rid: 6540294550018327060
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0.4
-    - rid: 5630202816662077753
+    - rid: 6540294550018327061
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.5
         duration: 0.5
         waitForEnd: 0
-    - rid: 5630202816662077754
+    - rid: 6540294550018327062
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 5630202816662077755
+    - rid: 6540294550018327063
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ImpactoEnWill
         waitForEnd: 1
         detenerEscena: 1
-    - rid: 5630202816662077756
+    - rid: 6540294550018327064
       type: {class: DerrotaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

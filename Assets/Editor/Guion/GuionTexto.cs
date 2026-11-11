@@ -39,7 +39,7 @@ using UnityEngine;
 /// Órdenes de personaje: en P [mirando X] · anda|corre|huye a P1, P2 [ritmo=paseo|normal|prisa|trote|corre]
 ///   [llega_mirando=X] [formacion=Y (llega colocado respecto a P como sale respecto a Y)] ·
 ///   encima A B C… [altura=m] [entra=s] [dura=s] (en volandas: va sobre el centro de A, B, C…) ·
-///   de_la_mano A [lado=der|izq] [dura=s] (va al lado de A, cogido de su mano, adonde ande A; «suelta» lo acaba) · mira X · gesto G [veces=N] [dura=s] · bucle G [congela] [al_final|ya] [fundido=s] (al_final con fundido: se funde hacia la pose final, sin saltar a ella) · reposo ·
+///   de_la_mano A [lado=der|izq] [dura=s] (va al lado de A, cogido de su mano, adonde ande A; «suelta» lo acaba) · mira X · gesto G [veces=N] [dura=s] · bucle G [congela] [al_final|ya] [fundido=s] (al_final con fundido: se funde hacia la pose final, sin saltar a ella; sentado o en un bucle de cuerpo entero, una pose de medio cuerpo se pone encima) · reposo [brazos] (brazos: suelta solo la pose de medio cuerpo) ·
 ///   cara EMOCION [dura=s] · dice CLAVE [gesto=G] [mira=X] [oyentes=a,b|todos] [cara=E] [sin_pose] ·
 ///   aparece [en P] [mirando X] · desaparece · charla con X [cada=s] · pasea por P1, P2 [ritmo=..] [pausa=s] ·
 ///   coge PROP [mano=derecha|izquierda|cabeza] [offset=x;y;z] [giro=x;y;z] · deja PROP en P [gesto=G]

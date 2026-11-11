@@ -204,11 +204,12 @@ plano medio g2 solo
 g2 dice CHUCHELANDIA_TEQUIERO_02 sin_pose
 & g2 gesto Jump
 plano dos liam will altura=1.2 lente=32
+& liam bucle BrazosCruzados fundido=0.4
 & vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab" en=will offset=0.3,1.6,0 lifetime=3
 & sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Balloon_Pop-003.wav" volume=0.6
 espera 0.5
 liam dice CHUCHELANDIA_TEQUIERO_03 cara=molesto mira=will sin_pose
-will dice CHUCHELANDIA_TEQUIERO_04 cara=cansado mira=liam sin_pose
+will dice CHUCHELANDIA_TEQUIERO_04 cara=cansado gesto=Shrug01 mira=liam sin_pose
 liam dice CHUCHELANDIA_TEQUIERO_05 cara=neutral sin_pose
 
 # Contraplano: Estela intenta aguantarse. Se le escapa un ruidito de cerdito por la nariz.
@@ -255,6 +256,7 @@ presidente dice CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO texto=bocadillo sin_pose du
 # Liam, todavía pegado a Will, hace la cuenta.
 @cuenta
 plano dos liam will altura=1.2 lente=32
+& liam reposo
 & efecto MezclaBeat fuente=salon quitar=true fundido=1.2
 liam dice CHUCHELANDIA_TEQUIERO_06 cara=sorpresa mira=estela sin_pose
 & will cara ilusionado

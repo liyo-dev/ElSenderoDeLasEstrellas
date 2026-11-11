@@ -55,12 +55,13 @@ espera 1.0
 @despues
 eldran anda a asoma llega_mirando=will
 & plano medio will altura=1.4 lente=34
+# Se mira las manos sin entender qué ha salido de ellas.
+& will bucle Ofrecer fundido=0.5
 desde @despues+1.6 plano dos will eldran lado=izq lente=36
-& will gesto Question01
 & will cara confuso
 & eldran mira will
 & eldran cara sorpresa
-desde @despues+0.4 will dice EVT_AWAKEN_05 gesto=Question01 cara=confuso
+desde @despues+0.4 will dice EVT_AWAKEN_05 cara=confuso
 desde @despues+3.6 fundido cubre 0.25
 & efecto ModuleBeat routine=Tinnitus
 & silencio 1.5

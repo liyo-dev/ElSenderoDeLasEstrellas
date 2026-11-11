@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Final_02_ElRio_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Final_02_ElRio
-  duracion: 199.10371
+  duracion: 194.5645
   presentacion: 1
-  huella: "2026-11-07 16:47 \xB7 dc1ba7f51eda89fec97ef61217347db4"
+  huella: "2026-11-11 18:15 \xB7 223d2b1195f1555c94a1f6d548609187"
   actores:
   - id: Player
     alias: will
@@ -23,97 +23,101 @@ MonoBehaviour:
     claveDelNombre: Will
     posiciones:
     - t: 0
-      p: {x: 398.4, y: 48.33384, z: -0.8}
+      p: {x: 398.4, y: 0, z: -0.8}
     - t: 55.360325
-      p: {x: 398.4, y: 48.33384, z: -0.8}
+      p: {x: 398.4, y: 0, z: -0.8}
     - t: 55.450325
-      p: {x: 398.3324, y: 48.346027, z: -0.7688}
+      p: {x: 398.3324, y: 0, z: -0.7688}
     - t: 55.540325
-      p: {x: 398.1712, y: 48.375095, z: -0.6944}
+      p: {x: 398.1712, y: 0, z: -0.6944}
     - t: 55.630325
-      p: {x: 397.9788, y: 48.409786, z: -0.6056}
+      p: {x: 397.9788, y: 0, z: -0.6056}
     - t: 55.720325
-      p: {x: 397.8176, y: 48.438854, z: -0.5312}
+      p: {x: 397.8176, y: 0, z: -0.5312}
     - t: 55.810326
-      p: {x: 397.75, y: 48.451042, z: -0.5}
+      p: {x: 397.75, y: 0, z: -0.5}
     - t: 88.65847
-      p: {x: 397.75, y: 48.451042, z: -0.5}
+      p: {x: 397.75, y: 0, z: -0.5}
     - t: 88.92186
-      p: {x: 398.03333, y: 48.373367, z: -0.44166666}
+      p: {x: 398.03333, y: 0, z: -0.44166666}
     - t: 89.12409
-      p: {x: 398.31668, y: 48.295685, z: -0.38333333}
+      p: {x: 398.31668, y: 0, z: -0.38333333}
     - t: 89.40404
-      p: {x: 398.74167, y: 48.182693, z: -0.29583335}
+      p: {x: 398.74167, y: 0, z: -0.29583335}
     - t: 89.699585
-      p: {x: 399.1667, y: 48.07995, z: -0.20833334}
+      p: {x: 399.1667, y: 0, z: -0.20833334}
     - t: 89.962975
-      p: {x: 399.45, y: 48.011497, z: -0.15}
-    - t: 105.58784
-      p: {x: 399.45, y: 48.011497, z: -0.15}
-    - t: 105.58884
-      p: {x: 398, y: 48.26317, z: 0.3}
-    - t: 147.96216
-      p: {x: 398, y: 48.26317, z: 0.3}
-    - t: 148.02496
-      p: {x: 398.15332, y: 48.184845, z: 0.517211}
-    - t: 148.3877
-      p: {x: 398.3066, y: 48.106514, z: 0.7344221}
-    - t: 148.7052
-      p: {x: 398.46536, y: 48.028038, z: 0.94534343}
-    - t: 148.99966
-      p: {x: 398.6573, y: 47.951927, z: 1.105072}
-    - t: 149.29416
-      p: {x: 398.88617, y: 47.885292, z: 1.2049298}
-    - t: 149.55392
-      p: {x: 399.10306, y: 47.83232, z: 1.245736}
-    - t: 149.84813
-      p: {x: 399.35223, y: 47.780556, z: 1.2438412}
-    - t: 150.12273
-      p: {x: 399.56818, y: 47.751457, z: 1.1581832}
-    - t: 150.41695
-      p: {x: 399.75092, y: 47.744507, z: 0.9887619}
-    - t: 150.7513
-      p: {x: 399.92657, y: 47.74827, z: 0.7653458}
-    - t: 151.08565
-      p: {x: 400.10223, y: 47.75196, z: 0.54192966}
-    - t: 151.41998
-      p: {x: 400.27786, y: 47.755684, z: 0.31851354}
-    - t: 151.75433
-      p: {x: 400.45352, y: 47.759415, z: 0.09509743}
-    - t: 152.08868
-      p: {x: 400.62918, y: 47.75757, z: -0.12831867}
-    - t: 152.29344
-      p: {x: 400.747, y: 47.750496, z: -0.25641018}
-    - t: 152.55556
-      p: {x: 400.94824, y: 47.717903, z: -0.33777928}
-    - t: 152.81767
-      p: {x: 401.10345, y: 47.66349, z: -0.18606332}
-    - t: 153.02245
-      p: {x: 401.16382, y: 47.628822, z: -0.022798419}
-    - t: 153.31538
-      p: {x: 401.2318, y: 47.574905, z: 0.21674678}
-    - t: 153.56374
-      p: {x: 401.2966, y: 47.52794, z: 0.4174563}
-    - t: 153.8251
-      p: {x: 401.4057, y: 47.475792, z: 0.6090453}
-    - t: 154.08893
-      p: {x: 401.6126, y: 47.43129, z: 0.6766841}
-    - t: 154.35031
-      p: {x: 401.81384, y: 47.41565, z: 0.5865532}
-    - t: 154.62425
-      p: {x: 401.9992, y: 47.405952, z: 0.4515485}
-    - t: 155.00749
-      p: {x: 402.2246, y: 47.396103, z: 0.27577424}
-    - t: 155.23038
-      p: {x: 402.3373, y: 47.391174, z: 0.18788712}
-    - t: 155.49908
-      p: {x: 402.45, y: 47.38626, z: 0.1}
+      p: {x: 399.45, y: 0, z: -0.15}
+    - t: 105.1585
+      p: {x: 399.45, y: 0, z: -0.15}
+    - t: 105.1595
+      p: {x: 398, y: 0, z: 0.3}
+    - t: 144.70349
+      p: {x: 398, y: 0, z: 0.3}
+    - t: 144.98311
+      p: {x: 398.09973, y: 0, z: 0.18835495}
+    - t: 145.21436
+      p: {x: 398.19943, y: 0, z: 0.07670991}
+    - t: 145.42104
+      p: {x: 398.29916, y: 0, z: -0.034935147}
+    - t: 145.78922
+      p: {x: 398.4986, y: 0, z: -0.25822523}
+    - t: 146.01773
+      p: {x: 398.6374, y: 0, z: -0.39412132}
+    - t: 146.23596
+      p: {x: 398.78723, y: 0, z: -0.5034822}
+    - t: 146.44891
+      p: {x: 398.94818, y: 0, z: -0.586308}
+    - t: 146.66187
+      p: {x: 399.1202, y: 0, z: -0.64259857}
+    - t: 146.8801
+      p: {x: 399.3033, y: 0, z: -0.67235404}
+    - t: 147.10861
+      p: {x: 399.49753, y: 0, z: -0.6755743}
+    - t: 147.4126
+      p: {x: 399.75558, y: 0, z: -0.6625936}
+    - t: 147.71661
+      p: {x: 400.01367, y: 0, z: -0.64961296}
+    - t: 148.0206
+      p: {x: 400.27173, y: 0, z: -0.63663226}
+    - t: 148.28954
+      p: {x: 400.49982, y: 0, z: -0.621914}
+    - t: 148.52237
+      p: {x: 400.6963, y: 0, z: -0.5990497}
+    - t: 148.75365
+      p: {x: 400.8895, y: 0, z: -0.56336844}
+    - t: 148.9844
+      p: {x: 401.07944, y: 0, z: -0.51487017}
+    - t: 149.21567
+      p: {x: 401.26608, y: 0, z: -0.45355493}
+    - t: 149.4485
+      p: {x: 401.44946, y: 0, z: -0.37942272}
+    - t: 149.7352
+      p: {x: 401.6703, y: 0, z: -0.27641627}
+    - t: 150.07826
+      p: {x: 401.9302, y: 0, z: -0.15094419}
+    - t: 150.4643
+      p: {x: 402.1901, y: 0, z: -0.025472088}
+    - t: 150.68893
+      p: {x: 402.32007, y: 0, z: 0.037263956}
+    - t: 150.95987
+      p: {x: 402.45, y: 0, z: 0.1}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
+    - t: 7.75
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 10.45
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 16.529726
       tipo: 2
       rumbo: 0
@@ -129,6 +133,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 30.410337
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
     - t: 32.965847
       tipo: 2
       rumbo: 0
@@ -137,8 +146,13 @@ MonoBehaviour:
     - t: 38.01102
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
+    - t: 45.011017
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 50.37243
       tipo: 2
       rumbo: 0
@@ -189,32 +203,52 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
+    - t: 92.932106
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 95.90557
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 105.58784
+    - t: 105.1585
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
-    - t: 115.38784
+    - t: 114.9585
       tipo: 1
       rumbo: 0
-      punto: {x: 399.6, y: 48.00067, z: -0.3}
+      punto: {x: 399.6, y: 0, z: -0.3}
       actor: 
-    - t: 135.71683
+    - t: 135.28749
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 155.49908
+    - t: 150.95987
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
     cabezas:
+    - t: 7.7
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 10.4
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
+    - t: 16.529726
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 16.629726
       tipo: 2
       rumbo: 0
@@ -230,22 +264,47 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 30.360338
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
     - t: 32.915848
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 38.01102
+      tipo: 1
+      rumbo: 0
+      punto: {x: 399.5, y: -0.25, z: -8}
+      actor: 
     - t: 38.66102
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: Actor_Estela
+      actor: Actor_Tobias
+    - t: 44.961018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 50.32243
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 51.85467
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     - t: 55.460327
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.251293
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -279,207 +338,270 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: Actor_Estela
+      actor: Actor_Tobias
+    - t: 92.282104
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 92.8821
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 95.85557
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 105.58784
+    - t: 105.1585
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 121.05825
+    - t: 114.9585
+      tipo: 1
+      rumbo: 0
+      punto: {x: 399.6, y: 0, z: -0.3}
+      actor: 
+    - t: 120.628914
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 124.61682
+    - t: 124.187485
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 130.01682
+    - t: 129.58748
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
+    - t: 135.28749
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
     animacion:
+    - fundido: 0
+      t: 8.3
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 11
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.229727
       tipo: 2
-      estado: SenseSomethingStart_NoWeapon
+      estado: Sobresalto01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 28.143604
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 33.515846
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 38.61102
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 38.69102
       tipo: 2
       estado: SenseSomethingStart_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 39.257687
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 41.461018
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 50.755325
+      t: 45.561016
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 55.360325
       tipo: 2
       estado: TakeDamage
       congelar: 0
       alFinal: 0
+      voz: hurt
+    - fundido: 0
+      t: 55.789658
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 55.861877
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 59.951294
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 62.45986
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 62.539864
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 63.763737
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 64.51373
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 72.03079
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 81.395615
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 89.07517
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 96.45557
+      t: 93.4821
       tipo: 2
-      estado: HeadNod01
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 99.1425
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 101.56517
+      t: 101.3505
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 105.58784
+      t: 105.1585
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
       alFinal: 1
+      voz: 
     - fundido: 1.2
-      t: 115.38784
+      t: 114.9585
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 136.51683
+      t: 136.0875
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 138.9395
+      t: 138.29549
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 144.36217
+      t: 143.5035
       tipo: 1
       estado: SitGround_Exit
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 145.56216
+      t: 144.70349
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 155.49908
+      t: 150.95987
       tipo: 2
       estado: SitGround_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 156.51108
+      t: 151.97186
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 16.529726
       emocion: sorpresa
@@ -511,19 +633,22 @@ MonoBehaviour:
     - t: 88.99517
       emocion: enfado
       dura: 3.5869389
+    - t: 93.3821
+      emocion: sorpresa
+      dura: 2
     - t: 99.1425
       emocion: alegre
       dura: 0
-    - t: 115.38784
+    - t: 114.9585
       emocion: sorpresa
       dura: 0
-    - t: 121.00825
+    - t: 120.57891
       emocion: alegre
       dura: 0
-    - t: 136.51683
+    - t: 136.0875
       emocion: alegre
       dura: 0
-    - t: 156.51108
+    - t: 151.97186
       emocion: alegre
       dura: 0
     visible: []
@@ -536,167 +661,177 @@ MonoBehaviour:
     claveDelNombre: Estela
     posiciones:
     - t: 0
-      p: {x: 398.9, y: 47.939598, z: 0.9}
+      p: {x: 398.9, y: 0, z: 0.9}
     - t: 42.111015
-      p: {x: 398.9, y: 47.939598, z: 0.9}
+      p: {x: 398.9, y: 0, z: 0.9}
     - t: 42.202682
-      p: {x: 398.86295, y: 48.148663, z: 0.7592592}
+      p: {x: 398.86295, y: 0.17777778, z: 0.7592592}
     - t: 42.29435
-      p: {x: 398.77036, y: 48.67132, z: 0.40740734}
+      p: {x: 398.77036, y: 0.6222223, z: 0.40740734}
     - t: 42.386017
-      p: {x: 398.65, y: 49.35078, z: -0.050000012}
+      p: {x: 398.65, y: 1.2, z: -0.050000012}
     - t: 42.47768
-      p: {x: 398.52963, y: 50.03024, z: -0.5074075}
+      p: {x: 398.52963, y: 1.7777779, z: -0.5074075}
     - t: 42.569347
-      p: {x: 398.43704, y: 50.5529, z: -0.85925925}
+      p: {x: 398.43704, y: 2.2222223, z: -0.85925925}
     - t: 42.661015
-      p: {x: 398.4, y: 50.761963, z: -1}
+      p: {x: 398.4, y: 2.4, z: -1}
     - t: 42.761013
-      p: {x: 398.22, y: 49.724483, z: -1.8640001}
+      p: {x: 398.22, y: 1.181, z: -1.8640001}
     - t: 42.861015
-      p: {x: 398.08, y: 48.917553, z: -2.536}
+      p: {x: 398.08, y: 0.23288894, z: -2.536}
     - t: 42.961014
-      p: {x: 397.97998, y: 48.341175, z: -3.0160003}
+      p: {x: 397.97998, y: -0.44433346, z: -3.0160003}
     - t: 43.061016
-      p: {x: 397.91998, y: 47.99535, z: -3.3040001}
+      p: {x: 397.91998, y: -0.85066664, z: -3.3040001}
     - t: 43.161015
-      p: {x: 397.9, y: 47.880074, z: -3.4}
+      p: {x: 397.9, y: -0.98611116, z: -3.4}
     - t: 48.165096
-      p: {x: 397.9, y: 47.880074, z: -3.4}
+      p: {x: 397.9, y: -0.98611116, z: -3.4}
     - t: 48.265095
-      p: {x: 397.9, y: 47.901558, z: -3.4}
+      p: {x: 397.9, y: -0.9646268, z: -3.4}
     - t: 48.365097
-      p: {x: 397.9, y: 47.9582, z: -3.4}
+      p: {x: 397.9, y: -0.90798616, z: -3.4}
     - t: 48.465096
-      p: {x: 397.9, y: 48.038277, z: -3.4}
+      p: {x: 397.9, y: -0.82790804, z: -3.4}
     - t: 48.565098
-      p: {x: 397.9, y: 48.130074, z: -3.4}
+      p: {x: 397.9, y: -0.73611116, z: -3.4}
     - t: 48.665096
-      p: {x: 397.9, y: 48.22187, z: -3.4}
+      p: {x: 397.9, y: -0.6443143, z: -3.4}
     - t: 48.765095
-      p: {x: 397.9, y: 48.30195, z: -3.4}
+      p: {x: 397.9, y: -0.56423616, z: -3.4}
     - t: 48.865097
-      p: {x: 397.9, y: 48.35859, z: -3.4}
+      p: {x: 397.9, y: -0.50759554, z: -3.4}
     - t: 48.965096
-      p: {x: 397.9, y: 48.380074, z: -3.4}
+      p: {x: 397.9, y: -0.4861112, z: -3.4}
     - t: 51.85467
-      p: {x: 397.9, y: 48.380074, z: -3.4}
+      p: {x: 397.9, y: -0.4861112, z: -3.4}
     - t: 52.12352
-      p: {x: 398.02106, y: 48.621346, z: -3.1421053}
+      p: {x: 398.02106, y: -0.21820179, z: -3.1421053}
     - t: 52.33315
-      p: {x: 398.1421, y: 48.61303, z: -2.8842106}
+      p: {x: 398.1421, y: -0.20029238, z: -2.8842106}
     - t: 52.611076
-      p: {x: 398.32367, y: 48.591263, z: -2.4973686}
+      p: {x: 398.32367, y: -0.17342827, z: -2.4973686}
     - t: 52.88678
-      p: {x: 398.50525, y: 48.49234, z: -2.1105263}
+      p: {x: 398.50525, y: -0.12646206, z: -2.1105263}
     - t: 53.162483
-      p: {x: 398.68683, y: 48.395187, z: -1.7236842}
+      p: {x: 398.68683, y: -0.07273405, z: -1.7236842}
     - t: 53.44904
-      p: {x: 398.8684, y: 48.30213, z: -1.3368421}
+      p: {x: 398.8684, y: -0.019006073, z: -1.3368421}
     - t: 53.680058
-      p: {x: 398.98947, y: 48.240105, z: -1.0789473}
+      p: {x: 398.98947, y: 0, z: -1.0789473}
     - t: 53.826992
-      p: {x: 399.05, y: 48.209084, z: -0.95}
+      p: {x: 399.05, y: 0, z: -0.95}
     - t: 56.9142
-      p: {x: 399.05, y: 48.209084, z: -0.95}
+      p: {x: 399.05, y: 0, z: -0.95}
     - t: 57.253345
-      p: {x: 399.1389, y: 48.151108, z: -0.6722222}
+      p: {x: 399.1389, y: 0, z: -0.6722222}
     - t: 57.513344
-      p: {x: 399.22778, y: 48.093155, z: -0.39444444}
+      p: {x: 399.22778, y: 0, z: -0.39444444}
     - t: 57.76696
-      p: {x: 399.31668, y: 48.03518, z: -0.11666663}
+      p: {x: 399.31668, y: 0, z: -0.11666663}
     - t: 58.051308
-      p: {x: 399.40558, y: 47.970222, z: 0.16111113}
+      p: {x: 399.40558, y: 0, z: 0.16111113}
     - t: 58.239292
-      p: {x: 399.45, y: 47.93522, z: 0.3}
+      p: {x: 399.45, y: 0, z: 0.3}
     - t: 70.71741
-      p: {x: 399.45, y: 47.93522, z: 0.3}
+      p: {x: 399.45, y: 0, z: 0.3}
     - t: 70.935425
-      p: {x: 399.18335, y: 48.00422, z: 0.23333333}
+      p: {x: 399.18335, y: 0, z: 0.23333333}
     - t: 71.208496
-      p: {x: 398.78333, y: 48.10771, z: 0.13333334}
+      p: {x: 398.78333, y: 0, z: 0.13333334}
     - t: 71.330795
-      p: {x: 398.65, y: 48.141914, z: 0.1}
+      p: {x: 398.65, y: 0, z: 0.1}
     - t: 77.30834
-      p: {x: 398.65, y: 48.141914, z: 0.1}
+      p: {x: 398.65, y: 0, z: 0.1}
     - t: 77.57265
-      p: {x: 398.89813, y: 48.065895, z: 0.22782783}
+      p: {x: 398.89813, y: 0, z: 0.22782783}
     - t: 77.77906
-      p: {x: 399.14627, y: 47.989616, z: 0.35565567}
+      p: {x: 399.14627, y: 0, z: 0.35565567}
     - t: 78.05187
-      p: {x: 399.51846, y: 47.875168, z: 0.54739743}
+      p: {x: 399.51846, y: 0, z: 0.54739743}
     - t: 78.29586
-      p: {x: 399.8564, y: 47.772057, z: 0.71698546}
+      p: {x: 399.8564, y: 0, z: 0.71698546}
     - t: 78.54833
-      p: {x: 400.22308, y: 47.669273, z: 0.85174227}
+      p: {x: 400.22308, y: 0, z: 0.85174227}
     - t: 78.79898
-      p: {x: 400.6045, y: 47.57522, z: 0.92193043}
+      p: {x: 400.6045, y: 0, z: 0.92193043}
     - t: 79.08142
-      p: {x: 401.04175, y: 47.48062, z: 0.93048024}
+      p: {x: 401.04175, y: 0, z: 0.93048024}
     - t: 79.356285
-      p: {x: 401.46765, y: 47.40915, z: 0.9192724}
+      p: {x: 401.46765, y: 0, z: 0.9192724}
     - t: 79.56824
-      p: {x: 401.795, y: 47.362823, z: 0.8951642}
+      p: {x: 401.795, y: 0, z: 0.8951642}
     - t: 79.78242
-      p: {x: 402.0974, y: 47.337257, z: 0.7632591}
+      p: {x: 402.0974, y: 0, z: 0.7632591}
     - t: 79.996605
-      p: {x: 402.3086, y: 47.342735, z: 0.5098066}
+      p: {x: 402.3086, y: 0, z: 0.5098066}
     - t: 80.21199
-      p: {x: 402.424, y: 47.374153, z: 0.20000003}
+      p: {x: 402.424, y: 0, z: 0.20000003}
     - t: 80.42376
-      p: {x: 402.512, y: 47.40184, z: -0.074999996}
+      p: {x: 402.512, y: 0, z: -0.074999996}
     - t: 80.69562
-      p: {x: 402.6, y: 47.42231, z: -0.35}
-    - t: 105.58784
-      p: {x: 402.6, y: 47.42231, z: -0.35}
-    - t: 105.58884
-      p: {x: 399.2, y: 47.98842, z: 0.3}
-    - t: 145.56216
-      p: {x: 399.2, y: 47.98842, z: 0.3}
-    - t: 145.82407
-      p: {x: 399.29135, y: 47.949776, z: 0.40440485}
-    - t: 146.04173
-      p: {x: 399.38272, y: 47.91114, z: 0.5088097}
-    - t: 146.41643
-      p: {x: 399.56543, y: 47.833862, z: 0.7176193}
-    - t: 146.748
-      p: {x: 399.74814, y: 47.75659, z: 0.926429}
-    - t: 147.07442
-      p: {x: 399.93085, y: 47.6793, z: 1.1352386}
-    - t: 147.40083
-      p: {x: 400.11356, y: 47.60205, z: 1.3440483}
-    - t: 147.67708
-      p: {x: 400.27344, y: 47.536446, z: 1.515805}
-    - t: 147.89609
-      p: {x: 400.41583, y: 47.48429, z: 1.6346976}
-    - t: 148.10442
-      p: {x: 400.56903, y: 47.435623, z: 1.721967}
-    - t: 148.30904
-      p: {x: 400.73297, y: 47.39054, z: 1.7776132}
-    - t: 148.5173
-      p: {x: 400.9076, y: 47.34896, z: 1.8016362}
-    - t: 148.73636
-      p: {x: 401.093, y: 47.310913, z: 1.7940361}
-    - t: 149.01877
-      p: {x: 401.32953, y: 47.27703, z: 1.7540972}
-    - t: 149.35748
-      p: {x: 401.61185, y: 47.243637, z: 1.6976312}
-    - t: 149.6962
-      p: {x: 401.89417, y: 47.210243, z: 1.6411651}
-    - t: 150.05397
-      p: {x: 402.1765, y: 47.17685, z: 1.584699}
-    - t: 150.25456
-      p: {x: 402.3177, y: 47.160156, z: 1.5564661}
-    - t: 150.47871
-      p: {x: 402.45883, y: 47.143456, z: 1.528233}
-    - t: 150.74911
-      p: {x: 402.6, y: 47.126778, z: 1.5}
+      p: {x: 402.6, y: 0, z: -0.35}
+    - t: 105.1585
+      p: {x: 402.6, y: 0, z: -0.35}
+    - t: 105.1595
+      p: {x: 399.2, y: 0, z: 0.3}
+    - t: 144.70349
+      p: {x: 399.2, y: 0, z: 0.3}
+    - t: 144.9654
+      p: {x: 399.29135, y: 0, z: 0.40440485}
+    - t: 145.18306
+      p: {x: 399.38272, y: 0, z: 0.5088097}
+    - t: 145.55775
+      p: {x: 399.56543, y: 0, z: 0.7176193}
+    - t: 145.88933
+      p: {x: 399.74814, y: 0, z: 0.926429}
+    - t: 146.21574
+      p: {x: 399.93085, y: 0, z: 1.1352386}
+    - t: 146.54216
+      p: {x: 400.11356, y: 0, z: 1.3440483}
+    - t: 146.8184
+      p: {x: 400.27344, y: 0, z: 1.515805}
+    - t: 147.03741
+      p: {x: 400.41583, y: 0, z: 1.6346976}
+    - t: 147.24574
+      p: {x: 400.56903, y: 0, z: 1.721967}
+    - t: 147.45036
+      p: {x: 400.73297, y: 0, z: 1.7776132}
+    - t: 147.65863
+      p: {x: 400.9076, y: 0, z: 1.8016362}
+    - t: 147.87769
+      p: {x: 401.093, y: 0, z: 1.7940361}
+    - t: 148.1601
+      p: {x: 401.32953, y: 0, z: 1.7540972}
+    - t: 148.49881
+      p: {x: 401.61185, y: 0, z: 1.6976312}
+    - t: 148.83752
+      p: {x: 401.89417, y: 0, z: 1.6411651}
+    - t: 149.1953
+      p: {x: 402.1765, y: 0, z: 1.584699}
+    - t: 149.39589
+      p: {x: 402.3177, y: 0, z: 1.5564661}
+    - t: 149.62004
+      p: {x: 402.45883, y: 0, z: 1.528233}
+    - t: 149.89044
+      p: {x: 402.6, y: 0, z: 1.5}
     miradas:
     - t: 0
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 7.87
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 10.570001
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 16.799726
       tipo: 2
       rumbo: 0
@@ -707,6 +842,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 30.530338
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
     - t: 38.76102
       tipo: 2
       rumbo: 0
@@ -737,27 +877,42 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 105.58784
+    - t: 93.0521
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
+    - t: 105.1585
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
-    - t: 124.51682
+    - t: 124.08749
       tipo: 1
       rumbo: 0
-      punto: {x: 397.6, y: 48.459694, z: -0.3}
+      punto: {x: 397.6, y: 0, z: -0.3}
       actor: 
-    - t: 135.71683
+    - t: 135.28749
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 150.74911
+    - t: 149.89044
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
     cabezas:
+    - t: 7.8199997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 10.52
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 16.749727
       tipo: 2
       rumbo: 0
@@ -772,12 +927,17 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      actor: Actor_Liam
+    - t: 30.48034
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
     - t: 32.865845
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      actor: Actor_Liam
     - t: 38.71102
       tipo: 2
       rumbo: 0
@@ -788,6 +948,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
+    - t: 50.272427
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 55.410324
       tipo: 2
       rumbo: 0
@@ -818,209 +983,279 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 95.80557
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
-    - t: 105.58784
-      tipo: 0
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: 
-    - t: 124.566826
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
-    - t: 130.13683
+    - t: 93.0021
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
-    - t: 156.61107
+    - t: 95.80557
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
+    - t: 105.1585
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    - t: 124.08749
+      tipo: 1
+      rumbo: 0
+      punto: {x: 397.6, y: 0, z: -0.3}
+      actor: 
+    - t: 124.13749
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 159.71107
+    - t: 129.70749
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
+    - t: 135.28749
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 152.07185
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 165.54454
+    - t: 155.17186
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 170.96004
+    - t: 161.00533
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 166.42082
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     animacion:
     - fundido: 0
-      t: 17.229727
+      t: 8.3
       tipo: 2
-      estado: SenseSomethingStart_NoWeapon
+      estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 11
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 17.229727
+      tipo: 2
+      estado: Sobresalto01
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 25.32687
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 39.31102
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 42.111015
       tipo: 1
       estado: Falling
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 43.161015
       tipo: 1
       estado: Swimming_Floating_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 48.165096
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 48.965096
       tipo: 2
       estado: Angry02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 51.85467
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 53.826992
       tipo: 2
       estado: Push_InPlace_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 55.360325
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 58.239292
       tipo: 2
       estado: SitGround_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 59.251293
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 63.893738
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 69.817406
       tipo: 1
       estado: SitGround_Exit
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 70.71741
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 71.4108
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 80.77562
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 89.69517
       tipo: 2
-      estado: SenseSomethingStart_NoWeapon
+      estado: Sobresalto01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 93.4821
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 99.1425
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 101.56517
+      t: 101.3505
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 105.58784
+      t: 105.1585
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
       alFinal: 1
+      voz: 
     - fundido: 1.2
-      t: 124.51682
+      t: 124.08749
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 136.51683
+      t: 136.0875
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 138.9395
+      t: 138.29549
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 144.36217
+      t: 143.5035
       tipo: 1
       estado: SitGround_Exit
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 145.56216
+      t: 144.70349
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 155.49908
+      t: 150.95987
       tipo: 2
       estado: SitGround_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 156.51108
+      t: 151.97186
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 17.129726
       emocion: sorpresa
@@ -1058,16 +1293,19 @@ MonoBehaviour:
     - t: 89.59517
       emocion: sorpresa
       dura: 2
+    - t: 93.3821
+      emocion: sorpresa
+      dura: 2
     - t: 95.75557
       emocion: picaro
       dura: 0
     - t: 99.1425
       emocion: alegre
       dura: 0
-    - t: 124.51682
+    - t: 124.08749
       emocion: alegre
       dura: 0
-    - t: 136.51683
+    - t: 136.0875
       emocion: alegre
       dura: 0
     visible: []
@@ -1088,23 +1326,23 @@ MonoBehaviour:
     - t: 83.17895
       p: {x: 401.6, y: 0, z: 0}
     - t: 83.466446
-      p: {x: 401.5854, y: 7.441139, z: -0.068776004}
+      p: {x: 401.5854, y: 0, z: -0.068776004}
     - t: 83.753944
-      p: {x: 401.55322, y: 23.811646, z: -0.2200832}
+      p: {x: 401.55322, y: 0, z: -0.2200832}
     - t: 84.04145
-      p: {x: 401.52106, y: 40.18215, z: -0.3713904}
+      p: {x: 401.52106, y: 0, z: -0.3713904}
     - t: 84.32895
-      p: {x: 401.50644, y: 47.62329, z: -0.4401664}
+      p: {x: 401.50644, y: 0, z: -0.4401664}
     - t: 88.65847
-      p: {x: 401.50644, y: 47.62329, z: -0.4401664}
+      p: {x: 401.50644, y: 0, z: -0.4401664}
     - t: 88.900955
-      p: {x: 401.2391, y: 47.64131, z: -0.2225416}
+      p: {x: 401.2391, y: 0, z: -0.2225416}
     - t: 88.99517
-      p: {x: 401.15, y: 47.648422, z: -0.15}
-    - t: 105.58784
-      p: {x: 401.15, y: 47.648422, z: -0.15}
-    - t: 105.58884
-      p: {x: 400.6, y: 47.699768, z: 0.25}
+      p: {x: 401.15, y: 0, z: -0.15}
+    - t: 105.1585
+      p: {x: 401.15, y: 0, z: -0.15}
+    - t: 105.1595
+      p: {x: 400.6, y: 0, z: 0.25}
     miradas:
     - t: 0
       tipo: 0
@@ -1126,15 +1364,20 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 93.172104
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 96.025566
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 105.58784
+    - t: 105.1585
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
     cabezas:
     - t: 7.65
@@ -1142,27 +1385,102 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
-    - t: 10.4
+    - t: 10.64
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
-    - t: 44.961018
+    - t: 16.869726
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Tobias
+    - t: 24.84687
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 27.663605
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 30.310337
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 33.035847
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 38.83102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 45.201015
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
+    - t: 50.44243
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 55.580326
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.471294
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 62.679863
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 64.03373
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 71.55079
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 80.91561
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     - t: 89.215164
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 92.282104
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 93.1221
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Tobias
     - t: 95.97556
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 105.58784
+    - t: 105.1585
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1174,54 +1492,63 @@ MonoBehaviour:
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 82.795616
       tipo: 2
       estado: SitGround_Exit
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 84.32895
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 88.99517
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 89.69517
       tipo: 2
-      estado: SenseSomethingStart_NoWeapon
+      estado: Sobresalto01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 96.45557
+      t: 93.4821
       tipo: 2
-      estado: HeadNod01
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 99.1425
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 101.56517
+      t: 101.3505
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 105.58784
+      t: 105.1585
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
       alFinal: 1
+      voz: 
     caras:
     - t: 7.6
       emocion: alegre
@@ -1241,6 +1568,9 @@ MonoBehaviour:
     - t: 89.59517
       emocion: sorpresa
       dura: 2
+    - t: 93.3821
+      emocion: sorpresa
+      dura: 2
     - t: 99.1425
       emocion: alegre
       dura: 0
@@ -1258,81 +1588,81 @@ MonoBehaviour:
     - t: 14.283334
       p: {x: 400.3, y: 0, z: 0}
     - t: 14.570834
-      p: {x: 400.30612, y: 7.4787903, z: -0.070044935}
+      p: {x: 400.30612, y: 0, z: -0.070044935}
     - t: 14.858334
-      p: {x: 400.31958, y: 23.932129, z: -0.2241438}
+      p: {x: 400.31958, y: 0, z: -0.2241438}
     - t: 15.145834
-      p: {x: 400.33307, y: 40.385468, z: -0.37824267}
+      p: {x: 400.33307, y: 0, z: -0.37824267}
     - t: 15.433334
-      p: {x: 400.3392, y: 47.864258, z: -0.4482876}
+      p: {x: 400.3392, y: 0, z: -0.4482876}
     - t: 15.742649
-      p: {x: 400.0669, y: 47.92225, z: -0.4487157}
+      p: {x: 400.0669, y: 0, z: -0.4487157}
     - t: 15.981517
-      p: {x: 399.79462, y: 47.980225, z: -0.4491438}
+      p: {x: 399.79462, y: 0, z: -0.4491438}
     - t: 16.220411
-      p: {x: 399.5223, y: 48.038223, z: -0.4495719}
+      p: {x: 399.5223, y: 0, z: -0.4495719}
     - t: 16.529726
-      p: {x: 399.25, y: 48.09623, z: -0.45}
+      p: {x: 399.25, y: 0, z: -0.45}
     - t: 35.81462
-      p: {x: 399.25, y: 48.09623, z: -0.45}
+      p: {x: 399.25, y: 0, z: -0.45}
     - t: 36.12394
-      p: {x: 399.5223, y: 48.038223, z: -0.4495719}
+      p: {x: 399.5223, y: 0, z: -0.4495719}
     - t: 36.362835
-      p: {x: 399.79462, y: 47.980225, z: -0.4491438}
+      p: {x: 399.79462, y: 0, z: -0.4491438}
     - t: 36.601704
-      p: {x: 400.0669, y: 47.92225, z: -0.4487157}
+      p: {x: 400.0669, y: 0, z: -0.4487157}
     - t: 36.911022
-      p: {x: 400.3392, y: 47.864258, z: -0.4482876}
+      p: {x: 400.3392, y: 0, z: -0.4482876}
     - t: 36.986023
-      p: {x: 400.33307, y: 40.385468, z: -0.37824267}
+      p: {x: 400.33307, y: 0, z: -0.37824267}
     - t: 37.061024
-      p: {x: 400.31958, y: 23.932129, z: -0.2241438}
+      p: {x: 400.31958, y: 0, z: -0.2241438}
     - t: 37.13602
-      p: {x: 400.30612, y: 7.4787903, z: -0.070044935}
+      p: {x: 400.30612, y: 0, z: -0.070044935}
     - t: 37.21102
       p: {x: 400.3, y: 0, z: 0}
-    - t: 105.58784
+    - t: 105.1585
       p: {x: 400.3, y: 0, z: 0}
-    - t: 105.58884
-      p: {x: 401.6, y: 47.419754, z: 0.75}
-    - t: 160.81108
-      p: {x: 401.6, y: 47.419754, z: 0.75}
-    - t: 160.91109
-      p: {x: 401.59732, y: 47.420498, z: 0.74821675}
-    - t: 161.01108
-      p: {x: 401.58972, y: 47.42261, z: 0.7431413}
-    - t: 161.11108
-      p: {x: 401.5778, y: 47.425922, z: 0.7351852}
-    - t: 161.21107
-      p: {x: 401.56213, y: 47.430264, z: 0.72475994}
-    - t: 161.31108
-      p: {x: 401.54343, y: 47.435463, z: 0.7122771}
-    - t: 161.41109
-      p: {x: 401.52222, y: 47.44135, z: 0.69814813}
-    - t: 161.51108
-      p: {x: 401.49918, y: 47.447746, z: 0.6827846}
-    - t: 161.61108
-      p: {x: 401.47488, y: 47.454487, z: 0.6665981}
-    - t: 161.71107
-      p: {x: 401.45, y: 47.4614, z: 0.65}
-    - t: 161.81108
-      p: {x: 401.4251, y: 47.46831, z: 0.63340193}
-    - t: 161.91109
-      p: {x: 401.40082, y: 47.47505, z: 0.6172154}
-    - t: 162.01108
-      p: {x: 401.37778, y: 47.48145, z: 0.6018519}
-    - t: 162.11108
-      p: {x: 401.35657, y: 47.487335, z: 0.5877229}
-    - t: 162.21107
-      p: {x: 401.33786, y: 47.492535, z: 0.5752401}
-    - t: 162.31108
-      p: {x: 401.3222, y: 47.496876, z: 0.5648148}
-    - t: 162.41109
-      p: {x: 401.31027, y: 47.500187, z: 0.5568587}
-    - t: 162.51108
-      p: {x: 401.30267, y: 47.5023, z: 0.55178326}
-    - t: 162.61108
-      p: {x: 401.3, y: 47.503044, z: 0.55}
+    - t: 105.1595
+      p: {x: 401.6, y: 0, z: 0.75}
+    - t: 156.27187
+      p: {x: 401.6, y: 0, z: 0.75}
+    - t: 156.37187
+      p: {x: 401.59732, y: 0, z: 0.74821675}
+    - t: 156.47186
+      p: {x: 401.58972, y: 0, z: 0.7431413}
+    - t: 156.57187
+      p: {x: 401.5778, y: 0, z: 0.7351852}
+    - t: 156.67186
+      p: {x: 401.56213, y: 0, z: 0.72475994}
+    - t: 156.77187
+      p: {x: 401.54343, y: 0, z: 0.7122771}
+    - t: 156.87187
+      p: {x: 401.52222, y: 0, z: 0.69814813}
+    - t: 156.97186
+      p: {x: 401.49918, y: 0, z: 0.6827846}
+    - t: 157.07187
+      p: {x: 401.47488, y: 0, z: 0.6665981}
+    - t: 157.17186
+      p: {x: 401.45, y: 0, z: 0.65}
+    - t: 157.27187
+      p: {x: 401.4251, y: 0, z: 0.63340193}
+    - t: 157.37187
+      p: {x: 401.40082, y: 0, z: 0.6172154}
+    - t: 157.47186
+      p: {x: 401.37778, y: 0, z: 0.6018519}
+    - t: 157.57187
+      p: {x: 401.35657, y: 0, z: 0.5877229}
+    - t: 157.67186
+      p: {x: 401.33786, y: 0, z: 0.5752401}
+    - t: 157.77187
+      p: {x: 401.3222, y: 0, z: 0.5648148}
+    - t: 157.87187
+      p: {x: 401.31027, y: 0, z: 0.5568587}
+    - t: 157.97186
+      p: {x: 401.30267, y: 0, z: 0.55178326}
+    - t: 158.07187
+      p: {x: 401.3, y: 0, z: 0.55}
     miradas:
     - t: 0
       tipo: 0
@@ -1344,17 +1674,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 24.89687
+    - t: 25.016869
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.713604
+    - t: 27.833603
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 33.085846
+    - t: 30.650337
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 33.205845
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1364,13 +1699,13 @@ MonoBehaviour:
       rumbo: 175
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 105.58784
+    - t: 105.1585
       tipo: 1
       rumbo: 0
-      punto: {x: 399.5, y: 47.193954, z: -8}
+      punto: {x: 399.5, y: -0.25, z: -8}
       actor: 
     cabezas:
-    - t: 7.7
+    - t: 7.9399996
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1385,21 +1720,76 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 24.84687
+    - t: 24.96687
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.663605
+    - t: 27.783604
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 33.035847
+    - t: 30.600338
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 33.155846
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 38.95102
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 44.911015
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 50.562428
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 55.700325
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 59.591293
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 62.799862
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 64.15373
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 71.67079
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 81.035614
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 89.33517
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 92.782104
       tipo: 2
       rumbo: 0
@@ -1410,27 +1800,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 105.58784
-      tipo: 0
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: 
-    - t: 129.96683
+    - t: 96.095566
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 156.85107
+    - t: 105.1585
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    - t: 129.53749
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 152.31186
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 159.95108
+    - t: 155.41187
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 160.81108
+    - t: 156.27187
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1442,126 +1837,126 @@ MonoBehaviour:
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.38
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 13.900001
       tipo: 2
       estado: SitGround_Exit
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.433334
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 16.529726
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: Ofrecer
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.609726
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 19.076393
-      tipo: 2
-      estado: Talk02
+      voz: 
+    - fundido: 0.3
+      t: 18.649727
+      tipo: 1
+      estado: Ofrecer
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 21.69306
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 24.076868
-      tipo: 4
+      t: 32.815845
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 25.32687
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 33.515846
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 36.911022
       tipo: 2
       estado: SitGround_Begin
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 37.95602
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 81.19562
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 83.618286
+      t: 83.40362
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 99.1425
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 101.56517
+      t: 101.3505
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 105.58784
+      t: 105.1585
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 105.58784
+      t: 105.1585
       tipo: 1
       estado: Sleeping_NoWeapon
       congelar: 0
       alFinal: 1
+      voz: 
     - fundido: 1.4
-      t: 129.01683
+      t: 128.5875
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 1.8
-      t: 160.81108
+      t: 156.27187
       tipo: 1
       estado: Sleeping_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 10.3
       emocion: alegre
@@ -1590,7 +1985,7 @@ MonoBehaviour:
     - t: 99.1425
       emocion: alegre
       dura: 0
-    - t: 129.01683
+    - t: 128.5875
       emocion: cansado
       dura: 0
     visible: []
@@ -1599,8 +1994,8 @@ MonoBehaviour:
       hasta: 15.483334
     - desde: 36.911022
       hasta: 37.26102
-    - desde: 160.81108
-      hasta: 162.66109
+    - desde: 156.27187
+      hasta: 158.12187
   lineas:
   - onlyIfFlag: 
     skipIfFlag: 
@@ -1627,7 +2022,7 @@ MonoBehaviour:
     actor: Actor_Tobias
     clave: FINAL_TOBIAS_RIO_02
     gesto: Talk01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -1775,8 +2170,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 115.38784
-    t1: 117.608246
+    t0: 114.9585
+    t1: 117.17891
     actor: Player
     clave: FINAL_WILL_NOCHE_00
     gesto: 
@@ -1784,8 +2179,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 121.00825
-    t1: 124.11682
+    t0: 120.57891
+    t1: 123.687485
     actor: Player
     clave: FINAL_WILL_NOCHE_03
     gesto: 
@@ -1793,8 +2188,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 124.51682
-    t1: 128.41682
+    t0: 124.08749
+    t1: 127.98749
     actor: Actor_Estela
     clave: FINAL_ESTELA_NOCHE_01
     gesto: 
@@ -1802,8 +2197,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 129.91682
-    t1: 134.71683
+    t0: 129.48749
+    t1: 134.28749
     actor: Actor_Tobias
     clave: FINAL_TOBIAS_NOCHE_01
     gesto: 
@@ -1811,8 +2206,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 156.51108
-    t1: 159.31108
+    t0: 151.97186
+    t1: 154.77187
     actor: Player
     clave: FINAL_WILL_NOCHE_02
     gesto: 
@@ -1820,8 +2215,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 159.61108
-    t1: 165.04456
+    t0: 155.07187
+    t1: 160.50534
     actor: Player
     clave: FINAL_WILL_HISTORIA_01
     gesto: 
@@ -1829,8 +2224,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 165.44455
-    t1: 170.46005
+    t0: 160.90533
+    t1: 165.92084
     actor: Player
     clave: FINAL_WILL_HISTORIA_02
     gesto: 
@@ -1838,8 +2233,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 170.86005
-    t1: 174.20372
+    t0: 166.32083
+    t1: 169.6645
     actor: Player
     clave: FINAL_WILL_HISTORIA_03
     gesto: 
@@ -1848,14 +2243,14 @@ MonoBehaviour:
   planos:
   - focos:
     - t: 5
-      p: {x: 399.8, y: 48.600296, z: -0.6}
+      p: {x: 399.8, y: 0.6, z: -0.6}
     t0: 5
     t1: 7.6
     tipo: 0
     descripcion: general de will y estela y tobias y liam
     posiciones:
     - t: 5
-      p: {x: 404.5, y: 49.132553, z: 3.8}
+      p: {x: 404.5, y: 2.6, z: 3.8}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -1869,7 +2264,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 399.8, y: 48.600296, z: -0.6}
+    focoFijo: {x: 399.8, y: 0.6, z: -0.6}
     alturaDelFoco: 0.6
     encuadre: {x: 0, y: 0}
     suavidad: 0
@@ -1882,7 +2277,7 @@ MonoBehaviour:
     descripcion: 'dos: liam y tobias'
     posiciones:
     - t: 7.6
-      p: {x: 403.2, y: 48.367996, z: -1.7}
+      p: {x: 403.2, y: 0.8305554, z: -1.7}
     lente: 38
     lenteFinal: 0
     sujetos:
@@ -1900,14 +2295,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 16.529726
-      p: {x: 398.85, y: 49.002422, z: -0.6}
+      p: {x: 398.85, y: 0.8, z: -0.6}
     t0: 16.529726
     t1: 38.61102
     tipo: 5
     descripcion: 'dos: tobias y will'
     posiciones:
     - t: 16.529726
-      p: {x: 398.7, y: 49.50126, z: -2.5}
+      p: {x: 398.7, y: 0.826389, z: -2.5}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -1917,7 +2312,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 398.85, y: 49.002422, z: -0.6}
+    focoFijo: {x: 398.85, y: 0.8, z: -0.6}
     alturaDelFoco: 0.8
     encuadre: {x: 0, y: 0}
     suavidad: 0.3
@@ -1930,7 +2325,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 38.61102
-      p: {x: 397, y: 49.93183, z: -1.9}
+      p: {x: 397, y: 1.0027777, z: -1.9}
     lente: 39
     lenteFinal: 0
     sujetos:
@@ -1946,14 +2341,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 41.511017
-      p: {x: 398.4, y: 49.561962, z: -1}
+      p: {x: 398.4, y: 1.2, z: -1}
     t0: 41.511017
     t1: 43.461014
     tipo: 0
     descripcion: general de will y estela
     posiciones:
     - t: 41.511017
-      p: {x: 394.2, y: 50.716213, z: -0.9}
+      p: {x: 394.2, y: 1.3, z: -0.9}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -1963,7 +2358,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 398.4, y: 49.561962, z: -1}
+    focoFijo: {x: 398.4, y: 1.2, z: -1}
     alturaDelFoco: 1.2
     encuadre: {x: 0, y: 0}
     suavidad: 0
@@ -1971,14 +2366,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 43.461014
-      p: {x: 397.9, y: 48.730072, z: -3.4}
+      p: {x: 397.9, y: -0.1361112, z: -3.4}
     t0: 43.461014
     t1: 44.861015
     tipo: 1
     descripcion: conjunto de estela
     posiciones:
     - t: 43.461014
-      p: {x: 397.2, y: 48.94483, z: -5.8}
+      p: {x: 397.2, y: 0.25, z: -5.8}
     lente: 38
     lenteFinal: 0
     sujetos:
@@ -1986,7 +2381,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 397.9, y: 48.730072, z: -3.4}
+    focoFijo: {x: 397.9, y: -0.1361112, z: -3.4}
     alturaDelFoco: 0.1
     encuadre: {x: 0, y: 0}
     suavidad: 0
@@ -1999,7 +2394,7 @@ MonoBehaviour:
     descripcion: conjunto de will y tobias y liam
     posiciones:
     - t: 44.861015
-      p: {x: 402.9, y: 48.791294, z: -2.3}
+      p: {x: 402.9, y: 1.0472223, z: -2.3}
     lente: 38
     lenteFinal: 0
     sujetos:
@@ -2024,7 +2419,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 48.165096
-      p: {x: 397.7, y: 49.13363, z: -1}
+      p: {x: 397.7, y: 0.6, z: -1}
     lente: 39
     lenteFinal: 0
     sujetos:
@@ -2045,7 +2440,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y will'
     posiciones:
     - t: 53.826992
-      p: {x: 398.6, y: 49.103546, z: 0.9}
+      p: {x: 398.6, y: 1.1, z: 0.9}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2068,7 +2463,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y tobias'
     posiciones:
     - t: 59.251293
-      p: {x: 399.9, y: 49.06997, z: -2.4}
+      p: {x: 399.9, y: 0.68333346, z: -2.4}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2091,7 +2486,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 62.45986
-      p: {x: 397, y: 49.93183, z: -1.9}
+      p: {x: 399.79224, y: 1.0000918, z: -1.9193388}
     lente: 39
     lenteFinal: 0
     sujetos:
@@ -2112,9 +2507,9 @@ MonoBehaviour:
     descripcion: 'dos: estela y tobias'
     posiciones:
     - t: 63.813736
-      p: {x: 399.9, y: 49.06997, z: -2.4}
+      p: {x: 399.9, y: 0.68333346, z: -2.4}
     - t: 69.817406
-      p: {x: 399.9, y: 48.99208, z: -1.8}
+      p: {x: 399.9, y: 0.7666666, z: -1.8}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2132,14 +2527,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 69.817406
-      p: {x: 400.15, y: 48.68366, z: -0.3}
+      p: {x: 400.15, y: 0.8, z: -0.3}
     t0: 69.817406
     t1: 88.99517
     tipo: 1
     descripcion: conjunto de will y estela y tobias y liam
     posiciones:
     - t: 69.817406
-      p: {x: 400.15, y: 49.370502, z: -3.9}
+      p: {x: 400.15, y: 1.05, z: -3.9}
     lente: 50
     lenteFinal: 0
     sujetos:
@@ -2153,7 +2548,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 400.15, y: 48.68366, z: -0.3}
+    focoFijo: {x: 400.15, y: 0.8, z: -0.3}
     alturaDelFoco: 0.8
     encuadre: {x: 0, y: 0}
     suavidad: 0.4
@@ -2161,14 +2556,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 88.99517
-      p: {x: 400.3, y: 48.65173, z: -0.3}
+      p: {x: 400.3, y: 0.8, z: -0.3}
     t0: 88.99517
     t1: 95.75557
     tipo: 1
     descripcion: conjunto de will y tobias y liam
     posiciones:
     - t: 88.99517
-      p: {x: 400.3, y: 49.267548, z: -2.3}
+      p: {x: 400.3, y: 0.9972222, z: -2.3}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -2180,7 +2575,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 400.3, y: 48.65173, z: -0.3}
+    focoFijo: {x: 400.3, y: 0.8, z: -0.3}
     alturaDelFoco: 0.8
     encuadre: {x: 0, y: 0}
     suavidad: 0.2
@@ -2188,14 +2583,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 95.75557
-      p: {x: 402.6, y: 48.42231, z: -0.35}
+      p: {x: 402.6, y: 1, z: -0.35}
     t0: 95.75557
     t1: 99.1425
     tipo: 2
     descripcion: medio de estela
     posiciones:
     - t: 95.75557
-      p: {x: 401.9, y: 48.903572, z: -2}
+      p: {x: 401.9, y: 1.0388888, z: -2}
     lente: 36
     lenteFinal: 0
     sujetos:
@@ -2203,7 +2598,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 402.6, y: 48.42231, z: -0.35}
+    focoFijo: {x: 402.6, y: 1, z: -0.35}
     alturaDelFoco: 1
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.2
@@ -2211,16 +2606,16 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 99.1425
-      p: {x: 399.8, y: 48.7003, z: -0.6}
+      p: {x: 399.8, y: 0.7, z: -0.6}
     t0: 99.1425
-    t1: 105.58784
+    t1: 105.1585
     tipo: 0
     descripcion: general de will y estela y tobias y liam
     posiciones:
     - t: 99.1425
-      p: {x: 400, y: 49.763237, z: -3.2}
-    - t: 105.58784
-      p: {x: 400, y: 49.177223, z: -6.5}
+      p: {x: 400, y: 1.3777778, z: -3.2}
+    - t: 105.1585
+      p: {x: 400, y: 1.3500001, z: -6.5}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2234,22 +2629,22 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 399.8, y: 48.7003, z: -0.6}
+    focoFijo: {x: 399.8, y: 0.7, z: -0.6}
     alturaDelFoco: 0.7
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 105.58784
+    - t: 105.1585
       p: {x: 406, y: 24, z: -22}
-    t0: 105.58784
-    t1: 111.98784
+    t0: 105.1585
+    t1: 111.5585
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 105.58784
-      p: {x: 399, y: 48.712433, z: 2}
+    - t: 105.1585
+      p: {x: 399, y: 1, z: 2}
     lente: 50
     lenteFinal: 0
     sujetos: []
@@ -2262,15 +2657,15 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 111.98784
-      p: {x: 399.9, y: 47.857872, z: 0.2}
-    t0: 111.98784
-    t1: 115.38784
+    - t: 111.5585
+      p: {x: 399.9, y: 0, z: 0.2}
+    t0: 111.5585
+    t1: 114.9585
     tipo: 0
     descripcion: general de will y estela y tobias y liam
     posiciones:
-    - t: 111.98784
-      p: {x: 400, y: 52.66579, z: 2.2}
+    - t: 111.5585
+      p: {x: 400, y: 5.2, z: 2.2}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -2284,22 +2679,22 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 399.9, y: 47.857872, z: 0.2}
+    focoFijo: {x: 399.9, y: 0, z: 0.2}
     alturaDelFoco: 0
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 115.38784
-      p: {x: 398, y: 48.71317, z: 0.3}
-    t0: 115.38784
-    t1: 118.00825
+    - t: 114.9585
+      p: {x: 398, y: 0.45, z: 0.3}
+    t0: 114.9585
+    t1: 117.57891
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 115.38784
-      p: {x: 397.6, y: 49.548775, z: -2}
+    - t: 114.9585
+      p: {x: 397.6, y: 0.73888886, z: -2}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2307,22 +2702,22 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 398, y: 48.71317, z: 0.3}
+    focoFijo: {x: 398, y: 0.45, z: 0.3}
     alturaDelFoco: 0.45
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 118.00825
+    - t: 117.57891
       p: {x: 406, y: 24, z: -22}
-    t0: 118.00825
-    t1: 121.00825
+    t0: 117.57891
+    t1: 120.57891
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 118.00825
-      p: {x: 398.6, y: 48.35353, z: 1.7}
+    - t: 117.57891
+      p: {x: 398.6, y: 0.5, z: 1.7}
     lente: 40
     lenteFinal: 0
     sujetos: []
@@ -2335,15 +2730,15 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 121.00825
-      p: {x: 398, y: 48.91317, z: 0.3}
-    t0: 121.00825
-    t1: 124.51682
+    - t: 120.57891
+      p: {x: 398, y: 0.65, z: 0.3}
+    t0: 120.57891
+    t1: 124.08749
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 121.00825
-      p: {x: 397.6, y: 49.548775, z: -2}
+    - t: 120.57891
+      p: {x: 397.6, y: 0.73888886, z: -2}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -2351,22 +2746,22 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 398, y: 48.91317, z: 0.3}
+    focoFijo: {x: 398, y: 0.65, z: 0.3}
     alturaDelFoco: 0.65
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 124.51682
-      p: {x: 398.6, y: 48.409805, z: 0.6}
-    t0: 124.51682
-    t1: 129.01683
+    - t: 124.08749
+      p: {x: 398.6, y: 0.35, z: 0.6}
+    t0: 124.08749
+    t1: 128.5875
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 124.51682
-      p: {x: 398.6, y: 50.08482, z: -0.8}
+    - t: 124.08749
+      p: {x: 398.6, y: 1.8, z: -0.8}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -2376,20 +2771,20 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 398.6, y: 48.409805, z: 0.6}
+    focoFijo: {x: 398.6, y: 0.35, z: 0.6}
     alturaDelFoco: 0.35
     encuadre: {x: 0, y: 0}
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 129.01683
-    t1: 135.71683
+    t0: 128.5875
+    t1: 135.28749
     tipo: 5
     descripcion: 'dos: tobias y liam'
     posiciones:
-    - t: 129.01683
-      p: {x: 401.1, y: 48.721886, z: -1.4}
+    - t: 128.5875
+      p: {x: 401.1, y: 0.872222, z: -1.4}
     lente: 35
     lenteFinal: 0
     sujetos:
@@ -2406,15 +2801,15 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 135.71683
-      p: {x: 398.6, y: 48.409805, z: 0.6}
-    t0: 135.71683
-    t1: 144.36217
+    - t: 135.28749
+      p: {x: 398.6, y: 0.35, z: 0.6}
+    t0: 135.28749
+    t1: 143.5035
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 135.71683
-      p: {x: 398.6, y: 50.08482, z: -0.8}
+    - t: 135.28749
+      p: {x: 398.6, y: 1.8, z: -0.8}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -2424,22 +2819,22 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 398.6, y: 48.409805, z: 0.6}
+    focoFijo: {x: 398.6, y: 0.35, z: 0.6}
     alturaDelFoco: 0.35
     encuadre: {x: 0, y: 0}
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 144.36217
-      p: {x: 399.9, y: 48.357872, z: 0.2}
-    t0: 144.36217
-    t1: 156.51108
+    - t: 143.5035
+      p: {x: 399.9, y: 0.5, z: 0.2}
+    t0: 143.5035
+    t1: 151.97186
     tipo: 0
     descripcion: general de will y estela y tobias y liam
     posiciones:
-    - t: 144.36217
-      p: {x: 400.6, y: 49.637527, z: -2.2}
+    - t: 143.5035
+      p: {x: 400.6, y: 1.4611111, z: -2.2}
     lente: 46
     lenteFinal: 0
     sujetos:
@@ -2453,20 +2848,20 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 399.9, y: 48.357872, z: 0.2}
+    focoFijo: {x: 399.9, y: 0.5, z: 0.2}
     alturaDelFoco: 0.5
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 156.51108
-    t1: 159.61108
+    t0: 151.97186
+    t1: 155.07187
     tipo: 5
     descripcion: 'dos: will y tobias'
     posiciones:
-    - t: 156.51108
-      p: {x: 401.1, y: 48.721886, z: -1.4}
+    - t: 151.97186
+      p: {x: 401.1, y: 0.872222, z: -1.4}
     lente: 38
     lenteFinal: 0
     sujetos:
@@ -2483,17 +2878,17 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 159.61108
-      p: {x: 401.8, y: 48.01581, z: 0.6}
-    t0: 159.61108
-    t1: 174.80373
+    - t: 155.07187
+      p: {x: 401.8, y: 0.6, z: 0.6}
+    t0: 155.07187
+    t1: 170.26451
     tipo: 0
     descripcion: general de will y estela y tobias y liam
     posiciones:
-    - t: 159.61108
-      p: {x: 400.6, y: 49.43753, z: -2.2}
-    - t: 174.80373
-      p: {x: 400.6, y: 48.529366, z: -7.5}
+    - t: 155.07187
+      p: {x: 400.6, y: 1.261111, z: -2.2}
+    - t: 170.26451
+      p: {x: 400.6, y: 1.15, z: -7.5}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2507,22 +2902,22 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 401.8, y: 48.01581, z: 0.6}
+    focoFijo: {x: 401.8, y: 0.6, z: 0.6}
     alturaDelFoco: 0.6
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 174.80373
+    - t: 170.26451
       p: {x: 406, y: 24, z: -22}
-    t0: 174.80373
-    t1: 199.10371
+    t0: 170.26451
+    t1: 194.5645
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 174.80373
-      p: {x: 400.5, y: 48.50409, z: -1}
+    - t: 170.26451
+      p: {x: 400.5, y: 0.6, z: -1}
     lente: 46
     lenteFinal: 0
     sujetos: []
@@ -2539,365 +2934,365 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550635
+      rid: 6540294550018327411
     linea: 100
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550636
+      rid: 6540294550018327412
     linea: 101
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550637
+      rid: 6540294550018327413
     linea: 102
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550638
+      rid: 6540294550018327414
     linea: 112
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.6
     beat:
-      rid: 6540294456446550639
+      rid: 6540294550018327415
     linea: 114
   - onlyIfFlag: 
     skipIfFlag: 
     t: 5
     beat:
-      rid: 6540294456446550640
+      rid: 6540294550018327416
     linea: 119
   - onlyIfFlag: 
     skipIfFlag: 
     t: 5
     beat:
-      rid: 6540294456446550641
+      rid: 6540294550018327417
     linea: 120
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.026869
     beat:
-      rid: 6540294456446550642
-    linea: 141
+      rid: 6540294550018327418
+    linea: 142
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.511017
     beat:
-      rid: 6540294456446550643
-    linea: 169
+      rid: 6540294550018327419
+    linea: 171
   - onlyIfFlag: 
     skipIfFlag: 
     t: 48.165096
     beat:
-      rid: 6540294456446550644
-    linea: 192
+      rid: 6540294550018327420
+    linea: 194
   - onlyIfFlag: 
     skipIfFlag: 
     t: 59.251293
     beat:
-      rid: 6540294456446550645
-    linea: 215
+      rid: 6540294550018327421
+    linea: 217
   - onlyIfFlag: 
     skipIfFlag: 
     t: 81.19562
     beat:
-      rid: 6540294456446550646
-    linea: 246
+      rid: 6540294550018327422
+    linea: 248
   - onlyIfFlag: 
     skipIfFlag: 
     t: 88.99517
     beat:
-      rid: 6540294456446550647
-    linea: 256
+      rid: 6540294550018327423
+    linea: 258
   - onlyIfFlag: 
     skipIfFlag: 
     t: 99.1425
     beat:
-      rid: 6540294456446550648
-    linea: 278
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 99.1425
-    beat:
-      rid: 6540294456446550649
-    linea: 279
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 99.1425
-    beat:
-      rid: 6540294456446550650
+      rid: 6540294550018327424
     linea: 280
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 104.38784
+    t: 99.1425
     beat:
-      rid: 6540294456446550651
-    linea: 290
+      rid: 6540294550018327425
+    linea: 281
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 105.58784
+    t: 99.1425
     beat:
-      rid: 6540294456446550652
-    linea: 308
+      rid: 6540294550018327426
+    linea: 282
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 105.58784
+    t: 103.9585
     beat:
-      rid: 6540294456446550653
-    linea: 305
+      rid: 6540294550018327427
+    linea: 292
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 105.58784
+    t: 105.1585
     beat:
-      rid: 6540294456446550654
-    linea: 295
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 111.98784
-    beat:
-      rid: 6540294456446550655
+      rid: 6540294550018327428
     linea: 310
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 111.98784
+    t: 105.1585
     beat:
-      rid: 6540294456446550656
-    linea: 311
+      rid: 6540294550018327429
+    linea: 307
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.01683
+    t: 105.1585
     beat:
-      rid: 6540294456446550657
-    linea: 346
+      rid: 6540294550018327430
+    linea: 297
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.01683
+    t: 111.5585
     beat:
-      rid: 6540294456446550658
-    linea: 347
+      rid: 6540294550018327431
+    linea: 312
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.01683
+    t: 111.5585
     beat:
-      rid: 6540294456446550659
+      rid: 6540294550018327432
+    linea: 313
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 128.5875
+    beat:
+      rid: 6540294550018327433
+    linea: 348
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 128.5875
+    beat:
+      rid: 6540294550018327434
     linea: 349
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 136.51683
+    t: 128.5875
     beat:
-      rid: 6540294456446550660
-    linea: 361
+      rid: 6540294550018327435
+    linea: 351
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 141.36217
+    t: 136.0875
     beat:
-      rid: 6540294456446550661
-    linea: 366
+      rid: 6540294550018327436
+    linea: 363
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 141.36217
+    t: 140.5035
     beat:
-      rid: 6540294456446550662
-    linea: 367
+      rid: 6540294550018327437
+    linea: 368
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 142.76216
+    t: 140.5035
     beat:
-      rid: 6540294456446550663
+      rid: 6540294550018327438
     linea: 369
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 144.36217
+    t: 141.90349
     beat:
-      rid: 6540294456446550664
+      rid: 6540294550018327439
     linea: 371
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 159.61108
+    t: 143.5035
     beat:
-      rid: 6540294456446550665
-    linea: 395
+      rid: 6540294550018327440
+    linea: 373
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 165.44455
+    t: 155.07187
     beat:
-      rid: 6540294456446550666
-    linea: 400
+      rid: 6540294550018327441
+    linea: 397
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 174.80373
+    t: 160.90533
     beat:
-      rid: 6540294456446550667
-    linea: 408
+      rid: 6540294550018327442
+    linea: 402
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 177.40373
+    t: 170.26451
     beat:
-      rid: 6540294456446550668
-    linea: 411
+      rid: 6540294550018327443
+    linea: 410
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 183.80373
+    t: 172.86452
     beat:
-      rid: 6540294456446550669
+      rid: 6540294550018327444
     linea: 413
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 189.20372
+    t: 179.26451
     beat:
-      rid: 6540294456446550670
+      rid: 6540294550018327445
     linea: 415
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 189.20372
+    t: 184.6645
     beat:
-      rid: 6540294456446550671
-    linea: 416
+      rid: 6540294550018327446
+    linea: 417
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 197.60371
+    t: 184.6645
     beat:
-      rid: 6540294456446550672
+      rid: 6540294550018327447
     linea: 418
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 193.0645
+    beat:
+      rid: 6540294550018327448
+    linea: 420
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: fin_dibujo
     t: 35.41462
   - nombre: frase
-    t: 177.40373
+    t: 172.86452
   puntos:
   - nombre: s_rio_tobias
     posicion: {x: 400.3, y: 0, z: 0}
   - nombre: s_rio_liam
     posicion: {x: 401.6, y: 0, z: 0}
   - nombre: p_r_centro
-    posicion: {x: 399.8, y: 48.000298, z: -0.6}
+    posicion: {x: 399.8, y: 0, z: -0.6}
   - nombre: p_r_rio
-    posicion: {x: 399.5, y: 47.193954, z: -8}
+    posicion: {x: 399.5, y: -0.25, z: -8}
   - nombre: p_orilla_will
-    posicion: {x: 398.4, y: 48.33384, z: -0.8}
+    posicion: {x: 398.4, y: 0, z: -0.8}
   - nombre: p_estela_mira
-    posicion: {x: 398.9, y: 47.939598, z: 0.9}
+    posicion: {x: 398.9, y: 0, z: 0.9}
   - nombre: p_estela_vuelo
-    posicion: {x: 398.4, y: 48.36196, z: -1}
+    posicion: {x: 398.4, y: 0, z: -1}
   - nombre: p_rio_agua
-    posicion: {x: 397.9, y: 48.630074, z: -3.4}
+    posicion: {x: 397.9, y: -0.2361112, z: -3.4}
   - nombre: p_tobias_dibujo
-    posicion: {x: 399.25, y: 48.09623, z: -0.45}
+    posicion: {x: 399.25, y: 0, z: -0.45}
   - nombre: p_estela_empuja
-    posicion: {x: 399.05, y: 48.209084, z: -0.95}
+    posicion: {x: 399.05, y: 0, z: -0.95}
   - nombre: p_will_empujado
-    posicion: {x: 397.75, y: 48.451042, z: -0.5}
+    posicion: {x: 397.75, y: 0, z: -0.5}
   - nombre: p_estela_sentada
-    posicion: {x: 399.45, y: 47.93522, z: 0.3}
+    posicion: {x: 399.45, y: 0, z: 0.3}
   - nombre: p_protesta
-    posicion: {x: 400.3, y: 47.85173, z: -0.3}
+    posicion: {x: 400.3, y: 0, z: -0.3}
   - nombre: p_actua_will
-    posicion: {x: 398.65, y: 48.141914, z: 0.1}
+    posicion: {x: 398.65, y: 0, z: 0.1}
   - nombre: p_estela_detras_t
-    posicion: {x: 400.3, y: 47.634834, z: 0.95}
+    posicion: {x: 400.3, y: 0, z: 0.95}
   - nombre: p_estela_detras_l
-    posicion: {x: 402.2, y: 47.29682, z: 0.9}
+    posicion: {x: 402.2, y: 0, z: 0.9}
   - nombre: p_actua_liam
-    posicion: {x: 402.6, y: 47.42231, z: -0.35}
+    posicion: {x: 402.6, y: 0, z: -0.35}
   - nombre: p_r_actua
-    posicion: {x: 400.15, y: 47.88366, z: -0.3}
+    posicion: {x: 400.15, y: 0, z: -0.3}
   - nombre: p_will_lado_tobias
-    posicion: {x: 399.45, y: 48.011497, z: -0.15}
+    posicion: {x: 399.45, y: 0, z: -0.15}
   - nombre: p_liam_lado_tobias
-    posicion: {x: 401.15, y: 47.648422, z: -0.15}
+    posicion: {x: 401.15, y: 0, z: -0.15}
   - nombre: cam_r_general
-    posicion: {x: 404.5, y: 46.532555, z: 3.8}
+    posicion: {x: 404.5, y: 0, z: 3.8}
   - nombre: cam_r_liam_tobias
-    posicion: {x: 403.2, y: 47.467995, z: -1.7}
+    posicion: {x: 403.2, y: -0.06944459, z: -1.7}
   - nombre: cam_r_will
-    posicion: {x: 397, y: 48.831833, z: -1.9}
+    posicion: {x: 397, y: -0.09722233, z: -1.9}
   - nombre: cam_r_lado
-    posicion: {x: 394.2, y: 49.416214, z: -0.9}
+    posicion: {x: 394.2, y: 0, z: -0.9}
   - nombre: cam_r_agua
-    posicion: {x: 397.2, y: 48.44483, z: -5.8}
+    posicion: {x: 397.2, y: -0.25, z: -5.8}
   - nombre: cam_r_reaccion
-    posicion: {x: 402.9, y: 47.591293, z: -2.3}
+    posicion: {x: 402.9, y: -0.15277779, z: -2.3}
   - nombre: cam_r_estela_agua
-    posicion: {x: 397.7, y: 48.53363, z: -1}
+    posicion: {x: 397.7, y: 0, z: -1}
   - nombre: cam_r_risa_a
-    posicion: {x: 400, y: 48.16324, z: -3.2}
+    posicion: {x: 400, y: -0.22222227, z: -3.2}
   - nombre: cam_r_risa_b
-    posicion: {x: 400, y: 47.577225, z: -6.5}
+    posicion: {x: 400, y: -0.25, z: -6.5}
   - nombre: cam_r_cielo
-    posicion: {x: 399, y: 47.712433, z: 2}
+    posicion: {x: 399, y: 0, z: 2}
   - nombre: cam_r_dibujo
-    posicion: {x: 398.7, y: 48.50126, z: -2.5}
+    posicion: {x: 398.7, y: -0.173611, z: -2.5}
   - nombre: p_dibujo
-    posicion: {x: 398.85, y: 48.202423, z: -0.6}
+    posicion: {x: 398.85, y: 0, z: -0.6}
   - nombre: cam_r_empujon
-    posicion: {x: 398.6, y: 48.003548, z: 0.9}
+    posicion: {x: 398.6, y: 0, z: 0.9}
   - nombre: cam_r_cuento
-    posicion: {x: 399.9, y: 48.21997, z: -2.4}
+    posicion: {x: 399.9, y: -0.16666655, z: -2.4}
   - nombre: cam_r_cuento_b
-    posicion: {x: 399.9, y: 48.142082, z: -1.8}
+    posicion: {x: 399.9, y: -0.083333455, z: -1.8}
   - nombre: cam_r_actua
-    posicion: {x: 400.15, y: 48.070503, z: -3.9}
+    posicion: {x: 400.15, y: -0.25, z: -3.9}
   - nombre: cam_r_protesta
-    posicion: {x: 400.3, y: 48.117546, z: -2.3}
+    posicion: {x: 400.3, y: -0.15277779, z: -2.3}
   - nombre: cam_r_estela_casi
-    posicion: {x: 401.9, y: 47.75357, z: -2}
+    posicion: {x: 401.9, y: -0.1111112, z: -2}
   - nombre: p_will_noche
-    posicion: {x: 398, y: 48.26317, z: 0.3}
+    posicion: {x: 398, y: 0, z: 0.3}
   - nombre: p_estela_noche
-    posicion: {x: 399.2, y: 47.98842, z: 0.3}
+    posicion: {x: 399.2, y: 0, z: 0.3}
   - nombre: p_liam_noche
-    posicion: {x: 400.6, y: 47.699768, z: 0.25}
+    posicion: {x: 400.6, y: 0, z: 0.25}
   - nombre: p_tobias_noche
-    posicion: {x: 401.6, y: 47.419754, z: 0.75}
+    posicion: {x: 401.6, y: 0, z: 0.75}
   - nombre: p_tobias_acurrucado
-    posicion: {x: 401.3, y: 47.503044, z: 0.55}
+    posicion: {x: 401.3, y: 0, z: 0.55}
   - nombre: p_will_delante
-    posicion: {x: 401, y: 47.74037, z: -0.6}
+    posicion: {x: 401, y: 0, z: -0.6}
   - nombre: p_will_cuenta
-    posicion: {x: 402.45, y: 47.38626, z: 0.1}
+    posicion: {x: 402.45, y: 0, z: 0.1}
   - nombre: p_estela_detras
-    posicion: {x: 400.6, y: 47.39631, z: 1.9}
+    posicion: {x: 400.6, y: 0, z: 1.9}
   - nombre: p_estela_escucha
-    posicion: {x: 402.6, y: 47.126778, z: 1.5}
+    posicion: {x: 402.6, y: 0, z: 1.5}
   - nombre: p_will_hacia_estela
-    posicion: {x: 399.6, y: 48.00067, z: -0.3}
+    posicion: {x: 399.6, y: 0, z: -0.3}
   - nombre: p_estela_hacia_will
-    posicion: {x: 397.6, y: 48.459694, z: -0.3}
+    posicion: {x: 397.6, y: 0, z: -0.3}
   - nombre: p_r_dos
-    posicion: {x: 398.6, y: 48.059807, z: 0.6}
+    posicion: {x: 398.6, y: 0, z: 0.6}
   - nombre: p_r_noche_centro
-    posicion: {x: 399.9, y: 47.857872, z: 0.2}
+    posicion: {x: 399.9, y: 0, z: 0.2}
   - nombre: p_r_cuenta
-    posicion: {x: 401.8, y: 47.41581, z: 0.6}
+    posicion: {x: 401.8, y: 0, z: 0.6}
   - nombre: p_constelacion_rio
     posicion: {x: 406, y: 24, z: -22}
   - nombre: cam_r_noche_cenital
-    posicion: {x: 400, y: 47.46579, z: 2.2}
+    posicion: {x: 400, y: 0, z: 2.2}
   - nombre: cam_r_will_sentado
-    posicion: {x: 397.6, y: 48.698776, z: -2}
+    posicion: {x: 397.6, y: -0.111111194, z: -2}
   - nombre: cam_r_pov
-    posicion: {x: 398.6, y: 47.85353, z: 1.7}
+    posicion: {x: 398.6, y: 0, z: 1.7}
   - nombre: cam_r_dos_noche
-    posicion: {x: 398.6, y: 48.28482, z: -0.8}
+    posicion: {x: 398.6, y: 0, z: -0.8}
   - nombre: cam_r_tobias_liam
-    posicion: {x: 401.1, y: 47.821884, z: -1.4}
+    posicion: {x: 401.1, y: -0.027777988, z: -1.4}
   - nombre: cam_r_alejarse_a
-    posicion: {x: 400.6, y: 48.03753, z: -2.2}
+    posicion: {x: 400.6, y: -0.13888893, z: -2.2}
   - nombre: cam_r_alejarse_b
-    posicion: {x: 400.6, y: 47.129364, z: -7.5}
+    posicion: {x: 400.6, y: -0.24999999, z: -7.5}
   - nombre: cam_r_final
-    posicion: {x: 400.5, y: 47.90409, z: -1}
+    posicion: {x: 400.5, y: 0, z: -1}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446550635
+    - rid: 6540294550018327411
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2905,7 +3300,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446550636
+    - rid: 6540294550018327412
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2913,21 +3308,21 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 6540294456446550637
+    - rid: 6540294550018327413
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PrepararRioDia
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550638
+    - rid: 6540294550018327414
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TarjetaSemanasDespues
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550639
+    - rid: 6540294550018327415
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2936,14 +3331,14 @@ MonoBehaviour:
         fadeIn: 4
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294456446550640
+    - rid: 6540294550018327416
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: QuitarTelon
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550641
+    - rid: 6540294550018327417
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2951,35 +3346,35 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.6
         waitForEnd: 0
-    - rid: 6540294456446550642
+    - rid: 6540294550018327418
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: DibujoDeTobias
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550643
+    - rid: 6540294550018327419
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TironDeLaCana
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550644
+    - rid: 6540294550018327420
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EstelaSaleDelAgua
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550645
+    - rid: 6540294550018327421
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TobiasMiraAEstela
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550646
+    - rid: 6540294550018327422
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2989,14 +3384,14 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 6540294456446550647
+    - rid: 6540294550018327423
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TobiasDejaDeMirar
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550648
+    - rid: 6540294550018327424
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3006,21 +3401,21 @@ MonoBehaviour:
         markName: 
         volume: 0.95
         tono: 1
-    - rid: 6540294456446550649
+    - rid: 6540294550018327425
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: Anochecer
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550650
+    - rid: 6540294550018327426
       type: {class: PostprocesoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         perfil: {fileID: 11400000, guid: 2210726cb381ea246aea7c867431ccac, type: 2}
         transicion: 9
         esperar: 0
-    - rid: 6540294456446550651
+    - rid: 6540294550018327427
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3029,35 +3424,35 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 4
         desdeSegundo: -1
-    - rid: 6540294456446550652
+    - rid: 6540294550018327428
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550653
+    - rid: 6540294550018327429
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TobiasDuerme
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550654
+    - rid: 6540294550018327430
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: MusicaDeLaNoche
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550655
+    - rid: 6540294550018327431
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: NocheEnElRio
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550656
+    - rid: 6540294550018327432
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3067,14 +3462,14 @@ MonoBehaviour:
         markName: 
         volume: 0.35
         tono: 1
-    - rid: 6540294456446550657
+    - rid: 6540294550018327433
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamDuerme
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550658
+    - rid: 6540294550018327434
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3084,21 +3479,21 @@ MonoBehaviour:
         markName: 
         volume: 0.55
         tono: 1
-    - rid: 6540294456446550659
+    - rid: 6540294550018327435
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TobiasDespierta
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550660
+    - rid: 6540294550018327436
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: WillYEstelaSeMiran
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550661
+    - rid: 6540294550018327437
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3108,7 +3503,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294456446550662
+    - rid: 6540294550018327438
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3118,7 +3513,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294456446550663
+    - rid: 6540294550018327439
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3128,42 +3523,42 @@ MonoBehaviour:
         markName: 
         volume: 0.4
         tono: 1
-    - rid: 6540294456446550664
+    - rid: 6540294550018327440
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: NadieMiraConLaCabeza
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550665
+    - rid: 6540294550018327441
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: VozQueSeAleja
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550666
+    - rid: 6540294550018327442
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TobiasDuerme
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550667
+    - rid: 6540294550018327443
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EnfocarEstrella
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550668
+    - rid: 6540294550018327444
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: FraseFinal
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550669
+    - rid: 6540294550018327445
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3171,7 +3566,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 5
         waitForEnd: 0
-    - rid: 6540294456446550670
+    - rid: 6540294550018327446
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3179,14 +3574,14 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446550671
+    - rid: 6540294550018327447
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: RotuloFin
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550672
+    - rid: 6540294550018327448
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

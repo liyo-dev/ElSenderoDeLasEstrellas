@@ -355,7 +355,7 @@ La prueba no le pide a Estela que cambie ni que sea dulce: le permite reírse de
 **Diseño jugable:** sin combate y sin derrota. La comedia vive del ritmo, así que los chistes con remate son cinemática y lo jugable está donde el jugador provoca el chiste. Dentro del reino toda la magia de ataque sale en purpurina y corazoncitos y no hace daño. El recorrido:
 
 - **La Puerta del Corazón:** el jugador intenta abrirla con los tres, cambiando de personaje: el fuego de Estela, la ganzúa de Liam y el empujón de Will.
-- **Pruebas de candidata:** ya vestida, y antes de conocer a Pompón, Estela supera tres pruebas físicas. Una carrera de obstáculos por plataformas, puentes, trampolines y ascensores contra los habitantes del reino, en la que también corren Will y Liam (Will rebota de más con su armadura; Liam camina muy digno con su corazón en la cabeza) y que tiene que ganar Estela; la escalada de una torre de caramelo contra un rival; y una prueba de puntería en la que globos y dianas revientan en corazoncitos. El lazo gigante le deja planear en los saltos largos. Si no gana, se reintenta en el acto con un comentario del grupo.
+- **Pruebas de candidata:** ya vestida, y antes de conocer a Pompón, Estela supera tres pruebas físicas. Una carrera de obstáculos por plataformas, puentes, trampolines y ascensores contra los habitantes del reino, en la que también corren Will y Liam (Will rebota de más con su armadura; Liam camina muy digno con su corazón en la cabeza) y que tiene que ganar Estela; la subida a la torre de caramelo contra un rival (era una escalada: el juego ya no tiene escalada, § 7.3, y esta prueba se cambia por otra sin decidir); y una prueba de puntería en la que globos y dianas revientan en corazoncitos. El lazo gigante le deja planear en los saltos largos. Si no gana, se reintenta en el acto con un comentario del grupo.
 - **Clases de la Condesa Merengue:** son el tutorial del duelo. Cada lección enseña un control y sale mal de forma graciosa, sin penalizar.
 - **El reino libre:** exploración antes de que suenen las trompetillas, con una misión opcional.
 - **Duelo de Ternura:** minijuego de tres rondas. En cada una actúa primero Pompón y después Estela: en la reverencia mantiene el equilibrio contra el peso del lazo, en la canción de cuna pulsa a ritmo con la música y en los ojitos mantiene el puchero. Los jueces responden con cartelitos. No se puede perder ni ganar jugando bien: el marcador es el chiste, y así no se finge un control que el jugador no tiene.
@@ -621,6 +621,16 @@ El diseño exige recorrido continuo a escala del jugador, accesos y arenas claro
 El vestido de MainWorld es una adaptación de juego (TDD §23). La capital es una ciudad amurallada en dos terrazas: Puerta Real al final del camino, Plaza de la Puerta, Plaza del Mercado con la taberna, Escalinata Real y Plaza Real frente al castillo. Dos subidas rodean el talud central para sostener la persecución. La escolta recorre taberna, escalinata y castillo; la Plaza Real alberga la audiencia y defensa contra el segundo Demonio.
 
 La **Laguna de la Era** es natural y de ribera, al sureste de la subida a las granjas. Es ambientación sin misión, presa ni acequias. No sustituye al manantial compartido de Risco y Vega. El marjal sureste queda reservado. La montaña destruida debe respetar la laguna y los recorridos.
+
+### 7.3. Exploración: habilidades que abren el mundo (decidido el 11 nov 2026)
+
+- **Sin escalada.** El jugador no trepa. Lo que sube, sube por peldaños o saltando de repisa en repisa; lo muy alto solo se alcanza **volando**, y debe verse desde el principio para que el vuelo tenga destino.
+- **Salto y nado abren zonas** durante el juego; el **vuelo** llega al final y es sobre todo recompensa. En el mundo abierto hay sitios a los que hay que ir y a los que de primeras no se llega: se llega usando una habilidad.
+- **Todo conectado.** Cada tramo de salto acaba en un atajo hacia algo conocido; fallar un salto deja en el nivel de abajo, no al principio. Las repisas se reconocen por su forma, sin marcas pintadas.
+- **Cuevas y templos** repartidos por el mundo son el sitio de los puzles (Pruebas de las Estrellas, § 4). La entrada de un templo puede cargar un nivel aparte. Su aspecto es propio (piedra clara con musgo, arco apuntado, aros de bronce) y no imita las Ruinas del Libro.
+- **En MainWorld** (TDD § 23.7d): cueva de la cascada (de la poza a la repisa alta, pasando por detrás del agua), subida en repisas, paso secreto del suroeste, cuatro entradas de templo (salto, nado, vuelo y a pie) y mirador en la cumbre como destino de vuelo.
+
+**Abierto:** salto y nado se obtienen hoy en dos secundarias (Rudolfo y Niño Pez, § 6); si hay zonas obligatorias que dependen de ellas, o pasan a la historia principal o lo obligatorio se resuelve con el salto básico. Y la prueba de escalada de Chuchelandia (§ 5) se cambia por otra, sin decidir cuál.
 
 ## 8. Anexos
 

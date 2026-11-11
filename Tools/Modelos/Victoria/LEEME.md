@@ -1,0 +1,16 @@
+# Victoria: vestuario propio (11 nov 2026)
+
+Segunda pieza de la propuesta de vestuario de NPCs con peso (aprobada por Raúl). **Estado: previa hecha; todavía
+no está en el juego.**
+
+- `victoria.py` (Blender 5.x, bpy): costurera. Blusa lila con las mangas remangadas (el brazo, de piel, con el
+  material del cuerpo), falda lila oscuro con vuelo, delantal crema con peto, tirantes y lazo a la espalda,
+  cinta de medir al cuello, bolsillo con el acerico y sus alfileres, medias y zapatos (`Body27_Costurera`).
+  El moño va aparte, como accesorio de cabeza (`AC13_Mono`, con la cinta crema), por fuera de su Hair06.
+  Argumentos: base.blend (`AllBodiesCloaks.fbx` importado) y salida.
+- `victoria_previa.png`: con Head02_Female y Hair06 del pack (`../Eldran/previa.py` y `../Ninos/foto.py`).
+- `para_unity/`: los dos FBX (`../Prendas/exportar_prenda.py`). **No están en Assets**; van a
+  `Assets/Art/Characters/NPCs/Victoria/` cuando Raúl dé el visto bueno y Unity esté libre. Hoy lleva Body04.
+
+Sin comprobar: la falda y el delantal al andar, y el moño con el color de pelo del juego (en Unity tiene que
+llevar el material de su pelo).

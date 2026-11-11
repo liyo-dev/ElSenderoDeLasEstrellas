@@ -40,6 +40,8 @@ will en p_will mirando p_puerta
 & plano conjunto will liam p_puerta
 & will cara neutral
 & liam cara molesto
+& liam bucle BrazosCruzados
+& will bucle ManosALaEspalda
 espera 1.2
 
 # Desde dentro.
@@ -70,6 +72,7 @@ sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes
 estela anda a p_fuera ritmo=paseo llega_mirando=will
 & vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=estela offset=0,1.4,0 lifetime=4
 plano medio estela solo
+& estela bucle BrazosEnJarras fundido=0.3
 espera 1.0
 
 # Will aguanta tres segundos.
@@ -77,6 +80,7 @@ espera 1.0
 plano medio will solo
 will cara picaro
 & liam cara neutral
+& will reposo
 espera 3.0
 will gesto Laugh01
 & will cara alegre

@@ -40,11 +40,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bodyText;
     [SerializeField] private Image portraitImage;
 
-    [Header("Modo Sueño (opcional)")]
-    [Tooltip("Fondo nebulosa de colores para el panel de diálogo. Hijo del canvas de diálogo, por debajo del panel.")]
-    [SerializeField] private DreamBackgroundController _dreamBackground;
-    [Tooltip("Chispas flotantes para el panel de diálogo. Hijo del canvas de diálogo, por encima del panel.")]
-    [SerializeField] private DreamSparkleOverlay _dreamSparkles;
+    /// El papel de la caja y la pestaña del nombre; se monta sobre el panel al despertar.
+    private PapelDeLaCajaDeDialogo _papel;
 
     [Header("Typewriter")]
     [SerializeField] private bool useTypewriter = true;
@@ -242,6 +239,8 @@ public class DialogueManager : MonoBehaviour
             group.interactable = false;
         }
 
+        MontarElPapel();
+
         // Asegurar choices ocultos por defecto
         if (choicesRoot != null)
         {
@@ -256,6 +255,27 @@ public class DialogueManager : MonoBehaviour
             if (t != null) submitHint = t.gameObject;
         }
         SetSubmitHintActive(false);
+    }
+
+    /// <summary>
+    /// Pone el papel de la interfaz bajo el texto de la caja. Los fondos que trae el panel de la
+    /// escena (nebulosa, chispas, difuminado oscuro) no se dibujan debajo.
+    /// </summary>
+    void MontarElPapel()
+    {
+        if (bodyText == null || !(bodyText.transform.parent is RectTransform panel)) return;
+        foreach (var fondo in panel.GetComponentsInChildren<DreamBackgroundController>(true)) fondo.gameObject.SetActive(false);
+        foreach (var chispas in panel.GetComponentsInChildren<DreamSparkleOverlay>(true)) chispas.gameObject.SetActive(false);
+        foreach (var difuminado in panel.GetComponentsInChildren<DialogueTextBackdropUI>(true)) difuminado.gameObject.SetActive(false);
+        _papel = new PapelDeLaCajaDeDialogo(panel, nameText, bodyText);
+        _papel.VestirOpcion(yesButton);
+        _papel.VestirOpcion(noButton);
+    }
+
+    void PonerNombreDelHablante(string nombre)
+    {
+        if (_papel != null) _papel.PonerNombre(nombre, PaletaUI.Noche, PaletaUI.Oro);
+        else if (nameText) nameText.text = nombre ?? string.Empty;
     }
 
     void OnEnable()
@@ -517,9 +537,6 @@ public class DialogueManager : MonoBehaviour
             Debug.LogError("[DialogueManager] ❌ CanvasGroup es NULL - el diálogo no se mostrará");
 #endif
         }
-
-        _dreamBackground?.StartDream();
-        _dreamSparkles?.StartSparkles();
 
         // NO mostrar el submitHint al inicio - se mostrará cuando termine de escribir la primera línea
         SetSubmitHintActive(false);
@@ -838,9 +855,6 @@ public class DialogueManager : MonoBehaviour
             group.interactable = false;
         }
 
-        _dreamBackground?.StopDream();
-        _dreamSparkles?.StopSparkles();
-
         // Desactivar sistema cinematográfico
         if (UsaCamaraCinematica && DialogueCinematicController.Instance != null)
         {
@@ -915,9 +929,6 @@ public class DialogueManager : MonoBehaviour
             group.interactable = false;
         }
 
-        _dreamBackground?.StopDream();
-        _dreamSparkles?.StopSparkles();
-
         SetSubmitHintActive(false);
 
         // Seguridad extra: garantizar que SavePrompt no quede enganchado
@@ -975,7 +986,7 @@ public class DialogueManager : MonoBehaviour
         }
         // Resetear contenido anterior
         StopTypewriter();
-        if (nameText) nameText.text = string.Empty;
+        PonerNombreDelHablante(string.Empty);
         if (bodyText)
         {
             bodyText.text = string.Empty;
@@ -989,10 +1000,10 @@ public class DialogueManager : MonoBehaviour
         if (pauseGameWhileOpen) TimeScaleArbiterService.Request(this, 0f);
         SetSubmitHintActive(false);
 
-        if (messageLabel != null && !string.IsNullOrEmpty(message))
-            messageLabel.text = message;
-        else if (bodyText != null && !string.IsNullOrEmpty(message))
-            bodyText.text = message;
+        // La pregunta va en el cuerpo de la caja; la etiqueta del nombre es la pestaña de quien habla.
+        var destinoDeLaPregunta = messageLabel != null && messageLabel != nameText ? messageLabel : bodyText;
+        if (destinoDeLaPregunta != null && !string.IsNullOrEmpty(message))
+            destinoDeLaPregunta.text = message;
 
         _onYes = onYes; _onNo = onNo;
 
@@ -1132,7 +1143,7 @@ public class DialogueManager : MonoBehaviour
             else
                 speakerNameToShow = line.speakerNameId;
         }
-        if (nameText) nameText.text = speakerNameToShow ?? string.Empty;
+        PonerNombreDelHablante(speakerNameToShow);
 
         // --- TEXTO DEL DIÁLOGO (si hay textId se localiza; si no, usa line.text) ---
         string textToShow = line.text ?? string.Empty;

@@ -28,6 +28,7 @@ will en p_will mirando claro
 & c2 en p_c2 mirando p_jefe
 & jefe en p_jefe mirando p_c2
 plano general jefe c2
+& jefe bucle BrazosEnJarras
 espera 1
 jefe dice CAP3_CLARO_01 mira=c2
 c2 dice CAP3_CLARO_02 cara=molesto
@@ -45,5 +46,7 @@ espera 0.4
 will cara pensativo
 will dice CAP3_CLARO_06 cara=preocupado
 espera 0.4
+# Se calma con la mano en el pecho, donde le arde el fuego.
 will dice CAP3_CLARO_07 cara=decidido
+& will bucle ManoAlPecho fundido=0.6
 espera 0.5

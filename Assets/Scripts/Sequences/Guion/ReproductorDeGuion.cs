@@ -525,16 +525,19 @@ public sealed class ReproductorDeGuion
         public void SaltarHasta(float t)
         {
             // Solo el último estado de animación y de cara que tocaba en t.
-            string bucle = null;
+            string bucle = null, poseAlta = null;
             while (_iAnim < Datos.animacion.Count && Datos.animacion[_iAnim].t <= t)
             {
                 var o = Datos.animacion[_iAnim++];
                 if (o.tipo == TipoDeAnimacion.Bucle) bucle = o.estado;
-                else if (o.tipo == TipoDeAnimacion.Reposo) bucle = null;
+                else if (o.tipo == TipoDeAnimacion.Reposo) { bucle = null; poseAlta = null; }
+                else if (o.tipo == TipoDeAnimacion.PoseAlta) poseAlta = o.estado;
+                else if (o.tipo == TipoDeAnimacion.SoltarPoseAlta) poseAlta = null;
             }
             // Sin fundido: es el estado con el que la escena ya tiene que aparecer.
             if (bucle != null) Actor.HoldPose(bucle, fundido: 0f);
             else Actor.ForzarEnElSuelo();
+            if (poseAlta != null) Actor.SostenerPoseDeMedioCuerpo(poseAlta, 0f);
             NPCEmotion cara = NPCEmotion.None;
             while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = CaraDe(Datos.caras[_iCara++].emocion);
             if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
@@ -672,6 +675,7 @@ public sealed class ReproductorDeGuion
             _cabezaAplicada = clave;
 
             Transform hacia = null;
+            bool esUnPunto = false;
             if (clave >= 0)
             {
                 var c = Datos.cabezas[clave];
@@ -682,6 +686,8 @@ public sealed class ReproductorDeGuion
                     if (_marcaDeCabeza == null) _marcaDeCabeza = new GameObject($"Guion · cabeza de {Datos.alias}").transform;
                     _marcaDeCabeza.position = c.punto;
                     hacia = _marcaDeCabeza;
+                    // El punto del guion es donde está lo que se mira (la bola sobre la mesa, la llave).
+                    esUnPunto = true;
                 }
             }
             if (hacia == null && _cabeza == null) return;
@@ -697,7 +703,7 @@ public sealed class ReproductorDeGuion
                 _inclinacionPrevia = _cabeza.MaxPitch;
                 _cabeza.FijarAlcance(YawDeCabeza, CorteDeCabeza, PesoDeCabeza, InclinacionDeCabeza);
             }
-            _cabeza.SetTarget(hacia);
+            _cabeza.SetTarget(hacia, esUnPunto);
         }
 
         private void SoltarCabeza()
@@ -731,6 +737,12 @@ public sealed class ReproductorDeGuion
                     break;
                 case TipoDeAnimacion.FinDeGesto:
                     Actor.CerrarGestoDeCuerpoEntero();
+                    break;
+                case TipoDeAnimacion.PoseAlta:
+                    Actor.SostenerPoseDeMedioCuerpo(o.estado, o.fundido > 0f ? o.fundido : 0.3f);
+                    break;
+                case TipoDeAnimacion.SoltarPoseAlta:
+                    Actor.SoltarPoseDeMedioCuerpo();
                     break;
                 case TipoDeAnimacion.HablaEmpieza:
                     Actor.BeginInteraction();

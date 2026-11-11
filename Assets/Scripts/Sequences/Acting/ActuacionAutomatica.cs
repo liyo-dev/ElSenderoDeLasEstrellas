@@ -20,6 +20,20 @@ public static class ActuacionAutomatica
     private static readonly string[] Saludo = { "HandWave01", "Greeting01_NoWeapon" };
     private static readonly string[] Alegria = { "Cheer01", "Cheer02" };
 
+    // Lo que pide la frase (INC-1068). El primero que el actor tenga; los demás son el plan B.
+    private static readonly string[] Ninguno = new string[0];
+    private static readonly string[] Aviso = { "Aviso01", "SenseSomethingStart_NoWeapon" };
+    private static readonly string[] Alto = { "Alto01", "HeadShake01" };
+    private static readonly string[] Sobresalto = { "Sobresalto01", "SenseSomethingStart_NoWeapon" };
+    private static readonly string[] Grito = { "Grito01", "Angry02" };
+    private static readonly string[] NegarFuerte = { "NegarConManos01", "HeadShake01", "HeadShake02" };
+    private static readonly string[] Decidido = { "Decidido01", "HeadNod01" };
+    private static readonly string[] Dudar = { "Dudar01", "Question02" };
+    private static readonly string[] Suspiro = { "Suspiro01" };
+    private static readonly string[] Hombros = { "Shrug01" };
+    private static readonly string[] Miedo = { "Fear01" };
+    private static readonly string[] Enfado = { "Angry01", "Angry02" };
+
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
@@ -39,12 +53,102 @@ public static class ActuacionAutomatica
     public static bool EsAlarma(string texto)
         => texto != null && texto.Contains("!") &&
            (Palabra(texto, "cuidado") || Palabra(texto, "peligro") || Palabra(texto, "socorro") ||
-            Palabra(texto, "ayuda") || Palabra(texto, "corred") || Palabra(texto, "huye") || Palabra(texto, "no"));
+            Palabra(texto, "ayuda") || Palabra(texto, "corred") || Palabra(texto, "huye") || Palabra(texto, "no") ||
+            Palabra(texto, "apártate") || Palabra(texto, "apartaos") || Palabra(texto, "atrás") || Palabra(texto, "huid"));
     private static bool EsAfirmacion(string texto)
         => Palabra(texto, "sí") || Palabra(texto, "vale") || Palabra(texto, "claro");
 
+    private static bool SinPalabras(string texto)
+    {
+        if (string.IsNullOrEmpty(texto)) return true;
+        foreach (char c in texto) if (char.IsLetter(c)) return false;
+        return true;
+    }
+
+    /// Dicho a voces: con signos dobles o casi todo en mayúsculas («¡¡WIIILL!!», «¡NOO!»).
+    private static bool EsGrito(string texto)
+    {
+        if (string.IsNullOrEmpty(texto)) return false;
+        if (texto.Contains("¡¡") || texto.Contains("!!")) return true;
+        int letras = 0, mayusculas = 0;
+        foreach (char c in texto)
+        {
+            if (!char.IsLetter(c)) continue;
+            letras++;
+            if (char.IsUpper(c)) mayusculas++;
+        }
+        return letras >= 3 && mayusculas * 10 >= letras * 7;
+    }
+
+    /// Alguna de las palabras o expresiones (las de varias palabras, tal cual; las sueltas, enteras).
+    private static bool Alguna(string texto, params string[] expresiones)
+    {
+        foreach (string e in expresiones)
+            if (e.IndexOf(' ') >= 0 ? texto.Contains(e) : Palabra(texto, e)) return true;
+        return false;
+    }
+
+    /// La frase empieza por una de esas palabras o expresiones.
+    private static bool Empieza(string texto, params string[] expresiones)
+    {
+        string inicio = texto.TrimStart('¡', '¿', ' ', '.', '…', '—', '-', '«', '"', '\'');
+        foreach (string e in expresiones)
+            if (inicio.StartsWith(e, System.StringComparison.Ordinal) &&
+                (inicio.Length == e.Length || !char.IsLetter(inicio[e.Length]))) return true;
+        return false;
+    }
+
+    /// Qué gesto pide una frase por lo que dice y por la cara con que se dice. Devuelve las opciones por
+    /// orden de preferencia (se usa la primera que el actor tenga); una lista vacía si la frase no lleva
+    /// gesto (un silencio: «...»); null si no pide nada en particular y vale un gesto de charla.
+    /// Va de lo más urgente a lo más suave: un aviso manda sobre una pregunta, y la cara solo decide
+    /// cuando el texto no dice nada.
+    public static string[] ParaDecir(string texto, NPCEmotion cara = NPCEmotion.None)
+    {
+        string limpio = Regex.Replace(texto ?? "", "<[^>]+>", " ");
+        string t = limpio.ToLowerInvariant();
+        bool exclama = t.Contains("!");
+
+        if (SinPalabras(t)) return exclama ? Sobresalto : Ninguno;
+        if (exclama && Alguna(t, "cuidado", "peligro", "socorro", "corred", "corre", "huid", "huye", "apártate",
+                                 "apartaos", "atrás", "al suelo", "agáchate", "agachaos")) return Aviso;
+        if (exclama && Empieza(t, "espera", "esperad", "alto", "para", "parad", "quieto", "quieta", "quietos",
+                                  "detente", "deteneos", "basta", "un momento")) return Alto;
+        if (EsRisa(t)) return Risa;
+        if (EsGrito(limpio)) return Grito;
+        if (EsPregunta(t)) return Pregunta;
+        if (exclama && Alguna(t, "mira", "mirad", "allí", "ahí")) return Senalar;
+        if (Alguna(t, "gracias")) return Gracias;
+        if (Alguna(t, "por favor", "te lo ruego", "te lo pido", "os lo ruego", "os lo pido")) return Suplicar;
+        if (Alguna(t, "qué le vamos a hacer", "qué remedio", "ni idea", "yo qué sé", "quién sabe", "qué más da")) return Hombros;
+        if (Empieza(t, "mmm", "hmm", "no sé", "no lo sé", "quizá", "quizás", "supongo", "a ver", "veamos")) return Dudar;
+        if (Empieza(t, "no") || Alguna(t, "nunca", "jamás", "ni hablar", "de eso nada", "de ninguna manera"))
+            return exclama ? NegarFuerte : Negar;
+        if (exclama && (Empieza(t, "vamos", "adelante", "a por", "hecho", "prometido") ||
+                        Alguna(t, "lo haré", "lo haremos", "lo conseguiremos", "puedo hacerlo"))) return Decidido;
+        if (Empieza(t, "sí", "vale", "claro", "de acuerdo", "hecho", "prometido")) return Afirmar;
+        if (Empieza(t, "uf", "ay", "en fin", "menos mal", "por fin")) return Suspiro;
+        if (t.Contains("buenos días") || t.Contains("muy buenas") || Empieza(t, "hola")) return Saludo;
+
+        switch (cara)
+        {
+            case NPCEmotion.Scared: return Miedo;
+            case NPCEmotion.Angry: return Enfado;
+            case NPCEmotion.Thinking:
+            case NPCEmotion.Confused: return Dudar;
+            case NPCEmotion.Determined: return Decidido;
+            case NPCEmotion.Relieved:
+            case NPCEmotion.Tired:
+            case NPCEmotion.Sad: return Suspiro;
+            case NPCEmotion.Excited: return exclama ? Alegria : null;
+            default: return null;
+        }
+    }
+
     public static string[] Preparar(string texto)
     {
+        var pedido = ParaDecir(texto);
+        if (pedido != null && pedido.Length > 0) return pedido;
         string t = (texto ?? "").ToLowerInvariant();
         if (EsPregunta(t)) return Pregunta;
         if (t.Contains("!") && (Palabra(t, "mira") || Palabra(t, "eh") || Palabra(t, "allí") || Palabra(t, "ahí"))) return Senalar;
@@ -162,6 +266,8 @@ public static class ActuacionAutomatica
     {
         gesto = null;
         cara = NPCEmotion.None;
+        // A un grito ahogado o a un silencio («¡...!», «...») no se le asiente.
+        if (SinPalabras(texto)) return false;
 
         bool esPregunta = EsPregunta(texto);
         bool esAlarma = EsAlarma(texto);

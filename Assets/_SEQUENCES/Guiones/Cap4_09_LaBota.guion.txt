@@ -28,13 +28,17 @@ will en p_will mirando p_liam
 & estela en p_estela mirando p_liam
 & bandas
 plano dos will liam
-will dice CAP4_BOTA_01 gesto=Greeting01_NoWeapon cara=alegre
+will dice CAP4_BOTA_01 cara=alegre
+& will bucle Ofrecer fundido=0.3
 liam cara alegre
 liam dice CAP4_BOTA_02 cara=alegre
+& will reposo
 plano medio estela
+& estela bucle BrazosEnJarras
 estela gesto Laugh01
 estela dice CAP4_BOTA_03 cara=picaro
 plano medio liam
+& liam bucle ManoAlPecho fundido=0.5
 liam dice CAP4_BOTA_04 cara=alegre
 
 @final

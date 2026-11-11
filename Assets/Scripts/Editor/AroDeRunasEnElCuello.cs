@@ -8,8 +8,8 @@ using UnityEngine.Rendering;
 /// prefab, cuelga el aro del hueso del cuello (sigue la animación) y le hace el modelo: una
 /// banda de hierro forjado con runas en relieve, partida en dos piezas (arco y trozo) que encajan
 /// mientras lo lleva puesto y se separan al caer el jefe (RuneCollar + PiezaQueCae).
-/// Es el mismo aro que Eldran enseña roto en el Capítulo 2. Idempotente: rehace el modelo.
-/// Ver INC-923.
+/// Es el mismo aro que Eldran enseña roto en el Capítulo 2. Idempotente: rehace el modelo y la luz.
+/// Ver INC-923, INC-1067.
 public static class AroDeRunasEnElCuello
 {
     const string Prefab = "Assets/Prefabs/Enemy/Demon.prefab";
@@ -20,15 +20,19 @@ public static class AroDeRunasEnElCuello
     const string NombreModelo = "Modelo del aro";
 
     // Proporciones del aro respecto a su radio (línea media de la banda).
-    const float Grosor = 0.11f;      // medio grosor radial
-    const float Alto = 0.30f;        // media altura de la banda
-    const float Holgura = 1.06f;     // el borde interior queda un 6 % por fuera de la piel
+    const float Grosor = 0.15f;      // medio grosor radial
+    const float Alto = 0.42f;        // media altura de la banda
+    const float Holgura = 1.12f;     // el borde interior queda un 12 % por fuera de la piel: se ve entero desde la cámara de combate
 
     // Piezas: el trozo es el que Will se lleva en el Capítulo 2.
     const float TrozoDesde = -15f, TrozoHasta = 32f;
     const float ArcoDesde = 32f, ArcoHasta = 345f;
 
     static readonly Color RunasApagadas = new(0.32f, 0.1f, 0.04f);
+    // HDR por encima del umbral del bloom (1): las runas y los filos se leen como luz. Ver INC-1067.
+    static readonly Color RunasEncendidas = new(6f, 2.4f, 0.8f);
+    static readonly Color ColorDeLaLuz = new(1f, 0.55f, 0.25f);
+    const string NombreLuz = "Luz del aro";
 
     [MenuItem("El Sendero/Combate/Demonio 1: poner el aro de runas al cuello")]
     public static void Poner()
@@ -105,6 +109,23 @@ public static class AroDeRunasEnElCuello
             so.FindProperty("piezas").GetArrayElementAtIndex(0).objectReferenceValue = arco;
             so.FindProperty("piezas").GetArrayElementAtIndex(1).objectReferenceValue = trozo;
             so.FindProperty("runasApagadas").colorValue = RunasApagadas;
+            so.FindProperty("runasEncendidas").colorValue = RunasEncendidas;
+
+            // Luz que se enciende con las runas: en la ventana de daño ilumina cuello y cara.
+            var luzVieja = t.Find(NombreLuz);
+            if (luzVieja) Object.DestroyImmediate(luzVieja.gameObject);
+            var luzGo = new GameObject(NombreLuz);
+            luzGo.layer = aro.gameObject.layer;
+            luzGo.transform.SetParent(t, false);
+            luzGo.transform.localPosition = Vector3.forward * radio * 1.6f;
+            var luz = luzGo.AddComponent<Light>();
+            luz.type = LightType.Point;
+            luz.color = ColorDeLaLuz;
+            luz.range = Mathf.Max(1.5f, radio * 12f);
+            luz.intensity = 0f;
+            luz.shadows = LightShadows.None;
+            luz.enabled = false;
+            so.FindProperty("luzDelBrillo").objectReferenceValue = luz;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             PrefabUtility.SaveAsPrefabAsset(raiz, Prefab);
@@ -157,8 +178,9 @@ public static class AroDeRunasEnElCuello
             dist.Clear();
             foreach (var d in rodaja) dist.Add((d - c).magnitude);
             dist.Sort();
-            // Mediana: con un percentil alto contaban el pelo, la papada o los cuernos y el aro quedaba holgado (INC-985).
-            float r = dist[(int)(dist.Count * 0.5f)];
+            // Percentil 70: la mediana deja el aro metido en la piel; más alto cuenta pelo, papada o
+            // cuernos y lo deja holgado. Ver INC-985 e INC-1067.
+            float r = dist[(int)(dist.Count * 0.7f)];
             if (!hay || r < radio) { hay = true; radio = r; centro = p + c; }
         }
         return hay && radio > 1e-4f;
@@ -254,11 +276,12 @@ public static class AroDeRunasEnElCuello
     };
 
     /// Runas en relieve en la cara de fuera de la banda, cada 30°, solo las que caen enteras en
-    /// la pieza (así ninguna queda partida entre el arco y el trozo).
+    /// la pieza (así ninguna queda partida entre el arco y el trozo), y dos filos a lo largo de
+    /// los cantos de arriba y abajo: con ellos el brillo dibuja el aro entero y se lee de lejos.
     static Mesh Runas(float radio, float desde, float hasta)
     {
         float a = radio * Grosor, b = radio * Alto;
-        float alto = b * 1.25f, trazo = alto * 0.13f, relieve = a * 0.45f;
+        float alto = b * 1.25f, trazo = alto * 0.2f, relieve = a * 0.6f;
         float superficie = radio + a;
         float mediaAnchura = Mathf.Rad2Deg * (alto * 0.35f) / superficie;
         var v = new List<Vector3>(); var n = new List<Vector3>(); var t = new List<int>();
@@ -278,6 +301,21 @@ public static class AroDeRunasEnElCuello
                 Caja(v, n, t, origen, tang, Vector3.up, fuera, p0, p1, trazo, relieve);
             }
         }
+        // Filos de los cantos, en tramos cortos que siguen la curva.
+        const float Paso = 6f;
+        float filo = b * 0.14f, yFilo = b * 0.86f;
+        for (float ang = desde; ang < hasta - 0.01f; ang += Paso)
+        {
+            float tramo = Mathf.Min(Paso, hasta - ang);
+            float rad = (ang + tramo * 0.5f) * Mathf.Deg2Rad;
+            var fuera = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
+            var tang = new Vector3(-Mathf.Sin(rad), 0f, Mathf.Cos(rad));
+            float media = superficie * tramo * Mathf.Deg2Rad * 0.5f;
+            Vector3 origen = fuera * (superficie - relieve * 0.3f);
+            foreach (float y in new[] { yFilo, -yFilo })
+                Caja(v, n, t, origen, tang, Vector3.up, fuera, new Vector2(-media, y), new Vector2(media, y), filo, relieve * 0.7f);
+        }
+
         var m = new Mesh();
         m.SetVertices(v); m.SetNormals(n); m.SetTriangles(t, 0); m.RecalculateBounds();
         return m;

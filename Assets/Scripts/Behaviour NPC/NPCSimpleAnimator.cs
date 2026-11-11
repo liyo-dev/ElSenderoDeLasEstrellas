@@ -363,6 +363,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         _targetRotation = transform.rotation;
 
         SombraDeContacto.Asegurar(gameObject);
+        MuelleDeHuesos.AsegurarCapa(gameObject);
 
         // La animación de andar ya no depende de las velocidades de la configuración (walkSpeed,
         // runSpeed, partyConfig): se calcula con la velocidad real en m/s, igual para todos. Con
@@ -757,7 +758,8 @@ public class NPCSimpleAnimator : MonoBehaviour
             return;
         }
 
-        if (_oneShotCoroutine != null && layer == 0) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
+        // Un gesto en curso en la capa de la pose se cierra aquí: si acabara después, soltaría la capa con la pose puesta.
+        if (_oneShotCoroutine != null && (layer == 0 || _oneShotLayer == layer)) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
         PararLaPose(layer);
         if (_capaQueSeSuelta == layer) DejarDeSoltar();
 
@@ -787,6 +789,14 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// No usa ReleasePose(true): eso devolvería TODO el personaje a idle y pisaría la animación
     /// de dejar la caja, que vive en la capa base.
     /// </summary>
+    /// Suelta solo la pose de medio cuerpo; la de cuerpo entero (sentado, tumbado) sigue puesta.
+    public void SoltarPoseDeMedioCuerpo()
+    {
+        if (upperBodyLayer <= 0 || upperBodyLayer >= _poseCoroutines.Length || _poseCoroutines[upperBodyLayer] == null) return;
+        PararLaPose(upperBodyLayer);
+        SoltarCapa(upperBodyLayer);
+    }
+
     public void SoltarPoseDeCarga()
     {
         ReleasePose(false);

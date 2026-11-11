@@ -93,11 +93,17 @@ namespace Sendero.UI
             // Personaje en el centro.
             var centro = P.Vacio("Personaje", cuerpo);
             P.Colocar(centro, 522f, 0f, 663f, 886f);
-            var sombra = P.Caja("Sombra", centro, new Color(0.54f, 0.55f, 0.95f, 0.28f), 40f);
-            sombra.rectTransform.anchorMin = sombra.rectTransform.anchorMax = new Vector2(0.5f, 0f);
-            sombra.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            sombra.rectTransform.anchoredPosition = new Vector2(0f, 70f);
-            sombra.rectTransform.sizeDelta = new Vector2(420f, 80f);
+            var resplandor = PiezasDeUI.Imagen("Resplandor", centro, PiezasDeUI.Resplandor, new Color(P.Oro.r, P.Oro.g, P.Oro.b, 0.32f));
+            resplandor.raycastTarget = false;
+            resplandor.rectTransform.anchorMin = resplandor.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+            resplandor.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            resplandor.rectTransform.anchoredPosition = new Vector2(0f, 480f);
+            resplandor.rectTransform.sizeDelta = new Vector2(820f, 820f);
+            var peana = (RectTransform)P.CajaConBorde("Peana", centro, P.Borde, P.Panel, 5f, 40f).transform.parent;
+            peana.anchorMin = peana.anchorMax = new Vector2(0.5f, 0f);
+            peana.pivot = new Vector2(0.5f, 0.5f);
+            peana.anchoredPosition = new Vector2(0f, 70f);
+            peana.sizeDelta = new Vector2(420f, 80f);
             var fig = new GameObject("Figura", typeof(RectTransform), typeof(RawImage));
             fig.transform.SetParent(centro, false);
             _figura = fig.GetComponent<RawImage>();
@@ -109,7 +115,7 @@ namespace Sendero.UI
             rtf.sizeDelta = new Vector2(600f, 800f);
             var shader = Shader.Find("UI/RetratoDelGrupo");
             if (shader != null) { _material = new Material(shader) { name = "Figura del menú de Equipo" }; _figura.material = _material; }
-            _sinFigura = P.Txt("Sin figura", centro, "", 26f, P.TextoApagado, false, TextAlignmentOptions.Center, envolver: true);
+            _sinFigura = P.Txt("Sin figura", centro, "", 26f, P.SobreNoche, false, TextAlignmentOptions.Center, envolver: true);
             P.Rellenar(_sinFigura.rectTransform, 60f);
 
             var der = P.CajaConBorde("Armario", cuerpo, P.Borde, P.Panel);
@@ -130,13 +136,13 @@ namespace Sendero.UI
                 P.Colocar(n.rectTransform, 76f, 0f, 340f, 70f);
                 var puesta = P.Caja("Puesta", f.transform, P.Verde, 14f);
                 P.ColocarDerecha(puesta.rectTransform, 12f, 19f, 108f, 32f);
-                var tp = P.Txt("Texto", puesta.transform, "PUESTA", 17f, new Color32(0x14, 0x12, 0x2F, 0xFF), true, TextAlignmentOptions.Center);
+                var tp = P.Txt("Texto", puesta.transform, "PUESTA", 17f, PaletaUI.PapelClaro, true, TextAlignmentOptions.Center);
                 P.Rellenar(tp.rectTransform);
                 _filas.Add(f); _iconosDeFila.Add(icono); _nombresDeFila.Add(n); _puestas.Add(puesta.gameObject);
             }
             var caja = P.Caja("Comparación", d, P.FichaOscura, 18f);
             P.Colocar(caja.rectTransform, 24f, 652f, 546f, 206f);
-            _descripcion = P.Txt("Descripción", caja.transform, "", 22f, new Color32(0xDF, 0xE2, 0xFF, 0xFF), false, TextAlignmentOptions.TopLeft, envolver: true);
+            _descripcion = P.Txt("Descripción", caja.transform, "", 22f, P.Texto, false, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(_descripcion.rectTransform, 20f, 14f, 506f, 84f);
             _rasgo = P.Txt("Rasgos", caja.transform, "", 21f, P.TextoApagado, true, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(_rasgo.rectTransform, 20f, 104f, 506f, 92f);
@@ -349,13 +355,13 @@ namespace Sendero.UI
                 {
                     bool yaLoTiene = antes != null && Contiene(antes.Rasgos, r);
                     lineas.Add(yaLoTiene
-                        ? "<color=#C9CDF0>•  " + RasgosDePrenda.Texto(r) + "</color>"
-                        : "<color=#6FDC8C>+  " + RasgosDePrenda.Texto(r) + "</color>");
+                        ? "<color=#614D3B>•  " + RasgosDePrenda.Texto(r) + "</color>"
+                        : "<color=#257A3A>+  " + RasgosDePrenda.Texto(r) + "</color>");
                 }
             if (antes != null && antes != despues)
                 foreach (var r in antes.Rasgos)
                     if (despues == null || !Contiene(despues.Rasgos, r))
-                        lineas.Add("<color=#FF8A80>−  " + RasgosDePrenda.Texto(r) + "</color>");
+                        lineas.Add("<color=#B3261E>−  " + RasgosDePrenda.Texto(r) + "</color>");
             if (lineas.Count == 0) return vista != null ? "Solo cambia el aspecto" : "";
             return string.Join("\n", lineas);
         }

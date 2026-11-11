@@ -90,6 +90,7 @@ estela gesto Push_InPlace_NoWeapon
 +0.5 pompon gesto Marshies_Happy_Dance
 espera 1.2
 plano dos will estela
+& will bucle BrazosEnJarras fundido=0.3
 will dice CHUCHELANDIA_VICTORIA_01 cara=picaro mira=estela
 
 # Mira a un lado y a otro. Un abrazo muy deprisa.
@@ -147,6 +148,7 @@ estela cara aliviado
 # La princesa más adorable de Chuchelandia.
 @collejas
 plano medio liam
+& liam bucle ManosALaEspalda fundido=0.4
 liam dice CHUCHELANDIA_VICTORIA_05 cara=picaro mira=estela
 liam dice CHUCHELANDIA_VICTORIA_06 cara=picaro mira=estela
 plano dos estela liam
@@ -155,6 +157,7 @@ estela gesto Attack1
 +0.3 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/Cartoon_Mouth_harp_boing.wav" volume=0.7
 & estela cara sorpresa
 & liam cara molesto
+& liam reposo
 espera 1.0
 plano medio will
 will dice CHUCHELANDIA_VICTORIA_07 cara=picaro mira=estela
@@ -170,5 +173,6 @@ plano conjunto estela will liam
 estela cara molesto
 & will cara alegre
 & liam cara neutral
+& estela bucle BrazosCruzados fundido=0.4
 & vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=estela offset=0,1.6,0.1 lifetime=3
 espera 2.0

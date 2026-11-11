@@ -73,8 +73,8 @@
 <polyline points='791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 791.273,861.091 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
 <circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <text x='795.273' y='873.091' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>30s</text>
+<circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='791.273' cy='861.091' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
@@ -85,8 +85,8 @@
 <polyline points='826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 826.647,936.96 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
 <circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <text x='830.647' y='948.96' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>30s</text>
+<circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='826.647' cy='936.96' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
@@ -94,5 +94,5 @@
 <line x1='826.647' y1='936.96' x2='819.886' y2='922.459' stroke='#7ad7ff' stroke-width='2'/>
 <text x='834.647' y='928.96' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>oliver</text>
 <circle cx='826.647' cy='936.96' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
-<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@menus  0:25,9 – 0:37,2</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@menus  0:27,5 – 0:38,9</text>
 </svg>

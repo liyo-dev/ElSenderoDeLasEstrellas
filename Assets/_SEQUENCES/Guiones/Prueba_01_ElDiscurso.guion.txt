@@ -84,15 +84,18 @@ plano general nino eldran v1 v2 desde=cam_plaza quieta
 & eldran gesto HandClap01
 & eldran cara alegre
 & nino cara triste
+& nino bucle Cabizbajo fundido=0.8
 espera 2.0
 
 # De vuelta al palacio.
 @palacio
 plano fijo desde=cam_grupo mira=espejo altura=1.9 altura_foco=1.4 lente=34 quieta
+& estela bucle BrazosEnJarras
 estela dice PRUEBA_WILL_DISCURSO_03 cara=picaro gesto=Laugh01 mira=will
 plano medio will solo
 will dice PRUEBA_WILL_DISCURSO_04 cara=enfadado gesto=Angry01 mira=estela
 plano medio liam solo
+& liam bucle BrazosCruzados
 liam dice PRUEBA_WILL_DISCURSO_05 cara=picaro mira=will
 & estela gesto Laugh01
 & estela cara alegre

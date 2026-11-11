@@ -19,7 +19,7 @@ using UnityEngine;
 /// cada una con su propia fase y velocidad para que no parpadeen a la vez), recalculado cada
 /// <see cref="twinkleUpdateInterval"/> segundos (no cada frame). Además, <see cref="starColor"/> usa
 /// canales por encima de 1 — con el pipeline de este proyecto en HDR y Bloom activo (ver
-/// Assets/Settings/PC_RPAsset.asset / Assets/Settings/DefaultVolumeProfile.asset) un color por
+/// Assets/Settings/PC_RPAsset.asset / Assets/Settings/Volumenes/Volumen Profile.asset) un color por
 /// encima de 1 aporta brillo extra vía Bloom sin tocar el shader. Se añade también
 /// <see cref="starColorAlt"/> (unas pocas estrellas plateadas/azuladas sueltas, ver
 /// <see cref="altStarChance"/>) para romper la monotonía del domo completamente dorado.

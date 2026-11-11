@@ -31,9 +31,11 @@ HILO
 will en p_will mirando fuego
 & c1 en c1_a mirando c1_c
 plano medio will desde=cam_will altura=1.6
+& will bucle BrazosCruzados
 espera 1.0
 will mira c1_a
 & will cara sorpresa
+& will reposo
 espera 0.6
 will dice CAP3_CARRO_01 cara=decidido
 

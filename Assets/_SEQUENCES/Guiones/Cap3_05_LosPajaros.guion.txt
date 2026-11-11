@@ -43,12 +43,15 @@ espera 1
 sargento dice CAP3_PAJAROS_01 cara=enfado
 jefe dice CAP3_PAJAROS_02 cara=miedo
 sargento dice CAP3_PAJAROS_03 cara=decidido
+& sargento bucle BrazosEnJarras fundido=0.4
 
 @jaulas
 plano sigue will
 will anda a junto_jaulas ritmo=prisa
 plano medio will
 will dice CAP3_PAJAROS_04 cara=alegre
+# Abre los brazos al cielo mientras salen volando.
+& will bucle Conjuro_Invocar fundido=0.5
 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=jaulas lifetime=4
 & plano general will jaulas
 espera 1
@@ -56,15 +59,18 @@ vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying
 espera 1
 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_ellow.prefab" en=will lifetime=2.5
 will cara ilusionado
+& will reposo
 espera 1.5
 
 @sargento
 will mira sargento
 sargento mira will
 plano dos will sargento
+& sargento bucle ManosALaEspalda fundido=0.4
 sargento dice CAP3_PAJAROS_05 cara=aliviado
 sargento dice CAP3_PAJAROS_06 gesto=HeadNod01
 will dice CAP3_PAJAROS_07 cara=agradecido
+& will bucle ManoAlPecho fundido=0.4
 espera 0.8
 fundido cubre 1.2
 espera 1.2

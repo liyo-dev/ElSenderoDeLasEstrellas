@@ -110,7 +110,7 @@ namespace Sendero.UI
                 _huecos.Add(hueco);
             }
 
-            _pistas = P.TxtConIconos("Pistas", raiz, "", 24f, P.TextoSuave, TextAlignmentOptions.MidlineRight);
+            _pistas = P.TxtConIconos("Pistas", raiz, "", 24f, P.SobreNoche, TextAlignmentOptions.MidlineRight);
             var rtp = _pistas.rectTransform;
             rtp.anchorMin = new Vector2(0f, 0f); rtp.anchorMax = new Vector2(1f, 0f); rtp.pivot = new Vector2(0.5f, 0f);
             rtp.offsetMin = new Vector2(Margen, 14f); rtp.offsetMax = new Vector2(-Margen, AltoPie - 14f);
@@ -118,7 +118,7 @@ namespace Sendero.UI
 
         private void MontarCabecera(RectTransform raiz)
         {
-            var lb = P.TxtConIconos("LB", raiz, P.Boton(InputGlyphNames.ShoulderLeft), 34f, P.TextoSuave, TextAlignmentOptions.Center);
+            var lb = P.TxtConIconos("LB", raiz, P.Boton(InputGlyphNames.ShoulderLeft), 34f, P.SobreNoche, TextAlignmentOptions.Center);
             P.Colocar(lb.rectTransform, Margen, 40f, 54f, 56f);
             var barra = P.Caja("Pestañas", raiz, new Color(0.05f, 0.05f, 0.13f, 0.75f), 30f);
             float x = 8f;
@@ -129,21 +129,21 @@ namespace Sendero.UI
                 var f = P.Caja("Pestaña " + _vistas[i].Titulo, barra.transform, Color.clear, 26f);
                 P.Colocar(f.rectTransform, x, 7f, anchos[i], 52f);
                 P.Clicable(f, () => { if (indice != _actual) { EntradaDelMenu.Sonido("UI_Navigate"); MostrarPestana(indice); } });
-                var t = P.Txt("Texto", f.transform, _vistas[i].Titulo, 25f, P.TextoSuave, true, TextAlignmentOptions.Center);
+                var t = P.Txt("Texto", f.transform, _vistas[i].Titulo, 25f, P.SobreNoche, true, TextAlignmentOptions.Center);
                 P.Rellenar(t.rectTransform);
                 _fondosDePestana.Add(f);
                 _textosDePestana.Add(t);
                 x += anchos[i] + 6f;
             }
             P.Colocar(barra.rectTransform, Margen + 60f, 35f, x + 2f, 66f);
-            var rb = P.TxtConIconos("RB", raiz, P.Boton(InputGlyphNames.ShoulderRight), 34f, P.TextoSuave, TextAlignmentOptions.Center);
+            var rb = P.TxtConIconos("RB", raiz, P.Boton(InputGlyphNames.ShoulderRight), 34f, P.SobreNoche, TextAlignmentOptions.Center);
             P.Colocar(rb.rectTransform, Margen + 60f + x + 8f, 40f, 54f, 56f);
 
             // Selector de personaje (Magia y Equipo) o monedas (el resto).
             _selector = P.Vacio("Personajes", raiz);
             P.ColocarDerecha(_selector, Margen, 35f, 620f, 66f);
             float xs = 620f;
-            var rt = P.TxtConIconos("RT", _selector, P.Boton(InputGlyphNames.TriggerRight), 30f, P.TextoSuave, TextAlignmentOptions.Center);
+            var rt = P.TxtConIconos("RT", _selector, P.Boton(InputGlyphNames.TriggerRight), 30f, P.SobreNoche, TextAlignmentOptions.Center);
             xs -= 50f; P.Colocar(rt.rectTransform, xs, 6f, 50f, 54f);
             for (int i = _personajes.Length - 1; i >= 0; i--)
             {
@@ -157,12 +157,12 @@ namespace Sendero.UI
                 _fichasDePersonaje.Insert(0, ficha);
                 _nombresDePersonaje.Insert(0, n);
             }
-            var lt = P.TxtConIconos("LT", _selector, P.Boton(InputGlyphNames.TriggerLeft), 30f, P.TextoSuave, TextAlignmentOptions.Center);
+            var lt = P.TxtConIconos("LT", _selector, P.Boton(InputGlyphNames.TriggerLeft), 30f, P.SobreNoche, TextAlignmentOptions.Center);
             xs -= 56f; P.Colocar(lt.rectTransform, xs, 6f, 50f, 54f);
 
             _monedas = P.Vacio("Monedas", raiz);
             P.ColocarDerecha(_monedas, Margen, 35f, 620f, 66f);
-            _textoMonedas = P.Txt("Texto", _monedas, "", 28f, P.Texto, true, TextAlignmentOptions.MidlineRight);
+            _textoMonedas = P.Txt("Texto", _monedas, "", 28f, P.SobreNoche, true, TextAlignmentOptions.MidlineRight);
             P.Rellenar(_textoMonedas.rectTransform);
         }
 
@@ -213,7 +213,7 @@ namespace Sendero.UI
             {
                 bool activa = i == _actual;
                 _fondosDePestana[i].color = activa ? P.Oro : Color.clear;
-                _textosDePestana[i].color = activa ? P.OroOscuro : P.TextoSuave;
+                _textosDePestana[i].color = activa ? P.OroOscuro : P.SobreNoche;
                 string titulo = _vistas[i].Titulo;
                 if (_vistas[i] is VistaDeSintoniaDelMenu && pendientes > 0)
                     titulo += activa ? "  <size=80%>★" + pendientes + "</size>" : "  <color=#F5C542><size=80%>★" + pendientes + "</size></color>";
@@ -234,8 +234,8 @@ namespace Sendero.UI
                     bool esta = ControlDelJugador.EnElGrupo(_personajes[i]);
                     P.Activar(_fichasDePersonaje[i].gameObject, esta);
                     bool elegido = _personajes[i] == Personaje;
-                    _fichasDePersonaje[i].color = elegido ? P.Borde : P.Ficha;
-                    _nombresDePersonaje[i].color = elegido ? new Color32(0x14, 0x12, 0x2F, 0xFF) : P.TextoSuave;
+                    _fichasDePersonaje[i].color = elegido ? P.Oro : P.Ficha;
+                    _nombresDePersonaje[i].color = elegido ? P.OroOscuro : P.TextoSuave;
                 }
             }
             else _textoMonedas.text = TextoDeMonedas();

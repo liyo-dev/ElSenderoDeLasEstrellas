@@ -21,15 +21,15 @@ MonoBehaviour:
   - rid: 5630202263296278917
   - rid: 5630202263296278918
   - rid: 5630202263296278919
-  - rid: 6540294476782371408
-  - rid: 6540294476782371409
-  - rid: 6540294476782371410
-  - rid: 6540294476782371411
-  - rid: 6540294476782371412
-  - rid: 6540294476782371413
-  - rid: 6540294476782371414
-  - rid: 6540294476782371415
-  - rid: 6540294476782371416
+  - rid: 6540294548361315006
+  - rid: 6540294548361315007
+  - rid: 6540294548361315008
+  - rid: 6540294548361315009
+  - rid: 6540294548361315010
+  - rid: 6540294548361315011
+  - rid: 6540294548361315012
+  - rid: 6540294548361315013
+  - rid: 6540294548361315014
   - rid: 5630202263296279101
   - rid: 5630202263296279079
   - rid: 5630202263296279102
@@ -746,178 +746,6 @@ MonoBehaviour:
         - cap2-prepara-viaje-erika-desbloqueo
         flagKey: GRIMORIO_RECIBIDO
         value: 1
-    - rid: 6540294476782371408
-      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 7.- Amanece tras la noche
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
-        position: {x: 3040, y: 0}
-        outputs:
-        - cap2-manana-despues-8
-        targetTime: 6
-        immediate: 1
-    - rid: 6540294476782371409
-      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "8.- Carga la habitaci\xF3n de Will"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-8
-        position: {x: 3420, y: 0}
-        outputs:
-        - cap2-manana-despues-9
-        operacion: 0
-        sceneName: WillHouse
-        waitForCompletion: 1
-    - rid: 6540294476782371410
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-9
-        position: {x: 3800, y: 0}
-        outputs:
-        - cap2-manana-despues-10
-        actorId: Player
-        markId: Bedroom
-        applyPlayerEnvironment: 1
-        showActor: 0
-    - rid: 6540294476782371411
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "10.- Eldran entra en la habitaci\xF3n"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-10
-        position: {x: 4180, y: 0}
-        outputs:
-        - cap2-manana-despues-11
-        actorId: NPC_Eldran
-        markId: M_Manana_EldranPuerta
-        applyPlayerEnvironment: 0
-        showActor: 1
-    - rid: 6540294476782371412
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-11
-        position: {x: 4560, y: 0}
-        outputs:
-        - cap2-manana-despues-12
-        cinematicName: "La ma\xF1ana despu\xE9s"
-        signalIn: MANANA_DESPUES_START
-        signalDone: MANANA_DESPUES_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
-    - rid: 6540294476782371413
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "12.- Eldran espera junto a la casa de Will (sale en la cinem\xE1tica)"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-12
-        position: {x: 4940, y: 0}
-        outputs:
-        - cap2-manana-despues-13
-        actorId: NPC_Eldran
-        markId: Eldran_JuntoACasaDeWill
-        applyPlayerEnvironment: 0
-        showActor: 1
-    - rid: 6540294476782371414
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 13.- Trozo del aro
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-13
-        position: {x: 5320, y: 0}
-        outputs:
-        - cap2-manana-despues-14
-        item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
-        amount: 1
-        logWarnings: 1
-        onlyOnce: 1
-    - rid: 6540294476782371415
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "14.- Prep\xE1rate para el viaje"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-14
-        position: {x: 5700, y: 0}
-        outputs:
-        - cap2-manana-despues-15
-        questId: PREPARA_VIAJE
-        giverId: NPC_Eldran
-        inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
-        noGiver: 0
-    - rid: 6540294476782371416
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-15
-        position: {x: 6080, y: 0}
-        outputs:
-        - cap2-prepara-viaje-fork
-        checkpointId: CAP2_MANANA_DESPUES
-        spawnAnchorId: Bedroom
-        sceneName: WillHouse
     - rid: 6540294538172825745
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -976,3 +804,175 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
+    - rid: 6540294548361315006
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 7.- Amanece tras la noche
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
+        position: {x: 2540, y: 0}
+        outputs:
+        - cap2-manana-despues-8
+        targetTime: 6
+        immediate: 1
+    - rid: 6540294548361315007
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "8.- Carga la habitaci\xF3n de Will"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-8
+        position: {x: 2920, y: 0}
+        outputs:
+        - cap2-manana-despues-9
+        operacion: 0
+        sceneName: WillHouse
+        waitForCompletion: 1
+    - rid: 6540294548361315008
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-9
+        position: {x: 3300, y: 0}
+        outputs:
+        - cap2-manana-despues-10
+        actorId: Player
+        markId: Bedroom
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294548361315009
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10.- Eldran entra en la habitaci\xF3n"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-10
+        position: {x: 3680, y: 0}
+        outputs:
+        - cap2-manana-despues-11
+        actorId: NPC_Eldran
+        markId: M_Manana_EldranPuerta
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 6540294548361315010
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-11
+        position: {x: 4060, y: 0}
+        outputs:
+        - cap2-manana-despues-12
+        cinematicName: "La ma\xF1ana despu\xE9s"
+        signalIn: MANANA_DESPUES_START
+        signalDone: MANANA_DESPUES_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294548361315011
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "12.- Eldran espera junto a la casa de Will (sale en la cinem\xE1tica)"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-12
+        position: {x: 4440, y: 0}
+        outputs:
+        - cap2-manana-despues-13
+        actorId: NPC_Eldran
+        markId: Eldran_JuntoACasaDeWill
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 6540294548361315012
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 13.- Trozo del aro
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-13
+        position: {x: 4820, y: 0}
+        outputs:
+        - cap2-manana-despues-14
+        item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294548361315013
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "14.- Prep\xE1rate para el viaje"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-14
+        position: {x: 5200, y: 0}
+        outputs:
+        - cap2-manana-despues-15
+        questId: PREPARA_VIAJE
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
+        noGiver: 0
+    - rid: 6540294548361315014
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-15
+        position: {x: 5580, y: 0}
+        outputs:
+        - cap2-prepara-viaje-fork
+        checkpointId: CAP2_MANANA_DESPUES
+        spawnAnchorId: Bedroom
+        sceneName: WillHouse

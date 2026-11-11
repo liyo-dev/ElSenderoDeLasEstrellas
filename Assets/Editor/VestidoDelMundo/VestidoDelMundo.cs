@@ -94,6 +94,7 @@ public static partial class VestidoDelMundo
             if (AssetDatabase.IsValidFolder(CarpetaGenerada)) AssetDatabase.DeleteAsset(CarpetaGenerada);
             ReponerRetirados(escena, informe);
             ReponerCasas(escena, informe);
+            CerrarElTerreno(terreno.terrainData);
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
             if (HayCopia())

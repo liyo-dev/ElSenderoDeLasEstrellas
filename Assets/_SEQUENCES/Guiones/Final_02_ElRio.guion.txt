@@ -135,7 +135,8 @@ will mira tobias
 plano dos tobias will desde=cam_r_dibujo mira=p_dibujo altura=1.0 altura_foco=0.8 lente=42 suave=0.3
 tobias cara alegre
 & will cara sorpresa
-tobias dice FINAL_TOBIAS_RIO_02 gesto=Talk01
+tobias dice FINAL_TOBIAS_RIO_02
+& tobias bucle Ofrecer fundido=0.4
 
 # El dibujo, a toda pantalla; encima, los comentarios de todos.
 efecto ModuleBeat routine=DibujoDeTobias
@@ -151,6 +152,7 @@ liam dice FINAL_LIAM_RIO_04 sin_pose
 espera 0.1
 estela cara enfado
 estela dice FINAL_ESTELA_RIO_05 sin_pose
+& tobias reposo
 espera 0.3
 @fin_dibujo
 espera 0.4
@@ -219,7 +221,7 @@ estela cara picaro
 estela dice FINAL_ESTELA_RIO_01 sin_pose
 espera 0.1
 
-plano medio will solo desde=cam_r_will altura=1.1 altura_foco=1.0 lente=39 suave=0.2
+plano medio will solo lado=frente altura=1.1 altura_foco=1.0 lente=39 suave=0.2
 will cara miedo
 will dice FINAL_WILL_LIAM_RIO_01 gesto=HeadShake01
 espera 0.1

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap1_PerasEldran_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_PerasEldran
-  duracion: 35.20674
+  duracion: 35.023884
   presentacion: 0
-  huella: "2026-10-30 17:48 \xB7 21ab1c5151e1f323c4dfc980d052d69b"
+  huella: "2026-11-11 18:11 \xB7 084e23c99b2cf86372c477231b1e0be3"
   actores:
   - id: Player
     alias: will
@@ -55,12 +55,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 25.985102
+    - t: 25.802244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 31.320816
+    - t: 31.137959
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -91,47 +91,71 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 25.935102
+    - t: 25.752245
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
+    - t: 31.137959
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
     animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.0028567
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.025714
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.485306
-      tipo: 2
-      estado: HeadNod01
+      t: 19.905306
+      tipo: 0
+      estado: 
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 20.305305
+      tipo: 2
+      estado: HandWave02
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.605307
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 26.357552
+      t: 26.174694
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 5.902857
       emocion: sorpresa
       dura: 2
-    - t: 26.292244
+    - t: 26.109386
       emocion: sorpresa
       dura: 1.3061224
     visible: []
@@ -143,29 +167,29 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: -1.91, y: 26.281815, z: -142.75}
-    - t: 31.320816
+    - t: 31.137959
       p: {x: -1.91, y: 26.281815, z: -142.75}
-    - t: 31.667255
-      p: {x: -1.6648182, y: 26.281815, z: -142.63705}
-    - t: 31.93849
-      p: {x: -1.4196362, y: 26.281815, z: -142.52411}
-    - t: 32.177814
-      p: {x: -1.1744545, y: 26.281815, z: -142.41118}
-    - t: 32.412548
-      p: {x: -0.92927265, y: 26.281815, z: -142.29823}
-    - t: 32.635315
-      p: {x: -0.7137705, y: 26.281815, z: -142.16132}
-    - t: 32.841717
-      p: {x: -0.5520817, y: 26.281815, z: -141.98898}
-    - t: 33.04811
-      p: {x: -0.45765966, y: 26.281815, z: -141.77237}
-    - t: 33.270885
-      p: {x: -0.41705093, y: 26.281815, z: -141.5203}
-    - t: 33.521782
-      p: {x: -0.41023055, y: 26.281815, z: -141.25218}
-    - t: 33.81872
-      p: {x: -0.4034102, y: 26.281815, z: -140.98407}
-    - t: 34.00674
+    - t: 31.484398
+      p: {x: -1.6648186, y: 26.281815, z: -142.63705}
+    - t: 31.755632
+      p: {x: -1.4196372, y: 26.281815, z: -142.52411}
+    - t: 31.994957
+      p: {x: -1.1744559, y: 26.281815, z: -142.41118}
+    - t: 32.22969
+      p: {x: -0.92927456, y: 26.281815, z: -142.29823}
+    - t: 32.452457
+      p: {x: -0.7137723, y: 26.281815, z: -142.16132}
+    - t: 32.65886
+      p: {x: -0.55208343, y: 26.281815, z: -141.98898}
+    - t: 32.865253
+      p: {x: -0.45766103, y: 26.281815, z: -141.77237}
+    - t: 33.088028
+      p: {x: -0.41705197, y: 26.281815, z: -141.5203}
+    - t: 33.338924
+      p: {x: -0.41023117, y: 26.281815, z: -141.25218}
+    - t: 33.635864
+      p: {x: -0.4034104, y: 26.281815, z: -140.98407}
+    - t: 33.823883
       p: {x: -0.4, y: 26.281815, z: -140.85}
     miradas:
     - t: 0
@@ -188,12 +212,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 26.105103
+    - t: 25.922245
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 34.00674
+    - t: 33.823883
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -224,7 +248,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 26.055103
+    - t: 25.872246
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -236,90 +260,112 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.08
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 2.6466668
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.352857
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.0028567
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.325714
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.405714
       tipo: 2
-      estado: Laugh01
+      estado: Shrug01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.239048
+      t: 11.105714
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.785306
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+      alFinal: 0
+      voz: laugh
     - fundido: 0
       t: 14.835306
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.485306
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 19.905306
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 19.985306
       tipo: 2
       estado: HandWave01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 22.71864
+      t: 22.505306
       tipo: 2
-      estado: Talk01
+      estado: Shrug01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 25.885101
+      t: 25.702244
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 26.357552
+      t: 26.174694
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: alegre
@@ -332,8 +378,8 @@ MonoBehaviour:
       dura: 5.859592
     - t: 19.905306
       emocion: alegre
-      dura: 6.329796
-    - t: 26.292244
+      dura: 6.146939
+    - t: 26.109386
       emocion: sorpresa
       dura: 1.3061224
     visible: []
@@ -361,12 +407,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 26.225101
+    - t: 26.042244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 27.141224
+    - t: 26.958366
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -392,101 +438,66 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 26.175102
+    - t: 25.992245
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 27.141224
+    - t: 26.958366
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
     animacion:
     - fundido: 0
-      t: 5.302857
-      tipo: 3
-      estado: 
+      t: 0
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.382857
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 7.682857
-      tipo: 2
-      estado: Talk01
+      voz: 
+    - fundido: 0.3
+      t: 7.2728567
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 9.375714
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 10.025714
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 14.785306
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.865306
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 17.698639
-      tipo: 2
-      estado: Talk03
+      voz: 
+    - fundido: 0.3
+      t: 17.025307
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.955305
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 26.357552
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 27.141224
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 27.221224
+      t: 27.038366
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 28.554558
-      tipo: 2
-      estado: Talk02
+      voz: 
+    - fundido: 0.3
+      t: 28.058367
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 31.370815
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 5.302857
       emocion: picaro
@@ -494,7 +505,7 @@ MonoBehaviour:
     - t: 14.785306
       emocion: alegre
       dura: 5.52
-    - t: 26.292244
+    - t: 26.109386
       emocion: sorpresa
       dura: 1.3061224
     visible: []
@@ -532,7 +543,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Victoria
-    - t: 27.291224
+    - t: 27.108366
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -558,64 +569,43 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Victoria
-    - t: 25.885101
+    - t: 25.702244
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Victoria
-    - t: 27.241224
+    - t: 27.058367
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Victoria
     animacion:
     - fundido: 0
-      t: 6.0028567
-      tipo: 2
-      estado: Question01
+      t: 0
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 10.025714
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 15.485306
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 25.835102
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 25.915102
+      t: 25.732244
       tipo: 2
       estado: Cheer01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 27.191223
-      tipo: 4
-      estado: 
+      voz: 
+    - fundido: 0.3
+      t: 26.992245
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 27.841225
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 5.902857
       emocion: sorpresa
       dura: 2
-    - t: 25.835102
+    - t: 25.652245
       emocion: ilusionado
       dura: 1.7061224
     visible: []
@@ -637,7 +627,7 @@ MonoBehaviour:
     actor: NPC_Victoria
     clave: PERAS_02
     gesto: Question01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -645,7 +635,7 @@ MonoBehaviour:
     t1: 14.785306
     actor: NPC_Eldran
     clave: PERAS_03
-    gesto: Laugh01
+    gesto: Shrug01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -655,12 +645,12 @@ MonoBehaviour:
     actor: NPC_Victoria
     clave: PERAS_04
     gesto: Laugh01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 19.905306
-    t1: 25.835102
+    t1: 25.652245
     actor: NPC_Eldran
     clave: PERAS_05
     gesto: HandWave01
@@ -668,21 +658,21 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 25.835102
-    t1: 27.141224
+    t0: 25.652245
+    t1: 26.958366
     actor: NPC_Oliver
     clave: PERAS_OLIVER_VOY
     gesto: Cheer01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 27.141224
-    t1: 31.320816
+    t0: 26.958366
+    t1: 31.137959
     actor: NPC_Victoria
     clave: PERAS_VICTORIA_QUEDATE
     gesto: HeadNod01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -692,7 +682,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de victoria a eldran
     posiciones:
     - t: 0
-      p: {x: -3.200407, y: 27.738256, z: -145.89874}
+      p: {x: 1.4911829, y: 27.738256, z: -142.64203}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -701,8 +691,8 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0999023
-    encuadre: {x: -0.13, y: -0.1}
+    alturaDelFoco: 1.0953062
+    encuadre: {x: 0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -713,7 +703,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de eldran a victoria
     posiciones:
     - t: 5.302857
-      p: {x: 0.24474621, y: 27.709526, z: -141.20036}
+      p: {x: 0.23786318, y: 27.709526, z: -141.19737}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -722,7 +712,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1064134
+    alturaDelFoco: 1.1051805
     encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
@@ -734,7 +724,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de victoria a eldran
     posiciones:
     - t: 9.325714
-      p: {x: 1.4911097, y: 27.738256, z: -142.63974}
+      p: {x: 1.4911829, y: 27.738256, z: -142.64203}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -743,7 +733,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0999023
+    alturaDelFoco: 1.0953062
     encuadre: {x: 0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
@@ -755,7 +745,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de eldran a victoria
     posiciones:
     - t: 14.785306
-      p: {x: 0.24474621, y: 27.709526, z: -141.20036}
+      p: {x: 0.23786318, y: 27.709526, z: -141.19737}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -764,19 +754,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1064134
+    alturaDelFoco: 1.1051805
     encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 19.905306
-    t1: 25.835102
+    t1: 25.652245
     tipo: 0
     descripcion: general de eldran y will
     posiciones:
     - t: 19.905306
-      p: {x: 10.071324, y: 29.481815, z: -152.30138}
+      p: {x: 7.906514, y: 29.481815, z: -147.99704}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -787,19 +777,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.85419536
+    alturaDelFoco: 0.87201035
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 25.835102
-    t1: 27.141224
+    t0: 25.652245
+    t1: 26.958366
     tipo: 6
     descripcion: sobre el hombro de will a oliver
     posiciones:
-    - t: 25.835102
-      p: {x: 1.6277032, y: 27.711775, z: -142.70367}
+    - t: 25.652245
+      p: {x: 1.5628693, y: 27.771374, z: -142.70009}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -808,19 +798,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1331573
+    alturaDelFoco: 1.1326946
     encuadre: {x: 0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 27.141224
-    t1: 31.320816
+    t0: 26.958366
+    t1: 31.137959
     tipo: 2
     descripcion: medio de victoria
     posiciones:
-    - t: 27.141224
-      p: {x: 1.1986187, y: 27.189335, z: -142.30853}
+    - t: 26.958366
+      p: {x: 1.1986187, y: 27.187693, z: -142.30853}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -829,19 +819,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1064134
+    alturaDelFoco: 1.1051805
     encuadre: {x: -0.13, y: -0.16}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 31.320816
-    t1: 35.20674
+    t0: 31.137959
+    t1: 35.023884
     tipo: 5
     descripcion: 'dos: eldran y will'
     posiciones:
-    - t: 31.320816
-      p: {x: 2.8362834, y: 27.172022, z: -142.82767}
+    - t: 31.137959
+      p: {x: 3.3697839, y: 27.169455, z: -141.57768}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -852,7 +842,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8461868
+    alturaDelFoco: 0.8438755
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -860,17 +850,17 @@ MonoBehaviour:
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 34.00674
+    t: 33.823883
     beat:
-      rid: 5630202816662077811
-    linea: 62
+      rid: 6540294550018326812
+    linea: 70
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: will
     t: 19.905306
   - nombre: regalo
-    t: 31.320816
+    t: 31.137959
   puntos:
   - nombre: p_eldran
     posicion: {x: -1.91, y: 26.281815, z: -142.75}
@@ -886,7 +876,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202816662077811
+    - rid: 6540294550018326812
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

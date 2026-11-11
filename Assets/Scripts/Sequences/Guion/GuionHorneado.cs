@@ -163,6 +163,10 @@ public enum TipoDeAnimacion
     HablaTermina = 4,
     /// Cierra un gesto de cuerpo entero sin salida propia (Dizzy_NoWeapon): vuelve a la locomoción.
     FinDeGesto = 5,
+    /// Pose de medio cuerpo encima del bucle de cuerpo entero (sentado y de brazos cruzados).
+    PoseAlta = 6,
+    /// Suelta la pose de medio cuerpo; el cuerpo sigue en su bucle.
+    SoltarPoseAlta = 7,
 }
 
 [Serializable]

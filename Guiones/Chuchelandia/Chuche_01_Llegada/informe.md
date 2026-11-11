@@ -1,10 +1,10 @@
 # Parte de horneado: Chuche_01_Llegada
 
-2026-11-01 09:26 · guion `Assets/_SEQUENCES/Guiones/Chuche_01_Llegada.guion.txt`
+2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Chuche_01_Llegada.guion.txt`
 
 **0:13,4** de secuencia · 4 frases · 4 planos · 5 efectos · 3 personajes
 
-Reparto medido (m): will 1,55/ojos 0,93 · estela 1,68/ojos 0,95 · liam 1,51/ojos 0,94
+Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93
 
 ## Errores (0)
 
@@ -32,7 +32,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · estela 1,68/ojos 0,95 · liam 1,51/oj
 | 0:07,7 | plano 3 | medio de will · 1,8 s · lente 30° · coste 2: ángulo 2 |
 | 0:07,7 | will | «A mí me gusta.» (1,8 s) · pose |
 | 0:09,5 | plano 4 | dos: estela y will · 3,9 s · lente 32° · coste 266: cara 152, ángulo 108 |
-| 0:09,5 | estela | «A ti te gusta todo lo que se pueda comer.» (2,6 s) · pose |
+| 0:09,5 | estela | «A ti te gusta todo lo que se pueda comer.» (2,6 s) |
 
 ## Qué hace cada personaje
 
@@ -50,11 +50,12 @@ Reparto medido (m): will 1,55/ojos 0,93 · estela 1,68/ojos 0,95 · liam 1,51/oj
 - 0:05,1–0:07,7 habla
 - 0:05,1 gesto HeadShake01
 - 0:08,4 gesto HeadNod01
+- 0:09,5 bucle BrazosEnJarras
 - 0:09,5–0:12,1 habla
-- 0:09,6 gesto Talk03
 
 ### liam (Actor_Liam)
 
 - 0:03,5 gesto HeadShake01
 - 0:05,8 gesto HeadShake02
+- 0:09,5 bucle BrazosCruzados
 

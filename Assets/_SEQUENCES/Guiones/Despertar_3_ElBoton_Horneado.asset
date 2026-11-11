@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Despertar_3_ElBoton
   duracion: 1.6
   presentacion: 1
-  huella: "2026-10-30 17:29 \xB7 883bfeef35076afcc3d26ba7c0af5919"
+  huella: "2026-11-11 18:12 \xB7 883bfeef35076afcc3d26ba7c0af5919"
   actores:
   - id: Player
     alias: will
@@ -38,6 +38,7 @@ MonoBehaviour:
       estado: Idle_Battle_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: decidido
@@ -81,7 +82,7 @@ MonoBehaviour:
     extras:
     - {x: 27.6, y: 28.6, z: -70}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0880126
+    alturaDelFoco: 1.1333598
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -91,19 +92,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0.8
     beat:
-      rid: 5630202816662077758
+      rid: 6540294550018327057
     linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.8
     beat:
-      rid: 5630202816662077759
+      rid: 6540294550018327058
     linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 5630202816662077760
+      rid: 6540294550018327059
     linea: 40
   etiquetas:
   - nombre: inicio
@@ -125,21 +126,21 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202816662077758
+    - rid: 6540294550018327057
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ReanudarProyectil
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202816662077759
+    - rid: 6540294550018327058
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SinMagiaDeWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202816662077760
+    - rid: 6540294550018327059
       type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

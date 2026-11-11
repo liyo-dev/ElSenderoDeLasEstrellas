@@ -33,18 +33,16 @@ public static partial class VestidoDelMundo
     private const string PiezaJardineraDePiedra = FK + "Vegetation/Plant01_c01.prefab";
     private const string PiezaFarolaDeDosBrazos = FK + "Props/Lighting/Light03_a02.prefab";
     private const string PiezaFarolaDeTresBrazos = FK + "Props/Lighting/Light03_a03.prefab";
-    private const string PiezaBrocal = FK + "Main Structures/Decoration/Well01_a01.prefab";
     private const string PiezaAsiento = FK + "Props/Furniture/Chair/Chair02_a01.prefab";
     private const string CarpetaDePlacas = FK + "Props/Sign/";
-    private const string MaterialAguaDeLaFuente = "Assets/Scenes/Worlds/MainWorld_data/Recursos/AguaRio.mat";
 
     // ── Casas nuevas ─────────────────────────────────────────────────────────────────────────
 
     /// Casas de la capital, comprobadas contra el terreno (desnivel bajo la huella de 0,65 m como mucho), la
     /// muralla nueva y sus torres, las casas del generador que se quedan (ya giradas), las calles con su ancho,
-    /// las plazas y las zonas libres. Todas son edificios completos del pack FK; las de la ciudad alta, de tres
+    /// las plazas y las zonas libres. Las que tienen oficio o nombre son edificios completos del pack FK y las demás se cambian por hileras de casas de ciudad (EnHileras); las de la ciudad alta, de tres
     /// plantas y tejado azul como el castillo. La puerta mira a su calle.
-    private static CasaNueva[] CasasNuevasDelReino() => new[]
+    private static CasaNueva[] CasasNuevasDelReino() => EnHileras(new[]
     {
         // Ciudad baja: la taberna da su terraza a la Plaza del Mercado; oficios a lo largo de la Calle de la
         // Taberna y de la Calle Mayor; la fila del pie del talud lo tapa con casas de 9,8 m (sus tejados asoman
@@ -65,7 +63,9 @@ public static partial class VestidoDelMundo
         // plaza, fuera de la arena del Demonio 2) y una casa noble en la esquina sureste.
         new CasaNueva("BuildingAT27", -37.0f, 309.0f, 90f, "Palacio de poniente"),
         new CasaNueva("BuildingAT31", 37.0f, 311.0f, 270f, "Archivo Real"),
-        new CasaNueva("BuildingAT46", 34.6f, 288.8f, 0f),
+        // Esquina sureste de la Plaza Real: la torre del reloj, unida a una casa de ciudad, con la fachada a la Vía Real.
+        new CasaNueva(PrefabsDeZonas + "TorreDelReloj.prefab", 32.0f, 290.75f, 0f, "Torre del reloj"),
+        new CasaNueva(PrefabsDeZonas + "CasaDeCiudad_E.prefab", 37.3f, 290.55f, 0f, "Casa de la torre del reloj"),
 
         // Vía Real: la casa de la torre verde corona la rampa este (se ve al subir desde la puerta); hileras a
         // los dos lados de la curva, con juntas de 1,5 m.
@@ -101,7 +101,7 @@ public static partial class VestidoDelMundo
         // Tramo norte de la Calle del Archivo, con fachadas a los dos lados como el de la del Cuartel.
         new CasaNueva("BuildingAT54", 46.0f, 336.8f, 90f),
         new CasaNueva("BuildingAT46", 62.0f, 336.0f, 270f),
-    };
+    });
 
     // ── Zonas libres ─────────────────────────────────────────────────────────────────────────
 
@@ -241,6 +241,7 @@ public static partial class VestidoDelMundo
         Parte("adornos de puertas", () => AdornarPuertas(o, Grupo(grupo, "Puertas"), puertas, reino.Semilla, ciudad: true));
         Parte("farolas de calle", () => FarolasEnCalles(o, Grupo(grupo, "Farolas"), reino));
         o.Informe.Add($"{reino.Nombre}: {o.Puestas - antes} piezas de la capital — {string.Join(", ", partes)}.");
+        CasasDeCiudadPorLasDelGenerador(o, grupo, reino);
         InformarDeLasCasasDeLaCapital(o, escena, reino);
     }
 
@@ -457,61 +458,9 @@ public static partial class VestidoDelMundo
     /// Fuente en el sitio del pozo que se retira: el brocal Well01_a01 ensanchado a 5,4 m y bajo (0,75 m) hace de
     /// pilón, y dentro, una lámina de agua. En los packs no hay fuentes ni estatuas, y un pedestal en el centro
     /// se leería como los de las Ruinas del Libro.
-    private static void PonerFuente(Obra o, Transform g)
-    {
-        const float ancho = 5.4f, alto = 0.75f;
-        // Proporciones del brocal FK: el hueco tiene el 47 % del ancho total y el agua queda al 80 % del alto.
-        const float radioDelHueco = 0.47f * ancho * 0.5f, alturaDelAgua = 0.8f * alto;
-        float suelo = float.MaxValue;
-        for (int i = 0; i < 9; i++)
-        {
-            float a = i * Mathf.PI * 0.25f, r = i == 8 ? 0f : ancho * 0.5f;
-            suelo = Mathf.Min(suelo, o.Suelo.Altura(SitioDeLaFuente.x + Mathf.Cos(a) * r, SitioDeLaFuente.y + Mathf.Sin(a) * r));
-        }
-        float cota = suelo - 0.05f;
-        // Se ensancha igual en X y en Z (el brocal es redondo aunque su caja no sea cuadrada).
-        Vector3 serie = TamanoDeSerie(o, PiezaBrocal);
-        float fondo = serie.x > 0f ? ancho * serie.z / serie.x : ancho;
-        GameObject pilon = PonerPiezaDeObra(o, g, PiezaBrocal, "Pilón de la fuente", SitioDeLaFuente, 0f, new Vector3(ancho, alto, fondo), cota,
-            sinObstaculo: false, solapePropio: false);
-        if (pilon == null) return;
+    private static void PonerFuente(Obra o, Transform g) =>
+        PonFijo(o, g, FuenteNueva, "Fuente de la Plaza del Mercado", SitioDeLaFuente, 0f);
 
-        var agua = AssetDatabase.LoadAssetAtPath<Material>(MaterialAguaDeLaFuente);
-        if (agua == null) { o.Informe.Add($"  ! falta {MaterialAguaDeLaFuente}: la fuente queda sin agua."); return; }
-        Mesh disco = DiscoDeLaFuente(radioDelHueco - 0.03f, 32);
-        GuardarMallaGenerada(disco, "Agua de la fuente de la Plaza del Mercado");
-        var lamina = new GameObject("Agua de la fuente");
-        lamina.transform.SetParent(g, false);
-        lamina.transform.position = new Vector3(SitioDeLaFuente.x, cota + alturaDelAgua, SitioDeLaFuente.y);
-        lamina.AddComponent<MeshFilter>().sharedMesh = disco;
-        var render = lamina.AddComponent<MeshRenderer>();
-        render.sharedMaterial = agua;
-        render.shadowCastingMode = ShadowCastingMode.Off;
-        o.SinObstaculo.Add(lamina.transform);
-        o.Puestas++;
-    }
-
-    /// Disco horizontal de radio dado, con la cara hacia arriba y UV de 0 a 1.
-    private static Mesh DiscoDeLaFuente(float radio, int lados)
-    {
-        var vertices = new Vector3[lados + 1];
-        var uv = new Vector2[lados + 1];
-        var triangulos = new int[lados * 3];
-        uv[0] = new Vector2(0.5f, 0.5f);
-        for (int i = 0; i < lados; i++)
-        {
-            float a = i * Mathf.PI * 2f / lados;
-            vertices[i + 1] = new Vector3(Mathf.Cos(a) * radio, 0f, Mathf.Sin(a) * radio);
-            uv[i + 1] = new Vector2(0.5f + Mathf.Cos(a) * 0.5f, 0.5f + Mathf.Sin(a) * 0.5f);
-            triangulos[i * 3] = 0;
-            triangulos[i * 3 + 1] = i + 2 > lados ? 1 : i + 2;
-            triangulos[i * 3 + 2] = i + 1;
-        }
-        var malla = new Mesh { name = "Agua de la fuente", vertices = vertices, uv = uv, triangles = triangulos };
-        malla.RecalculateNormals();
-        malla.RecalculateBounds();
-        return malla;
-    }
 
     // ── Mercado y terraza de la taberna ──────────────────────────────────────────────────────
 
@@ -519,11 +468,11 @@ public static partial class VestidoDelMundo
     /// plaza, dejando libre el eje de la escalinata y el centro (encuentro y persecución).
     private static readonly (string prefab, float x, float z, float frente)[] PuestosDelMercado =
     {
-        (PrefabsEdificios + "BuildingAT36.prefab", -15f, 248.9f, 0f),     // básico
-        (PrefabsEdificios + "BuildingAT40.prefab", -8.5f, 249.0f, 0f),    // carnicero
-        (PrefabsEdificios + "BuildingAT37.prefab", 8.5f, 249.2f, 0f),     // bebidas
-        (PrefabsEdificios + "BuildingAT41.prefab", 15.5f, 249.8f, 0f),    // pescado
-        (PrefabsEdificios + "BuildingAT42.prefab", 21.4f, 249.9f, 0f),    // pescado
+        (PrefabsDeZonas + "PuestoDeMercado_Fruta.prefab", -15f, 248.9f, 180f),     // básico
+        (PrefabsDeZonas + "PuestoDeMercado_Verdura.prefab", -8.5f, 249.0f, 180f),    // carnicero
+        (PrefabsDeZonas + "PuestoDeMercado_Pan.prefab", 8.5f, 249.2f, 180f),     // bebidas
+        (PrefabsDeZonas + "PuestoDeMercado_Pescado.prefab", 15.5f, 249.8f, 180f),    // pescado
+        (PrefabsDeZonas + "PuestoDeMercado_Fruta.prefab", 21.4f, 249.9f, 180f),    // pescado
     };
 
     private static void PonerMercado(Obra o, Transform g)
@@ -540,6 +489,9 @@ public static partial class VestidoDelMundo
             if (i % 3 == 0) PonFijo(o, g, Barril, "Barril del puesto", new Vector2(x, z) - l * costado, 0f);
         }
         PonFijo(o, g, Carreta, "Carreta de descarga de la posada", new Vector2(57.5f, 263.5f), 90f);
+        // Árboles de plaza con su banco corrido, en los rincones que no pisa nadie.
+        foreach (var p in new[] { new Vector2(-19f, 268.3f), new Vector2(19f, 268.3f), new Vector2(20.5f, 262.8f) })
+            PonFijo(o, g, ArbolDePlazaNuevo, "Árbol de la plaza", p, 0f, solapePropio: true);
     }
 
     /// Terraza de la taberna: la AT18 trae la suya, con toldo, hacia la plaza; delante, al borde de la plaza y
@@ -572,6 +524,8 @@ public static partial class VestidoDelMundo
                 PonFijo(o, plaza, Estandarte, "Estandarte de la Plaza Real", new Vector2(s * 27.3f, z), s > 0f ? -90f : 90f, 4.6f, Medida.Alto);
             foreach (float z in new[] { 285f, 311f })
                 PonFijo(o, plaza, PiezaFarolaDeTresBrazos, "Farola de la Plaza Real", new Vector2(s * 26.8f, z), 0f);
+            foreach (float z in new[] { 290.5f, 307.5f })
+                PonFijo(o, plaza, MacetaDeBola, "Boj de la Plaza Real", new Vector2(s * 27.1f, z), 0f);
         }
 
         Transform escalinata = Grupo(grupo, "Escalinata Real");
@@ -655,7 +609,7 @@ public static partial class VestidoDelMundo
         ("Casa del cambista", "Sign25_a01", 180f),
         ("Bodega de la Calle Mayor", "Sign03_a01", 0f),
         ("Posada del Camino Real", "Sign02_a01", 180f),
-        ("Archivo Real", "Sign21_a01", 180f),
+        ("Archivo Real", "Sign21_a01", 270f),
     };
 
     /// Pone cada rótulo junto a la puerta de su casa: a 2 m sobre el umbral, a 1,5 m de la puerta y pegado al

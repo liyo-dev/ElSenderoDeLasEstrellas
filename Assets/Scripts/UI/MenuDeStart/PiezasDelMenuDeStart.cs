@@ -9,28 +9,39 @@ using UnityEngine.UI;
 namespace Sendero.UI
 {
     /// <summary>
-    /// Colores y piezas del menú de Start (<see cref="MenuDeStart"/>): cajas de esquinas redondas,
-    /// textos, botones sin navegación (el menú lleva la suya) y colocación desde la esquina de
-    /// arriba a la izquierda del padre, en unidades de un lienzo de 1920×1080.
+    /// Colores y piezas del menú de Start (<see cref="MenuDeStart"/>): paneles de papel sobre el
+    /// fondo de noche (colores de <see cref="PaletaUI"/>), cajas de esquinas redondas, textos,
+    /// botones sin navegación (el menú lleva la suya) y colocación desde la esquina de arriba a la
+    /// izquierda del padre, en unidades de un lienzo de 1920×1080. Los colores de texto son para
+    /// escribir sobre papel; lo que va directamente sobre el fondo usa <see cref="SobreNoche"/>.
     /// </summary>
     public static class PiezasDelMenuDeStart
     {
-        public static readonly Color Fondo = new Color32(0x0D, 0x0F, 0x22, 0xFF);
-        public static readonly Color FondoAlto = new Color32(0x24, 0x27, 0x50, 0xFF);
-        public static readonly Color Panel = new Color32(0x12, 0x11, 0x2E, 0xDC);
-        public static readonly Color Borde = new Color32(0x8A, 0x8C, 0xF2, 0xFF);
-        public static readonly Color BordeApagado = new Color32(0x4B, 0x4F, 0x8C, 0xFF);
-        public static readonly Color Oro = new Color32(0xF5, 0xC5, 0x42, 0xFF);
-        public static readonly Color Texto = new Color32(0xEE, 0xF0, 0xFF, 0xFF);
-        public static readonly Color TextoSuave = new Color32(0xC9, 0xCD, 0xF0, 0xFF);
-        public static readonly Color TextoApagado = new Color32(0xA9, 0xAE, 0xD6, 0xFF);
-        public static readonly Color Ficha = new Color32(0x26, 0x28, 0x4F, 0xFF);
-        public static readonly Color FichaOscura = new Color32(0x1D, 0x1F, 0x42, 0xFF);
-        public static readonly Color Hueco = new Color32(0x26, 0x28, 0x4F, 0x59);
-        public static readonly Color Elegida = new Color32(0x3A, 0x34, 0x70, 0xFF);
-        public static readonly Color OroOscuro = new Color32(0x1D, 0x1A, 0x3A, 0xFF);
-        public static readonly Color Verde = new Color32(0x6F, 0xDC, 0x8C, 0xFF);
-        public static readonly Color Rojo = new Color32(0xFF, 0x8A, 0x80, 0xFF);
+        public static readonly Color Fondo = new Color32(0x1B, 0x15, 0x30, 0xFF);
+        public static readonly Color FondoAlto = new Color32(0x3A, 0x2E, 0x63, 0xFF);
+        public static readonly Color Panel = PaletaUI.Papel;
+        public static readonly Color Borde = PaletaUI.Tinta;
+        public static readonly Color BordeApagado = new Color32(0xA0, 0x8C, 0x74, 0xFF);
+        public static readonly Color Oro = PaletaUI.Oro;
+        /// Dorado oscuro para escribir sobre papel (el dorado de <see cref="Oro"/> es para rellenos y bordes).
+        public static readonly Color OroDeTexto = new Color32(0x8A, 0x5A, 0x00, 0xFF);
+        public static readonly Color Texto = PaletaUI.TintaDeTexto;
+        public static readonly Color TextoSuave = PaletaUI.Tinta;
+        public static readonly Color TextoApagado = new Color32(0x77, 0x64, 0x50, 0xFF);
+        /// Texto escrito directamente sobre el fondo de noche (cabecera, pistas, notas).
+        public static readonly Color SobreNoche = new Color32(0xEE, 0xE6, 0xD8, 0xFF);
+        public static readonly Color Ficha = PaletaUI.PapelClaro;
+        public static readonly Color FichaOscura = PaletaUI.PapelApagado;
+        public static readonly Color Hueco = new Color32(0x61, 0x4D, 0x3B, 0x26);
+        public static readonly Color Elegida = new Color32(0xFF, 0xE5, 0x96, 0xFF);
+        public static readonly Color OroOscuro = PaletaUI.TintaDeTexto;
+        public static readonly Color Verde = new Color32(0x25, 0x7A, 0x3A, 0xFF);
+        public static readonly Color Rojo = new Color32(0xB3, 0x26, 0x1E, 0xFF);
+        /// Pista vacía de una barra dibujada sobre papel.
+        public static readonly Color Pista = new Color32(0x3A, 0x2C, 0x22, 0xFF);
+
+        /// Versión oscura de un color claro (el de un elemento, por ejemplo) para escribir con él sobre papel.
+        public static Color SobrePapel(Color c) => new Color(c.r * 0.5f, c.g * 0.5f, c.b * 0.5f, c.a);
 
         /// Fuente de los textos del menú (la de los menús del juego; la pone el menú al montarse).
         public static TMP_FontAsset Fuente;

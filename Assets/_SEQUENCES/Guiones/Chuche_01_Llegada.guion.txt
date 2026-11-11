@@ -52,6 +52,8 @@ estela dice CHUCHELANDIA_LLEGADA_02 cara=enfado gesto=HeadShake01
 plano medio will
 will dice CHUCHELANDIA_LLEGADA_03 cara=ilusionado gesto=Cheer01 mira=p_valle
 plano dos estela will
+& estela bucle BrazosEnJarras fundido=0.3
 estela dice CHUCHELANDIA_LLEGADA_04 cara=molesto mira=will
 & liam cara picaro
+& liam bucle BrazosCruzados
 espera 0.8

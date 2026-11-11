@@ -38,6 +38,7 @@
 26. [Render: contorno de tinta, sombra de contacto y ajustes de rendimiento](#26-render-contorno-de-tinta-sombra-de-contacto-y-ajustes-de-rendimiento-inc-865)
 27. [Rediseño del 29 oct 2026: dueños nuevos](#27-rediseño-del-29-oct-2026-dueños-nuevos-inc-867)
 29. [Chuchelandia: la prueba de Estela](#29-chuchelandia-la-prueba-de-estela-inc-889)
+31. [Kits genéricos: separación de los sistemas](#31-kits-genéricos-separación-de-los-sistemas-inc-1049)
 
 ---
 
@@ -835,6 +836,10 @@ Gestiona la reproducción de `DialogueAsset` (SO con líneas localizadas). Respo
 - Mostrar opciones de respuesta cuando corresponde.
 - Posicionar party members vía `PlayerParty.PositionMembersForDialogue`.
 
+### Aspecto de la caja: `PapelDeLaCajaDeDialogo`
+
+`DialogueManager` monta en `Awake` un `PapelDeLaCajaDeDialogo` (`Assets/Scripts/Dialogue/`) sobre el panel de la escena: una hoja de `PiezasDeUI.Papel` bajo el texto (su sombra cuelga por debajo del panel), el cuerpo alineado arriba a la izquierda en tinta de texto con márgenes propios, y la etiqueta del nombre dentro de una pestaña inclinada que asoma por el borde de arriba y se ajusta al ancho del nombre (`PonerNombre(nombre, fondo, letra)`; sin nombre se esconde). Las opciones de respuesta de la caja llevan una ficha de papel que `ChoiceButtonFx` tiñe de dorado con el foco (`VestirOpcion`). La pregunta con opciones se escribe en el cuerpo. Los colores salen de `PaletaUI` (§ 11). Los fondos que el panel trae de la escena (nebulosa, chispas, difuminado) se apagan al montar el papel.
+
 ### DialogueAsset
 
 SO con lista de `DialogueLine`; hereda de `NarrativeDialogueAsset` (base abstracta del núcleo del grafo, `Runtime/Integration/Ports/`), así que los nodos del grafo lo referencian sin conocer la clase del juego. Cada línea tiene:
@@ -1278,6 +1283,12 @@ Selector del grupo del panel de estado: bustos de Liam, Will y Estela que asoman
 - **Lo usan:** `DialogueBeats` (`SayBeat`) y `ReproductorDeGuion` de las cinemáticas, los nodos del grafo por `SpeechBubbleNarrativeAdapter` (bocadillo) y `GuiarJugadorNode`, `CharlaEnBocadillos` y `ComentariosEnReposo`.
 - `PresentacionDeLinea` (`Sequences/PresentacionDeLinea.cs`) es el estilo de una frase (los tres de la UI más «heredar de la secuencia»); la conversión al estilo de la UI vive solo en `PresentacionDeLinea.Resolver`.
 - **Regla:** una frase nueva en pantalla pasa por `PresentadorDeLinea`; nadie llama a `SpeechBubbleUI.Show` por su cuenta. Quedan llamadas directas por pasar: `Bocadillos.Decir` (batalla final y `NivelEscapeSendero`), `GuiaDeCombate`, `FinalDelConducto`, `SenalDeCompra`, y `SavePointTeleportTrigger`. `CinematicSequencerBase` ya esconde el texto con `PresentadorDeLinea.EsconderTodo` (fase 6, § 22.7).
+
+### Papel de la interfaz: `PaletaUI` y `PiezasDeUI.Papel`
+
+La interfaz tiene dos situaciones y un solo material. Lo que convive con el mundo (caja de diálogo, avisos, HUD) va en papel crema con borde de tinta, el del bocadillo; los menús a pantalla completa ponen ese mismo papel sobre el fondo de noche. `PaletaUI` guarda los colores (`Papel`, `PapelClaro`, `PapelApagado`, `Tinta`, `TintaDeTexto`, `Oro`, `Noche`) y `PiezasDeUI.Papel(relleno, borde, filo, sombra)` da la hoja troceada: esquinas redondas, borde, filo claro por dentro y sombra dura que cuelga `SombraDelPapel` por debajo (la imagen baja su borde inferior esa medida). Con `pixelsPerUnitMultiplier` mayor que 1 la pieza se afina (pestañas, fichas). Se genera una vez por combinación de colores. Las hojas de las pantallas hechas en escenas y prefabs son sprites de `Art/UI/Menu`, `Art/UI/Misiones` y `Art/UI/HUD` (paneles, píldoras, fichas, chips) y `Resources/UI/TutorialPromptBackground`; las piezas oscuras que van sobre el mundo (aro de los botones de combate, pistas de las barras) usan el morado de noche o tinta oscura con aro crema.
+
+**El Sendero ▸ UI ▸ Pasar la interfaz al papel** (`InterfazDePapelBuilder`) mantiene los textos de escenas y prefabs: todo texto claro cuyo fondo más cercano (una imagen de un padre, o un hermano anterior que lo ocupa entero) es una hoja de su lista `Papeles` pasa a tinta (`TintaDeTexto`; los secundarios, `Tinta`; los dorados, dorado oscuro), y los `MenuTextHighlight` y `UISelectVisual` que tiñen esos textos pasan a colores legibles sobre papel. También pone hoja a los fondos lisos de `FondosQueSonPapel` y deja el detalle en `Claude outputs/interfaz-de-papel.md`. Es repetible: al añadir una pantalla con esos sprites, se apunta su escena o prefab en la lista y se vuelve a ejecutar. El menú de Start toma los colores de `PiezasDelMenuDeStart` (paneles de papel; `SobreNoche` para lo escrito sobre el fondo). Estado y pendientes: INC-1063.
 
 ### LanguageSelectPanel (selector de idioma de primer arranque)
 
@@ -3965,6 +3976,32 @@ Piezas genéricas que estrenó «¡TE QUIERO!» de Chuchelandia (§ 29):
 - **Líquido teñido:** `SalpicaduraDeAgua.salpicarAlActivarse` (0-1, negativo = no) hace del emisor de salpicaduras un VFX de un solo uso con sus colores (sirope, barro…), para `vfx` y `VfxPoolService`: salpica en el `LateUpdate` del fotograma en que se activa, ya colocado.
 - **Texto en el mundo:** `LocalizedText` traduce también un `TextMeshPro` del mundo (`TMP_Text`), no solo los de interfaz: una pancarta o un cartel se cambian de idioma como cualquier texto.
 
+### 22.13 Poses de medio cuerpo, gestos y escenas abiertas al hornear (INC-1059)
+
+- **Pose sostenida + gesto:** «bucle BrazosEnJarras» deja al actor en la pose hasta «reposo» (o hasta que eche a andar). Un gesto de medio cuerpo encima («gesto HeadNod01», o `gesto=` en una frase) se queda con la capa mientras dura; al acabar, el actor vuelve solo a la pose (`Horno.VolverALasPoses`, con 0,3 s de fundido). Solo poses en bucle de la capa UpperBody; una pose congelada (`congela`) no vuelve. Para que la pose acabe con el gesto, «reposo» antes.
+- **Quien sostiene una pose no reacciona con gestos de oyente:** escucha con la cabeza y la cara. Quien habla con una pose puesta tampoco hace gestos de hablar (ya era así): para una frase larga con manos, «reposo» antes.
+- **Sentados y tumbados:** con un bucle de cuerpo entero puesto (un asiento, tumbado), «bucle ManoAlPecho» pone la pose de medio cuerpo encima sin tocar la del cuerpo (`TipoDeAnimacion.PoseAlta`; en juego, `SequenceActor.SostenerPoseDeMedioCuerpo`). «reposo brazos» la suelta y sigue sentado; «reposo» y «levanta» sueltan las dos. El storyboard no la dibuja. Solo personajes con `NPCSimpleAnimator`: al jugador el horneado no se la pone y avisa.
+- **`BrazosCruzados` es de cuerpo entero** (capa base): los gestos de medio cuerpo se le ponen encima y vuelve sola.
+- **Mismo instante:** un «reposo» y un «gesto» del mismo actor en el mismo instante no tienen orden garantizado; el «reposo» va un momento antes.
+- **Insertar órdenes sin mover el tiempo:** lo que acompaña a una frase va detrás de ella con `&` (o `+s`); una orden suelta entre dos frases les quita la pausa de `RITMO`.
+- **Escenas abiertas:** el horneado abre en aditivo la escena del guion y no la cierra. Con MainWorld abierta, un punto sin altura de otra escena puede tomar por suelo el NavMesh de MainWorld (pasó en la zona del Sendero de `Final_01`: sus puntos llevan ahora la altura escrita). El horneado pedido por el buzón cierra al acabar, sin guardar, la escena que abrió (a mano se queda abierta: cerrarla antes de rehornear el NavMesh o guardar, porque el rehorneado mete en cada superficie la geometría de todas las abiertas).
+- **Escenas en binario y git:** `.gitattributes` trata `*.unity` como texto; una escena guardada en binario pierde bytes al subirla y sale rota al bajarla (INC-1059). Una escena restaurada del repositorio que dé «Unknown error occurred while loading» es eso. `MontarCinematicaFinal` no monta desde cero una escena que existe y no se abre: avisa.
+
+### 22.13 bis La cara de quien habla y la cabeza con el cuerpo (INC-1071)
+
+- **`mira` lleva la cabeza.** La orden gira el cuerpo y, con él, la cabeza hacia el mismo objetivo (al frente si es un rumbo). `cabeza` sigue sirviendo para volverla sin girar el cuerpo.
+- **La cara se mide cuando se habla.** `HornoCamaras.Coste` mira el ángulo de la cara en el instante de referencia del plano y a mitad de cada frase que el sujeto dice dentro de él (`MomentosDeCara`): un plano que empieza bien y en el que el que habla se gira ya no gana.
+- **Avisos de puesta en escena.** `AvisarDeQuienHabla` deja en el parte cada frase dicha a más de 110° de la cámara o con otro personaje delante de la cara, también con `desde=`. No se aplica a `sigue`, `general` ni `lado=espalda`.
+- **Puntos sobre una malla con suelo debajo.** Un punto sin altura cae en el NavMesh más cercano en vertical desde y=100; si hay terreno con NavMesh debajo de una montaña o un puente, hay que dar la altura en el punto (tercer número).
+
+### 22.14 El gesto lo pide la frase; la risa, el personaje (INC-1068)
+
+- **Gestos de reacción** (tabla `Gestos` de `PosesDeActuacion`): `Aviso01`, `Alto01`, `Sobresalto01`, `Grito01`, `Suspiro01`, `Dudar01`, `NegarConManos01`, `Decidido01`; risas `Laugh01` (por defecto), `Laugh_Risita`, `Laugh_Carcajada`. `Sacudidas(...)` hace los golpes que se apagan. Con estas cabezas, inclinar el tronco más de ~0,12 hace que el personaje mire al suelo; las manos, siempre lejos de la cara.
+- **Frases sin `gesto=`**: `HorneadorDeGuion.GestoSegunLaFrase` pregunta a `ActuacionAutomatica.ParaDecir(texto, cara)`, que va de lo urgente a lo suave (sin palabras → respingo o nada; aviso; alto; risa; grito; pregunta; señalar; gracias; súplica; hombros; duda; negativa; decisión; afirmación; suspiro; saludo) y solo mira la cara cuando el texto no dice nada. Devuelve opciones por orden; se usa la primera que el actor tenga. Lista vacía = sin gesto; null = charla (`Talk01-03`, como antes). No repite el mismo gesto del actor en 8 s ni el que acaba de hacer como oyente.
+- **Oyentes**: no reaccionan a una frase sin palabras; a un aviso, `Sobresalto01`; la misma reacción no se repite en 6 s.
+- **Variantes por personaje**: `GestosPorPersonaje.Variante` en `SequenceActor.PlayGesture`. Tabla en `Resources/Actuacion/gestos_por_personaje.txt` (`id gesto=variante`). Vale para cualquier gesto, no solo la risa. Pedir la variante por su nombre en el guion se la salta.
+- Las palabras clave están en castellano y viven en `ActuacionAutomatica` (ya era así); es lo que habrá que sacar a datos cuando el sistema se empaquete.
+
 ## 23. Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes (INC-671, INC-684)
 
 Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real y con un menú que lo deshace entero. De lo que ya estaba en la escena solo cambia dos cosas, las dos con registro para reponerlas: gira algunas casas y retira (deja inactivo y fuera de la build, nunca borra) lo que estorba a lo nuevo.
@@ -4042,6 +4079,7 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo, pa
 - **Reino:** ver § 23.5.
 - **En los demás pueblos:** macetas, jardineras, barriles, cajas, leña o un banco junto a las puertas y farolas cada 18 m alternando acera.
 - **Pueblo pesquero:** puestos de pescado, cajas, nasas, redes y barcas varadas fuera del embarcadero, y bancos.
+  Vida del puerto (`VidaDelPuerto`, INC-1048): un velero atracado por fuera del muelle transversal (escala 1,5: es el hito de la aldea) y otro fondeado, botes amarrados, grúa y género sobre los tablones (a los lados; el centro queda libre), barcas, nasas y ancla en la arena y un puesto de pescado más en el borde de poniente de la plaza (el centro y el paso a la rampa son de los vecinos del capítulo 3). `PonAFlote` pone a flote con calado y no pone donde no hay fondo; `PonEnElMuelle` apoya en la cara de arriba de los tablones (capa `Floor`), que busca bajando una esfera.
 - **Pueblo vecino:** puesto y bancos en la plaza, heno, carreta y leña.
 - **Granjas:** almiar y pacas, abrevadero, carretilla, gallineros, colmena y espantapájaros fuera de los huertos.
 - **12 parajes entre zonas:** ruinas de una casa fuerte, atalaya rota del acantilado sur, caserío abandonado, claustro viejo, redil del pastor, varadero de la playa oeste, cantera vieja, posta del cruce, era de trilla, almenara del acantilado este, mirador de la subida al Reino y descanso del cruce. Cada uno es una «receta» de piezas en coordenadas locales (muros derruidos, columnas, sillares sueltos, maderos, flores silvestres) orientada hacia donde llega su senda.
@@ -4101,7 +4139,7 @@ Ciudad amurallada en dos terrazas: la baja (y ≈ 104) de mercado y oficios y la
 **Pavimento.** Las calles y plazas de los pueblos con `Pavimentado` (hoy solo el Reino) son mallas propias que siguen el terreno a 4 cm (6 cm en rampa), con los materiales de suelo del pack FK y la UV en metros:
 
 - calle: calzada de adoquín (`Ground03`), bordillo de sillares (`Ground04`, 0,25 m de ancho y 0,12 m de alto) y acera de losas (`Ground01`, 0,75 m). En los cruces sigue de largo la de más prioridad (el paso de la puerta, después la más ancha) y la otra le abre el bordillo; las esquinas en L y los fondos de saco se rematan. El paso de la puerta va de adoquín de lado a lado, con cintas de piedra y un umbral;
-- plaza: baldosa (`Ground05`) centrada, marco de adoquín de 1,2 m y bordillo donde linda con tierra; se abre donde entra una calzada o se apoya obra (escalinata, muro, casa, balaustrada). Con rosetón (`Plaza.Roseton`): disco de `Ground02` con anillo de sillares y un eje de losas que lo cruza (en la Plaza Real, de la escalinata a la explanada);
+- plaza: baldosa de barro (`Ground01`, el material de las aceras, un dibujo cada 6 m) centrada, marco de adoquín de 1,2 m y bordillo donde linda con tierra; se abre donde entra una calzada o se apoya obra (escalinata, muro, casa, balaustrada). Con rosetón (`Plaza.Roseton`): disco de `Ground02` con anillo de sillares y un eje de losas que lo cruza (en la Plaza Real, de la escalinata a la explanada);
 - acceso de puerta: losas de la puerta de cada casa a la acera o la plaza, si están a menos de 8 m y no se cruza otra casa;
 - las zonas verdes y los taludes de más de 38° no se pavimentan;
 - sin colisor ni sombra: no cambia la navegación ni la colocación de piezas. La malla se parte donde el terreno se arquea; lo que queda tapado por otra superficie se hunde unos centímetros para que no parpadee. Una malla por calle, otra por plaza y otra para los accesos, en `CarpetaGenerada`.
@@ -4149,6 +4187,34 @@ Los ríos («Río del bosque», «Arroyo de la ladera este») son mallas hechas 
 - **Fondo no caminable:** `NavMeshModifierVolume` «Not Walkable» en la capa `Floor` donde hay 0,6 m o más de fondo. Hay que volver a hornear la navegación.
 
 Sin la habilidad de nadar, `PlayerSwimmingController` hace del agua honda (más de `fondoMaximoSinNadar`, 0,6 m) una orilla: el jugador vuelve al último sitio donde hacía pie. Solo cuenta pisando suelo (volar o saltar un arroyo no frena) y a menos de 2 m de ese sitio (si llega al agua cayendo, no se le arrastra).
+
+### 23.7c Casas y piezas propias de las zonas (`VestidoDelMundo.Zonas.cs`, INC-1053)
+
+Modelos hechos en Blender (`Tools/Modelos/Zonas/zonas.py`; FBX en `Assets/Art/World/Zonas/`). *El Sendero ▸ Escenario ▸ Zonas: preparar las casas nuevas* (`ModelosDeLasZonas`) les pone los materiales lisos con el estilo del pack (`PiezaDeBlender`), les añade `MeshCollider` y deja sus prefabs en `Assets/Art/World/Zonas/Prefabs/`, que es lo que coloca el vestido. Un material nuevo en `zonas.py` se añade también a la tabla de colores de `ModelosDeLasZonas`.
+
+- **Barrio sobre el agua** (`BarrioSobreElAgua`, desde `EscenasDelPuerto`): busca la orilla desde (228, −452); la pasarela arranca donde la arena queda a la altura de las tablas (1,6 m) y la primera casa va donde ya cubre. Las casas (`CasasDelBarrio`) se ponen en fila mar adentro, unidas por tramos de pasarela de 3 m a la altura de sus porches, con la fachada hacia el embarcadero. `PonSobrePilotes` deja las tablas a 1,6 m sobre el mar (los pilotes bajan 2,4 m). Cada casa tiene escalones hasta el agua: no hay escalada, se sube andando.
+- **Faro del cabo** (`FaroYLonjaDelPuerto`): retira con el registro la torre vigía (`Hitos del mapa…/Faro (torre vigía) — cabo del puerto`) y pone el faro sobre el basamento rocoso con `PonEnElMuelle` (que busca la cara de arriba de la obra en la capa `Floor`), a escala 1,25 y con la puerta hacia la aldea. La lonja y un secadero van en tierra.
+- **Hileras de la capital** (`EnHileras`, sobre la lista de `CasasNuevasDelReino`): cada casa del pack sin nombre (`BuildingAT46/55/54/53/17`) se cambia por una o dos casas de ciudad pared con pared (`HilerasPorCasaDelPack`), con la fachada en la línea de calle de la que sustituyen. Las casas con nombre (oficios, palacios) se quedan. Las casas de ciudad admiten solaparse entre sí al colocarse (`PermitirSolapePropio`). La torre del reloj y su casa van como entradas con nombre en la esquina sureste de la Plaza Real.
+- **Ramales, tiendas y casa apartada** (`BarrioSobreElAgua`, `RamalConTienda`): entre casa y casa, en vez de pasarela recta, algunos huecos llevan un rellano con banco del que sale un ramal hasta una tienda sobre pilotes (pescado, fruta, aparejos). El barrio acaba en un templete (`MiradorDeLaAldea`). Una casa amarilla queda suelta mar adentro, sin pasarela: solo se llega nadando y se sube por sus escalones. Por la arena alta va un paseo de tablas hacia la plaza.
+- **Casas de tierra de la aldea** (`CasasDeTierraDelPuerto`): cada `BuildingAT*` del pack que haya en los grupos del puerto se retira con el registro y en su sitio, con su mismo frente, va una `CasaDeLaAldeaEnTierra_*` (la amarilla, de dos plantas, donde la del pack medía más de 10 m). **Capítulo 3 puede tener referencias a esas casas del pack** (puertas, marcas, cámaras): está aceptado y queda para el hilo que repase el capítulo.
+- **Plaza del puerto**: rosa de los vientos sobre tarima de piedra en el centro (270, −433) (el cuerpo del modelo baja 1,2 m y se hunde 0,9 m: la plaza no es llana), tres ristras de banderines y puestos propios (`PuestoDeMercado_*`).
+- **Capital entera con modelos propios**: `EnHileras` cambia también las casas de oficio (`HilerasDeOficio`, con las variantes de toldo `_G`/`_H`) y los edificios públicos (`EdificiosPublicos` → `EdificioDeCiudad_*`); `CasasDeCiudadPorLasDelGenerador` sustituye en la escena las casas del pack que no vienen de la lista. Las piezas de `Zonas/Prefabs` admiten hasta 2 m de desnivel bajo la casa. La Plaza del Mercado lleva la fuente, los puestos y los árboles propios.
+- **Costados de las casas de ciudad**: llevan zócalo, impostas y ventanas, y hastial de piedra con ojo de buey en las de alero. Pared con pared quedan dentro de la vecina (la junta de hilera es de 2 cm); se ven en los extremos de hilera y por encima de una vecina más baja.
+- **Pueblo inicial** (`ArbolDelPuebloInicial`): retira con el registro la bocamina (`BuildingAT35`) y planta el árbol del columpio. Es la única excepción a «el pueblo de Will no se toca».
+- **Canon que cambia** (decisión de Raúl, 11 nov 2026): el faro es una torre suelta permitida; mover o sustituir casas es válido aunque afecte a capítulos (se documenta para arreglarlo después).
+
+### 23.7d Exploración: cuevas, templos, repisas y pueblo inicial (`VestidoDelMundo.Exploracion.cs`, INC-1062)
+
+Se llama desde `PoblarZonas` (`ExplorarElMundo`). Diseño en GDD § 7.3 (sin escalada).
+
+- **Piezas a cota exacta** (`PonExacto`): túneles, repisas, templos y casas del pueblo inicial no pasan por `Poner`; van con su origen en un punto calculado y reservan su huella.
+- **Terreno abierto** (`AbrirElTerreno`, `CerrarElTerreno`): los túneles van bajo el terreno y se abren con `TerrainData.SetHoles` solo las celdas cuya superficie cruzaría el hueco (entre 1 m por debajo y 4,2 m por encima del suelo del túnel, a 2,3 m del eje). Se cierran todos los agujeros al empezar cada vestido y en *quitar el vestido*. MainWorld no tiene otros agujeros.
+- **Cueva de la cascada** (`CuevaDeLaCascada`): boca al pie del cortado, donde cae el agua; tres `TunelEscalonado` (5 m de subida cada uno) hasta la repisa alta. La traza se retrasa hasta que la boca queda a ras del terreno. Con ella: `SubidaDelMirador` (repisas en zigzag del mirador a la repisa del oeste), el puente colgante sobre el arroyo y el templo de la Cascada.
+- **Túnel llano** (`TunelPorElTerreno`): dos bocas, tramos de 8 m y sala opcional; la distancia entre extremos debe cuadrar con las piezas (10 + 8·n, o 22,6 + 8·n con sala). La boca de llegada se tapa con hiedra.
+- **Templos** (`Templo`, `TemploEn`): busca cerca de un centro una ladera (3,4 m de subida en 6 m) con rellano delante y mete la entrada con la fachada cuesta abajo; retira con el registro los árboles y peñas del mundo que la taparían. La entrada es solo la puerta: el disparador que cargue el nivel irá en el velo del fondo.
+- **Arcos de entrada** (`ArcosDeEntrada`): recorre un círculo alrededor del pueblo y pone un arco en cada cruce con camino de 1,5 a 8,5 m.
+- **Casas del pueblo inicial** (`CasasDelPuebloInicial`): cada contenedor `BuildingATnn` se retira con el registro (con los enseres que cuelgan de él) y en el centro de sus módulos va una `CasaDelPueblo_*` elegida por el ancho de fachada.
+- Datos para elegir sitios sin abrir Unity: el heightmap de `Terreno.asset` (513², `h × 300 / 32766 − 25` m sobre 1300 m centrados) y `_ClaudeBackups/indice_mainworld.tsv`.
 
 ### 23.8 Estado y límites
 
@@ -4439,6 +4505,11 @@ Propuesta y diagnóstico completos: doc de proyecto `propuesta-outline-quibli-y-
 
 ---
 
+
+**Sombra cálida (INC-1056).** El tinte de sombra violeta sirve para los colores fríos; en los cálidos (rojo por encima del verde y del azul: piel, pelo rubio o castaño, madera) el shader usa `tinteDeSombraCalida` (`_DibujoSombraCalida`), y la luz ambiente tiñe solo lo que diga `tinteDeLaLuz`, igual que el sol. Sin eso, una cara entera en sombra sale lila.
+
+**Postprocesado general (INC-1058).** El perfil de la calidad (`Assets/Settings/Volumenes/Volumen Profile.asset`) acompaña al dibujo: sin grano, sin mezclador de canales y sin el detalle estilizado de Quibli; corrección de color sin tintes (solo algo de contraste y viveza); resplandor con el umbral en 1, para que solo resplandezca lo emisivo. Se pone y se quita con `PostprocesoDeDibujo` (*El Sendero ▸ Aspecto de dibujo*), que guarda una copia del perfil en `Assets/Settings/Volumenes/Antes del dibujo/`. Un perfil propio de un momento (sueño, golpe, interior) puede seguir usando esos efectos.
+
 ## 27. Rediseño del 29 oct 2026: dueños nuevos (INC-867)
 
 Revisión de código en busca de basura, duplicados y contradicciones, seguida de un rediseño por fases para que cada responsabilidad tenga **un solo dueño**. Seguimiento y pruebas en juego: `TRACKER.md` INC-867. Lo retirado está en `Versiones antiguas/Herramientas de un solo uso (2026-10-29)/` y `Versiones antiguas/Codigo sin uso (2026-10-29)/`.
@@ -4590,3 +4661,60 @@ Desde el 8 de noviembre de 2026. Raúl: «que el prólogo se vea más bonito, m�
 ### 30.4 Reparto nuevo del prólogo
 
 `PanaderaDelValle`, `MadreDelValle`, `VecinoDelMirador` (en `PersonajesConAspectoFijo`, roster del valle; caras en `CarasDeLosNPCs`) y `LucasDelValle`, el hijo, con cuerpo de niño (`RecursosDelPrologo.AsegurarLucas` + entrada de `NinosHechosEnBlender`). `RecursosDelPrologo.Asegurar` tiene menú (*El Sendero ▸ Guion ▸ Prólogo: preparar recursos*). Sonidos `SFX_Pueblo_Contraventana_Abre`/`_Golpe`.
+
+---
+
+## 31. Kits genéricos: separación de los sistemas (INC-1049)
+
+**Decisión de Raúl (11 nov 2026):** todos los sistemas genéricos se separan del juego antes de seguir con contenido, para venderlos o llevarlos al siguiente juego. La regla de trabajo es la 8.9 de CLAUDE.md/AGENTS.md. Las tareas detalladas (K0–K18) están en el Project de Claude: `claude/kits-genericos-tareas-separacion-2026-11-11.md`.
+
+### 31.1 Estructura
+
+```
+Assets/
+  Kits/<Kit>/            genérico; asmdef Kits.<Kit> (+ Kits.<Kit>.Editor), namespace Kits.<Kit>, API en inglés
+  ElSendero/Content/     jefes, hechizos, personajes, capítulos, scripts de un solo uso
+  ElSendero/Data/        assets del juego (grafos Cap*.asset, perfiles, tablas)
+  ElSendero/Connections/ enchufes: implementaciones del juego de las interfaces de cada kit
+```
+
+### 31.2 Reglas
+
+- Un kit no conoce el juego: sin nombres del juego, IDs ni rutas de sus assets, sin menús `El Sendero/…` (los kits usan `Tools/<Kit>/…`), sin condiciones de historia ni `if` por personaje, escena o capítulo.
+- Dependencias en una dirección: juego → kits. Entre kits, solo interfaces o eventos de `Kits.Core`. Sin ciclos (los asmdef no los admiten).
+- Los asmdef de los kits van con `autoReferenced: true`: el código del juego (Assembly-CSharp) los ve sin cambios y ellos no pueden ver el juego.
+- Nada de copias o variantes «del Sendero» de un sistema: se amplía el kit con datos, opciones o interfaces, o se escribe un enchufe en `Connections/`.
+- **Datos serializados:** los grafos y las secuencias guardan cada nodo o beat con su ensamblado (`asm: Assembly-CSharp`). Toda clase de `[SerializeReference]` que se mueva o se renombre lleva `[MovedFrom(true, sourceNamespace, sourceAssembly, sourceClassName)]`, y se comprueba que los assets conservan sus nodos. MonoBehaviour y ScriptableObject van por el GUID del `.meta`.
+- Medida y vigilancia: `Tools/Kits/dependencias_kits.py` (dependencias y ciclos por módulo; lista vacía de «kits que usan algo que no es un kit») y el guardián de kits.
+- **Guardián de kits.** `Kits.EditorTools.KitGuard` (`Assets/Kits/EditorTools/Editor/`) recorre la carpeta de kits y devuelve los incumplimientos: palabras prohibidas en rutas, código y textos (los comentarios no cuentan); `MenuItem` fuera de `Tools/`, `Assets/`, `GameObject/` o `CONTEXT/`; código sin el namespace `Kits.<Kit>` o que no está bajo un asmdef del kit; carpeta `Editor` dentro de un asmdef que entra en la build; asmdef con otro nombre o que referencia algo que no es un kit ni un paquete. No conoce el juego: los nombres prohibidos se los pasa el test `GuardianDeKitsTests` (`Assets/ElSendero/Connections/EditorTools/Editor/`), que es donde se añade un nombre nuevo del juego. Con «=» delante, la palabra solo cuenta suelta (`=Will` no salta con `OnWillRenderObject`).
+
+### 31.3 Punto de partida (medido el 11 nov 2026)
+
+- 1.178 archivos `.cs` propios, unas 293.000 líneas; ningún asmdef propio; 993 archivos sin namespace.
+- 24 carpetas de `Assets/Scripts` forman un único ciclo de dependencias (Core ↔ Player ↔ UI ↔ NPC…). `Partida` usa 41 tipos del juego.
+- Limpios: `Core/Pooling`, `Core/Logging`, `ServiceLocator`, `TimeScaleArbiterService`, `Render`, `Health`, `VFX`, `Timeline` y `Assets/NarrativeGraph` (que aún contiene los grafos del juego).
+- Informe completo: `Logs/claude/kits/informe_partida_2026-11-11.txt`.
+
+### 31.4 Estado
+
+| Tarea | Kit | Estado |
+|---|---|---|
+| K0 | Preparación | Informe de partida hecho; falta subida a git |
+| K1 | Esqueleto y guardián | Hecho: compila en Unity; falta pasar el test `GuardianDeKitsTests` en el Test Runner |
+| K2 | Core limpio, Render, Health | Pendiente |
+| K3 | NarrativeGraph | Pendiente |
+| K4 | Core (romper el ciclo) | Pendiente |
+| K5 | SaveBoot | Pendiente |
+| K6 | Audio | Pendiente |
+| K7 | Interaction | Pendiente |
+| K8 | Dialogue | Pendiente |
+| K9 | Quests | Pendiente |
+| K10 | Inventory (tienda, colecciones, vestuario) | Pendiente |
+| K11 | Sequences | Pendiente |
+| K12 | Combat | Pendiente |
+| K13 | Movement | Pendiente |
+| K14 | Environment, World, Camera | Pendiente |
+| K15 | Puzzles | Pendiente |
+| K16 | NPC y grupo (Characters) | Pendiente |
+| K17 | UI | Pendiente |
+| K18 | EditorTools y limpieza final | Pendiente |

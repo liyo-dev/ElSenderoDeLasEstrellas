@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_05_LosPajaros
   duracion: 32.918564
   presentacion: 1
-  huella: "2026-11-11 00:48 \xB7 259907e7aa074ad6ff9ed318e6f7afd6"
+  huella: "2026-11-11 18:11 \xB7 fb167f5d16dfe69a7b9ee8e23b0ab2c2"
   actores:
   - id: Player
     alias: will
@@ -137,6 +137,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
+    - t: 20.083563
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Sargento
     - t: 20.183563
       tipo: 2
       rumbo: 0
@@ -167,23 +172,16 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
+    - fundido: 0.5
       t: 15.383562
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: Conjuro_Invocar
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 15.463562
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 16.633562
-      tipo: 4
+      t: 18.583563
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
@@ -202,24 +200,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
+    - fundido: 0.4
       t: 29.218563
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 29.298563
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 30.468563
-      tipo: 4
-      estado: 
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
       voz: 
@@ -289,6 +273,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 20.083563
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 20.133562
       tipo: 2
       rumbo: 0
@@ -315,7 +304,7 @@ MonoBehaviour:
     - fundido: 0
       t: 1.08
       tipo: 2
-      estado: Talk03
+      estado: Angry01
       congelar: 0
       alFinal: 0
       voz: 
@@ -333,66 +322,17 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
+    - fundido: 0.4
       t: 5.6349998
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 5.7149997
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 7.895
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 15.863562
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
+    - fundido: 0.4
       t: 20.083563
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 20.163563
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 22.73023
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 24.163563
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 24.413563
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
       voz: 
@@ -403,24 +343,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 25.826897
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 28.818562
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 29.698563
-      tipo: 2
-      estado: HeadNod01
+    - fundido: 0.3
+      t: 25.513563
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
       voz: 
@@ -544,13 +470,6 @@ MonoBehaviour:
       voz: 
     - fundido: 0
       t: 15.863562
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 20.783564
       tipo: 2
       estado: HeadNod01
       congelar: 0
@@ -736,41 +655,6 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 6.3349996
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 15.863562
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 20.783564
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 25.113564
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 29.698563
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
     caras:
     - t: 3.985
       emocion: miedo
@@ -869,48 +753,6 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 4.465
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 6.3349996
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 15.863562
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 20.783564
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 25.113564
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 29.698563
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -921,7 +763,7 @@ MonoBehaviour:
     t1: 3.5349998
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_01
-    gesto: Talk03
+    gesto: Angry01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -939,8 +781,8 @@ MonoBehaviour:
     t1: 7.845
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_03
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -948,8 +790,8 @@ MonoBehaviour:
     t1: 16.583563
     actor: Player
     clave: CAP3_PAJAROS_04
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -957,8 +799,8 @@ MonoBehaviour:
     t1: 24.113564
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_05
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -967,7 +809,7 @@ MonoBehaviour:
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_06
     gesto: HeadNod01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -975,8 +817,8 @@ MonoBehaviour:
     t1: 30.418564
     actor: Player
     clave: CAP3_PAJAROS_07
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -1156,37 +998,37 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294533431951780
+      rid: 6540294550018326851
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 16.583563
     beat:
-      rid: 6540294533431951781
-    linea: 52
+      rid: 6540294550018326852
+    linea: 55
   - onlyIfFlag: 
     skipIfFlag: 
     t: 17.583563
     beat:
-      rid: 6540294533431951782
-    linea: 55
+      rid: 6540294550018326853
+    linea: 58
   - onlyIfFlag: 
     skipIfFlag: 
     t: 18.583563
     beat:
-      rid: 6540294533431951783
-    linea: 57
+      rid: 6540294550018326854
+    linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
     t: 31.218563
     beat:
-      rid: 6540294533431951784
-    linea: 69
+      rid: 6540294550018326855
+    linea: 75
   - onlyIfFlag: 
     skipIfFlag: 
     t: 32.918564
     beat:
-      rid: 6540294533431951785
+      rid: 6540294550018326856
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -1218,7 +1060,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294533431951780
+    - rid: 6540294550018326851
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1226,7 +1068,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294533431951781
+    - rid: 6540294550018326852
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1239,7 +1081,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294533431951782
+    - rid: 6540294550018326853
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1252,7 +1094,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294533431951783
+    - rid: 6540294550018326854
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1265,7 +1107,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294533431951784
+    - rid: 6540294550018326855
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1273,7 +1115,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294533431951785
+    - rid: 6540294550018326856
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

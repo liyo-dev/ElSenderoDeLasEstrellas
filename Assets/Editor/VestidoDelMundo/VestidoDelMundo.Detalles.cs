@@ -42,6 +42,13 @@ public static partial class VestidoDelMundo
     private const string Nasa2 = FK + "Props/Goods/Fishingcage02_a01.prefab";
     private const string Red = FK + "Props/Goods/Net01_a01.prefab";
     private const string Barca = FK + "Props/Ship/Boat01_a01.prefab";
+    private const string Bote = FK + "Props/Ship/Boat01_a02.prefab";
+    private const string BoteAncho = FK + "Props/Ship/Boat02_a01.prefab";
+    private const string Velero = FK + "Props/Ship/Ship01_a04.prefab";
+    private const string VeleroBlanco = FK + "Props/Ship/Ship01_a05.prefab";
+    private const string Ancla = FK + "Props/Ship/Anchor02_a01.prefab";
+    private const string Grua = FK + "Props/Engineering/Crane01_a01.prefab";
+    private const string Cabo = FK + "Props/Goods/Rope01_a01.prefab";
 
     private static readonly string[] ArbolesDeJardin =
     {
@@ -70,6 +77,10 @@ public static partial class VestidoDelMundo
         { "BuildingAT17", 180f }, { "BuildingAT18", 270f }, { "BuildingAT25", 270f }, { "BuildingAT27", 90f },
         { "BuildingAT31", 180f }, { "BuildingAT46", 270f }, { "BuildingAT47", 180f }, { "BuildingAT48", 90f },
         { "BuildingAT53", 180f }, { "BuildingAT54", 180f }, { "BuildingAT55", 180f },
+        { "CasaDeCiudad_A", 180f }, { "CasaDeCiudad_B", 180f }, { "CasaDeCiudad_C", 180f }, { "CasaDeCiudad_D", 180f },
+        { "CasaDeCiudad_E", 180f }, { "CasaDeCiudad_F", 180f }, { "TorreDelReloj", 180f },
+        { "CasaDeCiudad_G", 180f }, { "CasaDeCiudad_H", 180f }, { "EdificioDeCiudad_Taberna", 180f }, { "EdificioDeCiudad_Guardia", 180f },
+        { "EdificioDeCiudad_Posada", 180f }, { "EdificioDeCiudad_Palacio", 180f }, { "EdificioDeCiudad_Archivo", 180f },
     };
 
     private struct Puerta
@@ -224,6 +235,8 @@ public static partial class VestidoDelMundo
             Jardines(o, Grupo(grupo, "Jardines"), pueblo);
             o.Informe.Add($"{pueblo.Nombre}: {o.Puestas - antes} piezas de detalle.");
         }
+        ArbolDelPuebloInicial(o);
+        ExplorarElMundo(o);
         PoblarParajes(o);
     }
 
@@ -246,10 +259,12 @@ public static partial class VestidoDelMundo
                     Nombre = NombreCasaNueva(i + 1, n),
                     Pos = n.Pos,
                     Rumbo = n.Frente - lado,
-                    DesnivelMax = 1.4f,
+                    DesnivelMax = n.Prefab.StartsWith(PrefabsDeZonas) ? 2f : 1.4f,
                     Hundir = 0.15f,
                     PermitirCamino = true,
                     Holgura = 0.2f,
+                    // Las casas de ciudad van pared con pared.
+                    PermitirSolapePropio = n.Prefab.StartsWith(PrefabsDeZonas),
                 };
                 GameObject casa = Poner(o, grupo, p);
                 if (casa == null) continue;
@@ -449,14 +464,116 @@ public static partial class VestidoDelMundo
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(291f, -458f), 90f);
 
         ColocarBarcoDeSilas(o, muelle);
+        VidaDelPuerto(o, grupo, muelle);
+        BarrioSobreElAgua(o, grupo);
+        FaroYLonjaDelPuerto(o, grupo);
 
         Transform plaza = Grupo(grupo, "Plaza del puerto");
-        Pon(o, plaza, PrefabsEdificios + "BuildingAT41.prefab", "Puesto de pescado", new Vector2(286.5f, -440f), 270f, camino: true);
-        Pon(o, plaza, PrefabsEdificios + "BuildingAT42.prefab", "Puesto de pescado", new Vector2(253.5f, -441f), 90f, camino: true);
+        Pon(o, plaza, PrefabsDeZonas + "PuestoDeMercado_Pescado.prefab", "Puesto de pescado", new Vector2(283.8f, -444.6f), 90f, camino: true, corredor: false);
+        Pon(o, plaza, PrefabsDeZonas + "PuestoDeMercado_Pescado.prefab", "Puesto de pescado", new Vector2(253.5f, -441f), 270f, camino: true);
         Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(255.25f, -425.75f), 90f, camino: true);
         Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(284.5f, -425.75f), -90f, camino: true);
         Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(256.25f, -446.25f), 0f, camino: true);
         Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(283.75f, -446.25f), 0f, camino: true);
+    }
+
+    /// Lo que hace que la aldea se lea como un puerto de pesca desde el camino y desde la plaza: un velero
+    /// atracado por fuera del muelle transversal (el hito de la aldea, sus palos se ven desde lejos) y otro
+    /// fondeado en la bahía, botes amarrados, género y aparejos sobre los tablones (a los lados: el centro
+    /// del embarcadero queda libre), más barcas en la arena y género de pesca en el borde de poniente de la
+    /// plaza (el centro y el paso hacia la rampa quedan libres para los vecinos y sus escenas).
+    private const float EscalaDelVelero = 1.5f;
+
+    private static void VidaDelPuerto(Obra o, Transform grupo, Transform playa)
+    {
+        Transform barcos = Grupo(grupo, "Barcos del puerto");
+        // El velero se atraca con la eslora a lo largo del muelle transversal, al oeste del embarcadero.
+        Vector3 t = TamanoDeSerie(o, Velero) * EscalaDelVelero;
+        float eslora = Mathf.Max(t.x, t.z), manga = Mathf.Min(t.x, t.z);
+        var atraque = new Vector2(266f - 1.5f - eslora * 0.5f, -487f - 1.2f - manga * 0.5f);
+        PonAFlote(o, barcos, Velero, "Velero atracado en el muelle", atraque, t.z >= t.x ? 90f : 0f, t.y * 0.13f, EscalaDelVelero);
+        PonAFlote(o, barcos, VeleroBlanco, "Velero fondeado en la bahía", new Vector2(302f, -503f), 35f, t.y * 0.13f / EscalaDelVelero);
+        PonAFlote(o, barcos, Bote, "Bote amarrado", new Vector2(276.2f, -470.5f), 5f, 0.25f);
+        PonAFlote(o, barcos, BoteAncho, "Bote amarrado", new Vector2(263.6f, -476f), 185f, 0.25f);
+        PonAFlote(o, barcos, Bote, "Bote amarrado", new Vector2(253f, -479.3f), 90f, 0.25f);
+        PonAFlote(o, barcos, BoteAncho, "Bote amarrado", new Vector2(286f, -479.3f), 270f, 0.25f);
+
+        Transform tablones = Grupo(grupo, "Género del muelle");
+        // Brazo de poniente del muelle transversal.
+        PonEnElMuelle(o, tablones, Grua, "Grúa del muelle", new Vector2(251.6f, -484f), 270f);
+        PonEnElMuelle(o, tablones, Caja, "Caja del muelle", new Vector2(254.4f, -482.1f), 10f);
+        PonEnElMuelle(o, tablones, Caja, "Caja del muelle", new Vector2(255.5f, -482.3f), 35f);
+        PonEnElMuelle(o, tablones, Barril, "Barril del muelle", new Vector2(254.2f, -486f), 0f);
+        PonEnElMuelle(o, tablones, Nasa, "Nasa del muelle", new Vector2(259.5f, -482f), 20f);
+        PonEnElMuelle(o, tablones, Nasa2, "Nasa del muelle", new Vector2(260.8f, -482.2f), -15f);
+        PonEnElMuelle(o, tablones, Cabo, "Cabo adujado", new Vector2(257.5f, -486.1f), 90f);
+        // Brazo de levante.
+        PonEnElMuelle(o, tablones, Barril, "Barril del muelle", new Vector2(288.9f, -482f), 0f);
+        PonEnElMuelle(o, tablones, Barril, "Barril del muelle", new Vector2(289.7f, -483f), 40f);
+        PonEnElMuelle(o, tablones, Caja, "Caja del muelle", new Vector2(289f, -486f), 20f);
+        PonEnElMuelle(o, tablones, Nasa, "Nasa del muelle", new Vector2(283.6f, -486.1f), 40f);
+        PonEnElMuelle(o, tablones, Nasa2, "Nasa del muelle", new Vector2(282.3f, -486f), 0f);
+        PonEnElMuelle(o, tablones, Cabo, "Cabo adujado", new Vector2(279f, -482f), 90f);
+        PonEnElMuelle(o, tablones, Ancla, "Ancla del muelle", new Vector2(277.2f, -486.2f), 30f);
+        // Embarcadero: pegado a los costados, del arranque a la punta.
+        PonEnElMuelle(o, tablones, Nasa, "Nasa del muelle", new Vector2(267.8f, -470f), 10f);
+        PonEnElMuelle(o, tablones, Barril, "Barril del muelle", new Vector2(272.3f, -475f), 0f);
+        PonEnElMuelle(o, tablones, Caja, "Caja del muelle", new Vector2(267.8f, -479f), 25f);
+        PonEnElMuelle(o, tablones, Barril, "Barril del muelle", new Vector2(267.8f, -493.6f), 0f);
+        PonEnElMuelle(o, tablones, Caja, "Caja del muelle", new Vector2(272.2f, -493.5f), 15f);
+
+        Pon(o, playa, Barca, "Barca varada en la arena", new Vector2(297f, -456.5f), 70f, desnivel: 1.6f, hundir: 0.25f, inclinar: -6f);
+        Pon(o, playa, Barca, "Barca varada en la arena", new Vector2(246.5f, -457.3f), 95f, desnivel: 1.6f, hundir: 0.25f, inclinar: 5f);
+        Pon(o, playa, Red, "Red puesta a secar", new Vector2(286.5f, -458f), 90f);
+        Pon(o, playa, Nasa, "Nasa en la arena", new Vector2(289f, -460f), 15f);
+        Pon(o, playa, Nasa2, "Nasa en la arena", new Vector2(290.2f, -460.6f), -30f);
+        Pon(o, playa, Ancla, "Ancla en la arena", new Vector2(258.5f, -453.5f), -30f);
+
+        Transform lonja = Grupo(grupo, "Lonja de la plaza");
+        Pon(o, lonja, PrefabsDeZonas + "PuestoDeMercado_Fruta.prefab", "Puesto de fruta", new Vector2(260.8f, -431.5f), 270f, camino: true, corredor: false);
+        Pon(o, lonja, Barril, "Barril de la lonja", new Vector2(259.3f, -436.2f), 0f, camino: true, corredor: false);
+        Pon(o, lonja, Caja, "Caja de la lonja", new Vector2(259.6f, -437.6f), 20f, camino: true, corredor: false);
+        Pon(o, lonja, Nasa, "Nasa de la lonja", new Vector2(260.9f, -437f), -30f, camino: true, corredor: false);
+        Pon(o, lonja, Caja, "Caja de la lonja", new Vector2(280.7f, -436.9f), 10f, camino: true, corredor: false);
+        Pon(o, lonja, Barril, "Barril de la lonja", new Vector2(280.5f, -438.2f), 0f, camino: true, corredor: false);
+    }
+
+    /// Pone una pieza flotando en el mar, con «calado» metros de casco bajo el agua. No se pone donde no
+    /// hay fondo para ella.
+    private static GameObject PonAFlote(Obra o, Transform grupo, string prefab, string nombre, Vector2 pos, float rumbo, float calado,
+        float tamano = 1f)
+    {
+        var p = new Pieza
+        {
+            Prefab = prefab, Nombre = nombre, Pos = pos, Rumbo = rumbo, Tamano = tamano, Apoyo = Apoyo.Flotar, CotaAgua = NivelDelMar,
+            Hundir = calado, IgnorarZonas = true, PermitirCamino = true, Holgura = 0.3f,
+        };
+        if (o.Suelo.Altura(pos.x, pos.y) > NivelDelMar - calado) { o.Descartar("no hay fondo para que flote", p); return null; }
+        return Poner(o, grupo, p);
+    }
+
+    /// Pone una pieza sobre los tablones del muelle u otra obra de la escena en la capa del suelo caminable (el
+    /// basamento del cabo), hundida «hundir» metros:
+    /// busca su cara de arriba bajando una esfera (un rayo se colaría por la rendija entre dos tablones). Si
+    /// debajo no hay muelle, no se pone.
+    private static GameObject PonEnElMuelle(Obra o, Transform grupo, string prefab, string nombre, Vector2 pos, float rumbo,
+        float hundir = 0f, float tamano = 1f)
+    {
+        var p = new Pieza
+        {
+            Prefab = prefab, Nombre = nombre, Pos = pos, Rumbo = rumbo, Tamano = tamano, Apoyo = Apoyo.Flotar, Hundir = hundir,
+            IgnorarZonas = true, PermitirCamino = true, Holgura = 0.05f,
+        };
+        Physics.SyncTransforms();
+        var desdeArriba = new Ray(new Vector3(pos.x, NivelDelMar + 30f, pos.y), Vector3.down);
+        if (!Physics.SphereCast(desdeArriba, 0.3f, out RaycastHit tablon, 40f, LayerMask.GetMask("Floor"), QueryTriggerInteraction.Ignore)
+            || tablon.collider is TerrainCollider || tablon.point.y < NivelDelMar + 1f)
+        {
+            o.Descartar("no hay muelle debajo", p);
+            return null;
+        }
+        p.CotaAgua = tablon.point.y;
+        return Poner(o, grupo, p);
     }
 
     /// <summary>

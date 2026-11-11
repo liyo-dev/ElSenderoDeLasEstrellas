@@ -28,16 +28,20 @@ plano dos will estela
 will dice CAP4_GOLEM_05 mira=estela cara=preocupado
 estela dice CAP4_GOLEM_01 cara=pensativo
 will dice CAP4_GOLEM_02 cara=confuso
+& estela bucle BrazosCruzados fundido=0.4
 estela dice CAP4_GOLEM_03 cara=molesto
 
 @liam
 plano medio liam
-liam gesto CastingEnter01
+liam bucle Conjuro_Recogerse fundido=0.3
 & vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=manos_liam lifetime=1.5
 liam dice EVT_GOLEM_01 cara=triste
 plano general will estela centro
 sacudida 1 1.2
 & vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Smoke ground.prefab" en=centro lifetime=2.5
-estela dice CAP4_GOLEM_04 cara=miedo
+# Liam alza los brazos: el gólem sale de la tierra.
+& liam bucle Conjuro_Invocar fundido=0.25
+& estela reposo
+estela dice CAP4_GOLEM_04 cara=miedo gesto=Fear01
 espera 1
 bandas quita

@@ -30,6 +30,7 @@ will en p_will mirando bola_salida
 & will cara miedo
 & plano medio will desde=cam_norte altura=1.5 lente=30
 & lento 1 0.4
+& will gesto Fear01
 +0.1 efecto ModuleBeat routine=ImpactoEnWill detenerEscena=true dura=0.1
 
 # El golpe.

@@ -134,7 +134,7 @@ internal sealed partial class Horno
         float duraDeslizar = largo > 0.3f ? largo * 0.75f : AlPunto;
         Deslizar(a, iniDeslizar, a.PosEn(t), pie, duraDeslizar);
         a.Animar(t + largo, TipoDeAnimacion.Reposo);
-        a.bucle = null; a.bucleDeCuerpo = false;
+        a.bucle = null; a.bucleDeCuerpo = false; a.poseAlta = null;
         a.sentadoCon = NPCAmbientActivity.None;
         return Mathf.Max(largo, duraDeslizar);
     }

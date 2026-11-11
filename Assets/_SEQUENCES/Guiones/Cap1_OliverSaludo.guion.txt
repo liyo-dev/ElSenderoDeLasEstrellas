@@ -45,6 +45,14 @@ oliver dice OLIVER_GREETING_OUT_OF_BREATH gesto=Dizzy_NoWeapon cara=cansado
 oliver dice OLIVER_GREETING_NEW_SPELL_INTRO cara=ilusionado
 & will gesto Question01
 & will cara alegre
+# Oliver se prepara con toda la ceremonia: se recoge, alza los brazos… y petardea.
+oliver bucle Conjuro_Recogerse fundido=0.3
+espera 1.0
+oliver bucle Conjuro_Invocar fundido=0.3
+& oliver cara decidido
+espera 0.9
+oliver reposo
+espera 0.1
 
 # El hechizo fallido: les explota a los dos.
 @hechizo
@@ -72,7 +80,7 @@ will dice WILL_GREETING_OLIVER_CUT_OFF gesto=Laugh01
 
 # Los menús: caja de diálogo, la escena espera a que el jugador la cierre.
 @menus
-oliver dice OLIVER_GREETING_BEFORE_MENUS_HANDOFF gesto=Cheer01
+oliver dice OLIVER_GREETING_BEFORE_MENUS_HANDOFF gesto=Shrug01
 efecto DialogueBeat dialogue=DG_Oliver_Menus actorId=oliver conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=HeadNod01,Question01,HeadNod01,HeadNod01 caras_will=alegre dura=0.3
 oliver dice OLIVER_GREETING_PERAS_HANDOFF gesto=HandWave01
 will dice WILL_GREETING_PERAS_HANDOFF gesto=HeadNod01

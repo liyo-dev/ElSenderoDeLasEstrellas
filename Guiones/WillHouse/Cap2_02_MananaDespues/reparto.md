@@ -61,6 +61,7 @@ JumpMove
 Jump
 Falling
 Free Locomotion
+Andar agachado
 Strafing Movement
 Attack1
 Attack2
@@ -115,6 +116,19 @@ Cry01_Loop
 ApretonDeManos_A
 ClimaTaparse
 ClimaFrio
+BrazosEnJarras
+ManoAlPecho
+ManosALaEspalda
+Ofrecer
+Cabizbajo
+Shrug01
+Conjuro_Recogerse
+Conjuro_Invocar
+Conjuro_Esfuerzo
+Conjuro_Lanzar
+Conjuro_Unir_D
+Conjuro_Unir_I
+Conjuro_Abrirse
 MagicLeft
 MagicRight
 MagicSpecial
@@ -188,6 +202,7 @@ Opening01_Begin
 Opening01_Loop
 Opening01_Stop
 BrazosCruzados
+RecogerHierbas_Loop
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -239,6 +254,19 @@ Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
 ClimaFrio
+BrazosEnJarras
+ManoAlPecho
+ManosALaEspalda
+Ofrecer
+Cabizbajo
+Shrug01
+Conjuro_Recogerse
+Conjuro_Invocar
+Conjuro_Esfuerzo
+Conjuro_Lanzar
+Conjuro_Unir_D
+Conjuro_Unir_I
+Conjuro_Abrirse
 MagicLeft
 MagicRight
 MagicSpecial
@@ -308,6 +336,7 @@ Opening01_Begin
 Opening01_Loop
 Opening01_Stop
 BrazosCruzados
+RecogerHierbas_Loop
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -359,6 +388,19 @@ Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
 ClimaFrio
+BrazosEnJarras
+ManoAlPecho
+ManosALaEspalda
+Ofrecer
+Cabizbajo
+Shrug01
+Conjuro_Recogerse
+Conjuro_Invocar
+Conjuro_Esfuerzo
+Conjuro_Lanzar
+Conjuro_Unir_D
+Conjuro_Unir_I
+Conjuro_Abrirse
 MagicLeft
 MagicRight
 MagicSpecial
@@ -428,6 +470,7 @@ Opening01_Begin
 Opening01_Loop
 Opening01_Stop
 BrazosCruzados
+RecogerHierbas_Loop
 Free Locomotion
 Strafing Movement
 RollRGT_Battle_RM_NoWeapon
@@ -479,6 +522,19 @@ Cry01_Loop
 ApretonDeManos_A
 Push_InPlace_NoWeapon
 ClimaFrio
+BrazosEnJarras
+ManoAlPecho
+ManosALaEspalda
+Ofrecer
+Cabizbajo
+Shrug01
+Conjuro_Recogerse
+Conjuro_Invocar
+Conjuro_Esfuerzo
+Conjuro_Lanzar
+Conjuro_Unir_D
+Conjuro_Unir_I
+Conjuro_Abrirse
 MagicLeft
 MagicRight
 MagicSpecial

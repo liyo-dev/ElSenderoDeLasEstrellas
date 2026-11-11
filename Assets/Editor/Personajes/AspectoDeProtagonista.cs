@@ -125,7 +125,8 @@ public static class AspectoDeProtagonista
         if (cadena == null || cadena.Length == 0) return;
         var nombres = new HashSet<string>(raiz.GetComponentsInChildren<Transform>(true).Select(t => t.name));
         if (!cadena.All(nombres.Contains)) { informe.AppendLine($"{raiz.name}: le faltan los huesos de {string.Join(", ", cadena)}; sin muelle."); return; }
-        var muelle = raiz.GetComponent<MuelleDeHuesos>();
+        // Un personaje puede llevar varios muelles (la coleta, la capa): el de esta cadena es el que empieza por su primer hueso.
+        var muelle = raiz.GetComponents<MuelleDeHuesos>().FirstOrDefault(m => m.huesos != null && m.huesos.Length > 0 && m.huesos[0] == cadena[0]);
         if (muelle == null) muelle = raiz.AddComponent<MuelleDeHuesos>();
         muelle.huesos = cadena.ToArray();
         informe.AppendLine($"{raiz.name}: muelle en {string.Join(", ", cadena)}.");

@@ -48,12 +48,14 @@ public class DialogueHeadLook : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float neckShare = 0.25f;
 
     [Header("Objetivo")]
-    [Tooltip("Altura (m) sobre el root del objetivo a la que se mira si no tiene hueso head")]
+    [Tooltip("Altura (m) sobre el root del objetivo a la que se mira si es un personaje sin hueso head o un punto suelto. Un objeto con malla se mira en su centro.")]
     [SerializeField] private float targetHeightFallback = 1.2f;
 
     private Transform _target;
     public Transform Target => _target;
     private Transform _targetHead;   // hueso head del objetivo (si existe), para mirar a la cara
+    private Renderer[] _mallasDelObjetivo;   // si el objetivo es un objeto (no un personaje): se mira a su centro
+    private bool _puntoExacto;               // el objetivo es el punto al que hay que mirar, tal cual
     private Transform _head;
     private Transform _neck;
     private float _weight;                              // peso actual (0..1)
@@ -142,6 +144,37 @@ public class DialogueHeadLook : MonoBehaviour
         return null;
     }
 
+    /// Las mallas de un objetivo que es un objeto (una bola sobre la mesa, una llave, un mapa) y no un
+    /// personaje: a un objeto se le mira donde está, no a la altura de una cara por encima de él.
+    /// null si es un personaje o no tiene mallas (un punto suelto). Una vez por cambio de objetivo.
+    private static Renderer[] MallasDeUnObjeto(Transform target)
+    {
+        if (target == null || target.GetComponentInChildren<Animator>(true) != null) return null;
+        var todas = target.GetComponentsInChildren<Renderer>(true);
+        int n = 0;
+        for (int i = 0; i < todas.Length; i++)
+            if (todas[i] is MeshRenderer || todas[i] is SkinnedMeshRenderer) n++;
+        if (n == 0) return null;
+        var mallas = new Renderer[n];
+        n = 0;
+        for (int i = 0; i < todas.Length; i++)
+            if (todas[i] is MeshRenderer || todas[i] is SkinnedMeshRenderer) mallas[n++] = todas[i];
+        return mallas;
+    }
+
+    private static Vector3 CentroDe(Renderer[] mallas, Vector3 siNoHay)
+    {
+        bool hay = false;
+        Bounds caja = default;
+        for (int i = 0; i < mallas.Length; i++)
+        {
+            if (mallas[i] == null) continue;
+            if (hay) caja.Encapsulate(mallas[i].bounds);
+            else { caja = mallas[i].bounds; hay = true; }
+        }
+        return hay ? caja.center : siNoHay;
+    }
+
     /// <summary>
     /// Asigna el objetivo de mirada. null → fade out y el componente se duerme solo.
     /// </summary>
@@ -160,14 +193,18 @@ public class DialogueHeadLook : MonoBehaviour
         maxPitch = inclinacion;
     }
 
-    public void SetTarget(Transform target)
+    /// <param name="puntoExacto">El objetivo es justo el punto al que hay que mirar (una marca puesta
+    /// donde está lo que se mira): no se busca una cara ni se sube a la altura de una.</param>
+    public void SetTarget(Transform target, bool puntoExacto = false)
     {
         if (target == transform) target = null; // nunca mirarse a uno mismo
+        _puntoExacto = puntoExacto && target != null;
 
         if (_target != target)
         {
             _target = target;
-            _targetHead = FindTargetHead(target);
+            _targetHead = puntoExacto ? null : FindTargetHead(target);
+            _mallasDelObjetivo = !puntoExacto && _targetHead == null ? MallasDeUnObjeto(target) : null;
             _yawOutOfRange = false; // objetivo nuevo, corte por rango se reevalúa de cero
         }
 
@@ -207,8 +244,9 @@ public class DialogueHeadLook : MonoBehaviour
 
         if (_target != null)
         {
-            Vector3 lookPoint = _targetHead != null
-                ? _targetHead.position
+            Vector3 lookPoint = _puntoExacto ? _target.position
+                : _targetHead != null ? _targetHead.position
+                : _mallasDelObjetivo != null ? CentroDe(_mallasDelObjetivo, _target.position)
                 : _target.position + Vector3.up * targetHeightFallback;
 
             Vector3 baseFwd = transform.forward;

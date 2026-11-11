@@ -113,6 +113,7 @@ internal sealed class ActorH
     public NPCAmbientActivity sentadoCon; // actividad del asiento en el que está sentado (sienta/levanta)
     public Vector3 dePie;         // donde estaba de pie antes de sentarse: ahí vuelve al levantarse
     public bool bucleDeCuerpo;    // ese bucle es de cuerpo entero
+    public string poseAlta;       // pose de medio cuerpo puesta encima de un bucle de cuerpo entero
 
     // Pista propia
     public readonly List<GuionTexto.Orden> pista = new();
@@ -281,6 +282,10 @@ internal sealed partial class Horno
     private readonly List<EfectoHorneado> _efectos = new();
     private readonly List<PlanoPedido> _planosPedidos = new();
     private readonly Dictionary<string, (float tiempo, string gesto)> _ultimasReaccionesPorActor = new();
+    /// La cara con que se dice cada frase y el último gesto que el horneado eligió para cada actor:
+    /// con ellos se elige el gesto de las frases que no traen uno (GestoSegunLaFrase).
+    private readonly Dictionary<LineaHorneada, NPCEmotion> _caraDeLinea = new();
+    private readonly Dictionary<string, (float tiempo, string gesto)> _ultimoGestoElegido = new();
     private readonly HashSet<(string actor, float t)> _cabezaPedida = new();   // frases con «mira=» o «cabeza=»
     private GuionHorneado _salida;
     private float _fin;
@@ -791,7 +796,13 @@ internal sealed partial class Horno
             {
                 // Sentado el cuerpo no gira (en el juego tampoco: el asiento fija la orientación).
                 if (Sentado(a)) { Aviso($"{o}: {a.alias} está sentado; no se gira en la silla"); return 0f; }
-                if (Objetivo(o.args.FirstOrDefault(), o.linea, out var m)) a.Mirar(t, m);
+                if (Objetivo(o.args.FirstOrDefault(), o.linea, out var m))
+                {
+                    a.Mirar(t, m);
+                    // La cabeza va con el cuerpo: sin esto se quedaba vuelta hacia el último que
+                    // habló mientras el cuerpo ya atendía a otra cosa.
+                    if (!Tumbado(a)) a.GirarCabeza(t, m.tipo != TipoDeMirada.Rumbo ? m : ActorH.CabezaAlFrente);
+                }
                 return 0f;
             }
             case "cabeza":
@@ -830,6 +841,19 @@ internal sealed partial class Horno
                 if (!Estado(a, ref estado, o)) return 0f;
                 bool congela = o.Tiene("congela") || !a.estados[estado].bucle;
                 bool alFinal = o.Tiene("al_final") || o.Tiene("ya");
+                // Sentado o en un bucle de cuerpo entero, una pose de medio cuerpo va encima: el
+                // cuerpo sigue en su bucle (para el asiento, las cámaras y el storyboard no cambia nada).
+                if (!a.estados[estado].cuerpoEntero && a.estados[estado].bucle && a.bucle != null && a.bucleDeCuerpo)
+                {
+                    if (a.id == SequenceActor.PlayerId)
+                    {
+                        Aviso($"{o}: el jugador no admite todavía una pose de medio cuerpo encima de otra de cuerpo entero; no se pone");
+                        return 0f;
+                    }
+                    a.Animar(t, TipoDeAnimacion.PoseAlta, estado, false, o.OpF("fundido", 0f));
+                    a.poseAlta = estado;
+                    return o.opciones.ContainsKey("dura") ? o.OpF("dura", 0f) : 0f;
+                }
                 if (!a.estados[estado].bucle && !o.Tiene("congela"))
                     Aviso($"{o}: '{estado}' no es un bucle; se quedará en su último fotograma (añade «congela» si es lo que quieres)");
                 a.Animar(t, TipoDeAnimacion.Bucle, estado, congela, o.OpF("fundido", 0f), alFinal);
@@ -840,8 +864,16 @@ internal sealed partial class Horno
                 return o.opciones.ContainsKey("dura") ? o.OpF("dura", 0f) : 0f;
             }
             case "reposo":
+                // «reposo brazos»: suelta solo la pose de medio cuerpo; sigue sentado o en su bucle.
+                if (o.args.Contains("brazos"))
+                {
+                    if (a.poseAlta != null) a.Animar(t, TipoDeAnimacion.SoltarPoseAlta);
+                    else if (a.bucle != null && !a.bucleDeCuerpo) { a.Animar(t, TipoDeAnimacion.Reposo); a.bucle = null; }
+                    a.poseAlta = null;
+                    return 0f;
+                }
                 a.Animar(t, TipoDeAnimacion.Reposo);
-                a.bucle = null; a.bucleDeCuerpo = false;
+                a.bucle = null; a.bucleDeCuerpo = false; a.poseAlta = null;
                 return 0f;
             case "cara":
             {
@@ -981,7 +1013,7 @@ internal sealed partial class Horno
         if (a.bucle != null && (a.bucleDeCuerpo || !haraCuerpo))
         {
             a.Animar(t, TipoDeAnimacion.Reposo);
-            a.bucle = null; a.bucleDeCuerpo = false;
+            a.bucle = null; a.bucleDeCuerpo = false; a.poseAlta = null;
         }
     }
 
@@ -1075,6 +1107,7 @@ internal sealed partial class Horno
         {
             string palabra = Emocion(c, o);
             if (palabra != null) a.caras.Add(new OrdenDeCara { t = t, emocion = palabra, dura = dura + 0.4f });
+            if (palabra != null && CarasDelGuion.Intentar(palabra, out var caraDeLaFrase)) _caraDeLinea[linea] = caraDeLaFrase;
         }
 
         // Si la frase señala algo del mundo («mira=» a un punto o a un objeto, no a otro personaje),
@@ -1127,7 +1160,13 @@ internal sealed partial class Horno
                     out string gestoOyente,
                     out NPCEmotion caraOyente))
                 {
-                    if (!string.IsNullOrEmpty(gestoOyente) && (b.estados.Count == 0 || b.estados.ContainsKey(gestoOyente)))
+                    // Quien sostiene una pose de medio cuerpo no la suelta para reaccionar: escucha con la cabeza y la cara.
+                    bool sostienePose = b.bucle != null && !b.bucleDeCuerpo;
+                    // Quien oye un aviso da un respingo, no se cruza de brazos.
+                    if (gestoOyente == "SenseSomethingStart_NoWeapon" && b.estados.ContainsKey("Sobresalto01")) gestoOyente = "Sobresalto01";
+                    // Y no repite la misma reacción a los pocos segundos: se queda con la cara.
+                    if (gestoOyente != null && gestoOyente == infoReaccion.gesto && t - infoReaccion.tiempo < 6f) gestoOyente = null;
+                    if (!sostienePose && !string.IsNullOrEmpty(gestoOyente) && (b.estados.Count == 0 || b.estados.ContainsKey(gestoOyente)))
                     {
                         float tGesto = t + Mathf.Min(0.7f, dura * 0.4f);
                         b.Animar(tGesto, TipoDeAnimacion.Gesto, gestoOyente);
@@ -1262,7 +1301,7 @@ internal sealed partial class Horno
                 {
                     // Sentado: no se toca la capa base (bucle de asiento), pero si la línea no trae gesto
                     // se anima el tren superior con gestos de habla para que los brazos no queden congelados.
-                    if (Sentado(a) && string.IsNullOrEmpty(linea.gesto))
+                    if (Sentado(a) && string.IsNullOrEmpty(linea.gesto) && !ConPoseAltaEn(a, t0))
                     {
                         string[] gestosSentado = { "Talk01", "Talk02", "HeadNod01" };
                         string g = gestosSentado[Mathf.Abs(linea.clave.GetHashCode()) % gestosSentado.Length];
@@ -1285,7 +1324,9 @@ internal sealed partial class Horno
                     int idxGesto = Mathf.Abs(linea.clave.GetHashCode());
                     if (string.IsNullOrEmpty(linea.gesto))
                     {
-                        string gIni = gestosHabla[idxGesto % gestosHabla.Length];
+                        // Primero lo que pide la frase (un aviso, un grito, una negativa); si no pide nada, charla.
+                        string gIni = GestoSegunLaFrase(a, linea, out bool sinGesto) ?? gestosHabla[idxGesto % gestosHabla.Length];
+                        if (sinGesto) continue;
                         linea.gesto = gIni;
                         a.Animar(t0 + 0.08f, TipoDeAnimacion.Gesto, gIni);
                     }
@@ -1321,6 +1362,7 @@ internal sealed partial class Horno
             }
             CabezaDeQuienHabla(a);
             a.anim.Sort((x, y) => x.t.CompareTo(y.t));
+            VolverALasPoses(a);
             a.caras.Sort((x, y) => x.t.CompareTo(y.t));
             a.miradas.Sort((x, y) => x.t.CompareTo(y.t));
             a.cabezas.Sort((x, y) => x.t.CompareTo(y.t));
@@ -1330,6 +1372,85 @@ internal sealed partial class Horno
         _efectos.Sort((x, y) => x.t.CompareTo(y.t));
         _planosPedidos.Sort((x, y) => x.t0.CompareTo(y.t0));
         _fin += 0.5f;
+    }
+
+    /// El gesto de una frase que no trae uno, por lo que dice y la cara con que se dice
+    /// (ActuacionAutomatica.ParaDecir). «sinGesto» si la frase es un silencio y no lleva ninguno;
+    /// null si no pide nada en particular. No repite el mismo gesto dos veces seguidas en poco tiempo.
+    private string GestoSegunLaFrase(ActorH a, LineaHorneada linea, out bool sinGesto)
+    {
+        sinGesto = false;
+        _caraDeLinea.TryGetValue(linea, out var cara);
+        var opciones = ActuacionAutomatica.ParaDecir(TextoDe(linea.clave) ?? linea.clave, cara);
+        if (opciones == null) return null;
+        if (opciones.Length == 0) { sinGesto = true; return null; }
+        _ultimoGestoElegido.TryGetValue(a.id, out var anterior);
+        bool reciente = anterior.gesto != null && linea.t0 - anterior.tiempo < 8f;
+        _ultimasReaccionesPorActor.TryGetValue(a.id, out var reaccion);
+        foreach (string g in opciones)
+        {
+            if (!a.estados.ContainsKey(g)) continue;
+            // Acaba de reaccionar así como oyente (el respingo al aviso y, acto seguido, su «¡...!»): ya lo está haciendo.
+            if (g == reaccion.gesto && linea.t0 - reaccion.tiempo < 3f && linea.t0 >= reaccion.tiempo) { sinGesto = true; return null; }
+            if (reciente && g == anterior.gesto) continue;
+            _ultimoGestoElegido[a.id] = (linea.t0, g);
+            return g;
+        }
+        return null;
+    }
+
+    /// Tras un gesto de medio cuerpo, el actor vuelve a la pose de medio cuerpo que sostenía
+    /// («bucle BrazosEnJarras» y un asentimiento: asiente y sigue en jarras). El gesto se queda
+    /// con la capa y, sin esta orden, la pose se pierde hasta el siguiente «bucle». Solo poses en
+    /// bucle; si antes de acabar el gesto llega otra orden de animación, manda ella.
+    private static void VolverALasPoses(ActorH a)
+    {
+        const float Fundido = 0.3f;
+        var vueltas = new List<OrdenDeAnimacion>();
+        string pose = null, poseAlta = null;
+        for (int i = 0; i < a.anim.Count; i++)
+        {
+            var o = a.anim[i];
+            if (o.tipo == TipoDeAnimacion.Reposo) { pose = null; poseAlta = null; continue; }
+            if (o.tipo == TipoDeAnimacion.PoseAlta) { poseAlta = o.estado; continue; }
+            if (o.tipo == TipoDeAnimacion.SoltarPoseAlta) { poseAlta = null; continue; }
+            if (o.tipo == TipoDeAnimacion.Bucle)
+            {
+                bool deMedioCuerpo = !o.congelar && a.estados.TryGetValue(o.estado, out var info) && !info.cuerpoEntero && info.bucle;
+                pose = deMedioCuerpo ? o.estado : null;
+                continue;
+            }
+            if (o.tipo != TipoDeAnimacion.Gesto || (pose == null && poseAlta == null)) continue;
+            if (!a.estados.TryGetValue(o.estado, out var gesto) || gesto.cuerpoEntero) continue;
+            float fin = o.t + Mathf.Max(0.3f, gesto.largo * 0.9f);
+            bool pisada = false;
+            for (int j = i + 1; j < a.anim.Count && a.anim[j].t < fin + 0.05f; j++)
+            {
+                var siguiente = a.anim[j].tipo;
+                if (siguiente == TipoDeAnimacion.Bucle || siguiente == TipoDeAnimacion.Reposo || siguiente == TipoDeAnimacion.Gesto ||
+                    siguiente == TipoDeAnimacion.PoseAlta || siguiente == TipoDeAnimacion.SoltarPoseAlta) { pisada = true; break; }
+            }
+            if (pisada) continue;
+            if (poseAlta != null) vueltas.Add(new OrdenDeAnimacion { t = fin, tipo = TipoDeAnimacion.PoseAlta, estado = poseAlta, fundido = Fundido });
+            else vueltas.Add(new OrdenDeAnimacion { t = fin, tipo = TipoDeAnimacion.Bucle, estado = pose, fundido = Fundido });
+        }
+        if (vueltas.Count == 0) return;
+        a.anim.AddRange(vueltas);
+        a.anim.Sort((x, y) => x.t.CompareTo(y.t));
+    }
+
+    /// ¿Lleva en t una pose de medio cuerpo encima de su bucle de cuerpo entero?
+    private static bool ConPoseAltaEn(ActorH a, float t)
+    {
+        float ultima = float.NegativeInfinity;
+        bool puesta = false;
+        foreach (var o in a.anim)
+        {
+            if (o.t > t + 1e-3f || o.t < ultima) continue;
+            if (o.tipo == TipoDeAnimacion.PoseAlta) { puesta = true; ultima = o.t; }
+            else if (o.tipo == TipoDeAnimacion.SoltarPoseAlta || o.tipo == TipoDeAnimacion.Reposo) { puesta = false; ultima = o.t; }
+        }
+        return puesta;
     }
 
     private static bool HablaEn(ActorH a, float t) => a.habla.Any(h => t >= h.t0 - 0.3f && t <= h.t1 + 0.3f);

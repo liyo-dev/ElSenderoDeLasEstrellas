@@ -8,7 +8,17 @@ ShaderVariantCollection:
   m_PrefabAsset: {fileID: 0}
   m_Name: ElSendero
   m_Shaders:
+  - first: {fileID: 4800000, guid: 8864b4fe390c41d68fac8146222da0fa, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
   - first: {fileID: 10101, guid: 0000000000000000e000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: 
@@ -19,16 +29,6 @@ ShaderVariantCollection:
       - keywords: 
         passType: 13
       - keywords: _ALPHABLEND_ON
-        passType: 13
-      - keywords: _ALPHABLEND_ON _EMISSION
-        passType: 13
-      - keywords: _EMISSION
-        passType: 13
-      - keywords: _EMISSION _METALLICGLOSSMAP _NORMALMAP
-        passType: 13
-      - keywords: _EMISSION _NORMALMAP
-        passType: 13
-      - keywords: _NORMALMAP
         passType: 13
   - first: {fileID: 101, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -49,6 +49,8 @@ ShaderVariantCollection:
     second:
       variants:
       - keywords: _SUNDISK_HIGH_QUALITY
+        passType: 13
+      - keywords: _SUNDISK_NONE
         passType: 13
       - keywords: _SUNDISK_SIMPLE
         passType: 13
@@ -75,8 +77,6 @@ ShaderVariantCollection:
   - first: {fileID: 210, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
-      - keywords: _ALPHABLEND_ON _FADING_ON
-        passType: 13
       - keywords: _ALPHABLEND_ON _FADING_ON _METALLICGLOSSMAP _NORMALMAP
         passType: 13
   - first: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
@@ -88,18 +88,9 @@ ShaderVariantCollection:
         passType: 13
       - keywords: _ALPHABLEND_ON _COLORADDSUBDIFF_ON
         passType: 13
-      - keywords: _ALPHABLEND_ON _COLORCOLOR_ON _EMISSION
-        passType: 13
       - keywords: _ALPHABLEND_ON _EMISSION
         passType: 13
-      - keywords: _ALPHABLEND_ON _EMISSION _FADING_ON
-        passType: 13
       - keywords: _ALPHABLEND_ON _FADING_ON
-        passType: 13
-  - first: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
-    second:
-      variants:
-      - keywords: 
         passType: 13
   - first: {fileID: 10720, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -121,8 +112,6 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-      - keywords: _ALPHAPREMULTIPLY_ON _EMISSION _SURFACE_TYPE_TRANSPARENT
-        passType: 13
       - keywords: _ALPHAPREMULTIPLY_ON _SURFACE_TYPE_TRANSPARENT
         passType: 13
       - keywords: _EMISSION
@@ -141,6 +130,8 @@ ShaderVariantCollection:
   - first: {fileID: 4800000, guid: 69c1f799e772cb6438f56c23efccb782, type: 3}
     second:
       variants:
+      - keywords: 
+        passType: 13
       - keywords: _TERRAIN_INSTANCED_PERPIXEL_NORMAL
         passType: 13
   - first: {fileID: 4800000, guid: 13c02b14c4d048fa9653293d54f6e0e1, type: 3}
@@ -176,8 +167,6 @@ ShaderVariantCollection:
   - first: {fileID: -6465566751694194690, guid: 3bb35f7f86ffc45c2aa6fc4291f787fc, type: 3}
     second:
       variants:
-      - keywords: _MAIN_LIGHT_SHADOWS _SHADING_STYLE_HAIR_AND_METAL
-        passType: 13
       - keywords: _MAIN_LIGHT_SHADOWS _SHADING_STYLE_SKIN_AND_TEXTILES
         passType: 13
       - keywords: _SHADING_STYLE_SKIN_AND_TEXTILES
@@ -202,11 +191,13 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE ENABLE_DISSOLVE_VERTEX_COLOR
-          ENABLE_MASK_NOISE ENABLE_UV_NOISE
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE ENABLE_DISSOLVE_VERTEX_COLOR ENABLE_DUAL_COLORS ENABLE_GLOW ENABLE_MASK_FLOW ENABLE_SOFTPARTICLES ENABLE_UV_NOISE
         passType: 13
-      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE_VERTEX_COLOR ENABLE_MASK_NOISE
-          ENABLE_UV_NOISE
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE ENABLE_DISSOLVE_VERTEX_COLOR ENABLE_DUAL_COLORS ENABLE_MASK_FLOW ENABLE_SOFTPARTICLES ENABLE_UV_NOISE
+        passType: 13
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE ENABLE_DISSOLVE_VERTEX_COLOR ENABLE_MASK_NOISE ENABLE_UV_NOISE
+        passType: 13
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DISSOLVE_VERTEX_COLOR ENABLE_MASK_NOISE ENABLE_UV_NOISE
         passType: 13
       - keywords: ALPHA_FROM_GRAYSCALE ENABLE_DUAL_COLORS ENABLE_MASK ENABLE_UV_NOISE
         passType: 13
@@ -216,11 +207,9 @@ ShaderVariantCollection:
         passType: 13
       - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_MASK_FLOW ENABLE_UV_NOISE
         passType: 13
-      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_MASK_NOISE ENABLE_SOFTPARTICLES
-          ENABLE_UV_NOISE ENABLE_VERTEX_OFFSET
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_MASK_NOISE ENABLE_SOFTPARTICLES ENABLE_UV_NOISE ENABLE_VERTEX_OFFSET
         passType: 13
-      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_MASK_NOISE ENABLE_UV_NOISE
-          ENABLE_VERTEX_OFFSET
+      - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_MASK_NOISE ENABLE_UV_NOISE ENABLE_VERTEX_OFFSET
         passType: 13
       - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK ENABLE_SOFTPARTICLES ENABLE_UV_NOISE
         passType: 13
@@ -228,15 +217,13 @@ ShaderVariantCollection:
         passType: 13
       - keywords: ALPHA_FROM_GRAYSCALE ENABLE_MASK_FLOW ENABLE_SOFTPARTICLES ENABLE_UV_NOISE
         passType: 13
-      - keywords: ENABLE_DISSOLVE ENABLE_DUAL_COLORS ENABLE_MASK ENABLE_MASK_FLOW
-          UI_MODE
+      - keywords: ENABLE_DISSOLVE ENABLE_DUAL_COLORS ENABLE_MASK ENABLE_MASK_FLOW UI_MODE
         passType: 13
       - keywords: ENABLE_DISSOLVE ENABLE_RIM ENABLE_UV_NOISE
         passType: 13
       - keywords: ENABLE_DISTORTION ENABLE_MASK ENABLE_MASK_FLOW ENABLE_MASK_NOISE
         passType: 13
-      - keywords: ENABLE_DUAL_COLORS ENABLE_GLOW ENABLE_GLOW_BLINK ENABLE_MASK ENABLE_MASK_FLOW
-          ENABLE_UV_NOISE
+      - keywords: ENABLE_DUAL_COLORS ENABLE_GLOW ENABLE_GLOW_BLINK ENABLE_MASK ENABLE_MASK_FLOW ENABLE_UV_NOISE
         passType: 13
       - keywords: ENABLE_DUAL_COLORS ENABLE_GLOW ENABLE_MASK_FLOW ENABLE_UV_NOISE
         passType: 13
@@ -280,6 +267,11 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
+  - first: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
   - first: {fileID: 4800000, guid: d84268709d11078d11005b9844295342, type: 3}
     second:
       variants:
@@ -311,11 +303,6 @@ ShaderVariantCollection:
       - keywords: 
         passType: 13
   - first: {fileID: 4800000, guid: 01a668cc78047034a8a0c5ca2d24c6f7, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: 8864b4fe390c41d68fac8146222da0fa, type: 3}
     second:
       variants:
       - keywords: 
@@ -374,6 +361,8 @@ ShaderVariantCollection:
         passType: 13
       - keywords: OUTLINE_ON UNDERLAY_ON
         passType: 13
+      - keywords: UNDERLAY_ON
+        passType: 13
   - first: {fileID: -6465566751694194690, guid: cb91ece02faf8b74699f9615c6809e4a, type: 3}
     second:
       variants:
@@ -428,6 +417,8 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
+      - keywords: OUTLINE_ON UNDERLAY_ON
+        passType: 13
       - keywords: UNDERLAY_ON
         passType: 13
   - first: {fileID: -6465566751694194690, guid: a3d800b099a06e0478fb790c5e79057a, type: 3}
@@ -450,77 +441,60 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: 4800002, guid: 3d782c5bee67c7147a431990c381caec, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: a78c3fbf694f70942aa577ae926528e7, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: 4800000, guid: 2a230514c860643f69b6a4d1871d3825, type: 3}
     second:
       variants:
-      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_RIM_ON DR_SPECULAR_ON
-          _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD
-          _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_ENABLE_LIGHTMAP_DIR DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_ENABLE_LIGHTMAP_DIR DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_ENABLE_LIGHTMAP_DIR _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_ENABLE_LIGHTMAP_DIR _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_INTERPOLATE
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_INTERPOLATE _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD
-          _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_GRADIENT_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_GRADIENT_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _NORMALMAP
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_ADD
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_ADD
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_LIGHT_ATTENUATION DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_LIGHT_ATTENUATION DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_ADD _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
@@ -528,53 +502,43 @@ ShaderVariantCollection:
         passType: 13
       - keywords: DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_INTERPOLATE _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP
-          _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
       - keywords: DR_LIGHT_ATTENUATION _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_OUTLINE_ON DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_OUTLINE_ON DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_OUTLINE_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
+        passType: 13
+      - keywords: DR_RIM_ON DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_RIM_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_RIM_ON _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: DR_SPECULAR_ON _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
-      - keywords: _ALPHATEST_ON _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
-      - keywords: _ALPHATEST_ON _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
-      - keywords: _BASEMAP_PREMULTIPLY _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: _DETAILMAPBLENDINGMODE_ADD _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: _DETAILMAPBLENDINGMODE_ADD _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _NORMALMAP _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _NORMALMAP _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
-      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _EMISSION _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
-      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _RECEIVE_SHADOWS_OFF
-          _TEXTUREBLENDINGMODE_MULTIPLY
-        passType: 13
-      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _TEXTUREBLENDINGMODE_MULTIPLY
+      - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _NORMALMAP _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
       - keywords: _DETAILMAPBLENDINGMODE_MULTIPLY _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY
         passType: 13
@@ -654,16 +618,6 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: 9b4e681081e2b4c469111bb649e2f7ee, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: 9ce107479d11178d11005b9844295342, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: 2a1ff829940883c449bc7bba5e722d0b, type: 3}
     second:
       variants:
@@ -688,22 +642,7 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: 1bba45889e414608858cdeb63e1a7be3, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: 87767721d70d34644856de33a8656ca1, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 465b4b58550cc884b869b681db532bb0, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: fb6390f650ca44a5ba3246d8dda47927, type: 3}
     second:
       variants:
       - keywords: 
@@ -720,32 +659,12 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: 4800000, guid: 054a31a99d11e49d110086ba44295342, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: 7a030cdef1fb49a438cf240f6884c95c, type: 3}
     second:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: 301161bada00dda48afe6dbffadd4453, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: 061b50a4140954d47bfaf56070435f4a, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: d7288f66e4fb0634c9afef98c31b722a, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 24a73dccd7b6fad4798be282f96a21f4, type: 3}
     second:
       variants:
       - keywords: 
@@ -770,42 +689,12 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: 39144937a5efe954dac51acbbe54157e, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: bfad0aba0faa90547b68abd10bb6be86, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: aee84ce0dab81b049bb88017d78a63cd, type: 3}
     second:
       variants:
       - keywords: 
         passType: 13
   - first: {fileID: -6465566751694194690, guid: 2019d78ad3d1c5c4a8d309a857ca449f, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 7ef2cf71ad164fe479662ae612dff99e, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: def488a52add6574d9f295a507032cb8, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 3e01bbae25716b24ea9da11102b44902, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 9d4e8ca8c5046914c87ca6ccef140dac, type: 3}
     second:
       variants:
       - keywords: 
@@ -830,22 +719,7 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: ca2ed216f98028c4dae6c5224a952b3c, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 0738648e2f2f84b489a2f0076b69e30a, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: af66091e0eca0c04a9c3584ae867418a, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 5a4a765e921b8554eb959f7cf697b3be, type: 3}
     second:
       variants:
       - keywords: 
@@ -859,21 +733,6 @@ ShaderVariantCollection:
     second:
       variants:
       - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: df41eefe8c13d444ca890dddbbc61f8d, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 1716ff8c1e51af14280cc97fbcba3b11, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: 25a0ebb4827f3cc47a1af2c79005f65b, type: 3}
-    second:
-      variants:
-      - keywords: _USE_COLOR
         passType: 13
   - first: {fileID: -6465566751694194690, guid: 44245ab89240f51459a5077d7145c452, type: 3}
     second:
@@ -905,57 +764,7 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 13
-  - first: {fileID: -6465566751694194690, guid: f63d574838ccfb44f84acc05fed0af48, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: -6465566751694194690, guid: bde135b320597544b9ac325092409f8b, type: 3}
-    second:
-      variants:
-      - keywords: _USE_COLOR
-        passType: 13
   - first: {fileID: -6465566751694194690, guid: 16dbac556be7c00448dd113d83bf05e1, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800002, guid: 0779414d9195ad041b1747b36c7d2e58, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: ec20b30b8d1256c4595d1f88ed076e2f, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800002, guid: 20a51e433810d104c8a4ed40ca16d57b, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: b7261d938a155b74cb61a60a16d9f2aa, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: 7e41bcd00bd04254eb3028534f7c86bb, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800000, guid: a8d8823499ff50847aa460cb119c445d, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800002, guid: f76ad34989a514f4ca186cb4dea650af, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 13
-  - first: {fileID: 4800002, guid: d379eac073f73024780a8968d2259cef, type: 3}
     second:
       variants:
       - keywords: 
@@ -969,4 +778,281 @@ ShaderVariantCollection:
     second:
       variants:
       - keywords: _ALLOWALPHAOVERFLOW_OFF
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: f407551280e8ad748b42c21acb846f4a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 7df0532c0bd417b4bae8cbe43370f1ae, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 95164e51d6c570143bad1a40027d68fc, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 1a8e9c0e1f9270c43a3d79280bd1d33c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: e0d3b96ff9f8e074192e25cc70949919, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 9b4e681081e2b4c469111bb649e2f7ee, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 9ce107479d11178d11005b9844295342, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 1bba45889e414608858cdeb63e1a7be3, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 465b4b58550cc884b869b681db532bb0, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: fb6390f650ca44a5ba3246d8dda47927, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 054a31a99d11e49d110086ba44295342, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 301161bada00dda48afe6dbffadd4453, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: d7288f66e4fb0634c9afef98c31b722a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 24a73dccd7b6fad4798be282f96a21f4, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 39144937a5efe954dac51acbbe54157e, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: bfad0aba0faa90547b68abd10bb6be86, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 7ef2cf71ad164fe479662ae612dff99e, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: def488a52add6574d9f295a507032cb8, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 3e01bbae25716b24ea9da11102b44902, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 9d4e8ca8c5046914c87ca6ccef140dac, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: ca2ed216f98028c4dae6c5224a952b3c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 0738648e2f2f84b489a2f0076b69e30a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 5a4a765e921b8554eb959f7cf697b3be, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: df41eefe8c13d444ca890dddbbc61f8d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 1716ff8c1e51af14280cc97fbcba3b11, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: 25a0ebb4827f3cc47a1af2c79005f65b, type: 3}
+    second:
+      variants:
+      - keywords: _USE_COLOR
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: f63d574838ccfb44f84acc05fed0af48, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -6465566751694194690, guid: bde135b320597544b9ac325092409f8b, type: 3}
+    second:
+      variants:
+      - keywords: _USE_COLOR
+        passType: 13
+  - first: {fileID: 3155687112723782394, guid: 3d782c5bee67c7147a431990c381caec, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -7227826603656243281, guid: 20a51e433810d104c8a4ed40ca16d57b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -711390450026893859, guid: a78c3fbf694f70942aa577ae926528e7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -5632752132646269572, guid: f76ad34989a514f4ca186cb4dea650af, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -5177472215421116231, guid: a8d8823499ff50847aa460cb119c445d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -8921426177355345602, guid: b7261d938a155b74cb61a60a16d9f2aa, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: -8982593021844616764, guid: 7e41bcd00bd04254eb3028534f7c86bb, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 6783771228089616480, guid: ec20b30b8d1256c4595d1f88ed076e2f, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4296077072715864509, guid: 0779414d9195ad041b1747b36c7d2e58, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 8160885470343173294, guid: d379eac073f73024780a8968d2259cef, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: c051ce0eecd82964d86c00cf53ebf71e, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 685490c3372082641a9807bf74408f83, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 14d346eece227ef4fb2c6a0955696a64, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: a3571e1ee190d9a44b5185c43bd14db1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: a76df35aa60dd8c4ab43309579a485a0, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 9f50451daca183e4eb3c46e2d8d0497b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: e80ddc331dfdded4e9991a6a9f7eb195, type: 3}
+    second:
+      variants:
+      - keywords: _FORMA_CORAZON _VISTA_PANORAMICA
+        passType: 13
+      - keywords: _VISTA_PANORAMICA
+        passType: 13
+  - first: {fileID: 4800000, guid: f7b2579c039957d4f9ca6a1f5b502e0d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 5777ffaa4abc4a043a46aa97a0b51735, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: a7a1e78cea5671d44b632a80bd51466c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: ebdae4f3a175075448b1282100aa9536, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 5d8c11c75f5bf6f41970342a4f61c46d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 11e30be5341729c4abb7f988447f48ad, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: efda27f4ec484684087361209bf026fe, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 2182e38c4124d404fab12efe71e29eec, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: _ALPHATEST_ON _EMISSION _RECEIVE_SHADOWS_OFF
+        passType: 13
+      - keywords: _ALPHATEST_ON _RECEIVE_SHADOWS_OFF
+        passType: 13
+      - keywords: _EMISSION
+        passType: 13
+      - keywords: _EMISSION _RECEIVE_SHADOWS_OFF
+        passType: 13
+      - keywords: _RECEIVE_SHADOWS_OFF
         passType: 13

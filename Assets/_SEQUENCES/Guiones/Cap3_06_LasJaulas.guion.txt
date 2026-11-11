@@ -35,7 +35,7 @@ vfx "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Smok
 will cara cansado
 espera 1
 will dice CAP3_JAULAS_01 cara=cansado
-will dice CAP3_JAULAS_02 cara=triste
+will dice CAP3_JAULAS_02 cara=triste gesto=HeadShake01
 sargento anda a p_sarg_llega ritmo=prisa
 & g1 anda a p_g1_llega ritmo=prisa
 plano conjunto will sargento
@@ -46,6 +46,7 @@ espera 1
 sargento mira will
 sargento dice CAP3_JAULAS_05 cara=triste
 plano primer will
+& will bucle Cabizbajo fundido=0.6
 will dice CAP3_JAULAS_06 cara=triste
 sargento dice CAP3_JAULAS_07
 espera 0.6

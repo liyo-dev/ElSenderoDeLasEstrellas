@@ -472,9 +472,22 @@ public class SequenceActor
     /// antes: una pose sostenida es una decisión del montaje y no se pisa sola.
     public bool SosteniendoPose => (NpcAnimator != null && NpcAnimator.SosteniendoPose) || _poseDelJugador != null;
 
+    /// Pose de medio cuerpo encima de lo que haga el cuerpo (sentado, un bucle de cuerpo entero), sin
+    /// soltar la del cuerpo. Solo los personajes con NPCSimpleAnimator, que sostiene una pose por capa.
+    public void SostenerPoseDeMedioCuerpo(string estado, float fundido = 0.3f)
+    {
+        if (string.IsNullOrEmpty(estado) || NpcAnimator == null) return;
+        NpcAnimator.HoldPose(estado, fundido: fundido > 0f ? fundido : 0.02f);
+    }
+
+    /// Suelta la pose de medio cuerpo; el cuerpo sigue en su bucle.
+    public void SoltarPoseDeMedioCuerpo() => NpcAnimator?.SoltarPoseDeMedioCuerpo();
+
     public void PlayGesture(string stateName)
     {
         if (string.IsNullOrEmpty(stateName)) return;
+        // Cada personaje hace el gesto a su manera (la risa de cada uno): ver GestosPorPersonaje.
+        stateName = GestosPorPersonaje.Variante(this, stateName);
 
         if (_poseDelJugador != null) ReleasePose(false);
 

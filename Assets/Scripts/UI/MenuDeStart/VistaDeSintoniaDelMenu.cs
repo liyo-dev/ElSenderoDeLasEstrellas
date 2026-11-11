@@ -16,8 +16,8 @@ namespace Sendero.UI
     /// </summary>
     public sealed class VistaDeSintoniaDelMenu : IVistaDelMenuDeStart
     {
-        private static readonly Color ColorVigor = new Color32(0x4C, 0xD0, 0x7D, 0xFF);
-        private static readonly Color ColorFlujo = new Color32(0x78, 0xA6, 0xFF, 0xFF);
+        private static readonly Color ColorVigor = new Color32(0x25, 0x7A, 0x3A, 0xFF);
+        private static readonly Color ColorFlujo = new Color32(0x2F, 0x5F, 0xB8, 0xFF);
         private const float AnchoDeBarra = 520f;
 
         private MenuDeStart _menu;
@@ -69,7 +69,7 @@ namespace Sendero.UI
             P.Colocar(_progresoTexto.rectTransform, 440f, 100f, 600f, 34f);
             _hitosTexto = P.Txt("Hitos", c, "", 23f, P.TextoSuave, true, TextAlignmentOptions.TopRight);
             P.Colocar(_hitosTexto.rectTransform, 860f, 100f, 600f, 34f);
-            _estrellas = P.Txt("Estrellas", c, "", 26f, P.Oro, true, TextAlignmentOptions.Center, envolver: true);
+            _estrellas = P.Txt("Estrellas", c, "", 26f, P.OroDeTexto, true, TextAlignmentOptions.Center, envolver: true);
             P.ColocarDerecha(_estrellas.rectTransform, 30f, 28f, 260f, 120f);
 
             _vigor = Tarjeta(cuerpo, 0f, ColorVigor, "Vigor",
@@ -79,7 +79,7 @@ namespace Sendero.UI
                 "+" + SintoniaEstelarService.ManaPorFlujo + " de magia máxima",
                 "Más reserva para sostener el escudo y encadenar combos y hechizos potentes.", "MAGIA", 1);
 
-            _nota = P.Txt("Nota", cuerpo, "", 23f, P.TextoApagado, false, TextAlignmentOptions.Center);
+            _nota = P.Txt("Nota", cuerpo, "", 23f, P.SobreNoche, false, TextAlignmentOptions.Center);
             P.Colocar(_nota.rectTransform, 0f, 840f, 1812f, 40f);
         }
 
@@ -94,13 +94,13 @@ namespace Sendero.UI
             var c = op.fondo.transform;
             var circulo = P.Caja("Círculo", c, color, 45f);
             P.Colocar(circulo.rectTransform, 40f, 40f, 90f, 90f);
-            var signo = P.Txt("Signo", circulo.transform, "+", 56f, new Color32(0x14, 0x12, 0x2F, 0xFF), true, TextAlignmentOptions.Center);
+            var signo = P.Txt("Signo", circulo.transform, "+", 56f, PaletaUI.PapelClaro, true, TextAlignmentOptions.Center);
             P.Rellenar(signo.rectTransform);
             var n = P.Txt("Nombre", c, nombre, 48f, P.Texto, true);
             P.Colocar(n.rectTransform, 152f, 36f, 680f, 60f);
             var g = P.Txt("Ganancia", c, ganancia, 30f, color, true);
             P.Colocar(g.rectTransform, 152f, 96f, 680f, 40f);
-            var d = P.Txt("Descripción", c, descripcion, 26f, new Color32(0xDF, 0xE2, 0xFF, 0xFF), false, TextAlignmentOptions.TopLeft, envolver: true);
+            var d = P.Txt("Descripción", c, descripcion, 26f, P.Texto, false, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(d.rectTransform, 40f, 170f, 800f, 110f);
             var cq = P.Txt("Cómo queda", c, "CÓMO QUEDA LA BARRA DE " + queSube, 20f, P.TextoApagado, true);
             P.Colocar(cq.rectTransform, 40f, 320f, 800f, 30f);
@@ -114,7 +114,7 @@ namespace Sendero.UI
             var f = new Fila();
             var e = P.Txt("Etiqueta", padre, etiqueta, 24f, P.TextoApagado, true, TextAlignmentOptions.MidlineLeft);
             P.Colocar(e.rectTransform, 40f, y, 140f, 40f);
-            var fondo = P.Caja("Barra " + etiqueta, padre, new Color32(0x0D, 0x0F, 0x22, 0xFF), 8f);
+            var fondo = P.Caja("Barra " + etiqueta, padre, P.Pista, 8f);
             P.Colocar(fondo.rectTransform, 190f, y + 6f, AnchoDeBarra, 28f);
             f.debajo = P.Caja("Debajo", fondo.transform, Color.white, 6f);
             P.Rellenar(f.debajo.rectTransform, 2f);
@@ -142,7 +142,7 @@ namespace Sendero.UI
             int umbral = s != null ? s.PuntosParaSiguienteHito : 100;
             _estrellas.text = pendientes > 0
                 ? "<size=150%>" + new string('★', Mathf.Min(pendientes, 5)) + "</size>\n" + pendientes + (pendientes == 1 ? " don por elegir" : " dones por elegir")
-                : "<color=#A9AED6>Nada por elegir</color>";
+                : "<color=#776450>Nada por elegir</color>";
             float fraccion = umbral > 0 ? Mathf.Clamp01((float)puntos / umbral) : 0f;
             _progreso.sizeDelta = new Vector2(Mathf.Max(0f, 1014f * fraccion), _progreso.sizeDelta.y);
             P.Activar(_progreso.gameObject, fraccion > 0.001f);
@@ -174,14 +174,14 @@ namespace Sendero.UI
         {
             op.grupo.alpha = hay ? 1f : 0.55f;
             op.borde.color = hay && elegido ? op.color : P.BordeApagado;
-            op.fondo.color = hay && elegido ? new Color32(0x28, 0x22, 0x50, 0xEB) : P.Panel;
+            op.fondo.color = hay && elegido ? P.Elegida : P.Panel;
         }
 
         private static void PonerFila(Fila f, float valor, EstiloDeBarrasApiladas estilo, Color[] colores)
         {
             int capas = estilo.Capas(valor);
             f.arriba.color = EstiloDeBarrasApiladas.ColorDeCapa(colores, capas - 1);
-            f.debajo.color = capas > 1 ? EstiloDeBarrasApiladas.ColorDeCapa(colores, capas - 2) : new Color32(0x0D, 0x0F, 0x22, 0xFF);
+            f.debajo.color = capas > 1 ? EstiloDeBarrasApiladas.ColorDeCapa(colores, capas - 2) : P.Pista;
             var rt = f.arriba.rectTransform;
             rt.sizeDelta = new Vector2((AnchoDeBarra - 4f) * estilo.ParteDeArriba(valor), rt.sizeDelta.y);
             f.capas.text = capas > 1 ? "×" + capas : "";

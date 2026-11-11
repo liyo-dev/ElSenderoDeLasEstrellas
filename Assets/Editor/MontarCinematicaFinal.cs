@@ -132,6 +132,14 @@ public static class MontarCinematicaFinal
                                      "No la vuelvo a montar sola: si hace falta, usa el menú «Montar Escena de Cinemática Final».");
                 return;
             }
+            // La escena existe pero no se ha podido abrir o no trae su raíz: no se monta encima (se
+            // perdería la montada). Montarla desde cero solo lo hace el menú.
+            if (File.Exists(RutaEscenaPreview))
+            {
+                Debug.LogError("[Cinemática Final] La escena existe pero no se abre bien o le falta CINEMATICA_FINAL_ROOT. " +
+                               "No la monto desde cero: revisa el archivo o usa el menú «Montar Escena de Cinemática Final».");
+                return;
+            }
         }
 
         ConstruirEscenaCompleta();
@@ -371,7 +379,9 @@ public static class MontarCinematicaFinal
         var zona3 = GameObject.Find("ZONA_3_EL_RIO");
         if (zona3 != null) LimpiarCollidersYTriggersDecorativos(zona3);
 
-        var navSurface = UnityEngine.Object.FindFirstObjectByType<NavMeshSurface>();
+        // La superficie de esta escena, no la primera que haya abierta (podría ser la de MainWorld).
+        var navGoDeLaEscena = GameObject.Find("NAVMESH_CINEMATICA_FINAL");
+        var navSurface = navGoDeLaEscena != null ? navGoDeLaEscena.GetComponent<NavMeshSurface>() : null;
         if (navSurface != null && navSurface.layerMask != (1 << floorLayer))
         {
             navSurface.layerMask = 1 << floorLayer;

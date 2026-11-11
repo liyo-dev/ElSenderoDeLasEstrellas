@@ -92,6 +92,7 @@ estela dice CHUCHELANDIA_POMPON_02 cara=confuso mira=pompon
 plano medio heraldo solo rumbo=30
 heraldo dice CHUCHELANDIA_POMPON_03 sin_pose
 plano medio estela solo rumbo=250
+& estela bucle BrazosEnJarras fundido=0.3
 estela dice CHUCHELANDIA_POMPON_04 cara=neutral mira=heraldo
 plano medio heraldo solo rumbo=30
 heraldo dice CHUCHELANDIA_POMPON_05 sin_pose
@@ -106,10 +107,14 @@ estela dice CHUCHELANDIA_POMPON_08 cara=neutral mira=heraldo
 & efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.18 duracion=1.0
 plano dos estela condesa
 estela dice CHUCHELANDIA_POMPON_09 cara=confuso mira=condesa
+# Plano de quien habla: en el plano de grupo decía la frase de espaldas a la cámara.
+# Se vuelve hacia Estela para contestarle: seguía de cara al trono y hablaba de espaldas.
+condesa mira estela
+plano medio condesa solo
 condesa dice CHUCHELANDIA_POMPON_10 sin_pose
 condesa dice CHUCHELANDIA_POMPON_11 sin_pose
 plano medio estela
-estela dice CHUCHELANDIA_POMPON_12 cara=decidido mira=condesa
+estela dice CHUCHELANDIA_POMPON_12 cara=decidido gesto=Shrug01 mira=condesa
 & efecto EscalarActorBeat actorId=Actor_Heraldo escala=1.3 duracion=1.4
 
 # El heraldo se hincha un poco. Luego bastante. Liam da un paso atrás. Will, dos.
@@ -124,6 +129,8 @@ liam anda a p_liam_atras ritmo=paseo llega_mirando=heraldo
 && will anda a p_will_atras ritmo=normal llega_mirando=heraldo
 & liam cara preocupado
 & will cara miedo
+# Plano de quien habla: en el plano de grupo decía la frase de espaldas a la cámara.
+plano medio estela
 estela dice CHUCHELANDIA_POMPON_13 cara=neutral mira=pompon
 espera 0.2
 
@@ -145,10 +152,14 @@ will mira estela
 & liam mira estela
 & condesa mira estela
 & estela cara sorpresa
+& estela reposo
 espera 0.8
 estela dice CHUCHELANDIA_POMPON_14 gesto=Question02
+# Plano de quien habla: en el plano de grupo decía la frase de espaldas a la cámara.
+plano medio condesa solo
 condesa dice CHUCHELANDIA_POMPON_15 sin_pose
 plano medio liam solo
+& liam bucle BrazosCruzados
 liam dice CHUCHELANDIA_POMPON_16 cara=pensativo
 plano medio estela
 estela dice CHUCHELANDIA_POMPON_17 cara=enfado gesto=Angry02
@@ -157,7 +168,7 @@ liam dice CHUCHELANDIA_POMPON_18 cara=neutral pausa=0.1
 
 # El suplente.
 @suplente
-plano conjunto condesa estela
+plano medio condesa solo
 condesa dice CHUCHELANDIA_POMPON_19 sin_pose
 & condesa gesto Marshies_Wave
 plano medio g4 solo
@@ -200,11 +211,11 @@ espera 1.2
 @duelo
 plano dos condesa estela
 condesa dice CHUCHELANDIA_POMPON_25 sin_pose
-plano medio estela
+plano medio estela lado=frente
 estela dice CHUCHELANDIA_POMPON_26 cara=preocupado mira=condesa
 plano medio condesa solo
 condesa dice CHUCHELANDIA_POMPON_27 sin_pose
-plano medio estela
+plano medio estela lado=frente
 estela dice CHUCHELANDIA_POMPON_28 cara=molesto mira=condesa
 plano medio liam solo
 liam dice CHUCHELANDIA_POMPON_29 cara=neutral mira=will

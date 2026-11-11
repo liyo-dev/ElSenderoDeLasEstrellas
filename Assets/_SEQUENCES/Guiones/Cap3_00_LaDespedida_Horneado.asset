@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_00_LaDespedida
   duracion: 67.069
   presentacion: 1
-  huella: "2026-11-10 12:34 \xB7 511b1dcd5234837e74a8bd9fa6b2fcb3"
+  huella: "2026-11-11 18:11 \xB7 5810b0446bae45c5cbd105f7b35a14b6"
   actores:
   - id: Player
     alias: will
@@ -183,6 +183,21 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
+    - t: 55.578575
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 58.50924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 64.90924
+      tipo: 1
+      rumbo: 0
+      punto: {x: 63.6, y: 23.253124, z: -197.4}
+      actor: 
     animacion:
     - fundido: 0
       t: 1.3
@@ -201,7 +216,14 @@ MonoBehaviour:
     - fundido: 0
       t: 4.580408
       tipo: 2
-      estado: Talk03
+      estado: Shrug01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 6.2804084
+      tipo: 2
+      estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
@@ -250,7 +272,7 @@ MonoBehaviour:
     - fundido: 0
       t: 32.67388
       tipo: 2
-      estado: Talk03
+      estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
@@ -278,7 +300,7 @@ MonoBehaviour:
     - fundido: 0
       t: 39.439598
       tipo: 2
-      estado: Talk03
+      estado: Dudar01
       congelar: 0
       alFinal: 0
       voz: 
@@ -498,37 +520,9 @@ MonoBehaviour:
       actor: Player
     animacion:
     - fundido: 0
-      t: 0.6
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 0.68
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 4.1504083
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 5.200408
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 9.445714
-      tipo: 3
-      estado: 
+      t: 0
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
       voz: 
@@ -539,10 +533,17 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+    - fundido: 0.3
+      t: 11.685714
+      tipo: 1
+      estado: ManosALaEspalda
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.359048
-      tipo: 2
-      estado: Talk03
+      t: 14.879183
+      tipo: 0
+      estado: 
       congelar: 0
       alFinal: 0
       voz: 
@@ -554,23 +555,23 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 14.929183
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
       t: 14.959183
       tipo: 2
-      estado: Talk03
+      estado: Decidido01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 18.12585
+      t: 16.459183
       tipo: 2
       estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 18.97585
+      tipo: 2
+      estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
@@ -591,21 +592,14 @@ MonoBehaviour:
     - fundido: 0
       t: 21.661428
       tipo: 2
-      estado: Talk02
+      estado: Dudar01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 24.228096
+      t: 24.461428
       tipo: 2
       estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 27.444763
-      tipo: 2
-      estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
@@ -626,7 +620,14 @@ MonoBehaviour:
     - fundido: 0
       t: 29.095102
       tipo: 2
-      estado: Talk01
+      estado: Decidido01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 30.595102
+      tipo: 2
+      estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
@@ -665,6 +666,13 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+    - fundido: 0.6
+      t: 39.359596
+      tipo: 1
+      estado: ManoAlPecho
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 39.409595
       tipo: 4
@@ -679,10 +687,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 42.946537
-      tipo: 3
-      estado: 
+    - fundido: 0.3
+      t: 41.379597
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
       voz: 
@@ -693,24 +701,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 44.35987
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 46.97654
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 49.056946
-      tipo: 4
-      estado: 
+    - fundido: 0.3
+      t: 44.04654
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
       voz: 
@@ -721,10 +715,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 56.278576
-      tipo: 2
-      estado: HeadNod01
+    - fundido: 0.3
+      t: 57.858574
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
       voz: 
@@ -764,8 +758,8 @@ MonoBehaviour:
     t1: 4.100408
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_01
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -773,7 +767,7 @@ MonoBehaviour:
     t1: 9.045714
     actor: Player
     clave: CAP3_DESPEDIDA_02
-    gesto: Talk03
+    gesto: Shrug01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -783,7 +777,7 @@ MonoBehaviour:
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_03
     gesto: Laugh01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -791,7 +785,7 @@ MonoBehaviour:
     t1: 21.331429
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_04
-    gesto: Talk03
+    gesto: Decidido01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -800,7 +794,7 @@ MonoBehaviour:
     t1: 28.765102
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_05
-    gesto: Talk02
+    gesto: Dudar01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -809,7 +803,7 @@ MonoBehaviour:
     t1: 32.59388
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_06
-    gesto: Talk01
+    gesto: Decidido01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -818,7 +812,7 @@ MonoBehaviour:
     t1: 33.612656
     actor: Player
     clave: CAP3_DESPEDIDA_07
-    gesto: Talk03
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -836,7 +830,7 @@ MonoBehaviour:
     t1: 42.546535
     actor: Player
     clave: CAP3_DESPEDIDA_09
-    gesto: Talk03
+    gesto: Dudar01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -846,7 +840,7 @@ MonoBehaviour:
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_10
     gesto: HeadNod01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -974,7 +968,7 @@ MonoBehaviour:
     descripcion: general de will y eldran
     posiciones:
     - t: 49.006947
-      p: {x: 66.076324, y: 26.520458, z: -185.845}
+      p: {x: 65.177216, y: 26.60991, z: -183.32271}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -1016,20 +1010,20 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294518730654193
+      rid: 6540294550018326821
     linea: 29
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294518730654194
+      rid: 6540294550018326822
     linea: 30
   - onlyIfFlag: 
     skipIfFlag: 
     t: 66.10924
     beat:
-      rid: 6540294518730654195
-    linea: 72
+      rid: 6540294550018326823
+    linea: 77
   etiquetas:
   - nombre: inicio
     t: 0
@@ -1056,7 +1050,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294518730654193
+    - rid: 6540294550018326821
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1064,7 +1058,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294518730654194
+    - rid: 6540294550018326822
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1073,7 +1067,7 @@ MonoBehaviour:
         fadeIn: 2.5
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294518730654195
+    - rid: 6540294550018326823
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

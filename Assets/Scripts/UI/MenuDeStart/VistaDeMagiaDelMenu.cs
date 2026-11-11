@@ -87,13 +87,13 @@ namespace Sendero.UI
                 var icono = PiezasDeUI.Imagen("Icono", r.transform, null, Color.white);
                 icono.preserveAspect = true; icono.raycastTarget = false;
                 P.Rellenar(icono.rectTransform, 16f);
-                var n = P.Txt("Número", r.transform, (i + 1).ToString(), 20f, P.Oro, true);
+                var n = P.Txt("Número", r.transform, (i + 1).ToString(), 20f, P.OroDeTexto, true);
                 P.Colocar(n.rectTransform, 8f, 4f, 30f, 26f);
                 _ranuras.Add(r); _bordesDeRanura.Add(borde); _iconosDeRanura.Add(icono);
             }
             var nota = P.TxtConIconos("Nota", c, "En combate, " + P.Boton(InputGlyphNames.ShoulderLeft) + " pasa al siguiente de la fila.", 20f, P.TextoApagado);
             P.Colocar(nota.rectTransform, 24f, 190f, 450f, 40f);
-            var linea = P.Caja("Línea", c, new Color32(0x34, 0x37, 0x6A, 0xFF), 1f);
+            var linea = P.Caja("Línea", c, P.BordeApagado, 1f);
             P.Colocar(linea.rectTransform, 24f, 244f, 446f, 2f);
             var tc = P.TxtConIconos("Título Y", c, P.Boton(InputGlyphNames.North) + "  <b>COMBOS</b>", 22f, P.TextoApagado);
             P.Colocar(tc.rectTransform, 24f, 262f, 440f, 44f);
@@ -158,7 +158,7 @@ namespace Sendero.UI
             P.Colocar(_nombre.rectTransform, 190f, 40f, 320f, 90f);
             _pildoras = P.Txt("Elemento y tipo", c, "", 19f, P.TextoSuave, true);
             P.Colocar(_pildoras.rectTransform, 190f, 132f, 320f, 30f);
-            _lore = P.Txt("Frase", c, "", 23f, new Color32(0xDF, 0xE2, 0xFF, 0xFF), false, TextAlignmentOptions.TopLeft, envolver: true);
+            _lore = P.Txt("Frase", c, "", 23f, P.Texto, false, TextAlignmentOptions.TopLeft, envolver: true);
             _lore.fontStyle = FontStyles.Italic;
             P.Colocar(_lore.rectTransform, 30f, 196f, 480f, 120f);
 
@@ -351,7 +351,7 @@ namespace Sendero.UI
                 _iconosDeCombo[i].color = conocido ? Color.white : new Color(0.2f, 0.2f, 0.32f, 0.85f);
                 _nombresDeCombo[i].text = conocido ? s.GetLocalizedName() : "¿?";
                 _nombresDeCombo[i].color = conocido ? P.Texto : P.TextoApagado;
-                _secuencias[i].text = conocido ? ComboButtonGlyphs.SequenceSprites(s.comboSequence) : "<color=#8A8FBF>? ? ?</color>";
+                _secuencias[i].text = conocido ? ComboButtonGlyphs.SequenceSprites(s.comboSequence) : "<color=#776450>? ? ?</color>";
             }
 
             PintarDetalle();
@@ -379,19 +379,19 @@ namespace Sendero.UI
             _iconoGrande.color = conocido ? Color.white : new Color(0.2f, 0.2f, 0.32f, 0.85f);
             _nombre.text = conocido ? s.GetLocalizedName() : "Por descubrir";
             _pildoras.text = conocido
-                ? "<color=" + P.Hex(color) + ">" + NombreDeElemento(s.element).ToUpperInvariant() + "</color>    " + NombreDeTipo(s).ToUpperInvariant()
+                ? "<color=" + P.Hex(P.SobrePapel(color)) + ">" + NombreDeElemento(s.element).ToUpperInvariant() + "</color>    " + NombreDeTipo(s).ToUpperInvariant()
                 : "";
             _lore.text = conocido ? Lore(s) : "Una página sellada.";
             P.Activar(_datos, conocido);
             _sellado.text = conocido ? "" : (s.HasCombo ? "Alguien te lo enseñará más adelante." : "Hay una página del grimorio escondida en algún lugar del mundo.");
             if (conocido)
             {
-                _mana.text = "<color=#8FB6FF>" + Mathf.RoundToInt(s.manaCost) + "</color>";
+                _mana.text = "<color=#2F5FB8>" + Mathf.RoundToInt(s.manaCost) + "</color>";
                 bool apoyo = s.damage <= 0f;
                 _fuerzaEtiqueta.text = apoyo ? "Apoyo (no hace daño)" : "Fuerza";
                 int nivel = apoyo ? 0 : s.damage <= 10f ? 1 : s.damage <= 20f ? 2 : s.damage <= 40f ? 3 : 4;
                 string puntos = "";
-                for (int i = 1; i <= 4; i++) puntos += i <= nivel ? "<color=#F5C542>●</color>" : "<color=#34376A>●</color>";
+                for (int i = 1; i <= 4; i++) puntos += i <= nivel ? "<color=#C98A00>●</color>" : "<color=#CDBB9C>●</color>";
                 _fuerza.text = puntos;
                 _lanza.text = s.HasCombo
                     ? P.Boton(InputGlyphNames.North) + " " + ComboButtonGlyphs.SequenceSprites(s.comboSequence)

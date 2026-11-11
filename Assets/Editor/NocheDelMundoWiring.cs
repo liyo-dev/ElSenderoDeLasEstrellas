@@ -77,11 +77,10 @@ public static class NocheDelMundoWiring
         }
 
         AssetDatabase.SaveAssets();
-        EditorUtility.DisplayDialog("Noche",
-            resumen.Length == 0
-                ? "No hay ninguna escena abierta con DayNightCycle (abre MainWorld). Los materiales de las ventanas sí se han preparado."
-                : resumen + "\nGuarda la escena con Ctrl+S.",
-            "Vale");
+        // Sin diálogo: un diálogo modal deja parado el Editor (y el buzón de órdenes) hasta que alguien lo cierra.
+        Debug.Log("Noche: " + (resumen.Length == 0
+            ? "No hay ninguna escena abierta con DayNightCycle (abre MainWorld). Los materiales de las ventanas sí se han preparado."
+            : resumen + "Guarda la escena con Ctrl+S."));
     }
 
     private static List<Material> PrepararMateriales()

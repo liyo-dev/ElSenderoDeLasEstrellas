@@ -29,27 +29,29 @@ archimago  Actor_Archimago  nombre=Archimago color=FFD27A prefab=Assets/Prefabs/
 
 PUNTOS
 # ── ZONA 1: EL SENDERO ──
-p_liam_caido                  -1.2  4.2
-p_will_umbral                  0.0  4.6
-p_will_conjuro                 0.0  4.2
-p_will_a2_inicio               1.9  5.9
-p_portal_salida                0.0  8.2
-p_a1_sendero_centro            0.0  5.2
-p_a2_centro                   -0.5  4.2
+# Con altura escrita (a ras del suelo de la zona): sin ella, el horneado toma por suelo el NavMesh de
+# MainWorld, que pasa 30 m por encima de este punto cuando está abierta (así se fueron a 28 m cuatro generales el 7 nov).
+p_liam_caido                  -1.2  4.2  0.001
+p_will_umbral                  0.0  4.6  0.001
+p_will_conjuro                 0.0  4.2  0.001
+p_will_a2_inicio               1.9  5.9  0.001
+p_portal_salida                0.0  8.2  0.001
+p_a1_sendero_centro            0.0  5.2  0.001
+p_a2_centro                   -0.5  4.2  0.001
 
-cam_a1_hombro_will            -1.0  1.4
-cam_will_umbral_frente         0.35 7.2
-cam_will_umbral_cerca          0.25 6.6
-cam_a1_sendero_alto            6.5  1.0
-cam_a2_general                 6.0 -2.0
-cam_a2_will_frente            -1.1  2.8
-cam_a2_contrapicado            2.6  2.0
-cam_a2_orbita_a                2.6  6.4
-cam_a2_orbita_b               -2.9  5.8
-cam_a2_climax_frente          -1.4  3.0
-cam_a2_general_bajo            4.5  1.0
-cam_a2_will_cerca             -1.6  3.4
-cam_a2_final                   5.0 -4.0
+cam_a1_hombro_will            -1.0  1.4  0.001
+cam_will_umbral_frente         0.35 7.2  0.001
+cam_will_umbral_cerca          0.25 6.6  0.001
+cam_a1_sendero_alto            6.5  1.0  0.001
+cam_a2_general                 6.0 -2.0  0.001
+cam_a2_will_frente            -1.1  2.8  0.001
+cam_a2_contrapicado            2.6  2.0  0.001
+cam_a2_orbita_a                2.6  6.4  0.001
+cam_a2_orbita_b               -2.9  5.8  0.001
+cam_a2_climax_frente          -1.4  3.0  0.001
+cam_a2_general_bajo            4.5  1.0  0.001
+cam_a2_will_cerca             -1.6  3.4  0.001
+cam_a2_final                   5.0 -4.0  0.001
 
 # ── ZONA 2: LA PIEDRA ANCESTRAL (centro 200, 0; el portal en z 0,4) ──
 p_piedra_portal              200.0  0.4
@@ -214,7 +216,7 @@ will anda a p_will_conjuro ritmo=paseo llega_mirando=p_liam_caido
 espera 0.3
 
 plano medio will solo desde=cam_a2_will_frente altura=1.0 altura_foco=1.0 suave=0.4 lente=39
-will bucle CastingIdle01
+will bucle ManoAlPecho fundido=0.5
 will cara decidido
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
 will dice FINAL_WILL_CONJURO_01 cara=decidido dura=4.5
@@ -225,7 +227,7 @@ espera 0.6
 # ojos cerrados todo el conjuro y un gesto que solo crece: manos juntas y, en la tercera estrofa,
 # brazos sobre la cabeza; abre los ojos en el grito.
 plano general will liam desde=cam_a2_contrapicado mira=p_will_conjuro altura=0.35 altura_foco=1.9 lente=46 suave=0.5 gira=20
-will bucle Beg01_Loop
+will bucle Conjuro_Recogerse fundido=0.6
 efecto ModuleBeat routine=ConjuroCirculos
 efecto ModuleBeat routine=LevitarWill
 sonido SFX_Prologo_Trueno_Lejano volume=0.45
@@ -235,10 +237,9 @@ espera 0.8
 
 # Alrededor de Will, que ya flota.
 plano conjunto will liam desde=cam_a2_orbita_a mover=cam_a2_orbita_b mira=p_will_conjuro altura=1.7 altura_foco=2.3 lente=40 suave=0.4
-sonido Prologo_Carga volume=0.8
 sacudida 0.4 1.5
 will dice FINAL_WILL_CONJURO_03 cara=dormido dura=6.0
-& will bucle MagicAttackOmni01_Load congela fundido=0.6
+& will bucle Conjuro_Invocar fundido=0.8
 espera 0.8
 
 # El grito.
@@ -246,6 +247,8 @@ plano medio will solo desde=cam_a2_climax_frente mira=p_will_conjuro altura=0.9 
 efecto RespiroBeat musicaDb=-6 ambienteDb=-16 sfxDb=-8 duracion=0.8 ataque=0.2 fundido=0.3 esperar=false
 espera 0.6
 will dice FINAL_WILL_CONJURO_04 cara=enfado dura=3.5
+# En el grito lanza la luz hacia Liam y se queda con el brazo tendido.
+& will bucle Conjuro_Lanzar congela fundido=0.2
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
 
 # La luz se lleva a Liam.
@@ -259,6 +262,7 @@ espera 3.0
 plano medio will solo desde=cam_a2_will_cerca mira=p_will_conjuro altura=2.0 altura_foco=2.5 lente=36 suave=0.6
 efecto ModuleBeat routine=WillSeDesvanece
 will cara alegre
+& will bucle Conjuro_Abrirse fundido=1.2
 espera 3.6
 plano general will desde=cam_a2_final mira=p_will_conjuro altura=7.0 altura_foco=1.6 lente=40 suave=1.0
 espera 4.2
@@ -432,7 +436,8 @@ espera 2.6
 plano medio will solo desde=cam_piedra_will_regreso contrapicado altura=0.85 altura_foco=1.10 lente=42 suave=0.0
 will cara alegre
 will anda a p_piedra_will_llega ritmo=paseo llega_mirando=p_estela_a4
-will dice FINAL_WILL_RETURN_02 sin_pose gesto=Greeting01_NoWeapon dura=4.2
+will dice FINAL_WILL_RETURN_02 sin_pose dura=4.2
+& will bucle Ofrecer fundido=0.4
 espera 0.3
 
 # Estela no se lo cree; Liam tampoco.
@@ -450,6 +455,7 @@ plano dos estela liam desde=cam_a5_frente mira=p_a5_caras altura=1.3 altura_foco
 estela cara alegre
 & liam cara alegre
 estela dice FINAL_ESTELA_RETURN_00B sin_pose cara=alegre
+& will reposo
 espera 0.15
 
 # La carrera: en cámara lenta, a compás de la subida del tema. Corren felices y las lágrimas se
@@ -495,12 +501,14 @@ will mira estela
 estela dice FINAL_ESTELA_RETURN_01 sin_pose gesto=Angry01 cara=aliviado dura=4.5
 espera 0.2
 will cara alegre
-will dice FINAL_WILL_RETURN_04 sin_pose gesto=HeadNod01 dura=1.4
+will dice FINAL_WILL_RETURN_04 sin_pose dura=1.4
+& will bucle ManoAlPecho fundido=0.3
 espera 0.3
 
 # Es de los tres: Will y Estela se abrazan, Liam llega y los abraza a los dos. La cámara sube
 # girando hasta verlos desde arriba, y fundido a negro.
 plano general will estela liam desde=cam_grua_a mover=cam_grua_b mira=p_abrazo_final altura=1.4 altura_foco=0.9 lente=42 suave=0.3
+& will reposo
 efecto ModuleBeat routine=AbrazoEstelaWill
 espera 0.8
 liam anda a p_liam_abrazo_final ritmo=paseo llega_mirando=p_abrazo_final

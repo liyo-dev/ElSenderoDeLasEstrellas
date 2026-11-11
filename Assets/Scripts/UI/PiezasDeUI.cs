@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,6 +89,94 @@ public static class PiezasDeUI
                                                    0, SpriteMeshType.FullRect, new Vector4(borde, borde, borde, borde));
             return s_rectanguloRedondeado;
         }
+    }
+
+    private static Sprite s_resplandor;
+
+    /// <summary>
+    /// Mancha de luz redonda y blanca que se apaga hacia el borde, para teñir (el halo tras un
+    /// personaje, un foco). Se genera una vez.
+    /// </summary>
+    public static Sprite Resplandor
+    {
+        get
+        {
+            if (s_resplandor != null) return s_resplandor;
+            const int lado = 128;
+            var tex = new Texture2D(lado, lado, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "Resplandor" };
+            var px = new Color32[lado * lado];
+            float mitad = lado * 0.5f;
+            for (int y = 0; y < lado; y++)
+            for (int x = 0; x < lado; x++)
+            {
+                float d = Mathf.Sqrt((x + 0.5f - mitad) * (x + 0.5f - mitad) + (y + 0.5f - mitad) * (y + 0.5f - mitad)) / mitad;
+                float alfa = Mathf.SmoothStep(1f, 0f, Mathf.Clamp01(d));
+                px[y * lado + x] = new Color32(255, 255, 255, (byte)(alfa * alfa * 255f));
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            s_resplandor = Sprite.Create(tex, new Rect(0, 0, lado, lado), new Vector2(0.5f, 0.5f), 100f);
+            return s_resplandor;
+        }
+    }
+
+    /// <summary>Lo que cuelga la sombra por debajo del papel de <see cref="Papel"/>, en unidades del sprite.</summary>
+    public const float SombraDelPapel = 10f;
+
+    private static readonly Dictionary<(Color32, Color32, Color32, int), Sprite> s_papeles
+        = new Dictionary<(Color32, Color32, Color32, int), Sprite>();
+
+    /// <summary>
+    /// Hoja de papel troceada: esquinas redondas, borde de <paramref name="borde"/>, un filo de
+    /// <paramref name="filo"/> por dentro y una sombra dura que cuelga <see cref="SombraDelPapel"/>
+    /// por debajo (la imagen que la lleve baja su borde inferior esa medida para que el papel
+    /// ocupe justo su hueco). Con <c>pixelsPerUnitMultiplier</c> mayor que 1, esquinas, borde y
+    /// sombra se afinan en proporción. Se genera una vez por combinación de colores.
+    /// </summary>
+    public static Sprite Papel(Color relleno, Color borde, Color filo, float sombra = 0.55f)
+    {
+        var clave = ((Color32)relleno, (Color32)borde, (Color32)filo, Mathf.RoundToInt(sombra * 100f));
+        if (s_papeles.TryGetValue(clave, out var hecho) && hecho != null) return hecho;
+
+        const int ancho = 128, lado = 128, caida = (int)SombraDelPapel, alto = lado + caida, radio = 34;
+        const float grosor = 6f, anchoDelFilo = 4f;
+        var tex = new Texture2D(ancho, alto, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "Papel" };
+        var px = new Color32[ancho * alto];
+        Color colorDeSombra = new Color(borde.r * 0.45f, borde.g * 0.45f, borde.b * 0.45f, 1f);
+        float mitad = lado * 0.5f;
+        for (int y = 0; y < alto; y++)
+        for (int x = 0; x < ancho; x++)
+        {
+            float cx = x + 0.5f - mitad;
+            float d = DistanciaAlRedondeado(cx, y + 0.5f - (caida + mitad), mitad, radio);
+            float dSombra = DistanciaAlRedondeado(cx, y + 0.5f - mitad, mitad, radio);
+            float cubre = Mathf.Clamp01(0.5f - d);
+            float dentro = Mathf.Clamp01(0.5f - (d + grosor));
+            float pasadoElFilo = Mathf.Clamp01(0.5f - (d + grosor + anchoDelFilo));
+            Color hoja = Color.Lerp(borde, Color.Lerp(filo, relleno, pasadoElFilo), dentro);
+            float aSombra = Mathf.Clamp01(0.5f - dSombra) * sombra * (1f - cubre);
+            float alfa = cubre + aSombra;
+            Color c = alfa > 0f ? (hoja * cubre + colorDeSombra * aSombra) / alfa : hoja;
+            c.a = alfa;
+            px[y * ancho + x] = c;
+        }
+        tex.SetPixels32(px);
+        tex.Apply(false, true);
+        const float corte = 52f;
+        var sprite = Sprite.Create(tex, new Rect(0, 0, ancho, alto), new Vector2(0.5f, 0.5f), 100f,
+                                   0, SpriteMeshType.FullRect, new Vector4(corte, corte + caida, corte, corte));
+        sprite.name = "Papel";
+        s_papeles[clave] = sprite;
+        return sprite;
+    }
+
+    /// Distancia con signo al borde de un cuadrado de esquinas redondas centrado en el origen (negativa dentro).
+    private static float DistanciaAlRedondeado(float x, float y, float mitad, float radio)
+    {
+        float qx = Mathf.Abs(x) - (mitad - radio);
+        float qy = Mathf.Abs(y) - (mitad - radio);
+        float fuera = Mathf.Sqrt(Mathf.Max(qx, 0f) * Mathf.Max(qx, 0f) + Mathf.Max(qy, 0f) * Mathf.Max(qy, 0f));
+        return fuera + Mathf.Min(Mathf.Max(qx, qy), 0f) - radio;
     }
 
     /// <summary>Ancla en un punto del padre, con el pivote en el centro.</summary>

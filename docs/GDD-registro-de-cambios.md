@@ -1,5 +1,10 @@
 ## Registro de Cambios
 
+**11 de noviembre de 2026 — Claude (Cowork), por decisión de Raúl.**
+
+- Nuevo § 7.3 «Exploración: habilidades que abren el mundo»: sin escalada; salto y nado abren zonas y el vuelo llega al final; cuevas y templos para los puzles; lo que hay en MainWorld. Queda abierto cómo se obtienen salto y nado si hay zonas obligatorias que dependen de ellos.
+- § 5 (Chuchelandia): la prueba de escalada de la torre de caramelo se marca como «se cambia por otra, sin decidir».
+
 **31 de octubre de 2026 — Chuchelandia: orejitas para Will y corazón para Liam (INC-889).**
 
 A decisión de Raúl, como adaptación del juego, en el 5.15 Will lleva además unas orejitas de conejo con la armadura de gominola, y Liam un corazón en la cabeza en lugar del cuerno de unicornio. Cambian con ello las frases que lo nombran (ES/EN): «El corazoncito te favorece» / «He dicho que no digas nada, orejitas» (CHUCHELANDIA_CANDIDATA_07/08) y «Correr con un corazón en la cabeza no es digno» (CARRERA_LIAM_DIGNO_01). En la cinemática del ejército, las gominolas suben a Estela a pulso y se la llevan en volandas boca arriba, y ella grita «¡Noooooo! ¡Dejadmeeee!» (CHUCHELANDIA_CANDIDATA_09). La novela no cambia.

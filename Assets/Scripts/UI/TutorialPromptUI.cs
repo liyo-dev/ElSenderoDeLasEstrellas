@@ -407,16 +407,18 @@ public class TutorialPromptUI : MonoBehaviour
             _backgroundImage.sprite = _runtimeBackgroundSprite;
             _backgroundImage.type = Image.Type.Sliced;
             _backgroundImage.color = Color.white;
+            if (_label != null) _label.color = PaletaUI.TintaDeTexto;
         }
         else
         {
             _backgroundImage.sprite = null;
             _backgroundImage.type = Image.Type.Simple;
-            _backgroundImage.color = new Color(0.035f, 0.025f, 0.10f, 0.96f);
+            _backgroundImage.color = PaletaUI.Papel;
+            if (_label != null) _label.color = PaletaUI.TintaDeTexto;
 
             var outline = _backgroundImage.GetComponent<Outline>();
             if (outline == null) outline = _backgroundImage.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.55f, 0.40f, 1f, 0.85f);
+            outline.effectColor = PaletaUI.Tinta;
             outline.effectDistance = new Vector2(1.5f, -1.5f);
         }
 
@@ -532,7 +534,7 @@ public class TutorialPromptUI : MonoBehaviour
         _closeLabel = labelGo.AddComponent<TextMeshProUGUI>();
         _closeLabel.text = "X";
         _closeLabel.fontSize = _closeButtonSize * 0.6f;
-        _closeLabel.color = Color.white;
+        _closeLabel.color = PaletaUI.TintaDeTexto;
         _closeLabel.fontStyle = FontStyles.Bold;
         _closeLabel.alignment = TextAlignmentOptions.Center;
         _closeLabel.raycastTarget = false;

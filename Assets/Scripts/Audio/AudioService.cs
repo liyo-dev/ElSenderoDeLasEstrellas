@@ -1170,7 +1170,10 @@ public sealed class AudioService : MonoBehaviour
     }
 
     private readonly HashSet<AudioSource> _truenos = new();
-    float SourceMultiplier(AudioSource src)
+    float SourceMultiplier(AudioSource src) =>
+        MultiplicadorDeMezcla(src) * (_volumenAmortiguado.TryGetValue(src, out float f) ? f : 1f);
+
+    float MultiplicadorDeMezcla(AudioSource src)
     {
         if (_truenos.Contains(src)) return 1f;
         var group = src.outputAudioMixerGroup;
@@ -1204,6 +1207,7 @@ public sealed class AudioService : MonoBehaviour
             float objetivo = CalcularFactorDeCabecera();
             float k = objetivo < _factorCabecera ? 25f : 3f;
             _factorCabecera = Mathf.Lerp(_factorCabecera, objetivo, 1f - Mathf.Exp(-k * Time.unscaledDeltaTime));
+            ActualizarAmortiguaciones(Time.unscaledDeltaTime);
         }
         foreach (var entry in _sourceVolumes)
             if (entry.Key != null) entry.Key.volume = entry.Value * SourceMultiplier(entry.Key);
@@ -1413,6 +1417,7 @@ public sealed class AudioService : MonoBehaviour
             ? uiGroup : _ambienceSources.Contains(src) ? ambienceGroup : sfxGroup;
         src.loop = true;
         src.clip = clip;
+        if (_amortiguaciones.TryGetValue(loopId, out var amortiguacion)) AplicarAmortiguacion(loopId, amortiguacion);
         SetSourceVolume(src, volume);
         src.Play();
     }
@@ -1456,6 +1461,79 @@ public sealed class AudioService : MonoBehaviour
         if (string.IsNullOrWhiteSpace(loopId)) return;
         if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null) return;
         src.mute = muted;
+    }
+
+    // ── Loops oídos desde dentro ──
+    // Amortiguar no es silenciar: el loop sigue sonando, más bajo y sin agudos, como a través de
+    // una pared, y entra y sale con un fundido. Volumen y corte los pone quien lo pide (datos).
+    // Se guarda por loopId: si el loop arranca después, nace ya amortiguado. Ver INC-1070.
+    sealed class Amortiguacion
+    {
+        public float volumen = 1f, corte = CorteAbierto;
+        public float desdeVolumen = 1f, desdeCorte = CorteAbierto;
+        public float haciaVolumen = 1f, haciaCorte = CorteAbierto;
+        public float duracion, t = 1f;
+    }
+    const float CorteAbierto = 22000f;
+    readonly Dictionary<string, Amortiguacion> _amortiguaciones = new();
+    readonly Dictionary<AudioSource, float> _volumenAmortiguado = new();
+    readonly Dictionary<AudioSource, AudioLowPassFilter> _filtrosDeAmortiguacion = new();
+
+    /// <summary>
+    /// Baja el loop de loopId a 'fraccionDeVolumen' de su volumen y le quita los agudos por encima
+    /// de 'corteHz', en 'fundido' segundos (0 = en el acto). Vale aunque el loop aún no suene.
+    /// </summary>
+    public void AmortiguarLoopingSFX(string loopId, float fraccionDeVolumen, float corteHz, float fundido)
+    {
+        if (string.IsNullOrWhiteSpace(loopId)) return;
+        if (!_amortiguaciones.TryGetValue(loopId, out var a)) _amortiguaciones[loopId] = a = new Amortiguacion();
+        a.desdeVolumen = a.volumen;
+        a.desdeCorte = a.corte;
+        a.haciaVolumen = Mathf.Clamp01(fraccionDeVolumen);
+        a.haciaCorte = Mathf.Clamp(corteHz, 10f, CorteAbierto);
+        a.duracion = Mathf.Max(0f, fundido);
+        a.t = a.duracion > 0f ? 0f : 1f;
+        RecalcularAmortiguacion(a);
+        AplicarAmortiguacion(loopId, a);
+    }
+
+    /// <summary>Devuelve el loop de loopId a su volumen y sonido normales en 'fundido' segundos.</summary>
+    public void SoltarAmortiguacionLoopingSFX(string loopId, float fundido) =>
+        AmortiguarLoopingSFX(loopId, 1f, CorteAbierto, fundido);
+
+    void ActualizarAmortiguaciones(float dt)
+    {
+        foreach (var par in _amortiguaciones)
+        {
+            var a = par.Value;
+            if (a.t >= 1f) continue;
+            a.t = Mathf.Min(1f, a.t + dt / Mathf.Max(1e-4f, a.duracion));
+            RecalcularAmortiguacion(a);
+            AplicarAmortiguacion(par.Key, a);
+        }
+    }
+
+    static void RecalcularAmortiguacion(Amortiguacion a)
+    {
+        float s = Mathf.SmoothStep(0f, 1f, a.t);
+        a.volumen = Mathf.Lerp(a.desdeVolumen, a.haciaVolumen, s);
+        // El corte se funde en escala logarítmica, que es como lo oye el oído.
+        a.corte = Mathf.Exp(Mathf.Lerp(Mathf.Log(a.desdeCorte), Mathf.Log(a.haciaCorte), s));
+    }
+
+    void AplicarAmortiguacion(string loopId, Amortiguacion a)
+    {
+        if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null) return;
+        _volumenAmortiguado[src] = a.volumen;
+        bool abierto = a.corte >= CorteAbierto - 1f;
+        if (!_filtrosDeAmortiguacion.TryGetValue(src, out var filtro) || filtro == null)
+        {
+            if (abierto) return;
+            filtro = src.gameObject.AddComponent<AudioLowPassFilter>();
+            _filtrosDeAmortiguacion[src] = filtro;
+        }
+        filtro.cutoffFrequency = a.corte;
+        if (filtro.enabled == abierto) filtro.enabled = !abierto;
     }
 
     IEnumerator FadeOutAndStopLoop(string loopId, AudioSource src, float duration)

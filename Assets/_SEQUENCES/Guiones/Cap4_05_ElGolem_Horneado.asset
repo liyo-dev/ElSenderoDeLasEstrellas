@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap4_05_ElGolem_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_05_ElGolem
-  duracion: 16.913998
+  duracion: 16.269999
   presentacion: 1
-  huella: "2026-11-08 09:16 \xB7 d8cb646b425df7483df3a022b0bcb711"
+  huella: "2026-11-11 18:11 \xB7 0fd86a2692170e2c3baedd1e91a1b14d"
   actores:
   - id: Player
     alias: will
@@ -40,7 +40,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 13.548998
+    - t: 12.904999
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -66,7 +66,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 13.498998
+    - t: 12.854999
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -82,7 +82,7 @@ MonoBehaviour:
     - fundido: 0
       t: 0.08
       tipo: 2
-      estado: Talk03
+      estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
@@ -110,7 +110,7 @@ MonoBehaviour:
     - fundido: 0
       t: 7.9349995
       tipo: 2
-      estado: Talk02
+      estado: Question02
       congelar: 0
       alFinal: 0
       voz: 
@@ -129,7 +129,7 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 14.098998
+      t: 13.454999
       tipo: 2
       estado: HeadNod01
       congelar: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 13.448998
+    - t: 12.804999
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -211,12 +211,12 @@ MonoBehaviour:
     - fundido: 0
       t: 2.2199998
       tipo: 2
-      estado: Talk01
+      estado: Dudar01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 4.686667
+      t: 5.02
       tipo: 2
       estado: Talk02
       congelar: 0
@@ -229,6 +229,13 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+    - fundido: 0.4
+      t: 7.8549995
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.334999
       tipo: 2
@@ -237,42 +244,28 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 9.504999
+      t: 12.754999
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 12.754999
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 9.584999
+      t: 12.834999
       tipo: 2
-      estado: Talk03
+      estado: Fear01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 10.789999
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 13.398998
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 13.478998
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 15.463998
+      t: 14.819999
       tipo: 4
       estado: 
       congelar: 0
@@ -291,7 +284,7 @@ MonoBehaviour:
     - t: 9.504999
       emocion: molesto
       dura: 1.6349999
-    - t: 13.398998
+    - t: 12.754999
       emocion: miedo
       dura: 2.415
     visible: []
@@ -311,36 +304,22 @@ MonoBehaviour:
       actor: 
     cabezas: []
     animacion:
-    - fundido: 0
+    - fundido: 0.3
       t: 10.739999
-      tipo: 2
-      estado: CastingEnter01
+      tipo: 1
+      estado: Conjuro_Recogerse
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 11.383999
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 11.463999
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 13.448998
-      tipo: 4
-      estado: 
+    - fundido: 0.25
+      t: 12.754999
+      tipo: 1
+      estado: Conjuro_Invocar
       congelar: 0
       alFinal: 0
       voz: 
     caras:
-    - t: 11.383999
+    - t: 10.739999
       emocion: triste
       dura: 2.415
     visible: []
@@ -352,7 +331,7 @@ MonoBehaviour:
     t1: 1.6899999
     actor: Player
     clave: CAP4_GOLEM_05
-    gesto: Talk03
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -361,7 +340,7 @@ MonoBehaviour:
     t1: 7.4049997
     actor: _ESTELA
     clave: CAP4_GOLEM_01
-    gesto: Talk01
+    gesto: Dudar01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -370,7 +349,7 @@ MonoBehaviour:
     t1: 9.054999
     actor: Player
     clave: CAP4_GOLEM_02
-    gesto: Talk02
+    gesto: Question02
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -379,25 +358,25 @@ MonoBehaviour:
     t1: 10.739999
     actor: _ESTELA
     clave: CAP4_GOLEM_03
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 11.383999
-    t1: 13.398998
+    t0: 10.739999
+    t1: 12.754999
     actor: _LIAM
     clave: EVT_GOLEM_01
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 13.398998
-    t1: 15.413998
+    t0: 12.754999
+    t1: 14.769999
     actor: _ESTELA
     clave: CAP4_GOLEM_04
-    gesto: Talk02
+    gesto: Fear01
     sinPose: 0
     presentacion: -1
   planos:
@@ -426,12 +405,12 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 10.739999
-    t1: 13.398998
+    t1: 12.754999
     tipo: 2
     descripcion: medio de liam
     posiciones:
     - t: 10.739999
-      p: {x: -106.26864, y: 37.020416, z: 84.86189}
+      p: {x: -106.690346, y: 39.074226, z: 83.93492}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -446,12 +425,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 13.398998
-    t1: 16.913998
+    t0: 12.754999
+    t1: 16.269999
     tipo: 0
     descripcion: general de will y estela
     posiciones:
-    - t: 13.398998
+    - t: 12.754999
       p: {x: -110.111404, y: 35.38852, z: 76.08642}
     lente: 42
     lenteFinal: 0
@@ -474,32 +453,32 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294472562115422
+      rid: 6540294550018326878
     linea: 26
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.739999
     beat:
-      rid: 6540294472562115423
-    linea: 36
+      rid: 6540294550018326879
+    linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.398998
+    t: 12.754999
     beat:
-      rid: 6540294472562115424
-    linea: 39
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 13.398998
-    beat:
-      rid: 6540294472562115425
+      rid: 6540294550018326880
     linea: 40
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.413998
+    t: 12.754999
     beat:
-      rid: 6540294472562115426
-    linea: 43
+      rid: 6540294550018326881
+    linea: 41
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 15.769999
+    beat:
+      rid: 6540294550018326882
+    linea: 47
   etiquetas:
   - nombre: inicio
     t: 0
@@ -520,7 +499,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294472562115422
+    - rid: 6540294550018326878
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -528,7 +507,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294472562115423
+    - rid: 6540294550018326879
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -541,14 +520,14 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294472562115424
+    - rid: 6540294550018326880
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 1
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294472562115425
+    - rid: 6540294550018326881
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -561,7 +540,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294472562115426
+    - rid: 6540294550018326882
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

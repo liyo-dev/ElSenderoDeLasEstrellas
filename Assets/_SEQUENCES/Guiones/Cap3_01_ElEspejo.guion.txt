@@ -49,8 +49,10 @@ liam dice CAP3_ESPEJO_04 cara=preocupado sin_pose
 @pesca
 plano medio liam desde=cam_sienta altura=1.25 lente=40
 liam dice CAP3_ESPEJO_05 cara=decidido sin_pose
+& liam bucle ManoAlPecho fundido=0.5
 cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=3.4 dura=0.8
 tobi dice CAP3_ESPEJO_06 cara=alegre sin_pose
+& liam reposo brazos
 liam dice CAP3_ESPEJO_07 cara=alegre sin_pose
 espera 1.2
 
@@ -62,6 +64,7 @@ liam dice CAP3_ESPEJO_10 cara=decidido sin_pose
 espera 0.8
 plano primer liam desde=cam_cara altura=1.25 lente=40
 liam cabeza manos
+& liam bucle Cabizbajo fundido=0.8
 liam dice CAP3_ESPEJO_11 cara=triste sin_pose
 espera 1.2
 fundido cubre 1.5

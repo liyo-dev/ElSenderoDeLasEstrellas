@@ -255,8 +255,45 @@ internal sealed partial class Horno
         if (e.tipo != TipoDePlano.Sigue && (!o.opciones.ContainsKey("desde") || e.reubicado))
             NotasDePlano[plano.t0] = $"coste {e.coste:0}: {e.desglose}";
         if (e.coste >= 1000f) Aviso($"{o}: no hay ángulo limpio para «{plano.descripcion}» (algo tapa la cara). Prueba con desde= o lado=.");
+        if (e.tipo != TipoDePlano.Sigue && e.tipo != TipoDePlano.General && o.Op("lado") != "espalda") AvisarDeQuienHabla(e);
         _anterior = e;
         return plano;
+    }
+
+    /// Instantes del plano en que a «s» se le tiene que ver la cara: el de referencia y la mitad de
+    /// cada frase que dice dentro del plano (quien habla puede girarse a media toma).
+    private static IEnumerable<float> MomentosDeCara(Encuadre e, ActorH s)
+    {
+        yield return e.tRef;
+        foreach (var h in s.habla)
+        {
+            float a = Mathf.Max(h.t0, e.t0), b = Mathf.Min(h.t1, e.t1);
+            if (b - a > 0.4f) yield return (a + b) * 0.5f;
+        }
+    }
+
+    /// Grados entre hacia donde mira «s» en t y la dirección a la cámara: 0 de frente, 180 de espaldas.
+    private float AnguloDeCara(ActorH s, Vector3 c, float t)
+        => Mathf.Abs(Mathf.DeltaAngle(s.RumboEn(t, _actores), Rumbo(c - s.PosEn(t))));
+
+    /// Avisa de las frases que se dicen de espaldas a la cámara o con otro personaje delante de la
+    /// cara: el encuadre puede ser bueno al empezar el plano y dejar de serlo cuando el que habla
+    /// se gira o alguien se cruza.
+    private void AvisarDeQuienHabla(Encuadre e)
+    {
+        var sujetos = e.tipo == TipoDePlano.Hombro ? e.sujetos.Skip(1) : e.sujetos;
+        foreach (var s in sujetos)
+            foreach (var h in s.habla)
+            {
+                float a = Mathf.Max(h.t0, e.t0), b = Mathf.Min(h.t1, e.t1);
+                if (b - a <= 0.4f) continue;
+                float t = (a + b) * 0.5f;
+                float angulo = AnguloDeCara(s, e.camara, t);
+                if (angulo > 110f) Aviso($"{e.o}: {s.alias} habla de espaldas a la cámara en {t:0.0} s ({angulo:0}°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.");
+                Vector3 ojos = s.PosEn(t) + Vector3.up * s.AlturaDeOjos;
+                var tapa = _actores.Values.FirstOrDefault(x => x != s && x.VisibleEn(t) && Tapa(e.camara, ojos, x.PosEn(t), x.altura, x.Radio));
+                if (tapa != null) Aviso($"{e.o}: {tapa.alias} tapa la cara de {s.alias} mientras habla en {t:0.0} s.");
+            }
     }
 
     private static float LentePorDefecto(TipoDePlano t) => t switch
@@ -558,11 +595,8 @@ internal sealed partial class Horno
         // Caras: se tiene que ver la cara del que importa.
         float peor = 0f;
         foreach (var s in sujetosVistos)
-        {
-            float rumbo = s.RumboEn(e.tRef, _actores);
-            float angulo = Mathf.Abs(Mathf.DeltaAngle(rumbo, Rumbo(c - s.PosEn(e.tRef))));
-            peor = Mathf.Max(peor, angulo);
-        }
+            foreach (float t in MomentosDeCara(e, s))
+                peor = Mathf.Max(peor, AnguloDeCara(s, c, t));
         if (e.tipo == TipoDePlano.General) _d.cara = Mathf.Max(0f, peor - 80f) * 1.5f;
         else if (e.tipo == TipoDePlano.Conjunto) _d.cara = Mathf.Max(0f, peor - 65f) * 3f;
         else if (e.o.Op("lado") != "espalda")

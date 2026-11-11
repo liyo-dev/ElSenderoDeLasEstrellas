@@ -57,6 +57,8 @@ will en p_will mirando p_heraldo
 & will cara cansado
 & liam cara molesto
 & estela cara enfado
+& liam bucle BrazosCruzados
+& estela bucle BrazosEnJarras
 espera 0.6
 heraldo dice CHUCHELANDIA_CANDIDATA_01 sin_pose
 heraldo dice CHUCHELANDIA_CANDIDATA_02 sin_pose
@@ -91,7 +93,10 @@ plano general estela will liam lado=frente altura=3.0 lente=36 quieta
 & estela cara sorpresa
 & will cara sorpresa
 & liam cara sorpresa
+& estela reposo
 plano conjunto estela g1 g2
+# Plano de quien habla: en el plano de grupo decía la frase de espaldas a la cámara.
+plano medio g1 solo
 g1 dice CHUCHELANDIA_CANDIDATA_04 sin_pose
 & g2 gesto Jump
 & g3 gesto Jump

@@ -43,5 +43,7 @@ eldran anda a p_llega llega_mirando=will ritmo=prisa
 # Los dos, para la charla.
 @charla
 plano dos eldran will lente=34 quieta
+# Llega con prisa para su edad: las manos a la cintura mientras recupera el aliento.
+& eldran bucle BrazosEnJarras fundido=0.4
 efecto DialogueBeat dialogue=DG_ELDRAN_SIGUEME actorId=eldran conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=-,HeadNod01 dura=0.3
 espera 0.4

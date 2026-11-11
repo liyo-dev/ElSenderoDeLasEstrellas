@@ -23,7 +23,10 @@ public sealed class EstiloDeMenuSencillo : ScriptableObject
     public TMP_FontAsset fuenteTitulo;
     [Tooltip("Fuente del texto.")]
     public TMP_FontAsset fuenteTexto;
-    public Color colorTexto = new Color(0.96f, 0.95f, 1f, 1f);
-    public Color colorTextoSuave = new Color(0.78f, 0.76f, 0.9f, 1f);
-    public Color colorResalte = new Color(1f, 0.83f, 0.35f, 1f);
+    [Tooltip("Texto escrito sobre el papel de los paneles y las tarjetas.")]
+    public Color colorTexto = new Color(0.14f, 0.12f, 0.10f, 1f);
+    [Tooltip("Texto secundario sobre papel.")]
+    public Color colorTextoSuave = new Color(0.38f, 0.30f, 0.23f, 1f);
+    [Tooltip("Texto destacado sobre papel.")]
+    public Color colorResalte = new Color(0.54f, 0.35f, 0f, 1f);
 }

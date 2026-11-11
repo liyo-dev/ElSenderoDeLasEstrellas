@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_03_ElCarro
   duracion: 25.524998
   presentacion: 0
-  huella: "2026-11-11 00:47 \xB7 9edc6905a0052c45646d5fe6a7754ee2"
+  huella: "2026-11-11 18:11 \xB7 63b4cb9398cb2d06ebfaed1ee6084100"
   actores:
   - id: Player
     alias: will
@@ -40,8 +40,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Contrabandista1
-    cabezas: []
+    cabezas:
+    - t: 1
+      tipo: 1
+      rumbo: 0
+      punto: {x: -86, y: 20.65895, z: -204.6}
+      actor: 
+    - t: 10.039999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista1
     animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 1
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.6
       tipo: 3
@@ -52,12 +76,12 @@ MonoBehaviour:
     - fundido: 0
       t: 1.6800001
       tipo: 2
-      estado: Talk02
+      estado: Decidido01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 4.246667
+      t: 3.18
       tipo: 2
       estado: Talk03
       congelar: 0
@@ -80,12 +104,12 @@ MonoBehaviour:
     - fundido: 0
       t: 11.319999
       tipo: 2
-      estado: Talk02
+      estado: Dudar01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 13.886665
+      t: 14.119999
       tipo: 2
       estado: Talk03
       congelar: 0
@@ -108,14 +132,21 @@ MonoBehaviour:
     - fundido: 0
       t: 18.494999
       tipo: 2
-      estado: Talk03
+      estado: Decidido01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 21.661667
+      t: 19.994999
       tipo: 2
       estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 22.511665
+      tipo: 2
+      estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
@@ -424,7 +455,7 @@ MonoBehaviour:
     t1: 6.5399995
     actor: Player
     clave: CAP3_CARRO_01
-    gesto: Talk02
+    gesto: Decidido01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -433,7 +464,7 @@ MonoBehaviour:
     t1: 17.414999
     actor: Player
     clave: CAP3_CARRO_02
-    gesto: Talk02
+    gesto: Dudar01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -442,7 +473,7 @@ MonoBehaviour:
     t1: 24.524998
     actor: Player
     clave: CAP3_CARRO_03
-    gesto: Talk03
+    gesto: Decidido01
     sinPose: 0
     presentacion: -1
   planos:

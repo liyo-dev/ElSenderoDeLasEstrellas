@@ -245,8 +245,21 @@ public static class OrdenesDelEditor
                 bool storyboard = resto.EndsWith(" storyboard");
                 string ruta = storyboard ? resto.Substring(0, resto.Length - " storyboard".Length).Trim() : resto;
                 if (string.IsNullOrEmpty(ruta)) ruta = HorneadorDeGuion.RutaPrologo;
+                // El horneado abre en aditivo la escena del guion. Desde el buzón no hay nadie mirándola:
+                // se cierra al acabar (sin guardar), para que no se quede abierta y otro menú la rehornee o la guarde.
+                var abiertasAntes = new System.Collections.Generic.HashSet<string>();
+                for (int k = 0; k < UnityEngine.SceneManagement.SceneManager.sceneCount; k++)
+                    abiertasAntes.Add(UnityEngine.SceneManagement.SceneManager.GetSceneAt(k).path);
                 HorneadorDeGuion.Hornear(ruta, storyboard);
-                return HorneadorDeGuion.UltimoResumen ?? "horneado";
+                string cerradas = "";
+                for (int k = UnityEngine.SceneManagement.SceneManager.sceneCount - 1; k >= 0; k--)
+                {
+                    var esc = UnityEngine.SceneManagement.SceneManager.GetSceneAt(k);
+                    if (abiertasAntes.Contains(esc.path) || UnityEngine.SceneManagement.SceneManager.sceneCount < 2) continue;
+                    cerradas += " " + esc.name;
+                    UnityEditor.SceneManagement.EditorSceneManager.CloseScene(esc, true);
+                }
+                return (HorneadorDeGuion.UltimoResumen ?? "horneado") + (cerradas.Length > 0 ? " · cerrada al acabar:" + cerradas : "");
             }
             case "menu":
                 return EditorApplication.ExecuteMenuItem(resto) ? "menú ejecutado" : "no existe ese menú";

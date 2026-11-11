@@ -1,6 +1,6 @@
 # Parte de horneado: Cap2_02_MananaDespues
 
-2026-11-08 13:47 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
+2026-11-11 16:51 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
 
 **2:55,8** de secuencia · 33 frases · 32 planos · 18 efectos · 5 personajes
 
@@ -15,34 +15,41 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 ## Errores (0)
 
 
-## Avisos (26)
+## Avisos (33)
 
 - línea 10: 'Player' no tiene punto de aparición en WillHouse; necesita un «en» al principio.
 - línea 11: 'NPC_Eldran' no tiene punto de aparición en WillHouse; necesita un «en» al principio.
 - línea 11: 'NPC_Eldran' no está en el escenario de la secuencia ni hay en WillHouse un NPC que se registre con ese id: en juego no saldrá (salvo que lo traiga otra escena o el grafo). Ponlo en el SequenceStage con ese id.
-- línea 126: eldran anda a dejar_bollo ritmo=1.4 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,3, 4,0); voy en línea recta
-- línea 134: eldran deja PROP_Bollo en apoyo_bollo: la mano se queda a 0,41 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
-- línea 135: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (116,9, 3,3); voy en línea recta
-- línea 135: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (116,9, 2,3); voy en línea recta
-- línea 135: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
-- línea 135: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
-- línea 157: will anda a cama_paso ritmo=normal: un punto queda fuera del NavMesh (116,1, 1,2); voy en línea recta
-- línea 158: will sienta cama_borde: un punto queda fuera del NavMesh (116,4, 0,7); voy en línea recta
-- línea 164: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (115,0, 2,3); voy en línea recta
-- línea 164: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (115,9, 1,5); voy en línea recta
-- línea 164: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (116,4, 1,1); voy en línea recta
-- línea 257: eldran anda a dejar_aro ritmo=1.4 llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,3, 3,1); voy en línea recta
-- línea 258: eldran deja PROP_Aro en apoyo_aro: la mano se queda a 0,41 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
-- línea 261: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
-- línea 261: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
-- línea 267: will anda a cama_paso, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (116,1, 1,2); voy en línea recta
-- línea 267: will anda a cama_paso, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,7, 2,6); voy en línea recta
-- línea 292: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
-- línea 292: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,9, 2,3); voy en línea recta
-- línea 292: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,9, 3,3); voy en línea recta
-- línea 292: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,4, 5,0); voy en línea recta
-- línea 292: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,4, 5,6); voy en línea recta
-- línea 266: plano conjunto will eldran desde=cam_mesa_dos altura=1.20 altura_foco=0.85 lente=44 suave=0: algo del decorado se mete delante y tapa un 48% del cuadro. Prueba lado= o desde=.
+- línea 129: eldran anda a dejar_bollo ritmo=1.4 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,3, 4,0); voy en línea recta
+- línea 137: eldran deja PROP_Bollo en apoyo_bollo: la mano se queda a 0,41 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
+- línea 138: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (116,9, 3,3); voy en línea recta
+- línea 138: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (116,9, 2,3); voy en línea recta
+- línea 138: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
+- línea 138: eldran sienta silla por=rodeo_norte, rodeo_sur, paso_silla ritmo=1.4: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
+- línea 162: will anda a cama_paso ritmo=normal: un punto queda fuera del NavMesh (116,1, 1,2); voy en línea recta
+- línea 163: will sienta cama_borde: un punto queda fuera del NavMesh (116,4, 0,7); voy en línea recta
+- línea 169: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (115,0, 2,3); voy en línea recta
+- línea 169: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (115,9, 1,5); voy en línea recta
+- línea 169: & eldran sienta cama_eldran por=eldran_a_cama, cama_eldran_paso ritmo=1.3: un punto queda fuera del NavMesh (116,4, 1,1); voy en línea recta
+- línea 224: & selene anda a p_exp_selene_paso, p_exp_selene_umbral ritmo=paseo llega_mirando=p_exp_umbral: un punto queda fuera del NavMesh (300,0, 6,5); voy en línea recta
+- línea 224: & selene anda a p_exp_selene_paso, p_exp_selene_umbral ritmo=paseo llega_mirando=p_exp_umbral: un punto queda fuera del NavMesh (300,0, 9,5); voy en línea recta
+- línea 225: & eldran_joven anda a p_exp_eldran_paso ritmo=paseo llega_mirando=p_exp_selene_umbral: un punto queda fuera del NavMesh (298,7, 4,5); voy en línea recta
+- línea 226: & silas_joven anda a p_exp_silas_paso ritmo=paseo llega_mirando=p_exp_selene_umbral: un punto queda fuera del NavMesh (301,3, 4,2); voy en línea recta
+- línea 236: & eldran_joven corre a p_exp_eldran_alcance llega_mirando=p_exp_selene_vacio: un punto queda fuera del NavMesh (298,7, 7,5); voy en línea recta
+- línea 237: & selene anda a p_exp_selene_vacio ritmo=paseo: un punto queda fuera del NavMesh (300,0, 12,0); voy en línea recta
+- línea 244: & silas_joven anda a p_exp_silas_freno ritmo=prisa llega_mirando=p_exp_eldran_alcance: un punto queda fuera del NavMesh (300,4, 7,2); voy en línea recta
+- línea 266: eldran anda a dejar_aro ritmo=1.4 llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,3, 3,1); voy en línea recta
+- línea 267: eldran deja PROP_Aro en apoyo_aro: la mano se queda a 0,41 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
+- línea 270: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
+- línea 270: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
+- línea 276: will anda a cama_paso, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (116,1, 1,2); voy en línea recta
+- línea 276: will anda a cama_paso, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,7, 2,6); voy en línea recta
+- línea 304: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (115,3, 1,5); voy en línea recta
+- línea 304: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,9, 2,3); voy en línea recta
+- línea 304: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,9, 3,3); voy en línea recta
+- línea 304: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,4, 5,0); voy en línea recta
+- línea 304: eldran anda a paso_silla, rodeo_sur, rodeo_norte, puerta, fuera ritmo=1.4: un punto queda fuera del NavMesh (116,4, 5,6); voy en línea recta
+- línea 275: plano conjunto will eldran desde=cam_mesa_dos altura=1.20 altura_foco=0.85 lente=44 suave=0: algo del decorado se mete delante y tapa un 48% del cuadro. Prueba lado= o desde=.
 
 ## Silencios largos entre frases (4)
 
@@ -58,7 +65,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 | 0:00,0 | **@vela** |  |
 | 0:00,0 | plano 1 | medio de will · 5,3 s · lente 44° |
 | 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
-| 0:00,8 | will | «Una llama pequeña. Solo la mecha…» (3,2 s) · pose |
+| 0:00,8 | will | «Una llama pequeña. Solo la mecha…» (3,2 s) |
 | 0:04,0 | efecto | Entrada HoldRelease → velaControlada |
 | 0:04,3 | efecto | VFX: VFX_VelaPequena en vela |
 | 0:04,3 | efecto | SFX: Player_Damage |
@@ -133,7 +140,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 | 2:20,7 | plano 27 | primer plano de eldran · 6,7 s · lente 34° |
 | 2:20,7 | eldran | «Dicen que es muy poderosa y, según la mitad de las historias, imposible de soportar.» (6,7 s) |
 | 2:27,4 | plano 28 | primer plano de will · 2,5 s · lente 34° |
-| 2:27,4 | will | «¿Y según la otra mitad?» (2,5 s) · pose |
+| 2:27,4 | will | «¿Y según la otra mitad?» (2,5 s) |
 | 2:29,9 | plano 29 | dos: will y eldran · 7,9 s · lente 44° |
 | 2:29,9 | eldran | «También. Pero si alguien puede enseñarte a no incendiarte cada vez que estornudas, es ella.» (7,9 s) |
 | 2:37,7 | plano 30 | primer plano de will · 2,5 s · lente 34° |
@@ -149,8 +156,9 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 
 ### will (Player)
 
+- 0:00,8 bucle Conjuro_Recogerse
 - 0:00,8–0:04,0 habla
-- 0:00,9 gesto Talk01
+- 0:05,3 reposo 
 - 0:06,0 gesto HeadNod01
 - 0:12,7 gesto HeadShake01
 - 0:15,8–0:19,0 habla
@@ -182,9 +190,10 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 2:08,6 gesto HeadShake01
 - 2:16,6 gesto HeadNod01
 - 2:21,4 gesto HeadShake01
+- 2:22,2 bucle BrazosCruzados
 - 2:27,4–2:29,9 habla
-- 2:27,4 gesto Talk02
 - 2:30,6 gesto HeadShake02
+- 2:37,7 reposo 
 - 2:37,7–2:40,2 habla
 - 2:37,8 gesto Talk03
 - 2:38,0 gesto HeadNod01
@@ -203,8 +212,11 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 0:07,2–0:11,3 anda de (115,3, 4,0) a (114,5, 2,3)
 - 0:11,3 gesto SitMedium_Begin
 - 0:11,9 bucle SitMedium_Loop
+- 0:12,0 pose de brazos ManoAlPecho
 - 0:12,0–0:15,8 habla
 - 0:12,1 gesto HeadNod01
+- 0:13,1 pose de brazos ManoAlPecho
+- 0:15,8 suelta la pose de brazos
 - 0:19,0–0:21,8 habla
 - 0:19,1 gesto HeadNod01
 - 0:27,6–0:31,3 habla
@@ -227,13 +239,18 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 1:07,8–1:13,6 habla
 - 1:07,9 gesto HeadShake01
 - 1:10,2 gesto Talk01
+- 1:14,4 pose de brazos ManoAlPecho
 - 1:14,4–1:17,2 habla
 - 1:14,5 gesto HeadNod01
+- 1:15,5 pose de brazos ManoAlPecho
+- 1:17,5 suelta la pose de brazos
 - 1:20,7–1:25,6 habla
 - 1:30,0–1:37,0 habla
 - 1:37,8–1:41,0 habla
+- 1:46,6 pose de brazos Cabizbajo
 - 1:46,6–1:49,4 habla
 - 1:46,7 gesto HeadNod01
+- 1:47,7 pose de brazos Cabizbajo
 - 1:49,4 gesto SitMedium_Exit
 - 1:50,3 reposo 
 - 1:50,4–1:52,2 anda de (116,3, 1,2) a (115,3, 3,1)
@@ -274,6 +291,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 1:37,9–1:39,2 anda de (298,7, 4,7) a (298,7, 7,5)
 - 1:38,7 gesto DefendHit_NoWeapon
 - 1:41,0 gesto Beg01
+- 1:42,2 bucle Cabizbajo
 - 1:43,8 desaparece
 
 ### silas_joven (Actor_SilasJoven)

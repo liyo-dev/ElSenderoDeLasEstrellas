@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BatallaFinal_Intro_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: BatallaFinal_Intro
-  duracion: 169.11638
+  duracion: 169.05504
   presentacion: 1
-  huella: "2026-10-31 20:29 \xB7 5ecbf8b2b0fb970ddcf1868a79657af2"
+  huella: "2026-11-11 18:11 \xB7 a543b13fd505872383af259eb1c1dcbf"
   actores:
   - id: Player
     alias: will
@@ -70,21 +70,21 @@ MonoBehaviour:
       p: {x: 0, y: 0, z: -5.147727}
     - t: 5.9560037
       p: {x: 0, y: 0, z: -5}
-    - t: 65.53388
+    - t: 65.47254
       p: {x: 0, y: 0, z: -5}
-    - t: 65.53488
+    - t: 65.47354
       p: {x: 78.85, y: 0, z: 0}
-    - t: 126.49837
+    - t: 126.43703
       p: {x: 78.85, y: 0, z: 0}
-    - t: 126.70397
+    - t: 126.64263
       p: {x: 78.9875, y: 0, z: 0}
-    - t: 127.02749
+    - t: 126.96615
       p: {x: 79.2625, y: 0, z: 0}
-    - t: 127.23309
+    - t: 127.17175
       p: {x: 79.4, y: 0, z: 0}
-    - t: 129.0831
+    - t: 129.02176
       p: {x: 79.4, y: 0, z: 0}
-    - t: 129.0841
+    - t: 129.02277
       p: {x: 0, y: 0, z: -5}
     miradas:
     - t: 0
@@ -112,82 +112,82 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 38.116615
+    - t: 37.901947
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 40.41539
+    - t: 40.20072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 47.017635
+    - t: 46.802967
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 65.53388
+    - t: 65.47254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 69.08572
+    - t: 69.024376
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 74.963264
+    - t: 74.901924
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 92.38693
+    - t: 92.32559
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 104.84734
+    - t: 104.786
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 113.14306
+    - t: 113.08172
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 127.23309
+    - t: 127.17175
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 129.0831
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 144.45128
+    - t: 144.38994
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 150.01535
+    - t: 149.95401
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.58209
+    - t: 152.52075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 157.27739
+    - t: 157.21605
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.43924
+    - t: 164.3779
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -213,102 +213,112 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 38.066616
+    - t: 37.851948
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 40.36539
+    - t: 40.150723
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 46.967636
+    - t: 46.752968
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 66.03388
+    - t: 65.97254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 69.03571
+    - t: 68.97437
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 71.20612
+    - t: 71.14478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 74.91326
+    - t: 74.85192
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 89.1
+    - t: 89.03866
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 92.33693
+    - t: 92.27559
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 101.95224
+    - t: 101.8909
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 104.79734
+    - t: 104.736
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 110.88612
+    - t: 110.82478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 113.093056
+    - t: 113.031715
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Archimago
-    - t: 129.0831
+    - t: 129.02176
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 144.40128
+    - t: 144.33994
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 148.08679
+    - t: 148.02545
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 149.96535
+    - t: 149.904
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.6321
+    - t: 152.52075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 157.22739
+    - t: 152.57076
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.48924
+    - t: 157.16605
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Estela
+    - t: 164.3779
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    - t: 164.4279
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -320,270 +330,336 @@ MonoBehaviour:
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.25517
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.030273
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.110273
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 28.57694
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 30.468843
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.118845
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.666615
+      t: 38.451946
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 47.567635
+      t: 47.352966
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 57.159878
+      t: 56.94521
       tipo: 2
       estado: IdleWounded01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 65.53388
+      t: 65.47254
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 65.98388
+      t: 65.92254
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 66.06388
+      t: 66.00254
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 68.98572
+      t: 68.92438
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 69.63571
+      t: 69.57437
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 71.15612
+      t: 71.09478
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 71.23612
+      t: 71.17478
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 72.90279
+      t: 72.841446
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 74.863266
+      t: 74.801926
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 75.51326
+      t: 75.45192
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 89.049995
+      t: 88.988655
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 89.13
+      t: 89.06866
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 92.286934
+      t: 92.22559
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 92.93693
+      t: 92.87559
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.6
+      t: 101.8409
+      tipo: 1
+      estado: Cabizbajo
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 101.90224
+      t: 101.8409
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 101.98224
+      t: 101.9209
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 103.2409
+      tipo: 1
+      estado: Cabizbajo
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 104.747345
+      t: 104.686005
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 105.39734
-      tipo: 2
-      estado: HeadNod01
+      voz: 
+    - fundido: 0.4
+      t: 110.77478
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 113.693054
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 129.0831
+      t: 129.02176
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 142.23462
-      tipo: 2
-      estado: GetUp_NoWeapon
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 142.23462
+      t: 129.02176
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 145.00128
+      t: 142.17328
+      tipo: 2
+      estado: GetUp_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 142.17328
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 142.93994
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 144.93994
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.03679
+      t: 147.97545
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.11679
+      t: 148.05545
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 149.91536
+      t: 149.85402
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 150.56535
+      t: 150.50401
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 152.58209
+      t: 152.52075
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 152.6621
+      t: 152.60075
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 155.22876
+      t: 155.16742
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.1774
+      t: 157.11606
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.8274
+      t: 157.76605
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 164.43924
+      t: 164.3779
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 164.51924
+      t: 164.4579
       tipo: 2
       estado: Cheer01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 166.86638
+      t: 166.80504
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 14.5703535
       emocion: sorpresa
@@ -594,37 +670,37 @@ MonoBehaviour:
     - t: 31.018845
       emocion: sorpresa
       dura: 2
-    - t: 47.467632
+    - t: 47.252964
       emocion: sorpresa
       dura: 2
-    - t: 57.159878
+    - t: 56.94521
       emocion: sorpresa
       dura: 0
-    - t: 65.53388
+    - t: 65.47254
       emocion: sorpresa
       dura: 0
-    - t: 71.15612
+    - t: 71.09478
       emocion: triste
       dura: 0
-    - t: 89.049995
+    - t: 88.988655
       emocion: sorpresa
       dura: 0
-    - t: 101.90224
+    - t: 101.8409
       emocion: triste
       dura: 0
-    - t: 110.83612
+    - t: 110.77478
       emocion: decidido
       dura: 0
-    - t: 148.03679
+    - t: 147.97545
       emocion: decidido
       dura: 0
-    - t: 150.46536
+    - t: 150.40402
       emocion: sorpresa
       dura: 2
-    - t: 152.58209
+    - t: 152.52075
       emocion: decidido
       dura: 0
-    - t: 164.43924
+    - t: 164.3779
       emocion: decidido
       dura: 0
     visible: []
@@ -636,7 +712,7 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: 0, y: 0, z: 6.2}
-    - t: 129.0841
+    - t: 129.02277
       p: {x: 0, y: 0, z: 6.2}
     miradas:
     - t: 0
@@ -659,47 +735,47 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.236614
+    - t: 38.021946
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 129.0831
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 134.06577
+    - t: 134.00443
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 137.1976
+    - t: 137.13626
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 148.18678
+    - t: 148.12544
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 150.13536
+    - t: 150.07402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.73209
+    - t: 152.67075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.3974
+    - t: 157.33606
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.58923
+    - t: 164.5279
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -725,52 +801,52 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.186615
+    - t: 37.971947
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 40.315388
+    - t: 40.10072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 134.01576
+    - t: 133.95442
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 137.1476
+    - t: 137.08626
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 144.35129
+    - t: 144.28995
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 148.13678
+    - t: 148.07544
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 150.08536
+    - t: 150.02402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.68208
+    - t: 152.62074
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.3474
+    - t: 157.28606
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.53923
+    - t: 164.47789
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -782,198 +858,140 @@ MonoBehaviour:
       estado: Question01
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.5
       t: 15.55517
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 15.63517
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 18.101837
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 20.718504
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 23.935171
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 26.080273
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 26.730274
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 30.418844
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 30.498844
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 33.168846
+      tipo: 1
+      estado: ManosALaEspalda
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 34.493946
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 34.543945
-      tipo: 4
-      estado: 
+      voz: laugh
+    - fundido: 0.3
+      t: 36.653946
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.666615
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 40.26539
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 40.34539
+      t: 40.130722
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 42.912056
-      tipo: 2
-      estado: Talk01
+      voz: 
+    - fundido: 0.3
+      t: 42.260723
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 46.76763
-      tipo: 4
+      t: 46.652966
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 46.867634
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 46.947636
+      t: 46.732967
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 50.0143
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 52.630966
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 55.847633
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 57.209877
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 62.957214
+      t: 62.742546
       tipo: 2
       estado: Fear01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 134.49576
+      t: 134.43442
       tipo: 2
-      estado: Question01
+      estado: Question02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 137.7476
+      t: 137.68626
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 144.30128
+      t: 144.23994
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 144.38129
+      t: 144.31995
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.08679
+      t: 148.02545
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.73679
+      t: 148.67545
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 150.56535
+      t: 150.50401
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.8274
+      t: 157.76605
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 165.13924
+      t: 165.0779
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 14.5703535
       emocion: sorpresa
@@ -984,24 +1002,24 @@ MonoBehaviour:
     - t: 30.418844
       emocion: picaro
       dura: 0
-    - t: 40.26539
+    - t: 40.05072
       emocion: enfado
       dura: 0
-    - t: 62.957214
+    - t: 62.742546
       emocion: miedo
       dura: 0
-    - t: 134.39577
+    - t: 134.33443
       emocion: sorpresa
       dura: 2
-    - t: 144.30128
+    - t: 144.23994
       emocion: sorpresa
       dura: 0
-    - t: 150.46536
+    - t: 150.40402
       emocion: sorpresa
       dura: 2
     visible:
     - desde: 12.866751
-      hasta: 229.11638
+      hasta: 229.05504
     deslizando: []
   - id: NPC_Estela
     alias: estela
@@ -1058,17 +1076,17 @@ MonoBehaviour:
       p: {x: 1.5042553, y: 0, z: -5.693617}
     - t: 6.3046746
       p: {x: 1.5, y: 0, z: -5.4}
-    - t: 129.0831
+    - t: 129.02176
       p: {x: 1.5, y: 0, z: -5.4}
-    - t: 129.0841
+    - t: 129.02277
       p: {x: 0.5, y: 0, z: -4.55}
-    - t: 141.47272
+    - t: 141.41138
       p: {x: 0.5, y: 0, z: -4.55}
-    - t: 141.74431
+    - t: 141.68297
       p: {x: 0.8333334, y: 0, z: -4.8333335}
-    - t: 141.96303
+    - t: 141.90169
       p: {x: 1.1666667, y: 0, z: -5.116667}
-    - t: 142.23462
+    - t: 142.17328
       p: {x: 1.5, y: 0, z: -5.4}
     miradas:
     - t: 0
@@ -1096,67 +1114,67 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 38.356613
+    - t: 38.141945
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 40.53539
+    - t: 40.32072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 47.137634
+    - t: 46.922966
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 129.0831
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 137.31761
+    - t: 137.25627
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 142.23462
+    - t: 142.17328
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 144.57129
+    - t: 144.50995
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 148.3068
+    - t: 148.24545
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 149.86536
+    - t: 149.80402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 152.8521
+    - t: 152.79076
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.1274
+    - t: 157.06606
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 164.43924
+    - t: 164.3779
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 164.70924
+    - t: 164.6479
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1182,57 +1200,77 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 38.306614
+    - t: 38.091946
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Liam
-    - t: 40.48539
+    - t: 40.27072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 47.087635
+    - t: 46.872967
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 133.84576
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 137.26761
+    - t: 133.78442
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 144.52129
+    - t: 137.20627
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 144.45995
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 148.25679
+    - t: 148.19545
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 149.91536
+    - t: 149.80402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 152.8021
+    - t: 149.85402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.1774
+    - t: 152.74075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 164.65924
+    - t: 157.06606
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 157.11606
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 164.3779
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    - t: 164.5979
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1244,156 +1282,175 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.120068
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.60517
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.25517
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.730274
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.118845
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.666615
+      t: 38.451946
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 47.567635
+      t: 47.352966
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 61.94388
+      t: 61.72921
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 62.957214
+      t: 62.342545
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 62.742546
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 129.0831
+      t: 63.35588
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 129.02176
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 133.79576
+      t: 133.73442
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 133.87576
+      t: 133.81442
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 136.7976
+      t: 136.73627
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 137.7476
+      t: 137.68626
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 145.00128
+      t: 144.93994
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.73679
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 149.86536
+      t: 149.80402
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 149.94536
+      t: 149.88402
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 152.6321
+      t: 152.57076
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 153.28209
+      t: 153.22075
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 157.06606
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.1274
-      tipo: 3
+      t: 164.3779
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.2074
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 159.67406
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 162.68924
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 165.13924
+      t: 165.0779
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 14.040068
       emocion: sorpresa
@@ -1401,22 +1458,22 @@ MonoBehaviour:
     - t: 31.018845
       emocion: sorpresa
       dura: 2
-    - t: 47.467632
+    - t: 47.252964
       emocion: sorpresa
       dura: 2
-    - t: 61.94388
+    - t: 61.72921
       emocion: sorpresa
       dura: 0
-    - t: 62.957214
+    - t: 62.742546
       emocion: miedo
       dura: 0
-    - t: 129.0831
+    - t: 129.02176
       emocion: sorpresa
       dura: 0
-    - t: 149.86536
+    - t: 149.80402
       emocion: sorpresa
       dura: 0
-    - t: 157.1274
+    - t: 157.06606
       emocion: picaro
       dura: 0
     visible: []
@@ -1508,17 +1565,17 @@ MonoBehaviour:
       p: {x: -1.3071429, y: 0, z: -5.0142856}
     - t: 14.040068
       p: {x: -1.5, y: 0, z: -5.4}
-    - t: 129.0831
+    - t: 129.02176
       p: {x: -1.5, y: 0, z: -5.4}
-    - t: 129.0841
+    - t: 129.02277
       p: {x: -0.5, y: 0, z: -4.55}
-    - t: 141.47272
+    - t: 141.41138
       p: {x: -0.5, y: 0, z: -4.55}
-    - t: 141.74431
+    - t: 141.68297
       p: {x: -0.8333334, y: 0, z: -4.8333335}
-    - t: 141.96303
+    - t: 141.90169
       p: {x: -1.1666667, y: 0, z: -5.116667}
-    - t: 142.23462
+    - t: 142.17328
       p: {x: -1.5, y: 0, z: -5.4}
     miradas:
     - t: 0
@@ -1561,67 +1618,67 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 40.655388
+    - t: 40.44072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 47.257633
+    - t: 47.042965
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 129.0831
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 134.18576
+    - t: 134.12442
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 137.4376
+    - t: 137.37627
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 142.23462
+    - t: 142.17328
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 144.69128
+    - t: 144.62994
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 148.42679
+    - t: 148.36545
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 150.25536
+    - t: 150.19402
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.97209
+    - t: 152.91075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.5174
+    - t: 157.45605
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.43924
+    - t: 164.3779
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 164.82924
+    - t: 164.7679
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1647,57 +1704,67 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 38.016613
+    - t: 37.801945
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 40.60539
+    - t: 40.39072
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 47.207634
+    - t: 46.992966
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 134.13576
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Estela
-    - t: 137.3876
+    - t: 129.02176
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 144.64128
+    - t: 134.07442
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Estela
+    - t: 137.32626
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 144.57994
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_MagoOscuro
-    - t: 148.37679
+    - t: 148.31544
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 150.20535
+    - t: 150.14401
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 152.92209
+    - t: 152.86075
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 157.46739
+    - t: 157.40605
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Estela
-    - t: 164.77924
+    - t: 164.3779
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    - t: 164.7179
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1709,108 +1776,126 @@ MonoBehaviour:
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 16.25517
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.730274
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.118845
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 37.966614
+      t: 37.751945
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.046616
+      t: 37.831947
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 40.315388
+      t: 40.10072
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 40.96539
+      t: 40.75072
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 47.567635
+      t: 47.352966
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 62.957214
+      t: 62.742546
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 131.16843
+      t: 63.35588
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 131.10709
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 134.49576
+      t: 134.43442
       tipo: 2
       estado: Question02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 137.7476
+      t: 137.68626
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 145.00128
+      t: 144.93994
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 148.73679
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 150.56535
+      t: 150.50401
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 157.8274
+      t: 157.76605
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 165.13924
+      t: 165.0779
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 12.866751
       emocion: sorpresa
@@ -1821,22 +1906,22 @@ MonoBehaviour:
     - t: 31.018845
       emocion: sorpresa
       dura: 2
-    - t: 37.966614
+    - t: 37.751945
       emocion: enfado
       dura: 0
-    - t: 47.467632
+    - t: 47.252964
       emocion: sorpresa
       dura: 2
-    - t: 62.957214
+    - t: 62.742546
       emocion: miedo
       dura: 0
-    - t: 131.16843
+    - t: 131.10709
       emocion: triste
       dura: 0
-    - t: 134.39577
+    - t: 134.33443
       emocion: sorpresa
       dura: 2
-    - t: 150.46536
+    - t: 150.40402
       emocion: sorpresa
       dura: 2
     visible: []
@@ -1848,13 +1933,13 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: 81.15, y: 0, z: 0}
-    - t: 126.49837
+    - t: 126.43703
       p: {x: 81.15, y: 0, z: 0}
-    - t: 126.70397
+    - t: 126.64263
       p: {x: 81.0125, y: 0, z: 0}
-    - t: 127.02749
+    - t: 126.96615
       p: {x: 80.7375, y: 0, z: 0}
-    - t: 127.23309
+    - t: 127.17175
       p: {x: 80.6, y: 0, z: 0}
     miradas:
     - t: 0
@@ -1862,310 +1947,242 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 78.85, y: 0, z: 0}
       actor: 
-    - t: 65.53388
+    - t: 65.47254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 66.13388
+    - t: 66.07254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 71.30612
+    - t: 71.24478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 89.2
+    - t: 89.13866
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 102.05224
+    - t: 101.9909
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 110.98612
+    - t: 110.92478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 127.23309
+    - t: 127.17175
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
-    - t: 66.08388
+    - t: 65.47254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 68.98572
+    - t: 66.02254
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 71.25612
+    - t: 68.92438
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 74.863266
+    - t: 71.19478
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 89.149994
+    - t: 74.801926
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 92.286934
+    - t: 89.08865
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 102.002235
+    - t: 92.22559
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 104.747345
+    - t: 101.940895
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 110.93612
+    - t: 104.686005
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 113.04306
+    - t: 110.87478
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 112.98172
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     animacion:
     - fundido: 0
-      t: 66.683876
-      tipo: 2
-      estado: Question01
+      t: 65.47254
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 68.935715
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 69.01572
+      t: 68.95438
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 71.20612
-      tipo: 4
-      estado: 
+      voz: 
+    - fundido: 0.3
+      t: 70.99438
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 71.85612
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 74.81326
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 74.893265
+      t: 74.831924
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 76.96192
+      tipo: 1
+      estado: ManosALaEspalda
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.6
+      t: 92.17559
+      tipo: 1
+      estado: ManoAlPecho
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 77.45993
+      t: 92.25559
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 94.29559
+      tipo: 1
+      estado: ManoAlPecho
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.8
+      t: 104.636
+      tipo: 1
+      estado: Cabizbajo
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 112.93172
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 112.93172
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 113.01172
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 115.478386
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 118.095055
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 80.6766
+      t: 121.31172
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 83.19327
+      t: 123.82839
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 85.80994
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 89.1
+      t: 126.48703
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 89.74999
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 92.23693
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 92.31693
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 94.7836
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 98.00027
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 100.51694
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 101.95224
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 102.602234
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 104.69734
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 104.77734
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 107.34401
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 110.88612
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 111.53612
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 112.99306
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 113.07306
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 115.53973
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 118.156395
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 121.37306
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 123.88973
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 126.54837
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
-    - t: 65.53388
+    - t: 65.47254
       emocion: neutral
       dura: 0
-    - t: 66.58388
+    - t: 66.52254
       emocion: sorpresa
       dura: 2
-    - t: 74.81326
+    - t: 74.75192
       emocion: neutral
       dura: 0
-    - t: 89.649994
+    - t: 89.58865
       emocion: sorpresa
       dura: 2
-    - t: 92.23693
+    - t: 92.17559
       emocion: alegre
       dura: 0
-    - t: 104.69734
+    - t: 104.636
       emocion: neutral
       dura: 0
-    - t: 112.99306
+    - t: 112.93172
       emocion: alegre
       dura: 0
     visible:
-    - desde: 65.53388
-      hasta: 129.0831
+    - desde: 65.47254
+      hasta: 129.02176
     deslizando: []
   lineas:
   - onlyIfFlag: 
@@ -2183,8 +2200,8 @@ MonoBehaviour:
     t1: 26.030273
     actor: NPC_MagoOscuro
     clave: BF_INTRO_MAGO_01
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -2202,12 +2219,12 @@ MonoBehaviour:
     actor: NPC_MagoOscuro
     clave: BF_INTRO_MAGO_02
     gesto: Talk03
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 37.966614
-    t1: 40.26539
+    t0: 37.751945
+    t1: 40.05072
     actor: NPC_Liam
     clave: BF_INTRO_LIAM_01
     gesto: Angry01
@@ -2215,26 +2232,26 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 40.26539
-    t1: 46.717632
+    t0: 40.05072
+    t1: 46.502964
     actor: NPC_MagoOscuro
     clave: BF_INTRO_MAGO_03
     gesto: Talk02
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 46.867634
-    t1: 57.159878
+    t0: 46.652966
+    t1: 56.94521
     actor: NPC_MagoOscuro
     clave: BF_INTRO_MAGO_04
     gesto: Angry01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 65.98388
-    t1: 68.935715
+    t0: 65.92254
+    t1: 68.874374
     actor: Player
     clave: BF_VISION_WHERE_AM_I
     gesto: Question01
@@ -2242,17 +2259,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 68.935715
-    t1: 71.15612
+    t0: 68.874374
+    t1: 71.09478
     actor: NPC_Archimago
     clave: BF_VISION_WITH_ME
     gesto: Talk01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 71.15612
-    t1: 74.81326
+    t0: 71.09478
+    t1: 74.75192
     actor: Player
     clave: BF_VISION_HE_KNOWS
     gesto: HeadShake01
@@ -2260,17 +2277,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 74.81326
-    t1: 89.049995
+    t0: 74.75192
+    t1: 88.988655
     actor: NPC_Archimago
     clave: BF_VISION_BRIDGE_STORY
     gesto: Talk02
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 89.049995
-    t1: 92.23693
+    t0: 88.988655
+    t1: 92.17559
     actor: Player
     clave: BF_VISION_AM_I_YOU
     gesto: Question01
@@ -2278,17 +2295,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 92.23693
-    t1: 101.90224
+    t0: 92.17559
+    t1: 101.8409
     actor: NPC_Archimago
     clave: BF_VISION_TWO_SOULS
     gesto: Talk01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 101.90224
-    t1: 104.69734
+    t0: 101.8409
+    t1: 104.636
     actor: Player
     clave: BF_VISION_FEAR
     gesto: HeadShake01
@@ -2296,17 +2313,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 104.69734
-    t1: 110.83612
+    t0: 104.636
+    t1: 110.77478
     actor: NPC_Archimago
     clave: BF_VISION_ALONE_MISTAKE
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 110.83612
-    t1: 112.74306
+    t0: 110.77478
+    t1: 112.68172
     actor: Player
     clave: BF_VISION_NOT_ALONE
     gesto: 
@@ -2314,8 +2331,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 112.99306
-    t1: 126.49837
+    t0: 112.93172
+    t1: 126.43703
     actor: NPC_Archimago
     clave: BF_VISION_CREATE_SPELLS
     gesto: Talk01
@@ -2323,8 +2340,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 133.79576
-    t1: 136.7476
+    t0: 133.73442
+    t1: 136.68626
     actor: NPC_Estela
     clave: BF_POV_ESTELA_IDIOT
     gesto: Talk01
@@ -2332,8 +2349,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 137.0476
-    t1: 141.12271
+    t0: 136.98627
+    t1: 141.06137
     actor: Player
     clave: BF_POV_WILL_HERE
     gesto: 
@@ -2341,8 +2358,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 144.30128
-    t1: 148.03679
+    t0: 144.23994
+    t1: 147.97545
     actor: NPC_MagoOscuro
     clave: BF_MOMENT_MAGO_REMEMBER
     gesto: Talk03
@@ -2350,8 +2367,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 148.03679
-    t1: 149.86536
+    t0: 147.97545
+    t1: 149.80402
     actor: Player
     clave: BF_MOMENT_WILL_EVERYTHING
     gesto: Talk01
@@ -2359,8 +2376,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 149.86536
-    t1: 152.58209
+    t0: 149.80402
+    t1: 152.52075
     actor: NPC_Estela
     clave: BF_MOMENT_ESTELA_WHAT
     gesto: Question01
@@ -2368,8 +2385,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 152.58209
-    t1: 157.1274
+    t0: 152.52075
+    t1: 157.06606
     actor: Player
     clave: BF_MOMENT_WILL_EXPLAIN_LATER
     gesto: Talk02
@@ -2377,17 +2394,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 157.1274
-    t1: 162.63924
+    t0: 157.06606
+    t1: 162.5779
     actor: NPC_Estela
     clave: BF_MOMENT_ESTELA_BETTER
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 164.43924
-    t1: 166.81638
+    t0: 164.3779
+    t1: 166.75504
     actor: Player
     clave: BF_MOMENT_WILL_NOT_ALONE
     gesto: Cheer01
@@ -2414,7 +2431,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8702643
+    alturaDelFoco: 0.8845807
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -2426,7 +2443,7 @@ MonoBehaviour:
     descripcion: conjunto de will y estela y liam
     posiciones:
     - t: 6.3060036
-      p: {x: 0.9422817, y: 1.9, z: 1.2901521}
+      p: {x: 0.94095474, y: 1.9, z: 1.2799802}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -2439,7 +2456,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1.1258299
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -2472,15 +2489,15 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 12.866751
-      p: {x: -3.5505147, y: 0.89723605, z: -6.478668}
+      p: {x: -3.8293247, y: 0.8921578, z: -6.720479}
     - t: 13.116751
-      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+      p: {x: -3.9300385, y: 0.89215773, z: -6.9219065}
     - t: 13.366751
-      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+      p: {x: -3.9300385, y: 0.89215773, z: -6.9219065}
     - t: 13.616751
-      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+      p: {x: -3.9300385, y: 0.89215773, z: -6.9219065}
     - t: 13.866751
-      p: {x: -3.746968, y: 0.89723605, z: -6.8715754}
+      p: {x: -4.0257783, y: 0.8921578, z: -7.113386}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2489,7 +2506,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
+    alturaDelFoco: 1.1191353
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
@@ -2501,7 +2518,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 14.040068
-      p: {x: 2.7403693, y: 0.90687585, z: -1.6908824}
+      p: {x: 2.6323686, y: 0.9036308, z: -2.0138412}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2510,7 +2527,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
@@ -2543,7 +2560,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 26.030273
-      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+      p: {x: 1.4428544, y: 0.8921578, z: -1.5166416}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2552,14 +2569,14 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 30.418844
-    t1: 37.966614
+    t1: 37.751945
     tipo: 3
     descripcion: primer plano de mago
     posiciones:
@@ -2579,13 +2596,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 37.966614
-    t1: 40.26539
+    t0: 37.751945
+    t1: 40.05072
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 37.966614
-      p: {x: -1.0470462, y: 0.89723605, z: -1.8971572}
+    - t: 37.751945
+      p: {x: -0.9997166, y: 0.8921578, z: -1.5311418}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2594,18 +2611,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
+    alturaDelFoco: 1.1191353
     encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 40.26539
-    t1: 57.159878
+    t0: 40.05072
+    t1: 56.94521
     tipo: 3
     descripcion: primer plano de mago
     posiciones:
-    - t: 40.26539
+    - t: 40.05072
       p: {x: -1.4, y: 2.5, z: 4.2}
     lente: 36
     lenteFinal: 0
@@ -2621,13 +2638,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 57.159878
-    t1: 60.09388
+    t0: 56.94521
+    t1: 59.87921
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 57.159878
-      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+    - t: 56.94521
+      p: {x: 1.4428544, y: 0.8921578, z: -1.5166416}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2636,20 +2653,20 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 60.09388
+    - t: 59.87921
       p: {x: 0, y: 1.2, z: -5}
-    t0: 60.09388
-    t1: 61.94388
+    t0: 59.87921
+    t1: 61.72921
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 60.09388
+    - t: 59.87921
       p: {x: 0, y: 1.25, z: -3.6}
     lente: 28
     lenteFinal: 0
@@ -2663,13 +2680,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 61.94388
-    t1: 62.957214
+    t0: 61.72921
+    t1: 62.742546
     tipo: 2
     descripcion: medio de estela
     posiciones:
-    - t: 61.94388
-      p: {x: 2.5209432, y: 0.90687585, z: -1.6245873}
+    - t: 61.72921
+      p: {x: 2.4320483, y: 0.9036308, z: -1.9533184}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2678,18 +2695,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 62.957214
-    t1: 65.53388
+    t0: 62.742546
+    t1: 65.47254
     tipo: 0
     descripcion: general de will y estela y liam
     posiciones:
-    - t: 62.957214
+    - t: 62.742546
       p: {x: 0, y: 4.45, z: -2.5}
     lente: 44
     lenteFinal: 0
@@ -2703,19 +2720,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8702643
+    alturaDelFoco: 0.8845807
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 65.53388
-    t1: 65.98388
+    t0: 65.47254
+    t1: 65.92254
     tipo: 1
     descripcion: conjunto de will y archimago
     posiciones:
-    - t: 65.53388
-      p: {x: 80, y: 1.9, z: 4.1379037}
+    - t: 65.47254
+      p: {x: 80, y: 1.9, z: 4.21782}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -2726,19 +2743,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0919913
+    alturaDelFoco: 1.114665
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 65.98388
-    t1: 68.935715
+    t0: 65.92254
+    t1: 68.874374
     tipo: 6
     descripcion: sobre el hombro de archimago a will
     posiciones:
-    - t: 65.98388
-      p: {x: 81.42881, y: 1.440418, z: 2.3663795}
+    - t: 65.92254
+      p: {x: 81.54755, y: 1.440418, z: 2.2881813}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2747,19 +2764,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 68.935715
-    t1: 71.15612
+    t0: 68.874374
+    t1: 71.09478
     tipo: 6
     descripcion: sobre el hombro de will a archimago
     posiciones:
-    - t: 68.935715
-      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    - t: 68.874374
+      p: {x: 78.29098, y: 1.4895586, z: 1.3223091}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2768,19 +2785,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
+    alturaDelFoco: 1.0905362
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 71.15612
-    t1: 74.81326
+    t0: 71.09478
+    t1: 74.75192
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 71.15612
-      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    - t: 71.09478
+      p: {x: 81.197464, y: 0.8921578, z: 2.3474631}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2789,19 +2806,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 74.81326
-    t1: 89.049995
+    t0: 74.75192
+    t1: 88.988655
     tipo: 6
     descripcion: sobre el hombro de will a archimago
     posiciones:
-    - t: 74.81326
-      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    - t: 74.75192
+      p: {x: 78.29098, y: 1.4895586, z: 1.3223091}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2810,19 +2827,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
+    alturaDelFoco: 1.0905362
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 89.049995
-    t1: 92.23693
+    t0: 88.988655
+    t1: 92.17559
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 89.049995
-      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    - t: 88.988655
+      p: {x: 81.197464, y: 0.8921578, z: 2.3474631}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2831,19 +2848,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 92.23693
-    t1: 101.90224
+    t0: 92.17559
+    t1: 101.8409
     tipo: 6
     descripcion: sobre el hombro de will a archimago
     posiciones:
-    - t: 92.23693
-      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    - t: 92.17559
+      p: {x: 78.29098, y: 1.4895586, z: 1.3223091}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2852,19 +2869,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
+    alturaDelFoco: 1.0905362
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 101.90224
-    t1: 104.69734
+    t0: 101.8409
+    t1: 104.636
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 101.90224
-      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    - t: 101.8409
+      p: {x: 81.197464, y: 0.8921578, z: 2.3474631}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2873,19 +2890,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 104.69734
-    t1: 110.83612
+    t0: 104.636
+    t1: 110.77478
     tipo: 6
     descripcion: sobre el hombro de will a archimago
     posiciones:
-    - t: 104.69734
-      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    - t: 104.636
+      p: {x: 78.29098, y: 1.4895586, z: 1.3223091}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2894,19 +2911,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
+    alturaDelFoco: 1.0905362
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 110.83612
-    t1: 112.99306
+    t0: 110.77478
+    t1: 112.93172
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 110.83612
-      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    - t: 110.77478
+      p: {x: 81.197464, y: 0.8921578, z: 2.3474631}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2915,19 +2932,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 112.99306
-    t1: 126.49837
+    t0: 112.93172
+    t1: 126.43703
     tipo: 6
     descripcion: sobre el hombro de will a archimago
     posiciones:
-    - t: 112.99306
-      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    - t: 112.93172
+      p: {x: 78.29098, y: 1.4895586, z: 1.3223091}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2936,19 +2953,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
+    alturaDelFoco: 1.0905362
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 126.49837
-    t1: 129.0831
+    t0: 126.43703
+    t1: 129.02176
     tipo: 1
     descripcion: conjunto de archimago y will
     posiciones:
-    - t: 126.49837
-      p: {x: 80, y: 1.9, z: 4.868122}
+    - t: 126.43703
+      p: {x: 80, y: 1.9, z: 4.962141}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -2959,20 +2976,20 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0919913
+    alturaDelFoco: 1.114665
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 129.0831
+    - t: 129.02176
       p: {x: 0, y: 1.35, z: -4.6}
-    t0: 129.0831
-    t1: 142.23462
+    t0: 129.02176
+    t1: 142.17328
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 129.0831
+    - t: 129.02176
       p: {x: 0, y: 0.25, z: -5.1}
     lente: 42
     lenteFinal: 0
@@ -2986,13 +3003,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 142.23462
-    t1: 144.30128
+    t0: 142.17328
+    t1: 144.23994
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 142.23462
-      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+    - t: 142.17328
+      p: {x: 1.4428544, y: 0.8921578, z: -1.5166416}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3001,18 +3018,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 144.30128
-    t1: 148.03679
+    t0: 144.23994
+    t1: 147.97545
     tipo: 3
     descripcion: primer plano de mago
     posiciones:
-    - t: 144.30128
+    - t: 144.23994
       p: {x: -1.15, y: 2.6999998, z: 3.8}
     lente: 36
     lenteFinal: 0
@@ -3028,13 +3045,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 148.03679
-    t1: 149.86536
+    t0: 147.97545
+    t1: 149.80402
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 148.03679
-      p: {x: 1.3760201, y: 0.89116585, z: -1.6779938}
+    - t: 147.97545
+      p: {x: 1.494633, y: 0.8921578, z: -1.3916371}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3043,19 +3060,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 149.86536
-    t1: 152.58209
+    t0: 149.80402
+    t1: 152.52075
     tipo: 6
     descripcion: sobre el hombro de will a estela
     posiciones:
-    - t: 149.86536
-      p: {x: 0.51367694, y: 1.4299594, z: -1.8665569}
+    - t: 149.80402
+      p: {x: 0.40224338, y: 1.4895586, z: -2.2340655}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3064,19 +3081,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 152.58209
-    t1: 157.1274
+    t0: 152.52075
+    t1: 157.06606
     tipo: 6
     descripcion: sobre el hombro de estela a will
     posiciones:
-    - t: 152.58209
-      p: {x: 2.5767431, y: 1.5499327, z: -2.769897}
+    - t: 152.52075
+      p: {x: 2.5191283, y: 1.4037657, z: -2.5167465}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3085,19 +3102,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 157.1274
-    t1: 162.63924
+    t0: 157.06606
+    t1: 162.5779
     tipo: 6
     descripcion: sobre el hombro de will a estela
     posiciones:
-    - t: 157.1274
-      p: {x: 0.51367694, y: 1.4299594, z: -1.8665569}
+    - t: 157.06606
+      p: {x: 0.40224338, y: 1.4895586, z: -2.2340655}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3106,19 +3123,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 162.63924
-    t1: 164.43924
+    t0: 162.5779
+    t1: 164.3779
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
-    - t: 162.63924
-      p: {x: 0.51479936, y: 0.89723605, z: -8.025738}
+    - t: 162.5779
+      p: {x: 0.5931964, y: 0.8921578, z: -8.127907}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3127,20 +3144,20 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
+    alturaDelFoco: 1.1191353
     encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 164.43924
+    - t: 164.3779
       p: {x: 0, y: 1.2, z: -5.2}
-    t0: 164.43924
-    t1: 169.11638
+    t0: 164.3779
+    t1: 169.05504
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 164.43924
+    - t: 164.3779
       p: {x: 0, y: 1.3, z: -1.5}
     lente: 32
     lenteFinal: 0
@@ -3158,122 +3175,122 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202842388365792
+      rid: 6540294550018326779
     linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202842388365793
+      rid: 6540294550018326780
     linea: 61
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202842388365794
+      rid: 6540294550018326781
     linea: 62
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202842388365795
+      rid: 6540294550018326782
     linea: 73
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.516751
     beat:
-      rid: 5630202842388365796
+      rid: 6540294550018326783
     linea: 86
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 57.159878
+    t: 56.94521
     beat:
-      rid: 5630202842388365797
-    linea: 128
+      rid: 6540294550018326784
+    linea: 130
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 62.957214
+    t: 62.742546
     beat:
-      rid: 5630202842388365798
-    linea: 142
+      rid: 6540294550018326785
+    linea: 144
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 65.53388
+    t: 65.47254
     beat:
-      rid: 5630202842388365799
-    linea: 152
+      rid: 6540294550018326786
+    linea: 154
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 65.53388
+    t: 65.47254
     beat:
-      rid: 5630202842388365800
-    linea: 161
+      rid: 6540294550018326787
+    linea: 164
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 127.633095
+    t: 127.571754
     beat:
-      rid: 5630202842388365801
-    linea: 209
+      rid: 6540294550018326788
+    linea: 217
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.0831
+    t: 129.02176
     beat:
-      rid: 5630202842388365802
-    linea: 213
+      rid: 6540294550018326789
+    linea: 221
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.0831
+    t: 129.02176
     beat:
-      rid: 5630202842388365803
-    linea: 215
+      rid: 6540294550018326790
+    linea: 223
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.0831
+    t: 129.02176
     beat:
-      rid: 5630202842388365804
-    linea: 222
+      rid: 6540294550018326791
+    linea: 230
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.0831
+    t: 129.02176
     beat:
-      rid: 5630202842388365805
-    linea: 224
+      rid: 6540294550018326792
+    linea: 232
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 141.47272
+    t: 141.41138
     beat:
-      rid: 5630202842388365806
-    linea: 238
+      rid: 6540294550018326793
+    linea: 246
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 162.63924
+    t: 162.5779
     beat:
-      rid: 5630202842388365807
-    linea: 272
+      rid: 6540294550018326794
+    linea: 281
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 162.63924
+    t: 162.5779
     beat:
-      rid: 5630202842388365808
-    linea: 273
+      rid: 6540294550018326795
+    linea: 282
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 164.43924
+    t: 164.3779
     beat:
-      rid: 5630202842388365809
-    linea: 275
+      rid: 6540294550018326796
+    linea: 284
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 168.01637
+    t: 167.95503
     beat:
-      rid: 5630202842388365810
-    linea: 288
+      rid: 6540294550018326797
+    linea: 298
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 168.61638
+    t: 168.55504
     beat:
-      rid: 5630202842388365811
-    linea: 290
+      rid: 6540294550018326798
+    linea: 300
   etiquetas:
   - nombre: inicio
     t: 0
@@ -3338,7 +3355,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202842388365792
+    - rid: 6540294550018326779
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3346,7 +3363,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202842388365793
+    - rid: 6540294550018326780
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3354,7 +3371,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 5630202842388365794
+    - rid: 6540294550018326781
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3363,7 +3380,7 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 5630202842388365795
+    - rid: 6540294550018326782
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3371,35 +3388,35 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.1
         waitForEnd: 0
-    - rid: 5630202842388365796
+    - rid: 6540294550018326783
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: RasgarAireMago
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365797
+    - rid: 6540294550018326784
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PulsoPechoWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365798
+    - rid: 6540294550018326785
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ExpandirLuzPecho
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365799
+    - rid: 6540294550018326786
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EntrarVacioTibio
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365800
+    - rid: 6540294550018326787
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3407,14 +3424,14 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.85
         waitForEnd: 0
-    - rid: 5630202842388365801
+    - rid: 6540294550018326788
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: FusionArchimagoWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365802
+    - rid: 6540294550018326789
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3422,21 +3439,21 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.65
         waitForEnd: 0
-    - rid: 5630202842388365803
+    - rid: 6540294550018326790
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SalirVacioTibio
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365804
+    - rid: 6540294550018326791
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: IniciarDespertarPov
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365805
+    - rid: 6540294550018326792
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3444,21 +3461,21 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.85
         waitForEnd: 0
-    - rid: 5630202842388365806
+    - rid: 6540294550018326793
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: FinalizarDespertarPov
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365807
+    - rid: 6540294550018326794
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ReaccionAnimeLiam
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 5630202842388365808
+    - rid: 6540294550018326795
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3472,7 +3489,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202842388365809
+    - rid: 6540294550018326796
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3486,7 +3503,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 0
         esperar: 0
-    - rid: 5630202842388365810
+    - rid: 6540294550018326797
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3494,7 +3511,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202842388365811
+    - rid: 6540294550018326798
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

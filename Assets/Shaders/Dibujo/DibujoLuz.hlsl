@@ -11,6 +11,7 @@
 
 half _DibujoActivo;
 half4 _DibujoSombra;            // Tinte de la sombra (lineal).
+half4 _DibujoSombraCalida;      // Tinte de la sombra en los colores cálidos: la piel en sombra no sale lila.
 half _DibujoUmbral;             // Dónde cae el borde entre luz y sombra (N·L).
 half _DibujoSuavidad;           // Medio ancho del borde.
 half _DibujoSaturacionSombra;
@@ -25,6 +26,7 @@ half _DibujoTopeDeLuz;          // Luz máxima sobre una superficie: por encima,
 struct AjustesDeDibujo
 {
     half3 sombra;
+    half3 sombraCalida;
     half umbral;
     half suavidad;
     half saturacionSombra;
@@ -44,6 +46,7 @@ AjustesDeDibujo LeerAjustes()
     if (_DibujoActivo > 0.5h)
     {
         a.sombra = _DibujoSombra.rgb;
+        a.sombraCalida = dot(_DibujoSombraCalida.rgb, half3(1.0h, 1.0h, 1.0h)) > 0.001h ? _DibujoSombraCalida.rgb : _DibujoSombra.rgb;
         a.umbral = _DibujoUmbral;
         a.suavidad = max(_DibujoSuavidad, 0.001h);
         a.saturacionSombra = _DibujoSaturacionSombra;
@@ -58,6 +61,7 @@ AjustesDeDibujo LeerAjustes()
     else
     {
         a.sombra = half3(0.48h, 0.34h, 0.60h);
+        a.sombraCalida = half3(0.67h, 0.39h, 0.39h);
         a.umbral = 0.05h;
         a.suavidad = 0.02h;
         a.saturacionSombra = 1.15h;
@@ -96,6 +100,9 @@ half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
     // Término constante de la luz ambiente (armónicos esféricos sin la parte que depende de la normal):
     // el mismo tono en toda la pieza, sin degradados.
     half3 ambiente = max(half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w), 0.0h) * a.ambiente;
+    // El ambiente tiñe lo mismo que el sol: con el azul del cielo entero, lo que queda en sombra (que
+    // solo recibe ambiente) se enfría y la piel sale lila.
+    ambiente = lerp(LuminanciaDeDibujo(ambiente).xxx, ambiente, a.tinteDeLuz);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
     AmbientOcclusionFactor oclusion = GetScreenSpaceAmbientOcclusion(inputData.normalizedScreenSpaceUV);
@@ -113,7 +120,10 @@ half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
         tonoDeLuz = lerp(albedo, min(albedo * 1.5h + 0.03h, 1.0h), brillo);
     }
 
-    half3 tonoDeSombra = albedo * a.sombra;
+    // Cuánto de cálido es el color de la pieza (rojo por encima del verde y del azul): piel, pelo
+    // rubio, madera. Esos llevan la sombra cálida; los fríos, la violeta.
+    half calidez = saturate((albedo.r - max(albedo.g * 0.9h, albedo.b)) * 3.0h);
+    half3 tonoDeSombra = albedo * lerp(a.sombra, a.sombraCalida, calidez);
     tonoDeSombra = max(lerp(LuminanciaDeDibujo(tonoDeSombra).xxx, tonoDeSombra, a.saturacionSombra), 0.0h);
 
     // De día el sol más el ambiente pasan de 1 y el tono iluminado se quema: con el tope, la parte

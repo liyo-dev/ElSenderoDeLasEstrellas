@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Sendero_01_ElConjuro
   duracion: 39.826202
   presentacion: 1
-  huella: "2026-11-05 08:18 \xB7 ba76a364e98fa81f684c66a63b8ba93a"
+  huella: "2026-11-11 18:12 \xB7 fe320fb675246affd37a079e9bc9a82c"
   actores:
   - id: Player
     alias: will
@@ -53,24 +53,41 @@ MonoBehaviour:
       actor: 
     cabezas: []
     animacion:
-    - fundido: 0
+    - fundido: 0.6
       t: 2
       tipo: 1
-      estado: Beg01_Loop
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
-    - fundido: 0.6
+      voz: 
+    - fundido: 0.8
+      t: 11.908571
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 1
       t: 20.61551
       tipo: 1
-      estado: MagicAttackOmni01_Load
-      congelar: 1
+      estado: Conjuro_Abrirse
+      congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.35
+      t: 28.412653
+      tipo: 1
+      estado: Conjuro_Invocar
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.212652
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 2
       emocion: dormido
@@ -85,7 +102,7 @@ MonoBehaviour:
       emocion: dormido
       dura: 7.897143
     - t: 28.412653
-      emocion: enfado
+      emocion: decidido
       dura: 3.2
     - t: 33.812653
       emocion: sorpresa
@@ -278,70 +295,70 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 11.908571
-      p: {x: 565, y: 20.8, z: -505}
+      p: {x: 565, y: 19.8, z: -509.2}
     t0: 11.908571
     t1: 20.61551
-    tipo: 0
-    descripcion: general de will
+    tipo: 1
+    descripcion: conjunto de will
     posiciones:
     - t: 11.908571
-      p: {x: 566.6, y: 18.5, z: -514}
-    lente: 42
+      p: {x: 559.8, y: 19.3, z: -509.2}
+    lente: 52
     lenteFinal: 0
     sujetos:
     - Player
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 565, y: 20.8, z: -505}
-    alturaDelFoco: 2.8
+    focoFijo: {x: 565, y: 19.8, z: -509.2}
+    alturaDelFoco: 1.8
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos:
     - t: 20.61551
-      p: {x: 565, y: 19.6, z: -508.6}
+      p: {x: 565, y: 20.2, z: -508.6}
     t0: 20.61551
     t1: 28.412653
-    tipo: 1
-    descripcion: conjunto de will
+    tipo: 0
+    descripcion: general de will
     posiciones:
     - t: 20.61551
-      p: {x: 558.6, y: 19.7, z: -510.8}
-    lente: 36
+      p: {x: 565, y: 18.6, z: -516.8}
+    lente: 44
     lenteFinal: 0
     sujetos:
     - Player
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 565, y: 19.6, z: -508.6}
-    alturaDelFoco: 1.6
+    focoFijo: {x: 565, y: 20.2, z: -508.6}
+    alturaDelFoco: 2.2
     encuadre: {x: 0, y: 0}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos:
     - t: 28.412653
-      p: {x: 565, y: 19.3, z: -512.4}
+      p: {x: 565, y: 19.2, z: -512.4}
     t0: 28.412653
     t1: 31.212652
-    tipo: 3
-    descripcion: primer plano de will
+    tipo: 2
+    descripcion: medio de will
     posiciones:
     - t: 28.412653
-      p: {x: 563.4, y: 19.3, z: -509.8}
-    lente: 30
+      p: {x: 563.4, y: 19.2, z: -509.8}
+    lente: 38
     lenteFinal: 0
     sujetos:
     - Player
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 565, y: 19.3, z: -512.4}
-    alturaDelFoco: 1.3
-    encuadre: {x: 0.09, y: -0.074}
+    focoFijo: {x: 565, y: 19.2, z: -512.4}
+    alturaDelFoco: 1.2
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.2
     mezcla: 0
     mano: 0.12
@@ -396,143 +413,133 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294404317381164
-    linea: 37
+      rid: 6540294550018327352
+    linea: 42
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.41265297
+    beat:
+      rid: 6540294550018327353
+    linea: 87
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 6540294404317381165
-    linea: 49
+      rid: 6540294550018327354
+    linea: 56
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 6540294404317381166
-    linea: 50
+      rid: 6540294550018327355
+    linea: 57
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 6540294404317381167
-    linea: 51
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 2
-    beat:
-      rid: 6540294404317381168
-    linea: 52
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 11.908571
-    beat:
-      rid: 6540294404317381169
+      rid: 6540294550018327356
     linea: 58
   - onlyIfFlag: 
     skipIfFlag: 
     t: 11.908571
     beat:
-      rid: 6540294404317381170
-    linea: 59
+      rid: 6540294550018327357
+    linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
     t: 11.908571
     beat:
-      rid: 6540294404317381171
-    linea: 60
+      rid: 6540294550018327358
+    linea: 66
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 20.61551
+    t: 11.908571
     beat:
-      rid: 6540294404317381172
-    linea: 73
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 20.61551
-    beat:
-      rid: 6540294404317381173
-    linea: 70
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 20.61551
-    beat:
-      rid: 6540294404317381174
-    linea: 69
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 20.61551
-    beat:
-      rid: 6540294404317381175
+      rid: 6540294550018327359
     linea: 67
   - onlyIfFlag: 
     skipIfFlag: 
     t: 20.61551
     beat:
-      rid: 6540294404317381176
-    linea: 66
+      rid: 6540294550018327360
+    linea: 77
   - onlyIfFlag: 
     skipIfFlag: 
     t: 20.61551
     beat:
-      rid: 6540294404317381177
-    linea: 68
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 28.412653
-    beat:
-      rid: 6540294404317381178
+      rid: 6540294550018327361
     linea: 78
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.412653
+    t: 20.61551
     beat:
-      rid: 6540294404317381179
-    linea: 79
+      rid: 6540294550018327362
+    linea: 75
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 31.212652
+    t: 20.61551
     beat:
-      rid: 6540294404317381180
+      rid: 6540294550018327363
+    linea: 76
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 28.412653
+    beat:
+      rid: 6540294550018327364
     linea: 89
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 31.212652
+    t: 28.412653
     beat:
-      rid: 6540294404317381181
-    linea: 81
+      rid: 6540294550018327365
+    linea: 90
   - onlyIfFlag: 
     skipIfFlag: 
     t: 31.212652
     beat:
-      rid: 6540294404317381182
-    linea: 85
+      rid: 6540294550018327366
+    linea: 101
   - onlyIfFlag: 
     skipIfFlag: 
     t: 31.212652
     beat:
-      rid: 6540294404317381183
-    linea: 86
+      rid: 6540294550018327367
+    linea: 93
   - onlyIfFlag: 
     skipIfFlag: 
     t: 31.212652
     beat:
-      rid: 6540294404317381184
-    linea: 87
+      rid: 6540294550018327368
+    linea: 97
   - onlyIfFlag: 
     skipIfFlag: 
     t: 31.212652
     beat:
-      rid: 6540294404317381185
-    linea: 88
+      rid: 6540294550018327369
+    linea: 98
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 31.212652
+    beat:
+      rid: 6540294550018327370
+    linea: 99
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 31.212652
+    beat:
+      rid: 6540294550018327371
+    linea: 100
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.812653
     beat:
-      rid: 6540294404317381186
-    linea: 95
+      rid: 6540294550018327372
+    linea: 107
   etiquetas:
   - nombre: inicio
     t: 0
+  - nombre: grito
+    t: 28.412653
   puntos:
   - nombre: p_piedra
     posicion: {x: 565, y: 18, z: -505}
@@ -554,11 +561,17 @@ MonoBehaviour:
     posicion: {x: 558.6, y: 18, z: -510.8}
   - nombre: cam_espalda
     posicion: {x: 565.4, y: 18, z: -516.2}
+  - nombre: cam_perfil
+    posicion: {x: 559.8, y: 18, z: -509.2}
+  - nombre: p_medio
+    posicion: {x: 565, y: 18, z: -509.2}
+  - nombre: cam_detras
+    posicion: {x: 565, y: 18, z: -516.8}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294404317381164
+    - rid: 6540294550018327352
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -566,20 +579,29 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294404317381165
+    - rid: 6540294550018327353
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 0
+        musicId: SENDERO_CONJURO
+        fadeIn: 0.3
+        fadeOut: 0.5
+        desdeSegundo: -1
+    - rid: 6540294550018327354
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
-        vfxPrefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+        vfxPrefab: {fileID: 163736038969970735, guid: 7fd400017d34a5a46a61079434ba87ca, type: 3}
         atActorId: 
         markName: p_will
         offset: {x: 0, y: 0.05, z: 0}
-        lifetime: 40
+        lifetime: 45
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: CIRCULO_CONJURO
         escala: 1
-    - rid: 6540294404317381166
+    - rid: 6540294550018327355
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -589,32 +611,13 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294404317381167
-      type: {class: ConjuroEnLasManosBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        vfxPrefab: {fileID: 3335782661780353895, guid: 96191e74333daf74b9169ccdedf8e314, type: 3}
-        actorId: Player
-        offset: {x: 0, y: 0.4, z: 0.2}
-        duracion: 1.5
-        periodo: 1.2
-        avance: 0.05
-        elevacion: 0.03
-        escalaInicial: 0.3
-        escalaFinal: 0.7
-        vidaEnPool: 40
-        registrarComo: LUZ_MANOS
-        efectoRegistrado: 
-        subirACabeza: 0
-        offsetFinal: {x: 0, y: 2.85, z: 0}
-        tiempoSubida: 1.4
-    - rid: 6540294404317381168
+    - rid: 6540294550018327356
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 4
         gananciaDb: 3
-    - rid: 6540294404317381169
+    - rid: 6540294550018327357
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -627,7 +630,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294404317381170
+    - rid: 6540294550018327358
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -637,58 +640,29 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294404317381171
+    - rid: 6540294550018327359
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.15
         duration: 1.4
         waitForEnd: 0
-    - rid: 6540294404317381172
-      type: {class: ConjuroEnLasManosBeat, ns: , asm: Assembly-CSharp}
+    - rid: 6540294550018327360
+      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
-        vfxPrefab: {fileID: 0}
-        actorId: Player
-        offset: {x: 0, y: 0.4, z: 0.2}
-        duracion: 10
-        periodo: 1.8
-        avance: 0.3
-        elevacion: 0.22
-        escalaInicial: 0.7
-        escalaFinal: 1
-        vidaEnPool: 0
-        registrarComo: 
-        efectoRegistrado: LUZ_MANOS
-        subirACabeza: 1
-        offsetFinal: {x: 0, y: 1.75, z: 0.1}
-        tiempoSubida: 1.6
-    - rid: 6540294404317381173
+        actorId: SEMILLA_PORTAL
+        escala: 1
+        duracion: 5.5
+        esperar: 0
+    - rid: 6540294550018327361
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.25
         duration: 1.6
         waitForEnd: 0
-    - rid: 6540294404317381174
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: Prologo_Carga
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 0.7
-        tono: 1
-    - rid: 6540294404317381175
-      type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: SEMILLA_PORTAL
-        escala: 0.2
-        duracion: 0
-        esperar: 0
-    - rid: 6540294404317381176
+    - rid: 6540294550018327362
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -701,15 +675,15 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: SEMILLA_PORTAL
         escala: 1
-    - rid: 6540294404317381177
+    - rid: 6540294550018327363
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         actorId: SEMILLA_PORTAL
-        escala: 1
-        duracion: 5.5
+        escala: 0.2
+        duracion: 0
         esperar: 0
-    - rid: 6540294404317381178
+    - rid: 6540294550018327364
       type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -719,7 +693,7 @@ MonoBehaviour:
         fundido: 0.1
         duracion: 2.8
         esperar: 0
-    - rid: 6540294404317381179
+    - rid: 6540294550018327365
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -727,7 +701,7 @@ MonoBehaviour:
         escala: 1.6
         duracion: 2.6
         esperar: 0
-    - rid: 6540294404317381180
+    - rid: 6540294550018327366
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -737,38 +711,37 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294404317381181
+    - rid: 6540294550018327367
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294404317381182
+    - rid: 6540294550018327368
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.35
-    - rid: 6540294404317381183
+    - rid: 6540294550018327369
       type: {class: RecogerVfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         ids:
         - SEMILLA_PORTAL
-        - LUZ_MANOS
-    - rid: 6540294404317381184
+    - rid: 6540294550018327370
       type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         senal: SENDERO_PORTAL_ABIERTO
-    - rid: 6540294404317381185
+    - rid: 6540294550018327371
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.9
         waitForEnd: 0
-    - rid: 6540294404317381186
+    - rid: 6540294550018327372
       type: {class: RecogerVfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

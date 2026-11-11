@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Chuche_01_Llegada
   duracion: 13.403265
   presentacion: 0
-  huella: "2026-11-01 09:26 \xB7 3b0a454d7ebe992485a7a1ec7aa2ccab"
+  huella: "2026-11-11 18:11 \xB7 be344ebbfd466426f7e6aaadee35f104"
   actores:
   - id: Player
     alias: will
@@ -78,36 +78,42 @@ MonoBehaviour:
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.750204
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.662449
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.742449
       tipo: 2
       estado: Cheer01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.54102
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.19102
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: sorpresa
@@ -131,10 +137,10 @@ MonoBehaviour:
       punto: {x: 140, y: 2.4196098, z: 120.00001}
       actor: 
     - t: 7.812449
-      tipo: 2
+      tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
     - t: 9.49102
       tipo: 2
       rumbo: 0
@@ -152,10 +158,10 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     - t: 7.762449
-      tipo: 2
+      tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
     - t: 9.49102
       tipo: 2
       rumbo: 0
@@ -168,42 +174,35 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.130204
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.712449
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.362449
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.3
       t: 9.49102
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 9.57102
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 12.153265
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: sorpresa
@@ -243,10 +242,10 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
     - t: 7.932449
-      tipo: 2
+      tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
     cabezas:
     - t: 3.02
       tipo: 2
@@ -259,10 +258,10 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
     - t: 7.8824487
-      tipo: 2
+      tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: Player
+      punto: {x: 140, y: 2.4196098, z: 120.00001}
+      actor: 
     animacion:
     - fundido: 0
       t: 3.5
@@ -270,12 +269,21 @@ MonoBehaviour:
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.750204
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.49102
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: sorpresa
@@ -319,8 +327,8 @@ MonoBehaviour:
     t1: 12.103265
     actor: Actor_Estela
     clave: CHUCHELANDIA_LLEGADA_04
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos:
@@ -345,7 +353,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 140, y: 3.6196098, z: 120.00001}
-    alturaDelFoco: 0.8702643
+    alturaDelFoco: 0.8845807
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -357,7 +365,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 2.8
-      p: {x: 88.3588, y: 15.418468, z: 213.0156}
+      p: {x: 88.33279, y: 15.423852, z: 213.26625}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -366,7 +374,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.16}
     suavidad: 0.6
     mezcla: 0
@@ -378,7 +386,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 7.662449
-      p: {x: 86.64341, y: 15.407724, z: 211.6561}
+      p: {x: 86.65617, y: 15.404715, z: 211.55414}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -387,7 +395,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: -0.13, y: -0.16}
     suavidad: 0.6
     mezcla: 0
@@ -399,7 +407,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y will'
     posiciones:
     - t: 9.49102
-      p: {x: 89.38054, y: 15.359354, z: 212.7288}
+      p: {x: 89.38054, y: 15.358228, z: 212.7288}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -410,7 +418,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.84511876
+    alturaDelFoco: 0.8441049
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -420,31 +428,31 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344592
+      rid: 6540294550018326898
     linea: 35
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344593
+      rid: 6540294550018326899
     linea: 36
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344594
+      rid: 6540294550018326900
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344595
+      rid: 6540294550018326901
     linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.5
     beat:
-      rid: 6540294313956344596
+      rid: 6540294550018326902
     linea: 44
   etiquetas:
   - nombre: inicio
@@ -466,7 +474,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294313956344592
+    - rid: 6540294550018326898
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -479,7 +487,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344593
+    - rid: 6540294550018326899
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -492,7 +500,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344594
+    - rid: 6540294550018326900
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -505,7 +513,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344595
+    - rid: 6540294550018326901
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -515,7 +523,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344596
+    - rid: 6540294550018326902
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

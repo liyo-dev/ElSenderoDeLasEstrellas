@@ -1,13 +1,21 @@
-Demo con los capítulos 3 y 4, portada, trajes y README al día (INC-919 a INC-927)
+Punto de control 11 nov: arte, animación, zonas, interfaz de papel y cinemáticas (INC-1045 a INC-1071)
 
-- Capítulos 3 y 4 montados: la demo llega hasta la bota del vado y los créditos (INC-924)
-- Exportación de personajes al minijuego web (INC-919)
-- Repaso de trajes de Will y Liam, botas de Estela y coleta con huesos (INC-920, INC-921, INC-925)
-- Animación de brazos cruzados (INC-922) y aro de runas al cuello del demonio (INC-923)
-- Música «Los Tres» y sincronía de risas y llantos en la cinemática final (INC-926, INC-927)
-- Herramienta de la portada del juego en el Sendero
-- README: estado al 7 nov, capturas, estructura y stack corregidos
-- Menús El Sendero/Git para subir desde el Editor
+- Arte y render: piel en sombra sin tono lila (INC-1056), postprocesado general a juego con el
+  aspecto de dibujo (INC-1058), ajustes de render sin uso retirados (INC-1047)
+- Animación: capas que se mueven al andar y correr (INC-1050), cinco poses de actuación nuevas
+  (INC-1051), risa y miedo sin brazos en la cara (INC-1052), vítores y encogerse de hombros
+  (INC-1054), gestos de conjuro (INC-1055), risas por carácter y gesto según la frase (INC-1068)
+- Personajes: vestuario propio de Eldran, Victoria y Erika (previas, INC-1060), pelos sin calva
+  detrás de la oreja (INC-1061)
+- Zonas: Aldea del Mar como puerto y plazas de la capital (INC-1048), primeras casas propias
+  (INC-1053, en curso), exploración y pueblo de Will con piezas propias (INC-1062)
+- Interfaz al estilo del papel (INC-1063)
+- Cinemáticas: repaso de actuación con las poses nuevas (INC-1059), conjuro de la Piedra
+  (INC-1057), miradas de Liam (INC-1046), cámaras y puesta en escena (INC-1071, en curso)
+- Juego: botón de hablar con Victoria en el Cap. 2 (INC-1045), aro del Demonio (INC-1067),
+  lluvia que sonaba sin llover (INC-1066), clima en interiores, paso 1 (INC-1070)
+- Kits genéricos: separación de sistemas en marcha (INC-1049)
+- TRACKER y documentación al día; copias de lo sustituido en «Versiones antiguas»
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_016e2sJ3VVZvE8hUcRGgnCyF
+Claude-Session: https://claude.ai/code/session_016e2sJ5PwW9W8CtdHEvGtHf

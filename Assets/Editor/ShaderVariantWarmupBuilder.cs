@@ -103,13 +103,13 @@ namespace ElSendero.Editor.Rendimiento
                 $"Registrado en Graphics Settings > Preloaded Shaders: {(registrado ? "sí" : "NO — revisa el Warning de arriba")}."
             );
 
-            EditorUtility.DisplayDialog(
+            // Con Avisar el menú se puede pasar desde el buzón de órdenes sin dejar el Editor parado en un diálogo.
+            OrdenesDelEditor.Avisar(
                 "Shader Variant Collection generado",
                 $"{materialsScanned} materiales escaneados.\n{added} variantes guardadas en:\n{OutputPath}\n\n" +
                 (registrado
                     ? "Registrado en Graphics Settings > Preloaded Shaders — se precompilarán al arrancar el juego."
-                    : "No se pudo registrar automáticamente — mira la consola y añádelo a mano en Edit > Project Settings > Graphics > Preloaded Shaders."),
-                "OK");
+                    : "No se pudo registrar automáticamente — mira la consola y añádelo a mano en Edit > Project Settings > Graphics > Preloaded Shaders."));
         }
 
         /// <summary>Añade el collection a GraphicsSettings.m_PreloadedShaders si no estaba ya.</summary>

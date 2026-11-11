@@ -66,9 +66,10 @@ will mira estela
 & estela cara sorpresa
 espera 1.1
 plano medio estela
+& estela bucle BrazosCruzados fundido=0.3
 estela dice CHUCHELANDIA_PERGAMINO_04 cara=enfado mira=will
 plano medio will solo rumbo=305
-will dice CHUCHELANDIA_PERGAMINO_05 cara=neutral gesto=HeadShake02 mira=estela
+will dice CHUCHELANDIA_PERGAMINO_05 cara=neutral gesto=Shrug01 mira=estela
 plano medio estela
 estela dice CHUCHELANDIA_PERGAMINO_06 cara=molesto mira=will
 espera 0.6

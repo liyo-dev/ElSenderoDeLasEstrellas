@@ -26,6 +26,7 @@ will en p_will mirando p_estela
 & liam en p_liam_ini mirando p_will
 & bandas
 plano dos will estela
+& estela bucle BrazosEnJarras
 will dice CAP4_BIFURCACION_01 mira=estela
 estela dice CAP4_BIFURCACION_02 cara=molesto
 
@@ -36,21 +37,30 @@ espera 1.5
 estela anda a p_estela2 ritmo=prisa
 estela mira liam
 & will mira liam
+& liam bucle ManosALaEspalda fundido=0.4
 estela dice CAP4_BIFURCACION_03 cara=enfado gesto=Challenging_NoWeapon
 liam dice CAP4_BIFURCACION_04 cara=pensativo
 estela dice CAP4_BIFURCACION_05 mira=will cara=decidido
++1.2 will bucle Ofrecer fundido=0.5
 plano medio liam
 liam dice CAP4_BIFURCACION_06 cara=pensativo
 liam dice CAP4_BIFURCACION_07 cara=neutral
 plano conjunto will estela liam
+& will reposo
+# Plano de quien habla: en el plano de grupo decía la frase de espaldas a la cámara.
+plano medio will
 will dice CAP4_BIFURCACION_08 cara=alegre
+& estela bucle BrazosCruzados fundido=0.4
+plano medio estela
 estela dice CAP4_BIFURCACION_09 cara=molesto
+plano medio liam
 liam dice CAP4_BIFURCACION_10 mira=rio
 espera 0.6
 fundido cubre 0.8
 espera 0.9
 fundido entra 0.8
 plano medio liam
+& liam reposo
 liam dice CAP4_BIFURCACION_11 cara=sorpresa
 espera 0.4
 bandas quita

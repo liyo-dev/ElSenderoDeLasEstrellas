@@ -1,10 +1,10 @@
 # Parte de horneado: Despertar_2_Contraataque
 
-2026-10-31 20:29 · guion `Assets/_SEQUENCES/Guiones/Despertar_2_Contraataque.guion.txt`
+2026-11-11 18:12 · guion `Assets/_SEQUENCES/Guiones/Despertar_2_Contraataque.guion.txt`
 
 **0:07,3** de secuencia · 2 frases · 4 planos · 11 efectos · 2 personajes
 
-Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
+Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94
 
 ## Errores (0)
 
@@ -37,7 +37,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 | 0:02,0 | efecto | Tiempo: ×1 (de golpe) |
 | 0:03,0 | **@despues** |  |
 | 0:03,0 | plano 3 | medio de will · 1,6 s · lente 34° · coste 2: ángulo 2 |
-| 0:03,4 | will | «¿Qué... qué acabo de hacer?» (2,4 s) · pose |
+| 0:03,4 | will | «¿Qué... qué acabo de hacer?» (2,4 s) |
 | 0:04,6 | plano 4 | dos: will y eldran · 2,7 s · lente 36° · coste 119: cara 27, ángulo 84 |
 | 0:06,6 | efecto | Pantalla: cubrir (0,25s) |
 | 0:06,6 | efecto | Mecánica: Tinnitus |
@@ -49,9 +49,8 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 
 - 0:00,0–0:01,6 habla
 - 0:00,1 gesto Angry02
+- 0:03,0 bucle Ofrecer
 - 0:03,4–0:05,8 habla
-- 0:03,5 gesto Question01
-- 0:04,6 gesto Question01
 
 ### eldran (NPC_Eldran)
 

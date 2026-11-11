@@ -397,6 +397,8 @@ internal sealed partial class Horno
         foreach (var o in a.anim)
             if (o.tipo == TipoDeAnimacion.Bucle || o.tipo == TipoDeAnimacion.Gesto || o.tipo == TipoDeAnimacion.Reposo)
                 eventos.Add((o.t, $"{Tiempo(o.t)} {(o.tipo == TipoDeAnimacion.Bucle ? "bucle" : o.tipo == TipoDeAnimacion.Gesto ? "gesto" : "reposo")} {o.estado}"));
+            else if (o.tipo == TipoDeAnimacion.PoseAlta || o.tipo == TipoDeAnimacion.SoltarPoseAlta)
+                eventos.Add((o.t, $"{Tiempo(o.t)} {(o.tipo == TipoDeAnimacion.PoseAlta ? "pose de brazos " + o.estado : "suelta la pose de brazos")}"));
         foreach (var (t0, t1) in a.habla) eventos.Add((t0, $"{Tiempo(t0)}–{Tiempo(t1)} habla"));
         foreach (var v in a.visibilidad) eventos.Add((v.t, $"{Tiempo(v.t)} {(v.visible ? "aparece" : "desaparece")}"));
         return eventos.OrderBy(e => e.t).Select(e => e.s);

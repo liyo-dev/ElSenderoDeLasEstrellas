@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Final_01_ElSacrificio
   duracion: 248.6982
   presentacion: 1
-  huella: "2026-11-07 16:47 \xB7 db30d6e173000f9bb7e6890f5d29d353"
+  huella: "2026-11-11 18:12 \xB7 a3ef7bf58c6d891fa63bcd876edd6751"
   actores:
   - id: Player
     alias: will
@@ -23,13 +23,13 @@ MonoBehaviour:
     claveDelNombre: Will
     posiciones:
     - t: 0
-      p: {x: 0, y: 0, z: 4.6}
+      p: {x: 0, y: 0.001, z: 4.6}
     - t: 50.27095
-      p: {x: 0, y: 0, z: 4.6}
+      p: {x: 0, y: 0.001, z: 4.6}
     - t: 50.27195
-      p: {x: 1.9, y: 0, z: 5.9}
+      p: {x: 1.9, y: 0.001, z: 5.9}
     - t: 51.27095
-      p: {x: 1.9, y: 0, z: 5.9}
+      p: {x: 1.9, y: 0.001, z: 5.9}
     - t: 51.551003
       p: {x: 1.7882353, y: 0, z: 5.8}
     - t: 51.78261
@@ -70,17 +70,17 @@ MonoBehaviour:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 8.2}
+      punto: {x: 0, y: 0.001, z: 8.2}
       actor: 
     - t: 50.27095
       tipo: 1
       rumbo: 0
-      punto: {x: -1.2, y: 0, z: 4.2}
+      punto: {x: -1.2, y: 0.001, z: 4.2}
       actor: 
     - t: 54.68064
       tipo: 1
       rumbo: 0
-      punto: {x: -1.2, y: 0, z: 4.2}
+      punto: {x: -1.2, y: 0.001, z: 4.2}
       actor: 
     - t: 184.36487
       tipo: 1
@@ -158,6 +158,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 222.15276
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     - t: 222.25275
       tipo: 2
       rumbo: 0
@@ -175,90 +180,119 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.68
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.8500004
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.08204
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 50.27095
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.5
       t: 54.98064
       tipo: 1
-      estado: CastingIdle01
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.6
       t: 61.24921
       tipo: 1
-      estado: Beg01_Loop
+      estado: Conjuro_Recogerse
       congelar: 0
       alFinal: 0
-    - fundido: 0.6
+      voz: 
+    - fundido: 0.8
       t: 69.54636
       tipo: 1
-      estado: MagicAttackOmni01_Load
+      estado: Conjuro_Invocar
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.2
+      t: 78.365135
+      tipo: 1
+      estado: Conjuro_Lanzar
       congelar: 1
       alFinal: 0
+      voz: 
+    - fundido: 1.2
+      t: 85.179016
+      tipo: 1
+      estado: Conjuro_Abrirse
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 184.36487
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 192.06564
-      tipo: 2
-      estado: Greeting01_NoWeapon
+      voz: 
+    - fundido: 0.4
+      t: 191.98564
+      tipo: 1
+      estado: Ofrecer
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 196.9872
-      tipo: 2
-      estado: Question01
+      t: 200.91664
+      tipo: 0
+      estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 198.63951
-      tipo: 2
-      estado: Question02
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 214.55275
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 222.85275
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 228.49316
-      tipo: 2
-      estado: HeadNod01
+      voz: 
+    - fundido: 0.3
+      t: 228.41316
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 230.54173
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
     - t: 5.6
       emocion: triste
@@ -489,7 +523,7 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
-    - t: 109.24568
+    - t: 109.14568
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -514,6 +548,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
+    - t: 130.7952
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
     - t: 137.00182
       tipo: 2
       rumbo: 0
@@ -549,6 +588,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Archimago
+    - t: 172.76486
+      tipo: 1
+      rumbo: 0
+      punto: {x: 199.5, y: 17, z: 24}
+      actor: 
+    - t: 187.26488
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 0.9}
+      actor: 
     - t: 192.08563
       tipo: 2
       rumbo: 0
@@ -574,6 +623,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
+    - t: 222.15276
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 222.20276
       tipo: 2
       rumbo: 0
@@ -591,228 +645,266 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 2.6799998
       tipo: 2
       estado: Beg01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.25
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.1
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.18
       tipo: 2
       estado: Angry02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.746667
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 12.852041
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 13.002041
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 13.082041
       tipo: 2
       estado: Beg01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.55204
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 26.05204
       tipo: 2
       estado: DefendHit_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 26.358707
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0.5
       t: 35.294216
       tipo: 1
       estado: Cry01_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 94.97901
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 94.97901
       tipo: 1
       estado: Cry01_Loop
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 109.84568
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 112.34568
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 112.34568
       tipo: 2
       estado: GetUp_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 113.11235
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 113.19235
       tipo: 2
       estado: Beg01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 118.9339
       tipo: 2
-      estado: Question02
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 120.22296
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 127.59521
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 133.19519
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 136.95181
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 137.03181
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 142.08365
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 144.19753
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 147.81752
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 153.52936
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 160.21466
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 163.83466
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 192.68564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 198.63951
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 203.52214
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 206.35277
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 214.55275
       tipo: 2
       estado: Question02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 222.23276
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 229.11316
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: miedo
@@ -911,9 +1003,9 @@ MonoBehaviour:
     claveDelNombre: Liam
     posiciones:
     - t: 0
-      p: {x: -1.2, y: 0, z: 4.2}
+      p: {x: -1.2, y: 0.001, z: 4.2}
     - t: 94.97901
-      p: {x: -1.2, y: 0, z: 4.2}
+      p: {x: -1.2, y: 0.001, z: 4.2}
     - t: 94.98001
       p: {x: 198.6, y: 0, z: 5.6}
     - t: 133.19519
@@ -998,12 +1090,12 @@ MonoBehaviour:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 8.2}
+      punto: {x: 0, y: 0.001, z: 8.2}
       actor: 
     - t: 50.27095
       tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 4.2}
+      punto: {x: 0, y: 0.001, z: 4.2}
       actor: 
     - t: 94.97901
       tipo: 2
@@ -1156,6 +1248,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 130.7952
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
     - t: 137.0518
       tipo: 2
       rumbo: 0
@@ -1191,6 +1288,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Archimago
+    - t: 172.76486
+      tipo: 1
+      rumbo: 0
+      punto: {x: 199.5, y: 17, z: 24}
+      actor: 
+    - t: 187.26488
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 0.9}
+      actor: 
     - t: 192.20564
       tipo: 2
       rumbo: 0
@@ -1238,180 +1345,210 @@ MonoBehaviour:
       estado: Die01Stay_NoWeapon
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 50.27095
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 50.27095
       tipo: 1
       estado: Die01Stay_NoWeapon
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 94.97901
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 94.97901
       tipo: 1
       estado: Die01Stay_NoWeapon
       congelar: 1
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 107.37901
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 107.37901
       tipo: 2
       estado: GetUp_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 108.14568
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 109.225685
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 113.81235
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 118.40786
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 120.84296
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 126.97521
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 133.19519
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 136.95181
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 137.65181
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 142.08365
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 144.81752
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 153.52936
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 160.83466
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 163.83466
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 192.68564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 196.9872
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 201.61664
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 203.52214
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 206.35277
       tipo: 1
       estado: Idle01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 217.65276
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 222.85275
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 229.11316
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 231.34174
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 109.14568
       emocion: sorpresa
@@ -1540,30 +1677,35 @@ MonoBehaviour:
       estado: fly_idle
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 137.65181
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 144.81752
       tipo: 2
       estado: Question02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 160.83466
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 163.21466
       tipo: 2
       estado: HandWave02
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 137.55182
       emocion: sorpresa
@@ -1810,7 +1952,7 @@ MonoBehaviour:
     t1: 196.18564
     actor: Player
     clave: FINAL_WILL_RETURN_02
-    gesto: Greeting01_NoWeapon
+    gesto: 
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
@@ -1873,7 +2015,7 @@ MonoBehaviour:
     t1: 230.24173
     actor: Player
     clave: FINAL_WILL_RETURN_04
-    gesto: HeadNod01
+    gesto: 
     sinPose: 1
     presentacion: -1
   planos:
@@ -1930,7 +2072,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 5.6
-      p: {x: 0.35, y: 1.1, z: 7.2}
+      p: {x: 0.35, y: 1.1010001, z: 7.2}
     lente: 39
     lenteFinal: 0
     sujetos:
@@ -1946,14 +2088,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 8.1
-      p: {x: 0, y: 1.5, z: 8.2}
+      p: {x: 0, y: 1.501, z: 8.2}
     t0: 8.1
     t1: 13.002041
     tipo: 1
     descripcion: conjunto de will
     posiciones:
     - t: 8.1
-      p: {x: -1, y: 1.9, z: 1.4}
+      p: {x: -1, y: 1.901, z: 1.4}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -1961,7 +2103,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 0, y: 1.5, z: 8.2}
+    focoFijo: {x: 0, y: 1.501, z: 8.2}
     alturaDelFoco: 1.5
     encuadre: {x: 0, y: 0}
     suavidad: 0.3
@@ -1990,14 +2132,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 17.80204
-      p: {x: 0, y: 0.8, z: 5.2}
+      p: {x: 0, y: 0.801, z: 5.2}
     t0: 17.80204
     t1: 20.00204
     tipo: 0
     descripcion: general de will y liam
     posiciones:
     - t: 17.80204
-      p: {x: 6.5, y: 33.082504, z: 1}
+      p: {x: 6.5, y: 4.2009997, z: 1}
     lente: 46
     lenteFinal: 0
     sujetos:
@@ -2007,7 +2149,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 0, y: 0.8, z: 5.2}
+    focoFijo: {x: 0, y: 0.801, z: 5.2}
     alturaDelFoco: 0.8
     encuadre: {x: 0, y: 0}
     suavidad: 0.4
@@ -2020,7 +2162,7 @@ MonoBehaviour:
     descripcion: primer plano de will
     posiciones:
     - t: 20.00204
-      p: {x: 0.25, y: 1.1, z: 6.6}
+      p: {x: 0.25, y: 1.1010001, z: 6.6}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -2147,14 +2289,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 50.27095
-      p: {x: -0.5, y: 0.5, z: 4.2}
+      p: {x: -0.5, y: 0.501, z: 4.2}
     t0: 50.27095
     t1: 54.98064
     tipo: 0
     descripcion: general de will y liam
     posiciones:
     - t: 50.27095
-      p: {x: 6, y: 33.393154, z: -2}
+      p: {x: 6, y: 5.001, z: -2}
     lente: 44
     lenteFinal: 0
     sujetos:
@@ -2164,7 +2306,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: -0.5, y: 0.5, z: 4.2}
+    focoFijo: {x: -0.5, y: 0.501, z: 4.2}
     alturaDelFoco: 0.5
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
@@ -2177,7 +2319,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 54.98064
-      p: {x: -1.1, y: 1, z: 2.8}
+      p: {x: -1.1, y: 1.001, z: 2.8}
     lente: 39
     lenteFinal: 0
     sujetos:
@@ -2193,98 +2335,98 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 61.24921
-      p: {x: 0, y: 1.9, z: 4.2}
+      p: {x: 0, y: 1.901, z: 4.2}
     t0: 61.24921
     t1: 69.54636
     tipo: 0
     descripcion: general de will y liam
     posiciones:
     - t: 61.24921
-      p: {x: 2.6, y: 0.35000002, z: 2}
+      p: {x: 2.6, y: 0.35099995, z: 2}
     - t: 61.446762
-      p: {x: 2.598714, y: 0.35000002, z: 1.9984813}
+      p: {x: 2.598714, y: 0.35099995, z: 1.9984813}
     - t: 61.644314
-      p: {x: 2.5949347, y: 0.35000002, z: 1.9940279}
+      p: {x: 2.5949347, y: 0.35099995, z: 1.9940279}
     - t: 61.841866
-      p: {x: 2.5887718, y: 0.35000002, z: 1.9867985}
+      p: {x: 2.5887718, y: 0.35099995, z: 1.9867985}
     - t: 62.039413
-      p: {x: 2.5803275, y: 0.35000002, z: 1.9769595}
+      p: {x: 2.5803275, y: 0.35099995, z: 1.9769595}
     - t: 62.236965
-      p: {x: 2.5696988, y: 0.35000002, z: 1.9646816}
+      p: {x: 2.5696988, y: 0.35099995, z: 1.9646816}
     - t: 62.434517
-      p: {x: 2.5569773, y: 0.35000002, z: 1.9501407}
+      p: {x: 2.5569773, y: 0.35099995, z: 1.9501407}
     - t: 62.63207
-      p: {x: 2.5422523, y: 0.35000002, z: 1.9335153}
+      p: {x: 2.5422523, y: 0.35099995, z: 1.9335153}
     - t: 62.82962
-      p: {x: 2.5256114, y: 0.35000002, z: 1.9149866}
+      p: {x: 2.5256114, y: 0.35099995, z: 1.9149866}
     - t: 63.027172
-      p: {x: 2.5071418, y: 0.35000002, z: 1.8947365}
+      p: {x: 2.5071418, y: 0.35099995, z: 1.8947365}
     - t: 63.22472
-      p: {x: 2.4869316, y: 0.35000002, z: 1.8729479}
+      p: {x: 2.4869316, y: 0.35099995, z: 1.8729479}
     - t: 63.42227
-      p: {x: 2.4650707, y: 0.35000002, z: 1.849803}
+      p: {x: 2.4650707, y: 0.35099995, z: 1.849803}
     - t: 63.619823
-      p: {x: 2.4416525, y: 0.35000002, z: 1.8254826}
+      p: {x: 2.4416525, y: 0.35099995, z: 1.8254826}
     - t: 63.817375
-      p: {x: 2.4167736, y: 0.35000002, z: 1.8001657}
+      p: {x: 2.4167736, y: 0.35099995, z: 1.8001657}
     - t: 64.01492
-      p: {x: 2.390535, y: 0.35000002, z: 1.7740276}
+      p: {x: 2.390535, y: 0.35099995, z: 1.7740276}
     - t: 64.21248
-      p: {x: 2.3630433, y: 0.35000002, z: 1.7472413}
+      p: {x: 2.3630433, y: 0.35099995, z: 1.7472413}
     - t: 64.41003
-      p: {x: 2.3344102, y: 0.35000002, z: 1.719974}
+      p: {x: 2.3344102, y: 0.35099995, z: 1.719974}
     - t: 64.60758
-      p: {x: 2.3047538, y: 0.35000002, z: 1.6923897}
+      p: {x: 2.3047538, y: 0.35099995, z: 1.6923897}
     - t: 64.80513
-      p: {x: 2.274198, y: 0.35000002, z: 1.6646454}
+      p: {x: 2.274198, y: 0.35099995, z: 1.6646454}
     - t: 65.00268
-      p: {x: 2.242874, y: 0.35000002, z: 1.6368933}
+      p: {x: 2.242874, y: 0.35099995, z: 1.6368933}
     - t: 65.20023
-      p: {x: 2.210918, y: 0.35000002, z: 1.609278}
+      p: {x: 2.210918, y: 0.35099995, z: 1.609278}
     - t: 65.39778
-      p: {x: 2.1784742, y: 0.35000002, z: 1.5819378}
+      p: {x: 2.1784742, y: 0.35099995, z: 1.5819378}
     - t: 65.59534
-      p: {x: 2.145692, y: 0.35000002, z: 1.5550036}
+      p: {x: 2.145692, y: 0.35099995, z: 1.5550036}
     - t: 65.792885
-      p: {x: 2.1127284, y: 0.35000002, z: 1.5286}
+      p: {x: 2.1127284, y: 0.35099995, z: 1.5286}
     - t: 65.99044
-      p: {x: 2.0797443, y: 0.35000002, z: 1.5028417}
+      p: {x: 2.0797443, y: 0.35099995, z: 1.5028417}
     - t: 66.18799
-      p: {x: 2.0469084, y: 0.35000002, z: 1.477838}
+      p: {x: 2.0469084, y: 0.35099995, z: 1.477838}
     - t: 66.38554
-      p: {x: 2.014393, y: 0.35000002, z: 1.4536896}
+      p: {x: 2.014393, y: 0.35099995, z: 1.4536896}
     - t: 66.58309
-      p: {x: 1.9823757, y: 0.35000002, z: 1.4304898}
+      p: {x: 1.9823757, y: 0.35099995, z: 1.4304898}
     - t: 66.78064
-      p: {x: 1.9510384, y: 0.35000002, z: 1.408325}
+      p: {x: 1.9510384, y: 0.35099995, z: 1.408325}
     - t: 66.978195
-      p: {x: 1.9205666, y: 0.35000002, z: 1.3872747}
+      p: {x: 1.9205666, y: 0.35099995, z: 1.3872747}
     - t: 67.17574
-      p: {x: 1.8911488, y: 0.35000002, z: 1.3674119}
+      p: {x: 1.8911488, y: 0.35099995, z: 1.3674119}
     - t: 67.37329
-      p: {x: 1.862977, y: 0.35000002, z: 1.3488045}
+      p: {x: 1.862977, y: 0.35099995, z: 1.3488045}
     - t: 67.57085
-      p: {x: 1.8362441, y: 0.35000002, z: 1.3315148}
+      p: {x: 1.8362441, y: 0.35099995, z: 1.3315148}
     - t: 67.768394
-      p: {x: 1.811145, y: 0.35000002, z: 1.3156016}
+      p: {x: 1.811145, y: 0.35099995, z: 1.3156016}
     - t: 67.96595
-      p: {x: 1.787875, y: 0.35000002, z: 1.3011205}
+      p: {x: 1.787875, y: 0.35099995, z: 1.3011205}
     - t: 68.1635
-      p: {x: 1.7666302, y: 0.35000002, z: 1.2881248}
+      p: {x: 1.7666302, y: 0.35099995, z: 1.2881248}
     - t: 68.36105
-      p: {x: 1.7476052, y: 0.35000002, z: 1.2766669}
+      p: {x: 1.7476052, y: 0.35099995, z: 1.2766669}
     - t: 68.5586
-      p: {x: 1.7309942, y: 0.35000002, z: 1.2668006}
+      p: {x: 1.7309942, y: 0.35099995, z: 1.2668006}
     - t: 68.75615
-      p: {x: 1.7169889, y: 0.35000002, z: 1.2585804}
+      p: {x: 1.7169889, y: 0.35099995, z: 1.2585804}
     - t: 68.953705
-      p: {x: 1.7057788, y: 0.35000002, z: 1.2520654}
+      p: {x: 1.7057788, y: 0.35099995, z: 1.2520654}
     - t: 69.15125
-      p: {x: 1.6975498, y: 0.35000002, z: 1.2473192}
+      p: {x: 1.6975498, y: 0.35099995, z: 1.2473192}
     - t: 69.34881
-      p: {x: 1.6924834, y: 0.35000002, z: 1.2444122}
+      p: {x: 1.6924834, y: 0.35099995, z: 1.2444122}
     - t: 69.54636
-      p: {x: 1.6907564, y: 0.35000002, z: 1.2434239}
+      p: {x: 1.6907564, y: 0.35099995, z: 1.2434239}
     lente: 46
     lenteFinal: 0
     sujetos:
@@ -2294,7 +2436,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 0, y: 1.9, z: 4.2}
+    focoFijo: {x: 0, y: 1.901, z: 4.2}
     alturaDelFoco: 1.9
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
@@ -2302,16 +2444,16 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 69.54636
-      p: {x: 0, y: 2.3, z: 4.2}
+      p: {x: 0, y: 2.3009999, z: 4.2}
     t0: 69.54636
     t1: 77.76514
     tipo: 1
     descripcion: conjunto de will y liam
     posiciones:
     - t: 69.54636
-      p: {x: 2.6, y: 1.7, z: 6.4}
+      p: {x: 2.6, y: 1.7010001, z: 6.4}
     - t: 77.76514
-      p: {x: -2.9, y: 1.7, z: 5.8}
+      p: {x: -2.9, y: 1.7020001, z: 5.8}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2321,7 +2463,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: 0, y: 2.3, z: 4.2}
+    focoFijo: {x: 0, y: 2.3009999, z: 4.2}
     alturaDelFoco: 2.3
     encuadre: {x: 0, y: 0}
     suavidad: 0.4
@@ -2329,14 +2471,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 77.76514
-      p: {x: 0, y: 2.45, z: 4.2}
+      p: {x: 0, y: 2.451, z: 4.2}
     t0: 77.76514
     t1: 82.179016
     tipo: 2
     descripcion: medio de will
     posiciones:
     - t: 77.76514
-      p: {x: -1.4, y: 0.9, z: 3}
+      p: {x: -1.4, y: 0.90099996, z: 3}
     lente: 36
     lenteFinal: 0
     sujetos:
@@ -2344,7 +2486,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 0, y: 2.45, z: 4.2}
+    focoFijo: {x: 0, y: 2.451, z: 4.2}
     alturaDelFoco: 2.45
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.2
@@ -2352,14 +2494,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 82.179016
-      p: {x: -0.5, y: 1.4, z: 4.2}
+      p: {x: -0.5, y: 1.401, z: 4.2}
     t0: 82.179016
     t1: 85.179016
     tipo: 0
     descripcion: general de will y liam
     posiciones:
     - t: 82.179016
-      p: {x: 4.5, y: 30.13892, z: 1}
+      p: {x: 4.5, y: 1.001, z: 1}
     lente: 50
     lenteFinal: 0
     sujetos:
@@ -2369,7 +2511,7 @@ MonoBehaviour:
     - 1
     - 1
     extras: []
-    focoFijo: {x: -0.5, y: 1.4, z: 4.2}
+    focoFijo: {x: -0.5, y: 1.401, z: 4.2}
     alturaDelFoco: 1.4
     encuadre: {x: 0, y: 0}
     suavidad: 0
@@ -2377,14 +2519,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 85.179016
-      p: {x: 0, y: 2.5, z: 4.2}
+      p: {x: 0, y: 2.501, z: 4.2}
     t0: 85.179016
     t1: 88.779015
     tipo: 2
     descripcion: medio de will
     posiciones:
     - t: 85.179016
-      p: {x: -1.6, y: 2, z: 3.4}
+      p: {x: -1.6, y: 2.001, z: 3.4}
     lente: 36
     lenteFinal: 0
     sujetos:
@@ -2392,7 +2534,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 0, y: 2.5, z: 4.2}
+    focoFijo: {x: 0, y: 2.501, z: 4.2}
     alturaDelFoco: 2.5
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
@@ -2400,14 +2542,14 @@ MonoBehaviour:
     mano: 0.12
   - focos:
     - t: 88.779015
-      p: {x: 0, y: 1.6, z: 4.2}
+      p: {x: 0, y: 1.6010001, z: 4.2}
     t0: 88.779015
     t1: 94.97901
     tipo: 0
     descripcion: general de will
     posiciones:
     - t: 88.779015
-      p: {x: 5, y: 35.155693, z: -4}
+      p: {x: 5, y: 7.001, z: -4}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -2415,7 +2557,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 0, y: 1.6, z: 4.2}
+    focoFijo: {x: 0, y: 1.6010001, z: 4.2}
     alturaDelFoco: 1.6
     encuadre: {x: 0, y: 0}
     suavidad: 1
@@ -3143,404 +3285,398 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550567
-    linea: 106
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 0
-    beat:
-      rid: 6540294456446550568
-    linea: 107
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 0
-    beat:
-      rid: 6540294456446550569
+      rid: 6540294550018327065
     linea: 108
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550570
+      rid: 6540294550018327066
     linea: 109
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550571
+      rid: 6540294550018327067
     linea: 110
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550572
+      rid: 6540294550018327068
     linea: 111
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550573
-    linea: 117
+      rid: 6540294550018327069
+    linea: 112
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446550574
-    linea: 127
+      rid: 6540294550018327070
+    linea: 113
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294550018327071
+    linea: 119
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294550018327072
+    linea: 129
   - onlyIfFlag: 
     skipIfFlag: 
     t: 17.80204
     beat:
-      rid: 6540294456446550575
-    linea: 154
+      rid: 6540294550018327073
+    linea: 156
   - onlyIfFlag: 
     skipIfFlag: 
     t: 25.10204
     beat:
-      rid: 6540294456446550576
-    linea: 163
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 26.05204
-    beat:
-      rid: 6540294456446550577
+      rid: 6540294550018327074
     linea: 165
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.05204
     beat:
-      rid: 6540294456446550578
-    linea: 166
+      rid: 6540294550018327075
+    linea: 167
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 26.05204
+    beat:
+      rid: 6540294550018327076
+    linea: 168
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.158707
     beat:
-      rid: 6540294456446550579
-    linea: 174
+      rid: 6540294550018327077
+    linea: 176
   - onlyIfFlag: 
     skipIfFlag: 
     t: 35.294216
     beat:
-      rid: 6540294456446550580
-    linea: 183
+      rid: 6540294550018327078
+    linea: 185
   - onlyIfFlag: 
     skipIfFlag: 
     t: 40.77095
     beat:
-      rid: 6540294456446550581
-    linea: 192
+      rid: 6540294550018327079
+    linea: 194
   - onlyIfFlag: 
     skipIfFlag: 
     t: 45.57095
     beat:
-      rid: 6540294456446550582
-    linea: 194
+      rid: 6540294550018327080
+    linea: 196
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294456446550583
-    linea: 211
+      rid: 6540294550018327081
+    linea: 203
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294456446550584
-    linea: 207
+      rid: 6540294550018327082
+    linea: 208
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294456446550585
-    linea: 201
+      rid: 6540294550018327083
+    linea: 209
   - onlyIfFlag: 
     skipIfFlag: 
     t: 50.27095
     beat:
-      rid: 6540294456446550586
-    linea: 206
+      rid: 6540294550018327084
+    linea: 213
   - onlyIfFlag: 
     skipIfFlag: 
     t: 54.98064
     beat:
-      rid: 6540294456446550587
-    linea: 219
+      rid: 6540294550018327085
+    linea: 221
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294456446550588
-    linea: 229
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 61.24921
-    beat:
-      rid: 6540294456446550589
-    linea: 230
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 61.24921
-    beat:
-      rid: 6540294456446550590
+      rid: 6540294550018327086
     linea: 231
   - onlyIfFlag: 
     skipIfFlag: 
     t: 61.24921
     beat:
-      rid: 6540294456446550591
+      rid: 6540294550018327087
     linea: 232
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 69.54636
+    t: 61.24921
     beat:
-      rid: 6540294456446550592
-    linea: 238
+      rid: 6540294550018327088
+    linea: 233
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 61.24921
+    beat:
+      rid: 6540294550018327089
+    linea: 234
   - onlyIfFlag: 
     skipIfFlag: 
     t: 69.54636
     beat:
-      rid: 6540294456446550593
-    linea: 239
+      rid: 6540294550018327090
+    linea: 240
   - onlyIfFlag: 
     skipIfFlag: 
     t: 77.76514
     beat:
-      rid: 6540294456446550594
-    linea: 246
+      rid: 6540294550018327091
+    linea: 247
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294456446550595
-    linea: 255
+      rid: 6540294550018327092
+    linea: 252
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294456446550596
-    linea: 249
+      rid: 6540294550018327093
+    linea: 256
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294456446550597
-    linea: 253
+      rid: 6540294550018327094
+    linea: 257
   - onlyIfFlag: 
     skipIfFlag: 
     t: 82.179016
     beat:
-      rid: 6540294456446550598
-    linea: 254
+      rid: 6540294550018327095
+    linea: 258
   - onlyIfFlag: 
     skipIfFlag: 
     t: 85.179016
     beat:
-      rid: 6540294456446550599
-    linea: 260
+      rid: 6540294550018327096
+    linea: 263
   - onlyIfFlag: 
     skipIfFlag: 
     t: 92.97901
     beat:
-      rid: 6540294456446550600
-    linea: 265
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 94.97901
-    beat:
-      rid: 6540294456446550601
+      rid: 6540294550018327097
     linea: 269
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294456446550602
-    linea: 275
+      rid: 6540294550018327098
+    linea: 273
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294456446550603
-    linea: 276
+      rid: 6540294550018327099
+    linea: 279
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294456446550604
-    linea: 283
+      rid: 6540294550018327100
+    linea: 280
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294456446550605
-    linea: 286
+      rid: 6540294550018327101
+    linea: 287
   - onlyIfFlag: 
     skipIfFlag: 
     t: 94.97901
     beat:
-      rid: 6540294456446550606
-    linea: 288
+      rid: 6540294550018327102
+    linea: 290
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 94.97901
+    beat:
+      rid: 6540294550018327103
+    linea: 292
   - onlyIfFlag: 
     skipIfFlag: 
     t: 96.57901
     beat:
-      rid: 6540294456446550607
-    linea: 294
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 103.57901
-    beat:
-      rid: 6540294456446550608
+      rid: 6540294550018327104
     linea: 298
   - onlyIfFlag: 
     skipIfFlag: 
     t: 103.57901
     beat:
-      rid: 6540294456446550609
-    linea: 299
+      rid: 6540294550018327105
+    linea: 302
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 103.57901
+    beat:
+      rid: 6540294550018327106
+    linea: 303
   - onlyIfFlag: 
     skipIfFlag: 
     t: 107.37901
     beat:
-      rid: 6540294456446550610
-    linea: 303
+      rid: 6540294550018327107
+    linea: 307
   - onlyIfFlag: 
     skipIfFlag: 
     t: 130.7952
     beat:
-      rid: 6540294456446550611
-    linea: 345
+      rid: 6540294550018327108
+    linea: 349
   - onlyIfFlag: 
     skipIfFlag: 
     t: 141.38365
     beat:
-      rid: 6540294456446550612
-    linea: 362
+      rid: 6540294550018327109
+    linea: 366
   - onlyIfFlag: 
     skipIfFlag: 
     t: 144.11752
     beat:
-      rid: 6540294456446550613
-    linea: 367
+      rid: 6540294550018327110
+    linea: 371
   - onlyIfFlag: 
     skipIfFlag: 
     t: 147.11752
     beat:
-      rid: 6540294456446550614
-    linea: 374
+      rid: 6540294550018327111
+    linea: 378
   - onlyIfFlag: 
     skipIfFlag: 
     t: 160.13466
     beat:
-      rid: 6540294456446550615
-    linea: 383
+      rid: 6540294550018327112
+    linea: 387
   - onlyIfFlag: 
     skipIfFlag: 
     t: 163.13466
     beat:
-      rid: 6540294456446550616
-    linea: 390
+      rid: 6540294550018327113
+    linea: 394
   - onlyIfFlag: 
     skipIfFlag: 
     t: 172.56487
     beat:
-      rid: 6540294456446550617
-    linea: 393
+      rid: 6540294550018327114
+    linea: 397
   - onlyIfFlag: 
     skipIfFlag: 
     t: 172.76486
     beat:
-      rid: 6540294456446550618
-    linea: 398
+      rid: 6540294550018327115
+    linea: 402
   - onlyIfFlag: 
     skipIfFlag: 
     t: 184.36487
     beat:
-      rid: 6540294456446550619
-    linea: 417
+      rid: 6540294550018327116
+    linea: 421
   - onlyIfFlag: 
     skipIfFlag: 
     t: 188.16487
     beat:
-      rid: 6540294456446550620
-    linea: 429
+      rid: 6540294550018327117
+    linea: 433
   - onlyIfFlag: 
     skipIfFlag: 
     t: 200.51665
     beat:
-      rid: 6540294456446550621
-    linea: 447
+      rid: 6540294550018327118
+    linea: 452
   - onlyIfFlag: 
     skipIfFlag: 
     t: 203.52214
     beat:
-      rid: 6540294456446550622
-    linea: 458
+      rid: 6540294550018327119
+    linea: 464
   - onlyIfFlag: 
     skipIfFlag: 
     t: 203.52214
     beat:
-      rid: 6540294456446550623
-    linea: 459
+      rid: 6540294550018327120
+    linea: 465
   - onlyIfFlag: 
     skipIfFlag: 
     t: 206.35277
     beat:
-      rid: 6540294456446550624
-    linea: 468
+      rid: 6540294550018327121
+    linea: 474
   - onlyIfFlag: 
     skipIfFlag: 
     t: 206.35277
     beat:
-      rid: 6540294456446550625
-    linea: 469
+      rid: 6540294550018327122
+    linea: 475
   - onlyIfFlag: 
     skipIfFlag: 
     t: 211.55276
     beat:
-      rid: 6540294456446550626
-    linea: 480
+      rid: 6540294550018327123
+    linea: 486
   - onlyIfFlag: 
     skipIfFlag: 
     t: 230.54173
     beat:
-      rid: 6540294456446550627
-    linea: 504
+      rid: 6540294550018327124
+    linea: 512
   - onlyIfFlag: 
     skipIfFlag: 
     t: 232.2982
     beat:
-      rid: 6540294456446550628
-    linea: 507
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 242.7982
-    beat:
-      rid: 6540294456446550629
-    linea: 511
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 242.7982
-    beat:
-      rid: 6540294456446550630
-    linea: 512
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 248.1982
-    beat:
-      rid: 6540294456446550631
-    linea: 514
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 248.1982
-    beat:
-      rid: 6540294456446550632
+      rid: 6540294550018327125
     linea: 515
   - onlyIfFlag: 
     skipIfFlag: 
+    t: 242.7982
+    beat:
+      rid: 6540294550018327126
+    linea: 519
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 242.7982
+    beat:
+      rid: 6540294550018327127
+    linea: 520
+  - onlyIfFlag: 
+    skipIfFlag: 
     t: 248.1982
     beat:
-      rid: 6540294456446550633
-    linea: 516
+      rid: 6540294550018327128
+    linea: 522
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 248.1982
+    beat:
+      rid: 6540294550018327129
+    linea: 523
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 248.1982
+    beat:
+      rid: 6540294550018327130
+    linea: 524
   etiquetas:
   - nombre: inicio
     t: 0
@@ -3552,45 +3688,45 @@ MonoBehaviour:
     t: 206.35277
   puntos:
   - nombre: p_liam_caido
-    posicion: {x: -1.2, y: 0, z: 4.2}
+    posicion: {x: -1.2, y: 0.001, z: 4.2}
   - nombre: p_will_umbral
-    posicion: {x: 0, y: 0, z: 4.6}
+    posicion: {x: 0, y: 0.001, z: 4.6}
   - nombre: p_will_conjuro
-    posicion: {x: 0, y: 0, z: 4.2}
+    posicion: {x: 0, y: 0.001, z: 4.2}
   - nombre: p_will_a2_inicio
-    posicion: {x: 1.9, y: 0, z: 5.9}
+    posicion: {x: 1.9, y: 0.001, z: 5.9}
   - nombre: p_portal_salida
-    posicion: {x: 0, y: 0, z: 8.2}
+    posicion: {x: 0, y: 0.001, z: 8.2}
   - nombre: p_a1_sendero_centro
-    posicion: {x: 0, y: 0, z: 5.2}
+    posicion: {x: 0, y: 0.001, z: 5.2}
   - nombre: p_a2_centro
-    posicion: {x: -0.5, y: 0, z: 4.2}
+    posicion: {x: -0.5, y: 0.001, z: 4.2}
   - nombre: cam_a1_hombro_will
-    posicion: {x: -1, y: 0, z: 1.4}
+    posicion: {x: -1, y: 0.001, z: 1.4}
   - nombre: cam_will_umbral_frente
-    posicion: {x: 0.35, y: 0, z: 7.2}
+    posicion: {x: 0.35, y: 0.001, z: 7.2}
   - nombre: cam_will_umbral_cerca
-    posicion: {x: 0.25, y: 0, z: 6.6}
+    posicion: {x: 0.25, y: 0.001, z: 6.6}
   - nombre: cam_a1_sendero_alto
-    posicion: {x: 6.5, y: 28.882504, z: 1}
+    posicion: {x: 6.5, y: 0.001, z: 1}
   - nombre: cam_a2_general
-    posicion: {x: 6, y: 28.393154, z: -2}
+    posicion: {x: 6, y: 0.001, z: -2}
   - nombre: cam_a2_will_frente
-    posicion: {x: -1.1, y: 0, z: 2.8}
+    posicion: {x: -1.1, y: 0.001, z: 2.8}
   - nombre: cam_a2_contrapicado
-    posicion: {x: 2.6, y: 0, z: 2}
+    posicion: {x: 2.6, y: 0.001, z: 2}
   - nombre: cam_a2_orbita_a
-    posicion: {x: 2.6, y: 0, z: 6.4}
+    posicion: {x: 2.6, y: 0.001, z: 6.4}
   - nombre: cam_a2_orbita_b
-    posicion: {x: -2.9, y: 0, z: 5.8}
+    posicion: {x: -2.9, y: 0.001, z: 5.8}
   - nombre: cam_a2_climax_frente
-    posicion: {x: -1.4, y: 0, z: 3}
+    posicion: {x: -1.4, y: 0.001, z: 3}
   - nombre: cam_a2_general_bajo
-    posicion: {x: 4.5, y: 29.13892, z: 1}
+    posicion: {x: 4.5, y: 0.001, z: 1}
   - nombre: cam_a2_will_cerca
-    posicion: {x: -1.6, y: 0, z: 3.4}
+    posicion: {x: -1.6, y: 0.001, z: 3.4}
   - nombre: cam_a2_final
-    posicion: {x: 5, y: 28.155693, z: -4}
+    posicion: {x: 5, y: 0.001, z: -4}
   - nombre: p_piedra_portal
     posicion: {x: 200, y: 0, z: 0.4}
   - nombre: p_piedra_estela
@@ -3689,7 +3825,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446550567
+    - rid: 6540294550018327065
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3697,7 +3833,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446550568
+    - rid: 6540294550018327066
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3706,7 +3842,7 @@ MonoBehaviour:
         fadeIn: 3
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294456446550569
+    - rid: 6540294550018327067
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3714,35 +3850,35 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 6540294456446550570
+    - rid: 6540294550018327068
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AmbientePiedra
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550571
+    - rid: 6540294550018327069
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrirPortalUmbral
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550572
+    - rid: 6540294550018327070
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ColapsoDelSendero
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550573
+    - rid: 6540294550018327071
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550574
+    - rid: 6540294550018327072
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3750,27 +3886,27 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.2
         waitForEnd: 0
-    - rid: 6540294456446550575
+    - rid: 6540294550018327073
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.3
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294456446550576
+    - rid: 6540294550018327074
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ExplosionEnElPortal
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550577
+    - rid: 6540294550018327075
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.35
-    - rid: 6540294456446550578
+    - rid: 6540294550018327076
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3779,21 +3915,21 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.8
         desdeSegundo: -1
-    - rid: 6540294456446550579
+    - rid: 6540294550018327077
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EstelaAlcanzaElPortal
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550580
+    - rid: 6540294550018327078
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EstelaDejaDeAlcanzar
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550581
+    - rid: 6540294550018327079
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3803,7 +3939,7 @@ MonoBehaviour:
         markName: 
         volume: 0.75
         tono: 1
-    - rid: 6540294456446550582
+    - rid: 6540294550018327080
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3811,7 +3947,28 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.5
         waitForEnd: 0
-    - rid: 6540294456446550583
+    - rid: 6540294550018327081
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: SenderoDestruido
+        waitForEnd: 1
+        detenerEscena: 0
+    - rid: 6540294550018327082
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: LiamSinSentido
+        waitForEnd: 1
+        detenerEscena: 0
+    - rid: 6540294550018327083
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: MusicaDelConjuro
+        waitForEnd: 1
+        detenerEscena: 0
+    - rid: 6540294550018327084
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3819,48 +3976,27 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2
         waitForEnd: 0
-    - rid: 6540294456446550584
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: MusicaDelConjuro
-        waitForEnd: 1
-        detenerEscena: 0
-    - rid: 6540294456446550585
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: SenderoDestruido
-        waitForEnd: 1
-        detenerEscena: 0
-    - rid: 6540294456446550586
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: LiamSinSentido
-        waitForEnd: 1
-        detenerEscena: 0
-    - rid: 6540294456446550587
+    - rid: 6540294550018327085
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294456446550588
+    - rid: 6540294550018327086
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ConjuroCirculos
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550589
+    - rid: 6540294550018327087
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LevitarWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550590
+    - rid: 6540294550018327088
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3870,30 +4006,20 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294456446550591
+    - rid: 6540294550018327089
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 4
         gananciaDb: 4
-    - rid: 6540294456446550592
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: Prologo_Carga
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 0.8
-        tono: 1
-    - rid: 6540294456446550593
+    - rid: 6540294550018327090
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.4
         duration: 1.5
         waitForEnd: 0
-    - rid: 6540294456446550594
+    - rid: 6540294550018327091
       type: {class: RespiroBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3904,26 +4030,20 @@ MonoBehaviour:
         ataque: 0.2
         fundido: 0.3
         esperar: 0
-    - rid: 6540294456446550595
-      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        color: {r: 1, g: 1, b: 1, a: 1}
-        duration: 0.5
-    - rid: 6540294456446550596
+    - rid: 6540294550018327092
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294456446550597
+    - rid: 6540294550018327093
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ConjuroClimax
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550598
+    - rid: 6540294550018327094
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3933,14 +4053,20 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294456446550599
+    - rid: 6540294550018327095
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 0.5
+    - rid: 6540294550018327096
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: WillSeDesvanece
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550600
+    - rid: 6540294550018327097
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3948,7 +4074,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.4
         waitForEnd: 0
-    - rid: 6540294456446550601
+    - rid: 6540294550018327098
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3957,28 +4083,28 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 1
         desdeSegundo: -1
-    - rid: 6540294456446550602
+    - rid: 6540294550018327099
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AmbientePiedra
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550603
+    - rid: 6540294550018327100
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: OcultarLiam
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550604
+    - rid: 6540294550018327101
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSinSentido
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550605
+    - rid: 6540294550018327102
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3987,7 +4113,7 @@ MonoBehaviour:
         fadeIn: 2
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294456446550606
+    - rid: 6540294550018327103
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3995,7 +4121,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 2.2
         waitForEnd: 0
-    - rid: 6540294456446550607
+    - rid: 6540294550018327104
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4005,14 +4131,14 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294456446550608
+    - rid: 6540294550018327105
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamSeMaterializa
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550609
+    - rid: 6540294550018327106
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4022,64 +4148,64 @@ MonoBehaviour:
         markName: 
         volume: 0.85
         tono: 1
-    - rid: 6540294456446550610
+    - rid: 6540294550018327107
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LiamDespierta
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550611
+    - rid: 6540294550018327108
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EspirituArchimago
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550612
+    - rid: 6540294550018327109
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294456446550613
+    - rid: 6540294550018327110
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294456446550614
+    - rid: 6540294550018327111
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294456446550615
+    - rid: 6540294550018327112
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294456446550616
+    - rid: 6540294550018327113
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 3
         gananciaDb: 1.5
-    - rid: 6540294456446550617
+    - rid: 6540294550018327114
       type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         preset: 0
         gananciaDb: 0
-    - rid: 6540294456446550618
+    - rid: 6540294550018327115
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ArchimagoSeHaceEstrella
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550619
+    - rid: 6540294550018327116
       type: {class: RespiroBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4090,41 +4216,41 @@ MonoBehaviour:
         ataque: 0.3
         fundido: 0.8
         esperar: 0
-    - rid: 6540294456446550620
+    - rid: 6540294550018327117
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PortalDeRegreso
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550621
+    - rid: 6540294550018327118
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EsperarSubidaDelTema
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550622
+    - rid: 6540294550018327119
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: CarreraAlAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550623
+    - rid: 6540294550018327120
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: LagrimasAlCorrer
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550624
+    - rid: 6540294550018327121
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 1, b: 1, a: 1}
         duration: 0.25
-    - rid: 6540294456446550625
+    - rid: 6540294550018327122
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4134,35 +4260,35 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294456446550626
+    - rid: 6540294550018327123
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SoltarAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550627
+    - rid: 6540294550018327124
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrazoEstelaWill
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550628
+    - rid: 6540294550018327125
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrazoFinalDeLosTres
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550629
+    - rid: 6540294550018327126
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: TelonANegro
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550630
+    - rid: 6540294550018327127
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4170,14 +4296,14 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 4
         waitForEnd: 0
-    - rid: 6540294456446550631
+    - rid: 6540294550018327128
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SoltarAbrazo
         waitForEnd: 1
         detenerEscena: 0
-    - rid: 6540294456446550632
+    - rid: 6540294550018327129
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4185,7 +4311,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446550633
+    - rid: 6540294550018327130
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

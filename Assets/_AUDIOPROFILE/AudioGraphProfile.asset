@@ -618,3 +618,8 @@ MonoBehaviour:
     fadeIn: 1
     fadeOut: 2
     sinBucle: 0
+  - sequenceId: SENDERO_CONJURO
+    music: {fileID: 8300000, guid: 099f9fde0e2092e40afed64b3cadb6cc, type: 3}
+    fadeIn: 0.3
+    fadeOut: 2.5
+    sinBucle: 1

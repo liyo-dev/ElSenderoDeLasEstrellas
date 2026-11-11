@@ -1,0 +1,6 @@
+11 nov 2026 (INC-1059). Copias de lo que quedó guardado por error a las 16:06, cuando otra sesión
+rehorneó el NavMesh y guardó con seis escenas de cinemáticas abiertas a la vez (las había abierto el
+horneado de los guiones). Las escenas y sus NavMesh se devolvieron a su versión del repositorio, menos
+Laberinto, que tenía montaje sin subir y se quedó con su versión guardada.
+Los archivos de 0 bytes eran copias sin interés (NavMesh de 13-21 MB y escenas con luciérnagas de más):
+se vaciaron para no engordar el repositorio. Esta carpeta se puede borrar entera.

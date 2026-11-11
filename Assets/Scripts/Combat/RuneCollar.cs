@@ -53,6 +53,10 @@ public class RuneCollar : MonoBehaviour, IExpuestoAlDano
     [SerializeField, ColorUsage(false, true)] private Color runasEncendidas = new Color(3.2f, 1.25f, 0.45f);
     [Tooltip("Velocidad a la que se encienden y se apagan las runas (unidades de brillo por segundo).")]
     [SerializeField, Min(0.1f)] private float velocidadDelBrillo = 7f;
+    [Tooltip("Luz que acompaña al brillo de las runas: ilumina el cuello y la cara del jefe en la ventana. Vacío = sin luz.")]
+    [SerializeField] private Light luzDelBrillo;
+    [Tooltip("Intensidad de esa luz con las runas encendidas del todo.")]
+    [SerializeField, Min(0f)] private float intensidadDeLaLuz = 3f;
     [Tooltip("Piezas en que se parte el aro al caer el jefe. Cada una sale despedida hacia fuera desde el centro del aro.")]
     [SerializeField] private PiezaQueCae[] piezas;
     [Tooltip("Velocidad con la que salen despedidas las piezas (m/s).")]
@@ -123,6 +127,12 @@ public class RuneCollar : MonoBehaviour, IExpuestoAlDano
     private void PintarRunas()
     {
         _brilloPintado = _brillo;
+        if (luzDelBrillo)
+        {
+            luzDelBrillo.intensity = _brillo * intensidadDeLaLuz;
+            bool encendida = _brillo > 0.001f;
+            if (luzDelBrillo.enabled != encendida) luzDelBrillo.enabled = encendida;
+        }
         if (runas == null) return;
         var color = ColorDeRunas;
         for (int i = 0; i < runas.Length; i++)
@@ -141,6 +151,7 @@ public class RuneCollar : MonoBehaviour, IExpuestoAlDano
         if (_soltado) return;
         _soltado = true;
         SetGlow(false);
+        if (luzDelBrillo) luzDelBrillo.enabled = false;
         if (_collider) _collider.enabled = false;
         if (piezas == null) return;
 

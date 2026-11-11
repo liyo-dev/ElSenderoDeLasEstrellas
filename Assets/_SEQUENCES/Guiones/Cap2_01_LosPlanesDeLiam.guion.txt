@@ -95,6 +95,7 @@ espera 1.5
 @final
 liam cabeza manos
 liam cara triste
+& liam bucle Cabizbajo fundido=0.8
 espera 1
 # Liam piensa en su hermano: la franja con Tobi en la cama, y la frase cuando se va.
 cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=2.6 dura=0.8
@@ -103,6 +104,7 @@ espera 0.9
 tobi cara cansado
 espera 1.1
 liam dice EVT_LIAM_CRYSTAL_07 mira=manos cara=triste sin_pose
+& liam bucle ManoAlPecho fundido=0.6
 espera 2
 fundido cubre 1.5
 espera 1.5

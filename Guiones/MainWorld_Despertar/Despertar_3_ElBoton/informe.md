@@ -1,10 +1,10 @@
 # Parte de horneado: Despertar_3_ElBoton
 
-2026-10-30 17:29 · guion `Assets/_SEQUENCES/Guiones/Despertar_3_ElBoton.guion.txt`
+2026-11-11 18:12 · guion `Assets/_SEQUENCES/Guiones/Despertar_3_ElBoton.guion.txt`
 
 **0:01,6** de secuencia · 0 frases · 1 planos · 3 efectos · 2 personajes
 
-Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
+Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94
 
 ## Errores (0)
 

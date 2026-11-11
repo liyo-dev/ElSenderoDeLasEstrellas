@@ -29,8 +29,11 @@ will cara cansado
 & estela cara cansado
 espera 0.8
 will dice CAP4_TRAS_GOLEM_01 cara=cansado
+# Estela se mira las manos.
+& estela bucle Ofrecer fundido=0.5
 estela dice CAP4_TRAS_GOLEM_02 cara=cansado
 will gesto Loot01_Begin
+& estela reposo
 plano medio will
 will dice CAP4_TRAS_GOLEM_03 cara=sorpresa
 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Shine/Shine_blue.prefab" en=will lifetime=1.6
@@ -39,6 +42,7 @@ estela dice CAP4_TRAS_GOLEM_04 cara=preocupado
 @liam
 plano medio liam
 liam cara triste
+& liam bucle Cabizbajo fundido=0.8
 espera 1
 liam dice CAP4_TRAS_GOLEM_05 cara=triste
 espera 0.8

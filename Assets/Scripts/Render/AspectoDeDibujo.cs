@@ -13,6 +13,9 @@ public sealed class AspectoDeDibujo : ScriptableObject
     [Tooltip("Color por el que se multiplica el tono iluminado para dar el tono de sombra. Más claro = sombra más suave; con algo de violeta o rosa la sombra tiene color en vez de ensuciar.")]
     public Color tinteDeSombra = new Color(0.72f, 0.62f, 0.80f, 1f);
 
+    [Tooltip("Tinte de la sombra en los colores cálidos (piel, pelo rubio o castaño, madera, rojos): con el violeta de arriba la piel en sombra sale lila. Los colores fríos siguen con el otro.")]
+    public Color tinteDeSombraCalida = new Color(0.84f, 0.66f, 0.66f, 1f);
+
     [Tooltip("Dónde cae el borde entre luz y sombra. 0 = justo donde la superficie deja de mirar a la luz; más alto = más sombra.")]
     [Range(-0.5f, 0.5f)] public float umbral = 0.05f;
 
@@ -47,6 +50,7 @@ public sealed class AspectoDeDibujo : ScriptableObject
 
     private static readonly int IdActivo = Shader.PropertyToID("_DibujoActivo");
     private static readonly int IdSombra = Shader.PropertyToID("_DibujoSombra");
+    private static readonly int IdSombraCalida = Shader.PropertyToID("_DibujoSombraCalida");
     private static readonly int IdUmbral = Shader.PropertyToID("_DibujoUmbral");
     private static readonly int IdSuavidad = Shader.PropertyToID("_DibujoSuavidad");
     private static readonly int IdSaturacionSombra = Shader.PropertyToID("_DibujoSaturacionSombra");
@@ -65,6 +69,8 @@ public sealed class AspectoDeDibujo : ScriptableObject
         // la conversión que Unity hace con los colores de un material.
         Color sombra = QualitySettings.activeColorSpace == ColorSpace.Linear ? tinteDeSombra.linear : tinteDeSombra;
         Shader.SetGlobalVector(IdSombra, new Vector4(sombra.r, sombra.g, sombra.b, 1f));
+        Color calida = QualitySettings.activeColorSpace == ColorSpace.Linear ? tinteDeSombraCalida.linear : tinteDeSombraCalida;
+        Shader.SetGlobalVector(IdSombraCalida, new Vector4(calida.r, calida.g, calida.b, 1f));
         Shader.SetGlobalFloat(IdUmbral, umbral);
         Shader.SetGlobalFloat(IdSuavidad, suavidad);
         Shader.SetGlobalFloat(IdSaturacionSombra, saturacionDeSombra);

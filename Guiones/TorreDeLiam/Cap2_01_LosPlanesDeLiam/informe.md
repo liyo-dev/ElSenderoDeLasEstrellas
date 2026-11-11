@@ -1,6 +1,6 @@
 # Parte de horneado: Cap2_01_LosPlanesDeLiam
 
-2026-11-08 12:44 · guion `Assets/_SEQUENCES/Guiones/Cap2_01_LosPlanesDeLiam.guion.txt`
+2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap2_01_LosPlanesDeLiam.guion.txt`
 
 **0:43,5** de secuencia · 7 frases · 8 planos · 6 efectos · 2 personajes
 
@@ -70,6 +70,8 @@ Reparto medido (m): liam 1,68/ojos 0,93 · tobi 1,43/ojos 0,75
 - 0:22,7–0:25,3 habla
 - 0:28,3 gesto HeadShake01
 - 0:28,3–0:30,7 habla
+- 0:32,2 pose de brazos Cabizbajo
+- 0:36,0 pose de brazos ManoAlPecho
 - 0:36,0–0:39,5 habla
 
 ### tobi (TOBI_TORRE)

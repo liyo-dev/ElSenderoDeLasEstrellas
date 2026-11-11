@@ -1,18 +1,20 @@
 # Parte de horneado: Final_01_ElSacrificio
 
-2026-11-07 16:47 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
+2026-11-11 18:12 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
 
-**4:08,7** de secuencia · 32 frases · 51 planos · 67 efectos · 4 personajes
+**4:08,7** de secuencia · 32 frases · 51 planos · 66 efectos · 4 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93 · archimago 1,57/ojos 0,93
 
 ## Errores (0)
 
 
-## Avisos (3)
+## Avisos (5)
 
 - línea 28: 'Actor_Archimago' no tiene punto de aparición en CinematicaFinal_Preview; necesita un «en» al principio.
-- línea 488: plano hombro estela will lente=30 suave=0.25 distancia=2.8: no cabe el contraplano sobre el hombro de estela; hago un plano medio de will.
+- línea 133: plano conjunto estela solo desde=cam_a1_hombro_estela mira=p_piedra_portal altura=1.5 altura_foco=1.6 lente=36 suave=0.3: estela habla de espaldas a la cámara en 3,9 s (162°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 239: plano conjunto will liam desde=cam_a2_orbita_a mover=cam_a2_orbita_b mira=p_will_conjuro altura=1.7 altura_foco=2.3 lente=40 suave=0.4: will habla de espaldas a la cámara en 73,3 s (140°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 494: plano hombro estela will lente=30 suave=0.25 distancia=2.8: no cabe el contraplano sobre el hombro de estela; hago un plano medio de will.
 - 0:40,8: «medio de estela» dura 9,5 s sin voz y con la cámara quieta. ¿Pasa algo dentro?
 
 ## Silencios largos entre frases (8)
@@ -67,10 +69,10 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 0:40,8 | efecto | SFX: Final_Estela_Llanto |
 | 0:45,6 | efecto | Pantalla: cubrir (2,5s) |
 | 0:50,3 | plano 13 | general de will y liam · 4,7 s · lente 44° |
-| 0:50,3 | efecto | Pantalla: descubrir (2s) |
-| 0:50,3 | efecto | Mecánica: MusicaDelConjuro |
 | 0:50,3 | efecto | Mecánica: SenderoDestruido |
 | 0:50,3 | efecto | Mecánica: LiamSinSentido |
+| 0:50,3 | efecto | Mecánica: MusicaDelConjuro |
+| 0:50,3 | efecto | Pantalla: descubrir (2s) |
 | 0:55,0 | plano 14 | medio de will · 6,3 s · lente 39° |
 | 0:55,0 | will | «La fórmula de la Piedra Ancestral... No se me ha olvidado ni una sola línea.» (5,7 s) |
 | 0:55,0 | efecto | Voz: Ninguno, +0,0 dB |
@@ -82,16 +84,15 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 1:01,2 | efecto | Voz: Epico, +4,0 dB |
 | 1:09,5 | plano 16 | conjunto de will y liam · 8,2 s · lente 40° |
 | 1:09,5 | will | ««Una vida por otra vida. Mi pulso por su pulso. ¡Que mi luz cruce la puerta y la suya vuelva a arder!»» (7,4 s) |
-| 1:09,5 | efecto | SFX: Prologo_Carga |
 | 1:09,5 | efecto | Sacudida de cámara (0,4, 1,5s) |
 | 1:17,8 | plano 17 | medio de will · 4,4 s · lente 36° |
 | 1:17,8 | efecto | Respiro: 0,8 s (música -6 dB) |
 | 1:18,4 | will | «¡¡VUELVE CON ELLOS, LIAM!!» (3,8 s) |
 | 1:22,2 | plano 18 | general de will y liam · 3,0 s · lente 50° |
-| 1:22,2 | efecto | Fogonazo (0,5s) |
 | 1:22,2 | efecto | Voz: Ninguno, +0,0 dB |
 | 1:22,2 | efecto | Mecánica: ConjuroClimax |
 | 1:22,2 | efecto | SFX: SFX_Prologo_ExplosionFinal |
+| 1:22,2 | efecto | Fogonazo (0,5s) |
 | 1:25,2 | plano 19 | medio de will · 3,6 s · lente 36° |
 | 1:25,2 | efecto | Mecánica: WillSeDesvanece |
 | 1:28,8 | plano 20 | general de will · 6,2 s · lente 40° |
@@ -195,27 +196,29 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 - 0:20,1 gesto HeadNod01
 - 0:50,3 reposo 
 - 0:51,3–0:54,7 anda de (1,9, 5,9) a (0,0, 4,2)
-- 0:55,0 bucle CastingIdle01
+- 0:55,0 bucle ManoAlPecho
 - 0:55,0–1:00,6 habla
-- 1:01,2 bucle Beg01_Loop
+- 1:01,2 bucle Conjuro_Recogerse
 - 1:01,2–1:08,7 habla
-- 1:09,5 bucle MagicAttackOmni01_Load
+- 1:09,5 bucle Conjuro_Invocar
 - 1:09,5–1:17,0 habla
+- 1:18,4 bucle Conjuro_Lanzar
 - 1:18,4–1:22,2 habla
+- 1:25,2 bucle Conjuro_Abrirse
 - 1:35,0 desaparece
 - 3:04,4 reposo 
 - 3:04,4–3:07,0 habla
 - 3:08,2 aparece
 - 3:10,8–3:12,0 anda de (200,0, 0,9) a (200,0, 1,8)
+- 3:12,0 bucle Ofrecer
 - 3:12,0–3:16,2 habla
-- 3:12,1 gesto Greeting01_NoWeapon
-- 3:17,0 gesto Question01
-- 3:18,6 gesto Question02
+- 3:20,9 reposo 
 - 3:34,6 gesto Question01
 - 3:37,0–3:41,9 habla
 - 3:42,9 gesto HeadShake01
+- 3:48,4 bucle ManoAlPecho
 - 3:48,4–3:50,2 habla
-- 3:48,5 gesto HeadNod01
+- 3:50,5 reposo 
 
 ### estela (Actor_Estela)
 
@@ -232,13 +235,12 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 - 0:35,3–0:40,6 habla
 - 1:35,0 reposo 
 - 1:35,0 bucle Cry01_Loop
-- 1:49,8 gesto Question01
 - 1:52,3 bucle Idle01
 - 1:52,3 gesto GetUp_NoWeapon
 - 1:53,1 bucle Idle01
 - 1:53,1–1:58,1 habla
 - 1:53,2 gesto Beg01
-- 1:58,9 gesto Question02
+- 1:58,9 gesto Question01
 - 2:00,1–2:06,6 habla
 - 2:00,2 gesto HeadShake01
 - 2:07,6 gesto HeadNod01

@@ -68,11 +68,14 @@ public static class RecursosDelPrologo
         ("SFX_Pueblo_Contraventana_Golpe", CarpetaPack + "Misc(58)/Wood_Hit-023.wav"),
     };
 
-    /// Músicas propias del prólogo (reglas de secuencia del perfil de audio; suenan una vez).
+    /// Músicas propias de cinemáticas (reglas de secuencia del perfil de audio; suenan una vez).
     /// PROLOGO_CLIMAX: la plegaria, el grito y el estallido, montada a medida (golpe a los 48,4 s). Ver INC-940.
     private static readonly (string id, string ruta, float fadeIn, float fadeOut)[] Musicas =
     {
         ("PROLOGO_CLIMAX", "Assets/Audio/Music/Cinematicas/Protegelos a todos (climax del prologo).mp3", 0.3f, 2f),
+        // SENDERO_CONJURO: «La puerta de las estrellas», el conjuro de Will ante la Piedra (Sendero_01_ElConjuro),
+        // compuesta a medida: el grito cae en su segundo 28,0 y el portal en el 30,8. Ver INC-1055.
+        ("SENDERO_CONJURO", "Assets/Audio/Music/Cinematicas/La puerta de las estrellas (conjuro de la Piedra).mp3", 0.3f, 2.5f),
     };
 
     /// Lo mismo que hace el horneado antes de hornear, suelto (p. ej. para crear un personaje nuevo antes de vestirlo).

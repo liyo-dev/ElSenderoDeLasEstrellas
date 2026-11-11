@@ -29,13 +29,16 @@ will en p_will mirando eldran
 & bandas
 & musica MANANA_DESPUES fadeIn=2.5 continuarDondeIba=false
 plano dos will eldran
+# Eldran espera con las manos a la espalda; las suelta para dar el consejo.
+& eldran bucle ManosALaEspalda
 espera 0.6
 eldran dice CAP3_DESPEDIDA_01 cara=alegre
-will dice CAP3_DESPEDIDA_02 cara=alegre
+will dice CAP3_DESPEDIDA_02 cara=alegre gesto=Shrug01
 eldran dice CAP3_DESPEDIDA_03 gesto=Laugh01 cara=alegre
 
 @consejo
 plano medio eldran
+& eldran reposo
 eldran dice CAP3_DESPEDIDA_04 cara=decidido
 eldran dice CAP3_DESPEDIDA_05 cara=pensativo
 eldran dice CAP3_DESPEDIDA_06 cara=decidido
@@ -47,6 +50,8 @@ plano medio eldran
 eldran dice CAP3_DESPEDIDA_08 cara=alegre
 plano dos will eldran
 will dice CAP3_DESPEDIDA_09 cara=pensativo
+# Le llega: la mano al pecho, y así se queda viéndole marchar.
+& eldran bucle ManoAlPecho fundido=0.6
 eldran dice CAP3_DESPEDIDA_10 gesto=HeadNod01 cara=alegre
 
 @camino

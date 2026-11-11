@@ -28,10 +28,13 @@ will dice CAP4_MANZANA_07 cara=preocupado
 estela dice CAP4_MANZANA_02 cara=molesto
 will dice CAP4_MANZANA_03
 will anda a p_will2 ritmo=paseo
+# Estela saca la manzana y se la enseña.
+& estela bucle Ofrecer fundido=0.5
 estela dice CAP4_MANZANA_04 cara=triste
 plano dos will estela
 will dice CAP4_MANZANA_05 cara=alegre
 espera 0.8
 plano primer estela
+& estela bucle ManoAlPecho fundido=0.6
 estela dice CAP4_MANZANA_06 cara=agradecido
 espera 0.5

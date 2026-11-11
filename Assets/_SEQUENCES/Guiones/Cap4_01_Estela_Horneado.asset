@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap4_01_Estela
   duracion: 57.48401
   presentacion: 1
-  huella: "2026-11-07 17:23 \xB7 b1a6cb5ed8028d68e509362df13e76a0"
+  huella: "2026-11-11 18:11 \xB7 f08e88a7c9f507d8a014a6fd46d72622"
   actores:
   - id: Player
     alias: will
@@ -76,6 +76,11 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
     cabezas:
+    - t: 1.5
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
     - t: 1.6
       tipo: 2
       rumbo: 0
@@ -143,120 +148,84 @@ MonoBehaviour:
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.5299997
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.6099997
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.375
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.71901
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.55401
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.63401
       tipo: 2
       estado: HandClap01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 22.80401
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 23.05401
-      tipo: 3
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 42.00901
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.13401
-      tipo: 2
-      estado: FoundSomething_NoWeapon
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 24.53401
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 26.184011
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 32.59401
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 36.46901
+      t: 42.55501
       tipo: 2
       estado: HeadShake02
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 42.55501
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 43.824013
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: ManoAlPecho
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 43.904015
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 46.47068
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 50.374012
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 51.024014
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 2.1
       emocion: sorpresa
@@ -349,6 +318,11 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
+    - t: 1.5
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 1.55
       tipo: 2
       rumbo: 0
@@ -411,186 +385,175 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.58
       tipo: 2
       estado: Challenging_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.58
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.2299995
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 14.019011
-      tipo: 3
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 24.48401
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 14.09901
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 16.565678
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 19.182344
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 21.154009
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 22.03401
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 25.48401
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 25.56401
       tipo: 2
-      estado: Talk02
+      estado: Dudar01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.130678
+      t: 28.36401
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.644009
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.894009
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 31.974009
       tipo: 2
-      estado: Talk01
+      estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.51901
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.76901
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.84901
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 38.315674
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 42.00901
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosCruzados
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 42.05901
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 42.089012
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 43.42401
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 44.524014
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 50.324013
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 50.324013
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 50.404015
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 52.324013
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 52.874012
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 52.954014
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 56.43401
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 1.5
       emocion: picaro
@@ -646,8 +609,8 @@ MonoBehaviour:
     t1: 21.10401
     actor: _ESTELA
     clave: CAP4_ESTELA_03
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -664,8 +627,8 @@ MonoBehaviour:
     t1: 24.48401
     actor: Player
     clave: CAP4_ESTELA_05
-    gesto: FoundSomething_NoWeapon
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -673,7 +636,7 @@ MonoBehaviour:
     t1: 31.59401
     actor: _ESTELA
     clave: CAP4_ESTELA_06
-    gesto: Talk02
+    gesto: Dudar01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -682,7 +645,7 @@ MonoBehaviour:
     t1: 35.46901
     actor: _ESTELA
     clave: CAP4_ESTELA_07
-    gesto: Talk01
+    gesto: Angry01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -701,7 +664,7 @@ MonoBehaviour:
     actor: _ESTELA
     clave: CAP4_ESTELA_09
     gesto: HeadShake01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -709,8 +672,8 @@ MonoBehaviour:
     t1: 50.324013
     actor: Player
     clave: CAP4_ESTELA_10
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -727,8 +690,8 @@ MonoBehaviour:
     t1: 56.38401
     actor: _ESTELA
     clave: CAP4_ESTELA_12
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -889,26 +852,26 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446551000
+      rid: 6540294550018326864
     linea: 24
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446551001
+      rid: 6540294550018326865
     linea: 25
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446551002
+      rid: 6540294550018326866
     linea: 26
   - onlyIfFlag: 
     skipIfFlag: 
     t: 56.98401
     beat:
-      rid: 6540294456446551003
-    linea: 56
+      rid: 6540294550018326867
+    linea: 65
   etiquetas:
   - nombre: inicio
     t: 0
@@ -929,7 +892,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446551000
+    - rid: 6540294550018326864
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -937,7 +900,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446551001
+    - rid: 6540294550018326865
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -950,14 +913,14 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294456446551002
+    - rid: 6540294550018326866
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.6
         duration: 0.5
         waitForEnd: 0
-    - rid: 6540294456446551003
+    - rid: 6540294550018326867
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

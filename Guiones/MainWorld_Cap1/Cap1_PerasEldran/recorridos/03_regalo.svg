@@ -78,8 +78,8 @@
 <text x='780.655' y='1183.564' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
 <circle cx='772.655' cy='1191.564' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
 <polyline points='655.825,1338.182 662.414,1335.147 669.491,1331.886 677.906,1328.01 687.344,1323.663 697.014,1319.209 706.349,1314.057 714.622,1307.458 720.715,1298.896 724.042,1288.848 725.379,1278.461 725.632,1268.513 725.846,1260.1 726.037,1252.597 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 726.109,1249.746 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
-<circle cx='681.583' cy='1326.317' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<circle cx='726.103' cy='1249.969' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='690.307' cy='1322.298' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='726.109' cy='1249.746' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='656.155' cy='1338.03' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
 <line x1='656.155' y1='1338.03' x2='670.687' y2='1331.335' stroke='#7ad7ff' stroke-width='2'/>
 <text x='664.155' y='1330.03' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
@@ -98,8 +98,8 @@
 <line x1='828.509' y1='1163.636' x2='820.762' y2='1177.636' stroke='#9dff7a' stroke-width='2'/>
 <text x='836.509' y='1155.636' font-size='14' fill='#9dff7a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>oliver</text>
 <circle cx='828.509' cy='1163.636' r='4' fill='#000' stroke='#9dff7a' stroke-width='1'/>
-<polygon points='876.743,1341.797 696.954,1342.326 763.187,1202.407' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
-<circle cx='876.743' cy='1341.797' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
-<text x='883.743' y='1345.797' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>8</text>
-<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@regalo  0:31,3 – 0:35,2</text>
+<polygon points='901.575,1283.616 724.42,1347.349 740.558,1186.049' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='901.575' cy='1283.616' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='908.575' y='1287.616' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>8</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@regalo  0:31,1 – 0:35,0</text>
 </svg>

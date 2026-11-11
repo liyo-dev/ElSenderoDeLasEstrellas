@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Chuche_07_Victoria
   duracion: 51.18879
   presentacion: 0
-  huella: "2026-11-01 09:27 \xB7 7aa52347d8d7082cd240d18d51df510c"
+  huella: "2026-11-11 18:12 \xB7 3569a655222ca6b9e8f21a78715790a7"
   actores:
   - id: Player
     alias: will
@@ -109,48 +109,41 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
     animacion:
-    - fundido: 0
+    - fundido: 0.3
       t: 9.470505
-      tipo: 3
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 24.76421
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 9.550505
-      tipo: 2
-      estado: Talk02
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 11.505811
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 13.99181
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 44.93445
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 45.01445
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 47.048122
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 9.470505
       emocion: picaro
@@ -290,11 +283,31 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
+    - t: 3.727838
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
     - t: 9.570504
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 11.455811
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 11.85581
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 12.25581
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Pompon
     - t: 13.29181
       tipo: 2
       rumbo: 0
@@ -332,90 +345,133 @@ MonoBehaviour:
       estado: Push_InPlace_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 8.270505
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.170505
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 12.25581
       tipo: 2
       estado: Loot01_Begin
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 12.99181
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.448749
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 15.5287485
       tipo: 2
       estado: Angry01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 17.719156
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 19.397
       tipo: 2
       estado: Greeting01_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.930332
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.010332
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 23.51421
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 35.5346
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 39.52011
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 43.443783
       tipo: 2
       estado: Attack1
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 43.93445
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 45.63445
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 46.998123
       tipo: 2
       estado: Attack2
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 47.48879
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.4
+      t: 48.68879
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: sorpresa
@@ -553,48 +609,21 @@ MonoBehaviour:
       estado: HeadShake01
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 34.8346
-      tipo: 3
+      tipo: 1
+      estado: ManosALaEspalda
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 43.743782
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 34.9146
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 38.62011
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 38.82011
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 38.900112
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 42.066776
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 43.493782
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 34.8346
       emocion: picaro
@@ -675,30 +704,56 @@ MonoBehaviour:
       estado: Jump
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 3.727838
       tipo: 2
       estado: Marshies_Happy_Dance
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 3.8093336
       tipo: 2
       estado: Jump
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 5.5371714
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.237171
       tipo: 2
       estado: Marshies_Happy_Dance
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.046505
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.930332
       tipo: 2
       estado: Marshies_Happy_Dance
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 22.739666
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -741,6 +796,14 @@ MonoBehaviour:
       estado: Marshies_Happy_Dance
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 1.8093336
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible:
     - desde: 0
@@ -767,6 +830,14 @@ MonoBehaviour:
       estado: Jump
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 1.8093336
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible:
     - desde: 0
@@ -793,6 +864,14 @@ MonoBehaviour:
       estado: Marshies_Happy_Dance
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 1.8093336
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible:
     - desde: 0
@@ -805,8 +884,8 @@ MonoBehaviour:
     t1: 11.455811
     actor: Player
     clave: CHUCHELANDIA_VICTORIA_01
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -841,8 +920,8 @@ MonoBehaviour:
     t1: 38.57011
     actor: Actor_Liam
     clave: CHUCHELANDIA_VICTORIA_05
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -850,8 +929,8 @@ MonoBehaviour:
     t1: 43.443783
     actor: Actor_Liam
     clave: CHUCHELANDIA_VICTORIA_06
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -885,7 +964,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.92304766
+    alturaDelFoco: 0.933785
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -908,7 +987,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.2778106
+    alturaDelFoco: 1.2222035
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -920,7 +999,7 @@ MonoBehaviour:
     descripcion: 'dos: will y estela'
     posiciones:
     - t: 9.470505
-      p: {x: 95.14905, y: 14.889021, z: 0.9510126}
+      p: {x: 95.14905, y: 14.887895, z: 0.9510126}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -931,7 +1010,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.84511876
+    alturaDelFoco: 0.8441049
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -952,7 +1031,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.16}
     suavidad: 0.6
     mezcla: 0
@@ -975,7 +1054,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.9442901
+    alturaDelFoco: 0.9428298
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -987,7 +1066,7 @@ MonoBehaviour:
     descripcion: conjunto de estela y will y liam
     posiciones:
     - t: 24.76421
-      p: {x: 189.25, y: 6.3258967, z: 100}
+      p: {x: 188.82683, y: 7.8500686, z: 90.76121}
     lente: 36
     lenteFinal: 0
     sujetos:
@@ -1001,7 +1080,7 @@ MonoBehaviour:
     extras:
     - {x: 189.2, y: 5.241926, z: 100}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1.1258299
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1013,7 +1092,7 @@ MonoBehaviour:
     descripcion: conjunto de estela y will y liam
     posiciones:
     - t: 26.56421
-      p: {x: 189.77994, y: 4.748518, z: 104.30786}
+      p: {x: 188.93707, y: 4.8805614, z: 103.5333}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -1026,7 +1105,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1.1258299
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1038,7 +1117,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 34.8346
-      p: {x: 185.25987, y: 4.8921027, z: 98.91629}
+      p: {x: 185.47942, y: 4.8430796, z: 99.14733}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -1047,7 +1126,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
+    alturaDelFoco: 1.1191353
     encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
@@ -1059,7 +1138,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y liam'
     posiciones:
     - t: 43.443783
-      p: {x: 185.67589, y: 4.7144194, z: 99.689285}
+      p: {x: 185.67589, y: 4.7102575, z: 99.689285}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1070,7 +1149,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8478503
+    alturaDelFoco: 0.8441049
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1082,7 +1161,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de estela a will
     posiciones:
     - t: 44.93445
-      p: {x: 187.18883, y: 5.071997, z: 101.15778}
+      p: {x: 185.82828, y: 4.715337, z: 101.63969}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -1091,7 +1170,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.1038897
     encuadre: {x: 0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
@@ -1103,7 +1182,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y will'
     posiciones:
     - t: 46.998123
-      p: {x: 185.67589, y: 4.546146, z: 100.310715}
+      p: {x: 185.67589, y: 4.545019, z: 100.310715}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1114,7 +1193,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.84511876
+    alturaDelFoco: 0.8441049
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1126,7 +1205,7 @@ MonoBehaviour:
     descripcion: conjunto de estela y will y liam
     posiciones:
     - t: 48.68879
-      p: {x: 183.10118, y: 5.4786696, z: 99.86812}
+      p: {x: 183.01115, y: 5.4715843, z: 99.86582}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -1139,7 +1218,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1.1258299
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1149,140 +1228,140 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344703
+      rid: 6540294550018327009
     linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344704
+      rid: 6540294550018327010
     linea: 66
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344705
+      rid: 6540294550018327011
     linea: 67
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344706
+      rid: 6540294550018327012
     linea: 68
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344707
+      rid: 6540294550018327013
     linea: 69
   - onlyIfFlag: 
     skipIfFlag: 
     t: 3.727838
     beat:
-      rid: 6540294313956344708
+      rid: 6540294550018327014
     linea: 84
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.737171
     beat:
-      rid: 6540294313956344709
+      rid: 6540294550018327015
     linea: 89
   - onlyIfFlag: 
     skipIfFlag: 
     t: 12.25581
     beat:
-      rid: 6540294313956344710
-    linea: 105
+      rid: 6540294550018327016
+    linea: 106
   - onlyIfFlag: 
     skipIfFlag: 
     t: 19.397
     beat:
-      rid: 6540294313956344711
-    linea: 113
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 19.397
-    beat:
-      rid: 6540294313956344712
+      rid: 6540294550018327017
     linea: 114
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 19.397
+    beat:
+      rid: 6540294550018327018
+    linea: 115
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.26421
     beat:
-      rid: 6540294313956344713
-    linea: 121
+      rid: 6540294550018327019
+    linea: 122
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.76421
     beat:
-      rid: 6540294313956344714
-    linea: 127
+      rid: 6540294550018327020
+    linea: 128
   - onlyIfFlag: 
     skipIfFlag: 
     t: 25.36421
     beat:
-      rid: 6540294313956344715
-    linea: 129
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 25.36421
-    beat:
-      rid: 6540294313956344716
+      rid: 6540294550018327021
     linea: 130
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 33.8346
+    t: 25.36421
     beat:
-      rid: 6540294313956344717
-    linea: 139
+      rid: 6540294550018327022
+    linea: 131
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.8346
     beat:
-      rid: 6540294313956344718
+      rid: 6540294550018327023
     linea: 140
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.8346
     beat:
-      rid: 6540294313956344719
+      rid: 6540294550018327024
     linea: 141
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.8346
     beat:
-      rid: 6540294313956344720
+      rid: 6540294550018327025
     linea: 142
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 33.8346
+    beat:
+      rid: 6540294550018327026
+    linea: 143
   - onlyIfFlag: 
     skipIfFlag: 
     t: 43.443783
     beat:
-      rid: 6540294313956344721
-    linea: 154
+      rid: 6540294550018327027
+    linea: 156
   - onlyIfFlag: 
     skipIfFlag: 
     t: 43.743782
     beat:
-      rid: 6540294313956344722
-    linea: 155
+      rid: 6540294550018327028
+    linea: 157
   - onlyIfFlag: 
     skipIfFlag: 
     t: 46.998123
     beat:
-      rid: 6540294313956344723
-    linea: 163
+      rid: 6540294550018327029
+    linea: 166
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.298122
     beat:
-      rid: 6540294313956344724
-    linea: 164
+      rid: 6540294550018327030
+    linea: 167
   - onlyIfFlag: 
     skipIfFlag: 
     t: 48.68879
     beat:
-      rid: 6540294313956344725
-    linea: 173
+      rid: 6540294550018327031
+    linea: 177
   etiquetas:
   - nombre: inicio
     t: 0
@@ -1339,12 +1418,12 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294313956344703
+    - rid: 6540294550018327009
       type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         senal: CHUCHE_ATUENDO_VICTORIA
-    - rid: 6540294313956344704
+    - rid: 6540294550018327010
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1357,7 +1436,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344705
+    - rid: 6540294550018327011
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1370,7 +1449,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344706
+    - rid: 6540294550018327012
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1380,7 +1459,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344707
+    - rid: 6540294550018327013
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1390,7 +1469,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344708
+    - rid: 6540294550018327014
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1400,7 +1479,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344709
+    - rid: 6540294550018327015
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1410,7 +1489,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344710
+    - rid: 6540294550018327016
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1420,7 +1499,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344711
+    - rid: 6540294550018327017
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1433,7 +1512,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344712
+    - rid: 6540294550018327018
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1443,7 +1522,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294313956344713
+    - rid: 6540294550018327019
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1451,7 +1530,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.5
         waitForEnd: 0
-    - rid: 6540294313956344714
+    - rid: 6540294550018327020
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1459,7 +1538,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.5
         waitForEnd: 0
-    - rid: 6540294313956344715
+    - rid: 6540294550018327021
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1469,7 +1548,7 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294313956344716
+    - rid: 6540294550018327022
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1482,7 +1561,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344717
+    - rid: 6540294550018327023
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1495,7 +1574,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344718
+    - rid: 6540294550018327024
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1508,12 +1587,12 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344719
+    - rid: 6540294550018327025
       type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         senal: CHUCHE_VESTIDO_PURPURINA
-    - rid: 6540294313956344720
+    - rid: 6540294550018327026
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1523,7 +1602,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344721
+    - rid: 6540294550018327027
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1533,7 +1612,7 @@ MonoBehaviour:
         markName: 
         volume: 0.4
         tono: 1
-    - rid: 6540294313956344722
+    - rid: 6540294550018327028
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1543,7 +1622,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344723
+    - rid: 6540294550018327029
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1553,7 +1632,7 @@ MonoBehaviour:
         markName: 
         volume: 0.4
         tono: 1
-    - rid: 6540294313956344724
+    - rid: 6540294550018327030
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1563,7 +1642,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344725
+    - rid: 6540294550018327031
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

@@ -36,19 +36,27 @@ eldran en p_eldran mirando victoria
 & will en p_will mirando eldran
 & oliver en p_oliver mirando eldran
 & plano medio eldran
+# Victoria regaña en jarras; Will espera de brazos cruzados y Oliver con las manos a la espalda.
+& victoria bucle BrazosEnJarras
+& will bucle BrazosCruzados
+& oliver bucle ManosALaEspalda
 eldran dice PERAS_01 gesto=Talk02 cara=alegre
 plano medio victoria
 victoria dice PERAS_02 gesto=Question01 cara=picaro
 plano medio eldran
-eldran dice PERAS_03 gesto=Laugh01 cara=alegre
+eldran dice PERAS_03 gesto=Shrug01 cara=alegre
 plano medio victoria
 victoria dice PERAS_04 gesto=Laugh01 cara=alegre
+& eldran gesto Laugh01
 
 # Eldran se gira y ve a Will (y a Oliver) esperando.
 @will
 eldran mira will
 & plano general eldran will lente=34
 eldran dice PERAS_05 gesto=HandWave01 mira=will cara=alegre
+& will reposo
++0.4 will gesto HandWave02
++2.6 eldran gesto Shrug01
 plano medio oliver
 oliver dice PERAS_OLIVER_VOY gesto=Cheer01 cara=ilusionado
 plano medio victoria

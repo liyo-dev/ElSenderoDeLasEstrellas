@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap4_06_TrasElGolem
   duracion: 20.176
   presentacion: 1
-  huella: "2026-11-07 17:23 \xB7 1b818639a27024adb841c734c9568afc"
+  huella: "2026-11-11 18:11 \xB7 c62babdc430cc822a8afa59d28f9c66c"
   actores:
   - id: Player
     alias: will
@@ -68,54 +68,70 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.88
       tipo: 2
-      estado: Talk03
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 2.215
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.125
       tipo: 2
       estado: Loot01_Begin
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 6.861
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.861
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.941
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.407667
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.876
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.526
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: cansado
@@ -173,54 +189,62 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     animacion:
+    - fundido: 0.5
+      t: 0.8
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.346
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.3
+      t: 3.236
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 2.615
-      tipo: 3
+      t: 6.125
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 2.695
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 6.175
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.561
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.826
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 10.906
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 14.581
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: cansado
@@ -251,24 +275,13 @@ MonoBehaviour:
       actor: 
     cabezas: []
     animacion:
-    - fundido: 0
-      t: 15.531
-      tipo: 3
-      estado: 
+    - fundido: 0.8
+      t: 14.531
+      tipo: 1
+      estado: Cabizbajo
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 15.611
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 17.726
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 14.531
       emocion: triste
@@ -285,7 +298,7 @@ MonoBehaviour:
     t1: 2.165
     actor: Player
     clave: CAP4_TRAS_GOLEM_01
-    gesto: Talk03
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -294,8 +307,8 @@ MonoBehaviour:
     t1: 6.125
     actor: _ESTELA
     clave: CAP4_TRAS_GOLEM_02
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -321,8 +334,8 @@ MonoBehaviour:
     t1: 17.676
     actor: _LIAM
     clave: CAP4_TRAS_GOLEM_05
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -376,7 +389,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 14.531
-      p: {x: -106.371284, y: 36.751163, z: 84.567955}
+      p: {x: -110.37746, y: 38.234528, z: 82.70564}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -386,7 +399,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: 0.13, y: -0.074}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -395,26 +408,26 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446551020
+      rid: 6540294550018326884
     linea: 26
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.826
     beat:
-      rid: 6540294456446551021
-    linea: 36
+      rid: 6540294550018326885
+    linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 18.476
     beat:
-      rid: 6540294456446551022
-    linea: 45
+      rid: 6540294550018326886
+    linea: 49
   - onlyIfFlag: 
     skipIfFlag: 
     t: 19.676
     beat:
-      rid: 6540294456446551023
-    linea: 47
+      rid: 6540294550018326887
+    linea: 51
   etiquetas:
   - nombre: inicio
     t: 0
@@ -435,7 +448,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446551020
+    - rid: 6540294550018326884
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -443,7 +456,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446551021
+    - rid: 6540294550018326885
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -456,7 +469,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294456446551022
+    - rid: 6540294550018326886
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -464,7 +477,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294456446551023
+    - rid: 6540294550018326887
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

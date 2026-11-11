@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap4_04_LaFigura_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_04_LaFigura
-  duracion: 20.304998
+  duracion: 19.98
   presentacion: 1
-  huella: "2026-11-07 17:23 \xB7 b7abe86722ea18fe03bb6bda17f62640"
+  huella: "2026-11-11 18:11 \xB7 3c468b00c6aa9710e7484efa3148fffe"
   actores:
   - id: Player
     alias: will
@@ -93,72 +93,77 @@ MonoBehaviour:
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.2200003
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.3
       tipo: 2
-      estado: Talk02
+      estado: Shrug01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.585
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.635
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.665
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.195
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.271
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.735
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.815
       tipo: 2
-      estado: Talk01
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.15
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 12.249999
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 1.2
       emocion: decidido
@@ -202,7 +207,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 15.449999
+    - t: 15.124999
       tipo: 1
       rumbo: 0
       punto: {x: -320, y: 38.100163, z: 88}
@@ -243,6 +248,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
+    - t: 15.124999
+      tipo: 1
+      rumbo: 0
+      punto: {x: -320, y: 38.100163, z: 88}
+      actor: 
     animacion:
     - fundido: 0
       t: 0
@@ -250,84 +260,63 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.08
       tipo: 2
-      estado: Talk02
+      estado: Fear01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.25
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 2.4
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 2.48
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 4.2700005
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 4.7660003
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 7.595
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.6749997
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 9.335
-      tipo: 4
+      t: 9.735
+      tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 10.281
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.549999
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.629999
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.499999
+      t: 15.174999
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: miedo
@@ -343,7 +332,7 @@ MonoBehaviour:
       dura: 1.365
     - t: 11.549999
       emocion: preocupado
-      dura: 4.2999997
+      dura: 3.975
     visible: []
     deslizando: []
   - id: _LIAM
@@ -362,28 +351,17 @@ MonoBehaviour:
     cabezas: []
     animacion:
     - fundido: 0
-      t: 16.249998
-      tipo: 3
-      estado: 
+      t: 15.124999
+      tipo: 1
+      estado: BrazosCruzados
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 16.329998
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 18.054996
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
-    - t: 15.449999
+    - t: 15.124999
       emocion: pensativo
       dura: 0
-    - t: 16.249998
+    - t: 15.924999
       emocion: pensativo
       dura: 2.155
     visible: []
@@ -395,7 +373,7 @@ MonoBehaviour:
     t1: 1.2
     actor: _ESTELA
     clave: CAP4_FIGURA_01
-    gesto: Talk02
+    gesto: Fear01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -404,8 +382,8 @@ MonoBehaviour:
     t1: 4.2200003
     actor: _ESTELA
     clave: CAP4_FIGURA_02
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -413,7 +391,7 @@ MonoBehaviour:
     t1: 5.585
     actor: Player
     clave: CAP4_FIGURA_03
-    gesto: Talk02
+    gesto: Shrug01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -432,7 +410,7 @@ MonoBehaviour:
     actor: _ESTELA
     clave: CAP4_FIGURA_05
     gesto: Laugh01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -440,13 +418,13 @@ MonoBehaviour:
     t1: 11.099999
     actor: Player
     clave: CAP4_FIGURA_06
-    gesto: Talk01
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 11.549999
-    t1: 15.449999
+    t1: 15.124999
     actor: _ESTELA
     clave: CAP4_FIGURA_07
     gesto: Talk02
@@ -454,12 +432,12 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 16.249998
-    t1: 18.004997
+    t0: 15.924999
+    t1: 17.679998
     actor: _LIAM
     clave: CAP4_FIGURA_08
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -529,7 +507,7 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 5.585
-    t1: 15.449999
+    t1: 15.124999
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
@@ -551,12 +529,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.449999
-    t1: 20.304998
+    t0: 15.124999
+    t1: 19.98
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 15.449999
+    - t: 15.124999
       p: {x: -303.89127, y: 40.185028, z: 97.72346}
     lente: 30
     lenteFinal: 0
@@ -576,45 +554,45 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294456446551007
+      rid: 6540294550018326871
     linea: 27
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 6540294456446551008
+      rid: 6540294550018326872
     linea: 31
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 6540294456446551009
+      rid: 6540294550018326873
     linea: 32
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2.4
     beat:
-      rid: 6540294456446551010
+      rid: 6540294550018326874
     linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 18.604998
+    t: 18.279999
     beat:
-      rid: 6540294456446551011
-    linea: 54
+      rid: 6540294550018326875
+    linea: 57
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 19.804998
+    t: 19.48
     beat:
-      rid: 6540294456446551012
-    linea: 56
+      rid: 6540294550018326876
+    linea: 59
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: figuras
     t: 5.585
   - nombre: liam
-    t: 15.449999
+    t: 15.124999
   puntos:
   - nombre: campana
     posicion: {x: -330, y: 36.89159, z: 86}
@@ -632,7 +610,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294456446551007
+    - rid: 6540294550018326871
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -640,7 +618,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294456446551008
+    - rid: 6540294550018326872
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -653,19 +631,19 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294456446551009
+    - rid: 6540294550018326873
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 0.4
         rampDuration: 0.3
-    - rid: 6540294456446551010
+    - rid: 6540294550018326874
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0.3
-    - rid: 6540294456446551011
+    - rid: 6540294550018326875
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -673,7 +651,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294456446551012
+    - rid: 6540294550018326876
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

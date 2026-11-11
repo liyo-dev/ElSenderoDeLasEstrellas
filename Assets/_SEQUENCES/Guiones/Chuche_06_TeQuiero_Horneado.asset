@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Chuche_06_TeQuiero_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_06_TeQuiero
-  duracion: 49.687553
+  duracion: 49.81022
   presentacion: 1
-  huella: "2026-11-01 09:26 \xB7 b25ad12416c51d1f560b5000a39f2233"
+  huella: "2026-11-11 18:12 \xB7 e28867a3721c0c5af795141adf13b2d8"
   actores:
   - id: Player
     alias: will
@@ -28,77 +28,77 @@ MonoBehaviour:
       p: {x: 96.19981, y: 14.24, z: 5.0318217}
     - t: 0.05
       p: {x: 96.19981, y: 14.48, z: 5.0318217}
-    - t: 8.350041
+    - t: 8.687374
       p: {x: 96.19981, y: 14.48, z: 5.0318217}
-    - t: 8.440042
+    - t: 8.777374
       p: {x: 96.19981, y: 14.705, z: 5.0318217}
-    - t: 8.530042
+    - t: 8.867374
       p: {x: 96.19981, y: 14.78, z: 5.0318217}
-    - t: 8.630042
+    - t: 8.967375
       p: {x: 96.19981, y: 14.629999, z: 5.0318217}
-    - t: 8.7300415
+    - t: 9.067374
       p: {x: 96.19981, y: 14.48, z: 5.0318217}
-    - t: 8.803375
+    - t: 9.140708
       p: {x: 96.19981, y: 14.713333, z: 5.0318217}
-    - t: 8.876708
+    - t: 9.214041
       p: {x: 96.19981, y: 14.8533325, z: 5.0318217}
-    - t: 8.950042
+    - t: 9.2873745
       p: {x: 96.19981, y: 14.9, z: 5.0318217}
-    - t: 9.033375
+    - t: 9.3707075
       p: {x: 96.19981, y: 14.791111, z: 5.0318217}
-    - t: 9.116709
+    - t: 9.4540415
       p: {x: 96.19981, y: 14.588888, z: 5.0318217}
-    - t: 9.200042
+    - t: 9.5373745
       p: {x: 96.19981, y: 14.48, z: 5.0318217}
-    - t: 13.06392
+    - t: 13.401253
       p: {x: 96.19981, y: 14.48, z: 5.0318217}
-    - t: 13.16392
+    - t: 13.501253
       p: {x: 96.2082, y: 14.474609, z: 5.0460443}
-    - t: 13.26392
+    - t: 13.601253
       p: {x: 96.23192, y: 14.459374, z: 5.0862393}
-    - t: 13.36392
+    - t: 13.701253
       p: {x: 96.26878, y: 14.435702, z: 5.1486955}
-    - t: 13.46392
+    - t: 13.801252
       p: {x: 96.31659, y: 14.405, z: 5.2297034}
-    - t: 13.56392
+    - t: 13.901253
       p: {x: 96.37315, y: 14.368671, z: 5.3255525}
-    - t: 13.66392
+    - t: 14.001253
       p: {x: 96.43629, y: 14.328125, z: 5.4325323}
-    - t: 13.76392
+    - t: 14.101253
       p: {x: 96.50381, y: 14.284765, z: 5.5469327}
-    - t: 13.86392
+    - t: 14.201253
       p: {x: 96.57351, y: 14.24, z: 5.665044}
-    - t: 13.96392
+    - t: 14.301252
       p: {x: 96.64321, y: 14.195234, z: 5.7831545}
-    - t: 14.06392
+    - t: 14.401253
       p: {x: 96.71073, y: 14.151875, z: 5.897555}
-    - t: 14.16392
+    - t: 14.501253
       p: {x: 96.773865, y: 14.111328, z: 6.0045347}
-    - t: 14.26392
+    - t: 14.601253
       p: {x: 96.83043, y: 14.075, z: 6.1003838}
-    - t: 14.36392
+    - t: 14.701253
       p: {x: 96.878235, y: 14.044297, z: 6.1813917}
-    - t: 14.46392
+    - t: 14.801252
       p: {x: 96.9151, y: 14.020625, z: 6.243848}
-    - t: 14.56392
+    - t: 14.901253
       p: {x: 96.93882, y: 14.00539, z: 6.284043}
-    - t: 14.66392
+    - t: 15.001253
       p: {x: 96.94721, y: 14, z: 6.2982655}
-    - t: 15.263921
+    - t: 15.6012535
       p: {x: 96.94721, y: 14, z: 6.2982655}
-    - t: 15.28892
+    - t: 15.626253
       p: {x: 96.94721, y: 13.2, z: 6.2982655}
-    - t: 15.313921
+    - t: 15.651254
       p: {x: 96.94721, y: 12.4, z: 6.2982655}
-    - t: 16.913921
+    - t: 17.251253
       p: {x: 96.94721, y: 12.4, z: 6.2982655}
-    - t: 17.013922
+    - t: 17.351254
       p: {x: 96.94721, y: 13.099999, z: 6.2982655}
-    - t: 17.113922
+    - t: 17.451254
       p: {x: 96.94721, y: 13.6, z: 6.2982655}
-    - t: 17.21392
+    - t: 17.551252
       p: {x: 96.94721, y: 13.9, z: 6.2982655}
-    - t: 17.313921
+    - t: 17.651253
       p: {x: 96.94721, y: 14, z: 6.2982655}
     miradas:
     - t: 0
@@ -106,98 +106,98 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
       actor: 
-    - t: 12.116776
+    - t: 12.454109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 15.263921
+    - t: 15.6012535
       tipo: 1
       rumbo: 0
       punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
       actor: 
-    - t: 19.76392
+    - t: 20.101252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 22.876165
+    - t: 23.213497
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 25.560043
+    - t: 25.897375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 28.96188
+    - t: 29.299212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.57802
+    - t: 38.700684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.27802
+    - t: 40.400684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.67802
+    - t: 42.800686
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
     cabezas:
-    - t: 9.000042
+    - t: 9.337375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 12.066776
+    - t: 12.404109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 14.31392
+    - t: 14.651253
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 19.71392
+    - t: 20.051252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 22.826166
+    - t: 23.163498
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 25.560043
+    - t: 25.897375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 28.91188
+    - t: 29.249212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.52802
+    - t: 38.650684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.22802
+    - t: 40.350685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.62802
+    - t: 42.750687
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -209,122 +209,136 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.13
       tipo: 2
       estado: Cheer02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 2.2420406
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.291374
       tipo: 2
       estado: Cheer02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.405634
+      t: 12.742967
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0.2
-      t: 13.06392
+      t: 13.401253
       tipo: 1
       estado: Falling
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0.25
-      t: 14.31392
+      t: 14.651253
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.263921
+      t: 15.6012535
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.263921
+      t: 15.6012535
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 20.313921
+      t: 20.651253
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.426167
+      t: 23.763498
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 29.449268
+      t: 25.977375
+      tipo: 2
+      estado: Shrug01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 29.7866
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.988018
+      t: 39.110683
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 43.22802
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 0.05
       emocion: ilusionado
       dura: 2.5420408
-    - t: 8.7300415
+    - t: 9.067374
       emocion: sorpresa
       dura: 0
-    - t: 16.913921
+    - t: 17.251253
       emocion: confuso
       dura: 0
-    - t: 25.560043
+    - t: 25.897375
       emocion: cansado
       dura: 3.351837
-    - t: 45.128017
+    - t: 45.250683
       emocion: ilusionado
       dura: 0
     visible:
     - desde: 0
-      hasta: 15.263921
-    - desde: 16.913921
-      hasta: 109.68755
+      hasta: 15.6012535
+    - desde: 17.251253
+      hasta: 109.81022
     deslizando:
     - desde: 0
       hasta: 0.1
-    - desde: 8.350041
-      hasta: 8.580041
-    - desde: 8.530042
-      hasta: 8.780042
-    - desde: 8.7300415
-      hasta: 9.000042
-    - desde: 8.950042
-      hasta: 9.250042
-    - desde: 13.06392
-      hasta: 14.71392
-    - desde: 15.263921
-      hasta: 15.363921
-    - desde: 16.913921
-      hasta: 17.363922
+    - desde: 8.687374
+      hasta: 8.917374
+    - desde: 8.867374
+      hasta: 9.117374
+    - desde: 9.067374
+      hasta: 9.337375
+    - desde: 9.2873745
+      hasta: 9.587375
+    - desde: 13.401253
+      hasta: 15.051252
+    - desde: 15.6012535
+      hasta: 15.701254
+    - desde: 17.251253
+      hasta: 17.701254
   - id: Actor_Estela
     alias: estela
     colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
@@ -348,42 +362,42 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 97.059326, y: 14, z: 7}
       actor: 
-    - t: 9.100041
+    - t: 9.437374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.236777
+    - t: 12.57411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.88392
+    - t: 20.221252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.08188
+    - t: 29.419212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.698017
+    - t: 38.820683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.398018
+    - t: 40.520683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.79802
+    - t: 42.920685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
-    - t: 45.27802
+    - t: 45.400684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -394,107 +408,122 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.050041
+    - t: 2.1920407
+      tipo: 1
+      rumbo: 0
+      punto: {x: 97.059326, y: 14, z: 7}
+      actor: 
+    - t: 9.387374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.186777
+    - t: 12.52411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.833921
+    - t: 20.171253
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.031881
+    - t: 29.369213
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.648018
+    - t: 38.770683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.34802
+    - t: 40.470684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.74802
+    - t: 42.870686
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
-    - t: 45.22802
+    - t: 45.350685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
     animacion:
     - fundido: 0
-      t: 9.650042
+      t: 9.987374
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 12.405634
+      t: 20.651253
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 20.313921
+      t: 29.7866
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 29.449268
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 31.50535
+      t: 31.842682
       tipo: 2
       estado: Pain01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 32.40535
+      t: 32.742683
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
+      voz: laugh
     - fundido: 0
-      t: 34.82802
+      t: 32.76268
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 34.950684
       tipo: 1
       estado: Laugh01_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 36.628017
+      t: 36.750683
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.988018
+      t: 39.110683
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 43.22802
+      t: 45.950684
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: preocupado
@@ -505,13 +534,13 @@ MonoBehaviour:
     - t: 3.2920408
       emocion: enfado
       dura: 0
-    - t: 30.40535
+    - t: 30.742682
       emocion: molesto
       dura: 0
-    - t: 31.50535
+    - t: 31.842682
       emocion: sorpresa
       dura: 0
-    - t: 32.40535
+    - t: 32.742683
       emocion: alegre
       dura: 0
     visible: []
@@ -535,55 +564,55 @@ MonoBehaviour:
       p: {x: 94.9232, y: 14.430079, z: 6.4445252}
     - t: 5.991374
       p: {x: 95.00395, y: 14.48, z: 6.3771586}
-    - t: 13.06392
+    - t: 13.401253
       p: {x: 95.00395, y: 14.48, z: 6.3771586}
-    - t: 13.16392
+    - t: 13.501253
       p: {x: 95.01906, y: 14.474609, z: 6.383827}
-    - t: 13.26392
+    - t: 13.601253
       p: {x: 95.06176, y: 14.459374, z: 6.4026723}
-    - t: 13.36392
+    - t: 13.701253
       p: {x: 95.128105, y: 14.435702, z: 6.4319553}
-    - t: 13.46392
+    - t: 13.801252
       p: {x: 95.21416, y: 14.405, z: 6.469936}
-    - t: 13.56392
+    - t: 13.901253
       p: {x: 95.31598, y: 14.368671, z: 6.514875}
-    - t: 13.66392
+    - t: 14.001253
       p: {x: 95.42963, y: 14.328125, z: 6.565033}
-    - t: 13.76392
+    - t: 14.101253
       p: {x: 95.551155, y: 14.284765, z: 6.61867}
-    - t: 13.86392
+    - t: 14.201253
       p: {x: 95.67662, y: 14.24, z: 6.6740465}
-    - t: 13.96392
+    - t: 14.301252
       p: {x: 95.802086, y: 14.195234, z: 6.7294226}
-    - t: 14.06392
+    - t: 14.401253
       p: {x: 95.923615, y: 14.151875, z: 6.7830596}
-    - t: 14.16392
+    - t: 14.501253
       p: {x: 96.03726, y: 14.111328, z: 6.8332176}
-    - t: 14.26392
+    - t: 14.601253
       p: {x: 96.139084, y: 14.075, z: 6.8781567}
-    - t: 14.36392
+    - t: 14.701253
       p: {x: 96.225136, y: 14.044297, z: 6.916137}
-    - t: 14.46392
+    - t: 14.801252
       p: {x: 96.29148, y: 14.020625, z: 6.9454203}
-    - t: 14.56392
+    - t: 14.901253
       p: {x: 96.33418, y: 14.00539, z: 6.9642653}
-    - t: 14.66392
+    - t: 15.001253
       p: {x: 96.34929, y: 14, z: 6.970934}
-    - t: 15.263921
+    - t: 15.6012535
       p: {x: 96.34929, y: 14, z: 6.970934}
-    - t: 15.28892
+    - t: 15.626253
       p: {x: 96.34929, y: 13.2, z: 6.970934}
-    - t: 15.313921
+    - t: 15.651254
       p: {x: 96.34929, y: 12.4, z: 6.970934}
-    - t: 16.913921
+    - t: 17.251253
       p: {x: 96.34929, y: 12.4, z: 6.970934}
-    - t: 17.013922
+    - t: 17.351254
       p: {x: 96.34929, y: 13.099999, z: 6.970934}
-    - t: 17.113922
+    - t: 17.451254
       p: {x: 96.34929, y: 13.6, z: 6.970934}
-    - t: 17.21392
+    - t: 17.551252
       p: {x: 96.34929, y: 13.9, z: 6.970934}
-    - t: 17.313921
+    - t: 17.651253
       p: {x: 96.34929, y: 14, z: 6.970934}
     miradas:
     - t: 0
@@ -601,52 +630,52 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
       actor: 
-    - t: 8.950042
+    - t: 9.2873745
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 13.06392
+    - t: 13.401253
       tipo: 1
       rumbo: 0
       punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
       actor: 
-    - t: 15.263921
+    - t: 15.6012535
       tipo: 1
       rumbo: 0
       punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
       actor: 
-    - t: 20.00392
+    - t: 20.341251
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 22.726166
+    - t: 23.063498
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 25.710043
+    - t: 26.047375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.818016
+    - t: 38.94068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.518017
+    - t: 40.640682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.91802
+    - t: 43.040684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
-    - t: 45.128017
+    - t: 45.250683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -657,57 +686,67 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.170042
+    - t: 5.541374
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 9.2873745
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.016777
+    - t: 12.35411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 14.31392
+    - t: 13.401253
+      tipo: 1
+      rumbo: 0
+      punto: {x: 92.559326, y: 14.029524, z: 3.0000002}
+      actor: 
+    - t: 14.651253
       tipo: 0
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: 
-    - t: 19.95392
+    - t: 20.291252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 22.726166
+    - t: 23.063498
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 25.660044
+    - t: 25.997375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 28.86188
+    - t: 29.199211
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.768017
+    - t: 38.890682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.468018
+    - t: 40.590683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.86802
+    - t: 42.990685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
-    - t: 45.128017
+    - t: 45.250683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -719,66 +758,91 @@ MonoBehaviour:
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.541374
       tipo: 2
       estado: JumpFull_InPlace_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 9.650042
+      t: 6.2773743
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.987374
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0.2
-      t: 13.06392
+      t: 13.401253
       tipo: 1
       estado: Falling
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0.25
-      t: 14.31392
+      t: 14.651253
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.263921
+      t: 15.6012535
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.263921
+      t: 15.6012535
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 20.313921
+      t: 20.651253
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0.4
+      t: 22.563498
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0
-      t: 26.260044
+      t: 26.597376
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 38.988018
+      t: 39.110683
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 43.22802
-      tipo: 2
-      estado: HeadNod01
+      t: 45.250683
+      tipo: 0
+      estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 0
       emocion: cansado
@@ -786,35 +850,35 @@ MonoBehaviour:
     - t: 6.291374
       emocion: neutral
       dura: 0
-    - t: 8.950042
+    - t: 9.2873745
       emocion: miedo
       dura: 0
-    - t: 16.913921
+    - t: 17.251253
       emocion: molesto
       dura: 0
-    - t: 22.726166
+    - t: 23.063498
       emocion: molesto
       dura: 2.9338777
-    - t: 28.81188
+    - t: 29.149212
       emocion: neutral
       dura: 1.9934694
-    - t: 45.128017
+    - t: 45.250683
       emocion: sorpresa
       dura: 2.1502042
     visible:
     - desde: 0
-      hasta: 15.263921
-    - desde: 16.913921
-      hasta: 109.68755
+      hasta: 15.6012535
+    - desde: 17.251253
+      hasta: 109.81022
     deslizando:
     - desde: 5.541374
       hasta: 6.041374
-    - desde: 13.06392
-      hasta: 14.71392
-    - desde: 15.263921
-      hasta: 15.363921
-    - desde: 16.913921
-      hasta: 17.363922
+    - desde: 13.401253
+      hasta: 15.051252
+    - desde: 15.6012535
+      hasta: 15.701254
+    - desde: 17.251253
+      hasta: 17.701254
   - id: Actor_Pompon
     alias: pompon
     colorDelNombre: {r: 1, g: 0.3529412, b: 0.43137255, a: 1}
@@ -833,42 +897,42 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.340042
+    - t: 9.677375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.356777
+    - t: 12.69411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 20.12392
+    - t: 20.461252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.20188
+    - t: 29.539211
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.938015
+    - t: 39.06068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.638016
+    - t: 40.76068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 43.038017
+    - t: 43.160683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
-    - t: 47.37822
+    - t: 47.500885
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -879,48 +943,61 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.290042
+    - t: 9.627375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.306777
+    - t: 12.64411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 20.073921
+    - t: 20.411253
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.15188
+    - t: 29.489212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.888016
+    - t: 39.01068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.588017
+    - t: 40.710682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.988018
+    - t: 43.110683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
+    - t: 47.500885
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     animacion:
     - fundido: 0
-      t: 47.37822
+      t: 47.500885
       tipo: 2
       estado: Jump
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 49.31022
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -942,37 +1019,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.460042
+    - t: 9.797375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.476777
+    - t: 12.81411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.76392
+    - t: 20.101252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.32188
+    - t: 29.659212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.57802
+    - t: 38.700684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.27802
+    - t: 40.400684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 41.52802
+    - t: 41.650684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -983,37 +1060,42 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.410042
+    - t: 9.747375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.426777
+    - t: 12.76411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.71392
+    - t: 20.051252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.271881
+    - t: 29.609213
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.52802
+    - t: 38.650684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.22802
+    - t: 40.350685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.57802
+    - t: 41.650684
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 42.700684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1040,32 +1122,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.100041
+    - t: 9.437374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.116776
+    - t: 12.454109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.88392
+    - t: 20.221252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 28.96188
+    - t: 29.299212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.698017
+    - t: 38.820683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 42.67802
+    - t: 42.800686
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1076,48 +1158,56 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.050041
+    - t: 9.387374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.066776
+    - t: 12.404109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.833921
+    - t: 20.171253
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 28.91188
+    - t: 29.249212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.648018
+    - t: 38.770683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.178017
+    - t: 40.300682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 42.62802
+    - t: 42.750687
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
     animacion:
     - fundido: 0
-      t: 40.128017
+      t: 40.250683
       tipo: 2
       estado: Marshies_Jump
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 41.814682
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -1139,32 +1229,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.220042
+    - t: 9.557375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.236777
+    - t: 12.57411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 20.00392
+    - t: 20.341251
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.08188
+    - t: 29.419212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 40.398018
+    - t: 40.520683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.79802
+    - t: 42.920685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1175,37 +1265,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.170042
+    - t: 9.507375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.186777
+    - t: 12.52411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.95392
+    - t: 20.291252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.031881
+    - t: 29.369213
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.478016
+    - t: 38.60068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 40.34802
+    - t: 40.470684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.74802
+    - t: 42.870686
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1232,37 +1322,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.340042
+    - t: 9.677375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.356777
+    - t: 12.69411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 20.12392
+    - t: 20.461252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.20188
+    - t: 29.539211
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.818016
+    - t: 38.94068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.518017
+    - t: 40.640682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.91802
+    - t: 43.040684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1273,37 +1363,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.290042
+    - t: 9.627375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.306777
+    - t: 12.64411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 20.073921
+    - t: 20.411253
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 29.15188
+    - t: 29.489212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.768017
+    - t: 38.890682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.468018
+    - t: 40.590683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.86802
+    - t: 42.990685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1312,7 +1402,7 @@ MonoBehaviour:
     caras: []
     visible:
     - desde: 0
-      hasta: 109.68755
+      hasta: 109.81022
     deslizando: []
   - id: Actor_Gominola2
     alias: g2
@@ -1332,32 +1422,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.460042
+    - t: 9.797375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.476777
+    - t: 12.81411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 29.32188
+    - t: 29.659212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.938015
+    - t: 39.06068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.638016
+    - t: 40.76068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 43.038017
+    - t: 43.160683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1368,52 +1458,60 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.410042
+    - t: 9.747375
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.426777
+    - t: 12.76411
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.66392
+    - t: 20.001251
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 29.271881
+    - t: 29.609213
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.888016
+    - t: 39.01068
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.588017
+    - t: 40.710682
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.988018
+    - t: 43.110683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezPresidente
     animacion:
     - fundido: 0
-      t: 19.61392
+      t: 19.951252
       tipo: 2
       estado: Jump
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 21.760586
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible:
     - desde: 0
-      hasta: 109.68755
+      hasta: 109.81022
     deslizando: []
   - id: Actor_Gominola3
     alias: g3
@@ -1433,37 +1531,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.100041
+    - t: 9.437374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.116776
+    - t: 12.454109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.76392
+    - t: 20.101252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 28.96188
+    - t: 29.299212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.57802
+    - t: 38.700684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.27802
+    - t: 40.400684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.67802
+    - t: 42.800686
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1474,37 +1572,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.050041
+    - t: 9.387374
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 12.066776
+    - t: 12.404109
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 19.71392
+    - t: 20.051252
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Gominola2
-    - t: 28.91188
+    - t: 29.249212
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 38.52802
+    - t: 38.650684
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezEyeBud
-    - t: 40.22802
+    - t: 40.350685
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_JuezMarshie
-    - t: 42.62802
+    - t: 42.750687
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -1513,7 +1611,7 @@ MonoBehaviour:
     caras: []
     visible:
     - desde: 0
-      hasta: 109.68755
+      hasta: 109.81022
     deslizando: []
   lineas:
   - onlyIfFlag: 
@@ -1527,8 +1625,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 8.950042
-    t1: 11.666777
+    t0: 9.2873745
+    t1: 12.004109
     actor: Player
     clave: CHUCHELANDIA_TEQUIERO_07
     gesto: 
@@ -1536,8 +1634,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 11.966777
-    t1: 13.06392
+    t0: 12.30411
+    t1: 13.401253
     actor: Actor_Liam
     clave: CHUCHELANDIA_TEQUIERO_08
     gesto: 
@@ -1545,8 +1643,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 19.61392
-    t1: 22.226166
+    t0: 19.951252
+    t1: 22.563498
     actor: Actor_Gominola2
     clave: CHUCHELANDIA_TEQUIERO_02
     gesto: 
@@ -1554,8 +1652,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 22.726166
-    t1: 25.260044
+    t0: 23.063498
+    t1: 25.597376
     actor: Actor_Liam
     clave: CHUCHELANDIA_TEQUIERO_03
     gesto: 
@@ -1563,17 +1661,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 25.560043
-    t1: 28.51188
+    t0: 25.897375
+    t1: 28.849213
     actor: Player
     clave: CHUCHELANDIA_TEQUIERO_04
-    gesto: 
+    gesto: Shrug01
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 28.81188
-    t1: 30.40535
+    t0: 29.149212
+    t1: 30.742682
     actor: Actor_Liam
     clave: CHUCHELANDIA_TEQUIERO_05
     gesto: 
@@ -1581,8 +1679,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 38.428017
-    t1: 39.82802
+    t0: 38.550682
+    t1: 39.950684
     actor: Actor_JuezEyeBud
     clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ
     gesto: 
@@ -1590,8 +1688,8 @@ MonoBehaviour:
     presentacion: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 40.128017
-    t1: 41.52802
+    t0: 40.250683
+    t1: 41.650684
     actor: Actor_JuezMarshie
     clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ
     gesto: 
@@ -1599,8 +1697,8 @@ MonoBehaviour:
     presentacion: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 42.52802
-    t1: 45.128017
+    t0: 42.650684
+    t1: 45.250683
     actor: Actor_JuezPresidente
     clave: CHUCHELANDIA_DUELO_CARTEL_DIEZ_Y_UNO
     gesto: 
@@ -1608,8 +1706,8 @@ MonoBehaviour:
     presentacion: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 45.128017
-    t1: 46.87822
+    t0: 45.250683
+    t1: 47.000885
     actor: Actor_Liam
     clave: CHUCHELANDIA_TEQUIERO_06
     gesto: 
@@ -1633,7 +1731,7 @@ MonoBehaviour:
     extras:
     - {x: 96.19981, y: 14, z: 5.0318217}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0880126
+    alturaDelFoco: 1.1333598
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1645,7 +1743,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 2.1920407
-      p: {x: 97.24034, y: 15.336817, z: 3.3382933}
+      p: {x: 95.58634, y: 15.334638, z: 3.21876}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1654,7 +1752,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -1676,14 +1774,14 @@ MonoBehaviour:
     extras:
     - {x: 95.00395, y: 14, z: 6.3771586}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0555179
+    alturaDelFoco: 1.1760474
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 6.291374
-    t1: 13.06392
+    t1: 13.401253
     tipo: 1
     descripcion: conjunto de will y liam
     posiciones:
@@ -1699,18 +1797,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0717652
+    alturaDelFoco: 1.1547036
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 13.06392
-    t1: 15.263921
+    t0: 13.401253
+    t1: 15.6012535
     tipo: 1
     descripcion: conjunto de will y liam
     posiciones:
-    - t: 13.06392
+    - t: 13.401253
       p: {x: 93.023315, y: 15.2, z: 9.433232}
     lente: 36
     lenteFinal: 0
@@ -1723,18 +1821,18 @@ MonoBehaviour:
     extras:
     - {x: 97.059326, y: 14, z: 7}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0717652
+    alturaDelFoco: 1.1547036
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.263921
-    t1: 19.61392
+    t0: 15.6012535
+    t1: 19.951252
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
-    - t: 15.263921
+    - t: 15.6012535
       p: {x: 93.32228, y: 15.331307, z: 3.6781802}
     lente: 26
     lenteFinal: 0
@@ -1748,12 +1846,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 19.61392
-    t1: 22.226166
+    t0: 19.951252
+    t1: 22.563498
     tipo: 2
     descripcion: medio de g2
     posiciones:
-    - t: 19.61392
+    - t: 19.951252
       p: {x: 93.78415, y: 15.148364, z: 4.2022123}
     lente: 30
     lenteFinal: 0
@@ -1769,12 +1867,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 22.226166
-    t1: 30.40535
+    t0: 22.563498
+    t1: 30.742682
     tipo: 5
     descripcion: 'dos: liam y will'
     posiciones:
-    - t: 22.226166
+    - t: 22.563498
       p: {x: 94.06247, y: 15.236817, z: 4.3361416}
     lente: 32
     lenteFinal: 0
@@ -1786,19 +1884,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.84078085
+    alturaDelFoco: 0.838942
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 30.40535
-    t1: 32.40535
+    t0: 30.742682
+    t1: 32.742683
     tipo: 2
     descripcion: medio de estela
     posiciones:
-    - t: 30.40535
-      p: {x: 96.312454, y: 15.336818, z: 4.1000385}
+    - t: 30.742682
+      p: {x: 95.82527, y: 15.3, z: 4.442892}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1807,19 +1905,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 32.40535
-    t1: 36.628017
+    t0: 32.742683
+    t1: 36.750683
     tipo: 1
     descripcion: conjunto de estela
     posiciones:
-    - t: 32.40535
-      p: {x: 98.31595, y: 15.1, z: 4.6872606}
+    - t: 32.742683
+      p: {x: 98.16047, y: 15.1, z: 3.8706872}
     lente: 36
     lenteFinal: 0
     sujetos:
@@ -1828,18 +1926,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1792966
+    alturaDelFoco: 1.0680825
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 36.628017
-    t1: 37.82802
+    t0: 36.750683
+    t1: 37.950684
     tipo: 0
     descripcion: general de estela y presidente y malvavisco y lagrimitas
     posiciones:
-    - t: 36.628017
+    - t: 36.750683
       p: {x: 98.776146, y: 17.17417, z: 6.4881396}
     lente: 42
     lenteFinal: 0
@@ -1855,18 +1953,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.9000475
+    alturaDelFoco: 0.8782019
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 37.82802
-    t1: 45.128017
+    t0: 37.950684
+    t1: 45.250683
     tipo: 1
     descripcion: conjunto de presidente y malvavisco y lagrimitas
     posiciones:
-    - t: 37.82802
+    - t: 37.950684
       p: {x: 97.33861, y: 15.936816, z: 3.3738422}
     lente: 34
     lenteFinal: 0
@@ -1886,12 +1984,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 45.128017
-    t1: 47.37822
+    t0: 45.250683
+    t1: 47.500885
     tipo: 5
     descripcion: 'dos: liam y will'
     posiciones:
-    - t: 45.128017
+    - t: 45.250683
       p: {x: 95.138885, y: 15.233612, z: 3.521565}
     lente: 32
     lenteFinal: 0
@@ -1903,18 +2001,18 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.84078085
+    alturaDelFoco: 0.838942
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 47.37822
-    t1: 49.687553
+    t0: 47.500885
+    t1: 49.81022
     tipo: 2
     descripcion: medio de pompon
     posiciones:
-    - t: 47.37822
+    - t: 47.500885
       p: {x: 90.52919, y: 15.2, z: 5.676589}
     lente: 32
     lenteFinal: 0
@@ -1934,356 +2032,356 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344643
+      rid: 6540294550018326949
     linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344644
+      rid: 6540294550018326950
     linea: 74
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344645
+      rid: 6540294550018326951
     linea: 75
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344646
+      rid: 6540294550018326952
     linea: 76
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.05
     beat:
-      rid: 6540294313956344647
+      rid: 6540294550018326953
     linea: 83
   - onlyIfFlag: 
     skipIfFlag: 
     t: 5.541374
     beat:
-      rid: 6540294313956344648
+      rid: 6540294550018326954
     linea: 102
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.350041
+    t: 8.687374
     beat:
-      rid: 6540294313956344649
+      rid: 6540294550018326955
     linea: 116
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.350041
+    t: 8.687374
     beat:
-      rid: 6540294313956344650
+      rid: 6540294550018326956
     linea: 117
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.350041
+    t: 8.687374
     beat:
-      rid: 6540294313956344651
+      rid: 6540294550018326957
     linea: 115
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.530042
+    t: 8.867374
     beat:
-      rid: 6540294313956344652
+      rid: 6540294550018326958
     linea: 119
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.530042
+    t: 8.867374
     beat:
-      rid: 6540294313956344653
+      rid: 6540294550018326959
     linea: 120
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.7300415
+    t: 9.067374
     beat:
-      rid: 6540294313956344654
+      rid: 6540294550018326960
     linea: 122
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.7300415
+    t: 9.067374
     beat:
-      rid: 6540294313956344655
+      rid: 6540294550018326961
     linea: 123
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 8.950042
+    t: 9.2873745
     beat:
-      rid: 6540294313956344656
+      rid: 6540294550018326962
     linea: 127
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344657
+      rid: 6540294550018326963
     linea: 144
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344658
+      rid: 6540294550018326964
     linea: 145
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344659
+      rid: 6540294550018326965
     linea: 143
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344660
+      rid: 6540294550018326966
     linea: 138
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344661
+      rid: 6540294550018326967
     linea: 137
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 13.06392
+    t: 13.401253
     beat:
-      rid: 6540294313956344662
+      rid: 6540294550018326968
     linea: 139
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344663
+      rid: 6540294550018326969
     linea: 151
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344664
+      rid: 6540294550018326970
     linea: 152
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344665
+      rid: 6540294550018326971
     linea: 153
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344666
+      rid: 6540294550018326972
     linea: 154
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344667
+      rid: 6540294550018326973
     linea: 155
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344668
+      rid: 6540294550018326974
     linea: 156
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.66392
+    t: 15.001253
     beat:
-      rid: 6540294313956344669
+      rid: 6540294550018326975
     linea: 157
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 14.78392
+    t: 15.121253
     beat:
-      rid: 6540294313956344670
+      rid: 6540294550018326976
     linea: 158
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344671
+      rid: 6540294550018326977
     linea: 174
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344672
+      rid: 6540294550018326978
     linea: 175
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344673
+      rid: 6540294550018326979
     linea: 173
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344674
+      rid: 6540294550018326980
     linea: 171
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344675
+      rid: 6540294550018326981
     linea: 166
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.263921
+    t: 15.6012535
     beat:
-      rid: 6540294313956344676
+      rid: 6540294550018326982
     linea: 172
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.913921
+    t: 16.251253
     beat:
-      rid: 6540294313956344677
+      rid: 6540294550018326983
     linea: 179
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.46392
+    t: 16.801252
     beat:
-      rid: 6540294313956344678
+      rid: 6540294550018326984
     linea: 181
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.913921
+    t: 17.251253
     beat:
-      rid: 6540294313956344679
+      rid: 6540294550018326985
     linea: 192
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.913921
+    t: 17.251253
     beat:
-      rid: 6540294313956344680
+      rid: 6540294550018326986
     linea: 193
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.913921
+    t: 17.251253
     beat:
-      rid: 6540294313956344681
+      rid: 6540294550018326987
     linea: 194
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 17.313921
+    t: 17.651253
     beat:
-      rid: 6540294313956344682
+      rid: 6540294550018326988
     linea: 195
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 18.71392
+    t: 19.051252
     beat:
-      rid: 6540294313956344683
+      rid: 6540294550018326989
     linea: 197
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 19.61392
+    t: 19.951252
     beat:
-      rid: 6540294313956344684
+      rid: 6540294550018326990
     linea: 203
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 22.226166
+    t: 22.563498
     beat:
-      rid: 6540294313956344685
-    linea: 207
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 22.226166
-    beat:
-      rid: 6540294313956344686
+      rid: 6540294550018326991
     linea: 208
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 31.50535
+    t: 22.563498
     beat:
-      rid: 6540294313956344687
-    linea: 219
+      rid: 6540294550018326992
+    linea: 209
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 32.40535
+    t: 31.842682
     beat:
-      rid: 6540294313956344688
-    linea: 230
+      rid: 6540294550018326993
+    linea: 220
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 32.40535
+    t: 32.742683
     beat:
-      rid: 6540294313956344689
-    linea: 227
+      rid: 6540294550018326994
+    linea: 231
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 32.40535
+    t: 32.742683
     beat:
-      rid: 6540294313956344690
+      rid: 6540294550018326995
     linea: 228
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 36.628017
+    t: 32.742683
     beat:
-      rid: 6540294313956344691
-    linea: 238
+      rid: 6540294550018326996
+    linea: 229
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 37.82802
+    t: 36.750683
     beat:
-      rid: 6540294313956344692
-    linea: 245
+      rid: 6540294550018326997
+    linea: 239
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 42.52802
+    t: 37.950684
     beat:
-      rid: 6540294313956344693
-    linea: 253
+      rid: 6540294550018326998
+    linea: 246
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 45.128017
+    t: 42.650684
     beat:
-      rid: 6540294313956344694
-    linea: 258
+      rid: 6540294550018326999
+    linea: 254
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 45.250683
     beat:
-      rid: 6540294313956344695
-    linea: 270
+      rid: 6540294550018327000
+    linea: 260
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 47.500885
     beat:
-      rid: 6540294313956344696
-    linea: 269
+      rid: 6540294550018327001
+    linea: 272
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 47.500885
     beat:
-      rid: 6540294313956344697
+      rid: 6540294550018327002
     linea: 271
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 47.500885
     beat:
-      rid: 6540294313956344698
-    linea: 267
+      rid: 6540294550018327003
+    linea: 273
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 47.500885
     beat:
-      rid: 6540294313956344699
-    linea: 266
+      rid: 6540294550018327004
+    linea: 269
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 47.37822
+    t: 47.500885
     beat:
-      rid: 6540294313956344700
+      rid: 6540294550018327005
     linea: 268
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 48.67822
+    t: 47.500885
     beat:
-      rid: 6540294313956344701
-    linea: 275
+      rid: 6540294550018327006
+    linea: 270
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 48.800884
+    beat:
+      rid: 6540294550018327007
+    linea: 277
   etiquetas:
   - nombre: inicio
     t: 0
@@ -2294,29 +2392,29 @@ MonoBehaviour:
   - nombre: pancarta
     t: 6.291374
   - nombre: rebote
-    t: 8.350041
+    t: 8.687374
   - nombre: caida
-    t: 13.06392
+    t: 13.401253
   - nombre: plof
-    t: 14.66392
+    t: 15.001253
   - nombre: silencio_fuente
-    t: 15.263921
+    t: 15.6012535
   - nombre: salen
-    t: 16.913921
+    t: 17.251253
   - nombre: novios
-    t: 19.61392
+    t: 19.951252
   - nombre: aguanta
-    t: 30.40535
+    t: 30.742682
   - nombre: risa
-    t: 32.40535
+    t: 32.742683
   - nombre: silencio_salon
-    t: 36.628017
+    t: 36.750683
   - nombre: cartelitos
-    t: 37.82802
+    t: 37.950684
   - nombre: cuenta
-    t: 45.128017
+    t: 45.250683
   - nombre: final
-    t: 47.37822
+    t: 47.500885
   puntos:
   - nombre: p_centro
     posicion: {x: 92.559326, y: 14.029524, z: 3.0000002}
@@ -2360,7 +2458,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294313956344643
+    - rid: 6540294550018326949
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2368,23 +2466,23 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294313956344644
+    - rid: 6540294550018326950
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_Pancarta
         active: 1
-    - rid: 6540294313956344645
+    - rid: 6540294550018326951
       type: {class: CuerpoSinFisicaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         actorId: Player
-    - rid: 6540294313956344646
+    - rid: 6540294550018326952
       type: {class: CuerpoSinFisicaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         actorId: Actor_Liam
-    - rid: 6540294313956344647
+    - rid: 6540294550018326953
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2394,7 +2492,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344648
+    - rid: 6540294550018326954
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2404,7 +2502,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344649
+    - rid: 6540294550018326955
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2414,7 +2512,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344650
+    - rid: 6540294550018326956
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2429,7 +2527,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344651
+    - rid: 6540294550018326957
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2439,7 +2537,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344652
+    - rid: 6540294550018326958
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2454,7 +2552,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344653
+    - rid: 6540294550018326959
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2469,7 +2567,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344654
+    - rid: 6540294550018326960
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2484,7 +2582,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344655
+    - rid: 6540294550018326961
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2494,7 +2592,7 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 6540294313956344656
+    - rid: 6540294550018326962
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2509,7 +2607,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344657
+    - rid: 6540294550018326963
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2524,7 +2622,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 1
-    - rid: 6540294313956344658
+    - rid: 6540294550018326964
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2539,7 +2637,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344659
+    - rid: 6540294550018326965
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2554,7 +2652,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 1
-    - rid: 6540294313956344660
+    - rid: 6540294550018326966
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2564,13 +2662,13 @@ MonoBehaviour:
         ambienteDb: 0
         fundido: 0.3
         quitar: 0
-    - rid: 6540294313956344661
+    - rid: 6540294550018326967
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 0.3
         rampDuration: 0.15
-    - rid: 6540294313956344662
+    - rid: 6540294550018326968
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2580,13 +2678,13 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344663
+    - rid: 6540294550018326969
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0.1
-    - rid: 6540294313956344664
+    - rid: 6540294550018326970
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2599,7 +2697,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344665
+    - rid: 6540294550018326971
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2612,7 +2710,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344666
+    - rid: 6540294550018326972
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2622,14 +2720,14 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294313956344667
+    - rid: 6540294550018326973
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.2
         duration: 0.45
         waitForEnd: 0
-    - rid: 6540294313956344668
+    - rid: 6540294550018326974
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2639,13 +2737,13 @@ MonoBehaviour:
         ambienteDb: 0
         fundido: 0.2
         quitar: 1
-    - rid: 6540294313956344669
+    - rid: 6540294550018326975
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_Pancarta
         active: 0
-    - rid: 6540294313956344670
+    - rid: 6540294550018326976
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2655,7 +2753,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344671
+    - rid: 6540294550018326977
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2672,7 +2770,7 @@ MonoBehaviour:
         gestoHorneado: 
         segundoDelGesto: 0
         segundosDeApoyo: 0.25
-    - rid: 6540294313956344672
+    - rid: 6540294550018326978
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2689,7 +2787,7 @@ MonoBehaviour:
         gestoHorneado: 
         segundoDelGesto: 0
         segundosDeApoyo: 0.25
-    - rid: 6540294313956344673
+    - rid: 6540294550018326979
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2704,13 +2802,13 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344674
+    - rid: 6540294550018326980
       type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         atuendo: {fileID: 11400000, guid: 3978a78df0703984cba3ddf26cf727c1, type: 2}
         poner: 1
-    - rid: 6540294313956344675
+    - rid: 6540294550018326981
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2720,13 +2818,13 @@ MonoBehaviour:
         ambienteDb: -30
         fundido: 0.3
         quitar: 0
-    - rid: 6540294313956344676
+    - rid: 6540294550018326982
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_MantelNovios
         active: 1
-    - rid: 6540294313956344677
+    - rid: 6540294550018326983
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2736,7 +2834,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344678
+    - rid: 6540294550018326984
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2746,7 +2844,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344679
+    - rid: 6540294550018326985
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2761,7 +2859,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294313956344680
+    - rid: 6540294550018326986
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2771,7 +2869,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294313956344681
+    - rid: 6540294550018326987
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2784,7 +2882,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344682
+    - rid: 6540294550018326988
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2794,7 +2892,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294313956344683
+    - rid: 6540294550018326989
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2804,7 +2902,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344684
+    - rid: 6540294550018326990
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2814,7 +2912,7 @@ MonoBehaviour:
         ambienteDb: 0
         fundido: 0.6
         quitar: 1
-    - rid: 6540294313956344685
+    - rid: 6540294550018326991
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2827,7 +2925,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294313956344686
+    - rid: 6540294550018326992
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2837,7 +2935,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344687
+    - rid: 6540294550018326993
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2847,7 +2945,7 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294313956344688
+    - rid: 6540294550018326994
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2857,13 +2955,13 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 6540294313956344689
+    - rid: 6540294550018326995
       type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         atuendo: {fileID: 11400000, guid: ff0477d63e72bb543bb14803cbe7c6ed, type: 2}
         poner: 1
-    - rid: 6540294313956344690
+    - rid: 6540294550018326996
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2880,7 +2978,7 @@ MonoBehaviour:
         gestoHorneado: 
         segundoDelGesto: 0
         segundosDeApoyo: 0.25
-    - rid: 6540294313956344691
+    - rid: 6540294550018326997
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2890,7 +2988,7 @@ MonoBehaviour:
         ambienteDb: -20
         fundido: 0.5
         quitar: 0
-    - rid: 6540294313956344692
+    - rid: 6540294550018326998
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2900,7 +2998,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294313956344693
+    - rid: 6540294550018326999
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2910,7 +3008,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344694
+    - rid: 6540294550018327000
       type: {class: MezclaBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2920,43 +3018,43 @@ MonoBehaviour:
         ambienteDb: 0
         fundido: 1.2
         quitar: 1
-    - rid: 6540294313956344695
+    - rid: 6540294550018327001
       type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         atuendo: {fileID: 11400000, guid: 3978a78df0703984cba3ddf26cf727c1, type: 2}
         poner: 0
-    - rid: 6540294313956344696
+    - rid: 6540294550018327002
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_LazoDeEstela
         active: 0
-    - rid: 6540294313956344697
+    - rid: 6540294550018327003
       type: {class: AtuendoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         atuendo: {fileID: 11400000, guid: ff0477d63e72bb543bb14803cbe7c6ed, type: 2}
         poner: 0
-    - rid: 6540294313956344698
+    - rid: 6540294550018327004
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_Velo
         active: 0
-    - rid: 6540294313956344699
+    - rid: 6540294550018327005
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_MantelNovios
         active: 0
-    - rid: 6540294313956344700
+    - rid: 6540294550018327006
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_CorazonDeLiam
         active: 0
-    - rid: 6540294313956344701
+    - rid: 6540294550018327007
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap4_03_LaCampana
   duracion: 11.245
   presentacion: 0
-  huella: "2026-11-07 17:23 \xB7 d8a84873eb6d3ea181721a8b9b36e48a"
+  huella: "2026-11-11 18:11 \xB7 59de2c0a82d01762776521dd5105f435"
   actores:
   - id: Player
     alias: will
@@ -73,36 +73,42 @@ MonoBehaviour:
       estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.295
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.365
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.4449997
       tipo: 2
-      estado: Talk02
+      estado: Question01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 8.845
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.625
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 1.2
       emocion: sorpresa
@@ -163,60 +169,42 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 0.68
       tipo: 2
-      estado: Talk03
+      estado: FoundSomething_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 3.445
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.4
       t: 3.595
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 3.675
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 7.415
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 7.937
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 9.145
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 9.225
       tipo: 2
-      estado: Talk02
+      estado: Shrug01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 10.395
-      tipo: 4
-      estado: 
+      voz: 
+    - fundido: 0.3
+      t: 10.575001
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 3.595
       emocion: decidido
@@ -236,7 +224,7 @@ MonoBehaviour:
     t1: 3.395
     actor: _ESTELA
     clave: CAP4_CAMPANA_01
-    gesto: Talk03
+    gesto: FoundSomething_NoWeapon
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -245,8 +233,8 @@ MonoBehaviour:
     t1: 7.365
     actor: _ESTELA
     clave: CAP4_CAMPANA_02
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -254,7 +242,7 @@ MonoBehaviour:
     t1: 8.795
     actor: Player
     clave: CAP4_CAMPANA_03
-    gesto: Talk02
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -263,8 +251,8 @@ MonoBehaviour:
     t1: 10.345
     actor: _ESTELA
     clave: CAP4_CAMPANA_04
-    gesto: Talk02
-    sinPose: 0
+    gesto: Shrug01
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []

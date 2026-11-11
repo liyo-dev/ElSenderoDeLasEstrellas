@@ -22,7 +22,7 @@ namespace Sendero.UI
         private const int Categorias = 4;
         private static readonly string[] NombresDeCategoria = { "Consumibles", "Misión", "Recuerdos", "Tesoros" };
         private static readonly string[] Etiquetas = { "Consumible", "Objeto de misión", "Recuerdo", "" };
-        private static readonly Color[] ColoresDeEtiqueta = { P.Verde, P.Oro, new Color32(0xB9, 0xA3, 0xFF, 0xFF), P.Oro };
+        private static readonly Color[] ColoresDeEtiqueta = { P.Verde, P.OroDeTexto, new Color32(0x6A, 0x4F, 0xB8, 0xFF), P.OroDeTexto };
 
         private const int Columnas = 5, FilasVisibles = 4;
         private const float Lado = 160f, Hueco = 18f;
@@ -94,7 +94,7 @@ namespace Sendero.UI
                 icono.preserveAspect = true;
                 icono.raycastTarget = false;
                 P.Rellenar(icono.rectTransform, 22f);
-                var n = P.Txt("Cantidad", casilla.transform, "", 22f, Color.white, true, TextAlignmentOptions.BottomRight);
+                var n = P.Txt("Cantidad", casilla.transform, "", 22f, P.Texto, true, TextAlignmentOptions.BottomRight);
                 P.Rellenar(n.rectTransform, 10f);
                 _casillas.Add(casilla);
                 _iconos.Add(icono);
@@ -113,20 +113,20 @@ namespace Sendero.UI
             _iconoGrande.preserveAspect = true;
             _iconoGrande.raycastTarget = false;
             P.Rellenar(_iconoGrande.rectTransform, 22f);
-            _etiqueta = P.Txt("Etiqueta", dc, "", 20f, P.Oro, true);
+            _etiqueta = P.Txt("Etiqueta", dc, "", 20f, P.OroDeTexto, true);
             P.Colocar(_etiqueta.rectTransform, 266f, 54f, 510f, 30f);
             _nombre = P.Txt("Nombre", dc, "", 44f, P.Texto, true, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(_nombre.rectTransform, 266f, 92f, 510f, 110f);
             _tienes = P.Txt("Cantidad", dc, "", 24f, P.TextoSuave, true);
             P.Colocar(_tienes.rectTransform, 266f, 196f, 510f, 34f);
-            _descripcion = P.Txt("Descripción", dc, "", 28f, new Color32(0xDF, 0xE2, 0xFF, 0xFF), false, TextAlignmentOptions.TopLeft, envolver: true);
+            _descripcion = P.Txt("Descripción", dc, "", 28f, P.Texto, false, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(_descripcion.rectTransform, 36f, 270f, 747f, 230f);
             var efecto = P.Caja("Efecto", dc, new Color(0.3f, 0.82f, 0.49f, 0.14f), 16f);
             P.Colocar(efecto.rectTransform, 36f, 512f, 747f, 64f);
             _cajaDeEfecto = efecto.gameObject;
-            _efecto = P.Txt("Texto", efecto.transform, "", 24f, new Color32(0x9F, 0xF0, 0xBD, 0xFF), true, TextAlignmentOptions.MidlineLeft);
+            _efecto = P.Txt("Texto", efecto.transform, "", 24f, P.Verde, true, TextAlignmentOptions.MidlineLeft);
             P.Rellenar(_efecto.rectTransform, 18f);
-            _aviso = P.Txt("Aviso", dc, "", 24f, P.Oro, true, TextAlignmentOptions.TopLeft, envolver: true);
+            _aviso = P.Txt("Aviso", dc, "", 24f, P.OroDeTexto, true, TextAlignmentOptions.TopLeft, envolver: true);
             P.Colocar(_aviso.rectTransform, 36f, 600f, 747f, 80f);
             _usar = P.Caja("Usar", dc, P.Oro, 18f);
             P.Colocar(_usar.rectTransform, 36f, 780f, 240f, 70f);
@@ -206,8 +206,8 @@ namespace Sendero.UI
             for (int i = 0; i < _chips.Count; i++)
             {
                 bool activa = i == (int)_categoria;
-                _chips[i].color = activa ? P.Borde : P.Ficha;
-                _textosDeChip[i].color = activa ? new Color32(0x14, 0x12, 0x2F, 0xFF) : P.TextoSuave;
+                _chips[i].color = activa ? P.Oro : P.Ficha;
+                _textosDeChip[i].color = activa ? P.OroOscuro : P.TextoSuave;
                 int cuenta = (Categoria)i == Categoria.Tesoros ? TesorosEncontrados() : _porCategoria[i].Count;
                 _textosDeChip[i].text = NombresDeCategoria[i] + "  <size=80%>" + cuenta + "</size>";
             }

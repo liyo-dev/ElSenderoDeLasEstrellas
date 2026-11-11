@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_06_LasJaulas
   duracion: 24.606985
   presentacion: 1
-  huella: "2026-11-11 00:48 \xB7 87a95c7605dfaea4bf38d5712350abd5"
+  huella: "2026-11-11 18:11 \xB7 7993d7dfc0b442e067621a74a7c03dee"
   actores:
   - id: Player
     alias: will
@@ -97,7 +97,7 @@ MonoBehaviour:
     - fundido: 0
       t: 1.08
       tipo: 2
-      estado: Talk03
+      estado: Suspiro01
       congelar: 0
       alFinal: 0
       voz: 
@@ -118,7 +118,7 @@ MonoBehaviour:
     - fundido: 0
       t: 2.58
       tipo: 2
-      estado: Talk01
+      estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
@@ -143,31 +143,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
+    - fundido: 0.6
       t: 17.081982
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 17.161982
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 18.331982
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 19.431984
-      tipo: 2
-      estado: HeadNod01
+      tipo: 1
+      estado: Cabizbajo
       congelar: 0
       alFinal: 0
       voz: 
@@ -277,6 +256,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -219.5, y: 21.491383, z: -126.2}
       actor: 
+    - t: 14.936982
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
     - t: 14.986982
       tipo: 2
       rumbo: 0
@@ -352,7 +336,7 @@ MonoBehaviour:
     - fundido: 0
       t: 15.016982
       tipo: 2
-      estado: Talk03
+      estado: Suspiro01
       congelar: 0
       alFinal: 0
       voz: 
@@ -514,13 +498,6 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 19.431984
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -616,34 +593,6 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 3.098
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 8.681982
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 15.636982
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 19.431984
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -654,7 +603,7 @@ MonoBehaviour:
     t1: 2.2
     actor: Player
     clave: CAP3_JAULAS_01
-    gesto: Talk03
+    gesto: Suspiro01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -663,7 +612,7 @@ MonoBehaviour:
     t1: 3.995
     actor: Player
     clave: CAP3_JAULAS_02
-    gesto: Talk01
+    gesto: HeadShake01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -690,7 +639,7 @@ MonoBehaviour:
     t1: 17.081982
     actor: NPC_Sargento
     clave: CAP3_JAULAS_05
-    gesto: Talk03
+    gesto: Suspiro01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -699,8 +648,8 @@ MonoBehaviour:
     t1: 18.281982
     actor: Player
     clave: CAP3_JAULAS_06
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -782,31 +731,31 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294533431951787
+      rid: 6540294550018326858
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294533431951788
+      rid: 6540294550018326859
     linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
     t: 13.936982
     beat:
-      rid: 6540294533431951789
+      rid: 6540294550018326860
     linea: 44
   - onlyIfFlag: 
     skipIfFlag: 
     t: 22.906984
     beat:
-      rid: 6540294533431951790
-    linea: 52
+      rid: 6540294550018326861
+    linea: 53
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.606985
     beat:
-      rid: 6540294533431951791
+      rid: 6540294550018326862
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -832,7 +781,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294533431951787
+    - rid: 6540294550018326858
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -840,7 +789,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294533431951788
+    - rid: 6540294550018326859
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -853,7 +802,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294533431951789
+    - rid: 6540294550018326860
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -866,7 +815,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294533431951790
+    - rid: 6540294550018326861
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -874,7 +823,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294533431951791
+    - rid: 6540294550018326862
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

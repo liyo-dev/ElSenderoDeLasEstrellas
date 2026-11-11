@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Chuche_02_ElPergamino
   duracion: 25.839592
   presentacion: 0
-  huella: "2026-11-01 09:26 \xB7 d201bfa8ffc4f005a351d7296f168bfc"
+  huella: "2026-11-11 18:11 \xB7 0b3fd478067e64a655e172f03150f296"
   actores:
   - id: Player
     alias: will
@@ -86,6 +86,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Heraldo
+    - t: 16.310612
+      tipo: 1
+      rumbo: 0
+      punto: {x: 190, y: 3.9419265, z: 100}
+      actor: 
+    - t: 18.310612
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     - t: 19.510612
       tipo: 2
       rumbo: 0
@@ -108,42 +118,42 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.420408
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 20.048
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.004082
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.084082
       tipo: 2
-      estado: HeadShake02
+      estado: Shrug01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 22.569183
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 23.219185
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 18.310612
       emocion: picaro
@@ -217,6 +227,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Heraldo
+    - t: 16.310612
+      tipo: 1
+      rumbo: 0
+      punto: {x: 190, y: 3.9419265, z: 100}
+      actor: 
     - t: 19.410612
       tipo: 2
       rumbo: 0
@@ -239,54 +254,28 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.420408
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
-    - fundido: 0
+      voz: 
+    - fundido: 0.3
       t: 19.410612
-      tipo: 3
-      estado: 
+      tipo: 1
+      estado: BrazosCruzados
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 19.490612
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 21.054081
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     - fundido: 0
       t: 21.610123
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
-    - fundido: 0
-      t: 22.519184
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 22.599184
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-    - fundido: 0
-      t: 24.78959
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
+      voz: 
     caras:
     - t: 18.310612
       emocion: sorpresa
@@ -353,6 +342,16 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Heraldo
+    - t: 16.310612
+      tipo: 1
+      rumbo: 0
+      punto: {x: 190, y: 3.9419265, z: 100}
+      actor: 
+    - t: 18.310612
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
     animacion:
     - fundido: 0
       t: 5.295102
@@ -360,12 +359,14 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 11.420408
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 18.310612
       emocion: picaro
@@ -396,6 +397,11 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
+    - t: 16.310612
+      tipo: 1
+      rumbo: 0
+      punto: {x: 190, y: 3.9419265, z: 100}
+      actor: 
     animacion:
     - fundido: 0
       t: 0
@@ -403,6 +409,14 @@ MonoBehaviour:
       estado: Idle2
       congelar: 0
       alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 6.1333337
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -440,8 +454,8 @@ MonoBehaviour:
     t1: 21.004082
     actor: Actor_Estela
     clave: CHUCHELANDIA_PERGAMINO_04
-    gesto: Talk01
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -449,7 +463,7 @@ MonoBehaviour:
     t1: 22.519184
     actor: Player
     clave: CHUCHELANDIA_PERGAMINO_05
-    gesto: HeadShake02
+    gesto: Shrug01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -458,8 +472,8 @@ MonoBehaviour:
     t1: 24.739592
     actor: Actor_Estela
     clave: CHUCHELANDIA_PERGAMINO_06
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   planos:
   - focos: []
@@ -469,7 +483,7 @@ MonoBehaviour:
     descripcion: general de heraldo y will y estela y liam
     posiciones:
     - t: 0
-      p: {x: 181.44333, y: 5.012665, z: 112.484566}
+      p: {x: 177.25795, y: 4.641926, z: 110.306725}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -484,7 +498,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.93839145
+    alturaDelFoco: 0.9491288
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -531,7 +545,7 @@ MonoBehaviour:
     extras:
     - {x: 190, y: 3.9419265, z: 100}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8702643
+    alturaDelFoco: 0.8845807
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -543,7 +557,7 @@ MonoBehaviour:
     descripcion: conjunto de will y estela y liam
     posiciones:
     - t: 18.310612
-      p: {x: 178.42433, y: 4.171009, z: 103.95987}
+      p: {x: 178.6307, y: 4.2117143, z: 103.80198}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -556,7 +570,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1.1258299
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -568,7 +582,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de will a estela
     posiciones:
     - t: 19.410612
-      p: {x: 181.93028, y: 4.5879736, z: 101.161255}
+      p: {x: 185.43343, y: 5.162327, z: 100.18255}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -577,8 +591,8 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
-    encuadre: {x: 0.13, y: -0.1}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -589,7 +603,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 21.004082
-      p: {x: 181.66776, y: 4.6971197, z: 98.5142}
+      p: {x: 185.2121, y: 5.1902847, z: 97.40065}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -598,8 +612,8 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
-    encuadre: {x: -0.13, y: -0.16}
+    alturaDelFoco: 1.1038897
+    encuadre: {x: 0.13, y: -0.16}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -610,7 +624,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de will a estela
     posiciones:
     - t: 22.519184
-      p: {x: 181.93028, y: 4.5879736, z: 101.161255}
+      p: {x: 185.43343, y: 5.162327, z: 100.18255}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -619,8 +633,8 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1313343
-    encuadre: {x: 0.13, y: -0.1}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.13, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -629,13 +643,13 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294313956344598
+      rid: 6540294550018326904
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 6540294313956344599
+      rid: 6540294550018326905
     linea: 44
   etiquetas:
   - nombre: inicio
@@ -665,7 +679,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294313956344598
+    - rid: 6540294550018326904
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -675,7 +689,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294313956344599
+    - rid: 6540294550018326905
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

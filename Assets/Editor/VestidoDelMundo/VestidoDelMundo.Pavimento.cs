@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 ///   bordillo y acera, así el bordillo de fuera es corrido; los fondos de saco se rematan igual. La calle que
 ///   atraviesa la muralla (paso de la puerta) va de adoquín de lado a lado, con cintas de piedra a ras y un
 ///   umbral donde empieza el camino.
-/// · Plaza: baldosa (Ground05) alineada con la plaza y centrada en ella, marco de adoquín de 1,2 m y bordillo
+/// · Plaza: baldosa de barro (Ground01) alineada con la plaza y centrada en ella, marco de adoquín de 1,2 m y bordillo
 ///   donde la plaza linda con tierra. Donde entra una calzada, un acceso o se apoya obra (escalinata, muro,
 ///   casa, balaustrada), el bordillo se abre; entre dos plazas que se tocan no hay ni bordillo ni marco. Con
 ///   rosetón (Plaza.Roseton): disco de Ground02 con anillo de sillares y un eje de losas que cruza la plaza
@@ -41,7 +41,8 @@ public static partial class VestidoDelMundo
     /// Losas del pavimento: cada una es un material de suelo del pack FK y una submalla.
     private enum Losa { Acera, Roseton, Adoquin, Piedra, Baldosa }
 
-    private static readonly string[] MaterialDeLosa = { "Ground01", "Ground02", "Ground03", "Ground04", "Ground05" };
+    /// La baldosa de las plazas es el mismo material de barro de las aceras (Ground01), a su propia repetición.
+    private static readonly string[] MaterialDeLosa = { "Ground01", "Ground02", "Ground03", "Ground04", "Ground01" };
 
     // ── Medidas (m) ──────────────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,7 @@ public static partial class VestidoDelMundo
     private const float RepeticionDeAdoquin = 6f;           // como la capa de adoquín del terreno
     private const float RepeticionDeLosas = 3.75f;          // diez losas de 0,375 m: la acera lleva dos
     private const float RepeticionDeBordillo = 5.6f;        // sillares de 0,7 m (ocho por repetición)
-    private const float RepeticionDeBaldosa = 8f;           // rombos de 2 m; uno amarillo en el centro de la plaza
+    private const float RepeticionDeBaldosa = 6f;           // un dibujo del barro cada 6 m
     private const float SillarDeBordillo = RepeticionDeBordillo / 8f;
 
     /// Banda de sillares grises de Ground04 (coordenada v): la arista del bordillo y su fondo. El frente baja

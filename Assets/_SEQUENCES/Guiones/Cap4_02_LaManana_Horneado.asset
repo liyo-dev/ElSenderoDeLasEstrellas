@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap4_02_LaManana
   duracion: 20.605
   presentacion: 0
-  huella: "2026-11-08 09:16 \xB7 85f2e7d8de84fec2526fc26062e6ff7e"
+  huella: "2026-11-11 18:11 \xB7 267a02691f8283e2f183788e28c99ae3"
   actores:
   - id: Player
     alias: will
@@ -82,12 +82,12 @@ MonoBehaviour:
     - fundido: 0
       t: 0.88
       tipo: 2
-      estado: Talk01
+      estado: Question02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 3.3466668
+      t: 3.7133334
       tipo: 2
       estado: Talk02
       congelar: 0
@@ -202,6 +202,13 @@ MonoBehaviour:
       actor: Player
     animacion:
     - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
       t: 1.5
       tipo: 2
       estado: Question01
@@ -209,29 +216,15 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 6.0899997
-      tipo: 3
+      t: 8.429999
+      tipo: 0
       estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 6.1699996
-      tipo: 2
-      estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
       t: 8.429999
       tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 8.48
-      tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
@@ -257,31 +250,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
+    - fundido: 0.4
       t: 13.374999
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 13.454999
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 17.779999
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 18.73
-      tipo: 2
-      estado: Question02
+      tipo: 1
+      estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
       voz: 
@@ -307,7 +279,7 @@ MonoBehaviour:
     t1: 5.74
     actor: Player
     clave: CAP4_MANANA_01
-    gesto: Talk01
+    gesto: Question02
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
@@ -316,8 +288,8 @@ MonoBehaviour:
     t1: 8.429999
     actor: _ESTELA
     clave: CAP4_MANANA_02
-    gesto: Talk02
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -334,8 +306,8 @@ MonoBehaviour:
     t1: 17.73
     actor: _ESTELA
     clave: CAP4_MANANA_04
-    gesto: Talk03
-    sinPose: 0
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 

@@ -34,23 +34,32 @@ plano medio will
 will dice CAP4_ESTELA_02 cara=sorpresa
 estela anda a p_estela2 ritmo=paseo
 plano dos will estela
+& estela bucle BrazosEnJarras fundido=0.4
 estela dice CAP4_ESTELA_03 cara=molesto
 will dice CAP4_ESTELA_04 cara=alegre gesto=HandClap01
 
 @aro
-will dice CAP4_ESTELA_05 gesto=FoundSomething_NoWeapon
+# Le tiende el trozo de aro y lo sostiene mientras ella lo lee.
+will dice CAP4_ESTELA_05
+& will bucle Ofrecer fundido=0.4
 plano primer estela
+& estela reposo
 estela cara pensativo
 espera 1
 estela dice CAP4_ESTELA_06 cara=pensativo
 estela dice CAP4_ESTELA_07 cara=enfado
 estela dice CAP4_ESTELA_08 cara=preocupado
 plano dos will estela
+& will reposo
+& estela bucle BrazosCruzados fundido=0.4
 estela dice CAP4_ESTELA_09 cara=molesto gesto=HeadShake01
 will dice CAP4_ESTELA_10 cara=decidido
+& will bucle ManoAlPecho fundido=0.4
 plano primer estela
+& estela reposo
 estela dice CAP4_ESTELA_11 cara=preocupado
 espera 0.6
 estela dice CAP4_ESTELA_12 cara=picaro
+& estela bucle BrazosEnJarras fundido=0.4
 espera 0.6
 bandas quita

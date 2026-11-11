@@ -8,7 +8,7 @@ using UnityEngine;
 
 /// Tonos de piel de los NPCs. La piel de los personajes del pack sale de dos casillas de su textura
 /// de colores (piel y nariz), la misma para todos; un NPC con otro tono lleva copias de sus materiales
-/// con una copia de esa textura en su tono, y las piezas de piel de su cara (párpados, arrugas) en el
+/// con una copia de esa textura en su tono, y las piezas pintadas sobre la piel de su cara en el
 /// mismo tono. El reparto es la tabla de abajo; quien no está en ella lleva el tono de siempre.
 /// Se puede repetir: cada copia recuerda de qué material sale, y quitar a un NPC de la tabla le
 /// devuelve sus materiales.
@@ -104,8 +104,16 @@ public static class TonosDePiel
 
     static string Ruta(string npc) => npc.StartsWith("Assets/") ? npc : $"Assets/_NPCs/{npc}.prefab";
 
+    /// Piezas de la cara pintadas sobre la piel: cada una es la piel multiplicada por su factor, para
+    /// que en un tono oscuro sigan siendo algo más oscuras que la piel y no una mancha clara.
+    static readonly (string sufijo, Vector3 factor)[] PiezasSobreLaPiel =
+    {
+        ("_Piel", Vector3.one), ("_Arruga", new Vector3(0.86f, 0.78f, 0.8f)),
+        ("_Tostado", new Vector3(0.96f, 0.8f, 0.8f)), ("_Peca", new Vector3(0.75f, 0.59f, 0.51f)),
+    };
+
     static bool EsDePiel(Material mat, Texture2D textura) =>
-        mat.mainTexture == textura || mat.name.EndsWith("_Piel") || mat.name.EndsWith("_Arruga");
+        mat.mainTexture == textura || PiezasSobreLaPiel.Any(p => mat.name.EndsWith(p.sufijo));
 
     /// El material del que sale una copia en tono (él mismo si no es una copia).
     static Material Original(Material mat)
@@ -124,13 +132,14 @@ public static class TonosDePiel
     {
         Color32 piel = Tonos[tono];
         if (original.mainTexture == textura) return Copia(original, tono, TexturaEnTono(tono, piel));
-        if (original.name.EndsWith("_Piel")) return Copia(original, tono, Lisa(original, tono, piel));
-        if (original.name.EndsWith("_Arruga")) return Copia(original, tono, Lisa(original, tono, Arruga(piel)));
+        foreach (var (sufijo, factor) in PiezasSobreLaPiel)
+            if (original.name.EndsWith(sufijo))
+                return Copia(original, tono, Lisa(original, tono, new Color32(
+                    (byte)(piel.r * factor.x), (byte)(piel.g * factor.y), (byte)(piel.b * factor.z), 255)));
         return original;
     }
 
     static Color32 Nariz(Color32 piel) => new Color32((byte)(piel.r * 0.935f), (byte)(piel.g * 0.83f), (byte)(piel.b * 0.88f), 255);
-    static Color32 Arruga(Color32 piel) => new Color32((byte)(piel.r * 0.86f), (byte)(piel.g * 0.78f), (byte)(piel.b * 0.8f), 255);
 
     static Texture2D Lisa(Material original, string tono, Color32 color) =>
         PersonajeHechoEnBlender.TexturaDeColor($"{CarpetaDeMateriales}/{original.name}__{tono}_Color.png", color);

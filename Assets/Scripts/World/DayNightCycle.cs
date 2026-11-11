@@ -271,6 +271,16 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Probabilidad (0-1) de que arranque niebla ocasional en cada sorteo — la última en probarse (solo si tormenta/lluvia/viento no salieron). No se solapan lluvia y niebla ocasional a propósito (la lluvia ya espesa la niebla por su cuenta).")]
     [SerializeField, Range(0f, 1f)] private float mistChancePerCheck = 0.12f;
 
+    [Header("Clima - Oído desde un interior")]
+    [Tooltip("Dentro, los loops de lluvia, viento y nieve se oyen amortiguados (más bajos y sin agudos, como a través de la pared). Desactivado: se silencian del todo.")]
+    [SerializeField] private bool amortiguarEnInterior = true;
+    [Tooltip("Fracción del volumen del loop que llega a un interior (0-1).")]
+    [SerializeField, Range(0f, 1f)] private float volumenEnInterior = 0.35f;
+    [Tooltip("Frecuencia (Hz) por encima de la cual se quitan los agudos dentro. Más baja = pared más gruesa.")]
+    [SerializeField, Range(200f, 5000f)] private float corteEnInteriorHz = 650f;
+    [Tooltip("Segundos del fundido al entrar y al salir de un interior.")]
+    [SerializeField, Min(0f)] private float fundidoDeInterior = 0.8f;
+
     [Header("Clima - Audio (grafo sonoro)")]
     [Tooltip("Event Key del AudioGraphProfile (lista 'Event Sfx') que se reproduce cuando el cielo empieza a nublarse, ANTES de que arranque la lluvia. Déjalo vacío para no reproducir nada.")]
     [SerializeField] private string cloudsBuildingUpSfxKey;
@@ -801,6 +811,7 @@ public class DayNightCycle : MonoBehaviour
         _fundidoDeTormenta = _fundidoDeNieve = default;
 
         AudioService.Instance?.StopLoopingSFX(RainWeatherSfxLoopId);
+        SetWeatherAudioSuppressed(false, inmediato: true);
 
         if (_activeRainInstance != null)
         {
@@ -919,11 +930,31 @@ public class DayNightCycle : MonoBehaviour
             _activeSnowInstance.SetActive(active);
     }
 
-    void SetWeatherAudioSuppressed(bool suppressed)
+    void SetWeatherAudioSuppressed(bool suppressed, bool inmediato = false)
     {
-        AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, suppressed);
-        AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, suppressed);
-        AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, suppressed);
+        OirLoopDesdeDentro(RainWeatherSfxLoopId, suppressed, inmediato);
+        OirLoopDesdeDentro(WindWeatherSfxLoopId, suppressed, inmediato);
+        OirLoopDesdeDentro(SnowWeatherSfxLoopId, suppressed, inmediato);
+    }
+
+    /// Dentro: el loop se amortigua (o se silencia si amortiguarEnInterior está apagado). Fuera:
+    /// vuelve a sonar normal. Ver INC-1070.
+    void OirLoopDesdeDentro(string loopId, bool dentro, bool inmediato)
+    {
+        var audio = AudioService.Instance;
+        if (audio == null) return;
+        float fundido = inmediato ? 0f : fundidoDeInterior;
+        if (amortiguarEnInterior)
+        {
+            audio.SetLoopingSFXMuted(loopId, false);
+            if (dentro) audio.AmortiguarLoopingSFX(loopId, volumenEnInterior, corteEnInteriorHz, fundido);
+            else audio.SoltarAmortiguacionLoopingSFX(loopId, fundido);
+        }
+        else
+        {
+            audio.SoltarAmortiguacionLoopingSFX(loopId, 0f);
+            audio.SetLoopingSFXMuted(loopId, dentro);
+        }
     }
 
     void PlayWeatherSfx(string eventKey)
@@ -1396,8 +1427,7 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(RainWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(rainStartedSfxKey) ? "rain" : rainStartedSfxKey, rainLoopVolume);
 
-        if (AnclaDeClima == null && ClimaExteriorSilenciado())
-            AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, true);
+        OirLoopDesdeDentro(RainWeatherSfxLoopId, AnclaDeClima == null && ClimaExteriorSilenciado(), inmediato: true);
 
     }
 
@@ -1669,8 +1699,7 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(windStartedSfxKey) ? VientoPorDefecto : windStartedSfxKey, windLoopVolume);
 
-        if (AnclaDeClima == null && ClimaExteriorSilenciado())
-            AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, true);
+        OirLoopDesdeDentro(WindWeatherSfxLoopId, AnclaDeClima == null && ClimaExteriorSilenciado(), inmediato: true);
     }
 
     void BeginWindFadeOut()
@@ -1795,7 +1824,7 @@ public class DayNightCycle : MonoBehaviour
         GameplayEventLog.Log("NieveInicio");
         AudioService.Instance?.PlayLoopingSFX(SnowWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(snowSfxKey) ? VientoPorDefecto : snowSfxKey, snowLoopVolume);
-        if (dentro) AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, true);
+        OirLoopDesdeDentro(SnowWeatherSfxLoopId, dentro, inmediato: true);
     }
 
     void BeginSnowFadeOut()

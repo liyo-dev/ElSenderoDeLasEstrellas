@@ -33,20 +33,23 @@ will cara decidido
 espera 1.2
 lento 1 0.3
 plano medio estela
+& estela bucle BrazosEnJarras fundido=0.4
 estela dice CAP4_FIGURA_02 cara=sorpresa
 plano medio will
-will dice CAP4_FIGURA_03 cara=confuso
+will dice CAP4_FIGURA_03 cara=confuso gesto=Shrug01
 
 @figuras
 plano dos will estela
 will dice CAP4_FIGURA_04 cara=alegre
 estela dice CAP4_FIGURA_05 cara=picaro gesto=Laugh01
 will dice CAP4_FIGURA_06 cara=pensativo
+& estela reposo
 estela dice CAP4_FIGURA_07 cara=preocupado
 estela mira mira_liam
 
 @liam
 plano medio liam
+& liam bucle BrazosCruzados
 liam cara pensativo
 espera 0.8
 liam dice CAP4_FIGURA_08 cara=pensativo

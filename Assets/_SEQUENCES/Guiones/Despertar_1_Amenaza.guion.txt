@@ -42,7 +42,7 @@ sacudida 0.06 1.8
 & eldran mira bola_salida
 & eldran cara miedo
 +0.5 plano medio eldran altura=1.0 lente=34 solo
-eldran dice EVT_AWAKEN_01 gesto=SenseSomethingStart_NoWeapon cara=miedo
+eldran dice EVT_AWAKEN_01 gesto=Aviso01 cara=miedo
 
 # Cámara lenta de golpe. En negro sale la bola (la mecánica la lanza desde «bola_salida»).
 @lento
@@ -75,7 +75,6 @@ lento 0.2
 espera 0.7
 cutin will encuadre=Cara lado=Izquierda alturaEnPantalla=0.55 duracion=1.6 sonido=SFX_Prologo_CutIn dura=1.7
 & efecto LineasDeConcentracionBeat mostrar=true duracion=1.8
-& sonido Prologo_Carga volume=0.7
 +0.9 plano medio will altura=1.4 lente=40 zoom=26 solo
 & will bucle Idle_Battle_NoWeapon
 espera 1.4

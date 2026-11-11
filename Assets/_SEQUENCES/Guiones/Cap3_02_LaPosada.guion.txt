@@ -44,12 +44,15 @@ espera 0.3
 
 @pregunta
 plano dos will posadero
-will dice CAP3_POSADA_01 cara=pensativo gesto=FoundSomething_NoWeapon
+# Le tiende el trozo de aro con las dos manos y lo sostiene mientras el posadero lo mira.
+will dice CAP3_POSADA_01 cara=pensativo
+& will bucle Ofrecer fundido=0.4
 plano medio posadero
 posadero cara sorpresa
 espera 1.0
 posadero dice CAP3_POSADA_02 cara=preocupado
 plano medio will
+& will reposo
 will dice CAP3_POSADA_03 cara=triste
 plano medio posadero
 posadero dice CAP3_POSADA_04 cara=preocupado gesto=HeadShake01
@@ -61,6 +64,7 @@ sonido clip="Assets/Audio/Fantasy Sfx/Mp3/Dragon_Growl_00.mp3" volume=0.25
 & will cara sorpresa
 espera 0.9
 posadero dice CAP3_POSADA_05 cara=alegre
+& posadero bucle BrazosEnJarras fundido=0.4
 will dice CAP3_POSADA_06 cara=confuso gesto=Talk01
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Coin_Shaking-002.wav" volume=0.7
 posadero dice CAP3_POSADA_07 gesto=HeadNod01 cara=alegre
@@ -80,7 +84,7 @@ espera 0.5
 # Plano bajo, a la altura de la mesita: la cuchara en primer término y Lucía detrás.
 plano detalle PROP_Cuchara desde=cam_cuchara altura=0.85 lente=40
 prop PROP_BrilloCuchara
-& lucia bucle CastingIdle01
+& lucia bucle Conjuro_Esfuerzo fundido=0.3
 # Sube un palmo despacio (de fondo, mientras ella habla). Cada movimiento cuenta en el reloj del
 # guion con «dura»: los efectos no esperan solos.
 efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.2,0 deltaRotacion=0,0,8 segundos=2.4 desdeDondeEstaba=true dura=0
@@ -93,7 +97,7 @@ efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-24 segundos=0.12 dura
 # …y cae en su sitio de la mesa (su pose inicial: no puede quedarse en el aire).
 efecto PropMoveBeat propId=PROP_Cuchara segundos=0.2 suavizar=false desdeDondeEstaba=true dura=0.2
 & prop PROP_BrilloCuchara oculto
-& lucia gesto CastingExit01
+& lucia reposo
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.4
 plano medio lucia
 lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
