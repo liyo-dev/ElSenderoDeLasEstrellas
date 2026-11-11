@@ -74,6 +74,28 @@ public class NPCWorkRoute : MonoBehaviour
     [Tooltip("Pausa después de dejar la caja antes de volver a por otra.")]
     public float pausaAntesDeVolver = 0.6f;
 
+    [Header("Faena en el sitio (opcional)")]
+    [Tooltip("Con puntos aquí, el oficio no es llevar cajas: el NPC va de un punto a otro y en cada uno " +
+             "trabaja un rato en el sitio (recoger hierbas en el campo, remendar redes). Cada " +
+             "'faenasAntesDeEntregar' va al punto de entrega, si lo hay, a dejar lo recogido.")]
+    public List<Transform> puntosDeFaena = new();
+
+    [Tooltip("Estado de Animator al ponerse a trabajar en un punto (se reproduce una vez).")]
+    public string animacionFaenaEmpezar = "Loot01_Begin";
+
+    [Tooltip("Estado de Animator que se sostiene mientras trabaja en el punto.")]
+    public string animacionFaena = "Loot01_Loop";
+
+    [Tooltip("Estado de Animator al terminar en un punto (se reproduce una vez).")]
+    public string animacionFaenaAcabar = "Loot01_Stop";
+
+    [Tooltip("Segundos que trabaja en cada punto (mínimo y máximo, al azar).")]
+    public Vector2 segundosDeFaena = new Vector2(4f, 8f);
+
+    [Min(0)]
+    [Tooltip("Puntos trabajados antes de ir al punto de entrega. 0 = no va nunca.")]
+    public int faenasAntesDeEntregar = 3;
+
     [Header("Narrativa")]
     [Tooltip("Parte de la historia en la que la ruta está disponible.")]
     public TramoDeHistoria tramo = new();
@@ -104,6 +126,25 @@ public class NPCWorkRoute : MonoBehaviour
     private Transform _cajaEnMano;
     private bool _construida;
     private bool _terminada;
+
+    private int _siguienteFaena = -1;
+
+    /// <summary>¿Es una faena en el sitio (ver <see cref="puntosDeFaena"/>) en vez de llevar cajas?</summary>
+    public bool EsFaenaEnElSitio => puntosDeFaena != null && puntosDeFaena.Count > 0;
+
+    /// <summary>El siguiente punto de la faena, en orden y empezando por uno al azar.</summary>
+    public Transform SiguientePuntoDeFaena()
+    {
+        if (!EsFaenaEnElSitio) return null;
+        if (_siguienteFaena < 0) _siguienteFaena = Random.Range(0, puntosDeFaena.Count);
+        for (int intento = 0; intento < puntosDeFaena.Count; intento++)
+        {
+            var punto = puntosDeFaena[_siguienteFaena % puntosDeFaena.Count];
+            _siguienteFaena = (_siguienteFaena + 1) % puntosDeFaena.Count;
+            if (punto != null) return punto;
+        }
+        return null;
+    }
 
     public bool IsOccupied => _ocupante != null;
     public bool QuedanCajas => _cajasOrigen.Count > 0;
@@ -175,6 +216,7 @@ public class NPCWorkRoute : MonoBehaviour
     public bool EstaDisponible()
     {
         if (_terminada) return false;
+        if (EsFaenaEnElSitio) return tramo == null || tramo.EnCurso();
         if (puntoRecogida == null || puntoEntrega == null) return false;
 
         return tramo == null || tramo.EnCurso();
@@ -287,6 +329,12 @@ public class NPCWorkRoute : MonoBehaviour
     private void ConstruirSiHaceFalta()
     {
         if (!Application.isPlaying || _construida) return;
+        if (EsFaenaEnElSitio)
+        {
+            // Sin cajas: lo que se recoge en el sitio no se ve en la mano.
+            _construida = true;
+            return;
+        }
         if (puntoRecogida == null || puntoEntrega == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

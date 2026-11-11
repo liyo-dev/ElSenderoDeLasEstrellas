@@ -14,95 +14,95 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
   startNodeGuid: cap3-inicio
   nodes:
-  - rid: 6540294530920088332
-  - rid: 6540294530920088333
-  - rid: 6540294530920088334
-  - rid: 6540294530920088335
-  - rid: 6540294530920088336
-  - rid: 6540294530920088337
-  - rid: 6540294530920088338
-  - rid: 6540294530920088339
-  - rid: 6540294530920088340
-  - rid: 6540294530920088341
-  - rid: 6540294530920088342
-  - rid: 6540294530920088343
-  - rid: 6540294530920088344
-  - rid: 6540294530920088345
-  - rid: 6540294530920088346
-  - rid: 6540294530920088347
-  - rid: 6540294530920088348
-  - rid: 6540294530920088349
-  - rid: 6540294530920088350
-  - rid: 6540294530920088351
-  - rid: 6540294530920088352
-  - rid: 6540294530920088353
-  - rid: 6540294530920088354
-  - rid: 6540294530920088355
-  - rid: 6540294530920088356
-  - rid: 6540294530920088357
-  - rid: 6540294530920088358
-  - rid: 6540294530920088359
-  - rid: 6540294530920088360
-  - rid: 6540294530920088361
-  - rid: 6540294530920088362
-  - rid: 6540294530920088363
-  - rid: 6540294530920088364
-  - rid: 6540294530920088365
-  - rid: 6540294530920088366
-  - rid: 6540294530920088367
-  - rid: 6540294530920088368
-  - rid: 6540294530920088369
-  - rid: 6540294530920088370
-  - rid: 6540294530920088371
-  - rid: 6540294530920088372
-  - rid: 6540294530920088373
-  - rid: 6540294530920088374
-  - rid: 6540294530920088375
-  - rid: 6540294530920088376
-  - rid: 6540294530920088377
-  - rid: 6540294530920088378
-  - rid: 6540294530920088379
-  - rid: 6540294530920088380
-  - rid: 6540294530920088381
-  - rid: 6540294530920088382
-  - rid: 6540294530920088383
-  - rid: 6540294530920088384
-  - rid: 6540294530920088385
-  - rid: 6540294530920088386
-  - rid: 6540294530920088387
-  - rid: 6540294530920088388
-  - rid: 6540294530920088389
-  - rid: 6540294530920088390
-  - rid: 6540294530920088391
-  - rid: 6540294530920088392
-  - rid: 6540294530920088393
-  - rid: 6540294530920088394
-  - rid: 6540294530920088395
-  - rid: 6540294530920088396
-  - rid: 6540294530920088397
-  - rid: 6540294530920088398
-  - rid: 6540294530920088399
-  - rid: 6540294530920088400
-  - rid: 6540294530920088401
-  - rid: 6540294530920088402
-  - rid: 6540294530920088403
-  - rid: 6540294530920088404
-  - rid: 6540294530920088405
-  - rid: 6540294530920088406
-  - rid: 6540294530920088407
-  - rid: 6540294530920088408
-  - rid: 6540294530920088409
-  - rid: 6540294530920088410
-  - rid: 6540294530920088411
-  - rid: 6540294530920088412
-  - rid: 6540294530920088413
-  - rid: 6540294530920088414
-  - rid: 6540294530920088415
+  - rid: 6540294538172825748
+  - rid: 6540294538172825749
+  - rid: 6540294538172825750
+  - rid: 6540294538172825751
+  - rid: 6540294538172825752
+  - rid: 6540294538172825753
+  - rid: 6540294538172825754
+  - rid: 6540294538172825755
+  - rid: 6540294538172825756
+  - rid: 6540294538172825757
+  - rid: 6540294538172825758
+  - rid: 6540294538172825759
+  - rid: 6540294538172825760
+  - rid: 6540294538172825761
+  - rid: 6540294538172825762
+  - rid: 6540294538172825763
+  - rid: 6540294538172825764
+  - rid: 6540294538172825765
+  - rid: 6540294538172825766
+  - rid: 6540294538172825767
+  - rid: 6540294538172825768
+  - rid: 6540294538172825769
+  - rid: 6540294538172825770
+  - rid: 6540294538172825771
+  - rid: 6540294538172825772
+  - rid: 6540294538172825773
+  - rid: 6540294538172825774
+  - rid: 6540294538172825775
+  - rid: 6540294538172825776
+  - rid: 6540294538172825777
+  - rid: 6540294538172825778
+  - rid: 6540294538172825779
+  - rid: 6540294538172825780
+  - rid: 6540294538172825781
+  - rid: 6540294538172825782
+  - rid: 6540294538172825783
+  - rid: 6540294538172825784
+  - rid: 6540294538172825785
+  - rid: 6540294538172825786
+  - rid: 6540294538172825787
+  - rid: 6540294538172825788
+  - rid: 6540294538172825789
+  - rid: 6540294538172825790
+  - rid: 6540294538172825791
+  - rid: 6540294538172825792
+  - rid: 6540294538172825793
+  - rid: 6540294538172825794
+  - rid: 6540294538172825795
+  - rid: 6540294538172825796
+  - rid: 6540294538172825797
+  - rid: 6540294538172825798
+  - rid: 6540294538172825799
+  - rid: 6540294538172825800
+  - rid: 6540294538172825801
+  - rid: 6540294538172825802
+  - rid: 6540294538172825803
+  - rid: 6540294538172825804
+  - rid: 6540294538172825805
+  - rid: 6540294538172825806
+  - rid: 6540294538172825807
+  - rid: 6540294538172825808
+  - rid: 6540294538172825809
+  - rid: 6540294538172825810
+  - rid: 6540294538172825811
+  - rid: 6540294538172825812
+  - rid: 6540294538172825813
+  - rid: 6540294538172825814
+  - rid: 6540294538172825815
+  - rid: 6540294538172825816
+  - rid: 6540294538172825817
+  - rid: 6540294538172825818
+  - rid: 6540294538172825819
+  - rid: 6540294538172825820
+  - rid: 6540294538172825821
+  - rid: 6540294538172825822
+  - rid: 6540294538172825823
+  - rid: 6540294538172825824
+  - rid: 6540294538172825825
+  - rid: 6540294538172825826
+  - rid: 6540294538172825827
+  - rid: 6540294538172825828
+  - rid: 6540294538172825829
+  - rid: 6540294538172825830
+  - rid: 6540294538172825831
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
-    - rid: 6540294530920088332
+    - rid: 6540294538172825748
       type: {class: StartNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Inicio del Cap. 3
@@ -117,7 +117,7 @@ MonoBehaviour:
         position: {x: 0, y: 0}
         outputs:
         - cap3-tras-cap2
-    - rid: 6540294530920088333
+    - rid: 6540294538172825749
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Tras el Cap. 2 (CH_Cap2_BACK_1)
@@ -134,7 +134,7 @@ MonoBehaviour:
         - cap3-flag
         eventKey: CH_Cap2_BACK_1
         acceptEarlierEvent: 1
-    - rid: 6540294530920088334
+    - rid: 6540294538172825750
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Comienza el Cap. 3 (aparece el reparto de la costa y del cruce)
@@ -151,7 +151,7 @@ MonoBehaviour:
         - cap3-adios-hablar
         flagKey: CAP3_INICIADO
         value: 1
-    - rid: 6540294530920088335
+    - rid: 6540294538172825751
       type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Interludio: carga la torre de Liam (probar desde aqu\xED)"
@@ -169,7 +169,7 @@ MonoBehaviour:
         operacion: 0
         sceneName: TorreDeLiam
         waitForCompletion: 1
-    - rid: 6540294530920088336
+    - rid: 6540294538172825752
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Cinem\xE1tica: Tob\xEDas en el espejo"
@@ -193,7 +193,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088337
+    - rid: 6540294538172825753
       type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Descarga la torre de Liam"
@@ -211,7 +211,7 @@ MonoBehaviour:
         operacion: 1
         sceneName: TorreDeLiam
         waitForCompletion: 1
-    - rid: 6540294530920088338
+    - rid: 6540294538172825754
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Sigue hacia la aldea del mar (probar desde aqu\xED)"
@@ -227,7 +227,7 @@ MonoBehaviour:
         outputs:
         - cap3-llegada
         eventKey: CAP3_ALDEA_EMPIEZA
-    - rid: 6540294530920088339
+    - rid: 6540294538172825755
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Misi\xF3n: las marcas de hierro (aviso de misi\xF3n nueva)"
@@ -246,7 +246,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294530920088340
+    - rid: 6540294538172825756
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Llega a la aldea del mar"
@@ -263,7 +263,7 @@ MonoBehaviour:
         - cap3-paso-llegar
         eventKey: CAP3_LLEGADA_ALDEA
         acceptEarlierEvent: 1
-    - rid: 6540294530920088341
+    - rid: 6540294538172825757
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: llegar a la aldea'
@@ -286,7 +286,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088342
+    - rid: 6540294538172825758
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Hablar con el posadero"
@@ -305,7 +305,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294530920088343
+    - rid: 6540294538172825759
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Cinem\xE1tica: la posada, la cuchara y el trozo del aro"
@@ -329,7 +329,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088344
+    - rid: 6540294538172825760
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: preguntar en la posada'
@@ -352,7 +352,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088345
+    - rid: 6540294538172825761
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Will saca su hoja para apuntar lo que vea"
@@ -371,7 +371,7 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 6540294530920088346
+    - rid: 6540294538172825762
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Las tres pistas, en el orden que quiera (probar desde aqu\xED)"
@@ -387,7 +387,7 @@ MonoBehaviour:
         outputs:
         - cap3-pistas-fork
         eventKey: CAP3_PISTAS_EMPIEZA
-    - rid: 6540294530920088347
+    - rid: 6540294538172825763
       type: {class: ForkNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pistas en paralelo"
@@ -405,7 +405,7 @@ MonoBehaviour:
         - cap3-pista2
         - cap3-pista3
         - cap3-pistas-espera
-    - rid: 6540294530920088348
+    - rid: 6540294538172825764
       type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Esperar las tres pistas"
@@ -423,7 +423,7 @@ MonoBehaviour:
         eventKey: CAP3_PISTA_HECHA
         count: 3
         questId: 
-    - rid: 6540294530920088349
+    - rid: 6540294538172825765
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Volver con el posadero"
@@ -442,7 +442,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294530920088350
+    - rid: 6540294538172825766
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 El posadero: \xABT\xFA eres el primero que trae uno encima\xBB"
@@ -460,7 +460,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 96ab930b8efb1a645aafe8f0ea85cbb4, type: 2}
         npcId: NPC_Posadero
         oneShotFlag: 
-    - rid: 6540294530920088351
+    - rid: 6540294538172825767
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Paso: cont\xE1rselo al posadero"
@@ -483,7 +483,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088352
+    - rid: 6540294538172825768
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Ir andando al camino del bosque (probar desde aqu\xED)"
@@ -499,7 +499,7 @@ MonoBehaviour:
         outputs:
         - cap3-bosque-llega
         eventKey: CAP3_NOCHE_EMPIEZA
-    - rid: 6540294530920088353
+    - rid: 6540294538172825769
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Punto de guardado: el camino del bosque"
@@ -517,7 +517,7 @@ MonoBehaviour:
         checkpointId: CAP3_ACAMPADA
         spawnAnchorId: Cap3_Acampada
         sceneName: MainWorld
-    - rid: 6540294530920088354
+    - rid: 6540294538172825770
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Cinem\xE1tica: el carro con jaulas"
@@ -541,7 +541,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088355
+    - rid: 6540294538172825771
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Aviso: seguir sin que te vea"
@@ -565,7 +565,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
-    - rid: 6540294530920088356
+    - rid: 6540294538172825772
       type: {class: SeguirSinSerVistoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Seguir al contrabandista a escondidas hasta el claro (probar desde aqu\xED)"
@@ -610,7 +610,7 @@ MonoBehaviour:
         distanciaParaRecolocar: 20
         musica: {fileID: 8300000, guid: c450abf10ccb4544190c889de284ce72, type: 3}
         fundidoDeMusica: 1.5
-    - rid: 6540294530920088357
+    - rid: 6540294538172825773
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: seguir al carro'
@@ -633,7 +633,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088358
+    - rid: 6540294538172825774
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Cinem\xE1tica: el claro y \xAB\xBFDebes hacerlo?\xBB"
@@ -657,7 +657,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088359
+    - rid: 6540294538172825775
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 La decisi\xF3n, jugando (probar desde aqu\xED)"
@@ -673,7 +673,7 @@ MonoBehaviour:
         outputs:
         - cap3-pista-pluma
         eventKey: CAP3_DECIDE_EMPIEZA
-    - rid: 6540294530920088360
+    - rid: 6540294538172825776
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Will ve la pluma de la zarza"
@@ -696,7 +696,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088361
+    - rid: 6540294538172825777
       type: {class: ForkNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 \xBFCoge la pluma o entra en el claro? Gana lo primero que haga"
@@ -712,7 +712,7 @@ MonoBehaviour:
         outputs:
         - cap3-pluma-0
         - cap3-pelea-0
-    - rid: 6540294530920088362
+    - rid: 6540294538172825778
       type: {class: WaitForItemAddedNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Coge la pluma brillante"
@@ -731,7 +731,7 @@ MonoBehaviour:
         minimumAmount: 0
         completeIfAlreadyOwned: 1
         debugLogs: 0
-    - rid: 6540294530920088363
+    - rid: 6540294538172825779
       type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 \xBFYa hab\xEDa empezado a pelear?"
@@ -749,7 +749,7 @@ MonoBehaviour:
         - cap3-pluma-2
         flagKey: CAP3_PELEA_EN_EL_CLARO
         invert: 0
-    - rid: 6540294530920088364
+    - rid: 6540294538172825780
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Elige avisar a la guardia"
@@ -766,7 +766,7 @@ MonoBehaviour:
         - cap3-pluma-3
         flagKey: CAP3_AVISO_A_LA_GUARDIA
         value: 1
-    - rid: 6540294530920088365
+    - rid: 6540294538172825781
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 \xABTres piedras\u2026 y al cruce\xBB"
@@ -789,7 +789,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088366
+    - rid: 6540294538172825782
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Hablar con el sargento del cruce"
@@ -808,7 +808,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294530920088367
+    - rid: 6540294538172825783
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 El sargento ve la pluma"
@@ -826,7 +826,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 696de4c4956c84346a8a585e01600c9d, type: 2}
         npcId: NPC_Sargento
         oneShotFlag: 
-    - rid: 6540294530920088368
+    - rid: 6540294538172825784
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Cinem\xE1tica: los p\xE1jaros suben como chispas"
@@ -850,7 +850,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088369
+    - rid: 6540294538172825785
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Will entra en el claro"
@@ -867,7 +867,7 @@ MonoBehaviour:
         - cap3-pelea-1
         eventKey: CAP2_CONTRABANDISTAS_ATAQUE
         acceptEarlierEvent: 1
-    - rid: 6540294530920088370
+    - rid: 6540294538172825786
       type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 \xBFYa hab\xEDa elegido avisar?"
@@ -885,7 +885,7 @@ MonoBehaviour:
         - cap3-pelea-2
         flagKey: CAP3_AVISO_A_LA_GUARDIA
         invert: 0
-    - rid: 6540294530920088371
+    - rid: 6540294538172825787
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Elige pelear"
@@ -902,7 +902,7 @@ MonoBehaviour:
         - cap3-pelea-3
         flagKey: CAP3_PELEA_EN_EL_CLARO
         value: 1
-    - rid: 6540294530920088372
+    - rid: 6540294538172825788
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 En la pelea arden jaulas"
@@ -919,7 +919,7 @@ MonoBehaviour:
         - cap3-pelea-4
         flagKey: CAP3_JAULAS_QUEMADAS
         value: 1
-    - rid: 6540294530920088373
+    - rid: 6540294538172825789
       type: {class: StartNpcCombatNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Combate contra el jefe de los contrabandistas"
@@ -939,7 +939,7 @@ MonoBehaviour:
         defeatEventKey: CAP3_CONTRABANDISTA_VENCIDO
         waitForDefeat: 1
         restorePeacefulOnDefeat: 1
-    - rid: 6540294530920088374
+    - rid: 6540294538172825790
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Cinem\xE1tica: el humo trae a la guardia"
@@ -963,7 +963,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088375
+    - rid: 6540294538172825791
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Los contrabandistas, detenidos"
@@ -979,7 +979,7 @@ MonoBehaviour:
         outputs:
         - cap3-paso-claro
         eventKey: CAP3_CONTRABANDISTAS_FIN
-    - rid: 6540294530920088376
+    - rid: 6540294538172825792
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Paso: el claro (cierra la misi\xF3n)"
@@ -1002,7 +1002,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294530920088377
+    - rid: 6540294538172825793
       type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "R\xF3tulo: a la ma\xF1ana siguiente"
@@ -1026,7 +1026,7 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
-    - rid: 6540294530920088378
+    - rid: 6540294538172825794
       type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Amanece
@@ -1043,7 +1043,7 @@ MonoBehaviour:
         - cap3-manana-will
         targetTime: 6
         immediate: 1
-    - rid: 6540294530920088379
+    - rid: 6540294538172825795
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Will amanece en el cruce
@@ -1062,7 +1062,7 @@ MonoBehaviour:
         markId: Cap3_Amanecer
         applyPlayerEnvironment: 1
         showActor: 0
-    - rid: 6540294530920088380
+    - rid: 6540294538172825796
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Cap. 3 \xB7 Fin (punto de guardado)"
@@ -1080,7 +1080,7 @@ MonoBehaviour:
         checkpointId: CAP3_FIN
         spawnAnchorId: Cap3_Amanecer
         sceneName: MainWorld
-    - rid: 6540294530920088381
+    - rid: 6540294538172825797
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Fin del Cap. 3 (CH_Cap3_BACK_1)
@@ -1095,7 +1095,7 @@ MonoBehaviour:
         position: {x: 760, y: 2640}
         outputs: []
         eventKey: CH_Cap3_BACK_1
-    - rid: 6540294530920088382
+    - rid: 6540294538172825798
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 1 \xB7 hablar con el posadero"
@@ -1114,7 +1114,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294530920088383
+    - rid: 6540294538172825799
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 1 \xB7 las luces que respiran"
@@ -1132,7 +1132,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: a1f5635302e8cfc4891aa1129f5ea70f, type: 2}
         npcId: NPC_Posadero
         oneShotFlag: 
-    - rid: 6540294530920088384
+    - rid: 6540294538172825800
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: lo que vio el posadero'
@@ -1155,7 +1155,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088385
+    - rid: 6540294538172825801
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 1 hecha"
@@ -1170,7 +1170,7 @@ MonoBehaviour:
         position: {x: 1140, y: 3600}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
-    - rid: 6540294530920088386
+    - rid: 6540294538172825802
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 2 \xB7 la cerca del huerto (Luc\xEDa dice d\xF3nde vio al zorro)"
@@ -1187,7 +1187,7 @@ MonoBehaviour:
         - cap3-pista2-paso
         eventKey: CAP3_PISTA_HUERTO
         acceptEarlierEvent: 1
-    - rid: 6540294530920088387
+    - rid: 6540294538172825803
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: la cerca del huerto'
@@ -1210,7 +1210,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088388
+    - rid: 6540294538172825804
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 2 hecha"
@@ -1225,7 +1225,7 @@ MonoBehaviour:
         position: {x: 760, y: 4080}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
-    - rid: 6540294530920088389
+    - rid: 6540294538172825805
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 3 \xB7 el cobertizo de las redes"
@@ -1242,7 +1242,7 @@ MonoBehaviour:
         - cap3-pista3-paso
         eventKey: CAP3_PISTA_COBERTIZO
         acceptEarlierEvent: 1
-    - rid: 6540294530920088390
+    - rid: 6540294538172825806
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: el cobertizo'
@@ -1265,7 +1265,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088391
+    - rid: 6540294538172825807
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.2 \xB7 Pista 3 hecha"
@@ -1280,7 +1280,7 @@ MonoBehaviour:
         position: {x: 760, y: 4560}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
-    - rid: 6540294530920088392
+    - rid: 6540294538172825808
       type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Nota
@@ -1296,7 +1296,7 @@ MonoBehaviour:
         outputs: []
         note: "Cap. 3 \xB7 La pista del mar (GDD \xA7 5.7). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap3-\u2026\xBB se rehacen. Escena: \xABCap\xEDtulos (generado)\xBB en MainWorld (marcas Cap3_*, puntos del roster, pistas, el campamento de los contrabandistas)."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
-    - rid: 6540294530920088393
+    - rid: 6540294538172825809
       type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Se destapa la pantalla en el cruce
@@ -1317,7 +1317,7 @@ MonoBehaviour:
         transicion: {fileID: 0}
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
-    - rid: 6540294530920088394
+    - rid: 6540294538172825810
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.0 \xB7 Hablar con Eldran en la salida del pueblo (probar desde aqu\xED)"
@@ -1336,7 +1336,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294530920088395
+    - rid: 6540294538172825811
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.0 \xB7 Cinem\xE1tica: la despedida (\xABes un hasta pronto\xBB)"
@@ -1360,7 +1360,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088396
+    - rid: 6540294538172825812
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Paso: reunirse con Eldran (cierra \xABHora de partir\xBB)"
@@ -1383,7 +1383,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294530920088397
+    - rid: 6540294538172825813
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Camino del puerto, a pie (probar desde aqu\xED)"
@@ -1399,7 +1399,7 @@ MonoBehaviour:
         outputs:
         - cap3-camino-punto
         eventKey: CAP3_CAMINO_EMPIEZA
-    - rid: 6540294530920088398
+    - rid: 6540294538172825814
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: la salida del pueblo"
@@ -1417,7 +1417,7 @@ MonoBehaviour:
         checkpointId: CAP3_SALIDA
         spawnAnchorId: Will_SalidaDelPueblo
         sceneName: MainWorld
-    - rid: 6540294530920088399
+    - rid: 6540294538172825815
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Pasa por la mitad del camino"
@@ -1434,7 +1434,7 @@ MonoBehaviour:
         - cap3-espejo-carga
         eventKey: CAP3_ACAMPADA_CAMINO
         acceptEarlierEvent: 1
-    - rid: 6540294530920088400
+    - rid: 6540294538172825816
       type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Se destapa la pantalla y se sigue andando"
@@ -1455,7 +1455,7 @@ MonoBehaviour:
         transicion: {fileID: 0}
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
-    - rid: 6540294530920088401
+    - rid: 6540294538172825817
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: a mitad del camino"
@@ -1473,7 +1473,7 @@ MonoBehaviour:
         checkpointId: CAP3_ACAMPADA_CAMINO
         spawnAnchorId: Cap3_AcampadaCamino
         sceneName: MainWorld
-    - rid: 6540294530920088402
+    - rid: 6540294538172825818
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Llega al camino del bosque"
@@ -1490,7 +1490,7 @@ MonoBehaviour:
         - cap3-paso-bosque
         eventKey: CAP3_LLEGADA_BOSQUE
         acceptEarlierEvent: 1
-    - rid: 6540294530920088403
+    - rid: 6540294538172825819
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: ir hacia el bosque'
@@ -1513,7 +1513,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088404
+    - rid: 6540294538172825820
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Will: los carros pasan de noche"
@@ -1536,7 +1536,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088405
+    - rid: 6540294538172825821
       type: {class: SegunHoraDelDiaNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 \xBFYa es de noche al llegar?"
@@ -1553,7 +1553,7 @@ MonoBehaviour:
         - cap3-tuto-noche
         - cap3-hoguera-tuto
         franja: 7
-    - rid: 6540294530920088406
+    - rid: 6540294538172825822
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Tutorial (de noche): ve al fuego, o descansa para que se haga de d\xEDa"
@@ -1577,7 +1577,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
-    - rid: 6540294530920088407
+    - rid: 6540294538172825823
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Tutorial (de d\xEDa): las hogueras hacen pasar el tiempo"
@@ -1601,7 +1601,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
-    - rid: 6540294530920088408
+    - rid: 6540294538172825824
       type: {class: EsperarHoraDelDiaNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Esperar la noche junto al fuego"
@@ -1619,7 +1619,7 @@ MonoBehaviour:
         franja: 7
         anchorId: Cap3_Acampada
         radio: 6
-    - rid: 6540294530920088409
+    - rid: 6540294538172825825
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Anochece junto al fuego (aparecen los contrabandistas)"
@@ -1635,7 +1635,7 @@ MonoBehaviour:
         outputs:
         - cap3-paso-noche
         eventKey: CAP3_CAE_LA_NOCHE
-    - rid: 6540294530920088410
+    - rid: 6540294538172825826
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: esperar la noche'
@@ -1658,7 +1658,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088411
+    - rid: 6540294538172825827
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Will llega al claro (el del seguimiento se queda fuera)"
@@ -1674,7 +1674,7 @@ MonoBehaviour:
         outputs:
         - cap3-claro
         eventKey: CAP3_EN_EL_CLARO
-    - rid: 6540294530920088412
+    - rid: 6540294538172825828
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Le ha visto: \xAB\xBFMe ven\xEDas siguiendo?\xBB"
@@ -1692,7 +1692,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 2a7e76a0ccffb184ba5d6a227909de5b, type: 2}
         npcId: NPC_Contrabandista1
         oneShotFlag: 
-    - rid: 6540294530920088413
+    - rid: 6540294538172825829
       type: {class: StartNpcCombatNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Combate contra el contrabandista del seguimiento"
@@ -1713,7 +1713,7 @@ MonoBehaviour:
         defeatEventKey: CAP3_CARRETERO_VENCIDO
         waitForDefeat: 1
         restorePeacefulOnDefeat: 1
-    - rid: 6540294530920088414
+    - rid: 6540294538172825830
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Le gana: el contrabandista, aturdido"
@@ -1731,7 +1731,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 2eb4c3109b25833439e9a1f699a07154, type: 2}
         npcId: NPC_Contrabandista1
         oneShotFlag: 
-    - rid: 6540294530920088415
+    - rid: 6540294538172825831
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "3.3 \xB7 Will sigue solo hasta el claro"

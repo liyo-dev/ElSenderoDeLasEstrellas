@@ -22,7 +22,7 @@ MonoBehaviour:
     emotion: 0
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_HOJA_02
-    text: El zorro se rascaba contra la cerca hasta arrancarse el pelo. Y un perro ha dejado restos de hierro en la casa de las nasas.
+    text: "El zorro de Luc\xEDa se rascaba contra la cerca hasta arrancarse el pelo. Y en la casa de las nasas, otro animal m\xE1s grande ha dejado restos de hierro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
@@ -57,17 +57,31 @@ MonoBehaviour:
     emotion: 10
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_HOJA_07
-    text: "\xBFAl Bosque Prohibido? Pues ve con ojo por el camino."
+    text: "\xBFAl Bosque Prohibido? Entonces vas por el camino del bosque\u2026 \xBFTe acuerdas de las luces que te cont\xE9?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 9
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_HOJA_08
-    text: "\xDAltimamente pasan carros de noche, con la carga tapada. No paran ni para dar de beber a las mulas."
+    text: Desde entonces he visto pasar carros por ese camino, siempre de noche y con la carga tapada. Las luces iban con ellos.
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 9
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_HOJA_09
+    text: "Si quieres saber de d\xF3nde salen esos aros, espera junto al fuego del camino y m\xEDralo con tus propios ojos."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_HOJA_10
+    text: "Si esos carros llevan animales con aro, a Estela le llevar\xE9 algo m\xE1s que un trozo de hierro."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 10
   maxLinesPerPage: 0
   isGroupConversation: 0

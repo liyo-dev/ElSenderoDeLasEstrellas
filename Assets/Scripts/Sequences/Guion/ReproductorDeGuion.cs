@@ -228,7 +228,8 @@ public sealed class ReproductorDeGuion
     {
         if (_terminado) return;
         _terminado = true;
-        if (_ctx != null && _ctx.SeHaSaltado) CumplirAlSaltar(_g, _ctx, _iEfecto);
+        bool saltado = _ctx != null && _ctx.SeHaSaltado;
+        if (saltado) CumplirAlSaltar(_g, _ctx, _iEfecto);
         Reanudar();
         CerrarLinea();
         SpeechBubbleUI.Instance?.Hide();
@@ -238,6 +239,9 @@ public sealed class ReproductorDeGuion
         GuionEnMarcha.Quitar(this);
         _ctx.Stage?.QuitarMarcasTemporales();
         if (_puntos != null) Object.Destroy(_puntos);
+        // Saltada, cada actor queda como acaba el guion (dónde está, hacia dónde mira, si se ve),
+        // no como estaba en el instante de saltar: quien se va, se ha ido (INC-1031).
+        if (saltado) foreach (var i in _interpretes) i.IrAlFinal(_g.duracion, _porId);
         foreach (var i in _interpretes) i.Soltar();
         _interpretes.Clear();
         _porId.Clear();
@@ -535,6 +539,30 @@ public sealed class ReproductorDeGuion
             while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = CaraDe(Datos.caras[_iCara++].emocion);
             if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
             if (Datos.posiciones.Count > 0) Actor.Transform.position = Interpolar.Posicion(Datos.posiciones, t);
+        }
+
+        /// Deja al actor en el último instante del guion: su sitio final, su rumbo final y si se ve.
+        public void IrAlFinal(float duracion, Dictionary<string, Interprete> todos)
+        {
+            var tr = Actor?.Transform;
+            if (tr == null) return;
+            float t = Mathf.Max(0f, duracion - 0.001f);
+            bool andando = false;
+            if (Datos.posiciones.Count > 0)
+            {
+                tr.position = Interpolar.Posicion(Datos.posiciones, t);
+                var velocidad = Interpolar.Velocidad(Datos.posiciones, t);
+                andando = velocidad.sqrMagnitude > 0.0064f;
+                if (andando) _rumbo = Mathf.Atan2(velocidad.x, velocidad.z) * Mathf.Rad2Deg;
+            }
+            if (!andando && Datos.miradas.Count > 0)
+            {
+                var ultima = Datos.miradas[Datos.miradas.Count - 1];
+                if (ultima.t <= t) _rumbo = RumboDeMirada(ultima, tr.position, todos, _rumbo);
+            }
+            tr.rotation = Quaternion.Euler(0f, _rumbo, 0f);
+            Actor.SyncRotation();
+            _visible = EsVisible(t);
         }
 
         /// Traduce la palabra de la cara a la cara del juego. Si el juego no la reconoce, se avisa

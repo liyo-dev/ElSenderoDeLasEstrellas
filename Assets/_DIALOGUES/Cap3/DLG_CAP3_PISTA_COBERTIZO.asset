@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_COBERTIZO_01
-    text: "Mira qu\xE9 ara\xF1azos. Justo a la altura del cuello de un perro."
+    text: "Mira qu\xE9 ara\xF1azos. Aqu\xED se ha rascado otro animal, uno m\xE1s grande que el zorro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 

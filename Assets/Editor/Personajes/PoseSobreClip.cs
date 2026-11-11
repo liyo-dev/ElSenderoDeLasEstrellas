@@ -184,6 +184,80 @@ public static class PoseSobreClip
     /// </summary>
     public static float CrearHumanoide(GameObject prefab, AnimationClip base_, string ruta, IList<ApunteHumano> apuntes,
                                        HumanBodyBones marco = HumanBodyBones.Chest)
+        => CrearHumanoideCore(prefab, base_, ruta, apuntes.Select(a => (a.hueso, a.punta)).ToList(),
+                              (k, t) => apuntes[k].direccion, base_.length, marco);
+
+    /// <summary>
+    /// Crea o rehace en <paramref name="ruta"/> un clip humanoide de <paramref name="duracion"/> segundos en
+    /// bucle: el movimiento de <paramref name="base_"/> (repetido si es más corto) con algunos músculos
+    /// desplazados en el tiempo. Cada músculo (nombre de <see cref="HumanTrait.MuscleName"/>) lleva sus claves
+    /// (segundo, cuánto se suma al valor del clip de partida); entre claves, curva suave. Es lo directo para
+    /// gestos (inclinarse, estirar un brazo): no busca direcciones, mueve articulaciones.
+    /// </summary>
+    public static void CrearConMusculos(AnimationClip base_, string ruta, float duracion,
+                                        IDictionary<string, (float t, float delta)[]> musculos)
+    {
+        float fps = base_.frameRate > 0f ? base_.frameRate : 30f;
+        float largo = Mathf.Max(0.05f, duracion);
+        int fotogramas = Mathf.Max(1, Mathf.RoundToInt(largo * fps));
+        var clip = new AnimationClip { name = Path.GetFileNameWithoutExtension(ruta), frameRate = fps };
+        var hechos = new HashSet<string>();
+        foreach (var b in AnimationUtility.GetCurveBindings(base_))
+        {
+            var original = AnimationUtility.GetEditorCurve(base_, b);
+            bool tocado = b.type == typeof(Animator) && musculos.ContainsKey(b.propertyName);
+            var claves = new Keyframe[fotogramas + 1];
+            for (int f = 0; f <= fotogramas; f++)
+            {
+                float t = Mathf.Min(f / fps, largo);
+                float v = original.Evaluate(base_.length > 0f ? Mathf.Repeat(t, base_.length) : 0f);
+                if (tocado) v = Mathf.Clamp(v + DeltaEn(musculos[b.propertyName], t), -1f, 1f);
+                claves[f] = new Keyframe(t, v);
+            }
+            AnimationUtility.SetEditorCurve(clip, b, new AnimationCurve(claves));
+            if (tocado) hechos.Add(b.propertyName);
+        }
+        // Músculos que el clip de partida no anima: parten de 0.
+        foreach (var kv in musculos)
+        {
+            if (hechos.Contains(kv.Key)) continue;
+            var claves = new Keyframe[fotogramas + 1];
+            for (int f = 0; f <= fotogramas; f++)
+            {
+                float t = Mathf.Min(f / fps, largo);
+                claves[f] = new Keyframe(t, Mathf.Clamp(DeltaEn(kv.Value, t), -1f, 1f));
+            }
+            AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve("", typeof(Animator), kv.Key), new AnimationCurve(claves));
+        }
+        var ajustes = AnimationUtility.GetAnimationClipSettings(base_);
+        ajustes.loopTime = true;
+        ajustes.startTime = 0f;
+        ajustes.stopTime = largo;
+        AnimationUtility.SetAnimationClipSettings(clip, ajustes);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(ruta));
+        var existente = AssetDatabase.LoadAssetAtPath<AnimationClip>(ruta);
+        if (existente != null) { EditorUtility.CopySerialized(clip, existente); EditorUtility.SetDirty(existente); Object.DestroyImmediate(clip); }
+        else AssetDatabase.CreateAsset(clip, ruta);
+        AssetDatabase.SaveAssets();
+    }
+
+    private static float DeltaEn((float t, float delta)[] claves, float t)
+    {
+        if (claves == null || claves.Length == 0) return 0f;
+        if (t <= claves[0].t) return claves[0].delta;
+        for (int i = 1; i < claves.Length; i++)
+        {
+            if (t > claves[i].t) continue;
+            float u = Mathf.InverseLerp(claves[i - 1].t, claves[i].t, t);
+            return Mathf.Lerp(claves[i - 1].delta, claves[i].delta, u * u * (3f - 2f * u));
+        }
+        return claves[claves.Length - 1].delta;
+    }
+
+    private static float CrearHumanoideCore(GameObject prefab, AnimationClip base_, string ruta,
+                                            IList<(HumanBodyBones hueso, HumanBodyBones punta)> apuntes,
+                                            System.Func<int, float, Vector3> direccionEn, float duracion, HumanBodyBones marco)
     {
         var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
         inst.hideFlags = HideFlags.HideAndDontSave;
@@ -215,7 +289,8 @@ public static class PoseSobreClip
                 }
 
             float fps = base_.frameRate > 0f ? base_.frameRate : 30f;
-            int fotogramas = Mathf.Max(1, Mathf.RoundToInt(base_.length * fps));
+            float largo = Mathf.Max(0.05f, duracion);
+            int fotogramas = Mathf.Max(1, Mathf.RoundToInt(largo * fps));
             var valores = new float[fotogramas + 1][];
             var objetivos = new Vector3[apuntes.Count];
             Quaternion marcoInicial = Quaternion.identity;
@@ -224,10 +299,11 @@ public static class PoseSobreClip
 
             for (int f = 0; f <= fotogramas; f++)
             {
-                float t = Mathf.Min(f / fps, base_.length);
+                float t = Mathf.Min(f / fps, largo);
+                float tBase = base_.length > 0f ? Mathf.Repeat(t, base_.length) : 0f;
                 handler.SetHumanPose(ref reposo);
                 AnimationMode.BeginSampling();
-                try { AnimationMode.SampleAnimationClip(animador.gameObject, base_, t); }
+                try { AnimationMode.SampleAnimationClip(animador.gameObject, base_, tBase); }
                 finally { AnimationMode.EndSampling(); }
 
                 var pose = new HumanPose();
@@ -235,7 +311,7 @@ public static class PoseSobreClip
                 Quaternion giroMarco = Quaternion.Inverse(raiz.rotation) * huesoMarco.rotation;
                 if (f == 0) marcoInicial = giroMarco;
                 Quaternion respiro = giroMarco * Quaternion.Inverse(marcoInicial);
-                for (int k = 0; k < apuntes.Count; k++) objetivos[k] = (respiro * apuntes[k].direccion).normalized;
+                for (int k = 0; k < apuntes.Count; k++) objetivos[k] = (respiro * direccionEn(k, t)).normalized;
 
                 float[] x;
                 if (f == 0)
@@ -260,21 +336,33 @@ public static class PoseSobreClip
 
             var clip = new AnimationClip { name = Path.GetFileNameWithoutExtension(ruta), frameRate = fps };
             var nombres = new HashSet<string>(musculos.Select(m => HumanTrait.MuscleName[m]));
+            bool mismoLargo = Mathf.Abs(largo - base_.length) < 0.01f;
             foreach (var b in AnimationUtility.GetCurveBindings(base_))
             {
                 if (b.type == typeof(Animator) && nombres.Contains(b.propertyName)) continue;
-                AnimationUtility.SetEditorCurve(clip, b, AnimationUtility.GetEditorCurve(base_, b));
+                var original = AnimationUtility.GetEditorCurve(base_, b);
+                if (mismoLargo) { AnimationUtility.SetEditorCurve(clip, b, original); continue; }
+                // Más largo que el de partida: se repite su movimiento hasta cubrir la duración.
+                var repetida = new Keyframe[fotogramas + 1];
+                for (int f = 0; f <= fotogramas; f++)
+                {
+                    float t = Mathf.Min(f / fps, largo);
+                    repetida[f] = new Keyframe(t, original.Evaluate(base_.length > 0f ? Mathf.Repeat(t, base_.length) : 0f));
+                }
+                AnimationUtility.SetEditorCurve(clip, b, new AnimationCurve(repetida));
             }
             for (int i = 0; i < musculos.Count; i++)
             {
                 var claves = new Keyframe[fotogramas + 1];
-                for (int f = 0; f <= fotogramas; f++) claves[f] = new Keyframe(Mathf.Min(f / fps, base_.length), valores[f][i]);
+                for (int f = 0; f <= fotogramas; f++) claves[f] = new Keyframe(Mathf.Min(f / fps, largo), valores[f][i]);
                 var curva = new AnimationCurve(claves);
                 for (int f = 0; f < claves.Length; f++) curva.SmoothTangents(f, 0f);
                 AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve("", typeof(Animator), HumanTrait.MuscleName[musculos[i]]), curva);
             }
             var ajustes = AnimationUtility.GetAnimationClipSettings(base_);
             ajustes.loopTime = true;
+            ajustes.startTime = 0f;
+            ajustes.stopTime = largo;
             AnimationUtility.SetAnimationClipSettings(clip, ajustes);
 
             Directory.CreateDirectory(Path.GetDirectoryName(ruta));

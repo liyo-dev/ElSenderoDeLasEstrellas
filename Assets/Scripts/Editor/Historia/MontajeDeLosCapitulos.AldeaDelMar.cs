@@ -17,6 +17,7 @@ public static partial class MontajeDeLosCapitulos
     private const string Aldea = "Aldea del mar";
     private const string CarpetaAldea = "Assets/_NPCs/AldeaDelMar";
     private const string PuestoDeRemedios = "puerto_remedios";
+    private const string PuestoDelPosadero = "posada_posadero";
     private static readonly string[] VecinosDeLaAldea = { "Posadero", "Remedios", "Anselmo", "Engracia", "Eusebio", "Fermin", "Benito", "Rosario" };
     /// <summary>Vecinos que se quedan sentados: su punto de salida se ajusta al asiento que tienen debajo.</summary>
     private static readonly string[] SentadosDeLaAldea = { "Eusebio", "Benito", "Rosario" };
@@ -138,7 +139,7 @@ public static partial class MontajeDeLosCapitulos
         s_atrezo.Add(new Atrezo { Cap = Aldea, Nombre = "Mesita de Lucía", Prefab = Muebles + "Table/Table03_a01.prefab", Pos = new Vector3(277.3f, float.NaN, -429.7f), Rumbo = 0f, Tamano = 0.75f, Colision = true });
         SobreLaMesa(Aldea, "Cuenco de Lucía", Comida + "Bowl01_a01.prefab", 277.5f, -429.8f, 0f, 0.2f);
         // Lo que mueve la cinemática de la posada (PROP_…, en su escenario): la cuchara, su brillo y la sopa de Will.
-        SobreLaMesa(Cap3, "PROP_Cuchara Cap3", Muebles + "Kitchen/Spoon02_a01.prefab", 277.15f, -429.62f, 90f, 0.28f);
+        SobreLaMesa(Cap3, "PROP_Cuchara Cap3", Muebles + "Kitchen/Spoon02_a01.prefab", 277.15f, -429.62f, 90f, 0.38f);
         SobreLaMesa(Cap3, "PROP_SopaWill Cap3", Comida + "Bowl01_c01.prefab", 279.2f, -427.35f, 0f, 0.24f);
         s_atrezo.Add(new Atrezo { Cap = Cap3, Nombre = "PROP_BrilloCuchara Cap3", Prefab = "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab",
             Pos = new Vector3(277.15f, float.NaN, -429.62f), Tamano = 0f });
@@ -225,6 +226,21 @@ public static partial class MontajeDeLosCapitulos
         r.materialCaja = MaterialDeColor(new Color(0.55f, 0.38f, 0.22f), "Aldea_CajaDePescado");
         r.tamanoCaja = new Vector3(0.38f, 0.22f, 0.3f);
         r.cajasPorPila = 4;
+
+        // El posadero sirve en la terraza: va de la puerta de la posada a la mesa de Benito y Rosario
+        // con una bandeja, y vuelve (INC-1033).
+        var servir = new GameObject("Ruta del posadero (servir en la terraza)");
+        servir.transform.SetParent(padre, false);
+        var rp = servir.AddComponent<NPCWorkRoute>();
+        rp.puestoId = PuestoDelPosadero;
+        rp.puntoRecogida = PuntoDeRuta(servir.transform, "Recogida (puerta de la posada)", new Vector3(283.2f, float.NaN, -423.2f), 33f);
+        rp.puntoEntrega = PuntoDeRuta(servir.transform, "Entrega (mesa de Benito y Rosario)", new Vector3(284.0f, float.NaN, -429.6f), 180f);
+        rp.materialCaja = MaterialDeColor(new Color(0.5f, 0.33f, 0.18f), "Aldea_BandejaDeLaPosada");
+        rp.tamanoCaja = new Vector3(0.42f, 0.05f, 0.3f);
+        rp.separacionCajas = new Vector2(0.46f, 0.07f);
+        rp.cajasPorPila = 2;
+        rp.pausaAntesDeVolver = 2.5f;
+        AsegurarOficiosDeLaAldea(informe);
 
         // Pistas de la madera: lo que se ve, dentro del punto de inspección (sale y se va con su tramo).
         var inspeccion = raiz.Find(Cap3 + " · inspección");
@@ -313,6 +329,87 @@ public static partial class MontajeDeLosCapitulos
         go.transform.SetParent(padre, false);
         go.transform.SetPositionAndRotation(AlSuelo(pos), Quaternion.Euler(0f, rumbo, 0f));
         return go.transform;
+    }
+
+    /// <summary>
+    /// Que cada vecino haga algo de su oficio (INC-1033): el posadero sirve en la terraza (su ruta, arriba),
+    /// Anselmo se sienta en el borde del muelle mirando al mar y Engracia atiende su puesto entre ratos quieta.
+    /// </summary>
+    private static void AsegurarOficiosDeLaAldea(StringBuilder informe)
+    {
+        var posadero = AmbienteDelVecino("Posadero", "Remedios");
+        if (posadero != null)
+        {
+            posadero.enableWander = false;
+            posadero.permitirTrabajo = true;
+            posadero.puestoId = PuestoDelPosadero;
+            posadero.ambientActivity = NPCAmbientActivity.None;
+            EditorUtility.SetDirty(posadero);
+        }
+        var anselmo = AmbienteDelVecino("Anselmo", "Eusebio");
+        if (anselmo != null)
+        {
+            anselmo.enableWander = false;
+            anselmo.permitirTrabajo = false;
+            anselmo.puestoId = "";
+            anselmo.ambientActivity = NPCAmbientActivity.SitGround;
+            EditorUtility.SetDirty(anselmo);
+        }
+        GestosDeEsperaDelVecino("Engracia", "Idle01", "InteractWithPeople_NoWeapon", "Idle02", "Idle03");
+        AssetDatabase.SaveAssets();
+        informe.AppendLine("Aldea del mar: el posadero sirve en la terraza, Anselmo se sienta en el muelle y Engracia atiende su puesto.");
+    }
+
+    /// El ambiente de un vecino (se crea copiando el de otro si no tiene) y puesto en su prefab.
+    private static Game.NPC.Modules.NPCAmbientConfig AmbienteDelVecino(string nombre, string plantilla)
+    {
+        string ruta = $"Assets/_NPCs/Ambient/NPC_Ambient_{nombre}.asset";
+        var ambiente = AssetDatabase.LoadAssetAtPath<Game.NPC.Modules.NPCAmbientConfig>(ruta);
+        if (ambiente == null)
+        {
+            if (!AssetDatabase.CopyAsset($"Assets/_NPCs/Ambient/NPC_Ambient_{plantilla}.asset", ruta)) return null;
+            ambiente = AssetDatabase.LoadAssetAtPath<Game.NPC.Modules.NPCAmbientConfig>(ruta);
+            if (ambiente == null) return null;
+        }
+        string rutaPrefab = RutaDeVecino(nombre);
+        var raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
+        try
+        {
+            var cerebro = raiz.GetComponentInChildren<Game.NPC.NPCBehaviourManagerV2>(true);
+            if (cerebro != null)
+            {
+                var so = new SerializedObject(cerebro);
+                var prop = so.FindProperty("configuration.ambientConfig");
+                if (prop != null && prop.objectReferenceValue != ambiente)
+                {
+                    prop.objectReferenceValue = ambiente;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab);
+                }
+            }
+        }
+        finally { PrefabUtility.UnloadPrefabContents(raiz); }
+        return ambiente;
+    }
+
+    /// Los gestos que un vecino hace de vez en cuando mientras está quieto.
+    private static void GestosDeEsperaDelVecino(string nombre, params string[] estados)
+    {
+        string rutaPrefab = RutaDeVecino(nombre);
+        var raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
+        try
+        {
+            var animador = raiz.GetComponentInChildren<NPCSimpleAnimator>(true);
+            if (animador == null) return;
+            var so = new SerializedObject(animador);
+            var lista = so.FindProperty("idleVariationStates");
+            if (lista == null) return;
+            lista.arraySize = estados.Length;
+            for (int i = 0; i < estados.Length; i++) lista.GetArrayElementAtIndex(i).stringValue = estados[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+            PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab);
+        }
+        finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }
 
     /// <summary>Pelo rojizo enganchado y arañazos en la cerca; huellas pequeñas en la tierra, delante.</summary>

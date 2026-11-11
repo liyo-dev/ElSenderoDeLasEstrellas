@@ -577,6 +577,49 @@ public static partial class MontajeDeLosCapitulos
         go.AddComponent<Escondite>();
     }
 
+    /// <summary>
+    /// Quita la hierba de detalle (flores incluidas) del terreno en un círculo: el sitio de una escena
+    /// donde las flores altas taparían lo que importa. El vestido del mundo lo respeta al repintar
+    /// (cuenta como retoque a mano). Devuelve cuántas celdas ha vaciado.
+    /// </summary>
+    private static int DespejarHierba(Vector3 centro, float radio)
+    {
+        int vaciadas = 0;
+        foreach (var terreno in Terrain.activeTerrains)
+        {
+            var datos = terreno.terrainData;
+            if (datos == null || datos.detailPrototypes.Length == 0) continue;
+            Vector3 origen = terreno.transform.position, tam = datos.size;
+            int res = datos.detailResolution;
+            float celdaX = tam.x / res, celdaZ = tam.z / res;
+            int i0 = Mathf.FloorToInt((centro.x - radio - origen.x) / celdaX), i1 = Mathf.CeilToInt((centro.x + radio - origen.x) / celdaX);
+            int k0 = Mathf.FloorToInt((centro.z - radio - origen.z) / celdaZ), k1 = Mathf.CeilToInt((centro.z + radio - origen.z) / celdaZ);
+            i0 = Mathf.Clamp(i0, 0, res - 1); i1 = Mathf.Clamp(i1, 0, res - 1);
+            k0 = Mathf.Clamp(k0, 0, res - 1); k1 = Mathf.Clamp(k1, 0, res - 1);
+            if (i1 < i0 || k1 < k0) continue;
+            int ancho = i1 - i0 + 1, alto = k1 - k0 + 1;
+            Undo.RegisterCompleteObjectUndo(datos, "Despejar hierba");
+            for (int capa = 0; capa < datos.detailPrototypes.Length; capa++)
+            {
+                int[,] celdas = datos.GetDetailLayer(i0, k0, ancho, alto, capa);
+                bool cambiada = false;
+                for (int k = 0; k < alto; k++)
+                    for (int i = 0; i < ancho; i++)
+                    {
+                        if (celdas[k, i] == 0) continue;
+                        float x = origen.x + (i0 + i + 0.5f) * celdaX, z = origen.z + (k0 + k + 0.5f) * celdaZ;
+                        if ((x - centro.x) * (x - centro.x) + (z - centro.z) * (z - centro.z) > radio * radio) continue;
+                        celdas[k, i] = 0;
+                        cambiada = true;
+                        vaciadas++;
+                    }
+                if (cambiada) datos.SetDetailLayer(i0, k0, capa, celdas);
+            }
+            EditorUtility.SetDirty(datos);
+        }
+        return vaciadas;
+    }
+
     private static Bounds Limites(GameObject go)
     {
         var rs = go.GetComponentsInChildren<Renderer>(true);

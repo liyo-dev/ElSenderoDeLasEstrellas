@@ -14,78 +14,78 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
   startNodeGuid: cap4-inicio
   nodes:
-  - rid: 6540294530920088416
-  - rid: 6540294530920088417
-  - rid: 6540294530920088418
-  - rid: 6540294530920088419
-  - rid: 6540294530920088420
-  - rid: 6540294530920088421
-  - rid: 6540294530920088422
-  - rid: 6540294530920088423
-  - rid: 6540294530920088424
-  - rid: 6540294530920088425
-  - rid: 6540294530920088426
-  - rid: 6540294530920088427
-  - rid: 6540294530920088428
-  - rid: 6540294530920088429
-  - rid: 6540294530920088430
-  - rid: 6540294530920088431
-  - rid: 6540294530920088432
-  - rid: 6540294530920088433
-  - rid: 6540294530920088434
-  - rid: 6540294530920088435
-  - rid: 6540294530920088436
-  - rid: 6540294530920088437
-  - rid: 6540294530920088438
-  - rid: 6540294530920088439
-  - rid: 6540294530920088440
-  - rid: 6540294530920088441
-  - rid: 6540294530920088442
-  - rid: 6540294530920088443
-  - rid: 6540294530920088444
-  - rid: 6540294530920088445
-  - rid: 6540294530920088446
-  - rid: 6540294530920088447
-  - rid: 6540294530920088448
-  - rid: 6540294530920088449
-  - rid: 6540294530920088450
-  - rid: 6540294530920088451
-  - rid: 6540294530920088452
-  - rid: 6540294530920088453
-  - rid: 6540294530920088454
-  - rid: 6540294530920088455
-  - rid: 6540294530920088456
-  - rid: 6540294530920088457
-  - rid: 6540294530920088458
-  - rid: 6540294530920088459
-  - rid: 6540294530920088460
-  - rid: 6540294530920088461
-  - rid: 6540294530920088462
-  - rid: 6540294530920088463
-  - rid: 6540294530920088464
-  - rid: 6540294530920088465
-  - rid: 6540294530920088466
-  - rid: 6540294530920088467
-  - rid: 6540294530920088468
-  - rid: 6540294530920088469
-  - rid: 6540294530920088470
-  - rid: 6540294530920088471
-  - rid: 6540294530920088472
-  - rid: 6540294530920088473
-  - rid: 6540294530920088474
-  - rid: 6540294530920088475
-  - rid: 6540294530920088476
-  - rid: 6540294530920088477
-  - rid: 6540294530920088478
-  - rid: 6540294530920088479
-  - rid: 6540294530920088480
-  - rid: 6540294530920088481
-  - rid: 6540294530920088482
+  - rid: 6540294538172825832
+  - rid: 6540294538172825833
+  - rid: 6540294538172825834
+  - rid: 6540294538172825835
+  - rid: 6540294538172825836
+  - rid: 6540294538172825837
+  - rid: 6540294538172825838
+  - rid: 6540294538172825839
+  - rid: 6540294538172825840
+  - rid: 6540294538172825841
+  - rid: 6540294538172825842
+  - rid: 6540294538172825843
+  - rid: 6540294538172825844
+  - rid: 6540294538172825845
+  - rid: 6540294538172825846
+  - rid: 6540294538172825847
+  - rid: 6540294538172825848
+  - rid: 6540294538172825849
+  - rid: 6540294538172825850
+  - rid: 6540294538172825851
+  - rid: 6540294538172825852
+  - rid: 6540294538172825853
+  - rid: 6540294538172825854
+  - rid: 6540294538172825855
+  - rid: 6540294538172825856
+  - rid: 6540294538172825857
+  - rid: 6540294538172825858
+  - rid: 6540294538172825859
+  - rid: 6540294538172825860
+  - rid: 6540294538172825861
+  - rid: 6540294538172825862
+  - rid: 6540294538172825863
+  - rid: 6540294538172825864
+  - rid: 6540294538172825865
+  - rid: 6540294538172825866
+  - rid: 6540294538172825867
+  - rid: 6540294538172825868
+  - rid: 6540294538172825869
+  - rid: 6540294538172825870
+  - rid: 6540294538172825871
+  - rid: 6540294538172825872
+  - rid: 6540294538172825873
+  - rid: 6540294538172825874
+  - rid: 6540294538172825875
+  - rid: 6540294538172825876
+  - rid: 6540294538172825877
+  - rid: 6540294538172825878
+  - rid: 6540294538172825879
+  - rid: 6540294538172825880
+  - rid: 6540294538172825881
+  - rid: 6540294538172825882
+  - rid: 6540294538172825883
+  - rid: 6540294538172825884
+  - rid: 6540294538172825885
+  - rid: 6540294538172825886
+  - rid: 6540294538172825887
+  - rid: 6540294538172825888
+  - rid: 6540294538172825889
+  - rid: 6540294538172825890
+  - rid: 6540294538172825891
+  - rid: 6540294538172825892
+  - rid: 6540294538172825893
+  - rid: 6540294538172825894
+  - rid: 6540294538172825895
+  - rid: 6540294538172825896
+  - rid: 6540294538172825897
+  - rid: 6540294538172825898
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
-    - rid: 6540294530920088416
+    - rid: 6540294538172825832
       type: {class: StartNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Inicio del Cap. 4
@@ -100,7 +100,7 @@ MonoBehaviour:
         position: {x: 0, y: 0}
         outputs:
         - cap4-tras-cap3
-    - rid: 6540294530920088417
+    - rid: 6540294538172825833
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Tras el Cap. 3 (CH_Cap3_BACK_1)
@@ -117,7 +117,7 @@ MonoBehaviour:
         - cap4-flag
         eventKey: CH_Cap3_BACK_1
         acceptEarlierEvent: 1
-    - rid: 6540294530920088418
+    - rid: 6540294538172825834
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Fin del Cap. 4 (CH_Cap4_BACK_1)
@@ -133,7 +133,7 @@ MonoBehaviour:
         outputs:
         - cap4-demo-rotulo
         eventKey: CH_Cap4_BACK_1
-    - rid: 6540294530920088419
+    - rid: 6540294538172825835
       type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "R\xF3tulo: fin de la Primera Parte"
@@ -157,7 +157,7 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
-    - rid: 6540294530920088420
+    - rid: 6540294538172825836
       type: {class: FinDeLaDemoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Fin de la demo (en la build de la demo, a los cr\xE9ditos)"
@@ -174,7 +174,7 @@ MonoBehaviour:
         - cap4-demo-destapa
         escenaFinal: Credits
         espera: 0.8
-    - rid: 6540294530920088421
+    - rid: 6540294538172825837
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Comienza el Cap. 4
@@ -191,7 +191,7 @@ MonoBehaviour:
         - cap4-estela-aparece
         flagKey: CAP4_INICIADO
         value: 1
-    - rid: 6540294530920088422
+    - rid: 6540294538172825838
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Estela est\xE1 en su claro (el roster la pone)"
@@ -208,7 +208,7 @@ MonoBehaviour:
         - cap4-bosque
         flagKey: ESTELA_APARECE
         value: 1
-    - rid: 6540294530920088423
+    - rid: 6540294538172825839
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Hacia el Bosque Prohibido (probar desde aqu\xED)"
@@ -224,7 +224,7 @@ MonoBehaviour:
         outputs:
         - cap4-mision-estela
         eventKey: CAP4_BOSQUE_EMPIEZA
-    - rid: 6540294530920088424
+    - rid: 6540294538172825840
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Misi\xF3n: la hechicera del bosque (aviso de misi\xF3n nueva)"
@@ -243,7 +243,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294530920088425
+    - rid: 6540294538172825841
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Punto de guardado: el cruce"
@@ -261,7 +261,7 @@ MonoBehaviour:
         checkpointId: CAP4_INICIO
         spawnAnchorId: Cap3_Amanecer
         sceneName: MainWorld
-    - rid: 6540294530920088426
+    - rid: 6540294538172825842
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Llega al claro de los troncos quemados"
@@ -278,7 +278,7 @@ MonoBehaviour:
         - cap4-mando-estela
         eventKey: CAP4_LLEGADA_CLARO
         acceptEarlierEvent: 1
-    - rid: 6540294530920088427
+    - rid: 6540294538172825843
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
@@ -296,7 +296,7 @@ MonoBehaviour:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294530920088428
+    - rid: 6540294538172825844
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Cinem\xE1tica: Estela, el aro y \xABya me lo cobrar\xE9\xBB"
@@ -320,7 +320,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088429
+    - rid: 6540294538172825845
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.1 \xB7 Estela entra en el grupo"
@@ -338,7 +338,7 @@ MonoBehaviour:
         accion: 3
         personaje: Estela
         retirarDeLaEscena: 0
-    - rid: 6540294530920088430
+    - rid: 6540294538172825846
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Paso: encontrar a Estela (cierra la misi\xF3n)"
@@ -361,7 +361,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294530920088431
+    - rid: 6540294538172825847
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 La casa entre ra\xEDces (probar desde aqu\xED)"
@@ -377,7 +377,7 @@ MonoBehaviour:
         outputs:
         - cap4-casa-noche
         eventKey: CAP4_CASA_EMPIEZA
-    - rid: 6540294530920088432
+    - rid: 6540294538172825848
       type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Anochece en el claro"
@@ -394,7 +394,7 @@ MonoBehaviour:
         - cap4-casa-boc
         targetTime: 7
         immediate: 0
-    - rid: 6540294530920088433
+    - rid: 6540294538172825849
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 \xABPuedes mirar, pero no toques la cena\xBB"
@@ -417,7 +417,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088434
+    - rid: 6540294538172825850
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Will se acuesta en el jerg\xF3n"
@@ -434,7 +434,7 @@ MonoBehaviour:
         - cap4-rotulo-manana
         eventKey: CAP4_DORMIR
         acceptEarlierEvent: 1
-    - rid: 6540294530920088435
+    - rid: 6540294538172825851
       type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 R\xF3tulo: a la ma\xF1ana siguiente"
@@ -458,7 +458,7 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
-    - rid: 6540294530920088436
+    - rid: 6540294538172825852
       type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Amanece"
@@ -475,7 +475,7 @@ MonoBehaviour:
         - cap4-manana-will
         targetTime: 6
         immediate: 1
-    - rid: 6540294530920088437
+    - rid: 6540294538172825853
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Will se despierta junto a la casa"
@@ -494,7 +494,7 @@ MonoBehaviour:
         markId: Cap4_Campana_Salida
         applyPlayerEnvironment: 1
         showActor: 0
-    - rid: 6540294530920088438
+    - rid: 6540294538172825854
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Punto de guardado: la casa de Estela"
@@ -512,7 +512,7 @@ MonoBehaviour:
         checkpointId: CAP4_CASA
         spawnAnchorId: Cap4_Campana_Salida
         sceneName: MainWorld
-    - rid: 6540294530920088439
+    - rid: 6540294538172825855
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Misi\xF3n: rumbo al Reino (aviso de misi\xF3n nueva)"
@@ -531,7 +531,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294530920088440
+    - rid: 6540294538172825856
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 La prueba de la campana (probar desde aqu\xED)"
@@ -547,7 +547,7 @@ MonoBehaviour:
         outputs:
         - cap4-mando-manana
         eventKey: CAP4_CAMPANA_EMPIEZA
-    - rid: 6540294530920088441
+    - rid: 6540294538172825857
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Will al mando"
@@ -565,7 +565,7 @@ MonoBehaviour:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294530920088442
+    - rid: 6540294538172825858
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Cinem\xE1tica: el cartel y la primera receta"
@@ -589,7 +589,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088443
+    - rid: 6540294538172825859
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Aprende C\xFApula Estelar (primera receta del combo)"
@@ -612,7 +612,7 @@ MonoBehaviour:
         oneShotFlag: 
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 0
-    - rid: 6540294530920088444
+    - rid: 6540294538172825860
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.2 \xB7 Tutorial: el combo m\xE1gico"
@@ -636,7 +636,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
-    - rid: 6540294530920088445
+    - rid: 6540294538172825861
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Cinem\xE1tica: las reglas de la campana"
@@ -660,7 +660,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088446
+    - rid: 6540294538172825862
       type: {class: ForkNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 La prueba (y en paralelo, las figuras chamuscadas)"
@@ -676,7 +676,7 @@ MonoBehaviour:
         outputs:
         - cap4-figura-0
         - cap4-tocada
-    - rid: 6540294530920088447
+    - rid: 6540294538172825863
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Will toca la campana"
@@ -693,7 +693,7 @@ MonoBehaviour:
         - cap4-liam-aparece
         eventKey: CAP4_CAMPANA_TOCADA
         acceptEarlierEvent: 1
-    - rid: 6540294530920088448
+    - rid: 6540294538172825864
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Liam les observa (el roster le pone en la loma)"
@@ -710,7 +710,7 @@ MonoBehaviour:
         - cap4-campana-fin
         flagKey: LIAM_APARECE
         value: 1
-    - rid: 6540294530920088449
+    - rid: 6540294538172825865
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Fin de la prueba (Liam, en la loma)"
@@ -726,7 +726,7 @@ MonoBehaviour:
         outputs:
         - cap4-figura
         eventKey: CAP4_CAMPANA_FIN
-    - rid: 6540294530920088450
+    - rid: 6540294538172825866
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Cinem\xE1tica: la figura que resbala, las figuras rehechas y el que observa"
@@ -750,7 +750,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088451
+    - rid: 6540294538172825867
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Aprende Levitaci\xF3n por instinto"
@@ -773,7 +773,7 @@ MonoBehaviour:
         oneShotFlag: 
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 0
-    - rid: 6540294530920088452
+    - rid: 6540294538172825868
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: la prueba de la campana'
@@ -796,7 +796,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088453
+    - rid: 6540294538172825869
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Hacia el Reino: el G\xF3lem (probar desde aqu\xED)"
@@ -812,7 +812,7 @@ MonoBehaviour:
         outputs:
         - cap4-punto-golem
         eventKey: CAP4_GOLEM_EMPIEZA
-    - rid: 6540294530920088454
+    - rid: 6540294538172825870
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Punto de guardado: el camino del Reino"
@@ -830,7 +830,7 @@ MonoBehaviour:
         checkpointId: CAP4_CAMINO
         spawnAnchorId: Cap4_Golem_Entrada
         sceneName: MainWorld
-    - rid: 6540294530920088455
+    - rid: 6540294538172825871
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Llegan al descanso del camino"
@@ -847,7 +847,7 @@ MonoBehaviour:
         - cap4-mando-golem
         eventKey: CAP4_LLEGADA_ARENA
         acceptEarlierEvent: 1
-    - rid: 6540294530920088456
+    - rid: 6540294538172825872
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Will al mando"
@@ -865,7 +865,7 @@ MonoBehaviour:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294530920088457
+    - rid: 6540294538172825873
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Cinem\xE1tica: Liam traza el pacto y el G\xF3lem sale de la tierra"
@@ -889,7 +889,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088458
+    - rid: 6540294538172825874
       type: {class: StartBattleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Batalla: el G\xF3lem (fuego de frente lo alimenta, el barro lo hunde, remate en d\xFAo)"
@@ -913,7 +913,7 @@ MonoBehaviour:
         missionStringId: 
         missionId: 0
         arenaContext: 
-    - rid: 6540294530920088459
+    - rid: 6540294538172825875
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 Cinem\xE1tica: agotados, la esquirla y el cuaderno de Liam"
@@ -937,7 +937,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088460
+    - rid: 6540294538172825876
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.4 \xB7 La esquirla de cristal"
@@ -956,7 +956,7 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 6540294530920088461
+    - rid: 6540294538172825877
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Paso: cruzar el bosque'
@@ -979,7 +979,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294530920088462
+    - rid: 6540294538172825878
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.5 \xB7 Cinem\xE1tica: la manzana harinosa"
@@ -1003,7 +1003,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088463
+    - rid: 6540294538172825879
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.5 \xB7 Punto de guardado: el campamento"
@@ -1021,7 +1021,7 @@ MonoBehaviour:
         checkpointId: CAP4_MANZANA
         spawnAnchorId: Cap4_Manzana
         sceneName: MainWorld
-    - rid: 6540294530920088464
+    - rid: 6540294538172825880
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Hacia la bifurcaci\xF3n del r\xEDo (probar desde aqu\xED)"
@@ -1037,7 +1037,7 @@ MonoBehaviour:
         outputs:
         - cap4-llegada-bifurcacion
         eventKey: CAP4_BIFURCACION_EMPIEZA
-    - rid: 6540294530920088465
+    - rid: 6540294538172825881
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Llegan a la bifurcaci\xF3n"
@@ -1054,7 +1054,7 @@ MonoBehaviour:
         - cap4-mando-bifurcacion
         eventKey: CAP4_LLEGADA_BIFURCACION
         acceptEarlierEvent: 1
-    - rid: 6540294530920088466
+    - rid: 6540294538172825882
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Will al mando"
@@ -1072,7 +1072,7 @@ MonoBehaviour:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294530920088467
+    - rid: 6540294538172825883
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Cinem\xE1tica: Liam aparece y se une; la corriente se lleva su bota"
@@ -1096,7 +1096,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088468
+    - rid: 6540294538172825884
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Liam entra en el grupo"
@@ -1114,7 +1114,7 @@ MonoBehaviour:
         accion: 3
         personaje: Liam
         retirarDeLaEscena: 0
-    - rid: 6540294530920088469
+    - rid: 6540294538172825885
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Liam ya va en el grupo"
@@ -1130,7 +1130,7 @@ MonoBehaviour:
         outputs:
         - cap4-bota-boc
         eventKey: CAP4_LIAM_EN_EL_GRUPO
-    - rid: 6540294530920088470
+    - rid: 6540294538172825886
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 \xAB\xA1Mi bota!\xBB"
@@ -1153,7 +1153,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088471
+    - rid: 6540294538172825887
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Will recoge la bota r\xEDo abajo"
@@ -1170,7 +1170,7 @@ MonoBehaviour:
         - cap4-mando-bota
         eventKey: CAP4_BOTA_RECOGIDA
         acceptEarlierEvent: 1
-    - rid: 6540294530920088472
+    - rid: 6540294538172825888
       type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Will al mando"
@@ -1188,7 +1188,7 @@ MonoBehaviour:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294530920088473
+    - rid: 6540294538172825889
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.6 \xB7 Cinem\xE1tica: \xABTampoco sal\xEDa en el mapa que alguien ir\xEDa a por mi bota\xBB"
@@ -1212,7 +1212,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294530920088474
+    - rid: 6540294538172825890
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Paso: el camino del r\xEDo (cierra la misi\xF3n)"
@@ -1235,7 +1235,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294530920088475
+    - rid: 6540294538172825891
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "Cap. 4 \xB7 Fin (punto de guardado)"
@@ -1253,7 +1253,7 @@ MonoBehaviour:
         checkpointId: CAP4_FIN
         spawnAnchorId: Cap4_Bota
         sceneName: MainWorld
-    - rid: 6540294530920088476
+    - rid: 6540294538172825892
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Una figura de barro, chamuscada"
@@ -1270,7 +1270,7 @@ MonoBehaviour:
         - cap4-figura-1
         eventKey: CAP4_FIGURA_CHAMUSCADA
         acceptEarlierEvent: 1
-    - rid: 6540294530920088477
+    - rid: 6540294538172825893
       type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Queda apuntado"
@@ -1287,7 +1287,7 @@ MonoBehaviour:
         - cap4-figura-2
         flagKey: CAP4_FIGURAS_CHAMUSCADAS
         value: 1
-    - rid: 6540294530920088478
+    - rid: 6540294538172825894
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Estela: \xAB\xA1Las ten\xEDas que proteger!\xBB"
@@ -1310,7 +1310,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294530920088479
+    - rid: 6540294538172825895
       type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Nota
@@ -1326,7 +1326,7 @@ MonoBehaviour:
         outputs: []
         note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
-    - rid: 6540294530920088480
+    - rid: 6540294538172825896
       type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Se destapa la pantalla tras la cinem\xE1tica"
@@ -1347,7 +1347,7 @@ MonoBehaviour:
         transicion: {fileID: 0}
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
-    - rid: 6540294530920088481
+    - rid: 6540294538172825897
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "4.3 \xB7 Tutorial: Levitaci\xF3n"
@@ -1371,7 +1371,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
-    - rid: 6540294530920088482
+    - rid: 6540294538172825898
       type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 'Fuera de la build de la demo: se destapa la pantalla y sigue el juego'

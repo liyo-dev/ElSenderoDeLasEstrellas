@@ -21190,7 +21190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.NPCBehaviourManagerV2
   configuration:
     behaviourType: 0
-    ambientConfig: {fileID: 0}
+    ambientConfig: {fileID: 11400000, guid: 210d03c05db3059468bc86d1104f3199, type: 2}
     combatConfig: {fileID: 0}
     questConfig: {fileID: 0}
     interactiveNarrativeConfig: {fileID: 0}

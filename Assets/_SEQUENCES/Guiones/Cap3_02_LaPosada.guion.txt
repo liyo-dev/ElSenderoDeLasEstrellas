@@ -64,29 +64,36 @@ posadero dice CAP3_POSADA_05 cara=alegre
 will dice CAP3_POSADA_06 cara=confuso gesto=Talk01
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Coin_Shaking-002.wav" volume=0.7
 posadero dice CAP3_POSADA_07 gesto=HeadNod01 cara=alegre
+# Se va a la cocina: el plano pasa ya a Will y Lucía, el posadero sale por el borde.
 posadero anda a puerta ritmo=normal
 & will mira lucia
+& plano dos will lucia
 
 @cuchara
 # Lucía le enseña su magia: la cuchara sube de verdad, tiembla y se cae en la mesa.
-plano dos will lucia
 lucia dice CAP3_POSADA_08 cara=alegre mira=will
 lucia mira cuchara
 & lucia cara decidido
 & lucia gesto CastingEnter01
 & sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-012.wav" volume=0.45
 espera 0.5
-plano detalle PROP_Cuchara lucia desde=cam_cuchara altura=1.0 lente=34
+# Plano bajo, a la altura de la mesita: la cuchara en primer término y Lucía detrás.
+plano detalle PROP_Cuchara desde=cam_cuchara altura=0.85 lente=40
 prop PROP_BrilloCuchara
 & lucia bucle CastingIdle01
-& efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.24,0 deltaRotacion=0,0,12 segundos=2.6 desdeDondeEstaba=true esperar=false
+# Sube un palmo despacio (de fondo, mientras ella habla). Cada movimiento cuenta en el reloj del
+# guion con «dura»: los efectos no esperan solos.
+efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.2,0 deltaRotacion=0,0,8 segundos=2.4 desdeDondeEstaba=true dura=0
 lucia dice CAP3_POSADA_09 cara=decidido
-efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-24 segundos=0.18 desdeDondeEstaba=true esperar=true
-efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,20 segundos=0.18 desdeDondeEstaba=true esperar=true
-efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,-0.24,0 deltaRotacion=0,0,-8 segundos=0.22 suavizar=false desdeDondeEstaba=true esperar=false
+espera 0.3
+# Tiembla, cada vez más…
+efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-14 segundos=0.14 dura=0.14
+efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,22 segundos=0.14 dura=0.14
+efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-24 segundos=0.12 dura=0.12
+# …y cae en su sitio de la mesa (su pose inicial: no puede quedarse en el aire).
+efecto PropMoveBeat propId=PROP_Cuchara segundos=0.2 suavizar=false desdeDondeEstaba=true dura=0.2
 & prop PROP_BrilloCuchara oculto
 & lucia gesto CastingExit01
-espera 0.2
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.4
 plano medio lucia
 lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01

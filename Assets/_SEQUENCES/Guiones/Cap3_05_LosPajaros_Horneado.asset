@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap3_05_LosPajaros_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_05_LosPajaros
-  duracion: 31.563759
+  duracion: 32.918564
   presentacion: 1
-  huella: "2026-11-07 18:31 \xB7 e9e6d5037bbd8f3d256aac9ddc9e2330"
+  huella: "2026-11-11 00:48 \xB7 259907e7aa074ad6ff9ed318e6f7afd6"
   actores:
   - id: Player
     alias: will
@@ -26,50 +26,60 @@ MonoBehaviour:
       p: {x: -207.5, y: 22.043652, z: -132}
     - t: 7.845
       p: {x: -207.5, y: 22.043652, z: -132}
-    - t: 8.124023
-      p: {x: -207.66452, y: 22.04258, z: -131.75162}
-    - t: 8.340872
-      p: {x: -207.82903, y: 22.037628, z: -131.50322}
-    - t: 8.630334
-      p: {x: -208.0758, y: 22.020386, z: -131.13065}
-    - t: 8.918651
-      p: {x: -208.32259, y: 22.00961, z: -130.75807}
-    - t: 9.20697
-      p: {x: -208.56935, y: 22.005722, z: -130.38548}
-    - t: 9.495287
-      p: {x: -208.81613, y: 21.997501, z: -130.01291}
-    - t: 9.783612
-      p: {x: -209.06291, y: 21.964577, z: -129.64032}
-    - t: 10.071923
-      p: {x: -209.30968, y: 21.948643, z: -129.26775}
-    - t: 10.360249
-      p: {x: -209.55646, y: 21.943935, z: -128.89516}
-    - t: 10.64856
-      p: {x: -209.80322, y: 21.938122, z: -128.52258}
-    - t: 10.936885
-      p: {x: -210.05, y: 21.911072, z: -128.15}
-    - t: 11.225202
-      p: {x: -210.29678, y: 21.884026, z: -127.77742}
-    - t: 11.513516
-      p: {x: -210.54355, y: 21.856983, z: -127.40484}
-    - t: 11.801837
-      p: {x: -210.79033, y: 21.83532, z: -127.03226}
-    - t: 12.090148
-      p: {x: -211.0371, y: 21.830467, z: -126.65968}
-    - t: 12.3784685
-      p: {x: -211.28387, y: 21.832912, z: -126.2871}
-    - t: 12.666789
-      p: {x: -211.53065, y: 21.835354, z: -125.91452}
-    - t: 12.955104
-      p: {x: -211.77742, y: 21.8378, z: -125.54194}
-    - t: 13.243424
-      p: {x: -212.0242, y: 21.811752, z: -125.16936}
-    - t: 13.53289
-      p: {x: -212.27098, y: 21.780693, z: -124.796776}
-    - t: 13.74973
-      p: {x: -212.43549, y: 21.759987, z: -124.54839}
-    - t: 14.02876
-      p: {x: -212.6, y: 21.749569, z: -124.3}
+    - t: 8.12432
+      p: {x: -207.72368, y: 22.032074, z: -131.80263}
+    - t: 8.341376
+      p: {x: -207.94737, y: 22.016197, z: -131.60527}
+    - t: 8.631182
+      p: {x: -208.2829, y: 21.987206, z: -131.3092}
+    - t: 8.9198675
+      p: {x: -208.61842, y: 21.972046, z: -131.01315}
+    - t: 9.208553
+      p: {x: -208.95395, y: 21.956886, z: -130.7171}
+    - t: 9.497239
+      p: {x: -209.28947, y: 21.934345, z: -130.42105}
+    - t: 9.785925
+      p: {x: -209.625, y: 21.88958, z: -130.125}
+    - t: 10.074611
+      p: {x: -209.96053, y: 21.844818, z: -129.82895}
+    - t: 10.3632965
+      p: {x: -210.29605, y: 21.800049, z: -129.5329}
+    - t: 10.651983
+      p: {x: -210.63158, y: 21.769402, z: -129.23685}
+    - t: 10.94067
+      p: {x: -210.9671, y: 21.74942, z: -128.9408}
+    - t: 11.229363
+      p: {x: -211.30263, y: 21.741806, z: -128.64473}
+    - t: 11.518051
+      p: {x: -211.63815, y: 21.734188, z: -128.34868}
+    - t: 11.806739
+      p: {x: -211.97368, y: 21.717522, z: -128.05263}
+    - t: 12.095426
+      p: {x: -212.3092, y: 21.666645, z: -127.75658}
+    - t: 12.384112
+      p: {x: -212.64473, y: 21.615757, z: -127.460526}
+    - t: 12.672807
+      p: {x: -212.98027, y: 21.564865, z: -127.164474}
+    - t: 12.9614935
+      p: {x: -213.3158, y: 21.522717, z: -126.86842}
+    - t: 13.250183
+      p: {x: -213.65132, y: 21.522503, z: -126.572365}
+    - t: 13.538869
+      p: {x: -213.98685, y: 21.52229, z: -126.27631}
+    - t: 13.827555
+      p: {x: -214.32237, y: 21.522076, z: -125.98026}
+    - t: 14.1162405
+      p: {x: -214.6579, y: 21.514183, z: -125.68421}
+    - t: 14.404926
+      p: {x: -214.99342, y: 21.468422, z: -125.38816}
+    - t: 14.693616
+      p: {x: -215.32895, y: 21.42266, z: -125.0921}
+    - t: 14.99122
+      p: {x: -215.66447, y: 21.376892, z: -124.79605}
+    - t: 15.230697
+      p: {x: -215.88815, y: 21.355686, z: -124.59869}
+    - t: 15.383562
+      p: {x: -216, y: 21.34933, z: -124.5}
     miradas:
     - t: 0
       tipo: 1
@@ -91,17 +101,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 18.72876
+    - t: 20.083563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 18.87876
+    - t: 20.233562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.208757
+    - t: 24.563562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -122,22 +132,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.07876
+    - t: 15.433562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 18.82876
+    - t: 20.183563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.158758
+    - t: 24.513563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 27.913757
+    - t: 29.268562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -149,68 +159,78 @@ MonoBehaviour:
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.3349996
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.02876
+      t: 15.383562
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.10876
+      t: 15.463562
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 15.27876
+      t: 16.633562
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.42876
+      t: 20.783564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.758759
+      t: 25.113564
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 27.863758
+      t: 29.218563
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 27.943758
+      t: 29.298563
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 29.113758
+      t: 30.468563
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
-    - t: 14.02876
+    - t: 15.383562
       emocion: alegre
       dura: 1.6
-    - t: 17.22876
+    - t: 18.583563
       emocion: ilusionado
       dura: 0
-    - t: 27.863758
+    - t: 29.218563
       emocion: agradecido
       dura: 1.6
     visible: []
@@ -233,17 +253,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 14.17876
+    - t: 15.533562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.72876
+    - t: 20.083563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 28.013758
+    - t: 29.368563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -264,22 +284,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 14.128759
+    - t: 15.4835615
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.778759
+    - t: 20.133562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.108757
+    - t: 24.463562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.963758
+    - t: 29.318563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -291,102 +311,119 @@ MonoBehaviour:
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 1.08
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 3.5849998
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.465
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.6349998
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 5.7149997
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 7.895
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.50876
+      t: 15.863562
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 18.72876
+      t: 20.083563
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 18.80876
+      t: 20.163563
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 21.375427
+      t: 22.73023
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 22.808758
+      t: 24.163563
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.058758
+      t: 24.413563
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.138758
+      t: 24.493563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 24.472092
+      t: 25.826897
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 27.463757
+      t: 28.818562
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.343758
+      t: 29.698563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 1
       emocion: enfado
@@ -394,7 +431,7 @@ MonoBehaviour:
     - t: 5.6349998
       emocion: decidido
       dura: 2.6100001
-    - t: 18.72876
+    - t: 20.083563
       emocion: aliviado
       dura: 4.43
     visible: []
@@ -410,7 +447,7 @@ MonoBehaviour:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: -217.5, y: 21.39981, z: -125.5}
+      punto: {x: -216.8, y: 21.811646, z: -129.8}
       actor: 
     - t: 1.27
       tipo: 2
@@ -427,22 +464,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.29876
+    - t: 15.653563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.99876
+    - t: 20.353563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.328758
+    - t: 24.683563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 28.133759
+    - t: 29.488564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -463,22 +500,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.24876
+    - t: 15.603562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.948761
+    - t: 20.303564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.278759
+    - t: 24.633564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 28.08376
+    - t: 29.438564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -490,42 +527,49 @@ MonoBehaviour:
       estado: Idle_Battle_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.465
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.3349996
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.50876
+      t: 15.863562
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.42876
+      t: 20.783564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.758759
+      t: 25.113564
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.343758
+      t: 29.698563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -547,12 +591,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 14.41876
+    - t: 15.773562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 28.253757
+    - t: 29.608562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -563,12 +607,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_ContrabandistaJefe
-    - t: 14.36876
+    - t: 15.723562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 28.203758
+    - t: 29.558563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -580,24 +624,28 @@ MonoBehaviour:
       estado: Idle_Battle_NoWeapon
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.465
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.50876
+      t: 15.863562
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.343758
+      t: 29.698563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -624,22 +672,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.53876
+    - t: 15.893562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 19.11876
+    - t: 20.473562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.448757
+    - t: 24.803562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 28.373758
+    - t: 29.728563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -660,22 +708,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.48876
+    - t: 15.843562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 19.06876
+    - t: 20.423563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.398758
+    - t: 24.753563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 28.32376
+    - t: 29.678564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -687,36 +735,42 @@ MonoBehaviour:
       estado: Beg01_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.3349996
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.50876
+      t: 15.863562
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.42876
+      t: 20.783564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.758759
+      t: 25.113564
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.343758
+      t: 29.698563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras:
     - t: 3.985
       emocion: miedo
@@ -729,7 +783,7 @@ MonoBehaviour:
     claveDelNombre: CHAR_CONTRABANDISTA
     posiciones:
     - t: 0
-      p: {x: -217.5, y: 21.39981, z: -125.5}
+      p: {x: -216.8, y: 21.811646, z: -129.8}
     miradas:
     - t: 0
       tipo: 1
@@ -751,22 +805,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.17876
+    - t: 15.533562
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 19.23876
+    - t: 20.593563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.568758
+    - t: 24.923563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 28.013758
+    - t: 29.368563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -787,22 +841,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 14.128759
+    - t: 15.4835615
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 19.18876
+    - t: 20.543564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 23.518759
+    - t: 24.873564
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Sargento
-    - t: 27.963758
+    - t: 29.318563
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -814,42 +868,49 @@ MonoBehaviour:
       estado: Beg01_Loop
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 4.465
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
       t: 6.3349996
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 14.50876
+      t: 15.863562
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 19.42876
+      t: 20.783564
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 23.758759
+      t: 25.113564
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
+      voz: 
     - fundido: 0
-      t: 28.343758
+      t: 29.698563
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
+      voz: 
     caras: []
     visible: []
     deslizando: []
@@ -883,8 +944,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 14.02876
-    t1: 15.22876
+    t0: 15.383562
+    t1: 16.583563
     actor: Player
     clave: CAP3_PAJAROS_04
     gesto: Talk01
@@ -892,8 +953,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 18.72876
-    t1: 22.758759
+    t0: 20.083563
+    t1: 24.113564
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_05
     gesto: Talk02
@@ -901,8 +962,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 23.058758
-    t1: 27.413757
+    t0: 24.413563
+    t1: 28.768562
     actor: NPC_Sargento
     clave: CAP3_PAJAROS_06
     gesto: HeadNod01
@@ -910,8 +971,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 27.863758
-    t1: 29.063759
+    t0: 29.218563
+    t1: 30.418564
     actor: Player
     clave: CAP3_PAJAROS_07
     gesto: Talk03
@@ -925,7 +986,7 @@ MonoBehaviour:
     descripcion: general de sargento y jefe y c2
     posiciones:
     - t: 0
-      p: {x: -214.71414, y: 25.232681, z: -140.63873}
+      p: {x: -208.18471, y: 25.940945, z: -122.1403}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -945,60 +1006,72 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 7.845
-    t1: 14.02876
+    t1: 15.383562
     tipo: 7
     descripcion: siguiendo a will
     posiciones:
     - t: 7.845
-      p: {x: -203.44312, y: 24.233353, z: -130.5191}
+      p: {x: -203.96707, y: 24.267506, z: -129.51611}
     - t: 8.094999
-      p: {x: -203.54375, y: 24.237354, z: -130.36717}
+      p: {x: -204.10371, y: 24.263626, z: -129.39554}
     - t: 8.344999
-      p: {x: -203.64648, y: 24.240911, z: -130.21205}
+      p: {x: -204.24324, y: 24.259912, z: -129.27243}
     - t: 8.594999
-      p: {x: -203.75044, y: 24.24352, z: -130.0551}
+      p: {x: -204.38441, y: 24.25764, z: -129.14786}
     - t: 8.844999
-      p: {x: -203.95064, y: 24.249023, z: -129.75285}
+      p: {x: -204.65628, y: 24.25363, z: -128.90796}
     - t: 9.094999
-      p: {x: -204.16037, y: 24.254099, z: -129.43623}
+      p: {x: -204.94109, y: 24.248686, z: -128.6567}
     - t: 9.344999
-      p: {x: -204.37422, y: 24.259642, z: -129.11339}
+      p: {x: -205.23146, y: 24.241415, z: -128.40047}
     - t: 9.594999
-      p: {x: -204.58817, y: 24.265486, z: -128.79036}
+      p: {x: -205.522, y: 24.232388, z: -128.14409}
     - t: 9.844999
-      p: {x: -204.80214, y: 24.272156, z: -128.4673}
+      p: {x: -205.81259, y: 24.221605, z: -127.8877}
     - t: 10.094999
-      p: {x: -205.01611, y: 24.279799, z: -128.14424}
+      p: {x: -206.10315, y: 24.208538, z: -127.631325}
     - t: 10.344999
-      p: {x: -205.2301, y: 24.286428, z: -127.821175}
+      p: {x: -206.3937, y: 24.191498, z: -127.37494}
     - t: 10.594999
-      p: {x: -205.44406, y: 24.29152, z: -127.498116}
+      p: {x: -206.68425, y: 24.170488, z: -127.11855}
     - t: 10.844999
-      p: {x: -205.65804, y: 24.294561, z: -127.17506}
+      p: {x: -206.97482, y: 24.149862, z: -126.86218}
     - t: 11.094999
-      p: {x: -205.872, y: 24.294405, z: -126.852}
+      p: {x: -207.2654, y: 24.131527, z: -126.6058}
     - t: 11.344999
-      p: {x: -206.08598, y: 24.29105, z: -126.52893}
+      p: {x: -207.55594, y: 24.113394, z: -126.34943}
     - t: 11.594999
-      p: {x: -206.29996, y: 24.286837, z: -126.20586}
+      p: {x: -207.84651, y: 24.09486, z: -126.09304}
     - t: 11.844999
-      p: {x: -206.51395, y: 24.282187, z: -125.88279}
+      p: {x: -208.13707, y: 24.075949, z: -125.83666}
     - t: 12.094999
-      p: {x: -206.72792, y: 24.27978, z: -125.55974}
+      p: {x: -208.42763, y: 24.056599, z: -125.580284}
     - t: 12.344999
-      p: {x: -206.94191, y: 24.278852, z: -125.23667}
+      p: {x: -208.71819, y: 24.036808, z: -125.3239}
     - t: 12.594999
-      p: {x: -207.15584, y: 24.278421, z: -124.91368}
+      p: {x: -209.00877, y: 24.014103, z: -125.06752}
     - t: 12.844999
-      p: {x: -207.3688, y: 24.28253, z: -124.592125}
+      p: {x: -209.29933, y: 23.988407, z: -124.81114}
     - t: 13.094999
-      p: {x: -207.57602, y: 24.29068, z: -124.2793}
+      p: {x: -209.58989, y: 23.963228, z: -124.554756}
     - t: 13.344999
-      p: {x: -207.6817, y: 24.294031, z: -124.11973}
+      p: {x: -209.88045, y: 23.939959, z: -124.298386}
     - t: 13.594999
-      p: {x: -207.78683, y: 24.29691, z: -123.96096}
+      p: {x: -210.171, y: 23.917456, z: -124.04201}
     - t: 13.844999
-      p: {x: -207.89111, y: 24.298954, z: -123.803566}
+      p: {x: -210.46156, y: 23.896124, z: -123.78564}
+    - t: 14.094999
+      p: {x: -210.75137, y: 23.876017, z: -123.52992}
+    - t: 14.344999
+      p: {x: -211.03708, y: 23.856007, z: -123.27784}
+    - t: 14.594999
+      p: {x: -211.31133, y: 23.836672, z: -123.035866}
+    - t: 14.844999
+      p: {x: -211.45294, y: 23.82763, z: -122.91089}
+    - t: 15.094999
+      p: {x: -211.59311, y: 23.817154, z: -122.78722}
+    - t: 15.344999
+      p: {x: -211.7307, y: 23.806446, z: -122.66581}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -1013,13 +1086,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 14.02876
-    t1: 15.22876
+    t0: 15.383562
+    t1: 16.583563
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 14.02876
-      p: {x: -213.3206, y: 22.980251, z: -120.599144}
+    - t: 15.383562
+      p: {x: -217.65736, y: 22.326859, z: -121.11345}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1034,13 +1107,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.22876
-    t1: 18.72876
+    t0: 16.583563
+    t1: 20.083563
     tipo: 0
     descripcion: general de will
     posiciones:
-    - t: 15.22876
-      p: {x: -202.90024, y: 25.930882, z: -127.63643}
+    - t: 16.583563
+      p: {x: -223.423, y: 24.70293, z: -116.804}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -1048,7 +1121,7 @@ MonoBehaviour:
     pesos:
     - 1
     extras:
-    - {x: -212.6, y: 21.749569, z: -124.3}
+    - {x: -219.5, y: 21.491383, z: -126.2}
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 0.890497
     encuadre: {x: 0, y: 0}
@@ -1056,13 +1129,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 18.72876
-    t1: 31.563759
+    t0: 20.083563
+    t1: 32.918564
     tipo: 5
     descripcion: 'dos: will y sargento'
     posiciones:
-    - t: 18.72876
-      p: {x: -202.3415, y: 23.629261, z: -126.36824}
+    - t: 20.083563
+      p: {x: -224.00298, y: 23.411285, z: -138.62901}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1083,37 +1156,37 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294459056455822
+      rid: 6540294533431951780
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.22876
+    t: 16.583563
     beat:
-      rid: 6540294459056455823
-    linea: 50
+      rid: 6540294533431951781
+    linea: 52
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.22876
+    t: 17.583563
     beat:
-      rid: 6540294459056455824
-    linea: 53
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 17.22876
-    beat:
-      rid: 6540294459056455825
+      rid: 6540294533431951782
     linea: 55
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 29.863758
+    t: 18.583563
     beat:
-      rid: 6540294459056455826
-    linea: 67
+      rid: 6540294533431951783
+    linea: 57
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 31.563759
+    t: 31.218563
     beat:
-      rid: 6540294459056455827
+      rid: 6540294533431951784
+    linea: 69
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 32.918564
+    beat:
+      rid: 6540294533431951785
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -1121,12 +1194,14 @@ MonoBehaviour:
   - nombre: jaulas
     t: 7.845
   - nombre: sargento
-    t: 18.72876
+    t: 20.083563
   puntos:
   - nombre: claro
     posicion: {x: -215, y: 21.453735, z: -125}
   - nombre: jaulas
-    posicion: {x: -212.6, y: 21.749569, z: -124.3}
+    posicion: {x: -219.5, y: 21.491383, z: -126.2}
+  - nombre: junto_jaulas
+    posicion: {x: -216, y: 21.34933, z: -124.5}
   - nombre: p_will
     posicion: {x: -207.5, y: 22.043652, z: -132}
   - nombre: p_sargento
@@ -1138,12 +1213,12 @@ MonoBehaviour:
   - nombre: p_jefe
     posicion: {x: -215.5, y: 21.502022, z: -127.5}
   - nombre: p_c2
-    posicion: {x: -217.5, y: 21.39981, z: -125.5}
+    posicion: {x: -216.8, y: 21.811646, z: -129.8}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294459056455822
+    - rid: 6540294533431951780
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1151,7 +1226,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294459056455823
+    - rid: 6540294533431951781
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1164,7 +1239,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294459056455824
+    - rid: 6540294533431951782
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1177,7 +1252,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294459056455825
+    - rid: 6540294533431951783
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1190,7 +1265,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294459056455826
+    - rid: 6540294533431951784
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1198,7 +1273,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.2
         waitForEnd: 0
-    - rid: 6540294459056455827
+    - rid: 6540294533431951785
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

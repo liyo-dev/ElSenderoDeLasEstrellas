@@ -22,8 +22,15 @@ namespace Game.NPC.States
             IrAEntregar,
             Entregar,
             Pausa,
-            IrAPuestoFinal
+            IrAPuestoFinal,
+            IrAFaena,
+            EmpezarFaena,
+            Faena,
+            AcabarFaena
         }
+
+        // Lo que tardan en verse los gestos de ponerse y levantarse de la faena.
+        private const float SegundosDeGestoDeFaena = 0.9f;
 
         private readonly NPCWorkRoute _ruta;
 
@@ -36,6 +43,9 @@ namespace Game.NPC.States
         private bool _ocupada;
         private float _velocidad;
         private float _stoppingDistanceOriginal = -1f;
+        private Transform _puntoDeFaena;
+        private float _duracionDeFaena;
+        private int _faenasHechas;
 
         public WorkState(NPCWorkRoute ruta)
         {
@@ -78,7 +88,8 @@ namespace Game.NPC.States
                 context.Agent.speed = Mathf.Max(0.1f, _velocidad);
             }
 
-            IrARecoger(context);
+            if (_ruta.EsFaenaEnElSitio) IrAFaena(context);
+            else IrARecoger(context);
         }
 
         public override void OnUpdate(NPCStateContext context)
@@ -130,6 +141,38 @@ namespace Game.NPC.States
                     UpdateMovementAnimation(context);
                     if (HaLlegado(context, _ruta.puntoAlTerminar)) LlegarAPuestoFinal(context);
                     break;
+
+                case Fase.IrAFaena:
+                    ComprobarAtasco(context);
+                    UpdateMovementAnimation(context);
+                    if (HaLlegado(context, _puntoDeFaena)) LlegarAFaena(context);
+                    break;
+
+                case Fase.EmpezarFaena:
+                    _temporizador += Time.deltaTime;
+                    if (_temporizador >= SegundosDeGestoDeFaena)
+                    {
+                        if (!string.IsNullOrEmpty(_ruta.animacionFaena)) context.Animator?.HoldPose(_ruta.animacionFaena, fundido: 0.25f);
+                        _temporizador = 0f;
+                        _fase = Fase.Faena;
+                    }
+                    break;
+
+                case Fase.Faena:
+                    _temporizador += Time.deltaTime;
+                    if (_temporizador >= _duracionDeFaena)
+                    {
+                        context.Animator?.ReleasePose(false);
+                        if (!string.IsNullOrEmpty(_ruta.animacionFaenaAcabar)) context.Animator?.PlaySocialGesture(_ruta.animacionFaenaAcabar);
+                        _temporizador = 0f;
+                        _fase = Fase.AcabarFaena;
+                    }
+                    break;
+
+                case Fase.AcabarFaena:
+                    _temporizador += Time.deltaTime;
+                    if (_temporizador >= SegundosDeGestoDeFaena) TrasLaFaena(context);
+                    break;
             }
         }
 
@@ -156,7 +199,7 @@ namespace Game.NPC.States
             if (_ruta == null || !_ruta.isActiveAndEnabled || !_ruta.EstaDisponible())
                 return new IdleState();
 
-            if (_fase == Fase.IrARecoger || _fase == Fase.IrAEntregar || _fase == Fase.IrAPuestoFinal)
+            if (_fase == Fase.IrARecoger || _fase == Fase.IrAEntregar || _fase == Fase.IrAPuestoFinal || _fase == Fase.IrAFaena)
             {
                 if (IsPathBlocked(context)) return new IdleState();
                 if (_tiempoSinProgreso > 3f) return new IdleState();
@@ -177,6 +220,8 @@ namespace Game.NPC.States
             _ocupada = false;
 
             SoltarPoseDeCarga(context);
+            if (_fase == Fase.EmpezarFaena || _fase == Fase.Faena || _fase == Fase.AcabarFaena)
+                context.Animator?.ReleasePose(false);
 
             if (context.Agent != null && _stoppingDistanceOriginal >= 0f)
             {
@@ -277,6 +322,12 @@ namespace Game.NPC.States
 
         private void EmpezarSiguienteViaje(NPCStateContext context)
         {
+            if (_ruta.EsFaenaEnElSitio)
+            {
+                IrAFaena(context);
+                return;
+            }
+
             _ruta.SiguienteViaje();
 
             if (_ruta.EstaTerminada || !_ruta.QuedanCajas)
@@ -292,6 +343,46 @@ namespace Game.NPC.States
             }
 
             IrARecoger(context);
+        }
+
+        // ── Faena en el sitio ────────────────────────────────────────────────────────
+
+        private void IrAFaena(NPCStateContext context)
+        {
+            _puntoDeFaena = _ruta.SiguientePuntoDeFaena();
+            _fase = Fase.IrAFaena;
+            _temporizador = 0f;
+            _tiempoSinProgreso = 0f;
+            _ultimaPosicion = context.Transform.position;
+            IrA(context, _puntoDeFaena);
+        }
+
+        private void LlegarAFaena(NPCStateContext context)
+        {
+            StopMovement(context);
+            MirarA(context, _puntoDeFaena);
+            if (!string.IsNullOrEmpty(_ruta.animacionFaenaEmpezar))
+                context.Animator?.PlaySocialGesture(_ruta.animacionFaenaEmpezar);
+            _duracionDeFaena = Random.Range(Mathf.Min(_ruta.segundosDeFaena.x, _ruta.segundosDeFaena.y),
+                Mathf.Max(_ruta.segundosDeFaena.x, _ruta.segundosDeFaena.y));
+            _temporizador = 0f;
+            _fase = Fase.EmpezarFaena;
+        }
+
+        private void TrasLaFaena(NPCStateContext context)
+        {
+            _faenasHechas++;
+            if (_ruta.faenasAntesDeEntregar > 0 && _faenasHechas >= _ruta.faenasAntesDeEntregar && _ruta.puntoEntrega != null)
+            {
+                _faenasHechas = 0;
+                _fase = Fase.IrAEntregar;
+                _temporizador = 0f;
+                _tiempoSinProgreso = 0f;
+                _ultimaPosicion = context.Transform.position;
+                IrA(context, _ruta.puntoEntrega);
+                return;
+            }
+            IrAFaena(context);
         }
 
         private void IrAPuestoFinal(NPCStateContext context)

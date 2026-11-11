@@ -663,7 +663,7 @@ public class PropMoveBeat : SequenceBeat
                 ? Quaternion.Euler(deltaRotacion) * poseSeguir
                 : Quaternion.Euler(deltaRotacion) * t.rotation;
             yield return SeguirA(t, quien.Transform, seguirOffset, giroHastaSeguir, Mathf.Max(0.01f, segundos),
-                apoyarEnElSuelo ? PiezasDelCuerpo(t) : null);
+                apoyarEnElSuelo ? PiezasDelCuerpo(t) : null, NuevoTurno(t));
             yield break;
         }
 
@@ -687,7 +687,7 @@ public class PropMoveBeat : SequenceBeat
         if (apoyarEnElSuelo) hasta = ApoyarEnElSuelo(t, hasta, giroHasta);
 
         IEnumerator rutina = MoverA(t, hasta, giroHasta, Mathf.Max(0f, segundos), suavizar,
-            apoyarEnElSuelo ? PiezasDelCuerpo(t) : null);
+            apoyarEnElSuelo ? PiezasDelCuerpo(t) : null, NuevoTurno(t));
 
         if (esperar) yield return ctx.Player.StartCoroutine(rutina);
         else ctx.Player.StartCoroutine(rutina);
@@ -800,13 +800,13 @@ public class PropMoveBeat : SequenceBeat
     /// Mueve el objeto pegado al actor: cada fotograma se coloca en su posición más el
     /// desplazamiento. Es lo que convierte «la carreta va sola» en «la carreta va empujada».
     private static IEnumerator SeguirA(Transform t, Transform quien, Vector3 offset,
-        Quaternion giroHasta, float duracion, List<Renderer> cuerpo)
+        Quaternion giroHasta, float duracion, List<Renderer> cuerpo, int turno)
     {
         Quaternion giroDesde = t.rotation;
         float pasado = 0f;
         while (pasado < duracion)
         {
-            if (t == null || quien == null) yield break;
+            if (t == null || quien == null || !EsSuTurno(t, turno)) yield break;
             pasado += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(pasado / duracion);
             t.position = quien.position + offset;
@@ -823,7 +823,7 @@ public class PropMoveBeat : SequenceBeat
     }
 
     private static IEnumerator MoverA(Transform t, Vector3 hasta, Quaternion giroHasta,
-        float duracion, bool suave, List<Renderer> cuerpo)
+        float duracion, bool suave, List<Renderer> cuerpo, int turno)
     {
         Vector3 desde = t.position;
         Quaternion giroDesde = t.rotation;
@@ -839,6 +839,7 @@ public class PropMoveBeat : SequenceBeat
         {
             // Sin escalar: un beat de cámara lenta no tiene por qué frenar también el decorado,
             // y cuando sí hace falta ya está el TimeScaleBeat delante.
+            if (t == null || !EsSuTurno(t, turno)) yield break;
             pasado += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(pasado / duracion);
             if (suave) k = k * k * (3f - 2f * k);
@@ -848,6 +849,43 @@ public class PropMoveBeat : SequenceBeat
             yield return null;
         }
 
+        if (t != null && EsSuTurno(t, turno)) t.SetPositionAndRotation(hasta, giroHasta);
+    }
+
+    // Un objeto solo obedece a su último movimiento: si un beat lo mueve mientras otro anterior
+    // sigue de fondo (esperar = false), el anterior se para. Sin esto los dos escribían a la vez y
+    // ganaba el que acabase más tarde: la cuchara de Lucía se quedaba en el aire (INC-1032).
+    private static readonly Dictionary<Transform, int> s_turnos = new();
+    private static int s_ultimoTurno;
+
+    private static int NuevoTurno(Transform t)
+    {
+        int turno = ++s_ultimoTurno;
+        s_turnos[t] = turno;
+        return turno;
+    }
+
+    private static bool EsSuTurno(Transform t, int turno) => s_turnos.TryGetValue(t, out int actual) && actual == turno;
+
+    /// Saltada la secuencia, el objeto queda donde acaba este movimiento si cuenta desde su pose
+    /// inicial (un sitio absoluto); los relativos a donde esté no se pueden recomponer sin verlos.
+    public override void CumplirAlSaltar(SequenceContext ctx)
+    {
+        if (!desdeDondeEstaba || !string.IsNullOrWhiteSpace(seguirActorId)) return;
+        var t = ctx.GetActor(propId)?.Transform;
+        if (t == null || !ctx.TryGetPoseInicial(propId, out Vector3 sitio, out Quaternion pose)) return;
+        Destino(sitio, pose, out var hasta, out var giroHasta);
+        if (apoyarEnElSuelo) hasta = ApoyarEnElSuelo(t, hasta, giroHasta);
+        NuevoTurno(t);
         t.SetPositionAndRotation(hasta, giroHasta);
     }
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ReiniciarEstaticos()
+    {
+        s_turnos.Clear();
+        s_ultimoTurno = 0;
+    }
+#endif
 }

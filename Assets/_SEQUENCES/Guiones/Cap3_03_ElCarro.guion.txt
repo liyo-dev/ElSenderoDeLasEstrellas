@@ -1,4 +1,7 @@
-# Cap. 3 · De noche, junto al fuego, pasa un contrabandista con jaulas tapadas. Por la manta sale una luz que respira.
+# Cap. 3 · De noche, junto al fuego, pasa el carro del que habló el posadero: un contrabandista tira de él, con la
+# carga tapada con paja, y de ella sale una luz que sube y baja despacio, como si respirara (INC-1036).
+# El carro (PROP_Carro) va detrás del contrabandista solo (CargaArrastrada): no hay que moverlo en el guion,
+# y los planos encuadran al contrabandista (el carro solo existe en juego, no en el horneado).
 GUION Cap3_03_ElCarro
 ESCENA MainWorld
 ZONA Cap3Carro -104 -214 28
@@ -28,16 +31,25 @@ HILO
 will en p_will mirando fuego
 & c1 en c1_a mirando c1_c
 plano medio will desde=cam_will altura=1.6
-espera 1.2
+espera 1.0
 will mira c1_a
-will dice CAP3_CARRO_01 cara=sorpresa
+& will cara sorpresa
+espera 0.6
+will dice CAP3_CARRO_01 cara=decidido
+
+@llega
+# El carro entra en plano por el camino: se ve quién tira de él y la carga tapada.
 c1 anda a c1_b, c1_c ritmo=paseo sin_esperar
-plano conjunto will c1 desde=cam_camino altura=3.2
-espera 1.6
-vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow.prefab" en=c1 lifetime=2.5
+plano conjunto c1 desde=cam_camino altura=2.4
+espera 3.5
 will mira c1
+# El carro va detrás de él (CargaArrastrada): encuadrando al que tira, entra la carga con su luz.
+plano medio c1 altura=1.5 lente=30
+espera 1.2
 will dice CAP3_CARRO_02 cara=pensativo
-espera 2.5
+espera 1.0
+
+@decide
 plano primer will
 will dice CAP3_CARRO_03 cara=decidido
 espera 0.5

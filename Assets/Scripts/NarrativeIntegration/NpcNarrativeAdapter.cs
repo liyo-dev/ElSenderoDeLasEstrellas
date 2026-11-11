@@ -100,7 +100,9 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         {
             var npc = BuscarSinAviso(actorId);
             if (npc == null) return true;
-            if (CercaDelJugador(npc.transform.position)) return false;
+            // Un actor que ya no se ve (una escena lo ha hecho desaparecer) se puede retirar aunque
+            // el jugador esté al lado: nadie le ve irse (INC-1031).
+            if (CercaDelJugador(npc.transform.position) && SeVe(npc)) return false;
             _retirados[actorId] = npc.gameObject;
             npc.gameObject.SetActive(false);
             return true;
@@ -145,6 +147,13 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
     static NPCBehaviourManagerV2 BuscarSinAviso(string actorId) =>
         !string.IsNullOrEmpty(actorId) && NPCRegistry.HasInstance && NPCRegistry.Instance.TryGetNPCByID(actorId, out var npc) && npc.isActiveAndEnabled
             ? npc : null;
+
+    static bool SeVe(NPCBehaviourManagerV2 npc)
+    {
+        foreach (var r in npc.GetComponentsInChildren<Renderer>(false))
+            if (r.enabled && !r.forceRenderingOff) return true;
+        return false;
+    }
 
     static bool CercaDelJugador(Vector3 posicion) =>
         PlayerService.TryGetPlayer(out GameObject jugador) && jugador != null

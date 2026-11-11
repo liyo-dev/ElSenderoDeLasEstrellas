@@ -29,7 +29,8 @@ public static partial class Partida
             if (npc == null) continue;
             string id = npc.gameObject.name;
             if (!string.IsNullOrEmpty(id)) porNombre[id] = npc;
-            if (!npc.persistLastPosition) continue;
+            // Los sentados fijos no se mueven: su sitio es su punto de salida (INC-1028).
+            if (!npc.persistLastPosition || npc.SentadoFijo) continue;
 
             var pos = npc.lastPosition != default ? npc.lastPosition : npc.transform.position;
             if (pos == default) continue;
@@ -75,6 +76,11 @@ public static partial class Partida
         foreach (var npc in npcs)
         {
             if (npc == null || !mapa.TryGetValue(npc.gameObject.name, out var e) || e.position == default) continue;
+            if (npc.SentadoFijo)
+            {
+                if (e.hasActiveState) npc.gameObject.SetActive(e.isActive);
+                continue;
+            }
 
             // Una posición guardada en mal momento (un NPC levitado, en el aire) se baja al suelo.
             Vector3 destino;

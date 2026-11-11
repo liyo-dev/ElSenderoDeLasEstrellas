@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap3_02_LaPosada_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_02_LaPosada
-  duracion: 64.59804
+  duracion: 66.25449
   presentacion: 0
-  huella: "2026-11-10 21:59 \xB7 15c0591cd8f42caeb4ca06784dfe5c4b"
+  huella: "2026-11-11 00:52 \xB7 fe16b4d7934771356912b7793b34fa96"
   actores:
   - id: Player
     alias: will
@@ -102,37 +102,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 36.263462
+    - t: 36.75302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 39.103462
+    - t: 39.59302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 41.123463
+    - t: 42.31302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 42.173462
+    - t: 43.363018
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 45.338463
+    - t: 46.52802
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 47.853462
+    - t: 49.04302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Posadero
-    - t: 56.170372
+    - t: 57.82683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -173,32 +173,32 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Posadero
-    - t: 36.213463
+    - t: 36.703022
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 39.053463
+    - t: 39.543022
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 41.073463
+    - t: 42.26302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 42.173462
+    - t: 43.363018
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 45.288464
+    - t: 46.47802
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Lucia
-    - t: 56.120373
+    - t: 57.776833
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -303,56 +303,56 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.81346
+      t: 37.30302
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 41.45346
+      t: 42.643017
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 42.173462
+      t: 43.363018
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 42.253464
+      t: 43.44302
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 44.888462
+      t: 46.07802
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 45.888462
+      t: 47.07802
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 56.72037
+      t: 58.37683
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 62.45537
+      t: 64.11183
       tipo: 2
       estado: HeadNod01
       congelar: 0
@@ -377,16 +377,16 @@ MonoBehaviour:
     - t: 22.161564
       emocion: confuso
       dura: 4.365
-    - t: 36.71346
+    - t: 37.20302
       emocion: sorpresa
       dura: 2
-    - t: 42.173462
+    - t: 43.363018
       emocion: alegre
       dura: 3.065
-    - t: 45.78846
+    - t: 46.978016
       emocion: sorpresa
       dura: 2
-    - t: 62.45537
+    - t: 64.11183
       emocion: alegre
       dura: 0
     visible: []
@@ -400,137 +400,149 @@ MonoBehaviour:
       p: {x: 280.5, y: 5.003662, z: -428.5}
     - t: 27.946564
       p: {x: 280.5, y: 5.003662, z: -428.5}
-    - t: 28.151525
-      p: {x: 280.57214, y: 5.003662, z: -428.37048}
-    - t: 28.47274
-      p: {x: 280.7164, y: 5.003662, z: -428.11148}
-    - t: 28.742947
-      p: {x: 280.86066, y: 5.003662, z: -427.85245}
-    - t: 29.000744
-      p: {x: 281.0049, y: 5.988233, z: -427.59344}
-    - t: 29.25854
-      p: {x: 281.14917, y: 5.003662, z: -427.33444}
-    - t: 29.51636
-      p: {x: 281.29343, y: 5.003662, z: -427.0754}
-    - t: 29.774168
-      p: {x: 281.4377, y: 5.003662, z: -426.8164}
-    - t: 30.031988
-      p: {x: 281.58197, y: 5.003662, z: -426.55737}
-    - t: 30.289785
-      p: {x: 281.72623, y: 5.003662, z: -426.29837}
-    - t: 30.547606
-      p: {x: 281.87048, y: 5.003662, z: -426.03934}
-    - t: 30.805403
-      p: {x: 282.01474, y: 5.003662, z: -425.78033}
-    - t: 31.063234
-      p: {x: 282.15903, y: 5.003662, z: -425.5213}
-    - t: 31.32103
-      p: {x: 282.30328, y: 5.003662, z: -425.2623}
-    - t: 31.578827
-      p: {x: 282.44754, y: 5.003662, z: -425.0033}
-    - t: 31.836647
-      p: {x: 282.5918, y: 5.003662, z: -424.74426}
-    - t: 32.094444
-      p: {x: 282.73605, y: 5.003662, z: -424.48526}
-    - t: 32.352264
-      p: {x: 282.8803, y: 5.003662, z: -424.22623}
-    - t: 32.610077
-      p: {x: 283.0246, y: 5.003662, z: -423.96722}
-    - t: 32.867897
-      p: {x: 283.16885, y: 5.003662, z: -423.7082}
-    - t: 33.125694
-      p: {x: 283.3131, y: 5.003662, z: -423.4492}
-    - t: 33.383514
-      p: {x: 283.45737, y: 5.003662, z: -423.19016}
-    - t: 33.64131
-      p: {x: 283.60162, y: 5.003662, z: -422.93115}
-    - t: 33.899124
-      p: {x: 283.7459, y: 5.003662, z: -422.67215}
-    - t: 34.156944
-      p: {x: 283.89017, y: 5.003662, z: -422.41312}
-    - t: 34.41474
-      p: {x: 284.03442, y: 5.003662, z: -422.1541}
-    - t: 34.67256
-      p: {x: 284.17868, y: 5.003662, z: -421.89508}
-    - t: 34.93036
-      p: {x: 284.32294, y: 8.602204, z: -421.63608}
-    - t: 35.18818
-      p: {x: 284.4672, y: 8.737999, z: -421.37704}
-    - t: 35.4477
-      p: {x: 284.61148, y: 8.873793, z: -421.11804}
-    - t: 35.738914
-      p: {x: 284.75574, y: 9.009587, z: -420.859}
-    - t: 36.11346
-      p: {x: 284.9, y: 9.145381, z: -420.6}
-    - t: 47.853462
-      p: {x: 284.9, y: 9.145381, z: -420.6}
-    - t: 48.058422
-      p: {x: 284.82785, y: 9.077484, z: -420.72952}
-    - t: 48.37964
-      p: {x: 284.6836, y: 8.9416895, z: -420.98853}
-    - t: 48.649845
-      p: {x: 284.53934, y: 8.805896, z: -421.24756}
-    - t: 48.907642
-      p: {x: 284.39508, y: 8.670102, z: -421.50656}
-    - t: 49.16544
-      p: {x: 284.25082, y: 8.5343075, z: -421.76556}
-    - t: 49.42326
-      p: {x: 284.10657, y: 5.003662, z: -422.0246}
-    - t: 49.681072
-      p: {x: 283.96228, y: 5.003662, z: -422.2836}
-    - t: 49.938892
-      p: {x: 283.81802, y: 5.003662, z: -422.54263}
-    - t: 50.19669
-      p: {x: 283.67377, y: 5.003662, z: -422.80164}
-    - t: 50.45451
-      p: {x: 283.5295, y: 5.003662, z: -423.06067}
-    - t: 50.712307
-      p: {x: 283.38525, y: 5.003662, z: -423.31967}
-    - t: 50.970142
-      p: {x: 283.24097, y: 5.003662, z: -423.5787}
-    - t: 51.22794
-      p: {x: 283.0967, y: 5.003662, z: -423.8377}
-    - t: 51.485737
-      p: {x: 282.95245, y: 5.003662, z: -424.0967}
-    - t: 51.743557
-      p: {x: 282.8082, y: 5.003662, z: -424.35574}
-    - t: 52.001354
-      p: {x: 282.66394, y: 5.003662, z: -424.61475}
-    - t: 52.259174
-      p: {x: 282.51968, y: 5.003662, z: -424.87378}
-    - t: 52.516987
-      p: {x: 282.3754, y: 5.003662, z: -425.13278}
-    - t: 52.774807
-      p: {x: 282.23114, y: 5.003662, z: -425.3918}
-    - t: 53.032604
-      p: {x: 282.08688, y: 5.003662, z: -425.65082}
-    - t: 53.290424
-      p: {x: 281.94263, y: 5.003662, z: -425.90985}
-    - t: 53.54822
-      p: {x: 281.79837, y: 5.003662, z: -426.16885}
-    - t: 53.806034
-      p: {x: 281.65408, y: 5.003662, z: -426.42786}
-    - t: 54.063854
-      p: {x: 281.50983, y: 5.003662, z: -426.6869}
-    - t: 54.32165
-      p: {x: 281.36557, y: 5.003662, z: -426.9459}
-    - t: 54.57947
-      p: {x: 281.2213, y: 5.003662, z: -427.20493}
-    - t: 54.83727
-      p: {x: 281.07706, y: 5.988233, z: -427.46393}
-    - t: 55.09509
-      p: {x: 280.9328, y: 5.7349524, z: -427.72296}
-    - t: 55.35461
-      p: {x: 280.7885, y: 5.003662, z: -427.98196}
-    - t: 55.645824
-      p: {x: 280.64426, y: 5.003662, z: -428.241}
-    - t: 56.02037
+    - t: 28.29782
+      p: {x: 280.7741, y: 5.003662, z: -428.48633}
+    - t: 28.572485
+      p: {x: 281.04822, y: 5.003662, z: -428.47266}
+    - t: 28.77367
+      p: {x: 281.27393, y: 5.003662, z: -428.45435}
+    - t: 28.995785
+      p: {x: 281.52087, y: 5.003662, z: -428.39276}
+    - t: 29.203428
+      p: {x: 281.72003, y: 5.003662, z: -428.26312}
+    - t: 29.417032
+      p: {x: 281.88104, y: 5.003662, z: -428.07904}
+    - t: 29.702171
+      p: {x: 282.02054, y: 5.003662, z: -427.78256}
+    - t: 29.961502
+      p: {x: 282.1358, y: 5.003662, z: -427.5075}
+    - t: 30.220833
+      p: {x: 282.25107, y: 5.003662, z: -427.23245}
+    - t: 30.480164
+      p: {x: 282.36633, y: 5.003662, z: -426.9574}
+    - t: 30.73947
+      p: {x: 282.4816, y: 5.003662, z: -426.68237}
+    - t: 30.9988
+      p: {x: 282.59686, y: 5.003662, z: -426.40732}
+    - t: 31.258131
+      p: {x: 282.71213, y: 5.003662, z: -426.13226}
+    - t: 31.517462
+      p: {x: 282.8274, y: 5.003662, z: -425.8572}
+    - t: 31.776758
+      p: {x: 282.94263, y: 5.003662, z: -425.58218}
+    - t: 32.036087
+      p: {x: 283.0579, y: 5.003662, z: -425.30713}
+    - t: 32.295418
+      p: {x: 283.17316, y: 5.003662, z: -425.03207}
+    - t: 32.55475
+      p: {x: 283.28842, y: 5.003662, z: -424.75702}
+    - t: 32.814053
+      p: {x: 283.4037, y: 5.003662, z: -424.482}
+    - t: 33.073383
+      p: {x: 283.51895, y: 5.003662, z: -424.20694}
+    - t: 33.332714
+      p: {x: 283.63422, y: 5.003662, z: -423.9319}
+    - t: 33.592045
+      p: {x: 283.74948, y: 5.003662, z: -423.65683}
+    - t: 33.851376
+      p: {x: 283.86475, y: 5.003662, z: -423.38177}
+    - t: 34.11067
+      p: {x: 283.97998, y: 5.003662, z: -423.10675}
+    - t: 34.37
+      p: {x: 284.09525, y: 5.003662, z: -422.8317}
+    - t: 34.62933
+      p: {x: 284.2105, y: 5.003662, z: -422.55664}
+    - t: 34.88866
+      p: {x: 284.32578, y: 5.003662, z: -422.2816}
+    - t: 35.147964
+      p: {x: 284.44104, y: 5.003662, z: -422.00656}
+    - t: 35.407295
+      p: {x: 284.5563, y: 5.003662, z: -421.7315}
+    - t: 35.666626
+      p: {x: 284.67157, y: 5.003662, z: -421.45645}
+    - t: 35.927265
+      p: {x: 284.78683, y: 5.003662, z: -421.1814}
+    - t: 36.16052
+      p: {x: 284.87482, y: 5.003662, z: -420.95587}
+    - t: 36.36587
+      p: {x: 284.89944, y: 5.003662, z: -420.77252}
+    - t: 36.60302
+      p: {x: 284.9, y: 5.003662, z: -420.6}
+    - t: 49.04302
+      p: {x: 284.9, y: 5.003662, z: -420.6}
+    - t: 49.248646
+      p: {x: 284.84445, y: 5.003662, z: -420.73807}
+    - t: 49.57086
+      p: {x: 284.73334, y: 5.003662, z: -421.0142}
+    - t: 49.84181
+      p: {x: 284.62222, y: 5.003662, z: -421.29028}
+    - t: 50.100628
+      p: {x: 284.5111, y: 5.003662, z: -421.5664}
+    - t: 50.359447
+      p: {x: 284.4, y: 5.003662, z: -421.84253}
+    - t: 50.618267
+      p: {x: 284.28888, y: 5.003662, z: -422.11865}
+    - t: 50.877064
+      p: {x: 284.17776, y: 5.003662, z: -422.39474}
+    - t: 51.135883
+      p: {x: 284.06665, y: 5.003662, z: -422.67087}
+    - t: 51.394703
+      p: {x: 283.95554, y: 5.003662, z: -422.947}
+    - t: 51.6535
+      p: {x: 283.84442, y: 5.003662, z: -423.22308}
+    - t: 51.91232
+      p: {x: 283.7333, y: 5.003662, z: -423.4992}
+    - t: 52.17114
+      p: {x: 283.6222, y: 5.003662, z: -423.77533}
+    - t: 52.42996
+      p: {x: 283.51108, y: 5.003662, z: -424.05145}
+    - t: 52.688755
+      p: {x: 283.39996, y: 5.003662, z: -424.32755}
+    - t: 52.947575
+      p: {x: 283.28885, y: 5.003662, z: -424.60367}
+    - t: 53.206394
+      p: {x: 283.17773, y: 5.003662, z: -424.8798}
+    - t: 53.465214
+      p: {x: 283.06662, y: 5.003662, z: -425.1559}
+    - t: 53.72401
+      p: {x: 282.9555, y: 5.003662, z: -425.432}
+    - t: 53.982822
+      p: {x: 282.84442, y: 5.003662, z: -425.70813}
+    - t: 54.241642
+      p: {x: 282.7333, y: 5.003662, z: -425.98425}
+    - t: 54.50046
+      p: {x: 282.6222, y: 5.003662, z: -426.26038}
+    - t: 54.75926
+      p: {x: 282.51108, y: 5.003662, z: -426.53647}
+    - t: 55.018078
+      p: {x: 282.39996, y: 5.003662, z: -426.8126}
+    - t: 55.276897
+      p: {x: 282.28885, y: 5.003662, z: -427.0887}
+    - t: 55.535717
+      p: {x: 282.17773, y: 5.003662, z: -427.36484}
+    - t: 55.794514
+      p: {x: 282.06662, y: 5.003662, z: -427.64093}
+    - t: 56.053333
+      p: {x: 281.9555, y: 5.003662, z: -427.91705}
+    - t: 56.280594
+      p: {x: 281.82632, y: 5.003662, z: -428.1432}
+    - t: 56.490387
+      p: {x: 281.65817, y: 5.003662, z: -428.31464}
+    - t: 56.700184
+      p: {x: 281.44122, y: 5.003662, z: -428.4176}
+    - t: 56.927456
+      p: {x: 281.18527, y: 5.003662, z: -428.46582}
+    - t: 57.182674
+      p: {x: 280.91116, y: 5.003662, z: -428.4795}
+    - t: 57.485046
+      p: {x: 280.63705, y: 5.003662, z: -428.49316}
+    - t: 57.67683
       p: {x: 280.5, y: 5.003662, z: -428.5}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 279, y: 5.8478436, z: -427}
+      punto: {x: 279, y: 5.003662, z: -427}
       actor: 
     - t: 6.7415643
       tipo: 2
@@ -552,7 +564,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 56.02037
+    - t: 39.71302
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 42.433018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 46.648018
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 57.67683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -593,7 +620,22 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 56.02037
+    - t: 39.66302
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 42.38302
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 46.59802
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Lucia
+    - t: 57.67683
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -712,28 +754,42 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 56.02037
+      t: 40.14302
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 47.07802
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 57.67683
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 56.100372
+      t: 57.756832
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 58.567036
+      t: 60.223495
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 62.50537
+      t: 64.161835
       tipo: 4
       estado: 
       congelar: 0
@@ -761,7 +817,10 @@ MonoBehaviour:
     - t: 26.126564
       emocion: alegre
       dura: 2.22
-    - t: 56.02037
+    - t: 46.978016
+      emocion: sorpresa
+      dura: 2
+    - t: 57.67683
       emocion: alegre
       dura: 6.835
     visible: []
@@ -819,17 +878,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Posadero
-    - t: 36.11346
+    - t: 36.60302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 38.45346
+    - t: 38.94302
       tipo: 1
       rumbo: 0
       punto: {x: 277.15, y: 5.333415, z: -429.62}
       actor: 
-    - t: 42.323463
+    - t: 43.51302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -870,27 +929,27 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Posadero
-    - t: 36.11346
+    - t: 36.60302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 39.00346
+    - t: 39.49302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 41.02346
+    - t: 42.213017
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 42.273464
+    - t: 43.46302
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 45.23846
+    - t: 46.428017
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -939,63 +998,63 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.11346
+      t: 36.60302
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.193462
+      t: 36.68302
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 38.45346
+      t: 38.94302
       tipo: 2
       estado: CastingEnter01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 38.50346
+      t: 38.99302
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 38.95346
+      t: 39.44302
       tipo: 1
       estado: CastingIdle01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 40.77346
+      t: 41.963017
       tipo: 2
       estado: CastingExit01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 41.053463
+      t: 42.24302
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 42.873463
+      t: 44.06302
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 45.268463
+      t: 46.45802
       tipo: 2
       estado: Cheer01
       congelar: 0
@@ -1014,22 +1073,22 @@ MonoBehaviour:
     - t: 22.761564
       emocion: sorpresa
       dura: 2
-    - t: 36.11346
+    - t: 36.60302
       emocion: alegre
       dura: 2.74
-    - t: 38.45346
+    - t: 38.94302
       emocion: decidido
       dura: 0
-    - t: 38.95346
+    - t: 39.44302
       emocion: decidido
       dura: 2.22
-    - t: 40.97346
+    - t: 42.163017
       emocion: triste
       dura: 1.6
-    - t: 42.77346
+    - t: 43.963017
       emocion: sorpresa
       dura: 2
-    - t: 45.18846
+    - t: 46.378017
       emocion: alegre
       dura: 3.065
     visible: []
@@ -1100,8 +1159,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 36.11346
-    t1: 38.45346
+    t0: 36.60302
+    t1: 38.94302
     actor: NPC_Lucia
     clave: CAP3_POSADA_08
     gesto: Talk02
@@ -1109,8 +1168,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 38.95346
-    t1: 40.77346
+    t0: 39.44302
+    t1: 41.26302
     actor: NPC_Lucia
     clave: CAP3_POSADA_09
     gesto: 
@@ -1118,8 +1177,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 40.97346
-    t1: 42.173462
+    t0: 42.163017
+    t1: 43.363018
     actor: NPC_Lucia
     clave: CAP3_POSADA_10
     gesto: HeadShake01
@@ -1127,8 +1186,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 42.173462
-    t1: 44.838463
+    t0: 43.363018
+    t1: 46.02802
     actor: Player
     clave: CAP3_POSADA_11
     gesto: Talk01
@@ -1136,8 +1195,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 45.18846
-    t1: 47.853462
+    t0: 46.378017
+    t1: 49.04302
     actor: NPC_Lucia
     clave: CAP3_POSADA_13
     gesto: Cheer01
@@ -1145,8 +1204,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 56.02037
-    t1: 62.45537
+    t0: 57.67683
+    t1: 64.11183
     actor: NPC_Posadero
     clave: CAP3_POSADA_12
     gesto: Talk01
@@ -1266,12 +1325,12 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 19.221563
-    t1: 36.11346
+    t1: 27.946564
     tipo: 1
     descripcion: conjunto de will y posadero y lucia
     posiciones:
     - t: 19.221563
-      p: {x: 281.72006, y: 6.903662, z: -432.20425}
+      p: {x: 282.13754, y: 6.903662, z: -432.8357}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -1290,13 +1349,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 36.11346
-    t1: 38.95346
+    t0: 27.946564
+    t1: 39.44302
     tipo: 5
     descripcion: 'dos: will y lucia'
     posiciones:
-    - t: 36.11346
-      p: {x: 277.5882, y: 5.734561, z: -431.9536}
+    - t: 27.946564
+      p: {x: 278.67517, y: 5.734561, z: -431.9609}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1313,33 +1372,33 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 38.95346
-    t1: 40.97346
+    t0: 39.44302
+    t1: 42.163017
     tipo: 4
-    descripcion: detalle de lucia
+    descripcion: detalle de el punto
     posiciones:
-    - t: 38.95346
-      p: {x: 277.85, y: 5.8036623, z: -430.75}
-    lente: 36
+    - t: 39.44302
+      p: {x: 278, y: 5.853662, z: -431.1}
+    lente: 40
     lenteFinal: 0
     sujetos:
-    - NPC_Lucia
+    - PROP_Cuchara
     pesos:
     - 1
     extras: []
-    focoFijo: {x: 277.15, y: 5.344392, z: -429.62}
-    alturaDelFoco: 0.8323377
-    encuadre: {x: 0.09, y: -0.1}
+    focoFijo: {x: 277.15, y: 5.3465266, z: -429.62}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: -0.1}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 40.97346
-    t1: 42.173462
+    t0: 42.163017
+    t1: 43.363018
     tipo: 2
     descripcion: medio de lucia
     posiciones:
-    - t: 40.97346
+    - t: 42.163017
       p: {x: 275.73575, y: 5.5969872, z: -431.1076}
     lente: 30
     lenteFinal: 0
@@ -1355,12 +1414,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 42.173462
-    t1: 56.02037
+    t0: 43.363018
+    t1: 57.67683
     tipo: 5
     descripcion: 'dos: will y lucia'
     posiciones:
-    - t: 42.173462
+    - t: 43.363018
       p: {x: 277.5882, y: 5.734561, z: -431.9536}
     lente: 32
     lenteFinal: 0
@@ -1378,12 +1437,12 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 56.02037
-    t1: 64.59804
+    t0: 57.67683
+    t1: 66.25449
     tipo: 5
     descripcion: 'dos: will y posadero'
     posiciones:
-    - t: 56.02037
+    - t: 57.67683
       p: {x: 281.18915, y: 5.9093423, z: -431.3486}
     lente: 32
     lenteFinal: 0
@@ -1405,80 +1464,86 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294530920087845
+      rid: 6540294533431951810
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294530920087846
+      rid: 6540294533431951811
     linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 19.221563
     beat:
-      rid: 6540294530920087847
+      rid: 6540294533431951812
     linea: 59
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.126564
     beat:
-      rid: 6540294530920087848
+      rid: 6540294533431951813
     linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 38.45346
+    t: 38.94302
     beat:
-      rid: 6540294530920087849
-    linea: 77
+      rid: 6540294533431951814
+    linea: 78
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 38.95346
+    t: 39.44302
     beat:
-      rid: 6540294530920087850
-    linea: 80
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 38.95346
-    beat:
-      rid: 6540294530920087851
+      rid: 6540294533431951815
     linea: 82
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 40.77346
+    t: 39.44302
     beat:
-      rid: 6540294530920087852
-    linea: 84
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 40.77346
-    beat:
-      rid: 6540294530920087853
-    linea: 85
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 40.77346
-    beat:
-      rid: 6540294530920087854
+      rid: 6540294533431951816
     linea: 86
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 40.77346
+    t: 41.56302
     beat:
-      rid: 6540294530920087855
-    linea: 87
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 40.97346
-    beat:
-      rid: 6540294530920087856
+      rid: 6540294533431951817
     linea: 90
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 56.02037
+    t: 41.70302
     beat:
-      rid: 6540294530920087857
-    linea: 101
+      rid: 6540294533431951818
+    linea: 91
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 41.843018
+    beat:
+      rid: 6540294533431951819
+    linea: 92
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 41.963017
+    beat:
+      rid: 6540294533431951820
+    linea: 94
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 41.963017
+    beat:
+      rid: 6540294533431951821
+    linea: 95
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 42.163017
+    beat:
+      rid: 6540294533431951822
+    linea: 97
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 57.67683
+    beat:
+      rid: 6540294533431951823
+    linea: 108
   etiquetas:
   - nombre: inicio
     t: 0
@@ -1487,9 +1552,9 @@ MonoBehaviour:
   - nombre: tripas
     t: 19.221563
   - nombre: cuchara
-    t: 36.11346
+    t: 36.60302
   - nombre: sopa
-    t: 47.853462
+    t: 49.04302
   puntos:
   - nombre: w_entra
     posicion: {x: 275, y: 5.0296097, z: -433}
@@ -1500,30 +1565,30 @@ MonoBehaviour:
   - nombre: p_lucia
     posicion: {x: 277.3, y: 5.003662, z: -429.05}
   - nombre: mesa
-    posicion: {x: 279, y: 5.8478436, z: -427}
+    posicion: {x: 279, y: 5.003662, z: -427}
   - nombre: cuchara
     posicion: {x: 277.15, y: 5.333415, z: -429.62}
   - nombre: puerta
-    posicion: {x: 284.9, y: 9.145381, z: -420.6}
+    posicion: {x: 284.9, y: 5.003662, z: -420.6}
   - nombre: cam_cuchara
-    posicion: {x: 277.85, y: 5.003662, z: -430.75}
+    posicion: {x: 278, y: 5.003662, z: -431.1}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294530920087845
+    - rid: 6540294533431951810
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_SopaWill
         active: 0
-    - rid: 6540294530920087846
+    - rid: 6540294533431951811
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 0
-    - rid: 6540294530920087847
+    - rid: 6540294533431951812
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1533,7 +1598,7 @@ MonoBehaviour:
         markName: 
         volume: 0.25
         tono: 1
-    - rid: 6540294530920087848
+    - rid: 6540294533431951813
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1543,7 +1608,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294530920087849
+    - rid: 6540294533431951814
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1553,28 +1618,58 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294530920087850
+    - rid: 6540294533431951815
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 1
-    - rid: 6540294530920087851
+    - rid: 6540294533431951816
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_Cuchara
-        deltaPosicion: {x: 0, y: 0.24, z: 0}
-        deltaRotacion: {x: 0, y: 0, z: 12}
+        deltaPosicion: {x: 0, y: 0.2, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 8}
         enSusEjes: 0
-        segundos: 2.6
+        segundos: 2.4
         suavizar: 1
-        esperar: 0
+        esperar: 1
         seguirActorId: 
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294530920087852
+    - rid: 6540294533431951817
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Cuchara
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: -14}
+        enSusEjes: 0
+        segundos: 0.14
+        suavizar: 1
+        esperar: 1
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 0
+        apoyarEnElSuelo: 0
+    - rid: 6540294533431951818
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Cuchara
+        deltaPosicion: {x: 0, y: 0, z: 0}
+        deltaRotacion: {x: 0, y: 0, z: 22}
+        enSusEjes: 0
+        segundos: 0.14
+        suavizar: 1
+        esperar: 1
+        seguirActorId: 
+        seguirOffset: {x: 0, y: 0, z: 0}
+        desdeDondeEstaba: 0
+        apoyarEnElSuelo: 0
+    - rid: 6540294533431951819
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1582,50 +1677,35 @@ MonoBehaviour:
         deltaPosicion: {x: 0, y: 0, z: 0}
         deltaRotacion: {x: 0, y: 0, z: -24}
         enSusEjes: 0
-        segundos: 0.18
+        segundos: 0.12
         suavizar: 1
         esperar: 1
         seguirActorId: 
         seguirOffset: {x: 0, y: 0, z: 0}
-        desdeDondeEstaba: 1
+        desdeDondeEstaba: 0
         apoyarEnElSuelo: 0
-    - rid: 6540294530920087853
+    - rid: 6540294533431951820
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_Cuchara
         deltaPosicion: {x: 0, y: 0, z: 0}
-        deltaRotacion: {x: 0, y: 0, z: 20}
+        deltaRotacion: {x: 0, y: 0, z: 0}
         enSusEjes: 0
-        segundos: 0.18
-        suavizar: 1
+        segundos: 0.2
+        suavizar: 0
         esperar: 1
         seguirActorId: 
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294530920087854
-      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        propId: PROP_Cuchara
-        deltaPosicion: {x: 0, y: -0.24, z: 0}
-        deltaRotacion: {x: 0, y: 0, z: -8}
-        enSusEjes: 0
-        segundos: 0.22
-        suavizar: 0
-        esperar: 0
-        seguirActorId: 
-        seguirOffset: {x: 0, y: 0, z: 0}
-        desdeDondeEstaba: 1
-        apoyarEnElSuelo: 0
-    - rid: 6540294530920087855
+    - rid: 6540294533431951821
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 0
-    - rid: 6540294530920087856
+    - rid: 6540294533431951822
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1635,7 +1715,7 @@ MonoBehaviour:
         markName: 
         volume: 0.4
         tono: 1
-    - rid: 6540294530920087857
+    - rid: 6540294533431951823
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

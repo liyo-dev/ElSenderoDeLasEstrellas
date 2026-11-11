@@ -105,6 +105,23 @@ namespace Game.NPC
         public NPCBrain Brain => _brain;
         public NPCStateContext Context => _context;
         public NPCConfiguration Configuration => configuration;
+
+        /// <summary>
+        /// Sentado fijo: actividad de sentarse sin paseo (un vecino en su banco). Su sitio es el punto
+        /// de salida tal cual, así que nunca lleva el NavMeshAgent encendido ni se recoloca sobre la
+        /// malla: el banco recorta la malla y el agente lo sacaría al lado del asiento (INC-1028).
+        /// </summary>
+        public bool SentadoFijo
+        {
+            get
+            {
+                var ambiente = configuration?.ambientConfig;
+                if (ambiente == null || ambiente.enableWander) return false;
+                var a = ambiente.ambientActivity;
+                return a == NPCAmbientActivity.SitGround || a == NPCAmbientActivity.SitLow
+                    || a == NPCAmbientActivity.SitMedium || a == NPCAmbientActivity.SitHigh;
+            }
+        }
         public bool IsInCinematic => _context != null && _context.IsInCinematic;
         public bool IsExternalMovementOverrideActive => _externalMovementOverrideRequests > 0;
         
@@ -560,7 +577,7 @@ namespace Game.NPC
                 _sombraApagadaPorDistancia = null;
             }
 
-            if (_agent != null && !_agent.enabled)
+            if (_agent != null && !_agent.enabled && !SentadoFijo)
             {
                 // ✅ FIX (04 sep 2026): antes se hacía "_agent.enabled = true" a secas y solo
                 // DESPUÉS se comprobaba isOnNavMesh para recolocar con Warp. Unity valida
@@ -1102,7 +1119,7 @@ namespace Game.NPC
 
         public void ApplyLastPositionIfNeeded()
         {
-            if (!persistLastPosition || lastPosition == Vector3.zero) return;
+            if (!persistLastPosition || lastPosition == Vector3.zero || SentadoFijo) return;
 
             // FIX INC-070: si el NavMesh se ha vuelto a bakear (o el terreno cambió) desde que se
             // guardó lastPosition, esa altura guardada puede ya no coincidir con la superficie

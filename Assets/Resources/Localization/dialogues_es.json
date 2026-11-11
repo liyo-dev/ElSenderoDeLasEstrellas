@@ -2070,7 +2070,7 @@
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Pelo rojizo enganchado en la madera… y huellas pequeñas."
+            "value": "Pelo rojizo enganchado en la madera… Aquí es donde Lucía vio al zorro."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
@@ -2078,7 +2078,7 @@
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
-            "value": "Mira qué arañazos. Justo a la altura del cuello de un perro."
+            "value": "Mira qué arañazos. Aquí se ha rascado otro animal, uno más grande que el zorro."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
@@ -2094,7 +2094,7 @@
         },
         {
             "key": "DLG_CAP3_HOJA_02",
-            "value": "El zorro se rascaba contra la cerca hasta arrancarse el pelo. Y un perro ha dejado restos de hierro en la casa de las nasas."
+            "value": "El zorro de Lucía se rascaba contra la cerca hasta arrancarse el pelo. Y en la casa de las nasas, otro animal más grande ha dejado restos de hierro."
         },
         {
             "key": "DLG_CAP3_HOJA_03",
@@ -2366,11 +2366,11 @@
         },
         {
             "key": "DLG_CAP3_HOJA_07",
-            "value": "¿Al Bosque Prohibido? Pues ve con ojo por el camino."
+            "value": "¿Al Bosque Prohibido? Entonces vas por el camino del bosque… ¿Te acuerdas de las luces que te conté?"
         },
         {
             "key": "DLG_CAP3_HOJA_08",
-            "value": "Últimamente pasan carros de noche, con la carga tapada. No paran ni para dar de beber a las mulas."
+            "value": "Desde entonces he visto pasar carros por ese camino, siempre de noche y con la carga tapada. Las luces iban con ellos."
         },
         {
             "key": "CAP3_BOC_ESPERAR",
@@ -2443,6 +2443,14 @@
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
             "value": "Venía del bosque. Los demás tienen que estar por ahí."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_09",
+            "value": "Si quieres saber de dónde salen esos aros, espera junto al fuego del camino y míralo con tus propios ojos."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_10",
+            "value": "Si esos carros llevan animales con aro, a Estela le llevaré algo más que un trozo de hierro."
         }
     ]
 }

@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Events;
@@ -143,7 +144,7 @@ public static class Cap2ExtrasPrefabs
     {
         var raiz = new GameObject("CampamentoContrabandistas");
         Modelo(Pack + "Goods/Campfire01_a01.prefab", raiz.transform, "Hoguera", new Vector3(1.2f, 1.2f, 1.2f), uniforme: true, conColisiones: true);
-        var carro = Modelo(Pack + "Goods/Cart01.prefab", raiz.transform, "Carro", new Vector3(4f, 4f, 4f), uniforme: true, conColisiones: true);
+        var carro = Modelo(Pack + "Goods/Cart04.prefab", raiz.transform, "Carro", new Vector3(4f, 4f, 4f), uniforme: true, conColisiones: true);
         carro.transform.localPosition = new Vector3(-4f, 0f, 2f);
 
         // Entrar en el claro es plantar cara: el grafo lo toma como la decisión de pelear.
@@ -152,14 +153,23 @@ public static class Cap2ExtrasPrefabs
         senalClaro.eventKey = Cap2Extras.SenalAtaque; senalClaro.trigger = SignalEmitter.TriggerType.Manual;
         senalClaro.once = true; senalClaro.radioDeProximidad = 5f;
 
-        var jaulas = Hijo("Jaulas", raiz.transform, new Vector3(3f, 0f, 1f));
+        // Las jaulas van cargadas en el carro (se ve qué llevan y de dónde sale la luz), con un pájaro
+        // de luz dentro de cada una y una luz cálida que respira sobre la carga (INC-1038).
+        var jaulas = Hijo("Jaulas", raiz.transform, Vector3.zero);
         var senalJaula = jaulas.AddComponent<SignalEmitter>();
         senalJaula.eventKey = Cap2Extras.SenalJaulaQuemada; senalJaula.trigger = SignalEmitter.TriggerType.Manual; senalJaula.once = true;
+        var sitios = SitiosSobreElCarro(carro, 12);
         for (int i = 0; i < 12; i++)
         {
-            var jaula = Hijo("Jaula_" + (i + 1).ToString("00"), jaulas.transform,
-                new Vector3((i % 4) * 0.8f, (i / 8) * 0.7f, (i / 4 % 2) * 0.8f));
+            var jaula = Hijo("Jaula_" + (i + 1).ToString("00"), jaulas.transform, jaulas.transform.InverseTransformPoint(sitios[i]));
             var modelo = Modelo(Pack + "Goods/Cage01_a01.prefab", jaula.transform, "Modelo", new Vector3(0.7f, 0.7f, 0.7f), uniforme: true);
+            var pajaro = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            pajaro.name = "Pájaro de luz";
+            UnityEngine.Object.DestroyImmediate(pajaro.GetComponent<Collider>());
+            pajaro.transform.SetParent(jaula.transform, false);
+            pajaro.transform.localPosition = new Vector3(0f, 0.28f, 0f);
+            pajaro.transform.localScale = Vector3.one * 0.16f;
+            pajaro.GetComponent<Renderer>().sharedMaterial = MaterialPluma();
             var b = Limites(modelo);
             var caja = jaula.AddComponent<BoxCollider>();
             caja.center = jaula.transform.InverseTransformPoint(b.center);
@@ -177,6 +187,14 @@ public static class Cap2ExtrasPrefabs
             UnityEventTools.AddBoolPersistentListener(estado.alRestaurar, jaula.SetActive, false);
         }
 
+        var luzCarga = Hijo("Luz de las jaulas", jaulas.transform, jaulas.transform.InverseTransformPoint(Promedio(sitios) + Vector3.up * 1.6f));
+        var luz = luzCarga.AddComponent<Light>();
+        luz.type = LightType.Point;
+        luz.color = new Color(1f, 0.86f, 0.45f);
+        luz.range = 7f;
+        luz.shadows = LightShadows.None;
+        luzCarga.AddComponent<RespiracionDeLuz>().Configurar(luz, new Renderer[0]);
+
         var pluma = CrearPluma();
         pluma.transform.SetParent(raiz.transform, false);
         pluma.transform.localPosition = new Vector3(0f, 0f, -8f);
@@ -192,6 +210,55 @@ public static class Cap2ExtrasPrefabs
         senalVencidos.eventKey = Cap2Extras.SenalVencidos; senalVencidos.trigger = SignalEmitter.TriggerType.Manual; senalVencidos.once = true;
         UnityEventTools.AddPersistentListener(contador.onRequirementMet, senalVencidos.Send);
         return raiz;
+    }
+
+    /// Sitios para las jaulas sobre la plataforma del carro: se mide con rayos contra sus propias
+    /// colisiones dónde está la tabla (no las barandillas ni la lanza) y se llena en dos pisos.
+    static List<Vector3> SitiosSobreElCarro(GameObject carro, int cuantas)
+    {
+        const float Lado = 0.75f, Alto = 0.7f;
+        Physics.SyncTransforms();
+        var colisiones = carro.GetComponentsInChildren<Collider>(true);
+        var b = Limites(carro);
+        var medidos = new List<Vector3>();
+        for (float x = b.min.x + Lado * 0.6f; x <= b.max.x - Lado * 0.6f; x += Lado)
+            for (float z = b.min.z + Lado * 0.6f; z <= b.max.z - Lado * 0.6f; z += Lado)
+            {
+                var rayo = new Ray(new Vector3(x, b.max.y + 1f, z), Vector3.down);
+                float y = float.NegativeInfinity;
+                foreach (var c in colisiones)
+                    if (c.Raycast(rayo, out var h, b.size.y + 2f) && h.point.y > y) y = h.point.y;
+                if (y > b.min.y + b.size.y * 0.25f) medidos.Add(new Vector3(x, y, z));
+            }
+        var sitios = new List<Vector3>();
+        if (medidos.Count >= 4)
+        {
+            var alturas = medidos.Select(m => m.y).OrderBy(y => y).ToList();
+            float tabla = alturas[alturas.Count / 2];
+            var piso = medidos.Where(m => Mathf.Abs(m.y - tabla) < 0.15f).Select(m => new Vector3(m.x, tabla, m.z)).ToList();
+            for (int capa = 0; sitios.Count < cuantas && piso.Count > 0 && capa < 4; capa++)
+                foreach (var m in piso)
+                {
+                    if (sitios.Count >= cuantas) break;
+                    sitios.Add(m + Vector3.up * (Alto * capa));
+                }
+        }
+        if (sitios.Count < cuantas)
+        {
+            Debug.LogWarning("[Cap2ExtrasPrefabs] No encuentro la tabla del carro: las jaulas van en el suelo, al lado.");
+            sitios.Clear();
+            var junto = new Vector3(b.max.x + 1f, b.min.y, b.center.z);
+            for (int i = 0; i < cuantas; i++)
+                sitios.Add(junto + new Vector3((i % 4) * 0.8f, (i / 8) * Alto, (i / 4 % 2) * 0.8f));
+        }
+        return sitios;
+    }
+
+    static Vector3 Promedio(List<Vector3> puntos)
+    {
+        var suma = Vector3.zero;
+        foreach (var p in puntos) suma += p;
+        return puntos.Count > 0 ? suma / puntos.Count : Vector3.zero;
     }
 
     static GameObject CrearPluma()

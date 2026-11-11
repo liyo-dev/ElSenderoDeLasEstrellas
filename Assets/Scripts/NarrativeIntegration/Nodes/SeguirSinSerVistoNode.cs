@@ -27,6 +27,7 @@ public sealed class SeguirSinSerVistoNode : NarrativeNode, INarrativeStateEffect
 {
     private static readonly string[] Puertos = { "Llega", "Le ve" };
     private const int PuertoLlega = 0;
+    private const float RadioParaBuscarMalla = 8f;
     private const int PuertoLeVe = 1;
 
     [NarrativeKey(NarrativeKeyKind.Actor)]
@@ -186,9 +187,15 @@ public sealed class SeguirSinSerVistoNode : NarrativeNode, INarrativeStateEffect
 
         _npc = npc;
         _agente = npc.Agent;
-        if (_agente != null && !_agente.enabled)
+        // El NPC puede llegar aquí con el agente apagado o fuera de la malla (una cinemática lo deja
+        // donde acaba su camino, o apareció lejos de la malla): se le busca suelo caminable cerca
+        // antes de empezar, en vez de dar el tramo por hecho sin jugarlo (INC-1037).
+        if (_agente != null && !(_agente.enabled && _agente.isOnNavMesh))
         {
-            _agente.enabled = true;
+            if (!_agente.enabled)
+                Game.NPC.Common.NavMeshAgentUtility.SafeEnable(_agente, npc.transform, npc.transform.position, RadioParaBuscarMalla);
+            else if (NavMesh.SamplePosition(npc.transform.position, out var suelo, RadioParaBuscarMalla, NavMesh.AllAreas))
+                _agente.Warp(suelo.position);
             yield return null;
         }
 

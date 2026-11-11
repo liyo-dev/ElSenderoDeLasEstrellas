@@ -170,9 +170,15 @@ public static class NpcSpawner
 
     private static bool SpawnOne(NpcRosterSO.Entry entry, NpcSpawnPoint point, Transform staging)
     {
-        Vector3 position = entry.requireNavMesh
-            ? ResolveNavMeshPosition(point, entry.spawnId)
-            : ApoyarEnElSuelo(point.transform.position);
+        // Un sentado fijo va exactamente a su punto: el montaje ya lo calculó sobre el asiento, y
+        // bajarlo al suelo o a la malla lo dejaría hundido o al lado del banco (INC-1028).
+        var cerebroDelPrefab = entry.prefab.GetComponent<NPCBehaviourManagerV2>();
+        bool sentadoFijo = cerebroDelPrefab != null && cerebroDelPrefab.SentadoFijo;
+        Vector3 position = sentadoFijo
+            ? point.transform.position
+            : entry.requireNavMesh
+                ? ResolveNavMeshPosition(point, entry.spawnId)
+                : ApoyarEnElSuelo(point.transform.position);
         Quaternion rotation = point.applyRotation
             ? point.GetSpawnRotation()
             : entry.prefab.transform.rotation;
@@ -192,7 +198,7 @@ public static class NpcSpawner
         //     puesto), el NavMeshAgent se apaga antes de que Awake lo encienda: si no, Unity escribe
         //     «Failed to create agent» al crearlo y otra vez cada vez que se rehace el NavMesh.
         var agente = go.GetComponent<NavMeshAgent>();
-        if (agente != null && agente.enabled && !NavMesh.SamplePosition(position, out _, 1f, NavMesh.AllAreas))
+        if (agente != null && agente.enabled && (sentadoFijo || !NavMesh.SamplePosition(position, out _, 1f, NavMesh.AllAreas)))
             agente.enabled = false;
 
         // 4) Identidad narrativa, si el roster la sobrescribe.

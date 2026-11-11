@@ -37,6 +37,25 @@ public class SavePointTeleportTrigger : MonoBehaviour
         [SerializeField] private string requiredDefeatedBossId;
         
         private string _anchorId;
+
+        /// <summary>Id del punto (el mismo con el que se desbloquea en TeleportRegistry). Lo usa el farol
+        /// de estrellas para saber si este punto ya está descubierto (INC-1041).</summary>
+        public string AnchorId
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_anchorId))
+                {
+                    _anchorId = anchorIdOverride;
+                    if (string.IsNullOrEmpty(_anchorId))
+                    {
+                        var anchor = GetComponentInParent<SpawnAnchor>() ?? GetComponent<SpawnAnchor>();
+                        if (anchor != null) _anchorId = anchor.anchorId;
+                    }
+                }
+                return _anchorId;
+            }
+        }
         private bool _playerInRange;
         private bool _hintRequested;
         

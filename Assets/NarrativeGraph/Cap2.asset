@@ -59,9 +59,9 @@ MonoBehaviour:
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294530920088329
-  - rid: 6540294530920088330
-  - rid: 6540294530920088331
+  - rid: 6540294538172825745
+  - rid: 6540294538172825746
+  - rid: 6540294538172825747
   applicableSceneNames: []
   references:
     version: 2
@@ -918,7 +918,7 @@ MonoBehaviour:
         checkpointId: CAP2_MANANA_DESPUES
         spawnAnchorId: Bedroom
         sceneName: WillHouse
-    - rid: 6540294530920088329
+    - rid: 6540294538172825745
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
@@ -934,7 +934,7 @@ MonoBehaviour:
         outputs:
         - cap2-adios-mision
         eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294530920088330
+    - rid: 6540294538172825746
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "26e.- Misi\xF3n: hora de partir"
@@ -953,7 +953,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294530920088331
+    - rid: 6540294538172825747
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: '29.- Paso: despedirse de Oliver'

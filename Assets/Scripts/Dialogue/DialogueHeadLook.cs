@@ -61,6 +61,14 @@ public class DialogueHeadLook : MonoBehaviour
     private bool _yawOutOfRange;                        // estado con histéresis del corte por yaw
 
     private bool _bonesResolved;
+    private Animator _animator;
+
+    // Gestos que ya mueven la cabeza (asentir, negar): mientras suenan, la mirada se aparta. Si no,
+    // su giro se suma al del gesto y, con las cabezas grandes, el cuello parece desencajarse (INC-1027).
+    private static readonly int[] GestosDeCabeza =
+    {
+        Animator.StringToHash("HeadShake01"), Animator.StringToHash("HeadShake02"), Animator.StringToHash("HeadNod01"),
+    };
 
     void Awake()
     {
@@ -81,6 +89,7 @@ public class DialogueHeadLook : MonoBehaviour
         _bonesResolved = true;
 
         var animator = GetComponentInChildren<Animator>(true);
+        _animator = animator;
         if (animator != null && animator.isHuman)
         {
             _head = animator.GetBoneTransform(HumanBodyBones.Head);
@@ -167,6 +176,19 @@ public class DialogueHeadLook : MonoBehaviour
             enabled = true;
     }
 
+    private bool HaciendoGestoDeCabeza()
+    {
+        if (_animator == null || !_animator.isActiveAndEnabled) return false;
+        for (int capa = 0; capa < _animator.layerCount; capa++)
+        {
+            int actual = _animator.GetCurrentAnimatorStateInfo(capa).shortNameHash;
+            int siguiente = _animator.IsInTransition(capa) ? _animator.GetNextAnimatorStateInfo(capa).shortNameHash : 0;
+            for (int i = 0; i < GestosDeCabeza.Length; i++)
+                if (actual == GestosDeCabeza[i] || siguiente == GestosDeCabeza[i]) return true;
+        }
+        return false;
+    }
+
     void LateUpdate()
     {
         if (_head == null)
@@ -227,13 +249,14 @@ public class DialogueHeadLook : MonoBehaviour
                     clampedDir = Quaternion.AngleAxis(-pitchC, rightAxis) * clampedDir;
 
                     desiredTurn  = Quaternion.FromToRotation(baseFwd, clampedDir);
-                    targetWeight = maxWeight; // nunca clavar la mirada al 100%: solo insinuarla
+                    targetWeight = HaciendoGestoDeCabeza() ? 0f : maxWeight; // nunca clavar la mirada al 100%: solo insinuarla
                 }
             }
         }
 
-        // ── Suavizados ──
-        _weight = Mathf.MoveTowards(_weight, targetWeight, weightFadeSpeed * dt);
+        // ── Suavizados ── (al empezar un gesto de cabeza la mirada se aparta deprisa)
+        float velocidadDePeso = targetWeight < _weight && HaciendoGestoDeCabeza() ? weightFadeSpeed * 4f : weightFadeSpeed;
+        _weight = Mathf.MoveTowards(_weight, targetWeight, velocidadDePeso * dt);
         _smoothedTurn = Quaternion.Slerp(_smoothedTurn, desiredTurn, 1f - Mathf.Exp(-aimSpeed * dt));
 
         // Sin objetivo y fade terminado → dormir el componente (coste cero fuera de diálogos)

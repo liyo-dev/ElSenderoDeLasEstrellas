@@ -141,6 +141,14 @@ public static class NavMeshDelPrologo
                     if (c.enabled && c.isTrigger) { c.enabled = false; disparadores.Add(c); }
         }
 
+        // Malla de alturas: sin ella los agentes van sobre la malla simplificada, que en empedrado y
+        // cuestas queda centímetros por encima del suelo real, y los NPCs levitan (INC-1029).
+        if (!s.buildHeightMesh)
+        {
+            Undo.RecordObject(s, "NavMesh con malla de alturas");
+            s.buildHeightMesh = true;
+        }
+
         // Dónde vive el NavMesh ahora, para guardar el nuevo en el mismo sitio.
         string rutaAsset = s.navMeshData != null ? AssetDatabase.GetAssetPath(s.navMeshData) : null;
 

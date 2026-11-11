@@ -21090,6 +21090,7 @@ MonoBehaviour:
   enableIdleVariations: 1
   idleVariationStates:
   - Idle01
+  - InteractWithPeople_NoWeapon
   - Idle02
   - Idle03
   minIdleVariationInterval: 8

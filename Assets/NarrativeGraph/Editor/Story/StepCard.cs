@@ -90,11 +90,7 @@ namespace NarrativeGraphEditor.Story
             var entry = NarrativeNodeCatalog.Get(Model.GetType());
             _number.text = structure != null ? structure.Number(Model) : string.Empty;
             _number.style.display = string.IsNullOrEmpty(_number.text) ? DisplayStyle.None : DisplayStyle.Flex;
-            // On the card, only the name of the step type; the detail in brackets goes to the tooltip.
-            var typeTitle = entry?.title ?? Model.GetType().Name;
-            int bracket = typeTitle.IndexOf(" (", System.StringComparison.Ordinal);
-            _type.text = (bracket > 0 ? typeTitle.Substring(0, bracket) : typeTitle).ToUpperInvariant();
-            _type.tooltip = typeTitle;
+            _type.text = (entry?.title ?? Model.GetType().Name).ToUpperInvariant();
             _type.style.color = StoryColors.Category(entry?.category);
 
             _title.text = string.IsNullOrWhiteSpace(Model.displayTitle) ? entry?.title ?? Model.GetType().Name : Model.displayTitle;

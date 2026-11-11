@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_HUERTO_01
-    text: "Pelo rojizo enganchado en la madera\u2026 y huellas peque\xF1as."
+    text: "Pelo rojizo enganchado en la madera\u2026 Aqu\xED es donde Luc\xEDa vio al zorro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 

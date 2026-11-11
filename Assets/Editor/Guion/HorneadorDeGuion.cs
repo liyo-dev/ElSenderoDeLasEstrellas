@@ -1532,6 +1532,8 @@ internal sealed partial class Horno
     /// Escena del guion que se está horneando: su suelo manda sobre el de otras escenas abiertas.
     internal static UnityEngine.SceneManagement.Scene EscenaDelGuion;
 
+    private const float DistanciaDeMallaVecina = 4f;
+
     internal static Vector3 Suelo(Vector3 p)
     {
         // Un 0 puede ser «sin altura» o el suelo de verdad. Los interiores están a ras de 0 con el
@@ -1562,8 +1564,13 @@ internal sealed partial class Horno
         float y = p.y;
         // El NavMesh solo cuenta si tiene un punto justo debajo: uno a varios metros (un saliente,
         // una loma sin NavMesh) dejaría la altura en 0 y el rayo saldría desde bajo tierra.
-        bool hayNav = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas)
-                      && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f;
+        bool encontrado = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas);
+        bool hayNav = encontrado && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f;
+        // Sin malla justo debajo (un banco, el umbral de una puerta bajo un alero) vale la de al lado
+        // como referencia: el suelo está a su altura. Sin ella, el rayo desde lo alto se quedaba con
+        // el tejado o el asiento y el actor andaba por encima (INC-1032).
+        if (!hayNav && encontrado && new Vector2(hit.position.x - p.x, hit.position.z - p.z).sqrMagnitude < DistanciaDeMallaVecina * DistanciaDeMallaVecina)
+            hayNav = true;
         if (hayNav) y = hit.position.y;
         var desde = new Vector3(p.x, (hayNav ? y : (p.y == 0f ? 300f : p.y)) + 2.5f, p.z);
         if (Physics.Raycast(desde, Vector3.down, out var rh, 6f + (p.y == 0f && !hayNav ? 600f : 0f), SinZonasDeAmbiente, QueryTriggerInteraction.Ignore))

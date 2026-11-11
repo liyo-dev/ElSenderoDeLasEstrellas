@@ -2070,7 +2070,7 @@
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Reddish fur caught on the wood… and small tracks."
+            "value": "Reddish fur caught on the wood… This is where Lucía saw the fox."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
@@ -2078,7 +2078,7 @@
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
-            "value": "Look at these scratches. Right at the height of a dog's neck."
+            "value": "Look at these scratches. Another animal rubbed itself here, one bigger than the fox."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_02",
@@ -2094,7 +2094,7 @@
         },
         {
             "key": "DLG_CAP3_HOJA_02",
-            "value": "The fox rubbed itself on the fence until its fur came off. And a dog left bits of iron on the house with the lobster pots."
+            "value": "Lucía's fox rubbed itself on the fence until its fur came off. And at the house with the lobster pots, a bigger animal left bits of iron."
         },
         {
             "key": "DLG_CAP3_HOJA_03",
@@ -2366,11 +2366,11 @@
         },
         {
             "key": "DLG_CAP3_HOJA_07",
-            "value": "The Forbidden Forest? Then watch yourself on the road."
+            "value": "The Forbidden Forest? Then you'll take the forest road… Remember the lights I told you about?"
         },
         {
             "key": "DLG_CAP3_HOJA_08",
-            "value": "Lately carts go by at night, with their loads covered. They don't even stop to water the mules."
+            "value": "Since then I've seen carts on that road, always at night and with their loads covered. The lights went with them."
         },
         {
             "key": "CAP3_BOC_ESPERAR",
@@ -2443,6 +2443,14 @@
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
             "value": "He came from the forest. The others must be out there."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_09",
+            "value": "If you want to know where those collars come from, wait by the fire on the road and see it with your own eyes."
+        },
+        {
+            "key": "DLG_CAP3_HOJA_10",
+            "value": "If those carts carry collared animals, I'll bring Estela more than a piece of iron."
         }
     ]
 }

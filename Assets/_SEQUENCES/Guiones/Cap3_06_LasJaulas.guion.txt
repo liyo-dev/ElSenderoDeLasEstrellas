@@ -14,7 +14,8 @@ jefe      NPC_ContrabandistaJefe  nombre=CHAR_CONTRABANDISTA color=C9A27A prefab
 
 PUNTOS
 claro        -215 -125
-jaulas       -212.6 -124.3
+# Las jaulas van en el carro del campamento.
+jaulas       -219.5 -126.2
 p_will       -211 -128
 p_sargento   -205.5 -136
 p_sarg_llega -208.5 -131

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -50,6 +51,7 @@ public static partial class MontajeDeLosCapitulos
     private const string CombateJefe = "Assets/_NPCs/Combat/NPC_Combat_Config_BoyPirate.asset";
     /// Música del seguimiento a escondidas. Si aún no está en el proyecto, el tramo no cambia la música.
     private const string MusicaDelSigilo = "Assets/Audio/Music/Zonas/Tras el carro.mp3";
+    private const string CarroDeLasJaulas = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Cart07.prefab";
     private const string Matorral = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Vegetation/Tree07_b01.prefab";
 
     private static Capitulo MontarAssetsCap3(StringBuilder informe)
@@ -93,21 +95,23 @@ public static partial class MontajeDeLosCapitulos
             L("CHAR_LUCIA", "Estaba en la cerca del huerto, rascándose el cuello contra la madera. Así, mira.", "It was at the garden fence, rubbing its neck against the wood. Like this, look."),
             L("CHAR_LUCIA", "Le dije «ven, bonito» y salió corriendo. Creo que tenía más miedo que yo.", "I said \"here, boy\" and it ran off. I think it was more scared than me.", NPCEmotion.Sad));
         string dlgHuerto = DialogoDeCaja("DLG_CAP3_PISTA_HUERTO", "DLG_CAP3_HUERTO",
-            W("Pelo rojizo enganchado en la madera… y huellas pequeñas.", "Reddish fur caught on the wood… and small tracks.", NPCEmotion.Thinking),
+            W("Pelo rojizo enganchado en la madera… Aquí es donde Lucía vio al zorro.", "Reddish fur caught on the wood… This is where Lucía saw the fox.", NPCEmotion.Thinking),
             W("Se ha rascado aquí hasta arrancarse el pelo. Como si el collar le hiciera daño.", "It rubbed itself here until the fur came off. As if the collar hurt it.", NPCEmotion.Sad));
         string dlgCobertizo = DialogoDeCaja("DLG_CAP3_PISTA_COBERTIZO", "DLG_CAP3_COBERTIZO",
-            W("Mira qué arañazos. Justo a la altura del cuello de un perro.", "Look at these scratches. Right at the height of a dog's neck.", NPCEmotion.Thinking),
+            W("Mira qué arañazos. Aquí se ha rascado otro animal, uno más grande que el zorro.", "Look at these scratches. Another animal rubbed itself here, one bigger than the fox.", NPCEmotion.Thinking),
             W("Y esto… son restos de hierro. Tienen las mismas rayas que mi trozo de aro.", "And this… it's bits of iron. They have the same lines as my piece of the collar."),
             W("Todavía brillan.", "They're still glowing.", NPCEmotion.Surprised));
         string dlgHoja = DialogoDeCaja("DLG_CAP3_POSADERO_HOJA", "DLG_CAP3_HOJA",
             L("CHAR_POSADERO", "¿Qué, chico? ¿Has sacado algo en claro?", "Well, lad? Found anything?"),
-            W("El zorro se rascaba contra la cerca hasta arrancarse el pelo. Y un perro ha dejado restos de hierro en la casa de las nasas.", "The fox rubbed itself on the fence until its fur came off. And a dog left bits of iron on the house with the lobster pots.", NPCEmotion.Thinking),
+            W("El zorro de Lucía se rascaba contra la cerca hasta arrancarse el pelo. Y en la casa de las nasas, otro animal más grande ha dejado restos de hierro.", "Lucía's fox rubbed itself on the fence until its fur came off. And at the house with the lobster pots, a bigger animal left bits of iron.", NPCEmotion.Thinking),
             W("Con las mismas rayas que esto. Y todavía brillan.", "With the same lines as this. And they're still glowing."),
             L("CHAR_POSADERO", "Llevo semanas contándolo y nadie me hace caso. Ni los guardias del cruce.", "I've been telling people for weeks and nobody listens. Not even the guards at the crossroads.", NPCEmotion.Annoyed),
             L("CHAR_POSADERO", "Y ahora apareces tú con un trozo de esos aros en el bolsillo.", "And now you turn up with a piece of one of those collars in your pocket."),
             W("Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido. Con todo esto, a lo mejor me escucha.", "I'm taking it to Estela, the sorceress of the Forbidden Forest. With all this, maybe she'll listen to me.", NPCEmotion.Determined),
-            L("CHAR_POSADERO", "¿Al Bosque Prohibido? Pues ve con ojo por el camino.", "The Forbidden Forest? Then watch yourself on the road.", NPCEmotion.Worried),
-            L("CHAR_POSADERO", "Últimamente pasan carros de noche, con la carga tapada. No paran ni para dar de beber a las mulas.", "Lately carts go by at night, with their loads covered. They don't even stop to water the mules.", NPCEmotion.Worried));
+            L("CHAR_POSADERO", "¿Al Bosque Prohibido? Entonces vas por el camino del bosque… ¿Te acuerdas de las luces que te conté?", "The Forbidden Forest? Then you'll take the forest road… Remember the lights I told you about?", NPCEmotion.Worried),
+            L("CHAR_POSADERO", "Desde entonces he visto pasar carros por ese camino, siempre de noche y con la carga tapada. Las luces iban con ellos.", "Since then I've seen carts on that road, always at night and with their loads covered. The lights went with them.", NPCEmotion.Worried),
+            L("CHAR_POSADERO", "Si quieres saber de dónde salen esos aros, espera junto al fuego del camino y míralo con tus propios ojos.", "If you want to know where those collars come from, wait by the fire on the road and see it with your own eyes."),
+            W("Si esos carros llevan animales con aro, a Estela le llevaré algo más que un trozo de hierro.", "If those carts carry collared animals, I'll bring Estela more than a piece of iron.", NPCEmotion.Determined));
         string dlgSargento = DialogoDeCaja("DLG_CAP3_SARGENTO_PLUMA", "DLG_CAP3_SARGENTO",
             L("CHAR_SARGENTO", "¿Contrabandistas? ¿Por aquí? Chico, vete a dormir.", "Smugglers? Around here? Go to bed, kid.", NPCEmotion.Annoyed),
             W("Llevan pájaros en jaulas. Mire esto.", "They're carrying birds in cages. Look at this."),
@@ -165,16 +169,16 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_POSADA_11", "¿Casi? Yo a tu edad no movía ni una miga.", "Almost? At your age I couldn't move a crumb.");
         TextoDeCine("CAP3_POSADA_12", "Tómate la sopa y luego pregunta por ahí. Aquí la gente ve muchas cosas, aunque luego no las cuente.", "Have your soup, then ask around. People here see plenty, even if they don't say so.");
         TextoDeCine("CAP3_POSADA_13", "¿De verdad? ¡Pues mañana llego al pulgar!", "Really? Then tomorrow I'll reach my thumb!");
-        TextoDeCine("CAP3_CARRO_01", "¿Un carro, a estas horas?", "A cart, at this hour?");
-        TextoDeCine("CAP3_CARRO_02", "Esa luz… sube y baja. Como si respirara.", "That light… it rises and falls. As if it were breathing.");
-        TextoDeCine("CAP3_CARRO_03", "No es un farol. Vamos a ver adónde va. De lejos.", "That's no lantern. Let's see where it goes. From a distance.");
+        TextoDeCine("CAP3_CARRO_01", "Ahí viene. Un carro de noche, con la carga tapada… lo que contó el posadero.", "Here it comes. A cart at night, with its load covered… just like the innkeeper said.");
+        TextoDeCine("CAP3_CARRO_02", "Esa luz que sale de la paja… sube y baja despacio, como si respirara. Son las luces del camino.", "That light coming from the straw… it rises and falls slowly, as if it were breathing. Those are the lights on the road.");
+        TextoDeCine("CAP3_CARRO_03", "Ahí dentro van los animales de los aros. Voy a ver adónde los lleva. De lejos, sin que me vea.", "The collared animals are in there. I'm going to see where he takes them. From a distance, without being seen.");
         TextoDeCine("CAP3_CLARO_01", "Doce jaulas. En la capital pagan bien por plumas que brillan.", "Twelve cages. They pay well in the capital for feathers that glow.");
         TextoDeCine("CAP3_CLARO_02", "No paran de brillar. Me ponen nervioso.", "They won't stop glowing. They make me nervous.");
         TextoDeCine("CAP3_CLARO_03", "Pues tápalos. Al amanecer, al barco.", "Then cover them. At dawn, to the boat.");
         TextoDeCine("CAP3_CLARO_04", "El perro no deja de gruñir al bosque.", "The dog won't stop growling at the forest.");
-        TextoDeCine("CAP3_CLARO_05", "Me arden las manos…", "My hands are burning…");
-        TextoDeCine("CAP3_CLARO_06", "«¿Debes hacerlo?»", "\"Should you?\"");
-        TextoDeCine("CAP3_CLARO_07", "Eso me preguntaría Eldran.", "That's what Eldran would ask me.");
+        TextoDeCine("CAP3_CLARO_05", "Podría entrar ahora mismo y sacarlos de ahí…", "I could go in right now and get them out of there…");
+        TextoDeCine("CAP3_CLARO_06", "Pero son tres. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro.", "But there are three of them. And if the fire gets away from me, the cages burn with the birds inside.");
+        TextoDeCine("CAP3_CLARO_07", "Eldran siempre lo dice: que puedas hacer algo no quiere decir que debas.", "Eldran always says it: being able to do something doesn't mean you should.");
         TextoDeCine("CAP3_PAJAROS_01", "¡Guardia del cruce! Que nadie se mueva.", "Crossroads guard! Nobody move.");
         TextoDeCine("CAP3_PAJAROS_02", "Solo son pájaros…", "They're only birds…");
         TextoDeCine("CAP3_PAJAROS_03", "Pájaros que no se venden. Atadlos.", "Birds that aren't for sale. Tie them up.");
@@ -208,7 +212,8 @@ public static partial class MontajeDeLosCapitulos
         // Donde se queda el del seguimiento, a la entrada del claro y fuera de los planos de su cinemática.
         M(Cap3, "Cap3_Sigilo_Fin", -217f, -143f, 330f);
         M(Cap3, "Cap3_Claro", -215f, -125f, 315f);
-        M(Cap3, "Cap3_Matorral", -205f, -137f, 315f);
+        // Fuera de la mata de hojas grandes del suelo vegetal: si no, la cámara del primer plano se mete en ella (INC-1038).
+        M(Cap3, "Cap3_Matorral", -208f, -134f, 315f);
         M(Cap3, "Cap3_Puesto", -90f, -124f, 270f);
         M(Cap3, "Cap3_Amanecer", -96f, -126f, 270f);
 
@@ -218,7 +223,7 @@ public static partial class MontajeDeLosCapitulos
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_GuardiaCruce1", Pos = new Vector3(-92f, float.NaN, -118f), Rumbo = 250f });
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_GuardiaCruce2", Pos = new Vector3(-93f, float.NaN, -129f), Rumbo = 290f });
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_Contrabandista1", Pos = new Vector3(-86f, float.NaN, -204.6f), Rumbo = 232f });
-        s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_Contrabandista2", Pos = new Vector3(-218f, float.NaN, -127f), Rumbo = 90f });
+        s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_Contrabandista2", Pos = new Vector3(-216.5f, float.NaN, -129.5f), Rumbo = 90f });
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_ContrabandistaJefe", Pos = new Vector3(-213f, float.NaN, -128f), Rumbo = 0f });
 
         s_papeles.Add(new Papel { SpawnId = "SPAWN_Posadero", Prefab = CarpetaAldea + "/Posadero.prefab", Nombre = "Posadero", Id = Posadero, Flag = FlagCap3Iniciado });
@@ -288,7 +293,12 @@ public static partial class MontajeDeLosCapitulos
         // La posada es la casa de pescadores 3; la mesa es la «Mesa de encuentro» de la plaza (279, −427).
         // Hoguera de descanso (CampfireRestInteractable): descansar en ella hace pasar el tiempo hasta la noche.
         s_atrezo.Add(new Atrezo { Cap = Cap3, Nombre = "Hoguera de la acampada", Prefab = "Assets/Art/World/RPG Tiny Fantasy World 01 PBR/Prefab/BuildingUtilityDeco/Fire01.prefab",
-            Pos = new Vector3(-99.5f, float.NaN, -206.5f), Rumbo = 0f, Tamano = 1.2f, Colision = true, Tramo = Tramo(S3.Noche, FinCap3) });
+            Pos = new Vector3(-99.5f, float.NaN, -206.5f), Rumbo = 0f, Tamano = 1.7f, Colision = true, Tramo = Tramo(S3.Noche, FinCap3) });
+        // El carro de las jaulas: lo lleva el contrabandista del seguimiento tirando de él (CargaArrastrada,
+        // en PonerExtrasCap3), con la carga tapada con paja y una luz que respira en ella. Desde que anochece junto al
+        // fuego hasta que Will llega al claro, donde está el carro del campamento (INC-1036).
+        s_atrezo.Add(new Atrezo { Cap = Cap3, Nombre = "PROP_Carro Cap3", Prefab = CarroDeLasJaulas,
+            Pos = new Vector3(-83.9f, float.NaN, -203.0f), Rumbo = 321f, Tamano = 4.2f, Tramo = Tramo(S3.CaeLaNoche, S3.EnElClaro) });
         // Matorrales donde no se ve al jugador, en los huecos sin pared ni árbol del seguimiento.
         foreach (var (nombre, x, z, rumbo) in new[]
         {
@@ -459,5 +469,40 @@ public static partial class MontajeDeLosCapitulos
             EnTramo(tramo, Tramo(S3.Decide, S3.ContrabandistasFin), t.gameObject);
         }
         informe.AppendLine("Cap. 3: campamento de los contrabandistas en el claro.");
+
+        PrepararCarroDeLasJaulas(raiz, informe);
+        // La hoguera de la acampada, el sitio de Will y el claro, sin flores altas: si no, tapan el
+        // fuego, la cara de Will y las jaulas (INC-1035, INC-1038).
+        int despejadas = DespejarHierba(new Vector3(-99.5f, 0f, -207.5f), 5.5f)
+            + DespejarHierba(new Vector3(-215f, 0f, -125f), 12f)
+            + DespejarHierba(new Vector3(-208f, 0f, -134f), 3f);
+        informe.AppendLine($"Cap. 3: acampada y claro despejados de flores ({despejadas} celdas de hierba).");
+    }
+
+    /// El carro que pasa junto al fuego: va tras el contrabandista del seguimiento, sin colisiones (se
+    /// sigue a escondidas a su lado), con una luz cálida bajo la carga tapada que sube y baja despacio.
+    private static void PrepararCarroDeLasJaulas(Transform raiz, StringBuilder informe)
+    {
+        var carro = raiz.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PROP_Carro Cap3");
+        if (carro == null) { informe.AppendLine("AVISO: falta el carro de las jaulas (PROP_Carro Cap3)."); return; }
+        var arrastre = carro.GetComponent<CargaArrastrada>() ?? carro.gameObject.AddComponent<CargaArrastrada>();
+        arrastre.Configurar(Contra1, 2.9f, 90f);
+        EditorUtility.SetDirty(arrastre);
+
+        var previa = carro.Find("Luz de la carga");
+        if (previa != null) Object.DestroyImmediate(previa.gameObject);
+        var limites = carro.GetComponentsInChildren<Renderer>(true).Select(r => r.bounds).Aggregate((a, b) => { a.Encapsulate(b); return a; });
+        var luzGo = new GameObject("Luz de la carga");
+        luzGo.transform.SetParent(carro, false);
+        // Justo encima de la paja: la ilumina por fuera (desde dentro no se vería) y alumbra alrededor.
+        luzGo.transform.position = new Vector3(limites.center.x, limites.max.y + 0.4f, limites.center.z);
+        var luz = luzGo.AddComponent<Light>();
+        luz.type = LightType.Point;
+        luz.color = new Color(1f, 0.86f, 0.45f);
+        luz.range = 5f;
+        luz.shadows = LightShadows.None;
+        var respira = luzGo.AddComponent<RespiracionDeLuz>();
+        respira.Configurar(luz, new Renderer[0]);
+        informe.AppendLine("Cap. 3: carro de las jaulas tras el contrabandista, con la luz que respira.");
     }
 }

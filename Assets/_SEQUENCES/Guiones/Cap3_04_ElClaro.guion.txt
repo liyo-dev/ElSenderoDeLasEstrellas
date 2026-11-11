@@ -1,4 +1,5 @@
-# Cap. 3 · El claro de los contrabandistas: doce jaulas de pájaros de luz. A Will le arden las manos.
+# Cap. 3 · El claro de los contrabandistas: el carro con doce jaulas de pájaros de luz. Will, escondido,
+# siente el fuego en las manos y duda: podría entrar, pero las jaulas arderían con ellos (INC-1039).
 GUION Cap3_04_ElClaro
 ESCENA MainWorld
 ZONA Cap3Claro -212 -129 24
@@ -14,8 +15,11 @@ jefe  NPC_ContrabandistaJefe   nombre=CHAR_CONTRABANDISTA color=C9A27A prefab=As
 PUNTOS
 # El contrabandista del seguimiento no sale: se queda fuera del claro (o aturdido en el camino).
 claro     -215 -125
-p_will    -205 -137
-p_c2      -218 -127
+# Fuera de la mata de hojas grandes del suelo vegetal, para que la cámara no se meta en ella.
+p_will    -208 -134
+# Delante de Will, entre él y el claro: su cara de frente con el campamento a la espalda de la cámara.
+cam_will  -209.3 -132.4
+p_c2      -216.5 -129.5
 p_jefe    -213 -128.5
 
 HILO
@@ -31,12 +35,15 @@ jefe dice CAP3_CLARO_03 gesto=HeadShake01
 c2 dice CAP3_CLARO_04 mira=jefe
 
 @will
-plano primer will
+plano primer will desde=cam_will altura=1.2
 will cara enfado
+# El fuego le prende en los puños sin querer: así se entiende de qué habla.
+vfx "Assets/VFX/100BestEffectPack/Effects/FlameEmissionEffect/FlameEmissionEffect.prefab" en=will offset=-0.15,0.65,0.2 lifetime=3.5 escala=0.25 seguirAlActor=true
 espera 1
 will dice CAP3_CLARO_05 cara=enfado
-espera 0.6
+espera 0.4
 will cara pensativo
-will dice CAP3_CLARO_06 cara=pensativo
+will dice CAP3_CLARO_06 cara=preocupado
+espera 0.4
 will dice CAP3_CLARO_07 cara=decidido
 espera 0.5

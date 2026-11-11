@@ -16,13 +16,15 @@ c2        NPC_Contrabandista2     nombre=CHAR_CONTRABANDISTA color=A89C8A prefab
 
 PUNTOS
 claro        -215 -125
-jaulas       -212.6 -124.3
+# Las jaulas van en el carro del campamento; Will se acerca por su lado.
+jaulas       -219.5 -126.2
+junto_jaulas -216.0 -124.5
 p_will       -207.5 -132
 p_sargento   -210 -133.5
 p_g1         -217 -130.5
 p_g2         -211 -121.5
 p_jefe       -215.5 -127.5
-p_c2         -217.5 -125.5
+p_c2         -216.8 -129.8
 
 HILO
 @inicio
@@ -44,7 +46,7 @@ sargento dice CAP3_PAJAROS_03 cara=decidido
 
 @jaulas
 plano sigue will
-will anda a jaulas ritmo=prisa
+will anda a junto_jaulas ritmo=prisa
 plano medio will
 will dice CAP3_PAJAROS_04 cara=alegre
 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Sparkle/Sparkle_ellow_flying.prefab" en=jaulas lifetime=4
