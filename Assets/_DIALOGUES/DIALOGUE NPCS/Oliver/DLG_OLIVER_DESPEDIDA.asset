@@ -19,14 +19,14 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 9
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_DESPEDIDA_02
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 9
+    emotion: 0
   - speakerNameId: CHAR_WILL
     textId: DLG_OLIVER_DESPEDIDA_03
     text: 
@@ -40,13 +40,13 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 13
+    emotion: 1
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_DESPEDIDA_04
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 17
   maxLinesPerPage: 3
   isGroupConversation: 0

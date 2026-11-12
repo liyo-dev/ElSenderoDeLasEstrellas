@@ -391,6 +391,7 @@ public class TeleportService : MonoBehaviour
     {
         if (!player) return;
 
+        pos = SitioLibre(player, pos);
         player.transform.SetPositionAndRotation(pos, rot);
 
         var rb = player.GetComponent<Rigidbody>() ?? player.GetComponentInChildren<Rigidbody>(true);
@@ -405,6 +406,50 @@ public class TeleportService : MonoBehaviour
         {
             motor.ForzarEnElSuelo();
         }
+    }
+
+    // ── Sitio libre ───────────────────────────────────────────────────────────────────────────
+
+    private static readonly Collider[] s_solapes = new Collider[16];
+
+    /// Si el punto de llegada está ocupado por algo sólido (un ancla que se ha quedado debajo de
+    /// unas cajas o de un mueble colocado después), busca alrededor, en el NavMesh, el sitio libre
+    /// más cercano. Sin esto el jugador aparece subido encima. Ver INC-1117.
+    private static Vector3 SitioLibre(GameObject player, Vector3 pos)
+    {
+        if (Libre(player, pos)) return pos;
+        for (float radio = 0.75f; radio <= 4.5f; radio += 0.75f)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                float ang = i * 30f * Mathf.Deg2Rad;
+                Vector3 candidato = pos + new Vector3(Mathf.Cos(ang), 0f, Mathf.Sin(ang)) * radio;
+                if (!NavMesh.SamplePosition(candidato, out var hit, 1.5f, NavMesh.AllAreas)) continue;
+                if (Mathf.Abs(hit.position.y - pos.y) > 1.5f) continue;
+                if (Libre(player, hit.position)) return hit.position;
+            }
+        }
+        return pos;
+    }
+
+    /// Cabe el jugador de pie en el punto: una cápsula de su tamaño, levantada un palmo para no
+    /// contar el suelo que pisa, no toca nada sólido que no sea él mismo.
+    private static bool Libre(GameObject player, Vector3 pie)
+    {
+        var cap = player.GetComponent<CapsuleCollider>();
+        float radio = cap != null ? cap.radius * player.transform.lossyScale.x : 0.3f;
+        float alto = cap != null ? cap.height * player.transform.lossyScale.y : 1.8f;
+        Vector3 abajo = pie + Vector3.up * (0.35f + radio);
+        Vector3 arriba = pie + Vector3.up * Mathf.Max(0.35f + radio, alto - radio);
+        int n = Physics.OverlapCapsuleNonAlloc(abajo, arriba, radio, s_solapes, ~0, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++)
+        {
+            var c = s_solapes[i];
+            if (c == null || c is TerrainCollider) continue;
+            if (c.transform.IsChildOf(player.transform)) continue;
+            return false;
+        }
+        return true;
     }
 
     /// <summary>

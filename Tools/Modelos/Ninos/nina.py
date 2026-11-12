@@ -101,5 +101,6 @@ for p in cuerpo.data.polygons:
     if mats[p.material_index] == "lambert1" and v.groups and nombres[max(v.groups, key=lambda g: g.weight).group].startswith(
             ("hand", "index", "thumb", "middle", "ring", "pinky", "lowerarm")):
         p.material_index = mats.index("Piel")
+exec(open(os.path.join(D, "falda.py")).read())   # falda menos abierta (INC-1082)
 bpy.ops.wm.save_as_mainfile(filepath=args[2])
 print("NINA", [(o.name, len(o.data.vertices)) for o in bpy.data.objects if o.type == 'MESH'])

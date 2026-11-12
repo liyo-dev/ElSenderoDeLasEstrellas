@@ -54,7 +54,6 @@ MonoBehaviour:
   - rid: 5630202655468159110
   - rid: 5630202655468159111
   - rid: 5630202718439342302
-  - rid: 5630202718439342225
   - rid: 5630202718439342303
   - rid: 5630202816662077838
   - rid: 5630202816662077843
@@ -636,25 +635,6 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 0
-    - rid: 5630202718439342225
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "23b-4.- Recibir Pa\xF1uelo de Erika"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-erika-item
-        position: {x: 8360, y: 414}
-        outputs:
-        - cap2-prepara-viaje-erika-2
-        item: {fileID: 11400000, guid: 21c07b37d24802f4a8c2f9c9296320a6, type: 2}
-        amount: 1
-        logWarnings: 1
-        onlyOnce: 1
     - rid: 5630202718439342302
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -669,7 +649,7 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-combate
         position: {x: 7980, y: 380}
         outputs:
-        - cap2-prepara-viaje-erika-item
+        - cap2-prepara-viaje-erika-2
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         acceptEarlierEvent: 1
     - rid: 5630202718439342303

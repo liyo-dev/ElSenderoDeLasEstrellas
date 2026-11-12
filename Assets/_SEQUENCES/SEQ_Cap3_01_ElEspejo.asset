@@ -18,7 +18,7 @@ MonoBehaviour:
   signalOut: CAP3_ESPEJO_DONE
   musicId: 
   presentacionDeTexto: 1
-  endStayBlack: 0
+  endStayBlack: 1
   skipMusicRestore: 0
   modulos: {fileID: 0}
   phases:
@@ -26,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 6540294550018326832
+    - rid: 6540294555676705545
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326832
+    - rid: 6540294555676705545
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

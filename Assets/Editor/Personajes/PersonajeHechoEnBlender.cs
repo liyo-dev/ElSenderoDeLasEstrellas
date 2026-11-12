@@ -106,6 +106,9 @@ public static class PersonajeHechoEnBlender
         if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", textura);
         mat.color = color;
         if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", color);
+        // La ropa hecha en Blender es de una sola capa: por dentro (bajo el bajo de una camiseta, con el
+        // personaje tumbado) no se pintaría y se vería a través. Se pinta por las dos caras. Ver INC-1107.
+        if (mat.HasProperty("_Cull")) mat.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Off);
         EditorUtility.SetDirty(mat);
         return mat;
     }

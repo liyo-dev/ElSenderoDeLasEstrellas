@@ -9,3 +9,6 @@ De la propuesta de vestuario de NPCs con peso (aprobada por Raúl). **Estado: pr
   bueno y Unity esté libre.
 
 Sin comprobar: cómo se mueve al andar (los pesos se copian del cuerpo).
+
+## Gorro de aprendiz (12 nov 2026, INC-1088)
+`gorro.py` (args: base.blend, salida) → `Hat09_Aprendiz`: gorro azul de su túnica, punta doblada atrás, ala corta, cinta naranja, estrellita de latón delante y otra en la punta; pesado a «head». Previa: `gorro_previa.png`. Aprobado por Raúl (12 nov): en `Assets/Art/Characters/NPCs/Vestuario/Oliver/` y en su ficha de `VestuarioDeLosNPCs`, en lugar de Hat08.

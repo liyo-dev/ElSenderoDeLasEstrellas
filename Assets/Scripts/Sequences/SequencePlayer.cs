@@ -288,6 +288,27 @@ public class SequencePlayer : CinematicSequencerBase
     /// durante el fundido de entrada (INC-956). Tampoco en Awake por otro motivo: entre que el
     /// SequencePlayer despierta y que la secuencia arranca, el jugador puede haber entrado en una
     /// casa, que es lo que pasa en el prólogo.
+    /// Sin interior en el Inspector, la cinemática ocurre donde arrancan sus actores: si el primero
+    /// del guion empieza dentro de un interior cargado, es de interior (y el clima no entra). Así
+    /// una secuencia montada desde otra escena (la de la torre de Liam vive en MainWorld) no
+    /// depende de un campo que no puede apuntar a otra escena. Ver INC-1116.
+    protected override AnchorEnvironment ResolverInterior()
+    {
+        if (_definition?.phases == null) return null;
+        foreach (var fase in _definition.phases)
+        {
+            if (fase?.beats == null) continue;
+            foreach (var beat in fase.beats)
+            {
+                if (beat is not GuionBeat g || g.guion == null) continue;
+                foreach (var actor in g.guion.actores)
+                    if (actor.posiciones != null && actor.posiciones.Count > 0)
+                        return AnchorEnvironment.InteriorQueContiene(actor.posiciones[0].p);
+            }
+        }
+        return null;
+    }
+
     protected override void PrepararEscenaEnElCorte()
     {
         if (_stage != null) CinematicTimeOfDay.ActivarEscena(_stage.gameObject.scene);

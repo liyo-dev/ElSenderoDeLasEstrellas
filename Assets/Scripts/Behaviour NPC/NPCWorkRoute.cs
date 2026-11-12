@@ -359,9 +359,19 @@ public class NPCWorkRoute : MonoBehaviour
     {
         var pila = new GameObject(nombre).transform;
         pila.SetParent(transform, false);
-        pila.position = punto.position + punto.TransformVector(offsetPila);
+        pila.position = AlSuelo(punto.position + punto.TransformVector(offsetPila));
         pila.rotation = punto.rotation;
         return pila;
+    }
+
+    /// La pila se apoya en lo que haya debajo del punto: si el suelo se ha movido desde que se
+    /// colocó el punto, las cajas no se quedan en el aire. Ver INC-1118.
+    private static Vector3 AlSuelo(Vector3 p)
+    {
+        if (Physics.Raycast(p + Vector3.up * 1.5f, Vector3.down, out var hit, 4f, ~0, QueryTriggerInteraction.Ignore)
+            && hit.collider.GetComponentInParent<NPCSimpleAnimator>() == null)
+            p.y = hit.point.y;
+        return p;
     }
 
     private void LlenarPila(Transform pila, List<Transform> cajas, int cantidad)

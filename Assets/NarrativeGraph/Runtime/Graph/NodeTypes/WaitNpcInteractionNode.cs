@@ -14,6 +14,11 @@ using UnityEngine;
 /// anterior para no avanzar por una charla que ocurrió antes de llegar aquí.
 ///
 /// Mientras espera, el actor lleva la marca de «tiene algo para ti» (INarrativeAttentionMarkers).
+///
+/// Si varios grafos esperan a la vez hablar con el mismo actor, la charla con marca (la de la
+/// historia) va antes que las de sin marca (servicios que se repiten, como pedir una revancha):
+/// una misma interacción solo hace avanzar a las esperas con marca, y las demás siguen esperando
+/// a la siguiente. Así no salen dos conversaciones a la vez del mismo personaje.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("NPCs", "Esperar hablar con NPC", "Se queda esperando hasta que el jugador interactúa con el NPC indicado.")]
@@ -50,6 +55,24 @@ public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffec
     [NonSerialized] private Action _handler;
     [NonSerialized] private string _key;
 
+    // Esperas activas por actor, para dar prioridad a las que llevan marca.
+    private static readonly Dictionary<string, List<WaitNpcInteractionNode>> s_esperando = new();
+    // Último fotograma en que una espera con marca se quedó la charla de cada actor.
+    private static readonly Dictionary<string, int> s_tomadaConMarca = new();
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() { s_esperando.Clear(); s_tomadaConMarca.Clear(); }
+#endif
+
+    private static bool HayOtraConMarca(string npcId, WaitNpcInteractionNode yo)
+    {
+        if (s_tomadaConMarca.TryGetValue(npcId, out int f) && f == Time.frameCount) return true;
+        if (!s_esperando.TryGetValue(npcId, out var lista)) return false;
+        foreach (var w in lista) if (w != yo && w.showMarker) return true;
+        return false;
+    }
+
     public void Project(INarrativeStateWriter state)
     {
         if (!string.IsNullOrWhiteSpace(npcId)) state.MarkSignalRaised(SignalKeyFor(npcId));
@@ -78,8 +101,12 @@ public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffec
 
         ShowIcon();
 
+        Apuntar(true);
         _handler = () =>
         {
+            // Una espera sin marca cede la charla a la de la historia (ver cabecera).
+            if (!showMarker && HayOtraConMarca(npcId, this)) return;
+            if (showMarker) s_tomadaConMarca[npcId] = Time.frameCount;
             Unsubscribe();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[WaitNpcInteractionNode:{guid}] ✅ El jugador habló con '{npcId}' → avanzando");
@@ -99,8 +126,21 @@ public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffec
         HideIcon();
     }
 
+    private void Apuntar(bool esperando)
+    {
+        if (string.IsNullOrWhiteSpace(npcId)) return;
+        if (!s_esperando.TryGetValue(npcId, out var lista))
+        {
+            if (!esperando) return;
+            s_esperando[npcId] = lista = new List<WaitNpcInteractionNode>();
+        }
+        if (esperando) { if (!lista.Contains(this)) lista.Add(this); }
+        else lista.Remove(this);
+    }
+
     private void Unsubscribe()
     {
+        Apuntar(false);
         if (_signals != null && _handler != null && !string.IsNullOrEmpty(_key))
         {
             try { _signals.OffCustom(_key, _handler); } catch { }

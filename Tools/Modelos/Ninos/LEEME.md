@@ -23,3 +23,6 @@ En Unity: *El Sendero ▸ Personajes ▸ Niños hechos en Blender (Tobías, Nina
 
 Para otro niño: un script como `tobias.py` con su talla, sus caras con otra numeración libre (60-79 ocupados) y
 una entrada más en `NinosHechosEnBlender`.
+
+## Falda menos abierta (12 nov 2026, INC-1082)
+Con los brazos caídos, los antebrazos quedaban dentro del vuelo de la falda y solo asomaban las manos (parecían sueltas y se perdían contra el delantal). `falda.py` deja el vuelo por debajo del talle en el 45 %; `nina.py` lo usa al final, y se puede pasar solo sobre `nina.blend`. Foto con los brazos caídos: `nina_brazos_caidos.png`. Lo de antes, en `Versiones antiguas/Nina falda abierta antes de INC-1082 (2026-11-12)/`.

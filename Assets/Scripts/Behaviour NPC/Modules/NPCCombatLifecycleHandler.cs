@@ -88,6 +88,9 @@ namespace Game.NPC.Modules
         // Si en esta partida ya se le había derrotado antes de la caída en curso (revanchas).
         private bool _yaHabiaCaidoAntes;
 
+        /// Se le ha derrotado ya alguna vez en esta partida.
+        public bool YaDerrotadoEnLaPartida => FlagDePartida.EstaPuesto(ClaveDeDerrota());
+
         private string ClaveDeDerrota()
         {
             string id = _manager != null && !string.IsNullOrEmpty(_manager.PersistenceId) ? _manager.PersistenceId : name;

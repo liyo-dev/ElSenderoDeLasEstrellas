@@ -111,6 +111,9 @@ namespace Game.NPC.Modules
         [Header("Diálogos")]
         [Tooltip("Diálogo que se muestra durante la fase de alerta (antes del combate)")]
         public DialogueAsset dialogueOnAlert;
+
+        [Tooltip("Diálogo de alerta las siguientes veces, cuando ya se le ha derrotado en la partida (combates que se pueden repetir). Vacío = no dice nada y se pasa al combate.")]
+        public DialogueAsset dialogueOnAlertRepeat;
         
         [Tooltip("Diálogo que se muestra si el NPC es derrotado")]
         public DialogueAsset dialogueOnDefeat;

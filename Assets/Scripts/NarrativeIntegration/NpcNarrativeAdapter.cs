@@ -129,19 +129,33 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         var npc = _retirados.TryGetValue(actorId, out var retirado) && retirado != null ? null : BuscarSinAviso(actorId);
         if (npc != null) QuedarseEnLaMarca(npc);
 
-        if (CercaDelJugador(mark.transform.position)) return false;
+        bool marcaALaVista = CercaDelJugador(mark.transform.position);
 
         if (_retirados.TryGetValue(actorId, out var go) && go != null)
         {
+            if (marcaALaVista) return false;
             go.SetActive(true);
             _retirados.Remove(actorId);
         }
         else
         {
             if (npc == null) return false;
-            if (CercaDelJugador(npc.transform.position)) return false;
+            // Si el jugador lo vería saltar de sitio, va andando: así no se queda plantado donde
+            // estaba mientras dice que se va a otro sitio. Ver INC-1121.
+            if (marcaALaVista || CercaDelJugador(npc.transform.position)) return IrAndando(npc, mark);
         }
         return TryPlace(actorId, markId, false, true);
+    }
+
+    static bool IrAndando(NPCBehaviourManagerV2 npc, SpawnAnchor mark)
+    {
+        Vector3 destino = mark.transform.position;
+        float metros = Vector3.Distance(npc.transform.position, destino);
+        if (metros < 0.5f) return true;
+        Quaternion giro = mark.GetCharacterRotation();
+        npc.MoveToPosition(destino, maxDuration: metros / 1.2f + 10f, turn: true,
+            onComplete: () => { if (npc != null) npc.transform.rotation = giro; });
+        return true;
     }
 
     static NPCBehaviourManagerV2 BuscarSinAviso(string actorId) =>

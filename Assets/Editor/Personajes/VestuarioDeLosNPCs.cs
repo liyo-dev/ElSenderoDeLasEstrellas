@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// Vestuario propio de los NPCs con peso en la historia (Eldran, Victoria, Erika, Oliver, el Rey, el
-/// posadero y la boticaria), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
+/// posadero y la boticaria, con su pañuelo verde salvia en la cabeza), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
 /// protagonistas (<see cref="AspectoDeProtagonista.PonerPiezas"/>): la pieza de cuerpo nueva entra en
 /// el modelo de cada uno junto a la que llevaba, se enciende y la de antes se queda apagada. La piel
 /// de debajo (manos, brazos) usa el material de su cuerpo de siempre, así que conserva su tono de piel.
@@ -74,9 +74,10 @@ public static class VestuarioDeLosNPCs
             Piezas = new[]
             {
             new AspectoDeProtagonista.Pieza { Nombre = "Body29_Aprendiz", Categoria = PartCategory.Body, Vecina = "Body20" },
+            new AspectoDeProtagonista.Pieza { Nombre = "Hat09_Aprendiz", Categoria = PartCategory.Hat, Vecina = "Hat08" },   // en lugar del de bruja (INC-1088)
             },
             Apagar = new string[] {  },
-            Colores = new[] { ("Tunica", new Color(0.5f, 0.74f, 0.93f)), ("TunicaOscura", new Color(0.3f, 0.52f, 0.75f)), ("Naranja", new Color(0.96f, 0.55f, 0.16f)), ("Cordon", new Color(0.93f, 0.87f, 0.7f)), ("Cuero", new Color(0.42f, 0.26f, 0.14f)), ("CueroOscuro", new Color(0.25f, 0.15f, 0.08f)), ("Papel", new Color(0.95f, 0.91f, 0.8f)), ("Pantalon", new Color(0.36f, 0.36f, 0.42f)), ("Laton", new Color(0.8f, 0.62f, 0.25f)) },
+            Colores = new[] { ("Tunica", new Color(0.5f, 0.74f, 0.93f)), ("Gorro", new Color(0.2f, 0.38f, 0.64f)), ("TunicaOscura", new Color(0.3f, 0.52f, 0.75f)), ("Naranja", new Color(0.96f, 0.55f, 0.16f)), ("Cordon", new Color(0.93f, 0.87f, 0.7f)), ("Cuero", new Color(0.42f, 0.26f, 0.14f)), ("CueroOscuro", new Color(0.25f, 0.15f, 0.08f)), ("Papel", new Color(0.95f, 0.91f, 0.8f)), ("Pantalon", new Color(0.36f, 0.36f, 0.42f)), ("Laton", new Color(0.8f, 0.62f, 0.25f)) },
         },
         new AspectoDeProtagonista.Ficha
         {
@@ -119,9 +120,10 @@ public static class VestuarioDeLosNPCs
             Piezas = new[]
             {
             new AspectoDeProtagonista.Pieza { Nombre = "Body32_Herborista", Categoria = PartCategory.Body, Vecina = "Body10" },
+            new AspectoDeProtagonista.Pieza { Nombre = "AC14_Panuelo", Categoria = PartCategory.Accessory, Vecina = "Hair09|Body10" },
             },
             Apagar = new string[] {  },
-            Colores = new[] { ("Vestido", new Color(0.26f, 0.5f, 0.3f)), ("VestidoOscuro", new Color(0.16f, 0.34f, 0.2f)), ("Delantal", new Color(0.9f, 0.64f, 0.24f)), ("DelantalOscuro", new Color(0.7f, 0.45f, 0.14f)), ("Cuero", new Color(0.4f, 0.25f, 0.13f)), ("CueroOscuro", new Color(0.24f, 0.15f, 0.08f)), ("Hoja", new Color(0.36f, 0.68f, 0.3f)), ("Tallo", new Color(0.3f, 0.42f, 0.2f)), ("Frasco", new Color(0.55f, 0.85f, 0.9f)), ("Corcho", new Color(0.7f, 0.55f, 0.38f)), ("Panoleta", new Color(0.95f, 0.9f, 0.78f)), ("Media", new Color(0.94f, 0.92f, 0.88f)), ("Zapato", new Color(0.3f, 0.18f, 0.1f)) },
+            Colores = new[] { ("Vestido", new Color(0.26f, 0.5f, 0.3f)), ("VestidoOscuro", new Color(0.16f, 0.34f, 0.2f)), ("Delantal", new Color(0.9f, 0.64f, 0.24f)), ("DelantalOscuro", new Color(0.7f, 0.45f, 0.14f)), ("Cuero", new Color(0.4f, 0.25f, 0.13f)), ("CueroOscuro", new Color(0.24f, 0.15f, 0.08f)), ("Hoja", new Color(0.36f, 0.68f, 0.3f)), ("Tallo", new Color(0.3f, 0.42f, 0.2f)), ("Frasco", new Color(0.55f, 0.85f, 0.9f)), ("Corcho", new Color(0.7f, 0.55f, 0.38f)), ("Panoleta", new Color(0.95f, 0.9f, 0.78f)), ("Panuelo", new Color(0.5f, 0.66f, 0.42f)), ("PanueloOscuro", new Color(0.36f, 0.5f, 0.3f)), ("Media", new Color(0.94f, 0.92f, 0.88f)), ("Zapato", new Color(0.3f, 0.18f, 0.1f)) },
         },
     };
 

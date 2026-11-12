@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_00_LaDespedida
   duracion: 67.069
   presentacion: 1
-  huella: "2026-11-11 18:11 \xB7 5810b0446bae45c5cbd105f7b35a14b6"
+  huella: "2026-11-12 09:27 \xB7 91bd3286e83162c1784b7e2eccd67470"
   actores:
   - id: Player
     alias: will
@@ -520,9 +520,37 @@ MonoBehaviour:
       actor: Player
     animacion:
     - fundido: 0
-      t: 0
-      tipo: 1
-      estado: ManosALaEspalda
+      t: 0.6
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 0.68
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 4.1504083
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 5.200408
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 9.445714
+      tipo: 3
+      estado: 
       congelar: 0
       alFinal: 0
       voz: 
@@ -533,10 +561,10 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0.3
-      t: 11.685714
-      tipo: 1
-      estado: ManosALaEspalda
+    - fundido: 0
+      t: 12.125714
+      tipo: 2
+      estado: Talk03
       congelar: 0
       alFinal: 0
       voz: 
@@ -550,6 +578,13 @@ MonoBehaviour:
     - fundido: 0
       t: 14.879183
       tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.929183
+      tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
@@ -758,8 +793,8 @@ MonoBehaviour:
     t1: 4.100408
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_01
-    gesto: 
-    sinPose: 1
+    gesto: Question01
+    sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -777,7 +812,7 @@ MonoBehaviour:
     actor: NPC_Eldran
     clave: CAP3_DESPEDIDA_03
     gesto: Laugh01
-    sinPose: 1
+    sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
@@ -1010,20 +1045,20 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326821
+      rid: 6540294555676705524
     linea: 29
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326822
+      rid: 6540294555676705525
     linea: 30
   - onlyIfFlag: 
     skipIfFlag: 
     t: 66.10924
     beat:
-      rid: 6540294550018326823
-    linea: 77
+      rid: 6540294555676705526
+    linea: 75
   etiquetas:
   - nombre: inicio
     t: 0
@@ -1050,7 +1085,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326821
+    - rid: 6540294555676705524
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1058,7 +1093,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294550018326822
+    - rid: 6540294555676705525
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1067,7 +1102,7 @@ MonoBehaviour:
         fadeIn: 2.5
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294550018326823
+    - rid: 6540294555676705526
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

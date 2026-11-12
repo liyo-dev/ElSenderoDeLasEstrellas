@@ -64,14 +64,14 @@ MonoBehaviour:
     partName: AC09_Ribbon
   - category: 2
     partName: Head02_Female
-  - category: 3
-    partName: Hair16_Heroe
-  - category: 0
-    partName: Body23_Aventurero
   - category: 4
     partName: Eye30
   - category: 5
     partName: Mouth27
+  - category: 3
+    partName: Hair16_Heroe
+  - category: 0
+    partName: Body23_Aventurero
   unlockedWardrobeIds:
   - Body05
   - Cloak02

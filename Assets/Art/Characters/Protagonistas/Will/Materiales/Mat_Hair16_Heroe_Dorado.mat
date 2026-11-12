@@ -115,10 +115,10 @@ Material:
     - _AlphaClip: 0
     - _BaseMapPremultiply: 1
     - _Blend: 0
-    - _Brillo: 1
+    - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DecalPaintOver: 0
     - _DetailMapBlendingMode: 0

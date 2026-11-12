@@ -20,9 +20,5 @@ MonoBehaviour:
   descriptionId: 
   description: La camiseta de siempre con la chaqueta corta azul marino encima, abierta y remangada.
   icon: {fileID: 0}
-  bonos:
-    vida: 0
-    magia: 0
-    ataque: 0
-    defensa: 0
+  rasgos: 
   soloPara: 01000000i

@@ -34,6 +34,12 @@ public class NPCEmotionController : MonoBehaviour
     [Tooltip("Expresiones que ya representan ojos cerrados y no se interrumpen con parpadeos.")]
     [SerializeField] private string[] ojosYaCerrados = { "Eye07", "Eye09" };
 
+    [Header("Barba que tapa la boca")]
+    [Tooltip("Piezas (por nombre) que tapan la boca, como las barbas largas. Mientras habla bajan un poco, como si moviera la mandíbula, para que se note que habla. Ver INC-1090.")]
+    [SerializeField] private string[] piezasQueBajanAlHablar = { "Head05_Santa" };
+    [Tooltip("Metros que baja la pieza con la boca abierta (con la entreabierta, la mitad).")]
+    [SerializeField, Min(0f)] private float metrosQueBajaAlHablar = 0.02f;
+
     // Una sola corrutina actualiza todas las caras; su propietario se releva al desactivarse.
     private static readonly List<NPCEmotionController> CarasActivas = new List<NPCEmotionController>();
     private static NPCEmotionController _duenoDelTick;
@@ -70,6 +76,8 @@ public class NPCEmotionController : MonoBehaviour
     private bool _tieneOjos, _tieneBoca;
     private float _finDelHabla, _proximoCambioDeBoca;
     private float _finDeReaccion = float.PositiveInfinity;
+    private Transform[] _piezasQueBajan;
+    private Vector3[] _sitioDeLasPiezas;
 
     /// Se dispara cuando cambia la emoción actual, incluida la vuelta al reposo.
     public event System.Action<NPCEmotion> OnEmotionChanged;
@@ -84,6 +92,7 @@ public class NPCEmotionController : MonoBehaviour
         _tieneOjos = TieneParte(ojosDeReposo, _eyeMeshes);
         _tieneBoca = TieneParte(bocaDeReposo, _mouthMeshes);
         ResolverReposo();
+        BuscarPiezasQueBajan();
     }
     void Start() => VolverAReposo();
     void OnEnable()
@@ -346,6 +355,7 @@ public class NPCEmotionController : MonoBehaviour
         {
             _bocaDuranteHabla = _bocaDeLaCara;
             _haTenidoVoz = false;
+            _hablando = true;
             AplicarBocaDelHabla(emotionProfile.bocaHablandoAbierta);
         }
         _hablando = true;
@@ -371,6 +381,37 @@ public class NPCEmotionController : MonoBehaviour
         if (boca == _bocaDuranteHabla) return;
         ActivateMesh(_mouthMeshes, boca, "boca", false);
         _bocaDuranteHabla = boca;
+        float apertura = !_hablando || emotionProfile == null ? 0f
+            : boca == emotionProfile.bocaHablandoAbierta ? 1f
+            : boca == emotionProfile.bocaHablandoEntreabierta ? 0.5f : 0f;
+        BajarPiezas(apertura);
+    }
+
+    /// Las piezas activas que tapan la boca (barbas). Ver INC-1090.
+    private void BuscarPiezasQueBajan()
+    {
+        if (piezasQueBajanAlHablar == null || piezasQueBajanAlHablar.Length == 0) return;
+        var piezas = new List<Transform>();
+        foreach (var t in GetComponentsInChildren<Transform>(true))
+            if (t.gameObject.activeSelf && System.Array.IndexOf(piezasQueBajanAlHablar, t.name) >= 0) piezas.Add(t);
+        if (piezas.Count == 0) return;
+        _piezasQueBajan = piezas.ToArray();
+        _sitioDeLasPiezas = new Vector3[_piezasQueBajan.Length];
+        for (int i = 0; i < _piezasQueBajan.Length; i++) _sitioDeLasPiezas[i] = _piezasQueBajan[i].localPosition;
+    }
+
+    private void BajarPiezas(float apertura)
+    {
+        if (_piezasQueBajan == null) return;
+        for (int i = 0; i < _piezasQueBajan.Length; i++)
+        {
+            var pieza = _piezasQueBajan[i];
+            if (pieza == null) continue;
+            var abajo = pieza.parent != null
+                ? pieza.parent.InverseTransformVector(Vector3.down * metrosQueBajaAlHablar * apertura)
+                : Vector3.down * metrosQueBajaAlHablar * apertura;
+            pieza.localPosition = _sitioDeLasPiezas[i] + abajo;
+        }
     }
     private void ActivateMesh(Dictionary<string, GameObject> mallas, string nombre, string tipo, bool diagnostico = true)
     {

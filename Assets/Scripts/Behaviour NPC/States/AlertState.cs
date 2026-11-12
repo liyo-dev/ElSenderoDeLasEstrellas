@@ -1,5 +1,6 @@
 using UnityEngine;
 using Game.NPC.Common;
+using Game.NPC.Modules;
 
 namespace Game.NPC.States
 {
@@ -417,7 +418,12 @@ namespace Game.NPC.States
             }
 
             var config = context.Config?.combatConfig;
-            if (config == null || config.dialogueOnAlert == null || DialogueManager.Instance == null)
+            // La presentación del combate es de la primera vez: en las revanchas va la suya (o
+            // ninguna), no la charla del primer encuentro otra vez. Ver INC-1119.
+            var ciclo = context.Transform.GetComponent<NPCCombatLifecycleHandler>();
+            bool revancha = ciclo != null && ciclo.YaDerrotadoEnLaPartida;
+            var dialogo = config == null ? null : (revancha ? config.dialogueOnAlertRepeat : config.dialogueOnAlert);
+            if (dialogo == null || DialogueManager.Instance == null)
             {
                 AvisarAlGrafo(context);
                 return;
@@ -425,7 +431,7 @@ namespace Game.NPC.States
             {
                 if (config.waitForAlertDialogue) _waitingForDialogue = true;
 
-                DialogueManager.Instance.StartBattleDialogue(config.dialogueOnAlert, context.Transform, () =>
+                DialogueManager.Instance.StartBattleDialogue(dialogo, context.Transform, () =>
                 {
                     _waitingForDialogue = false;
                     _dialogueCompleted = true; // ⭐ Marcar que el diálogo completó para transición inmediata

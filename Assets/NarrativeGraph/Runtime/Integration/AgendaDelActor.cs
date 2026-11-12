@@ -47,7 +47,8 @@ public sealed class EntradaDeAgenda
     [Tooltip("Cuándo vale esta entrada. Vacío = siempre.")]
     public TramoDeHistoria tramo = new();
 
-    [Tooltip("Si está y dónde. Los cambios se hacen sin que el jugador lo vea.")]
+    [Tooltip("Si está y dónde. Los cambios se hacen sin que el jugador lo vea; si para ir a la marca " +
+             "lo vería saltar de sitio, va andando.")]
     public PresenciaEnAgenda presencia = PresenciaEnAgenda.SinCambios;
 
     [Tooltip("Marca del mundo donde se coloca (solo con «En una marca»).")]

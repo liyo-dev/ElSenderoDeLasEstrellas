@@ -20,9 +20,5 @@ MonoBehaviour:
   descriptionId: 
   description: "Camiseta azul marino con ribete dorado y el pa\xF1uelo de siempre al cuello."
   icon: {fileID: 0}
-  bonos:
-    vida: 0
-    magia: 0
-    ataque: 0
-    defensa: 0
+  rasgos: 
   soloPara: 01000000i

@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_00_LaDespedida
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap3_00_LaDespedida.guion.txt`
+2026-11-12 09:27 · guion `Assets/_SEQUENCES/Guiones/Cap3_00_LaDespedida.guion.txt`
 
 **1:07,1** de secuencia · 11 frases · 7 planos · 3 efectos · 2 personajes
 
@@ -26,9 +26,9 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94
 | 0:00,0 | plano 1 | dos: will y eldran · 14,9 s · lente 32° · coste 150: cara 144 |
 | 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Música: MANANA_DESPUES |
-| 0:00,6 | eldran | «Ya estás aquí. ¿Te has despedido de todos?» (3,5 s) |
+| 0:00,6 | eldran | «Ya estás aquí. ¿Te has despedido de todos?» (3,5 s) · pose |
 | 0:04,5 | will | «De casi todos. Tomasa quería venderme otra cosa inútil.» (4,5 s) · pose |
-| 0:09,4 | eldran | «Esa mujer no descansa. Escucha, que esto es importante.» (5,4 s) |
+| 0:09,4 | eldran | «Esa mujer no descansa. Escucha, que esto es importante.» (5,4 s) · pose |
 | 0:14,9 | **@consejo** |  |
 | 0:14,9 | plano 2 | medio de eldran · 17,7 s · lente 30° · coste 33: ángulo 33 |
 | 0:14,9 | eldran | «Estela no acepta aprendices. Si te presentas con un trozo de hierro y buena cara, te cerrará la puerta.» (6,5 s) · pose |
@@ -74,11 +74,12 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94
 
 ### eldran (NPC_Eldran)
 
-- 0:00,0 bucle ManosALaEspalda
 - 0:00,6–0:04,1 habla
+- 0:00,7 gesto Question01
+- 0:05,2 gesto HeadNod01
 - 0:09,4–0:14,9 habla
 - 0:09,5 gesto Laugh01
-- 0:11,7 bucle ManosALaEspalda
+- 0:12,1 gesto Talk03
 - 0:14,9 reposo 
 - 0:14,9–0:21,3 habla
 - 0:15,0 gesto Decidido01

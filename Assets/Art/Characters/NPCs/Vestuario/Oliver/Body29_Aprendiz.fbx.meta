@@ -22,6 +22,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Gorro
+    second: {fileID: 2100000, guid: e2028e9aab8c6a84ab9d9ffa77574e8f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Laton
     second: {fileID: 2100000, guid: ed2bbba85d1d8774ca1db9cbbb2e5c67, type: 2}
   - first:

@@ -1522,7 +1522,7 @@
         },
         {
             "key": "DLG_ERIKA_DESPUES_01",
-            "value": "That handkerchief suits you. Come back in one piece."
+            "value": "If you want another round, you know where I am. And come back in one piece."
         },
         {
             "key": "ITEM_PANUELO_NAME",
@@ -1534,19 +1534,19 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "Cloak, potion, handkerchief… you've got everything. But you're missing the most important thing: knowing why you're leaving."
+            "value": "Cloak, potion, grimoire… you've got everything. Well, everything but one thing: knowing why you're leaving."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
-            "value": "Out there you're going to have doubts, Will. And when you do, you need to be very clear about your reasons."
+            "value": "Out there you're going to have doubts, Will. And when you do, you'll need to remember why you walked out that door."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_03",
-            "value": "To find Estela. And to understand what's happening to me."
+            "value": "That demon wore a ring, and someone put it there. I want to know who. And I want Estela to teach me this magic before it happens again."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_04",
-            "value": "Good reasons. And they're yours, not mine. Hold on to them."
+            "value": "Now that sounds like you. Hold on to it when things get rough."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_01",
@@ -1554,7 +1554,7 @@
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_02",
-            "value": "I am staying in the village. Someone has to look after Pía... and your house."
+            "value": "I'm staying in the village. Someone has to keep an eye on your house while you're away."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_03",
@@ -1574,11 +1574,11 @@
         },
         {
             "key": "DLG_ERIKA_VICTORIA_02",
-            "value": "Here, an embroidered handkerchief: for the sweat and to remind you to come back."
+            "value": "With your Protection and your grimoire, you're not leaving empty-handed."
         },
         {
             "key": "DLG_ERIKA_VICTORIA_03",
-            "value": "And do not lose it along the way."
+            "value": "And keep practising on the road. Magic gets rusty."
         },
         {
             "key": "ESCAPE_SENDERO_ESTELA_INICIO",
@@ -2234,7 +2234,7 @@
         },
         {
             "key": "DLG_CAP2_ADIOS_ERIKA_01",
-            "value": "Keep your guard up and don't strike first. And bring that scarf back, it's mine."
+            "value": "Keep your guard up and don't strike first. And come back in one piece, you still owe me a rematch."
         },
         {
             "key": "DLG_CAP2_ADIOS_BOTICARIA_01",

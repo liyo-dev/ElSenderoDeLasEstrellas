@@ -52,6 +52,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Panuelo
+    second: {fileID: 2100000, guid: c457b8f1eea3b6342a5495cc8711c133, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PanueloOscuro
+    second: {fileID: 2100000, guid: 5d2f5a480b0752647ba40597f25c1f47, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Tallo
     second: {fileID: 2100000, guid: d41527814dc6319469b9304915452492, type: 2}
   - first:

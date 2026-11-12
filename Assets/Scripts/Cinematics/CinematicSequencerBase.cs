@@ -49,8 +49,19 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     [Tooltip("Asignar si la cinemática ocurre en un interior. Activa/desactiva el skybox sólido automáticamente.")]
     [SerializeField] private AnchorEnvironment _interiorAnchor;
 
-    /// True si la cinemática ocurre en un interior (tiene AnchorEnvironment asignado).
-    protected bool OcurreEnInterior => _interiorAnchor != null;
+    /// El interior donde ocurre la cinemática: el asignado en el Inspector o, si no hay, el que
+    /// resuelva la subclase en el corte (p. ej. por dónde están sus actores). Ver INC-1116.
+    private AnchorEnvironment _interiorEnCurso;
+
+    /// True si la cinemática ocurre en un interior.
+    protected bool OcurreEnInterior => InteriorDeLaCinematica != null;
+
+    private AnchorEnvironment InteriorDeLaCinematica
+        => _interiorAnchor != null ? _interiorAnchor : _interiorEnCurso;
+
+    /// Interior en el que transcurre la cinemática cuando el Inspector no lo dice. Se pregunta en
+    /// el corte de entrada, con la pantalla cubierta. Null = al aire libre.
+    protected virtual AnchorEnvironment ResolverInterior() => null;
 
     protected AudioGraphProfile.SequenceRule MusicRule { get; private set; }
 
@@ -369,7 +380,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected void BeginCinematic()
     {
         MusicRule = ResolveAudioProfile()?.GetSequenceRule(_sequenceMusicId);
-        if (_interiorAnchor != null) EnvironmentController.Instance?.BeginCinematicOverride();
+        if (InteriorDeLaCinematica != null) EnvironmentController.Instance?.BeginCinematicOverride();
         // Null-safe: secuencias que no transcurren en el mundo (una secuencia de sueño, un
         // "sueño" fuera de cualquier localización real) no necesitan controlar la cámara de mundo
         // y no asignan _cinematicCamera en el Inspector.
@@ -397,7 +408,8 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         PresentadorDeLinea.EsconderTodo();
         OcultablesDeCinematica.MostrarTodos(this);
         ResolveActionManager()?.PopMode(ActionMode.Cinematic);
-        if (_interiorAnchor != null) EnvironmentController.Instance?.EndCinematicOverride();
+        if (InteriorDeLaCinematica != null) EnvironmentController.Instance?.EndCinematicOverride();
+        _interiorEnCurso = null;
     }
 
     /// Devuelve _actionManager si está asignado en el Inspector; si no, lo resuelve vía
@@ -423,6 +435,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         LockCinematic();
         yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
         {
+            _interiorEnCurso = _interiorAnchor == null ? ResolverInterior() : null;
             PrepararEscenaEnElCorte();
             BeginCinematic();
             // El interior se aplica en el cut point, con la pantalla cubierta:
@@ -441,8 +454,9 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// de BeginCinematic() (que activa el override en EnvironmentController).
     private void ApplyInteriorAtCutPoint()
     {
-        if (_interiorAnchor != null)
-            EnvironmentController.Instance?.ApplyInteriorForCinematic(env: _interiorAnchor);
+        var interior = InteriorDeLaCinematica;
+        if (interior != null)
+            EnvironmentController.Instance?.ApplyInteriorForCinematic(env: interior);
     }
 
     /// Cubre la pantalla, llama a EndCinematic() en el cut point y revela el gameplay.

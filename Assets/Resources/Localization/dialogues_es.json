@@ -1522,7 +1522,7 @@
         },
         {
             "key": "DLG_ERIKA_DESPUES_01",
-            "value": "Ese pañuelo te sienta bien. Vuelve entero."
+            "value": "Si quieres otra ronda, ya sabes dónde estoy. Y vuelve entero."
         },
         {
             "key": "ITEM_PANUELO_NAME",
@@ -1534,19 +1534,19 @@
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_01",
-            "value": "Capa, poción, pañuelo… ya llevas de todo. Pero te falta lo más importante: saber por qué te vas."
+            "value": "Capa, poción, grimorio… ya llevas de todo. Bueno, de todo menos una cosa: saber por qué te vas."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_02",
-            "value": "Ahí fuera vas a dudar, Will. Y cuando dudes, tienes que tener muy claros tus motivos."
+            "value": "Ahí fuera vas a dudar, Will. Y cuando dudes, tendrás que acordarte de por qué saliste por esa puerta."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_03",
-            "value": "Encontrar a Estela. Y entender qué me está pasando."
+            "value": "Ese demonio llevaba un aro, y alguien se lo puso. Quiero saber quién. Y quiero que Estela me enseñe a usar esta magia antes de que vuelva a pasar."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_04",
-            "value": "Buenos motivos. Y son tuyos, no míos. No los sueltes."
+            "value": "Eso ya suena a ti. Agárrate a eso cuando se ponga feo."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_01",
@@ -1554,7 +1554,7 @@
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_02",
-            "value": "Yo me quedo en el pueblo. Alguien tiene que cuidar de Pía... y de tu casa."
+            "value": "Yo me quedo en el pueblo. Alguien tiene que echarle un ojo a tu casa mientras estás fuera."
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_03",
@@ -1574,11 +1574,11 @@
         },
         {
             "key": "DLG_ERIKA_VICTORIA_02",
-            "value": "Toma, un pañuelo bordado: para el sudor y para acordarte de volver."
+            "value": "Con la Protección y tu grimorio, ya no sales del pueblo con las manos vacías."
         },
         {
             "key": "DLG_ERIKA_VICTORIA_03",
-            "value": "Y no lo pierdas por el camino."
+            "value": "Y practica por el camino, que la magia se oxida."
         },
         {
             "key": "ESCAPE_SENDERO_ESTELA_INICIO",
@@ -2234,7 +2234,7 @@
         },
         {
             "key": "DLG_CAP2_ADIOS_ERIKA_01",
-            "value": "Guardia alta y no te lances el primero. Y vuelve con ese pañuelo, que es mío."
+            "value": "Guardia alta y no te lances el primero. Y vuelve entero, que aún me debes una revancha."
         },
         {
             "key": "DLG_CAP2_ADIOS_BOTICARIA_01",

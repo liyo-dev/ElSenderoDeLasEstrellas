@@ -18,7 +18,7 @@ MonoBehaviour:
   displayNameId: WARDROBE_CLOAK02_NAME
   displayName: Capa de mago de principiante.
   descriptionId: WARDROBE_CLOAK02_DESC
-  description: "Capa m\xE1gica usada por magos que comienzan su aventura."
+  description: "La capa que Victoria le cosi\xF3 a Will para el viaje. Con ella puesta hay m\xE1s margen para devolver un golpe con la Protecci\xF3n."
   icon: {fileID: 21300000, guid: da50e43c38e144f41ba766604d000d07, type: 3}
-  rasgos: 
+  rasgos: 01000000i
   soloPara: 

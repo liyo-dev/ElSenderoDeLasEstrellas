@@ -19,28 +19,28 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 1
   - speakerNameId: CHAR_ELDRAN
     textId: DLG_ELDRAN_MOTIVOS_02
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 10
+    emotion: 0
   - speakerNameId: CHAR_WILL
     textId: DLG_ELDRAN_MOTIVOS_03
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
-    emotion: 6
+    emotion: 0
   - speakerNameId: CHAR_ELDRAN
     textId: DLG_ELDRAN_MOTIVOS_04
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 11
   - speakerNameId: CHAR_ELDRAN
     textId: DLG_ELDRAN_MOTIVOS_05
     text: "Anda, ve a despedirte de la gente. Oliver no me perdonar\xEDa que te fueras sin decirle nada."
