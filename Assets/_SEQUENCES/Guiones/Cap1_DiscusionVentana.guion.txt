@@ -8,7 +8,7 @@
 GUION Cap1_DiscusionVentana
 ESCENA WillHouse
 SECUENCIA Assets/_SEQUENCES/SEQ_DiscusionVentana.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO

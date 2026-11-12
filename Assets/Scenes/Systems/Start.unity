@@ -977,14 +977,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 993124783}
-  - {fileID: 90825583}
   - {fileID: 1676841572}
   - {fileID: 794523449}
   - {fileID: 822553939}
   - {fileID: 1549242723}
   - {fileID: 1749223130}
-  - {fileID: 1389356914}
   m_Father: {fileID: 621423747}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -1399,7 +1396,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1563,97 +1560,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &90825582
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 90825583}
-  - component: {fileID: 90825586}
-  - component: {fileID: 90825585}
-  - component: {fileID: 90825584}
-  m_Layer: 5
-  m_Name: DialogueTextBackdropUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &90825583
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90825582}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 47256263}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 992, y: 250}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &90825584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90825582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93c38ccbee79c1e498833b8c975e2f37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueTextBackdropUI
-  _color: {r: 0.02, g: 0.04, b: 0.15, a: 0.82}
-  _softH: 0.22
-  _softV: 0.55
---- !u!114 &90825585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90825582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &90825586
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90825582}
-  m_CullTransparentMesh: 1
 --- !u!1 &97851985
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,7 +3054,6 @@ MonoBehaviour:
   manaText: {fileID: 0}
   barrasApiladas: 1
   tamanoDelNumeroDeCapas: 22
-  fadeDuration: 0.5
 --- !u!114 &206708493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4337,8 +4242,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5192,8 +5097,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6229,14 +6134,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.078431375}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: ecac636bb5aa474580c9ff59f4542c59, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8647,7 +8552,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9301,8 +9206,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9683,7 +9588,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -10211,15 +10116,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: ecac636bb5aa474580c9ff59f4542c59, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -10671,88 +10576,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
---- !u!1 &993124782
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 993124783}
-  - component: {fileID: 993124784}
-  - component: {fileID: 993124785}
-  - component: {fileID: 993124786}
-  m_Layer: 5
-  m_Name: DreamBackground
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &993124783
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 993124782}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 47256263}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 992, y: 250}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &993124784
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 993124782}
-  m_CullTransparentMesh: 1
---- !u!114 &993124785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 993124782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708f5effa10fe9c4da08b7bceec1e60b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DreamBackgroundController
-  _blobCount: 5
-  _sizeMin: 200
-  _sizeMax: 560
-  _alphaMin: 0.2
-  _alphaMax: 0.4
-  _pulseSpeedMin: 3.5
-  _pulseSpeedMax: 8
-  _driftFraction: 0.35
-  _driftSpeedMin: 5
-  _driftSpeedMax: 13
---- !u!114 &993124786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 993124782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
-  m_Softness: {x: 0, y: 0}
 --- !u!1 &996394058
 GameObject:
   m_ObjectHideFlags: 0
@@ -11235,9 +11058,9 @@ MonoBehaviour:
   enableCameraFocus: 1
   deathShotYawOffset: 150
   deathShotPitch: 20
-  enableDeathFlash: 1
-  deathFlashColor: {r: 0.5, g: 0, b: 0, a: 0.4}
-  deathFlashDuration: 0.3
+  segundosDeLaNoche: 2.6
+  giroDeLaCamara: 40
+  inclinacionFinal: 32
   gameOverAudioEvent: GameOverMenu
 --- !u!4 &1017316058
 Transform:
@@ -13567,7 +13390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ff0f7930880df4e92628a2cf2221a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sendero.UI.ComboPanelUI
-  rowBackground: {fileID: 21300000, guid: c00decf23975fc246a3aa1d498544bea, type: 3}
   timerFill: {fileID: 21300000, guid: b23d6a3165424614fa730f8943348cb3, type: 3}
   hintSize: 120
   symbolSize: 110
@@ -13576,7 +13398,7 @@ MonoBehaviour:
   hintOn: {r: 1, g: 1, b: 1, a: 1}
   hintOff: {r: 1, g: 1, b: 1, a: 0.15}
   timerColor: {r: 0.95, g: 0.76, b: 0.31, a: 0.9}
-  failColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  tinteDeFallo: {r: 1, g: 0.62, b: 0.55, a: 1}
   fadeIn: 0.1
   fadeOut: 0.3
   resultHold: 0.35
@@ -14389,89 +14211,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!1 &1389356913
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1389356914}
-  - component: {fileID: 1389356916}
-  - component: {fileID: 1389356915}
-  - component: {fileID: 1389356917}
-  m_Layer: 5
-  m_Name: DreamSparkles
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1389356914
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389356913}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 47256263}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1389356915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389356913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d729c5c8d804774d8538edbc41fa121, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DreamSparkleOverlay
-  _poolSize: 18
-  _spawnMin: 0.12
-  _spawnMax: 0.45
-  _lifetimeMin: 1.6
-  _lifetimeMax: 3.8
-  _driftY: 85
-  _driftXMax: 22
-  _sizeMin: 5
-  _sizeMax: 20
-  _colorA: {r: 1, g: 0.95, b: 0.7, a: 0.88}
-  _colorB: {r: 0.55, g: 0.82, b: 1, a: 0.88}
---- !u!222 &1389356916
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389356913}
-  m_CullTransparentMesh: 1
---- !u!114 &1389356917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389356913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
-  m_Softness: {x: 0, y: 0}
 --- !u!1 &1391983626
 GameObject:
   m_ObjectHideFlags: 0
@@ -14682,6 +14421,10 @@ MonoBehaviour:
   cancelButton: {fileID: 564799593}
   cancelLabel: {fileID: 72659636}
   margenTextoBoton: 26
+  tamanoDeLaCaja: {x: 991, y: 250}
+  alturaDeLaCaja: 50
+  anchoDeLosBotones: 230
+  letraDelMensaje: 34
   inputGracePeriod: 0.15
 --- !u!4 &1406461266
 Transform:
@@ -15043,6 +14786,7 @@ MonoBehaviour:
     title: "Levitaci\xF3n"
     description: 
     icon: {fileID: 21300000, guid: 1704c7cdd1802f0448577afeeb7f2a03, type: 3}
+  habilidadesSinAviso: 01000000i
   slideOffscreenX: 450
   animInDuration: 0.45
   animOutDuration: 0.3
@@ -15328,8 +15072,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15599,11 +15343,17 @@ MonoBehaviour:
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}
   colorDelGolpe: {r: 1, g: 0.18, b: 0.18, a: 1}
+  marcoRedondo: 1
+  centroDelMarco: {x: 0, y: 210}
+  diametroDelMarco: 250
+  grosorDelAro: 9
+  grosorDeLaTinta: 7
+  escalaDentroDelMarco: 0.72
+  subidaDentroDelMarco: 40
   mostrarBarras: 1
   tamanoDeBarra: {x: 190, y: 12}
   alturaDeLasBarras: 12
   colorDeVidaBaja: {r: 0.95, g: 0.32, b: 0.25, a: 1}
-  colorDeFondoDeBarra: {r: 0, g: 0, b: 0, a: 0.6}
   duracionDelCambio: 0.45
   alturaDelSalto: 14
   duracionDelGolpe: 0.4
@@ -16312,11 +16062,17 @@ MonoBehaviour:
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}
   colorDelGolpe: {r: 1, g: 0.18, b: 0.18, a: 1}
+  marcoRedondo: 1
+  centroDelMarco: {x: 0, y: 210}
+  diametroDelMarco: 250
+  grosorDelAro: 9
+  grosorDeLaTinta: 7
+  escalaDentroDelMarco: 0.72
+  subidaDentroDelMarco: 40
   mostrarBarras: 1
   tamanoDeBarra: {x: 190, y: 12}
   alturaDeLasBarras: 12
   colorDeVidaBaja: {r: 0.95, g: 0.32, b: 0.25, a: 1}
-  colorDeFondoDeBarra: {r: 0, g: 0, b: 0, a: 0.6}
   duracionDelCambio: 0.45
   alturaDelSalto: 14
   duracionDelGolpe: 0.4
@@ -17872,14 +17628,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: ecac636bb5aa474580c9ff59f4542c59, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -18274,7 +18030,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -20133,7 +19889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05, g: 0.05, b: 0.08, a: 0.92}
+  m_Color: {r: 0.169, g: 0.137, b: 0.267, a: 0.94}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -20586,11 +20342,17 @@ MonoBehaviour:
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}
   colorDelGolpe: {r: 1, g: 0.18, b: 0.18, a: 1}
+  marcoRedondo: 1
+  centroDelMarco: {x: 0, y: 210}
+  diametroDelMarco: 250
+  grosorDelAro: 9
+  grosorDeLaTinta: 7
+  escalaDentroDelMarco: 0.72
+  subidaDentroDelMarco: 40
   mostrarBarras: 1
   tamanoDeBarra: {x: 190, y: 12}
   alturaDeLasBarras: 12
   colorDeVidaBaja: {r: 0.95, g: 0.32, b: 0.25, a: 1}
-  colorDeFondoDeBarra: {r: 0, g: 0, b: 0, a: 0.6}
   duracionDelCambio: 0.45
   alturaDelSalto: 14
   duracionDelGolpe: 0.4
@@ -20955,8 +20717,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -22036,8 +21798,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279901988
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -23076,7 +22838,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -23168,7 +22930,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
@@ -24748,7 +24510,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
@@ -25100,7 +24862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
+  m_Color: {r: 0.169, g: 0.137, b: 0.267, a: 0.94}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

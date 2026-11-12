@@ -9,6 +9,9 @@
 // RenderTexture de un retrato vivo. Respeta RectMask2D (UNITY_UI_CLIP_RECT), que es lo que
 // corta el retrato a la altura del pecho.
 //
+// _RecorteRedondo recorta además a un círculo (xy centro y z radio, en el espacio del lienzo,
+// como _ClipRect; w = 1 lo enciende): el marco redondo de la interfaz de papel.
+//
 // Los retratos vivos llegan en dos texturas, la misma imagen sobre negro y sobre blanco; con
 // _UsarTexturaSobreFondo encendido, el alfa sale de lo que cambian entre ellas (el fondo) y el
 // color se desmultiplica, porque URP no conserva el alfa de una RenderTexture.
@@ -25,6 +28,7 @@ Shader "UI/RetratoDelGrupo"
         _Saturacion ("Saturación", Range(0, 1.5)) = 1
         _Brillo ("Brillo", Range(0, 2)) = 1
         _Destello ("Destello (alfa = intensidad)", Color) = (1,0.18,0.18,0)
+        _RecorteRedondo ("Recorte redondo (xy centro, z radio, w activo)", Vector) = (0,0,0,0)
 
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
@@ -105,6 +109,7 @@ Shader "UI/RetratoDelGrupo"
             half _Saturacion;
             half _Brillo;
             half4 _Destello;
+            float4 _RecorteRedondo;
 
             v2f vert(appdata_t v)
             {
@@ -137,6 +142,12 @@ Shader "UI/RetratoDelGrupo"
                 half gris = dot(color.rgb, half3(0.299, 0.587, 0.114));
                 color.rgb = lerp(gris.xxx, color.rgb, _Saturacion) * _Brillo;
                 color.rgb = lerp(color.rgb, _Destello.rgb, saturate(_Destello.a));
+
+                if (_RecorteRedondo.w > 0.5)
+                {
+                    float d = distance(IN.worldPosition.xy, _RecorteRedondo.xy);
+                    color.a *= saturate(_RecorteRedondo.z - d + 0.5);
+                }
 
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);

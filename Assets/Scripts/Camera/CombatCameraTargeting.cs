@@ -27,6 +27,20 @@ public class CombatCameraTargeting : MonoBehaviour
     public static CombatCameraTargeting Instance { get; private set; }
     public GameObject CurrentTarget => currentTarget;
 
+    /// <summary>
+    /// Fija la cámara en un objetivo aunque no esté en combate (p. ej. el NPC que acaba de ver al
+    /// jugador, para que se vea quién le ha pillado). Se suelta como cualquier fijado.
+    /// </summary>
+    public void Enfocar(GameObject objetivo)
+    {
+        SetTarget(objetivo);
+        _enfocadoHasta = Time.time + SegundosDeEnfoqueSinCombate;
+    }
+
+    // Un enfoque sin combate se suelta solo pasado este tiempo si no llega a empezar la pelea.
+    private const float SegundosDeEnfoqueSinCombate = 8f;
+    private float _enfocadoHasta;
+
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() { Instance = null; }
@@ -155,6 +169,13 @@ public class CombatCameraTargeting : MonoBehaviour
         
         wasInCombatLastFrame = isInCombat;
         
+        if (isInCombat) _enfocadoHasta = 0f;
+        else if (_enfocadoHasta > 0f && Time.time > _enfocadoHasta)
+        {
+            _enfocadoHasta = 0f;
+            ReleaseLock();
+        }
+
         if (isInCombat && !isLockActive && !_suppressedByLevitation && !_targetingSuppressedByPlayer && !DebeSuprimirMarcador()) TryAutoLock();
         if (isLockActive) EnsureVisualLockSync();
     }

@@ -157,6 +157,62 @@ public static class PasoAlAspectoDeDibujo
         OrdenesDelEditor.Avisar("Aspecto de dibujo", informe.ToString());
     }
 
+    /// Materiales del dibujo cuya textura tiene partes transparentes (hojas, flores, enredaderas) y
+    /// no recortan: se veía el fondo de la textura como una caja. Les pone el recorte por alfa y
+    /// los dibuja por las dos caras. Se puede repetir (INC-1080).
+    [MenuItem("El Sendero/Aspecto de dibujo/Recortar las texturas con transparencia")]
+    public static void RecortarTransparencias()
+    {
+        var shader = Shader.Find(NombreDelShader);
+        if (shader == null) { OrdenesDelEditor.Avisar("Aspecto de dibujo", $"No encuentro el shader «{NombreDelShader}»."); return; }
+        var cache = new Dictionary<Texture2D, float>();
+        var nombres = new List<string>();
+        int revisados = 0;
+        foreach (string guid in AssetDatabase.FindAssets("t:Material", new[] { "Assets" }))
+        {
+            string ruta = AssetDatabase.GUIDToAssetPath(guid);
+            if (!ruta.EndsWith(".mat", StringComparison.OrdinalIgnoreCase)) continue;
+            if (CarpetasQueNoSeTocan.Any(c => ruta.StartsWith(c, StringComparison.OrdinalIgnoreCase))) continue;
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            if (mat == null || mat.shader != shader || mat.IsKeywordEnabled("_ALPHATEST_ON")) continue;
+            var tex = mat.GetTexture("_BaseMap") as Texture2D;
+            if (tex == null || !GraphicsFormatUtility.HasAlphaChannel(tex.graphicsFormat)) continue;
+            revisados++;
+            if (!cache.TryGetValue(tex, out float hueco)) cache[tex] = hueco = FraccionTransparente(tex);
+            // Casi nada transparente: no hace falta. Casi todo: el alfa no se usa (se borraría la pieza).
+            if (hueco < 0.04f || hueco > 0.9f) continue;
+            mat.EnableKeyword("_ALPHATEST_ON");
+            mat.SetFloat("_AlphaClip", 1f);
+            if (mat.GetFloat("_Cutoff") <= 0f) mat.SetFloat("_Cutoff", 0.5f);
+            mat.SetFloat("_Cull", 0f);
+            if (mat.renderQueue < (int)RenderQueue.AlphaTest) mat.renderQueue = (int)RenderQueue.AlphaTest;
+            EditorUtility.SetDirty(mat);
+            nombres.Add(mat.name);
+        }
+        AssetDatabase.SaveAssets();
+        OrdenesDelEditor.Avisar("Aspecto de dibujo", $"{nombres.Count} de {revisados} materiales con textura con alfa pasan a recortar: {string.Join(", ", nombres.Take(60))}");
+    }
+
+    /// Fracción de píxeles casi transparentes de una textura (la lee aunque no sea legible).
+    private static float FraccionTransparente(Texture2D tex)
+    {
+        int w = Mathf.Min(tex.width, 256), h = Mathf.Min(tex.height, 256);
+        var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        var previo = RenderTexture.active;
+        Graphics.Blit(tex, rt);
+        RenderTexture.active = rt;
+        var copia = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        copia.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+        copia.Apply();
+        RenderTexture.active = previo;
+        RenderTexture.ReleaseTemporary(rt);
+        var px = copia.GetPixels32();
+        UnityEngine.Object.DestroyImmediate(copia);
+        int n = 0;
+        foreach (var p in px) if (p.a < 128) n++;
+        return px.Length > 0 ? n / (float)px.Length : 0f;
+    }
+
     [MenuItem("El Sendero/Aspecto de dibujo/Volver al aspecto anterior")]
     public static void Volver()
     {
@@ -207,6 +263,22 @@ public static class PasoAlAspectoDeDibujo
     /// El color con que la rampa de Quibli pinta la parte iluminada (su punto más claro), tal como se
     /// escribe en un color de material. <paramref name="sombra"/>: luz del punto más oscuro respecto al
     /// más claro (lineal), o -1 si no hay rampa.
+    /// El color liso con el que se ve un material de Quibli (su rampa, sin textura) o de URP.
+    internal static Color ColorPlanoDe(Material mat)
+    {
+        if (mat == null) return Color.white;
+        if (mat.shader != null && mat.shader.name == ShaderDeQuibli)
+        {
+            Color c = ColorIluminadoDeLaRampa(mat, out _);
+            if (mat.GetTexture("_BaseMap") == null && mat.HasProperty("_TextureImpact"))
+                c = (c.linear * (1f - Mathf.Clamp01(mat.GetFloat("_TextureImpact")))).gamma;
+            c.a = 1f;
+            return c;
+        }
+        if (mat.HasProperty("_Tinte")) return mat.GetColor("_Tinte");
+        return mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : Color.white;
+    }
+
     private static Color ColorIluminadoDeLaRampa(Material mat, out float sombra)
     {
         sombra = -1f;

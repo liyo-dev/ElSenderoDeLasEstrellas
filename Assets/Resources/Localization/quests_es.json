@@ -258,11 +258,11 @@
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_DESC",
-            "value": "Eldran te enseña un Punto de Guardado."
+            "value": "Eldran te enseña un farol de estrellas."
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_DETAIL",
-            "value": "Antes de seguir su camino, Eldran quiere enseñarte un Punto de Guardado: aquí podrás guardar tu partida y descansar para recuperar tu salud y tu maná."
+            "value": "Antes de seguir su camino, Eldran quiere enseñarte un farol de estrellas: a su lado puedes descansar para recuperar la salud y el maná, y guardar la partida."
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_NAME",
@@ -270,7 +270,7 @@
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_STEP01_DESC",
-            "value": "Escucha lo que Eldran tiene que decirte sobre el Punto de Guardado."
+            "value": "Escucha lo que Eldran tiene que decirte sobre el farol de estrellas."
         },
         {
             "key": "QUEST_GUARDIABOSQUE_ARANAS_DESC",

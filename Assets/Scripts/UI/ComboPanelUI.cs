@@ -16,7 +16,6 @@ namespace Sendero.UI
     public class ComboPanelUI : MonoBehaviour
     {
         [Header("Sprites")]
-        [SerializeField] private Sprite rowBackground;
         [SerializeField] private Sprite timerFill;
 
         [Header("Medidas (unidades locales)")]
@@ -29,7 +28,8 @@ namespace Sendero.UI
         [SerializeField] private Color hintOn = Color.white;
         [SerializeField] private Color hintOff = new Color(1f, 1f, 1f, 0.15f);
         [SerializeField] private Color timerColor = new Color(0.95f, 0.76f, 0.31f, 0.9f);
-        [SerializeField] private Color failColor = new Color(1f, 0.35f, 0.35f, 1f);
+        [Tooltip("Tinte del papel de la fila cuando el combo falla.")]
+        [SerializeField] private Color tinteDeFallo = new Color(1f, 0.62f, 0.55f, 1f);
 
         [Header("Animación")]
         [SerializeField] private float fadeIn = 0.1f;
@@ -126,8 +126,7 @@ namespace Sendero.UI
             _symbolsRow.anchoredPosition = new Vector2(0f, -(hintSize + spacing * 1.5f));
             _symbolsRow.sizeDelta = new Vector2(rowW, symbolSize + spacing * 2f);
             _symbolsBg = _symbolsRow.gameObject.AddComponent<UnityEngine.UI.Image>();
-            _symbolsBg.sprite = rowBackground;
-            _symbolsBg.type = UnityEngine.UI.Image.Type.Sliced;
+            PiezasDeUI.VestirHoja(_symbolsBg);
             _symbolsBg.raycastTarget = false;
 
             for (int i = 0; i < maxSymbols; i++)
@@ -273,7 +272,7 @@ namespace Sendero.UI
             }
             else if (result == ComboCastController.Result.Fizzled)
             {
-                _symbolsBg.color = failColor;
+                _symbolsBg.color = tinteDeFallo;
                 _symbolsRow.DOKill(true);
                 _symbolsRow.DOShakeAnchorPos(0.3f, new Vector2(18f, 0f), 20, 0f).SetUpdate(true);
             }

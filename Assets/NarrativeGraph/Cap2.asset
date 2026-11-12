@@ -21,15 +21,15 @@ MonoBehaviour:
   - rid: 5630202263296278917
   - rid: 5630202263296278918
   - rid: 5630202263296278919
-  - rid: 6540294548361315006
-  - rid: 6540294548361315007
-  - rid: 6540294548361315008
-  - rid: 6540294548361315009
-  - rid: 6540294548361315010
-  - rid: 6540294548361315011
-  - rid: 6540294548361315012
-  - rid: 6540294548361315013
-  - rid: 6540294548361315014
+  - rid: 6540294555676705490
+  - rid: 6540294555676705491
+  - rid: 6540294555676705492
+  - rid: 6540294555676705493
+  - rid: 6540294555676705494
+  - rid: 6540294555676705495
+  - rid: 6540294555676705496
+  - rid: 6540294555676705497
+  - rid: 6540294555676705498
   - rid: 5630202263296279101
   - rid: 5630202263296279079
   - rid: 5630202263296279102
@@ -804,7 +804,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294548361315006
+    - rid: 6540294555676705490
       type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 7.- Amanece tras la noche
@@ -821,7 +821,7 @@ MonoBehaviour:
         - cap2-manana-despues-8
         targetTime: 6
         immediate: 1
-    - rid: 6540294548361315007
+    - rid: 6540294555676705491
       type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "8.- Carga la habitaci\xF3n de Will"
@@ -839,7 +839,7 @@ MonoBehaviour:
         operacion: 0
         sceneName: WillHouse
         waitForCompletion: 1
-    - rid: 6540294548361315008
+    - rid: 6540294555676705492
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
@@ -858,7 +858,7 @@ MonoBehaviour:
         markId: Bedroom
         applyPlayerEnvironment: 1
         showActor: 0
-    - rid: 6540294548361315009
+    - rid: 6540294555676705493
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "10.- Eldran entra en la habitaci\xF3n"
@@ -877,7 +877,7 @@ MonoBehaviour:
         markId: M_Manana_EldranPuerta
         applyPlayerEnvironment: 0
         showActor: 1
-    - rid: 6540294548361315010
+    - rid: 6540294555676705494
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
@@ -901,7 +901,7 @@ MonoBehaviour:
         acercarActor: 
         distanciaMaxima: 24
         distanciaDeAparicion: 12
-    - rid: 6540294548361315011
+    - rid: 6540294555676705495
       type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "12.- Eldran espera junto a la casa de Will (sale en la cinem\xE1tica)"
@@ -920,7 +920,7 @@ MonoBehaviour:
         markId: Eldran_JuntoACasaDeWill
         applyPlayerEnvironment: 0
         showActor: 1
-    - rid: 6540294548361315012
+    - rid: 6540294555676705496
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 13.- Trozo del aro
@@ -939,7 +939,7 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 6540294548361315013
+    - rid: 6540294555676705497
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "14.- Prep\xE1rate para el viaje"
@@ -958,7 +958,7 @@ MonoBehaviour:
         giverId: NPC_Eldran
         inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
         noGiver: 0
-    - rid: 6540294548361315014
+    - rid: 6540294555676705498
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"

@@ -258,15 +258,11 @@ public class DialogueManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Pone el papel de la interfaz bajo el texto de la caja. Los fondos que trae el panel de la
-    /// escena (nebulosa, chispas, difuminado oscuro) no se dibujan debajo.
+    /// Pone el papel de la interfaz bajo el texto de la caja.
     /// </summary>
     void MontarElPapel()
     {
         if (bodyText == null || !(bodyText.transform.parent is RectTransform panel)) return;
-        foreach (var fondo in panel.GetComponentsInChildren<DreamBackgroundController>(true)) fondo.gameObject.SetActive(false);
-        foreach (var chispas in panel.GetComponentsInChildren<DreamSparkleOverlay>(true)) chispas.gameObject.SetActive(false);
-        foreach (var difuminado in panel.GetComponentsInChildren<DialogueTextBackdropUI>(true)) difuminado.gameObject.SetActive(false);
         _papel = new PapelDeLaCajaDeDialogo(panel, nameText, bodyText);
         _papel.VestirOpcion(yesButton);
         _papel.VestirOpcion(noButton);
@@ -274,7 +270,11 @@ public class DialogueManager : MonoBehaviour
 
     void PonerNombreDelHablante(string nombre)
     {
-        if (_papel != null) _papel.PonerNombre(nombre, PaletaUI.Noche, PaletaUI.Oro);
+        if (_papel != null)
+        {
+            ColoresDeLaPestana.De(nombre, out var fondo, out var letra);
+            _papel.PonerNombre(nombre, fondo, letra);
+        }
         else if (nameText) nameText.text = nombre ?? string.Empty;
     }
 
@@ -1172,26 +1172,63 @@ public class DialogueManager : MonoBehaviour
     float _margenDerechoDelPrefab = float.NaN;
 
     /// <summary>
-    /// Deja libre a la derecha del texto el hueco del botón A de pasar página, para que las frases
-    /// largas no queden debajo de él (INC-983). Se mide en cada página: la caja puede cambiar de tamaño.
+    /// Aparta el texto del botón A de pasar página (INC-983) solo cuando hace falta: el texto usa
+    /// todo el ancho de la caja y, si alguna línea llegaría a pisar el botón, se reserva su hueco a
+    /// la derecha (el margen de TMP vale para todas las líneas). Se mide en cada página: la caja
+    /// puede cambiar de tamaño.
     /// </summary>
     void ReservarSitioParaElBotonA()
     {
         if (submitHint == null || !(submitHint.transform is RectTransform boton)) return;
+        var margen = bodyText.margin;
+        if (float.IsNaN(_margenDerechoDelPrefab)) _margenDerechoDelPrefab = margen.z;
+        float derecha = _margenDerechoDelPrefab;
+
         var texto = bodyText.rectTransform;
         boton.GetWorldCorners(s_esquinas);
         Vector3 abajoIzq = texto.InverseTransformPoint(s_esquinas[0]);
         Vector3 arribaDer = texto.InverseTransformPoint(s_esquinas[2]);
         Rect caja = texto.rect;
         bool seCruzan = abajoIzq.x < caja.xMax && arribaDer.x > caja.xMin && abajoIzq.y < caja.yMax && arribaDer.y > caja.yMin;
-        var margen = bodyText.margin;
-        if (float.IsNaN(_margenDerechoDelPrefab)) _margenDerechoDelPrefab = margen.z;
-        float derecha = seCruzan ? Mathf.Max(_margenDerechoDelPrefab, caja.xMax - abajoIzq.x + 8f) : _margenDerechoDelPrefab;
+        if (seCruzan && LineasPisanElBoton(abajoIzq, arribaDer, margen))
+            derecha = Mathf.Max(_margenDerechoDelPrefab, caja.xMax - abajoIzq.x + 8f);
+
         if (!Mathf.Approximately(margen.z, derecha))
         {
             margen.z = derecha;
             bodyText.margin = margen;
         }
+    }
+
+    /// <summary>
+    /// Mide el texto con el ancho entero y dice si alguna línea entra en el rectángulo del botón A
+    /// (en el espacio local del texto).
+    /// </summary>
+    bool LineasPisanElBoton(Vector3 abajoIzq, Vector3 arribaDer, Vector4 margen)
+    {
+        margen.z = _margenDerechoDelPrefab;
+        bodyText.margin = margen;
+        var desbordamiento = bodyText.overflowMode;
+        bodyText.overflowMode = TextOverflowModes.Overflow;
+        bodyText.maxVisibleCharacters = int.MaxValue;
+        try
+        {
+            if (!TryForceMeshUpdate()) return true;
+            var info = bodyText.textInfo;
+            for (int i = 0; i < info.lineCount; i++)
+            {
+                var linea = info.lineInfo[i];
+                if (linea.characterCount == 0) continue;
+                float izquierda = linea.lineExtents.min.x;
+                float derechaDeLinea = linea.lineExtents.max.x;
+                float arriba = linea.ascender;
+                float abajo = linea.descender;
+                if (izquierda < arribaDer.x && derechaDeLinea > abajoIzq.x && abajo < arribaDer.y && arriba > abajoIzq.y)
+                    return true;
+            }
+            return false;
+        }
+        finally { bodyText.overflowMode = desbordamiento; }
     }
 
     void PintarPagina(DialogueLine line, bool reproducirVoz)
@@ -1202,8 +1239,8 @@ public class DialogueManager : MonoBehaviour
         if (bodyText)
         {
             StopTypewriter();
-            ReservarSitioParaElBotonA();
             bodyText.text = _currentText;
+            ReservarSitioParaElBotonA();
             int limite = _current != null ? _current.maxLinesPerPage : 0;
             if (limite > 0)
             {

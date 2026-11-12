@@ -1123,7 +1123,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 470, y: -434}
+  m_AnchoredPosition: {x: 470, y: -536}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &28415820
@@ -34034,8 +34034,6 @@ MonoBehaviour:
   fontSize: 26
   fullCreditsSceneName: Credits
   panelWidth: 560
-  panelColor: {r: 0.07, g: 0.05, b: 0.03, a: 0.9}
-  accentColor: {r: 0.97, g: 0.71, b: 0.22, a: 1}
   animDuration: 0.32
   cancelInputGracePeriod: 0.25
   autoScrollSpeed: 0.045
@@ -47469,8 +47467,6 @@ MonoBehaviour:
   font: {fileID: 0}
   fontSize: 26
   panelWidth: 560
-  panelColor: {r: 0.07, g: 0.05, b: 0.03, a: 0.9}
-  accentColor: {r: 0.97, g: 0.71, b: 0.22, a: 1}
   animDuration: 0.32
   cancelInputGracePeriod: 0.25
 --- !u!4 &666895260
@@ -66800,7 +66796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.02, g: 0.02, b: 0.05, a: 0.92}
+  m_Color: {r: 0.169, g: 0.137, b: 0.267, a: 0.94}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -141041,8 +141037,6 @@ MonoBehaviour:
   font: {fileID: 0}
   fontSize: 24
   panelWidth: 620
-  panelColor: {r: 0.07, g: 0.05, b: 0.03, a: 0.9}
-  accentColor: {r: 0.97, g: 0.71, b: 0.22, a: 1}
   animDuration: 0.32
   cancelInputGracePeriod: 0.25
 --- !u!4 &1532511250
@@ -169032,8 +169026,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuTextHighlight
   targetGraphic: {fileID: 1843063551}
   selectionOwner: {fileID: 1525387481}
-  normalColor: {r: 1, g: 1, b: 1, a: 0.85}
-  starColor: {r: 1, g: 0.87, b: 0.2, a: 1}
+  normalColor: {r: 0.14, g: 0.12, b: 0.1, a: 0.85}
+  starColor: {r: 0.72, g: 0.36, b: 0.05, a: 1}
   pulseDuration: 0.45
   twinkleScale: 1.06
   twinkleTime: 0.18
@@ -169067,7 +169061,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -174819,8 +174813,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuTextHighlight
   targetGraphic: {fileID: 1890165522}
   selectionOwner: {fileID: 671507750}
-  normalColor: {r: 1, g: 1, b: 1, a: 0.85}
-  starColor: {r: 1, g: 0.87, b: 0.2, a: 1}
+  normalColor: {r: 0.14, g: 0.12, b: 0.1, a: 0.85}
+  starColor: {r: 0.72, g: 0.36, b: 0.05, a: 1}
   pulseDuration: 0.45
   twinkleScale: 1.06
   twinkleTime: 0.18
@@ -174854,7 +174848,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -192114,7 +192108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05, g: 0.05, b: 0.08, a: 0.92}
+  m_Color: {r: 0.169, g: 0.137, b: 0.267, a: 0.94}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -214408,7 +214402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 360, y: -638}
+  m_AnchoredPosition: {x: 360, y: -536}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &3087215322051445977
@@ -215225,8 +215219,6 @@ MonoBehaviour:
   fullscreenNoButton: {fileID: 7708655203485270257}
   combatHintsYesButton: {fileID: 543560764}
   combatHintsNoButton: {fileID: 1260877059}
-  activeStateColor: {r: 1, g: 0.92, b: 0.16, a: 1}
-  inactiveStateColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sliderStep: 0.05
   autoAddSelectVisuals: 1
   cancelInputGracePeriod: 0.25
@@ -217481,7 +217473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 470, y: -536}
+  m_AnchoredPosition: {x: 470, y: -638}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!223 &8463703872617498362

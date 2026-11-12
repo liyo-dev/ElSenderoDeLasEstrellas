@@ -9,7 +9,7 @@
 GUION Chuche_02_ElPergamino
 ESCENA Chuchelandia
 SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Pergamino.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.3
 
 REPARTO

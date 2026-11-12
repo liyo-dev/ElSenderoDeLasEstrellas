@@ -453,7 +453,7 @@ public class ShopUI : MonoBehaviour
         if (pieza != null && pieza.Rasgos.Count > 0 && _selectedEntry.item.usageKind != ItemData.ItemUsageKind.Consumable)
         {
             foreach (var rasgo in pieza.Rasgos)
-                descripcion += "\n<color=#6FDC8C>+ " + RasgosDePrenda.Texto(rasgo) + "</color>";
+                descripcion += "\n<color=#2E7D3E>+ " + RasgosDePrenda.Texto(rasgo) + "</color>";
         }
         detailDescription.richText = true;
         var moneda = shopController != null ? shopController.CurrencyItem : null;

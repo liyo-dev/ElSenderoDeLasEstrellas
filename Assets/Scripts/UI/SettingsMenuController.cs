@@ -39,9 +39,9 @@ public class SettingsMenuController : MonoBehaviour
     private Action _onClosed;
     private EventSystem _eventSystem;
 
-    [Header("State visuals")]
-    [SerializeField] private Color activeStateColor = new Color(1f, 0.92f, 0.16f);
-    [SerializeField] private Color inactiveStateColor = Color.white;
+    // Opción elegida en dorado y la otra en papel apagado, como las fichas de la interfaz de papel.
+    private static Color ColorActivo => PaletaUI.Oro;
+    private static Color ColorInactivo => PaletaUI.PapelApagado;
 
     [Header("Slider input")]
     [SerializeField, Tooltip("Incremento aplicado al ajustar sliders con el gamepad.")]
@@ -73,6 +73,7 @@ public class SettingsMenuController : MonoBehaviour
         // Además del mapeo compartido de Cancelar (Esc en teclado, botón B/East en mando), hay un
         // botón "Volver" visible en el panel: con ratón no había ninguna forma cómoda de cerrar el
         // menú sin depender del atajo de teclado.
+        VestirDePapel();
         WireBinaryButton(backButton, () => Close());
 
         if (spanishButton)
@@ -114,8 +115,8 @@ public class SettingsMenuController : MonoBehaviour
                 if (!go.GetComponent<UISelectVisual>())
                 {
                     var v = go.AddComponent<UISelectVisual>();
-                    v.normalColor = Color.white;
-                    v.highlightColor = new Color(1f, 0.92f, 0.16f);
+                    v.normalColor = s is Slider ? PaletaUI.PapelClaro : ColorInactivo;
+                    v.highlightColor = ColorActivo;
                     v.selectedScale = 1.06f;
                     v.animDuration = 0.12f;
                     v.enablePulse = true;
@@ -478,6 +479,59 @@ public class SettingsMenuController : MonoBehaviour
         UpdateBinaryGroup(fullscreenYesButton, fullscreenNoButton, enabled);
     }
 
+    /// <summary>
+    /// La ventana de ajustes con la interfaz de papel: fondo de noche, cada columna una hoja de
+    /// papel con su título en oro, botones y deslizadores en fichas con borde de tinta y todo el
+    /// texto en tinta. Se monta sobre lo que hay en la escena, sin tocarla.
+    /// </summary>
+    void VestirDePapel()
+    {
+        if (root == null) return;
+        var ventana = root.transform.Find("Window");
+        if (ventana != null && ventana.TryGetComponent<Image>(out var fondo))
+        {
+            fondo.sprite = null;
+            fondo.color = new Color(PaletaUI.Noche.r, PaletaUI.Noche.g, PaletaUI.Noche.b, 0.96f);
+        }
+
+        foreach (var columna in root.GetComponentsInChildren<VerticalLayoutGroup>(true))
+        {
+            if (columna.TryGetComponent<Image>(out var hoja)) PiezasDeUI.VestirHoja(hoja);
+            columna.padding = new RectOffset(Mathf.Max(columna.padding.left, 32), Mathf.Max(columna.padding.right, 32),
+                                             Mathf.Max(columna.padding.top, 28), Mathf.Max(columna.padding.bottom, 28));
+        }
+
+        foreach (var control in root.GetComponentsInChildren<Selectable>(true))
+        {
+            if (control is Slider deslizador)
+            {
+                if (deslizador.transform.Find("Background") is Transform pista && pista.TryGetComponent<Image>(out var imgPista))
+                    PiezasDeUI.VestirFicha(imgPista, PaletaUI.PapelApagado);
+                if (deslizador.fillRect != null && deslizador.fillRect.TryGetComponent<Image>(out var relleno))
+                    PiezasDeUI.VestirFicha(relleno, PaletaUI.Oro);
+                if (deslizador.handleRect != null && deslizador.handleRect.TryGetComponent<Image>(out var tirador))
+                    PiezasDeUI.VestirFicha(tirador, PaletaUI.PapelClaro);
+            }
+            else if (control.targetGraphic is Image imagen)
+            {
+                PiezasDeUI.VestirFicha(imagen, ColorInactivo);
+            }
+        }
+
+        foreach (var texto in root.GetComponentsInChildren<Text>(true)) PintarTexto(texto, texto.transform);
+        foreach (var texto in root.GetComponentsInChildren<TMPro.TMP_Text>(true)) PintarTexto(texto, texto.transform);
+    }
+
+    /// Los títulos de cada columna (hijos directos de la hoja) en oro y en negrita; el resto, en tinta.
+    static void PintarTexto(Graphic texto, Transform t)
+    {
+        bool titulo = t.parent != null && t.parent.GetComponent<VerticalLayoutGroup>() != null;
+        texto.color = titulo ? PaletaUI.OroSobrePapel : PaletaUI.TintaDeTexto;
+        if (!titulo) return;
+        if (texto is Text legado) legado.fontStyle = FontStyle.Bold;
+        else if (texto is TMPro.TMP_Text tmp) tmp.fontStyle |= TMPro.FontStyles.Bold;
+    }
+
     void UpdateBinaryGroup(Button yesButton, Button noButton, bool yesActive)
     {
         ApplyStateToButton(yesButton, yesActive);
@@ -490,13 +544,13 @@ public class SettingsMenuController : MonoBehaviour
             return;
 
         var graphic = btn.targetGraphic ?? btn.GetComponentInChildren<Graphic>();
-        var color = active ? activeStateColor : inactiveStateColor;
+        var color = active ? ColorActivo : ColorInactivo;
 
         var visual = btn.GetComponent<UISelectVisual>();
         if (visual)
         {
             visual.normalColor = color;
-            visual.highlightColor = activeStateColor;
+            visual.highlightColor = ColorActivo;
             if (visual.targetGraphic)
                 visual.targetGraphic.color = color;
         }

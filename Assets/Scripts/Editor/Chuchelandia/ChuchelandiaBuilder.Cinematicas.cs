@@ -28,7 +28,7 @@ public static partial class ChuchelandiaBuilder
     private sealed class Cine
     {
         public string Nodo, Clave, Guion, Secuencia, Nombre, Resumen;
-        /// <summary>Bocadillo (dentro del juego) o Subtitulo (de cine, con bandas).</summary>
+        /// <summary>Subtítulo de cine con bandas: las cinemáticas no van en bocadillo.</summary>
         public PresentacionDeTexto Texto;
         public string RutaGuion => $"{CarpetaGuionesCine}/{Guion}.guion.txt";
         public string RutaSecuencia => $"{CarpetaSecuenciasCine}/{Secuencia}.asset";
@@ -345,6 +345,6 @@ public static partial class ChuchelandiaBuilder
     }
 
     private static Cine C(string nodo, string clave, string guion, string secuencia, string nombre, string resumen,
-                          PresentacionDeTexto texto = PresentacionDeTexto.Bocadillo)
+                          PresentacionDeTexto texto = PresentacionDeTexto.Subtitulo)
         => new Cine { Nodo = nodo, Clave = clave, Guion = guion, Secuencia = secuencia, Nombre = nombre, Resumen = resumen, Texto = texto };
 }

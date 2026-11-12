@@ -45,8 +45,6 @@ public class AmbientZone : MonoBehaviour
 
     // --- Estado activo ---
     private static AmbientZone _currentActiveZone;
-    // El último lugar cuyo nombre salió en pantalla: no se repite al salir y volver a entrar.
-    private static AmbientPreset _ultimoLugarNombrado;
     private static Tween _currentTween;
     private static Tween _overlayTween;
     private static AudioClip _previousMusic;
@@ -79,7 +77,6 @@ public class AmbientZone : MonoBehaviour
     {
         _defaultsCaptured = false;
         _currentActiveZone = null;
-        _ultimoLugarNombrado = null;
         _currentTween = null;
         _overlayTween = null;
         _previousMusic = null;
@@ -206,13 +203,10 @@ public class AmbientZone : MonoBehaviour
         OnTriggerEnter(other);
     }
 
-    /// <summary>El nombre del lugar, como rótulo, al entrar en un lugar con nombre distinto del último.</summary>
+    /// <summary>Anuncia el lugar al entrar (presentación la primera vez, rótulo breve después).</summary>
     private void NombrarElLugar()
     {
-        if (ambientPreset == null || string.IsNullOrEmpty(ambientPreset.nombreDelLugar)) return;
-        if (_ultimoLugarNombrado == ambientPreset || HudToastService.Instance == null) return;
-        _ultimoLugarNombrado = ambientPreset;
-        HudToastService.Instance.Show(ambientPreset.nombreDelLugar, 3.5f);
+        if (ambientPreset != null) PresentacionDeLugares.Anunciar(ambientPreset.nombreDelLugar);
     }
 
     private System.Collections.IEnumerator DeferredMusicTransition()

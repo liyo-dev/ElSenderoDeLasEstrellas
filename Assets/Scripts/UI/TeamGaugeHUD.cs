@@ -96,7 +96,7 @@ namespace Sendero.UI
             rt.anchoredPosition = new Vector2(35f, 0f);
             rt.sizeDelta = new Vector2(620f, 100f);
             var background = _ready.GetComponent<UnityEngine.UI.Image>();
-            background.color = new Color(0.07f, 0.04f, 0.14f, 0.9f);
+            PiezasDeUI.VestirFicha(background, PaletaUI.Papel);
             background.raycastTarget = false;
             CreateGlyph(InputGlyphNames.TriggerLeft, 8f);
             CreateGlyph(InputGlyphNames.TriggerRight, 94f);
@@ -112,7 +112,7 @@ namespace Sendero.UI
             plusText.text = "+";
             plusText.fontSize = 42f;
             plusText.alignment = TextAlignmentOptions.Center;
-            plusText.color = fullColor;
+            plusText.color = PaletaUI.Tinta;
             plusText.raycastTarget = false;
             var label = new GameObject("Nombre", typeof(RectTransform), typeof(TextMeshProUGUI));
             label.layer = gameObject.layer;
@@ -127,7 +127,7 @@ namespace Sendero.UI
             if (existing != null) _readyText.font = existing.font;
             _readyText.fontSize = 44f;
             _readyText.alignment = TextAlignmentOptions.MidlineLeft;
-            _readyText.color = fullColor;
+            _readyText.color = PaletaUI.TintaDeTexto;
             _readyText.raycastTarget = false;
         }
 

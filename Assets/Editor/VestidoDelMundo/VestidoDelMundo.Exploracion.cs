@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +33,6 @@ public static partial class VestidoDelMundo
     {
         Transform grupo = Grupo(o.Raiz, "Exploración");
         CerrarElTerreno(o);
-        CasasDelPuebloInicial(o);
         foreach (float radio in new[] { 64f, 76f, 90f })
             if (ArcosDeEntrada(o, Grupo(grupo, "Arcos de entrada"), ArcoDeWill, "Arco del pueblo", new Vector2(0f, -130f), radio) > 0) break;
         ArcosDeEntrada(o, Grupo(grupo, "Arcos de entrada"), ArcoDelMar, "Arco de la aldea", new Vector2(270f, -425f), 62f);
@@ -412,10 +412,75 @@ public static partial class VestidoDelMundo
         return hay;
     }
 
+    /// Margen (m) alrededor de la planta de una casa del pack dentro del que un punto de juego la deja sin cambiar.
+    private const float MargenDePuntosDeJuego = 3.5f;
+
+    /// Dónde pasa algo de juego en la escena: los puntos de aparición de NPCs y lo que cuelga de la raíz
+    /// «GAMEPLAY» (anclas de puertas, eventos, oficios). Las zonas grandes (colisionador de más de 8 m) no cuentan:
+    /// cubren el pueblo entero y no son un sitio concreto.
+    private static List<(Vector3 pos, string nombre)> PuntosDeJuego(Scene escena)
+    {
+        var r = new List<(Vector3, string)>();
+        foreach (GameObject raiz in escena.GetRootGameObjects())
+        {
+            foreach (NpcSpawnPoint p in raiz.GetComponentsInChildren<NpcSpawnPoint>(true))
+                r.Add((p.transform.position, p.name));
+            if (raiz.name != "GAMEPLAY") continue;
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == raiz.transform || t.childCount > 0) continue;
+                Collider c = t.GetComponent<Collider>();
+                if (c != null && c.bounds.extents.magnitude > 8f) continue;
+                r.Add((t.position, t.name));
+            }
+        }
+        return r;
+    }
+
+    /// Nombre del primer punto de juego que cae en la planta de la casa (con margen), o null si no hay ninguno.
+    /// Una casa con juego (la de Will con su puerta, el puesto de Tomasa, los puestos de los oficios) no se
+    /// cambia: su puerta, su mostrador y quien la atiende dependen del modelo del pack.
+    private static string PuntoDeJuegoEnLaCasa(Transform casa, Bounds local, List<(Vector3 pos, string nombre)> puntos)
+    {
+        float escala = Mathf.Max(0.01f, casa.lossyScale.x);
+        float margen = MargenDePuntosDeJuego / escala;
+        foreach (var (pos, nombre) in puntos)
+        {
+            Vector3 p = casa.InverseTransformPoint(pos);
+            if (p.x >= local.min.x - margen && p.x <= local.max.x + margen &&
+                p.z >= local.min.z - margen && p.z <= local.max.z + margen)
+                return nombre;
+        }
+        return null;
+    }
+
+    /// Casas de campo puestas en la última ejecución (con su rumbo y planta): las usan el árbol del columpio y el
+    /// huerto para no pisarlas.
+    private static readonly List<(Transform casa, float rumbo, Vector2 planta)> CasasDeCampoPuestas = new();
+
     private const string MotivoCasaDelPackEnElPueblo = "casa del pack en el pueblo inicial: la sustituye una casa de campo de entramado y paja";
+    private const string MotivoPiezaSueltaEnCasaNueva = "pieza suelta del pack que se montaba sobre una casa ya cambiada o le tapaba la puerta (molino, chimenea, valla, árbol…)";
+
+    /// Planta de los muros (ancho de fachada × fondo, m) de cada casa de campo, como sale de zonas.py
+    /// (VARIANTES_DEL_PUEBLO). Los muros van centrados en el origen de la pieza.
+    private static readonly Dictionary<string, Vector2> PlantaDeCasaDelPueblo = new()
+    {
+        { "A", new Vector2(6.0f, 5.0f) }, { "B", new Vector2(5.2f, 4.6f) }, { "C", new Vector2(7.2f, 5.4f) },
+        { "D", new Vector2(5.6f, 6.0f) }, { "E", new Vector2(4.6f, 4.2f) }, { "F", new Vector2(8.4f, 6.0f) },
+    };
+
+    /// Piezas sueltas del pueblo que son parte de una casa (no enseres): si caen sobre una casa nueva se retiran.
+    private static readonly string[] PiezasDeCasa = { "Building", "Chimney", "Windmill", "Window", "Door", "Roof", "Stairs", "Ladder", "Wall", "Vane", "Smoke" };
 
     /// Cambia las casas del pack del pueblo inicial por casas de campo propias, en su sitio y mirando a donde
     /// miraban; el modelo se elige por el ancho de fachada de la casa que sustituye.
+    /// · Puestos (sin puerta y con algo de juego al lado: Tomasa, los oficios): se quedan, no son casas.
+    /// · Casas con juego en la puerta (la de Will): la casa nueva se coloca con su puerta donde estaba la vieja y
+    ///   mirando hacia el mismo lado, para que anclas, teletransportes y escenas sigan en su sitio.
+    /// · Si aun así un punto de juego queda dentro de los muros nuevos, se queda la del pack.
+    /// · El molino (torre con aspas) se queda: es el hito del pueblo.
+    /// · Lo suelto del pack que era parte de la casa (chimeneas…) y cae sobre la nueva se retira.
+    /// Ver INC-1074.
     private static void CasasDelPuebloInicial(Obra o)
     {
         Scene escena = o.Raiz.gameObject.scene;
@@ -424,33 +489,255 @@ public static partial class VestidoDelMundo
         HashSet<string> giradas = CasasGiradas(escena);
         Transform casas = Grupo(Grupo(o.Raiz, "Pueblo inicial"), "Casas de campo");
         var viejas = new List<(Transform casa, string prefab)>();
+        var sueltas = new List<Transform>();
         // Aquí cada casa es un contenedor «BuildingATnn» con los módulos de la casa («Building…») y, colgando, los
-        // enseres de su patio.
-        foreach (Transform casa in pueblo)
-            if (casa.gameObject.activeSelf && casa.name.StartsWith("BuildingAT"))
-                viejas.Add((casa, casa.name.Split(' ')[0]));
-        int n = 0, puestas = 0;
+        // enseres de su patio. Lo demás del grupo son piezas sueltas.
+        foreach (Transform hijo in pueblo)
+        {
+            if (!hijo.gameObject.activeSelf) continue;
+            if (hijo.name.StartsWith("BuildingAT")) viejas.Add((hijo, hijo.name.Split(' ')[0]));
+            else sueltas.Add(hijo);
+        }
+        List<(Vector3 pos, string nombre)> puntos = PuntosDeJuego(escena);
+        int n = 0, puestas = 0, retiradasSueltas = 0;
+        CasasDeCampoPuestas.Clear();
+        var puestasEnElPueblo = CasasDeCampoPuestas;
         foreach (var (casa, prefab) in viejas)
         {
-            Vector3 f3 = FrenteDeCasa(casa, prefab, giradas);
-            Vector2 frente = new Vector2(f3.x, f3.z).normalized;
             if (!CajaDeLaCasa(casa, out Bounds local)) continue;
+            // El molino (la torre del pack con las aspas sueltas encima) es el hito del pueblo: se queda.
+            var aspas = new List<(Vector3 pos, string nombre)>();
+            foreach (Transform t in sueltas)
+                if (t.name.StartsWith("Windmill")) aspas.Add((t.position, t.name));
+            if (PuntoDeJuegoEnLaCasa(casa, local, aspas) != null)
+            {
+                o.Informe.Add($"    {casa.name}: es el molino, se queda con sus aspas");
+                continue;
+            }
+            Transform puertaVieja = PuertaDeLaCasa(casa);
+            string usada = PuntoDeJuegoEnLaCasa(casa, local, puntos);
+            if (usada != null && puertaVieja == null)
+            {
+                o.Informe.Add($"    {casa.name}: es un puesto, se queda el del pack (juego: {usada})");
+                continue;
+            }
+
             Vector3 centro = casa.TransformPoint(local.center);
-            var c = new Vector2(centro.x, centro.z);
+            Vector3 f3 = puertaVieja != null && usada != null ? FrenteDeLaPuerta(casa, local, puertaVieja) : FrenteDeCasa(casa, prefab, giradas);
+            Vector2 frente = new Vector2(f3.x, f3.z).normalized;
             // La fachada es el +Z local o, en las giradas, otro lado: el ancho es la medida de la caja que cruza al frente.
             Vector3 frenteLocal = casa.InverseTransformDirection(f3);
             float ancho = (Mathf.Abs(frenteLocal.z) >= Mathf.Abs(frenteLocal.x) ? local.size.x : local.size.z) * casa.lossyScale.x;
             string variante = ancho >= 9.5f ? "F" : ancho >= 7.6f ? "C" : ancho >= 6.4f ? (n % 2 == 0 ? "A" : "D") : ancho >= 5.4f ? (n % 2 == 0 ? "B" : "D") : "E";
-            o.Informe.Add($"    {casa.name}: {ancho:0.0} m de fachada → CasaDelPueblo_{variante}");
+
+            // Va donde estaba la que sustituye: el sitio ya era de una casa. Si con la puerta en su sitio el tejado
+            // pisa el de otra casa nueva, se prueba con una más estrecha.
+            float rumbo = Rumbo(-frente);
+            bool alinear = puertaVieja != null && usada != null;
+            GameObject nueva = null;
+            string comoVa = null, tapado = null;
+            Vector2 planta = default;
+            foreach (string v in VariantesDesde(variante))
+            {
+                nueva = PonerCasaDeCampo(o, casas, casa.name, v, centro, rumbo, frente, alinear ? puertaVieja : null, out comoVa);
+                if (nueva == null) break;
+                planta = PlantaDeCasaDelPueblo[v];
+                tapado = PuntoDentroDeLosMuros(nueva.transform, rumbo, planta, puntos);
+                if (tapado == null && !PisaOtraCasa(nueva.transform, rumbo, planta, puestasEnElPueblo))
+                {
+                    variante = v;
+                    break;
+                }
+                Object.DestroyImmediate(nueva);
+                o.Ocupado.RemoveAt(o.Ocupado.Count - 1);
+                o.Puestas--;
+                nueva = null;
+            }
+            if (nueva == null)
+            {
+                o.Informe.Add($"    {casa.name}: se queda la del pack ({(tapado != null ? $"la nueva taparía «{tapado}»" : "ninguna casa de campo cabe sin pisar a otra")})");
+                continue;
+            }
+            puestasEnElPueblo.Add((nueva.transform, rumbo, planta));
+
+            o.Informe.Add($"    {casa.name}: {ancho:0.0} m de fachada → CasaDelPueblo_{variante}, {comoVa}");
             n++;
+            puestas++;
             Retirar(escena, casa, MotivoCasaDelPackEnElPueblo, o);
-            Physics.SyncTransforms();
-            // Va donde estaba la que sustituye, sin comprobar choques: el sitio ya era de una casa. El zócalo baja
-            // 0,6 m por debajo del origen y absorbe el desnivel.
-            float suelo = Mathf.Min(o.Suelo.Altura(c.x, c.y), Mathf.Min(o.Suelo.Altura(c.x + frente.x * 2.5f, c.y + frente.y * 2.5f), o.Suelo.Altura(c.x - frente.x * 2.5f, c.y - frente.y * 2.5f)));
-            if (PonExacto(o, casas, PrefabsDeZonas + "CasaDelPueblo_" + variante + ".prefab", casa.name + " (casa de campo)",
-                    new Vector3(c.x, suelo + 0.3f, c.y), Rumbo(-frente)) != null) puestas++;
+            bool hayPuerta = PuertaDelModelo(nueva, out Vector3 puertaPuesta);
+            for (int i = sueltas.Count - 1; i >= 0; i--)
+            {
+                if (!SueltaSobreLaCasa(sueltas[i], nueva.transform, rumbo, planta, hayPuerta, puertaPuesta)) continue;
+                Retirar(escena, sueltas[i], MotivoPiezaSueltaEnCasaNueva, o);
+                sueltas.RemoveAt(i);
+                retiradasSueltas++;
+            }
         }
-        o.Informe.Add($"  Pueblo inicial: {puestas} de {n} casas del pack cambiadas por casas de campo.");
+        Physics.SyncTransforms();
+        o.Informe.Add($"  Pueblo inicial: {puestas} casas del pack cambiadas por casas de campo; {retiradasSueltas} piezas sueltas retiradas de encima.");
+    }
+
+    /// La variante pedida y, detrás, las más estrechas que ella, de más ancha a más estrecha.
+    private static IEnumerable<string> VariantesDesde(string variante)
+    {
+        yield return variante;
+        float ancho = PlantaDeCasaDelPueblo[variante].x;
+        foreach (KeyValuePair<string, Vector2> v in PlantaDeCasaDelPueblo.OrderByDescending(v => v.Value.x))
+            if (v.Value.x < ancho) yield return v.Key;
+    }
+
+    /// Pone una casa de campo en el sitio de una del pack: en su centro o, si se da la puerta vieja, con su puerta
+    /// en ella; apoyada en el suelo más bajo de delante, el centro y detrás.
+    private static GameObject PonerCasaDeCampo(Obra o, Transform grupo, string nombreViejo, string variante, Vector3 centro, float rumbo,
+        Vector2 frente, Transform puertaVieja, out string comoVa)
+    {
+        comoVa = "en el sitio de la vieja";
+        GameObject nueva = PonExacto(o, grupo, PrefabsDeZonas + "CasaDelPueblo_" + variante + ".prefab", nombreViejo + " (casa de campo)",
+            new Vector3(centro.x, 0f, centro.z), rumbo);
+        if (nueva == null) return null;
+        if (puertaVieja != null && PuertaDelModelo(nueva, out Vector3 puertaNueva))
+        {
+            Vector3 mover = puertaVieja.position - puertaNueva;
+            nueva.transform.position += new Vector3(mover.x, 0f, mover.z);
+            comoVa = "con la puerta donde estaba la vieja";
+        }
+        // El zócalo baja 0,6 m por debajo del origen y absorbe el desnivel.
+        Vector3 p = nueva.transform.position;
+        float suelo = Mathf.Min(o.Suelo.Altura(p.x, p.z), Mathf.Min(o.Suelo.Altura(p.x + frente.x * 2.5f, p.z + frente.y * 2.5f), o.Suelo.Altura(p.x - frente.x * 2.5f, p.z - frente.y * 2.5f)));
+        nueva.transform.position = new Vector3(p.x, suelo + 0.3f, p.z);
+        o.Ocupado[o.Ocupado.Count - 1] = HuellaOrientada(nueva, rumbo);
+        return nueva;
+    }
+
+    /// ¿El tejado (muros + 0,6 m de alero) pisa el de otra casa de campo ya puesta? Comprobación de ejes separados
+    /// entre los dos rectángulos girados.
+    private static bool PisaOtraCasa(Transform casa, float rumbo, Vector2 planta, List<(Transform casa, float rumbo, Vector2 planta)> otras)
+    {
+        Vector2[] a = RectanguloDelTejado(casa.position, rumbo, planta);
+        foreach (var (otra, r, p) in otras)
+            if (SeTocan(a, RectanguloDelTejado(otra.position, r, p))) return true;
+        return false;
+    }
+
+    private static Vector2[] RectanguloDelTejado(Vector3 centro, float rumbo, Vector2 planta)
+    {
+        float a = rumbo * Mathf.Deg2Rad, mx = planta.x * 0.5f + 0.6f, mz = planta.y * 0.5f + 0.6f;
+        var z = new Vector2(Mathf.Sin(a), Mathf.Cos(a));
+        var x = new Vector2(z.y, -z.x);
+        var c = new Vector2(centro.x, centro.z);
+        return new[] { c - x * mx - z * mz, c + x * mx - z * mz, c + x * mx + z * mz, c - x * mx + z * mz };
+    }
+
+    private static bool SeTocan(Vector2[] a, Vector2[] b)
+    {
+        foreach (Vector2[] poligono in new[] { a, b })
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 lado = poligono[(i + 1) % 4] - poligono[i];
+                var eje = new Vector2(lado.y, -lado.x);
+                float minA = float.MaxValue, maxA = float.MinValue, minB = float.MaxValue, maxB = float.MinValue;
+                foreach (Vector2 v in a) { float d = Vector2.Dot(v, eje); minA = Mathf.Min(minA, d); maxA = Mathf.Max(maxA, d); }
+                foreach (Vector2 v in b) { float d = Vector2.Dot(v, eje); minB = Mathf.Min(minB, d); maxB = Mathf.Max(maxB, d); }
+                if (maxA < minB || maxB < minA) return false;
+            }
+        return true;
+    }
+
+    /// La puerta del pack que cuelga de la casa («Door…»), o null si no tiene (los puestos).
+    private static Transform PuertaDeLaCasa(Transform casa)
+    {
+        foreach (Transform hijo in casa)
+            if (hijo.gameObject.activeSelf && hijo.name.StartsWith("Door")) return hijo;
+        return null;
+    }
+
+    /// Hacia dónde sale la puerta: el lado de la caja de la casa en el que está.
+    private static Vector3 FrenteDeLaPuerta(Transform casa, Bounds local, Transform puerta)
+    {
+        Vector3 q = casa.InverseTransformPoint(puerta.position) - local.center;
+        float ex = Mathf.Max(0.01f, local.extents.x), ez = Mathf.Max(0.01f, local.extents.z);
+        Vector3 eje = Mathf.Abs(q.x) / ex >= Mathf.Abs(q.z) / ez ? new Vector3(Mathf.Sign(q.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(q.z));
+        Vector3 d = casa.TransformDirection(eje);
+        d.y = 0f;
+        return d.normalized;
+    }
+
+    /// Dónde está la puerta de una casa de campo ya puesta: el centro de lo que lleva el color de carpintería por
+    /// debajo de 1,2 m (las contraventanas empiezan más arriba).
+    private static bool PuertaDelModelo(GameObject casa, out Vector3 puerta)
+    {
+        puerta = default;
+        float y0 = casa.transform.position.y;
+        Vector3 suma = Vector3.zero;
+        int cuantos = 0;
+        foreach (MeshFilter mf in casa.GetComponentsInChildren<MeshFilter>())
+        {
+            Mesh malla = mf.sharedMesh;
+            var mr = mf.GetComponent<MeshRenderer>();
+            if (malla == null || mr == null) continue;
+            Material[] mats = mr.sharedMaterials;
+            Vector3[] v = malla.vertices;
+            for (int s = 0; s < malla.subMeshCount && s < mats.Length; s++)
+            {
+                if (mats[s] == null || !(mats[s].name.Contains("Contra") || mats[s].name.Contains("Carpinteria"))) continue;
+                foreach (int i in malla.GetTriangles(s))
+                {
+                    Vector3 w = mf.transform.TransformPoint(v[i]);
+                    float h = w.y - y0;
+                    if (h <= 0.3f || h >= 1.2f) continue;
+                    suma += w;
+                    cuantos++;
+                }
+            }
+        }
+        if (cuantos == 0) return false;
+        puerta = suma / cuantos;
+        return true;
+    }
+
+    /// Nombre del primer punto de juego que queda dentro de los muros de una casa de campo (con 0,3 m de holgura
+    /// hacia dentro), o null.
+    private static string PuntoDentroDeLosMuros(Transform casa, float rumbo, Vector2 planta, List<(Vector3 pos, string nombre)> puntos)
+    {
+        Quaternion giro = Quaternion.Inverse(Quaternion.Euler(0f, rumbo, 0f));
+        foreach (var (pos, nombre) in puntos)
+        {
+            Vector3 q = giro * (pos - casa.position);
+            if (Mathf.Abs(q.x) < planta.x * 0.5f - 0.3f && Mathf.Abs(q.z) < planta.y * 0.5f - 0.3f) return nombre;
+        }
+        return null;
+    }
+
+    /// ¿La pieza suelta se monta sobre la casa nueva o le tapa la entrada? Las piezas de casa (molino, chimenea…),
+    /// si su caja toca los muros; lo demás (vallas, árboles, barriles), si su núcleo (60 % de su caja en planta) entra
+    /// en los muros o en el porche, de la puerta a 2,3 m hacia fuera. Lo enorme (el río, el terreno) no cuenta, ni lo que lleva scripts salvo las piezas de casa.
+    private static bool SueltaSobreLaCasa(Transform suelta, Transform casa, float rumbo, Vector2 planta, bool hayPuerta, Vector3 puerta)
+    {
+        bool hay = false;
+        Bounds b = default;
+        foreach (Renderer r in suelta.GetComponentsInChildren<Renderer>())
+        {
+            if (!hay) { b = r.bounds; hay = true; }
+            else b.Encapsulate(r.bounds);
+        }
+        if (!hay || Mathf.Max(b.extents.x, b.extents.z) > 15f) return false;
+        bool deCasa = false;
+        foreach (string prefijo in PiezasDeCasa)
+            if (suelta.name.StartsWith(prefijo)) { deCasa = true; break; }
+        // Lo que lleva scripts (tablones, interactuables, luces de noche…) no es decorado suelto: no se toca. Las
+        // piezas de casa sí (una chimenea lleva su humo), porque sin su casa no pintan nada.
+        if (!deCasa)
+            foreach (MonoBehaviour mb in suelta.GetComponentsInChildren<MonoBehaviour>(true))
+                if (mb != null) return false;
+        Quaternion giro = Quaternion.Inverse(Quaternion.Euler(0f, rumbo, 0f));
+        Vector3 q = giro * (b.center - casa.position);
+        float holgura = Mathf.Min(b.extents.x, b.extents.z) * (deCasa ? 1f : 0.6f);
+        if (deCasa) holgura = Mathf.Max(b.extents.x, b.extents.z) * 0.7f;
+        if (Mathf.Abs(q.x) < planta.x * 0.5f + holgura && Mathf.Abs(q.z) < planta.y * 0.5f + holgura) return true;
+        if (!hayPuerta) return false;
+        // Porche: la fachada mira a −Z local; de la puerta hacia fuera.
+        Vector3 d = giro * (puerta - casa.position);
+        float fuera = d.z - q.z;
+        return Mathf.Abs(q.x - d.x) < 1.3f + holgura && fuera > -holgura && fuera < 2.3f + holgura;
     }
 }

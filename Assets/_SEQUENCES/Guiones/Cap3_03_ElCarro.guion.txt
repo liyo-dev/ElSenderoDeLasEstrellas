@@ -6,7 +6,7 @@ GUION Cap3_03_ElCarro
 ESCENA MainWorld
 ZONA Cap3Carro -104 -214 28
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_03_ElCarro.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.4 mismo_hablante=0.25
 
 REPARTO

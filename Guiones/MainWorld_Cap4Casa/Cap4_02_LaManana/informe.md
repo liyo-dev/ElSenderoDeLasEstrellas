@@ -1,8 +1,8 @@
 # Parte de horneado: Cap4_02_LaManana
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap4_02_LaManana.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap4_02_LaManana.guion.txt`
 
-**0:20,6** de secuencia · 5 frases · 2 planos · 0 efectos · 2 personajes
+**0:20,6** de secuencia · 5 frases · 2 planos · 2 efectos · 2 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 
@@ -25,12 +25,14 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | conjunto de will y estela · 8,4 s · lente 34° · coste 0: limpio |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,8 | will | ««ENTRENAMIENTO DEL FUTURO GRAN HECHICERO». ¿Por qué «futuro» va tan pequeño?» (4,9 s) · pose |
 | 0:06,1 | estela | «Porque es lo que más lejos te queda.» (2,3 s) |
 | 0:08,4 | plano 2 | medio de estela · 12,2 s · lente 30° · coste 2: ángulo 2 |
 | 0:08,4 | estela | «El fuego no es una cosa sola: puede empujar, cortar, iluminar o calentar.» (4,7 s) · pose |
 | 0:13,4 | estela | «Hoy aprendes a protegerte. Y a proteger a otro, que es más difícil.» (4,4 s) |
 | 0:18,1 | will | «Vale. ¿Por dónde empiezo?» (1,6 s) · pose |
+| 0:20,6 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

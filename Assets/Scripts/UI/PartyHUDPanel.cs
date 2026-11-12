@@ -65,6 +65,8 @@ namespace Sendero.UI
         [SerializeField] private float panelSlideOffset = 40f;
 
         private RetratoDelGrupo[] _retratos; // 0=Liam, 1=Will, 2=Estela
+        // Iconos de la cruceta a los lados del carrusel: solo salen si hay alguien a ese lado.
+        private global::Core.InputGlyphs.InputGlyphIcon _pistaIzquierda, _pistaDerecha;
         private readonly bool[] _presente = new bool[3];
         private readonly Color[] _colores = new Color[3];
         // Nombre de cada personaje en mayúsculas, del dueño de los nombres (ControlDelJugador).
@@ -88,6 +90,16 @@ namespace Sendero.UI
         private void Awake()
         {
             _retratos = new[] { retratoDeLiam, retratoDeWill, retratoDeEstela };
+            foreach (var icono in GetComponentsInChildren<global::Core.InputGlyphs.InputGlyphIcon>(true))
+            {
+                if (icono.GlyphName == global::Core.InputGlyphs.InputGlyphNames.DpadLeft) _pistaIzquierda = icono;
+                else if (icono.GlyphName == global::Core.InputGlyphs.InputGlyphNames.DpadRight) _pistaDerecha = icono;
+            }
+            // En la interfaz de papel el borde del panel es la tinta de la hoja: la línea de luz sobra.
+            if (lineaDeLuz != null) lineaDeLuz.gameObject.SetActive(false);
+            // El aviso del trío es una ficha dorada: su texto, en tinta.
+            if (avisoDelTrio != null)
+                foreach (var texto in avisoDelTrio.GetComponentsInChildren<TMP_Text>(true)) texto.color = PaletaUI.TintaDeTexto;
             if (avisoDelTrio != null) { avisoDelTrio.alpha = 0f; avisoDelTrio.gameObject.SetActive(false); }
         }
 
@@ -227,19 +239,37 @@ namespace Sendero.UI
             }
             var central = Retrato(activo);
             if (central != null) central.transform.SetAsLastSibling();
+            MostrarPista(_pistaIzquierda, izquierda >= 0 && _presente[izquierda]);
+            MostrarPista(_pistaDerecha, derecha >= 0 && _presente[derecha]);
 
             if (activo != _activoMostrado)
             {
                 _activoMostrado = activo;
-                if (nombreDelActivo != null && activo >= 0 && activo < _nombres.Length) nombreDelActivo.text = _nombres[activo];
-                if (lineaDeLuz != null && activo >= 0 && activo < _colores.Length)
+                if (nombreDelActivo != null && activo >= 0 && activo < _nombres.Length)
                 {
-                    var c = _colores[activo];
-                    lineaDeLuz.DOKill();
-                    lineaDeLuz.DOColor(new Color(c.r, c.g, c.b, lineaDeLuz.color.a), animar ? 0.35f : 0f).SetUpdate(true);
+                    nombreDelActivo.text = _nombres[activo];
+                    PintarPestana((Slot)activo);
                 }
             }
             PonerTrio(false);
+        }
+
+        private static void MostrarPista(Component pista, bool ver)
+        {
+            if (pista != null && pista.gameObject.activeSelf != ver) pista.gameObject.SetActive(ver);
+        }
+
+        /// La pestaña del nombre, de papel del color del personaje, como en la caja de diálogo.
+        private void PintarPestana(Slot personaje)
+        {
+            ColoresDeLaPestana.De(personaje, out var fondo, out var letra);
+            nombreDelActivo.color = letra;
+            if (!(nombreDelActivo.transform.parent is RectTransform pestana) || !pestana.TryGetComponent<Image>(out var hoja)) return;
+            hoja.sprite = PiezasDeUI.Papel(fondo, PaletaUI.Tinta, fondo, 0.5f);
+            hoja.color = Color.white;
+            hoja.type = Image.Type.Sliced;
+            hoja.pixelsPerUnitMultiplier = 1.6f;
+            pestana.localRotation = Quaternion.Euler(0f, 0f, -2f);
         }
 
         private void PonerSalud(int slot)

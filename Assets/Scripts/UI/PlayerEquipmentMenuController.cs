@@ -116,7 +116,6 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             MenuManager.Close(MenuKind.Equipment);
             TimeScaleArbiterService.Release(this);
             Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
-            Sendero.UI.TimeOfDayIndicator.Instance?.Mostrar(this);
             _isOpen = false;
         }
         ExitUiInputScope();
@@ -248,7 +247,6 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         SetCanvasState(true);
         Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
-        Sendero.UI.TimeOfDayIndicator.Instance?.Ocultar(this);
 
         _isOpen = true;
         GameState.Push(GamePhase.Inventory);
@@ -265,7 +263,6 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         _menu?.Cerrar();
         SetCanvasState(false);
         Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
-        Sendero.UI.TimeOfDayIndicator.Instance?.Mostrar(this);
         TimeScaleArbiterService.Release(this);
 
         _isOpen = false;

@@ -13,7 +13,7 @@
 GUION Chuche_04_ElVestidor
 ESCENA Chuchelandia
 SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Vestidor.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.3 mismo_hablante=0.25
 
 REPARTO

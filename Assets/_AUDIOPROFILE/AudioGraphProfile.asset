@@ -349,6 +349,8 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 806361dae42b4985ac9faba92310a1a6, type: 3}
   - eventKey: UI_ComenzarPartida
     sfx: {fileID: 8300000, guid: 4e6d1d74866b3404689d4af0896850d1, type: 3}
+  - eventKey: UI_LugarDescubierto
+    sfx: {fileID: 8300000, guid: 1ae3b01669263db4dbfcee497885563c, type: 3}
   - eventKey: Ambience_Prologo_Pueblo
     sfx: {fileID: 8300000, guid: 4871881a72e47e9408672db41756958a, type: 3}
   - eventKey: Ambience_Prologo_Rio

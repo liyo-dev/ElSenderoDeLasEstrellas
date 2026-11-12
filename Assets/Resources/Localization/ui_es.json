@@ -1786,7 +1786,7 @@
         },
         {
             "key": "ABILITY_SHIELD_DESC",
-            "value": "Mantén B para alzarla. Si bloqueas en el momento justo, devuelves el golpe."
+            "value": "Mantén <sprite name=\"interactable_b\"> para protegerte."
         },
         {
             "key": "SPELL_FX_BOUNCE",
@@ -2315,7 +2315,27 @@
         },
         {
             "key": "LUGAR_ALDEA_DEL_MAR",
-            "value": "Aldea del mar"
+            "value": "Aldea del Mar"
+        },
+        {
+            "key": "LUGAR_PUEBLO_DEL_MOLINO",
+            "value": "Pueblo del Molino"
+        },
+        {
+            "key": "LUGAR_BOSQUE_PROHIBIDO",
+            "value": "Bosque Prohibido"
+        },
+        {
+            "key": "LUGAR_CIUDAD_ALTA",
+            "value": "Ciudad Alta"
+        },
+        {
+            "key": "LUGAR_LAGUNA_DE_LA_ERA",
+            "value": "Laguna de la Era"
+        },
+        {
+            "key": "LUGAR_NUEVO",
+            "value": "Nuevo lugar"
         },
         {
             "key": "TUTORIAL_CAP3_HOGUERA_NOCHE",

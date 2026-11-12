@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_DiscusionVentana
   duracion: 18.901224
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 0cc39133e8b98d31d81e7f82f804efab"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 75bc82ee560958eba668df000a9b04a6"
   actores:
   - id: Player
     alias: will
@@ -138,7 +138,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -180,29 +180,41 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.09, y: -0.16}
+    encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705342
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
     t: 0.5
     beat:
-      rid: 6540294550018326800
+      rid: 6540294555676705343
     linea: 35
   - onlyIfFlag: 
     skipIfFlag: 
     t: 4.4
     beat:
-      rid: 6540294550018326801
+      rid: 6540294555676705344
     linea: 36
   - onlyIfFlag: 
     skipIfFlag: 
     t: 8.2
     beat:
-      rid: 6540294550018326802
+      rid: 6540294555676705345
     linea: 40
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 18.901224
+    beat:
+      rid: 6540294555676705346
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -223,7 +235,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326800
+    - rid: 6540294555676705342
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705343
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -243,7 +263,7 @@ MonoBehaviour:
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 6540294550018326801
+    - rid: 6540294555676705344
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -263,7 +283,7 @@ MonoBehaviour:
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 6540294550018326802
+    - rid: 6540294555676705345
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -283,3 +303,11 @@ MonoBehaviour:
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 6540294555676705346
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

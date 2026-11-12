@@ -109,9 +109,6 @@ public class BugReportFlyoutPanel : MonoBehaviour
 
     [Header("Panel")]
     [Min(200f)] [SerializeField] float panelWidth = 620f;
-    [SerializeField] Color panelColor = new Color(0.07f, 0.05f, 0.03f, 0.9f);
-    [Tooltip("Dorado a juego con el resto de paneles del menú (mismo tono que Créditos/Notas del Parche).")]
-    [SerializeField] Color accentColor = new Color(0.97f, 0.71f, 0.22f, 1f);
     [Min(0.05f)] [SerializeField] float animDuration = 0.32f;
 
     [Header("Navegación (mando)")]
@@ -365,7 +362,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         _panelRoot.anchorMin = new Vector2(1f, 0f);
         _panelRoot.anchorMax = new Vector2(1f, 1f);
         _panelRoot.pivot = new Vector2(1f, 0.5f);
-        _panelRoot.sizeDelta = new Vector2(panelWidth, 0f);
+        _panelRoot.sizeDelta = new Vector2(panelWidth, -48f);
 
         _hiddenX = panelWidth + 40f;
         _panelRoot.anchoredPosition = new Vector2(_hiddenX, 0f);
@@ -376,17 +373,8 @@ public class BugReportFlyoutPanel : MonoBehaviour
         _panelGroup.interactable = false;
 
         var bg = panelGo.AddComponent<Image>();
-        bg.color = panelColor;
+        PiezasDeUI.VestirHoja(bg);
 
-        var accentGo = new GameObject("AccentLine", typeof(RectTransform));
-        accentGo.transform.SetParent(_panelRoot, false);
-        var accentRt = (RectTransform)accentGo.transform;
-        accentRt.anchorMin = new Vector2(0f, 0f);
-        accentRt.anchorMax = new Vector2(0f, 1f);
-        accentRt.pivot = new Vector2(0f, 0.5f);
-        accentRt.sizeDelta = new Vector2(4f, 0f);
-        accentRt.anchoredPosition = Vector2.zero;
-        accentGo.AddComponent<Image>().color = accentColor;
 
         BuildHeader();
         BuildScrollView();
@@ -413,7 +401,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         var title = titleGo.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(title, "REPORTAR UN FALLO", fontSize * 1.3f);
         title.fontStyle = FontStyles.Bold;
-        title.color = accentColor;
+        title.color = PaletaUI.OroSobrePapel;
         title.alignment = TextAlignmentOptions.Left;
         titleGo.AddComponent<LocalizedText>().key = "BugReport_Title";
 
@@ -425,7 +413,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         closeRt.pivot = new Vector2(1f, 0.5f);
         closeRt.sizeDelta = new Vector2(48f, 48f);
         closeRt.anchoredPosition = Vector2.zero;
-        closeGo.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.08f);
+        PiezasDeUI.VestirFicha(closeGo.AddComponent<Image>(), PaletaUI.PapelApagado);
         _closeButton = closeGo.AddComponent<Button>();
         _closeButton.onClick.AddListener(ClosePanel);
 
@@ -558,7 +546,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         var label = go.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(label, text, fontSize * 0.92f);
         label.fontStyle = FontStyles.Bold;
-        label.color = accentColor;
+        label.color = PaletaUI.OroSobrePapel;
         var le = go.AddComponent<LayoutElement>();
         le.preferredHeight = fontSize * 1.4f;
         go.AddComponent<LocalizedText>().key = locKey;
@@ -580,7 +568,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         go.transform.SetParent(_content, false);
         var label = go.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(label, text, fontSize * 0.72f);
-        label.color = new Color(1f, 1f, 1f, 0.5f);
+        label.color = new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.85f);
         label.alignment = TextAlignmentOptions.TopLeft;
         label.margin = new Vector4(2f, 4f, 2f, 0f);
         // Sin LayoutElement.preferredHeight fijo a propósito: TextMeshProUGUI ya implementa
@@ -615,7 +603,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
             rowLe.minHeight = fontSize * 1.9f;
 
             var bg = rowGo.AddComponent<Image>();
-            bg.color = new Color(1f, 1f, 1f, 0.06f);
+            PiezasDeUI.VestirFicha(bg, PaletaUI.PapelApagado);
             _severityBackgrounds[i] = bg;
 
             var button = rowGo.AddComponent<Button>();
@@ -642,9 +630,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         _selectedSeverity = index;
         for (int i = 0; i < _severityBackgrounds.Length; i++)
         {
-            _severityBackgrounds[i].color = i == index
-                ? new Color(accentColor.r, accentColor.g, accentColor.b, 0.35f)
-                : new Color(1f, 1f, 1f, 0.06f);
+            _severityBackgrounds[i].color = i == index ? PaletaUI.Oro : PaletaUI.PapelApagado;
         }
         AudioService.Instance?.PlaySFX("UI_Move");
     }
@@ -665,7 +651,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         le.minHeight = height;
 
         var bg = fieldGo.AddComponent<Image>();
-        bg.color = new Color(1f, 1f, 1f, 0.06f);
+        PiezasDeUI.VestirFicha(bg, PaletaUI.PapelClaro);
 
         var textAreaGo = new GameObject("TextArea", typeof(RectTransform));
         textAreaGo.transform.SetParent(fieldGo.transform, false);
@@ -681,7 +667,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         StretchToParent((RectTransform)placeholderGo.transform);
         var placeholderLabel = placeholderGo.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(placeholderLabel, placeholder, fontSize * 0.85f);
-        placeholderLabel.color = new Color(1f, 1f, 1f, 0.4f);
+        placeholderLabel.color = new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.6f);
         placeholderLabel.fontStyle = FontStyles.Italic;
         placeholderLabel.alignment = multiline ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
         // Bug (24 ago 2026, capturas de Raúl): ConfigureLabel deja el wrap en Normal para todos los
@@ -703,7 +689,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         StretchToParent((RectTransform)textGo.transform);
         var textLabel = textGo.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(textLabel, "", fontSize * 0.85f);
-        textLabel.color = Color.white;
+        textLabel.color = PaletaUI.TintaDeTexto;
         textLabel.alignment = multiline ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
         // Mismo motivo que el placeholder de arriba: en un campo de una sola línea, lo que escriba el
         // jugador tampoco debe envolver a una segunda línea invisible/recortada.
@@ -733,7 +719,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         le.minHeight = fontSize * 2.3f;
 
         var bg = go.AddComponent<Image>();
-        bg.color = accentColor;
+        PiezasDeUI.VestirFicha(bg, PaletaUI.Oro);
         _submitButton = go.AddComponent<Button>();
         _submitButton.targetGraphic = bg;
         _submitButton.onClick.AddListener(HandleSubmitPressed);
@@ -744,7 +730,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         var label = labelGo.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(label, "ENVIAR", fontSize);
         label.fontStyle = FontStyles.Bold;
-        label.color = new Color(0.1f, 0.07f, 0.02f, 1f);
+        label.color = PaletaUI.TintaDeTexto;
         label.alignment = TextAlignmentOptions.Center;
         label.raycastTarget = false;
         labelGo.AddComponent<LocalizedText>().key = "BugReport_Submit";
@@ -826,7 +812,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     {
         _selectedSeverity = -1;
         for (int i = 0; i < _severityBackgrounds.Length; i++)
-            _severityBackgrounds[i].color = new Color(1f, 1f, 1f, 0.06f);
+            _severityBackgrounds[i].color = PaletaUI.PapelApagado;
 
         _buildField.text = "";
         _descriptionField.text = "";
@@ -837,7 +823,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     {
         if (_statusText == null) return;
         _statusText.text = message;
-        _statusText.color = isError ? new Color(1f, 0.45f, 0.4f, 1f) : new Color(0.6f, 1f, 0.6f, 1f);
+        _statusText.color = isError ? new Color(0.72f, 0.18f, 0.12f, 1f) : new Color(0.18f, 0.45f, 0.16f, 1f);
     }
 
     // Para los mensajes de estado (validación/envío/éxito/error): se generan en el momento, así que
@@ -852,7 +838,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     {
         label.text = text;
         label.fontSize = size;
-        label.color = Color.white;
+        label.color = PaletaUI.TintaDeTexto;
         label.textWrappingMode = TextWrappingModes.Normal;
         label.raycastTarget = false;
         if (font != null) label.font = font;

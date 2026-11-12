@@ -27,6 +27,7 @@ MonoBehaviour:
   overlayMaxAlpha: 0.85
   changeMusic: 1
   musicZoneId: Castle
+  nombreDelLugar: LUGAR_CIUDAD_ALTA
   controlCamera: 0
   cameraMode: 2
   cameraHorizontalAngle: 90

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap1_EldranCaja_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_EldranCaja
-  duracion: 6.470949
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 4792855fc0a9ce0c02368495644b80ff"
+  duracion: 6.275032
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 ea08e9feebd3b13a253c829b53b2e18c"
   actores:
   - id: Player
     alias: will
@@ -52,31 +52,29 @@ MonoBehaviour:
       p: {x: 7, y: 26.281815, z: -137}
     - t: 1.9069388
       p: {x: 7, y: 26.281815, z: -137}
-    - t: 2.187483
-      p: {x: 7.2733693, y: 26.281815, z: -136.87671}
-    - t: 2.405399
-      p: {x: 7.5467386, y: 26.281815, z: -136.75343}
-    - t: 2.6965895
-      p: {x: 7.9567924, y: 26.281815, z: -136.5685}
-    - t: 2.986797
-      p: {x: 8.366846, y: 26.281815, z: -136.38358}
-    - t: 3.277009
-      p: {x: 8.7769, y: 26.281815, z: -136.19864}
-    - t: 3.567217
-      p: {x: 9.1869545, y: 26.281815, z: -136.01372}
-    - t: 3.8574286
-      p: {x: 9.597008, y: 26.281815, z: -135.82878}
-    - t: 4.147637
-      p: {x: 10.007062, y: 26.281815, z: -135.64386}
-    - t: 4.354034
-      p: {x: 10.313683, y: 26.281815, z: -135.55592}
-    - t: 4.5997424
-      p: {x: 10.689553, y: 26.281815, z: -135.59409}
-    - t: 4.8418703
-      p: {x: 11.0191765, y: 26.281815, z: -135.75127}
-    - t: 5.140256
-      p: {x: 11.342294, y: 26.281815, z: -135.93782}
-    - t: 5.270949
+    - t: 2.1831064
+      p: {x: 7.287097, y: 26.281815, z: -136.93549}
+    - t: 2.3979328
+      p: {x: 7.5741935, y: 26.281815, z: -136.87097}
+    - t: 2.6841526
+      p: {x: 8.004839, y: 26.281815, z: -136.7742}
+    - t: 2.9689186
+      p: {x: 8.435484, y: 26.281815, z: -136.67741}
+    - t: 3.2536824
+      p: {x: 8.866129, y: 26.281815, z: -136.58064}
+    - t: 3.5384462
+      p: {x: 9.296774, y: 26.281815, z: -136.48387}
+    - t: 3.82321
+      p: {x: 9.727419, y: 26.281815, z: -136.3871}
+    - t: 4.1079736
+      p: {x: 10.158064, y: 26.281815, z: -136.29033}
+    - t: 4.39274
+      p: {x: 10.58871, y: 26.281815, z: -136.19354}
+    - t: 4.68702
+      p: {x: 11.019355, y: 26.281815, z: -136.09677}
+    - t: 4.9239545
+      p: {x: 11.306451, y: 26.281815, z: -136.03226}
+    - t: 5.0750318
       p: {x: 11.45, y: 26.281815, z: -136}
     miradas:
     - t: 0
@@ -84,7 +82,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 5.270949
+    - t: 5.0750318
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -113,7 +111,7 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0.4
-      t: 5.270949
+      t: 5.0750318
       tipo: 1
       estado: BrazosEnJarras
       congelar: 0
@@ -176,12 +174,12 @@ MonoBehaviour:
   planos:
   - focos: []
     t0: 0
-    t1: 5.270949
+    t1: 5.0750318
     tipo: 0
     descripcion: general de eldran y will
     posiciones:
     - t: 0
-      p: {x: -1.9867296, y: 33.281815, z: -130.72137}
+      p: {x: -3.2015324, y: 33.281815, z: -135.77141}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -198,13 +196,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 5.270949
-    t1: 6.470949
+    t0: 5.0750318
+    t1: 6.275032
     tipo: 5
     descripcion: 'dos: eldran y will'
     posiciones:
-    - t: 5.270949
-      p: {x: 12.424205, y: 27.169455, z: -133.12665}
+    - t: 5.0750318
+      p: {x: 9.563595, y: 27.169455, z: -134.06609}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -223,17 +221,29 @@ MonoBehaviour:
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 5.270949
+    t: 0
     beat:
-      rid: 6540294550018326804
+      rid: 6540294555676705348
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 5.0750318
+    beat:
+      rid: 6540294555676705349
     linea: 48
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.275032
+    beat:
+      rid: 6540294555676705350
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: acerca
     t: 1.9069388
   - nombre: charla
-    t: 5.270949
+    t: 5.0750318
   puntos:
   - nombre: p_will
     posicion: {x: 13.2, y: 26.281815, z: -135.6}
@@ -247,7 +257,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326804
+    - rid: 6540294555676705348
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705349
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -262,3 +280,11 @@ MonoBehaviour:
           - HeadNod01
           emotions: 
         detenerEscena: 1
+    - rid: 6540294555676705350
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

@@ -91,6 +91,33 @@ public static class PiezasDeUI
         }
     }
 
+    private static Sprite s_circulo;
+
+    /// <summary>Círculo blanco relleno con el borde suavizado, para teñir (marcos, aros, máscaras). Se genera una vez.</summary>
+    public static Sprite Circulo
+    {
+        get
+        {
+            if (s_circulo != null) return s_circulo;
+            const int lado = 256;
+            var tex = new Texture2D(lado, lado, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "Circulo" };
+            var px = new Color32[lado * lado];
+            float mitad = lado * 0.5f;
+            for (int y = 0; y < lado; y++)
+            for (int x = 0; x < lado; x++)
+            {
+                float d = Mathf.Sqrt((x + 0.5f - mitad) * (x + 0.5f - mitad) + (y + 0.5f - mitad) * (y + 0.5f - mitad));
+                float alfa = Mathf.Clamp01(mitad - 1f - d + 0.5f);
+                px[y * lado + x] = new Color32(255, 255, 255, (byte)(alfa * 255f));
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            s_circulo = Sprite.Create(tex, new Rect(0, 0, lado, lado), new Vector2(0.5f, 0.5f), 100f);
+            s_circulo.name = "Circulo";
+            return s_circulo;
+        }
+    }
+
     private static Sprite s_resplandor;
 
     /// <summary>
@@ -177,6 +204,26 @@ public static class PiezasDeUI
         float qy = Mathf.Abs(y) - (mitad - radio);
         float fuera = Mathf.Sqrt(Mathf.Max(qx, 0f) * Mathf.Max(qx, 0f) + Mathf.Max(qy, 0f) * Mathf.Max(qy, 0f));
         return fuera + Mathf.Min(Mathf.Max(qx, qy), 0f) - radio;
+    }
+
+    /// <summary>Viste una imagen como hoja de papel troceada (paneles, ventanas).</summary>
+    public static void VestirHoja(Image imagen)
+    {
+        imagen.sprite = Papel(PaletaUI.Papel, PaletaUI.Tinta, PaletaUI.PapelClaro);
+        imagen.type = Image.Type.Sliced;
+        imagen.color = Color.white;
+    }
+
+    /// <summary>
+    /// Viste una imagen como ficha de papel teñible (botones, campos, filas): borde de tinta y el
+    /// relleno del color que se le dé; afina el borde en piezas pequeñas.
+    /// </summary>
+    public static void VestirFicha(Image imagen, Color color)
+    {
+        imagen.sprite = Papel(Color.white, PaletaUI.Tinta, Color.white, 0.5f);
+        imagen.type = Image.Type.Sliced;
+        imagen.pixelsPerUnitMultiplier = 1.6f;
+        imagen.color = color;
     }
 
     /// <summary>Ancla en un punto del padre, con el pivote en el centro.</summary>

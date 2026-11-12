@@ -166,6 +166,7 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
             Instance = null;
             NarrativeTitleCards.Unregister(this);
             DestruirRotuloBreve();
+            DestruirPresentacionDeLugar();
             _bgPulseTween?.Kill();
             _rootGroup?.DOKill();
             _textContainer?.DOKill();

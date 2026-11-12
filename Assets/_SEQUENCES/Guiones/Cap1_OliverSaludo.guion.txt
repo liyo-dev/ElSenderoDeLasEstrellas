@@ -11,7 +11,7 @@ GUION Cap1_OliverSaludo
 ESCENA MainWorld
 ZONA Cap1 6 -136 22
 SECUENCIA Assets/_SEQUENCES/SEQ_OliverSaludo.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO
@@ -24,12 +24,15 @@ p_will        1.0 -132.5
 # Oliver en su sitio de la plaza (SP_Oliver) y donde se para, a 1,8 m de Will.
 p_oliver      5.99 -143.19
 p_llega       1.76 -134.13
+# Cámaras fijas: con las casas nuevas del pueblo los planos automáticos caían dentro del decorado (INC-1087).
+cam_alta      9 -150
+cam_charla    6.5 -133.3
 
 HILO
 @inicio
 will en p_will mirando oliver
 & oliver en p_oliver mirando will
-& plano general oliver will altura=7 lente=40 quieta
+& plano general oliver will desde=cam_alta altura=5.5 lente=40 quieta
 oliver dice OLIVER_GREETING_SPOT_WILL gesto=Cheer02 cara=alegre
 
 # Corre hasta Will. El mismo plano aéreo: se le ve cruzar la plaza.
@@ -39,7 +42,7 @@ oliver corre a p_llega llega_mirando=will
 
 # Ya juntos: los dos de perfil, el plano no cambia hasta el final.
 @charla
-plano conjunto oliver will lente=40 quieta
+plano conjunto oliver will desde=cam_charla altura=1.5 lente=40 quieta
 & will mira oliver
 oliver dice OLIVER_GREETING_OUT_OF_BREATH gesto=Dizzy_NoWeapon cara=cansado
 oliver dice OLIVER_GREETING_NEW_SPELL_INTRO cara=ilusionado

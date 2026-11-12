@@ -1,15 +1,15 @@
 # Parte de horneado: Cap3_02_LaPosada
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap3_02_LaPosada.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap3_02_LaPosada.guion.txt`
 
-**1:05,3** de secuencia · 13 frases · 11 planos · 14 efectos · 3 personajes
+**1:05,3** de secuencia · 13 frases · 11 planos · 16 efectos · 3 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · posadero 1,51/ojos 0,98 · lucia 1,16/ojos 0,63
 
 ## Errores (0)
 
 
-## Avisos (17)
+## Avisos (18)
 
 - línea 13: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
 - línea 48: will dice CAP3_POSADA_01 cara=pensativo: la frase CAP3_POSADA_01 no tiene voz en Voices/es; le doy 1,8 s por su texto
@@ -27,6 +27,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · posadero 1,51/ojos 0,98 · lucia 1,16
 - línea 106: lucia dice CAP3_POSADA_13 cara=alegre gesto=Cheer01: la frase CAP3_POSADA_13 no tiene voz en Voices/es; le doy 2,7 s por su texto
 - línea 110: posadero anda a p_posadero ritmo=normal: un punto queda fuera del NavMesh (280,5, -428,5); voy en línea recta
 - línea 114: posadero dice CAP3_POSADA_12 mira=will gesto=Talk01 cara=alegre: la frase CAP3_POSADA_12 no tiene voz en Voices/es; le doy 6,4 s por su texto
+- 0:56,7: en «dos: will y posadero» lucia está 9 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.
 
 ## Silencios largos entre frases (2)
@@ -40,10 +41,11 @@ Reparto medido (m): will 1,62/ojos 0,93 · posadero 1,51/ojos 0,98 · lucia 1,16
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de will y posadero y lucia · 7,0 s · lente 38° · coste 54: cara 31, ángulo 23 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Apagar: PROP_SopaWill |
 | 0:00,0 | efecto | Apagar: PROP_BrilloCuchara |
 | 0:07,0 | **@pregunta** |  |
-| 0:07,0 | plano 2 | dos: will y posadero · 1,8 s · lente 32° · coste 627: cara 163, ángulo 108, eje 350 |
+| 0:07,0 | plano 2 | dos: will y posadero · 1,8 s · lente 32° · coste 643: cara 179, ángulo 108, eje 350 |
 | 0:07,0 | will | «Perdone… ¿sabe qué es esto?» (1,8 s) |
 | 0:08,8 | plano 3 | sobre el hombro de will a posadero · 2,6 s · lente 24° · coste 68: cara 68 |
 | 0:09,8 | posadero | «¿De dónde has sacado eso?» (1,6 s) · pose |
@@ -52,13 +54,13 @@ Reparto medido (m): will 1,62/ojos 0,93 · posadero 1,51/ojos 0,98 · lucia 1,16
 | 0:14,6 | plano 5 | sobre el hombro de will a posadero · 4,6 s · lente 24° · coste 68: cara 68 |
 | 0:14,6 | posadero | «Demonios por aquí, no. Pero animales con un aro como ese… unos cuantos.» (4,6 s) · pose |
 | 0:19,2 | **@tripas** |  |
-| 0:19,2 | plano 6 | conjunto de will y posadero y lucia · 8,7 s · lente 34° · coste 80: cara 44, ángulo 36 |
+| 0:19,2 | plano 6 | conjunto de will y posadero y lucia · 8,7 s · lente 34° · coste 89: cara 47, ángulo 36 |
 | 0:19,2 | efecto | SFX: Dragon_Growl_00 |
 | 0:20,1 | posadero | «…¿Eso han sido tus tripas?» (1,7 s) |
 | 0:22,2 | will | «Se me acabó la comida ayer… ¿Me llega con esto para una sopa?» (4,0 s) · pose |
 | 0:26,1 | posadero | «Para sopa, sí. Para pan, no.» (1,8 s) |
 | 0:26,1 | efecto | SFX: Coin_Shaking-002 |
-| 0:27,9 | plano 7 | dos: will y lucia · 11,0 s · lente 32° · coste 907: cara 811, ángulo 90 |
+| 0:27,9 | plano 7 | dos: will y lucia · 11,0 s · lente 32° · coste 926: cara 830, ángulo 90 |
 | 0:36,1 | **@cuchara** |  |
 | 0:36,1 | lucia | «¿Quieres ver magia? Mira la cuchara.» (2,3 s) · pose |
 | 0:38,5 | efecto | SFX: Chimes_Harp-012 |
@@ -74,13 +76,14 @@ Reparto medido (m): will 1,62/ojos 0,93 · posadero 1,51/ojos 0,98 · lucia 1,16
 | 0:41,7 | plano 9 | medio de lucia · 1,2 s · lente 30° · coste 6: ángulo 6 |
 | 0:41,7 | lucia | «Casi.» (1,2 s) · pose |
 | 0:41,7 | efecto | SFX: Metal_Hit-013 |
-| 0:42,9 | plano 10 | dos: will y lucia · 13,8 s · lente 32° · coste 277: cara 163, ángulo 108 |
+| 0:42,9 | plano 10 | dos: will y lucia · 13,8 s · lente 32° · coste 294: cara 180, ángulo 108 |
 | 0:42,9 | will | «¿Casi? Yo a tu edad no movía ni una miga.» (2,7 s) · pose |
 | 0:45,9 | lucia | «¿De verdad? ¡Pues mañana llego al pulgar!» (2,7 s) · pose |
 | 0:48,6 | **@sopa** |  |
-| 0:56,7 | plano 11 | dos: will y posadero · 8,6 s · lente 32° · coste 277: cara 163, ángulo 108 |
+| 0:56,7 | plano 11 | dos: will y posadero · 8,6 s · lente 32° · coste 293: cara 179, ángulo 108 |
 | 0:56,7 | posadero | «Tómate la sopa y luego pregunta por ahí. Aquí la gente ve muchas cosas, aunque luego no las cuente.» (6,4 s) |
 | 0:56,7 | efecto | Encender: PROP_SopaWill |
+| 1:05,3 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

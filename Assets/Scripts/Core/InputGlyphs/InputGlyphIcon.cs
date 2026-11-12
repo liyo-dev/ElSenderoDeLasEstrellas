@@ -30,6 +30,9 @@ namespace Core.InputGlyphs
         [SerializeField] private string glyphName;
         [SerializeField] private Image icon;
 
+        /// Botón (de <see cref="InputGlyphNames"/>) cuyo icono enseña.
+        public string GlyphName => glyphName;
+
         /// <summary>Configura un aviso creado por el HUD con la misma familia de entrada.</summary>
         public void SetGlyphName(string name)
         {

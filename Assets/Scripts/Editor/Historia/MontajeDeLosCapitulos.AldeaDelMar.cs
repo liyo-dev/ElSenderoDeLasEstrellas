@@ -29,9 +29,9 @@ public static partial class MontajeDeLosCapitulos
     /// <summary>Prefabs, textos, roster y agendas de la aldea. Se llama desde el montaje del Cap. 3.</summary>
     private static void MontarAldeaDelMar(StringBuilder informe)
     {
-        // El nombre del pueblo sale como rótulo al entrar en su zona de ambiente.
+        // El nombre del pueblo se anuncia al entrar en su zona de ambiente (PresentacionDeLugares).
         const string nombre = "LUGAR_ALDEA_DEL_MAR";
-        TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Interfaz, nombre, "Aldea del mar", "Seaside Village");
+        TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Interfaz, nombre, "Aldea del Mar", "Seaside Village");
         var ambiente = Cargar<AmbientPreset>("Assets/AmbientPresets/AmbientPreset_VillageByTheSea.asset");
         if (ambiente != null && ambiente.nombreDelLugar != nombre)
         {

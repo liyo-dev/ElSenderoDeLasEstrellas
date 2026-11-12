@@ -81,9 +81,9 @@ public static partial class MontajeDeLosCapitulos
         // ── Cinemáticas ─────────────────────────────────────────────────────────────────────
         s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_ESTELA", Guion = "Cap4_01_Estela",
             Nombre = "Cap. 4: Estela", Resumen = "La explosión, «¿otra princesita perdida?», el aro leído y «ya me lo cobraré»." });
-        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_MANANA", Guion = "Cap4_02_LaManana", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_MANANA", Guion = "Cap4_02_LaManana", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 4: la mañana en la casa", Resumen = "El cartel del FUTURO GRAN HECHICERO y la primera receta: protegerte y proteger a otro." });
-        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_CAMPANA", Guion = "Cap4_03_LaCampana", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_CAMPANA", Guion = "Cap4_03_LaCampana", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 4: las reglas de la campana", Resumen = "Llega a la campana sin chamuscar a nadie. Estela, mientras, molesta." });
         s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_FIGURA", Guion = "Cap4_04_LaFigura",
             Nombre = "Cap. 4: la figura que resbala", Resumen = "Will sostiene una figura en el aire sin saber cómo; rehacen las figuras; alguien les observa." });
@@ -91,7 +91,7 @@ public static partial class MontajeDeLosCapitulos
             Nombre = "Cap. 4: el Gólem", Resumen = "Liam, desde el saliente, traza el pacto y el Gólem sale de la tierra." });
         s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_TRAS_GOLEM", Guion = "Cap4_06_TrasElGolem",
             Nombre = "Cap. 4: después del Gólem", Resumen = "Agotados; la esquirla con un rostro; Liam escribe «No volver a utilizar seres vivos»." });
-        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_MANZANA", Guion = "Cap4_07_LaManzana", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_MANZANA", Guion = "Cap4_07_LaManzana", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 4: la manzana harinosa", Resumen = "Estela no quiere ayuda; comparten la última manzana. «Gracias, idiota»." });
         s_cines.Add(new Cine { Cap = Cap4, Clave = "CAP4_BIFURCACION", Guion = "Cap4_08_LaBifurcacion",
             Nombre = "Cap. 4: la bifurcación", Resumen = "Liam aparece, lee el trozo de lejos y se une hasta el Reino. En el vado, la corriente se lleva su bota." });

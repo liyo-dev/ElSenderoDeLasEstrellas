@@ -3,7 +3,7 @@ GUION Cap4_02_LaManana
 ESCENA MainWorld
 ZONA Cap4Casa -334 64 20
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_02_LaManana.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO

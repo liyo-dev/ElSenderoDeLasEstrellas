@@ -126,7 +126,8 @@ public static class FarolDeEstrellasBuilder
         imp.SaveAndReimport();
     }
 
-    /// Material liso a partir del del pack (mismo shader toon y contorno), sin la textura de paleta.
+    /// Material liso con el aspecto de dibujo del juego (shader «El Sendero/Dibujo», color en
+    /// «_Tinte»); sin ese shader, una copia del del pack. Sin textura de paleta.
     static Material MaterialLiso(Material origen, string nombre, Color color, bool brilla, float fuerzaDelBrillo = 1f)
     {
         string ruta = $"{Carpeta}/{nombre}.mat";
@@ -136,6 +137,10 @@ public static class FarolDeEstrellasBuilder
             m = new Material(origen) { name = nombre };
             AssetDatabase.CreateAsset(m, ruta);
         }
+        var dibujo = Shader.Find("El Sendero/Dibujo");
+        if (dibujo != null && m.shader != dibujo) m.shader = dibujo;
+        if (m.HasProperty("_Tinte")) m.SetColor("_Tinte", color);
+        if (m.HasProperty("_TextureImpact")) m.SetFloat("_TextureImpact", 0f);
         foreach (var t in new[] { "_BaseMap", "_MainTex", "_EmissionMap" })
             if (m.HasProperty(t)) m.SetTexture(t, null);
         if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", color);

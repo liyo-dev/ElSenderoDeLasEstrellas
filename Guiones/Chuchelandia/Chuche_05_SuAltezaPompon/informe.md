@@ -1,15 +1,15 @@
 # Parte de horneado: Chuche_05_SuAltezaPompon
 
-2026-11-11 18:18 · guion `Assets/_SEQUENCES/Guiones/Chuche_05_SuAltezaPompon.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Chuche_05_SuAltezaPompon.guion.txt`
 
-**1:39,1** de secuencia · 29 frases · 34 planos · 19 efectos · 11 personajes
+**1:39,1** de secuencia · 29 frases · 34 planos · 21 efectos · 11 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93 · condesa 1,55/ojos 1,17 · heraldo 2,08/ojos 1,22 · suplente 2,08/ojos 1,22 · pompon 1,97/ojos 1,15 · g1 1,97/ojos 1,15 · g2 1,97/ojos 1,15 · g3 1,97/ojos 1,15 · g4 1,97/ojos 1,15
 
 ## Errores (0)
 
 
-## Avisos (27)
+## Avisos (30)
 
 - línea 18: 'Player' no tiene punto de aparición en Chuchelandia; necesita un «en» al principio.
 - línea 23: 'Actor_HeraldoSuplente' no tiene punto de aparición en Chuchelandia; necesita un «en» al principio.
@@ -19,20 +19,23 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 - línea 178: & suplente anda a p_suplente ritmo=normal llega_mirando=condesa: no se llega del todo a (92,2, 1,7) por el NavMesh
 - línea 108: plano dos estela condesa: no hay ángulo limpio para «dos: estela y condesa» (algo tapa la cara). Prueba con desde= o lado=.
 - línea 113: plano medio condesa solo: no hay ángulo limpio para «medio de condesa» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 113: plano medio condesa solo: condesa habla de espaldas a la cámara en 33,6 s (158°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
-- línea 113: plano medio condesa solo: condesa habla de espaldas a la cámara en 37,6 s (158°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 113: plano medio condesa solo: condesa habla de espaldas a la cámara en 33,6 s (165°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 113: plano medio condesa solo: condesa habla de espaldas a la cámara en 37,6 s (165°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
 - línea 189: plano dos estela will: no hay ángulo limpio para «dos: estela y will» (algo tapa la cara). Prueba con desde= o lado=.
+- línea 189: plano dos estela will: estela habla de espaldas a la cámara en 76,2 s (150°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 199: plano medio pompon solo: no hay ángulo limpio para «medio de pompon» (algo tapa la cara). Prueba con desde= o lado=.
 - línea 214: plano medio estela lado=frente: no cabe el contraplano sobre el hombro de condesa; hago un plano medio de estela.
 - línea 214: plano medio estela lado=frente: estela habla de espaldas a la cámara en 90,5 s (113°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
 - línea 218: plano medio estela lado=frente: no cabe el contraplano sobre el hombro de condesa; hago un plano medio de estela.
 - línea 218: plano medio estela lado=frente: estela habla de espaldas a la cámara en 95,1 s (113°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
-- 0:01,2: en «conjunto de pompon y estela» will está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
-- 0:01,2: en «conjunto de pompon y estela» condesa está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 0:01,2: en «conjunto de pompon y estela» liam está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 0:01,2: en «conjunto de pompon y estela» condesa está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:01,2: en «conjunto de pompon y estela» heraldo está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
-- 0:01,2: en «conjunto de pompon y estela» g4 está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 0:01,2: en «conjunto de pompon y estela» g1 está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:08,5: en «medio de heraldo» condesa está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:08,5: en «medio de heraldo» g4 está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:32,3: en «medio de condesa» pompon está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 0:32,3: en «medio de condesa» g2 está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:32,3: en «medio de condesa» g3 está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - 0:47,1: el plano «medio de heraldo» dura 0,6 s (un corte tan corto se lee como un salto).
 - 1:23,2: en «dos: condesa y estela» suplente está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
@@ -51,51 +54,52 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de estela y pompon · 1,2 s · lente 42° · coste 791: delante 552, cara 130, ángulo 104 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Escalar: Actor_Heraldo ×1 en 0 s |
 | 0:00,0 | efecto | SFX: Trumpet-009 |
 | 0:00,0 | efecto | SFX: Trumpet-010 |
 | 0:01,2 | **@alfombra** |  |
-| 0:01,2 | plano 2 | conjunto de pompon y estela · 7,3 s · lente 34° · coste 543: cara 110, ángulo 77, eje 350 |
+| 0:01,2 | plano 2 | conjunto de pompon y estela · 7,3 s · lente 34° · coste 914: tapado 244, delante 487, cara 105, ángulo 72 |
 | 0:01,2 | efecto | VFX: Sparkle_ellow_flying en Actor_Pompon |
 | 0:02,6 | efecto | SFX: cartoon_whistle_down(4) |
 | 0:08,5 | **@anuncio** |  |
-| 0:08,5 | plano 3 | medio de heraldo · 7,4 s · lente 30° · coste 240: cara 202, ángulo 32 |
+| 0:08,5 | plano 3 | medio de heraldo · 7,4 s · lente 30° · coste 282: cara 240, ángulo 36 |
 | 0:08,5 | heraldo | «¡Su Alteza Pompón! ¡Princesa de Chuchelandia y campeona de ternura durante cuatrocientos años seguidos!» (7,4 s) |
 | 0:15,9 | **@oso** |  |
-| 0:15,9 | plano 4 | medio de estela · 1,6 s · lente 30° · coste 150: cara 112, ángulo 32 |
+| 0:15,9 | plano 4 | medio de estela · 1,6 s · lente 30° · coste 192: cara 150, ángulo 36 |
 | 0:15,9 | estela | «¿Eso es un oso?» (1,6 s) · pose |
-| 0:17,5 | plano 5 | medio de heraldo · 1,8 s · lente 30° · coste 240: cara 202, ángulo 32 |
+| 0:17,5 | plano 5 | medio de heraldo · 1,8 s · lente 30° · coste 282: cara 240, ángulo 36 |
 | 0:17,5 | heraldo | «Es la princesa.» (1,8 s) |
-| 0:19,3 | plano 6 | medio de estela · 1,3 s · lente 30° · coste 328: cara 273, ángulo 50 |
+| 0:19,3 | plano 6 | medio de estela · 1,3 s · lente 30° · coste 870: cara 810, ángulo 54 |
 | 0:19,3 | estela | «Es un oso.» (1,3 s) |
-| 0:20,6 | plano 7 | medio de heraldo · 2,0 s · lente 30° · coste 240: cara 202, ángulo 32 |
+| 0:20,6 | plano 7 | medio de heraldo · 2,0 s · lente 30° · coste 282: cara 240, ángulo 36 |
 | 0:20,6 | heraldo | «Es la princesa oso.» (2,0 s) |
 | 0:20,6 | efecto | Escalar: Actor_Heraldo ×1,06 en 0,6 s |
-| 0:22,6 | plano 8 | medio de estela · 2,0 s · lente 30° · coste 328: cara 273, ángulo 50 |
+| 0:22,6 | plano 8 | medio de estela · 2,0 s · lente 30° · coste 870: cara 810, ángulo 54 |
 | 0:22,6 | estela | «Es un oso con una tiara.» (2,0 s) |
-| 0:24,6 | plano 9 | medio de heraldo · 3,4 s · lente 30° · coste 240: cara 202, ángulo 32 |
+| 0:24,6 | plano 9 | medio de heraldo · 3,4 s · lente 30° · coste 282: cara 240, ángulo 36 |
 | 0:24,6 | heraldo | «Es. La. Princesa.» (3,4 s) |
 | 0:24,6 | efecto | Escalar: Actor_Heraldo ×1,12 en 1,2 s |
-| 0:28,0 | plano 10 | medio de estela · 2,5 s · lente 30° · coste 328: cara 273, ángulo 50 |
+| 0:28,0 | plano 10 | medio de estela · 2,5 s · lente 30° · coste 870: cara 810, ángulo 54 |
 | 0:28,0 | estela | «Pues tiene cara de oso.» (2,5 s) |
 | 0:28,0 | efecto | Escalar: Actor_Heraldo ×1,18 en 1 s |
-| 0:30,5 | plano 11 | dos: estela y condesa · 1,8 s · lente 32° · coste 1158: cara 1089, ángulo 63 |
+| 0:30,5 | plano 11 | dos: estela y condesa · 1,8 s · lente 32° · coste 1164: cara 1101, ángulo 63 |
 | 0:30,5 | estela | «¿Le pasa algo?» (1,8 s) |
-| 0:32,3 | plano 12 | medio de condesa · 7,7 s · lente 30° · coste 1194: cara 1088, ángulo 107 |
+| 0:32,3 | plano 12 | medio de condesa · 7,7 s · lente 30° · coste 1227: cara 1125, ángulo 102 |
 | 0:32,3 | condesa | «No le pasa nada, alteza.» (2,7 s) |
 | 0:35,2 | condesa | «Es solo que usted es una candidata… complicada.» (4,8 s) |
 | 0:40,0 | plano 13 | sobre el hombro de condesa a estela · 2,3 s · lente 24° · coste 703: delante 347, eje 350 |
 | 0:40,0 | estela | «Yo solo digo que es un oso.» (2,3 s) |
 | 0:40,0 | efecto | Escalar: Actor_Heraldo ×1,3 en 1,4 s |
 | 0:42,3 | **@hinchado** |  |
-| 0:42,3 | plano 14 | medio de heraldo · 1,0 s · lente 30° · coste 241: cara 150, ángulo 86 |
+| 0:42,3 | plano 14 | medio de heraldo · 1,0 s · lente 30° · coste 319: cara 225, ángulo 95 |
 | 0:42,3 | efecto | SFX: cartoon_whistle_up(1) |
 | 0:42,3 | efecto | Escalar: Actor_Heraldo ×1,45 en 1,2 s |
-| 0:43,3 | plano 15 | conjunto de will y liam y estela · 1,5 s · lente 34° · coste 54: cara 54 |
+| 0:43,3 | plano 15 | conjunto de will y liam y estela · 1,5 s · lente 34° · coste 59: cara 53 |
 | 0:44,8 | plano 16 | sobre el hombro de pompon a estela · 2,3 s · lente 24° · coste 431: cara 81, eje 350 |
 | 0:44,8 | estela | «Y bastante pegajoso.» (2,1 s) |
 | 0:47,1 | **@pop** |  |
-| 0:47,1 | plano 17 | medio de heraldo · 0,6 s · lente 30° · coste 241: cara 150, ángulo 86 |
+| 0:47,1 | plano 17 | medio de heraldo · 0,6 s · lente 30° · coste 319: cara 225, ángulo 95 |
 | 0:47,1 | efecto | VFX: Confetti_blast_multicolor en M_Cine_Salon_Heraldo |
 | 0:47,1 | efecto | SFX: Balloon_Pop-003 |
 | 0:47,1 | efecto | Sacudida de cámara (0,2, 0,4s) |
@@ -104,44 +108,45 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 0:47,7 | efecto | SFX: Metal_Hit-013 |
 | 0:47,7 | efecto | Escalar: Actor_Heraldo ×1 en 0 s |
 | 0:48,5 | estela | «¿Qué? Yo no he hecho nada.» (2,3 s) · pose |
-| 0:50,8 | plano 19 | medio de condesa · 4,2 s · lente 30° · coste 283: cara 212, ángulo 65 |
+| 0:50,8 | plano 19 | medio de condesa · 4,2 s · lente 30° · coste 845: delante 562, cara 213, ángulo 65 |
 | 0:50,8 | condesa | «Le ha llamado oso a Su Alteza. Cinco veces.» (4,2 s) |
-| 0:55,0 | plano 20 | medio de liam · 2,1 s · lente 30° · coste 127: cara 100, ángulo 21 |
+| 0:55,0 | plano 20 | medio de liam · 2,1 s · lente 30° · coste 163: cara 138, ángulo 26 |
 | 0:55,0 | liam | «Cinco.» (2,1 s) |
-| 0:57,1 | plano 21 | medio de estela · 1,8 s · lente 30° · coste 43: cara 25, ángulo 12 |
+| 0:57,1 | plano 21 | medio de estela · 1,8 s · lente 30° · coste 3: ángulo 3 |
 | 0:57,1 | estela | «¡Es que es un oso!» (1,8 s) · pose |
-| 0:58,8 | plano 22 | medio de liam · 1,5 s · lente 30° · coste 43: cara 25, ángulo 12 |
+| 0:58,8 | plano 22 | medio de liam · 1,5 s · lente 30° · coste 79: cara 63, ángulo 17 |
 | 0:58,8 | liam | «Seis.» (1,5 s) |
 | 1:00,4 | **@suplente** |  |
-| 1:00,4 | plano 23 | medio de condesa · 2,9 s · lente 30° · coste 7: ángulo 2 |
+| 1:00,4 | plano 23 | medio de condesa · 2,9 s · lente 30° · coste 829: delante 616, cara 175, ángulo 30 |
 | 1:00,4 | condesa | «¡Que pase el suplente!» (2,9 s) |
-| 1:03,2 | plano 24 | medio de g4 · 3,2 s · lente 30° · coste 35: ángulo 29 |
+| 1:03,2 | plano 24 | medio de g4 · 3,2 s · lente 30° · coste 485: estorbo 441, ángulo 38 |
 | 1:03,2 | g4 | «Ya van tres esta semana.» (3,2 s) |
-| 1:06,4 | plano 25 | conjunto de condesa y suplente · 2,8 s · lente 34° · coste 62: cara 2, ángulo 54 |
+| 1:06,4 | plano 25 | conjunto de condesa y suplente · 2,8 s · lente 34° · coste 75: cara 15, ángulo 54 |
 | 1:06,4 | suplente | «¿Es ella?» (1,2 s) |
 | 1:07,9 | condesa | «Es ella.» (1,3 s) |
-| 1:09,2 | plano 26 | conjunto de suplente y estela · 4,4 s · lente 34° · coste 321: cara 43, ángulo 18, eje 260 |
+| 1:09,2 | plano 26 | conjunto de suplente y estela · 4,4 s · lente 34° · coste 329: cara 45, ángulo 18, eje 260 |
 | 1:09,8 | suplente | «¡Su Alteza Pompón! ¡Princesa de Chuchelandia!» (3,8 s) |
 | 1:13,6 | **@tapa** |  |
-| 1:13,6 | plano 27 | dos: estela y will · 3,2 s · lente 32° · coste 1034: tapado 344, cara 271, ángulo 63, eje 350 |
+| 1:13,6 | plano 27 | dos: estela y will · 3,2 s · lente 32° · coste 1142: cara 1050, ángulo 86 |
 | 1:15,6 | estela | «¡Mmmf!» (1,2 s) |
 | 1:16,8 | **@chapoteo** |  |
-| 1:16,8 | plano 28 | medio de pompon · 3,2 s · lente 30° · coste 199: cara 137, ángulo 56 |
+| 1:16,8 | plano 28 | medio de pompon · 3,2 s · lente 30° · coste 1170: delante 1095, ángulo 8 |
 | 1:16,8 | efecto | SFX: Bubble-001 |
 | 1:17,2 | efecto | SFX: Bubble-002 |
-| 1:20,0 | plano 29 | general de estela y pompon y g1 y g2 · 3,1 s · lente 42° · coste 191: cara 99, ángulo 85 |
+| 1:20,0 | plano 29 | general de estela y pompon y g1 y g2 · 3,1 s · lente 42° · coste 541: cara 99, ángulo 85, eje 350 |
 | 1:20,3 | efecto | SFX: cartoon_whistle_down(6) |
 | 1:23,2 | **@duelo** |  |
-| 1:23,2 | plano 30 | dos: condesa y estela · 6,6 s · lente 32° · coste 875: cara 846, ángulo 23 |
+| 1:23,2 | plano 30 | dos: condesa y estela · 6,6 s · lente 32° · coste 916: cara 885, ángulo 23 |
 | 1:23,2 | condesa | «Para abrir la Puerta del Corazón, la candidata debe vencer a la princesa reinante en el Duelo de Ternura.» (6,6 s) |
 | 1:29,7 | plano 31 | medio de estela · 1,5 s · lente 24° · coste 930: cara 863, ángulo 68 |
 | 1:29,7 | estela | «¿Y si pierdo?» (1,5 s) · pose |
-| 1:31,2 | plano 32 | medio de condesa · 2,8 s · lente 30° · coste 211: cara 175, ángulo 30 |
+| 1:31,2 | plano 32 | medio de condesa · 2,8 s · lente 30° · coste 297: cara 250, ángulo 39 |
 | 1:31,2 | condesa | «Nadie ha vencido nunca a Su Alteza.» (2,8 s) |
 | 1:34,0 | plano 33 | medio de estela · 2,1 s · lente 24° · coste 930: cara 863, ángulo 68 |
 | 1:34,0 | estela | «Eso no responde a mi pregunta.» (2,1 s) · pose |
-| 1:36,2 | plano 34 | medio de liam · 3,0 s · lente 30° · coste 41: ángulo 33 |
+| 1:36,2 | plano 34 | medio de liam · 3,0 s · lente 30° · coste 33: ángulo 33 |
 | 1:36,2 | liam | «Sí que la responde.» (1,8 s) |
+| 1:39,1 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

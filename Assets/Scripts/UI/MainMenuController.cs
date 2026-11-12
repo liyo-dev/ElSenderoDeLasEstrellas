@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Core.InputGlyphs;
+using TMPro;
 
 [DisallowMultipleComponent]
 public class MainMenuController : MonoBehaviour
@@ -154,6 +156,7 @@ public class MainMenuController : MonoBehaviour
         WireButton(controlsButton, OnClickControls, "CONTROLS");
         WireButton(exitButton, OnClickExit, "EXIT");
         if (labButton) WireButton(labButton, OnClickLab, "LAB");
+        CrearBotonDeIconosDeMando();
 
         // Ensure UISelectVisual exists on main menu buttons
         var menuButtons = GetComponentsInChildren<Button>(true);
@@ -743,6 +746,60 @@ public class MainMenuController : MonoBehaviour
         if (!efectoAlComenzar)
             AudioService.Instance?.PlaySFX("UI_Submit");
         LoadTargetScene(escenaDelLab, labButton);
+    }
+
+    // ── Iconos de mando (pruebas) ────────────────────────────────────────
+    // Fila «Mando: …» que fuerza los iconos de mando (Automático / Nintendo / PlayStation / Xbox).
+    // Sirve para probar con mandos que llegan al juego disfrazados por apps como Switch 2 Connect,
+    // DS4Windows o Steam Input. Solo en el Editor y en builds de desarrollo. Ver InputGlyphService.
+    Button _iconosDeMandoButton;
+    TMP_Text _iconosDeMandoTexto;
+
+    static readonly InputGlyphDeviceFamily?[] CicloDeIconosDeMando =
+    {
+        null, InputGlyphDeviceFamily.Switch, InputGlyphDeviceFamily.PlayStation, InputGlyphDeviceFamily.Xbox,
+    };
+
+    void CrearBotonDeIconosDeMando()
+    {
+        if (!Debug.isDebugBuild || _iconosDeMandoButton) return;
+        var plantilla = labButton ? labButton : exitButton;
+        if (!plantilla) return;
+
+        var copia = Instantiate(plantilla.gameObject, plantilla.transform.parent);
+        copia.name = "BotonIconosDeMando";
+        copia.transform.SetSiblingIndex(plantilla.transform.GetSiblingIndex() + 1);
+
+        // El texto lo pone esta fila, no la tabla de idiomas.
+        foreach (var localizado in copia.GetComponentsInChildren<LocalizedText>(true))
+            Destroy(localizado);
+
+        _iconosDeMandoButton = copia.GetComponent<Button>();
+        _iconosDeMandoButton.onClick = new Button.ButtonClickedEvent();
+        _iconosDeMandoButton.onClick.AddListener(OnClickIconosDeMando);
+        _iconosDeMandoTexto = copia.GetComponentInChildren<TMP_Text>(true);
+        RefrescarTextoDeIconosDeMando();
+    }
+
+    public void OnClickIconosDeMando()
+    {
+        if (_isLoading || !_inputArmed) return;
+        int actual = System.Array.IndexOf(CicloDeIconosDeMando, InputGlyphService.ForcedGamepadFamily);
+        var siguiente = CicloDeIconosDeMando[(actual + 1) % CicloDeIconosDeMando.Length];
+        InputGlyphService.SetForcedGamepadFamily(siguiente);
+        RefrescarTextoDeIconosDeMando();
+    }
+
+    void RefrescarTextoDeIconosDeMando()
+    {
+        if (!_iconosDeMandoTexto) return;
+        _iconosDeMandoTexto.text = InputGlyphService.ForcedGamepadFamily switch
+        {
+            InputGlyphDeviceFamily.Switch => "Mando: Nintendo",
+            InputGlyphDeviceFamily.PlayStation => "Mando: PlayStation",
+            InputGlyphDeviceFamily.Xbox => "Mando: Xbox",
+            _ => "Mando: Automático",
+        };
     }
 
     public void OnClickExit()

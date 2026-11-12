@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_01_Llegada
   duracion: 13.403265
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 be344ebbfd466426f7e6aaadee35f104"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 1c9a125c5368a18f94ff8fc5d45c8142"
   actores:
   - id: Player
     alias: will
@@ -365,7 +365,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 2.8
-      p: {x: 88.33279, y: 15.423852, z: 213.26625}
+      p: {x: 88.36528, y: 15.413076, z: 212.95317}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -375,7 +375,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -386,7 +386,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 7.662449
-      p: {x: 86.65617, y: 15.404715, z: 211.55414}
+      p: {x: 86.76822, y: 15.369586, z: 210.65883}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -396,7 +396,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -407,7 +407,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y will'
     posiciones:
     - t: 9.49102
-      p: {x: 89.38054, y: 15.358228, z: 212.7288}
+      p: {x: 89.48638, y: 15.3514805, z: 212.61082}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -428,32 +428,44 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326898
+      rid: 6540294555676705397
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705398
     linea: 35
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326899
+      rid: 6540294555676705399
     linea: 36
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326900
+      rid: 6540294555676705400
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326901
+      rid: 6540294555676705401
     linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.5
     beat:
-      rid: 6540294550018326902
+      rid: 6540294555676705402
     linea: 44
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 13.403265
+    beat:
+      rid: 6540294555676705403
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -474,7 +486,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326898
+    - rid: 6540294555676705397
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705398
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -487,7 +507,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326899
+    - rid: 6540294555676705399
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -500,7 +520,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326900
+    - rid: 6540294555676705400
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -513,7 +533,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326901
+    - rid: 6540294555676705401
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -523,7 +543,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294550018326902
+    - rid: 6540294555676705402
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -533,3 +553,11 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
+    - rid: 6540294555676705403
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

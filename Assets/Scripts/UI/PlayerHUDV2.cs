@@ -46,9 +46,6 @@ namespace Sendero.UI
         [Tooltip("Tamaño del «×N» junto a cada barra.")]
         [SerializeField] private float tamanoDelNumeroDeCapas = 22f;
 
-        [Header("Configuración de Fade")]
-        [Tooltip("Duración del fade in/out en segundos")]
-        [SerializeField] private float fadeDuration = 0.5f;
         
         // Referencias a sistemas del juego
         private PlayerHealthSystem _healthSystem;
@@ -549,7 +546,7 @@ namespace Sendero.UI
             if (!_isVisible) return;
 
             _isVisible = false;
-            float useDuration = duration > 0 ? duration : fadeDuration;
+            float useDuration = duration > 0 ? duration : OcultablesDeCinematica.SegundosDelFundido;
             _currentFadeTween?.Kill();
 
             if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
@@ -604,7 +601,7 @@ namespace Sendero.UI
             if (_ocultadoPor.Count > 0 || _isVisible) return;
 
             _isVisible = true;
-            float useDuration = duration > 0 ? duration : fadeDuration;
+            float useDuration = duration > 0 ? duration : OcultablesDeCinematica.SegundosDelFundido;
             _currentFadeTween?.Kill();
 
             if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();

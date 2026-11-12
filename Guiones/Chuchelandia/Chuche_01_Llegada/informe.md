@@ -1,8 +1,8 @@
 # Parte de horneado: Chuche_01_Llegada
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Chuche_01_Llegada.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Chuche_01_Llegada.guion.txt`
 
-**0:13,4** de secuencia · 4 frases · 4 planos · 5 efectos · 3 personajes
+**0:13,4** de secuencia · 4 frases · 4 planos · 7 efectos · 3 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93
 
@@ -20,19 +20,21 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de will y estela y liam · 2,8 s · lente 40° |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | VFX: Confetti_blast_multicolor en M_Llegada_Will |
 | 0:00,0 | efecto | VFX: Sparkle_ellow_flying en M_Llegada_Estela |
 | 0:00,0 | efecto | VFX: Sparkle_ellow_flying en M_Llegada_Liam |
 | 0:00,0 | efecto | SFX: Trumpet-009 |
 | 0:01,5 | efecto | SFX: cartoon_trumpet_fail(5) |
 | 0:02,8 | **@oh_no** |  |
-| 0:02,8 | plano 2 | medio de estela · 4,9 s · lente 30° · coste 352: ángulo 2, eje 350 |
+| 0:02,8 | plano 2 | medio de estela · 4,9 s · lente 30° · coste 358: ángulo 2, eje 350 |
 | 0:02,8 | estela | «Oh, no.» (1,8 s) |
 | 0:05,1 | estela | «No. De verdad que no.» (2,6 s) · pose |
 | 0:07,7 | plano 3 | medio de will · 1,8 s · lente 30° · coste 2: ángulo 2 |
 | 0:07,7 | will | «A mí me gusta.» (1,8 s) · pose |
-| 0:09,5 | plano 4 | dos: estela y will · 3,9 s · lente 32° · coste 266: cara 152, ángulo 108 |
+| 0:09,5 | plano 4 | dos: estela y will · 3,9 s · lente 32° · coste 270: cara 156, ángulo 108 |
 | 0:09,5 | estela | «A ti te gusta todo lo que se pueda comer.» (2,6 s) |
+| 0:13,4 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

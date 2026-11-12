@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_02_LaPosada
   duracion: 65.298035
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 7f9a68cf182ffd1de63d4fb45d3e324a"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 02c4e1dc1e3e3fb58e8abdfd850ef42f"
   actores:
   - id: Player
     alias: will
@@ -1220,7 +1220,7 @@ MonoBehaviour:
     descripcion: 'dos: will y posadero'
     posiciones:
     - t: 7.0415645
-      p: {x: 281.18915, y: 5.9093423, z: -431.3486}
+      p: {x: 281.52997, y: 5.9093423, z: -431.91666}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1253,7 +1253,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1113726
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1274,7 +1274,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1295,7 +1295,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1113726
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1306,7 +1306,7 @@ MonoBehaviour:
     descripcion: conjunto de will y posadero y lucia
     posiciones:
     - t: 19.221563
-      p: {x: 282.13754, y: 6.903662, z: -432.8357}
+      p: {x: 282.31976, y: 6.903662, z: -433.05475}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -1331,7 +1331,7 @@ MonoBehaviour:
     descripcion: 'dos: will y lucia'
     posiciones:
     - t: 27.946564
-      p: {x: 279.0278, y: 5.734561, z: -431.86893}
+      p: {x: 279.24008, y: 5.734561, z: -432.5084}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1364,7 +1364,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 277.15, y: 5.3465266, z: -429.62}
     alturaDelFoco: 0
-    encuadre: {x: 0, y: -0.1}
+    encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1375,7 +1375,7 @@ MonoBehaviour:
     descripcion: medio de lucia
     posiciones:
     - t: 41.67346
-      p: {x: 276.23975, y: 5.5951695, z: -430.90555}
+      p: {x: 275.91953, y: 5.5963254, z: -431.466}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1385,7 +1385,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 0.7617901
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1396,7 +1396,7 @@ MonoBehaviour:
     descripcion: 'dos: will y lucia'
     posiciones:
     - t: 42.87346
-      p: {x: 277.5882, y: 5.734561, z: -431.9536}
+      p: {x: 277.45233, y: 5.734561, z: -432.61356}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1419,7 +1419,7 @@ MonoBehaviour:
     descripcion: 'dos: will y posadero'
     posiciones:
     - t: 56.720367
-      p: {x: 281.18915, y: 5.9093423, z: -431.3486}
+      p: {x: 281.52997, y: 5.9093423, z: -431.91666}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1440,86 +1440,98 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326833
+      rid: 6540294555676705364
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705365
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326834
+      rid: 6540294555676705366
     linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
     t: 19.221563
     beat:
-      rid: 6540294550018326835
+      rid: 6540294555676705367
     linea: 62
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.126564
     beat:
-      rid: 6540294550018326836
+      rid: 6540294555676705368
     linea: 69
   - onlyIfFlag: 
     skipIfFlag: 
     t: 38.45346
     beat:
-      rid: 6540294550018326837
+      rid: 6540294555676705369
     linea: 82
   - onlyIfFlag: 
     skipIfFlag: 
     t: 38.95346
     beat:
-      rid: 6540294550018326838
+      rid: 6540294555676705370
     linea: 86
   - onlyIfFlag: 
     skipIfFlag: 
     t: 38.95346
     beat:
-      rid: 6540294550018326839
+      rid: 6540294555676705371
     linea: 90
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.07346
     beat:
-      rid: 6540294550018326840
+      rid: 6540294555676705372
     linea: 94
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.21346
     beat:
-      rid: 6540294550018326841
+      rid: 6540294555676705373
     linea: 95
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.35346
     beat:
-      rid: 6540294550018326842
+      rid: 6540294555676705374
     linea: 96
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.473457
     beat:
-      rid: 6540294550018326843
+      rid: 6540294555676705375
     linea: 98
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.473457
     beat:
-      rid: 6540294550018326844
+      rid: 6540294555676705376
     linea: 99
   - onlyIfFlag: 
     skipIfFlag: 
     t: 41.67346
     beat:
-      rid: 6540294550018326845
+      rid: 6540294555676705377
     linea: 101
   - onlyIfFlag: 
     skipIfFlag: 
     t: 56.720367
     beat:
-      rid: 6540294550018326846
+      rid: 6540294555676705378
     linea: 112
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 65.298035
+    beat:
+      rid: 6540294555676705379
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -1552,19 +1564,27 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326833
+    - rid: 6540294555676705364
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705365
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_SopaWill
         active: 0
-    - rid: 6540294550018326834
+    - rid: 6540294555676705366
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 0
-    - rid: 6540294550018326835
+    - rid: 6540294555676705367
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1574,7 +1594,7 @@ MonoBehaviour:
         markName: 
         volume: 0.25
         tono: 1
-    - rid: 6540294550018326836
+    - rid: 6540294555676705368
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1584,7 +1604,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294550018326837
+    - rid: 6540294555676705369
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1594,13 +1614,13 @@ MonoBehaviour:
         markName: 
         volume: 0.45
         tono: 1
-    - rid: 6540294550018326838
+    - rid: 6540294555676705370
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 1
-    - rid: 6540294550018326839
+    - rid: 6540294555676705371
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1615,7 +1635,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294550018326840
+    - rid: 6540294555676705372
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1630,7 +1650,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 0
         apoyarEnElSuelo: 0
-    - rid: 6540294550018326841
+    - rid: 6540294555676705373
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1645,7 +1665,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 0
         apoyarEnElSuelo: 0
-    - rid: 6540294550018326842
+    - rid: 6540294555676705374
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1660,7 +1680,7 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 0
         apoyarEnElSuelo: 0
-    - rid: 6540294550018326843
+    - rid: 6540294555676705375
       type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1675,13 +1695,13 @@ MonoBehaviour:
         seguirOffset: {x: 0, y: 0, z: 0}
         desdeDondeEstaba: 1
         apoyarEnElSuelo: 0
-    - rid: 6540294550018326844
+    - rid: 6540294555676705376
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloCuchara
         active: 0
-    - rid: 6540294550018326845
+    - rid: 6540294555676705377
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1691,9 +1711,17 @@ MonoBehaviour:
         markName: 
         volume: 0.4
         tono: 1
-    - rid: 6540294550018326846
+    - rid: 6540294555676705378
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_SopaWill
         active: 1
+    - rid: 6540294555676705379
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

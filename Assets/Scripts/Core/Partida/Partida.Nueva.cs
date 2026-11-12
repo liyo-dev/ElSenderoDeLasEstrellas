@@ -21,10 +21,11 @@ public static partial class Partida
         p.maxMP = 0f;
         p.currentMP = 0f;
 
-        // Nada de la partida anterior: NPCs, cinemáticas vistas, pizarras, narrativas, avisos, grupo.
+        // Nada de la partida anterior: NPCs, cinemáticas vistas, lugares conocidos, pizarras, narrativas, avisos, grupo.
         p.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
         p.flags ??= new List<string>();
         p.flags.RemoveAll(f => !string.IsNullOrEmpty(f) && f.StartsWith("CINEMATIC_SEEN:", StringComparison.OrdinalIgnoreCase));
+        p.flags.RemoveAll(f => !string.IsNullOrEmpty(f) && f.StartsWith(LugaresConocidos.Prefijo, StringComparison.Ordinal));
         p.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
         p.senalesEmitidas = new List<string>();
         p.completedInteractiveNarratives = new List<string>();

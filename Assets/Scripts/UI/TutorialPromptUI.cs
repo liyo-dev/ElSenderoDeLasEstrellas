@@ -362,6 +362,12 @@ public class TutorialPromptUI : MonoBehaviour
         if (string.IsNullOrEmpty(_textTemplate)) return _textTemplate;
         if (string.IsNullOrEmpty(_buttonName) || !_textTemplate.Contains(ButtonToken)) return _textTemplate;
 
+        // Con icono del mando o teclado activo, el icono va dentro de la frase; sin él, su nombre.
+        if (InputGlyphService.GetSprite(_buttonName) != null && InputGlyphService.IconosDeTexto != null)
+        {
+            InputGlyphService.UsarIconos(_label);
+            return _textTemplate.Replace(ButtonToken, InputGlyphService.SpriteTag(_buttonName));
+        }
         string label = InputGlyphLabels.GetLabel(_buttonName, InputGlyphService.CurrentFamily);
         return _textTemplate.Replace(ButtonToken, label);
     }

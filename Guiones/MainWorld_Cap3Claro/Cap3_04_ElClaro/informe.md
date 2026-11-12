@@ -1,8 +1,8 @@
 # Parte de horneado: Cap3_04_ElClaro
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap3_04_ElClaro.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap3_04_ElClaro.guion.txt`
 
-**0:29,2** de secuencia · 7 frases · 2 planos · 1 efectos · 3 personajes
+**0:29,2** de secuencia · 7 frases · 2 planos · 3 efectos · 3 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · jefe 1,31/ojos 0,98
 
@@ -28,6 +28,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · jefe 1,31/ojos 0
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de jefe y c2 · 13,4 s · lente 42° · coste 54: ángulo 54 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:01,0 | jefe | «Doce jaulas. En la capital pagan bien por plumas que brillan.» (4,0 s) |
 | 0:05,4 | c2 | «No paran de brillar. Me ponen nervioso.» (2,5 s) · pose |
 | 0:08,3 | jefe | «Pues tápalos. Al amanecer, al barco.» (2,3 s) |
@@ -38,6 +39,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · jefe 1,31/ojos 0
 | 0:14,4 | will | «Podría entrar ahora mismo y sacarlos de ahí…» (2,9 s) · pose |
 | 0:17,7 | will | «Pero son tres. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro.» (5,4 s) · pose |
 | 0:23,5 | will | «Eldran siempre lo dice: que puedas hacer algo no quiere decir que debas.» (4,7 s) |
+| 0:29,2 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

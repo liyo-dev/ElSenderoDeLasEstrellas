@@ -1,0 +1,2329 @@
+{
+    "texts": [
+        {
+            "key": "STAT_EFECTO_ATAQUE_MAS",
+            "value": "Your spells deal {0} % more damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_MENOS",
+            "value": "Your spells deal {0} % less damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_NORMAL",
+            "value": "Your spells deal normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA",
+            "value": "You take {0} % less damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_NORMAL",
+            "value": "You take normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO",
+            "value": "Damage {0} %"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO_NORMAL",
+            "value": "Normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO",
+            "value": "Damage taken -{0} %"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO_NORMAL",
+            "value": "Normal damage taken"
+        },
+        {
+            "key": "SHOP_IF_EQUIPPED",
+            "value": "If equipped:"
+        },
+        {
+            "key": "ITEM_COIN_NAME_PLURAL",
+            "value": "Coins"
+        },
+        {
+            "key": "ITEM_ESENCIA_NAME_PLURAL",
+            "value": "Essence"
+        },
+        {
+            "key": "SHOP_MISSING_CURRENCY_ONE",
+            "value": "You need {0} more {1}"
+        },
+        {
+            "key": "SHOP_MISSING_CURRENCY_OTHER",
+            "value": "You need {0} more {1}"
+        },
+        {
+            "key": "SHOP_MSG_EFFECT_UNAVAILABLE",
+            "value": "This product\u0027s effect cannot be applied."
+        },
+        {
+            "key": "ABILITIES_LEVEL_LABEL",
+            "value": "Level: {0}"
+        },
+        {
+            "key": "ABILITIES_MANA_LABEL",
+            "value": "Mana: {0}/{1}"
+        },
+        {
+            "key": "BATTLE_CANNOT_FLEE",
+            "value": "You can't flee the battle."
+        },
+        {
+            "key": "BATTLE_REPORT_TITLE",
+            "value": "Victory!"
+        },
+        {
+            "key": "BATTLE_REPORT_PROGRESS",
+            "value": "Progress"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA",
+            "value": "Star Attunement"
+        },
+        {
+            "key": "BATTLE_REPORT_SINTONIA_HITO",
+            "value": "Attunement complete! Choose Health or Magic in the menu"
+        },
+        {
+            "key": "BATTLE_REPORT_LOOT",
+            "value": "Loot"
+        },
+        {
+            "key": "BATTLE_REPORT_CONTINUE",
+            "value": "Continue"
+        },
+        {
+            "key": "STAT_VIDA",
+            "value": "Health"
+        },
+        {
+            "key": "STAT_MAGIA",
+            "value": "Magic"
+        },
+        {
+            "key": "STAT_ATAQUE",
+            "value": "Attack"
+        },
+        {
+            "key": "STAT_DEFENSA",
+            "value": "Defense"
+        },
+        {
+            "key": "BOSS_DEMONIO_HEALTHBAR_NAME",
+            "value": "Demon"
+        },
+        {
+            "key": "BOSS_DEMONIO_NAME",
+            "value": "DEMON"
+        },
+        {
+            "key": "BOSS_GOLEM_HEALTHBAR_NAME",
+            "value": "Golem Boss"
+        },
+        {
+            "key": "BOSS_GOLEM_NAME",
+            "value": "GOLEM"
+        },
+        {
+            "key": "BOSS_MAGOOSCURO_NAME",
+            "value": "DARK MAGE"
+        },
+        {
+            "key": "BugReport_Error",
+            "value": "Couldn't send it. Check your connection and try again."
+        },
+        {
+            "key": "BugReport_ErrorBuild",
+            "value": "Enter the build number."
+        },
+        {
+            "key": "BugReport_ErrorDescripcion",
+            "value": "Describe the bug before submitting."
+        },
+        {
+            "key": "BugReport_ErrorSeveridad",
+            "value": "Choose the bug's severity."
+        },
+        {
+            "key": "BugReport_HelpBuild",
+            "value": "You can find it in the bottom-left corner of the screen"
+        },
+        {
+            "key": "BugReport_LabelBuild",
+            "value": "Build Number *"
+        },
+        {
+            "key": "BugReport_LabelDescripcion",
+            "value": "Bug Description *"
+        },
+        {
+            "key": "BugReport_LabelPasos",
+            "value": "Steps to Reproduce (optional)"
+        },
+        {
+            "key": "BugReport_LabelSeveridad",
+            "value": "Bug Severity *"
+        },
+        {
+            "key": "BugReport_PlaceholderBuild",
+            "value": "0.0.0"
+        },
+        {
+            "key": "BugReport_PlaceholderDescripcion",
+            "value": "Try to be as specific as possible."
+        },
+        {
+            "key": "BugReport_PlaceholderPasos",
+            "value": "How can I reproduce the bug?"
+        },
+        {
+            "key": "BugReport_Sending",
+            "value": "Sending…"
+        },
+        {
+            "key": "BugReport_SeverityGameBreaking",
+            "value": "Game Breaking"
+        },
+        {
+            "key": "BugReport_SeverityMayor",
+            "value": "Major Bug"
+        },
+        {
+            "key": "BugReport_SeverityMenor",
+            "value": "Minor Bug"
+        },
+        {
+            "key": "BugReport_SeverityPuntual",
+            "value": "One-off Bug"
+        },
+        {
+            "key": "BugReport_Submit",
+            "value": "SUBMIT"
+        },
+        {
+            "key": "BugReport_Success",
+            "value": "Thanks! Report sent."
+        },
+        {
+            "key": "BugReport_Title",
+            "value": "REPORT A BUG"
+        },
+        {
+            "key": "COMBAT_FLED_SOLO",
+            "value": "You retreat from the fight."
+        },
+        {
+            "key": "COMBAT_FLED_TEAM",
+            "value": "You retreat from the fight. You can pick it back up later."
+        },
+        {
+            "key": "COMBAT_TARGET_LOCK_OFF",
+            "value": "Target lock disabled"
+        },
+        {
+            "key": "COMBAT_TARGET_LOCK_ON",
+            "value": "Target lock enabled"
+        },
+        {
+            "key": "COMMON_NO",
+            "value": "No"
+        },
+        {
+            "key": "COMMON_NONE",
+            "value": "None"
+        },
+        {
+            "key": "COMMON_SEGURO",
+            "value": "Are you sure?"
+        },
+        {
+            "key": "COMMON_YES",
+            "value": "Yes"
+        },
+        {
+            "key": "CONFIRM_MAINMENU_QUIT",
+            "value": "Quit to main menu? Unsaved progress will be lost."
+        },
+        {
+            "key": "CONFIRM_MINIGAME_ABORT",
+            "value": "Exit the minigame? The level will restart."
+        },
+        {
+            "key": "CONFIRM_NEW_GAME",
+            "value": "Current save data will be deleted. Do you want to continue?"
+        },
+        {
+            "key": "CONTROLS_BIG_MAP",
+            "value": "View big map"
+        },
+        {
+            "key": "CONTROLS_CAMERA",
+            "value": "Camera"
+        },
+        {
+            "key": "CONTROLS_CHARACTER_NEXT",
+            "value": "Switch character (next)"
+        },
+        {
+            "key": "CONTROLS_CHARACTER_PREV",
+            "value": "Switch character (previous)"
+        },
+        {
+            "key": "CONTROLS_INTERACT",
+            "value": "Interact (NPCs, doors, objects)"
+        },
+        {
+            "key": "CONTROLS_JUMP",
+            "value": "Jump (in the air: double jump; again: fly)"
+        },
+        {
+            "key": "CONTROLS_FLY_UP",
+            "value": "While flying: go up"
+        },
+        {
+            "key": "CONTROLS_FLY_DOWN",
+            "value": "While flying: go down"
+        },
+        {
+            "key": "CONTROLS_MOVE",
+            "value": "Move"
+        },
+        {
+            "key": "CONTROLS_PAUSE",
+            "value": "Pause / Menu"
+        },
+        {
+            "key": "CONTROLS_SERIES",
+            "value": "Basic spell: three-hit series (hold: precise shot)"
+        },
+        {
+            "key": "CONTROLS_DEFENSE",
+            "value": "Defense: at the right moment, counter; hold, shield"
+        },
+        {
+            "key": "CONTROLS_COMBO",
+            "value": "Magic combo: open the circle and type the sequence"
+        },
+        {
+            "key": "CONTROLS_SPRINT",
+            "value": "Run"
+        },
+        {
+            "key": "CONTROLS_TARGET_NEXT",
+            "value": "Next target (enemy or markable)"
+        },
+        {
+            "key": "CONTROLS_TEAM_ATTACK",
+            "value": "Team attack: both triggers together, with whoever is nearby"
+        },
+        {
+            "key": "COMBO_DENIED_NONE",
+            "value": "You don't know any combo yet."
+        },
+        {
+            "key": "COMBO_DENIED_COOLDOWN",
+            "value": "The circle is not ready yet."
+        },
+        {
+            "key": "COMBO_DENIED_BUSY",
+            "value": "You can't right now."
+        },
+        {
+            "key": "COMBO_DENIED_FLYING",
+            "value": "You can't focus while flying."
+        },
+        {
+            "key": "TEAM_DENIED_NOBODY",
+            "value": "No companion nearby."
+        },
+        {
+            "key": "TEAM_DENIED_CHARGE",
+            "value": "Not enough team charge."
+        },
+        {
+            "key": "TEAM_DENIED_BUSY",
+            "value": "You can't right now."
+        },
+        {
+            "key": "CONTROLS_NEXT_SPELL",
+            "value": "Next basic spell"
+        },
+        {
+            "key": "CONTROLS_TARGET_TOGGLE",
+            "value": "Lock target (hold: toggle automatic targeting)"
+        },
+        {
+            "key": "CONTROLS_TELEPORT",
+            "value": "Teleport to save point"
+        },
+        {
+            "key": "Dialogue_Continue",
+            "value": "Continue"
+        },
+        {
+            "key": "Dialogue_End",
+            "value": "End"
+        },
+        {
+            "key": "Dialogue_Skip",
+            "value": "Skip"
+        },
+        {
+            "key": "GLYPH_CLICK_LEFT",
+            "value": "Left click"
+        },
+        {
+            "key": "GLYPH_CLICK_RIGHT",
+            "value": "Right click"
+        },
+        {
+            "key": "GLYPH_DPAD",
+            "value": "the D-Pad"
+        },
+        {
+            "key": "GLYPH_DPAD_DOWN",
+            "value": "D-Pad Down"
+        },
+        {
+            "key": "GLYPH_DPAD_LEFT",
+            "value": "D-Pad Left"
+        },
+        {
+            "key": "GLYPH_DPAD_RIGHT",
+            "value": "D-Pad Right"
+        },
+        {
+            "key": "GLYPH_DPAD_UP",
+            "value": "D-Pad Up"
+        },
+        {
+            "key": "GLYPH_KEY_F",
+            "value": "F"
+        },
+        {
+            "key": "GLYPH_KEY_SHIFT",
+            "value": "Shift"
+        },
+        {
+            "key": "GLYPH_KEY_SPACE",
+            "value": "Space"
+        },
+        {
+            "key": "GLYPH_MENU",
+            "value": "Menu"
+        },
+        {
+            "key": "GLYPH_MOUSE",
+            "value": "Mouse"
+        },
+        {
+            "key": "GLYPH_SHARE",
+            "value": "Share"
+        },
+        {
+            "key": "GLYPH_STICK",
+            "value": "Left stick"
+        },
+        {
+            "key": "GLYPH_STICK_CLICK",
+            "value": "Stick click"
+        },
+        {
+            "key": "GLYPH_STICK_RIGHT",
+            "value": "Right stick"
+        },
+        {
+            "key": "GLYPH_STICK_RIGHT_CLICK",
+            "value": "Right stick click (R3)"
+        },
+        {
+            "key": "GLYPH_VIEW",
+            "value": "View"
+        },
+        {
+            "key": "GLYPH_WHEEL_DOWN",
+            "value": "Scroll down"
+        },
+        {
+            "key": "GLYPH_WHEEL_UP",
+            "value": "Scroll up"
+        },
+        {
+            "key": "HUD_FOLLOW_PROMPT_FOLLOW",
+            "value": "Follow me"
+        },
+        {
+            "key": "HUD_FOLLOW_PROMPT_STOP",
+            "value": "Stop following"
+        },
+        {
+            "key": "HUD_FOLLOW_STATUS_FOLLOWING",
+            "value": "All Together"
+        },
+        {
+            "key": "HUD_FOLLOW_STATUS_FREE",
+            "value": "Free Party"
+        },
+        {
+            "key": "INTERACT_CHEST_OPEN",
+            "value": "Open chest [A]"
+        },
+        {
+            "key": "INTERACT_DOOR_OPEN",
+            "value": "Open door [A]"
+        },
+        {
+            "key": "Interact_Examine",
+            "value": "Examine"
+        },
+        {
+            "key": "INTERACT_EXAMINE",
+            "value": "Examine [A]"
+        },
+        {
+            "key": "INTERACT_ITEM_PICKUP",
+            "value": "Pick up [A]"
+        },
+        {
+            "key": "INTERACT_NPC_TALK",
+            "value": "Talk [A]"
+        },
+        {
+            "key": "Interact_Open",
+            "value": "Open"
+        },
+        {
+            "key": "Interact_PickUp",
+            "value": "Pick Up"
+        },
+        {
+            "key": "Interact_Press",
+            "value": "Press [A] to interact"
+        },
+        {
+            "key": "Interact_Talk",
+            "value": "Talk"
+        },
+        {
+            "key": "INVENTORY_EMPTY",
+            "value": "Empty inventory"
+        },
+        {
+            "key": "INVENTORY_NO_DESCRIPTION",
+            "value": "No description."
+        },
+        {
+            "key": "INVENTORY_QUANTITY_LABEL",
+            "value": "Quantity: {0}"
+        },
+        {
+            "key": "INVENTORY_SELECT_ITEM",
+            "value": "Select an item"
+        },
+        {
+            "key": "INVENTORY_UNAVAILABLE",
+            "value": "Inventory unavailable"
+        },
+        {
+            "key": "ITEM_AC01_HEART_DESC",
+            "value": "A small heart-shaped charm."
+        },
+        {
+            "key": "ITEM_AC01_HEART_NAME",
+            "value": "Heart"
+        },
+        {
+            "key": "ITEM_AC02_LEAF_DESC",
+            "value": "An autumn leaf worn as an ornament."
+        },
+        {
+            "key": "ITEM_AC02_LEAF_NAME",
+            "value": "Leaf"
+        },
+        {
+            "key": "ITEM_AC03_BLACKGLASS_DESC",
+            "value": "Dark-lensed glasses, great for staying incognito."
+        },
+        {
+            "key": "ITEM_AC03_BLACKGLASS_NAME",
+            "value": "Black Glasses"
+        },
+        {
+            "key": "ITEM_AC03_HEAVYMETALGLASS_DESC",
+            "value": "Glasses with a rebellious, rock-and-roll edge."
+        },
+        {
+            "key": "ITEM_AC03_HEAVYMETALGLASS_NAME",
+            "value": "Heavy Metal Glasses"
+        },
+        {
+            "key": "ITEM_AC03_NERDGLASS_DESC",
+            "value": "Thick-framed glasses, very intellectual."
+        },
+        {
+            "key": "ITEM_AC03_NERDGLASS_NAME",
+            "value": "Nerd Glasses"
+        },
+        {
+            "key": "ITEM_AC03_NIGHTVISION_DESC",
+            "value": "They help you see in the dark... or so it seems."
+        },
+        {
+            "key": "ITEM_AC03_NIGHTVISION_NAME",
+            "value": "Night Vision Goggles"
+        },
+        {
+            "key": "ITEM_AC04_ANGELEARS_DESC",
+            "value": "Angel ears."
+        },
+        {
+            "key": "ITEM_AC04_ANGELEARS_NAME",
+            "value": "Angel Ears"
+        },
+        {
+            "key": "ITEM_AC04_ANTHENAEARS_DESC",
+            "value": "Ears with antennas, like something from another world."
+        },
+        {
+            "key": "ITEM_AC04_ANTHENAEARS_NAME",
+            "value": "Antenna Ears"
+        },
+        {
+            "key": "ITEM_AC04_BUNNYEARS_DESC",
+            "value": "Bunny ears."
+        },
+        {
+            "key": "ITEM_AC04_BUNNYEARS_NAME",
+            "value": "Bunny Ears"
+        },
+        {
+            "key": "ITEM_AC04_SHORTEARS_DESC",
+            "value": "A small, discreet pair of ears."
+        },
+        {
+            "key": "ITEM_AC04_SHORTEARS_NAME",
+            "value": "Short Ears"
+        },
+        {
+            "key": "ITEM_AC05_HORN01_DESC",
+            "value": "A curved horn with a demonic look."
+        },
+        {
+            "key": "ITEM_AC05_HORN01_NAME",
+            "value": "Curved Horn"
+        },
+        {
+            "key": "ITEM_AC05_HORN02_DESC",
+            "value": "A straight, sharp horn."
+        },
+        {
+            "key": "ITEM_AC05_HORN02_NAME",
+            "value": "Straight Horn"
+        },
+        {
+            "key": "ITEM_AC05_HORN03_DESC",
+            "value": "Two small twin horns."
+        },
+        {
+            "key": "ITEM_AC05_HORN03_NAME",
+            "value": "Twin Horns"
+        },
+        {
+            "key": "ITEM_AC05_HORN04_DESC",
+            "value": "An imposing dragon-shaped horn."
+        },
+        {
+            "key": "ITEM_AC05_HORN04_NAME",
+            "value": "Dragon Horn"
+        },
+        {
+            "key": "ITEM_AC06_CROWN01_DESC",
+            "value": "A gleaming crown fit for royalty."
+        },
+        {
+            "key": "ITEM_AC06_CROWN01_NAME",
+            "value": "Golden Crown"
+        },
+        {
+            "key": "ITEM_AC06_CROWN02_DESC",
+            "value": "A modest crown of polished silver."
+        },
+        {
+            "key": "ITEM_AC06_CROWN02_NAME",
+            "value": "Silver Crown"
+        },
+        {
+            "key": "ITEM_AC06_CROWN03_DESC",
+            "value": "A crown woven from flowers of the Path."
+        },
+        {
+            "key": "ITEM_AC06_CROWN03_NAME",
+            "value": "Flower Crown"
+        },
+        {
+            "key": "ITEM_AC07_PIRATEPATCH_DESC",
+            "value": "A patch hiding an eye... or a secret."
+        },
+        {
+            "key": "ITEM_AC07_PIRATEPATCH_NAME",
+            "value": "Pirate Patch"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK01_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK01_NAME",
+            "value": "Ninja Mask I"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK02_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK02_NAME",
+            "value": "Ninja Mask II"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK03_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK03_NAME",
+            "value": "Ninja Mask III"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK04_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK04_NAME",
+            "value": "Ninja Mask IV"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK05_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK05_NAME",
+            "value": "Ninja Mask V"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK06_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK06_NAME",
+            "value": "Ninja Mask VI"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK07_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK07_NAME",
+            "value": "Ninja Mask VII"
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK08_DESC",
+            "value": "A dark mask that conceals the face, perfect for stealth."
+        },
+        {
+            "key": "ITEM_AC08_NINJAMASK08_NAME",
+            "value": "Ninja Mask VIII"
+        },
+        {
+            "key": "ITEM_AC09_RIBBON_DESC",
+            "value": "A decorative ribbon for an elegant touch."
+        },
+        {
+            "key": "ITEM_AC09_RIBBON_NAME",
+            "value": "Ribbon"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE01_DESC",
+            "value": "A classic, neat, well-groomed mustache."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE01_NAME",
+            "value": "Classic Mustache"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE02_DESC",
+            "value": "A thin, discreet mustache."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE02_NAME",
+            "value": "Thin Mustache"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE03_DESC",
+            "value": "A mustache with the tips curled upward."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE03_NAME",
+            "value": "Curly Mustache"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE04_DESC",
+            "value": "A thick, bushy mustache."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE04_NAME",
+            "value": "Bushy Mustache"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE05_DESC",
+            "value": "A refined mustache with a noble touch."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE05_NAME",
+            "value": "Elegant Mustache"
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE06_DESC",
+            "value": "A huge, eye-catching mustache."
+        },
+        {
+            "key": "ITEM_AC10_MUSTACHE06_NAME",
+            "value": "Extravagant Mustache"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE01_DESC",
+            "value": "A mustache paired with a short, neat beard."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE01_NAME",
+            "value": "Mustache & Short Beard"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE02_DESC",
+            "value": "A mustache paired with a goatee."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE02_NAME",
+            "value": "Mustache & Goatee"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE03_DESC",
+            "value": "A mustache paired with a long, full beard."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE03_NAME",
+            "value": "Mustache & Long Beard"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE04_DESC",
+            "value": "A mustache paired with a braided beard."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE04_NAME",
+            "value": "Mustache & Braided Beard"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE05_DESC",
+            "value": "A mustache and beard fit for a king."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE05_NAME",
+            "value": "Royal Mustache"
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE06_DESC",
+            "value": "A mustache and beard with a strange arcane sheen."
+        },
+        {
+            "key": "ITEM_AC11_MUSTACHE06_NAME",
+            "value": "Magic Mustache"
+        },
+        {
+            "key": "ITEM_ALGAS_NAME",
+            "value": "Seaweed"
+        },
+        {
+            "key": "ITEM_BOOTS_NAME",
+            "value": "Boots"
+        },
+        {
+            "key": "ITEM_CARACOLA_NAME",
+            "value": "Seashell"
+        },
+        {
+            "key": "ITEM_CHEST25COIN_NAME",
+            "value": "Chest"
+        },
+        {
+            "key": "ITEM_CLOAK01_DESC",
+            "value": "A mage cloak worn by the most powerful mages."
+        },
+        {
+            "key": "ITEM_CLOAK01_NAME",
+            "value": "Expert Mage Cloak"
+        },
+        {
+            "key": "ITEM_COIN_NAME",
+            "value": "Coin"
+        },
+        {
+            "key": "ITEM_KEY_DESC",
+            "value": "A key that might come in handy."
+        },
+        {
+            "key": "ITEM_KEY_NAME",
+            "value": "Key"
+        },
+        {
+            "key": "ITEM_MERMELADA_NAME",
+            "value": "Jam"
+        },
+        {
+            "key": "ITEM_ESTRELLA_TORCIDA_NAME",
+            "value": "Crooked star"
+        },
+        {
+            "key": "ITEM_ESTRELLA_TORCIDA_DESC",
+            "value": "A badly carved wooden star. It's no use at all, and it's yours."
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_NAME",
+            "value": "Paper lantern"
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_DESC",
+            "value": "For festival nights in the square."
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_NAME",
+            "value": "Wooden bird"
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_DESC",
+            "value": "Carved from a single piece. It almost looks ready to sing."
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_NAME",
+            "value": "Bunting garland"
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_DESC",
+            "value": "Colours to brighten up any window."
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_NAME",
+            "value": "Wind chime"
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_DESC",
+            "value": "It rings with the valley breeze."
+        },
+        {
+            "key": "SHOP_TOMASA_SALUDO",
+            "value": "Wooden figurines, carved by hand. Well... most of them carved properly."
+        },
+        {
+            "key": "ITEM_POCIONMAGIA_DESC",
+            "value": "A potion that restores magic when consumed. Restores 25 MP."
+        },
+        {
+            "key": "ITEM_POCIONMAGIA_NAME",
+            "value": "Magic Potion"
+        },
+        {
+            "key": "ITEM_POCIONVIDA_DESC",
+            "value": "A potion that restores health when consumed. Restores 25 HP."
+        },
+        {
+            "key": "ITEM_POCIONVIDA_NAME",
+            "value": "Health Potion"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_NAME",
+            "value": "Star Feather"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_NAME_PLURAL",
+            "value": "Star Feathers"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_DESC",
+            "value": "A feather that shines like a shooting star. Revives the nearest fallen companion with half their health."
+        },
+        {
+            "key": "MainMenu_BugReport",
+            "value": "Bug Report"
+        },
+        {
+            "key": "MainMenu_Continue",
+            "value": "Continue"
+        },
+        {
+            "key": "MainMenu_Controls",
+            "value": "Controls"
+        },
+        {
+            "key": "MainMenu_Credits",
+            "value": "Credits"
+        },
+        {
+            "key": "MainMenu_Lab",
+            "value": "Lab"
+        },
+        {
+            "key": "MainMenu_Exit",
+            "value": "Exit"
+        },
+        {
+            "key": "MainMenu_NewGame",
+            "value": "New Game"
+        },
+        {
+            "key": "MainMenu_PatchNotes",
+            "value": "Patch Notes"
+        },
+        {
+            "key": "MainMenu_Settings",
+            "value": "Settings"
+        },
+        {
+            "key": "NPC_REQUIRES_WILL",
+            "value": "Only Will can speak with this character"
+        },
+        {
+            "key": "PatchNotes_Title",
+            "value": "PATCH NOTES"
+        },
+        {
+            "key": "Pensamiento",
+            "value": "Thought"
+        },
+        {
+            "key": "QUEST_MENU_HEADER_HIDDEN",
+            "value": "Hidden missions ({0})"
+        },
+        {
+            "key": "QUEST_MENU_HEADER_MAIN",
+            "value": "Missions (main)"
+        },
+        {
+            "key": "QUEST_MENU_HEADER_VISIBLE",
+            "value": "Visible missions ({0})"
+        },
+        {
+            "key": "ROOM_EXIT_BLOCKED",
+            "value": "You can’t go through there yet."
+        },
+        {
+            "key": "ROOM_EXIT_NEEDS",
+            "value": "Before you leave, you need: "
+        },
+        {
+            "key": "SAVEPOINT_PROMPT",
+            "value": "Save Game"
+        },
+        {
+            "key": "SAVEPOINT_SAVED",
+            "value": "Game saved successfully!"
+        },
+        {
+            "key": "SAVEPOINT_SAVING",
+            "value": "Saving game..."
+        },
+        {
+            "key": "Settings_Audio",
+            "value": "Audio"
+        },
+        {
+            "key": "SETTINGS_AUDIO",
+            "value": "Audio"
+        },
+        {
+            "key": "Settings_Back",
+            "value": "Back"
+        },
+        {
+            "key": "SETTINGS_CAMERA_CONTROLS",
+            "value": "Camera / Controls"
+        },
+        {
+            "key": "SETTINGS_CAMERA_SENSITIVITY",
+            "value": "Camera Sensitivity"
+        },
+        {
+            "key": "Settings_Controls",
+            "value": "Controls"
+        },
+        {
+            "key": "SETTINGS_FULLSCREEN",
+            "value": "Fullscreen"
+        },
+        {
+            "key": "SETTINGS_GENERAL",
+            "value": "General"
+        },
+        {
+            "key": "Settings_Graphics",
+            "value": "Graphics"
+        },
+        {
+            "key": "SETTINGS_INVERT_LOOK_GROUND",
+            "value": "Invert Y axis"
+        },
+        {
+            "key": "Settings_Language",
+            "value": "Language"
+        },
+        {
+            "key": "SETTINGS_LANGUAGE",
+            "value": "Language"
+        },
+        {
+            "key": "SETTINGS_MASTER_VOLUME",
+            "value": "Master Volume"
+        },
+        {
+            "key": "SETTINGS_MUSIC_VOLUME",
+            "value": "Music Volume"
+        },
+        {
+            "key": "SETTINGS_SFX_VOLUME",
+            "value": "SFX Volume"
+        },
+        {
+            "key": "SETTINGS_TITLE",
+            "value": "Settings"
+        },
+        {
+            "key": "SETTINGS_VIBRATION",
+            "value": "Vibration"
+        },
+        {
+            "key": "SETTINGS_COMBAT_HINTS",
+            "value": "Combat hints"
+        },
+        {
+            "key": "SHOP_BUY_BUTTON",
+            "value": "BUY"
+        },
+        {
+            "key": "SHOP_ITEM_AVAILABLE",
+            "value": "Available"
+        },
+        {
+            "key": "SHOP_MSG_INVALID_ITEM",
+            "value": "Invalid item."
+        },
+        {
+            "key": "SHOP_MSG_INVALID_SELECTION",
+            "value": "Invalid selection."
+        },
+        {
+            "key": "SHOP_MSG_ITEM_UNAVAILABLE",
+            "value": "Item unavailable."
+        },
+        {
+            "key": "SHOP_MSG_NO_CURRENCY_ITEM",
+            "value": "No currency item has been assigned."
+        },
+        {
+            "key": "SHOP_MSG_NO_INVENTORY",
+            "value": "No inventory configured."
+        },
+        {
+            "key": "SHOP_MSG_NOT_ENOUGH_CURRENCY",
+            "value": "You don't have enough coins."
+        },
+        {
+            "key": "SHOP_MSG_NOT_ENOUGH_QUANTITY",
+            "value": "You don't have enough of that item."
+        },
+        {
+            "key": "SHOP_MSG_OUT_OF_STOCK",
+            "value": "Product out of stock."
+        },
+        {
+            "key": "SHOP_PRICE_LABEL",
+            "value": "Price: {0}"
+        },
+        {
+            "key": "SHOP_PURCHASE_FAILED",
+            "value": "Couldn't complete the purchase."
+        },
+        {
+            "key": "SHOP_PURCHASE_SUCCESS",
+            "value": "Purchased!"
+        },
+        {
+            "key": "SHOP_SELL_BUTTON",
+            "value": "SELL"
+        },
+        {
+            "key": "SHOP_SELL_NOT_IMPLEMENTED",
+            "value": "Selling isn't implemented yet."
+        },
+        {
+            "key": "SHOP_STOCK_IN_STOCK",
+            "value": "In stock"
+        },
+        {
+            "key": "SHOP_STOCK_OUT",
+            "value": "Out of stock"
+        },
+        {
+            "key": "SHOP_STOCK_UNLIMITED",
+            "value": "Unlimited stock"
+        },
+        {
+            "key": "SHOP_TITTLE",
+            "value": "Shop"
+        },
+        {
+            "key": "SHOP_VENDOR",
+            "value": "What would you like to buy today?"
+        },
+        {
+            "key": "SPELL_AURA_ESTELAR_NAME",
+            "value": "Stellar Aura"
+        },
+        {
+            "key": "SPELL_BOLA_FUEGO_NAME",
+            "value": "Fireball"
+        },
+        {
+            "key": "SPELL_BOLA_PRISMA_NAME",
+            "value": "Prism Ball"
+        },
+        {
+            "key": "SPELL_CORAZON_ESTELAR_NAME",
+            "value": "Stellar Heart"
+        },
+        {
+            "key": "SPELL_DAMAGE_LABEL",
+            "value": "Damage: {0}"
+        },
+        {
+            "key": "SPELL_LEVITATION_NAME",
+            "value": "Levitation"
+        },
+        {
+            "key": "SPELL_LLAMA_ASTRAL_NAME",
+            "value": "Astral Flame"
+        },
+        {
+            "key": "SPELL_MANA_COST_LABEL",
+            "value": "Mana cost: {0}"
+        },
+        {
+            "key": "SPELL_TORNADO_NAME",
+            "value": "Cycloneburst"
+        },
+        {
+            "key": "SPELL_UNASSIGNED_SHORT",
+            "value": "Unassigned"
+        },
+        {
+            "key": "SPLASH_PRESENTA",
+            "value": "Presents"
+        },
+        {
+            "key": "System_Error",
+            "value": "Error"
+        },
+        {
+            "key": "System_Loading",
+            "value": "Loading..."
+        },
+        {
+            "key": "System_Saving",
+            "value": "Saving..."
+        },
+        {
+            "key": "TELEPORT_BLOCKED_BOSS",
+            "value": "I can't teleport out of here yet."
+        },
+        {
+            "key": "TELEPORT_POINT_BEDROOM",
+            "value": "Bedroom"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEINTERIOR1",
+            "value": "Castle Interior"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEINTERIOR2",
+            "value": "Castle Interior"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEINTERIOR2_JAIL",
+            "value": "Castle Dungeon"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEINTERIOR2_TO_CASTLEINTERIOR1",
+            "value": "Castle Corridor"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEOUT",
+            "value": "Castle Exterior"
+        },
+        {
+            "key": "TELEPORT_POINT_CASTLEOUTGUARD",
+            "value": "Castle Guard"
+        },
+        {
+            "key": "TELEPORT_POINT_HOUSE_FRONTDOOR",
+            "value": "House Door"
+        },
+        {
+            "key": "TELEPORT_POINT_HOUSE_FRONTDOOR_TUTORIAL",
+            "value": "House Door"
+        },
+        {
+            "key": "TELEPORT_POINT_HOUSE1",
+            "value": "House"
+        },
+        {
+            "key": "TELEPORT_POINT_HOUSE1_FRONTDOOR",
+            "value": "House Door"
+        },
+        {
+            "key": "TELEPORT_POINT_OUTSIDEKINGDOM",
+            "value": "Outside the Kingdom"
+        },
+        {
+            "key": "TELEPORT_POINT_RESTAURANT",
+            "value": "Restaurant"
+        },
+        {
+            "key": "TELEPORT_POINT_RESTAURANT_FRONTDOOR",
+            "value": "Restaurant Door"
+        },
+        {
+            "key": "TELEPORT_POINT_RESTAURANTELDRAN",
+            "value": "Eldran's Restaurant"
+        },
+        {
+            "key": "TELEPORT_POINT_ROCKS",
+            "value": "The Rocks"
+        },
+        {
+            "key": "TELEPORT_POINT_RUINAS",
+            "value": "The Ruins"
+        },
+        {
+            "key": "TELEPORT_POINT_SENDERO",
+            "value": "The Path"
+        },
+        {
+            "key": "TELEPORT_POINT_TOWN",
+            "value": "Town"
+        },
+        {
+            "key": "TELEPORT_POINT_WOODS_ENTRANCE_SAVEPOINT",
+            "value": "Woods Entrance"
+        },
+        {
+            "key": "TELEPORT_POINT_WOODS_SAVEPOINT",
+            "value": "Woods Save Point"
+        },
+        {
+            "key": "UI_ARCHIVADAS",
+            "value": "Archived"
+        },
+        {
+            "key": "UI_ARCHIVAR",
+            "value": "Archive"
+        },
+        {
+            "key": "UI_ACTIVAR",
+            "value": "Activate"
+        },
+        {
+            "key": "UI_CANCELAR_SALIR",
+            "value": "Cancel / Exit"
+        },
+        {
+            "key": "UI_DESPLAZAMIENTO",
+            "value": "Movement"
+        },
+        {
+            "key": "UI_Experience",
+            "value": "Experience"
+        },
+        {
+            "key": "UI_Health",
+            "value": "Health"
+        },
+        {
+            "key": "UI_HECHIZOS",
+            "value": "Spells"
+        },
+        {
+            "key": "UI_HP",
+            "value": "HP:"
+        },
+        {
+            "key": "UI_INVENTARIO",
+            "value": "Inventory"
+        },
+        {
+            "key": "UI_Level",
+            "value": "Level:"
+        },
+        {
+            "key": "UI_Mana",
+            "value": "Mana"
+        },
+        {
+            "key": "UI_MISIONES",
+            "value": "Quests"
+        },
+        {
+            "key": "UI_MISIONES_ACTIVAS",
+            "value": "Active Quests"
+        },
+        {
+            "key": "UI_MISIONES_ARCHIVADAS",
+            "value": "Archived Quests"
+        },
+        {
+            "key": "UI_MISIONES_OCULTAR",
+            "value": "[{DPAD_UP}] Quest Detail"
+        },
+        {
+            "key": "UI_MISIONES_SHOW",
+            "value": "[{DPAD_UP}] Show"
+        },
+        {
+            "key": "UI_MISIONES_VER_ACTIVAS",
+            "value": "View Active"
+        },
+        {
+            "key": "UI_MISIONES_VER_ARCHIVADAS",
+            "value": "View Archived"
+        },
+        {
+            "key": "UI_MP",
+            "value": "MP:"
+        },
+        {
+            "key": "UI_PAUSA",
+            "value": "Pause"
+        },
+        {
+            "key": "UI_PRESENTA",
+            "value": "Presents"
+        },
+        {
+            "key": "UI_REANUDAR",
+            "value": "Resume"
+        },
+        {
+            "key": "UI_SALIR_MENU",
+            "value": "Exit to menu"
+        },
+        {
+            "key": "UI_SEGUIR",
+            "value": "Follow"
+        },
+        {
+            "key": "UI_SELECCION",
+            "value": "Selection"
+        },
+        {
+            "key": "UI_SIGUIENDO",
+            "value": "Following"
+        },
+        {
+            "key": "UI_TELETRANSPORTE",
+            "value": "Teleport"
+        },
+        {
+            "key": "UI_USAR",
+            "value": "Use"
+        },
+        {
+            "key": "UI_VOLVER_MENU",
+            "value": "Back to menu"
+        },
+        {
+            "key": "WAIT_FOR_DAY",
+            "value": "Rest and wait until dawn?"
+        },
+        {
+            "key": "WAIT_FOR_DAY_QUEST",
+            "value": "It must be daytime to inspect this area."
+        },
+        {
+            "key": "WAIT_FOR_NIGHT",
+            "value": "Rest and wait until nightfall?"
+        },
+        {
+            "key": "WARDROBE_BODY01_DESC",
+            "value": "Simple, patched clothing typical of field workers."
+        },
+        {
+            "key": "WARDROBE_BODY01_NAME",
+            "value": "Peasant Clothes"
+        },
+        {
+            "key": "WARDROBE_BODY02_DESC",
+            "value": "Light layers made for long walks along the Path."
+        },
+        {
+            "key": "WARDROBE_BODY02_NAME",
+            "value": "Traveler's Garb"
+        },
+        {
+            "key": "WARDROBE_BODY03_DESC",
+            "value": "A plain tunic, comfortable for everyday wear."
+        },
+        {
+            "key": "WARDROBE_BODY03_NAME",
+            "value": "Humble Tunic"
+        },
+        {
+            "key": "WARDROBE_BODY04_DESC",
+            "value": "Tanned leather that protects among the forest brush."
+        },
+        {
+            "key": "WARDROBE_BODY04_NAME",
+            "value": "Hunter's Gear"
+        },
+        {
+            "key": "WARDROBE_BODY05_DESC",
+            "value": "Plain clothes that any villager might wear day to day."
+        },
+        {
+            "key": "WARDROBE_BODY05_NAME",
+            "value": "Villager clothes"
+        },
+        {
+            "key": "WARDROBE_BODY06_DESC",
+            "value": "The standard-issue uniform of the village guard."
+        },
+        {
+            "key": "WARDROBE_BODY06_NAME",
+            "value": "Guard Uniform"
+        },
+        {
+            "key": "WARDROBE_BODY07_DESC",
+            "value": "Cloth touched by a faint arcane glow."
+        },
+        {
+            "key": "WARDROBE_BODY07_NAME",
+            "value": "Mage Apprentice Robe"
+        },
+        {
+            "key": "WARDROBE_BODY08_DESC",
+            "value": "Thick leather that withstands sparks and forge heat."
+        },
+        {
+            "key": "WARDROBE_BODY08_NAME",
+            "value": "Blacksmith's Apron"
+        },
+        {
+            "key": "WARDROBE_BODY09_DESC",
+            "value": "Waterproof and light, perfect for days by the river."
+        },
+        {
+            "key": "WARDROBE_BODY09_NAME",
+            "value": "Fisherman's Clothes"
+        },
+        {
+            "key": "WARDROBE_BODY10_DESC",
+            "value": "Elegant yet practical, made for closing good deals."
+        },
+        {
+            "key": "WARDROBE_BODY10_NAME",
+            "value": "Merchant's Attire"
+        },
+        {
+            "key": "WARDROBE_BODY11_DESC",
+            "value": "Velvet and embroidery worthy of the royal court."
+        },
+        {
+            "key": "WARDROBE_BODY11_NAME",
+            "value": "Noble's Dress"
+        },
+        {
+            "key": "WARDROBE_BODY12_DESC",
+            "value": "Pockets full of notes and ink stains."
+        },
+        {
+            "key": "WARDROBE_BODY12_NAME",
+            "value": "Scholar's Robe"
+        },
+        {
+            "key": "WARDROBE_BODY13_DESC",
+            "value": "Bright colors that turn heads in any tavern."
+        },
+        {
+            "key": "WARDROBE_BODY13_NAME",
+            "value": "Bard's Costume"
+        },
+        {
+            "key": "WARDROBE_BODY14_DESC",
+            "value": "Plain cloth blessed in the temples of the Path."
+        },
+        {
+            "key": "WARDROBE_BODY14_NAME",
+            "value": "Priest's Cassock"
+        },
+        {
+            "key": "WARDROBE_BODY15_DESC",
+            "value": "Dark tones meant to help you go unnoticed."
+        },
+        {
+            "key": "WARDROBE_BODY15_NAME",
+            "value": "Thief's Garb"
+        },
+        {
+            "key": "WARDROBE_BODY16_DESC",
+            "value": "Light plating that doesn't sacrifice mobility."
+        },
+        {
+            "key": "WARDROBE_BODY16_NAME",
+            "value": "Light Warrior Armor"
+        },
+        {
+            "key": "WARDROBE_BODY17_DESC",
+            "value": "Warm and comfortable, fit for the years of wisdom."
+        },
+        {
+            "key": "WARDROBE_BODY17_NAME",
+            "value": "Elder's Clothes"
+        },
+        {
+            "key": "WARDROBE_BODY18_DESC",
+            "value": "Always smells of freshly baked bread."
+        },
+        {
+            "key": "WARDROBE_BODY18_NAME",
+            "value": "Baker's Apron"
+        },
+        {
+            "key": "WARDROBE_BODY19_DESC",
+            "value": "Many pockets for storing herbs and remedies."
+        },
+        {
+            "key": "WARDROBE_BODY19_NAME",
+            "value": "Herbalist's Clothes"
+        },
+        {
+            "key": "WARDROBE_BODY20_DESC",
+            "value": "Reserved for the village's grand celebrations."
+        },
+        {
+            "key": "WARDROBE_BODY20_NAME",
+            "value": "Festival Outfit"
+        },
+        {
+            "key": "WARDROBE_CLOAK01_DESC",
+            "value": "A magic cloak worn by the most powerful mages."
+        },
+        {
+            "key": "WARDROBE_CLOAK01_NAME",
+            "value": "Expert mage cloak."
+        },
+        {
+            "key": "WARDROBE_CLOAK02_DESC",
+            "value": "A magic cloak used by mages starting out on their adventure."
+        },
+        {
+            "key": "WARDROBE_CLOAK02_NAME",
+            "value": "Beginner mage cloak."
+        },
+        {
+            "key": "WARDROBE_CLOAK03_DESC",
+            "value": "A magic cloak worn by mages who have mastered magic."
+        },
+        {
+            "key": "WARDROBE_CLOAK03_NAME",
+            "value": "Advanced mage cloak."
+        },
+        {
+            "key": "WATER_ENTER_NEEDS",
+            "value": "Before entering the water, you need:"
+        },
+        {
+            "key": "WOODS_EXIT_BLOCKED",
+            "value": "I should talk to that guard."
+        },
+        {
+            "key": "EQUIP_CATEGORY_WEAPONR",
+            "value": "Right-Hand Weapon"
+        },
+        {
+            "key": "EQUIP_CATEGORY_SHIELDR",
+            "value": "Left-Hand Shield"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BOW",
+            "value": "Bow"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BODY",
+            "value": "Clothing"
+        },
+        {
+            "key": "EQUIP_CATEGORY_CLOAK",
+            "value": "Cloak"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HEAD",
+            "value": "Head"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAIR",
+            "value": "Hair"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYES",
+            "value": "Eyes"
+        },
+        {
+            "key": "EQUIP_CATEGORY_MOUTH",
+            "value": "Mouth"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAT",
+            "value": "Helmet"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYEBROW",
+            "value": "Eyebrow"
+        },
+        {
+            "key": "EQUIP_CATEGORY_ACCESSORY",
+            "value": "Accessory"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_TITLE",
+            "value": "Physical Attack"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_DESC",
+            "value": "Basic melee strike."
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_TITLE",
+            "value": "Magic"
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_DESC",
+            "value": "Lets you channel and cast spells."
+        },
+        {
+            "key": "ABILITY_DASH_TITLE",
+            "value": "Dash"
+        },
+        {
+            "key": "ABILITY_DASH_DESC",
+            "value": "Quick dodge to avoid damage."
+        },
+        {
+            "key": "ABILITY_BLOCK_TITLE",
+            "value": "Block"
+        },
+        {
+            "key": "ABILITY_BLOCK_DESC",
+            "value": "Raises your guard to reduce damage."
+        },
+        {
+            "key": "ABILITY_SWIM_TITLE",
+            "value": "Swim"
+        },
+        {
+            "key": "ABILITY_SWIM_DESC",
+            "value": "Lets you move through water."
+        },
+        {
+            "key": "ABILITY_JUMP_TITLE",
+            "value": "Jump"
+        },
+        {
+            "key": "ABILITY_JUMP_DESC",
+            "value": "Basic ability to overcome obstacles."
+        },
+        {
+            "key": "ABILITY_CLIMB_TITLE",
+            "value": "Climb"
+        },
+        {
+            "key": "ABILITY_CLIMB_DESC",
+            "value": "Lets you climb vertical surfaces."
+        },
+        {
+            "key": "ABILITY_MAGIC_TITLE",
+            "value": "Magic"
+        },
+        {
+            "key": "ABILITY_MAGIC_DESC",
+            "value": "Unlocks the use of spells."
+        },
+        {
+            "key": "ABILITY_FLY_TITLE",
+            "value": "Fly"
+        },
+        {
+            "key": "ABILITY_FLY_DESC",
+            "value": "Lets you travel through the air."
+        },
+        {
+            "key": "ABILITY_SPRINT_TITLE",
+            "value": "Sprint"
+        },
+        {
+            "key": "ABILITY_SPRINT_DESC",
+            "value": "Run faster for a limited time."
+        },
+        {
+            "key": "ABILITY_SHIELD_TITLE",
+            "value": "Protection"
+        },
+        {
+            "key": "ABILITY_SHIELD_DESC",
+            "value": "Hold B to raise it. Block at the right moment to strike back."
+        },
+        {
+            "key": "SPELL_FX_BOUNCE",
+            "value": "Bounces {0} times"
+        },
+        {
+            "key": "SPELL_FX_PIERCE_ALL",
+            "value": "Pierces everyone"
+        },
+        {
+            "key": "SPELL_FX_PIERCE",
+            "value": "Pierces {0}"
+        },
+        {
+            "key": "SPELL_FX_SPREAD",
+            "value": "Fan of {0}"
+        },
+        {
+            "key": "SPELL_FX_IMPACT_ZONE",
+            "value": "Leaves fire on impact"
+        },
+        {
+            "key": "SPELL_FX_SLOW",
+            "value": "Slows"
+        },
+        {
+            "key": "SPELL_FX_ROOT",
+            "value": "Roots"
+        },
+        {
+            "key": "SPELL_FX_PULL",
+            "value": "Pulls to the center"
+        },
+        {
+            "key": "SPELL_FX_PUSH",
+            "value": "Pushes enemies away"
+        },
+        {
+            "key": "SPELL_FX_HEAL",
+            "value": "Heals the party"
+        },
+        {
+            "key": "SPELL_FX_SHIELD",
+            "value": "Shields the party"
+        },
+        {
+            "key": "SPELL_FX_BLINK",
+            "value": "{0} m teleport"
+        },
+        {
+            "key": "SPELL_LEARNED_COMBO",
+            "value": "{0}'s combo: open the circle with {1} and type {2}."
+        },
+        {
+            "key": "SPELL_LEARNED_BASIC",
+            "value": "{0}'s basic spell. Equip it in Equipment › Spells."
+        },
+        {
+            "key": "MENU_CONTROLS_HINT",
+            "value": "Controls"
+        },
+        {
+            "key": "GRIMOIRE_BUTTON",
+            "value": "Grimoire"
+        },
+        {
+            "key": "GRIMOIRE_OWNER",
+            "value": "{0}'s spell"
+        },
+        {
+            "key": "GRIMOIRE_CAST_TITLE",
+            "value": "How to cast"
+        },
+        {
+            "key": "GRIMOIRE_STEP_OPEN",
+            "value": "Open the circle"
+        },
+        {
+            "key": "GRIMOIRE_STEP_TYPE",
+            "value": "Type"
+        },
+        {
+            "key": "GRIMOIRE_STEP_CAST",
+            "value": "Cast"
+        },
+        {
+            "key": "GRIMOIRE_STEP_ROTATE",
+            "value": "Switch basic"
+        },
+        {
+            "key": "GRIMOIRE_STEP_HOLD",
+            "value": "Hold: lift"
+        },
+        {
+            "key": "GRIMOIRE_STEP_RELEASE",
+            "value": "Release: throw"
+        },
+        {
+            "key": "GRIMOIRE_KIND_BASIC",
+            "value": "Basic"
+        },
+        {
+            "key": "GRIMOIRE_KIND_COMBO",
+            "value": "Combo"
+        },
+        {
+            "key": "GRIMOIRE_KIND_LEVITATION",
+            "value": "Levitation"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE",
+            "value": "Damage"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE_TICK",
+            "value": "Damage per hit"
+        },
+        {
+            "key": "GRIMOIRE_STAT_HEAL_TICK",
+            "value": "Heal per hit"
+        },
+        {
+            "key": "GRIMOIRE_STAT_SHIELD",
+            "value": "Shield"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DURATION",
+            "value": "Duration"
+        },
+        {
+            "key": "GRIMOIRE_STAT_MANA",
+            "value": "Mana"
+        },
+        {
+            "key": "GRIMOIRE_COMBO_ALWAYS",
+            "value": "Takes no slot · always at hand"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TITLE",
+            "value": "Undiscovered page"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TEXT",
+            "value": "This page is still sealed. A master, a quest or a corner you can only reach by flying, levitating or diving may hold it."
+        },
+        {
+            "key": "GRIMOIRE_PAGE_COUNTER",
+            "value": "{0} · page {1} of {2} · {3} discovered"
+        },
+        {
+            "key": "GRIMOIRE_EQUIPPED",
+            "value": "Equipped · slot {0}"
+        },
+        {
+            "key": "GRIMOIRE_NOT_EQUIPPED",
+            "value": "Not equipped"
+        },
+        {
+            "key": "GRIMOIRE_HINT_KB",
+            "value": "A / D  Turn page      Tab  Other character      Esc  Close"
+        },
+        {
+            "key": "GRIMOIRE_HINT",
+            "value": "{0} {1}  Turn page      {2}  Other character      {3}  Close"
+        },
+        {
+            "key": "ELEMENT_FIRE",
+            "value": "Fire"
+        },
+        {
+            "key": "ELEMENT_STORM",
+            "value": "Wind"
+        },
+        {
+            "key": "ELEMENT_LIGHT",
+            "value": "Light"
+        },
+        {
+            "key": "ELEMENT_MIND",
+            "value": "Mind"
+        },
+        {
+            "key": "SPELL_FX_KNOCKBACK",
+            "value": "Knockback"
+        },
+        {
+            "key": "SPELL_FX_ON_CASTER",
+            "value": "Around the caster"
+        },
+        {
+            "key": "SPELL_KEEP_ONE",
+            "value": "At least one basic spell must stay equipped."
+        },
+        {
+            "key": "SPELL_NOTHING_TO_REORDER",
+            "value": "Only one equipped: there's no order to change."
+        },
+        {
+            "key": "SPELL_SLOT_EMPTY",
+            "value": "empty"
+        },
+        {
+            "key": "SPELL_SLOT_FREE",
+            "value": "Slot {0} is free.\nPick a basic spell from the list to fill it."
+        },
+        {
+            "key": "SPELL_BASICS_INTRO",
+            "value": "Equip up to 4 basic spells. In combat, cast them with {0}\nand {1} switches to the next one, in this order."
+        },
+        {
+            "key": "SPELL_TYPE_BASIC",
+            "value": "Basic"
+        },
+        {
+            "key": "SPELL_HINT_REPLACE",
+            "value": "4 equipped. Replace which one with {0}?   {1} This one   ·   {2} Cancel"
+        },
+        {
+            "key": "SPELL_HINT_MOVE",
+            "value": "Move it to which slot?   {0} Here   ·   {1} Cancel"
+        },
+        {
+            "key": "SPELL_HINT_SLOT",
+            "value": "{0} Change position   ·   {1} Back to the list"
+        },
+        {
+            "key": "SPELL_HINT_SLOT_EMPTY",
+            "value": "{0} Pick a basic spell from the list"
+        },
+        {
+            "key": "SPELL_HINT_LIST",
+            "value": "{0} Equip or remove"
+        },
+        {
+            "key": "SPELL_HINT_UNEQUIP",
+            "value": "{0} Remove"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP",
+            "value": "{0} Equip in slot {1}"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP_FULL",
+            "value": "{0} Equip (4 equipped: you'll pick one to replace)"
+        },
+        {
+            "key": "GAME_OVER_MENSAJE",
+            "value": "You have fallen. Continue from the last save point?"
+        },
+        {
+            "key": "REQUISITO_FALTA_FLY",
+            "value": "You need to fly to get here."
+        },
+        {
+            "key": "REQUISITO_FALTA_SWIM",
+            "value": "You need to know how to swim to go this way."
+        },
+        {
+            "key": "REQUISITO_FALTA_JUMP",
+            "value": "You need to know how to jump to get past here."
+        },
+        {
+            "key": "REQUISITO_FALTA_CLIMB",
+            "value": "You need to know how to climb to get up here."
+        },
+        {
+            "key": "REQUISITO_FALTA_MAGIC",
+            "value": "You need magic here."
+        },
+        {
+            "key": "REQUISITO_FALTA_SPRINT",
+            "value": "You need to run to make it in time."
+        },
+        {
+            "key": "REQUISITO_FALTA_SHIELD",
+            "value": "You need the shield to get past here."
+        },
+        {
+            "key": "REQUISITO_FALTA_ALGO",
+            "value": "You're still missing something to get past here."
+        },
+        {
+            "key": "ZONA_SIN_VUELO_AVISO",
+            "value": "An ancient magic keeps you from flying here."
+        },
+        {
+            "key": "PARTY_NO_PUEDE_LLEGAR",
+            "value": "{0} can't reach you."
+        },
+        {
+            "key": "HUD_RETRATO_KO",
+            "value": "K.O."
+        },
+        {
+            "key": "HUD_TRIO_LISTO",
+            "value": "TRIO READY!"
+        },
+        {
+            "key": "SPELL_AMANECER_NAME",
+            "value": "Dawn"
+        },
+        {
+            "key": "SPELL_AMANECER_LORE",
+            "value": "A light that did not exist when he made his wish."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_01",
+            "value": "Stop! Fire to its face makes it stronger! Look how it grows."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_02",
+            "value": "Fire from the front again! You're only making it bigger."
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_PISTA",
+            "value": "And if we lure it into the mud by the stream, it'll sink. Make it chase you there!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_01",
+            "value": "It's sunk into the mud! Now, hit it anywhere!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_02",
+            "value": "Stuck again! Go for it!"
+        },
+        {
+            "key": "JEFES_GOLEM_RECUERDA_BARRO",
+            "value": "Lead it into the mud, Will! It can't carry its own weight there."
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_01",
+            "value": "That ring has three runes! Orange, blue and green... one for each of us!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_02",
+            "value": "Each rune only yields to one of us. We have to take turns: switch character and let's break all three!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RUNA_ROTA",
+            "value": "One down! Now one of the others!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_YA_ROTA",
+            "value": "That rune's already broken. Switch character!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_EXPUESTO",
+            "value": "No ring! Now, everyone at it!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECOMPUESTO",
+            "value": "The ring has closed again! Once more, one rune each."
+        },
+        {
+            "key": "JEFES_DEMONIO2_AIRE",
+            "value": "It's up on the battlements! Hit it from afar or climb up after it!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_BAJA",
+            "value": "It's come down, and it's furious! Watch out for the shadows!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECUERDA",
+            "value": "Check the colour of the rune that's left and switch to whoever it belongs to."
+        },
+        {"key":"CAP2_PUENTE_FALTAN_PIEZAS","value":"The plank is broken. You need a rope and some nails to fix it."},
+        {
+            "key": "REQUISITO_FALTA_OBJETO",
+            "value": "You need something for this: {0}."
+        },
+        {
+            "key": "REQUISITO_FALTA_HECHIZO",
+            "value": "It is sealed by a magic you don't know yet."
+        },
+        {
+            "key": "TESORO_REGISTRO_TITULO",
+            "value": "Treasures"
+        },
+        {
+            "key": "TESORO_REGISTRO_VACIO",
+            "value": "You don't know of any treasure yet."
+        },
+        {
+            "key": "TESORO_REGISTRO_FILA",
+            "value": "{0}: {1} / {2}"
+        },
+        {
+            "key": "TESORO_REGION_MUNDO",
+            "value": "The world"
+        },
+        {
+            "key": "TESORO_REGION_LAB",
+            "value": "Lab"
+        },
+        {
+            "key": "TESORO_REGION_CHUCHELANDIA",
+            "value": "Chuchelandia"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_NAME",
+            "value": "Little trumpet"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_PLURAL",
+            "value": "Little trumpets"
+        },
+        {
+            "key": "ITEM_TROMPETILLA_DESC",
+            "value": "A golden little trumpet from the gummy army. It goes “toot-toot” and is a bit sticky."
+        },
+        {
+            "key": "TESORO_MAPA_LAB_NOMBRE",
+            "value": "Treasure map (LAB)"
+        },
+        {
+            "key": "TESORO_MAPA_LAB_DESC",
+            "value": "Marks where something is buried in the LAB treasure room. Check the minimap."
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_NAME",
+            "value": "Glass marble"
+        },
+        {
+            "key": "ITEM_CANICA_CRISTAL_DESC",
+            "value": "A blue marble that shines like a piece of sky."
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_NAME",
+            "value": "Holed stone"
+        },
+        {
+            "key": "ITEM_PIEDRA_CON_AGUJERO_DESC",
+            "value": "They say looking through the hole brings luck."
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_NAME",
+            "value": "Old coin"
+        },
+        {
+            "key": "ITEM_MONEDA_ANTIGUA_DESC",
+            "value": "No one knows which kingdom it's from. It can't buy anything."
+        },
+        {
+            "key": "PRUEBA_YA",
+            "value": "Go!"
+        },
+        {
+            "key": "PRUEBA_PUESTO",
+            "value": "{0} of {1}"
+        },
+        {
+            "key": "CONCURSO_PUNTOS",
+            "value": "{0} points"
+        },
+        {
+            "key": "CONCURSO_EQUILIBRIO",
+            "value": "Keep your balance: correct with the left stick or the arrow keys."
+        },
+        {
+            "key": "CONCURSO_RITMO",
+            "value": "Press each button as it reaches the circle."
+        },
+        {
+            "key": "CONCURSO_MANTENER",
+            "value": "Hold {0} and release it inside the zone."
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_NAME",
+            "value": "Sightings sheet"
+        },
+        {
+            "key": "ITEM_HOJA_AVISTAMIENTOS_DESC",
+            "value": "The sheet where Will writes down what the seaside villagers tell him about the collared animals."
+        },
+        {
+            "key": "CAP3_TUTO_SEGUIR",
+            "value": "Follow him without being seen. When he stops to look back, hide in a bush or behind a wall."
+        },
+        {
+            "key": "CAP3_ROTULO_MANANA",
+            "value": "The next morning…"
+        },
+        {
+            "key": "DEMO_FIN_ROTULO",
+            "value": "End of Part One. Thank you for playing the demo."
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_NAME",
+            "value": "Crystal shard"
+        },
+        {
+            "key": "ITEM_ESQUIRLA_CRISTAL_DESC",
+            "value": "It was among the Golem's rocks. For a moment it showed a face."
+        },
+        {
+            "key": "CAP4_ROTULO_MANANA",
+            "value": "The next morning…"
+        },
+        {
+            "key": "TUTORIAL_CAP4_CUPULA_ESTELAR",
+            "value": "Press {BOTON} and type X, B, A: the Star Dome protects whoever is beneath it."
+        },
+        {
+            "key": "TUTORIAL_CAP4_LEVITACION",
+            "value": "New spell: Levitation. It's now among your spells: cast it to float over water, mud and gaps."
+        },
+        {
+            "key": "REQUISITO_FALTA_PRENDA",
+            "value": "You need to be wearing something that {0}."
+        },
+        {
+            "key": "RASGO_VIENTOMASBARATO",
+            "value": "Wind spells cost less mana"
+        },
+        {
+            "key": "RASGO_CONTRAATAQUEMASAMPLIO",
+            "value": "More time to return attacks"
+        },
+        {
+            "key": "RASGO_PLANEAR",
+            "value": "Lets you glide"
+        },
+        {
+            "key": "RASGO_REBOTEEXTRA",
+            "value": "Bounces higher on springs"
+        },
+        {
+            "key": "LUGAR_ALDEA_DEL_MAR",
+            "value": "Seaside Village"
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA_NOCHE",
+            "value": "It's already night: go to the campfire to wait for the cart. If you'd rather keep exploring by day, press {BOTON} by any campfire to rest until morning."
+        },
+        {
+            "key": "TUTORIAL_CAP3_HOGUERA",
+            "value": "Press {BOTON} by a campfire to rest: by day, time passes until night; at night, until morning."
+        }
+    ]
+}

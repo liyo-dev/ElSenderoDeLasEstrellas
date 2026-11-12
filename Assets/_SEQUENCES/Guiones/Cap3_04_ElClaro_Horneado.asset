@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_04_ElClaro
   duracion: 29.18
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 1c10d49f2f510d5974aee0a43cfe5ca8"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 a3d34be1744c689c4af162b1fe6fd01b"
   actores:
   - id: Player
     alias: will
@@ -501,17 +501,29 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0, y: -0.16}
+    encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705384
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
     t: 13.445
     beat:
-      rid: 6540294550018326849
+      rid: 6540294555676705385
     linea: 42
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 29.18
+    beat:
+      rid: 6540294555676705386
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -532,7 +544,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326849
+    - rid: 6540294555676705384
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705385
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -545,3 +565,11 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 0.25
+    - rid: 6540294555676705386
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

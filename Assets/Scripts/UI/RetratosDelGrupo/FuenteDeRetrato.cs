@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Sendero.UI
 {
     /// Cara que pone un personaje en su retrato del HUD.
-    public enum ExpresionDeRetrato { Normal = 0, Dolorido = 1, Caido = 2, Contento = 3 }
+    public enum ExpresionDeRetrato { Normal = 0, Dolorido = 1, Caido = 2, Contento = 3, Concentrado = 4 }
 
     /// Lo que hace falta para pintar un retrato: la textura, la parte de ella que se usa y cuánto
     /// del dibujo queda por debajo del borde del panel (lo que el recorte esconde).

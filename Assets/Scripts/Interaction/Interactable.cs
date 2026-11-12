@@ -25,6 +25,9 @@ public class Interactable : MonoBehaviour
              "InteractionHintIconSet. Si se deja vacío, el icono se queda con el sprite que ya " +
              "tenga puesto a mano en el prefab (comportamiento anterior, sin romper nada).")]
     [SerializeField] private InteractionHintIconSet iconSet;
+    [Tooltip("Sin icono asignado, copia el de otro interactuable de la escena (el primero con icono y juego de " +
+             "sprites) y lo pone sobre este objeto. Así los objetos montados por código también lo enseñan.")]
+    [SerializeField] private bool iconoPorDefectoSiFalta = true;
 
     [Header("Uso")]
     [SerializeField] private bool singleUse = false;
@@ -110,6 +113,7 @@ public class Interactable : MonoBehaviour
         {
             _hintOriginalScale = hint.transform.localScale * hintScale;
             _hintIcon = hint.GetComponentInChildren<Image>(true);
+            if (s_muestraDeIcono == null && iconSet != null && hint.transform.parent != null) s_muestraDeIcono = this;
             if (hideHintAtStart)
             {
                 hint.transform.localScale = Vector3.zero;
@@ -205,6 +209,41 @@ public class Interactable : MonoBehaviour
 
     void HandleInputFamilyChanged(InputGlyphDeviceFamily _) => RefreshHintIcon();
 
+    /// Pone sobre este objeto una copia del icono de la muestra, a la misma escala en el mundo y
+    /// por encima de lo que se dibuja. Ver INC-1092.
+    bool CrearIconoPorDefecto()
+    {
+        if (!iconoPorDefectoSiFalta || EsPersonaje) return false;
+        var muestra = s_muestraDeIcono;
+        if (muestra == null || muestra.hint == null || muestra.hint.transform.parent == null) return false;
+
+        float arriba = transform.position.y + defaultSightHeight;
+        var renderers = GetComponentsInChildren<Renderer>(false);
+        if (renderers.Length > 0)
+        {
+            float max = float.MinValue;
+            for (int i = 0; i < renderers.Length; i++)
+                if (!(renderers[i] is ParticleSystemRenderer)) max = Mathf.Max(max, renderers[i].bounds.max.y);
+            if (max > float.MinValue) arriba = max + 0.45f;
+        }
+
+        hint = Instantiate(muestra.hint, transform, false);
+        hint.name = muestra.hint.name;
+        hint.transform.position = new Vector3(transform.position.x, arriba, transform.position.z);
+        hint.transform.rotation = muestra.hint.transform.rotation;
+        Vector3 enElMundo = Vector3.Scale(muestra._hintOriginalScale, muestra.hint.transform.parent.lossyScale);
+        Vector3 propia = transform.lossyScale;
+        _hintOriginalScale = new Vector3(enElMundo.x / Mathf.Max(0.0001f, Mathf.Abs(propia.x)),
+                                         enElMundo.y / Mathf.Max(0.0001f, Mathf.Abs(propia.y)),
+                                         enElMundo.z / Mathf.Max(0.0001f, Mathf.Abs(propia.z)));
+        hint.transform.localScale = Vector3.zero;
+        hint.SetActive(false);
+        if (iconSet == null) iconSet = muestra.iconSet;
+        _hintIcon = hint.GetComponentInChildren<Image>(true);
+        RefreshHintIcon();
+        return true;
+    }
+
     /// <summary>
     /// Actualiza el sprite del icono de interactuar según la familia de mando/teclado activa,
     /// usando el set de sprites baked en <see cref="iconSet"/> (referencia directa, sin
@@ -227,12 +266,15 @@ public class Interactable : MonoBehaviour
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetHintEstatico() { _hintEncendido = null; }
+    private static void ResetHintEstatico() { _hintEncendido = null; s_muestraDeIcono = null; }
 #endif
+
+    /// Interactuable cuyo icono se copia en los que no tienen uno (ver iconoPorDefectoSiFalta).
+    private static Interactable s_muestraDeIcono;
 
     public void SetHintVisible(bool visible, GameObject interactor = null)
     {
-        if (hint == null) return;
+        if (hint == null && (!visible || !CrearIconoPorDefecto())) return;
         
         // Los personajes del grupo nunca muestran el icono de interactuar
         if (EsPersonajeDelGrupo())
@@ -706,7 +748,8 @@ public class Interactable : MonoBehaviour
 
         popup.Show(prompt,
             onConfirm: () => HandleChoiceResult(confirmFollowUp, invokeConfirm: true),
-            onCancel:  () => HandleChoiceResult(cancelFollowUp, invokeConfirm: false));
+            onCancel:  () => HandleChoiceResult(cancelFollowUp, invokeConfirm: false),
+            quien: ResolveSpeakerName(dialogue));
         PlayPromptVoice();
     }
 
@@ -743,6 +786,15 @@ public class Interactable : MonoBehaviour
             return LocalizationManager.Instance.Get(text, text);
         }
         return string.IsNullOrEmpty(text) ? fallback : text;
+    }
+
+    /// Nombre de quien dice la primera línea, tal como se ve en la caja de diálogo.
+    string ResolveSpeakerName(DialogueAsset asset)
+    {
+        if (asset == null || asset.lines == null || asset.lines.Length == 0) return null;
+        string id = asset.lines[0].speakerNameId;
+        if (string.IsNullOrEmpty(id)) return null;
+        return LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(id, id) : id;
     }
 
     bool LooksLikeKey(string value)

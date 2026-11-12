@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap1_OliverSaludo_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_OliverSaludo
-  duracion: 38.914265
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 790f871a92e954f01c106ae7a157e2e4"
+  duracion: 39.035606
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 7942eaaa7cd2e89220cc20b29aafb19b"
   actores:
   - id: Player
     alias: will
@@ -35,27 +35,27 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 6.8715696
+    - t: 6.9929113
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 7.0215697
+    - t: 7.1429114
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 11.71463
+    - t: 11.835972
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 28.031815
+    - t: 28.153156
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 34.731815
+    - t: 34.853157
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -66,149 +66,149 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 6.8715696
+    - t: 6.9929113
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 6.9715695
+    - t: 7.0929112
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 11.66463
+    - t: 11.785972
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 21.730385
+    - t: 21.851727
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 27.981815
+    - t: 28.103157
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 34.681816
+    - t: 34.803158
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
-    - t: 36.86263
+    - t: 36.98397
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Oliver
     animacion:
     - fundido: 0
-      t: 7.5715694
+      t: 7.692911
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 11.5646305
+      t: 11.685972
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 16.572386
+      t: 16.693727
       tipo: 2
       estado: TakeDamage_2
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.001719
+      t: 17.12306
       tipo: 5
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.472385
+      t: 17.593727
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 18.672386
+      t: 18.793728
       tipo: 5
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 19.472385
+      t: 19.593727
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
       voz: laugh
     - fundido: 0
-      t: 21.680386
+      t: 21.801727
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 21.760386
+      t: 21.881727
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 24.360386
+      t: 24.481728
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 27.581814
+      t: 27.703156
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 28.581816
+      t: 28.703157
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 35.281815
+      t: 35.403156
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.81263
+      t: 36.93397
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.89263
+      t: 37.013973
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 38.064262
+      t: 38.185604
       tipo: 4
       estado: 
       congelar: 0
@@ -218,16 +218,16 @@ MonoBehaviour:
     - t: 2.56
       emocion: sorpresa
       dura: 0
-    - t: 11.5646305
+    - t: 11.685972
       emocion: alegre
       dura: 0
-    - t: 16.572386
+    - t: 16.693727
       emocion: sorpresa
       dura: 0
-    - t: 19.472385
+    - t: 19.593727
       emocion: alegre
       dura: 0
-    - t: 28.481815
+    - t: 28.603157
       emocion: sorpresa
       dura: 2
     visible: []
@@ -241,41 +241,43 @@ MonoBehaviour:
       p: {x: 5.99, y: 26.281815, z: -143.19}
     - t: 2.56
       p: {x: 5.99, y: 26.281815, z: -143.19}
-    - t: 2.813499
-      p: {x: 5.8005967, y: 26.281815, z: -142.78433}
-    - t: 3.0679698
-      p: {x: 5.5480595, y: 26.281815, z: -142.24344}
-    - t: 3.316696
-      p: {x: 5.295522, y: 26.281815, z: -141.70255}
-    - t: 3.565422
-      p: {x: 5.042985, y: 26.281815, z: -141.16165}
-    - t: 3.814154
-      p: {x: 4.7904477, y: 26.281815, z: -140.62074}
-    - t: 4.06288
-      p: {x: 4.5379105, y: 26.281815, z: -140.07985}
-    - t: 4.311606
-      p: {x: 4.285373, y: 26.281815, z: -139.53896}
-    - t: 4.560332
-      p: {x: 4.0328355, y: 26.281815, z: -138.99806}
-    - t: 4.8090577
-      p: {x: 3.7802985, y: 26.281815, z: -138.45717}
-    - t: 5.0577836
-      p: {x: 3.5277612, y: 26.281815, z: -137.91628}
-    - t: 5.3065095
-      p: {x: 3.2752237, y: 26.281815, z: -137.37538}
-    - t: 5.5552354
-      p: {x: 3.0226865, y: 26.281815, z: -136.83449}
-    - t: 5.803967
-      p: {x: 2.770149, y: 26.281815, z: -136.29358}
-    - t: 6.052693
-      p: {x: 2.517612, y: 26.281815, z: -135.75269}
-    - t: 6.301419
-      p: {x: 2.2650747, y: 26.281815, z: -135.21179}
-    - t: 6.5508547
-      p: {x: 2.0125372, y: 26.281815, z: -134.6709}
-    - t: 6.7728014
-      p: {x: 1.8231343, y: 26.281815, z: -134.26523}
-    - t: 6.8715696
+    - t: 2.7695036
+      p: {x: 5.6365824, y: 26.281815, z: -143.16167}
+    - t: 2.992256
+      p: {x: 5.2905607, y: 26.281815, z: -142.85567}
+    - t: 3.2318273
+      p: {x: 5.003076, y: 26.281815, z: -142.35773}
+    - t: 3.4348633
+      p: {x: 4.761812, y: 26.281815, z: -141.93437}
+    - t: 3.6425743
+      p: {x: 4.540302, y: 26.281815, z: -141.4879}
+    - t: 3.8504717
+      p: {x: 4.348519, y: 26.281815, z: -141.02739}
+    - t: 4.096041
+      p: {x: 4.1414375, y: 26.281815, z: -140.4756}
+    - t: 4.3416104
+      p: {x: 3.9343557, y: 26.281815, z: -139.92381}
+    - t: 4.5871797
+      p: {x: 3.7272744, y: 26.281815, z: -139.37202}
+    - t: 4.8327546
+      p: {x: 3.5201929, y: 26.281815, z: -138.82022}
+    - t: 5.078324
+      p: {x: 3.3131113, y: 26.281815, z: -138.26843}
+    - t: 5.323893
+      p: {x: 3.1060297, y: 26.281815, z: -137.71664}
+    - t: 5.5694623
+      p: {x: 2.8989482, y: 26.281815, z: -137.16486}
+    - t: 5.8150315
+      p: {x: 2.6918669, y: 26.281815, z: -136.61307}
+    - t: 6.0606008
+      p: {x: 2.484785, y: 26.281815, z: -136.06128}
+    - t: 6.306175
+      p: {x: 2.2777038, y: 26.281815, z: -135.50948}
+    - t: 6.5517435
+      p: {x: 2.0706222, y: 26.281815, z: -134.95769}
+    - t: 6.8143387
+      p: {x: 1.8635408, y: 26.281815, z: -134.4059}
+    - t: 6.9929113
       p: {x: 1.76, y: 26.281815, z: -134.13}
     miradas:
     - t: 0
@@ -283,38 +285,38 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 6.8715696
+    - t: 6.9929113
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 21.830385
+    - t: 21.951727
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 36.96263
+    - t: 37.083973
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
-    - t: 21.780386
+    - t: 21.901728
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.931814
+    - t: 28.053156
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 34.631813
+    - t: 34.753155
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 36.912632
+    - t: 37.033974
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -342,189 +344,189 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 6.8715696
+      t: 6.9929113
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 6.9515696
+      t: 7.0729113
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 8.484903
+      t: 8.606245
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 11.414631
+      t: 11.535973
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 11.5646305
+      t: 11.685972
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 11.64463
+      t: 11.765972
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.3
-      t: 14.072386
+      t: 14.1937275
       tipo: 1
       estado: Conjuro_Recogerse
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 14.122386
+      t: 14.243728
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.3
-      t: 15.072386
+      t: 15.1937275
       tipo: 1
       estado: Conjuro_Invocar
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 15.972385
+      t: 16.093727
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 16.072386
+      t: 16.193727
       tipo: 2
       estado: MagicSpecial
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 16.572386
+      t: 16.693727
       tipo: 2
       estado: TakeDamage_2
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.001719
+      t: 17.12306
       tipo: 5
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.472385
+      t: 17.593727
       tipo: 2
       estado: Dizzy_NoWeapon
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 18.672386
+      t: 18.793728
       tipo: 5
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 19.472385
+      t: 19.593727
       tipo: 2
       estado: Laugh01
       congelar: 0
       alFinal: 0
       voz: laugh
     - fundido: 0
-      t: 21.680386
+      t: 21.801727
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 22.380386
+      t: 22.501728
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 27.881815
+      t: 28.003157
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 27.961815
+      t: 28.083157
       tipo: 2
       estado: Shrug01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 29.661816
+      t: 29.783157
       tipo: 2
       estado: Talk01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 32.178482
+      t: 32.299824
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 34.331814
+      t: 34.453156
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 34.581814
+      t: 34.703156
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 34.661816
+      t: 34.783157
       tipo: 2
       estado: HandWave01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 36.51263
+      t: 36.633972
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 37.29328
+      t: 37.414623
       tipo: 2
       estado: HeadNod01
       congelar: 0
@@ -534,22 +536,22 @@ MonoBehaviour:
     - t: 0
       emocion: alegre
       dura: 2.96
-    - t: 6.8715696
+    - t: 6.9929113
       emocion: cansado
       dura: 4.893061
-    - t: 11.5646305
+    - t: 11.685972
       emocion: ilusionado
       dura: 2.9077551
-    - t: 15.072386
+    - t: 15.1937275
       emocion: decidido
       dura: 0
-    - t: 16.572386
+    - t: 16.693727
       emocion: sorpresa
       dura: 0
-    - t: 19.472385
+    - t: 19.593727
       emocion: alegre
       dura: 0
-    - t: 22.280386
+    - t: 22.401728
       emocion: sorpresa
       dura: 2
     visible: []
@@ -566,8 +568,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 6.8715696
-    t1: 11.364631
+    t0: 6.9929113
+    t1: 11.485972
     actor: NPC_Oliver
     clave: OLIVER_GREETING_OUT_OF_BREATH
     gesto: Dizzy_NoWeapon
@@ -575,8 +577,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 11.5646305
-    t1: 14.072386
+    t0: 11.685972
+    t1: 14.1937275
     actor: NPC_Oliver
     clave: OLIVER_GREETING_NEW_SPELL_INTRO
     gesto: Talk01
@@ -584,8 +586,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 21.680386
-    t1: 27.531815
+    t0: 21.801727
+    t1: 27.653156
     actor: Player
     clave: WILL_GREETING_OLIVER_CUT_OFF
     gesto: Laugh01
@@ -593,8 +595,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 27.881815
-    t1: 34.281815
+    t0: 28.003157
+    t1: 34.403156
     actor: NPC_Oliver
     clave: OLIVER_GREETING_BEFORE_MENUS_HANDOFF
     gesto: Shrug01
@@ -602,8 +604,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 34.581814
-    t1: 36.46263
+    t0: 34.703156
+    t1: 36.583973
     actor: NPC_Oliver
     clave: OLIVER_GREETING_PERAS_HANDOFF
     gesto: HandWave01
@@ -611,8 +613,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 36.81263
-    t1: 38.014263
+    t0: 36.93397
+    t1: 38.135605
     actor: Player
     clave: WILL_GREETING_PERAS_HANDOFF
     gesto: HeadNod01
@@ -621,12 +623,12 @@ MonoBehaviour:
   planos:
   - focos: []
     t0: 0
-    t1: 6.8715696
+    t1: 6.9929113
     tipo: 0
     descripcion: general de oliver y will
     posiciones:
     - t: 0
-      p: {x: -8.287754, y: 33.281815, z: -143.3451}
+      p: {x: 9, y: 31.781815, z: -150}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -643,13 +645,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 6.8715696
-    t1: 38.914265
+    t0: 6.9929113
+    t1: 39.035606
     tipo: 1
     descripcion: conjunto de oliver y will
     posiciones:
-    - t: 6.8715696
-      p: {x: -1.8067144, y: 28.181814, z: -132.15498}
+    - t: 6.9929113
+      p: {x: 6.5, y: 27.781815, z: -133.3}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -668,45 +670,57 @@ MonoBehaviour:
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.572386
+    t: 0
     beat:
-      rid: 6540294550018326806
-    linea: 60
+      rid: 6540294555676705352
+    linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.572386
+    t: 16.693727
     beat:
-      rid: 6540294550018326807
-    linea: 62
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 16.572386
-    beat:
-      rid: 6540294550018326808
+      rid: 6540294555676705353
     linea: 63
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.572386
+    t: 16.693727
     beat:
-      rid: 6540294550018326809
-    linea: 64
+      rid: 6540294555676705354
+    linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 34.281815
+    t: 16.693727
     beat:
-      rid: 6540294550018326810
-    linea: 84
+      rid: 6540294555676705355
+    linea: 66
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 16.693727
+    beat:
+      rid: 6540294555676705356
+    linea: 67
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 34.403156
+    beat:
+      rid: 6540294555676705357
+    linea: 87
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 39.035606
+    beat:
+      rid: 6540294555676705358
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: carrera
     t: 2.56
   - nombre: charla
-    t: 6.8715696
+    t: 6.9929113
   - nombre: hechizo
-    t: 16.072386
+    t: 16.193727
   - nombre: menus
-    t: 27.531815
+    t: 27.653156
   puntos:
   - nombre: p_will
     posicion: {x: 1, y: 26.281815, z: -132.5}
@@ -714,11 +728,23 @@ MonoBehaviour:
     posicion: {x: 5.99, y: 26.281815, z: -143.19}
   - nombre: p_llega
     posicion: {x: 1.76, y: 26.281815, z: -134.13}
+  - nombre: cam_alta
+    posicion: {x: 9, y: 26.281815, z: -150}
+  - nombre: cam_charla
+    posicion: {x: 6.5, y: 26.281815, z: -133.3}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326806
+    - rid: 6540294555676705352
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705353
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -731,7 +757,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326807
+    - rid: 6540294555676705354
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -744,7 +770,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 0.5
-    - rid: 6540294550018326808
+    - rid: 6540294555676705355
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -754,14 +780,14 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294550018326809
+    - rid: 6540294555676705356
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.4
         waitForEnd: 0
-    - rid: 6540294550018326810
+    - rid: 6540294555676705357
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -778,3 +804,11 @@ MonoBehaviour:
           - HeadNod01
           emotions: 01000000i
         detenerEscena: 1
+    - rid: 6540294555676705358
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

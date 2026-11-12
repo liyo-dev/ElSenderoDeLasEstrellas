@@ -57,20 +57,29 @@ public class ControlesDelBarcoHUD : MonoBehaviour
 
     void CrearBoton(string clave, string porDefecto, string glifo, Vector2 posicion)
     {
-        var go = new GameObject("Boton " + porDefecto, typeof(RectTransform), typeof(TextMeshProUGUI));
+        // Ficha de papel con el icono del botón y lo que hace, como el aviso de «Hablar».
+        var go = new GameObject("Boton " + porDefecto, typeof(RectTransform), typeof(UnityEngine.UI.Image));
         go.transform.SetParent(_panel.transform, false);
         var rt = go.GetComponent<RectTransform>();
         rt.anchoredPosition = posicion;
         rt.sizeDelta = new Vector2(320f, 50f);
+        var ficha = go.GetComponent<UnityEngine.UI.Image>();
+        PiezasDeUI.VestirFicha(ficha, PaletaUI.Papel);
+        ficha.raycastTarget = false;
 
-        var texto = go.GetComponent<TextMeshProUGUI>();
+        var textoGo = new GameObject("Texto", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textoGo.transform.SetParent(go.transform, false);
+        PiezasDeUI.Estirar((RectTransform)textoGo.transform);
+        ((RectTransform)textoGo.transform).offsetMin = new Vector2(16f, 0f);
+        ((RectTransform)textoGo.transform).offsetMax = new Vector2(-18f, 0f);
+        var texto = textoGo.GetComponent<TextMeshProUGUI>();
         texto.text = InputGlyphService.SpriteTag(glifo) + "   " +
                      (LocalizationManager.Instance != null
                          ? LocalizationManager.Instance.Get(clave, porDefecto)
                          : porDefecto);
         texto.alignment = TextAlignmentOptions.Right;
         texto.fontSize = 26f;
-        texto.color = Color.white;
+        texto.color = PaletaUI.TintaDeTexto;
         InputGlyphService.UsarIconos(texto);
     }
 

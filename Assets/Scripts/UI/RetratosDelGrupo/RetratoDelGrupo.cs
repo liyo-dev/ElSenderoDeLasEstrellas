@@ -29,6 +29,7 @@ namespace Sendero.UI
         private static readonly int IdDestello = Shader.PropertyToID("_Destello");
         private static readonly int IdTexturaSobreFondo = Shader.PropertyToID("_TexturaSobreFondo");
         private static readonly int IdUsarTexturaSobreFondo = Shader.PropertyToID("_UsarTexturaSobreFondo");
+        private static readonly int IdRecorte = Shader.PropertyToID("_RecorteRedondo");
 
         [Header("Piezas")]
         [SerializeField] private RawImage imagen;
@@ -53,6 +54,20 @@ namespace Sendero.UI
         [SerializeField] private Color colorDelTrio = new Color(1f, 0.85f, 0.35f, 1f);
         [SerializeField] private Color colorDelGolpe = new Color(1f, 0.18f, 0.18f, 1f);
 
+        [Header("Marco redondo")]
+        [Tooltip("Enmarca la cara en un círculo de papel con borde de tinta, como las piezas de la interfaz de papel: dorado el que va al mando, apagado los demás.")]
+        [SerializeField] private bool marcoRedondo = true;
+        [Tooltip("Centro del círculo respecto al pie de la imagen del retrato (unidades del canvas, escala 1).")]
+        [SerializeField] private Vector2 centroDelMarco = new Vector2(0f, 210f);
+        [SerializeField, Min(40f)] private float diametroDelMarco = 250f;
+        [SerializeField, Min(0f)] private float grosorDelAro = 9f;
+        [SerializeField, Min(0f)] private float grosorDeLaTinta = 7f;
+        [Tooltip("Escala de la imagen dentro del círculo, alrededor de su centro: el busto se reduce para que la cabeza entera (pelo y barbilla) quepa en el marco.")]
+        [SerializeField, Range(0.3f, 1.5f)] private float escalaDentroDelMarco = 0.72f;
+        [Tooltip("Desplazamiento vertical de la imagen dentro del círculo, después de escalarla (unidades del canvas). " +
+                 "Sube la imagen para que la cara (ojos y boca), y no la cabeza con el pelo, quede en el centro del círculo.")]
+        [SerializeField] private float subidaDentroDelMarco = 40f;
+
         [Header("Barras de vida y maná")]
         [Tooltip("Muestra la vida y el maná del personaje al pie de su retrato, apiladas por capas de color (EstiloDeBarrasApiladas) (cada uno tiene los suyos, INC-717). Crecen con el retrato: las del que va al mando se ven más grandes.")]
         [SerializeField] private bool mostrarBarras = true;
@@ -61,7 +76,6 @@ namespace Sendero.UI
         [Tooltip("Altura de las barras sobre el borde del panel.")]
         [SerializeField] private float alturaDeLasBarras = 12f;
         [SerializeField] private Color colorDeVidaBaja = new Color(0.95f, 0.32f, 0.25f, 1f);
-        [SerializeField] private Color colorDeFondoDeBarra = new Color(0f, 0f, 0f, 0.6f);
 
         [Header("Tiempos")]
         [SerializeField] private float duracionDelCambio = 0.45f;
@@ -89,6 +103,9 @@ namespace Sendero.UI
 
         private RectTransform _barras;
         private CapaDeBarra _vida, _mana;
+        private Image _aro;
+        private RectTransform _marco;
+        private Vector4 _recorte;
 
         /// Una barra del retrato: el relleno de la capa de arriba, la capa de debajo y el «×N».
         private sealed class CapaDeBarra
@@ -112,6 +129,7 @@ namespace Sendero.UI
         private void Awake()
         {
             AsegurarMaterial();
+            AsegurarMarco();
             if (etiquetaCaido != null && !_caido) etiquetaCaido.gameObject.SetActive(false);
         }
 
@@ -123,14 +141,75 @@ namespace Sendero.UI
             AplicarAspecto();
         }
 
+        /// Pone detrás de la imagen un círculo de papel con aro y borde de tinta (y su sombra dura);
+        /// la imagen se recorta a ese círculo en el shader (<see cref="ActualizarRecorte"/>).
+        private void AsegurarMarco()
+        {
+            if (!marcoRedondo || _marco != null || imagen == null || vaiven == null) return;
+            var marco = new GameObject("Marco", typeof(RectTransform));
+            _marco = (RectTransform)marco.transform;
+            _marco.SetParent(imagen.transform.parent, false);
+            _marco.anchorMin = _marco.anchorMax = new Vector2(0.5f, 0f);
+            _marco.pivot = new Vector2(0.5f, 0.5f);
+            _marco.anchoredPosition = centroDelMarco;
+            _marco.sizeDelta = Vector2.one * diametroDelMarco;
+            _marco.SetSiblingIndex(imagen.transform.GetSiblingIndex());
+
+            float exterior = diametroDelMarco + (grosorDelAro + grosorDeLaTinta) * 2f;
+            var sombra = Circulo("Sombra", _marco, exterior, new Color(PaletaUI.Tinta.r * 0.45f, PaletaUI.Tinta.g * 0.45f, PaletaUI.Tinta.b * 0.45f, 0.55f));
+            sombra.rectTransform.anchoredPosition = new Vector2(0f, -8f);
+            Circulo("Tinta", _marco, exterior, PaletaUI.Tinta);
+            _aro = Circulo("Aro", _marco, diametroDelMarco + grosorDelAro * 2f, PaletaUI.PapelApagado);
+            Circulo("Fondo", _marco, diametroDelMarco, PaletaUI.Papel);
+        }
+
+        /// El shader recorta la imagen al círculo del marco. Sus vértices van en el espacio del
+        /// lienzo que la pinta, así que el centro y el radio se pasan en ese espacio; el carrusel
+        /// mueve y escala el retrato, por eso se repasa cada frame.
+        private void LateUpdate() => ActualizarRecorte();
+
+        private void ActualizarRecorte()
+        {
+            if (_material == null) return;
+            var lienzo = imagen != null ? imagen.canvas : null;
+            if (_marco == null || lienzo == null)
+            {
+                if (_recorte.w != 0f) { _recorte = Vector4.zero; _material.SetVector(IdRecorte, _recorte); }
+                return;
+            }
+            var espacio = lienzo.transform;
+            Vector3 centro = espacio.InverseTransformPoint(_marco.position);
+            float escala = _marco.lossyScale.x / Mathf.Max(0.0001f, espacio.lossyScale.x);
+            var recorte = new Vector4(centro.x, centro.y, diametroDelMarco * 0.5f * escala, 1f);
+            if (recorte == _recorte) return;
+            _recorte = recorte;
+            _material.SetVector(IdRecorte, recorte);
+        }
+
+        private static Image Circulo(string nombre, RectTransform padre, float diametro, Color color)
+        {
+            var img = PiezasDeUI.Imagen(nombre, padre, PiezasDeUI.Circulo, color);
+            img.raycastTarget = false;
+            PiezasDeUI.Colocar(img.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one * diametro);
+            return img;
+        }
+
         private void OnEnable()
         {
             if (_cansado && !_caido) Respirar(true);
             if (_vivo != null && _posicion != PosicionDeRetrato.Oculto) _vivo.Mostrar(_personaje, true);
+            ActiveCombatRegistry.OnNPCEnteredCombat += AlCambiarElCombate;
+            ActiveCombatRegistry.OnNPCExitedCombat += AlCambiarElCombate;
+            RefrescarImagen();
         }
+
+        // La cara de combate entra y sale con la pelea.
+        private void AlCambiarElCombate(GameObject _) => RefrescarImagen();
 
         private void OnDisable()
         {
+            ActiveCombatRegistry.OnNPCEnteredCombat -= AlCambiarElCombate;
+            ActiveCombatRegistry.OnNPCExitedCombat -= AlCambiarElCombate;
             // Lo pasajero (sacudida, destello, saltito, respiración) se corta y vuelve a reposo.
             Matar(ref _tSalto, true);
             Matar(ref _tSacudida, true);
@@ -198,7 +277,17 @@ namespace Sendero.UI
                 _tSalto = cuerpo.DOPunchAnchorPos(new Vector2(0f, alturaDelSalto), duracionDelCambio, 1, 0f).SetUpdate(true);
                 if (_vivo != null) _vivo.Reaccionar(_personaje, ReaccionDeRetrato.Saludo);
             }
+            MostrarBarras();
             RefrescarAspecto(animar);
+        }
+
+        /// El que va al mando tiene su vida y su maná en el panel grande: sus barras pequeñas
+        /// sobran (y quedarían tapadas por la pestaña del nombre). Los de los lados sí las llevan.
+        private void MostrarBarras()
+        {
+            if (_barras == null) return;
+            bool ver = _posicion != PosicionDeRetrato.Centro;
+            if (_barras.gameObject.activeSelf != ver) _barras.gameObject.SetActive(ver);
         }
 
         /// Vida baja y caído, tal como los da <see cref="EstadoDelGrupoParaRetratos"/>.
@@ -250,6 +339,7 @@ namespace Sendero.UI
             _barras.sizeDelta = new Vector2(tamanoDeBarra.x, tamanoDeBarra.y * 2f + 4f);
             _barras.anchoredPosition = new Vector2(0f, alturaDeLasBarras);
             _barras.SetAsLastSibling();
+            MostrarBarras();
             _mana = Barra("Mana", 0f);
             _vida = Barra("Vida", tamanoDeBarra.y + 4f);
         }
@@ -266,7 +356,8 @@ namespace Sendero.UI
             rtFondo.sizeDelta = new Vector2(0f, tamanoDeBarra.y);
             rtFondo.anchoredPosition = new Vector2(0f, y);
             var imgFondo = fondo.GetComponent<Image>();
-            imgFondo.color = colorDeFondoDeBarra;
+            // Pista de tinta: con el relleno metido 1,5 por dentro queda como una barra con borde de tinta.
+            imgFondo.color = PaletaUI.Tinta;
             imgFondo.raycastTarget = false;
 
             barra.debajo = Relleno("Capa de debajo", rtFondo);
@@ -349,12 +440,15 @@ namespace Sendero.UI
             if (_caido) return ExpresionDeRetrato.Caido;
             if (Time.unscaledTime < _finDelGolpe || _cansado) return ExpresionDeRetrato.Dolorido;
             if (_trio) return ExpresionDeRetrato.Contento;
+            // En combate, cara de concentración (INC-1099).
+            if (ActiveCombatRegistry.Count > 0) return ExpresionDeRetrato.Concentrado;
             return ExpresionDeRetrato.Normal;
         }
 
         private void RefrescarImagen()
         {
             if (imagen == null) return;
+            AsegurarMarco();
             var expresion = ExpresionActual();
             if (expresion == _expresion && imagen.texture != null) return;
             if (!Obtener(expresion, out var img)) return;
@@ -370,8 +464,16 @@ namespace Sendero.UI
             }
             var rt = imagen.rectTransform;
             float alto = altoVisible / Mathf.Max(0.1f, 1f - img.FraccionBajoElBorde);
-            rt.sizeDelta = new Vector2(alto * img.Aspecto, alto);
-            rt.anchoredPosition = new Vector2(0f, elevacionDeLaImagen - alto * img.FraccionBajoElBorde);
+            var tamano = new Vector2(alto * img.Aspecto, alto);
+            var posicion = new Vector2(0f, elevacionDeLaImagen - alto * img.FraccionBajoElBorde);
+            if (_marco != null)
+            {
+                // Se reduce alrededor del centro del círculo para que la cara entera quede dentro.
+                tamano *= escalaDentroDelMarco;
+                posicion = centroDelMarco + (posicion - centroDelMarco) * escalaDentroDelMarco + new Vector2(0f, subidaDentroDelMarco);
+            }
+            rt.sizeDelta = tamano;
+            rt.anchoredPosition = posicion;
         }
 
         private bool Obtener(ExpresionDeRetrato expresion, out ImagenDeRetrato img)
@@ -408,6 +510,13 @@ namespace Sendero.UI
                         AplicarAspecto();
                     }).SetUpdate(true);
                 }
+            }
+            if (_aro != null)
+            {
+                _aro.DOKill();
+                var c = _caido ? PaletaUI.PapelApagado * new Color(0.75f, 0.75f, 0.75f, 1f) : centro || _trio ? PaletaUI.Oro : PaletaUI.PapelApagado;
+                if (d <= 0f) _aro.color = c;
+                else _aro.DOColor(c, d).SetUpdate(true);
             }
             if (halo != null)
             {

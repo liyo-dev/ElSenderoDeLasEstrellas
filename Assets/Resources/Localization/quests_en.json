@@ -258,11 +258,11 @@
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_DESC",
-            "value": "Eldran shows you a Save Point."
+            "value": "Eldran shows you a star lantern."
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_DETAIL",
-            "value": "Before going his own way, Eldran wants to show you a Save Point: here you can save your game and rest to recover your health and mana."
+            "value": "Before going his own way, Eldran wants to show you a star lantern: next to it you can rest to recover your health and mana, and save your game."
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_NAME",
@@ -270,7 +270,7 @@
         },
         {
             "key": "QUEST_ELDRAN_SAVEPOINT_INTRO_STEP01_DESC",
-            "value": "Listen to what Eldran has to say about the Save Point."
+            "value": "Listen to what Eldran has to say about the star lantern."
         },
         {
             "key": "QUEST_GUARDIABOSQUE_ARANAS_DESC",

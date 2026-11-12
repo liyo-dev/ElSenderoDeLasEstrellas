@@ -24,6 +24,10 @@ public interface IOcultableDuranteCinematica
 /// apuntándose aquí, sin tocar el reproductor.
 public static class OcultablesDeCinematica
 {
+    /// Segundos que tarda en esconderse o volver cada sistema apuntado: todos a la vez y al mismo
+    /// ritmo, para que la pantalla no se vacíe a trozos (INC-1094).
+    public const float SegundosDelFundido = 0.35f;
+
     private static readonly List<IOcultableDuranteCinematica> s_registrados = new();
 
     public static void Registrar(IOcultableDuranteCinematica ocultable)

@@ -13,15 +13,18 @@ public class TeleportUIItem : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private Image backgroundImage;
     
-    [Header("Colors")]
-    [SerializeField] private Color normalColor = new Color(0.2f, 0.2f, 0.25f, 0.8f);
-    [SerializeField] private Color selectedColor = new Color(0.3f, 0.5f, 0.8f, 0.9f);
-    
     private TeleportPointData _pointData;
     private Action<TeleportPointData> _onClick;
     private bool _isSelected;
     
     public TeleportPointData PointData => _pointData;
+
+    // Ficha de papel: apagada en reposo y dorada con el foco, como las opciones del diálogo.
+    void Awake()
+    {
+        if (backgroundImage != null) PiezasDeUI.VestirFicha(backgroundImage, PaletaUI.PapelApagado);
+        if (nameText != null) nameText.color = PaletaUI.TintaDeTexto;
+    }
     
     /// <summary>
     /// Configura el item con los datos del punto de teletransporte.
@@ -45,7 +48,7 @@ public class TeleportUIItem : MonoBehaviour, IPointerClickHandler
         _isSelected = selected;
         
         if (backgroundImage != null)
-            backgroundImage.color = selected ? selectedColor : normalColor;
+            backgroundImage.color = selected ? PaletaUI.Oro : PaletaUI.PapelApagado;
     }
     
     public void OnPointerClick(PointerEventData eventData)

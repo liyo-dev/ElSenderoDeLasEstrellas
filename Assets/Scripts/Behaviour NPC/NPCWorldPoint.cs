@@ -30,6 +30,9 @@ public class NPCWorldPoint : MonoBehaviour
              "Evita que se pueda sentar desde muy lejos aunque esté dentro del rango global del InteractionDetector.")]
     public float requiredProximity = 1.5f;
 
+    [Tooltip("Solo lo usa el jugador: los NPCs no lo eligen al buscar dónde sentarse (columpios, sitios con mecánica propia).")]
+    public bool soloJugador;
+
     [Header("Prop (beber/comer)")]
     [Tooltip("Objeto que el personaje cogerá con la mano derecha al iniciar la actividad (ej: vaso, taza).")]
     public Transform prop;
@@ -57,6 +60,8 @@ public class NPCWorldPoint : MonoBehaviour
     private bool _propAttached;
 
     public bool IsOccupied => _isOccupied;
+    /// <summary>Quién lo ocupa ahora (null si está libre).</summary>
+    public Transform Occupant => _isOccupied ? _occupant : null;
     public NPCAmbientActivity ActivityType => activityType;
 
     public Vector3 InteractionPosition =>
@@ -166,7 +171,7 @@ public class NPCWorldPoint : MonoBehaviour
 
         foreach (var wp in _all)
         {
-            if (wp == null || wp._isOccupied) continue;
+            if (wp == null || wp._isOccupied || wp.soloJugador) continue;
             if (activityFilter != NPCAmbientActivity.None && wp.activityType != activityFilter) continue;
 
             // FIX INC-130 (5 sept 2026): no ofrecer puntos cuya actividad todavía no tiene clips de

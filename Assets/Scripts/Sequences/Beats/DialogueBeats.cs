@@ -232,7 +232,7 @@ public class SayBeat : SequenceBeat
         int turnoDelBocadillo = 0;
         ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
         var estilo = presentacion.Resolver(
-            ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo);
+            ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Subtitulo);
         var pages = new System.Collections.Generic.List<string>();
         foreach (string raw in text.Split('\n'))
         {

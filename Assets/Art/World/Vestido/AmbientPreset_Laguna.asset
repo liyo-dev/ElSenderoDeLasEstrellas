@@ -23,6 +23,7 @@ MonoBehaviour:
   overlayMaxAlpha: 0.85
   changeMusic: 0
   musicZoneId: 
+  nombreDelLugar: LUGAR_LAGUNA_DE_LA_ERA
   controlCamera: 0
   cameraMode: 0
   cameraHorizontalAngle: 90

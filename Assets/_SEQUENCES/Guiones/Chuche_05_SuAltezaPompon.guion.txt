@@ -11,7 +11,7 @@
 GUION Chuche_05_SuAltezaPompon
 ESCENA Chuchelandia
 SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Pompon.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.3 mismo_hablante=0.25
 
 REPARTO

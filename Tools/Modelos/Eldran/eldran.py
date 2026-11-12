@@ -1,5 +1,5 @@
 # Eldran, vestuario propio: abrigo largo de mago viejo, verde musgo apagado, con coderas de cuero y
-# bufanda gris; cinturón, zurrón cruzado con libros, pantalón y botas. La cabeza, la barba, el pelo y los
+# bufanda gris con un cabo a la espalda; cinturón, zurrón cruzado con libros, pantalón y botas. La cabeza, la barba, el pelo y los
 # ojos siguen siendo los suyos (Head05_Santa, Hair13). Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body26_AbrigoDeMago → las manos y el torso de Body05 con la ropa encima, pesado como él.
@@ -113,10 +113,9 @@ torno("traje", "Cuello", [(0.77, 0.165), (0.745, 0.2), (0.71, 0.218)], "AbrigoOs
 # Cinturón de cuero con hebilla, por fuera del abrigo
 toro("traje", "Cinturon", (0, -0.01, 0.45), 0.208, 0.019, "CueroOscuro", None, escala=(1, 0.92, 1))
 esfera("traje", "Hebilla", (0.0, -0.208, 0.45), (0.03, 0.013, 0.027), "Laton", None)
-# Bufanda gris: una vuelta gorda al cuello y dos cabos, uno por delante y otro echado a la espalda
+# Bufanda gris: una vuelta gorda al cuello y un cabo echado a la espalda. El cabo de delante se quitó (11 nov):
+# salía por debajo de la barba de Head05_Santa y la atravesaba.
 toro("traje", "Bufanda", (0, -0.012, 0.722), 0.185, 0.058, "Bufanda", {"spine_03": 1.0}, escala=(1, 0.98, 0.75))
-tubo("traje", "CaboDelante", curva((-0.1, -0.19, 0.72), (-0.125, -0.27, 0.64), (-0.11, -0.245, 0.49), 8), [0.058, 0.056, 0.054, 0.052], "Bufanda", {"spine_03": 0.6, "spine_02": 0.4}, seg=10)
-toro("traje", "Fleco", (-0.11, -0.245, 0.49), 0.04, 0.014, "BufandaOscura", {"spine_02": 1.0}, escala=(1, 0.7, 1))
 tubo("traje", "CaboEspalda", curva((0.1, 0.17, 0.72), (0.14, 0.25, 0.66), (0.13, 0.235, 0.54), 7), [0.056, 0.054, 0.05], "Bufanda", {"spine_03": 0.6, "spine_02": 0.4}, seg=10)
 # Zurrón cruzado: la correa del hombro derecho a la cadera izquierda, y la bolsa con dos libros asomando
 correa = curva((-0.15, -0.09, 0.7), (-0.02, -0.37, 0.6), (0.22, -0.13, 0.44), 12)

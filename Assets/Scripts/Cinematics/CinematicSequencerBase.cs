@@ -237,6 +237,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         s_runningSequences.Add(this);
         try
         {
+            yield return Co_EsperarPresentacionDelLugar();
             yield return Co_Sequence();
         }
         finally
@@ -254,6 +255,19 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             }
         }
     }
+
+    /// Si al empezar se está presentando el lugar en el que acaba de entrar el jugador, la
+    /// cinemática espera a que termine en vez de taparlo (INC-1087). Se mira un fotograma después,
+    /// porque entrar en un sitio y arrancar su cinemática suelen pasar a la vez.
+    private static IEnumerator Co_EsperarPresentacionDelLugar()
+    {
+        yield return null;
+        float limite = Time.unscaledTime + SegundosMaximosEsperandoLaPresentacion;
+        while (PresentacionDeLugares.EnCurso && Time.unscaledTime < limite)
+            yield return null;
+    }
+
+    private const float SegundosMaximosEsperandoLaPresentacion = 8f;
 
     // Al salir del juego (o del Play en el Editor) no se restaura nada: los servicios ya se
     // están destruyendo y no hay partida que proteger.

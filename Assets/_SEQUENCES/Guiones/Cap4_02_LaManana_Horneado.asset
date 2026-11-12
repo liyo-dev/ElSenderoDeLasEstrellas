@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_02_LaManana
   duracion: 20.605
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 267a02691f8283e2f183788e28c99ae3"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 db83892549d962baed617b66d8c7ce9c"
   actores:
   - id: Player
     alias: will
@@ -349,7 +349,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 8.429999
-      p: {x: -333.77292, y: 36.899784, z: 63.87998}
+      p: {x: -333.76443, y: 36.899784, z: 63.029694}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -359,11 +359,23 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  efectos: []
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705388
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 20.605
+    beat:
+      rid: 6540294555676705389
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -377,4 +389,20 @@ MonoBehaviour:
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6540294555676705388
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705389
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

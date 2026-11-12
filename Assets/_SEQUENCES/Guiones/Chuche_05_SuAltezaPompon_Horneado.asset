@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_05_SuAltezaPompon
   duracion: 99.12122
-  presentacion: 0
-  huella: "2026-11-11 18:18 \xB7 6c0a75f4bbc0a4b21ffb052ac14ee3fc"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 989f21ce0343aa273502650ff44cbbd6"
   actores:
   - id: Player
     alias: will
@@ -3289,7 +3289,7 @@ MonoBehaviour:
     descripcion: conjunto de pompon y estela
     posiciones:
     - t: 1.2
-      p: {x: 88.127335, y: 15.9, z: 7.4695263}
+      p: {x: 87.96472, y: 15.973007, z: -3.2218812}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -3312,7 +3312,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 8.492596
-      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+      p: {x: 89.639084, y: 15.182769, z: 4.999159}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3322,7 +3322,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3333,7 +3333,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 15.911371
-      p: {x: 92.9917, y: 14.637481, z: 5.0508866}
+      p: {x: 93.021324, y: 14.668898, z: 5.851881}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3343,7 +3343,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3354,7 +3354,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 17.50484
-      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+      p: {x: 89.639084, y: 15.182769, z: 4.999159}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3364,7 +3364,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3375,7 +3375,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 19.255045
-      p: {x: 92.9917, y: 14.637481, z: 5.0508866}
+      p: {x: 93.021324, y: 14.668898, z: 5.851881}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3385,7 +3385,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3396,7 +3396,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 20.58729
-      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+      p: {x: 89.639084, y: 15.182769, z: 4.999159}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3406,7 +3406,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3417,7 +3417,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 22.572596
-      p: {x: 92.9917, y: 14.637481, z: 5.0508866}
+      p: {x: 93.021324, y: 14.668898, z: 5.851881}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3427,7 +3427,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3438,7 +3438,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 24.557901
-      p: {x: 90.489746, y: 15.219586, z: 4.323612}
+      p: {x: 89.639084, y: 15.182769, z: 4.999159}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3448,7 +3448,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3459,7 +3459,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 27.979942
-      p: {x: 92.9917, y: 14.637481, z: 5.0508866}
+      p: {x: 93.021324, y: 14.668898, z: 5.851881}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3469,7 +3469,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3480,7 +3480,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y condesa'
     posiciones:
     - t: 30.51382
-      p: {x: 92.14631, y: 15.006455, z: -0.47943664}
+      p: {x: 91.57089, y: 15.006455, z: -1.381778}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -3503,7 +3503,7 @@ MonoBehaviour:
     descripcion: medio de condesa
     posiciones:
     - t: 32.264023
-      p: {x: 91.687965, y: 15.12928, z: -1.0091171}
+      p: {x: 91.51477, y: 15.12928, z: -1.9493468}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3513,7 +3513,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.2637982
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3534,7 +3534,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3545,7 +3545,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 42.30994
-      p: {x: 92.05824, y: 15.18277, z: -1.5301089}
+      p: {x: 91.038864, y: 15.255776, z: -3.2128396}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3555,7 +3555,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3566,7 +3566,7 @@ MonoBehaviour:
     descripcion: conjunto de will y liam y estela
     posiciones:
     - t: 43.30994
-      p: {x: 99.58105, y: 15.7578, z: 0.48972392}
+      p: {x: 99.99098, y: 16.073008, z: 0.24885559}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -3601,7 +3601,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3612,7 +3612,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 47.09623
-      p: {x: 92.05824, y: 15.18277, z: -1.5301089}
+      p: {x: 91.038864, y: 15.255776, z: -3.2128396}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3622,7 +3622,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3660,7 +3660,7 @@ MonoBehaviour:
     descripcion: medio de condesa
     posiciones:
     - t: 50.795002
-      p: {x: 91.337975, y: 15.166098, z: 2.0903563}
+      p: {x: 90.67381, y: 15.166098, z: 2.4004188}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3670,7 +3670,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.2637982
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3681,7 +3681,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 55.02684
-      p: {x: 94.071724, y: 14.892158, z: 5.3032246}
+      p: {x: 92.82294, y: 14.84695, z: 6.0214825}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3691,7 +3691,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3702,7 +3702,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 57.090515
-      p: {x: 96.35026, y: 14.939776, z: 2.6876001}
+      p: {x: 97.60138, y: 14.903631, z: 3.4496531}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3712,7 +3712,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3723,7 +3723,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 58.84072
-      p: {x: 94.06236, y: 14.892158, z: 5.240495}
+      p: {x: 92.7959, y: 14.85815, z: 5.9270997}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3733,7 +3733,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3744,7 +3744,7 @@ MonoBehaviour:
     descripcion: medio de condesa
     posiciones:
     - t: 60.355824
-      p: {x: 95.52079, y: 15.166098, z: 2.2096505}
+      p: {x: 97.41764, y: 15.129281, z: -0.6795324}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3754,7 +3754,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.2637982
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3765,7 +3765,7 @@ MonoBehaviour:
     descripcion: medio de g4
     posiciones:
     - t: 63.229294
-      p: {x: 93.319435, y: 15.1115465, z: -0.38563824}
+      p: {x: 92.17704, y: 15.1115465, z: -0.95330477}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3775,7 +3775,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.3552045
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3786,7 +3786,7 @@ MonoBehaviour:
     descripcion: conjunto de condesa y suplente
     posiciones:
     - t: 66.41623
-      p: {x: 87.76242, y: 15.9, z: -1.9128742}
+      p: {x: 86.92374, y: 15.983334, z: -2.9941497}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -3809,7 +3809,7 @@ MonoBehaviour:
     descripcion: conjunto de suplente y estela
     posiciones:
     - t: 69.22398
-      p: {x: 89.9011, y: 15.9, z: -1.9446158}
+      p: {x: 89.43278, y: 15.9, z: -2.5908651}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -3832,7 +3832,7 @@ MonoBehaviour:
     descripcion: 'dos: estela y will'
     posiciones:
     - t: 73.63786
-      p: {x: 93.0702, y: 14.771152, z: 4.7008924}
+      p: {x: 98.10139, y: 14.887895, z: 3.3124237}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -3855,7 +3855,7 @@ MonoBehaviour:
     descripcion: medio de pompon
     posiciones:
     - t: 76.82071
-      p: {x: 94.02133, y: 15.1115465, z: 5.684617}
+      p: {x: 98.2815, y: 15.911547, z: -1.1222162}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3865,7 +3865,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.3552045
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3903,7 +3903,7 @@ MonoBehaviour:
     descripcion: 'dos: condesa y estela'
     posiciones:
     - t: 83.16204
-      p: {x: 96.578835, y: 15.043052, z: 3.0747974}
+      p: {x: 98.349724, y: 15.006455, z: 3.718455}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -3926,7 +3926,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 89.71877
-      p: {x: 97.39756, y: 14.940448, z: 3.2905595}
+      p: {x: 98.46544, y: 14.903631, z: 3.383508}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3936,7 +3936,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3947,7 +3947,7 @@ MonoBehaviour:
     descripcion: medio de condesa
     posiciones:
     - t: 91.23387
-      p: {x: 95.798195, y: 15.12928, z: 0.9968393}
+      p: {x: 97.59781, y: 15.12928, z: -0.2068845}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3957,7 +3957,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.2637982
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3968,7 +3968,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 94.02898
-      p: {x: 97.39756, y: 14.940448, z: 3.2905595}
+      p: {x: 98.46544, y: 14.903631, z: 3.383508}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -3978,7 +3978,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -3989,7 +3989,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 96.17102
-      p: {x: 95.792, y: 14.892158, z: 1.4259815}
+      p: {x: 95.71796, y: 14.892158, z: 1.0907416}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -3999,7 +3999,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -4008,116 +4008,128 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550166437965
+      rid: 6540294555676705436
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705437
     linea: 66
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550166437966
+      rid: 6540294555676705438
     linea: 69
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550166437967
+      rid: 6540294555676705439
     linea: 70
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 6540294550166437968
+      rid: 6540294555676705440
     linea: 78
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2.6
     beat:
-      rid: 6540294550166437969
+      rid: 6540294555676705441
     linea: 81
   - onlyIfFlag: 
     skipIfFlag: 
     t: 20.58729
     beat:
-      rid: 6540294550166437970
+      rid: 6540294555676705442
     linea: 99
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.557901
     beat:
-      rid: 6540294550166437971
+      rid: 6540294555676705443
     linea: 104
   - onlyIfFlag: 
     skipIfFlag: 
     t: 27.979942
     beat:
-      rid: 6540294550166437972
+      rid: 6540294555676705444
     linea: 107
   - onlyIfFlag: 
     skipIfFlag: 
     t: 40.011166
     beat:
-      rid: 6540294550166437973
+      rid: 6540294555676705445
     linea: 118
   - onlyIfFlag: 
     skipIfFlag: 
     t: 42.30994
     beat:
-      rid: 6540294550166437974
+      rid: 6540294555676705446
     linea: 125
   - onlyIfFlag: 
     skipIfFlag: 
     t: 42.30994
     beat:
-      rid: 6540294550166437975
+      rid: 6540294555676705447
     linea: 123
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.09623
     beat:
-      rid: 6540294550166437976
+      rid: 6540294555676705448
     linea: 141
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.09623
     beat:
-      rid: 6540294550166437977
+      rid: 6540294555676705449
     linea: 142
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.09623
     beat:
-      rid: 6540294550166437978
+      rid: 6540294555676705450
     linea: 143
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.696228
     beat:
-      rid: 6540294550166437979
+      rid: 6540294555676705451
     linea: 145
   - onlyIfFlag: 
     skipIfFlag: 
     t: 47.696228
     beat:
-      rid: 6540294550166437980
+      rid: 6540294555676705452
     linea: 146
   - onlyIfFlag: 
     skipIfFlag: 
     t: 76.82071
     beat:
-      rid: 6540294550166437981
+      rid: 6540294555676705453
     linea: 201
   - onlyIfFlag: 
     skipIfFlag: 
     t: 77.22071
     beat:
-      rid: 6540294550166437982
+      rid: 6540294555676705454
     linea: 202
   - onlyIfFlag: 
     skipIfFlag: 
     t: 80.33005
     beat:
-      rid: 6540294550166437983
+      rid: 6540294555676705455
     linea: 207
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 99.12122
+    beat:
+      rid: 6540294555676705456
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -4180,7 +4192,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550166437965
+    - rid: 6540294555676705436
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705437
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4188,7 +4208,7 @@ MonoBehaviour:
         escala: 1
         duracion: 0
         esperar: 0
-    - rid: 6540294550166437966
+    - rid: 6540294555676705438
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4198,7 +4218,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294550166437967
+    - rid: 6540294555676705439
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4208,7 +4228,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550166437968
+    - rid: 6540294555676705440
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4221,7 +4241,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550166437969
+    - rid: 6540294555676705441
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4231,7 +4251,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550166437970
+    - rid: 6540294555676705442
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4239,7 +4259,7 @@ MonoBehaviour:
         escala: 1.06
         duracion: 0.6
         esperar: 0
-    - rid: 6540294550166437971
+    - rid: 6540294555676705443
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4247,7 +4267,7 @@ MonoBehaviour:
         escala: 1.12
         duracion: 1.2
         esperar: 0
-    - rid: 6540294550166437972
+    - rid: 6540294555676705444
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4255,7 +4275,7 @@ MonoBehaviour:
         escala: 1.18
         duracion: 1
         esperar: 0
-    - rid: 6540294550166437973
+    - rid: 6540294555676705445
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4263,7 +4283,7 @@ MonoBehaviour:
         escala: 1.3
         duracion: 1.4
         esperar: 0
-    - rid: 6540294550166437974
+    - rid: 6540294555676705446
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4273,7 +4293,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550166437975
+    - rid: 6540294555676705447
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4281,7 +4301,7 @@ MonoBehaviour:
         escala: 1.45
         duracion: 1.2
         esperar: 0
-    - rid: 6540294550166437976
+    - rid: 6540294555676705448
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4294,7 +4314,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550166437977
+    - rid: 6540294555676705449
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4304,14 +4324,14 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 6540294550166437978
+    - rid: 6540294555676705450
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.2
         duration: 0.4
         waitForEnd: 0
-    - rid: 6540294550166437979
+    - rid: 6540294555676705451
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4321,7 +4341,7 @@ MonoBehaviour:
         markName: 
         volume: 0.35
         tono: 1
-    - rid: 6540294550166437980
+    - rid: 6540294555676705452
       type: {class: EscalarActorBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4329,7 +4349,7 @@ MonoBehaviour:
         escala: 1
         duracion: 0
         esperar: 0
-    - rid: 6540294550166437981
+    - rid: 6540294555676705453
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4339,7 +4359,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294550166437982
+    - rid: 6540294555676705454
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4349,7 +4369,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294550166437983
+    - rid: 6540294555676705455
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -4359,3 +4379,11 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
+    - rid: 6540294555676705456
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

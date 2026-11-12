@@ -287,14 +287,58 @@ namespace Sendero.Narrative.Editor
                 : objetivo;
             status = $"Lanzando Play desde {nodeDesc} en {graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
 
-            // La prueba siempre arranca por la escena Start, que es la que tiene el GameBootService
-            // que lee el perfil, aunque en el editor esté abierta otra escena.
-            var start = AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(StartScenePath);
-            if (start != null) UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = start;
-            else Debug.LogWarning($"[QuickTest] No encuentro {StartScenePath}: se arranca por la escena abierta.");
+            // Un ancla de una escena aparte (Chuchelandia, Parque, Laberinto…) no se alcanza por
+            // Continuar, que siempre lleva a MainWorld: se abre esa escena sola y se da Play desde
+            // ella (AutoBootstrapOnPlay carga Start encima). El resto arranca por Start, que es la
+            // que tiene el GameBootService que lee el perfil, aunque en el editor esté abierta otra.
+            var escenaAparte = EscenaAparteDelAncla(tempPreset.spawnAnchorId);
+            if (escenaAparte != null)
+            {
+                if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                {
+                    RestoreOriginalBootPreset();
+                    status = "Prueba cancelada: hay escenas sin guardar.";
+                    return false;
+                }
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(escenaAparte, UnityEditor.SceneManagement.OpenSceneMode.Single);
+                UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
+                status += $" Escena: {System.IO.Path.GetFileNameWithoutExtension(escenaAparte)}.";
+            }
+            else
+            {
+                var start = AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(StartScenePath);
+                if (start != null) UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = start;
+                else Debug.LogWarning($"[QuickTest] No encuentro {StartScenePath}: se arranca por la escena abierta.");
+            }
 
             EditorApplication.isPlaying = true;
             return true;
+        }
+
+        // Escenas que la partida alcanza desde el menú: Continuar carga MainWorld y WorldBootstrap
+        // trae sus interiores. Las de sistema no tienen anclas de juego.
+        const string EscenaDelMenu = "Assets/Scenes/Worlds/MainWorld.unity";
+        static readonly string[] CarpetasSinEscenasAparte = { "Assets/Scenes/Systems/", "Assets/Scenes/Interior/" };
+
+        /// <summary>
+        /// Ruta de la escena de la Build que tiene un <c>SpawnAnchor</c> con ese id, si es una escena
+        /// aparte de MainWorld; null si el ancla está en MainWorld, en un interior o no se encuentra.
+        /// </summary>
+        static string EscenaAparteDelAncla(string anchorId)
+        {
+            if (string.IsNullOrEmpty(anchorId)) return null;
+            var linea = new System.Text.RegularExpressions.Regex(
+                @"^\s+anchorId: " + System.Text.RegularExpressions.Regex.Escape(anchorId) + @"\s*$",
+                System.Text.RegularExpressions.RegexOptions.Multiline);
+            foreach (var escena in EditorBuildSettings.scenes)
+            {
+                var ruta = escena.path;
+                if (!escena.enabled || string.IsNullOrEmpty(ruta) || ruta == EscenaDelMenu) continue;
+                if (CarpetasSinEscenasAparte.Any(c => ruta.StartsWith(c, StringComparison.Ordinal))) continue;
+                if (!System.IO.File.Exists(ruta)) continue;
+                if (linea.IsMatch(System.IO.File.ReadAllText(ruta))) return ruta;
+            }
+            return null;
         }
 
         /// <summary>Simula el camino sin tocar Assets ni entrar en Play Mode.</summary>

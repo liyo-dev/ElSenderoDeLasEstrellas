@@ -51,6 +51,7 @@ public class QuestStartedBannerUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
     private SceneBoundUI _sceneBoundUI;
 
     private readonly Queue<string> _pendientes = new();
+    private TextMeshProUGUI _etiqueta;
     // Hay un texto a medio enseñar (entró y aún no ha salido): al recuperar el turno continúa.
     private bool _enCurso;
     // Tiene el turno y nada lo tapa: la cuenta atrás corre.
@@ -77,8 +78,56 @@ public class QuestStartedBannerUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
         if (bannerRoot != null)
         {
             _shownAnchoredPos = bannerRoot.anchoredPosition;
+            VestirDePapel();
             bannerRoot.gameObject.SetActive(false);
         }
+    }
+
+    /// Hoja de papel con el nombre de la misión y una pestaña de noche con «NUEVA MISIÓN»
+    /// asomando por arriba, como la pestaña del nombre de la caja de diálogo.
+    void VestirDePapel()
+    {
+        if (bannerRoot.TryGetComponent<Image>(out var hoja))
+        {
+            hoja.sprite = PiezasDeUI.Papel(PaletaUI.Papel, PaletaUI.Tinta, PaletaUI.PapelClaro);
+            hoja.type = Image.Type.Sliced;
+            hoja.color = Color.white;
+            hoja.pixelsPerUnitMultiplier = 1.2f;
+        }
+        if (titleText != null)
+        {
+            titleText.color = PaletaUI.TintaDeTexto;
+            titleText.fontStyle = FontStyles.Bold;
+            titleText.rectTransform.offsetMax = new Vector2(titleText.rectTransform.offsetMax.x, -18f);
+        }
+
+        var pestana = new GameObject("Pestana", typeof(RectTransform));
+        var rt = (RectTransform)pestana.transform;
+        rt.SetParent(bannerRoot, false);
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(0f, 2f);
+        rt.localRotation = Quaternion.Euler(0f, 0f, -1.5f);
+        var fondo = PiezasDeUI.Imagen("Fondo", rt, PiezasDeUI.Papel(PaletaUI.Noche, PaletaUI.Tinta, PaletaUI.Noche, 0.5f), Color.white);
+        fondo.raycastTarget = false;
+        fondo.pixelsPerUnitMultiplier = 1.8f;
+        PiezasDeUI.Estirar(fondo.rectTransform);
+        _etiqueta = PiezasDeUI.Texto("Etiqueta", rt, string.Empty, titleText != null ? titleText.font : null, 24f, PaletaUI.Oro);
+        _etiqueta.fontStyle = FontStyles.Bold;
+        _etiqueta.characterSpacing = 8f;
+        _etiqueta.textWrappingMode = TextWrappingModes.NoWrap;
+        PiezasDeUI.Estirar(_etiqueta.rectTransform);
+    }
+
+    void PonerEtiqueta()
+    {
+        if (_etiqueta == null) return;
+        string texto = LocalizationManager.Instance != null
+            ? LocalizationManager.Instance.Get("QUEST_STARTED_BANNER", "Nueva misión")
+            : "Nueva misión";
+        _etiqueta.text = texto.ToUpperInvariant();
+        var rt = (RectTransform)_etiqueta.transform.parent;
+        rt.sizeDelta = new Vector2(_etiqueta.GetPreferredValues(_etiqueta.text).x + 52f, 46f);
     }
 
     void OnEnable()
@@ -129,11 +178,7 @@ public class QuestStartedBannerUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
         if (QuestManager.Instance != null && QuestManager.Instance.TryGetQuestData(questId, out var data) && data != null)
             questName = data.GetLocalizedName();
 
-        string format = LocalizationManager.Instance != null
-            ? LocalizationManager.Instance.Get("QUEST_STARTED_BANNER", "Nueva misión: {0}")
-            : "Nueva misión: {0}";
-
-        _pendientes.Enqueue(string.Format(format, questName));
+        _pendientes.Enqueue(questName);
         ArbitroDeAvisos.Pedir(this);
     }
 
@@ -205,6 +250,7 @@ public class QuestStartedBannerUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
         }
         string texto = _pendientes.Dequeue();
         if (titleText != null) titleText.text = texto;
+        PonerEtiqueta();
         AnimateIn();
     }
 

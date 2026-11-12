@@ -1786,7 +1786,7 @@
         },
         {
             "key": "ABILITY_SHIELD_DESC",
-            "value": "Hold B to raise it. Block at the right moment to strike back."
+            "value": "Hold <sprite name=\"interactable_b\"> to protect yourself."
         },
         {
             "key": "SPELL_FX_BOUNCE",
@@ -2316,6 +2316,26 @@
         {
             "key": "LUGAR_ALDEA_DEL_MAR",
             "value": "Seaside Village"
+        },
+        {
+            "key": "LUGAR_PUEBLO_DEL_MOLINO",
+            "value": "Mill Village"
+        },
+        {
+            "key": "LUGAR_BOSQUE_PROHIBIDO",
+            "value": "Forbidden Forest"
+        },
+        {
+            "key": "LUGAR_CIUDAD_ALTA",
+            "value": "High City"
+        },
+        {
+            "key": "LUGAR_LAGUNA_DE_LA_ERA",
+            "value": "Era Lagoon"
+        },
+        {
+            "key": "LUGAR_NUEVO",
+            "value": "New place"
         },
         {
             "key": "TUTORIAL_CAP3_HOGUERA_NOCHE",

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_04_ElVestidor
   duracion: 44.98285
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 720f2a79d3756e001e9f2009ada9eea1"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 fca059ef123f219b8fd7162b40457e2c"
   actores:
   - id: Player
     alias: will
@@ -650,7 +650,7 @@ MonoBehaviour:
     descripcion: conjunto de will y liam
     posiciones:
     - t: 0
-      p: {x: 94.57594, y: 16.473007, z: 42.15954}
+      p: {x: 96.916985, y: 16.473007, z: 47.581505}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -697,7 +697,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 18.597143
-      p: {x: 102.89904, y: 14.953538, z: 36.726833}
+      p: {x: 103.21258, y: 14.953538, z: 37.978436}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -707,7 +707,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: 0, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -742,7 +742,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 24.47493
-      p: {x: 101.37976, y: 15.67664, z: 40.100647}
+      p: {x: 101.45142, y: 15.67664, z: 39.88286}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -752,7 +752,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -763,7 +763,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 25.47493
-      p: {x: 101.20878, y: 15.665166, z: 40.719337}
+      p: {x: 101.13399, y: 15.665166, z: 41.56568}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -773,7 +773,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -784,7 +784,7 @@ MonoBehaviour:
     descripcion: medio de liam
     posiciones:
     - t: 31.08293
-      p: {x: 98.59661, y: 14.892158, z: 38.675964}
+      p: {x: 98.00237, y: 14.892158, z: 38.723167}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -794,7 +794,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -815,7 +815,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -826,7 +826,7 @@ MonoBehaviour:
     descripcion: conjunto de estela y will y liam
     posiciones:
     - t: 35.784973
-      p: {x: 101.23726, y: 16.673008, z: 41.0547}
+      p: {x: 96.10361, y: 15.9, z: 39.438263}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -849,68 +849,80 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326917
+      rid: 6540294555676705422
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705423
     linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1.2
     beat:
-      rid: 6540294550018326918
+      rid: 6540294555676705424
     linea: 50
   - onlyIfFlag: 
     skipIfFlag: 
     t: 17.697144
     beat:
-      rid: 6540294550018326919
+      rid: 6540294555676705425
     linea: 59
   - onlyIfFlag: 
     skipIfFlag: 
     t: 21.004082
     beat:
-      rid: 6540294550018326920
+      rid: 6540294555676705426
     linea: 68
   - onlyIfFlag: 
     skipIfFlag: 
     t: 21.004082
     beat:
-      rid: 6540294550018326921
+      rid: 6540294555676705427
     linea: 69
   - onlyIfFlag: 
     skipIfFlag: 
     t: 21.004082
     beat:
-      rid: 6540294550018326922
+      rid: 6540294555676705428
     linea: 73
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.47493
     beat:
-      rid: 6540294550018326923
+      rid: 6540294555676705429
     linea: 87
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.47493
     beat:
-      rid: 6540294550018326924
+      rid: 6540294555676705430
     linea: 88
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.47493
     beat:
-      rid: 6540294550018326925
+      rid: 6540294555676705431
     linea: 89
   - onlyIfFlag: 
     skipIfFlag: 
     t: 35.784973
     beat:
-      rid: 6540294550018326926
+      rid: 6540294555676705432
     linea: 101
   - onlyIfFlag: 
     skipIfFlag: 
     t: 35.784973
     beat:
-      rid: 6540294550018326927
+      rid: 6540294555676705433
     linea: 102
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 44.98285
+    beat:
+      rid: 6540294555676705434
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -939,12 +951,20 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326917
+    - rid: 6540294555676705422
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705423
       type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         senal: CHUCHE_ATUENDO_CANDIDATA
-    - rid: 6540294550018326918
+    - rid: 6540294555676705424
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -954,7 +974,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294550018326919
+    - rid: 6540294555676705425
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -964,7 +984,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294550018326920
+    - rid: 6540294555676705426
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -974,7 +994,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550018326921
+    - rid: 6540294555676705427
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -987,7 +1007,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326922
+    - rid: 6540294555676705428
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1000,7 +1020,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326923
+    - rid: 6540294555676705429
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1010,7 +1030,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294550018326924
+    - rid: 6540294555676705430
       type: {class: SaltoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1027,7 +1047,7 @@ MonoBehaviour:
         parabola: 0
         alturaMaximaDeAterrizaje: -1
         poseEnElSuelo: 
-    - rid: 6540294550018326925
+    - rid: 6540294555676705431
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1037,7 +1057,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294550018326926
+    - rid: 6540294555676705432
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1050,7 +1070,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018326927
+    - rid: 6540294555676705433
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1060,3 +1080,11 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
+    - rid: 6540294555676705434
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

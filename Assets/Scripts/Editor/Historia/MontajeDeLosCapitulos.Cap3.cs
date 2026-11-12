@@ -135,11 +135,11 @@ public static partial class MontajeDeLosCapitulos
         // ── Cinemáticas ─────────────────────────────────────────────────────────────────────
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_ESPEJO", Guion = "Cap3_01_ElEspejo", Escena = "TorreDeLiam",
             Nombre = "Cap. 3: Tobías en el espejo", Resumen = "Media sopa y la promesa de ir a pescar. La llave del aro se calentará cerca de Will." });
-        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_POSADA", Guion = "Cap3_02_LaPosada", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_POSADA", Guion = "Cap3_02_LaPosada", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: la posada", Resumen = "Will pregunta por el trozo del aro, le suenan las tripas (una sopa, si alcanza) y Lucía intenta subir la cuchara." });
-        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CARRO", Guion = "Cap3_03_ElCarro", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CARRO", Guion = "Cap3_03_ElCarro", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: el carro de noche", Resumen = "Un carro con jaulas tapadas pasa junto al fuego; por la manta sale una luz que respira." });
-        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CLARO", Guion = "Cap3_04_ElClaro", Texto = PresentacionDeTexto.Bocadillo,
+        s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CLARO", Guion = "Cap3_04_ElClaro", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: el claro", Resumen = "Doce jaulas de pájaros de luz. A Will le arden las manos: «¿Debes hacerlo?»." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_PAJAROS", Guion = "Cap3_05_LosPajaros",
             Nombre = "Cap. 3: los pájaros", Resumen = "La guardia detiene a los contrabandistas; Will abre las jaulas y los pájaros suben como chispas." });

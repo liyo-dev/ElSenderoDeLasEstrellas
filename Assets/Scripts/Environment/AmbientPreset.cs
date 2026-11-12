@@ -46,7 +46,7 @@ public class AmbientPreset : ScriptableObject
     public string musicZoneId = "";
 
     [Header("Nombre del lugar")]
-    [Tooltip("Clave de texto del nombre del lugar: sale como rótulo al entrar en la zona. Vacío = sin rótulo.")]
+    [Tooltip("Clave de texto del nombre del lugar. La primera vez que se entra en la partida sale su presentación (cinta de papel con el nombre); las siguientes, un rótulo breve. Ver PresentacionDeLugares. Vacío = no se anuncia.")]
     public string nombreDelLugar = "";
 
     [Header("Cámara")]

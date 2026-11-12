@@ -542,6 +542,7 @@ namespace Sendero.UI
                     case ExpresionDeRetrato.Dolorido: c.cara.SetEmotion(NPCEmotion.Tired); break;
                     case ExpresionDeRetrato.Caido: c.cara.SetEmotion(NPCEmotion.Sad); c.cara.AplicarOjos("Eye09"); break;
                     case ExpresionDeRetrato.Contento: c.cara.SetEmotion(NPCEmotion.Happy); break;
+                    case ExpresionDeRetrato.Concentrado: c.cara.SetEmotion(NPCEmotion.Determined); break;
                     default: c.cara.VolverAReposo(); break;
                 }
             }

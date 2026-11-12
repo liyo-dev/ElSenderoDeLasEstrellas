@@ -3,7 +3,7 @@ GUION Cap4_03_LaCampana
 ESCENA MainWorld
 ZONA Cap4Campana -330 74 22
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_03_LaCampana.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO

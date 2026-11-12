@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using EasyTransition;
 using DG.Tweening;
-using Sendero.Core.Feedback;
 using Core;
 
 /// <summary>
 /// Gestiona el Game Over con feedback visual cinematográfico:
-/// - Slow motion progresivo (via FeedbackService)
+/// - Slow motion progresivo (árbitro del tiempo)
 /// - Zoom de cámara hacia el jugador
 /// - Música de Game Over
+/// - La noche de estrellas (NocheDeLaCaida) y la pregunta de continuar en el centro
 /// - Al caer el jugador, pregunta: «Continuar» carga el último guardado sin pasar por el menú;
 ///   «Salir al menú» va al menú principal. Sin partida guardada, va directo al menú. Ver INC-518.
 /// </summary>
@@ -78,11 +78,13 @@ public class GameOverManager : MonoBehaviour
     [Tooltip("Inclinación hacia abajo de la cámara para acompañar la caída al suelo")]
     [SerializeField] private float deathShotPitch = 20f;
 
-    [Header("Screen Flash")]
-    [Tooltip("¿Hacer flash rojo al morir?")]
-    [SerializeField] private bool enableDeathFlash = true;
-    [SerializeField] private Color deathFlashColor = new Color(0.6f, 0f, 0f, 0.5f);
-    [SerializeField] private float deathFlashDuration = 0.4f;
+    [Header("Noche de la caída")]
+    [Tooltip("Segundos que tarda la pantalla en irse a la noche de estrellas antes de preguntar.")]
+    [SerializeField] private float segundosDeLaNoche = 2.6f;
+    [Tooltip("Grados que rodea la cámara al caído mientras cae la noche.")]
+    [SerializeField] private float giroDeLaCamara = 40f;
+    [Tooltip("Inclinación final de la cámara, mirando al caído desde arriba.")]
+    [SerializeField] private float inclinacionFinal = 32f;
 
     [Header("Audio")]
     [Tooltip("Evento de audio para Game Over")]
@@ -98,6 +100,7 @@ public class GameOverManager : MonoBehaviour
     private float _escalaPedida = 1f;
     private vThirdPersonCamera _thirdPersonCamera;
     private PlayerHealthSystem _deadPlayer;
+    private NocheDeLaCaida _noche;
 
     public bool IsShown => _isGameOverActive;
 
@@ -202,6 +205,7 @@ public class GameOverManager : MonoBehaviour
         }
 
         CleanupTweens();
+        QuitarLaNoche();
         _isGameOverActive = false;
 
         // Restaurar FOV si es necesario
@@ -265,14 +269,8 @@ public class GameOverManager : MonoBehaviour
         // Limpiar suppressors de GamepadInputReader (ej. QuestMenuManager que no llegó a cerrar).
         GamepadInputReader.ForceRestoreGameplaySuppression();
 
-        // 1. Flash rojo de muerte (via FeedbackService)
-        if (enableDeathFlash)
-        {
-            FeedbackService.ScreenFlash(deathFlashColor, deathFlashDuration);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[GameOverManager] 🔴 Flash de muerte activado");
-#endif
-        }
+        // 1. Fuera todo lo que hay en pantalla: el momento es del caído.
+        OcultablesDeCinematica.OcultarTodos(this);
 
         // 1b. Limpiar el estado de cambio de personaje (destruye el NPC instanciado de Will si
         // lo hubiera). Sin esto, si el jugador moría mientras controlaba a Liam/Estela, el NPC de
@@ -316,10 +314,13 @@ public class GameOverManager : MonoBehaviour
         // cortar a la transición, usando tiempo real porque Time.timeScale está modificado
         yield return WaitForPlayerToLand();
 
-        // 7. Fuera la cámara lenta antes de preguntar
+        // 7. Cae la noche: la cámara rodea al caído y la pantalla se va a azul con estrellas.
+        yield return NocheDeEstrellas();
+
+        // 8. Fuera la cámara lenta antes de preguntar
         SoltarCamaraLenta();
 
-        // 8. Continuar desde el último guardado o salir al menú
+        // 9. Continuar desde el último guardado o salir al menú
         OfrecerContinuar();
 
         _gameOverCoroutine = null;
@@ -349,7 +350,8 @@ public class GameOverManager : MonoBehaviour
             confirmText: Texto("MainMenu_Continue", "Continuar"),
             cancelText: Texto("UI_SALIR_MENU", "Salir al menú"),
             selectConfirm: true,
-            cancelWithBack: false);
+            cancelWithBack: false,
+            centrado: true);
     }
 
     /// Carga el último guardado sin pasar por el menú: tapa con la pantalla de carga, descarga el
@@ -467,6 +469,38 @@ public class GameOverManager : MonoBehaviour
 
         // Pequeño respiro tras aterrizar antes de cortar a la transición.
         yield return new WaitForSecondsRealtime(landingSettleDelay);
+    }
+
+    /// La noche de estrellas (INC-1101): el lienzo justo por debajo del de la pregunta de continuar,
+    /// y la cámara girando despacio alrededor del caído hasta mirarle desde arriba.
+    private System.Collections.IEnumerator NocheDeEstrellas()
+    {
+        int orden = 100;
+        var popup = ConfirmationPopupUI.Instance;
+        var lienzoDelPopup = popup != null ? popup.GetComponentInParent<Canvas>() : null;
+        if (lienzoDelPopup != null) orden = lienzoDelPopup.rootCanvas.sortingOrder;
+        if (_noche != null) Destroy(_noche.gameObject);
+        _noche = NocheDeLaCaida.Crear(transform, orden);
+        _noche.Mostrar(segundosDeLaNoche);
+
+        float yaw0 = 0f, pitch0 = deathShotPitch;
+        if (_deadPlayer != null) yaw0 = _deadPlayer.transform.eulerAngles.y + deathShotYawOffset;
+        float t = 0f;
+        while (t < segundosDeLaNoche)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, t / segundosDeLaNoche);
+            if (_thirdPersonCamera != null && _deadPlayer != null)
+                _thirdPersonCamera.SetAngles(yaw0 + giroDeLaCamara * k, Mathf.Lerp(pitch0, inclinacionFinal, k));
+            yield return null;
+        }
+    }
+
+    private void QuitarLaNoche()
+    {
+        if (_noche != null) Destroy(_noche.gameObject);
+        _noche = null;
+        OcultablesDeCinematica.MostrarTodos(this);
     }
 
     private void StartSlowMotion()

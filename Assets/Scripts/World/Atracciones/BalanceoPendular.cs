@@ -21,6 +21,13 @@ public sealed class BalanceoPendular : MonoBehaviour
     private Quaternion _reposo;
     private float _fase;
 
+    /// <summary>Cuánto del balanceo se hace (0 = quieto en reposo, 1 = la amplitud entera). Lo sube y baja
+    /// quien lo maneja (un columpio, mientras alguien va sentado).</summary>
+    public float Intensidad { get; set; } = 1f;
+
+    /// <summary>Segundos de una ida y vuelta completa.</summary>
+    public float Periodo => periodo;
+
     void Awake()
     {
         _reposo = Quaternion.Euler(reposo);
@@ -29,7 +36,7 @@ public sealed class BalanceoPendular : MonoBehaviour
 
     void Update()
     {
-        float angulo = amplitud * Mathf.Sin((Time.time + _fase) * 2f * Mathf.PI / periodo);
+        float angulo = amplitud * Intensidad * Mathf.Sin((Time.time + _fase) * 2f * Mathf.PI / periodo);
         transform.localRotation = _reposo * Quaternion.AngleAxis(angulo, eje);
     }
 

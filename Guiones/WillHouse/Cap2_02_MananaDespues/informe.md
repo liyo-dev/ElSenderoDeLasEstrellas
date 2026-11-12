@@ -1,6 +1,6 @@
 # Parte de horneado: Cap2_02_MananaDespues
 
-2026-11-11 16:51 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
+2026-11-12 08:00 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
 
 **2:55,8** de secuencia · 33 frases · 32 planos · 18 efectos · 5 personajes
 
@@ -162,7 +162,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 0:06,0 gesto HeadNod01
 - 0:12,7 gesto HeadShake01
 - 0:15,8–0:19,0 habla
-- 0:15,9 gesto Talk02
+- 0:15,9 gesto Question01
 - 0:19,7 gesto HeadNod01
 - 0:21,8–0:27,6 habla
 - 0:21,9 gesto Talk03
@@ -185,8 +185,8 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 1:53,7 reposo 
 - 1:59,5–2:01,5 anda de (116,3, 0,8) a (115,7, 2,6)
 - 2:01,5–2:07,9 habla
-- 2:01,6 gesto Talk02
-- 2:04,1 gesto Talk03
+- 2:01,6 gesto Question01
+- 2:03,9 gesto Talk03
 - 2:08,6 gesto HeadShake01
 - 2:16,6 gesto HeadNod01
 - 2:21,4 gesto HeadShake01
@@ -195,7 +195,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · selene 1,60/
 - 2:30,6 gesto HeadShake02
 - 2:37,7 reposo 
 - 2:37,7–2:40,2 habla
-- 2:37,8 gesto Talk03
+- 2:37,8 gesto Decidido01
 - 2:38,0 gesto HeadNod01
 - 2:40,9 gesto HeadShake01
 - 2:45,9 gesto HeadNod01

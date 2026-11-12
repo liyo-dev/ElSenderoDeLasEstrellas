@@ -10,7 +10,7 @@
 GUION Chuche_01_Llegada
 ESCENA Chuchelandia
 SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Llegada.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.25
 
 REPARTO

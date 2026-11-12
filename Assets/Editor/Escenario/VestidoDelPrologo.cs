@@ -11,7 +11,7 @@ using F = VestidoDeFachadas;
 /// <summary>
 /// Viste el pueblo del prólogo (Prologo_Valle): puertas y ventanas del Fantasy Kingdom Pack en las
 /// casas (que vienen sin ellas), contraventanas que se abren, jardineras, macetas junto a las
-/// puertas, banderines entre las casas y el cartel de la panadería. Todo cuelga de
+/// puertas y el cartel de la panadería. Todo cuelga de
 /// «Vestido del pueblo (generado)» y se rehace entero en cada ejecución; se retoca en las tablas
 /// de abajo, no a mano en la escena. Las piezas no llevan colisionadores (no tocan el NavMesh).
 /// </summary>
@@ -122,18 +122,9 @@ public static partial class VestidoDelPrologo
         ("SPAWN_VecinaDelMirador", Vector3.zero, 0f, "Vecina"),
     };
 
-    /// Guirnaldas de banderines entre dos casas: (casa A, casa B, prefab, altura sobre la base).
-    static readonly (string a, string b, string prefab, float altura)[] Guirnaldas =
-    {
-        ("Casa_Norte_02", "Casa_Sur_03", Pack + "Main Structures/Tent/Tent02_a01.prefab", 4.0f),
-        ("Panaderia", "Casa_Sur_01", Pack + "Props/Flag/Flag04_a01.prefab", 3.8f),
-        ("Casa_Norte_03", "Casa_Sur_03", Pack + "Props/Flag/Flag04_a01.prefab", 4.3f),
-        ("Panaderia", "Casa_Norte_02", Pack + "Main Structures/Tent/Tent02_a01.prefab", 4.4f),
-    };
-
     // ── Menús ───────────────────────────────────────────────────────────────────────────────
 
-    [MenuItem("El Sendero/Escenario/Prólogo: vestir el pueblo (puertas, ventanas, banderines)")]
+    [MenuItem("El Sendero/Escenario/Prólogo: vestir el pueblo (puertas, ventanas, tablón, campo)")]
     public static void Vestir()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Vestido del prólogo", "Hazlo fuera de Play."); return; }
@@ -150,11 +141,11 @@ public static partial class VestidoDelPrologo
             int piezas = 0;
             foreach (var c in Casas) piezas += VestirCasa(escena, raiz.transform, c, informe);
             PonerSitios(raiz.transform, informe);
-            piezas += PonerGuirnaldas(escena, raiz.transform, informe);
             piezas += PonerPuestoDelPan(raiz.transform, informe);
             foreach (var go in raiz.GetComponentsInChildren<Transform>(true)) GameObjectUtility.SetStaticEditorFlags(go.gameObject, 0);
             piezas += PonerTablon(raiz.transform, informe);
             piezas += PonerCampo(raiz.transform, informe);
+            piezas += PintarSuelo(escena, raiz.transform, informe);
             informe.Insert(0, $"{piezas} piezas.\n");
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
@@ -210,6 +201,7 @@ public static partial class VestidoDelPrologo
 
     static void Quitar(Scene escena)
     {
+        DevolverSuelo(escena);
         foreach (var r in escena.GetRootGameObjects())
             if (r.name == Raiz) Object.DestroyImmediate(r);
     }
@@ -610,51 +602,6 @@ public static partial class VestidoDelPrologo
             n++;
         }
         return n;
-    }
-
-    static int PonerGuirnaldas(Scene escena, Transform raiz, StringBuilder informe)
-    {
-        int n = 0;
-        var grupo = new GameObject("Banderines").transform;
-        grupo.SetParent(raiz, false);
-        foreach (var (a, b, prefab, altura) in Guirnaldas)
-        {
-            var ta = Buscar(escena, a); var tb = Buscar(escena, b);
-            var pf = AssetDatabase.LoadAssetAtPath<GameObject>(prefab);
-            if (ta == null || tb == null || pf == null) { informe.AppendLine($"Banderines {a}-{b}: falta algo."); continue; }
-            var ea = F.Medir(ta); var eb = F.Medir(tb);
-            float y = Mathf.Min(ea.BaseY, eb.BaseY) + altura;
-            if (!Extremo(ea, eb.Centro, y, out var pa) || !Extremo(eb, ea.Centro, y, out var pb))
-            { informe.AppendLine($"Banderines {a}-{b}: no encuentro las paredes a {altura} m."); continue; }
-            // El prefab: una guirnalda a lo largo de su eje lateral. Se estira hasta las dos paredes.
-            var pz = F.MedirPieza(pf);
-            float largo = Vector3.Distance(pa, pb);
-            float escala = largo / Mathf.Max(0.1f, pz.Ancho);
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, escena);
-            go.name = $"Banderines {a} - {b}";
-            go.transform.SetParent(grupo, true);
-            Vector3 dir = pb - pa; dir.y = 0f;
-            Quaternion giro = Quaternion.FromToRotation(pz.lateral, dir.normalized);
-            if (Vector3.Dot(pz.lateral, dir.normalized) < -0.999f) giro = Quaternion.AngleAxis(180f, Vector3.up);
-            go.transform.localScale = new Vector3(go.transform.localScale.x * (Mathf.Abs(pz.lateral.x) > 0.5f ? escala : 1f), go.transform.localScale.y, go.transform.localScale.z * (Mathf.Abs(pz.lateral.z) > 0.5f ? escala : 1f));
-            // Punto de cuelgue: el extremo lMin en pa, a la altura de la parte de arriba del prefab.
-            Vector3 ancla = Vector3.Scale(pz.lateral * pz.lMin + Vector3.up * pz.yMax + pz.fuera * ((pz.dMin + pz.dMax) * 0.5f), go.transform.localScale);
-            go.transform.SetPositionAndRotation(pa - giro * ancla, giro);
-            F.SinColisiones(go);
-            go.AddComponent<NoTapaLaCamara>();
-            n++;
-        }
-        return n;
-    }
-
-    /// Punto de la pared de un edificio en la línea hacia otro punto, a una altura.
-    static bool Extremo(F.Edificio e, Vector3 hacia, float y, out Vector3 p)
-    {
-        Vector3 c = e.Centro; c.y = y; hacia.y = y;
-        Vector3 dir = (hacia - c).normalized;
-        Vector3 desde = c + dir * 30f;
-        if (F.Rayo(e, desde, -dir, 40f, out float d, out _)) { p = desde - dir * d + dir * 0.05f; return true; }
-        p = default; return false;
     }
 
     static void Escribir(StringBuilder informe)

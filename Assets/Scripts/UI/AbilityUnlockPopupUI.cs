@@ -30,6 +30,9 @@ public class AbilityUnlockPopupUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
     [SerializeField] private List<AbilityPresentation> abilityPresentations = new();
     [SerializeField] private List<AbilityPresentationForKey> abilityKeyPresentations = new();
     [SerializeField] private List<SpellPresentation> spellPresentations = new();
+    [Tooltip("Habilidades que se desbloquean sin aviso propio porque ya lo da otra cosa (el ataque mágico " +
+             "llega con la clave «Magia», que es la que se anuncia; con las dos salía «Magia» dos veces, INC-1097).")]
+    [SerializeField] private List<AbilityId> habilidadesSinAviso = new() { AbilityId.MagicAttack };
 
     [Header("Animación")]
     [SerializeField] private float slideOffscreenX = 450f;
@@ -77,6 +80,13 @@ public class AbilityUnlockPopupUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
     void Awake()
     {
         _sceneBoundUI = GetComponent<SceneBoundUI>();
+        // Los textos de los desbloqueos pueden llevar el icono del botón (<sprite name="...">) y van centrados.
+        if (abilityDescriptionText != null)
+        {
+            Core.InputGlyphs.InputGlyphService.UsarIconos(abilityDescriptionText);
+            abilityDescriptionText.alignment = TextAlignmentOptions.Center;
+        }
+        if (abilityTitleText != null) abilityTitleText.alignment = TextAlignmentOptions.Center;
         if (popupRoot != null)
             popupRoot.gameObject.SetActive(false);
     }
@@ -121,6 +131,7 @@ public class AbilityUnlockPopupUI : MonoBehaviour, IAvisoEnPantalla, ISceneBound
 
     private void HandleAbilityUnlocked(AbilityId ability)
     {
+        if (habilidadesSinAviso.Contains(ability)) return;
         string flag = GetAbilityFlag(ability);
         if (!MarcarSiEsNuevo(flag)) return;
         var p = AbilityPresentationLookup.Resolve(ability, abilityPresentations);

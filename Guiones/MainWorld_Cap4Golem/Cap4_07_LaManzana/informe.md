@@ -1,8 +1,8 @@
 # Parte de horneado: Cap4_07_LaManzana
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap4_07_LaManzana.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap4_07_LaManzana.guion.txt`
 
-**0:21,8** de secuencia · 7 frases · 3 planos · 0 efectos · 2 personajes
+**0:21,8** de secuencia · 7 frases · 3 planos · 2 efectos · 2 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 
@@ -30,16 +30,18 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
-| 0:00,0 | plano 1 | conjunto de will y estela · 14,8 s · lente 34° · coste 73: cara 13, ángulo 54 |
+| 0:00,0 | plano 1 | conjunto de will y estela · 14,8 s · lente 34° · coste 88: cara 28, ángulo 54 |
 | 0:00,0 | will | «Cenizas todavía calientes. Alguien ha dormido aquí esta noche.» (4,0 s) · pose |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:05,0 | will | «¿Estás bien? Apóyate en mí.» (1,8 s) · pose |
 | 0:07,1 | estela | «Puedo sola.» (1,2 s) · pose |
 | 0:08,7 | will | «Ya lo sé.» (1,2 s) · pose |
 | 0:12,4 | estela | «Es la última manzana. Está harinosa.» (2,3 s) |
-| 0:14,8 | plano 2 | dos: will y estela · 2,0 s · lente 32° · coste 296: cara 182, ángulo 108 |
+| 0:14,8 | plano 2 | dos: will y estela · 2,0 s · lente 32° · coste 312: cara 198, ángulo 108 |
 | 0:14,8 | will | «Pues a medias.» (1,2 s) · pose |
 | 0:16,8 | plano 3 | primer plano de estela · 5,0 s · lente 24° · coste 163: cara 138, ángulo 26 |
 | 0:16,8 | estela | «Hacía mucho que nadie se ponía delante de mí. Gracias, idiota.» (4,0 s) |
+| 0:21,8 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

@@ -10,7 +10,7 @@ GUION Cap1_PerasEldran
 ESCENA MainWorld
 ZONA Cap1 6 -136 22
 SECUENCIA Assets/_SEQUENCES/SEQ_PerasEldran.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO

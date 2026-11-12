@@ -6,7 +6,7 @@ GUION Cap3_02_LaPosada
 ESCENA MainWorld
 ZONA Cap3Posada 280 -427 24
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_02_LaPosada.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.2
 
 REPARTO

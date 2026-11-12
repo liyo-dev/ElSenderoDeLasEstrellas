@@ -61,6 +61,19 @@ namespace Game.NPC.States
         // modos: para cuando se llega aquí, el icono y la animación de sobresalto llevan de sobra
         // los 1.2s de SENSE_DURATION iniciales, más todo lo que dure la caminata, ya completos.
         private bool _dialogueStarted;
+        private bool _grafoAvisado;
+
+        /// Avisa al grafo de que el jugador ha hablado con este NPC (la señal de WaitNpcInteractionNode).
+        private void AvisarAlGrafo(NPCStateContext context)
+        {
+            if (_grafoAvisado) return;
+            _grafoAvisado = true;
+            var manager = context.Transform != null ? context.Transform.GetComponent<NPCBehaviourManagerV2>() : null;
+            string actorId = manager != null ? manager.PersistenceId : null;
+            if (string.IsNullOrEmpty(actorId)) return;
+            string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
+            DefaultNarrativeSignals.Instance?.RaiseCustom(clave, $"[AlertState] {actorId} ha hablado con el jugador");
+        }
 
         public AlertState(float duration = 2f, bool walk = true, float stopDist = 3f, bool skipDialogue = false)
         {
@@ -107,14 +120,14 @@ namespace Game.NPC.States
                 narrativeActor.HideQuestIcon();
             }
 
-            // Notificar al grafo que el NPC interactuó/vio al jugador
-            var manager = context.Transform != null ? context.Transform.GetComponent<NPCBehaviourManagerV2>() : null;
-            string actorId = manager != null ? manager.PersistenceId : null;
-            if (!string.IsNullOrEmpty(actorId))
-            {
-                string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
-                DefaultNarrativeSignals.Instance?.RaiseCustom(clave, $"[AlertState] {actorId} vio al jugador");
-            }
+            // El grafo se entera de la charla cuando el NPC ha dicho lo suyo (ver AvisarAlGrafo):
+            // lo que el grafo dé después (un hechizo, un objeto) llega tras la frase que lo da.
+            _grafoAvisado = false;
+            if (_skipDialogue) AvisarAlGrafo(context);
+
+            // Que se vea quién ha pillado al jugador: la cámara se vuelve hacia el NPC.
+            if (!_skipDialogue && context.Transform != null)
+                CombatCameraTargeting.Instance?.Enfocar(context.Transform.gameObject);
 
             // FIX INC-019: el icono de detección (❗) estaba definido en NPCCombatConfig
             // (alertIconPrefab/questionIconPrefab/exclamationIconPrefab) y el sistema que lo
@@ -176,7 +189,8 @@ namespace Game.NPC.States
                     }
                     _hasPlayedChallenge = true;
                 }
-                // Mientras dura la reacción inicial, ni caminar ni empezar diálogo todavía.
+                // Mientras dura la reacción inicial, ni caminar ni empezar diálogo todavía; mira al jugador.
+                FacePlayer(context);
                 return;
             }
 
@@ -254,6 +268,8 @@ namespace Game.NPC.States
         public override void OnExit(NPCStateContext context)
         {
             context.Log("[AlertState] Fin de alerta.");
+            // Si la alerta se corta antes de acabar la frase, el grafo no se queda esperando.
+            AvisarAlGrafo(context);
 
             // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): si el jugador
             // llega a distancia de diálogo y AlertState dispara PlayChallengingForBattle()/
@@ -401,14 +417,19 @@ namespace Game.NPC.States
             }
 
             var config = context.Config?.combatConfig;
-            if (config != null && config.dialogueOnAlert != null)
+            if (config == null || config.dialogueOnAlert == null || DialogueManager.Instance == null)
+            {
+                AvisarAlGrafo(context);
+                return;
+            }
             {
                 if (config.waitForAlertDialogue) _waitingForDialogue = true;
 
-                DialogueManager.Instance?.StartBattleDialogue(config.dialogueOnAlert, context.Transform, () =>
+                DialogueManager.Instance.StartBattleDialogue(config.dialogueOnAlert, context.Transform, () =>
                 {
                     _waitingForDialogue = false;
                     _dialogueCompleted = true; // ⭐ Marcar que el diálogo completó para transición inmediata
+                    AvisarAlGrafo(context);
 
                     // ⭐ NO manipular animaciones del player - Invector maneja todo automáticamente
                     // El player usará siempre su idle normal sin forzar poses de batalla

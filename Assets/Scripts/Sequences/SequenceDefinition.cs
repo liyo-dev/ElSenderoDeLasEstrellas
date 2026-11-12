@@ -39,8 +39,9 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
     public string musicId;
 
     [Header("Puesta en escena")]
-    [Tooltip("Presentación de las líneas que heredan el estilo de la secuencia.")]
-    public PresentacionDeTexto presentacionDeTexto = PresentacionDeTexto.Bocadillo;
+    [Tooltip("Presentación de las líneas que heredan el estilo de la secuencia. Las cinemáticas van en " +
+             "subtítulo con bandas de cine; el bocadillo queda para lo que pasa sin cortar el juego.")]
+    public PresentacionDeTexto presentacionDeTexto = PresentacionDeTexto.Subtitulo;
 
     [Tooltip("Marcado = al terminar, la secuencia deja la pantalla CUBIERTA en vez de descubrirla. " +
              "Se usa cuando lo que viene detrás gestiona su propia entrada — el caso real es el " +

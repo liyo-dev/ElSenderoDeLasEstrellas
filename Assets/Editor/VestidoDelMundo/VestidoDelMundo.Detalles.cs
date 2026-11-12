@@ -235,7 +235,8 @@ public static partial class VestidoDelMundo
             Jardines(o, Grupo(grupo, "Jardines"), pueblo);
             o.Informe.Add($"{pueblo.Nombre}: {o.Puestas - antes} piezas de detalle.");
         }
-        ArbolDelPuebloInicial(o);
+        CasasDelPuebloInicial(o);
+        PuebloInicialConSitios(o);
         ExplorarElMundo(o);
         PoblarParajes(o);
     }

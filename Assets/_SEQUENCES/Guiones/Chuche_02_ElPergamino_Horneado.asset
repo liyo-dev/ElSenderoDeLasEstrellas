@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_02_ElPergamino
   duracion: 25.839592
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 0b3fd478067e64a655e172f03150f296"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 49dd2b7f82b124f80556618239957ac6"
   actores:
   - id: Player
     alias: will
@@ -510,7 +510,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 1
-      p: {x: 185.03308, y: 4.1909165, z: 102.546684}
+      p: {x: 184.45961, y: 3.9148698, z: 103.47356}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -520,7 +520,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -557,7 +557,7 @@ MonoBehaviour:
     descripcion: conjunto de will y estela y liam
     posiciones:
     - t: 18.310612
-      p: {x: 178.6307, y: 4.2117143, z: 103.80198}
+      p: {x: 177.89201, y: 4.0680037, z: 104.36714}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -592,7 +592,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -603,7 +603,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 21.004082
-      p: {x: 185.2121, y: 5.1902847, z: 97.40065}
+      p: {x: 186.36282, y: 5.213213, z: 97.83486}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -613,7 +613,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -634,7 +634,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -643,14 +643,26 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294550018326904
+      rid: 6540294555676705405
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705406
     linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 6540294550018326905
+      rid: 6540294555676705407
     linea: 44
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 25.839592
+    beat:
+      rid: 6540294555676705408
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -679,7 +691,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018326904
+    - rid: 6540294555676705405
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705406
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -689,7 +709,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550018326905
+    - rid: 6540294555676705407
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -699,3 +719,11 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
+    - rid: 6540294555676705408
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

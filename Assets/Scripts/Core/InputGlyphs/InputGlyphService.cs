@@ -39,6 +39,45 @@ namespace Core.InputGlyphs
         /// <summary>Se dispara cuando cambia la familia activa (por si alguna UI ya visible quiere refrescarse).</summary>
         public static event Action<InputGlyphDeviceFamily> FamilyChanged;
 
+        // ── Iconos de mando forzados ─────────────────────────────────────────
+        // Apps como Switch 2 Connect, DS4Windows o Steam Input presentan al juego un mando virtual
+        // (normalmente de Xbox o PlayStation), así que la detección por nombre no puede saber qué
+        // mando físico se tiene en la mano. Con esto se fuerza la familia de iconos de mando; el
+        // teclado sigue detectándose igual. Se guarda en PlayerPrefs. null = automático.
+        const string ForcedFamilyPrefKey = "InputGlyphs.ForcedGamepadFamily";
+        static bool _forcedLoaded;
+        static InputGlyphDeviceFamily? _forcedFamily;
+
+        /// <summary>Familia de iconos de mando forzada, o null si se detecta sola (por defecto).</summary>
+        public static InputGlyphDeviceFamily? ForcedGamepadFamily
+        {
+            get
+            {
+                if (!_forcedLoaded)
+                {
+                    _forcedLoaded = true;
+                    int v = PlayerPrefs.GetInt(ForcedFamilyPrefKey, -1);
+                    _forcedFamily = v >= 0 && v != (int)InputGlyphDeviceFamily.KeyboardMouse
+                        ? (InputGlyphDeviceFamily?)(InputGlyphDeviceFamily)v : null;
+                }
+                return _forcedFamily;
+            }
+        }
+
+        /// <summary>Fuerza los iconos de mando (Xbox / PlayStation / Switch) o vuelve a automático con null.
+        /// Se aplica al momento si se está jugando con mando.</summary>
+        public static void SetForcedGamepadFamily(InputGlyphDeviceFamily? family)
+        {
+            if (family == InputGlyphDeviceFamily.KeyboardMouse) family = null;
+            _forcedLoaded = true;
+            _forcedFamily = family;
+            PlayerPrefs.SetInt(ForcedFamilyPrefKey, family.HasValue ? (int)family.Value : -1);
+            PlayerPrefs.Save();
+
+            if (_bootstrapped && CurrentFamily != InputGlyphDeviceFamily.KeyboardMouse && Gamepad.current != null)
+                SetFamily(DetectFamilyFromGamepad(Gamepad.current));
+        }
+
         const float MouseMoveThresholdSqr = 4f;   // px de movimiento de ratón por frame para contar como actividad
         const float StickThresholdSqr = 0.35f * 0.35f; // deadzone para contar el stick como actividad
 
@@ -89,6 +128,8 @@ namespace Core.InputGlyphs
             _originalFallbacks = null;
             _familyLibraryLink = null;
             _familyLibraryLoadAttempted = false;
+            _forcedLoaded = false;
+            _forcedFamily = null;
             CurrentFamily = InputGlyphDeviceFamily.KeyboardMouse;
             FamilyChanged = null;
         }
@@ -440,6 +481,9 @@ namespace Core.InputGlyphs
 
         internal static InputGlyphDeviceFamily DetectFamilyFromGamepad(Gamepad gp)
         {
+            var forced = ForcedGamepadFamily;
+            if (forced.HasValue) return forced.Value;
+
             string product = (gp.description.product ?? string.Empty).ToLowerInvariant();
             string manufacturer = (gp.description.manufacturer ?? string.Empty).ToLowerInvariant();
             string combined = product + " " + manufacturer;

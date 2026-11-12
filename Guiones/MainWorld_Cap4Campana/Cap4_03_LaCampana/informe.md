@@ -1,8 +1,8 @@
 # Parte de horneado: Cap4_03_LaCampana
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap4_03_LaCampana.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap4_03_LaCampana.guion.txt`
 
-**0:11,2** de secuencia · 4 frases · 2 planos · 0 efectos · 2 personajes
+**0:11,2** de secuencia · 4 frases · 2 planos · 2 efectos · 2 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 
@@ -24,11 +24,13 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de will y estela · 7,4 s · lente 42° · coste 5: ángulo 5 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,6 | estela | «¿Ves la campana? Llega hasta ella y tócala.» (2,8 s) · pose |
 | 0:03,6 | estela | «Las figuras de barro son gente. No se chamusca a la gente.» (3,8 s) |
 | 0:07,4 | plano 2 | dos: will y estela · 3,9 s · lente 32° · coste 261: cara 147, ángulo 108 |
 | 0:07,4 | will | «¿Y tú qué vas a hacer?» (1,4 s) · pose |
 | 0:09,1 | estela | «Molestarte.» (1,2 s) |
+| 0:11,2 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

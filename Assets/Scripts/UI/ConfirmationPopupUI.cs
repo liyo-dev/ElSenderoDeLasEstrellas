@@ -13,6 +13,10 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Popup de confirmación reutilizable (singleton). Pausa el juego mientras está abierto.
 /// Colocar en Start.unity para que sobreviva cambios de escena.
+///
+/// Se ve como la caja de diálogo: hoja de papel abajo, en el mismo sitio y tamaño, con la
+/// pestaña del nombre de quien pregunta (si lo hay) y los botones en columna a la derecha.
+/// La hoja y la pestaña las pone <see cref="PapelDeLaCajaDeDialogo"/>.
 /// </summary>
 public class ConfirmationPopupUI : MonoBehaviour
 {
@@ -33,6 +37,15 @@ public class ConfirmationPopupUI : MonoBehaviour
              "Si el texto más su margen no cabe en el ancho del botón, el botón se ensancha.")]
     private float margenTextoBoton = 26f;
 
+    [Header("Caja")]
+    [SerializeField, Tooltip("Tamaño de la caja, el mismo que la de diálogo.")]
+    private Vector2 tamanoDeLaCaja = new Vector2(991f, 250f);
+    [SerializeField, Tooltip("Altura de la caja sobre el borde inferior, la misma que la de diálogo.")]
+    private float alturaDeLaCaja = 50f;
+    [SerializeField, Min(0f), Tooltip("Ancho de la columna de botones, a la derecha de la caja.")]
+    private float anchoDeLosBotones = 230f;
+    [SerializeField, Min(8f)] private float letraDelMensaje = 34f;
+
     [Header("Input")]
     [SerializeField, Min(0f), Tooltip("Tiempo mínimo tras abrir antes de aceptar input de confirmar/cancelar. Evita que la misma pulsación que abrió el popup (p.ej. botón Sur del gamepad) lo confirme instantáneamente en el mismo frame.")]
     private float inputGracePeriod = 0.15f;
@@ -49,6 +62,8 @@ public class ConfirmationPopupUI : MonoBehaviour
     private float _anchoBaseConfirmar, _anchoBaseCancelar;
     private float _letraBaseConfirmar, _letraBaseCancelar;
 
+    private PapelDeLaCajaDeDialogo _papel;
+
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() => Instance = null;
@@ -59,6 +74,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        VestirDePapel();
         PrepararBoton(confirmButton, confirmLabel, out _anchoBaseConfirmar, out _letraBaseConfirmar);
         PrepararBoton(cancelButton, cancelLabel, out _anchoBaseCancelar, out _letraBaseCancelar);
         if (panel) panel.SetActive(false);
@@ -76,9 +92,13 @@ public class ConfirmationPopupUI : MonoBehaviour
     /// <param name="selectConfirm">Abrir con el foco en confirmar en vez de en cancelar.</param>
     /// <param name="cancelWithBack">Si el botón Atrás (Este / Escape) elige cancelar. Apagarlo cuando
     /// cancelar no es «no hacer nada» y ese botón se usa para otra cosa justo antes de abrir.</param>
+    /// <param name="quien">Nombre de quien pregunta, en la pestaña de la caja. Vacío = sin pestaña.</param>
+    /// <param name="centrado">La caja en el centro de la pantalla en vez de abajo (momentos que lo
+    /// ocupan todo, como caer en combate).</param>
     public void Show(string message, Action onConfirm, Action onCancel = null,
                      string confirmText = null, string cancelText = null,
-                     bool selectConfirm = false, bool cancelWithBack = true)
+                     bool selectConfirm = false, bool cancelWithBack = true, string quien = null,
+                     bool centrado = false)
     {
         if (_isShown) return;
 
@@ -116,6 +136,11 @@ public class ConfirmationPopupUI : MonoBehaviour
         _previousSelected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
 
         if (messageText) messageText.text = message;
+        if (_papel != null)
+        {
+            ColoresDeLaPestana.De(quien, out var fondoDelNombre, out var letraDelNombre);
+            _papel.PonerNombre(quien, fondoDelNombre, letraDelNombre);
+        }
 
         var loc = LocalizationManager.Instance;
         string textoSi = !string.IsNullOrEmpty(confirmText) ? confirmText.Trim()
@@ -134,6 +159,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         _shownAt = Time.unscaledTime;
         if (panel) panel.SetActive(true);
         AjustarBotonesAlTexto();
+        PonerEnElCentro(centrado);
 
         // Sonido de abrir, el mismo que los demás paneles (TeleportUI, mapa). Va aquí y no en quien
         // lo abre para que todos los popups suenen igual; quien lo abre no pone el suyo (INC-931).
@@ -141,6 +167,73 @@ public class ConfirmationPopupUI : MonoBehaviour
 
         SelectButton(_confirmSelected);
         AnimateSelection(_confirmSelected, instant: true);
+    }
+
+    // ── Aspecto de papel ──────────────────────────────────────────────────────
+
+    /// Pone la caja abajo como la de diálogo, sobre una hoja de papel con pestaña para el nombre,
+    /// el mensaje a la izquierda y los botones en columna a la derecha. Sin oscurecer la pantalla:
+    /// el fondo sigue tapando los clics, pero no se ve.
+    void VestirDePapel()
+    {
+        if (messageText == null || confirmButton == null) return;
+        var caja = messageText.transform.parent as RectTransform;
+        var fila = confirmButton.transform.parent as RectTransform;
+        if (caja == null || fila == null) return;
+
+        if (panel != null && panel.TryGetComponent<Image>(out var velo)) velo.color = new Color(0f, 0f, 0f, 0f);
+        if (caja.TryGetComponent<Image>(out var fondoViejo)) fondoViejo.enabled = false;
+
+        caja.anchorMin = caja.anchorMax = new Vector2(0.5f, 0f);
+        caja.pivot = new Vector2(0.5f, 0f);
+        caja.sizeDelta = tamanoDeLaCaja;
+        caja.anchoredPosition = new Vector2(0f, alturaDeLaCaja);
+
+        var nombreGo = new GameObject("Nombre", typeof(RectTransform));
+        nombreGo.transform.SetParent(caja, false);
+        var nombre = nombreGo.AddComponent<TextMeshProUGUI>();
+        nombre.font = messageText.font;
+        nombre.fontSize = 40f;
+        nombre.fontStyle = FontStyles.Bold;
+        nombre.raycastTarget = false;
+
+        messageText.fontSize = letraDelMensaje;
+        messageText.enableAutoSizing = true;
+        messageText.fontSizeMax = letraDelMensaje;
+        messageText.fontSizeMin = Mathf.Min(letraDelMensaje, 22f);
+        _papel = new PapelDeLaCajaDeDialogo(caja, nombre, messageText);
+        var rtMensaje = messageText.rectTransform;
+        rtMensaje.offsetMax = new Vector2(-(anchoDeLosBotones + 40f), rtMensaje.offsetMax.y);
+        messageText.alignment = TextAlignmentOptions.MidlineLeft;
+
+        fila.anchorMin = new Vector2(1f, 0f);
+        fila.anchorMax = new Vector2(1f, 1f);
+        fila.pivot = new Vector2(1f, 0.5f);
+        fila.sizeDelta = new Vector2(anchoDeLosBotones, -48f);
+        fila.anchoredPosition = new Vector2(-36f, 0f);
+        if (fila.TryGetComponent<HorizontalLayoutGroup>(out var horizontal)) DestroyImmediate(horizontal);
+        if (!fila.TryGetComponent<VerticalLayoutGroup>(out var columna)) columna = fila.gameObject.AddComponent<VerticalLayoutGroup>();
+        columna.childAlignment = TextAnchor.MiddleCenter;
+        columna.spacing = 16f;
+        columna.childControlWidth = false;
+        columna.childControlHeight = false;
+        columna.childForceExpandWidth = false;
+        columna.childForceExpandHeight = false;
+
+        foreach (var etiqueta in new[] { confirmLabel, cancelLabel })
+            if (etiqueta != null) etiqueta.color = PaletaUI.TintaDeTexto;
+    }
+
+    /// Papel dorado el botón con el foco, apagado el otro.
+    void PintarBotones(Button elegido)
+    {
+        foreach (var boton in new[] { confirmButton, cancelButton })
+        {
+            if (boton == null) continue;
+            var imagen = boton.targetGraphic as Image;
+            if (imagen == null) imagen = boton.GetComponent<Image>();
+            if (imagen != null) imagen.color = boton == elegido ? PaletaUI.Oro : PaletaUI.PapelApagado;
+        }
     }
 
     // ── Botones que se ajustan a su texto ─────────────────────────────────────
@@ -186,10 +279,12 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (fila != null)
         {
             Canvas.ForceUpdateCanvases();
-            float espacio = 0f, relleno = 0f;
-            var grupo = fila.GetComponent<HorizontalLayoutGroup>();
-            if (grupo != null) { espacio = grupo.spacing; relleno = grupo.padding.horizontal; }
-            anchoMax = (fila.rect.width - relleno - espacio) * 0.5f;
+            var grupo = fila.GetComponent<HorizontalOrVerticalLayoutGroup>();
+            float relleno = grupo != null ? grupo.padding.horizontal : 0f;
+            // En fila, cada botón cabe en su mitad; en columna, en todo el ancho.
+            anchoMax = grupo is HorizontalLayoutGroup
+                ? (fila.rect.width - relleno - grupo.spacing) * 0.5f
+                : fila.rect.width - relleno;
         }
 
         AjustarBoton(confirmButton, confirmLabel, _anchoBaseConfirmar, _letraBaseConfirmar, anchoMax);
@@ -254,9 +349,10 @@ public class ConfirmationPopupUI : MonoBehaviour
         {
             if (gp.buttonSouth.wasPressedThisFrame)  { ActivateSelected(); return; }
             if (_cancelWithBack && gp.buttonEast.wasPressedThisFrame) { Cancel(); return; }
-            if (gp.dpad.left.wasPressedThisFrame || gp.leftStick.left.wasPressedThisFrame)
-                ToggleSelection();
-            if (gp.dpad.right.wasPressedThisFrame || gp.leftStick.right.wasPressedThisFrame)
+            if (gp.dpad.left.wasPressedThisFrame || gp.leftStick.left.wasPressedThisFrame
+                || gp.dpad.right.wasPressedThisFrame || gp.leftStick.right.wasPressedThisFrame
+                || gp.dpad.up.wasPressedThisFrame || gp.leftStick.up.wasPressedThisFrame
+                || gp.dpad.down.wasPressedThisFrame || gp.leftStick.down.wasPressedThisFrame)
                 ToggleSelection();
         }
         var kb = Keyboard.current;
@@ -264,13 +360,15 @@ public class ConfirmationPopupUI : MonoBehaviour
         {
             if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) { ActivateSelected(); return; }
             if (_cancelWithBack && kb.escapeKey.wasPressedThisFrame) { Cancel(); return; }
-            if (kb.leftArrowKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame || kb.tabKey.wasPressedThisFrame)
+            if (kb.leftArrowKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame
+                || kb.upArrowKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame || kb.tabKey.wasPressedThisFrame)
                 ToggleSelection();
         }
 #else
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) { ActivateSelected(); return; }
         if (_cancelWithBack && Input.GetKeyDown(KeyCode.Escape)) { Cancel(); return; }
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)
+            || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.Tab))
             ToggleSelection();
 #endif
 
@@ -316,6 +414,7 @@ public class ConfirmationPopupUI : MonoBehaviour
     {
         var selectedBtn = confirm ? confirmButton : cancelButton;
         var unselectedBtn = confirm ? cancelButton : confirmButton;
+        PintarBotones(selectedBtn);
 
         // Cambiar de botón suena como en el resto de menús (mando, teclado o ratón).
         // Al abrir (instant) no suena: ahí no ha habido cambio.
@@ -368,6 +467,30 @@ public class ConfirmationPopupUI : MonoBehaviour
         var cb = _onCancel;
         Hide();
         cb?.Invoke();
+    }
+
+    // Dónde va la caja abajo, para devolverla tras enseñarla centrada.
+    private bool _guardadaLaPosicion;
+    private Vector2 _anclaMin, _anclaMax, _pivote, _posicion;
+
+    private void PonerEnElCentro(bool centrado)
+    {
+        var caja = messageText != null ? messageText.transform.parent as RectTransform : null;
+        if (caja == null) return;
+        if (!_guardadaLaPosicion)
+        {
+            _anclaMin = caja.anchorMin; _anclaMax = caja.anchorMax; _pivote = caja.pivot; _posicion = caja.anchoredPosition;
+            _guardadaLaPosicion = true;
+        }
+        if (centrado)
+        {
+            caja.anchorMin = caja.anchorMax = caja.pivot = new Vector2(0.5f, 0.5f);
+            caja.anchoredPosition = Vector2.zero;
+        }
+        else
+        {
+            caja.anchorMin = _anclaMin; caja.anchorMax = _anclaMax; caja.pivot = _pivote; caja.anchoredPosition = _posicion;
+        }
     }
 
     void Hide()

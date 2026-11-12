@@ -19,6 +19,6 @@ MonoBehaviour:
   boton: {fileID: 21300000, guid: 4ed36212bff5425ca241216e5648f355, type: 3}
   fuenteTitulo: {fileID: 11400000, guid: 21a67e0dff06da94d848f1cf0d0074f8, type: 2}
   fuenteTexto: {fileID: 11400000, guid: 812c7b0dc56552d4aaa2319860b0c738, type: 2}
-  colorTexto: {r: 0.96, g: 0.95, b: 1, a: 1}
-  colorTextoSuave: {r: 0.78, g: 0.76, b: 0.9, a: 1}
-  colorResalte: {r: 1, g: 0.83, b: 0.35, a: 1}
+  colorTexto: {r: 0.14, g: 0.12, b: 0.1, a: 1}
+  colorTextoSuave: {r: 0.38, g: 0.3, b: 0.23, a: 1}
+  colorResalte: {r: 0.54, g: 0.35, b: 0, a: 1}

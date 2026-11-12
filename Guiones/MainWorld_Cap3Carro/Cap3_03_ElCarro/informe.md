@@ -1,8 +1,8 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-11 18:11 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
-**0:25,5** de secuencia · 3 frases · 4 planos · 0 efectos · 2 personajes
+**0:25,5** de secuencia · 3 frases · 4 planos · 2 efectos · 2 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97
 
@@ -27,6 +27,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | medio de will · 6,5 s · lente 30° |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:01,6 | will | «Ahí viene. Un carro de noche, con la carga tapada… lo que contó el posadero.» (4,9 s) · pose |
 | 0:06,5 | **@llega** |  |
 | 0:06,5 | plano 2 | conjunto de c1 · 3,5 s · lente 34° |
@@ -35,6 +36,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97
 | 0:18,4 | **@decide** |  |
 | 0:18,4 | plano 4 | primer plano de will · 7,1 s · lente 24° · coste 2: ángulo 2 |
 | 0:18,4 | will | «Ahí dentro van los animales de los aros. Voy a ver adónde los lleva. De lejos, sin que me vea.» (6,1 s) · pose |
+| 0:25,5 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

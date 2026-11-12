@@ -124,7 +124,8 @@ public static class ClimaSobreElJugador
 
         bool libre = _motor.enabled && _motor.PisandoSuelo && Time.timeScale > 0f
                      && (_modos == null || _modos.Top == ActionMode.Default)
-                     && !(PlayerLockService.HasInstance && PlayerLockService.Instance.IsLocked);
+                     && !(PlayerLockService.HasInstance && PlayerLockService.Instance.IsLocked)
+                     && !(global::Core.PlayerInputManager.Instance != null && global::Core.PlayerInputManager.Instance.IsInUIMode);
         if (!libre)
         {
             Soltar();

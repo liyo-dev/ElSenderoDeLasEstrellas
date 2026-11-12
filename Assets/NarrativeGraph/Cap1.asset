@@ -880,9 +880,6 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 3
         duracionMaxima: 240
-        distanciaMinima: 0
-        avisoAlAcercarseKey: 
-        anclaDeVuelta: 
         charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
@@ -928,9 +925,6 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 3
         duracionMaxima: 240
-        distanciaMinima: 0
-        avisoAlAcercarseKey: 
-        anclaDeVuelta: 
         charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}

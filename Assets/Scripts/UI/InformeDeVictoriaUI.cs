@@ -119,6 +119,36 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
         if (panel != null) _posicionDelPanel = panel.anchoredPosition;
         BrilloDelTitulo();
         PrepararMaterialesVivos();
+        PintarBarraDeSintonia();
+    }
+
+    /// La barra de Sintonía, lisa como las del HUD: el sprite de cristal del prefab se estiraba
+    /// (INC-1105). Pista de tinta, lo que ya había en lavanda y lo ganado en oro.
+    private void PintarBarraDeSintonia()
+    {
+        if (sintonia == null || sintonia.barraBase == null || sintonia.barraGanada == null) return;
+        var tex = new Texture2D(4, 4, TextureFormat.RGBA32, false) { name = "BarraLisa", wrapMode = TextureWrapMode.Clamp };
+        var blanco = new Color32[16];
+        for (int i = 0; i < blanco.Length; i++) blanco[i] = new Color32(255, 255, 255, 255);
+        tex.SetPixels32(blanco);
+        tex.Apply();
+        var liso = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
+        foreach (var (img, color) in new[] { (sintonia.barraBase, PaletaUI.Lavanda), (sintonia.barraGanada, PaletaUI.Oro) })
+        {
+            img.sprite = liso;
+            img.type = Image.Type.Filled;
+            img.fillMethod = Image.FillMethod.Horizontal;
+            img.fillOrigin = (int)Image.OriginHorizontal.Left;
+            img.color = color;
+        }
+        var pista = sintonia.barraBase.transform.parent != null ? sintonia.barraBase.transform.parent.GetComponent<Image>() : null;
+        if (pista != null && pista != sintonia.barraGanada && pista.transform != sintonia.raiz
+            && System.Text.RegularExpressions.Regex.IsMatch(pista.name, "barra|pista|fondo|track", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+        {
+            pista.sprite = liso;
+            pista.type = Image.Type.Simple;
+            pista.color = new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.85f);
+        }
     }
 
     private void OnDisable()
@@ -276,16 +306,15 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
     }
 
     /// El personaje al mando en grande y los compañeros de la foto en pequeño: vivos si el estudio
-    /// de retratos está en marcha (el del mando celebra), y si no, el retrato fijo de su ficha.
+    /// de retratos está en marcha, y si no, el retrato fijo de su ficha.
     private void RellenarRetratos(ResultadoDeBatalla r)
     {
         var foto = r.EnLaFoto;
         Slot principal = foto.Count > 0 ? foto[0]
             : PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveSlot : Slot.Will;
 
+        // Solo la cara, sin la reacción de celebrar (INC-1104).
         PonerRetrato(0, principal, retrato, retratoVivo);
-        if (_vivos[0].HasValue && EstudioDeRetratos.Activo != null)
-            EstudioDeRetratos.Activo.Reaccionar(principal, ReaccionDeRetrato.Victoria);
 
         for (int i = 0; i < companeros.Length; i++)
         {

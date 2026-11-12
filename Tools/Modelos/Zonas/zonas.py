@@ -793,14 +793,27 @@ def torre_del_reloj(nombre="TorreDelReloj"):
     return juntar(o, nombre)
 
 def arbol_con_columpio(nombre="ArbolConColumpio"):
-    """Árbol grande de copa redonda con un columpio colgado de una rama."""
+    """Árbol grande de copa redonda con la rama del columpio. El columpio va aparte (columpio_del_arbol), en el
+    mismo sistema de coordenadas, para que en Unity se balancee colgado de la rama."""
     o = [cono(0, 0, 0, 3.4, 0.6, 0.4, "MaderaOscura", 8), cono(0, 0, -0.1, 0.5, 0.95, 0.6, "MaderaOscura", 8),
          viga((0, 0, 2.9), (2.7, 0, 3.6), 0.3, "MaderaOscura"), viga((0, 0, 3.0), (-1.7, 0.6, 4.2), 0.26, "MaderaOscura")]
     for k, (x, y, z, r) in enumerate(((0, 0, 5.4, 2.7), (-2.0, 0.6, 4.8, 1.9), (2.1, -0.5, 5.2, 2.0), (0.4, 1.7, 4.7, 1.7), (3.1, 0.3, 4.6, 1.35), (-0.6, -1.6, 4.8, 1.6))):
         o.append(bola((x, y, z), r, "Hojas" if k % 2 == 0 else "CopaClara", 2))
+    # Argollas donde se atan las cuerdas, a la misma altura (el eje del balanceo).
     for x in (1.55, 2.25):
-        o.append(viga((x, 0, 2.9 + 0.7 * x / 2.7), (x, 0, 0.74), 0.045, "Cuerda"))
-    o.append(caja(1.4, 2.4, -0.22, 0.22, 0.66, 0.75, "Madera", 0.02))
+        o.append(caja(x - 0.06, x + 0.06, -0.06, 0.06, ALTO_DEL_EJE - 0.04, 2.9 + 0.7 * x / 2.7 - 0.1, "Hierro", 0.01))
+    return juntar(o, nombre)
+
+ALTO_DEL_EJE = 3.22   # altura (m) de la que cuelgan las cuerdas: justo bajo la rama en las dos argollas
+ALTO_DEL_ASIENTO = 0.55
+
+def columpio_del_arbol(nombre="ColumpioDelArbol"):
+    """Cuerdas y tabla del columpio, en el sitio del árbol. Cuelgan de y = 0, z = ALTO_DEL_EJE (el eje del
+    balanceo va a lo largo de X); la tabla queda con su cara de arriba a ALTO_DEL_ASIENTO del suelo."""
+    o = []
+    for x in (1.55, 2.25):
+        o.append(viga((x, 0, ALTO_DEL_EJE), (x, 0, ALTO_DEL_ASIENTO - 0.02), 0.045, "Cuerda"))
+    o.append(caja(1.4, 2.4, -0.22, 0.22, ALTO_DEL_ASIENTO - 0.09, ALTO_DEL_ASIENTO, "Madera", 0.02))
     return juntar(o, nombre)
 
 # ── Fotos de maqueta ────────────────────────────────────────────────────────────────────────
@@ -1277,7 +1290,7 @@ for nombre, opciones in VARIANTES_DE_CIUDAD:
 for nombre, opciones in (("PuestoDeMercado_Fruta", dict(toldo="ToldoRojo", genero="Flor")), ("PuestoDeMercado_Verdura", dict(toldo="ToldoVerde", genero="Hojas")),
                          ("PuestoDeMercado_Pan", dict(toldo="ToldoAmarillo", genero="TejaAmarilla")), ("PuestoDeMercado_Pescado", dict(toldo="Pizarra", genero="Pescado"))):
     limpiar(); exportar(puesto(nombre, **opciones))
-for pieza in (faro, lonja, secadero, torre_del_reloj, arbol_con_columpio, rellano, mirador, fuente, arbol_de_plaza, rosa_de_los_vientos, banderines, paseo):
+for pieza in (faro, lonja, secadero, torre_del_reloj, arbol_con_columpio, columpio_del_arbol, rellano, mirador, fuente, arbol_de_plaza, rosa_de_los_vientos, banderines, paseo):
     limpiar(); exportar(pieza())
 for nombre, opciones in (("TiendaDeLaAldea_Pescado", dict(toldo="ToldoRojo", teja="TejaTurquesa", zocalo="Zocalo", genero="Pescado")),
                          ("TiendaDeLaAldea_Fruta", dict(toldo="ToldoAmarillo", teja="TejaCoral", zocalo="ZocaloCoral", genero="Flor")),

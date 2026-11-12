@@ -14,7 +14,7 @@
 GUION Chuche_03_UnaCandidata
 ESCENA Chuchelandia
 SECUENCIA Assets/_SEQUENCES/SEQ_Chuche_Candidata.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.35 mismo_hablante=0.3
 
 REPARTO

@@ -4,7 +4,7 @@ GUION Cap3_04_ElClaro
 ESCENA MainWorld
 ZONA Cap3Claro -212 -129 24
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_04_ElClaro.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.4 mismo_hablante=0.25
 
 REPARTO

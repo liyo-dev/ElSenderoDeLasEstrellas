@@ -549,6 +549,8 @@ espera 1.2
 
 # ── 2. EL RÍO ─────────────────────────────────────────────────────────────────────────────
 @rio
+# Del pueblo al río, fundido corto a negro: la mezcla de cámara cruzaba volando el pueblo (INC-1083).
+efecto ScreenFadeBeat fadeIn=true color=000000FF duration=0.4 waitForEnd=true
 ambiente AMBIENTE sonar=false fundido=3
 ambiente AMBIENTE_RIO eventKey=Ambience_Prologo_Rio volumen=0.55
 hora Sunset transitionSeconds=6
@@ -556,7 +558,8 @@ archimago en rio_a_ini mirando rio_a_fin
 liora en rio_l_ini mirando rio_l_fin
 efecto SolDeFondoBeat colocar=true ladoDeLaCamara=270 elevacion=7 segundos=2 enCuadro=true posicionX=0.72 alturaDeSalida=0.88 alturaDePuesta=0.42 puesta=19
 # Travelling de frente: de lado, la espalda del maestro tapaba a Liora mientras hablaba.
-plano sigue liora lado=frente distancia=4.5 mezcla=1.2
+plano sigue liora lado=frente distancia=4.5
+efecto ScreenFadeBeat fadeIn=false duration=0.5 waitForEnd=false
 espera 1.0
 @rio_paseo
 archimago anda a rio_a_fin ritmo=paseo llega_mirando=liora sin_esperar
@@ -737,7 +740,39 @@ archimago gesto MagicLeft
 +0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
 +0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
 +0.85 mago gesto TakeDamage
-espera 1.8
+espera 1.2
+
+# El intercambio (INC-1084): el Mago vuelve con una ráfaga, el Archimago la esquiva por el aire y
+# contesta desde arriba; el Mago la para con su escudo, que revienta. Planos cortos y cada vez más
+# rápidos hasta el choque.
+@intercambio
+mago desliza a duelo_m dura=0.4 mirando=archimago
+plano medio mago lado=frente altura=1.0 altura_foco=1.1 lente=34 mano=0.35
+mago gesto MagicRight
++0.15 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.45 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.75 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.2 sacudida 0.25 0.9
+espera 0.55
+plano conjunto archimago lado=der altura=0.5 altura_foco=1.8 lente=42 mano=0.35
+efecto SaltoBeat actorId=archimago altura=2.6 desplazamiento=2.2 haciaElLado=true subida=0.32 sostener=0.5 caida=0.4
++0.05 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=archimago offset=0,0.2,0 lifetime=1.4
++0.05 sonido Prologo_Despegue en=archimago volume=0.7
++0.3 archimago gesto MagicLeft
++0.4 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
++0.4 destello BFB3FFFF 0.10
+espera 0.9
+plano medio mago lado=frente altura=0.9 altura_foco=1.15 lente=30 mano=0.4
++0.05 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
++0.05 mago gesto Defend_NoWeapon
++0.45 sonido Prologo_EscudoBloquea en=mago
++0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" en=mago offset=0,1.2,0 lifetime=1.2
++0.7 sonido Prologo_ImpactoHechizo en=mago
++0.7 destello FFFFFFFF 0.14
++0.7 sacudida 0.55 0.6
++0.75 mago desliza a mago_retrocede dura=0.25 seco mirando=archimago
+espera 1.1
+archimago desliza a duelo_a dura=0.35 mirando=mago
 @choque
 plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.1 lente=38 mano=0.3
 mago gesto MagicSpecial
@@ -880,6 +915,8 @@ plano primer archimago lado=frente altura=1.05 altura_foco=1.15 lente=32 zoom=14
 efecto LineasDeConcentracionBeat mostrar=false
 
 # Con los brazos en alto, abre los ojos y mira a cámara, triste, al despedirse de Liora (INC-981).
+# La despedida de Liora es su voz, no el conjuro: sin eco (INC-1086).
+efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
 archimago dice PROLOGO_PLEGARIA_06 cara=triste
 espera 0.35
 
@@ -910,6 +947,7 @@ espera 1.0
 # El grito: los dos sostienen su hechizo en alto, el orbe sobre el Archimago y el agujero sobre
 # el Mago (INC-941).
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
+efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
 +0.3 sacudida 0.45 2.0
@@ -926,11 +964,12 @@ espera 3.6
 # El choque: los dos hechizos salen al encuentro y empujan uno contra otro, con cortes cada vez
 # más rápidos, hasta que estallan (el estallido va en el pico de la música).
 @choque_final
-desde @choque_final-1.6 sonido SFX_Prologo_LuchaFinal volume=0.9
+# Los SFX del choque van por debajo de la música, que es la que sube hasta el estallido (INC-1085).
+desde @choque_final-1.6 sonido SFX_Prologo_LuchaFinal volume=0.55
 plano general archimago mago desde=cam_choque altura=1.6 mira=foco_choque lente=52
 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA efectoBRegistrado=CARGA_ESFERA puntoDeEncuentro=encuentro_hechizos fraccionDeViaje=0.4 duracionCrecimiento=3.4 duracionMezcla=0 entregarBlanco=false crecimientoA=2.4 crecimientoB=1.2 esperar=false
-& sonido Prologo_HechizoArchimago
-& sonido Prologo_BolaDeFuego
+& sonido Prologo_HechizoArchimago volume=0.6
+& sonido Prologo_BolaDeFuego volume=0.6
 +1.3 sacudida 0.5 2.1
 +1.2 efecto LineasDeConcentracionBeat mostrar=true duracion=2.2
 # Los dos hechizos se ven salir, encontrarse y empujarse en el aire: más cerca del choque y sin

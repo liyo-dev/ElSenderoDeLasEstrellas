@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_03_LaCampana
   duracion: 11.245
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 59de2c0a82d01762776521dd5105f435"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 d6a733d0a64e5757d71700236fe26dca"
   actores:
   - id: Player
     alias: will
@@ -302,7 +302,19 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  efectos: []
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705391
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 11.245
+    beat:
+      rid: 6540294555676705392
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -318,4 +330,20 @@ MonoBehaviour:
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6540294555676705391
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705392
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

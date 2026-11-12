@@ -3,7 +3,7 @@ GUION Cap4_07_LaManzana
 ESCENA MainWorld
 ZONA Cap4Golem -104 60 24
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_07_LaManzana.asset
-TEXTO bocadillo
+TEXTO subtitulo
 RITMO entre_frases=0.4 mismo_hablante=0.25
 
 REPARTO

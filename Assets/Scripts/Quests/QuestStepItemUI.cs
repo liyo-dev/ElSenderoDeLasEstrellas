@@ -11,6 +11,15 @@ public class QuestStepItemUI : MonoBehaviour
     [SerializeField] private Color colorPending = Color.white;
     [SerializeField] private Color colorDone = Color.white;
 
+    // Fila de papel claro con el texto en tinta; el icono del estado va suelto, sin recuadro.
+    void Awake()
+    {
+        if (TryGetComponent<Image>(out var fila)) PiezasDeUI.VestirFicha(fila, PaletaUI.PapelClaro);
+        if (icon != null && icon.transform.parent != transform && icon.transform.parent.TryGetComponent<Image>(out var recuadro))
+            recuadro.color = Color.clear;
+        if (label) label.color = PaletaUI.TintaDeTexto;
+    }
+
     public void Bind(QuestStep step)
     {
         if (label) label.text = step?.description ?? "";

@@ -1,8 +1,8 @@
 # Parte de horneado: Chuche_04_ElVestidor
 
-2026-11-11 18:12 · guion `Assets/_SEQUENCES/Guiones/Chuche_04_ElVestidor.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Chuche_04_ElVestidor.guion.txt`
 
-**0:45,0** de secuencia · 11 frases · 9 planos · 11 efectos · 4 personajes
+**0:45,0** de secuencia · 11 frases · 9 planos · 13 efectos · 4 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93 · condesa 1,55/ojos 1,17
 
@@ -13,7 +13,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 
 - línea 20: 'Player' no tiene punto de aparición en Chuchelandia; necesita un «en» al principio.
 - línea 72: estela anda a p_fuera ritmo=paseo llega_mirando=will: no se llega del todo a (102,4, 37,0) por el NavMesh
-- línea 40: & plano conjunto will liam p_puerta: algo del decorado se mete delante y tapa un 13% del cuadro. Prueba lado= o desde=.
+- línea 40: & plano conjunto will liam p_puerta: algo del decorado se mete delante y tapa un 15% del cuadro. Prueba lado= o desde=.
 - línea 67: plano conjunto will liam p_fuera rumbo=270 distancia=5.5: algo del decorado se mete delante y tapa un 17% del cuadro. Prueba lado= o desde=.
 - No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.
 
@@ -28,7 +28,8 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
-| 0:00,0 | plano 1 | conjunto de will y liam · 9,1 s · lente 34° · coste 954: estorbo 563, cara 298, ángulo 86 |
+| 0:00,0 | plano 1 | conjunto de will y liam · 9,1 s · lente 34° · coste 886: estorbo 624, cara 187, ángulo 68 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Señal: CHUCHE_ATUENDO_CANDIDATA |
 | 0:01,2 | **@voces** |  |
 | 0:01,2 | condesa | «¡Levante los brazos, alteza!» (2,1 s) |
@@ -40,29 +41,30 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 0:10,5 | condesa | «¡El lazo! ¡Traed el lazo grande!» (3,0 s) |
 | 0:13,8 | estela | «Como me pongáis ese lazo…» (2,5 s) |
 | 0:17,7 | efecto | SFX: Cartoon_Rope_Swirl(4) |
-| 0:18,6 | plano 3 | medio de liam · 2,4 s · lente 30° · coste 15: ángulo 15 |
+| 0:18,6 | plano 3 | medio de liam · 2,4 s · lente 30° · coste 24: ángulo 24 |
 | 0:18,6 | liam | «Le han puesto el lazo.» (1,9 s) |
 | 0:21,0 | **@sale** |  |
 | 0:21,0 | plano 4 | conjunto de will y liam · 3,5 s · lente 34° · coste 819: estorbo 676, cara 79, ángulo 59 |
 | 0:21,0 | efecto | SFX: Chimes_Harp-012 |
 | 0:21,0 | efecto | VFX: Shine_pink en M_Vestidor_Puerta |
 | 0:21,0 | efecto | VFX: Sparkle_ellow_flying en Actor_Estela |
-| 0:24,5 | plano 5 | medio de estela · 1,0 s · lente 30° · coste 16: ángulo 8 |
+| 0:24,5 | plano 5 | medio de estela · 1,0 s · lente 30° · coste 14: ángulo 8 |
 | 0:25,5 | **@aguanta** |  |
-| 0:25,5 | plano 6 | medio de will · 5,6 s · lente 30° · coste 325: cara 250, ángulo 69 |
+| 0:25,5 | plano 6 | medio de will · 5,6 s · lente 30° · coste 867: cara 787, ángulo 74 |
 | 0:28,5 | efecto | SFX: Cartoon_Plastic_Boing |
 | 0:28,5 | efecto | Salto: Player 0,4 m |
 | 0:28,5 | efecto | SFX: Final_Will_Risa |
 | 0:31,1 | **@rosa** |  |
-| 0:31,1 | plano 7 | medio de liam · 2,0 s · lente 30° · coste 285: cara 212, ángulo 65 |
+| 0:31,1 | plano 7 | medio de liam · 2,0 s · lente 30° · coste 319: cara 250, ángulo 69 |
 | 0:31,1 | liam | «Estás muy rosa.» (2,0 s) |
 | 0:33,1 | plano 8 | sobre el hombro de liam a estela · 2,7 s · lente 24° · coste 6: limpio |
 | 0:33,1 | estela | «Una palabra más y os prendo fuego.» (2,7 s) |
-| 0:35,8 | plano 9 | conjunto de estela y will y liam · 9,2 s · lente 34° · coste 208: cara 130, ángulo 72 |
+| 0:35,8 | plano 9 | conjunto de estela y will y liam · 9,2 s · lente 34° · coste 828: estorbo 438, cara 281, ángulo 104 |
 | 0:35,8 | efecto | VFX: VFX_Hechizo_CorazonEstelar_Impacto en Actor_Estela |
 | 0:35,8 | efecto | SFX: Xylophone-011 |
 | 0:38,1 | estela | «Bueno. Os lleno de purpurina.» (3,1 s) |
 | 0:41,7 | estela | «Pero con mucha rabia.» (2,0 s) |
+| 0:45,0 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

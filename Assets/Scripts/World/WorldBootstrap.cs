@@ -21,6 +21,17 @@ public class WorldBootstrap : MonoBehaviour
         { "Bedroom", "WillHouse" },
     };
 
+    // Mundo al que pertenece cada escena de interior de AnchorHomeScene.
+    private static readonly System.Collections.Generic.Dictionary<string, string> InteriorDeMundo =
+        new System.Collections.Generic.Dictionary<string, string>
+    {
+        { "WillHouse", "MainWorld" },
+    };
+
+    [Tooltip("Ancla donde aparece el jugador al dar Play en el editor directamente en esta escena " +
+             "cuando el ancla de la partida es de otro mundo. Vacía: la primera ancla de la escena por orden de id.")]
+    [SerializeField] private string anclaAlDarPlayAqui;
+
     // Anchors cuyo arranque normal desemboca en una cinemática narrativa que se encarga ELLA
     // MISMA de revelar la pantalla (ej. "Bedroom" → la secuencia del prólogo, disparada por el
     // grafo con la señal PROLOGUE_DREAM_START). Si el anchor está aquí, el fade final de este
@@ -218,6 +229,9 @@ public class WorldBootstrap : MonoBehaviour
         // 2) Flujo normal: el preset de la partida ya lo ha preparado Partida (al arrancar o al cargar)
         // Simplemente aplicar el preset al jugador sin recargar el save
         string anchorId = Partida.AnclaDeInicio;
+#if UNITY_EDITOR
+        anchorId = AnclaDeEstaEscenaSiLaPartidaEsDeOtroMundo(anchorId);
+#endif
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[WorldBootstrap] 📍 Modo NORMAL - Anchor desde profile: '{anchorId}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
@@ -306,6 +320,37 @@ public class WorldBootstrap : MonoBehaviour
             yield return null;
         }
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Play en el editor directamente en una escena aparte (Chuchelandia, Parque…) con una partida
+    /// de otro mundo: el ancla guardada no está y se acabaría cargando la casa de Will encima.
+    /// Entonces se aparece en un ancla de esta escena. La historia sigue la de la partida: para
+    /// jugar el nivel desde su principio, probar desde su grafo.
+    /// </summary>
+    private string AnclaDeEstaEscenaSiLaPartidaEsDeOtroMundo(string anchorId)
+    {
+        if (!string.IsNullOrEmpty(anchorId) && AnchorRegistry.Get(anchorId) != null) return anchorId;
+        var escena = gameObject.scene;
+        if (SceneManager.GetActiveScene() != escena) return anchorId;
+        if (!string.IsNullOrEmpty(anchorId)
+            && AnchorHomeScene.TryGetValue(anchorId, out var interior)
+            && InteriorDeMundo.TryGetValue(interior, out var mundo)
+            && mundo == escena.name)
+            return anchorId;
+
+        string elegida = null;
+        foreach (var par in AnchorRegistry.All)
+        {
+            if (par.Value == null || par.Value.gameObject.scene != escena) continue;
+            if (par.Key == anclaAlDarPlayAqui) { elegida = par.Key; break; }
+            if (elegida == null || string.CompareOrdinal(par.Key, elegida) < 0) elegida = par.Key;
+        }
+        if (elegida == null) return anchorId;
+        Debug.Log($"[WorldBootstrap] Play directo en '{escena.name}': el ancla de la partida ('{anchorId}') es de otro mundo; se aparece en '{elegida}'.");
+        return elegida;
+    }
+#endif
 
     private System.Collections.IEnumerator EnsureAnchorSceneLoaded(string anchorId)
     {

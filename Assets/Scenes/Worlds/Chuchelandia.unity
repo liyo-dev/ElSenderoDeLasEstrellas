@@ -11290,6 +11290,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -22175,6 +22176,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -25515,80 +25517,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f029b47704532c4f8d596b666a6a57f, type: 3}
---- !u!1001 &269056116
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1150733773}
-    m_Modifications:
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.2500019
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3254085221104069255, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-      propertyPath: m_Name
-      value: SantuarioDeGuardado
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
---- !u!4 &269056117 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1454099787155061590, guid: 5eccae605b8332743b8c9ea4b1a5bb5c, type: 3}
-  m_PrefabInstance: {fileID: 269056116}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &269096302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32523,6 +32451,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -46896,6 +46825,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -58388,6 +58318,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -59522,7 +59453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2052766923886183289, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2356093960681784762, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
@@ -61488,6 +61419,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -69924,6 +69856,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -76165,6 +76098,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -93363,6 +93297,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -97379,6 +97314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65d3d431d187054dba6ab3981376743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldBootstrap
+  anclaAlDarPlayAqui: 
   bootCinematicTimeout: 5
 --- !u!114 &1074284375
 MonoBehaviour:
@@ -98070,6 +98006,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -98491,6 +98428,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -106282,7 +106220,7 @@ Transform:
   m_Children:
   - {fileID: 1976148357}
   - {fileID: 2045599452}
-  - {fileID: 269056117}
+  - {fileID: 1777441699}
   m_Father: {fileID: 581314830}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1150733774
@@ -106340,6 +106278,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -110377,6 +110316,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -120417,6 +120357,10 @@ MonoBehaviour:
   snowChancePerCheck: 0.08
   windChancePerCheck: 0.15
   mistChancePerCheck: 0.12
+  amortiguarEnInterior: 1
+  volumenEnInterior: 0.35
+  corteEnInteriorHz: 650
+  fundidoDeInterior: 0.8
   cloudsBuildingUpSfxKey: 
   rainStartedSfxKey: 
   rainLoopVolume: 0.3
@@ -144211,6 +144155,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -153761,6 +153706,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -162102,6 +162048,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1339711780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1777441698
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1150733773}
+    m_Modifications:
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2500019
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249927669608712262, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+      propertyPath: m_Name
+      value: FarolDeEstrellas
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+--- !u!4 &1777441699 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 118282486876589342, guid: 7804a6290137a1a4b8e32332c52800b2, type: 3}
+  m_PrefabInstance: {fileID: 1777441698}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1777550531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4402766620531244140, guid: 217981af3918f34438d3bfae5697b2e1, type: 3}
@@ -162484,6 +162504,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -171877,6 +171898,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -174655,6 +174677,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -180385,6 +180408,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 

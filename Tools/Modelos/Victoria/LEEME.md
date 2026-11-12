@@ -14,3 +14,9 @@ no está en el juego.**
 
 Sin comprobar: la falda y el delantal al andar, y el moño con el color de pelo del juego (en Unity tiene que
 llevar el material de su pelo).
+
+## Cambio del 11 nov (noche)
+En el juego, los dos cabos amarillos de la cinta de medir se despegaban del delantal y colgaban por debajo del
+peto (Raúl: «eso que sobresale amarillo»). Ahora van pegados a la superficie del peto, terminan encima de la
+cinta del delantal y se pesan como el peto (copiados del cuerpo), así se mueven con él. La previa nueva es con los
+brazos bajados y la cabeza sin pelo. Lo anterior, en `Versiones antiguas/Cinta de medir despegada (2026-11-11)/`.

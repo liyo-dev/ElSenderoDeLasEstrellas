@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 /// Casas y piezas propias de cada zona (hechas en Tools/Modelos/Zonas; prefabs en Assets/Art/World/Zonas/Prefabs):
 /// el barrio sobre el agua de la aldea del mar, el faro del cabo, las hileras de casas de ciudad de la capital
-/// y el árbol del columpio del pueblo inicial.
+/// y el pueblo inicial (árbol del columpio, huerto ordenado, mirador y menos vallas y carros).
 public static partial class VestidoDelMundo
 {
     private const string PrefabsDeZonas = "Assets/Art/World/Zonas/Prefabs/";
@@ -231,27 +231,282 @@ public static partial class VestidoDelMundo
     // ── Pueblo inicial ───────────────────────────────────────────────────────────────────────
 
     private const string GrupoDelPuebloInicial = "Pueblo inicial — Will — Demo 09";
-    private const string MotivoMina = "bocamina con vagonetas y raíles: no es de un pueblo de campo; en su sitio va el árbol del columpio";
+    private const string MotivoMina = "bocamina con vagonetas y raíles: no es de un pueblo de campo";
+    private const string MotivoVallaDeMas = "valla del pueblo inicial que no cierra un huerto ni un cercado (el pueblo estaba cargado de vallas)";
+    private const string MotivoCarroDeMas = "carro o puesto suelto del pueblo inicial (se quedan los del mercado)";
+    private const string MotivoSitioDelColumpio = "estorbaba en el sitio del árbol del columpio, junto a casa de Will";
+    private const string MotivoSitioDelHuerto = "estorbaba en el sitio del huerto ordenado";
 
-    /// Aligera el pueblo inicial: retira la bocamina (vagonetas y raíles) y planta en su sitio el árbol del columpio.
-    private static void ArbolDelPuebloInicial(Obra o)
+    /// Casa de Will en el pueblo inicial: al lado va el árbol del columpio y el huerto.
+    private const string CasaDeWill = "BuildingAT01";
+    private static readonly Vector2 CentroDelPuebloInicial = new(0f, -130f);
+    /// Las vallas que no cierran cultivos dentro de este radio se quitan; las de fuera dibujan el borde del pueblo.
+    private const float RadioDeVallasDeMas = 30f;
+    /// Lo que se considera cultivo o cercado: una valla a menos de 5 m de algo así se queda.
+    private static readonly string[] CosasDeCampo = { "Farm", "Vegetables", "Hive", "Scarecrow", "Hay", "Henhouse", "Trough" };
+    /// Carros y puestos sueltos que sobran (la carreta del patio de Will, el puesto pegado a la fuente y el carro
+    /// de la calle de levante). Los del mercado, junto a Tomasa y los oficios, se quedan.
+    private static readonly string[] CarrosDeMas = { "Cart10 (1)", "Cart08", "Cart03" };
+    /// Bancal de muestra que se copia para el huerto ordenado (con sus hortalizas).
+    private const string BancalDeMuestra = "Farm01_b01 (1)";
+    private const string EspantapajarosDeMuestra = "Scarecrow01_a01 (3)";
+    /// Banco con respaldo del pack que ya sirve para sentarse.
+    private const string BancoUsable = FK + "Props/Furniture/Chair/Chair02_d01.prefab";
+    private static readonly Vector2 MiradorDelPuebloInicial = new(13.5f, -158.5f);
+
+    /// El pueblo inicial más ligero y con sitios para estar: fuera la bocamina, la mitad de las vallas y los carros
+    /// sueltos; el árbol del columpio (se puede subir) junto a casa de Will, un huerto ordenado en bancales y un
+    /// mirador con bancos al sur. Va después de cambiar las casas (CasasDelPuebloInicial). Ver INC-1076.
+    private static void PuebloInicialConSitios(Obra o)
     {
         Scene escena = o.Raiz.gameObject.scene;
         Transform pueblo = BuscarGrupo(escena, GrupoDelPuebloInicial);
-        Retirar(escena, pueblo != null ? pueblo.Find("BuildingAT35") : null, MotivoMina, o);
-        Poner(o, Grupo(Grupo(o.Raiz, "Pueblo inicial"), "Árbol del columpio"), new Pieza
+        if (pueblo == null) return;
+        Retirar(escena, pueblo.Find("BuildingAT35"), MotivoMina, o);
+        AligerarElPueblo(o, escena, pueblo);
+        Transform grupo = Grupo(o.Raiz, "Pueblo inicial");
+        List<(Vector3 pos, string nombre)> puntos = PuntosDeJuego(escena);
+        var reservado = new List<(Vector2 centro, float radio)>();
+        ArbolJuntoACasaDeWill(o, escena, pueblo, Grupo(grupo, "Árbol del columpio"), puntos, reservado);
+        HuertoOrdenado(o, escena, pueblo, Grupo(grupo, "Huerto ordenado"), puntos, reservado);
+        MiradorConBancos(o, Grupo(grupo, "Mirador del sur"));
+    }
+
+    /// Piezas sueltas del pueblo (sin casas ni puestos, sin scripts) que siguen en la escena.
+    private static List<Transform> SueltasDelPueblo(Transform pueblo)
+    {
+        var r = new List<Transform>();
+        foreach (Transform t in pueblo)
         {
-            Prefab = ArbolDelColumpio, Nombre = "Árbol del columpio", Pos = new Vector2(13.5f, -158.5f), Rumbo = 30f,
-            Apoyo = Apoyo.Tronco, RadioTronco = 0.7f, IgnorarZonas = true, PermitirCamino = true, PermitirSolapePropio = true,
-            DesnivelMax = 1.5f, Holgura = 0f,
-        });
-        Transform rincon = Grupo(Grupo(o.Raiz, "Pueblo inicial"), "Rincón del columpio");
-        PonFijo(o, rincon, Banco, "Banco del columpio", new Vector2(9.6f, -160.6f), 60f, solapePropio: true);
-        PonFijo(o, rincon, Banco, "Banco del columpio", new Vector2(16.9f, -161.6f), 300f, solapePropio: true);
+            if (!t.gameObject.activeSelf || t.name.StartsWith("BuildingAT")) continue;
+            bool conScript = false;
+            foreach (MonoBehaviour mb in t.GetComponentsInChildren<MonoBehaviour>(true))
+                if (mb != null) { conScript = true; break; }
+            if (!conScript) r.Add(t);
+        }
+        return r;
+    }
+
+    private static Vector2 Planta(Transform t) => new(t.position.x, t.position.z);
+
+    private static void AligerarElPueblo(Obra o, Scene escena, Transform pueblo)
+    {
+        List<Transform> sueltas = SueltasDelPueblo(pueblo);
+        var campo = new List<Vector2>();
+        foreach (Transform t in sueltas)
+            foreach (string c in CosasDeCampo)
+                if (t.name.StartsWith(c)) { campo.Add(Planta(t)); break; }
+        foreach (Transform t in sueltas)
+        {
+            if (System.Array.IndexOf(CarrosDeMas, t.name) >= 0) { Retirar(escena, t, MotivoCarroDeMas, o); continue; }
+            if (!t.name.StartsWith("Railing")) continue;
+            Vector2 p = Planta(t);
+            if (Vector2.Distance(p, CentroDelPuebloInicial) >= RadioDeVallasDeMas) continue;
+            bool cierraAlgo = false;
+            foreach (Vector2 c in campo)
+                if (Vector2.Distance(p, c) < 5f) { cierraAlgo = true; break; }
+            if (!cierraAlgo) Retirar(escena, t, MotivoVallaDeMas, o);
+        }
+    }
+
+    /// Distancia de un punto al rectángulo del tejado de una casa (0 si cae dentro).
+    private static float DistanciaAlTejado(Vector2 p, Transform casa, float rumbo, Vector2 planta)
+    {
+        Vector3 q = Quaternion.Inverse(Quaternion.Euler(0f, rumbo, 0f)) * (new Vector3(p.x, 0f, p.y) - new Vector3(casa.position.x, 0f, casa.position.z));
+        float dx = Mathf.Max(0f, Mathf.Abs(q.x) - (planta.x * 0.5f + 0.6f));
+        float dz = Mathf.Max(0f, Mathf.Abs(q.z) - (planta.y * 0.5f + 0.6f));
+        return Mathf.Sqrt(dx * dx + dz * dz);
+    }
+
+    /// ¿Hay sitio para algo de «radio» en p: lejos de las casas nuevas, de lo que se queda del pack (puestos), de
+    /// los puntos de juego y de lo ya reservado?
+    private static bool HaySitio(Vector2 p, float radio, Transform pueblo, List<(Vector3 pos, string nombre)> puntos, List<(Vector2 centro, float radio)> reservado)
+    {
+        foreach (var (casa, rumbo, planta) in CasasDeCampoPuestas)
+            if (casa != null && DistanciaAlTejado(p, casa, rumbo, planta) < radio) return false;
+        foreach (Transform t in pueblo)
+            if (t.gameObject.activeSelf && t.name.StartsWith("BuildingAT") && Vector2.Distance(Planta(t), p) < radio + 4f) return false;
+        foreach (var (pos, _) in puntos)
+            if (Vector2.Distance(new Vector2(pos.x, pos.z), p) < radio + 1.5f) return false;
+        foreach (var (c, r) in reservado)
+            if (Vector2.Distance(c, p) < radio + r) return false;
+        return true;
+    }
+
+    /// Cuánto estorba lo suelto del pueblo en un círculo (área de lo que hay dentro): se elige el sitio que menos
+    /// obliga a quitar.
+    private static float Estorbo(List<Transform> sueltas, Vector2 c, float radio)
+    {
+        float suma = 0f;
+        foreach (Transform t in sueltas)
+            if (Vector2.Distance(Planta(t), c) < radio) suma += 1f;
+        return suma;
+    }
+
+    private static int RetirarEnCirculo(Obra o, Scene escena, List<Transform> sueltas, Vector2 c, float radio, string motivo)
+    {
+        int n = 0;
+        for (int i = sueltas.Count - 1; i >= 0; i--)
+        {
+            if (Vector2.Distance(Planta(sueltas[i]), c) >= radio) continue;
+            Retirar(escena, sueltas[i], motivo, o);
+            sueltas.RemoveAt(i);
+            n++;
+        }
+        return n;
+    }
+
+    /// El árbol del columpio en un hueco junto a casa de Will (a un lado o detrás, nunca delante de la puerta),
+    /// con el columpio mirando hacia fuera de la casa.
+    private static void ArbolJuntoACasaDeWill(Obra o, Scene escena, Transform pueblo, Transform grupo,
+        List<(Vector3 pos, string nombre)> puntos, List<(Vector2 centro, float radio)> reservado)
+    {
+        Transform casaDeWill = null;
+        float rumboDeWill = 0f;
+        foreach (var (casa, rumbo, _) in CasasDeCampoPuestas)
+            if (casa != null && casa.name.StartsWith(CasaDeWill + " ")) { casaDeWill = casa; rumboDeWill = rumbo; }
+        if (casaDeWill == null)
+        {
+            Transform vieja = pueblo.Find(CasaDeWill);
+            if (vieja == null) { o.Informe.Add("  · Árbol del columpio: no encuentro la casa de Will."); return; }
+            casaDeWill = vieja;
+        }
+        GameObject modelo = CargarPrefab(o, ArbolDelColumpio);
+        NPCWorldPoint asientoDelModelo = modelo != null ? modelo.GetComponentInChildren<NPCWorldPoint>(true) : null;
+        if (asientoDelModelo == null || asientoDelModelo.interactionPoint == null)
+        {
+            o.Informe.Add("  · Árbol del columpio: el prefab no tiene asiento (ejecuta Zonas: preparar las casas nuevas).");
+            return;
+        }
+        Vector3 asientoLocal = modelo.transform.InverseTransformPoint(asientoDelModelo.interactionPoint.position);
+        Vector3 frenteLocal = modelo.transform.InverseTransformDirection(asientoDelModelo.interactionPoint.forward);
+        float rumboDelFrente = Rumbo(new Vector2(frenteLocal.x, frenteLocal.z));
+
+        var c = Planta(casaDeWill);
+        float r = rumboDeWill * Mathf.Deg2Rad;
+        var puerta = -new Vector2(Mathf.Sin(r), Mathf.Cos(r));
+        List<Transform> sueltas = SueltasDelPueblo(pueblo);
+        float mejor = float.MaxValue;
+        Vector2 tronco = default, asiento = default;
+        float rumboDelArbol = 0f;
+        for (float d = 7f; d <= 11f; d += 1f)
+            for (int k = 0; k < 24; k++)
+            {
+                float a = k * 15f * Mathf.Deg2Rad;
+                var dir = new Vector2(Mathf.Sin(a), Mathf.Cos(a));
+                if (Vector2.Dot(dir, puerta) > 0.4f) continue;
+                Vector2 p = c + dir * d;
+                // El columpio mira hacia fuera de la casa.
+                float rumbo = Rumbo(dir) - rumboDelFrente;
+                Vector3 s3 = Quaternion.Euler(0f, rumbo, 0f) * asientoLocal;
+                var s = p + new Vector2(s3.x, s3.z);
+                if (!HaySitio(p, 3.2f, pueblo, puntos, reservado) || !HaySitio(s, 2.4f, pueblo, puntos, reservado)) continue;
+                float coste = Estorbo(sueltas, p, 3f) + Estorbo(sueltas, s, 2.4f) + 0.4f * d;
+                if (coste < mejor) { mejor = coste; tronco = p; asiento = s; rumboDelArbol = rumbo; }
+            }
+        if (mejor == float.MaxValue) { o.Informe.Add("  · Árbol del columpio: no hay hueco junto a casa de Will."); return; }
+
+        int quitadas = RetirarEnCirculo(o, escena, sueltas, tronco, 3f, MotivoSitioDelColumpio)
+                     + RetirarEnCirculo(o, escena, sueltas, asiento, 2.4f, MotivoSitioDelColumpio);
+        Physics.SyncTransforms();
+        GameObject arbol = PonExacto(o, grupo, ArbolDelColumpio, "Árbol del columpio",
+            new Vector3(tronco.x, o.Suelo.Altura(tronco.x, tronco.y) - 0.05f, tronco.y), rumboDelArbol);
+        if (arbol == null) return;
+        reservado.Add((tronco, 3.2f));
+        reservado.Add((asiento, 2.4f));
+        // Flores alrededor del tronco, por el lado contrario al columpio.
+        for (int i = 0; i < 5; i++)
+        {
+            float a = (rumboDelArbol + 120f + i * 30f) * Mathf.Deg2Rad;
+            PonFijo(o, grupo, Flor, "Flores del columpio", tronco + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 1.6f, i * 50f, sinObstaculo: true, solapePropio: true);
+        }
+        o.Informe.Add($"  Árbol del columpio: junto a casa de Will, tronco en ({tronco.x:0.0}, {tronco.y:0.0}), asiento en ({asiento.x:0.0}, {asiento.y:0.0}); {quitadas} piezas sueltas retiradas de su sitio.");
+    }
+
+    /// Huerto ordenado: dos bancales iguales en fila, alineados con la casa de Will, y un espantapájaros al final.
+    private static void HuertoOrdenado(Obra o, Scene escena, Transform pueblo, Transform grupo,
+        List<(Vector3 pos, string nombre)> puntos, List<(Vector2 centro, float radio)> reservado)
+    {
+        Transform muestra = pueblo.Find(BancalDeMuestra);
+        Transform espantapajaros = pueblo.Find(EspantapajarosDeMuestra);
+        Transform casaDeWill = null;
+        float rumboDeWill = 0f;
+        foreach (var (casa, rumbo, _) in CasasDeCampoPuestas)
+            if (casa != null && casa.name.StartsWith(CasaDeWill + " ")) { casaDeWill = casa; rumboDeWill = rumbo; }
+        if (muestra == null || casaDeWill == null) { o.Informe.Add("  · Huerto ordenado: falta el bancal de muestra o la casa de Will."); return; }
+
+        const float escala = 0.75f, separacion = 5.2f;
+        var c = Planta(casaDeWill);
+        float r = rumboDeWill * Mathf.Deg2Rad;
+        var eje = new Vector2(Mathf.Cos(r), -Mathf.Sin(r));   // a lo largo de la fachada
+        var fondo = new Vector2(Mathf.Sin(r), Mathf.Cos(r));  // hacia la trasera (la puerta mira al contrario)
+        List<Transform> sueltas = SueltasDelPueblo(pueblo);
+        float mejor = float.MaxValue;
+        Vector2 centro = default, fila = default;
+        for (int k = 0; k < 16; k++)
+            for (float d = 8f; d <= 18f; d += 1f)
+            {
+                float ang = k * 22.5f * Mathf.Deg2Rad;
+                var lado = new Vector2(Mathf.Sin(ang), Mathf.Cos(ang));
+                if (Vector2.Dot(lado, -fondo) > 0.4f) continue;   // delante de la puerta, no
+                Vector2 m = c + lado * d;
+                // La fila va de costado a la casa: así los dos bancales quedan a la misma distancia.
+                Vector2 f = Mathf.Abs(Vector2.Dot(lado, eje)) > 0.7f ? fondo : eje;
+                Vector2 a = m - f * separacion * 0.5f, b = m + f * separacion * 0.5f;
+                if (!HaySitio(a, 2.3f, pueblo, puntos, reservado) || !HaySitio(b, 2.3f, pueblo, puntos, reservado)) continue;
+                float coste = Estorbo(sueltas, a, 2.6f) + Estorbo(sueltas, b, 2.6f) + 0.3f * d;
+                if (coste < mejor) { mejor = coste; centro = m; fila = f; }
+            }
+        if (mejor == float.MaxValue) { o.Informe.Add("  · Huerto ordenado: no hay hueco junto a casa de Will."); return; }
+
+        int quitadas = 0;
+        float rumboFila = Rumbo(fila);
+        for (int i = 0; i < 2; i++)
+        {
+            Vector2 p = centro + fila * separacion * (i - 0.5f);
+            quitadas += RetirarEnCirculo(o, escena, sueltas, p, 2.7f, MotivoSitioDelHuerto);
+            CopiaDeMuestra(o, grupo, muestra, $"Bancal {i + 1}", p, rumboFila, escala);
+            reservado.Add((p, 2.6f));
+        }
+        if (espantapajaros != null)
+        {
+            Vector2 p = centro + fila * (separacion + 0.6f);
+            quitadas += RetirarEnCirculo(o, escena, sueltas, p, 0.9f, MotivoSitioDelHuerto);
+            CopiaDeMuestra(o, grupo, espantapajaros, "Espantapájaros del huerto", p, rumboFila + 180f, 1f);
+        }
+        o.Informe.Add($"  Huerto ordenado: 2 bancales en ({centro.x:0.0}, {centro.y:0.0}); {quitadas} piezas sueltas retiradas de su sitio.");
+    }
+
+    /// Copia una pieza del pueblo (con lo que lleva encima) en el vestido, apoyada en el suelo.
+    private static void CopiaDeMuestra(Obra o, Transform grupo, Transform muestra, string nombre, Vector2 p, float rumbo, float escala)
+    {
+        GameObject copia = Object.Instantiate(muestra.gameObject, grupo);
+        copia.name = nombre;
+        copia.tag = "Untagged";
+        copia.SetActive(true);
+        float y = o.Suelo.Altura(p.x, p.y);
+        copia.transform.SetPositionAndRotation(new Vector3(p.x, y + (muestra.position.y - o.Suelo.Altura(muestra.position.x, muestra.position.z)), p.y),
+            Quaternion.Euler(0f, rumbo, 0f));
+        copia.transform.localScale = muestra.lossyScale * escala;
+        o.Ocupado.Add(HuellaOrientada(copia, rumbo));
+        o.Puestas++;
+    }
+
+    /// Mirador al sur del pueblo: dos bancos con respaldo (se puede sentar) mirando al valle, entre flores.
+    private static void MiradorConBancos(Obra o, Transform grupo)
+    {
+        Vector2 c = MiradorDelPuebloInicial;
+        Vector2 fuera = (c - CentroDelPuebloInicial).normalized;
+        float rumbo = Rumbo(fuera);
+        var lado = new Vector2(fuera.y, -fuera.x);
+        PonFijo(o, grupo, BancoUsable, "Banco del mirador", c - lado * 1.7f, rumbo, solapePropio: true);
+        PonFijo(o, grupo, BancoUsable, "Banco del mirador", c + lado * 1.7f, rumbo, solapePropio: true);
         for (int i = 0; i < 7; i++)
         {
             float a = i * Mathf.PI * 2f / 7f + 0.4f;
-            PonFijo(o, rincon, Flor, "Flores del columpio", new Vector2(13.5f + Mathf.Cos(a) * 3.3f, -158.5f + Mathf.Sin(a) * 3.3f), i * 50f, sinObstaculo: true, solapePropio: true);
+            Vector2 p = c + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * 3.3f;
+            if (Vector2.Dot(p - c, fuera) > 1.2f) continue;   // delante de los bancos, nada: es la vista
+            PonFijo(o, grupo, Flor, "Flores del mirador", p, i * 50f, sinObstaculo: true, solapePropio: true);
         }
     }
 

@@ -129,9 +129,22 @@ caja("traje", "Bolsillo", (0.09, -0.262, 0.345), (0.1, 0.012, 0.075), "DelantalO
 esfera("traje", "Acerico", (0.09, -0.262, 0.39), (0.036, 0.026, 0.028), "Acerico", {"pelvis": 1.0})
 for k, (dx, dz) in enumerate(((-0.018, 0.018), (0.0, 0.026), (0.02, 0.018))):
     esfera("traje", f"Alfiler{k}", (0.09 + dx, -0.272, 0.39 + dz), (0.007, 0.007, 0.007), "Alfiler", {"pelvis": 1.0})
-# Cinta de medir: sobre los hombros, por detrás del cuello, con los dos cabos colgando por delante
-tubo("traje", "CintaDeMedir", [(-0.085, -0.215, 0.5), (-0.1, -0.215, 0.62), (-0.125, -0.15, 0.725), (-0.11, 0.0, 0.762), (0.0, 0.1, 0.755),
-     (0.11, 0.0, 0.762), (0.125, -0.15, 0.725), (0.1, -0.215, 0.6), (0.085, -0.218, 0.44)], [0.013] * 9, "Cinta", {"spine_03": 0.7, "spine_02": 0.3}, seg=8)
+# Cinta de medir: sobre los hombros, por detrás del cuello, con los dos cabos colgando por delante.
+# Los cabos van pegados al peto (a su superficie más el grosor de la cinta) y terminan encima de la cinta del
+# delantal; se pesan como el peto (copiados del cuerpo), así no se separan de él al moverse (en el juego se veían
+# despegados y acababan colgando por debajo del peto).
+PETO = [(0.67, 0.203), (0.6, 0.212), (0.52, 0.205), (0.46, 0.2)]
+def sobre_el_peto(x, z, r_cinta=0.013):
+    zs = sorted(PETO)
+    z = min(max(z, zs[0][0]), zs[-1][0])
+    for (z0, r0), (z1, r1) in zip(zs, zs[1:]):
+        if z0 <= z <= z1: r = r0 + (r1 - r0) * (z - z0) / (z1 - z0); break
+    return -0.01 - r * 0.92 * math.sqrt(max(0.0, 1 - (x / r) ** 2)) - 0.007 - r_cinta * 0.8
+cabo = [(0.1, 0.665), (0.088, 0.6), (0.082, 0.54), (0.08, 0.49)]
+lado_der = [(-x, sobre_el_peto(x, z), z) for x, z in cabo]
+lado_izq = [(x, sobre_el_peto(x, z), z) for x, z in cabo]
+tubo("traje", "CintaDeMedir", lado_der[::-1] + [(-0.125, -0.15, 0.725), (-0.11, 0.0, 0.762), (0.0, 0.1, 0.755),
+     (0.11, 0.0, 0.762), (0.125, -0.15, 0.725)] + lado_izq, [0.013] * 13, "Cinta", None, seg=8)
 for lado, s in (("l", 1), ("r", -1)):
     # manga remangada hasta el codo, con la vuelta más clara; el brazo, de piel, entra en la mano
     tubo("traje", f"Manga_{lado}", [(0.15 * s, -0.003, 0.636), (0.22 * s, -0.003, 0.635), (0.3 * s, -0.003, 0.634)], [0.082, 0.08, 0.079], "Blusa", None, cerrar=False)

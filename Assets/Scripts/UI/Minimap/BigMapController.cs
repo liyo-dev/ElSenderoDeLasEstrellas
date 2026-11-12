@@ -64,9 +64,6 @@ public class BigMapController : MonoBehaviour
     [Tooltip("Distancia de la ayuda al borde inferior de la pantalla (px).")]
     [SerializeField] float hintBottomMargin = 36f;
 
-    [Tooltip("Color del fondo de la ayuda.")]
-    [SerializeField] Color hintBackground = new Color(0f, 0f, 0f, 0.6f);
-
     const string HintKey = "BIGMAP_HINT";
     const string HintFallback =
         "<sprite name=\"interactable_Joystick\"> Mover    " +
@@ -275,8 +272,9 @@ public class BigMapController : MonoBehaviour
         rootRt.pivot = new Vector2(0.5f, 0f);
         rootRt.anchoredPosition = new Vector2(0f, hintBottomMargin);
 
+        // Ficha de papel sobre el mapa, como los avisos del juego.
         var background = _hintRoot.AddComponent<Image>();
-        background.color = hintBackground;
+        PiezasDeUI.VestirFicha(background, PaletaUI.Papel);
         background.raycastTarget = false;
 
         var layout = _hintRoot.AddComponent<HorizontalLayoutGroup>();
@@ -293,7 +291,7 @@ public class BigMapController : MonoBehaviour
         _hintLabel = labelGo.AddComponent<TextMeshProUGUI>();
         if (hintFont != null) _hintLabel.font = hintFont;
         _hintLabel.fontSize = hintFontSize;
-        _hintLabel.color = Color.white;
+        _hintLabel.color = PaletaUI.TintaDeTexto;
         _hintLabel.alignment = TextAlignmentOptions.Center;
         _hintLabel.textWrappingMode = TextWrappingModes.NoWrap;
         _hintLabel.raycastTarget = false;

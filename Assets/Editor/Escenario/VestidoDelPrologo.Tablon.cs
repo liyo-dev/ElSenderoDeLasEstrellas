@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// El tablón de avisos de la plaza (INC-1012): en la tabla del poste indicador, por la cara que da a
-/// la plaza, tres papeles clavados: se busca ayuda para la siega, el dibujo del globo que ha hecho
+/// El tablón de avisos de la plaza (INC-1012): en la tabla del poste indicador, por la cara que se ve
+/// al llegar al pueblo (la de fuera, no la de la plaza; INC-1078), tres papeles clavados: se busca ayuda para la siega, el dibujo del globo que ha hecho
 /// Nina y la gallina perdida de la panadería. Las texturas salen de Tools/Texturas/tablon_de_avisos.py.
 /// </summary>
 public static partial class VestidoDelPrologo
@@ -36,8 +36,8 @@ public static partial class VestidoDelPrologo
         var caja = new Bounds(todos[0], Vector3.zero);
         foreach (var w in todos) caja.Encapsulate(w);
         bool caraEnX = caja.size.x < caja.size.z;
-        Vector3 haciaLaPlaza = Plaza - caja.center; haciaLaPlaza.y = 0f;
-        Vector3 fuera = caraEnX ? new Vector3(Mathf.Sign(haciaLaPlaza.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(haciaLaPlaza.z));
+        Vector3 haciaElCamino = caja.center - Plaza; haciaElCamino.y = 0f;
+        Vector3 fuera = caraEnX ? new Vector3(Mathf.Sign(haciaElCamino.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(haciaElCamino.z));
         Vector3 lado = Vector3.Cross(Vector3.up, fuera);
         bool hay = false;
         var b = new Bounds();
@@ -79,7 +79,7 @@ public static partial class VestidoDelPrologo
                 punto = golpe.point;
             }
             go.transform.position = punto + normal * (0.006f + 0.002f * n);
-            // El Quad mira hacia su -Z: con +Z hacia la tabla, el dibujo queda hacia la plaza.
+            // El Quad mira hacia su -Z: con +Z hacia la tabla, el dibujo queda hacia fuera.
             go.transform.rotation = Quaternion.LookRotation(-normal, Vector3.up) * Quaternion.Euler(0f, 0f, giro);
             go.transform.localScale = new Vector3(anchoReal, altoPapel, 1f);
             var r = go.GetComponent<MeshRenderer>();

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_07_LaManzana
   duracion: 21.802849
-  presentacion: 0
-  huella: "2026-11-11 18:11 \xB7 4222a58e0e2cae6b3e7b0a79840e7d34"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 41bd0332d7d8a8074dfc427fe991699a"
   actores:
   - id: Player
     alias: will
@@ -440,7 +440,7 @@ MonoBehaviour:
     descripcion: conjunto de will y estela
     posiciones:
     - t: 0
-      p: {x: -104.968796, y: 34.24451, z: 50.592003}
+      p: {x: -105.329796, y: 34.142178, z: 49.238274}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -463,7 +463,7 @@ MonoBehaviour:
     descripcion: 'dos: will y estela'
     posiciones:
     - t: 14.77285
-      p: {x: -105.630554, y: 33.358963, z: 52.30834}
+      p: {x: -105.89404, y: 33.309128, z: 51.517887}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -486,7 +486,7 @@ MonoBehaviour:
     descripcion: primer plano de estela
     posiciones:
     - t: 16.77285
-      p: {x: -105.19166, y: 33.37702, z: 52.06835}
+      p: {x: -105.16092, y: 33.33814, z: 51.63585}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -496,11 +496,23 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.09, y: -0.16}
+    encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  efectos: []
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705394
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 21.802849
+    beat:
+      rid: 6540294555676705395
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -516,4 +528,20 @@ MonoBehaviour:
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6540294555676705394
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705395
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

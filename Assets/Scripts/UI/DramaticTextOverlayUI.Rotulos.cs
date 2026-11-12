@@ -5,18 +5,26 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// Las otras dos formas de texto en pantalla que dibuja este mismo servicio, para que nadie más
+/// Las otras formas de texto en pantalla que dibuja este mismo servicio, para que nadie más
 /// monte su propio Canvas de texto:
 /// - El rótulo sobre la pantalla tapada del grafo («A la mañana siguiente…»), como
 ///   <see cref="INarrativeTitleCardPresenter"/>. Se dibuja por encima del fundido de pantalla.
-/// - El rótulo breve de abajo (mensajes cortos del juego), que pinta <see cref="HudToastService"/>
-///   cuando el árbitro de avisos le da el turno.
+/// - El rótulo breve de abajo (mensajes cortos del juego), en una tira de papel, que pinta
+///   <see cref="HudToastService"/> cuando el árbitro de avisos le da el turno.
+/// - La presentación de un lugar la primera vez que se entra (<see cref="PresentacionDeLugarUI"/>),
+///   que enseña <see cref="PresentacionDeLugares"/>.
 public partial class DramaticTextOverlayUI : INarrativeTitleCardPresenter
 {
     // Encima del fundido de pantalla de FeedbackService (9998).
     const int OrdenSobreElFundido = 9999;
     // Por encima del HUD y de los banners de aviso.
     const int OrdenDelRotuloBreve = 120;
+    // Por encima del HUD y del banner de misión nueva, por debajo del rótulo breve.
+    const int OrdenDeLaPresentacionDeLugar = 112;
+    const float AltoDelRotuloBreve = 72f;
+    const float MargenDelRotuloBreve = 48f;
+    const float AnchoMinimoDelRotuloBreve = 320f;
+    const float AnchoMaximoDelRotuloBreve = 1150f;
 
     // ── Rótulo sobre la pantalla (grafo) ─────────────────────────────────────────────────────
 
@@ -143,14 +151,17 @@ public partial class DramaticTextOverlayUI : INarrativeTitleCardPresenter
     // ── Rótulo breve (abajo) ─────────────────────────────────────────────────────────────────
 
     CanvasGroup _rotuloBreve;
+    RectTransform _panelDelRotuloBreve;
     TextMeshProUGUI _textoDelRotuloBreve;
     Tween _fundidoDelRotuloBreve;
 
-    /// Pone el texto del rótulo breve (sin cambiar si se ve o no).
+    /// Pone el texto del rótulo breve (sin cambiar si se ve o no); la tira se ajusta a su ancho.
     public void PonerRotuloBreve(string texto)
     {
         ConstruirRotuloBreve();
         _textoDelRotuloBreve.text = texto;
+        float ancho = _textoDelRotuloBreve.GetPreferredValues(texto ?? "", 10000f, AltoDelRotuloBreve).x + MargenDelRotuloBreve * 2f;
+        _panelDelRotuloBreve.sizeDelta = new Vector2(Mathf.Clamp(ancho, AnchoMinimoDelRotuloBreve, AnchoMaximoDelRotuloBreve), AltoDelRotuloBreve);
     }
 
     /// Funde el rótulo breve hasta <paramref name="alfa"/> en <paramref name="segundos"/> (0 = al instante).
@@ -175,53 +186,29 @@ public partial class DramaticTextOverlayUI : INarrativeTitleCardPresenter
             });
     }
 
-    // Franja semitransparente centrada en la parte baja. Cuelga de la misma raíz persistente que
-    // este overlay (no de él, que se apaga cuando no hay frases), con su propio orden de dibujo.
+    // Tira de papel centrada en la parte baja, como el resto de avisos que conviven con el mundo.
     void ConstruirRotuloBreve()
     {
         if (_rotuloBreve != null) return;
 
-        var raiz = new GameObject("RotuloBreve", typeof(RectTransform));
-        if (transform.parent != null) raiz.transform.SetParent(transform.root, false);
-        else DontDestroyOnLoad(raiz);
-
-        var lienzo = raiz.AddComponent<Canvas>();
-        lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
-        lienzo.overrideSorting = true;
-        lienzo.sortingOrder = OrdenDelRotuloBreve;
-        // Solo actúa si la raíz no tiene Canvas propio (entonces este es el lienzo raíz).
-        var escalado = raiz.AddComponent<CanvasScaler>();
-        escalado.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        escalado.referenceResolution = new Vector2(1920f, 1080f);
-        escalado.matchWidthOrHeight = 0.5f;
-
-        var rtRaiz = (RectTransform)raiz.transform;
-        rtRaiz.anchorMin = Vector2.zero;
-        rtRaiz.anchorMax = Vector2.one;
-        rtRaiz.offsetMin = rtRaiz.offsetMax = Vector2.zero;
+        var raiz = LienzoPropio("RotuloBreve", OrdenDelRotuloBreve);
 
         var panel = new GameObject("Panel", typeof(RectTransform));
         panel.transform.SetParent(raiz.transform, false);
-        var rtPanel = (RectTransform)panel.transform;
-        rtPanel.anchorMin = new Vector2(0.2f, 0.06f);
-        rtPanel.anchorMax = new Vector2(0.8f, 0.13f);
-        rtPanel.offsetMin = rtPanel.offsetMax = Vector2.zero;
-        var fondo = panel.AddComponent<Image>();
-        fondo.color = new Color(0f, 0f, 0f, 0.65f);
-        fondo.raycastTarget = false;
+        _panelDelRotuloBreve = (RectTransform)panel.transform;
+        PiezasDeUI.Colocar(_panelDelRotuloBreve, new Vector2(0.5f, 0.095f), Vector2.zero,
+                           new Vector2(AnchoMinimoDelRotuloBreve, AltoDelRotuloBreve));
+        var papel = PiezasDeUI.Imagen("Papel", panel.transform, PiezasDeUI.Papel(PaletaUI.Papel, PaletaUI.Tinta, PaletaUI.PapelClaro), Color.white);
+        papel.raycastTarget = false;
+        PiezasDeUI.Estirar(papel.rectTransform);
+        PiezasDeUI.AjustarBordesAlAlto(papel, AltoDelRotuloBreve);
+        papel.rectTransform.offsetMin = new Vector2(0f, -PiezasDeUI.SombraDelPapel / Mathf.Max(1f, papel.pixelsPerUnitMultiplier));
 
-        var textoGo = new GameObject("Texto", typeof(RectTransform));
-        textoGo.transform.SetParent(panel.transform, false);
-        var rtTexto = (RectTransform)textoGo.transform;
-        rtTexto.anchorMin = Vector2.zero;
-        rtTexto.anchorMax = Vector2.one;
-        rtTexto.offsetMin = new Vector2(12f, 4f);
-        rtTexto.offsetMax = new Vector2(-12f, -4f);
-        _textoDelRotuloBreve = textoGo.AddComponent<TextMeshProUGUI>();
-        _textoDelRotuloBreve.alignment = TextAlignmentOptions.Center;
-        _textoDelRotuloBreve.fontSize = 22f;
-        _textoDelRotuloBreve.color = Color.white;
-        _textoDelRotuloBreve.raycastTarget = false;
+        _textoDelRotuloBreve = PiezasDeUI.Texto("Texto", panel.transform, "", _label != null ? _label.font : null, 24f, PaletaUI.TintaDeTexto);
+        var rtTexto = _textoDelRotuloBreve.rectTransform;
+        PiezasDeUI.Estirar(rtTexto);
+        rtTexto.offsetMin = new Vector2(MargenDelRotuloBreve * 0.5f, 4f);
+        rtTexto.offsetMax = new Vector2(-MargenDelRotuloBreve * 0.5f, -4f);
 
         _rotuloBreve = raiz.AddComponent<CanvasGroup>();
         _rotuloBreve.alpha = 0f;
@@ -235,5 +222,44 @@ public partial class DramaticTextOverlayUI : INarrativeTitleCardPresenter
         _fundidoDelRotuloBreve?.Kill();
         if (_rotuloBreve != null) Destroy(_rotuloBreve.gameObject);
         _rotuloBreve = null;
+    }
+
+    // ── Presentación de un lugar ─────────────────────────────────────────────────────────────
+
+    PresentacionDeLugarUI _presentacionDeLugar;
+
+    /// La presentación de lugar, montada la primera vez que se pide.
+    public PresentacionDeLugarUI PresentacionDeLugar
+        => _presentacionDeLugar ??= new PresentacionDeLugarUI(
+               LienzoPropio("PresentacionDeLugar", OrdenDeLaPresentacionDeLugar), _label != null ? _label.font : null);
+
+    void DestruirPresentacionDeLugar()
+    {
+        _presentacionDeLugar?.Destruir();
+        _presentacionDeLugar = null;
+    }
+
+    // ── Lienzos propios ──────────────────────────────────────────────────────────────────────
+
+    // Lienzo de pantalla completa con su propio orden de dibujo. Cuelga de la misma raíz
+    // persistente que este overlay (no de él, que se apaga cuando no hay frases).
+    GameObject LienzoPropio(string nombre, int orden)
+    {
+        var raiz = new GameObject(nombre, typeof(RectTransform));
+        if (transform.parent != null) raiz.transform.SetParent(transform.root, false);
+        else DontDestroyOnLoad(raiz);
+
+        var lienzo = raiz.AddComponent<Canvas>();
+        lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
+        lienzo.overrideSorting = true;
+        lienzo.sortingOrder = orden;
+        // Solo actúa si la raíz no tiene Canvas propio (entonces este es el lienzo raíz).
+        var escalado = raiz.AddComponent<CanvasScaler>();
+        escalado.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        escalado.referenceResolution = new Vector2(1920f, 1080f);
+        escalado.matchWidthOrHeight = 0.5f;
+
+        PiezasDeUI.Estirar((RectTransform)raiz.transform);
+        return raiz;
     }
 }

@@ -1,8 +1,8 @@
 # Parte de horneado: Chuche_07_Victoria
 
-2026-11-11 18:12 · guion `Assets/_SEQUENCES/Guiones/Chuche_07_Victoria.guion.txt`
+2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Chuche_07_Victoria.guion.txt`
 
-**0:51,2** de secuencia · 7 frases · 12 planos · 23 efectos · 8 personajes
+**0:51,2** de secuencia · 7 frases · 12 planos · 25 efectos · 8 personajes
 
 Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/ojos 0,93 · pompon 1,97/ojos 1,15 · condesa 1,55/ojos 1,17 · g1 1,97/ojos 1,15 · g2 1,97/ojos 1,15 · g3 1,97/ojos 1,15
 
@@ -42,6 +42,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
 | 0:00,0 | plano 1 | general de estela y will y liam y pompon · 2,0 s · lente 42° · coste 87: cara 69, ángulo 18 |
+| 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Señal: CHUCHE_ATUENDO_VICTORIA |
 | 0:00,0 | efecto | VFX: Confetti_blast_multicolor en Actor_Estela |
 | 0:00,0 | efecto | VFX: Flash_ellow_pink en Actor_Estela |
@@ -51,7 +52,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 0:02,0 | plano 2 | conjunto de estela y pompon · 7,5 s · lente 34° |
 | 0:03,7 | efecto | SFX: Bubble-001 |
 | 0:06,7 | efecto | SFX: Bubble-002 |
-| 0:09,5 | plano 3 | dos: will y estela · 2,0 s · lente 32° · coste 302: cara 192, ángulo 104 |
+| 0:09,5 | plano 3 | dos: will y estela · 2,0 s · lente 32° · coste 346: cara 241, ángulo 99 |
 | 0:09,5 | will | «Creo que le caes bien.» (2,0 s) |
 | 0:11,5 | **@abrazo** |  |
 | 0:11,5 | plano 4 | medio de estela · 6,2 s · lente 26° |
@@ -69,25 +70,26 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94 · liam 1,68/oj
 | 0:25,4 | efecto | SFX: Clicks-008 |
 | 0:25,4 | efecto | VFX: Shine_pink en M_Puerta_Candado |
 | 0:26,6 | **@umbral** |  |
-| 0:26,6 | plano 7 | conjunto de estela y will y liam · 8,3 s · lente 34° · coste 155: tapado 122, ángulo 27 |
+| 0:26,6 | plano 7 | conjunto de estela y will y liam · 8,3 s · lente 34° · coste 212: tapado 183, ángulo 23 |
 | 0:33,8 | efecto | VFX: Sparkle_ellow_flying en Actor_Estela |
 | 0:33,8 | efecto | VFX: Flash_ellow_pink en Actor_Estela |
 | 0:33,8 | efecto | Señal: CHUCHE_VESTIDO_PURPURINA |
 | 0:33,8 | efecto | SFX: Chimes_Harp-013 |
 | 0:34,8 | **@collejas** |  |
-| 0:34,8 | plano 8 | medio de liam · 8,6 s · lente 24° · coste 163: cara 137, ángulo 26 |
+| 0:34,8 | plano 8 | medio de liam · 8,6 s · lente 24° · coste 325: cara 250, ángulo 69 |
 | 0:34,8 | liam | «La hechicera más poderosa y orgullosa del grupo…» (3,7 s) |
 | 0:38,8 | liam | «…coronada oficialmente como la princesa más adorable de Chuchelandia.» (4,6 s) |
-| 0:43,4 | plano 9 | dos: estela y liam · 1,5 s · lente 32° · coste 273: cara 159, ángulo 108 |
+| 0:43,4 | plano 9 | dos: estela y liam · 1,5 s · lente 32° · coste 635: cara 171, ángulo 108, eje 350 |
 | 0:43,4 | efecto | SFX: Punch 01 |
 | 0:43,7 | efecto | SFX: Cartoon_Mouth_harp_boing |
 | 0:44,9 | plano 10 | sobre el hombro de estela a will · 2,1 s · lente 24° · coste 90: cara 81 |
 | 0:44,9 | will | «Con récord de corazones.» (2,1 s) · pose |
-| 0:47,0 | plano 11 | dos: estela y will · 1,7 s · lente 32° · coste 165: cara 159 |
+| 0:47,0 | plano 11 | dos: estela y will · 1,7 s · lente 32° · coste 177: cara 171 |
 | 0:47,0 | efecto | SFX: Punch 02 |
 | 0:47,3 | efecto | SFX: Cartoon_Mouth_harp_boing(6) |
-| 0:48,7 | plano 12 | conjunto de estela y will y liam · 2,5 s · lente 34° · coste 165: cara 91, ángulo 68 |
+| 0:48,7 | plano 12 | conjunto de estela y will y liam · 2,5 s · lente 34° · coste 180: cara 107, ángulo 68 |
 | 0:48,7 | efecto | VFX: Sparkle_ellow_flying en Actor_Estela |
+| 0:51,2 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 

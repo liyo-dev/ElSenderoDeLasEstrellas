@@ -1264,15 +1264,23 @@ Selector del grupo del panel de estado: bustos de Liam, Will y Estela que asoman
 
 | Canal (`CanalDeAviso`) | Avisos |
 |---|---|
-| `Cabecera` (arriba, centro) | banner de misión nueva (`QuestStartedBannerUI`) y barra del jefe (`BossHealthBar`), uno detrás de otro |
+| `Cabecera` (arriba, centro) | presentación de un lugar nuevo (`PresentacionDeLugares`, prioridad 30), banner de misión nueva (`QuestStartedBannerUI`, 20) y barra del jefe (`BossHealthBar`), uno detrás de otro |
 | `Lateral` (derecha) | popup de habilidad o hechizo desbloqueado (`AbilityUnlockPopupUI`) |
 | `Objetos` | pila de objetos conseguidos (`CollectiblePopupQueue`) |
-| `Rotulo` (abajo) | mensajes cortos del juego (`HudToastService`, auto-creado; el texto lo dibuja `DramaticTextOverlayUI`) |
+| `Rotulo` (abajo) | mensajes cortos del juego en una tira de papel que se ajusta al texto (`HudToastService`, auto-creado; el texto lo dibuja `DramaticTextOverlayUI`) |
 
 - **En cada canal se ve uno:** el de prioridad más alta y, a igualdad, el que pidió antes. Uno más importante aparta al que se veía, que vuelve cuando queda libre; `Adelantar` despide a los pasajeros en vez de hacerlos volver fuera de contexto. Avisos de canales distintos conviven.
 - **Silencio:** mientras hay un menú abierto (`MenuManager`) o algo tapa la pantalla (cinemática, intro de jefe, texto dramático: el árbitro se apunta en nombre de todos al registro `OcultablesDeCinematica`), nadie tiene turno; los avisos esperan con la cuenta atrás parada y salen después. `Silenciar(quien)`/`Reanudar(quien)` para otros casos. Así ningún aviso se pierde por estar tapado.
 - **Canales cerrados:** `CerrarCanal(canal, quien)` / `AbrirCanal` / `CanalAbierto` son reglas del juego del tipo «lo ganado en batalla no saca aviso, lo cuenta el informe de victoria»; lo comprueba quien recibe lo que hay que avisar (`CollectiblePopupQueue` descarta lo que llega con `Objetos` cerrado).
 - **Regla:** un aviso nuevo implementa `IAvisoEnPantalla` y pasa por el árbitro; no escucha `MenuManager` ni las cinemáticas por su cuenta.
+
+### Anunciar el lugar al entrar: `PresentacionDeLugares` (INC-1075)
+
+`PresentacionDeLugares.Anunciar(claveDelLugar)` (`Scripts/UI/Avisos/`, auto-creado) es el camino único para anunciar que el jugador entra en un lugar con nombre. Hoy lo llama `AmbientZone` con `AmbientPreset.nombreDelLugar` (clave de `ui_*.json`, prefijo `LUGAR_`); cualquier otro sistema (portal, teletransporte, mapa) puede llamarlo igual.
+- **Primera vez en la partida:** presentación en el canal `Cabecera` (`PresentacionDeLugarUI`, que monta `DramaticTextOverlayUI` en un lienzo propio de orden 112): cinta de papel que se despliega, pestaña de noche con `LUGAR_NUEVO` («Nuevo lugar»), estrella de oro con trazos de tinta, el nombre letra a letra y chispas de oro; quieta 2,6 s y se va (unos 4,5 s en total). Suena `UI_LugarDescubierto` (`AudioGraphProfile`). Todo lo que se ve es función del tiempo a la vista: con un menú o una cinemática se para y sigue después.
+- **Ya conocido:** rótulo breve con el nombre (2,5 s).
+- **Memoria:** `LugaresConocidos` (`Scripts/World/`), marcas `LUGAR_CONOCIDO:<clave>` en `Partida.Preset.flags`: se guardan con la partida y la partida nueva las borra. Sin partida o sin `DramaticTextOverlayUI` no se marca nada y sale el rótulo breve.
+- Salir y volver a entrar en el mismo lugar sin pasar por otro no lo anuncia otra vez; al cargar partida sí.
 
 ### Frases en pantalla: `PresentadorDeLinea`
 
@@ -1879,7 +1887,7 @@ Todo lo citado abajo (rutas, clases, shaders, propiedades) está verificado leye
   - **Antes de tocar código de esto, lo más rentable es una captura o clip corto del momento exacto en que se ve la línea** (con el `[ContextMenu] Activar/Desactivar techo de nubes (debug)` de `CloudCoverSpawner` puedes reproducirlo a demanda). Con eso se puede diferenciar en 30 segundos si es un problema de solape geométrico (se arregla con más espaciado/menos escala máxima) o del shader Quibli en sí (se arregla en el material, o cambiando esas nubes concretas a modo `QuibliCloud2D` con billboard, que no tiene solape 3D real). Lo dejo como primer paso de la Parte B, no como algo que vaya a "arreglar a ciegas".
 - **No existe ningún sistema de estrellas de cielo, estrellas fugaces ni arcoíris.** Verificado: no hay coincidencias en `Assets/` para nada tipo "starfield/shooting star/rainbow/arcoiris" salvo `Assets/Scripts/World/StarWorldLighting.cs` y `StarWorldFootprintPool.cs`, que son del **nivel final "mundo estelar"** (la metáfora final del juego) y no tienen relación con el cielo nocturno del mundo normal — de hecho `StarWorldLighting.OnEnable/Start` **desactiva `DayNightCycle` por completo** mientras esa escena esté cargada y lo reactiva al salir. Cualquier cosa que hagamos en las Partes A/C de este documento no debe tocar esa escena: sigue siendo un override total independiente, ya funciona así y no hay motivo para unificarlo.
 - **Riesgo real y concreto de tocar el enum `TimeOfDay`:** hay 4 sitios más en el proyecto que referencian valores concretos del enum, y hay que auditarlos antes de reducir franjas (detalle en Parte A.3):
-  - `Assets/Scripts/UI/TimeOfDayIndicator.cs` — un sprite de UI por cada periodo (`SpriteForPeriod`).
+  - (`TimeOfDayIndicator` retirado el 11 nov 2026: no estaba en ninguna escena.)
   - `Assets/Scripts/World/CampfireRestInteractable.cs` — `nightTarget = TimeOfDay.Night`, `dayTarget = TimeOfDay.Morning`, y comprueba `== Night || == Midnight` para "es de noche".
   - `Assets/Scripts/World/DayOnlyInspectionTrigger.cs` — misma comprobación `== Night || == Midnight`.
   - `Assets/NarrativeGraph/Runtime/Graph/NodeTypes/SetTimeOfDayNode.cs` — nodo de grafo narrativo con `targetTime` serializado; probablemente ya colocado en `MainNarrative.asset` con un valor concreto grabado como int.

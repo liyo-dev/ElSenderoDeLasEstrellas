@@ -391,7 +391,7 @@ namespace Sendero.UI
                 _fuerzaEtiqueta.text = apoyo ? "Apoyo (no hace daño)" : "Fuerza";
                 int nivel = apoyo ? 0 : s.damage <= 10f ? 1 : s.damage <= 20f ? 2 : s.damage <= 40f ? 3 : 4;
                 string puntos = "";
-                for (int i = 1; i <= 4; i++) puntos += i <= nivel ? "<color=#C98A00>●</color>" : "<color=#CDBB9C>●</color>";
+                for (int i = 1; i <= 4; i++) puntos += (i <= nivel ? "<color=#C98A00>" : "<color=#CDBB9C>") + "<size=170%>•</size></color>"; // «●» no está en la fuente (INC-1098)
                 _fuerza.text = puntos;
                 _lanza.text = s.HasCombo
                     ? P.Boton(InputGlyphNames.North) + " " + ComboButtonGlyphs.SequenceSprites(s.comboSequence)

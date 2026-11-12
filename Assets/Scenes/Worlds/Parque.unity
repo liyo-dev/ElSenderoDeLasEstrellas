@@ -14745,6 +14745,10 @@ MonoBehaviour:
   snowChancePerCheck: 0.08
   windChancePerCheck: 0.15
   mistChancePerCheck: 0.12
+  amortiguarEnInterior: 1
+  volumenEnInterior: 0.35
+  corteEnInteriorHz: 650
+  fundidoDeInterior: 0.8
   cloudsBuildingUpSfxKey: 
   rainStartedSfxKey: 
   rainLoopVolume: 0.3
@@ -14797,6 +14801,8 @@ MonoBehaviour:
   duracionDelFundidoDelCielo: 45
   duracionDeNublarse: 40
   duracionDeDespejarse: 60
+  nubosidadQueEmpiezaATaparEstrellas: 0.12
+  nubosidadQueTapaLasEstrellas: 0.4
   colorDeNubesDeLluvia: {r: 0.52, g: 0.58, b: 0.66, a: 1}
   colorDeNubesDeTormenta: {r: 0.22, g: 0.27, b: 0.34, a: 1}
   colorDeNubesDeNieve: {r: 0.86, g: 0.88, b: 0.92, a: 1}
@@ -62469,6 +62475,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 206955243820471005, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2052766923886183289, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

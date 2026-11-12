@@ -90,9 +90,6 @@ public class CreditsFlyoutPanel : MonoBehaviour
 
     [Header("Panel")]
     [Min(200f)] [SerializeField] float panelWidth = 560f;
-    [SerializeField] Color panelColor = new Color(0.07f, 0.05f, 0.03f, 0.9f);
-    [Tooltip("Dorado a juego con el cursor personalizado (CursorManager) — línea de acento y títulos.")]
-    [SerializeField] Color accentColor = new Color(0.97f, 0.71f, 0.22f, 1f);
     [Min(0.05f)] [SerializeField] float animDuration = 0.32f;
 
     [Header("Navegación (mando)")]
@@ -464,7 +461,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // a "fuera de pantalla". Con pivot.x=1 (borde derecho del panel como pivote), x=0 sí queda
         // pegado al borde derecho y visible, y _hiddenX (positivo) lo saca de pantalla como se espera.
         _panelRoot.pivot = new Vector2(1f, 0.5f);
-        _panelRoot.sizeDelta = new Vector2(panelWidth, 0f);
+        _panelRoot.sizeDelta = new Vector2(panelWidth, -48f);
         _panelRoot.anchoredPosition = Vector2.zero;
 
         _hiddenX = panelWidth + 40f;
@@ -476,18 +473,8 @@ public class CreditsFlyoutPanel : MonoBehaviour
         _panelGroup.interactable = false;
 
         var bg = panelGo.AddComponent<Image>();
-        bg.color = panelColor;
+        PiezasDeUI.VestirHoja(bg);
 
-        // Línea de acento dorada en el borde izquierdo del panel
-        var accentGo = new GameObject("AccentLine", typeof(RectTransform));
-        accentGo.transform.SetParent(_panelRoot, false);
-        var accentRt = (RectTransform)accentGo.transform;
-        accentRt.anchorMin = new Vector2(0f, 0f);
-        accentRt.anchorMax = new Vector2(0f, 1f);
-        accentRt.pivot = new Vector2(0f, 0.5f);
-        accentRt.sizeDelta = new Vector2(4f, 0f);
-        accentRt.anchoredPosition = Vector2.zero;
-        accentGo.AddComponent<Image>().color = accentColor;
 
         BuildHeader();
         BuildScrollView();
@@ -515,7 +502,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         var title = titleGo.AddComponent<TextMeshProUGUI>();
         ConfigureLabel(title, "CRÉDITOS", fontSize * 1.3f);
         title.fontStyle = FontStyles.Bold;
-        title.color = accentColor;
+        title.color = PaletaUI.OroSobrePapel;
         title.alignment = TextAlignmentOptions.Left;
 
         // Botón cerrar ("X" en teclado/ratón; icono real del botón Cancelar del mando cuando la
@@ -531,7 +518,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         closeRt.pivot = new Vector2(1f, 0.5f);
         closeRt.sizeDelta = new Vector2(48f, 48f);
         closeRt.anchoredPosition = Vector2.zero;
-        closeGo.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.08f);
+        PiezasDeUI.VestirFicha(closeGo.AddComponent<Image>(), PaletaUI.PapelApagado);
         _closeButton = closeGo.AddComponent<Button>();
         _closeButton.onClick.AddListener(ClosePanel);
 
@@ -638,7 +625,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         footerRt.sizeDelta = new Vector2(-40f, 64f);
         footerRt.anchoredPosition = new Vector2(0f, 20f);
 
-        footerGo.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.06f);
+        PiezasDeUI.VestirFicha(footerGo.AddComponent<Image>(), PaletaUI.Oro);
         var btn = footerGo.AddComponent<Button>();
         btn.onClick.AddListener(GoToFullCredits);
 
@@ -652,7 +639,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // North en su lugar (ver _footerIcon más abajo).
         ConfigureLabel(label, "Ver créditos completos >>", fontSize * 0.85f);
         label.alignment = TextAlignmentOptions.Center;
-        label.color = accentColor;
+        label.color = PaletaUI.TintaDeTexto;
         label.raycastTarget = false;
         _footerLabel = label;
 
@@ -674,7 +661,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
     {
         label.text = text;
         label.fontSize = size;
-        label.color = Color.white;
+        label.color = PaletaUI.TintaDeTexto;
         label.textWrappingMode = TextWrappingModes.Normal;
         label.raycastTarget = false;
         if (font != null) label.font = font;

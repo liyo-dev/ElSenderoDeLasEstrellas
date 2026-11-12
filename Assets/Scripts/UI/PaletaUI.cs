@@ -38,6 +38,9 @@ public static class PaletaUI
     /// Dorado de lo elegido y de las estrellas.
     public static readonly Color Oro = new Color(1f, 0.831f, 0.369f, 1f);                // #FFD45E
 
+    /// Dorado oscuro que se lee sobre el papel: títulos y resaltes escritos en la hoja.
+    public static readonly Color OroSobrePapel = new Color(0.54f, 0.35f, 0f, 1f);                // #8A5900
+
     /// Morado de noche: fondo de los menús y de las piezas oscuras que van sobre papel.
     public static readonly Color Noche = new Color(0.169f, 0.137f, 0.267f, 1f);          // #2B2344
 }

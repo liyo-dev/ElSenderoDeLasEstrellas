@@ -22,7 +22,6 @@ public static class InterfazDePapelBuilder
 
     static readonly string[] Papeles =
     {
-        "Assets/Art/UI/Menu/btn_usar.png",
         "Assets/Art/UI/Menu/confirm_button_pill.png",
         "Assets/Art/UI/Menu/confirm_dialog_glass.png",
         "Assets/Art/UI/Menu/menu_panel_glass.png",
@@ -64,9 +63,19 @@ public static class InterfazDePapelBuilder
     {
         ("LorePopup", "Canvas/PopupRoot/Background", "Assets/Art/UI/Misiones/panel_glass_bg.png"),
         ("AbilityUnlockPopupUI", "Canvas/Panel/PanelImg (1)", "Assets/Art/UI/Misiones/panel_glass_bg.png"),
+        ("TeleportSavePoint", "TeleportScrollView", "Assets/Art/UI/Misiones/panel_glass_bg.png"),
     };
 
-    static readonly Color OroDeTexto = new Color(0.54f, 0.35f, 0f, 1f);
+    /// Fondos de los menús a pantalla completa: la noche de la interfaz, casi opaca (raíz, ruta dentro de ella).
+    static readonly (string raiz, string ruta)[] FondosDeNoche =
+    {
+        ("PanelControles", "Background"),
+        ("PanelSelectorIdioma", "Background"),
+        ("PlayerEquipementMenu", "Controles (menú de Start)/Background"),
+        ("QuestMenusCanvas", "QuestMainMenu"),
+    };
+    static readonly Color Noche = new Color(PaletaUI.Noche.r, PaletaUI.Noche.g, PaletaUI.Noche.b, 0.94f);
+
     static readonly Color ResalteSobrePapel = new Color(0.72f, 0.36f, 0.05f, 1f);
 
     [MenuItem(Menu)]
@@ -74,10 +83,11 @@ public static class InterfazDePapelBuilder
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
         {
-            EditorUtility.DisplayDialog("Interfaz de papel", "Sal del modo Play antes de pasar la interfaz al papel.", "Vale");
+            OrdenesDelEditor.Avisar("Interfaz de papel", "Sal del modo Play antes de pasar la interfaz al papel.");
             return;
         }
-        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        // Desde el buzón no se pregunta: solo se guardan las escenas que este menú cambia.
+        if (!OrdenesDelEditor.EnOrden && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
         var papeles = new HashSet<Sprite>();
         foreach (var ruta in Papeles)
@@ -102,7 +112,6 @@ public static class InterfazDePapelBuilder
             {
                 cambios += Empapelar(raiz, informe);
                 cambios += Repasar(raiz, papeles, informe);
-                cambios += QuitarFondosDeLaCajaDeDialogo(raiz, informe);
             }
             if (cambios > 0)
             {
@@ -121,7 +130,8 @@ public static class InterfazDePapelBuilder
             try
             {
                 informe.AppendLine("## " + ruta);
-                int cambios = Repasar(raiz, papeles, informe);
+                int cambios = Empapelar(raiz, informe);
+                cambios += Repasar(raiz, papeles, informe);
                 if (cambios > 0) PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
                 informe.AppendLine();
                 total += cambios;
@@ -200,7 +210,7 @@ public static class InterfazDePapelBuilder
         foreach (var (nombre, ruta, hoja) in FondosQueSonPapel)
         {
             if (raiz.name != nombre) continue;
-            var objeto = raiz.transform.Find(ruta);
+            var objeto = string.IsNullOrEmpty(ruta) ? raiz.transform : raiz.transform.Find(ruta);
             var imagen = objeto != null ? objeto.GetComponent<Image>() : null;
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(hoja);
             if (imagen == null || sprite == null || imagen.sprite == sprite) continue;
@@ -210,6 +220,18 @@ public static class InterfazDePapelBuilder
             imagen.enabled = true;
             Marcar(imagen);
             informe.AppendLine("- papel en `" + Ruta(objeto) + "`");
+            cambios++;
+        }
+        foreach (var (nombre, ruta) in FondosDeNoche)
+        {
+            if (raiz.name != nombre) continue;
+            var objeto = raiz.transform.Find(ruta);
+            var imagen = objeto != null ? objeto.GetComponent<Image>() : null;
+            if (imagen == null || (imagen.sprite == null && imagen.color == Noche)) continue;
+            imagen.sprite = null;
+            imagen.color = Noche;
+            Marcar(imagen);
+            informe.AppendLine("- noche en `" + Ruta(objeto) + "`");
             cambios++;
         }
         return cambios;
@@ -262,32 +284,11 @@ public static class InterfazDePapelBuilder
         if (luz < 0.55f) return c;
         Color.RGBToHSV(c, out float tono, out float saturacion, out _);
         Color nuevo;
-        if (saturacion > 0.45f && tono > 0.08f && tono < 0.2f) nuevo = OroDeTexto;
+        if (saturacion > 0.45f && tono > 0.08f && tono < 0.2f) nuevo = PaletaUI.OroSobrePapel;
         else if (luz > 0.9f || saturacion < 0.08f) nuevo = PaletaUI.TintaDeTexto;
         else nuevo = PaletaUI.Tinta;
         nuevo.a = c.a;
         return nuevo;
-    }
-
-    /// Quita del panel de la caja de diálogo la nebulosa, las chispas y el difuminado que tapa el papel.
-    static int QuitarFondosDeLaCajaDeDialogo(GameObject raiz, StringBuilder informe)
-    {
-        int quitados = 0;
-        foreach (var manager in raiz.GetComponentsInChildren<DialogueManager>(true))
-        {
-            var sobrantes = new List<GameObject>();
-            foreach (var c in manager.GetComponentsInChildren<DialogueTextBackdropUI>(true)) sobrantes.Add(c.gameObject);
-            foreach (var c in manager.GetComponentsInChildren<DreamBackgroundController>(true)) sobrantes.Add(c.gameObject);
-            foreach (var c in manager.GetComponentsInChildren<DreamSparkleOverlay>(true)) sobrantes.Add(c.gameObject);
-            foreach (var go in sobrantes)
-            {
-                if (go == null) continue;
-                informe.AppendLine("- quitado `" + Ruta(go.transform) + "`");
-                Object.DestroyImmediate(go);
-                quitados++;
-            }
-        }
-        return quitados;
     }
 
     static void Marcar(Object objeto)

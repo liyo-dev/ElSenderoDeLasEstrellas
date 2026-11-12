@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -481,7 +482,40 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
     {
         s_ocultadoPor.RemoveWhere(k => k is UnityEngine.Object o && o == null);
         bool visible = !_hiddenByInterior && !_hiddenByBattle && !_hiddenByMenu && s_ocultadoPor.Count == 0;
-        if (minimapRoot != null && minimapRoot.activeSelf != visible)
-            minimapRoot.SetActive(visible);
+        if (minimapRoot == null || visible == _visibleObjetivo && _visibleObjetivoFijado) return;
+        _visibleObjetivo = visible;
+        _visibleObjetivoFijado = true;
+        FundirMinimapa(visible);
+    }
+
+    // Se esconde y vuelve con un fundido, al mismo ritmo que el HUD (INC-1094).
+    bool _visibleObjetivo;
+    bool _visibleObjetivoFijado;
+    CanvasGroup _fundidoDelMinimapa;
+
+    void FundirMinimapa(bool visible)
+    {
+        if (_fundidoDelMinimapa == null)
+        {
+            _fundidoDelMinimapa = minimapRoot.GetComponent<CanvasGroup>();
+            if (_fundidoDelMinimapa == null) _fundidoDelMinimapa = minimapRoot.AddComponent<CanvasGroup>();
+        }
+        var grupo = _fundidoDelMinimapa;
+        grupo.DOKill();
+        if (visible)
+        {
+            if (!minimapRoot.activeSelf)
+            {
+                grupo.alpha = 0f;
+                minimapRoot.SetActive(true);
+            }
+            grupo.DOFade(1f, OcultablesDeCinematica.SegundosDelFundido).SetUpdate(true);
+        }
+        else if (minimapRoot.activeSelf)
+        {
+            var raiz = minimapRoot;
+            grupo.DOFade(0f, OcultablesDeCinematica.SegundosDelFundido).SetUpdate(true)
+                .OnComplete(() => { if (raiz != null && !_visibleObjetivo && raiz.activeSelf) raiz.SetActive(false); });
+        }
     }
 }

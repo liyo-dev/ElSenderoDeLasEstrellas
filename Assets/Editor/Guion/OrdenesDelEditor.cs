@@ -26,6 +26,9 @@ using UnityEngine;
 ///   foto nombre x y z mx my mz [lente]       foto en perspectiva desde (x,y,z) mirando a (mx,my,mz),
 ///                                           con todas las escenas abiertas → Guiones/_fotos/nombre.png
 ///   gemini RUTA.mp4 [fps=2]                 manda un vídeo a Gemini (resultado en Logs/Gemini/)
+///   mover Escena/ruta/del/objeto x z [rumbo] pone un objeto de una escena abierta en (x, suelo, z) y, si se da, con
+///                                           ese rumbo; la altura sale de un rayo contra el suelo. Marca la escena
+///   guardar                                 guarda las escenas abiertas con cambios
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
 ///
@@ -208,6 +211,44 @@ public static class OrdenesDelEditor
         finally { foreach (var go in puestos) if (go != null) UnityEngine.Object.DestroyImmediate(go); }
     }
 
+    /// «mover Escena/ruta x z [rumbo]»: la ruta empieza por el nombre de la escena, como la da «donde».
+    private static string Mover(string resto)
+    {
+        if (Application.isPlaying) return "no se puede en Play";
+        var p = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (p.Length < 3) return "mover Escena/ruta x z [rumbo]";
+        var ci = System.Globalization.CultureInfo.InvariantCulture;
+        bool conRumbo = p.Length >= 4 && float.TryParse(p[p.Length - 1], System.Globalization.NumberStyles.Float, ci, out _)
+                        && float.TryParse(p[p.Length - 2], System.Globalization.NumberStyles.Float, ci, out _)
+                        && float.TryParse(p[p.Length - 3], System.Globalization.NumberStyles.Float, ci, out _);
+        int n = p.Length - (conRumbo ? 3 : 2);
+        string ruta = string.Join(" ", p, 0, n);
+        float x = float.Parse(p[n], ci), z = float.Parse(p[n + 1], ci);
+        int barra = ruta.IndexOf('/');
+        if (barra < 0) return "la ruta empieza por el nombre de la escena";
+        var esc = UnityEngine.SceneManagement.SceneManager.GetSceneByName(ruta.Substring(0, barra));
+        if (!esc.IsValid() || !esc.isLoaded) return "la escena no está abierta";
+        string dentro = ruta.Substring(barra + 1);
+        Transform t = null;
+        foreach (var raiz in esc.GetRootGameObjects())
+        {
+            if (dentro == raiz.name) { t = raiz.transform; break; }
+            if (dentro.StartsWith(raiz.name + "/")) { t = raiz.transform.Find(dentro.Substring(raiz.name.Length + 1)); if (t != null) break; }
+        }
+        if (t == null) return "no encuentro " + ruta;
+        float y = t.position.y;
+        var golpes = Physics.RaycastAll(new Vector3(x, y + 30f, z), Vector3.down, 80f, ~0, QueryTriggerInteraction.Ignore);
+        float mejor = float.MinValue;
+        foreach (var g in golpes)
+            if (!g.transform.IsChildOf(t) && g.point.y > mejor && g.point.y < y + 3f) mejor = g.point.y;
+        if (mejor > float.MinValue) y = mejor;
+        Undo.RecordObject(t, "Mover desde el buzón");
+        t.position = new Vector3(x, y, z);
+        if (conRumbo) t.rotation = Quaternion.Euler(0f, float.Parse(p[n + 2], ci), 0f);
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(esc);
+        return $"{ruta} en ({x:0.##}, {y:0.##}, {z:0.##})" + (conRumbo ? $" rumbo {p[n + 2]}" : "") + " · escena marcada (guardar con «guardar»)";
+    }
+
     private static string Ejecutar(string orden)
     {
         string linea = orden.Split('\n')[0].Trim();
@@ -319,6 +360,13 @@ public static class OrdenesDelEditor
                 float F(int i) => float.Parse(pf[i], ci);
                 float lente = pf.Length > 7 ? F(7) : 40f;
                 return "foto en " + (CapturaDeEscenario.FotoDesde(pf[0], new Vector3(F(1), F(2), F(3)), new Vector3(F(4), F(5), F(6)), lente) ?? "(falló)");
+            }
+            case "mover":
+                return Mover(resto);
+            case "guardar":
+            {
+                if (Application.isPlaying) return "no se puede en Play";
+                return UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes() ? "escenas guardadas" : "no se pudieron guardar";
             }
             case "camara_de_prueba":
             {

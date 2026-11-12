@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Chuche_03_UnaCandidata
   duracion: 45.440678
-  presentacion: 0
-  huella: "2026-11-11 18:15 \xB7 a7568dcc0ba9cb716235dd35f04aa3eb"
+  presentacion: 1
+  huella: "2026-11-12 07:30 \xB7 314b41f713bba9dbcd8c122867bd252d"
   actores:
   - id: Player
     alias: will
@@ -1925,7 +1925,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 7.8224487
-      p: {x: 185.85149, y: 4.9291863, z: 98.97876}
+      p: {x: 186.13515, y: 4.915566, z: 99.11515}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1935,7 +1935,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1946,7 +1946,7 @@ MonoBehaviour:
     descripcion: medio de heraldo
     posiciones:
     - t: 10.356326
-      p: {x: 188.54384, y: 5.1153984, z: 99.90467}
+      p: {x: 188.55795, y: 5.4281774, z: 98.74685}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1956,7 +1956,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.4365191
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -1992,45 +1992,45 @@ MonoBehaviour:
     descripcion: medio de g1
     posiciones:
     - t: 16.954803
-      p: {x: 185.90317, y: 4.39687, z: 101.75064}
+      p: {x: 186.2697, y: 5.00094, z: 108.04418}
     - t: 17.204803
-      p: {x: 186.07942, y: 4.472322, z: 101.51214}
+      p: {x: 186.44595, y: 5.0377913, z: 107.80568}
     - t: 17.454803
-      p: {x: 186.22191, y: 4.548005, z: 101.26295}
+      p: {x: 186.58842, y: 5.0745354, z: 107.55649}
     - t: 17.704803
-      p: {x: 186.33194, y: 4.6200204, z: 101.01927}
+      p: {x: 186.69846, y: 5.109079, z: 107.31281}
     - t: 17.954803
-      p: {x: 186.55028, y: 4.7488313, z: 100.59286}
+      p: {x: 186.91682, y: 5.1651, z: 106.886406}
     - t: 18.204803
-      p: {x: 186.73889, y: 4.8536882, z: 100.246254}
+      p: {x: 187.10544, y: 5.2182074, z: 106.539795}
     - t: 18.454803
-      p: {x: 186.87639, y: 4.9361777, z: 99.96802}
+      p: {x: 187.24294, y: 5.2602663, z: 106.26156}
     - t: 18.704803
-      p: {x: 186.95557, y: 4.9980683, z: 99.75256}
+      p: {x: 187.32211, y: 5.290973, z: 106.046104}
     - t: 18.954803
-      p: {x: 186.98558, y: 5.038686, z: 99.606255}
+      p: {x: 187.35213, y: 5.310124, z: 105.89979}
     - t: 19.204803
-      p: {x: 186.99417, y: 5.057548, z: 99.53723}
+      p: {x: 187.36073, y: 5.3188376, z: 105.83077}
     - t: 19.454803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 19.704803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 19.954803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 20.204803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 20.454803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 20.704803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 20.954803
-      p: {x: 186.99452, y: 5.058454, z: 99.5339}
+      p: {x: 187.36107, y: 5.3192544, z: 105.827446}
     - t: 21.204803
-      p: {x: 186.99452, y: 5.058454, z: 99.533905}
+      p: {x: 187.36107, y: 5.319254, z: 105.827446}
     - t: 21.454803
-      p: {x: 186.99452, y: 5.058454, z: 99.533905}
+      p: {x: 187.36105, y: 5.319254, z: 105.82744}
     - t: 21.704803
-      p: {x: 186.99452, y: 5.058454, z: 99.533905}
+      p: {x: 187.36105, y: 5.319254, z: 105.827446}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2040,7 +2040,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.3552045
-    encuadre: {x: 0.13, y: -0.16}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -2387,7 +2387,7 @@ MonoBehaviour:
     descripcion: general de estela y g1 y g2 y g3 y g4
     posiciones:
     - t: 21.81358
-      p: {x: 165.3037, y: 5.654119, z: 100.62864}
+      p: {x: 164.57227, y: 5.6568203, z: 100.87152}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -2416,7 +2416,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 30.127865
-      p: {x: 181.24156, y: 4.4898424, z: 99.21461}
+      p: {x: 180.37376, y: 4.485919, z: 98.96752}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2426,7 +2426,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: -0.13, y: -0.16}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -2542,7 +2542,7 @@ MonoBehaviour:
     descripcion: 'dos: will y liam'
     posiciones:
     - t: 33.727863
-      p: {x: 180.02258, y: 4.1747985, z: 100.09705}
+      p: {x: 179.77324, y: 4.175069, z: 100.02905}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -2575,7 +2575,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -2596,7 +2596,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -2617,7 +2617,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1191353
-    encuadre: {x: -0.13, y: -0.1}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -2638,65 +2638,77 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.1038897
-    encuadre: {x: 0.13, y: -0.1}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   efectos:
   - onlyIfFlag: 
     skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294555676705410
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
     t: 12.156325
     beat:
-      rid: 6540294550018327396
+      rid: 6540294555676705411
     linea: 75
   - onlyIfFlag: 
     skipIfFlag: 
     t: 12.756326
     beat:
-      rid: 6540294550018327397
+      rid: 6540294555676705412
     linea: 86
   - onlyIfFlag: 
     skipIfFlag: 
     t: 12.756326
     beat:
-      rid: 6540294550018327398
+      rid: 6540294555676705413
     linea: 87
   - onlyIfFlag: 
     skipIfFlag: 
     t: 12.756326
     beat:
-      rid: 6540294550018327399
+      rid: 6540294555676705414
     linea: 88
   - onlyIfFlag: 
     skipIfFlag: 
     t: 22.51358
     beat:
-      rid: 6540294550018327400
+      rid: 6540294555676705415
     linea: 125
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.727863
     beat:
-      rid: 6540294550018327401
+      rid: 6540294555676705416
     linea: 146
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.727863
     beat:
-      rid: 6540294550018327402
+      rid: 6540294555676705417
     linea: 147
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.727863
     beat:
-      rid: 6540294550018327403
+      rid: 6540294555676705418
     linea: 148
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.727863
     beat:
-      rid: 6540294550018327404
+      rid: 6540294555676705419
     linea: 149
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 45.440678
+    beat:
+      rid: 6540294555676705420
+    linea: 0
   etiquetas:
   - nombre: inicio
     t: 0
@@ -2743,7 +2755,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294550018327396
+    - rid: 6540294555676705410
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294555676705411
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2753,7 +2773,7 @@ MonoBehaviour:
         markName: 
         volume: 0.8
         tono: 1
-    - rid: 6540294550018327397
+    - rid: 6540294555676705412
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2766,7 +2786,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018327398
+    - rid: 6540294555676705413
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2779,7 +2799,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018327399
+    - rid: 6540294555676705414
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2789,7 +2809,7 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
-    - rid: 6540294550018327400
+    - rid: 6540294555676705415
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2799,7 +2819,7 @@ MonoBehaviour:
         markName: 
         volume: 0.6
         tono: 1
-    - rid: 6540294550018327401
+    - rid: 6540294555676705416
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2812,7 +2832,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018327402
+    - rid: 6540294555676705417
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2825,12 +2845,12 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294550018327403
+    - rid: 6540294555676705418
       type: {class: SenalBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         senal: CHUCHE_ATUENDO_CANDIDATA
-    - rid: 6540294550018327404
+    - rid: 6540294555676705419
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2840,3 +2860,11 @@ MonoBehaviour:
         markName: 
         volume: 0.7
         tono: 1
+    - rid: 6540294555676705420
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
