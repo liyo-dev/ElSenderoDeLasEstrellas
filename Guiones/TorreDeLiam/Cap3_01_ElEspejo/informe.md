@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_01_ElEspejo
 
-2026-11-12 09:40 · guion `Assets/_SEQUENCES/Guiones/Cap3_01_ElEspejo.guion.txt`
+2026-11-12 20:08 · guion `Assets/_SEQUENCES/Guiones/Cap3_01_ElEspejo.guion.txt`
 
 **0:28,8** de secuencia · 9 frases · 6 planos · 6 efectos · 2 personajes
 
@@ -11,15 +11,15 @@ Reparto medido (m): liam 1,68/ojos 0,93 · tobi 1,43/ojos 0,75
 
 ## Avisos (9)
 
-- línea 49: tobi dice CAP3_ESPEJO_01 sin_pose: la frase CAP3_ESPEJO_01 no tiene voz en Voices/es; le doy 1,8 s por su texto
-- línea 50: liam dice CAP3_ESPEJO_02 mira=vision cara=pensativo sin_pose: la frase CAP3_ESPEJO_02 no tiene voz en Voices/es; le doy 1,2 s por su texto
-- línea 51: tobi dice CAP3_ESPEJO_03 cara=alegre sin_pose: la frase CAP3_ESPEJO_03 no tiene voz en Voices/es; le doy 1,6 s por su texto
-- línea 55: liam dice CAP3_ESPEJO_04 mira=vision cara=preocupado sin_pose: la frase CAP3_ESPEJO_04 no tiene voz en Voices/es; le doy 1,2 s por su texto
-- línea 59: liam dice CAP3_ESPEJO_05 mira=vision cara=decidido sin_pose: la frase CAP3_ESPEJO_05 no tiene voz en Voices/es; le doy 2,9 s por su texto
-- línea 62: tobi dice CAP3_ESPEJO_06 cara=alegre sin_pose: la frase CAP3_ESPEJO_06 no tiene voz en Voices/es; le doy 1,2 s por su texto
-- línea 64: liam dice CAP3_ESPEJO_07 mira=vision cara=alegre sin_pose: la frase CAP3_ESPEJO_07 no tiene voz en Voices/es; le doy 3,2 s por su texto
-- línea 70: liam dice CAP3_ESPEJO_10 mira=vision cara=decidido sin_pose: la frase CAP3_ESPEJO_10 no tiene voz en Voices/es; le doy 4,7 s por su texto
-- línea 74: liam dice CAP3_ESPEJO_11 cara=triste sin_pose: la frase CAP3_ESPEJO_11 no tiene voz en Voices/es; le doy 1,7 s por su texto
+- línea 47: tobi dice CAP3_ESPEJO_01 sin_pose: la frase CAP3_ESPEJO_01 no tiene voz en Voices/es; le doy 1,8 s por su texto
+- línea 48: liam dice CAP3_ESPEJO_02 mira=vision cara=pensativo sin_pose: la frase CAP3_ESPEJO_02 no tiene voz en Voices/es; le doy 1,2 s por su texto
+- línea 49: tobi dice CAP3_ESPEJO_03 cara=alegre sin_pose: la frase CAP3_ESPEJO_03 no tiene voz en Voices/es; le doy 1,6 s por su texto
+- línea 53: liam dice CAP3_ESPEJO_04 mira=vision cara=preocupado sin_pose: la frase CAP3_ESPEJO_04 no tiene voz en Voices/es; le doy 1,2 s por su texto
+- línea 57: liam dice CAP3_ESPEJO_05 mira=vision cara=decidido sin_pose: la frase CAP3_ESPEJO_05 no tiene voz en Voices/es; le doy 2,9 s por su texto
+- línea 60: tobi dice CAP3_ESPEJO_06 cara=alegre sin_pose: la frase CAP3_ESPEJO_06 no tiene voz en Voices/es; le doy 1,2 s por su texto
+- línea 62: liam dice CAP3_ESPEJO_07 mira=vision cara=alegre sin_pose: la frase CAP3_ESPEJO_07 no tiene voz en Voices/es; le doy 3,2 s por su texto
+- línea 68: liam dice CAP3_ESPEJO_10 mira=vision cara=decidido sin_pose: la frase CAP3_ESPEJO_10 no tiene voz en Voices/es; le doy 4,7 s por su texto
+- línea 72: liam dice CAP3_ESPEJO_11 cara=triste sin_pose: la frase CAP3_ESPEJO_11 no tiene voz en Voices/es; le doy 1,7 s por su texto
 
 ## Línea de tiempo
 

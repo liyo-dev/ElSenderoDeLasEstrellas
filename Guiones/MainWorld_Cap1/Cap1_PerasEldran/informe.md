@@ -1,10 +1,10 @@
 # Parte de horneado: Cap1_PerasEldran
 
-2026-11-12 07:30 · guion `Assets/_SEQUENCES/Guiones/Cap1_PerasEldran.guion.txt`
+2026-11-13 18:06 · guion `Assets/_SEQUENCES/Guiones/Cap1_PerasEldran.guion.txt`
 
 **0:34,8** de secuencia · 7 frases · 8 planos · 3 efectos · 4 personajes
 
-Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · victoria 1,58/ojos 0,95 · oliver 1,70/ojos 0,94
+Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · victoria 1,58/ojos 0,95 · oliver 1,75/ojos 0,94
 
 ## Errores (0)
 
@@ -28,9 +28,9 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · victoria 1,5
 | 0:14,8 | plano 4 | sobre el hombro de eldran a victoria · 5,1 s · lente 24° · coste 97: cara 91 |
 | 0:14,8 | victoria | «Pues allí la tendrás. Anda, saluda a Will, que lleva un rato esperando.» (5,1 s) |
 | 0:19,9 | **@will** |  |
-| 0:19,9 | plano 5 | general de eldran y will · 5,7 s · lente 34° · coste 95: cara 57, ángulo 32 |
+| 0:19,9 | plano 5 | general de eldran y will · 5,7 s · lente 34° · coste 338: delante 267, cara 13, ángulo 59 |
 | 0:19,9 | eldran | «¡Will! Ya ves, perdiendo cajas a mi edad. Ya aparecerá.» (5,7 s) · pose |
-| 0:25,7 | plano 6 | sobre el hombro de will a oliver · 1,3 s · lente 24° · coste 350: eje 350 |
+| 0:25,7 | plano 6 | sobre el hombro de will a oliver · 1,3 s · lente 24° · coste 6: limpio |
 | 0:25,7 | oliver | «¿Os echo una mano?» (1,3 s) |
 | 0:27,0 | plano 7 | medio de victoria · 4,2 s · lente 30° · coste 6: ángulo 6 |
 | 0:27,0 | victoria | «Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis.» (4,2 s) |

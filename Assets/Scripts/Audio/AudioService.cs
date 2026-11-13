@@ -565,6 +565,16 @@ public sealed class AudioService : MonoBehaviour
         // que puede llegar después de la gracia; al acabar, ella misma pedirá la del lugar.
         if (CinematicSequencerBase.AnySequenceActive) yield break;
 
+        // Con una batalla sonando manda su música: la del lugar no se pone encima. Al acabar la
+        // batalla, quien la cierra vuelve a pedirla.
+        if (_battleActive)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[AudioService] Música del lugar retenida: suena la batalla '{_activeBattleId}'.");
+#endif
+            yield break;
+        }
+
         // Con la pantalla en negro, espera al telón o al fundido (HandleTelonAbierto). Lo que
         // sonaba (la música de la cinemática que acaba de terminar) se apaga mientras tanto: así
         // no se pisa con lo que venga detrás (rótulo, otra cinemática con su propio tema).

@@ -598,6 +598,17 @@ public class DialogueBeat : SequenceBeat, IConfigurableDesdeGuion
             ctx.Player?.RegisterCleanup(soltarReloj);
         }
 
+        // La caja de diálogo es modo juego: la avanza el jugador, así que se ve sin bandas de cine.
+        // Si la secuencia las tenía puestas, se retiran antes de abrir la caja y vuelven al cerrarla
+        // para lo que quede de escena (si queda algo que ver). Ver INC-1141 e INC-1149.
+        var bandas = BandasDeCineUI.Instance;
+        float alturaDeBandas = bandas != null ? bandas.AlturaObjetivo : 0f;
+        if (alturaDeBandas > 0f)
+        {
+            bandas.Mostrar(false, duracion: 0.25f);
+            while (bandas != null && bandas.Animando) yield return null;
+        }
+
         try
         {
             DialogueManager.Instance.StartDialogue(dialogue, anchor, () => finished = true,
@@ -628,6 +639,11 @@ public class DialogueBeat : SequenceBeat, IConfigurableDesdeGuion
             if (endDialogueCameraImmediately && !conservarCamaraDeLaSecuencia)
                 DialogueCinematicController.Instance?.EndCinematicNow();
         }
+
+        // Solo vuelven si queda escena que ver: si la secuencia acaba con esta caja, se pasa a jugar
+        // sin bandas (antes volvían ~1,5 s y se iban otra vez). Ver INC-1149.
+        if (alturaDeBandas > 0f && bandas != null && (ctx.Player == null || ctx.Player.QuedaAlgoQueVer()))
+            bandas.Mostrar(true, alturaDeBandas, 0.25f);
     }
 }
 

@@ -1,59 +1,32 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 /// Avisa al grafo narrativo cuando el jugador compra un objeto concreto (INC-436).
 ///
-/// Nació para la estrella torcida de Tomasa: con la moneda de Eldran, en su puesto solo alcanza
-/// para ella, y el capítulo 1 no sigue hasta que Will la compra. ShopMarketSignal avisaba al
-/// CERRAR una tienda, comprara lo que comprara; aquí lo que cuenta es la compra de ese objeto.
-///
-/// Al comprarlo espera a que se cierre la tienda (con un menú abierto los bocadillos se esconden),
-/// dice las frases de `reacciones` —el vendedor es este objeto; el jugador, Will— y lanza el
-/// evento. Va en el propio NPC vendedor, así que no hay que tocar la escena para montarlo.
+/// ShopMarketSignal avisa al cerrar una tienda, se compre lo que se compre; aquí cuenta la compra
+/// de ese objeto. Al comprarlo espera a que se cierre la tienda y lanza el evento. Lo que se diga
+/// después va en la cinemática que el grafo lanza con ese evento (modo cine), no aquí. Va en el
+/// propio NPC vendedor, así que no hay que tocar la escena para montarlo. Ver INC-1145.
 public class SenalDeCompra : MonoBehaviour
 {
-    [Serializable]
-    public class Reaccion
-    {
-        [Tooltip("Marcado: la dice Will. Desmarcado: la dice el vendedor (este objeto).")]
-        public bool diceElJugador;
-        [Tooltip("Clave de localización de la frase.")]
-        public string textKey;
-        [Tooltip("Gesto al decirla (opcional, p. ej. 'Laugh01').")]
-        public string gesto;
-    }
-
     [Tooltip("El objeto cuya compra se espera.")]
     [SerializeField] private ItemData objeto;
 
-    [Tooltip("Evento del grafo (RaiseCustom) que se lanza cuando el jugador lo ha comprado y han " +
-             "terminado las frases.")]
+    [Tooltip("Evento del grafo (RaiseCustom) que se lanza cuando el jugador lo ha comprado y se ha " +
+             "cerrado la tienda.")]
     [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     [SerializeField] private string eventoNarrativo = "ESTRELLA_COMPRADA";
 
-    [Tooltip("Lo que se dice al salir de la tienda después de comprarlo, en orden.")]
-    [SerializeField] private Reaccion[] reacciones = Array.Empty<Reaccion>();
-
-    [Tooltip("Segundos por frase. 0 = lo que se tarda en leerla (el bocadillo nunca dura menos).")]
-    [SerializeField, Min(0f)] private float segundosPorFrase = 0f;
-
     private bool _comprado;
     private bool _eventoEmitido;
-    private PlayerActionManager _bloqueo;
-    private bool _saltado;
-    private Action _alSaltar;
 
     void OnEnable() => ShopController.CompraRealizada += AlComprar;
 
-    // Si el vendedor desaparece a mitad de las frases (cambio de escena, carga, roster), las
-    // corrutinas mueren sin llegar a su final: aquí se suelta al jugador y se avisa igualmente al
-    // grafo, para que el capítulo no se quede esperando una compra que ya se hizo.
+    // Si el vendedor desaparece antes de que se cierre la tienda (cambio de escena, carga, roster),
+    // se avisa igualmente al grafo para que el capítulo no espere una compra que ya se hizo.
     void OnDisable()
     {
         ShopController.CompraRealizada -= AlComprar;
-        DejarDeSerSaltable();
-        SoltarJugador();
         if (_comprado && !_eventoEmitido) Emitir();
     }
 
@@ -68,76 +41,7 @@ public class SenalDeCompra : MonoBehaviour
     private IEnumerator Co_TrasLaCompra()
     {
         while (MenuManager.AnyOpen()) yield return null;
-
-        // INC-445: «mientras Tomasa habla me puedo ir». Will se queda quieto durante las frases,
-        // mirando a la vendedora, igual que en cualquier conversación.
-        if (PlayerService.Player != null)
-        {
-            _bloqueo = PlayerService.Player.GetComponent<PlayerActionManager>();
-            _bloqueo?.PushMode(ActionMode.Cinematic);
-            Vector3 hacia = transform.position - PlayerService.Player.transform.position; hacia.y = 0f;
-            if (hacia.sqrMagnitude > 0.01f)
-                PlayerService.Player.transform.rotation = Quaternion.LookRotation(hacia.normalized, Vector3.up);
-        }
-
-        // Las frases se pueden saltar con el mismo botón que las secuencias (NarrativeSkipHub).
-        // Saltar solo corta las frases: al jugador se le suelta y el evento se lanza igual.
-        // Ver INC-461.
-        _saltado = false;
-        _alSaltar = () =>
-        {
-            _saltado = true;
-            SpeechBubbleUI.Instance?.SkipCurrent();
-        };
-        NarrativeSkipHub.RegisterSkipHandler(_alSaltar);
-
-        yield return new WaitForSecondsRealtime(0.35f);
-
-        var bocadillo = SpeechBubbleUI.Instance;
-        if (bocadillo != null && reacciones != null)
-        {
-            foreach (var r in reacciones)
-            {
-                if (_saltado) break;
-                if (r == null || string.IsNullOrEmpty(r.textKey)) continue;
-                Transform quien = r.diceElJugador
-                    ? (PlayerService.Player != null ? PlayerService.Player.transform : null)
-                    : transform;
-                if (quien == null) continue;
-
-                string texto = LocalizationManager.Instance != null
-                    ? LocalizationManager.Instance.Get(r.textKey, r.textKey)
-                    : r.textKey;
-
-                float voz = VoiceLines.TryPlay(r.textKey);
-                bool fin = false;
-                bocadillo.Show(quien, texto, Mathf.Max(0.1f, segundosPorFrase, voz > 0f ? voz + 0.3f : 0f), () => fin = true,
-                               string.IsNullOrEmpty(r.gesto) ? null : r.gesto);
-
-                // Tope por si otro bocadillo pisa este y su aviso no llega nunca (mismo motivo que
-                // el tope de SayBeat).
-                float tope = bocadillo.TiempoDeLectura(texto) * 4f + 10f;
-                while (!fin && !_saltado && tope > 0f) { tope -= Time.unscaledDeltaTime; yield return null; }
-            }
-        }
-
-        DejarDeSerSaltable();
-        SoltarJugador();
-        Emitir();
-    }
-
-    private void DejarDeSerSaltable()
-    {
-        if (_alSaltar == null) return;
-        NarrativeSkipHub.UnregisterSkipHandler(_alSaltar);
-        _alSaltar = null;
-    }
-
-    private void SoltarJugador()
-    {
-        if (_bloqueo == null) return;
-        _bloqueo.PopMode(ActionMode.Cinematic);
-        _bloqueo = null;
+        if (!_eventoEmitido) Emitir();
     }
 
     private void Emitir()

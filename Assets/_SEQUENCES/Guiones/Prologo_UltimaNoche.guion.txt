@@ -171,8 +171,7 @@ cam_rio          6016.6 5994.6
 cam_duelo_norte  6002.6 6004.6
 # La grieta: desde el norte, como todo el duelo (el maestro a la izquierda de la pantalla).
 cam_grieta       6003.4 6003.4
-# Vida de fondo: el humo del horno de la panadería y mariposas en las flores y en la ribera.
-humo_horno       5995.6 6003.9 101.3
+# Vida de fondo: mariposas en las flores y en la ribera.
 mariposas_a      6014.4 5993.9 100.8
 mariposas_b      6016.4 6003.0 100.9
 mariposas_c      6011.0 6004.2 100.9
@@ -434,9 +433,7 @@ efecto SetPropActiveBeat propId=PROP_Nube_Oeste active=false
 efecto SetPropActiveBeat propId=PROP_Nube_Este active=false
 efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
 archimago en plaza_archimago mirando cam_baja
-# Vida de fondo: humo del horno de la panadería y mariposas en las flores y en la ribera. Las
-# mariposas se recogen cuando llega la tormenta; el humo, con la explosión.
-vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Smoke02_P.prefab en=humo_horno lifetime=220 registrarComo=HUMO_HORNO
+# Vida de fondo: mariposas en las flores y en la ribera; se recogen cuando llega la tormenta.
 vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly01_P.prefab en=mariposas_a lifetime=110 registrarComo=MARIPOSAS_A
 vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly02_P.prefab en=mariposas_b lifetime=110 registrarComo=MARIPOSAS_B
 vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly03_P.prefab en=mariposas_c lifetime=110 registrarComo=MARIPOSAS_C
@@ -497,7 +494,7 @@ archimago mira carreta
 # detrás de un «desde ...» acababa contando desde ese «desde» (la carreta se posaba antes de
 # subir y se quedaba en el aire, fuera de plano). Ver INC-1016.
 desde @carreta_magia+0.3 sonido Prologo_MagiaLevitar en=archimago
-desde @carreta_magia+0.4 vfx "Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab" en=carreta offset=0,0.2,0 lifetime=3.8
+desde @carreta_magia+0.4 vfx Assets/_VFX/Prologo/Piloto/Luz_Remolino.prefab en=carreta offset=0,0.2,0 lifetime=3.8
 desde @carreta_magia+0.5 archimago bucle CastingIdle01
 # En tres tiempos, para que se vea: sube todavía volcada, se endereza en el aire y baja.
 desde @carreta_magia+0.6 efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=0,1.3,0 deltaRotacion=0,0,62 segundos=1.0 desdeDondeEstaba=true esperar=false
@@ -647,7 +644,6 @@ espera 3.5
 # colina: lo fuerte del trueno dura 2,5 s y, si cae con la frase de Liora, la tapa (INC-936).
 desde @evacuar-3.0 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.85 trueno=SFX_Prologo_Trueno_3
 ambiente PANICO eventKey=Ambience_Prologo_Panico volumen=0.6
-prop PROP_Incendio
 archimago mira liora
 & liora mira archimago
 plano medio liora solo lado=izq altura=1.0 altura_foco=1.0 lente=38
@@ -726,10 +722,10 @@ archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
 & mago reposo
 
 # El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
-plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.0 lente=46 mano=0.25
+plano dos archimago mago desde=cam_duelo_norte altura=1.1 altura_foco=1.0 lente=58 mano=0.25
 mago gesto MagicRight
-+0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
-+0.3 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
++0.3 vfx Assets/_VFX/Prologo/Piloto/Luz_Escudo.prefab en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
 +0.3 archimago gesto Defend_NoWeapon
 +0.8 sonido Prologo_EscudoBloquea en=archimago
 +0.8 destello BFB3FFFF 0.12
@@ -737,7 +733,7 @@ mago gesto MagicRight
 espera 1.4
 # La respuesta del Archimago, en el mismo dos de perfil: la bola cruza la pantalla hacia el Mago.
 archimago gesto MagicLeft
-+0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Luz_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
 +0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
 +0.85 mago gesto TakeDamage
 espera 1.2
@@ -749,66 +745,74 @@ espera 1.2
 mago desliza a duelo_m dura=0.4 mirando=archimago
 plano medio mago lado=frente altura=1.0 altura_foco=1.1 lente=34 mano=0.35
 mago gesto MagicRight
-+0.15 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
-+0.45 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
-+0.75 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.15 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.45 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.75 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
 +0.2 sacudida 0.25 0.9
 espera 0.55
-plano conjunto archimago lado=der altura=0.5 altura_foco=1.8 lente=42 mano=0.35
+plano dos archimago mago desde=cam_duelo_norte altura=1.2 altura_foco=1.7 lente=62 mano=0.35
 efecto SaltoBeat actorId=archimago altura=2.6 desplazamiento=2.2 haciaElLado=true subida=0.32 sostener=0.5 caida=0.4
-+0.05 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=archimago offset=0,0.2,0 lifetime=1.4
++0.05 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=archimago offset=0,0.2,0 lifetime=1.4
 +0.05 sonido Prologo_Despegue en=archimago volume=0.7
 +0.3 archimago gesto MagicLeft
-+0.4 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
++0.4 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
 +0.4 destello BFB3FFFF 0.10
 espera 0.9
 plano medio mago lado=frente altura=0.9 altura_foco=1.15 lente=30 mano=0.4
-+0.05 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
++0.05 vfx Assets/_VFX/Prologo/Piloto/Sombra_Escudo.prefab en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
 +0.05 mago gesto Defend_NoWeapon
 +0.45 sonido Prologo_EscudoBloquea en=mago
-+0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" en=mago offset=0,1.2,0 lifetime=1.2
++0.7 vfx Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab en=mago offset=0,0.95,0 lifetime=1.2
 +0.7 sonido Prologo_ImpactoHechizo en=mago
 +0.7 destello FFFFFFFF 0.14
 +0.7 sacudida 0.55 0.6
 +0.75 mago desliza a mago_retrocede dura=0.25 seco mirando=archimago
 espera 1.1
+# Los dos vuelven a su sitio, a la misma distancia del centro: el choque cae en medio.
 archimago desliza a duelo_a dura=0.35 mirando=mago
+& mago desliza a duelo_m dura=0.35 mirando=archimago
 @choque
-plano dos archimago mago desde=cam_duelo_norte altura=1.0 altura_foco=1.1 lente=38 mano=0.3
+plano dos archimago mago desde=cam_duelo_norte altura=1.1 altura_foco=1.1 lente=58 mano=0.3
 mago gesto MagicSpecial
 & archimago gesto MagicSpecial
 # Los dos rayos salen de las manos y se encuentran en el centro (antes solo había el gesto).
-+0.2 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=choque lifetime=3 registrarComo=PUNTO_CHOQUE
-+0.55 efecto SpellBeat lanzaId=archimago objetivoId=PUNTO_CHOQUE vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" sfxLanzamiento=Prologo_HechizoArchimago velocidad=4.5 tiempoDeCarga=0.1 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
-+0.55 efecto SpellBeat lanzaId=mago objetivoId=PUNTO_CHOQUE vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab sfxLanzamiento=Prologo_BolaDeFuego velocidad=11.5 tiempoDeCarga=0.1 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
-+0.1 vfx Assets/_VFX/Prologo/VFX_CirculoDelArchimago.prefab en=archimago offset=0,0.05,0 lifetime=2.2
-+0.1 vfx Assets/_VFX/Prologo/VFX_CirculoDelMagoOscuro.prefab en=mago offset=0,0.05,0 lifetime=2.2
+# Cada uno prepara su hechizo entre las manos y lo suelta hacia el centro.
++0.05 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/Piloto/Luz_CargaEnLasManos.prefab entreLasManos=true duracion=0.55 avance=0 elevacion=0 escalaInicial=0.4 escalaFinal=1.2
++0.05 efecto ConjuroEnLasManosBeat actorId=mago vfxPrefab=Assets/_VFX/Prologo/Piloto/Sombra_CargaEnLasManos.prefab entreLasManos=true duracion=0.55 avance=0 elevacion=0 escalaInicial=0.4 escalaFinal=1.2
+# Marca invisible en el centro (antes era un destello que aparecía solo antes de que llegaran los hechizos).
++0.2 vfx Assets/_VFX/Prologo/Piloto/Marca.prefab en=choque lifetime=3 registrarComo=PUNTO_CHOQUE
++0.55 efecto SpellBeat lanzaId=archimago objetivoId=PUNTO_CHOQUE vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab sfxLanzamiento=Prologo_HechizoArchimago velocidad=4.5 tiempoDeCarga=0 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
++0.55 efecto SpellBeat lanzaId=mago objetivoId=PUNTO_CHOQUE vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab sfxLanzamiento=Prologo_BolaDeFuego velocidad=4.5 tiempoDeCarga=0 alturaDelImpacto=1.15 sacudidaAlImpacto=0 esperarAlImpacto=false
++0.1 vfx Assets/_VFX/Prologo/Piloto/Luz_Circulo.prefab en=archimago offset=0,0.05,0 lifetime=2.2
++0.1 vfx Assets/_VFX/Prologo/Piloto/Sombra_Circulo.prefab en=mago offset=0,0.05,0 lifetime=2.2
 +0.7 sonido SFX_Prologo_Latigazo volume=0.9
-+0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.3,0 lifetime=1.2
-+0.7 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash purple.prefab" en=mago offset=0,1.3,0 lifetime=1.2
 +1.0 sonido Prologo_Choque
 +1.0 efecto LineasDeConcentracionBeat mostrar=true duracion=1.0
-+1.0 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy explosion.prefab" en=choque offset=0,1.6,0 lifetime=2.0
-+1.0 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=choque lifetime=2.2
++1.0 vfx Assets/_VFX/Prologo/Piloto/Choque.prefab en=choque offset=0,1.15,0 lifetime=2.0
++1.0 vfx Assets/_VFX/Prologo/Piloto/Pilar.prefab en=choque lifetime=2.2
 +1.0 destello FFFFFFFF 0.28
 +1.0 sacudida 0.75 1.0
 +1.1 sonido Prologue_WarClashStinger_A
 espera 2.6
 # La grieta: el Archimago sale despedido.
+# Se entiende en dos tiempos: el Mago la prepara entre las manos y la suelta contra el suelo; la
+# grieta corre por el suelo hasta el Archimago y ahí revientan los pinchos.
 plano medio mago lado=izq altura=1.0 altura_foco=1.05 lente=38 mano=0.3
 mago gesto MagicRight
+& efecto ConjuroEnLasManosBeat actorId=mago vfxPrefab=Assets/_VFX/Prologo/Piloto/Sombra_CargaEnLasManos.prefab entreLasManos=true duracion=0.7 avance=0 elevacion=0 escalaInicial=0.4 escalaFinal=1.2
 +0.2 sonido Prologo_SueloSeAbre en=mago
-+0.25 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash purple.prefab" en=mago offset=0,1.2,0 lifetime=1.2
 +0.25 sonido SFX_Prologo_Latigazo volume=0.9
-plano conjunto archimago desde=cam_grieta altura=0.9 altura_foco=0.9 lente=42 mano=0.3
-+0.3 vfx Assets/_SPELLS/Prefabs/MagoOscuroGrieta.prefab en=archimago lifetime=2.4
-+0.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Ground AOE explosion.prefab" en=archimago lifetime=2.0
+espera 0.6
+plano dos archimago mago desde=cam_duelo_norte altura=1.3 altura_foco=0.8 lente=58 mano=0.3
+& efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Rastro.prefab velocidad=20 tiempoDeCarga=0 alturaDelImpacto=0 alPecho=false sacudidaAlImpacto=0 esperarAlImpacto=false
++0.3 vfx Assets/_VFX/Prologo/Piloto/Sombra_Grieta.prefab en=archimago lifetime=2.4
++0.5 vfx Assets/_VFX/Prologo/Piloto/Sombra_Onda.prefab en=archimago lifetime=2.0
 +0.5 sacudida 0.7 0.9
 +0.5 sonido Prologo_ImpactoHechizo en=archimago
 +0.55 sonido SFX_Prologo_Impacto volume=0.8
 +0.55 archimago desliza a arch_caida dura=0.35 seco mirando=mago
 +0.55 archimago bucle Pain01
-espera 2.0
+espera 1.4
 
 # ── 7. EL ÚLTIMO HECHIZO ──────────────────────────────────────────────────────────────────
 @ultimo
@@ -824,15 +828,15 @@ mago bucle JumpAir_InPlace_NoWeapon congela
 & mago bucle FoundSomething_NoWeapon congela al_final
 & mago desliza aqui altura=3 dura=2.6
 +0.1 sonido Prologo_Despegue en=mago
-+0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=mago offset=0,0.2,0 lifetime=1.6
++0.1 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=mago offset=0,0.2,0 lifetime=1.6
 +0.6 sonido Prologo_HechizoGrande en=mago volume=0.6
 +0.8 sonido SFX_Prologo_AgujeroNegro_Carga volume=0.5
 +0.8 ambiente AGUJERO_NEGRO eventKey=SFX_Prologo_AgujeroNegro_Bucle volumen=0.12
-+0.8 vfx Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab en=agujero lifetime=160 registrarComo=CARGA_ESFERA
++0.8 vfx Assets/_VFX/Prologo/Piloto/Sombra_CargaGrande.prefab en=agujero lifetime=160 registrarComo=CARGA_ESFERA
 +0.85 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=0.35 duracion=0
 +0.9 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.0 duracion=3.5
 # Su círculo mágico (morado), bajo los pies mientras levita; el agujero, encima de él.
-+1.0 vfx Assets/_VFX/Prologo/VFX_CirculoDelMagoOscuro.prefab en=mago offset=0,0.05,0 lifetime=160 seguirAlActor=true registrarComo=CARGA_CRECE
++1.0 vfx Assets/_VFX/Prologo/Piloto/Sombra_Circulo.prefab en=mago offset=0,0.05,0 lifetime=160 seguirAlActor=true registrarComo=CARGA_CRECE
 +1.0 sacudida 0.35 1.6
 espera 3.4
 
@@ -844,7 +848,7 @@ archimago bucle CastingIdle01
 & liora mira centro_plaza
 & nina mira centro_plaza
 # Su círculo mágico (azul) desde la plegaria hasta el choque; el de curación verde no pega (INC-938).
-+0.2 vfx Assets/_VFX/Prologo/VFX_CirculoDelArchimago.prefab en=archimago offset=0,0.05,0 lifetime=75 registrarComo=CIRCULO_PLEGARIA
++0.2 vfx Assets/_VFX/Prologo/Piloto/Luz_Circulo.prefab en=archimago offset=0,0.05,0 lifetime=75 registrarComo=CIRCULO_PLEGARIA
 +0.2 sonido Prologo_MagiaLevitar en=archimago volume=0.5
 # "No daré ni un paso atrás... ¡Liora! ¡Nina!": la voz a pelo. Sin eco y sin música de
 # fondo: la frase sola, y el silencio alrededor es lo que hace que pese.
@@ -874,7 +878,9 @@ espera 1.4
 # Plano medio: las manos y el orbe que nace entre ellas tienen que verse (INC-980).
 plano medio archimago lado=der altura=0.85 altura_foco=0.9 lente=44 gira=-35
 archimago bucle Beg01_Loop
-& efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_OrbeProtector.prefab offset=0,0.52,0.22 avance=0.05 elevacion=0.03 duracion=34 periodo=1.4 escalaInicial=0.3 escalaFinal=1.3 registrarComo=BOLA_PROTECTORA vidaEnPool=90
+& efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_OrbeProtector.prefab entreLasManos=true offset=0,0.52,0.22 avance=0.05 elevacion=0.03 duracion=34 periodo=1.4 escalaInicial=0.3 escalaFinal=1.3 registrarComo=BOLA_PROTECTORA vidaEnPool=90
+# Carga del conjuro: graves que laten y aire brillante, sin tocar la zona de la voz; se aparta en la despedida.
+& sonido SFX_Prologo_CargaPlegaria volume=0.45
 # La plegaria va sin música: Ultimo Incantazione entra en el hechizo, con el grito.
 archimago dice PROLOGO_PLEGARIA_02 cara=dormido
 +0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
@@ -883,7 +889,6 @@ archimago dice PROLOGO_PLEGARIA_02 cara=dormido
 plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 gira=-35 mano=0.15
 archimago dice PROLOGO_PLEGARIA_03 cara=dormido
 +3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_1
-+3.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.25,0 lifetime=1.6
 +5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
 +5.6 sacudida 0.35 1.2
 
@@ -897,8 +902,8 @@ espera 1.2
 plano conjunto archimago lado=der altura=0.55 altura_foco=1.7 lente=52 gira=-35 mano=0.2
 archimago dice PROLOGO_PLEGARIA_04 cara=dormido
 & archimago bucle Conjuro_Invocar fundido=0.8
-& efecto ConjuroEnLasManosBeat actorId=archimago efectoRegistrado=BOLA_PROTECTORA subirACabeza=true offset=0,0.52,0.22 offsetFinal=0,2.1,0.15 tiempoSubida=1.6 duracion=16 escalaInicial=1.3 escalaFinal=6
-+3.5 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=archimago lifetime=2.2
+& efecto ConjuroEnLasManosBeat actorId=archimago efectoRegistrado=BOLA_PROTECTORA subirACabeza=true entreLasManos=true offset=0,0.52,0.22 offsetFinal=0,2.45,0.15 tiempoSubida=1.6 duracion=16 escalaInicial=1.3 escalaFinal=6
++3.5 vfx Assets/_VFX/Prologo/Piloto/Pilar.prefab en=archimago lifetime=2.2
 +3.5 sonido Prologo_MagiaLevitar en=archimago volume=0.55
 +3.5 sacudida 0.3 0.9
 
@@ -952,47 +957,49 @@ archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
 +0.3 sacudida 0.45 2.0
 +0.3 sonido Prologo_ProteccionAbsoluta volume=0.7
-+0.3 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.8 duracion=2.5
++0.3 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.8 duracion=0.6
+# En pleno «¡Protégelos a todos!» los dos lanzan su hechizo a la vez, empujando con las dos manos.
++0.6 archimago bucle Conjuro_Lanzar congela fundido=0.15
++0.6 mago bucle Conjuro_Lanzar congela fundido=0.15
++0.75 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA efectoBRegistrado=CARGA_ESFERA puntoDeEncuentro=encuentro_hechizos fraccionDeViaje=0.26 duracionCrecimiento=5.4 duracionMezcla=0 entregarBlanco=false crecimientoA=2.4 crecimientoB=1.2 esperar=false
+# El disparo de los dos: pared que sube de tono y se corta al chocar (con el plin).
++0.75 sonido SFX_Prologo_LanzamientoConjuro volume=0.9
 
-# Aérea que gira alrededor de los dos, cada uno con su hechizo en alto.
-@sostienen
-plano general archimago mago desde=cam_aerea_choque altura=7 mira=foco_aereo lente=58 gira=40
-sonido SFX_Prologo_AgujeroNegro_Carga volume=0.6
-& sacudida 0.3 3.4
-espera 3.6
-
-# El choque: los dos hechizos salen al encuentro y empujan uno contra otro, con cortes cada vez
-# más rápidos, hasta que estallan (el estallido va en el pico de la música).
+# Chocan: «plin», un destello que llena la pantalla, y se empujan en el aire con los planos de siempre.
+# El estallido va en el golpe de la música (@hechizo + 10 s).
 @choque_final
-# Los SFX del choque van por debajo de la música, que es la que sube hasta el estallido (INC-1085).
-desde @choque_final-1.6 sonido SFX_Prologo_LuchaFinal volume=0.55
+# Aérea que gira alrededor de los dos mientras los hechizos chocan y se empujan.
+plano general archimago mago desde=cam_aerea_choque altura=7 mira=foco_aereo lente=58 gira=40
+& destello FFFFFFFF 0.6
+& sonido SFX_Prologo_Plin volume=0.9
+& sonido SFX_Prologo_LuchaFinal volume=0.55
+& vfx Assets/_VFX/Prologo/Piloto/Choque.prefab en=encuentro_hechizos lifetime=2.5
+& vfx Assets/_VFX/Prologo/Piloto/Forcejeo.prefab en=encuentro_hechizos lifetime=8 registrarComo=FORCEJEO
++0.2 sacudida 0.5 3.4
++2.0 efecto LineasDeConcentracionBeat mostrar=true duracion=3.5
+espera 3.6
+# Más cerca del choque, a la vista.
 plano general archimago mago desde=cam_choque altura=1.6 mira=foco_choque lente=52
-efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA efectoBRegistrado=CARGA_ESFERA puntoDeEncuentro=encuentro_hechizos fraccionDeViaje=0.4 duracionCrecimiento=3.4 duracionMezcla=0 entregarBlanco=false crecimientoA=2.4 crecimientoB=1.2 esperar=false
-& sonido Prologo_HechizoArchimago volume=0.6
-& sonido Prologo_BolaDeFuego volume=0.6
-+1.3 sacudida 0.5 2.1
-+1.2 efecto LineasDeConcentracionBeat mostrar=true duracion=2.2
-# Los dos hechizos se ven salir, encontrarse y empujarse en el aire: más cerca del choque y sin
-# cortar a primeros planos (no se veía el choque ni la explosión, INC-980).
-# Por detrás del Archimago, como el plano del grito: su orbe sale hacia el Mago, el agujero baja a su
-# encuentro y chocan en medio, a la vista.
-desde @choque_final+1.6 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=3.2 altura=0.9 lente=52 mano=0.5
-espera 3.4
+espera 1.6
+# Por detrás del Archimago, como el plano del grito: su orbe contra el agujero, hasta el estallido.
+plano general archimago mago desde=cam_final mira=duelo_a altura_foco=3.2 altura=0.9 lente=52 mano=0.5
+espera 1.8
 
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
 # Estallido con estruendo; los dos salen despedidos cada uno hacia su lado y la pantalla se va
 # pintando de blanco poco a poco.
 @estallido
+# La previa sube de tono y se corta justo en el golpe; el estallido sube como el final del Dragon Slave.
+desde @estallido-1.4 sonido SFX_Prologo_PreviaEstallido volume=0.85
 efecto LineasDeConcentracionBeat mostrar=false fundido=0
-vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy explosion.prefab" en=encuentro_hechizos lifetime=3
-& vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" en=encuentro_hechizos lifetime=2.5
-& vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=choque lifetime=2.5
+vfx Assets/_VFX/Prologo/Piloto/Choque.prefab en=encuentro_hechizos lifetime=3
+& vfx Assets/_VFX/Prologo/Piloto/EstallidoFinal.prefab en=choque lifetime=4
 & destello FFFFFFFF 0.35
 & sacudida 1.0 1.8
-& sonido SFX_Prologo_ExplosionFinal volume=1
+& sonido SFX_Prologo_EstallidoSube volume=1
 & sonido Prologo_Choque volume=0.9
 & sonido Prologue_WarClashStinger_A
-& efecto RecogerVfxBeat ids=CARGA_CRECE|CIRCULO_PLEGARIA
+& efecto RecogerVfxBeat ids=CARGA_CRECE|CIRCULO_PLEGARIA|FORCEJEO
 & ambiente AGUJERO_NEGRO sonar=false fundido=0.3
 +0.05 archimago reposo
 +0.05 archimago bucle Die01_NoWeapon congela
@@ -1005,7 +1012,7 @@ vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy ex
 espera 4.1
 
 @explosion
-efecto RecogerVfxBeat ids=CARGA_ESFERA|BOLA_PROTECTORA|HUMO_HORNO
+efecto RecogerVfxBeat ids=CARGA_ESFERA|BOLA_PROTECTORA
 efecto MezclaBeat fuente=grito quitar=true fundido=0.6
 ambiente TORMENTA sonar=false fundido=0.2
 +0.2 hora Morning immediate=true esLaHoraDeVolver=true

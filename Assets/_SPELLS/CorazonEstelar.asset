@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 3
   lore: "Late como una estrella que a\xFAn no ha decidido apagarse."
   loreId: 
-  prefab: {fileID: 4286403840095254974, guid: 5edca020d53f45944bdc3324c46214d0, type: 3}
+  prefab: {fileID: 2877260255541916858, guid: eb8c88be0d075734fb6e3040c9274871, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0.65, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 0
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 25
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 4771564426222910639, guid: 814a2fe4f0436554597e4c2dff5547f3, type: 3}
-  impactVFX: {fileID: 7037865047022992450, guid: c5b10485b3aead6419ea5caa0e3f17ad, type: 3}
+  spawnVFX: {fileID: 2985902196680016700, guid: 1363330f360f43f46b298ef07f4bc788, type: 3}
+  impactVFX: {fileID: 4230478978851823955, guid: 8bce9a32bf2978b47a71c7e611bf98bb, type: 3}
   despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_CorazonEstelar
   impactSFXKey: Impacto_Luz_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 7bb9669c2b0c9ef4c86aced248b8b3d7, type: 3}
   bounceCount: 0

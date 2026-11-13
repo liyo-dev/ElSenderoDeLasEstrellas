@@ -38,6 +38,7 @@
 <circle cx='975' cy='914.191' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='914.191' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='914.191' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='975' cy='914.191' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <text x='979' y='926.191' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>40s</text>
 <circle cx='975' cy='914.191' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='914.191' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
@@ -49,11 +50,12 @@
 <circle cx='2145' cy='934.286' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='2145' cy='934.286' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='2145' cy='934.286' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='2145' cy='934.286' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <text x='2149' y='946.286' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>40s</text>
 <circle cx='2145' cy='934.286' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='2145' cy='934.286' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
 <line x1='2145' y1='934.286' x2='2145' y2='950.286' stroke='#7ad7ff' stroke-width='2'/>
 <text x='2153' y='926.286' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>tobi</text>
 <circle cx='2145' cy='934.286' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
-<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@final  0:32,2 – 0:43,5</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@final  0:31,8 – 0:43,1</text>
 </svg>

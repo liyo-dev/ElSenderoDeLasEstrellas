@@ -21,7 +21,7 @@ namespace ElSendero.Editor.Iconos
         [Tooltip("Giro que se suma a la dirección de fuera, para un 3/4 suave.")]
         public float giroExtra;
         public int grosorContorno = 6;
-        public Color colorContorno = new Color(43f / 255f, 30f / 255f, 22f / 255f, 1f);
+        public Color colorContorno = new Color(0.20f, 0.15f, 0.22f, 1f);
         [Tooltip("Fotografía el esqueleto en la pose que tiene el origen (p. ej. una animación muestreada) en vez de en la pose de bind.")]
         public bool poseDelOrigen;
         [Tooltip("Encuadra solo esta fracción del alto, desde arriba (0 = todo). Para retratos: cabeza y pecho.")]

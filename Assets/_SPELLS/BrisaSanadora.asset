@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_BrisaSanadora
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 1e97f396b940dc94283b3c860e5d3660, type: 3}
   bounceCount: 0

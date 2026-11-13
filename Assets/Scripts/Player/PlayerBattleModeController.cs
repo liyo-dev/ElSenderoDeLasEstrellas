@@ -111,6 +111,7 @@ namespace Game.Player
         // Estado de la capa
         private float _currentLayerWeight;
         private float _targetLayerWeight;
+        private float _brazosSueltosHasta;
         
         /// <summary>
         /// Indica si actualmente se está reproduciendo la secuencia de victoria
@@ -123,6 +124,7 @@ namespace Game.Player
         private CinemachineCamera _gameplayVcam;
         private int _gameplayVcamOriginalPriority;
         private CinemachineBrain _mainBrain;
+        private Camera _camaraPrincipal;
         private float _mainBrainOriginalBlendTime;
         private bool _victoryCameraActive;
 
@@ -326,15 +328,16 @@ namespace Game.Player
         {
             if (animator == null || animator.layerCount <= upperBodyLayerIndex) return;
             
-            // Interpolar hacia el peso objetivo
-            if (!Mathf.Approximately(_currentLayerWeight, _targetLayerWeight))
+            // Interpolar hacia el peso objetivo (cero mientras los brazos están sueltos por un golpe)
+            float objetivo = Time.time < _brazosSueltosHasta ? 0f : _targetLayerWeight;
+            if (!Mathf.Approximately(_currentLayerWeight, objetivo))
             {
                 float speed = 1f / Mathf.Max(0.01f, layerFadeDuration);
-                _currentLayerWeight = Mathf.MoveTowards(_currentLayerWeight, _targetLayerWeight, speed * Time.deltaTime);
+                _currentLayerWeight = Mathf.MoveTowards(_currentLayerWeight, objetivo, speed * Time.deltaTime);
                 animator.SetLayerWeight(upperBodyLayerIndex, _currentLayerWeight);
                 
 #if UNITY_EDITOR
-                if (debugMode && Mathf.Approximately(_currentLayerWeight, _targetLayerWeight))
+                if (debugMode && Mathf.Approximately(_currentLayerWeight, objetivo))
                 {
                     Debug.Log($"[PlayerBattleMode] Capa UpperBody peso = {_currentLayerWeight:F2}");
                 }
@@ -342,6 +345,18 @@ namespace Game.Player
             }
         }
         
+        /// <summary>
+        /// Quita la pose de combate de los brazos durante unos segundos, para que se vea entera una
+        /// animación de cuerpo completo (el golpe al recibir daño); después vuelve con su fundido.
+        /// </summary>
+        public void SoltarBrazos(float segundos)
+        {
+            _brazosSueltosHasta = Mathf.Max(_brazosSueltosHasta, Time.time + segundos);
+            if (animator == null || animator.layerCount <= upperBodyLayerIndex) return;
+            _currentLayerWeight = 0f;
+            animator.SetLayerWeight(upperBodyLayerIndex, 0f);
+        }
+
         /// <summary>
         /// Detecta si hay enemigos en combate activo consultando ActiveCombatRegistry.
         /// O(1) — no physics queries, no GetComponentInChildren.
@@ -438,8 +453,9 @@ namespace Game.Player
             _victoryVcam.Lens.NearClipPlane = 0.1f;
             _victoryVcam.Lens.FarClipPlane = 1000f;
 
-            if (Camera.main != null)
-                _mainBrain = Camera.main.GetComponent<CinemachineBrain>();
+            _camaraPrincipal = Camera.main;
+            if (_camaraPrincipal != null)
+                _mainBrain = _camaraPrincipal.GetComponent<CinemachineBrain>();
 
             _victoryVcamReady = true;
         }
@@ -453,6 +469,11 @@ namespace Game.Player
             if (!enableVictoryCamera) return;
 
             EnsureVictoryCamera();
+            if (_camaraPrincipal == null)
+            {
+                _camaraPrincipal = Camera.main;
+                _mainBrain = _camaraPrincipal != null ? _camaraPrincipal.GetComponent<CinemachineBrain>() : null;
+            }
             if (_victoryVcam == null) return;
 
             Vector3 flatForward = transform.forward;
@@ -484,6 +505,9 @@ namespace Game.Player
 
             _victoryVcam.Priority.Value = (_gameplayVcam != null ? _gameplayVcam.Priority.Value : 10) + 10;
             _victoryCameraActive = true;
+            // Sin reclamar la cámara, vThirdPersonCamera sigue escribiéndola y el plano de victoria
+            // no llega a verse. Ver INC-1103
+            CameraDirectorService.Claim(this);
 
 #if UNITY_EDITOR
             if (debugMode)
@@ -538,6 +562,7 @@ namespace Game.Player
                 _mainBrain.DefaultBlend.Time = _mainBrainOriginalBlendTime;
 
             _victoryCameraActive = false;
+            CameraDirectorService.Release(this);
         }
 
         /// <summary>
@@ -563,6 +588,7 @@ namespace Game.Player
             _isPlayingVictory = true;
             _currentBattleId = battleId;
             GameplayEventLog.Log("Victoria", _currentBattleId);
+
 
             // Deshabilitar control del jugador mientras dura (campos públicos de Invector)
             if (controller != null) controller.enabled = false;
@@ -721,6 +747,7 @@ namespace Game.Player
 
             int hash = Animator.StringToHash(estado);
             float limite = Time.time + Mathf.Max(0.5f, tope);
+
             float empezar = Time.time + 0.3f;
             while (Time.time < limite)
             {
@@ -760,7 +787,15 @@ namespace Game.Player
                 Vector3 pos = _focoVictoria + dir * dist + Vector3.up * alto;
                 Vector3 mira = PuntoDeMira(pos);
 
-                _victoryVcam.transform.SetPositionAndRotation(pos, Quaternion.LookRotation((mira - pos).normalized, Vector3.up));
+                var rot = Quaternion.LookRotation((mira - pos).normalized, Vector3.up);
+                _victoryVcam.transform.SetPositionAndRotation(pos, rot);
+                // Sin Cinemachine al mando de la cámara principal, el plano se escribe en ella
+                // directamente (la cámara ya está reclamada con CameraDirectorService).
+                if (_camaraPrincipal != null && (_mainBrain == null || !_mainBrain.isActiveAndEnabled))
+                {
+                    _camaraPrincipal.transform.SetPositionAndRotation(pos, rot);
+                    _camaraPrincipal.fieldOfView = victoryCamFOV;
+                }
                 yield return null;
             }
             _victoryCamMove = null;

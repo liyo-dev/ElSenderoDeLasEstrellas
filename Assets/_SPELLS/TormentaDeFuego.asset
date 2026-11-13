@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_TormentaDeFuego
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 8583c5469757b8e42b119a29f1911193, type: 3}
   bounceCount: 0

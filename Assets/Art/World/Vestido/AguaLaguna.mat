@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AguaLaguna
-  m_Shader: {fileID: -6465566751694194690, guid: 47bdbe31ac31eb340b92e7a54d819879, type: 3}
+  m_Shader: {fileID: 4800000, guid: bb4b1582928084247b737baf48d7a3e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3001
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -47,19 +47,38 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AnchoDeEspuma: 0.35
+    - _CantidadDeDestellos: 0.35
+    - _CorteHondo: 0.6
+    - _CorteMedio: 0.25
     - _Depth: 2.2
+    - _EscalaDeDestellos: 3
     - _FoamAmount: 0
     - _FoamCutoff: 1
     - _FoamScale: 0
     - _FoamSpeed: 0
+    - _GrosorDeDestellos: 0.07
+    - _GrosorDeTinta: 0.06
     - _Normal01Strength: 2
     - _Normal02Strength: 0.6
     - _NormalSpeed: 0.5
     - _NormalStrength: 2.26
+    - _OndulacionDeEspuma: 0.5
+    - _OpacidadEnLaOrilla: 0.7
+    - _Profundidad: 3
     - _QueueControl: 0
     - _QueueOffset: 1
     - _Smoothness: 0.9
+    - _VelocidadDeDestellos: 0.6
+    - _VelocidadDeEspuma: 0.4
     m_Colors:
+    - _ColorDestellos: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorEspuma: {r: 0.8537736, g: 0.8437736, b: 0.8037735, a: 1}
+    - _ColorHondo: {r: 0.09249998, g: 0.27749997, b: 0.28999996, a: 0.8025}
+    - _ColorMedio: {r: 0.21999997, g: 0.29999998, b: 0.19999996, a: 0.45}
+    - _ColorOrilla: {r: 0.454, g: 0.51, b: 0.43999997, a: 0.615}
+    - _ColorTinta: {r: 0.19999996, g: 0.14999998, b: 0.21999997, a: 1}
+    - _Corriente: {r: 0, g: 0, b: 0, a: 0}
     - _DeepWaterColor: {r: 0.05, g: 0.27, b: 0.32, a: 0.92}
     - _FoamColor: {r: 0.7075471, g: 0.7075471, b: 0.7075471, a: 1}
     - _ShallowWaterColor: {r: 0.22, g: 0.3, b: 0.2, a: 0.45}

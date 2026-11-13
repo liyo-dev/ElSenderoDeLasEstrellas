@@ -12,9 +12,11 @@ half4 _BaseColor;       // No tiñe: solo su alfa cuenta en el recorte (lo leen 
 half4 _Tinte;
 half4 _EmissionColor;
 half _Cutoff;
+half _SombraSinRecorte;
 half _Surface;
 half _TextureImpact;
 half _Brillo;
+half _Pincel;
 CBUFFER_END
 
 #endif

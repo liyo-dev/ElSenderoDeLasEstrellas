@@ -37,6 +37,14 @@ public class ConjuroEnLasManosBeat : SequenceBeat
              "sobre la cabeza del conjurante (que mide 1,8 m); a 0,95 m queda entre las manos.")]
     public Vector3 offset = new Vector3(0f, 0.95f, 0f);
 
+    [Tooltip("La bola va en el punto medio de las dos manos y las sigue mientras se mueven; " +
+             "«offset» solo se usa si el personaje no tiene manos que encontrar.")]
+    public bool entreLasManos;
+
+    [Tooltip("Con «entreLasManos»: desplazamiento desde el punto medio de las manos, en el espacio de " +
+             "quien conjura (un poco por delante de las palmas para que no se meta en ellas).")]
+    public Vector3 desdeLasManos = new Vector3(0f, 0.02f, 0.06f);
+
     [Tooltip("Segundos que dura el conjuro. 0 = hasta que se acabe la secuencia.")]
     public float duracion = 6f;
 
@@ -134,6 +142,17 @@ public class ConjuroEnLasManosBeat : SequenceBeat
                 pool.Recoger(instancia, uso);
         });
 
+        Transform manoIzquierda = null, manoDerecha = null;
+        if (entreLasManos)
+        {
+            var anim = raiz.GetComponentInChildren<Animator>();
+            manoIzquierda = HuesoDelActor.De(anim, HumanBodyBones.LeftHand);
+            manoDerecha = HuesoDelActor.De(anim, HumanBodyBones.RightHand);
+        }
+        bool conManos = manoIzquierda != null && manoDerecha != null;
+        // La subida arranca de donde esté la bola (entre las manos) en vez de desde «offset».
+        Vector3 inicioDeLaSubida = conManos ? instancia.localPosition : offset;
+
         Vector3 escalaBase = vfxPrefab != null ? vfxPrefab.transform.localScale : Vector3.one;
         Vector3 adelante = new Vector3(0f, 0f, avance);
         Vector3 arriba = new Vector3(0f, elevacion, 0f);
@@ -149,7 +168,7 @@ public class ConjuroEnLasManosBeat : SequenceBeat
                 float tSubida = tiempoSubida > 0f ? tiempoSubida : (duracion > 0f ? duracion : 1.4f);
                 float kSubida = Mathf.Clamp01(t / tSubida);
                 float suavizado = Mathf.SmoothStep(0f, 1f, kSubida);
-                Vector3 pos = Vector3.Lerp(offset, offsetFinal, suavizado);
+                Vector3 pos = Vector3.Lerp(inicioDeLaSubida, offsetFinal, suavizado);
                 if (kSubida >= 1f)
                 {
                     float flote = Mathf.Sin((t - tSubida) * 2.5f) * 0.03f;
@@ -168,7 +187,10 @@ public class ConjuroEnLasManosBeat : SequenceBeat
                 float carga = Mathf.SmoothStep(0f, 1f, intensidad);
                 float ciclo = Mathf.Max(0.25f, periodo * Mathf.Lerp(1f, 0.45f, carga));
                 float fase = Mathf.PingPong(t / ciclo, 1f);
-                instancia.localPosition = offset + Vector3.Lerp(adelante, arriba, Mathf.SmoothStep(0f, 1f, fase));
+                Vector3 centro = conManos
+                    ? raiz.InverseTransformPoint((manoIzquierda.position + manoDerecha.position) * 0.5f) + desdeLasManos
+                    : offset;
+                instancia.localPosition = centro + Vector3.Lerp(adelante, arriba, Mathf.SmoothStep(0f, 1f, fase));
                 instancia.localRotation = Quaternion.identity;
                 instancia.localScale = escalaBase * Mathf.Lerp(escalaInicial, escalaFinal, carga);
             }

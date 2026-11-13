@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 10
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
-  impactVFX: {fileID: 440291300114468618, guid: c75b801163bf6c84fb7a173f6368b0c8, type: 3}
+  spawnVFX: {fileID: 4828924625583889719, guid: 6849a7c6881152243b1ebddf7d2554c0, type: 3}
+  impactVFX: {fileID: 4384932747206876306, guid: 55397c20d6fdb7c4aa8710e12620f08a, type: 3}
   despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_AuraEstelar
   impactSFXKey: Impacto_Viento_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 2fe59ab44bbd1454cb275b3591d9be76, type: 3}
   bounceCount: 0

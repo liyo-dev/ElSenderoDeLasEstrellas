@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kits.Core;
 using UnityEngine;
 
 /// El árbitro único de los avisos en pantalla (ver <see cref="IAvisoEnPantalla"/>).
@@ -14,6 +15,10 @@ using UnityEngine;
 ///   Si llega uno más importante, el que se veía pierde el turno y vuelve cuando quede libre.
 /// - Mientras hay silencio (menú, cinemática…), nadie tiene turno. Los avisos esperan con la
 ///   cuenta atrás parada y salen al levantarse el silencio.
+/// - Un aviso puede ceder además ante situaciones de juego concretas (<see cref="IAvisoEnPantalla.CedeAnte"/>,
+///   p. ej. un combate): mientras alguna esté abierta no entra en el reparto y espera su turno;
+///   los demás avisos de su canal siguen su curso. El árbitro no sabe qué situaciones existen,
+///   las lee de <see cref="GameContext"/>.
 /// - Un canal cerrado (<see cref="CerrarCanal"/>) no enseña lo que le llegue mientras siga
 ///   cerrado, ni después: es para reglas del juego del tipo «lo ganado en batalla no saca aviso,
 ///   lo cuenta el informe de victoria». Lo comprueba quien recibe lo que hay que avisar.
@@ -79,9 +84,14 @@ public static class ArbitroDeAvisos
         MenuManager.MenuClosed += AlCerrarMenu;
         PlayerPresetService.OnPresetApplying -= AlCargarPartida;
         PlayerPresetService.OnPresetApplying += AlCargarPartida;
+        GameContext.Changed -= AlCambiarElContexto;
+        GameContext.Changed += AlCambiarElContexto;
         OcultablesDeCinematica.Registrar(s_silencioDeCinematica);
         if (MenuManager.AnyOpen()) s_silencios.Add(PorMenu);
     }
+
+    // Una situación se abre o se cierra: los avisos que ceden ante ella pierden o recuperan el turno.
+    private static void AlCambiarElContexto(string situacion, bool abierta) => Actualizar();
 
     private static void AlAbrirMenu(MenuKind _) => Silenciar(PorMenu);
 
@@ -247,6 +257,7 @@ public static class ArbitroDeAvisos
             for (int i = 0; i < s_entradas.Count; i++)
             {
                 var e = s_entradas[i];
+                if (CedePaso(e.Aviso)) continue;
                 int c = (int)e.Canal;
                 if (s_mejorPorCanal[c] == null || VaAntes(e, s_mejorPorCanal[c])) s_mejorPorCanal[c] = e;
             }
@@ -271,6 +282,16 @@ public static class ArbitroDeAvisos
             Avisar(e.Aviso, Llamada.Tener);
         }
         s_copia.Clear();
+    }
+
+    // True si alguna de las situaciones ante las que el aviso cede está abierta ahora mismo.
+    private static bool CedePaso(IAvisoEnPantalla aviso)
+    {
+        var situaciones = aviso.CedeAnte;
+        if (situaciones == null) return false;
+        for (int i = 0; i < situaciones.Count; i++)
+            if (GameContext.Has(situaciones[i])) return true;
+        return false;
     }
 
     private static void LimpiarMuertos()

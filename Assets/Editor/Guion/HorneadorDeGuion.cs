@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Unity.AI.Navigation;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
@@ -332,7 +333,7 @@ internal sealed partial class Horno
 
         if (!string.IsNullOrEmpty(_g.prepara))
         {
-            var clase = AppDomain.CurrentDomain.GetAssemblies().Select(asm => asm.GetType(_g.prepara)).FirstOrDefault(t => t != null);
+            var clase = TypeCache.GetTypesDerivedFrom<object>().FirstOrDefault(t => t.FullName == _g.prepara);
             var metodo = clase?.GetMethod("Asegurar", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             if (metodo == null) Error($"PREPARA {_g.prepara}: no existe esa clase con un Asegurar() estático");
             else
@@ -1708,7 +1709,8 @@ internal sealed partial class Horno
         if (go.GetComponent<NavMeshObstacle>() != null) return false;
         int layer = go.layer;
         if (layer == 2 /* Ignore Raycast */ || layer == 8 /* Interactable */ || layer == 16 /* Obstacle */) return false;
-        if (GameObjectUtility.GetNavMeshArea(go) == 1 /* Not Walkable */) return false;
+        var modificador = go.GetComponent<NavMeshModifier>();
+        if (modificador != null && modificador.overrideArea && modificador.area == 1 /* Not Walkable */) return false;
         return true;
     }
 }

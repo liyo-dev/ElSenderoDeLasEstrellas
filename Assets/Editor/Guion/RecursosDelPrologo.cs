@@ -62,6 +62,11 @@ public static class RecursosDelPrologo
         // Estilo anime clásico (Dragon Ball / Slayers), 5 oct 2026, INC-593.
         ("SFX_Prologo_LuchaFinal", "Assets/Audio/SFX_Prologo/Disenados/SFX_Lucha_Final.wav"),
         ("SFX_Prologo_ExplosionFinal", "Assets/Audio/SFX_Prologo/Disenados/SFX_Explosion_Final_DBZ.wav"),
+        ("SFX_Prologo_EstallidoSube", "Assets/Audio/SFX_Prologo/Disenados/SFX_Estallido_Sube.wav"),
+        ("SFX_Prologo_PreviaEstallido", "Assets/Audio/SFX_Prologo/Disenados/SFX_Previa_Estallido.wav"),
+        ("SFX_Prologo_Plin", "Assets/Audio/SFX_Prologo/Disenados/SFX_Plin.wav"),
+        ("SFX_Prologo_LanzamientoConjuro", "Assets/Audio/SFX_Prologo/Disenados/SFX_Lanzamiento_Conjuro.wav"),
+        ("SFX_Prologo_CargaPlegaria", "Assets/Audio/SFX_Prologo/Disenados/SFX_Carga_Plegaria.wav"),
         ("SFX_Prologo_SilencioBlanco", "Assets/Audio/SFX_Prologo/Disenados/SFX_Silencio_Blanco.wav"),
         // El pueblo (vestido del prólogo): contraventanas y puertas.
         ("SFX_Pueblo_Contraventana_Abre", CarpetaPack + "Misc(58)/Wood_Scratching-009.wav"),
@@ -86,7 +91,7 @@ public static class RecursosDelPrologo
         try { CrearAgujeroNegro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Agujero negro: " + ex.Message); }
         try { CrearLuzProtectora.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Luz protectora: " + ex.Message); }
         try { CrearBolaDeConjuro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Bola de conjuro: " + ex.Message); }
-        try { CrearRemolinoDelPrologo.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Remolino: " + ex.Message); }
+        try { VfxDelPrologo.Construir(new System.Text.StringBuilder()); OrbeDelArchimago.Construir(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Efectos del piloto: " + ex.Message); }
         try { PrologoPostprocesoSueno.CrearPerfiles(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Perfiles: " + ex.Message); }
         AsegurarAtardecer();
         AsegurarNina();

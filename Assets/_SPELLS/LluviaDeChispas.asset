@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 9
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 4771564426222910639, guid: 814a2fe4f0436554597e4c2dff5547f3, type: 3}
-  impactVFX: {fileID: 1057324642254954024, guid: a0f1738cace9fcf468151b3b68f97941, type: 3}
+  spawnVFX: {fileID: 3560789669896693081, guid: 92c7ae2f3421e9a478bdec2782faa688, type: 3}
+  impactVFX: {fileID: 6353189894792951842, guid: f7be125d11bc30944b711ee36c7aaeb8, type: 3}
   despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_LluviaDeChispas
   impactSFXKey: Impacto_Luz_Pequeno
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: af5a2540c497dca48bd8f59298a392e8, type: 3}
   bounceCount: 0

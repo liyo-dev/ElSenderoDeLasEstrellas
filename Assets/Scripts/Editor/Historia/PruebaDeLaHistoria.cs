@@ -20,6 +20,7 @@ using UnityEngine.SceneManagement;
 ///   ir Marca                                 lleva al jugador a un SpawnAnchor
 ///   foto nombre                              captura del Game view en Guiones/Historia/fotos/
 ///   estado                                   escribe Guiones/Historia/estado.md
+///   invulnerable                             el jugador no puede morir (God Mode de PlayerHealthSystem)
 ///   guardar Escena                           guarda una escena abierta (fuera de Play)
 /// Tras cada tanda escribe el estado: dónde está cada grafo, diálogo y cinemática en curso,
 /// grupo, actores de los capítulos y los avisos y errores de la consola desde la última vez.
@@ -110,6 +111,14 @@ public static class PruebaDeLaHistoria
             }
             case "estado":
                 return "ok";
+            case "invulnerable":
+            {
+                var jugador = PlayerService.Player;
+                var salud = jugador != null ? jugador.GetComponentInChildren<PlayerHealthSystem>(true) : null;
+                if (salud == null) return "sin jugador";
+                salud.SetGodMode(true);
+                return "invulnerable";
+            }
             case "mirar":
             {
                 // Lo generado de los capítulos cuyo nombre contiene el texto: si está encendido y dónde.
@@ -165,7 +174,7 @@ public static class PruebaDeLaHistoria
                 // Antes de unir: el estado del compañero que se busca (por qué puede fallar).
                 string nombre = ControlDelJugador.Nombre(slot);
                 var diag = new StringBuilder();
-                foreach (var m in UnityEngine.Object.FindObjectsByType<NPCPartyMember>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                foreach (var m in UnityEngine.Object.FindObjectsByType<NPCPartyMember>(FindObjectsInactive.Include))
                 {
                     if (m == null) continue;
                     var tipo = typeof(NPCPartyMember);
@@ -195,7 +204,7 @@ public static class PruebaDeLaHistoria
             {
                 // Derrota a los jefes vivos (los que llevan barra de jefe) como si el jugador los hubiera vencido.
                 int n = 0;
-                foreach (var barra in UnityEngine.Object.FindObjectsByType<BossHealthBar>(FindObjectsSortMode.None))
+                foreach (var barra in UnityEngine.Object.FindObjectsByType<BossHealthBar>())
                 {
                     var d = barra.GetComponent<Damageable>();
                     if (d == null || !barra.gameObject.activeInHierarchy) continue;
@@ -239,8 +248,11 @@ public static class PruebaDeLaHistoria
                     // «#Tipo.Metodo»: llama al método estático sin pasar por el menú.
                     if (ruta.StartsWith("#"))
                     {
-                        string[] tm = ruta.Substring(1).Split('.');
-                        var tipo = System.AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(tm[0])).FirstOrDefault(t => t != null);
+                        // El método va tras el último punto: el tipo puede llevar espacio de nombres.
+                        string completo = ruta.Substring(1);
+                        int punto = completo.LastIndexOf('.');
+                        string[] tm = { completo.Substring(0, punto), completo.Substring(punto + 1) };
+                        var tipo = TypeCache.GetTypesDerivedFrom<object>().FirstOrDefault(t => t.FullName == tm[0]);
                         var metodo = tipo?.GetMethod(tm[1], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                         hecho = metodo != null;
                         metodo?.Invoke(null, null);

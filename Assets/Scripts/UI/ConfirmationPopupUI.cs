@@ -316,22 +316,44 @@ public class ConfirmationPopupUI : MonoBehaviour
         CentrarTintaEnBoton(texto);
     }
 
-    // El centrado de TMP va por el avance de cada letra, no por lo que se ve: con letras de
-    // trazo asimétrico («Sí», la tilde) el texto quedaba visiblemente corrido dentro del botón.
-    // Se desplaza la etiqueta para que el centro del dibujo coincida con el centro del botón.
+    // El centrado de TMP va por el avance de cada letra y por la caja de la línea (ascendente y
+    // descendente de la fuente), no por lo que se ve: con letras de trazo asimétrico («Sí», la
+    // tilde) el texto queda corrido en horizontal y, con un ascendente grande, más bajo de lo
+    // debido. Se desplaza la etiqueta para que el centro del dibujo coincida con el del botón:
+    // en horizontal, el de todo lo dibujado; en vertical, el de las mayúsculas, para que la tilde
+    // o las colas de las letras no muevan el texto y dos botones queden a la misma altura.
     static void CentrarTintaEnBoton(TextMeshProUGUI texto)
     {
         var rt = texto.rectTransform;
-        var pos = rt.anchoredPosition;
-        pos.x = 0f;
-        rt.anchoredPosition = pos;
+        rt.anchoredPosition = Vector2.zero;
         texto.ForceMeshUpdate();
-        if (texto.textInfo == null || texto.textInfo.characterCount == 0) return;
-        // textBounds está en el espacio local de la etiqueta; con pivote centrado y márgenes
-        // simétricos, el centro del botón es x = (0.5 - pivot.x) * ancho.
-        float centroCaja = (0.5f - rt.pivot.x) * rt.rect.width;
-        pos.x = centroCaja - texto.textBounds.center.x;
-        rt.anchoredPosition = pos;
+        var info = texto.textInfo;
+        if (info == null || info.characterCount == 0) return;
+
+        float minX = float.PositiveInfinity, maxX = float.NegativeInfinity;
+        float minY = float.PositiveInfinity, maxY = float.NegativeInfinity;
+        float minYMayus = float.PositiveInfinity, maxYMayus = float.NegativeInfinity;
+        for (int i = 0; i < info.characterCount; i++)
+        {
+            var letra = info.characterInfo[i];
+            if (!letra.isVisible) continue;
+            minX = Mathf.Min(minX, letra.bottomLeft.x);
+            maxX = Mathf.Max(maxX, letra.topRight.x);
+            minY = Mathf.Min(minY, letra.bottomLeft.y);
+            maxY = Mathf.Max(maxY, letra.topRight.y);
+            if (!char.IsUpper(letra.character)) continue;
+            minYMayus = Mathf.Min(minYMayus, letra.bottomLeft.y);
+            maxYMayus = Mathf.Max(maxYMayus, letra.topRight.y);
+        }
+        if (minX > maxX) return;
+
+        float centroX = (minX + maxX) * 0.5f;
+        float centroY = minYMayus <= maxYMayus ? (minYMayus + maxYMayus) * 0.5f : (minY + maxY) * 0.5f;
+        // Los límites están en el espacio local de la etiqueta; el centro del botón es
+        // (0.5 - pivote) por el tamaño de la etiqueta (con pivote centrado, 0).
+        float centroCajaX = (0.5f - rt.pivot.x) * rt.rect.width;
+        float centroCajaY = (0.5f - rt.pivot.y) * rt.rect.height;
+        rt.anchoredPosition = new Vector2(centroCajaX - centroX, centroCajaY - centroY);
     }
 
     void Update()

@@ -43,6 +43,11 @@ public sealed class PapelDeLaCajaDeDialogo
             rt.offsetMin = new Vector2(MargenLateral, MargenInferior);
             rt.offsetMax = new Vector2(-MargenLateral, -MargenSuperior);
             cuerpo.alignment = TextAlignmentOptions.TopLeft;
+            // El mismo aire a los dos lados: el hueco del botón de pasar página solo se reserva
+            // cuando una línea lo pisaría (DialogueManager). Ver INC-1110
+            var margen = cuerpo.margin;
+            margen.z = margen.x;
+            cuerpo.margin = margen;
             cuerpo.color = PaletaUI.TintaDeTexto;
         }
 

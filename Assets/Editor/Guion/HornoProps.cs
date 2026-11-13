@@ -25,7 +25,7 @@ internal sealed partial class Horno
         if (_actores.Values.Any(a => a.id == SequenceActor.PlayerId))
             foreach (var jugador in GameObject.FindGameObjectsWithTag(GameTags.Player))
                 Apagar(jugador);
-        foreach (var rotulo in UnityEngine.Object.FindObjectsByType<RotuloDeMaqueta>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        foreach (var rotulo in UnityEngine.Object.FindObjectsByType<RotuloDeMaqueta>(FindObjectsInactive.Exclude))
             Apagar(rotulo.gameObject);
         Physics.SyncTransforms();
     }

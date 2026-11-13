@@ -231,7 +231,10 @@ namespace Core.InputGlyphs
         public static void SetFamily(InputGlyphDeviceFamily family)
         {
             EnsureFamilyBuilt(family);
-            if (family == CurrentFamily) return;
+            // Misma familia: se vuelve a poner en los iconos de texto por si se construyó antes de
+            // tener DialogueIcons (alguien pidió un sprite antes del arranque y los textos se
+            // quedaban sin glifos, con la «?» de EmojiOne). Ver INC-1098
+            if (family == CurrentFamily) { ApplyToDialogueIcons(family); return; }
 
             CurrentFamily = family;
             ApplyToDialogueIcons(family);

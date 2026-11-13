@@ -40,6 +40,11 @@ namespace Game.NPC.States
         private Vector3 _ultimaPosicion;
         private Transform _carryPoint;
         private Transform _cajaEnMano;
+        private Transform _manoIzquierda;
+        private Transform _manoDerecha;
+        private const float VelocidadDeLaCaja = 18f;
+        private const float SeparacionMaximaDeLasManos = 0.8f;
+        private const float DelanteMinimoDeLasManos = 0.12f;
         private bool _ocupada;
         private float _velocidad;
         private float _stoppingDistanceOriginal = -1f;
@@ -79,6 +84,7 @@ namespace Game.NPC.States
 
             _ocupada = true;
             _carryPoint = ObtenerOCrearCarryPoint(context);
+            BuscarManos(context);
 
             _velocidad = ambient.walkSpeed;
 
@@ -98,13 +104,16 @@ namespace Game.NPC.States
 
             if (!_ocupada || _ruta == null || !_ruta.isActiveAndEnabled) return;
 
-            // Mantener la caja estable horizontalmente (yaw del NPC) como en PlayerCarrySystem
+            // La caja va entre las manos (si las manos la sostienen delante) o en el punto de carga;
+            // estable en horizontal con el rumbo del NPC, como en PlayerCarrySystem. Ver INC-1091
             if (_cajaEnMano != null && _carryPoint != null)
             {
                 float npcYaw = context.Transform.eulerAngles.y;
                 float rotExtra = _ruta.rotacionCargaFrontal.y;
-                _cajaEnMano.position = _carryPoint.position;
-                _cajaEnMano.rotation = Quaternion.Euler(0f, npcYaw + rotExtra, 0f);
+                Vector3 destino = EntreLasManos(context, out var enManos) ? enManos : _carryPoint.position;
+                float k = 1f - Mathf.Exp(-VelocidadDeLaCaja * Time.deltaTime);
+                _cajaEnMano.position = Vector3.Lerp(_cajaEnMano.position, destino, k);
+                _cajaEnMano.rotation = Quaternion.Slerp(_cajaEnMano.rotation, Quaternion.Euler(0f, npcYaw + rotExtra, 0f), k);
             }
 
             switch (_fase)
@@ -117,6 +126,9 @@ namespace Game.NPC.States
 
                 case Fase.Recoger:
                     _temporizador += Time.deltaTime;
+                    // Las manos llegan a la caja a mitad de la animación: desde ahí va con ellas.
+                    if (_cajaEnMano == null && _carryPoint != null && _temporizador >= _ruta.tiempoRecoger * _ruta.momentoDeAgarre)
+                        _cajaEnMano = _ruta.CogerCaja(_carryPoint);
                     if (_temporizador >= _ruta.tiempoRecoger) CogerCajaYMarchar(context);
                     break;
 
@@ -128,6 +140,12 @@ namespace Game.NPC.States
 
                 case Fase.Entregar:
                     _temporizador += Time.deltaTime;
+                    // Se suelta cuando las manos la posan en la pila, no al acabar la animación.
+                    if (_cajaEnMano != null && _temporizador >= _ruta.tiempoDejar * _ruta.momentoDeSoltar)
+                    {
+                        _ruta.DejarCajaEnPila();
+                        _cajaEnMano = null;
+                    }
                     if (_temporizador >= _ruta.tiempoDejar) DejarCajaYEsperar(context);
                     break;
 
@@ -283,7 +301,7 @@ namespace Game.NPC.States
         {
             if (_carryPoint != null)
             {
-                _cajaEnMano = _ruta.CogerCaja(_carryPoint);
+                if (_cajaEnMano == null) _cajaEnMano = _ruta.CogerCaja(_carryPoint);
             }
             else
             {
@@ -460,6 +478,31 @@ namespace Game.NPC.States
             a.y = 0f;
             b.y = 0f;
             return (a - b).sqrMagnitude <= 0.09f; // 0,3 m
+        }
+
+        /// <summary>
+        /// Punto entre las dos manos si las manos están delante del cuerpo y a la distancia de
+        /// sostener algo (con los brazos caídos no vale: la caja quedaría dentro del cuerpo).
+        /// </summary>
+        private bool EntreLasManos(NPCStateContext context, out Vector3 punto)
+        {
+            punto = default;
+            if (_manoIzquierda == null || _manoDerecha == null) return false;
+            Vector3 izq = _manoIzquierda.position, der = _manoDerecha.position;
+            if ((izq - der).sqrMagnitude > SeparacionMaximaDeLasManos * SeparacionMaximaDeLasManos) return false;
+            punto = (izq + der) * 0.5f;
+            Vector3 delante = punto - context.Transform.position;
+            delante.y = 0f;
+            return Vector3.Dot(delante, context.Transform.forward) >= DelanteMinimoDeLasManos;
+        }
+
+        private void BuscarManos(NPCStateContext context)
+        {
+            _manoIzquierda = _manoDerecha = null;
+            var animator = context.Transform != null ? context.Transform.GetComponentInChildren<Animator>() : null;
+            if (animator == null || !animator.isHuman) return;
+            _manoIzquierda = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            _manoDerecha = animator.GetBoneTransform(HumanBodyBones.RightHand);
         }
 
         private Transform ObtenerOCrearCarryPoint(NPCStateContext context)

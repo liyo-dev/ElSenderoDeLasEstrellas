@@ -13,6 +13,21 @@ lib_args = [MOD, CAB_N, "normal", "neutra", "/dev/null", ESTILO, "x", COLOR]
 sys.argv = ["x", "--"] + lib_args
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "caras_lib.txt")).read())
 arm = [o for o in bpy.data.objects if o.type == 'ARMATURE'][0]
+# OJO_SOMBRA=1: «ojos de sombra» (Mago Oscuro bajo el velo): el mismo ojo, pero todo de luz violeta (blanco y iris), con la pupila
+# y la línea del párpado del mismo violeta claro (sin pupila que se note) y la ceja en violeta oscuro. Sobre la cabeza negra solo se ve la luz.
+if os.environ.get("OJO_SOMBRA") == "1":
+    LUZ = {"Blanco": (0.62, 0.30, 1.0, 1), "Iris": (0.80, 0.55, 1.0, 1), "IrisOscuro": (0.62, 0.30, 1.0, 1), "Negro": (0.80, 0.55, 1.0, 1), "Ceja": (0.45, 0.24, 0.78, 1)}
+    for m in bpy.data.materials:
+        if m.name.split(".")[0] in LUZ:
+            c = LUZ[m.name.split(".")[0]]; m.diffuse_color = c; b = m.node_tree.nodes["Principled BSDF"]
+            b.inputs["Base Color"].default_value = c; b.inputs["Emission Color"].default_value = c; b.inputs["Emission Strength"].default_value = 1.5
+
+# CEJA_COLOR="r,g,b": color de las cejas (Mago Oscuro: negras con un punto violeta); PIEL_COLOR="r,g,b" solo para las pruebas de Blender.
+if os.environ.get("CEJA_COLOR"):
+    c = tuple(float(x) for x in os.environ["CEJA_COLOR"].split(",")) + (1,)
+    for m in bpy.data.materials:
+        if m.name.split(".")[0] == "Ceja": m.diffuse_color = c; m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = c
+
 OJOS = ["normal", "feliz", "triste", "enfado", "sorpresa", "miedo", "pensar", "cansado", "cerrados"]
 BOCAS = ["neutra", "sonrisa", "risa", "triste", "o", "enfado", "ondulada", "picara", "entreabierta", "abierta"]
 MEJ = os.environ.get("MEJILLAS", "")          # las mejillas de todos los ojos (ver mejillas() en caras_lib)

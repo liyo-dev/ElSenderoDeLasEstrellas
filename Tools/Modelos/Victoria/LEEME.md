@@ -20,3 +20,7 @@ En el juego, los dos cabos amarillos de la cinta de medir se despegaban del dela
 peto (Raúl: «eso que sobresale amarillo»). Ahora van pegados a la superficie del peto, terminan encima de la
 cinta del delantal y se pesan como el peto (copiados del cuerpo), así se mueven con él. La previa nueva es con los
 brazos bajados y la cabeza sin pelo. Lo anterior, en `Versiones antiguas/Cinta de medir despegada (2026-11-11)/`.
+
+## 13 nov 2026 — chequeo de choques (INC-1138)
+Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
+- Cambios de forma: la media sube hasta la cadera por debajo de la falda (al correr se veía el hueco), y falda, bajo y delantal con algo más de vuelo.

@@ -51458,6 +51458,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 0.6
   puntosDeFaena: []
@@ -258487,39 +258489,39 @@ MonoBehaviour:
   timeSettings:
   - timeOfDay: 6
     skybox: {fileID: 2100000, guid: da746b8828a33c84f8fcfb2d04d5a251, type: 2}
-    lightColor: {r: 1, g: 1, b: 1, a: 1}
-    lightIntensity: 1.2
-    ambientColor: {r: 0.28, g: 0.3, b: 0.42, a: 1}
-    ambientIntensity: 0.8
-    fogColor: {r: 0.68, g: 0.78, b: 0.92, a: 1}
-    fogDensity: 0.008
+    lightColor: {r: 1, g: 0.86, b: 0.74, a: 1}
+    lightIntensity: 1.1
+    ambientColor: {r: 0.34, g: 0.33, b: 0.44, a: 1}
+    ambientIntensity: 0.85
+    fogColor: {r: 0.8, g: 0.8, b: 0.9, a: 1}
+    fogDensity: 0.007
     duration: 120
   - timeOfDay: 0
     skybox: {fileID: 2100000, guid: ad94383a6a988104b9cb02b503dd0418, type: 2}
-    lightColor: {r: 1, g: 1, b: 1, a: 1}
+    lightColor: {r: 1, g: 0.97, b: 0.9, a: 1}
     lightIntensity: 1.3
-    ambientColor: {r: 0.4, g: 0.38, b: 0.33, a: 1}
+    ambientColor: {r: 0.4, g: 0.39, b: 0.36, a: 1}
     ambientIntensity: 1.1
-    fogColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+    fogColor: {r: 0.85, g: 0.87, b: 0.9, a: 1}
     fogDensity: 0.004
     duration: 120
   - timeOfDay: 8
     skybox: {fileID: 2100000, guid: 93044e86ecd60c443a61c5b7c5bea22e, type: 2}
-    lightColor: {r: 1, g: 1, b: 1, a: 1}
-    lightIntensity: 0.6
-    ambientColor: {r: 0.35, g: 0.18, b: 0.1, a: 1}
-    ambientIntensity: 0.65
-    fogColor: {r: 0.9, g: 0.55, b: 0.3, a: 1}
-    fogDensity: 0.013
+    lightColor: {r: 1, g: 0.72, b: 0.5, a: 1}
+    lightIntensity: 0.85
+    ambientColor: {r: 0.38, g: 0.27, b: 0.3, a: 1}
+    ambientIntensity: 0.8
+    fogColor: {r: 0.9, g: 0.62, b: 0.42, a: 1}
+    fogDensity: 0.011
     duration: 45
   - timeOfDay: 7
     skybox: {fileID: 2100000, guid: 7476afeb2f971ba4b8c33339a684e547, type: 2}
-    lightColor: {r: 1, g: 1, b: 1, a: 1}
-    lightIntensity: 0.3
-    ambientColor: {r: 0.08, g: 0.08, b: 0.18, a: 1}
-    ambientIntensity: 0.45
-    fogColor: {r: 0.08, g: 0.08, b: 0.18, a: 1}
-    fogDensity: 0.016
+    lightColor: {r: 0.6, g: 0.7, b: 1, a: 1}
+    lightIntensity: 0.6
+    ambientColor: {r: 0.17, g: 0.18, b: 0.34, a: 1}
+    ambientIntensity: 0.8
+    fogColor: {r: 0.1, g: 0.1, b: 0.22, a: 1}
+    fogDensity: 0.014
     duration: 90
   directionalLight: {fileID: 1981865215}
   transitionDuration: 10
@@ -501598,6 +501600,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 2.5
   puntosDeFaena: []
@@ -521219,6 +521223,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 0.6
   puntosDeFaena: []
@@ -678541,6 +678547,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 0.6
   puntosDeFaena: []
@@ -707977,6 +707985,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 0.6
   puntosDeFaena: []
@@ -828303,6 +828313,8 @@ MonoBehaviour:
   animacionDejar: CarryThrow_NoWeapon
   tiempoRecoger: 1.1
   tiempoDejar: 0.9
+  momentoDeAgarre: 0.45
+  momentoDeSoltar: 0.6
   poseDeCarga: CarryMoveIdle_NoWeapon
   pausaAntesDeVolver: 0.6
   puntosDeFaena:

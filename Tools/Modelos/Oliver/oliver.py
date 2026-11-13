@@ -3,8 +3,10 @@
 # con un pergamino, pantalón y botas. Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body29_Aprendiz → las manos y el torso de Body05 con la ropa encima, pesado como él.
-import bpy, bmesh, math, sys
+import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
+import ropa_lib as rl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 bpy.ops.wm.open_mainfile(filepath=BASE)
@@ -107,9 +109,10 @@ def caja(g, nombre, centro, medidas, mat, pesos, rot=(0, 0, 0)):
 R = math.radians
 ZAPATO = "CueroOscuro"
 # ── Túnica grande: le sobra por todas partes ──
-torno("traje", "Tunica", [(0.725, 0.15), (0.67, 0.205), (0.58, 0.216), (0.5, 0.208), (0.45, 0.21), (0.36, 0.232), (0.29, 0.25)], "Tunica", grosor=0.009)
+tunica = torno("traje", "Tunica", [(0.725, 0.15), (0.67, 0.205), (0.58, 0.216), (0.5, 0.208), (0.45, 0.21), (0.36, 0.232), (0.29, 0.25)], "Tunica", grosor=0.009)
 toro("traje", "Bajo", (0, -0.01, 0.292), 0.249, 0.013, "Naranja", None, escala=(1, 0.92, 1))
-torno("traje", "Cuello", [(0.775, 0.17), (0.75, 0.205), (0.715, 0.225)], "Naranja", seg=40, grosor=0.014)
+# el cuello copia los pesos de la túnica en la que se apoya: con los del cuerpo se separaba de ella al bajar los brazos
+torno("traje", "Cuello", [(0.775, 0.17), (0.75, 0.2), (0.715, 0.21)], "Naranja", rl.Zona(sobre=tunica), seg=40, grosor=0.014)
 tubo("traje", "Tapeta", curva((0.0, -0.17, 0.72), (0.0, -0.228, 0.6), (0.0, -0.21, 0.47), 8), [0.015] * 8, "Naranja", None, seg=8)
 # Cordón a la cintura con el nudo y dos cabos
 toro("traje", "Cordon", (0, -0.01, 0.455), 0.211, 0.013, "Cordon", None, escala=(1, 0.92, 1))
@@ -137,21 +140,6 @@ for lado, s in (("l", 1), ("r", -1)):
     esfera("traje", f"Suela_{lado}", (0.118 * s, -0.03, 0.012), (0.088, 0.13, 0.014), ZAPATO, {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
     esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.085, 0.035), (0.07, 0.09, 0.044), ZAPATO, {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
-def pesar(lista):
-    for o, pesos in lista:
-        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
-        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
-        if pesos is None:
-            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
-            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
-            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
-            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
-        else:
-            for h, w in pesos.items():
-                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
-        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')
     objs = [o for o, _ in lista] + ([extra] if extra else [])
@@ -171,7 +159,7 @@ for o, _ in GRUPOS["traje"]:
         o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
-for g in GRUPOS.values(): pesar(g)
+rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm)
 # Lo del cuerpo de debajo que queda tapado por la ropa se quita (después de copiar los pesos: la ropa los
 # toma del cuerpo entero). Del Body05 solo quedan las manos y el torso.
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)

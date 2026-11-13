@@ -393,7 +393,8 @@ public class MagicProjectileSpawner : MonoBehaviour
         _chargingProjectiles.Remove(go);
 
         // Recalcular la dirección exacta hacia el objetivo en el fotograma en que se suelta el proyectil
-        Vector3 releaseDir = ResolveProjectileDirection(spell, origin, null);
+        Transform guia = ObjetivoAGuiar(spell, null);
+        Vector3 releaseDir = DireccionDesdeLaSalida(guia, go.transform.position, ResolveProjectileDirection(spell, origin, null));
         go.transform.rotation = Quaternion.LookRotation(releaseDir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
         // La velocidad se calcula al soltar: durante la carga el jugador puede empezar o dejar de
@@ -412,6 +413,7 @@ public class MagicProjectileSpawner : MonoBehaviour
         {
             mp.SetKinematic(false);
             mp.Launch(releaseDir, effectiveSpeed, spell.useGravity);
+            mp.GuiarHacia(guia, spell.correccionHaciaElObjetivo);
         }
         else if (cachedRb != null)
         {
@@ -457,11 +459,27 @@ public class MagicProjectileSpawner : MonoBehaviour
         return null;
     }
 
-    private static Vector3 GetTargetCenter(Transform target)
+    private static Vector3 GetTargetCenter(Transform target) => Targetable.CentroDelCuerpo(target);
+
+    /// <summary>
+    /// Objetivo al que el proyectil corrige el rumbo en vuelo, o null si no se guía: hace falta un
+    /// objetivo fijado, que lo lance el grupo del jugador, un solo proyectil (el abanico se abre),
+    /// sin gravedad y con corrección en el hechizo. Ver INC-1147.
+    /// </summary>
+    private Transform ObjetivoAGuiar(MagicSpellSO spell, Vector3? directionOverride)
     {
-        var col = target.GetComponentInParent<Collider>();
-        if (col == null) col = target.GetComponentInChildren<Collider>();
-        return col ? col.bounds.center : target.position + Vector3.up;
+        if (directionOverride.HasValue || spell.correccionHaciaElObjetivo <= 0f || spell.useGravity) return null;
+        if (Mathf.Max(1, spell.spreadCount) > 1) return null;
+        if (!AmenazasAlJugador.EsDelGrupoDelJugador(Instigator)) return null;
+        return Targetable.RaizDelObjetivo(GetAimedTarget());
+    }
+
+    /// <summary>Dirección desde el punto real de salida hasta el centro del objetivo guiado.</summary>
+    private static Vector3 DireccionDesdeLaSalida(Transform guia, Vector3 salida, Vector3 dirPorDefecto)
+    {
+        if (guia == null) return dirPorDefecto;
+        Vector3 hacia = GetTargetCenter(guia) - salida;
+        return hacia.sqrMagnitude > 0.001f ? hacia.normalized : dirPorDefecto;
     }
 
     /// <summary>
@@ -814,6 +832,7 @@ public class MagicProjectileSpawner : MonoBehaviour
 
         Transform o = origin ? origin : transform;
         Vector3 baseDir = ResolveProjectileDirection(spell, o, directionOverride);
+        Transform guia = ObjetivoAGuiar(spell, directionOverride);
 
         // Abanico (INC-497): N proyectiles repartidos en spreadAngle alrededor de la dirección.
         int count = Mathf.Max(1, spell.spreadCount);
@@ -822,16 +841,17 @@ public class MagicProjectileSpawner : MonoBehaviour
         {
             float angle = count == 1 ? 0f : Mathf.Lerp(-spell.spreadAngle * 0.5f, spell.spreadAngle * 0.5f, i / (float)(count - 1));
             Vector3 d = Quaternion.AngleAxis(angle, Vector3.up) * baseDir;
-            GameObject one = LaunchOne(spell, o, d, damageMultiplier);
+            GameObject one = LaunchOne(spell, o, d, damageMultiplier, guia);
             if (first == null) first = one;
         }
         return first;
     }
 
-    private GameObject LaunchOne(MagicSpellSO spell, Transform o, Vector3 dir, float damageMultiplier)
+    private GameObject LaunchOne(MagicSpellSO spell, Transform o, Vector3 dir, float damageMultiplier, Transform guia = null)
     {
         float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
         Vector3 spawnPos = ComputeSpawnPosition(spell, o, dir);
+        dir = DireccionDesdeLaSalida(guia, spawnPos, dir);
         Quaternion spawnRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
         PlaySpawnVfx(spell, spawnPos, spawnRt);
@@ -844,6 +864,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             mp.Configure(BuildProjectileConfig(spell, effectiveSpeed, damageMultiplier), Instigator);
             mp.ConfigureExtras(spell, GetDamageLayers(), damageMultiplier);
             mp.Launch(dir, effectiveSpeed, spell.useGravity);
+            mp.GuiarHacia(guia, spell.correccionHaciaElObjetivo);
         }
         else if (go.TryGetComponent<Rigidbody>(out var rb))
         {

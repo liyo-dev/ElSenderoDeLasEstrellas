@@ -57,6 +57,8 @@ public class MagicSpellSO : ScriptableObject
     public Vector3 visualRotationOffsetEuler = Vector3.zero;
     [Tooltip("Sale en horizontal. Los proyectiles con objetivo lo ignoran y van a su centro; se aplica sin objetivo, con dirección forzada (cinemáticas) y a los hechizos de zona.")]
     public bool    flattenDirection = true;
+    [Tooltip("Grados por segundo que el proyectil corrige su rumbo en vuelo hacia el centro del objetivo fijado (0 = sale recto y no corrige). Solo proyectiles del grupo, sin gravedad y de uno en uno; deja de corregir si lo pasa de largo.")]
+    [Min(0f)] public float correccionHaciaElObjetivo = 90f;
     [Tooltip("Si se marca, se forzará esta escala al instanciar el proyectil y el VFX de spawn. Si está desmarcado, se usará la escala del prefab.")]
     public bool     useScaleOverride = false;
     public Vector3  scaleOverride = Vector3.one;

@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_MagoOscuroGrieta
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 0}
   bounceCount: 0

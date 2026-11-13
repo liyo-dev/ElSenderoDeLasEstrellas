@@ -88,6 +88,12 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
     Vector3 _spawnPos;
     float   _spawnTime;
 
+    // Corrección de rumbo hacia el objetivo fijado (INC-1147).
+    Transform  _guia;
+    Damageable _vidaDeLaGuia;
+    Vector3    _centroLocalDeLaGuia;
+    float      _gradosDeGuia;
+
     /// <summary>Daño configurado de este proyectil (usado p. ej. por ProjectileCollisionHandler al sumar daños en un choque de hechizos).</summary>
     public float Damage => _cfg.damage;
     /// <summary>Quién lanzó el proyectil (puede ser null). Lo usa el contraataque (INC-493).</summary>
@@ -283,10 +289,11 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             if (next != null)
             {
                 _bouncesLeft--;
-                Vector3 aim = next.position + Vector3.up * 1f;
+                Vector3 aim = Targetable.CentroDelCuerpo(next);
                 float speed = _cfg.initialSpeed;
                 if (_rb != null && !_rb.isKinematic) speed = Mathf.Max(speed, _rb.linearVelocity.magnitude);
                 Launch(aim - transform.position, speed, false);
+                GuiarHacia(next, _gradosDeGuia);
                 return true;
             }
         }
@@ -357,6 +364,55 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         }
     }
 
+    /// <summary>
+    /// Corrige el rumbo en vuelo hacia el centro del cuerpo de 'objetivo', a 'gradosPorSegundo'
+    /// como mucho: sigue a un objetivo que se mueve sin girar en seco. Llamar tras Launch; con
+    /// objetivo null o 0 grados, vuela recto. Los rebotes guían al siguiente con el mismo giro.
+    /// </summary>
+    public void GuiarHacia(Transform objetivo, float gradosPorSegundo)
+    {
+        _gradosDeGuia = Mathf.Max(0f, gradosPorSegundo);
+        _guia = _gradosDeGuia > 0f ? objetivo : null;
+        _vidaDeLaGuia = null;
+        if (_guia == null) return;
+        _vidaDeLaGuia = _guia.GetComponentInParent<Damageable>();
+        _centroLocalDeLaGuia = _guia.InverseTransformPoint(Targetable.CentroDelCuerpo(_guia));
+    }
+
+    void CorregirRumbo(float dt)
+    {
+        if (!_guia.gameObject.activeInHierarchy || (_vidaDeLaGuia != null && !_vidaDeLaGuia.IsAlive))
+        {
+            _guia = null;
+            return;
+        }
+
+        Vector3 actual = _hasRb ? _rb.linearVelocity : transform.forward;
+        float rapidez = actual.magnitude;
+        if (rapidez < 0.0001f) return;
+        Vector3 rumbo = actual / rapidez;
+
+        Vector3 hacia = _guia.TransformPoint(_centroLocalDeLaGuia) - transform.position;
+        // Si ya lo ha pasado de largo, deja de corregir: no da la vuelta para perseguirlo.
+        if (Vector3.Dot(rumbo, hacia) <= 0f)
+        {
+            _guia = null;
+            return;
+        }
+
+        Vector3 nuevo = Vector3.RotateTowards(rumbo, hacia.normalized, _gradosDeGuia * Mathf.Deg2Rad * dt, 0f);
+        Quaternion giro = Quaternion.LookRotation(nuevo, Vector3.up);
+        if (_hasRb)
+        {
+            _rb.linearVelocity = nuevo * rapidez;
+            _rb.rotation = giro;
+        }
+        else
+        {
+            transform.rotation = giro;
+        }
+    }
+
     void RefreshHasRigidbody()
     {
         _hasRb = _rb != null && !_rb.isKinematic;
@@ -365,6 +421,8 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
     void Update()
     {
         if (_ended) return;
+
+        if (_guia != null) CorregirRumbo(Time.deltaTime);
 
         // Movimiento manual si no hay Rigidbody
         if (!_hasRb && _movementEnabled && _cfg.initialSpeed > 0f)

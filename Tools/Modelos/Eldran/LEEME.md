@@ -25,3 +25,6 @@ En el juego, el cabo de la bufanda que colgaba por delante salía por debajo de 
 atravesaba (Raúl: «tiene una cosa gris que le atraviesa»). Se quita ese cabo y su fleco; quedan la vuelta al
 cuello (tapada por la barba) y el cabo de la espalda. La previa nueva es con los brazos bajados y la cabeza sin
 pelo. Lo anterior, en `Versiones antiguas/Bufanda con cabo delante (2026-11-11)/`.
+
+## 13 nov 2026 — chequeo de choques (INC-1138)
+Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.

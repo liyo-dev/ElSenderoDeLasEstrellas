@@ -85,6 +85,21 @@ public static class PersonajeHechoEnBlender
         return true;
     }
 
+    /// <summary>Hace que un material brille con su propio color (emisión HDR): ojos de luz, líneas de luz. Si no existe, no hace nada.
+    /// Hay que llamarlo después de <see cref="Liso"/>, que deja el material sin emisión.</summary>
+    public static void Brillar(string ruta, float fuerza)
+    {
+        var m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+        if (m == null) return;
+        var color = m.HasProperty("_BaseColor") ? m.GetColor("_BaseColor") : m.color;
+        if (m.HasProperty("_Emission")) m.SetFloat("_Emission", 1f);
+        if (m.HasProperty("_EmissionColorUI")) m.SetColor("_EmissionColorUI", color);
+        if (m.HasProperty("_EmissionScaleUI")) m.SetFloat("_EmissionScaleUI", fuerza);
+        if (m.HasProperty("_EmissionColor")) m.SetColor("_EmissionColor", color * fuerza);
+        m.EnableKeyword("_EMISSION");
+        EditorUtility.SetDirty(m);
+    }
+
     /// <summary>El tono de piel de la textura de colores del pack: las piezas de piel hechas aparte van en el mismo.</summary>
     public static readonly Color PielDelPack = new Color32(246, 190, 150, 255);
 

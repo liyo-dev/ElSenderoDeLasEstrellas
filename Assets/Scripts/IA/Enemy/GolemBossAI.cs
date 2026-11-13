@@ -1142,7 +1142,8 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             {
                 // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
                 // RockThrowAttack(). Mismo lifetime (1.5s).
-                VfxPoolService.Instance.Play(rockWarningVFX, targetPos + Vector3.up * 0.1f, Quaternion.Euler(90f, 0f, 0f), 1.5f);
+                Kits.StylizedVfx.GroundMark.On(
+                    VfxPoolService.Instance.Play(rockWarningVFX, targetPos, Quaternion.identity, 1.5f));
             }
 
             // Gesto de invocación (planta los pies, alterna mano) en vez del saltito de antes

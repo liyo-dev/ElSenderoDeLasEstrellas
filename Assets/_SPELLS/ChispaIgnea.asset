@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 10
@@ -75,8 +76,8 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 5302146505831436120, guid: b3573f03d84ca004b8e00a5343295ec2, type: 3}
-  impactVFX: {fileID: 5162910912013668194, guid: cf82839c411151342a7b2337bda9fb34, type: 3}
+  spawnVFX: {fileID: 856204504299427095, guid: 06c3d71ecdd3f05409e67dc4d7387846, type: 3}
+  impactVFX: {fileID: 5465430371897979121, guid: ad666e6236add4244aad627243a1c9a9, type: 3}
   despawnVFX: {fileID: 3685239417598464635, guid: acdaa162cece6444b90ef53280ca8aa4, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_ChispaIgnea

@@ -1,5 +1,9 @@
 ## Registro de Cambios
 
+**12 de noviembre de 2026 — El aro de runas sin llave (INC-1126), por decisión de Raúl.**
+
+Como adaptación del juego («esto no es la novela»), el lore del aro se simplifica: Liam le puso el aro al Demonio con una invocación para que hiciera lo que él quería, y no hay ninguna llave del aro que se caliente o se apague. En el § 5.5 la escena del cristal ya no apaga ninguna llave y se añade la adaptación. Cambian los textos ES/EN de CAP4_ESTELA_06 («Runas de sometimiento. Se lo pusieron con una invocación: el demonio hacía lo que le mandaban.») y, en inglés, CAP3_ESPEJO_10 dice «collar» en lugar de «ring». En «Los planes de Liam» Liam ya no mira una llave: dice «Lo ha vencido» mirando la nube de la bola. La novela no cambia.
+
 **11 de noviembre de 2026 — Claude (Cowork), por decisión de Raúl.**
 
 - Nuevo § 7.3 «Exploración: habilidades que abren el mundo»: sin escalada; salto y nado abren zonas y el vuelo llega al final; cuevas y templos para los puzles; lo que hay en MainWorld. Queda abierto cómo se obtienen salto y nado si hay zonas obligatorias que dependen de ellos.

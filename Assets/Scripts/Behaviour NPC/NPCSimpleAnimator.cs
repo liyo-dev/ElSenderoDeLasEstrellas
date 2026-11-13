@@ -302,6 +302,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         // Sentado, la espalda y la cabeza se enderezan (las animaciones de sentado encorvan a los chibis).
         PosturaDeSentado.Asegurar(gameObject);
+        // Al hablar solo se mueve la boca: la cabeza no cabecea con Talk01-03 (INC-1144).
+        CabezaQuietaAlHablar.Asegurar(gameObject);
 
         // Get components
         if (animator == null)

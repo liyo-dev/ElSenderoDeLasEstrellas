@@ -221,16 +221,6 @@ public static class MontadorDeBarco
         int b85 = Mathf.Clamp(Mathf.RoundToInt(bins * 0.85f), 0, bins - 1);
         datos.proaLocal = anchos[b15] < anchos[b85] ? -ejeEs : ejeEs;
 
-        // El ancho del casco en una estación concreta. En la popa el casco es bastante más
-        // estrecho que en el centro: con la manga máxima del barco, los compañeros de al lado
-        // quedaban metidos dentro de la borda.
-        float AnchoDelCascoEn(Vector3 puntoLocal)
-        {
-            float t = (Vector3.Dot(puntoLocal, ejeEs) - minEje) / Mathf.Max(0.01f, largo);
-            int b = Mathf.Clamp(Mathf.FloorToInt(t * bins), 0, bins - 1);
-            return anchos[b];
-        }
-
         // Casco: desde el primer sitio con anchura hasta el último (la verga no es casco).
         float anchoMax = 0f;
         for (int b = 0; b < bins; b++) anchoMax = Mathf.Max(anchoMax, anchos[b]);

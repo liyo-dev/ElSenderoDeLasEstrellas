@@ -24,7 +24,7 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 18000000050000000200000003000000010000001a00000004000000i
+  unlockedSpells: 1800000005000000020000000300000001000000i
   basicSpellIds: 18000000050000000200000003000000i
   companionBasics: []
   companionHealth: []
@@ -43,47 +43,6 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION3
   - NARRATIVE_FLAG:CAP2_INICIADO
   - QUEST_ACTIVE:PREPARA_VIAJE
-  - NARRATIVE_FLAG:GRIMORIO_RECIBIDO
-  - QUEST_COMPLETED:PREPARA_VIAJE
-  - QUEST_STEP_DONE:PREPARA_VIAJE:0
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
-  - QUEST_STEP_DONE:PREPARA_VIAJE:1
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
-  - QUEST_STEP_DONE:PREPARA_VIAJE:2
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
-  - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
-  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
-  - NARRATIVE_FLAG:CAP2_COMPLETADO
-  - NARRATIVE_FLAG:CAP3_INICIADO
-  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:1
-  - QUEST_COMPLETED:CAP2_HORA_DE_PARTIR
-  - QUEST_ACTIVE:CAP3_MARCAS_DE_HIERRO
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:0
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:1
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:3
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:4
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:2
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:5
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:6
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:7
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:8
-  - NARRATIVE_FLAG:CAP3_AVISO_A_LA_GUARDIA
-  - NARRATIVE_FLAG:CAP3_PELEA_EN_EL_CLARO
-  - NARRATIVE_FLAG:CAP3_JAULAS_QUEMADAS
-  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:9
-  - QUEST_COMPLETED:CAP3_MARCAS_DE_HIERRO
-  - NARRATIVE_FLAG:CAP4_INICIADO
-  - NARRATIVE_FLAG:ESTELA_APARECE
-  - QUEST_ACTIVE:CAP4_ENCUENTRA_A_ESTELA
-  - QUEST_STEP_DONE:CAP4_ENCUENTRA_A_ESTELA:0
-  - QUEST_COMPLETED:CAP4_ENCUENTRA_A_ESTELA
-  - QUEST_ACTIVE:CAP4_RUMBO_AL_REINO
-  - NARRATIVE_FLAG:CAP4_FIGURAS_CHAMUSCADAS
-  - NARRATIVE_FLAG:LIAM_APARECE
-  - QUEST_STEP_DONE:CAP4_RUMBO_AL_REINO:0
-  - QUEST_STEP_DONE:CAP4_RUMBO_AL_REINO:1
-  - QUEST_STEP_DONE:CAP4_RUMBO_AL_REINO:2
-  - QUEST_COMPLETED:CAP4_RUMBO_AL_REINO
   abilities:
     swim: 1
     jump: 1
@@ -105,25 +64,13 @@ MonoBehaviour:
     partName: Body23_Aventurero
   unlockedWardrobeIds:
   - Body05
-  - Cloak02
   inventoryItems:
   - itemId: coin
     count: 1
   - itemId: trozo_del_aro
     count: 1
-  - itemId: pocionHP
-    count: 1
-  - itemId: panuelo_erika
-    count: 1
-  - itemId: hoja_avistamientos
-    count: 1
-  - itemId: pluma_brillante
-    count: 1
-  - itemId: esquirla_cristal
-    count: 1
   defeatedBossIds:
   - Demon_1
-  - Golem_1
   narrativeBlackboards:
   - graphLabel: Cap1
     blackboardData:
@@ -137,31 +84,7 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Cap3
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Cap4
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Sendero
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: sendero-ritual-listo
+      value: cap2-manana-despues-15
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
@@ -188,94 +111,7 @@ MonoBehaviour:
   - LIAM_CRYSTAL_DONE
   - MANANA_DESPUES_START
   - MANANA_DESPUES_DONE
-  - NPC_INTERACT_NPC_Victoria
-  - NPC_INTERACT_NPC_Boticaria
-  - NPC_INTERACT_NPC_Erika
-  - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
-  - ERIKA_ENTRENAMIENTO_DERROTADA
-  - CAP2_A_DESPEDIRSE
-  - NPC_INTERACT_NPC_Oliver
-  - CH_Cap2_BACK_1
-  - CAP3_DESPEDIDA_START
-  - CAP3_DESPEDIDA_DONE
-  - CAP3_CAMINO_EMPIEZA
-  - CAP3_ACAMPADA_CAMINO
-  - CAP3_ESPEJO_START
-  - CAP3_ESPEJO_DONE
-  - CAP3_ALDEA_EMPIEZA
-  - CAP3_LLEGADA_ALDEA
-  - NPC_INTERACT_NPC_Posadero
-  - CAP3_POSADA_START
-  - CAP3_POSADA_DONE
-  - CAP3_PISTAS_EMPIEZA
-  - CAP3_PISTA_HUERTO
-  - CAP3_PISTA_COBERTIZO
-  - CAP3_PISTA_HECHA
-  - CAP3_NOCHE_EMPIEZA
-  - CAP3_LLEGADA_BOSQUE
-  - CAP3_CAE_LA_NOCHE
-  - CAP3_CARRO_START
-  - CAP3_CARRO_DONE
-  - CAP3_EN_EL_CLARO
-  - CAP3_CLARO_START
-  - CAP3_CLARO_DONE
-  - CAP3_DECIDE_EMPIEZA
-  - CAP2_CONTRABANDISTAS_ATAQUE
-  - NPC_INTERACT_NPC_Sargento
-  - CAP3_CONTRABANDISTA_VENCIDO
-  - CAP3_JAULAS_START
-  - CAP3_JAULAS_DONE
-  - CAP3_PAJAROS_START
-  - CAP3_PAJAROS_DONE
-  - CAP3_CONTRABANDISTAS_FIN
-  - CH_Cap3_BACK_1
-  - CAP4_BOSQUE_EMPIEZA
-  - CAP4_LLEGADA_CLARO
-  - CAP4_ESTELA_START
-  - CAP4_ESTELA_DONE
-  - CAP4_CASA_EMPIEZA
-  - CAP4_DORMIR
-  - CAP4_CAMPANA_EMPIEZA
-  - CAP4_MANANA_START
-  - CAP4_MANANA_DONE
-  - CAP4_CAMPANA_START
-  - CAP4_CAMPANA_DONE
-  - CAP4_FIGURA_CHAMUSCADA
-  - CAP4_CAMPANA_TOCADA
-  - CAP4_CAMPANA_FIN
-  - CAP4_FIGURA_START
-  - CAP4_FIGURA_DONE
-  - CAP4_GOLEM_EMPIEZA
-  - CAP4_LLEGADA_ARENA
-  - CAP4_GOLEM_START
-  - CAP4_GOLEM_DONE
-  - CAP4_TRAS_GOLEM_START
-  - CAP4_TRAS_GOLEM_DONE
-  - CAP4_MANZANA_START
-  - CAP4_MANZANA_DONE
-  - CAP4_BIFURCACION_EMPIEZA
-  - CAP4_LLEGADA_BIFURCACION
-  - CAP4_BIFURCACION_START
-  - CAP4_BIFURCACION_DONE
-  - CAP4_LIAM_EN_EL_GRUPO
-  - CAP4_BOTA_RECOGIDA
-  - CAP4_BOTA_START
-  - CAP4_BOTA_DONE
-  - CH_Cap4_BACK_1
-  - SENDERO_REQUISITOS_CUMPLIDOS
-  npcPositions:
-  - npcId: Eldran
-    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
-    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
-  - npcId: Contrabandista1
-    position: {x: -217, y: 21.982067, z: -143}
-    rotation: {x: 0, y: -0.25881913, z: -0, w: 0.9659258}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
+  npcPositions: []
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

@@ -163,7 +163,7 @@ public static class CarasDeLosProtagonistas
     /// Prepara un FBX de caras (materiales lisos con el estilo dado, en «Materiales» junto al FBX) y devuelve
     /// sus piezas (Eye…, Mouth…) para <see cref="PiezaNuevaDelModelo"/>.
     /// </summary>
-    public static List<(GameObject modelo, string nombre)> PrepararFbx(string ruta, Color iris, string rutaEstilo, StringBuilder informe)
+    public static List<(GameObject modelo, string nombre)> PrepararFbx(string ruta, Color iris, string rutaEstilo, StringBuilder informe, (string material, Color color)[] extras = null)
     {
         var piezas = new List<(GameObject modelo, string nombre)>();
         var colores = new[]
@@ -176,7 +176,7 @@ public static class CarasDeLosProtagonistas
             ("IrisOscuro", new Color(iris.r * 0.45f, iris.g * 0.45f, iris.b * 0.45f)),
         };
         string materiales = System.IO.Path.GetDirectoryName(ruta).Replace('\\', '/') + "/Materiales";
-        if (!PersonajeHechoEnBlender.PrepararPrenda(ruta, materiales, rutaEstilo, colores, informe)) return piezas;
+        if (!PersonajeHechoEnBlender.PrepararPrenda(ruta, materiales, rutaEstilo, extras == null ? colores : colores.Concat(extras).ToArray(), informe)) return piezas;
         var modelo = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
         foreach (var r in modelo.GetComponentsInChildren<SkinnedMeshRenderer>(true)) piezas.Add((modelo, r.name));
         return piezas;

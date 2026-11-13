@@ -711,6 +711,27 @@ public class SequencePlayer : CinematicSequencerBase
         if (isActiveAndEnabled) StartCoroutine(Co_RevealAfterSkip());
     }
 
+    /// ¿Queda por delante algún beat que se VEA? Los que solo colocan cosas (SoloColoca) y las esperas
+    /// sueltas (el aire del final de cada guion) no cuentan.
+    /// Lo usa DialogueBeat para no volver a poner las bandas de cine cuando la escena acaba con su
+    /// caja de diálogo: se pasaba de cine a juego con las bandas puestas un momento. Ver INC-1149.
+    public bool QuedaAlgoQueVer()
+    {
+        if (_definition?.phases == null || _context == null || _faseEnCurso < 0 || _endRequested) return false;
+        for (int p = _faseEnCurso; p < _definition.phases.Count; p++)
+        {
+            var fase = _definition.phases[p];
+            if (fase?.beats == null) continue;
+            bool enCurso = p == _faseEnCurso && _beatEnCurso >= 0;
+            if (!enCurso && !fase.ShouldRun(_context)) continue;
+            for (int b = enCurso ? _beatEnCurso + 1 : 0; b < fase.beats.Count; b++)
+                if (SeVe(fase.beats[b])) return true;
+        }
+        return false;
+    }
+
+    private static bool SeVe(SequenceBeat beat) => beat != null && !EsPreparacion(beat) && !(beat is WaitBeat);
+
     /// Saltar la secuencia no puede dejar sin hacer lo que la historia espera de ella: los beats
     /// que no han llegado a correr cumplen lo suyo (SequenceBeat.CumplirAlSaltar). Ver INC-890.
     private void CumplirLoQueQuedaba()

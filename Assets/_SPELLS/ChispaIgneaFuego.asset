@@ -81,8 +81,12 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_ChispaIgneaFuego
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
-  attackIcon: {fileID: 21300000, guid: c0f7caa3829897842a4783156480f259, type: 3}
+  attackIcon: {fileID: 21300000, guid: cfc27a0b22429a445a907d9247429307, type: 3}
   bounceCount: 0
   bounceRange: 8
   pierceCount: 0

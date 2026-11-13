@@ -2,8 +2,9 @@ using UnityEngine;
 
 /// <summary>
 /// Rayo generado entero por código (sin assets de terceros): un trazo en zigzag desde arriba hasta
-/// el punto de impacto, ramas secundarias más finas, halo translúcido opcional, parpadeo opcional y
-/// un destello de luz puntual que decae. Lo usan los rayos de la secuencia del prólogo
+/// el punto de impacto, ramas secundarias más finas, contorno de tinta (aspecto de dibujo: la misma
+/// tinta que el contorno de la escena), halo translúcido opcional, parpadeo opcional y un destello
+/// de luz puntual que decae. Lo usan los rayos de la secuencia del prólogo
 /// (VFX_RayoColision_Claro / _Oscuro, cada uno con su color) y los rayos de tormenta de
 /// DayNightCycle.
 ///
@@ -46,6 +47,10 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
     [SerializeField, Min(0f)] private float anchoDelHalo = 0f;
     [Tooltip("Color (con su transparencia) del halo.")]
     [SerializeField] private Color colorDelHalo = new Color(0.55f, 0.65f, 1f, 0.22f);
+    [Tooltip("Ancho del contorno de tinta de cada trazo, en veces el ancho del trazo (se dibuja detrás). 0 = sin contorno.")]
+    [SerializeField, Min(0f)] private float anchoDeLaTinta = 2.2f;
+    [Tooltip("Color del contorno de tinta (el mismo que el contorno de la escena).")]
+    [SerializeField] private Color colorDeLaTinta = new Color(0.20f, 0.15f, 0.22f, 1f);
 
     [Header("Parpadeo")]
     [Tooltip("Tramos (segundos de tiempo real) en los que el rayo se alterna encendido y apagado, empezando encendido; tras el último queda apagado. Vacío = visible todo el rato.")]
@@ -73,12 +78,15 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
         public Color colorDelHalo;
         public float[] parpadeo;
         public float intensidadDeLuz;
+        /// Ancho del contorno de tinta en veces el del trazo; 0 = el de por defecto del componente.
+        public float anchoDeLaTinta;
     }
 
     private struct Trazo
     {
         public LineRenderer nucleo;
         public LineRenderer halo;
+        public LineRenderer tinta;
     }
 
     private Light _flashLight;
@@ -87,6 +95,7 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
     private float _tiempoEncendido;
     private bool _visible = true;
     private static Material _sharedRuntimeMat;
+    private static Material _materialDeTinta;
 
     /// Crea una plantilla inactiva (fuera de escena, sobrevive a cambios de escena) con el aspecto
     /// indicado, para usarla como prefab en VfxPoolService.Play. Al estar inactiva no construye
@@ -110,6 +119,7 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
         vfx.colorDelHalo = ajustes.colorDelHalo;
         vfx.parpadeo = ajustes.parpadeo ?? new float[0];
         vfx.flashLightIntensity = Mathf.Max(0f, ajustes.intensidadDeLuz);
+        if (ajustes.anchoDeLaTinta > 0f) vfx.anchoDeLaTinta = ajustes.anchoDeLaTinta;
         return go;
     }
 
@@ -226,6 +236,14 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
         trazo.nucleo.startColor = color;
         trazo.nucleo.endColor = new Color(color.r, color.g, color.b, color.a * opacidadEnElImpacto);
 
+        if (trazo.tinta != null)
+        {
+            trazo.tinta.positionCount = puntos;
+            trazo.tinta.widthMultiplier = ancho * anchoDeLaTinta;
+            trazo.tinta.startColor = colorDeLaTinta;
+            trazo.tinta.endColor = new Color(colorDeLaTinta.r, colorDeLaTinta.g, colorDeLaTinta.b, colorDeLaTinta.a * opacidadEnElImpacto);
+        }
+
         if (trazo.halo == null) return;
         trazo.halo.positionCount = puntos;
         trazo.halo.widthMultiplier = ancho * anchoDelHalo;
@@ -237,6 +255,7 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
     {
         trazo.nucleo.SetPosition(indice, punto);
         if (trazo.halo != null) trazo.halo.SetPosition(indice, punto);
+        if (trazo.tinta != null) trazo.tinta.SetPosition(indice, punto);
     }
 
     private void PonerVisible(bool visible)
@@ -251,23 +270,26 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
     {
         if (trazo.nucleo != null) trazo.nucleo.enabled = visible;
         if (trazo.halo != null) trazo.halo.enabled = visible;
+        if (trazo.tinta != null) trazo.tinta.enabled = visible;
     }
 
     private Trazo CrearTrazo(Transform raiz, string nombre)
     {
-        var trazo = new Trazo { nucleo = CrearLinea(raiz, nombre, 0) };
-        if (anchoDelHalo > 0f) trazo.halo = CrearLinea(raiz, nombre + "Halo", -1);
+        // Orden de dibujo: halo (brillo, detrás), tinta y el trazo encima.
+        var trazo = new Trazo { nucleo = CrearLinea(raiz, nombre, 0, null) };
+        if (anchoDeLaTinta > 0f) trazo.tinta = CrearLinea(raiz, nombre + "Tinta", -1, MaterialDeTinta());
+        if (anchoDelHalo > 0f) trazo.halo = CrearLinea(raiz, nombre + "Halo", -2, null);
         return trazo;
     }
 
-    private LineRenderer CrearLinea(Transform raiz, string nombre, int orden)
+    private LineRenderer CrearLinea(Transform raiz, string nombre, int orden, Material material)
     {
         var go = new GameObject(nombre);
         go.transform.SetParent(raiz, false);
 
         var lr = go.AddComponent<LineRenderer>();
         lr.useWorldSpace = false;
-        lr.material = boltMaterial != null ? boltMaterial : GetRuntimeMaterial();
+        lr.material = material != null ? material : boltMaterial != null ? boltMaterial : GetRuntimeMaterial();
         lr.numCapVertices = 2;
         lr.numCornerVertices = 2;
         lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -276,6 +298,24 @@ public class ProceduralLightningBoltVfx : MonoBehaviour
         if (anchoEnElImpacto < 1f)
             lr.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, anchoEnElImpacto));
         return lr;
+    }
+
+    /// Material de la tinta: mezcla normal (no aditiva), para que el contorno oscurezca lo que tapa.
+    private static Material MaterialDeTinta()
+    {
+        if (_materialDeTinta == null)
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit") ?? Shader.Find("Sprites/Default");
+            _materialDeTinta = new Material(shader) { hideFlags = HideFlags.DontSave };
+            if (_materialDeTinta.HasProperty("_Surface")) _materialDeTinta.SetFloat("_Surface", 1f);
+            if (_materialDeTinta.HasProperty("_Blend")) _materialDeTinta.SetFloat("_Blend", 0f);
+            _materialDeTinta.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            _materialDeTinta.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            _materialDeTinta.SetFloat("_ZWrite", 0f);
+            _materialDeTinta.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            _materialDeTinta.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        }
+        return _materialDeTinta;
     }
 
     private static Material GetRuntimeMaterial()

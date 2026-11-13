@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_SelloDelPacto
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: c0f7caa3829897842a4783156480f259, type: 3}
   bounceCount: 0

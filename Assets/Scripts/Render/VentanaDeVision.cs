@@ -3,12 +3,15 @@ using UnityEngine;
 /// Una ventana en el mundo que enseña lo que ve otra cámara: una visión en una bola de cristal,
 /// un recuerdo flotando, lo que pasa en otro sitio. La cámara solo dibuja mientras la ventana está
 /// encendida, en una textura a baja resolución; la ventana se gira hacia la cámara que mira y se
-/// abre y se cierra con un fundido. Si tiene una luz, la hace latir con la visión.
+/// abre y se cierra con un fundido. Si tiene una luz, la hace latir con la visión. En vez de una
+/// cámara puede enseñar una imagen fija (algo que ya pasó y se recuerda).
 [DisallowMultipleComponent]
 public class VentanaDeVision : MonoBehaviour
 {
     [Tooltip("La cámara que ve lo que se enseña. Se apaga sola cuando la ventana no está encendida.")]
     [SerializeField] private Camera camaraDeLaVision;
+    [Tooltip("Imagen fija que se enseña en vez de lo que ve la cámara (algo que ya pasó). Si está puesta, la cámara no se usa.")]
+    [SerializeField] private Texture imagenFija;
     [Tooltip("La malla donde se pinta la visión (con un material que tenga _MainTex y _Aparicion).")]
     [SerializeField] private Renderer ventana;
     [Tooltip("Luz que acompaña a la visión (opcional): late mientras está abierta.")]
@@ -38,7 +41,9 @@ public class VentanaDeVision : MonoBehaviour
     private void OnEnable()
     {
         _apertura = 0f;
-        if (camaraDeLaVision == null || ventana == null) return;
+        if (ventana == null) return;
+        if (imagenFija != null) { Pintar(); return; }
+        if (camaraDeLaVision == null) return;
         _rt = new RenderTexture(resolucion.x, resolucion.y, 16) { name = name + " (visión)" };
         camaraDeLaVision.targetTexture = _rt;
         camaraDeLaVision.enabled = true;
@@ -75,7 +80,8 @@ public class VentanaDeVision : MonoBehaviour
     {
         if (ventana == null) return;
         ventana.GetPropertyBlock(_bloque);
-        if (_rt != null) _bloque.SetTexture(MainTexId, _rt);
+        if (imagenFija != null) _bloque.SetTexture(MainTexId, imagenFija);
+        else if (_rt != null) _bloque.SetTexture(MainTexId, _rt);
         _bloque.SetFloat(AparicionId, Mathf.SmoothStep(0f, 1f, _apertura));
         ventana.SetPropertyBlock(_bloque);
     }

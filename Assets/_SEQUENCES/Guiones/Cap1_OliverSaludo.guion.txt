@@ -60,9 +60,9 @@ espera 0.1
 # El hechizo fallido: les explota a los dos.
 @hechizo
 oliver gesto MagicSpecial dura=0.5
-efecto VfxBeat vfxPrefab=Assets/Art/World/ithappy/Sweet_Land/VFX/FX_Prefabs/FX_Smoke_Small.prefab atActorId=oliver offset=0;1.1;0 earlyDespawn=1
-# Chispas de fuego de verdad, pocas: el hechizo petardea, no explota.
-& vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Sparks/Sparks explode red.prefab" en=oliver offset=0,1.1,0 lifetime=1.2 escala=0.5
+# Petardea, no explota: humo de dibujo, una onda y pocas chispas (antes, humo y chispas de paquete
+# que casi no se veían). Ver INC-1153.
+efecto VfxBeat vfxPrefab=Assets/_VFX/Hechizos/VFX_Hechizo_Fallido.prefab atActorId=oliver offset=0;1.1;0 lifetime=2
 & efecto SfxBeat eventKey=SpellFail atActorId=oliver
 & sacudida 0.35 0.4
 # Sin quejido: la voz de cada uno se guarda para la risa (dos reacciones de una voz se separan 4 s).

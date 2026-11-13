@@ -21,24 +21,24 @@ public static class BatallaFinalLabBuilder
     const string GuionPath = "Assets/BOSSBATTLES/Guiones/Guion_BatallaFinal_Estela.asset";
 
     const string PrefabWill = "Assets/Prefabs/_WILL.prefab";
-    const string PrefabMago = "Assets/Prefabs/_MAGO_OSCURO.prefab";
+    const string PrefabMago = "Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab";   // en el Sendero ya se le ve la cara (el prólogo usa _MAGO_OSCURO, en sombra)
     const string PrefabCamara = "Assets/Prefabs/CamaraDelJugador.prefab";
     const string PrefabGrupo = "Assets/Prefabs/GrupoDelJugador.prefab";
     const string HechizoGolpe = "Assets/_SPELLS/MagoOscuroGolpe.asset";
 
     // Efectos
-    const string VfxAparicion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect5.prefab";
+    const string VfxAparicion = "Assets/_VFX/Hechizos/VFX_Hechizo_MagoOscuro_Aparicion.prefab";   // de dibujo (INC-1127)
     const string VfxDerrota = "Assets/_VFX/BatallaFinal/VFX_MagoOscuro_Derrota.prefab";
     const string VfxRebobinado = "Assets/_VFX/BatallaFinal/VFX_Rebobinado.prefab";
     const string VfxSacrificio = "Assets/_VFX/BatallaFinal/VFX_SacrificioLiam.prefab";
     const string VfxZona = "Assets/_VFX/Hechizos/VFX_Hechizo_MagoOscuroGrieta_Zona.prefab";
     const string VfxMarea = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect3.prefab";
     const string VfxRegeneracion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab";
-    const string VfxProtegido = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield pink.prefab";
-    const string VfxCarga = "Assets/VFX/Free Game VFX/Prefab/FX_Purple_Hit_02.prefab";
+    const string VfxProtegido = "Assets/_VFX/Hechizos/VFX_Hechizo_Escudo_MagoOscuro.prefab";
+    const string VfxCarga = "Assets/_VFX/Hechizos/VFX_Hechizo_MagoOscuro_Carga.prefab";
     const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
     const string VfxCorte = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_02.prefab";
-    const string VfxExplosionBomba = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
+    const string VfxExplosionBomba = "Assets/_VFX/Hechizos/VFX_Hechizo_MagoOscuro_Explosion.prefab";
     const string VfxPozo = "Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab";
     const string VfxImplosionPozo = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect4.prefab";
 

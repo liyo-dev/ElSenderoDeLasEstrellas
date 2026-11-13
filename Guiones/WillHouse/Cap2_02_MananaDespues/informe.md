@@ -1,6 +1,6 @@
 # Parte de horneado: Cap2_02_MananaDespues
 
-2026-11-12 08:00 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
+2026-11-13 13:21 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
 
 **2:55,8** de secuencia · 33 frases · 32 planos · 18 efectos · 5 personajes
 

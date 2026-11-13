@@ -64,7 +64,7 @@
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Usa {BOTON} para moverte.\nSe oye jaleo fuera. Sal a ver qué pasa."
+            "value": "Usa {BOTON} para moverte."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
@@ -72,7 +72,7 @@
         },
         {
             "key": "TUTORIAL_WAKE_UP",
-            "value": "Pulsa {BOTON} para despertar a Will."
+            "value": "Despertar a Will"
         },
         {
             "key": "QUEST_STARTED_BANNER",

@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 2
   lore: 
   loreId: 
-  prefab: {fileID: 7966731087305637596, guid: 460babe280fe4aa41adc3fefd46f0c0b, type: 3}
+  prefab: {fileID: 6173648803128454668, guid: a94bb270d7177c840b72c5a476c2cf0b, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -34,8 +34,9 @@ MonoBehaviour:
   destroyOnHit: 1
   forwardOffset: 0
   positionOffset: {x: 0, y: -0.5, z: 0}
-  visualRotationOffsetEuler: {x: -90, y: 0, z: 0}
+  visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 20
@@ -75,9 +76,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
-  impactVFX: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  spawnVFX: {fileID: 505743793857485063, guid: 382de989262d68f4bbcc38ba9a8e23ef, type: 3}
+  impactVFX: {fileID: 6603107003288286566, guid: 10c802f1ff7d5504989fbc6a1f1fdd4c, type: 3}
+  despawnVFX: {fileID: 2762701776606989417, guid: a7f5797aa55665942b30a94f26b1cccd, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Huracan
   impactSFXKey: Impacto_Viento_Grande

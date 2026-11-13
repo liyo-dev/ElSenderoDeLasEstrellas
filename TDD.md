@@ -39,6 +39,7 @@
 27. [Rediseño del 29 oct 2026: dueños nuevos](#27-rediseño-del-29-oct-2026-dueños-nuevos-inc-867)
 29. [Chuchelandia: la prueba de Estela](#29-chuchelandia-la-prueba-de-estela-inc-889)
 31. [Kits genéricos: separación de los sistemas](#31-kits-genéricos-separación-de-los-sistemas-inc-1049)
+32. [Quién cede ante quién: árbitros, contexto de juego y puentes con los kits](#32-quién-cede-ante-quién-árbitros-contexto-de-juego-y-puentes-con-los-kits-inc-1130)
 
 ---
 
@@ -4726,3 +4727,139 @@ Assets/
 | K16 | NPC y grupo (Characters) | Pendiente |
 | K17 | UI | Pendiente |
 | K18 | EditorTools y limpieza final | Pendiente |
+
+
+---
+
+## 32. Quién cede ante quién: árbitros, contexto de juego y puentes con los kits (INC-1130)
+
+**Origen (12 nov 2026):** probando el Cap. 1 con «Jugar desde este nodo» salieron dos fallos que no tenían que ver entre sí a primera vista: en pleno combate con el demonio sonaba la música de ambiente (INC-1124) y salía el rótulo con el nombre del pueblo (INC-1125). Raúl pidió aprovecharlos para poner en orden todo lo que reparte prioridades en gameplay (quién calla, quién manda, quién espera) y dejarlo dibujado, y ver cómo encajan los sistemas genéricos con los enchufes que ha habido que escribir para los del juego. Esta sección es ese mapa. No trata de acciones del jugador (magia, salto…), solo de **ceder el paso**.
+
+Medido el 12 nov 2026 sobre `Assets/Scripts`, `Assets/NarrativeGraph`, `Assets/Kits` y `Assets/ElSendero`. Las cifras de «quién consulta qué» son de lectura a nivel de archivo: no cuentan las rutas indirectas (un consumidor que se calla porque un árbitro le dice que se calle aparece como «no consulta»; eso es justo lo que se quiere ver, pero hay que recordarlo al leer la matriz).
+
+### 32.1 Las dos formas de ceder el paso
+
+Hay dos patrones en el proyecto y casi todo problema viene de mezclarlos:
+
+1. **Petición con clave a un árbitro.** Quien necesita algo lo pide con su clave y lo suelta al acabar; el árbitro decide cuál manda y reparte. Es robusto: si la clave muere (escena descargada, objeto destruido) el árbitro lo detecta, y el reparto no depende del orden en que lleguen las cosas. Ejemplos: `TimeScaleArbiterService`, `CameraDirectorService`, `PlayerLockService`, `ArbitroDeAvisos`, `HideHUD(quien)`, `Minimap.Ocultar(quien)`, `AtenuarBus(clave, …)`.
+2. **Pregunta de estado.** Cada consumidor mira por su cuenta «¿hay una cinemática? ¿hay combate?» y decide si calla. Es frágil: cada uno elige qué mirar, y al añadir una situación nueva hay que acordarse de tocar a todos los consumidores. Ejemplos: `AnySequenceActive`, `ActiveCombatRegistry.Count`, `AudioService.IsBattleActive`, `MenuManager.AnyOpen()`.
+
+Un árbitro bien hecho usa (1) para repartir y (2) solo por dentro, en un único sitio. Lo que sale mal es cuando los consumidores del patrón (2) están repartidos por el código.
+
+### 32.2 Inventario de árbitros y registros
+
+| Qué reparte | Dónde | Modelo | Usos medidos |
+|---|---|---|---|
+| Velocidad del tiempo (pausa, hitstop, cámara lenta) | `TimeScaleArbiterService` | Claves; manda la más lenta; claves destruidas se descartan solas | 110 |
+| Movimiento y entrada del jugador | `PlayerLockService` | Conjunto de dueños; bloqueado mientras haya uno | 95 |
+| Qué puede hacer el jugador ahora | `PlayerActionManager` (`PushMode`/`PopMode`, `ModeRule`) | Pila de `ActionMode` (13 modos); manda el tope | 42 `PushMode` |
+| Control de la cámara cinemática | `CameraDirectorService` (`Claim`/`Release`) | Claves con ventana de gracia al soltar | 17 |
+| Menús abiertos | `MenuManager` (`MenuKind`) | Estado por tipo + eventos `MenuOpened`/`MenuClosed` | 13 `AnyOpen` |
+| Fase de la interfaz | `GameState` (`GamePhase`) | Pila con contador | 8 `Push`, 8 archivos con `Is` |
+| Avisos en pantalla | `ArbitroDeAvisos` | Un aviso por canal, prioridad, silencios con clave (menús y cinemáticas) | 12 `Pedir` |
+| Qué se oculta durante una cinemática | `OcultablesDeCinematica` + `HideHUD`/`Minimap.Ocultar` | Registro de sistemas que se esconden con su clave | 30 |
+| Música | `AudioService` (pila de combate, `PedirMusicaDelLugar` con gracia, zona, escena) | Mezcla de pila, petición diferida y estado | 16 `PedirMusicaDelLugar`, 12 `PlayMusic` |
+| Volumen de buses | `AudioService.AtenuarBus` | Claves | 3 |
+| Combate en curso | `ActiveCombatRegistry` (NPCs) y `AudioService._battleActive` (música) | Conjunto y booleano, **dos fuentes** | 19 y 5 |
+| Cinemática en curso | `CinematicSequencerBase.AnySequenceActive` y `ActionMode.Cinematic` y `GamePhase.Cutscene` y `CinematicState` | **Cuatro representaciones** | 64 |
+| Quién va al mando | `ControlDelJugador`, `SaludDelGrupo` | Estado único | — |
+
+### 32.3 Qué hace cada consumidor con cada situación
+
+Marca «sí» si el archivo del consumidor mira esa situación (por sí mismo o a través del registro que le toca). «·» si no la mira en absoluto. Se han mirado 33 consumidores.
+
+| Consumidor | Cinemática | Menú | Combate | Diálogo | Bloqueo | Tiempo |
+|---|---|---|---|---|---|---|
+| `ArbitroDeAvisos` | sí | sí | · | · | · | · |
+| `PresentacionDeLugares` (vía árbitro) | sí | sí | **·** | · | · | · |
+| `AudioService` | sí | · | sí | · | · | sí |
+| `AudioService.PedirMusicaDelLugar` | sí | · | **·** | · | · | · |
+| `AmbientZone` | sí | · | sí | · | · | · |
+| `InteractionDetector` | sí | · | sí | sí | · | · |
+| `MinimapController` | sí | sí | · | · | · | · |
+| `PlayerHUDV2` | sí | · | · | · | · | · |
+| `SpeechBubbleUI` | · | sí | · | · | · | · |
+| `ComentariosEnReposo` | sí | sí | · | · | · | · |
+| `CompanionFollowPrompt` | sí | · | sí | · | · | · |
+| `TutorialPromptUI` | · | sí | · | · | · | · |
+| `LorePopupUI` | · | sí | · | · | · | sí |
+| `HudToastService` | · | · | · | · | · | · |
+| `ClimaSobreElJugador` | · | · | · | · | sí | sí |
+| `PlayerTargeting`, `CombatCameraTargeting` | sí | · | sí | · | · | · |
+| `NPCBehaviourManagerV2`, `NPCPartyMember`, `WorkState` | sí | · | sí | · | · | · |
+| `PlayerActionManager` | sí | sí | sí | · | sí | · |
+| `GameOverManager` | sí | · | sí | sí | · | sí |
+
+Totales: miran la **cinemática** 21 de 33, el **menú** 9, el **combate** 12, el **diálogo** 3. Cada columna se ha resuelto por separado, y por eso la fila de «combate» deja fuera justo los sistemas que dibujan cosas encima del juego (avisos, rótulo de lugar, minimapa, comentarios del grupo, bocadillos, toasts).
+
+### 32.4 Lo que se ve al dibujarlo
+
+1. **La misma situación tiene varias representaciones sin relación.** La cinemática vive en cuatro sitios (`AnySequenceActive`, `ActionMode.Cinematic`, `GamePhase.Cutscene`, `CinematicState`); el combate en tres (`ActiveCombatRegistry`, `_battleActive`, `ActionMode.Combat`) y `GamePhase` no tiene combate. `AmbientZone` ya tuvo que escribir `IsBattleActive || ActiveCombatRegistry.Count > 0` porque ninguno de los dos basta.
+2. **Quien dibuja encima del juego no sabe de combate.** Los avisos, el rótulo de lugar, el minimapa y los comentarios del grupo se callan por menú y cinemática (`ArbitroDeAvisos` y `OcultablesDeCinematica`) pero no por combate. Es INC-1125.
+3. **La petición diferida de música no mira el combate.** `Co_MusicaDelLugar` comprueba cinemática y pantalla tapada, pero no si hay una batalla sonando. Cualquier relevo que llegue en pleno combate (cinemática que acaba, `DramaticTextNode`, el adaptador de audio del grafo, `ConductorDeBarco`) pone la música del lugar encima. Es INC-1124.
+4. **Los árbitros buenos no son los que fallan.** `TimeScaleArbiterService`, `CameraDirectorService`, `PlayerLockService` y `ArbitroDeAvisos` están bien hechos y solo les falta que les alimenten el contexto. Lo que falla está en los registros que consultan los consumidores, no en los árbitros.
+5. **«Jugar desde este nodo» no repite el orden de una partida real.** `NarrativeTestLauncher` escribe un preset temporal (cuerpo del jugador, progreso proyectado con `NarrativeStateProjector`, blackboards, ancla de aparición) y arranca por `Start`. El proyector solo reproduce lo que cada nodo declara con `INarrativeStateEffect`: flags, misiones, colocaciones. No reproduce el estado de presentación: lugar ya anunciado, música del lugar, avisos pendientes. Además, `PresentacionDeLugares` vacía su último lugar al aplicar un preset (`OnPresetApplying`), así que al aparecer siempre anuncia el sitio. En una partida real el combate llega después de entrar en el pueblo; en el arranque desde nodo llega en el mismo instante. *(Hipótesis de causa, pendiente de comprobar en Play al aplicar el arreglo.)*
+6. **Los árbitros con ventana de gracia solo existen para cámara y música.** Los avisos no tienen margen: cuando un contexto acaba, el siguiente aviso sale de golpe.
+
+### 32.5 Diseño propuesto: contexto de juego único
+
+*(Propuesta aprobada en lo que atañe a INC-1124/1125; el resto, diseño pendiente de implementar. Ningún sistema se quita: cada uno sigue con su estado y además lo publica.)*
+
+- **Un registro de situaciones activas con clave.** Algo como `ContextoDeJuego` con un conjunto pequeño de situaciones: `Combate`, `Cinematica`, `Menu`, `Dialogo`, `Minijuego`, `PantallaTapada`. Quien sea dueño de la situación (el sistema de combate, el de cinemáticas, `MenuManager`…) la **abre y cierra con su clave**, igual que hoy se pide el tiempo o la cámara. Un solo `Hay(situacion)` y un evento al cambiar.
+- **Quién calla ante qué, en datos y no en código.** Una tabla (ScriptableObject) con, por consumidor, las situaciones ante las que cede y cómo: **se calla** (descarta lo que llegue), **espera** (guarda lo pedido y lo suelta al acabar, con ventana de gracia) o **sigue**. Así cambiar «el rótulo de lugar espera en combate» es editar un dato.
+- **Los consumidores consultan una vez, a través del árbitro que ya tienen.** `ArbitroDeAvisos` ya tiene `Silenciar(clave)`: el contexto lo alimenta. `AudioService` mira `Hay(Combate)` en `Co_MusicaDelLugar`. Los predicados sueltos (`ActiveCombatRegistry.Count > 0 || IsBattleActive`) pasan a `Hay(Combate)`.
+- **Regla de arranque.** Cualquier sistema que cede ante un contexto debe funcionar si el contexto **ya está activo cuando él nace** (carga de partida, «Jugar desde este nodo», entrada a escena). Se comprueba al consultar el estado al arrancar, no esperando a un evento que ya pasó.
+
+Orden de trabajo previsto:
+
+1. Arreglo mínimo (INC-1124/1125): `Co_MusicaDelLugar` sale sin poner nada con combate; `ArbitroDeAvisos` silencia la cabecera de lugar con combate. Antes, comprobar que el combate del demonio del Cap. 1 entra en `ActiveCombatRegistry` desde el primer fotograma.
+2. `ContextoDeJuego` con `Combate` y `Cinematica` (las dos con más representaciones). Los registros existentes publican en él.
+3. Migrar los predicados duplicados, empezando por `AmbientZone` y `AudioService`.
+4. Tabla de políticas de los consumidores que dibujan encima del juego (avisos, rótulo, minimapa, comentarios, bocadillos, toasts).
+5. Prueba de arranque desde nodo en un combate como test fijo de cualquier sistema que cede.
+
+### 32.6 Cómo encajan los kits genéricos con los puentes
+
+Hay tres clases de puente y conviene no mezclarlas:
+
+| Puente | Dónde está | Qué es | Estado |
+|---|---|---|---|
+| **Puertos del grafo** | `Assets/NarrativeGraph/Runtime/Integration/Ports/` (15 interfaces: audio, cámara, diálogo, jugador, pantalla, guardado, misiones…) | Lo que el grafo necesita del juego; se piden con `NarrativeServices.TryGet` | Funciona; es el modelo a copiar |
+| **Adaptadores del juego** | `Assets/Scripts/NarrativeIntegration/` (unos 13: audio, cámara, diálogo, jugador, misiones, burbujas, localización, pantalla, NPC, guardado…) | Implementan los puertos con las clases concretas de El Sendero | Funciona; hoy en `Scripts/`, irán a `ElSendero/Connections/NarrativeGraph/` (K3) |
+| **Enchufes de kit** (`Connections/<Kit>/`) | `Assets/ElSendero/Connections/` | Implementaciones del juego de las interfaces de cada kit | Solo existe el esqueleto de `EditorTools`: los kits reales aún no se han movido (K2–K18 pendientes) |
+
+Las reglas de § 31 dicen que un kit no usa a otro por sus clases concretas, solo por interfaces o eventos de un kit base. **El contexto de juego es el caso de uso exacto de esa regla**: si `Kits.Audio` tiene que callarse en combate y `Kits.Combat` es quien sabe que hay combate, no pueden conocerse. La salida es que el kit base (`Kits.Core`) defina:
+
+- la interfaz de lectura (`IGameContext`: `Has(situation)` y un evento de cambio),
+- el contrato de escritura con clave (`Enter(situation, key)` / `Exit(situation, key)`),
+- y la interfaz de política (`IContextPolicy`: qué hace cada consumidor ante cada situación, leída de datos).
+
+Cada kit consulta la lectura y publica sus situaciones por la escritura; **el juego** rellena el conjunto de situaciones y las políticas en `Connections/Core/`. Así `Kits.Audio` no sabe qué es un combate de El Sendero, solo que existe una situación «Combate» que puede pedir al contexto. Es lo mismo que ya hacen `INarrativeAudio` o `INarrativePlayerControl` para el grafo, aplicado al reparto de prioridades.
+
+Lo que hay que vigilar al migrar (se añade a la lista de § 31.2):
+
+- Los árbitros que ya están limpios (`TimeScaleArbiterService`, `ServiceLocator`, `Pooling`) van a `Kits.Core` tal cual y son la plantilla de estilo.
+- `ArbitroDeAvisos`, `CameraDirectorService` y `PlayerLockService` mezclan hoy API genérica con detalles del juego (menús, cinemáticas, `vThirdPersonCamera`). Al pasarlos a kit, la parte genérica (claves, prioridad, gracia) va al kit y lo concreto entra por interfaz.
+- Un enchufe nunca debe contener lógica de prioridad propia: si lo necesita, la regla pertenece al kit (como dato u opción) o a la tabla de políticas del juego.
+
+### 32.7 Lista de comprobación para un sistema nuevo que dibuja o suena encima del juego
+
+1. ¿Ante qué situaciones debe ceder (combate, cinemática, menú, diálogo, pantalla tapada)? Se declara en la tabla de políticas, no en `if` dentro del sistema.
+2. ¿Cede **callándose**, **esperando** o **siguiendo**? Esperar necesita ventana de gracia si lo que viene detrás puede volver a pedir lo mismo.
+3. ¿Qué pasa si arranca con el contexto **ya activo** (cargar partida, «Jugar desde este nodo», entrar en escena con el combate en marcha)?
+4. ¿Se pide con clave y se suelta también en `OnDisable`/`Exit()`? Una clave que muere sin soltar es lo que deja el juego pausado, sin HUD o en silencio.
+5. ¿A quién cede **él** a su vez? Un aviso puede ceder ante el combate, pero la barra del jefe no.
+
+### 32.8 Estado
+
+| Punto | Estado |
+|---|---|
+| Inventario y matriz de consumidores | Hecho (12 nov 2026) |
+| `Kits.Core.GameContext` (`Has`, `Enter`, `Exit`, `Changed`; claves destruidas se descartan solas) | Escrito; falta compilar en Unity |
+| Situaciones del juego (`Situaciones.Combate`, `Situaciones.Cinematica`) | Escrito en `ElSendero/Connections/Core/` |
+| Publicadores | `ActiveCombatRegistry` (Combate, con cada NPC como clave) y `CinematicSequencerBase` (Cinemática, con cada secuencia como clave) |
+| Consumidores migrados | `ArbitroDeAvisos` lee `IAvisoEnPantalla.CedeAnte`; `PresentacionDeLugares` cede ante Combate (INC-1125). `AudioService.Co_MusicaDelLugar` no pone la música del lugar con una batalla sonando (INC-1124) |
+| Política por consumidor | Hecha como declaración de cada aviso (`CedeAnte`), no como tabla central: es el patrón más pequeño que cubre el caso; se pasa a tabla de datos cuando haya más de un tipo de consumidor |
+| Pendiente | Migrar `AmbientZone` y el resto de predicados duplicados a `GameContext`; decidir si minimapa, comentarios del grupo y bocadillos ceden ante combate; test de arranque desde nodo en combate; `IContextPolicy` en `Kits.Core` si la política pasa a datos |
+
+**Cómo se usa (resumen).** Un dueño de situación: `GameContext.Enter(Situaciones.X, clave)` al empezar y `Exit(Situaciones.X, clave)` al acabar, también en `OnDisable`. Un consumidor que cede: consulta `GameContext.Has(Situaciones.X)` o escucha `GameContext.Changed`. Un aviso nuevo en pantalla que deba esperar a una situación declara `CedeAnte`. Notas de diseño: el registro no decide nada, solo recuerda qué está en curso; la música usa `_battleActive` y no `Combate` porque el combate de un NPC puede seguir registrado sin música de batalla (arañas) y no debe dejar el lugar en silencio.

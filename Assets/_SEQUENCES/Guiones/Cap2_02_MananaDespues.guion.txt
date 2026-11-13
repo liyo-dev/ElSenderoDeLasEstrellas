@@ -148,7 +148,7 @@ eldran dice EVT_MANANA_04b mira=will cara=alegre gesto=HeadNod01 dura=2.6
 plano medio will solo desde=cam_will_mesa altura=1.15 altura_foco=1.15 lente=34 encuadre=centro suave=0
 # Will cuenta el fuego con todo el cuerpo: lo lanza, enseña el tamaño, se corrige y lo hace aún más grande.
 will dice EVT_MANANA_04 mira=eldran cara=ilusionado dura=5.2
-+0.4 will gesto CastingDamage01
++0.4 will gesto CastingDamage01 voz=no
 +1.8 will gesto Cheer01
 +3.0 will gesto HeadShake01
 +4.0 will gesto Cheer02

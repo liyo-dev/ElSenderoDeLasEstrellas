@@ -84,6 +84,14 @@ public class SpellBeat : SequenceBeat
     [Tooltip("Altura sobre los pies a la que impacta en el objetivo, cuando es un actor.")]
     public float alturaDelImpacto = 1.1f;
 
+    [Tooltip("El hechizo nace en la mano de verdad (la que está más adelantada) en vez de a «alturaDeLaMano»: " +
+             "en personajes bajos la altura fija caía en la cara.")]
+    public bool desdeLaMano = true;
+
+    [Tooltip("Si el objetivo es un personaje, impacta en su pecho (hueso del pecho) en vez de a «alturaDelImpacto». " +
+             "Desmarcar para impactos a una altura fija (p. ej. por el suelo).")]
+    public bool alPecho = true;
+
     [Tooltip("Sacudida de cámara al impacto. 0 = ninguna.")]
     public float sacudidaAlImpacto = 0.4f;
 
@@ -142,6 +150,8 @@ public class SpellBeat : SequenceBeat
             yield break;
         }
 
+        Transform pecho = alPecho ? Pecho(objetivo) : null;
+
         // ── 1. La carga ──────────────────────────────────────────────────────────────────────
         Vector3 mano = Mano(lanza);
 
@@ -156,7 +166,7 @@ public class SpellBeat : SequenceBeat
 
         // ── 2. El viaje ──────────────────────────────────────────────────────────────────────
         mano = Mano(lanza);   // puede haberse movido durante la carga
-        Vector3 destino = Destino(objetivo, marca);
+        Vector3 destino = Destino(objetivo, marca, pecho);
 
         Transform proyectil = vfxProyectil != null
             ? VfxPoolService.Instance.Play(vfxProyectil, mano,
@@ -175,7 +185,7 @@ public class SpellBeat : SequenceBeat
             transcurrido += Time.deltaTime;
 
             // Releído cada fotograma: si el objetivo se mueve, el hechizo le sigue.
-            destino = Destino(objetivo, marca);
+            destino = Destino(objetivo, marca, pecho);
 
             Vector3 delta = destino - posicion;
             float queda = delta.magnitude;
@@ -226,11 +236,33 @@ public class SpellBeat : SequenceBeat
     private Vector3 Mano(SequenceActor lanza)
     {
         Transform t = lanza.Transform;
+        if (desdeLaMano)
+        {
+            var anim = t.GetComponentInChildren<Animator>();
+            Transform izq = HuesoDelActor.De(anim, HumanBodyBones.LeftHand);
+            Transform der = HuesoDelActor.De(anim, HumanBodyBones.RightHand);
+            Transform delante = izq == null ? der : der == null ? izq
+                : (Vector3.Dot(der.position - t.position, t.forward) >= Vector3.Dot(izq.position - t.position, t.forward) ? der : izq);
+            if (delante != null) return delante.position + t.forward * 0.12f;
+        }
         return t.position + Vector3.up * alturaDeLaMano + t.forward * separacionDelCuerpo;
     }
 
-    private Vector3 Destino(SequenceActor objetivo, Transform marca)
+    /// El pecho del objetivo, si es un personaje con esqueleto.
+    private static Transform Pecho(SequenceActor objetivo)
     {
+        if (objetivo?.Transform == null) return null;
+        var anim = objetivo.Transform.GetComponentInChildren<Animator>();
+        if (anim == null) return null;
+        Transform t = HuesoDelActor.De(anim, HumanBodyBones.UpperChest);
+        if (t == null) t = HuesoDelActor.De(anim, HumanBodyBones.Chest);
+        if (t == null) t = HuesoDelActor.De(anim, HumanBodyBones.Spine);
+        return t;
+    }
+
+    private Vector3 Destino(SequenceActor objetivo, Transform marca, Transform pecho)
+    {
+        if (pecho != null) return pecho.position;
         if (objetivo?.Transform != null)
             return objetivo.Transform.position + Vector3.up * alturaDelImpacto;
 

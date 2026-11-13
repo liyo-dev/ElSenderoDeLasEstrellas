@@ -32,11 +32,17 @@ public static class CarasDeLosNPCs
         public string Clave, Fbx; public Color Iris; public int Ojos, Bocas; public Cabeza Cabeza;
         public string FbxDeBocas;      // null = las de su cabeza (protagonistas)
         public bool DeProtagonista;    // FBX que prepara CarasDeLosProtagonistas
+        public (string material, Color color)[] Extras;   // materiales de su FBX que no están en los colores de siempre
+        public (string material, float fuerza)[] Brillan;   // materiales de su FBX que brillan con su color (ojos de luz, líneas de la Piedra)
+        public Color? Ceja;            // color propio de sus cejas (si no, el de las del pelo del pack)
     }
 
     static readonly Color Marron = new Color(0.35f, 0.2f, 0.1f), Verde = new Color(0.2f, 0.55f, 0.25f),
         Azul = new Color(0.22f, 0.42f, 0.72f), Gris = new Color(0.36f, 0.43f, 0.52f),
-        Oscuro = new Color(0.2f, 0.12f, 0.08f), Ambar = new Color(0.68f, 0.42f, 0.14f);
+        Oscuro = new Color(0.2f, 0.12f, 0.08f), Ambar = new Color(0.68f, 0.42f, 0.14f),
+        Sombra = new Color(14f / 255f, 10f / 255f, 20f / 255f);   // el tono «sombra» de TonosDePiel
+    /// <summary>La luz de los ojos del Mago Oscuro en sombra: violeta casi blanco.</summary>
+    static readonly Color LuzDeSombra = new Color(0.86f, 0.7f, 1f);
 
     static Juego J(string clave, Color iris, int ojos, Cabeza cabeza, int bocas = 0) => new Juego
     {
@@ -60,6 +66,21 @@ public static class CarasDeLosNPCs
         J("h_mayor_ambar", Ambar, 230, Cabeza.Hombre), J("hf_mayor_marron", Marron, 240, Cabeza.Mujer),
         J("m_mayor_azul", Azul, 250, Cabeza.Mujer), J("h_tostado_marron", Marron, 260, Cabeza.Hombre),
         J("h_pecas_azul", Azul, 270, Cabeza.Hombre), J("m_pecas_marron", Marron, 280, Cabeza.Mujer),
+        // Los de un solo personaje: sus ojos, cejas y bocas propias (Tools/Modelos/Caras/kit_npcs.py)
+        new Juego { Clave = "archimago", Fbx = $"{CarpetaKit}/Caras_NPC_archimago.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_archimago.fbx", Iris = Gris, Ojos = 320, Bocas = 320, Cabeza = Cabeza.Hombre, Ceja = new Color(0.55f, 0.55f, 0.6f) },
+        new Juego { Clave = "mago_oscuro", Fbx = $"{CarpetaKit}/Caras_NPC_mago_oscuro.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_mago_oscuro.fbx", Iris = new Color(0.6f, 0.4f, 0.95f), Ojos = 290, Bocas = 310, Cabeza = Cabeza.Hombre,
+                    Ceja = new Color(0.06f, 0.04f, 0.1f),
+                    Extras = new[] { ("OjeraVioleta", new Color(0.55f, 0.38f, 0.78f)), ("LuzPiedra", Color.white), ("HaloPiedra", new Color(0.72f, 0.6f, 0.95f)) },
+                    Brillan = new[] { ("LuzPiedra", 2f), ("HaloPiedra", 0.9f) } },
+        // Los ojos de luz bajo el velo. Lleva sus propias bocas (las del juego de la cara, copiadas con los materiales
+        // BocaSombra y LenguaSombra en el color de la sombra): el sistema de emociones las sigue cambiando, pero no se ven.
+        new Juego { Clave = "mago_oscuro_sombra", Fbx = $"{CarpetaKit}/Caras_NPC_mago_oscuro_sombra.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_mago_oscuro_sombra.fbx", Iris = LuzDeSombra, Ojos = 300, Bocas = 310, Cabeza = Cabeza.Hombre,
+                    Ceja = Sombra,   // sin cejas: en la cara de sombra solo se ven los ojos
+                    // Cada ojo es una sola mancha de luz (blanco, iris, pupila y párpado del mismo color), con brillo por encima
+                    // del umbral del bloom para que deje halo
+                    Extras = new[] { ("Blanco", LuzDeSombra), ("Iris", LuzDeSombra), ("IrisOscuro", LuzDeSombra), ("Negro", LuzDeSombra),
+                                     ("BocaSombra", Sombra), ("LenguaSombra", Sombra) },
+                    Brillan = new[] { ("Blanco", 5f), ("Iris", 5f), ("IrisOscuro", 5f), ("Negro", 5f) } },
         new Juego { Clave = "will", Fbx = CarasProtas + "/Caras_chico_verde.fbx", Iris = Verde, Ojos = 30, Cabeza = Cabeza.Hombre, DeProtagonista = true },
     };
 
@@ -105,8 +126,10 @@ public static class CarasDeLosNPCs
         ("NonInteractable/TownNpc#4", "mh_almendra_marron"),
         // Niños (con su cuerpo de adulto encogido hasta que tengan cuerpo de niño propio)
         ("NiñoPez", "nino_chico_ambar"), ("AmigaDelNiñoPez", "nina_almendra_azul"), ("Recuerdos/WillNino", "will"),
-        // El Archimago (prólogo y cinemática final): el modelo antiguo de Will, con los ojos de Will
-        ("Assets/Prefabs/_WILL_ORIGINAL.prefab", "will"),
+        // El Archimago (prólogo y cinemática final): el modelo antiguo de Will, vestido por VestuarioDeLosNPCs
+        ("Assets/Prefabs/_WILL_ORIGINAL.prefab", "archimago"),
+        // El Mago Oscuro: sombra en el prólogo, revelado (con cara y pelo) para el final; el segundo lo crea MagoOscuroPorEstados
+        ("Assets/Prefabs/_MAGO_OSCURO.prefab", "mago_oscuro_sombra"), ("Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab", "mago_oscuro"),
     };
 
     static readonly Regex PiezaDeCara = new Regex(@"^(Eye|Mouth|Fx)(\d+)$");   // Fx: los símbolos de anime (lágrimas, sudor…)
@@ -138,10 +161,12 @@ public static class CarasDeLosNPCs
         };
         foreach (var j in Kit)
         {
-            var deEsteFbx = j.DeProtagonista ? PiezasDe(j.Fbx) : CarasDeLosProtagonistas.PrepararFbx(j.Fbx, j.Iris, rutaEstilo, informe);
+            var deEsteFbx = j.DeProtagonista ? PiezasDe(j.Fbx) : CarasDeLosProtagonistas.PrepararFbx(j.Fbx, j.Iris, rutaEstilo, informe, j.Extras);
+            if (!j.DeProtagonista) BrillarSusMateriales(j);
             var ojos = deEsteFbx.Where(p => p.nombre.StartsWith("Eye")).ToList();
             var simbolos = deEsteFbx.Where(p => p.nombre.StartsWith("Fx")).ToList();
-            var susBocas = j.Bocas != 0 ? deEsteFbx.Where(p => p.nombre.StartsWith("Mouth")).ToList() : bocas[j.Cabeza];
+            var susBocas = j.Bocas == 0 ? bocas[j.Cabeza]
+                : (j.FbxDeBocas != j.Fbx ? PiezasDe(j.FbxDeBocas) : deEsteFbx).Where(p => p.nombre.StartsWith("Mouth")).ToList();
             if (ojos.Count == 0 || susBocas.Count == 0) { informe.AppendLine($"Juego {j.Clave}: faltan piezas en {j.Fbx}."); continue; }
             piezas[j.Clave] = ojos.Concat(susBocas).Concat(simbolos).ToList();
             var perfil = CarasDeLosProtagonistas.Perfil($"NPC_{j.Clave}", j.Ojos, j.Bocas != 0 ? j.Bocas : (j.Cabeza == Cabeza.Hombre ? 20 : 40), new StringBuilder());
@@ -204,6 +229,7 @@ public static class CarasDeLosNPCs
             filtro.sharedMesh = sinCejas;
             if (suCeja != null) ceja = suCeja;
         }
+        if (j.Ceja.HasValue) ceja = PersonajeHechoEnBlender.Liso(estilo, $"{CarpetaCejas}/Mat_Ceja_{j.Clave}.mat", j.Ceja.Value);
         if (ceja == null) ceja = PersonajeHechoEnBlender.Liso(estilo, $"{CarpetaCejas}/Mat_Ceja_Defecto.mat", CejaPorDefecto);
         foreach (var c in raiz.GetComponentsInChildren<CejasPorEmocion>(true)) Object.DestroyImmediate(c, true);
 
@@ -338,6 +364,14 @@ public static class CarasDeLosNPCs
     }
 
     // ── Piezas ───────────────────────────────────────────────────────────────────────────────────────────────────
+
+    /// Los materiales de un juego que brillan (la emisión se pierde cada vez que se rehacen los materiales del FBX).
+    static void BrillarSusMateriales(Juego j)
+    {
+        if (j.Brillan == null) return;
+        string carpeta = Path.GetDirectoryName(j.Fbx).Replace('\\', '/') + "/Materiales", nombre = Path.GetFileNameWithoutExtension(j.Fbx);
+        foreach (var (material, fuerza) in j.Brillan) PersonajeHechoEnBlender.Brillar($"{carpeta}/Mat_{nombre}_{material}.mat", fuerza);
+    }
 
     static List<(GameObject modelo, string nombre)> PiezasDe(string fbx)
     {

@@ -235,7 +235,9 @@ Tras la victoria, una escena aparte muestra a Liam observando a Will en la bola 
 
 Después de la victoria se completa el encargo de Eldran y se vuelve a un punto de guardado.
 
-**ADAPTACIÓN DEL JUEGO frente a la novela V:** Liam provoca el ataque para encontrar a alguien de buen corazón, con el tono de la novela. En la escena del cristal no se ríe; se levanta cuando Will cae y la llave del aro se apaga al romperse el aro. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
+**ADAPTACIÓN DEL JUEGO frente a la novela V:** Liam provoca el ataque para encontrar a alguien de buen corazón, con el tono de la novela. En la escena del cristal no se ríe; se levanta cuando Will cae y ve en la bola que lo ha vencido. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
+
+**ADAPTACIÓN DEL JUEGO frente a la novela: el aro de runas (decidido por Raúl, 12 nov 2026).** El lore del aro se simplifica: el aro se lo puso Liam al Demonio con una invocación, para que el Demonio hiciera lo que él quería. **No existe ninguna llave del aro**: nada se calienta, se enciende ni se apaga cuando Will está cerca. Liam sabe de Will porque lo ve en la bola de cristal, y le sigue de cerca porque Will se ha llevado un trozo de su aro. Cuando Estela lee el aro (4.1) solo reconoce las runas de sometimiento y la invocación; no habla de llaves.
 
 ### 5.6. Capítulo 2: Prepárate para el viaje — novelas III–IV
 

@@ -30,13 +30,65 @@ public class Targetable : MonoBehaviour
     {
         get
         {
-            if (_colliderDeApuntado == null)
-            {
-                _colliderDeApuntado = GetComponent<Collider>();
-                if (_colliderDeApuntado == null) _colliderDeApuntado = GetComponentInChildren<Collider>();
-            }
+            if (_colliderDeApuntado == null) _colliderDeApuntado = ColliderDelCuerpo(transform);
             return _colliderDeApuntado;
         }
+    }
+
+    static readonly List<Collider> _collidersDelCuerpo = new();
+
+    /// <summary>
+    /// Raíz de lo que se apunta: el Targetable o el Damageable del que cuelga 't'. La búsqueda
+    /// de objetivos encuentra colliders sueltos (un arma, un trigger de detección, un hueso);
+    /// apuntar a la raíz evita tomar uno de ellos por el objetivo.
+    /// </summary>
+    public static Transform RaizDelObjetivo(Transform t)
+    {
+        if (t == null) return null;
+        var targetable = t.GetComponentInParent<Targetable>();
+        if (targetable != null) return targetable.transform;
+        var damageable = t.GetComponentInParent<Damageable>();
+        return damageable != null ? damageable.transform : t;
+    }
+
+    /// <summary>
+    /// Collider que representa el cuerpo de 'raiz': el suyo propio si es sólido; si no, el sólido
+    /// más grande de sus hijos (el cuerpo, no el arma); sin sólidos, el primer collider que tenga.
+    /// Nunca sube a los padres: un trigger de zona o de combate no es el cuerpo del objetivo.
+    /// </summary>
+    public static Collider ColliderDelCuerpo(Transform raiz)
+    {
+        if (raiz == null) return null;
+        if (raiz.TryGetComponent<Collider>(out var propio) && propio.enabled && !propio.isTrigger) return propio;
+
+        raiz.GetComponentsInChildren(false, _collidersDelCuerpo);
+        Collider mejor = null, primero = null;
+        float mejorVolumen = -1f;
+        for (int i = 0; i < _collidersDelCuerpo.Count; i++)
+        {
+            var c = _collidersDelCuerpo[i];
+            if (!c.enabled) continue;
+            if (primero == null) primero = c;
+            if (c.isTrigger) continue;
+            Vector3 tam = c.bounds.size;
+            float volumen = tam.x * tam.y * tam.z;
+            if (volumen > mejorVolumen) { mejorVolumen = volumen; mejor = c; }
+        }
+        _collidersDelCuerpo.Clear();
+        return mejor != null ? mejor : primero;
+    }
+
+    /// <summary>
+    /// Centro del cuerpo de lo que se apunta (Targetable, Damageable o el propio transform):
+    /// adonde van los hechizos y donde se coloca el marcador. Sin collider, un metro sobre los pies.
+    /// </summary>
+    public static Vector3 CentroDelCuerpo(Transform objetivo)
+    {
+        Transform raiz = RaizDelObjetivo(objetivo);
+        if (raiz == null) return Vector3.zero;
+        var targetable = raiz.GetComponent<Targetable>();
+        Collider col = targetable != null ? targetable.ColliderDeApuntado : ColliderDelCuerpo(raiz);
+        return col != null ? col.bounds.center : raiz.position + Vector3.up;
     }
 
     void OnEnable()

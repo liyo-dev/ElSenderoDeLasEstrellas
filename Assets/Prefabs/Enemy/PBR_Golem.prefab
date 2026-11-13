@@ -212,7 +212,7 @@ MonoBehaviour:
   rockHandPoint: {fileID: 7123563488054886675}
   rockHandPointLeft: {fileID: 3411324387237086588}
   rockSpeed: 30
-  rockPickupVFX: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  rockPickupVFX: {fileID: 6880476693677599788, guid: 5167ba911cde0d642a963ab2d4ebbfb2, type: 3}
   phase2HealthThreshold: 0.8
   rockRainCount: 150
   rockRainRadius: 15
@@ -221,7 +221,7 @@ MonoBehaviour:
   rockRainInterval: 0.15
   rockRainAoeRadius: 3
   rockRainAoeDamage: 25
-  rockWarningVFX: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}
+  rockWarningVFX: {fileID: 596014911510155551, guid: 20f4ef91602bccc4e86afa866120f38f, type: 3}
   rockLandingVfxScale: 0.6
   phase3HealthThreshold: 0.5
   jumpHeight: 8
@@ -229,8 +229,8 @@ MonoBehaviour:
   shockwaveRadius: 10
   shockwaveDamage: 50
   shockwaveKnockback: 15
-  shockwaveVFX: {fileID: 6526302276393259002, guid: f9d9793366789ae48a7e1b0692763acc, type: 3}
-  landingDustVFX: {fileID: 4994997792314849709, guid: 3dd50886582244645be87adb42aa8528, type: 3}
+  shockwaveVFX: {fileID: 3527042055090944369, guid: 82c81081fb3444a498f96339dc6b2681, type: 3}
+  landingDustVFX: {fileID: 2604177019790708107, guid: f29ca7beaa0e86c4c9c7b17bfe32804c, type: 3}
   cameraShakeDuration: 0.5
   cameraShakeIntensity: 0.3
   attackCooldown: 3
@@ -248,7 +248,7 @@ MonoBehaviour:
     distancia: 4
     altura: 2
     duracion: 0.7
-  punchImpactVFX: {fileID: 1758473627833946668, guid: 9b21333b068a5084ba09535839bee3c8, type: 3}
+  punchImpactVFX: {fileID: 2073205168982220886, guid: 734dc6f7ef4d8e7499b054aa3a0ed353, type: 3}
   chargeCooldown: 10
   chargeOnPhaseChangeChance: 0.7
   kitingChargeDelay: 2.5
@@ -312,6 +312,7 @@ MonoBehaviour:
   animationSpeed: 5
   fadeInDuration: 0.4
   fadeOutDuration: 0.5
+  prioridad: 10
 --- !u!114 &6115329083915449752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 90
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!195 &2517759409743794487
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -420,6 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: boss
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &4621281258234471913
 MonoBehaviour:
   m_ObjectHideFlags: 0

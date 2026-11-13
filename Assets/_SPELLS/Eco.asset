@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 12
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
-  impactVFX: {fileID: 7172471199737809696, guid: f536de70df6b57f4081332334234a569, type: 3}
+  spawnVFX: {fileID: 3465344361621299825, guid: b231943c06a7579429209d2cb2c143c4, type: 3}
+  impactVFX: {fileID: 2221231285539944538, guid: 4310240f6b2d52841a42a5d0c323b62b, type: 3}
   despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Eco
   impactSFXKey: Impacto_Mente_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: a00d5e274490e7d419102f73aaefd9a3, type: 3}
   bounceCount: 0

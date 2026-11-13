@@ -113,30 +113,30 @@ public class DayNightCycle : MonoBehaviour
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Morning,
             duration = 90f,
-            lightColor = new Color(1f, 0.88f, 0.72f), lightIntensity = 0.95f,
-            ambientColor = new Color(0.3f, 0.31f, 0.4f), ambientIntensity = 0.85f,
-            fogColor = new Color(0.7f, 0.79f, 0.9f), fogDensity = 0.007f
+            lightColor = new Color(1f, 0.86f, 0.74f), lightIntensity = 1.1f,
+            ambientColor = new Color(0.34f, 0.33f, 0.44f), ambientIntensity = 0.85f,
+            fogColor = new Color(0.80f, 0.80f, 0.90f), fogDensity = 0.007f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.AfterNoon,
             duration = 220f,
-            lightColor = new Color(1f, 0.97f, 0.88f), lightIntensity = 1.2f,
-            ambientColor = new Color(0.38f, 0.37f, 0.34f), ambientIntensity = 1f,
-            fogColor = new Color(0.85f, 0.87f, 0.88f), fogDensity = 0.0045f
+            lightColor = new Color(1f, 0.97f, 0.90f), lightIntensity = 1.3f,
+            ambientColor = new Color(0.40f, 0.39f, 0.36f), ambientIntensity = 1.1f,
+            fogColor = new Color(0.85f, 0.87f, 0.90f), fogDensity = 0.004f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Sunset,
             duration = 65f,
-            lightColor = new Color(1f, 0.82f, 0.64f), lightIntensity = 0.92f,
-            ambientColor = new Color(0.30f, 0.28f, 0.34f), ambientIntensity = 0.80f,
-            fogColor = new Color(0.86f, 0.70f, 0.56f), fogDensity = 0.008f
+            lightColor = new Color(1f, 0.72f, 0.50f), lightIntensity = 0.85f,
+            ambientColor = new Color(0.38f, 0.27f, 0.30f), ambientIntensity = 0.8f,
+            fogColor = new Color(0.90f, 0.62f, 0.42f), fogDensity = 0.011f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Night,
             duration = 150f,
-            lightColor = new Color(0.5f, 0.6f, 0.95f), lightIntensity = 0.4f,
-            ambientColor = new Color(0.1f, 0.1f, 0.2f), ambientIntensity = 0.55f,
-            fogColor = new Color(0.09f, 0.09f, 0.19f), fogDensity = 0.015f
+            lightColor = new Color(0.60f, 0.70f, 1f), lightIntensity = 0.6f,
+            ambientColor = new Color(0.17f, 0.18f, 0.34f), ambientIntensity = 0.8f,
+            fogColor = new Color(0.10f, 0.10f, 0.22f), fogDensity = 0.014f
         }
     };
 

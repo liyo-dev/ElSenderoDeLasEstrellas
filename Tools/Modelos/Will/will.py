@@ -6,8 +6,10 @@
 #   Hair16_Heroe       → malla pesada a «head» (pieza de pelo del modelo modular).
 #   Body23_Aventurero  → las manos de Body05 con la ropa nueva (camiseta), pesado como él.
 #   Body24_AventureroChaqueta → lo mismo con la chaqueta encima (otro cuerpo del armario: así se puede llevar capa).
-import bpy, bmesh, math, sys
+import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
+import ropa_lib as rl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 import os
@@ -356,21 +358,6 @@ for lado, s in (("l", 1), ("r", -1)):
     esfera("chaqueta", f"HombroChaqueta_{lado}", (0.16 * s, -0.003, Z_BRAZO + 0.008), (0.1, 0.098, 0.098), "Chaqueta", None)
 
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
-def pesar(lista):
-    for o, pesos in lista:
-        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
-        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
-        if pesos is None:
-            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
-            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
-            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
-            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
-        else:
-            for h, w in pesos.items():
-                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
-        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')
     objs = [o for o, _ in lista] + ([extra] if extra else [])
@@ -390,7 +377,7 @@ for o, _ in GRUPOS["traje"]:
         o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
-pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"]); pesar(GRUPOS["chaqueta"])
+rl.pesar_piezas(GRUPOS["pelo"], cuerpo, arm, con_cuerpo=False); rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm); rl.pesar_piezas(rl.completar_zonas(GRUPOS["chaqueta"]), cuerpo, arm, con_cuerpo=False)
 # Primero los pesos (la ropa los copia del cuerpo entero, brazos y piernas incluidos); después
 # del cuerpo de Body05 solo se quedan las manos: su torso lleva pintada la ropa vieja y asomaba por la camisa
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)

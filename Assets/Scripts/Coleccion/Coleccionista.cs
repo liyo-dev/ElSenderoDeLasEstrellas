@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.NPC;
 
 /// <summary>
 /// Un NPC que colecciona objetos raros (Oliver). Al terminar de hablar con él se queda con las
@@ -20,9 +21,17 @@ public sealed class Coleccionista : MonoBehaviour
     private const float EsperaTrasLaCharla = 0.25f;
 
     private Interactable _interactable;
+    private NPCBehaviourManagerV2 _npcManager;
+    private NPCSimpleAnimator _animator;
     private Coroutine _atendiendo;
+    private bool _retenido;
 
-    private void Awake() => _interactable = GetComponent<Interactable>();
+    private void Awake()
+    {
+        _interactable = GetComponent<Interactable>();
+        _npcManager = GetComponent<NPCBehaviourManagerV2>();
+        _animator = GetComponent<NPCSimpleAnimator>();
+    }
 
     private void OnEnable() => _interactable.OnFinished.AddListener(Atender);
 
@@ -30,11 +39,31 @@ public sealed class Coleccionista : MonoBehaviour
     {
         _interactable.OnFinished.RemoveListener(Atender);
         if (_atendiendo != null) { StopCoroutine(_atendiendo); _atendiendo = null; }
+        Soltar();
+    }
+
+    // El NPC se queda quieto y de cara al jugador mientras dura la pregunta y el álbum: la charla
+    // ya ha terminado, pero sin esto se vuelve a su rutina antes de que salga la pregunta.
+    private void Retener()
+    {
+        if (_retenido) return;
+        _retenido = true;
+        if (_npcManager != null && _npcManager.Context != null) _npcManager.Context.IsInteracting = true;
+        if (_animator != null) _animator.BeginInteraction();
+    }
+
+    private void Soltar()
+    {
+        if (!_retenido) return;
+        _retenido = false;
+        if (_npcManager != null && _npcManager.Context != null) _npcManager.Context.IsInteracting = false;
+        if (_animator != null) _animator.EndInteraction();
     }
 
     public void Atender()
     {
         if (coleccion == null || _atendiendo != null) return;
+        Retener();
         _atendiendo = StartCoroutine(Co_Atender());
     }
 
@@ -47,14 +76,19 @@ public sealed class Coleccionista : MonoBehaviour
         DarPremios();
         if (nuevas.Count > 0)
         {
-            ColeccionUI.Abrir(coleccion, estilo, nuevas);
+            AbrirAlbum(nuevas);
             yield break;
         }
 
         var popup = ConfirmationPopupUI.Instance;
-        if (popup == null) yield break;
+        if (popup == null) { Soltar(); yield break; }
         popup.Show(ColeccionDeObjetos.Texto(preguntaId, pregunta),
-                   () => ColeccionUI.Abrir(coleccion, estilo, nuevas), null, selectConfirm: true);
+                   () => AbrirAlbum(nuevas), Soltar, selectConfirm: true);
+    }
+
+    private void AbrirAlbum(ICollection<PiezaDeColeccion> nuevas)
+    {
+        if (ColeccionUI.Abrir(coleccion, estilo, nuevas, Soltar) == null) Soltar();
     }
 
     /// Se queda con las piezas que aún no tiene y que el jugador lleva encima.

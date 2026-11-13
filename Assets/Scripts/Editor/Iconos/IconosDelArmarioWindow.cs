@@ -12,9 +12,11 @@ namespace ElSendero.Editor.Iconos
         const string CarpetaArmario = "Assets/_WARDROBE ITEMS";
         const string CarpetaInventario = "Assets/_ITEMS/_TEST_WARDROBE";
         [SerializeField] GameObject modelo;
+        [Tooltip("Modelos donde se busca la pieza si no la lleva el modelo de ejemplo (ropa de Estela o de Liam).")]
+        [SerializeField] GameObject[] otrosModelos;
         [SerializeField] int tamano = 512;
         [SerializeField] int grosor = 6;
-        [SerializeField] Color contorno = new Color(43f / 255f, 30f / 255f, 22f / 255f, 1f);
+        [SerializeField] Color contorno = new Color(0.20f, 0.15f, 0.22f, 1f);
         [SerializeField] float margen = 0.12f;
         [SerializeField] Vector2 anguloBody = new Vector2(20f, 8f);
         [SerializeField] Vector2 anguloCapaDesdeFuera = new Vector2(-20f, 8f);
@@ -29,10 +31,44 @@ namespace ElSendero.Editor.Iconos
         [MenuItem("El Sendero/Herramientas/Iconos del armario desde 3D")]
         static void Abrir() => GetWindow<IconosDelArmarioWindow>("Iconos del armario");
 
+        /// Fotografía solo las piezas que aún no tienen icono (ropa nueva), sin tocar las demás.
+        [MenuItem("El Sendero/Herramientas/Iconos del armario: generar los que faltan")]
+        static void GenerarLosQueFaltan()
+        {
+            var ventana = CreateInstance<IconosDelArmarioWindow>();
+            try
+            {
+                ventana.OnEnable();
+                ventana.GenerarTodos(soloLosQueFaltan: true);
+                OrdenesDelEditor.Avisar("Iconos del armario", ventana.resumen);
+            }
+            finally { DestroyImmediate(ventana); }
+        }
+
+        /// Vuelve a fotografiar todas las piezas (p. ej. tras pasar los materiales al aspecto de dibujo).
+        [MenuItem("El Sendero/Herramientas/Iconos del armario: rehacer todos")]
+        static void RehacerTodos()
+        {
+            var ventana = CreateInstance<IconosDelArmarioWindow>();
+            try
+            {
+                ventana.OnEnable();
+                ventana.GenerarTodos(soloLosQueFaltan: false);
+                OrdenesDelEditor.Avisar("Iconos del armario", ventana.resumen);
+            }
+            finally { DestroyImmediate(ventana); }
+        }
+
         void OnEnable()
         {
             minSize = new Vector2(620f, 640f);
             if (modelo == null) modelo = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_WILL_NPC.prefab");
+            if (otrosModelos == null || otrosModelos.Length == 0)
+                otrosModelos = new[]
+                {
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_ESTELA.prefab"),
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_LIAM.prefab"),
+                };
             items.Clear();
             foreach (var guid in AssetDatabase.FindAssets("t:WardrobeItemSO", new[] { CarpetaArmario }))
             {
@@ -82,7 +118,11 @@ namespace ElSendero.Editor.Iconos
             {
                 EditorGUILayout.BeginHorizontal();
                 if (GUILayout.Button("Previsualizar", GUILayout.Height(32f))) Previsualizar();
-                if (GUILayout.Button("Generar todos", GUILayout.Height(32f))) GenerarTodos();
+                if (GUILayout.Button("Generar todos", GUILayout.Height(32f)))
+                {
+                    GenerarTodos();
+                    EditorUtility.DisplayDialog("Iconos del armario", resumen, "Aceptar");
+                }
                 EditorGUILayout.EndHorizontal();
             }
             desplazamientoResumen = EditorGUILayout.BeginScrollView(desplazamientoResumen, GUILayout.MinHeight(70f));
@@ -107,10 +147,18 @@ namespace ElSendero.Editor.Iconos
         Texture2D Fotografiar(WardrobeItemSO item)
         {
             var piezas = new HashSet<Transform>();
-            foreach (var transformacion in modelo.GetComponentsInChildren<Transform>(true))
-                if (string.Equals(transformacion.name, item.PartName, StringComparison.Ordinal)) piezas.Add(transformacion);
+            GameObject conLaPieza = null;
+            var candidatos = new List<GameObject> { modelo };
+            if (otrosModelos != null) candidatos.AddRange(otrosModelos);
+            foreach (var candidato in candidatos)
+            {
+                if (candidato == null) continue;
+                foreach (var transformacion in candidato.GetComponentsInChildren<Transform>(true))
+                    if (string.Equals(transformacion.name, item.PartName, StringComparison.Ordinal)) piezas.Add(transformacion);
+                if (piezas.Count > 0) { conLaPieza = candidato; break; }
+            }
             if (piezas.Count == 0) throw new PiezaAusenteException(item.PartName);
-            return FotografoDeIconos.Fotografiar(modelo, renderer =>
+            return FotografoDeIconos.Fotografiar(conLaPieza, renderer =>
             {
                 // Incluye los subrenderers de una pieza compuesta, sin hacer visibles sus hermanos.
                 for (var t = renderer.transform; t != null; t = t.parent)
@@ -126,7 +174,7 @@ namespace ElSendero.Editor.Iconos
             catch (Exception ex) { resumen = ex.Message; }
         }
 
-        void GenerarTodos()
+        void GenerarTodos(bool soloLosQueFaltan = false)
         {
             int generados = 0, renombrados = 0, corregidos = 0;
             var errores = new List<string>();
@@ -147,16 +195,18 @@ namespace ElSendero.Editor.Iconos
                             throw new InvalidOperationException("Nombre de pieza inválido.");
                         if (!nombres.Add(item.PartName)) throw new InvalidOperationException("La pieza aparece en más de un WardrobeItemSO.");
                         string destino = CarpetaIconos + item.PartName + ".png";
-                        string origen = ResolverOrigen(item, destino);
-                        if (!File.Exists(origen)) throw new FileNotFoundException("No existe el PNG de la pieza: " + origen);
+                        // Pieza nueva sin PNG todavía: se crea el suyo.
+                        string origen = item.Icon == null && !File.Exists(destino) ? destino : ResolverOrigen(item, destino);
+                        bool nueva = !File.Exists(origen);
+                        if (soloLosQueFaltan && !nueva && item.Icon != null) { sprites.Add(item, item.Icon); continue; }
                         foto = Fotografiar(item);
                         // Conserva el primer original también cuando se vuelve a generar con otros ajustes.
                         Directory.CreateDirectory(archivo);
                         string copia = Path.Combine(archivo, Path.GetFileName(origen));
                         string aliasArchivado = item.PartName == "AC04_AngelEars" ? "orejas de angel.png" :
                             item.PartName == "AC04_BunnyEars" ? "BunnyEars.png" : Path.GetFileName(origen);
-                        if (!File.Exists(copia) && !File.Exists(Path.Combine(archivo, aliasArchivado))) File.Copy(origen, copia, false);
-                        if (origen != destino)
+                        if (!nueva && !File.Exists(copia) && !File.Exists(Path.Combine(archivo, aliasArchivado))) File.Copy(origen, copia, false);
+                        if (!nueva && origen != destino)
                         {
                             string error = AssetDatabase.MoveAsset(origen, destino);
                             if (!string.IsNullOrEmpty(error)) throw new IOException(error);
@@ -201,7 +251,6 @@ namespace ElSendero.Editor.Iconos
             resumen = $"Generados: {generados}/{items.Count}. Renombrados: {renombrados}. Referencias corregidas: {corregidos}. Errores: {errores.Count}. Piezas ausentes: {ausentes.Count}.";
             if (ausentes.Count > 0) resumen += "\nPiezas que no existen en el modelo: " + string.Join(", ", ausentes);
             if (errores.Count > 0) resumen += "\n" + string.Join("\n", errores);
-            EditorUtility.DisplayDialog("Iconos del armario", resumen, "Aceptar");
             LimpiarFoto();
         }
 

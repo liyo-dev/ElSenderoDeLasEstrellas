@@ -18,8 +18,8 @@ public static class AnimatorLayerUtil
 {
     /// <summary>
     /// Resuelve en qué layer vive realmente el estado con hash <paramref name="stateHash"/>:
-    /// prueba primero <paramref name="preferredLayer"/> (por defecto 1, la UpperBody layer) y si
-    /// no existe ahí cae al Base Layer (capa 0). Devuelve -1 si no existe en ninguna de las dos.
+    /// prueba primero <paramref name="preferredLayer"/> (por defecto 1, la UpperBody layer), después
+    /// el Base Layer (capa 0) y después el resto de capas. Devuelve -1 si no existe en ninguna.
     /// </summary>
     public static int ResolveLayer(Animator animator, int stateHash, int preferredLayer = 1)
     {
@@ -34,6 +34,11 @@ public static class AnimatorLayerUtil
 
         if (animator.HasState(0, stateHash))
             return 0;
+
+        // Estados que viven en otra capa (p. ej. los gestos de cabeza, con su máscara propia).
+        for (int capa = 1; capa < animator.layerCount; capa++)
+            if (capa != preferredLayer && animator.HasState(capa, stateHash))
+                return capa;
 
         return -1;
     }

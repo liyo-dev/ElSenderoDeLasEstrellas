@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap1_OliverSaludo
   duracion: 39.035606
   presentacion: 1
-  huella: "2026-11-12 07:30 \xB7 7942eaaa7cd2e89220cc20b29aafb19b"
+  huella: "2026-11-13 18:04 \xB7 fb46b173765d465d4e7fdfd001f1cb05"
   actores:
   - id: Player
     alias: will
@@ -639,7 +639,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.9139301
+    alturaDelFoco: 0.92704344
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -662,7 +662,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1631837
+    alturaDelFoco: 1.1798735
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -672,43 +672,37 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705352
+      rid: 6540294592641368201
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 16.693727
     beat:
-      rid: 6540294555676705353
-    linea: 63
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 16.693727
-    beat:
-      rid: 6540294555676705354
+      rid: 6540294592641368202
     linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
     t: 16.693727
     beat:
-      rid: 6540294555676705355
+      rid: 6540294592641368203
     linea: 66
   - onlyIfFlag: 
     skipIfFlag: 
     t: 16.693727
     beat:
-      rid: 6540294555676705356
+      rid: 6540294592641368204
     linea: 67
   - onlyIfFlag: 
     skipIfFlag: 
     t: 34.403156
     beat:
-      rid: 6540294555676705357
+      rid: 6540294592641368205
     linea: 87
   - onlyIfFlag: 
     skipIfFlag: 
     t: 39.035606
     beat:
-      rid: 6540294555676705358
+      rid: 6540294592641368206
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -736,7 +730,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705352
+    - rid: 6540294592641368201
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -744,33 +738,20 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705353
+    - rid: 6540294592641368202
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
-        vfxPrefab: {fileID: 4258998459985370294, guid: 845c6ddd599013d49a5a83858fadb532, type: 3}
+        vfxPrefab: {fileID: 519777972055410874, guid: d103fafdf68ff7d4fa721f6bffac3ab0, type: 3}
         atActorId: NPC_Oliver
         markName: 
         offset: {x: 0, y: 1.1, z: 0}
-        lifetime: 0
-        earlyDespawn: 1
-        seguirAlActor: 0
-        registrarComo: 
-        escala: 1
-    - rid: 6540294555676705354
-      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        vfxPrefab: {fileID: 5435998012328932994, guid: d8703a33a4eb0b84a875202fde23e8f7, type: 3}
-        atActorId: NPC_Oliver
-        markName: 
-        offset: {x: 0, y: 1.1, z: 0}
-        lifetime: 1.2
+        lifetime: 2
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
-        escala: 0.5
-    - rid: 6540294555676705355
+        escala: 1
+    - rid: 6540294592641368203
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -780,14 +761,14 @@ MonoBehaviour:
         markName: 
         volume: 1
         tono: 1
-    - rid: 6540294555676705356
+    - rid: 6540294592641368204
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.4
         waitForEnd: 0
-    - rid: 6540294555676705357
+    - rid: 6540294592641368205
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -804,7 +785,7 @@ MonoBehaviour:
           - HeadNod01
           emotions: 01000000i
         detenerEscena: 1
-    - rid: 6540294555676705358
+    - rid: 6540294592641368206
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

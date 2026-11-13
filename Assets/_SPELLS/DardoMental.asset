@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 7
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
-  impactVFX: {fileID: 1573680092425891448, guid: 4432429cbed6afd48824d16fe9df2f9b, type: 3}
+  spawnVFX: {fileID: 1828094662004237461, guid: 3bd88fcd84ccf0a408c88edbaf66845c, type: 3}
+  impactVFX: {fileID: 42716459744156139, guid: 15d4c3adfb5949f4c820ba17148683b8, type: 3}
   despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_DardoMental
   impactSFXKey: Impacto_Mente_Pequeno
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 8819e0595f821d04a94856ebdd045e13, type: 3}
   bounceCount: 0
@@ -94,7 +99,7 @@ MonoBehaviour:
   statusEffect: 1
   statusDuration: 2
   statusStrength: 0.4
-  statusVFX: {fileID: 6063518424537689786, guid: bad5794a53f5c3645bb444b3a040ba01, type: 3}
+  statusVFX: {fileID: 2954121380222308441, guid: 293853db664bf1a4e8c0bffccda59298, type: 3}
   zoneOnCaster: 0
   healPerTick: 0
   groupShieldSeconds: 0

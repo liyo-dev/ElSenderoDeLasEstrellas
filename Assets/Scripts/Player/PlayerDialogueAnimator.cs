@@ -46,6 +46,9 @@ public class PlayerDialogueAnimator : MonoBehaviour
             animator = GetComponent<Animator>();
 
         _ambientActivity = GetComponent<PlayerAmbientActivityHandler>();
+
+        // Al hablar solo se mueve la boca: la cabeza no cabecea con Talk01-03 (INC-1144).
+        CabezaQuietaAlHablar.Asegurar(gameObject);
     }
 
     void OnEnable()

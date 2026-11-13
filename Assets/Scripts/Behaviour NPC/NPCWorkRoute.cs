@@ -67,6 +67,14 @@ public class NPCWorkRoute : MonoBehaviour
     [Tooltip("Segundos que el NPC se queda en la animación de dejar antes de soltar la caja.")]
     public float tiempoDejar = 0.9f;
 
+    [Range(0f, 1f)]
+    [Tooltip("Parte de la animación de recoger en la que las manos llegan a la caja: desde ahí la caja va con las manos.")]
+    public float momentoDeAgarre = 0.45f;
+
+    [Range(0f, 1f)]
+    [Tooltip("Parte de la animación de dejar en la que las manos sueltan la caja en la pila.")]
+    public float momentoDeSoltar = 0.6f;
+
     [Tooltip("Pose de UpperBody que mantiene la caja con las dos manos mientras camina. Vacío = no se cambia la pose.")]
     public string poseDeCarga = "CarryMoveIdle_NoWeapon";
 
@@ -259,10 +267,9 @@ public class NPCWorkRoute : MonoBehaviour
         _cajasOrigen.RemoveAt(ultimo);
         if (caja == null) return null;
 
-        // La caja va centrada en el punto de carga frontal (como PlayerCarrySystem).
-        caja.SetParent(socketCarga, worldPositionStays: false);
-        caja.localPosition = Vector3.zero;
-        caja.localRotation = Quaternion.Euler(rotacionCargaFrontal);
+        // La caja sale de la pila desde donde está: quien la lleva la acerca a las manos o al punto
+        // de carga (WorkState), sin saltos.
+        caja.SetParent(socketCarga, worldPositionStays: true);
 
         _cajaEnMano = caja;
         return caja;

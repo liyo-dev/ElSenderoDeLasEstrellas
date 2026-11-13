@@ -401,7 +401,7 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
     {
         if (shader == null) return false;
         var nombre = shader.name;
-        return nombre.Contains("Eldoria/Agua") || nombre.Contains("WaterURP") || nombre.Contains("Water_Final");
+        return nombre.Contains("Agua de dibujo") || nombre.Contains("Eldoria/Agua") || nombre.Contains("WaterURP") || nombre.Contains("Water_Final");
     }
 
     void CacheWaterRenderersOnce()

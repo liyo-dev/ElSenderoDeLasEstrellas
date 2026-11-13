@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap2_02_MananaDespues
   duracion: 175.78581
   presentacion: 1
-  huella: "2026-11-12 08:00 \xB7 854a439a14811324406a5605ac96a2af"
+  huella: "2026-11-13 13:21 \xB7 93d3704d683e3b1219b6df073e16a50f"
   actores:
   - id: Player
     alias: will
@@ -465,7 +465,7 @@ MonoBehaviour:
       estado: CastingDamage01
       congelar: 0
       alFinal: 0
-      voz: hurt
+      voz: 
     - fundido: 0
       t: 23.63976
       tipo: 2
@@ -3087,109 +3087,109 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705499
+      rid: 6540294589977723085
     linea: 105
   - onlyIfFlag: 
     skipIfFlag: 
     t: 4
     beat:
-      rid: 6540294555676705500
+      rid: 6540294589977723086
     linea: 112
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705501
+      rid: 6540294589977723087
     linea: 120
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705502
+      rid: 6540294589977723088
     linea: 118
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705503
+      rid: 6540294589977723089
     linea: 117
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705504
+      rid: 6540294589977723090
     linea: 119
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705505
+      rid: 6540294589977723091
     linea: 115
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705506
+      rid: 6540294589977723092
     linea: 114
   - onlyIfFlag: velaControlada
     skipIfFlag: 
     t: 4.3
     beat:
-      rid: 6540294555676705507
+      rid: 6540294589977723093
     linea: 113
   - onlyIfFlag: 
     skipIfFlag: velaControlada
     t: 4.3
     beat:
-      rid: 6540294555676705508
+      rid: 6540294589977723094
     linea: 116
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.5647116
     beat:
-      rid: 6540294555676705509
+      rid: 6540294589977723095
     linea: 135
   - onlyIfFlag: 
     skipIfFlag: 
     t: 7.1813784
     beat:
-      rid: 6540294555676705510
+      rid: 6540294589977723096
     linea: 137
   - onlyIfFlag: 
     skipIfFlag: 
     t: 90.02478
     beat:
-      rid: 6540294555676705511
+      rid: 6540294589977723097
     linea: 213
   - onlyIfFlag: 
     skipIfFlag: 
     t: 90.02478
     beat:
-      rid: 6540294555676705512
+      rid: 6540294589977723098
     linea: 214
   - onlyIfFlag: 
     skipIfFlag: 
     t: 103.79948
     beat:
-      rid: 6540294555676705513
+      rid: 6540294589977723099
     linea: 253
   - onlyIfFlag: 
     skipIfFlag: 
     t: 103.79948
     beat:
-      rid: 6540294555676705514
+      rid: 6540294589977723100
     linea: 254
   - onlyIfFlag: 
     skipIfFlag: 
     t: 112.79401
     beat:
-      rid: 6540294555676705515
+      rid: 6540294589977723101
     linea: 267
   - onlyIfFlag: 
     skipIfFlag: 
     t: 175.28581
     beat:
-      rid: 6540294555676705516
+      rid: 6540294589977723102
     linea: 310
   etiquetas:
   - nombre: vela
@@ -3299,7 +3299,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705499
+    - rid: 6540294589977723085
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3307,7 +3307,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705500
+    - rid: 6540294589977723086
       type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3326,7 +3326,7 @@ MonoBehaviour:
         successFlag: velaControlada
         tolerant: 1
         detenerEscena: 1
-    - rid: 6540294555676705501
+    - rid: 6540294589977723087
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3339,7 +3339,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294555676705502
+    - rid: 6540294589977723088
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3349,7 +3349,7 @@ MonoBehaviour:
         markName: 
         volume: 0.9
         tono: 1
-    - rid: 6540294555676705503
+    - rid: 6540294589977723089
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3359,7 +3359,7 @@ MonoBehaviour:
         markName: vela
         volume: 0.8
         tono: 1
-    - rid: 6540294555676705504
+    - rid: 6540294589977723090
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3369,7 +3369,7 @@ MonoBehaviour:
         repeats: 2
         holdSeconds: 0.6
         returnToNormalAfter: 0
-    - rid: 6540294555676705505
+    - rid: 6540294589977723091
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3382,7 +3382,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294555676705506
+    - rid: 6540294589977723092
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3395,7 +3395,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294555676705507
+    - rid: 6540294589977723093
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3408,7 +3408,7 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294555676705508
+    - rid: 6540294589977723094
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3421,7 +3421,7 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 1
-    - rid: 6540294555676705509
+    - rid: 6540294589977723095
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3430,7 +3430,7 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294555676705510
+    - rid: 6540294589977723096
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3447,33 +3447,33 @@ MonoBehaviour:
         gestoHorneado: Opening01_Begin
         segundoDelGesto: 0.61666673
         segundosDeApoyo: 0.25
-    - rid: 6540294555676705511
+    - rid: 6540294589977723097
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 6540294555676705512
+    - rid: 6540294589977723098
       type: {class: PostprocesoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         perfil: {fileID: 11400000, guid: 201dd19f7f8e4bc4ba1b0c2a28f06a50, type: 2}
         transicion: 0.2
         esperar: 0
-    - rid: 6540294555676705513
+    - rid: 6540294589977723099
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 6540294555676705514
+    - rid: 6540294589977723100
       type: {class: PostprocesoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         perfil: {fileID: 11400000, guid: 106eacf28b0544b48a5acb7efc3ed589, type: 2}
         transicion: 1.2
         esperar: 0
-    - rid: 6540294555676705515
+    - rid: 6540294589977723101
       type: {class: PropEnManoBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3490,7 +3490,7 @@ MonoBehaviour:
         gestoHorneado: Opening01_Begin
         segundoDelGesto: 0.61666673
         segundosDeApoyo: 0.25
-    - rid: 6540294555676705516
+    - rid: 6540294589977723102
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

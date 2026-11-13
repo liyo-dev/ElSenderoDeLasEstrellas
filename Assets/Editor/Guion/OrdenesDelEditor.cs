@@ -29,6 +29,7 @@ using UnityEngine;
 ///   mover Escena/ruta/del/objeto x z [rumbo] pone un objeto de una escena abierta en (x, suelo, z) y, si se da, con
 ///                                           ese rumbo; la altura sale de un rayo contra el suelo. Marca la escena
 ///   guardar                                 guarda las escenas abiertas con cambios
+///   ruta guid [guid…]                       la ruta del asset de cada GUID
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
 ///
@@ -363,6 +364,13 @@ public static class OrdenesDelEditor
             }
             case "mover":
                 return Mover(resto);
+            case "ruta":
+            {
+                var sbRuta = new System.Text.StringBuilder();
+                foreach (var g in resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    sbRuta.Append('\n').Append("    ").Append(g).Append(" = ").Append(AssetDatabase.GUIDToAssetPath(g));
+                return sbRuta.ToString();
+            }
             case "guardar":
             {
                 if (Application.isPlaying) return "no se puede en Play";

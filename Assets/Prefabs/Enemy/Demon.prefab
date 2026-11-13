@@ -3327,7 +3327,7 @@ MonoBehaviour:
   plasmaChargeDuration: 2.1
   projectilePrefab: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
   projectileSpawnPoint: {fileID: 2156623539970524872}
-  spellEffectPrefab: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
+  spellEffectPrefab: {fileID: 2235681210751260556, guid: 1e91604c158620a4e82b96e7d3d87a5c, type: 3}
   rangedTelegraphPrefab: {fileID: 0}
   rangedTelegraphDuration: 0.4
   slashCooldown: 2
@@ -3341,9 +3341,9 @@ MonoBehaviour:
   isSecondEncounter: 0
   secondCooldownMultiplier: 0.65
   phase3HealthPercentSecond: 0.5
-  rainShadowPrefab: {fileID: 2048943519762858860, guid: e04bd1cf92ebd23479963617598b5322, type: 3}
-  rainImpactPrefab: {fileID: 5855226060593206312, guid: adb060b720f894548823870ca035ed30, type: 3}
-  rainExplosionVFXPrefab: {fileID: 2053018119804519932, guid: ff2cbc49a80f1a84888ca31cc045fe24, type: 3}
+  rainShadowPrefab: {fileID: 3074890372048154740, guid: 55db14c6fce27fe478797f126a7f2024, type: 3}
+  rainImpactPrefab: {fileID: 3715971011072251951, guid: 74a5fc55a73f9f04c964d93cfbe1e4ee, type: 3}
+  rainExplosionVFXPrefab: {fileID: 1544204639750909832, guid: e8cf9e8b8e2a5d7448463c41ed4310f8, type: 3}
   rainCount: 6
   rainRadius: 7
   rainWarningDuration: 1.5

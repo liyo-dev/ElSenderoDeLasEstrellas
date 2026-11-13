@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 2
   lore: "Un remolino peque\xF1o con muy mal car\xE1cter."
   loreId: 
-  prefab: {fileID: 9089776569402074837, guid: 5f0bf4124c24237459fe6b81670f7ebf, type: 3}
+  prefab: {fileID: 6173648803128454668, guid: bd5ab9b68cf4d9343a97d648115d6453, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: -0.5, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 5
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 5503135327009739637, guid: a1ec355707f8e6042a4b1cd49075459c, type: 3}
-  impactVFX: {fileID: 2787556212050310887, guid: 57970c6bb711ec24b8d98424b1806f3b, type: 3}
+  spawnVFX: {fileID: 2897545746248113709, guid: fdfa25d4c2e94dd47a42c21a31443233, type: 3}
+  impactVFX: {fileID: 9015722922084379637, guid: fcb4bd15c3c5c614b9ab51cf3b9fb3aa, type: 3}
   despawnVFX: {fileID: 2762701776606989417, guid: a7f5797aa55665942b30a94f26b1cccd, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Tornado
   impactSFXKey: Impacto_Viento_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: c3ecade824d9fb04d9275b094781a07a, type: 3}
   bounceCount: 0

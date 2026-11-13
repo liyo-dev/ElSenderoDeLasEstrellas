@@ -19,6 +19,6 @@ MonoBehaviour:
   displayName: Traje de hechicera
   descriptionId: 
   description: "T\xFAnica corta azul con ribete dorado, hombreras y botas a juego."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ff89da5ce66b8d94fb3dc2443733c273, type: 3}
   rasgos: 
   soloPara: 02000000i

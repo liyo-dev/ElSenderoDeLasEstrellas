@@ -740,9 +740,8 @@ public static partial class VestidoDelMundo
                 : $"  ! falta {RutaAguaDeLago}: la lámina queda sin material.";
         }
 
-        /// AguaLaguna.mat: copia de Water_Lake.mat (shader Water_Final, el que el minimapa reconoce como agua) con
-        /// colores de agua de ribera: verde oliva medio transparente en la orilla (se ve el fondo de barro) y verde
-        /// azulado hondo en el centro. Se crea una vez; lo que se retoque después en el Editor se conserva.
+        /// AguaLaguna.mat: copia de Water_Lake.mat (con el agua de dibujo, que el minimapa reconoce como agua); los colores
+        /// de ribera solo se ponen si la copia tiene los campos del agua del pack (_ShallowWaterColor, _DeepWaterColor). Se crea una vez; lo que se retoque después en el Editor se conserva.
         private static Material MaterialDelAgua() => RecursoPersistente(ArchivoAguaDeLaLaguna, () =>
         {
             var origen = AssetDatabase.LoadAssetAtPath<Material>(RutaAguaDeLago);

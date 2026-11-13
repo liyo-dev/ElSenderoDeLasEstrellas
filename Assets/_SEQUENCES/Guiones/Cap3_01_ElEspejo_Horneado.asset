@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap3_01_ElEspejo
   duracion: 28.810001
   presentacion: 1
-  huella: "2026-11-12 09:40 \xB7 7e64ef487d613514104471f1779b48e3"
+  huella: "2026-11-12 20:08 \xB7 b971db39204b67d4d0e54c6724eed0b6"
   actores:
   - id: LIAM_TORRE
     alias: liam
@@ -377,38 +377,38 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705539
-    linea: 38
+      rid: 6540294573444563021
+    linea: 36
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705540
+      rid: 6540294573444563022
+    linea: 37
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294573444563023
     linea: 39
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 0
-    beat:
-      rid: 6540294555676705541
-    linea: 41
   - onlyIfFlag: 
     skipIfFlag: 
     t: 26.810001
     beat:
-      rid: 6540294555676705542
+      rid: 6540294573444563024
+    linea: 74
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 28.310001
+    beat:
+      rid: 6540294573444563025
     linea: 76
   - onlyIfFlag: 
     skipIfFlag: 
     t: 28.310001
     beat:
-      rid: 6540294555676705543
-    linea: 78
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 28.310001
-    beat:
-      rid: 6540294555676705544
-    linea: 79
+      rid: 6540294573444563026
+    linea: 77
   etiquetas:
   - nombre: inicio
     t: 0
@@ -427,14 +427,10 @@ MonoBehaviour:
     posicion: {x: -6001.4, y: 100, z: 5997.4}
   - nombre: cam_cara
     posicion: {x: -6001.2, y: 100, z: 5998.9}
-  - nombre: cam_llave
-    posicion: {x: -6000.65, y: 100, z: 5998.6}
   - nombre: cam_sienta
     posicion: {x: -6001.3, y: 100, z: 5998.7}
   - nombre: foco_general
     posicion: {x: -6000, y: 101.75, z: 6001}
-  - nombre: detalle_llave
-    posicion: {x: -6000.15, y: 100.62, z: 5999.75}
   - nombre: vision
     posicion: {x: -5999.15, y: 100.9, z: 5999.85}
   - nombre: cam_bola
@@ -447,13 +443,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705539
+    - rid: 6540294573444563021
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_VisionDeLaBola
         active: 1
-    - rid: 6540294555676705540
+    - rid: 6540294573444563022
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -461,7 +457,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705541
+    - rid: 6540294573444563023
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -470,7 +466,7 @@ MonoBehaviour:
         fadeIn: 0
         fadeOut: 0.5
         desdeSegundo: -1
-    - rid: 6540294555676705542
+    - rid: 6540294573444563024
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -478,13 +474,13 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.5
         waitForEnd: 0
-    - rid: 6540294555676705543
+    - rid: 6540294573444563025
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_VisionDeLaBola
         active: 0
-    - rid: 6540294555676705544
+    - rid: 6540294573444563026
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

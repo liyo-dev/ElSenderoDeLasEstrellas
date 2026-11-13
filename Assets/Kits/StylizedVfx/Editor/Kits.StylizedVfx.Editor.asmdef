@@ -1,0 +1,18 @@
+{
+    "name": "Kits.StylizedVfx.Editor",
+    "rootNamespace": "Kits.StylizedVfx.Editor",
+    "references": [
+        "Kits.StylizedVfx"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

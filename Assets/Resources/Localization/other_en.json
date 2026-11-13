@@ -64,7 +64,7 @@
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Use {BOTON} to move.\nYou hear a commotion outside. Go and see what’s happening."
+            "value": "Use {BOTON} to move."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
@@ -72,7 +72,7 @@
         },
         {
             "key": "TUTORIAL_WAKE_UP",
-            "value": "Press {BOTON} to wake Will up."
+            "value": "Wake Will up"
         },
         {
             "key": "QUEST_STARTED_BANNER",

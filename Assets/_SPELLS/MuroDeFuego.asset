@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_MuroDeFuego
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 264dd2b399fac2544a8de4e720c52674, type: 3}
   bounceCount: 0

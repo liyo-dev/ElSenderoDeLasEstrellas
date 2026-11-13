@@ -81,6 +81,8 @@ public static partial class VestidoDelPrologo
     const string Contraventana = CarpetaPueblo + "/Contraventana.fbx";
     const string Mirador = CarpetaPueblo + "/Mirador.fbx";
     const float EscalonDelMirador = 0.3f;
+    /// Distancia a la pared de quien se asoma al mirador (el antepecho está a 0,55 m por dentro).
+    const float FondoDelQueSeAsoma = 0.16f;
     const string PuertaDeCasa = CarpetaPueblo + "/PuertaDeCasa.fbx";
     /// Estilo de los materiales lisos de esas piezas: el del pack, para que se iluminen igual que las casas.
     const string Estilo = "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/FK01.mat";
@@ -483,9 +485,10 @@ public static partial class VestidoDelPrologo
             Bisagras(go, f, false, 165f);
             Pintar(go, null);
             Ocupar(ocupado, f.nombre, u, pz.Ancho, 0f, pz.Alto);
-            // Quien se asoma: dentro del mirador, a 0,3 m de la pared, mirando a la plaza, subido a un
-            // escalón para que la cara asome por encima de la jardinera (Ver INC-1007).
-            Marca(grupo, MarcaMirador(quien), enPared + f.fuera * 0.3f + Vector3.up * EscalonDelMirador, f.fuera);
+            // Quien se asoma: dentro del mirador, pegado a la pared para que las manos no asomen por el
+            // antepecho al hacer gestos (Ver INC-1079), mirando a la plaza, subido a un escalón para
+            // que la cara asome por encima de la jardinera (Ver INC-1007).
+            Marca(grupo, MarcaMirador(quien), enPared + f.fuera * FondoDelQueSeAsoma + Vector3.up * EscalonDelMirador, f.fuera);
             return 1;
         }
         informe.AppendLine($"{casa.name}: no cabe el mirador.");

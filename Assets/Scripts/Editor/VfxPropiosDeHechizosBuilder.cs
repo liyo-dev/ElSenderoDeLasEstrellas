@@ -18,7 +18,7 @@ using static VfxProcedural;
 /// conserva los GUID). Las piezas genéricas (partículas, texturas y materiales) están en
 /// VfxProcedural.
 /// </summary>
-public static class VfxPropiosDeHechizosBuilder
+public static partial class VfxPropiosDeHechizosBuilder
 {
     public const string Carpeta = "Assets/_VFX/Hechizos";
     private const string CarpetaTexturas = Carpeta + "/Texturas";
@@ -109,25 +109,14 @@ public static class VfxPropiosDeHechizosBuilder
         Guardar(DardoMentalImpacto, root => ConstruirImpactoDardoMental(root, t), log);
         Guardar(GarraImpacto, root => ConstruirImpactoGarra(root, t), log);
         Guardar(SelloZona, root => ConstruirSelloZona(root, t), log);
+        ConstruirDibujo(t, log);
 
         Variante(Hovl + "AoE effects/Laser AOE.prefab", JuicioZona, v => Retintar(v, VioletaProfundo, null), log, warnings);
         Variante("Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab", BolaPrismaClasica,
             _ => { }, log, warnings);
         Variante(Hovl + "AoE effects/Meteors AOE.prefab", MeteoroZona, v => Retintar(v, DoradoPalido, null), log, warnings);
 
-        foreach (MagicElement e in Enum.GetValues(typeof(MagicElement)))
-        {
-            string nombre = NombreElemento(e);
-            if (nombre == null) continue;
-            Color color = ColorDeElemento(e, out Color? oscuro);
-            Variante(Lana + "Flash/1 Flash_magic_ellow_blue.prefab", "Destello_" + nombre, v =>
-            {
-                Retintar(v, color, oscuro);
-                ApagarHijosPorNombre(v, "Circle", "Shockwave", "Shadow");
-                v.transform.localScale = Vector3.one * (e == MagicElement.Mind ? 0.35f : (e == MagicElement.Storm ? 0.45f : 0.65f));
-            }, log, warnings);
-            Variante(Lana + "Flash/2 Flash_round_ellow.prefab", "DestelloFin_" + nombre, v => Retintar(v, color, oscuro), log, warnings);
-        }
+        // Los destellos de lanzar y de desaparecer, por elemento, los monta HechizosConVolumen (INC-1140).
     }
 
     private static Color ColorDeElemento(MagicElement e, out Color? oscuro)
@@ -843,31 +832,7 @@ public static class VfxPropiosDeHechizosBuilder
         return n.Contains("AB") || n.IndexOf("Alpha", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
-    private static void ApagarSistemasConMaterial(GameObject root, string parteDelNombre)
-    {
-        foreach (var render in root.GetComponentsInChildren<ParticleSystemRenderer>(true))
-            if (render.sharedMaterial != null && render.sharedMaterial.name.Contains(parteDelNombre))
-            {
-                render.gameObject.SetActive(false);
-                PrefabUtility.RecordPrefabInstancePropertyModifications(render.gameObject);
-            }
-    }
 
-    private static void ApagarHijosPorNombre(GameObject root, params string[] nombres)
-    {
-        foreach (var t in root.GetComponentsInChildren<Transform>(true))
-        {
-            if (t == root.transform) continue;
-            foreach (var n in nombres)
-            {
-                if (string.Equals(t.name, n, StringComparison.OrdinalIgnoreCase))
-                {
-                    t.gameObject.SetActive(false);
-                    PrefabUtility.RecordPrefabInstancePropertyModifications(t.gameObject);
-                }
-            }
-        }
-    }
 
     private static ParticleSystem.MinMaxGradient Tintar(ParticleSystem.MinMaxGradient g, Color d)
     {

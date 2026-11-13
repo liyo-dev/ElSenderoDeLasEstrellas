@@ -1,0 +1,1409 @@
+{
+    "texturas": [
+        {
+            "ruta": "Assets/Art/UI/Abilities/climb.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Abilities/fly.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Abilities/jump.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Abilities/magic.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Abilities/proteccion.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Abilities/swim.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/aura_estelar.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/bola_fuego.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/bola_prisma.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/corazon_estelar.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Garra del pacto.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/amanecer.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/brisa_sanadora.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/cadenas_del_pacto.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/chispa_ignea.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/chispa_ignea_fuego.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/cupula_estelar.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/dardo_mental.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/eco.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/estrella_fugaz.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/juicio_del_pacto.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/lluvia_de_chispas.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/meteoro.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/muro_de_fuego.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/nova_de_luz.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/paso_sombrio.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/rafaga.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/remolino.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Grimorio/tormenta_de_fuego.png",
+            "tamano": 512,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Huracan.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/levitation.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/llama_astral.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/Sello del pacto.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Attacks/tornado.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Buttons/interactable_A.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Buttons/prohibido.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Buttons/standard_btn.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Cursor/cursor_default_star.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Cursor/cursor_interact_hand.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/DialogueIcons/DialogueIcons_Atlas.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/flecha_pagina.png",
+            "tamano": 1024,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/fondo_medallon.png",
+            "tamano": 1024,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/libro_abierto.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/marco_icono.png",
+            "tamano": 1024,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/sello_desconocido.png",
+            "tamano": 1024,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Grimorio/separador.png",
+            "tamano": 1024,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/ability_socket_ring.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/BG.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/cooldown_ring_fill.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/escudo_hud.png",
+            "tamano": 256,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/estrella_equipo.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/hp_bar_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/hp_bar_fill.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/hud_panel_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/mp_bar_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/mp_bar_fill.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/segmento_equipo_fondo.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/HUD/segmento_equipo_relleno.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Iconos/IconoDelJuego.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InformeDeVictoria/aro_fino.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/InformeDeVictoria/circulo.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/InformeDeVictoria/linea.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/InformeDeVictoria/pastilla.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/InformeDeVictoria/pastilla_oro.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/confirm.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/dpad.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/dpadDown.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/dpadLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/dpadRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/dpadUp.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/east.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/north.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/select.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/shoulderLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/shoulderRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/south.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/start.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/stick.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/teleport.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/triggerLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/triggerRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/KeyboardMouse/west.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/dpad.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/dpadDown.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/dpadLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/dpadRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/dpadUp.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/east.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/north.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/select.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/shoulderLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/shoulderRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/south.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/start.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/stick.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/triggerLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/triggerRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/PlayStation/west.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/dpad.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/dpadDown.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/dpadLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/dpadRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/dpadUp.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/east.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/north.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/select.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/shoulderLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/shoulderRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/south.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/start.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/stick.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/triggerLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/triggerRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Switch/west.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/dpad.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/dpadDown.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/dpadLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/dpadRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/dpadUp.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/east.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/north.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/select.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/shoulderLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/shoulderRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/south.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/start.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/stick.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/triggerLeft.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/triggerRight.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/InputGlyphs/Xbox/west.png",
+            "tamano": 1024,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/algas.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/bolsa_monedas_grande.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/bolsa_monedas_pequena.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/boots.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/campanilla_viento.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/canica_cristal.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/caracola.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/coin.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/esencia.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/estrella_torcida.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/farolillo_papel.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/guirnalda_banderines.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/key.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/lifePotion.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/magicPotion.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/mermelada.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/moneda_antigua.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/pajaro_madera.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/panuelo_erika.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/piedra_con_agujero.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/trompetilla.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Items/trozo_del_aro.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/confirm_button_pill.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/confirm_dialog_glass.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/Generated/MainMenuCinematicBackdrop.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/Generated/MainMenuCinematicHalo.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/logo sendero 4.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_cursor_cinta.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_cursor_estrella.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_dim_hole.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_panel_glass.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_row_glass.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_velo_lateral.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/menu_window_ring.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Menu/Portada_BandaSonoraOriginal.jpg",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/active_BG.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/button_link_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/complete_BG.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/header_pill_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/panel_BG.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/panel_glass_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/panel_glass_bg_compact.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/progress_chip_bg.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/state_chip_active.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/state_chip_active_compact.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/state_chip_completed.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Misiones/state_chip_completed_compact.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/admiration.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/angry.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_00.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_01.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_02.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_03.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_04.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_05.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_06.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_07.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_08.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_09.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_10.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/Charla/charla_11.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/over_here.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/talk.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/want_fight.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/NpcStatus/what.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/estela_caido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/estela_contento.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/estela_dolorido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/estela_normal.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/halo_retrato.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/liam_caido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/liam_contento.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/liam_dolorido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/liam_normal.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/linea_retrato.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/will_caido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/will_contento.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/will_dolorido.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/Grupo/will_normal.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/retrato_estela.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/retrato_liam.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Retratos/retrato_will.png",
+            "tamano": 2048,
+            "compresion": 1
+        },
+        {
+            "ruta": "Assets/Art/UI/Símbolo arcano luminoso.png",
+            "tamano": 2048,
+            "compresion": 0
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC01_Heart.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC02_Leaf.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC03_BlackGlass.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC03_HeavyMetalGlass.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC03_NerdGlass.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC03_NightVision.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC04_AngelEars.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC04_AnthenaEars.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC04_BunnyEars.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC04_ShortEars.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC05_Horn01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC05_Horn02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC05_Horn03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC05_Horn04.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC06_Crown01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC06_Crown02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC06_Crown03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC07_PiratePatch.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask04.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask05.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask06.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask07.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC08_NinjaMask08.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC09_Ribbon.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache04.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache05.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC10_Mustache06.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache04.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache05.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC11_Mustache06.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/AC12_Capucha.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body04.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body05.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body06.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body07.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body08.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body09.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body10.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body11.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body12.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body13.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body14.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body15.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body16.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body17.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body18.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body19.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body20.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body21_Hechicera.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body22_Tunica.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body23_Aventurero.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Body24_AventureroChaqueta.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Cloak01.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Cloak02.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Cloak03.png",
+            "tamano": 2048,
+            "compresion": 2
+        },
+        {
+            "ruta": "Assets/Art/UI/Wardrobe/Cloak04_Hechicera.png",
+            "tamano": 2048,
+            "compresion": 2
+        }
+    ]
+}

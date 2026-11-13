@@ -358,6 +358,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         _cinematicLocked = true;
         bool wasInactive = s_activeSequenceCount == 0;
         s_activeSequenceCount++;
+        Kits.Core.GameContext.Enter(Situaciones.Cinematica, this);
         if (wasInactive)
         {
             // INC-601: el occlusion culling horneado se equivoca con las cámaras de las secuencias.
@@ -397,6 +398,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         if (!_cinematicLocked) return; // Ya restaurado (evita Pop/ShowHUD duplicados si se llama dos veces)
         _cinematicLocked = false;
         s_activeSequenceCount = Mathf.Max(0, s_activeSequenceCount - 1);
+        Kits.Core.GameContext.Exit(Situaciones.Cinematica, this);
         if (s_activeSequenceCount == 0)
         {
             SinOcclusionEnSecuencias.Desactivar();

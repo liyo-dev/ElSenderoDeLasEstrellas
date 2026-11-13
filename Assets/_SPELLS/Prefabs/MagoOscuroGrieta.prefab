@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5257822230175585128}
+  - {fileID: 3219590016451037507}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1208743062312378317
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9397ef0775b9efd488576038dd4db3ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicZoneEffect
---- !u!1001 &830675228947356601
+--- !u!1001 &7865457465782127304
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -53,57 +53,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1890726830372888923}
     m_Modifications:
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5608171845533206409, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
+    - target: {fileID: 5922768593969279868, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
       propertyPath: m_Name
-      value: VFX_Hechizo_MagoOscuroGrieta_Zona
+      value: VFX_Hechizo_MagoOscuroGrieta_Dibujo_Zona
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
---- !u!4 &5257822230175585128 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
+--- !u!4 &3219590016451037507 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4859577297916332241, guid: eb6c018a70fd6a14aab70570f99b5137, type: 3}
-  m_PrefabInstance: {fileID: 830675228947356601}
+  m_CorrespondingSourceObject: {fileID: 4722587072128746379, guid: 5f69835f60bfa9845b25dabdcb5b636b, type: 3}
+  m_PrefabInstance: {fileID: 7865457465782127304}
   m_PrefabAsset: {fileID: 0}

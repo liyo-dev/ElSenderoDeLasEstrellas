@@ -76,11 +76,15 @@ MonoBehaviour:
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
   spawnVFX: {fileID: 6889855085797149803, guid: 5ba8f185e3060e646b42e3589cf09151, type: 3}
-  impactVFX: {fileID: 100004, guid: 1129ca32d1c4f6e40bf53318cb70d03c, type: 3}
+  impactVFX: {fileID: 3493654690895429556, guid: 7bcb8ce034d242c44b81dfbab26ad711, type: 3}
   despawnVFX: {fileID: 5106139474640774688, guid: c81e12f246687e74baab933dca3d17e9, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_MagoOscuroGolpe
   impactSFXKey: Impacto_Oscuro_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 0}
   bounceCount: 0

@@ -474,27 +474,41 @@ namespace Invector.vCharacterController
 
             // Algo que corta el paso a ras de suelo y que no es una rampa que ya se sube andando.
             if (!Physics.Raycast(pie + Vector3.up * 0.04f, direccion, out RaycastHit frente, alcance, groundLayer, QueryTriggerInteraction.Ignore)) return;
-            if (frente.normal.y > 0.7f) return;
+            if (frente.normal.y > 0.7f) { DiagnosticoPeldano("rampa", frente.collider, frente.normal.y); return; }
             // Por encima de la altura de un peldaño, libre (si no, es una pared).
-            if (Physics.Raycast(pie + Vector3.up * (alturaDePeldano + 0.04f), direccion, alcance, groundLayer, QueryTriggerInteraction.Ignore)) return;
+            if (Physics.Raycast(pie + Vector3.up * (alturaDePeldano + 0.04f), direccion, out RaycastHit alto0, alcance, groundLayer, QueryTriggerInteraction.Ignore)) { DiagnosticoPeldano("pared sobre el peldaño", alto0.collider, alto0.point.y - pie.y); return; }
 
             // La huella del peldaño, un poco más allá de su borde.
             Vector3 sobre = new Vector3(frente.point.x, pie.y + alturaDePeldano + 0.04f, frente.point.z) + direccion * 0.08f;
-            if (!Physics.Raycast(sobre, Vector3.down, out RaycastHit huella, alturaDePeldano + 0.04f, groundLayer, QueryTriggerInteraction.Ignore)) return;
-            if (huella.normal.y < 0.7f) return;
+            if (!Physics.Raycast(sobre, Vector3.down, out RaycastHit huella, alturaDePeldano + 0.04f, groundLayer, QueryTriggerInteraction.Ignore)) { DiagnosticoPeldano("sin huella plana", frente.collider, 0f); return; }
+            if (huella.normal.y < 0.7f) { DiagnosticoPeldano("huella inclinada", huella.collider, huella.normal.y); return; }
             float subida = huella.point.y - pie.y;
-            if (subida < 0.03f || subida > alturaDePeldano) return;
+            if (subida < 0.03f || subida > alturaDePeldano) { DiagnosticoPeldano("subida fuera de rango", huella.collider, subida); return; }
 
             // Que quepa el personaje encima.
             Vector3 nuevoPie = pie + Vector3.up * (subida + 0.02f);
             float alto = Mathf.Max(_capsuleCollider.height, radio * 2f);
             Vector3 abajo = nuevoPie + Vector3.up * (radio + 0.05f) + direccion * 0.05f;
             Vector3 cabeza = nuevoPie + Vector3.up * (alto - radio) + direccion * 0.05f;
-            if (Physics.CheckCapsule(abajo, cabeza, radio * 0.9f, groundLayer, QueryTriggerInteraction.Ignore)) return;
+            if (Physics.CheckCapsule(abajo, cabeza, radio * 0.9f, groundLayer, QueryTriggerInteraction.Ignore)) { DiagnosticoPeldano("no cabe encima", frente.collider, subida); return; }
 
             _rigidbody.position = nuevoPie;
             Vector3 v = _rigidbody.linearVelocity;
             if (v.y < 0f) { v.y = 0f; _rigidbody.linearVelocity = v; }
+        }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        private float _proximoDiagnosticoPeldano;
+#endif
+        // Diagnóstico temporal (INC-1129): por qué se rechaza un peldaño. Quitar al cerrar la incidencia.
+        [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("UNITY_INCLUDE_INSTRUMENTATION")]
+        private void DiagnosticoPeldano(string motivo, Collider col, float valor)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (Time.unscaledTime < _proximoDiagnosticoPeldano) return;
+            _proximoDiagnosticoPeldano = Time.unscaledTime + 0.5f;
+            Debug.Log($"[Peldaño] rechazado: {motivo} | valor={valor:F2} | pie.y={_rigidbody.position.y:F2} | collider={(col != null ? col.transform.root.name + "/" + col.name : "-")}");
+#endif
         }
 
         private Vector3 LimitarVelocidadDeMovimiento(Vector3 velocidad)

@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700cd0237e2f4235aeb8c8fc6b886f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCShieldController
-  shieldPrefab: {fileID: 6287953604210959080, guid: 5156d6689efbccb4991059f3a5755566, type: 3}
+  shieldPrefab: {fileID: 5638306324195512089, guid: 08bc49afa2d417c4d9c00ad5848f57de, type: 3}
   shieldAnchor: {fileID: 0}
   shieldOffset: {x: 0, y: 0, z: 0}
   defendAnimation: Defend_NoWeapon

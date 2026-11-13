@@ -1,0 +1,45 @@
+{
+    "materiales": [
+        {
+            "ruta": "Assets/Art/Materials/Sendero/Mat_CintaRoja_Mara.mat",
+            "shader": "Universal Render Pipeline/Unlit",
+            "cola": -1
+        },
+        {
+            "ruta": "Assets/Plugins/Low Poly Modular Terrain Pack/Terrain_Assets/Materials/CPT_Terrain_01.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/Plugins/Invector-3rdPersonController_LITE/Resources/Materials/comparacao.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/VFX/G-spot_Lab/Magic Energy Seamless Textures Free Pack/MagicEnergy_Purple_01/MagicEnergy_Purple_01.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm 1.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm 2.mat",
+            "shader": "Quibli/Stylized Lit",
+            "cola": 2000
+        },
+        {
+            "ruta": "Assets/Prefabs/Enemy/Mundo/Materiales/Fantasma_Intangible.mat",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": 3000
+        }
+    ],
+    "cieloDelPrologo": "Assets/Art/Day-Night Skyboxes/Materials/SkyBrightMorning.mat"
+}

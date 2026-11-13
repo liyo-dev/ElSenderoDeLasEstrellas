@@ -494,6 +494,7 @@ internal sealed partial class Horno
     {
         int mascara = MascaraDeDecorado;
         if (Physics.CheckSphere(c, 0.3f, mascara, QueryTriggerInteraction.Ignore)) return true;
+        if (DentroDeUnaCasa(c)) return true;
         foreach (var b in Cajas())
         {
             if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) > 4.5f) continue;
@@ -799,7 +800,67 @@ internal sealed partial class Horno
         if (largo < 0.3f) return false;
         // Se ignoran los últimos 40 cm, la capa de suelo y las zonas de ambiente.
         int mascara = MascaraDeDecorado;
-        return Physics.Raycast(a, d / largo, largo - 0.4f, mascara, QueryTriggerInteraction.Ignore);
+        if (Physics.Raycast(a, d / largo, largo - 0.4f, mascara, QueryTriggerInteraction.Ignore)) return true;
+        return CortaUnaCasa(a, d / largo, largo - 0.4f);
+    }
+
+    // ── Casas con la colisión en la capa de suelo ───────────────────────────────────────────
+    // Las casas propias de las zonas (ModelosDeLasZonas, «Vestido del mundo») llevan toda su
+    // colisión en un hijo «Colisión (suelo)» de la capa Floor, para poder pisar porches y escalones.
+    // La máscara de decorado se salta la capa Floor (si no, el suelo taparía todos los planos), así
+    // que esas casas no contaban: el horneado metía la cámara dentro de una y el plano salía de un
+    // color liso (INC-1145, plano general de Eldran y Will en Cap1_PerasEldran). Aquí cuentan solo
+    // esas colisiones, no el terreno ni el resto del suelo.
+    private const string ColisionDeCasa = "Colisión (suelo)";
+    private const int CapaDeSuelo = 1 << 10;
+    private static readonly RaycastHit[] s_golpesDeCasa = new RaycastHit[16];
+    private static readonly Collider[] s_casasCerca = new Collider[16];
+
+    private static bool EsCasa(Collider c) => c != null && !(c is TerrainCollider) && c.name == ColisionDeCasa;
+
+    /// ¿Corta la línea la pared de una casa? Con caras traseras: desde dentro también cuenta.
+    private static bool CortaUnaCasa(Vector3 desde, Vector3 dir, float largo)
+    {
+        if (largo <= 0f) return false;
+        bool antes = Physics.queriesHitBackfaces;
+        Physics.queriesHitBackfaces = true;
+        try
+        {
+            int n = Physics.RaycastNonAlloc(desde, dir, s_golpesDeCasa, largo, CapaDeSuelo, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++) if (EsCasa(s_golpesDeCasa[i].collider)) return true;
+            return false;
+        }
+        finally { Physics.queriesHitBackfaces = antes; }
+    }
+
+    /// ¿Está la cámara dentro de una casa? Tocando una pared, o encerrada: casa encima y debajo.
+    /// ModelosDeLasZonas crea un hijo "Colisión (suelo)" por cada malla, así que techo y suelo son
+    /// objetos distintos: comprobar que ambos rayos encuentren una casa, no que sea el mismo objeto.
+    private static bool DentroDeUnaCasa(Vector3 c)
+    {
+        int n = Physics.OverlapSphereNonAlloc(c, 0.3f, s_casasCerca, CapaDeSuelo, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++) if (EsCasa(s_casasCerca[i])) return true;
+
+        if (PrimeraCasa(c, Vector3.up, 15f) == null) return false;
+        return PrimeraCasa(c, Vector3.down, 15f) != null;
+    }
+
+    private static Collider PrimeraCasa(Vector3 desde, Vector3 dir, float largo)
+    {
+        bool antes = Physics.queriesHitBackfaces;
+        Physics.queriesHitBackfaces = true;
+        try
+        {
+            int n = Physics.RaycastNonAlloc(desde, dir, s_golpesDeCasa, largo, CapaDeSuelo, QueryTriggerInteraction.Ignore);
+            Collider mejor = null; float cerca = float.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                var g = s_golpesDeCasa[i];
+                if (EsCasa(g.collider) && g.distance < cerca) { cerca = g.distance; mejor = g.collider; }
+            }
+            return mejor;
+        }
+        finally { Physics.queriesHitBackfaces = antes; }
     }
 
     /// ¿Un personaje de pie en pb (alto h) se mete entre la cámara y el objetivo?

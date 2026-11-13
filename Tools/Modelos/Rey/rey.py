@@ -3,8 +3,10 @@
 # lugar de la capucha. Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body30_Rey → las manos y el torso de Body05 con la ropa encima, pesado como él.
-import bpy, bmesh, math, sys
+import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
+import ropa_lib as rl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 bpy.ops.wm.open_mainfile(filepath=BASE)
@@ -138,21 +140,6 @@ for lado, s in (("l", 1), ("r", -1)):
     esfera("traje", f"Suela_{lado}", (0.118 * s, -0.03, 0.012), (0.086, 0.128, 0.014), ZAPATO, {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
     esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.085, 0.035), (0.068, 0.088, 0.042), ZAPATO, {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
-def pesar(lista):
-    for o, pesos in lista:
-        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
-        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
-        if pesos is None:
-            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
-            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
-            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
-            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
-        else:
-            for h, w in pesos.items():
-                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
-        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')
     objs = [o for o, _ in lista] + ([extra] if extra else [])
@@ -172,7 +159,7 @@ for o, _ in GRUPOS["traje"]:
         o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
-for g in GRUPOS.values(): pesar(g)
+rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm)
 # Lo del cuerpo de debajo que queda tapado por la ropa se quita (después de copiar los pesos: la ropa los
 # toma del cuerpo entero). Del Body05 solo quedan las manos y el torso.
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)

@@ -1,6 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════════════════
-#  CAP. 1 · ELDRAN LE LLAMA: «VEN, SÍGUEME»  (INC-867, fase 6)
-#  Will acaba de comprar la estrella torcida en el puesto de Tomasa. Eldran le llama desde la
+#  CAP. 1 · ELDRAN LE LLAMA: «VEN, SÍGUEME»  (INC-867, fase 6; Tomasa, INC-1145)
+#  Will acaba de comprar la estrella torcida en el puesto de Tomasa, que le cuenta que no sirve
+#  para nada (en modo cine, como toda cinemática). Eldran le llama desde la
 #  plaza, se acerca y le pide que le siga (caja de diálogo, la escena espera a que el jugador la
 #  cierre). Plano aéreo mientras Eldran se acerca y los dos en plano para la charla.
 # ═══════════════════════════════════════════════════════════════════════════════════════════
@@ -24,13 +25,24 @@ p_tomasa    16.69 -136.84
 # Eldran le llama desde la plaza y se para a 1,8 m de Will.
 p_eldran    7.0 -137.0
 p_llega     11.45 -136.0
+# Cámara fija para Tomasa y Will, desde el lado: el mostrador le tapa a Tomasa la parte de abajo, como en juego.
+cam_tomasa  12.3 -131.3
 
 HILO
 @inicio
 will en p_will mirando tomasa
 & tomasa en p_tomasa mirando will
 & eldran en p_eldran mirando will
-& plano general eldran will altura=7 lente=40 quieta
+
+# Tomasa y Will, en el mostrador, con la estrella recién comprada.
+@tomasa
+plano dos will tomasa desde=cam_tomasa altura=1.6 lente=34 quieta
+tomasa dice TOMASA_ESTRELLA_1 gesto=Talk01
+will dice WILL_ESTRELLA_1
+tomasa dice TOMASA_ESTRELLA_2 gesto=Laugh01 cara=alegre
+
+@llamada
+plano general eldran will altura=7 lente=40 quieta
 eldran dice DLG_ELDRAN_CAJA_LLAMADA gesto=Cheer01 cara=alegre
 & will mira eldran
 & will cara sorpresa

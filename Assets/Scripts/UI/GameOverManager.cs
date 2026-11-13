@@ -247,6 +247,9 @@ public class GameOverManager : MonoBehaviour
             return;
         }
 
+        // Sin referencia al caído, el jugador vigente: sin él no hay plano del caído ni noche que
+        // gire a su alrededor, y la cámara se quedaba mirando al enemigo fijado. Ver INC-1150.
+        if (deadPlayer == null) PlayerService.TryGetComponent(out deadPlayer);
         _deadPlayer = deadPlayer;
         _gameOverCoroutine = StartCoroutine(GameOverSequence());
     }
@@ -332,7 +335,7 @@ public class GameOverManager : MonoBehaviour
     {
         if (s_respuestaALaDerrota != null && s_respuestaALaDerrota.Responder()) return;
 
-        var popup = ConfirmationPopupUI.Instance;
+        var popup = PopupDeContinuar();
         if (popup == null || !GameBootService.PuedeContinuar())
         {
             TransitionToMainMenu();
@@ -403,6 +406,23 @@ public class GameOverManager : MonoBehaviour
             Debug.LogWarning("[GameOverManager] ⚠️ No se encontró Camera.main");
 #endif
         }
+    }
+
+    /// La pregunta de continuar. ConfirmationPopupUI se apunta como Instance en su Awake, que no
+    /// llega a correr si su objeto empezó apagado en la escena: entonces se busca. Ver INC-1150.
+    private static ConfirmationPopupUI PopupDeContinuar()
+    {
+        if (ConfirmationPopupUI.Instance != null) return ConfirmationPopupUI.Instance;
+        var popup = FindAnyObjectByType<ConfirmationPopupUI>(FindObjectsInactive.Include);
+        // Se enciende para que corra su Awake (prepara el panel y se apunta como Instance).
+        if (popup != null && !popup.gameObject.activeSelf) popup.gameObject.SetActive(true);
+        if (popup != null && !popup.isActiveAndEnabled) popup = null;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.LogWarning(popup != null
+            ? "[GameOverManager] ConfirmationPopupUI.Instance era nulo; encontrado apagado en la escena y encendido."
+            : "[GameOverManager] No hay ConfirmationPopupUI activo en ninguna escena: sin pregunta de continuar.");
+#endif
+        return popup;
     }
 
     /// <summary>
@@ -476,7 +496,7 @@ public class GameOverManager : MonoBehaviour
     private System.Collections.IEnumerator NocheDeEstrellas()
     {
         int orden = 100;
-        var popup = ConfirmationPopupUI.Instance;
+        var popup = PopupDeContinuar();
         var lienzoDelPopup = popup != null ? popup.GetComponentInParent<Canvas>() : null;
         if (lienzoDelPopup != null) orden = lienzoDelPopup.rootCanvas.sortingOrder;
         if (_noche != null) Destroy(_noche.gameObject);
@@ -491,7 +511,11 @@ public class GameOverManager : MonoBehaviour
             t += Time.unscaledDeltaTime;
             float k = Mathf.SmoothStep(0f, 1f, t / segundosDeLaNoche);
             if (_thirdPersonCamera != null && _deadPlayer != null)
+            {
+                // El fijado de combate puede volver a engancharse al enemigo: se suelta cada vez.
+                _thirdPersonCamera.ClearLockTarget();
                 _thirdPersonCamera.SetAngles(yaw0 + giroDeLaCamara * k, Mathf.Lerp(pitch0, inclinacionFinal, k));
+            }
             yield return null;
         }
     }

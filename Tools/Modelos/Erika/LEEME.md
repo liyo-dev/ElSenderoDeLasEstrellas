@@ -14,3 +14,7 @@ no está en el juego.**
 
 La capa corta va pesada a la espalda (no a los huesos de capa): no ondea. Sin comprobar: cómo se mueve en
 combate, que es donde más se la ve.
+
+## 13 nov 2026 — chequeo de choques (INC-1138)
+Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
+- Cambios de forma: el brazal empieza pasado el codo y copia los pesos del brazo como la manga, las correas abrazan el brazal y los remaches van en fila por fuera de la hombrera (se metían en ella y en el pañuelo).

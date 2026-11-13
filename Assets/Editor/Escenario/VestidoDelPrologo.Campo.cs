@@ -35,7 +35,7 @@ public static partial class VestidoDelPrologo
         campo.SetParent(raiz, false);
         var rnd = new System.Random(1406);
         var marcas = new List<Vector3>();
-        foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude))
             if (t.name.StartsWith("M_") || t.GetComponent<NpcSpawnPoint>() != null) marcas.Add(t.position);
         var enFlor = MaterialDelArbolEnFlor(informe);
 
@@ -117,7 +117,7 @@ public static partial class VestidoDelPrologo
     static bool SobreCaminoOAgua(Vector3 p)
     {
         if (s_caminos.Count == 0)
-            foreach (var r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            foreach (var r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude))
             {
                 string n = (r.name + " " + (r.transform.parent != null ? r.transform.parent.name : "")).ToLowerInvariant();
                 if (n.Contains("camino") || n.Contains("rio") || n.Contains("agua") || n.Contains("cauce")) s_caminos.Add(r);

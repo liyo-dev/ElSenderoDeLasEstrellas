@@ -10,8 +10,8 @@ using UnityEngine;
 /// No conoce zonas, escenas ni mapas: lo llama quien sepa que el jugador ha entrado en un lugar
 /// con nombre (hoy <see cref="AmbientZone"/>, con el nombre de su <see cref="AmbientPreset"/>).
 ///
-/// Es un aviso del canal Cabecera (<see cref="ArbitroDeAvisos"/>): espera mientras hay un menú o
-/// una cinemática, con el tiempo parado, y va antes que el banner de misión nueva si coinciden.
+/// Es un aviso del canal Cabecera (<see cref="ArbitroDeAvisos"/>): espera mientras hay un menú, una
+/// cinemática o un combate, con el tiempo parado, y va antes que el banner de misión nueva si coinciden.
 /// Se auto-crea al arrancar el juego.
 /// </summary>
 public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
@@ -40,9 +40,13 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     private bool _empezada;
     private float _t;
 
+    // En pleno combate no sale el nombre del lugar: espera a que acabe.
+    private static readonly string[] s_cedeAnte = { Situaciones.Combate };
+
     public CanalDeAviso Canal => CanalDeAviso.Cabecera;
     public int Prioridad => 30;
     public bool Pasajero => true;
+    public System.Collections.Generic.IReadOnlyList<string> CedeAnte => s_cedeAnte;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void AutoCreate()
@@ -91,13 +95,10 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
         _ultimoLugar = clave;
         string nombre = Texto(clave, clave);
 
-        // Sin dónde dibujarla, rótulo. Un lugar ya conocido (o sin partida donde apuntarlo) lleva
-        // la cinta corta: no se gasta la primera vez de un sitio en algo que no se va a recordar.
-        if (Vista == null)
-        {
-            HudToastService.Instance?.ShowRaw(nombre, DuracionDelRecordatorio);
-            return;
-        }
+        // Un lugar ya conocido (o sin partida donde apuntarlo) lleva la cinta corta: no se gasta la
+        // primera vez de un sitio en algo que no se va a recordar. Si todavía no hay dónde dibujar
+        // la cinta (el overlay aún no ha arrancado), se espera al turno: el rótulo es solo el último
+        // recurso, cuando le toca y sigue sin haber cinta. Ver INC-1152.
         _breve = LugaresConocidos.EsConocido(clave) || !LugaresConocidos.Marcar(clave);
 
         // Un lugar detrás de otro: manda el último, que es donde está el jugador.
@@ -126,9 +127,9 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     public void AlTenerTurno()
     {
         _aLaVista = true;
-        if (!_pendiente || Vista == null)
+        if (_pendiente && Vista == null) RotuloEnSuLugar();
+        if (!_pendiente)
         {
-            _pendiente = false;
             ArbitroDeAvisos.Terminar(this);
             return;
         }
@@ -162,12 +163,20 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     private void Empezar()
     {
         var vista = Vista;
-        if (vista == null) { Acabar(); return; }
+        if (vista == null) { RotuloEnSuLugar(); Acabar(); return; }
         _t = 0f;
         _empezada = true;
         vista.Preparar(_nombre, _breve ? "" : Texto(ClaveDelEncabezado, ""), _breve);
         vista.Ver(true);
         if (!_breve) AudioService.Instance?.PlaySFX(SonidoDeLaPresentacion);
+    }
+
+    // Sin cinta, el nombre sale en un rótulo y la presentación se da por hecha.
+    private void RotuloEnSuLugar()
+    {
+        if (!string.IsNullOrEmpty(_nombre)) HudToastService.Instance?.ShowRaw(_nombre, DuracionDelRecordatorio);
+        _pendiente = false;
+        _empezada = false;
     }
 
     private void Acabar()

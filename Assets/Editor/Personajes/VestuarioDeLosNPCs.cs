@@ -125,6 +125,40 @@ public static class VestuarioDeLosNPCs
             Apagar = new string[] {  },
             Colores = new[] { ("Vestido", new Color(0.26f, 0.5f, 0.3f)), ("VestidoOscuro", new Color(0.16f, 0.34f, 0.2f)), ("Delantal", new Color(0.9f, 0.64f, 0.24f)), ("DelantalOscuro", new Color(0.7f, 0.45f, 0.14f)), ("Cuero", new Color(0.4f, 0.25f, 0.13f)), ("CueroOscuro", new Color(0.24f, 0.15f, 0.08f)), ("Hoja", new Color(0.36f, 0.68f, 0.3f)), ("Tallo", new Color(0.3f, 0.42f, 0.2f)), ("Frasco", new Color(0.55f, 0.85f, 0.9f)), ("Corcho", new Color(0.7f, 0.55f, 0.38f)), ("Panoleta", new Color(0.95f, 0.9f, 0.78f)), ("Panuelo", new Color(0.5f, 0.66f, 0.42f)), ("PanueloOscuro", new Color(0.36f, 0.5f, 0.3f)), ("Media", new Color(0.94f, 0.92f, 0.88f)), ("Zapato", new Color(0.3f, 0.18f, 0.1f)) },
         },
+        new AspectoDeProtagonista.Ficha
+        {
+            Nombre = "El Archimago",
+            Carpeta = Carpeta + "/Archimago",
+            PrefabPropio = "Assets/Prefabs/_WILL_ORIGINAL.prefab",
+            CuerpoDeAntes = "Body17",
+            Modelos = new[] { "Assets/Prefabs/_WILL_ORIGINAL.prefab" },
+            Propios = new[] { "Assets/Prefabs/_WILL_ORIGINAL.prefab" },
+            Piezas = new[]
+            {
+            new AspectoDeProtagonista.Pieza { Nombre = "Body34_Archimago", Categoria = PartCategory.Body, Vecina = "Body17" },
+            new AspectoDeProtagonista.Pieza { Nombre = "Hair20_Archimago", Categoria = PartCategory.Hair, Vecina = "Hair11" },
+            },
+            Apagar = new[] { "Cloak01" },   // su capa corta ya va en el cuerpo
+            Colores = new[] { ("Crema", new Color(0.96f, 0.9f, 0.72f)), ("CremaCalida", new Color(0.88f, 0.74f, 0.5f)), ("Oro", new Color(0.88f, 0.67f, 0.2f)), ("Celeste", new Color(0.55f, 0.74f, 0.88f)), ("Pantalon", new Color(0.52f, 0.44f, 0.34f)), ("Cuero", new Color(0.4f, 0.26f, 0.15f)), ("CueroOscuro", new Color(0.27f, 0.17f, 0.1f)), ("PeloPlata", new Color(0.74f, 0.74f, 0.8f)), ("PeloPlataOscuro", new Color(0.55f, 0.55f, 0.62f)), ("AroOro", new Color(0.88f, 0.67f, 0.2f)) },
+        },
+        new AspectoDeProtagonista.Ficha
+        {
+            Nombre = "El Mago Oscuro",
+            Carpeta = Carpeta + "/MagoOscuro",
+            PrefabPropio = "Assets/Prefabs/_MAGO_OSCURO.prefab",
+            CuerpoDeAntes = "Body18",
+            Modelos = new[] { "Assets/Prefabs/_MAGO_OSCURO.prefab" },
+            Propios = new[] { "Assets/Prefabs/_MAGO_OSCURO.prefab" },
+            Piezas = new[]
+            {
+            new AspectoDeProtagonista.Pieza { Nombre = "Body33_MagoOscuro", Categoria = PartCategory.Body, Vecina = "Body18" },
+            new AspectoDeProtagonista.Pieza { Nombre = "AC14_VeloDeSombra", Categoria = PartCategory.Accessory, Vecina = "AC05_Horn02|Body18" },
+            new AspectoDeProtagonista.Pieza { Nombre = "Hair19_MagoOscuro", Categoria = PartCategory.Hair, Vecina = "Hair01|Body18", DeSerie = false },   // lo enciende MagoOscuroPorEstados en el revelado
+            },
+            Apagar = new[] { "HeadArmor04", "AC05_Horn02" },   // el casco y los cuernos del guardia del pack
+            Colores = new[] { ("Tunica", new Color(0.075f, 0.055f, 0.13f)), ("Capa", new Color(0.05f, 0.038f, 0.095f)), ("Forro", new Color(0.3f, 0.12f, 0.52f)), ("Luz", new Color(0.74f, 0.45f, 1f)), ("Hueso", new Color(0.66f, 0.62f, 0.78f)), ("Vacio", new Color(0.012f, 0.008f, 0.025f)), ("Estrella", new Color(0.4f, 0.24f, 0.7f)), ("Cinto", new Color(0.12f, 0.09f, 0.19f)), ("PeloMago", new Color(0.04f, 0.035f, 0.06f)), ("PeloGris", new Color(0.62f, 0.6f, 0.7f)) },
+            Brillan = new[] { ("Luz", 1.3f) },   // la franja del bajo y los puños
+        },
     };
 
     [MenuItem("El Sendero/Personajes/Vestuario propio de los NPCs", priority = 60)]

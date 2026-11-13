@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap1_PerasEldran
   duracion: 34.753197
   presentacion: 1
-  huella: "2026-11-12 07:30 \xB7 37afa1d81585a036fc01efd26760a307"
+  huella: "2026-11-13 18:06 \xB7 37afa1d81585a036fc01efd26760a307"
   actores:
   - id: Player
     alias: will
@@ -762,7 +762,7 @@ MonoBehaviour:
     descripcion: general de eldran y will
     posiciones:
     - t: 19.905306
-      p: {x: -3.2943072, y: 29.481815, z: -130.5508}
+      p: {x: 8.283604, y: 29.481815, z: -150.44698}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -785,7 +785,7 @@ MonoBehaviour:
     descripcion: sobre el hombro de will a oliver
     posiciones:
     - t: 25.652245
-      p: {x: 1.5628693, y: 27.771374, z: -142.70009}
+      p: {x: 1.6088314, y: 27.771374, z: -142.41739}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -794,7 +794,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1326946
+    alturaDelFoco: 1.1446159
     encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -848,19 +848,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705360
+      rid: 6540294592641368208
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.553196
     beat:
-      rid: 6540294555676705361
+      rid: 6540294592641368209
     linea: 70
   - onlyIfFlag: 
     skipIfFlag: 
     t: 34.753197
     beat:
-      rid: 6540294555676705362
+      rid: 6540294592641368210
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -884,7 +884,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705360
+    - rid: 6540294592641368208
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -892,7 +892,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705361
+    - rid: 6540294592641368209
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -920,7 +920,7 @@ MonoBehaviour:
           - HeadNod01
           emotions: 
         detenerEscena: 1
-    - rid: 6540294555676705362
+    - rid: 6540294592641368210
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

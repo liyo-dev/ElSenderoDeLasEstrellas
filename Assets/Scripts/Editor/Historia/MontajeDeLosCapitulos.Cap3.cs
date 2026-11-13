@@ -134,7 +134,7 @@ public static partial class MontajeDeLosCapitulos
 
         // ── Cinemáticas ─────────────────────────────────────────────────────────────────────
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_ESPEJO", Guion = "Cap3_01_ElEspejo", Escena = "TorreDeLiam",
-            Nombre = "Cap. 3: Tobías en el espejo", Resumen = "Media sopa y la promesa de ir a pescar. La llave del aro se calentará cerca de Will." });
+            Nombre = "Cap. 3: Tobías en el espejo", Resumen = "Media sopa y la promesa de ir a pescar. Will se ha llevado un trozo del aro de Liam: tendrá que seguirle de cerca." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_POSADA", Guion = "Cap3_02_LaPosada", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: la posada", Resumen = "Will pregunta por el trozo del aro, le suenan las tripas (una sopa, si alcanza) y Lucía intenta subir la cuchara." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CARRO", Guion = "Cap3_03_ElCarro", Texto = PresentacionDeTexto.Subtitulo,
@@ -154,7 +154,7 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_ESPEJO_05", "Cuando vuelva iremos a pescar. Te lo prometo.", "When I get back we'll go fishing. I promise.");
         TextoDeCine("CAP3_ESPEJO_06", "No sabes pescar.", "You don't know how to fish.");
         TextoDeCine("CAP3_ESPEJO_07", "Aprenderé. Dicen que el truco es tener paciencia.", "I'll learn. They say the trick is patience.");
-        TextoDeCine("CAP3_ESPEJO_10", "La llave del aro. Se calentará cada vez que el chico esté cerca.", "The collar's key. It'll grow warm whenever the boy is near.");
+        TextoDeCine("CAP3_ESPEJO_10", "El chico se ha llevado un trozo de mi aro. Tendré que seguirle de cerca.", "The boy took a piece of my collar. I'll have to follow him closely.");
         TextoDeCine("CAP3_ESPEJO_11", "Aguanta un poco más, Tobi.", "Hold on a little longer, Tobi.");
         TextoDeCine("CAP3_POSADA_01", "Perdone… ¿sabe qué es esto?", "Excuse me… do you know what this is?");
         TextoDeCine("CAP3_POSADA_02", "¿De dónde has sacado eso?", "Where did you get that?");

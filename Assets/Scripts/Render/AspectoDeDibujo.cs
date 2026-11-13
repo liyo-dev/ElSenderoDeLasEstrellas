@@ -48,6 +48,17 @@ public sealed class AspectoDeDibujo : ScriptableObject
     [Tooltip("Cuánto aclara el brillo.")]
     [Range(0f, 1f)] public float fuerzaDelBrillo = 0.35f;
 
+    [Header("Suelo")]
+    [Tooltip("Cuánto se ve el dibujo de las texturas del terreno. 0 = cada capa de un color plano (su color medio); 1 = la textura entera.")]
+    [Range(0f, 1f)] public float texturaDelSuelo = 0.35f;
+
+    [Header("Pinceladas")]
+    [Tooltip("Cuánto se notan las pinceladas en los modelos propios de color liso (los que llevan «Pinceladas» en el material). 0 = color liso.")]
+    [Range(0f, 0.4f)] public float pinceladas = 0.12f;
+
+    [Tooltip("Tamaño de cada mancha de pincel, en metros.")]
+    [Range(0.1f, 3f)] public float tamanoDeLasPinceladas = 0.6f;
+
     private static readonly int IdActivo = Shader.PropertyToID("_DibujoActivo");
     private static readonly int IdSombra = Shader.PropertyToID("_DibujoSombra");
     private static readonly int IdSombraCalida = Shader.PropertyToID("_DibujoSombraCalida");
@@ -61,6 +72,9 @@ public sealed class AspectoDeDibujo : ScriptableObject
     private static readonly int IdBrilloFuerza = Shader.PropertyToID("_DibujoBrilloFuerza");
     private static readonly int IdLucesExtra = Shader.PropertyToID("_DibujoLucesExtra");
     private static readonly int IdTopeDeLuz = Shader.PropertyToID("_DibujoTopeDeLuz");
+    private static readonly int IdTexturaDelSuelo = Shader.PropertyToID("_DibujoTexturaDelSuelo");
+    private static readonly int IdPincel = Shader.PropertyToID("_DibujoPincel");
+    private static readonly int IdPincelEscala = Shader.PropertyToID("_DibujoPincelEscala");
 
     /// Pone los ajustes como valores globales de shader.
     public void Aplicar()
@@ -81,6 +95,9 @@ public sealed class AspectoDeDibujo : ScriptableObject
         Shader.SetGlobalFloat(IdBrilloFuerza, fuerzaDelBrillo);
         Shader.SetGlobalFloat(IdLucesExtra, lucesPuntuales);
         Shader.SetGlobalFloat(IdTopeDeLuz, topeDeLuz);
+        Shader.SetGlobalFloat(IdTexturaDelSuelo, texturaDelSuelo);
+        Shader.SetGlobalFloat(IdPincel, pinceladas);
+        Shader.SetGlobalFloat(IdPincelEscala, tamanoDeLasPinceladas);
         Shader.SetGlobalFloat(IdActivo, 1f);
     }
 

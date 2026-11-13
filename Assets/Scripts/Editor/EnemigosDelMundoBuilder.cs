@@ -140,14 +140,14 @@ public static class EnemigosDelMundoBuilder
         return raiz;
     }
 
-    /// Material translúcido de «intangible» con la textura del fantasma.
+    /// Material translúcido de «intangible» con la textura del fantasma, con el aspecto de dibujo.
     private static Material MaterialIntangible(GameObject modelo)
     {
         string ruta = CarpetaMateriales + "/Fantasma_Intangible.mat";
         var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
         if (mat == null)
         {
-            mat = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "Fantasma_Intangible" };
+            mat = new Material(Shader.Find("El Sendero/Dibujo")) { name = "Fantasma_Intangible" };
             AssetDatabase.CreateAsset(mat, ruta);
         }
         Texture textura = null;
@@ -159,17 +159,7 @@ public static class EnemigosDelMundoBuilder
                 if (textura == null && m.HasProperty("_MainTex")) textura = m.GetTexture("_MainTex");
             }
         mat.SetTexture("_BaseMap", textura);
-        mat.SetColor("_BaseColor", new Color(0.75f, 0.9f, 1f, 0.3f));
-        mat.SetFloat("_Surface", 1f);
-        mat.SetFloat("_Blend", 0f);
-        mat.SetFloat("_ZWrite", 0f);
-        mat.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
-        mat.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
-        mat.SetOverrideTag("RenderType", "Transparent");
-        mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        mat.EnableKeyword("_EMISSION");
-        mat.SetColor("_EmissionColor", new Color(0.15f, 0.25f, 0.35f));
-        mat.renderQueue = (int)RenderQueue.Transparent;
+        RestosAlAspectoDeDibujo.ComoFantasmaDeDibujo(mat, Shader.Find("El Sendero/Dibujo"));
         EditorUtility.SetDirty(mat);
         return mat;
     }

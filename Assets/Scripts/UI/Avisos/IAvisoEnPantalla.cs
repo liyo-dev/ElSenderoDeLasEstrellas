@@ -31,6 +31,12 @@ public interface IAvisoEnPantalla
     /// (<see cref="ArbitroDeAvisos.Adelantar"/>), se despide en vez de volver más tarde fuera de contexto.
     bool Pasajero { get; }
 
+    /// Situaciones de juego (<c>Kits.Core.GameContext</c>) ante las que el aviso espera su turno,
+    /// además de los menús y las cinemáticas, que callan a todos. Mientras alguna esté abierta no
+    /// tiene el turno y su cuenta atrás no corre; sale cuando se cierran todas. Null si no cede
+    /// ante ninguna.
+    System.Collections.Generic.IReadOnlyList<string> CedeAnte => null;
+
     /// Tiene el turno y nada lo tapa: se enseña (o vuelve a enseñarse) y su cuenta atrás corre.
     void AlTenerTurno();
 

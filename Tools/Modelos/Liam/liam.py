@@ -5,8 +5,10 @@
 #   Hair15_Flequillo → malla pesada a «head» (pieza de pelo del modelo modular).
 #   Body22_Tunica    → las manos y el torso de Body05 con la ropa encima, pesado como él.
 #   AC12_Capucha     → la capucha, pesada a «head» (accesorio del modelo modular).
-import bpy, bmesh, math, sys
+import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
+import ropa_lib as rl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 bpy.ops.wm.open_mainfile(filepath=BASE)
@@ -275,21 +277,6 @@ for lado, s in (("l", 1), ("r", -1)):
     esfera("traje", f"Puntera_{lado}", (0.123 * s, -0.085, 0.035), (0.07, 0.09, 0.044), "Cuero", {f"ball_{lado}": 0.6, f"foot_{lado}": 0.4})
 
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
-def pesar(lista):
-    for o, pesos in lista:
-        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
-        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
-        if pesos is None:
-            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
-            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
-            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
-            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
-        else:
-            for h, w in pesos.items():
-                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
-        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')
     objs = [o for o, _ in lista] + ([extra] if extra else [])
@@ -297,7 +284,7 @@ def unir(lista, nombre, extra=None):
     bpy.context.view_layer.objects.active = extra or objs[0]
     bpy.ops.object.join(); bpy.context.object.name = nombre
     return bpy.context.object
-pesar(GRUPOS["pelo"]); pesar(GRUPOS["traje"]); pesar(GRUPOS["capucha"])
+rl.pesar_piezas(GRUPOS["pelo"], cuerpo, arm, con_cuerpo=False); rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm); rl.pesar_piezas(GRUPOS["capucha"], cuerpo, arm, con_cuerpo=False)
 # Primero los pesos (la ropa los copia del cuerpo entero, brazos y piernas incluidos); después
 # lo del cuerpo de debajo que queda tapado por el pantalón, las botas y las mangas se quita
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)

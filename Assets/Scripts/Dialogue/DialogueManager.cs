@@ -45,6 +45,9 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Typewriter")]
     [SerializeField] private bool useTypewriter = true;
+    [Tooltip("Tope de líneas visuales por página cuando el diálogo no pone el suyo (DialogueAsset.maxLinesPerPage = 0). " +
+             "La caja enseña 3: si una frase ocupa más, sigue en otra página. 0 = sin tope. Ver INC-1151.")]
+    [SerializeField, Min(0)] private int lineasPorPaginaPorDefecto = 3;
     [Tooltip("Caracteres por segundo cuando useTypewriter está activo")] 
     [SerializeField, Min(1f)] private float charsPerSecond = 35f;
     [Tooltip("Si se pulsa Avanzar mientras escribe, completa la línea al instante")] 
@@ -1241,7 +1244,7 @@ public class DialogueManager : MonoBehaviour
             StopTypewriter();
             bodyText.text = _currentText;
             ReservarSitioParaElBotonA();
-            int limite = _current != null ? _current.maxLinesPerPage : 0;
+            int limite = _current != null && _current.maxLinesPerPage > 0 ? _current.maxLinesPerPage : lineasPorPaginaPorDefecto;
             if (limite > 0)
             {
                 Canvas.ForceUpdateCanvases();

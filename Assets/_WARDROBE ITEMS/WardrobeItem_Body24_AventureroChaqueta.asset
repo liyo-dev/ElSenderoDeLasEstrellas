@@ -19,6 +19,6 @@ MonoBehaviour:
   displayName: Ropa de aventurero con chaqueta
   descriptionId: 
   description: La camiseta de siempre con la chaqueta corta azul marino encima, abierta y remangada.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9eae68f6fa1416b479dae392316bf4bb, type: 3}
   rasgos: 
   soloPara: 01000000i

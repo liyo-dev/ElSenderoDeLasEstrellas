@@ -118,7 +118,7 @@ Material:
     - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DecalPaintOver: 0
     - _DetailMapBlendingMode: 0
@@ -156,6 +156,7 @@ Material:
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
     - _Parallax: 0.02
+    - _Pincel: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 0
@@ -164,6 +165,7 @@ Material:
     - _SelfShadingSize: 0
     - _ShadowsFloor: 0.25
     - _Smoothness: 0.4
+    - _SombraSinRecorte: 0
     - _SpecularEnabled: 0
     - _SpecularNoiseSize: 1
     - _SrcBlend: 1

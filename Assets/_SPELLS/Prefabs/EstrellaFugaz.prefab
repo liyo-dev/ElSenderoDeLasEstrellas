@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8580739324101774918}
+  - {fileID: 2600442820697655112}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &5609586118272192151
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicProjectile
   lifeTimeSeconds: 0
---- !u!1001 &2845905293277139568
+--- !u!1001 &7422323423889963319
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -76,57 +76,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1252529306473553544}
     m_Modifications:
-    - target: {fileID: 273215520306283144, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
-      propertyPath: m_Name
-      value: VFX_Hechizo_EstrellaFugaz_Proyectil
-      objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
+    - target: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5980962935627389569, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
+      propertyPath: m_Name
+      value: VFX_Hechizo_EstrellaFugaz_Dibujo
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
---- !u!4 &8580739324101774918 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
+--- !u!4 &2600442820697655112 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5794522188983819318, guid: 6f55448e6fcb0c443be2addea26fa36a, type: 3}
-  m_PrefabInstance: {fileID: 2845905293277139568}
+  m_CorrespondingSourceObject: {fileID: 4834547282435358335, guid: c6b6e2a796beda940a5833b50c9a6ad9, type: 3}
+  m_PrefabInstance: {fileID: 7422323423889963319}
   m_PrefabAsset: {fileID: 0}

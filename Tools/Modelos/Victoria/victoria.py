@@ -4,8 +4,10 @@
 # el 11 nov 2026. Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y.
 #   Body27_Costurera → las manos y el torso de Body05 con la ropa encima, pesado como él.
 #   AC13_Mono        → el moño con su cinta, pesado a «head» (del color del pelo en Unity).
-import bpy, bmesh, math, sys
+import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
+import ropa_lib as rl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 bpy.ops.wm.open_mainfile(filepath=BASE)
@@ -112,11 +114,11 @@ ZAPATO = "Zapato"; H = {"head": 1.0}
 # ── Blusa y falda ──
 torno("traje", "Blusa", [(0.725, 0.14), (0.67, 0.192), (0.58, 0.2), (0.5, 0.19), (0.45, 0.188)], "Blusa", grosor=0.008)
 torno("traje", "Cuello", [(0.755, 0.15), (0.735, 0.19), (0.712, 0.2)], "BlusaClara", seg=40, grosor=0.012)
-torno("traje", "Falda", [(0.47, 0.186), (0.42, 0.21), (0.32, 0.243), (0.21, 0.27)], "Falda", grosor=0.008, onda=0.035, n_onda=10)
-toro("traje", "Bajo", (0, -0.01, 0.212), 0.268, 0.01, "FaldaOscura", None, escala=(1, 0.92, 1))
+torno("traje", "Falda", [(0.47, 0.186), (0.42, 0.212), (0.32, 0.25), (0.21, 0.288)], "Falda", grosor=0.008, onda=0.035, n_onda=10)
+toro("traje", "Bajo", (0, -0.01, 0.212), 0.286, 0.01, "FaldaOscura", None, escala=(1, 0.92, 1))
 # ── Delantal: el peto delante del pecho, la falda del delantal por delante, la cinta a la cintura y el lazo detrás ──
 torno("traje", "Peto", [(0.67, 0.203), (0.6, 0.212), (0.52, 0.205), (0.46, 0.2)], "Delantal", abierto=(R(-125), R(-55)), grosor=0.007)
-torno("traje", "DelantalFalda", [(0.47, 0.2), (0.42, 0.222), (0.33, 0.252), (0.25, 0.272)], "Delantal", abierto=(R(-160), R(-20)), grosor=0.007)
+torno("traje", "DelantalFalda", [(0.47, 0.2), (0.42, 0.224), (0.33, 0.259), (0.25, 0.284)], "Delantal", abierto=(R(-160), R(-20)), grosor=0.007)
 toro("traje", "CintaDelantal", (0, -0.01, 0.462), 0.203, 0.014, "DelantalOscuro", None, escala=(1, 0.92, 1))
 for s in (1, -1):
     # tirantes del peto, por encima del hombro hasta la cintura por detrás
@@ -152,7 +154,8 @@ for lado, s in (("l", 1), ("r", -1)):
     toro("traje", f"Vuelta_{lado}", (0.3 * s, -0.003, 0.634), 0.079, 0.02, "BlusaClara", None, rot=(0, R(90), 0))
     tubo("traje", f"Brazo_{lado}", [(0.26 * s, -0.003, 0.634), (0.33 * s, -0.002, 0.634), (0.4 * s, -0.002, 0.632), (0.475 * s, -0.003, 0.629)],
          [0.068, 0.067, 0.068, 0.07], "Piel", None, cerrar=False)
-    tubo("traje", f"Media_{lado}", [(0.1 * s, 0.002, 0.3), (0.108 * s, 0.0, 0.2), (0.116 * s, 0.003, 0.09)], [0.078, 0.074, 0.07], "Media", None, cerrar=False)
+    # la media sube hasta la cadera, por debajo de la falda: al correr la pierna sale por el bajo y antes se veía el hueco
+    tubo("traje", f"Media_{lado}", [(0.098 * s, 0.003, 0.44), (0.103 * s, 0.0, 0.33), (0.108 * s, 0.0, 0.2), (0.116 * s, 0.003, 0.07)], [0.094, 0.089, 0.082, 0.079], "Media", None, cerrar=False)
     o = torno("traje", f"Zapato_{lado}", [(0.0, 0.08), (0.04, 0.085), (0.085, 0.074), (0.1, 0.078)], ZAPATO, None, seg=24, elip=1.0, cy=0.0)
     for v in o.data.vertices: v.co.x += 0.118 * s
     esfera("traje", f"Suela_{lado}", (0.118 * s, -0.03, 0.012), (0.086, 0.128, 0.014), ZAPATO, {f"foot_{lado}": 0.5, f"ball_{lado}": 0.5})
@@ -162,21 +165,6 @@ for lado, s in (("l", 1), ("r", -1)):
 esfera("mono", "Mono", (0, 0.37, 1.2), (0.125, 0.12, 0.118), "Pelo", H)
 toro("mono", "CintaMono", (0, 0.3, 1.17), 0.085, 0.018, "Delantal", H, rot=(R(-70), 0, 0))
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
-def pesar(lista):
-    for o, pesos in lista:
-        for m in [m for m in o.modifiers if m.type == 'SOLIDIFY']:
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
-        o.parent = arm; o.matrix_parent_inverse = arm.matrix_world.inverted()
-        if pesos is None:
-            for g in cuerpo.vertex_groups: o.vertex_groups.new(name=g.name)
-            dt = o.modifiers.new("Pesos", 'DATA_TRANSFER'); dt.object = cuerpo
-            dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
-            dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=dt.name)
-        else:
-            for h, w in pesos.items():
-                vg = o.vertex_groups.new(name=h); vg.add(list(range(len(o.data.vertices))), w, 'REPLACE')
-        md = o.modifiers.new("Esqueleto", 'ARMATURE'); md.object = arm
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')
     objs = [o for o, _ in lista] + ([extra] if extra else [])
@@ -196,7 +184,8 @@ for o, _ in GRUPOS["traje"]:
         o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
-for g in GRUPOS.values(): pesar(g)
+rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm)
+rl.pesar_piezas(GRUPOS["mono"], cuerpo, arm, con_cuerpo=False)
 # Lo del cuerpo de debajo que queda tapado por la ropa se quita (después de copiar los pesos: la ropa los
 # toma del cuerpo entero). Del Body05 solo quedan las manos y el torso.
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)

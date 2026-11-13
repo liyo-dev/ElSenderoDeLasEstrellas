@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 0
   lore: "La primera llama que Will aprendi\xF3 a encender en la palma de la mano."
   loreId: 
-  prefab: {fileID: 2680830935764052329, guid: 2fec67c3e5501714e9c206697d01239f, type: 3}
+  prefab: {fileID: 156240471979232137, guid: 41988a9719a00ac48bc54eb5556d5ac1, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 5
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 5302146505831436120, guid: b3573f03d84ca004b8e00a5343295ec2, type: 3}
-  impactVFX: {fileID: 2115158460567608952, guid: cf3629393289b174fabe717ad672d281, type: 3}
+  spawnVFX: {fileID: 6025423187318189886, guid: eae9fcf26614fc647a9030d1d8cb5a26, type: 3}
+  impactVFX: {fileID: 6349107827176864262, guid: e4ab14bbfd51a9b4eafc428d3603be07, type: 3}
   despawnVFX: {fileID: 3685239417598464635, guid: acdaa162cece6444b90ef53280ca8aa4, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_LlamaAstral
   impactSFXKey: Impacto_Fuego_Pequeno
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 7522bb52d0451d3418f913dd207b577a, type: 3}
   bounceCount: 0

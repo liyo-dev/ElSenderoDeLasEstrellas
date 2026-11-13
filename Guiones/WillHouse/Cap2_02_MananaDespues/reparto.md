@@ -222,9 +222,6 @@ RollBWD_Battle_RM_NoWeapon
 Greeting01_NoWeapon
 HandWave01
 HandWave02
-HeadShake01
-HeadShake02
-HeadNod01
 Question01
 Question02
 Reverence01
@@ -299,6 +296,10 @@ New State
 CarryThrow_NoWeapon
 CarryMoveIdle_NoWeapon
 CarryStart_NoWeapon
+Quieta
+HeadShake01
+HeadShake02
+HeadNod01
 # Assets/_NPCs/_GrafoNarrativo/Selene.prefab
 Idle_Normal_NoWeapon
 InteractWithPeople_NoWeapon
@@ -366,9 +367,6 @@ RollBWD_Battle_RM_NoWeapon
 Greeting01_NoWeapon
 HandWave01
 HandWave02
-HeadShake01
-HeadShake02
-HeadNod01
 Question01
 Question02
 Reverence01
@@ -443,6 +441,10 @@ New State
 CarryThrow_NoWeapon
 CarryMoveIdle_NoWeapon
 CarryStart_NoWeapon
+Quieta
+HeadShake01
+HeadShake02
+HeadNod01
 # Assets/_NPCs/MagoPrimero.prefab
 Idle_Normal_NoWeapon
 InteractWithPeople_NoWeapon
@@ -510,9 +512,6 @@ RollBWD_Battle_RM_NoWeapon
 Greeting01_NoWeapon
 HandWave01
 HandWave02
-HeadShake01
-HeadShake02
-HeadNod01
 Question01
 Question02
 Reverence01
@@ -587,3 +586,7 @@ New State
 CarryThrow_NoWeapon
 CarryMoveIdle_NoWeapon
 CarryStart_NoWeapon
+Quieta
+HeadShake01
+HeadShake02
+HeadNod01

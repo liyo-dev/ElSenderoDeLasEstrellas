@@ -25,6 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _PINCEL
   - _RECEIVE_SHADOWS_OFF
   m_InvalidKeywords:
   - _DETAILMAPBLENDINGMODE_MULTIPLY
@@ -158,6 +159,7 @@ Material:
     - _OverrideLightAttenuation: 0
     - _OverrideLightmapDir: 0
     - _Parallax: 0.005
+    - _Pincel: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 0
     - _RimEnabled: 0
@@ -166,6 +168,7 @@ Material:
     - _SelfShadingSize: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
+    - _SombraSinRecorte: 0
     - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

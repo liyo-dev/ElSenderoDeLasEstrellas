@@ -39,6 +39,7 @@ public static class AspectoDeProtagonista
         public Pieza[] Piezas;
         public string[] Apagar = new string[0];   // piezas de antes que deja de llevar (además de las de las mismas categorías)
         public (string material, Color color)[] Colores;
+        public (string material, float fuerza)[] Brillan = new (string, float)[0];   // materiales de sus piezas que brillan con su propio color (luz)
         public string[] CadenaConMuelle = new string[0];   // huesos de sus piezas que se mueven con MuelleDeHuesos (la coleta), de la raíz a la punta
     }
 
@@ -84,6 +85,7 @@ public static class AspectoDeProtagonista
         {
             string fbx = $"{f.Carpeta}/{p.Nombre}.fbx";
             PersonajeHechoEnBlender.PrepararPrenda(fbx, f.Carpeta + "/Materiales", estilo, f.Colores, informe);
+            foreach (var (material, fuerza) in f.Brillan) PersonajeHechoEnBlender.Brillar($"{f.Carpeta}/Materiales/Mat_{p.Nombre}_{material}.mat", fuerza);
             if (AssetImporter.GetAtPath(fbx) is ModelImporter imp)
             {
                 imp.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "lambert1"), materialDelCuerpo);

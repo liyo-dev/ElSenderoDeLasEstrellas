@@ -9,3 +9,6 @@ De la propuesta de vestuario de NPCs con peso (aprobada por Raúl). **Estado: pr
   bueno y Unity esté libre.
 
 Sin comprobar: cómo se mueve al andar (los pesos se copian del cuerpo).
+
+## 13 nov 2026 — chequeo de choques (INC-1138)
+Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.

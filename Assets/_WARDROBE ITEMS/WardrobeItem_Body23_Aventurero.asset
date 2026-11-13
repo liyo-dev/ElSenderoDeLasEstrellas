@@ -19,6 +19,6 @@ MonoBehaviour:
   displayName: Ropa de aventurero
   descriptionId: 
   description: "Camiseta azul marino con ribete dorado y el pa\xF1uelo de siempre al cuello."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: faf1cdf70800c314e993b9161f565751, type: 3}
   rasgos: 
   soloPara: 01000000i

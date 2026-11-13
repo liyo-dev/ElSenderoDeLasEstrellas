@@ -60,6 +60,7 @@ public static class ActiveCombatRegistry
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ActiveCombatRegistry] ⚔️ NPC '{npc.name}' registrado en combate{(allowsCameraLock ? "" : " (sin auto-lock de cámara)")}");
 #endif
+            Kits.Core.GameContext.Enter(Situaciones.Combate, npc);
             OnNPCEnteredCombat?.Invoke(npc);
         }
     }
@@ -81,6 +82,7 @@ public static class ActiveCombatRegistry
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ActiveCombatRegistry] 🏳️ NPC '{npc.name}' removido del combate");
 #endif
+            Kits.Core.GameContext.Exit(Situaciones.Combate, npc);
             OnNPCExitedCombat?.Invoke(npc);
         }
     }
@@ -231,6 +233,7 @@ public static class ActiveCombatRegistry
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCombatRegistry] 🧹 Limpiando {_npcsInCombat.Count} NPCs del registro");
 #endif
+        foreach (var npc in _npcsInCombat) Kits.Core.GameContext.Exit(Situaciones.Combate, npc);
         _npcsInCombat.Clear();
     }
     

@@ -21,12 +21,23 @@ public static class TonosDePiel
     /// La piel y la nariz de la textura del pack.
     static readonly Color32 PielDelPack = new Color32(246, 190, 150, 255);
     static readonly Color32 NarizDelPack = new Color32(230, 158, 132, 255);
+    /// La casilla gris con la que el pack pinta la coronilla y la nuca (debajo del pelo).
+    static readonly Color32 CueroDelPack = new Color32(90, 90, 90, 255);
+
+    /// Tonos que también pintan la coronilla: los de quien la lleva a la vista. La sombra va sin pelo bajo la
+    /// capucha y su coronilla gris se veía como una franja clara en la frente (prólogo, 13 nov 2026).
+    static readonly Dictionary<string, Color32> CueroPorTono = new Dictionary<string, Color32>
+    {
+        { "sombra", new Color32(14, 10, 20, 255) },
+    };
 
     static readonly Dictionary<string, Color32> Tonos = new Dictionary<string, Color32>
     {
         { "clara", new Color32(250, 204, 172, 255) },
         { "tostada", new Color32(214, 148, 104, 255) },
         { "morena", new Color32(168, 108, 74, 255) },
+        { "lavanda", new Color32(224, 214, 232, 255) },   // el Mago Oscuro sin sombra: gris lavanda muy pálido y mate
+        { "sombra", new Color32(14, 10, 20, 255) },       // el Mago Oscuro en el prólogo: figura de sombra
     };
 
     /// Qué tono lleva cada NPC (Assets/_NPCs/…, como en CarasDeLosNPCs). El resto, el tono del pack.
@@ -40,6 +51,7 @@ public static class TonosDePiel
         ("Tabernera", "tostada"), ("Ladron2", "tostada"), ("Pueblo/MC01 (1) 1", "tostada"),
         ("NonInteractable/TownNpc#3", "tostada"), ("NonInteractable/VecinoDelMirador", "tostada"),
         ("AldeaDelMar/Anselmo", "tostada"), ("AldeaDelMar/Benito", "tostada"), ("AldeaDelMar/Fermin", "tostada"),
+        ("Assets/Prefabs/_MAGO_OSCURO.prefab", "sombra"), ("Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab", "lavanda"),
         ("AldeaDelMar/Remedios", "tostada"), ("AldeaDelMar/Rosario", "tostada"),
 
         ("Roberto", "morena"), ("Combat/Lety", "morena"), ("Patricia", "morena"), ("Sara", "morena"),
@@ -173,12 +185,14 @@ public static class TonosDePiel
         return copia;
     }
 
-    /// La textura del pack con la piel y la nariz en un tono (se rehace si cambia la del pack o el tono).
+    /// La textura del pack con la piel y la nariz en un tono, y la coronilla si el tono la pinta (se rehace si cambia
+    /// la del pack o el tono).
     static Texture2D TexturaEnTono(string tono, Color32 piel)
     {
         Directory.CreateDirectory(Carpeta);
         string ruta = $"{Carpeta}/Albedo_{tono}.png";
-        string firma = $"{File.GetLastWriteTimeUtc(TexturaDelPack).Ticks};{piel.r},{piel.g},{piel.b}";
+        bool conCuero = CueroPorTono.TryGetValue(tono, out var cuero);
+        string firma = $"{File.GetLastWriteTimeUtc(TexturaDelPack).Ticks};{piel.r},{piel.g},{piel.b}" + (conCuero ? $";{cuero.r},{cuero.g},{cuero.b}" : "");
         var importador = AssetImporter.GetAtPath(ruta);
         var hecha = AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
         if (hecha != null && importador != null && importador.userData == firma) return hecha;
@@ -193,6 +207,7 @@ public static class TonosDePiel
         {
             if (Igual(pixeles[i], PielDelPack)) pixeles[i] = piel;
             else if (Igual(pixeles[i], NarizDelPack)) pixeles[i] = nariz;
+            else if (conCuero && Igual(pixeles[i], CueroDelPack)) pixeles[i] = cuero;
         }
         lectura.SetPixels32(pixeles);
         lectura.Apply();

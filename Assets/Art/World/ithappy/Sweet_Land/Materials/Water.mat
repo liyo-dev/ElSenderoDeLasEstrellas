@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: 9560d353b85e16d4b8d99f19e5ef8961, type: 3}
+  m_Shader: {fileID: 4800000, guid: bb4b1582928084247b737baf48d7a3e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -56,18 +56,23 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientFresnel: 6
+    - _AnchoDeEspuma: 0.35
     - _AngleOffset: 10
     - _BUILTIN_QueueControl: -1
     - _BUILTIN_QueueOffset: 0
+    - _CantidadDeDestellos: 0.35
     - _CausticsAmount: 1
     - _Caustics_Enabled: 1
     - _Caustics_Opacity: 1
     - _Caustics_Scale: 0.05
     - _CellDensity: 10
+    - _CorteHondo: 0.6
+    - _CorteMedio: 0.25
     - _Depth: 3.1
     - _Depth_Strength: 0.15
     - _Distortion_Scale: 500
     - _Distortion_Speed: 0.0001
+    - _EscalaDeDestellos: 3
     - _FoamAmount: 0.65
     - _FoamCutoff: 0.07
     - _Foam_Enabled: 1
@@ -75,17 +80,24 @@ Material:
     - _Foam_Noise_Scale: 200
     - _Foam_Size: 0
     - _Foam_Speed: 0.01
+    - _GrosorDeDestellos: 0.07
+    - _GrosorDeTinta: 0.06
     - _IsCaustics: 0
     - _IsFoam: 1
     - _IsMask: 1
     - _Mettalic: 0
     - _NormalStrength: 0.5
     - _Normal_Strength: 0.3
+    - _OndulacionDeEspuma: 0.5
+    - _OpacidadEnLaOrilla: 0.7
+    - _Profundidad: 1.5
     - _Refraction: 0.01
     - _Refraction_Enabled: 0
     - _Refraction_Strength: 0.147
     - _Smoothness: 0.017
     - _SurfaceOpacity: 1
+    - _VelocidadDeDestellos: 0.6
+    - _VelocidadDeEspuma: 0.4
     - _VoronoiDensity: 9
     - _VoronoiLevel: 0
     - _VoronoiOffset: 2
@@ -96,9 +108,16 @@ Material:
     m_Colors:
     - _ColorAmbient: {r: 0.46169454, g: 0.8172087, b: 0.9339623, a: 1}
     - _ColorDeep: {r: 0.1381274, g: 0.4551066, b: 0.754717, a: 1}
+    - _ColorDestellos: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorEspuma: {r: 0.93268067, g: 0.97584903, b: 0.9299414, a: 1}
     - _ColorFoam: {r: 0.86536133, g: 0.9716981, b: 0.9598829, a: 1}
+    - _ColorHondo: {r: 0.18189293, g: 0.5081611, b: 0.7665094, a: 1}
+    - _ColorMedio: {r: 0.31318966, g: 0.66732496, b: 0.8018868, a: 1}
+    - _ColorOrilla: {r: 0.51923275, g: 0.76712745, b: 0.86132073, a: 1}
     - _ColorShallow: {r: 0.31318972, g: 0.66732496, b: 0.8018868, a: 1}
     - _ColorSurface: {r: 0.4132787, g: 0.7937468, b: 0.8867924, a: 1}
+    - _ColorTinta: {r: 0.19999996, g: 0.14999998, b: 0.21999997, a: 1}
+    - _Corriente: {r: 0, g: 0, b: 0, a: 0}
     - _Deep_Color: {r: 0, g: 0, b: 0, a: 0}
     - _Surface_Color: {r: 0, g: 0, b: 0, a: 0}
     - _VoronoiST: {r: 0.05, g: 0.05, b: 0.05, a: 0.05}

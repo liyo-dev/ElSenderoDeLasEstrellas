@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 4
   lore: "Un paso por la sombra, y ya est\xE1 m\xE1s all\xE1."
   loreId: 
-  prefab: {fileID: 3384366999043453948, guid: 7c19ad7a926fc084ea69d9ba4fedeeab, type: 3}
+  prefab: {fileID: 1590937354366164248, guid: d4a3a7a8ff5d444489b5b437da6d7310, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 2
   castSFXKey: Hechizo_PasoSombrio
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: b2db4b152aaf0214794f997416a96b7e, type: 3}
   bounceCount: 0

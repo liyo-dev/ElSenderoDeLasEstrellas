@@ -10,7 +10,7 @@ public static partial class MontajeDeLosCapitulos
         ("CAP4_ESTELA_03", "La tienes delante. Y si vienes a que convierta a alguien en sapo, ya no lo hago. El último acabó con vestido.", "You're looking at her. And if you've come to have someone turned into a toad, I don't do that anymore. The last one ended up in a dress."),
         ("CAP4_ESTELA_04", "Impresionante.", "Impressive."),
         ("CAP4_ESTELA_05", "Vengo a que leas esto.", "I came so you could read this."),
-        ("CAP4_ESTELA_06", "Runas de sometimiento. El collar es la jaula; las runas, la orden. Y cada aro tiene una llave.", "Runes of subjugation. The collar is the cage; the runes, the command. And every collar has a key."),
+        ("CAP4_ESTELA_06", "Runas de sometimiento. Se lo pusieron con una invocación: el demonio hacía lo que le mandaban.", "Runes of subjugation. Someone put it on him with a summoning: the demon did whatever it was told."),
         ("CAP4_ESTELA_07", "El monstruo no era tu demonio. Es quien le puso el aro.", "The monster wasn't your demon. It's whoever put the collar on him."),
         ("CAP4_ESTELA_08", "Hay una magia que no sale de ti: la sacas de otro. La llaman oscura porque la fuerza no es tuya.", "There's a kind of magic that doesn't come from you: you take it from someone else. They call it dark because the strength isn't yours."),
         ("CAP4_ESTELA_09", "No acepto aprendices.", "I don't take apprentices."),

@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_CupulaEstelar
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: bf6b8162c21df1740b6fcd1abde165af, type: 3}
   bounceCount: 0
@@ -99,7 +103,7 @@ MonoBehaviour:
   healPerTick: 0
   groupShieldSeconds: 6
   groupShieldDamageFactor: 0.3
-  groupShieldVFX: {fileID: 6424583148328831481, guid: d2ffbc8b168cdf74a9dbb7c6c1cfdf2f, type: 3}
+  groupShieldVFX: {fileID: 439102632790397904, guid: ad0fcde752ee9f94cb70a1f77f9903ac, type: 3}
   teamGaugeGain: 0.34
   teleportDistance: 6
   abreProteccionSegundos: 0

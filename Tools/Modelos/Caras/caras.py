@@ -8,13 +8,14 @@ cabeza = bpy.data.objects[args[1]]
 MANTENER = len(args) > 6 and args[6] == "mantener"
 for o in list(bpy.data.objects):
     if o.type == 'MESH' and o != cabeza and (not MANTENER or o.name.startswith(("Eye", "Mouth"))): bpy.data.objects.remove(o)
+import os as _os
 def mat(n, c, emis=False):
     m = bpy.data.materials.new(n); m.use_nodes = True
     b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = c; b.inputs["Roughness"].default_value = 0.8
     return m
 PIEL = mat("Piel", (1, 0.82, 0.7, 1))
 if not MANTENER: cabeza.data.materials.clear(); cabeza.data.materials.append(PIEL)
-NEGRO = mat("Negro", (0.08, 0.05, 0.06, 1)); COLOR_IRIS = {"marron": (0.35, 0.2, 0.1, 1), "verde": (0.2, 0.55, 0.25, 1), "azul": (0.22, 0.42, 0.72, 1), "gris": (0.36, 0.43, 0.52, 1), "oscuro": (0.2, 0.12, 0.08, 1), "ambar": (0.68, 0.42, 0.14, 1)}.get(args[7] if len(args) > 7 else "", (0.35, 0.22, 0.12, 1))
+NEGRO = mat("Negro", (0.08, 0.05, 0.06, 1)); COLOR_IRIS = {"marron": (0.35, 0.2, 0.1, 1), "verde": (0.2, 0.55, 0.25, 1), "azul": (0.22, 0.42, 0.72, 1), "gris": (0.36, 0.43, 0.52, 1), "oscuro": (0.2, 0.12, 0.08, 1), "ambar": (0.68, 0.42, 0.14, 1), "violeta": (0.62, 0.34, 0.95, 1)}.get(args[7] if len(args) > 7 else "", (0.35, 0.22, 0.12, 1))
 IRIS = mat("Iris", COLOR_IRIS); BLANCO = mat("Blanco", (1, 1, 1, 1))
 BOCA = mat("Boca", (0.45, 0.1, 0.12, 1)); LENGUA = mat("Lengua", (0.95, 0.45, 0.45, 1)); CEJA = mat("Ceja", (0.25, 0.14, 0.08, 1))
 Y0 = -0.45   # plano delante de la cara desde el que se proyecta
@@ -296,7 +297,7 @@ def ojo_a(lado, s, tipo):
         pu = dentro(elipse(icx, icz - 0.003, irx * 0.42, irz * 0.46))
         if pu: forma(f"Pupila_{lado}", pu, NEGRO, 3)
         b1 = dentro(elipse(icx + 0.012 * s, icz + irz * 0.4, 0.011, 0.013))
-        if b1: forma(f"Brillo_{lado}", b1, BLANCO, 4)
+        if b1 and os.environ.get("SIN_BRILLO") != "1": forma(f"Brillo_{lado}", b1, BLANCO, 4)   # SIN_BRILLO=1: ojos «sin luz» (Mago Oscuro)
     x0, _, x1, _ = ojo.bounds
     top = []
     for j in range(1, 24):
@@ -424,13 +425,51 @@ def boca(tipo):
         forma("Lengua", elipse(0, z - 0.02, 0.018, 0.008), LENGUA, 2)
     elif tipo == "picara": forma("Boca", arco(0.012, z + 0.006, 0.028, 0.012, 0.009, sube=False), BOCA, 1)
 
+def _noop(): pass
+
 import os
 ROSA = mat("Rubor", (1.0, 0.55, 0.6, 1)); ROSA_FUERTE = mat("RuborFuerte", (0.95, 0.3, 0.38, 1))
+OJERA = mat("OjeraVioleta", (0.55, 0.38, 0.78, 1)); LUZ_PIEDRA = mat("LuzPiedra", (1.0, 1.0, 1.0, 1)); HALO_PIEDRA = mat("HaloPiedra", (0.72, 0.6, 0.95, 1))
 TOSTADO = mat("Tostado", (0.93, 0.6, 0.47, 1)); PECA = mat("Peca", (0.72, 0.44, 0.3, 1)); ARRUGA = mat("Arruga", (0.78, 0.56, 0.48, 1))
 def linea(p0, p1, grosor=0.0032):
     """Trazo fino recto entre dos puntos (x, z)."""
     dx, dz = p1[0] - p0[0], p1[1] - p0[1]; l = math.hypot(dx, dz) or 1; nx, nz = -dz / l * grosor / 2, dx / l * grosor / 2
     return [(p0[0] + nx, p0[1] + nz), (p1[0] + nx, p1[1] + nz), (p1[0] - nx, p1[1] - nz), (p0[0] - nx, p0[1] - nz)]
+def _trazo(pts, g=0.0045):
+    """Línea fina que pasa por los puntos (x, z): una tira de cuadriláteros."""
+    return [linea(pts[i], pts[i + 1], g) for i in range(len(pts) - 1)]
+_boca_original = boca
+def boca(tipo):
+    """BOCA_ESTILO=fina (Mago Oscuro): bocas de línea fina. La de reposo es la media sonrisa (una comisura levantada); la risa es
+    la sonrisa ancha; «enfado» es la línea recta de cuando deja de sonreír (sin dientes)."""
+    estilo = os.environ.get("BOCA_ESTILO")
+    if estilo == "amable":   # Archimago: solo la de reposo cambia (línea fina con una sonrisa suave y simétrica); las demás, las de siempre
+        if tipo != "neutra": return _boca_original(tipo)
+        z = BOCA_Z
+        pts = [(-0.027 + 0.054 * i / 12, z + 0.004 + 0.010 * (2 * i / 12 - 1) ** 2) for i in range(13)]
+        return FORMA_BASE("Boca", [[(x * KB, z + (zz - z) * KB) for x, zz in q] for q in _trazo(pts)], BOCA, 1)
+    if estilo != "fina": return _boca_original(tipo)
+    z = BOCA_Z
+    def forma(nombre, puntos, material, z_orden=0.0):
+        esc = lambda ps: [(x * KB, z + (zz - z) * KB) for x, zz in ps]
+        return FORMA_BASE(nombre, [esc(p) for p in puntos] if isinstance(puntos[0][0], tuple) else esc(puntos), material, z_orden)
+    medio = lambda a, c: [(-0.03 + 0.06 * i / 12, z + c * (i / 12) ** 2.4 + a * 0.0) for i in range(13)]   # una comisura sube (la de la derecha de la cara)
+    if tipo in ("neutra", "pensar"): forma("Boca", _trazo(medio(0, 0.011)), BOCA, 1)
+    elif tipo == "picara": forma("Boca", _trazo(medio(0, 0.017)), BOCA, 1)
+    elif tipo == "sonrisa": forma("Boca", _trazo([(-0.034 + 0.068 * i / 14, z + 0.006 + 0.014 * (i / 14 * 2 - 1) ** 2 * (1.3 if i > 7 else 0.8)) for i in range(15)]), BOCA, 1)
+    elif tipo == "risa":
+        forma("Boca", arco(0, z + 0.02, 0.05, 0.05, 0.05, sube=False), BOCA, 1)
+        forma("Lengua", elipse(0, z - 0.012, 0.024, 0.011), LENGUA, 2)
+    elif tipo == "triste": forma("Boca", arco(0, z - 0.008, 0.028, 0.012, 0.0045, sube=True), BOCA, 1)
+    elif tipo == "o": forma("Boca", elipse(0, z, 0.014, 0.02), BOCA, 1)
+    elif tipo == "enfado": forma("Boca", _trazo([(-0.032, z), (0.032, z)]), BOCA, 1)
+    elif tipo == "ondulada":
+        forma("Boca", _trazo([(-0.034 + 0.068 * i / 20, z + 0.005 * math.sin(i * 0.9)) for i in range(21)]), BOCA, 1)
+    elif tipo == "entreabierta": forma("Boca", elipse(0, z, 0.02, 0.006), BOCA, 1)
+    elif tipo == "abierta":
+        forma("Boca", elipse(0, z - 0.004, 0.024, 0.02), BOCA, 1)
+        forma("Lengua", elipse(0, z - 0.016, 0.015, 0.006), LENGUA, 2)
+    else: _boca_original(tipo)
 def mejillas(tipo):
     """Uno o varios tipos unidos con «+» (p. ej. «pecas+suave»). Vacío = sin nada.
     suave: dos óvalos rosados. verguenza: óvalos más fuertes y rayitas encima, como la figura de Lina.
@@ -448,6 +487,14 @@ def _mejilla(tipo):
         elif tipo == "mayor":
             forma(f"Ojera_{lado}", arco(OJO_X * s, OJO_Z - 0.062 * (K / 1.25), 0.032 * (K / 1.25), 0.008, 0.0035, sube=False), ARRUGA, 0.6)
             forma(f"Surco_{lado}", linea((0.05 * s, BOCA_Z + 0.046), (0.06 * s, BOCA_Z + 0.02), 0.0034), ARRUGA, 0.6)
+        elif tipo == "ojeras":   # ojeras suaves en violeta (Mago Oscuro)
+            forma(f"OjeraV_{lado}", arco(OJO_X * s, OJO_Z - 0.052 * (K / 1.25), 0.038 * (K / 1.25), 0.013, 0.0075, sube=False), OJERA, 0.6)
+        elif tipo == "piedra":   # tres líneas finas de luz blanca en la sien (guiño al altar); emisión suave
+            x0 = (OJO_X + 0.085) * s
+            for k, (dz, largo) in enumerate(((0.012, 0.034), (-0.004, 0.044), (-0.02, 0.03))):
+                p0, p1 = (x0 - 0.004 * s, OJO_Z + dz), (x0 + largo * s, OJO_Z + dz - 0.018)
+                forma(f"PiedraHalo{k}_{lado}", linea(p0, p1, 0.0085), HALO_PIEDRA, 0.65)   # resplandor suave alrededor de la línea
+                forma(f"Piedra{k}_{lado}", linea(p0, p1, 0.0034), LUZ_PIEDRA, 0.7)
         if tipo not in ("suave", "verguenza"): continue
         forma(f"Mejilla_{lado}", elipse(cx, cz, 0.042, 0.02), ROSA if tipo == "suave" else ROSA_FUERTE, 0.5)
         if tipo == "verguenza":

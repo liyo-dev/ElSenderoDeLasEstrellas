@@ -47949,6 +47949,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 206955243820471005, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2052766923886183289, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3032424197757487374, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
@@ -144060,7 +144064,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 01bf9d4cc81e06947b0ad8f5572526d3, type: 2}
+  - {fileID: 2100000, guid: efe26ab2e8a741d4ad4da6ddc5bcbb7d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -144100,6 +144104,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1652807921}
     m_Modifications:
+    - target: {fileID: 242837876127653390, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
+      propertyPath: controlador
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 724768449762793005, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: controller
       value: 
@@ -169060,7 +169068,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279901988
   m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -174847,7 +174855,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279901988
   m_fontColor: {r: 0.14, g: 0.12, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -187459,7 +187467,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 01bf9d4cc81e06947b0ad8f5572526d3, type: 2}
+  - {fileID: 2100000, guid: efe26ab2e8a741d4ad4da6ddc5bcbb7d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

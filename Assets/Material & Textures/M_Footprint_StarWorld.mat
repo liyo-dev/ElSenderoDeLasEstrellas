@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _EMISSION
+  - _PINCEL
   m_InvalidKeywords:
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _SURFACE_TYPE_TRANSPARENT
@@ -161,12 +162,14 @@ Material:
     - _OverrideLightAttenuation: 0
     - _OverrideLightmapDir: 0
     - _Parallax: 0.005
+    - _Pincel: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimEnabled: 0
     - _SelfShadingSize: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _SombraSinRecorte: 0
     - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5

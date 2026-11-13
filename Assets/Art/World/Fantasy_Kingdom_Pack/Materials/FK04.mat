@@ -216,6 +216,7 @@ Material:
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
     - _Parallax: 0.02
+    - _Pincel: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 0
@@ -224,6 +225,7 @@ Material:
     - _SelfShadingSize: 0
     - _ShadowsFloor: 0.25
     - _Smoothness: 0.4
+    - _SombraSinRecorte: 0
     - _SpecularEnabled: 0
     - _SpecularNoiseSize: 1
     - _SrcBlend: 1

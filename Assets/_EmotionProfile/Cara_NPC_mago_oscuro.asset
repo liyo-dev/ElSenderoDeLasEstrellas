@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bb9917ab1e49e8964383e4fc141e9f, type: 3}
+  m_Name: Cara_NPC_mago_oscuro
+  m_EditorClassIdentifier: Assembly-CSharp::EmotionProfile
+  transitionDuration: 0.1
+  ojosNeutros:
+  - Eye290
+  bocasNeutras:
+  - Mouth310
+  - Mouth311
+  ojosDeReposoPorDefecto: Eye290
+  bocaDeReposoPorDefecto: Mouth310
+  ojosDelParpadeo: Eye298
+  ojosYaCerrados:
+  - Eye291
+  - Eye298
+  - Eye299
+  segundosDeReaccion: 1.5
+  bocaHablandoEntreabierta: Mouth318
+  bocaHablandoAbierta: Mouth319
+  segundosPorBoca: 0.08
+  umbralVozAbierta: 0.08
+  tiempoMinimoPorBocaConVoz: 0.06
+  emotions:
+  - emotion: 0
+    eyeMeshName: 
+    mouthMeshName: 
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: 
+    bodyAnimVariants: []
+  - emotion: 1
+    eyeMeshName: Eye291
+    mouthMeshName: Mouth312
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: HeadNod01
+    bodyAnimVariants:
+    - Cheer01
+    - HandClap01
+  - emotion: 2
+    eyeMeshName: Eye292
+    mouthMeshName: Mouth313
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Cry01
+    bodyAnimVariants:
+    - HeadShake01
+  - emotion: 3
+    eyeMeshName: Eye293
+    mouthMeshName: Mouth315
+    simbolos:
+    - Fx2909
+    - Fx2910
+    segundosPorSimbolo: 0.22
+    bodyAnimStateName: Angry02
+    bodyAnimVariants:
+    - Angry01
+    - Challenging_NoWeapon
+  - emotion: 4
+    eyeMeshName: Eye294
+    mouthMeshName: Mouth314
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: SenseSomethingStart_NoWeapon
+    bodyAnimVariants:
+    - FoundSomething_NoWeapon
+    - Question02
+  - emotion: 5
+    eyeMeshName: Eye295
+    mouthMeshName: Mouth316
+    simbolos:
+    - Fx2911
+    - Fx2912
+    segundosPorSimbolo: 0.07
+    bodyAnimStateName: Beg01
+    bodyAnimVariants:
+    - Defend_NoWeapon
+    - HeadShake02
+  - emotion: 6
+    eyeMeshName: Eye296
+    mouthMeshName: Mouth310
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Question01
+    bodyAnimVariants:
+    - Question02
+    - SenseSomethingSearching_NoWeapon
+  - emotion: 7
+    eyeMeshName: Eye297
+    mouthMeshName: Mouth310
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: IdleWounded01
+    bodyAnimVariants:
+    - Talk02
+  - emotion: 8
+    eyeMeshName: 
+    mouthMeshName: Mouth317
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Talk03
+    bodyAnimVariants:
+    - Laugh01
+  - emotion: 9
+    eyeMeshName: Eye292
+    mouthMeshName: Mouth316
+    simbolos:
+    - Fx2906
+    - Fx2907
+    - Fx2908
+    segundosPorSimbolo: 0.35
+    bodyAnimStateName: HeadShake02
+    bodyAnimVariants:
+    - Question01
+    - Talk02
+  - emotion: 10
+    eyeMeshName: Eye293
+    mouthMeshName: Mouth310
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Challenging_NoWeapon
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 11
+    eyeMeshName: Eye291
+    mouthMeshName: Mouth311
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Talk02
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 12
+    eyeMeshName: Eye296
+    mouthMeshName: Mouth316
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Question02
+    bodyAnimVariants:
+    - HeadShake01
+    - Question01
+  - emotion: 13
+    eyeMeshName: Eye294
+    mouthMeshName: Mouth312
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Cheer02
+    bodyAnimVariants:
+    - Cheer01
+    - HandClap01
+  - emotion: 14
+    eyeMeshName: Eye297
+    mouthMeshName: Mouth313
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: HeadShake01
+    bodyAnimVariants:
+    - Angry01
+  - emotion: 15
+    eyeMeshName: Eye291
+    mouthMeshName: Mouth311
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: Reverence01
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 16
+    eyeMeshName: Eye299
+    mouthMeshName: Mouth313
+    simbolos:
+    - Fx2900
+    - Fx2901
+    - Fx2902
+    - Fx2903
+    - Fx2904
+    - Fx2905
+    segundosPorSimbolo: 0.11
+    bodyAnimStateName: Cry01
+    bodyAnimVariants:
+    - HeadShake01
+  - emotion: 17
+    eyeMeshName: Eye291
+    mouthMeshName: Mouth311
+    simbolos:
+    - Fx2900
+    - Fx2901
+    - Fx2902
+    - Fx2903
+    - Fx2904
+    - Fx2905
+    segundosPorSimbolo: 0.11
+    bodyAnimStateName: Talk02
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 18
+    eyeMeshName: Eye298
+    mouthMeshName: Mouth310
+    simbolos: []
+    segundosPorSimbolo: 0
+    bodyAnimStateName: 
+    bodyAnimVariants: []
+  - emotion: 19
+    eyeMeshName: Eye292
+    mouthMeshName: Mouth316
+    simbolos:
+    - Fx2911
+    - Fx2912
+    segundosPorSimbolo: 0.07
+    bodyAnimStateName: 
+    bodyAnimVariants: []
+  neutralBodyAnims:
+  - Talk01
+  - Talk02
+  - Talk03

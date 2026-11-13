@@ -394,6 +394,9 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     void EvaluarCandidato(Transform objetivo, Collider collider, Targetable cfg, Vector3 origin, Vector3 fwd,
                           ref float bestScore, ref Transform best)
     {
+        // El objetivo es la raíz del enemigo o de la pieza, no el collider suelto que ha salido en
+        // la búsqueda (arma, trigger, hueso): de ahí salen el centro y la guía de los hechizos.
+        objetivo = Targetable.RaizDelObjetivo(objetivo);
         bool marcableSiempre = cfg != null && cfg.esMarcableSiempre;
         var damageable = objetivo.GetComponentInParent<Damageable>();
 
@@ -467,11 +470,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
             // Cachear el centro local del collider una sola vez para no leer bounds.center cada frame.
             // bounds.center se actualiza en FixedUpdate y causa temblor si se lee en LateUpdate.
-            var col = newT.GetComponentInParent<Collider>();
-            if (col == null) col = newT.GetComponentInChildren<Collider>();
-            _cachedTargetLocalCenter = col
-                ? newT.InverseTransformPoint(col.bounds.center)
-                : Vector3.up;
+            _cachedTargetLocalCenter = newT.InverseTransformPoint(Targetable.CentroDelCuerpo(newT));
         }
         else
         {
@@ -574,12 +573,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         return fallbackForward;
     }
 
-    static Vector3 GetTargetCenter(Transform target)
-    {
-        var col = target.GetComponentInParent<Collider>();
-        if (col == null) col = target.GetComponentInChildren<Collider>();
-        return col ? col.bounds.center : target.position + Vector3.up;
-    }
+    static Vector3 GetTargetCenter(Transform target) => Targetable.CentroDelCuerpo(target);
 
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()

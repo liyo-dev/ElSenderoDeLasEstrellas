@@ -1,0 +1,48 @@
+{
+    "materiales": [
+        {
+            "ruta": "Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.mat",
+            "shader": "Universal Render Pipeline/Terrain/Lit"
+        },
+        {
+            "ruta": "Assets/Scenes/Worlds/MainWorld_data/Recursos/AguaMar.mat",
+            "shader": "El Sendero/Eldoria/Agua MainWorld corregida"
+        },
+        {
+            "ruta": "Assets/Scenes/Worlds/MainWorld_data/Recursos/AguaRio.mat",
+            "shader": "El Sendero/Eldoria/Agua MainWorld corregida"
+        },
+        {
+            "ruta": "Assets/Art/World/ithappy/Amusement_Park/Materials/Water.mat",
+            "shader": "ithappy/WaterURP"
+        },
+        {
+            "ruta": "Assets/Art/World/ithappy/Sweet_Land/Materials/Water.mat",
+            "shader": "ithappy/WaterURP"
+        },
+        {
+            "ruta": "Assets/_NPCs/Chuchelandia/Atrezo/Mat_Sirope.mat",
+            "shader": "ithappy/WaterURP"
+        },
+        {
+            "ruta": "Assets/Scenes/Test/CombatLabMaterials/Lab_Agua.mat",
+            "shader": "Universal Render Pipeline/Lit"
+        },
+        {
+            "ruta": "Assets/Art/World/RPG Tiny Fantasy World 01 PBR/Material/Special/Water_Ocean.mat",
+            "shader": "Shader Graphs/Water_Final"
+        },
+        {
+            "ruta": "Assets/Art/World/RPG Tiny Fantasy World 01 PBR/Material/Special/Water_Lake.mat",
+            "shader": "Shader Graphs/Water_Final"
+        },
+        {
+            "ruta": "Assets/Art/World/RPG Tiny Fantasy World 01 PBR/Material/Special/Water_River.mat",
+            "shader": "Shader Graphs/Water_River"
+        },
+        {
+            "ruta": "Assets/Art/World/Vestido/AguaLaguna.mat",
+            "shader": "Shader Graphs/Water_Final"
+        }
+    ]
+}

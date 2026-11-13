@@ -18,7 +18,7 @@ MonoBehaviour:
     retardo: 0
     gananciaDb: 0
     rangoPitch: {x: 1, y: 1}
-    paneo: 1
+    paneo: 0
     probabilidad: 1
     espacial: 1
   - clips:
@@ -26,6 +26,6 @@ MonoBehaviour:
     retardo: 0.3
     gananciaDb: -6
     rangoPitch: {x: 1, y: 1}
-    paneo: 1
+    paneo: 0
     probabilidad: 1
     espacial: 1

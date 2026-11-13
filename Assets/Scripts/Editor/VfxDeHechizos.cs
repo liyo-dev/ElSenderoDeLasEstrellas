@@ -42,6 +42,7 @@ public static class VfxDeHechizos
         public string LevitacionSoltar;
         public MagicElement? Elemento;
         public string Nombre;
+        public string Icono;         // ruta del sprite del botón y del grimorio
         public float? AlturaSalida;
         public float? RadioImpacto;
         public float? RadioColision;
@@ -51,37 +52,38 @@ public static class VfxDeHechizos
     private static readonly Ficha[] Fichas =
     {
         // Will
-        new Ficha { Asset = "LlamaAstral",     Impacto = Fuego + "effects/fireBall/hitVFX.prefab" },
-        new Ficha { Asset = "BolaPrisma",      Visual = Propio(VfxPropiosDeHechizosBuilder.BolaPrismaClasica), Impacto = Lana + "Flash/Flash_star_ellow_purple.prefab", Elemento = MagicElement.Light },
-        new Ficha { Asset = "CorazonEstelar",  Impacto = Propio(VfxPropiosDeHechizosBuilder.CorazonImpacto) },
-        new Ficha { Asset = "EstrellaFugaz", Visual = Propio(VfxPropiosDeHechizosBuilder.EstrellaFugazProyectil), AlturaSalida = 1.1f },
-        new Ficha { Asset = "LluviaDeChispas", Visual = Propio(VfxPropiosDeHechizosBuilder.TresEstrellasProyectil), Impacto = Propio(VfxPropiosDeHechizosBuilder.TresEstrellasImpacto), AlturaSalida = 1.1f, RadioImpacto = 1.4f, RadioColision = 0.6f },
-        new Ficha { Asset = "Meteoro",         Visual = Propio(VfxPropiosDeHechizosBuilder.MeteoroZona) },
-        new Ficha { Asset = "NovaDeLuz",       Visual = Best + "HolyEffect/HolyEffect2.prefab" },
-        new Ficha { Asset = "CupulaEstelar" },
-        new Ficha { Asset = "Levitation",      LevitacionMantener = Hovl + "Character auras/Buff.prefab", LevitacionSoltar = Lana + "Flash/Flash_ellow.prefab", Nombre = "Levitación" },
+        // Todos con el aspecto de dibujo (INC-1127).
+        new Ficha { Asset = "LlamaAstral",     Visual = Propio(VfxPropiosDeHechizosBuilder.LlamaAstralDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.LlamaAstralDibujoImpacto) },
+        new Ficha { Asset = "BolaPrisma",      Visual = Propio(VfxPropiosDeHechizosBuilder.BolaPrismaDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.BolaPrismaDibujoImpacto), Elemento = MagicElement.Light },
+        new Ficha { Asset = "CorazonEstelar", Visual = Propio(VfxPropiosDeHechizosBuilder.CorazonEstelarDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.CorazonEstelarDibujoImpacto) },
+        new Ficha { Asset = "EstrellaFugaz", Visual = Propio(VfxPropiosDeHechizosBuilder.EstrellaFugazDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.EstrellaFugazDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "LluviaDeChispas", Visual = Propio(VfxPropiosDeHechizosBuilder.LluviaDeChispasDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.LluviaDeChispasDibujoImpacto), AlturaSalida = 1.1f, RadioImpacto = 1.4f, RadioColision = 0.6f },
+        new Ficha { Asset = "Meteoro", Visual = Propio(VfxPropiosDeHechizosBuilder.MeteoroDibujoZona) },
+        new Ficha { Asset = "NovaDeLuz", Visual = Propio(VfxPropiosDeHechizosBuilder.NovaDeLuzDibujoZona) },
+        new Ficha { Asset = "CupulaEstelar", Visual = Propio(VfxPropiosDeHechizosBuilder.CupulaEstelarDibujoZona) },
+        new Ficha { Asset = "Levitation", LevitacionMantener = Propio(VfxPropiosDeHechizosBuilder.LevitacionDibujoMantener), LevitacionSoltar = Propio(VfxPropiosDeHechizosBuilder.LevitacionDibujoSoltar), Nombre = "Levitación" },
         // Estela
-        new Ficha { Asset = "BolaFuego" },
-        new Ficha { Asset = "ChispaIgnea", Visual = Propio(VfxPropiosDeHechizosBuilder.ChispaFuego), AlturaSalida = 1.1f },
-        new Ficha { Asset = "ChispaIgneaFuego" },
-        new Ficha { Asset = "Rafaga", Visual = Propio(VfxPropiosDeHechizosBuilder.RafagaViento), AlturaSalida = 1.1f },
-        new Ficha { Asset = "Tornado",         Impacto = Gabriel + "vfx_Smoke_01.prefab", Nombre = "Ciclón" },
-        new Ficha { Asset = "Remolino" },
-        new Ficha { Asset = "BrisaSanadora" },
-        new Ficha { Asset = "MuroDeFuego",     Visual = Fuego + "prefabs/fireZoneVFX.prefab" },
-        new Ficha { Asset = "TormentaDeFuego", Visual = Fuego + "prefabs/meteorFireRainVFX.prefab" },
+        new Ficha { Asset = "BolaFuego", Visual = Propio(VfxPropiosDeHechizosBuilder.BolaFuegoDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.BolaFuegoDibujoImpacto) },
+        new Ficha { Asset = "ChispaIgnea", Visual = Propio(VfxPropiosDeHechizosBuilder.ChispaIgneaDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.ChispaIgneaDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "ChispaIgneaFuego", Visual = Propio(VfxPropiosDeHechizosBuilder.ChispaIgneaFuegoDibujoZona), Icono = "Assets/Art/UI/Attacks/Grimorio/chispa_ignea_fuego.png" },
+        new Ficha { Asset = "Rafaga", Visual = Propio(VfxPropiosDeHechizosBuilder.RafagaDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.RafagaDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "Tornado", Visual = Propio(VfxPropiosDeHechizosBuilder.TornadoDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.TornadoDibujoImpacto), Nombre = "Ciclón" },
+        new Ficha { Asset = "Remolino", Visual = Propio(VfxPropiosDeHechizosBuilder.RemolinoDibujoZona) },
+        new Ficha { Asset = "BrisaSanadora", Visual = Propio(VfxPropiosDeHechizosBuilder.BrisaSanadoraDibujoZona) },
+        new Ficha { Asset = "MuroDeFuego", Visual = Propio(VfxPropiosDeHechizosBuilder.MuroDeFuegoDibujoZona) },
+        new Ficha { Asset = "TormentaDeFuego", Visual = Propio(VfxPropiosDeHechizosBuilder.TormentaDeFuegoDibujoZona) },
         // Liam
-        new Ficha { Asset = "AuraEstelar",     Visual = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarProyectil), Impacto = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarImpacto), AlturaSalida = 1.1f },
-        new Ficha { Asset = "DardoMental",     Visual = Propio(VfxPropiosDeHechizosBuilder.Dardo),                 Impacto = Propio(VfxPropiosDeHechizosBuilder.DardoMentalImpacto), AlturaSalida = 1.1f },
-        new Ficha { Asset = "Eco",             Visual = Propio(VfxPropiosDeHechizosBuilder.EcoProyectil),         Impacto = Propio(VfxPropiosDeHechizosBuilder.EcoImpacto),         AlturaSalida = 1.1f },
-        new Ficha { Asset = "GarraDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.Garra),                Impacto = Propio(VfxPropiosDeHechizosBuilder.GarraImpacto),       AlturaSalida = 1.1f },
-        new Ficha { Asset = "CadenasDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.CadenasZona), Estado = Propio(VfxPropiosDeHechizosBuilder.CadenasEstado) },
-        new Ficha { Asset = "SelloDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.SelloZona) },
-        new Ficha { Asset = "JuicioDelPacto",  Visual = Propio(VfxPropiosDeHechizosBuilder.JuicioZona) },
-        new Ficha { Asset = "PasoSombrio",     Visual = Lana + "Flash/Flash_blue_purple.prefab", SinImpacto = true },
+        new Ficha { Asset = "AuraEstelar", Visual = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "DardoMental", Visual = Propio(VfxPropiosDeHechizosBuilder.DardoMentalDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.DardoMentalDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "Eco", Visual = Propio(VfxPropiosDeHechizosBuilder.EcoDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.EcoDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "GarraDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.GarraDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.GarraDibujoImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "CadenasDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.CadenasDibujoZona), Estado = Propio(VfxPropiosDeHechizosBuilder.CadenasDibujoEstado) },
+        new Ficha { Asset = "SelloDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.SelloDibujoZona) },
+        new Ficha { Asset = "JuicioDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.JuicioDibujoZona) },
+        new Ficha { Asset = "PasoSombrio", Visual = Propio(VfxPropiosDeHechizosBuilder.PasoSombrioDibujoLlegada), SinImpacto = true },
         // Mago Oscuro
-        new Ficha { Asset = "MagoOscuroGolpe", Impacto = Best + "DarkEffect/DarkEffect5.prefab" },
-        new Ficha { Asset = "MagoOscuroGrieta", Visual = Propio(VfxPropiosDeHechizosBuilder.GrietaZona) },
+        new Ficha { Asset = "MagoOscuroGolpe", Visual = Propio(VfxPropiosDeHechizosBuilder.MagoOscuroGolpeDibujo), Impacto = Propio(VfxPropiosDeHechizosBuilder.MagoOscuroGolpeDibujoImpacto) },
+        new Ficha { Asset = "MagoOscuroGrieta", Visual = Propio(VfxPropiosDeHechizosBuilder.GrietaDibujoZona) },
     };
 
     [MenuItem("El Sendero/Magia/VFX de los hechizos · aplicar (INC-640)")]
@@ -152,6 +154,23 @@ public static class VfxDeHechizos
         {
             spell.displayName = f.Nombre;
             log.AppendLine($"   {spell.name}: nombre «{f.Nombre}».");
+        }
+        if (f.Icono != null)
+        {
+            if (AssetImporter.GetAtPath(f.Icono) is TextureImporter imp && imp.textureType != TextureImporterType.Sprite)
+            {
+                imp.textureType = TextureImporterType.Sprite;
+                imp.spriteImportMode = SpriteImportMode.Single;
+                imp.mipmapEnabled = false;
+                imp.SaveAndReimport();
+            }
+            var icono = AssetDatabase.LoadAssetAtPath<Sprite>(f.Icono);
+            if (icono == null) warnings.Add($"{spell.name}: no encuentro el icono {f.Icono}.");
+            else if (spell.attackIcon != icono)
+            {
+                spell.attackIcon = icono;
+                log.AppendLine($"   {spell.name}: icono {icono.name}.");
+            }
         }
         if (f.AlturaSalida.HasValue && !Mathf.Approximately(spell.positionOffset.y, f.AlturaSalida.Value))
         {

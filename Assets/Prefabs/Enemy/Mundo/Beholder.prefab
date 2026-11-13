@@ -1678,6 +1678,7 @@ MonoBehaviour:
   animacionDeMuerte: Die
   segundosHastaDesaparecer: 2.5
   vfxAlDesaparecer: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  puntosDeSintonia: 20
   proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
   boca: {fileID: 6539888572312746313}
   cadencia: 3
@@ -1687,8 +1688,8 @@ MonoBehaviour:
   anguloParaDisparar: 15
   segundosAturdido: 3.5
   factorSinAturdir: 0
-  vfxAturdido: {fileID: 7053385775836331393, guid: 354b6251e950209409c75ab984acf000, type: 3}
-  vfxRebote: {fileID: 8500920156052182585, guid: 830e92a3f95c4b04caf8edd648aed9bd, type: 3}
+  vfxAturdido: {fileID: 8497706097452059432, guid: 981af9477e2a99b4492de852230ddf87, type: 3}
+  vfxRebote: {fileID: 3965549976678917516, guid: b1246c75cbcd8da4598c871bea2ce43e, type: 3}
   animReposo: IdleNormal
   animAlerta: SenseSomethingST
   animCombate: IdleBattle
@@ -1708,6 +1709,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 10
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &5460389120195556158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1722,6 +1724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &8987030003868742285
 MonoBehaviour:
   m_ObjectHideFlags: 0

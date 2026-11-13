@@ -7,7 +7,7 @@ public class DialogueAsset : NarrativeDialogueAsset
 {
     public DialogueLine[] lines;
 
-    [Min(0), Tooltip("Máximo de líneas visuales por página. Cero conserva la presentación completa de cada frase.")]
+    [Min(0), Tooltip("Máximo de líneas visuales por página. Cero = el tope general de DialogueManager (3 líneas).")]
     public int maxLinesPerPage;
 
     [Header("Cinematografía")]

@@ -40,16 +40,18 @@ public sealed class ColeccionUI : MonoBehaviour
     private int _pagina, _seleccion;
     private float _ignorarHasta, _siguienteNavegacion;
     private bool _bloqueado;
+    private System.Action _alCerrar;
 
     // Silueta de la pieza que falta: clara y translúcida, para que se lea la forma sobre la tarjeta oscura.
     private Color ColorDeSilueta => new Color(_estilo.colorTextoSuave.r, _estilo.colorTextoSuave.g, _estilo.colorTextoSuave.b, 0.3f);
 
     /// <summary>Abre el álbum. <paramref name="nuevas"/>: piezas recién entregadas (salen marcadas).</summary>
-    public static ColeccionUI Abrir(ColeccionDeObjetos coleccion, EstiloDeMenuSencillo estilo, ICollection<PiezaDeColeccion> nuevas)
+    public static ColeccionUI Abrir(ColeccionDeObjetos coleccion, EstiloDeMenuSencillo estilo, ICollection<PiezaDeColeccion> nuevas, System.Action alCerrar = null)
     {
         if (coleccion == null || coleccion.paginas == null || coleccion.paginas.Count == 0) return null;
         if (!MenuManager.TryOpen(MenuKind.Collection)) return null;
         var ui = new GameObject("Coleccion (menú)").AddComponent<ColeccionUI>();
+        ui._alCerrar = alCerrar;
         ui.Montar(coleccion, estilo, nuevas);
         return ui;
     }
@@ -89,6 +91,8 @@ public sealed class ColeccionUI : MonoBehaviour
         MenuManager.Close(MenuKind.Collection);
         GamepadInputReader.PopUiNavigationScope();
         GamepadInputReader.PopGameplaySuppression(this);
+        var alCerrar = _alCerrar; _alCerrar = null;
+        alCerrar?.Invoke();
     }
 
     public void Cerrar()

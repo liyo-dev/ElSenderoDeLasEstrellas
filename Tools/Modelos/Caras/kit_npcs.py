@@ -41,10 +41,18 @@ KIT = [
     ("Caras_NPC_h_tostado_marron",    "Head01_Male",   "chicoL", "almendra", "marron", 260, 0,   False, "tostada",      "gruesa",  False),   # guardias
     ("Caras_NPC_h_pecas_azul",        "Head01_Male",   "chicoL", "chico",    "azul",   270, 0,   False, "pecas",        "fina",    False),   # Oliver
     ("Caras_NPC_m_pecas_marron",      "Head02_Female", "chicaL", "almendra", "marron", 280, 0,   False, "pecas+suave",  "fina",    False),   # Vicky
+    # 12 nov 2026: el Mago Oscuro. «sombra» = los ojos de luz bajo el velo (cabeza en negro, OJO_SOMBRA); el otro, su cara al descubrirse.
+    ("Caras_mago_oscuro",             "Head01_Male",   "chicoL", "afilado",  "violeta", 290, 310, False, "ojeras+piedra", "fina",   False),   # Mago Oscuro (cara del final)
+    ("Caras_mago_oscuro_sombra",      "Head01_Male",   "chicoL", "afilado",  "violeta", 300, 0,  False, "",             "fina",    False),   # Mago Oscuro (ojos de luz bajo el velo)
+    # 12 nov 2026: el Archimago, diseño propio (adulto maduro; cejas grises, boca de reposo con sonrisa suave)
+    ("Caras_archimago",               "Head01_Male",   "chicoL", "almendra", "gris",    320, 320, False, "mayor",        "gruesa",  False),   # Archimago (adulto maduro, ojos grises, sonrisa suave)
 ]
 # Ajustes sueltos por juego (variables de caras_lib): Estela, cejas 8 mm más bajas para que asomen bajo el flequillo
 # (más arriba quedaban más tapadas: las puntas del flequillo se ensanchan hacia arriba).
-AJUSTES = {"Caras_chica_marron": {"CEJA_DZ": "-0.008"}}
+AJUSTES = {"Caras_chica_marron": {"CEJA_DZ": "-0.008"},
+           "Caras_archimago": {"BOCA_ESTILO": "amable", "CEJA_COLOR": "0.55,0.55,0.60"},
+           "Caras_mago_oscuro": {"SIN_BRILLO": "1", "BOCA_ESTILO": "fina", "OJO_ESCALA": "1.12", "CEJA_COLOR": "0.06,0.04,0.1"},   # ojos «sin luz», boca de línea fina, ojeras y líneas de la Piedra
+           "Caras_mago_oscuro_sombra": {"OJO_SOMBRA": "1", "OJO_ESCALA": "1.12", "SIN_BRILLO": "1"}}   # ojos de luz violeta, algo más grandes
 os.makedirs(SALIDA, exist_ok=True)
 for fbx, cabeza, estilo, forma, iris, ojos, bocas, nino, mejillas, cejas, extras in KIT:
     if PEDIDOS and fbx not in PEDIDOS and fbx.replace("Caras_NPC_", "") not in PEDIDOS: continue

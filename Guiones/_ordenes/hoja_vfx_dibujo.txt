@@ -1,0 +1,195 @@
+0: VFX_GolpeTraicion
+1: VFX_MagoOscuro_CataclismoBarrido
+2: VFX_MagoOscuro_Derrota
+3: VFX_PortalSendero_Colapso
+4: VFX_Rebobinado
+5: VFX_SacrificioLiam
+6: VFX_SenderoDestruccion
+7: Amanecer
+8: Amanecer_Carga
+9: Amanecer_Impacto
+10: Amanecer_ProteccionAbierta
+11: AuraEstelar_Dibujo
+12: AuraEstelar_Dibujo_Impacto
+13: Beholder_Aturdido
+14: Beholder_Rebote
+15: BolaFuego_Dibujo
+16: BolaFuego_Dibujo_Impacto
+17: BolaPrisma_Clasica
+18: BolaPrisma_Dibujo
+19: BolaPrisma_Dibujo_Impacto
+20: BrisaSanadora_Dibujo_Zona
+21: CadenasDelPacto_Dibujo_Estado
+22: CadenasDelPacto_Dibujo_Zona
+23: ChispaIgnea_Dibujo
+24: ChispaIgnea_Dibujo_Impacto
+25: ChispaIgneaFuego_Dibujo_Zona
+26: CorazonEstelar_Dibujo
+27: CorazonEstelar_Dibujo_Impacto
+28: CupulaEstelar_Dibujo_Zona
+29: DardoMental_Dibujo
+30: DardoMental_Dibujo_Impacto
+31: Demonio_Lanzamiento
+32: Demonio_Lluvia_Aviso
+33: Demonio_Lluvia_Gota
+34: Demonio_Lluvia_Impacto
+35: Destello_Fuego
+36: Destello_Luz
+37: Destello_Mente
+38: Destello_Oscuro
+39: Destello_Viento
+40: Eco_Dibujo
+41: Eco_Dibujo_Impacto
+42: Enemigo_Plasma
+43: Enemigo_Plasma_Impacto
+44: Escudo_Contraataque
+45: Escudo_Grupo
+46: Escudo_MagoOscuro
+47: Escudo_Npc
+48: Escudo_Will
+49: EstrellaFugaz_Dibujo_Impacto
+50: GarraDelPacto_Dibujo
+51: GarraDelPacto_Dibujo_Impacto
+52: Golem_Aviso
+53: Golem_CogerRoca
+54: Golem_Onda
+55: Golem_Polvo
+56: Golem_Punetazo
+57: JuicioDelPacto_Dibujo_Zona
+58: JuicioDelPacto_Zona
+59: Levitation_Dibujo_Mantener
+60: Levitation_Dibujo_Soltar
+61: LlamaAstral_Dibujo
+62: LlamaAstral_Dibujo_Impacto
+63: LluviaDeChispas_Dibujo_Impacto
+64: MagoOscuro_Aparicion
+65: MagoOscuro_Carga
+66: MagoOscuro_Explosion
+67: MagoOscuroGolpe_Dibujo
+68: MagoOscuroGolpe_Dibujo_Impacto
+69: MagoOscuroGrieta_Dibujo_Zona
+70: Meteoro_Dibujo_Zona
+71: Meteoro_Zona
+72: MuroDeFuego_Dibujo_Zona
+73: NovaDeLuz_Dibujo_Zona
+74: PasoSombrio_Dibujo_Llegada
+75: Rafaga_Dibujo
+76: Rafaga_Dibujo_Impacto
+77: Remolino_Dibujo_Zona
+78: SelloDelPacto_Dibujo_Zona
+79: TormentaDeFuego_Dibujo_Zona
+80: Tornado_Dibujo
+81: Tornado_Dibujo_Impacto
+82: VFX_Manga
+83: VFX_VelaGrande
+84: VFX_VelaPequena
+85: VFX_Pagina_Brillo
+86: VFX_AgujeroNegro
+87: VFX_BolaDeConjuro
+88: VFX_CirculoDelArchimago
+89: VFX_CirculoDelMagoOscuro
+90: VFX_LuzProtectora
+91: VFX_MagoOscuro_HechizoSostenido
+92: VFX_OrbeProtector
+93: VFX_RemolinoDelPrologo
+94: FX Spark
+95: Imp Demon
+96: Basic Orb 2
+97: Basic Orb
+98: Bubble Orb 
+99: Light Orb 2
+100: Multiple Earth Orb
+101: AuraConcentracion_Liam
+102: AuraConcentracion_Will
+103: AuraFormacion_Trio
+104: AuraLevitacion_Estela
+105: FocoMano_Estela
+106: ImpactoRemate_Estela
+107: ImpactoRemate_Liam
+108: ImpactoRemate_Trio
+109: SpecialAttack_Estela
+110: SpecialAttack_EstelaLiam
+111: SpecialAttack_Liam
+112: SpecialAttack_Trio
+113: Fire01_P
+114: Fire02_P
+115: Light01_P
+116: Light02_P
+117: fire1
+118: fire2
+119: PaginaDelGrimorio
+120: SantuarioDeGuardado
+121: Orbe_Esencia
+122: Orbe_EsenciaBrillante
+123: DarkEffect1
+124: DarkEffect3
+125: DarkEffect4
+126: DarkEffect5
+127: ExplosionEffect
+128: ExplosionEffect3
+129: ExplosionEffect5
+130: FireEffect1
+131: FlameEmissionEffect
+132: MagicEffect20
+133: SwampEffect1
+134: GiroRapido
+135: FX_Fireball
+136: FX_Greenlight_shrink
+137: FX_LightPillar
+138: vfx_Explosion_01
+139: vfx_Explosion_02
+140: vfx_Flames_01
+141: vfx_Heal_02
+142: vfx_Hyperdrive_01
+143: vfx_Implosion_01
+144: vfx_Portal_01
+145: vfx_Shockwave_01
+146: vfx_Tornado_01
+147: Ground AOE explosion
+148: Laser AOE
+149: Meteors AOE
+150: Red energy explosion
+151: Plexus
+152: Star aura
+153: Crystal effect blue
+154: Teleport
+155: Explosion
+156: Holy hit
+157: Star hit
+158: Stones hit
+159: Healing circle
+160: Magic circle 2
+161: Magic circle
+162: Magic shield blue
+163: Magic shield pink
+164: Magic shield yellow
+165: Portal blue
+166: Portal red
+167: Portal yellow
+168: Charge slash blue
+169: Charge slash purple
+170: Electro slash
+171: Smoke vortex
+172: Sparks explode red
+173: Sparks explode white
+174: Sparks explode yellow
+175: Sparks flashing white
+176: Sparks flashing yellow
+177: Explosion
+178: Magic fire 0
+179: Confetti_blast_multicolor
+180: Confetti_directional_multicolor
+181: 1 Flash_magic_ellow_blue
+182: 2 Flash_round_ellow
+183: Flash_blue_purple
+184: Flash_ellow
+185: Flash_ellow_pink
+186: Shine_blue
+187: Shine_ellow
+188: Shine_pink
+189: Sparkle_ellow
+190: AoE Poison
+191: AoE Stars
+192: Hit_02
+193: FireSmall
+194: Vortex

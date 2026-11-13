@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 0
   lore: "El fuego de Estela: r\xE1pido, c\xE1lido y sin remordimientos."
   loreId: 
-  prefab: {fileID: 3226506910322988314, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+  prefab: {fileID: 7959252986511817922, guid: b85b33610c455df4bb308688b6e2dc60, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 5
@@ -75,8 +76,8 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 5302146505831436120, guid: b3573f03d84ca004b8e00a5343295ec2, type: 3}
-  impactVFX: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
+  spawnVFX: {fileID: 7470435807032059405, guid: ff043cfc389bea44e8b8b0866a70e439, type: 3}
+  impactVFX: {fileID: 3110324338418661638, guid: 4d7391c2661b5fc498fd2a0a4a70c77b, type: 3}
   despawnVFX: {fileID: 3685239417598464635, guid: acdaa162cece6444b90ef53280ca8aa4, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_BolaFuego

@@ -12,3 +12,6 @@ Sin comprobar: cómo se mueve al andar (los pesos se copian del cuerpo).
 
 ## Pañuelo verde salvia (12 nov 2026, INC-1111)
 `panuelo.py` (args: base.blend, Hair09.fbx, salida) → `AC14_Panuelo`: copia la diadema de Hair09 hacia fuera (la tapa), nudo con dos orejas donde estaba la piedra y una ramita al lado; pesado a «head». Previa: `panuelo_previa.png`. Ya está en `Assets/Art/Characters/NPCs/Vestuario/Boticaria/` y en la ficha de `VestuarioDeLosNPCs`.
+
+## 13 nov 2026 — chequeo de choques (INC-1138)
+Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.

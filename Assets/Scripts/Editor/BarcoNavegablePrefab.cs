@@ -62,7 +62,7 @@ public static class BarcoNavegablePrefab
             if (enHijos != null) return enHijos.gameObject;
         }
 
-        var todos = Object.FindObjectsByType<BarcoNavegable>(FindObjectsSortMode.None);
+        var todos = Object.FindObjectsByType<BarcoNavegable>();
         if (todos.Length == 0) return null;
         return todos[0].gameObject;
     }

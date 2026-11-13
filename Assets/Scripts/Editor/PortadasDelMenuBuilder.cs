@@ -358,33 +358,19 @@ public static class PortadasDelMenuBuilder
 
     // ── Cielo de noche y estrellas (Sendero) ─────────────────────────────────────────────────
 
-    /// <summary>Skybox procedural de día, como el cielo del juego (MainWorld usa el procedural).</summary>
-    static Material CieloDeDia()
-    {
-        var mat = MaterialEnCarpeta(CieloDiaPath, "Skybox/Procedural");
-        if (mat == null) return null;
-        mat.SetFloat("_SunDisk", 2f);
-        mat.SetFloat("_SunSize", 0.035f);
-        mat.SetFloat("_SunSizeConvergence", 6f);
-        mat.SetFloat("_AtmosphereThickness", 0.9f);
-        mat.SetColor("_SkyTint", new Color(0.42f, 0.58f, 0.85f));
-        mat.SetColor("_GroundColor", new Color(0.45f, 0.5f, 0.55f));
-        mat.SetFloat("_Exposure", 1.25f);
-        EditorUtility.SetDirty(mat);
-        return mat;
-    }
+    /// <summary>Cielo de día del menú: el cielo de dibujo del juego (El Sendero/Cielo) con los colores de la franja de día.</summary>
+    internal static Material CieloDeDia() => CieloDelJuego(CieloDiaPath, "Assets/Art/Cielo/Cielo_Dia.mat");
 
-    /// <summary>Skybox procedural oscuro, sin sol, con el horizonte algo violeta.</summary>
-    static Material CieloDeNoche()
+    /// <summary>Cielo de noche del menú: el cielo de dibujo del juego con los colores de la franja de noche (las estrellas las pone CampoDeEstrellas).</summary>
+    internal static Material CieloDeNoche() => CieloDelJuego(CieloNochePath, "Assets/Art/Cielo/Cielo_Noche.mat");
+
+    /// Deja el material del menú con el shader del cielo del juego y los valores de una franja; conserva su GUID.
+    static Material CieloDelJuego(string ruta, string rutaDeLaFranja)
     {
-        var mat = MaterialEnCarpeta(CieloNochePath, "Skybox/Procedural");
+        var mat = MaterialEnCarpeta(ruta, "El Sendero/Cielo");
+        var franja = AssetDatabase.LoadAssetAtPath<Material>(rutaDeLaFranja);
         if (mat == null) return null;
-        mat.SetFloat("_SunDisk", 0f);
-        mat.SetFloat("_SunSize", 0f);
-        mat.SetFloat("_AtmosphereThickness", 0.55f);
-        mat.SetColor("_SkyTint", new Color(0.32f, 0.22f, 0.62f));
-        mat.SetColor("_GroundColor", new Color(0.05f, 0.05f, 0.12f));
-        mat.SetFloat("_Exposure", 0.32f);
+        if (franja != null) mat.CopyPropertiesFromMaterial(franja);
         EditorUtility.SetDirty(mat);
         return mat;
     }

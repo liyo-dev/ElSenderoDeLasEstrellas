@@ -22,6 +22,8 @@ public static class RevisionDelCap3Inicio
     private const string Torre = "Assets/Scenes/Interior/TorreDeLiam.unity";
     private const string MaterialHumo = "Assets/Art/Materials/VentanaDeHumo.mat";
     private const string PropVision = "PROP_VisionDeLaBola";
+    private const string PropVisionDelCombate = "PROP_VisionDelCombate";
+    private const string ImagenDelCombate = "Assets/Art/World/Visiones/Vision_WillContraElDemonio.png";
 
     // Emociones por línea (NPCEmotion): el gesto sale de la emoción, así que se elige por lo que
     // pasa en la charla. Oliver: triste porque se va, alegre al final con lágrimas.
@@ -210,6 +212,9 @@ public static class RevisionDelCap3Inicio
             p.FindPropertyRelative("eyeHeight").floatValue = 0f;
             se.ApplyModifiedPropertiesWithoutUndo();
 
+            VisionDelCombate(escena, escenario, bola, sb);
+            SinLlaveDelAro(escena, escenario, sb);
+
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
             sb.Append($"Torre: visión de la bola montada sobre el cristal (cámara en el cuarto de Tobi), luz de la bola violeta. ");
@@ -218,6 +223,77 @@ public static class RevisionDelCap3Inicio
         {
             if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
         }
+    }
+
+    /// La visión del Cap. 2 (Los planes de Liam): en la bola, Will contra el demonio. Es algo que ya
+    /// ha pasado cuando se ve la escena, así que la nube enseña una imagen fija. Ver INC-1123
+    private static void VisionDelCombate(Scene escena, SequenceStage escenario, Transform bola, StringBuilder sb)
+    {
+        var imagen = AssetDatabase.LoadAssetAtPath<Texture2D>(ImagenDelCombate);
+        if (imagen == null) { sb.Append($"Falta {ImagenDelCombate}. "); return; }
+        var vieja = escena.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Transform>(true)).FirstOrDefault(t => t.name == PropVisionDelCombate);
+        if (vieja != null) Object.DestroyImmediate(vieja.gameObject);
+
+        var raiz = new GameObject(PropVisionDelCombate);
+        SceneManager.MoveGameObjectToScene(raiz, escena);
+        raiz.transform.position = bola.position + new Vector3(0.45f, 0.5f, 0f);
+
+        var humo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        humo.name = "Humo";
+        Object.DestroyImmediate(humo.GetComponent<Collider>());
+        humo.transform.SetParent(raiz.transform, false);
+        humo.transform.localScale = new Vector3(0.9f, 0.7f, 1f);
+        var rend = humo.GetComponent<MeshRenderer>();
+        rend.sharedMaterial = MaterialDeHumo();
+        rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        rend.receiveShadows = false;
+
+        var luzGo = new GameObject("Luz de la visión");
+        luzGo.transform.SetParent(raiz.transform, false);
+        var luz = luzGo.AddComponent<Light>();
+        luz.type = LightType.Point;
+        luz.color = new Color(0.75f, 0.55f, 1f);
+        luz.intensity = 0.9f;
+        luz.range = 2.8f;
+        luz.shadows = LightShadows.None;
+
+        var ventana = raiz.AddComponent<VentanaDeVision>();
+        var so = new SerializedObject(ventana);
+        so.FindProperty("imagenFija").objectReferenceValue = imagen;
+        so.FindProperty("ventana").objectReferenceValue = rend;
+        so.FindProperty("luz").objectReferenceValue = luz;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        raiz.SetActive(false);
+
+        var se = new SerializedObject(escenario);
+        var props = se.FindProperty("_props");
+        int idx = -1;
+        for (int i = 0; i < props.arraySize; i++)
+            if (props.GetArrayElementAtIndex(i).FindPropertyRelative("id").stringValue == PropVisionDelCombate) idx = i;
+        if (idx < 0) { props.InsertArrayElementAtIndex(props.arraySize); idx = props.arraySize - 1; }
+        var p = props.GetArrayElementAtIndex(idx);
+        p.FindPropertyRelative("id").stringValue = PropVisionDelCombate;
+        p.FindPropertyRelative("target").objectReferenceValue = raiz.transform;
+        p.FindPropertyRelative("eyeHeight").floatValue = 0f;
+        se.ApplyModifiedPropertiesWithoutUndo();
+        sb.Append("Torre: visión del combate (Will contra el demonio, imagen fija) sobre la bola. ");
+    }
+
+    /// El aro no tiene llave (lore simplificado por Raúl): fuera la llave de la mesa y su brillo,
+    /// y sus entradas del escenario. Ver INC-1126
+    private static void SinLlaveDelAro(Scene escena, SequenceStage escenario, StringBuilder sb)
+    {
+        string[] nombres = { "PROP_Llave", "PROP_BrilloLlave" };
+        int quitados = 0;
+        foreach (var t in escena.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Transform>(true)).ToArray())
+            if (t != null && nombres.Contains(t.name)) { Object.DestroyImmediate(t.gameObject); quitados++; }
+        var se = new SerializedObject(escenario);
+        var props = se.FindProperty("_props");
+        for (int i = props.arraySize - 1; i >= 0; i--)
+            if (nombres.Contains(props.GetArrayElementAtIndex(i).FindPropertyRelative("id").stringValue))
+                props.DeleteArrayElementAtIndex(i);
+        se.ApplyModifiedPropertiesWithoutUndo();
+        sb.Append(quitados > 0 ? $"Torre: fuera la llave del aro y su brillo ({quitados}). " : "Torre: la llave del aro ya no estaba. ");
     }
 
     private static Material MaterialDeHumo()

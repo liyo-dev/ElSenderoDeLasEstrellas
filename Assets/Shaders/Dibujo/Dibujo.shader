@@ -15,6 +15,8 @@ Shader "El Sendero/Dibujo"
         [ToggleOff(_RECEIVE_SHADOWS_OFF)] _ReceiveShadows("Recibe sombras", Float) = 0
         [Toggle(_ALPHATEST_ON)] _AlphaClip("Recorte por alfa", Float) = 0.0
         _Cutoff("Umbral del recorte", Range(0, 1)) = 0.5
+        [Toggle(_SOMBRA_SIN_RECORTE)] _SombraSinRecorte("La sombra no usa el recorte (sombra estable)", Float) = 0.0
+        [Toggle(_PINCEL)] _Pincel("Pinceladas (piezas de color liso)", Float) = 0.0
 
         [HideInInspector][MainColor] _BaseColor("Color (no tiñe)", Color) = (1, 1, 1, 1)
         [HideInInspector] _BumpMap("Normal Map", 2D) = "bump" {}
@@ -48,6 +50,7 @@ Shader "El Sendero/Dibujo"
             #pragma shader_feature_local DR_VERTEX_COLORS_ON
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
+            #pragma shader_feature_local_fragment _PINCEL
             // La emisión se enciende en juego (ventanas de noche): la variante tiene que existir siempre.
             #pragma multi_compile_local_fragment _ _EMISSION
 
@@ -64,6 +67,7 @@ Shader "El Sendero/Dibujo"
 
             #include "DibujoEntrada.hlsl"
             #include "DibujoLuz.hlsl"
+            #include "DibujoPincel.hlsl"
 
             struct Attributes
             {
@@ -120,7 +124,8 @@ Shader "El Sendero/Dibujo"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 half4 textura = SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                half alfa = textura.a;
+                // El alfa del tinte solo cuenta en los transparentes (fantasmas): en los opacos vale 1.
+                half alfa = textura.a * _Tinte.a;
                 #if defined(_ALPHATEST_ON)
                 clip(alfa - _Cutoff);
                 #endif
@@ -131,6 +136,9 @@ Shader "El Sendero/Dibujo"
                 half3 albedo = lerp(half3(1.0h, 1.0h, 1.0h), textura.rgb, _TextureImpact) * _Tinte.rgb;
                 #if defined(DR_VERTEX_COLORS_ON)
                 albedo *= input.color.rgb;
+                #endif
+                #if defined(_PINCEL)
+                albedo *= Pincelada(input.positionWS, NormalizeNormalPerPixel(input.normalWS));
                 #endif
 
                 InputData inputData = (InputData)0;
@@ -171,9 +179,14 @@ Shader "El Sendero/Dibujo"
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SOMBRA_SIN_RECORTE
             #pragma multi_compile_instancing
             #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            // Con "sombra sin recorte" la sombra es la silueta completa: no parpadea con el recorte.
+            #if defined(_SOMBRA_SIN_RECORTE)
+            #undef _ALPHATEST_ON
+            #endif
             #include "DibujoEntrada.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
             ENDHLSL

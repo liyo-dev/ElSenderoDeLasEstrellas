@@ -8,13 +8,14 @@ cabeza = bpy.data.objects[args[1]]
 MANTENER = len(args) > 6 and args[6] == "mantener"
 for o in list(bpy.data.objects):
     if o.type == 'MESH' and o != cabeza and (not MANTENER or o.name.startswith(("Eye", "Mouth"))): bpy.data.objects.remove(o)
+import os as _os
 def mat(n, c, emis=False):
-    m = bpy.data.materials.new(n); m.use_nodes = True
+    m = bpy.data.materials.new(n); m.use_nodes = True; m.diffuse_color = c   # el color también para las previas (Workbench)
     b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = c; b.inputs["Roughness"].default_value = 0.8
     return m
 PIEL = mat("Piel", (1, 0.82, 0.7, 1))
 if not MANTENER: cabeza.data.materials.clear(); cabeza.data.materials.append(PIEL)
-NEGRO = mat("Negro", (0.08, 0.05, 0.06, 1)); COLOR_IRIS = {"marron": (0.35, 0.2, 0.1, 1), "verde": (0.2, 0.55, 0.25, 1), "azul": (0.22, 0.42, 0.72, 1), "gris": (0.36, 0.43, 0.52, 1), "oscuro": (0.2, 0.12, 0.08, 1), "ambar": (0.68, 0.42, 0.14, 1)}.get(args[7] if len(args) > 7 else "", (0.35, 0.22, 0.12, 1))
+NEGRO = mat("Negro", (0.08, 0.05, 0.06, 1)); COLOR_IRIS = {"marron": (0.35, 0.2, 0.1, 1), "verde": (0.2, 0.55, 0.25, 1), "azul": (0.22, 0.42, 0.72, 1), "gris": (0.36, 0.43, 0.52, 1), "oscuro": (0.2, 0.12, 0.08, 1), "ambar": (0.68, 0.42, 0.14, 1), "violeta": (0.62, 0.34, 0.95, 1)}.get(args[7] if len(args) > 7 else "", (0.35, 0.22, 0.12, 1))
 IRIS = mat("Iris", COLOR_IRIS); BLANCO = mat("Blanco", (1, 1, 1, 1))
 BOCA = mat("Boca", (0.45, 0.1, 0.12, 1)); LENGUA = mat("Lengua", (0.95, 0.45, 0.45, 1)); CEJA = mat("Ceja", (0.25, 0.14, 0.08, 1))
 Y0 = -0.45   # plano delante de la cara desde el que se proyecta
@@ -35,6 +36,147 @@ def forma(nombre, puntos, material, z_orden=0.0):
     sw = o.modifiers.new("Pegar", 'SHRINKWRAP'); sw.target = cabeza; sw.wrap_method = 'PROJECT'
     sw.use_project_y = True; sw.use_negative_direction = True; sw.use_positive_direction = True; sw.offset = 0.004 + z_orden * 0.002
     return o
+def hinchar_casquete(bm, mw, metros, faldon=True, arbol_cabeza=None, suavizar=0, holgura=0.6, volumen=None, subdividir=True):
+    """Separa del cráneo un casquete de pelo hecho con las caras de la cabeza.
+    - Lo hincha «metros» (en metros: la cabeza del pack va en centímetros bajo el esqueleto, escala 0,01), más lo que dé
+      «volumen(punto del mundo)» en cada sitio (un tupé, más pelo por detrás…).
+    - «suavizar» pasadas de suavizado quitan los bultos de la cabeza (orejas) y las aristas; después ningún punto queda
+      a menos de «holgura» × «metros» de la cabeza («arbol_cabeza»: BVHTree de la cabeza en su espacio local).
+    - Con «faldon», todo el borde baja hasta la cabeza (un poco por dentro de la piel), para que por el hueco no se vean
+      la piel ni el revés del pelo. Devuelve {índice de vértice: normal} del faldón, para que se sombree como el borde del
+      pelo y no como una pared oscura (ver normales_del_faldon)."""
+    esc = mw.to_scale()[0]
+    if suavizar:
+        # Solo la pieza más grande: las orejas del pack son islas sueltas y, hinchadas, salen como orejeras; con la holgura
+        # el casquete ya pasa por encima de ellas con un bulto suave.
+        islas, vistas = [], set()
+        for f in bm.faces:
+            if f in vistas: continue
+            pila, isla = [f], []
+            while pila:
+                g = pila.pop()
+                if g in vistas: continue
+                vistas.add(g); isla.append(g)
+                pila += [h for e in g.edges for h in e.link_faces if h not in vistas]
+            islas.append(isla)
+        if len(islas) > 1:
+            mayor = max(islas, key=len)
+            bmesh.ops.delete(bm, geom=[f for isla in islas if isla is not mayor for f in isla], context='FACES')
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+        bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=1, use_grid_fill=True, smooth=1.0)
+    bm.normal_update()
+    for v in bm.verts: v.co = v.co + v.normal * ((metros + (volumen(mw @ v.co) if volumen else 0.0)) / esc)
+    if suavizar:
+        borde_v = {v for e in bm.edges if e.is_boundary for v in e.verts}
+        dentro_v = [v for v in bm.verts if v not in borde_v]
+        for _ in range(suavizar):
+            bmesh.ops.smooth_vert(bm, verts=dentro_v, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+            bmesh.ops.smooth_vert(bm, verts=list(borde_v), factor=0.25, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+        if arbol_cabeza is not None:
+            minimo = holgura * metros / esc
+            for v in bm.verts:
+                cerca = arbol_cabeza.find_nearest(v.co)
+                if cerca[0] is None or cerca[3] >= minimo: continue
+                fuera = (v.co - cerca[0]); fuera = fuera.normalized() if fuera.length > 1e-6 else cerca[1]
+                if fuera.dot(cerca[1]) < 0: fuera = cerca[1]
+                v.co = cerca[0] + fuera * minimo
+        bm.normal_update()
+    # El borde, liso: cada vértice del borde se promedia con sus dos vecinos del borde (sin esto, las normales del borde,
+    # hechas con pocas caras, lo dejan ondulado o en escalera).
+    for _ in range(10):
+        nuevo = {}
+        for v in bm.verts:
+            vec = [e.other_vert(v) for e in v.link_edges if e.is_boundary]
+            if len(vec) == 2: nuevo[v] = v.co * 0.5 + (vec[0].co + vec[1].co) * 0.25
+        for v, co in nuevo.items(): v.co = co
+    bm.normal_update()
+    normales = {}
+    if not faldon: return normales
+    borde = [e for e in bm.edges if e.is_boundary]
+    dentro = {}
+    for e in borde:
+        for v in e.verts:
+            if v in dentro: continue
+            # hacia dentro siguiendo la normal (con el punto más cercano, vértices vecinos caían en sitios dispares y el
+            # borde salía en dientes de sierra)
+            pegado = arbol_cabeza.ray_cast(v.co, -v.normal, 4 * (metros + 0.05) / esc) if arbol_cabeza is not None else (None,)
+            if arbol_cabeza is not None and pegado[0] is None: pegado = arbol_cabeza.find_nearest(v.co)
+            base = pegado[0] - pegado[1] * (0.003 / esc) if pegado[0] is not None else v.co - v.normal * ((metros + 0.003) / esc)
+            dentro[v] = bm.verts.new(base)
+    caras = []
+    for e in borde:
+        bucle = next(l for l in e.link_faces[0].loops if l.edge == e)   # mismo sentido que el casquete: el faldón mira hacia fuera
+        a, b = bucle.vert, bucle.link_loop_next.vert
+        caras.append(((b, a, dentro[a], dentro[b]), (b, a)))
+    nb = {v: v.normal.copy() for v in dentro}
+    for (vs, _) in caras: bm.faces.new(vs)
+    bm.verts.index_update()
+    for v, d in dentro.items(): normales[v.index] = nb[v]; normales[d.index] = nb[v]
+    return normales
+def casquete_liso(nombre, material, centro, linea, metros, volumen=None, quitar=None, suavizar=4):
+    """Casquete de pelo con el borde liso: una esfera fina proyectada sobre el cráneo (la cabeza sin orejas), cortada
+    vértice a vértice por la línea del pelo («linea(punto)»: altura mínima del pelo en ese sitio; «quitar(punto)»: zonas
+    sin pelo, como las orejas), con el borde alisado, separada «metros» (+ «volumen(punto)») y cerrada contra la cabeza.
+    Todo en el espacio del mundo. Devuelve el objeto, con las normales del faldón ya puestas."""
+    from mathutils.bvhtree import BVHTree
+    mwc = cabeza.matrix_world
+    bmc = bmesh.new(); bmc.from_mesh(cabeza.data); bmc.transform(mwc); bmc.faces.ensure_lookup_table()
+    arbol_cabeza = BVHTree.FromBMesh(bmc)
+    islas, vistas = [], set()
+    for f in bmc.faces:
+        if f in vistas: continue
+        pila, isla = [f], []
+        while pila:
+            g = pila.pop()
+            if g in vistas: continue
+            vistas.add(g); isla.append(g); pila += [h for e in g.edges for h in e.link_faces if h not in vistas]
+        islas.append(isla)
+    mayor = set(max(islas, key=len))
+    bmesh.ops.delete(bmc, geom=[f for f in bmc.faces if f not in mayor], context='FACES')
+    craneo = BVHTree.FromBMesh(bmc); bmc.free()
+    def sobre_craneo(d, defecto):
+        h = craneo.ray_cast(centro + d * 0.9, -d, 1.0)
+        return centro + d * ((h[0] - centro).length if h[0] is not None else defecto)
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=64, v_segments=40, radius=1.0)
+    for v in bm.verts: v.co = sobre_craneo(v.co.normalized(), 0.33)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < linea(v.co) or (quitar and quitar(v.co))], context='VERTS')
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+    # solo la pieza más grande (sin islitas sueltas)
+    bm.faces.ensure_lookup_table(); islas, vistas = [], set()
+    for f in bm.faces:
+        if f in vistas: continue
+        pila, isla = [f], []
+        while pila:
+            g = pila.pop()
+            if g in vistas: continue
+            vistas.add(g); isla.append(g); pila += [h for e in g.edges for h in e.link_faces if h not in vistas]
+        islas.append(isla)
+    mayor = max(islas, key=len)
+    bmesh.ops.delete(bm, geom=[f for isla in islas if isla is not mayor for f in isla], context='FACES')
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+    for _ in range(12):   # borde liso, apoyado en el cráneo
+        nuevo = {}
+        for v in bm.verts:
+            vec = [e.other_vert(v) for e in v.link_edges if e.is_boundary]
+            if len(vec) == 2: nuevo[v] = v.co * 0.4 + (vec[0].co + vec[1].co) * 0.3
+        for v, co in nuevo.items(): v.co = sobre_craneo((co - centro).normalized(), (co - centro).length)
+    normales = hinchar_casquete(bm, mwc.Identity(4), metros, arbol_cabeza=arbol_cabeza, suavizar=suavizar, volumen=volumen, subdividir=False)
+    me = bpy.data.meshes.new(nombre); bm.to_mesh(me); bm.free()
+    o = bpy.data.objects.new(nombre, me); bpy.context.scene.collection.objects.link(o); o.data.materials.append(material)
+    normales_del_faldon(me, normales)
+    return o
+def normales_del_faldon(me, normales, vertices_desde=0):
+    """Pone a las esquinas del faldón la normal del borde del pelo (normales: {índice: normal}, desplazados vertices_desde)."""
+    if not normales: return
+    for p in me.polygons: p.use_smooth = True
+    me.update()
+    lista = []
+    for p in me.polygons:
+        es_faldon = all((me.loops[li].vertex_index - vertices_desde) in normales for li in p.loop_indices)
+        for li in p.loop_indices:
+            vi = me.loops[li].vertex_index - vertices_desde
+            lista.append(normales[vi] if es_faldon else me.corner_normals[li].vector.copy())
+    me.normals_split_custom_set(lista)
 def elipse(cx, cz, rx, rz, n=24, a0=0, a1=2 * math.pi):
     return [(cx + rx * math.cos(a0 + (a1 - a0) * i / n), cz + rz * math.sin(a0 + (a1 - a0) * i / n)) for i in range(n + (0 if a1 - a0 >= 2*math.pi else 1))]
 def arco(cx, cz, ancho, alto, grosor, n=16, sube=True):
@@ -296,7 +438,7 @@ def ojo_a(lado, s, tipo):
         pu = dentro(elipse(icx, icz - 0.003, irx * 0.42, irz * 0.46))
         if pu: forma(f"Pupila_{lado}", pu, NEGRO, 3)
         b1 = dentro(elipse(icx + 0.012 * s, icz + irz * 0.4, 0.011, 0.013))
-        if b1: forma(f"Brillo_{lado}", b1, BLANCO, 4)
+        if b1 and os.environ.get("SIN_BRILLO") != "1": forma(f"Brillo_{lado}", b1, BLANCO, 4)   # SIN_BRILLO=1: ojos «sin luz» (Mago Oscuro)
     x0, _, x1, _ = ojo.bounds
     top = []
     for j in range(1, 24):
@@ -424,13 +566,51 @@ def boca(tipo):
         forma("Lengua", elipse(0, z - 0.02, 0.018, 0.008), LENGUA, 2)
     elif tipo == "picara": forma("Boca", arco(0.012, z + 0.006, 0.028, 0.012, 0.009, sube=False), BOCA, 1)
 
+def _noop(): pass
+
 import os
 ROSA = mat("Rubor", (1.0, 0.55, 0.6, 1)); ROSA_FUERTE = mat("RuborFuerte", (0.95, 0.3, 0.38, 1))
+OJERA = mat("OjeraVioleta", (0.55, 0.38, 0.78, 1)); LUZ_PIEDRA = mat("LuzPiedra", (1.0, 1.0, 1.0, 1)); HALO_PIEDRA = mat("HaloPiedra", (0.72, 0.6, 0.95, 1))
 TOSTADO = mat("Tostado", (0.93, 0.6, 0.47, 1)); PECA = mat("Peca", (0.72, 0.44, 0.3, 1)); ARRUGA = mat("Arruga", (0.78, 0.56, 0.48, 1))
 def linea(p0, p1, grosor=0.0032):
     """Trazo fino recto entre dos puntos (x, z)."""
     dx, dz = p1[0] - p0[0], p1[1] - p0[1]; l = math.hypot(dx, dz) or 1; nx, nz = -dz / l * grosor / 2, dx / l * grosor / 2
     return [(p0[0] + nx, p0[1] + nz), (p1[0] + nx, p1[1] + nz), (p1[0] - nx, p1[1] - nz), (p0[0] - nx, p0[1] - nz)]
+def _trazo(pts, g=0.0045):
+    """Línea fina que pasa por los puntos (x, z): una tira de cuadriláteros."""
+    return [linea(pts[i], pts[i + 1], g) for i in range(len(pts) - 1)]
+_boca_original = boca
+def boca(tipo):
+    """BOCA_ESTILO=fina (Mago Oscuro): bocas de línea fina. La de reposo es la media sonrisa (una comisura levantada); la risa es
+    la sonrisa ancha; «enfado» es la línea recta de cuando deja de sonreír (sin dientes)."""
+    estilo = os.environ.get("BOCA_ESTILO")
+    if estilo == "amable":   # Archimago: solo la de reposo cambia (línea fina con una sonrisa suave y simétrica); las demás, las de siempre
+        if tipo != "neutra": return _boca_original(tipo)
+        z = BOCA_Z
+        pts = [(-0.027 + 0.054 * i / 12, z + 0.004 + 0.010 * (2 * i / 12 - 1) ** 2) for i in range(13)]
+        return FORMA_BASE("Boca", [[(x * KB, z + (zz - z) * KB) for x, zz in q] for q in _trazo(pts)], BOCA, 1)
+    if estilo != "fina": return _boca_original(tipo)
+    z = BOCA_Z
+    def forma(nombre, puntos, material, z_orden=0.0):
+        esc = lambda ps: [(x * KB, z + (zz - z) * KB) for x, zz in ps]
+        return FORMA_BASE(nombre, [esc(p) for p in puntos] if isinstance(puntos[0][0], tuple) else esc(puntos), material, z_orden)
+    medio = lambda a, c: [(-0.03 + 0.06 * i / 12, z + c * (i / 12) ** 2.4 + a * 0.0) for i in range(13)]   # una comisura sube (la de la derecha de la cara)
+    if tipo in ("neutra", "pensar"): forma("Boca", _trazo(medio(0, 0.011)), BOCA, 1)
+    elif tipo == "picara": forma("Boca", _trazo(medio(0, 0.017)), BOCA, 1)
+    elif tipo == "sonrisa": forma("Boca", _trazo([(-0.034 + 0.068 * i / 14, z + 0.006 + 0.014 * (i / 14 * 2 - 1) ** 2 * (1.3 if i > 7 else 0.8)) for i in range(15)]), BOCA, 1)
+    elif tipo == "risa":
+        forma("Boca", arco(0, z + 0.02, 0.05, 0.05, 0.05, sube=False), BOCA, 1)
+        forma("Lengua", elipse(0, z - 0.012, 0.024, 0.011), LENGUA, 2)
+    elif tipo == "triste": forma("Boca", arco(0, z - 0.008, 0.028, 0.012, 0.0045, sube=True), BOCA, 1)
+    elif tipo == "o": forma("Boca", elipse(0, z, 0.014, 0.02), BOCA, 1)
+    elif tipo == "enfado": forma("Boca", _trazo([(-0.032, z), (0.032, z)]), BOCA, 1)
+    elif tipo == "ondulada":
+        forma("Boca", _trazo([(-0.034 + 0.068 * i / 20, z + 0.005 * math.sin(i * 0.9)) for i in range(21)]), BOCA, 1)
+    elif tipo == "entreabierta": forma("Boca", elipse(0, z, 0.02, 0.006), BOCA, 1)
+    elif tipo == "abierta":
+        forma("Boca", elipse(0, z - 0.004, 0.024, 0.02), BOCA, 1)
+        forma("Lengua", elipse(0, z - 0.016, 0.015, 0.006), LENGUA, 2)
+    else: _boca_original(tipo)
 def mejillas(tipo):
     """Uno o varios tipos unidos con «+» (p. ej. «pecas+suave»). Vacío = sin nada.
     suave: dos óvalos rosados. verguenza: óvalos más fuertes y rayitas encima, como la figura de Lina.
@@ -448,6 +628,14 @@ def _mejilla(tipo):
         elif tipo == "mayor":
             forma(f"Ojera_{lado}", arco(OJO_X * s, OJO_Z - 0.062 * (K / 1.25), 0.032 * (K / 1.25), 0.008, 0.0035, sube=False), ARRUGA, 0.6)
             forma(f"Surco_{lado}", linea((0.05 * s, BOCA_Z + 0.046), (0.06 * s, BOCA_Z + 0.02), 0.0034), ARRUGA, 0.6)
+        elif tipo == "ojeras":   # ojeras suaves en violeta (Mago Oscuro)
+            forma(f"OjeraV_{lado}", arco(OJO_X * s, OJO_Z - 0.052 * (K / 1.25), 0.038 * (K / 1.25), 0.013, 0.0075, sube=False), OJERA, 0.6)
+        elif tipo == "piedra":   # tres líneas finas de luz blanca en la sien (guiño al altar); emisión suave
+            x0 = (OJO_X + 0.085) * s
+            for k, (dz, largo) in enumerate(((0.012, 0.034), (-0.004, 0.044), (-0.02, 0.03))):
+                p0, p1 = (x0 - 0.004 * s, OJO_Z + dz), (x0 + largo * s, OJO_Z + dz - 0.018)
+                forma(f"PiedraHalo{k}_{lado}", linea(p0, p1, 0.0085), HALO_PIEDRA, 0.65)   # resplandor suave alrededor de la línea
+                forma(f"Piedra{k}_{lado}", linea(p0, p1, 0.0034), LUZ_PIEDRA, 0.7)
         if tipo not in ("suave", "verguenza"): continue
         forma(f"Mejilla_{lado}", elipse(cx, cz, 0.042, 0.02), ROSA if tipo == "suave" else ROSA_FUERTE, 0.5)
         if tipo == "verguenza":

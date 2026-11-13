@@ -13,7 +13,7 @@ public class PlayerHealthSystem : MonoBehaviour
 {
     [Header("Configuración de Daño")]
     [SerializeField] private float invulnerabilityDuration = 1f;
-    [Tooltip("Si está activo, el jugador no puede morir (útil para testing)")]
+    [Tooltip("Si está activo, el jugador no puede morir: los golpes llegan y se ven, pero la vida no baja de 1 (para pruebas)")]
     [SerializeField] private bool godMode; // por defecto false
 
     [Header("Animaciones")]
@@ -21,6 +21,8 @@ public class PlayerHealthSystem : MonoBehaviour
     [SerializeField] private string[] damageAnimationNames = new string[] { "TakeDamage", "TakeDamage_2" };
     [SerializeField] private string deathAnimationName = "Die02_NoWeapon";
     [SerializeField] private int upperBodyLayer = 1; // Layer para animaciones del torso superior
+    [Tooltip("Segundos sin la pose de combate de los brazos tras un golpe, para que la animación de daño (de cuerpo entero) se vea completa.")]
+    [SerializeField, Min(0f)] private float segundosSinPoseDeBrazos = 0.7f;
     [Tooltip("Velocidad de las animaciones de daño y de caída al morir. Se reproducen en tiempo real, " +
              "sin la cámara lenta del Game Over, para que la caída se vea entera. Menos de 1 = más lenta.")]
     [SerializeField, Range(0.2f, 1.5f)] private float ritmoDeLaCaida = 0.7f;
@@ -116,6 +118,7 @@ public class PlayerHealthSystem : MonoBehaviour
     private int _frameAnimDeDano = -1;
     private bool _caidaIniciada;
     private bool _animatorEnModoCaida;
+    private Game.Player.PlayerBattleModeController _modoDeBatalla;
     private AnimatorUpdateMode _modoAnimatorPrevio;
     private float _velocidadAnimatorPrevia = 1f;
 
@@ -298,7 +301,7 @@ public class PlayerHealthSystem : MonoBehaviour
     /// </summary>
     public bool TakeDamage(float damageAmount, bool ignoreInvulnerability = false)
     {
-        if (!IsAlive || damageAmount <= 0f || godMode) return false;
+        if (!IsAlive || damageAmount <= 0f) return false;
         // FIX A10 (auditoría 2026-08-07): god-frame durante cinemáticas. Sin esto, un AoE/proyectil
         // residual que impacta justo cuando arranca una cinemática (o un daño en curso que se
         // resuelve un frame después de que ActionMode.Cinematic ya esté en la pila) podía matar al
@@ -316,7 +319,7 @@ public class PlayerHealthSystem : MonoBehaviour
         if (damageAmount <= 0f) return false;
 
         float oldHealth = _currentHp;
-        _currentHp = Mathf.Max(0f, oldHealth - damageAmount);
+        _currentHp = Mathf.Max(godMode ? Mathf.Min(1f, oldHealth) : 0f, oldHealth - damageAmount);
         
         // Actualizar también el GameBootProfile si es necesario
         UpdateGameBootProfile();
@@ -1050,17 +1053,23 @@ public class PlayerHealthSystem : MonoBehaviour
             return;
         }
 
-        // Asegurar que el layer configurado existe antes de usarlo
-        if (upperBodyLayer >= 0 && upperBodyLayer < _animator.layerCount)
+        // Un estado de la capa de brazos necesita su peso; uno de cuerpo entero (capa base) necesita
+        // quitar la pose de combate de los brazos, que lo taparía de cintura para arriba. Ver INC-1100
+        if (EnsureResolved(animationName) && upperBodyLayer >= 0 && upperBodyLayer < _animator.layerCount)
         {
-            _animator.SetLayerWeight(upperBodyLayer, 1f);
+            if (_stateLayer[animationName] == upperBodyLayer) _animator.SetLayerWeight(upperBodyLayer, 1f);
+            else
+            {
+                if (_modoDeBatalla == null) _modoDeBatalla = GetComponentInParent<Game.Player.PlayerBattleModeController>(true) ?? GetComponentInChildren<Game.Player.PlayerBattleModeController>(true);
+                if (_modoDeBatalla != null) _modoDeBatalla.SoltarBrazos(segundosSinPoseDeBrazos);
+                else _animator.SetLayerWeight(upperBodyLayer, 0f);
+            }
         }
 
         // Intentar reproducir usando CrossFade en el estado resuelto (más seguro)
         if (CrossFadeResolved(animationName, 0.05f))
         {
             int layer = _stateLayer.ContainsKey(animationName) ? _stateLayer[animationName] : 0;
-            
             return;
         }
 

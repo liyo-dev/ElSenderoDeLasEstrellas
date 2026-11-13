@@ -60,6 +60,7 @@ Material:
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _RECEIVE_SHADOWS_OFF
+  - _SOMBRA_SIN_RECORTE
   m_InvalidKeywords:
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _RECEIVESHADOWS_OFF
@@ -210,6 +211,7 @@ Material:
     - _SelfShadingSize: 0
     - _ShadowsFloor: 0.25
     - _Smoothness: 0.4
+    - _SombraSinRecorte: 1
     - _SpecularEnabled: 0
     - _SpecularNoiseSize: 1
     - _SrcBlend: 1

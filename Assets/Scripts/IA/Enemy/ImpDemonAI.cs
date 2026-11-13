@@ -1116,8 +1116,8 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             yield return WaitFacingPlayer(duration);
             yield break;
         }
-        Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
-        Transform telegraph = VfxPoolService.Instance.Play(telegraphPrefab, targetPosition, rot, duration);
+        Transform telegraph = VfxPoolService.Instance.Play(telegraphPrefab, targetPosition, Quaternion.identity, duration);
+        Kits.StylizedVfx.GroundMark.On(telegraph);
 
         if (!telegraph)
         {
@@ -1166,12 +1166,12 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
             if (rainShadowPrefab)
             {
-                // Rotación forzada para que el quad quede plano en el suelo
-                Quaternion rot = Quaternion.Euler(90f, Random.Range(0f, 360f), 0f);
-                shadowTrans[i] = pool.Play(rainShadowPrefab, positions[i] + Vector3.up * 0.04f,
-                    rot, warningDuration + duration + 1f);
+                // La marca se apoya sola en el suelo y sigue la pendiente (GroundMark).
+                shadowTrans[i] = pool.Play(rainShadowPrefab, positions[i], Quaternion.identity,
+                    warningDuration + duration + 1f);
                 if (shadowTrans[i])
                 {
+                    Kits.StylizedVfx.GroundMark.On(shadowTrans[i]);
                     _efectosLluvia.Add((shadowTrans[i], pool.ObtenerUso(shadowTrans[i])));
                     shadowTrans[i].localScale = Vector3.zero;
                 }
@@ -1192,13 +1192,15 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
             if (trackPlayer && player)
             {
+                // Solo se arrastra en horizontal: la altura la pone el suelo de cada marca.
                 Vector3 newCenter = player.position;
                 for (int i = 0; i < count; i++)
                 {
                     Vector3 offset = positions[i] - center;
+                    offset.y = 0f;
                     positions[i] = newCenter + offset;
                     if (shadowTrans[i])
-                        shadowTrans[i].position = positions[i] + Vector3.up * 0.04f;
+                        shadowTrans[i].position = positions[i];
                 }
                 center = newCenter;
             }
@@ -1206,7 +1208,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             yield return null;
         }
 
-        // Las marcas quedan fijas al terminar el aviso: se puede esquivar la caída.
+        // Las marcas quedan fijas al terminar el aviso: se puede esquivar la caída. La gota cae y
+        // revienta en el suelo de cada marca, no a la altura de los pies del jugador.
+        for (int i = 0; i < count; i++)
+            positions[i] = Kits.StylizedVfx.GroundMark.GroundBelow(positions[i]);
         Transform[] drops = new Transform[count];
         float[] alturaDelCentro = new float[count];
         bool[] launched = new bool[count];

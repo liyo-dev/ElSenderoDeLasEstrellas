@@ -25,7 +25,7 @@ public static partial class VestidoDelPrologo
     static int PonerTablon(Transform raiz, StringBuilder informe)
     {
         MeshFilter poste = null;
-        foreach (var mf in Object.FindObjectsByType<MeshFilter>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        foreach (var mf in Object.FindObjectsByType<MeshFilter>(FindObjectsInactive.Exclude))
             if (mf.name == Poste && mf.sharedMesh != null) { poste = mf; break; }
         if (poste == null) { informe.AppendLine("Tablón: no encuentro " + Poste + "."); return 0; }
 

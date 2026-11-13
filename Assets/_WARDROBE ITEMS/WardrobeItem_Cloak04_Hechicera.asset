@@ -19,6 +19,6 @@ MonoBehaviour:
   displayName: Capa de hechicera
   descriptionId: 
   description: La capa crema de Estela, de los hombros a las rodillas.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 89820cd545ed15b4b913044df5e55d7b, type: 3}
   rasgos: 
   soloPara: 02000000i

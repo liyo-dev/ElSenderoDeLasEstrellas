@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 15
@@ -75,12 +76,16 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
-  impactVFX: {fileID: 984074990140296083, guid: 7f7c236de60b36545a433e66d095cfff, type: 3}
+  spawnVFX: {fileID: 4201050252026308414, guid: b1eecf26c6796a348b5f076ae4452a57, type: 3}
+  impactVFX: {fileID: 2393968913063189143, guid: 2f153d48cc0037840b1691977b1ecad7, type: 3}
   despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_GarraDelPacto
   impactSFXKey: Impacto_Mente_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 64408afc78977c847910fcbd7b29ab18, type: 3}
   bounceCount: 0

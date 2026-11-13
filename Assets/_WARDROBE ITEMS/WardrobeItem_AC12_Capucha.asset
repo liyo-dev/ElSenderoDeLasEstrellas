@@ -19,10 +19,6 @@ MonoBehaviour:
   displayName: Capucha
   descriptionId: 
   description: La capucha de Liam. Sin ella se le ve el flequillo.
-  icon: {fileID: 0}
-  bonos:
-    vida: 0
-    magia: 0
-    ataque: 0
-    defensa: 0
+  icon: {fileID: 21300000, guid: 14bbaad3d3ceebe4db98bb63f759968d, type: 3}
+  rasgos: 
   soloPara: 00000000i

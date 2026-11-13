@@ -65,8 +65,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   levitationDrainDelay: 1
   levitationManaDrainPerSecond: 5
-  levitationHoldVFX: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
-  levitationReleaseVFX: {fileID: 4035903591278710484, guid: aa122f157eac1c8428ae5db8a315ccd8, type: 3}
+  levitationHoldVFX: {fileID: 5706662881367843375, guid: e5792ca9c92852f4dbae8e032a820559, type: 3}
+  levitationReleaseVFX: {fileID: 3905684764908286773, guid: af93483a994d4514d883f6552af3b30a, type: 3}
   levitationRangeIndicatorVFX: {fileID: 100002, guid: 28e29d76acf694c4a98b013d47c6bfc1, type: 3}
   rangeIndicatorCount: 1
   levitationCaptureShakeIntensity: 0.3
@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_Levitation
   impactSFXKey: Impacto_Levitacion
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 1704c7cdd1802f0448577afeeb7f2a03, type: 3}
   bounceCount: 0

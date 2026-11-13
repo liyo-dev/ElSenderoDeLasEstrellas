@@ -17,10 +17,8 @@ silla Silla_Liam
 manos -6000 6000.5 100.45
 cam_general -6001.4 5997.4 100
 cam_cara -6001.2 5998.9 100
-cam_llave -6000.65 5998.6 100
 cam_sienta -6001.3 5998.7 100
 foco_general -6000 6001 101.75
-detalle_llave -6000.15 5999.75 100.62
 # La nube de la visión, sobre la bola; y desde el otro lado de la mesa, con la nube delante y Liam detrás.
 vision -5999.15 5999.85 100.9
 cam_bola -5999.2 5998.4 100

@@ -896,9 +896,10 @@ def casa_del_pueblo(nombre, ancho=6.0, fondo=5.0, plantas=1, contra="ContraRoja"
         h = f * 0.6
         o.append(prisma([(-f / 2, zt - 0.02), (f / 2, zt - 0.02), (0, zt + h)], -w / 2, w / 2, "Estuco", eje='X'))
         o += tejado_de_paja(f / 2 + 0.6, zt, h, -w / 2 - 0.55, w / 2 + 0.55, 'X')
-    # Chimenea de piedra en un costado.
-    o.append(caja(w / 2 - 0.25, w / 2 + 0.55, f * 0.12, f * 0.12 + 0.95, -0.6, zt + h + 0.9, "PiedraCampo", 0.05))
-    o.append(caja(w / 2 - 0.33, w / 2 + 0.63, f * 0.12 - 0.08, f * 0.12 + 1.03, zt + h + 0.9, zt + h + 1.08, "Roca", 0.03))
+    # Chimenea de piedra en un costado. Su cara exterior sobresale de todo el tejado (hastial a w/2 + 0,55,
+    # hiladas y caballete hasta w/2 + 0,65): si coincidiera con el hastial, las dos caras parpadearían. Ver INC-1142.
+    o.append(caja(w / 2 - 0.05, w / 2 + 0.75, f * 0.12, f * 0.12 + 0.95, -0.6, zt + h + 0.9, "PiedraCampo", 0.05))
+    o.append(caja(w / 2 - 0.13, w / 2 + 0.83, f * 0.12 - 0.08, f * 0.12 + 1.03, zt + h + 0.9, zt + h + 1.08, "Roca", 0.03))
     # Puerta con porche y tejadillo de paja.
     xd = -w * 0.2
     o.append(caja(xd - 0.62, xd + 0.62, -f / 2 - 0.08, -f / 2 + 0.02, zs, zs + 2.15, "MaderaOscura", 0.02))

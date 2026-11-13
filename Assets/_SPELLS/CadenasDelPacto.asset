@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_CadenasDelPacto
   impactSFXKey: 
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 0}
+  impactEvent: {fileID: 0}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: dbd70d604201f354ca9a6032f6984390, type: 3}
   bounceCount: 0
@@ -94,7 +98,7 @@ MonoBehaviour:
   statusEffect: 2
   statusDuration: 0.6
   statusStrength: 0
-  statusVFX: {fileID: 7446724993709181866, guid: 9ffd0f5d261b6b847a3e55d8f8c17bbe, type: 3}
+  statusVFX: {fileID: 6241893393276265310, guid: 6a9b2ef8fed5c184289cd7be54236230, type: 3}
   zoneOnCaster: 0
   healPerTick: 0
   groupShieldSeconds: 0

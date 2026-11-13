@@ -1,0 +1,311 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using static VfxProcedural;
+
+/// Pasa al aspecto de dibujo los efectos que el juego usa fuera de los hechizos: los de los paquetes
+/// (destellos, brillos, confeti, humo, golpes, círculos, portales…) y los propios de las cinemáticas
+/// y el ambiente. Cada prefab se rehace EN SU SITIO: se le quitan las partículas, mallas y luces (lo
+/// que tenga de juego, como colisiones o componentes del proyecto, se queda) y se le mete dentro un
+/// hijo «Dibujo» del tipo que toca, al tamaño que tenía el efecto. Así cambian a la vez escenas,
+/// guiones, configuraciones y código que lo nombran, sin tocar ninguna referencia. Las copias de
+/// antes están en «Versiones antiguas/VFX antes del aspecto de dibujo (2026-11-12)». Idempotente:
+/// si ya tiene su «Dibujo», reutiliza su tamaño. Ver INC-1127
+public static class VfxDelJuegoADibujo
+{
+    private const string NombreDelDibujo = "Dibujo";
+
+    private enum Tipo
+    {
+        Destello, Brillo, Chispitas, Confeti, Humo, Polvo, Chispas, Golpe, GolpeDePiedra, Oscuro, Circulo,
+        Tajo, Columna, Llama, Onda, Implosion, Portal, Remolino, Curacion, Velocidad, Meteoro, Juicio,
+        Veneno, Estrellas, Escudo, Orbe,
+    }
+
+    private sealed class Entrada
+    {
+        public string Ruta; public Tipo Tipo; public Color Color;
+        public Entrada(string ruta, Tipo tipo, Color color) { Ruta = ruta; Tipo = tipo; Color = color; }
+    }
+
+    private static readonly Color Crema = new Color(1f, 0.97f, 0.90f);
+    private static readonly Color Oro = new Color(1f, 0.84f, 0.38f);
+    private static readonly Color Fuego = new Color(1f, 0.55f, 0.28f);
+    private static readonly Color Rojo = new Color(0.90f, 0.28f, 0.22f);
+    private static readonly Color Rosa = new Color(1f, 0.62f, 0.70f);
+    private static readonly Color Lila = new Color(0.70f, 0.58f, 1f);
+    private static readonly Color Cielo = new Color(0.62f, 0.82f, 1f);
+    private static readonly Color Menta = new Color(0.62f, 0.92f, 0.80f);
+    private static readonly Color Verde = new Color(0.60f, 0.85f, 0.35f);
+    private static readonly Color Sombra = new Color(0.30f, 0.20f, 0.42f);
+    private static readonly Color Tierra = new Color(0.82f, 0.74f, 0.64f);
+
+    private const string Best = "Assets/VFX/100BestEffectPack/Effects/";
+    private const string Free = "Assets/VFX/Free Game VFX/Prefab/";
+    private const string Gabriel = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/";
+    private const string Hovl = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/";
+    private const string Lana = "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/";
+    private const string Equipo = "Assets/Art/VFX/Equipo/";
+
+    private static readonly Entrada[] Tabla =
+    {
+        // 100 Best Effect Pack
+        new Entrada(Best + "DarkEffect/DarkEffect1.prefab", Tipo.Oscuro, Rojo),
+        new Entrada(Best + "DarkEffect/DarkEffect3.prefab", Tipo.Oscuro, Rojo),
+        new Entrada(Best + "DarkEffect/DarkEffect4.prefab", Tipo.Implosion, Sombra),
+        new Entrada(Best + "DarkEffect/DarkEffect5.prefab", Tipo.Oscuro, Lila),
+        new Entrada(Best + "ExplosionEffect/ExplosionEffect.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Best + "ExplosionEffect/ExplosionEffect3.prefab", Tipo.Golpe, Crema),
+        new Entrada(Best + "ExplosionEffect/ExplosionEffect5.prefab", Tipo.Golpe, Oro),
+        new Entrada(Best + "FireEffect/FireEffect1.prefab", Tipo.Llama, Color.white),
+        new Entrada(Best + "FlameEmissionEffect/FlameEmissionEffect.prefab", Tipo.Llama, Color.white),
+        new Entrada(Best + "OtherMagicEffect/MagicEffect20.prefab", Tipo.Circulo, Lila),
+        new Entrada(Best + "SwampEffect/SwampEffect1.prefab", Tipo.Veneno, Verde),
+        // Combate
+        new Entrada("Assets/VFX/Combate/GiroRapido.prefab", Tipo.Remolino, Crema),
+        // Free Game VFX
+        new Entrada(Free + "FX_Fireball.prefab", Tipo.Llama, Color.white),
+        new Entrada(Free + "FX_Greenlight_shrink.prefab", Tipo.Implosion, Menta),
+        new Entrada(Free + "FX_LightPillar.prefab", Tipo.Columna, Oro),
+        // Gabriel Aguiar
+        new Entrada(Gabriel + "vfx_Explosion_01.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Gabriel + "vfx_Explosion_02.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Gabriel + "vfx_Flames_01.prefab", Tipo.Llama, Color.white),
+        new Entrada(Gabriel + "vfx_Heal_02.prefab", Tipo.Curacion, Menta),
+        new Entrada(Gabriel + "vfx_Hyperdrive_01.prefab", Tipo.Velocidad, Crema),
+        new Entrada(Gabriel + "vfx_Implosion_01.prefab", Tipo.Implosion, Lila),
+        new Entrada(Gabriel + "vfx_Portal_01.prefab", Tipo.Portal, Lila),
+        new Entrada(Gabriel + "vfx_Shockwave_01.prefab", Tipo.Onda, Crema),
+        new Entrada(Gabriel + "vfx_Smoke_01.prefab", Tipo.Humo, Crema),
+        new Entrada(Gabriel + "vfx_Tornado_01.prefab", Tipo.Remolino, Menta),
+        // Hovl: magic effects pack
+        new Entrada(Hovl + "AoE effects/Ground AOE explosion.prefab", Tipo.Golpe, Crema),
+        new Entrada(Hovl + "AoE effects/Laser AOE.prefab", Tipo.Juicio, Lila),
+        new Entrada(Hovl + "AoE effects/Meteors AOE.prefab", Tipo.Meteoro, Oro),
+        new Entrada(Hovl + "AoE effects/Red energy explosion.prefab", Tipo.Golpe, Rojo),
+        new Entrada(Hovl + "AoE effects/Smoke AOE explosion.prefab", Tipo.Humo, Crema),
+        new Entrada(Hovl + "Character auras/Plexus.prefab", Tipo.Brillo, Lila),
+        new Entrada(Hovl + "Character auras/Star aura.prefab", Tipo.Brillo, Oro),
+        new Entrada(Hovl + "Environment/Crystal effect blue.prefab", Tipo.Brillo, Cielo),
+        new Entrada(Hovl + "Environment/Teleport.prefab", Tipo.Portal, Cielo),
+        new Entrada(Hovl + "Hits and explosions/Explosion.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Hovl + "Hits and explosions/Holy hit.prefab", Tipo.Golpe, Oro),
+        new Entrada(Hovl + "Hits and explosions/Star hit.prefab", Tipo.Golpe, Oro),
+        new Entrada(Hovl + "Hits and explosions/Stones hit.prefab", Tipo.GolpeDePiedra, Tierra),
+        new Entrada(Hovl + "Magic circles/Magic circle.prefab", Tipo.Circulo, Oro),
+        new Entrada(Hovl + "Magic circles/Magic circle 2.prefab", Tipo.Circulo, Lila),
+        new Entrada(Hovl + "Magic circles/Healing circle.prefab", Tipo.Circulo, Menta),
+        new Entrada(Hovl + "Magic shields/Magic shield blue.prefab", Tipo.Escudo, Cielo),
+        new Entrada(Hovl + "Magic shields/Magic shield pink.prefab", Tipo.Escudo, Rosa),
+        new Entrada(Hovl + "Magic shields/Magic shield yellow.prefab", Tipo.Escudo, Oro),
+        new Entrada(Hovl + "Portals/Portal yellow.prefab", Tipo.Portal, Oro),
+        new Entrada(Hovl + "Portals/Portal red.prefab", Tipo.Portal, Rojo),
+        new Entrada(Hovl + "Portals/Portal blue.prefab", Tipo.Portal, Cielo),
+        new Entrada(Hovl + "Slash effects/Charge slash blue.prefab", Tipo.Tajo, Cielo),
+        new Entrada(Hovl + "Slash effects/Charge slash purple.prefab", Tipo.Tajo, Lila),
+        new Entrada(Hovl + "Slash effects/Electro slash.prefab", Tipo.Tajo, Cielo),
+        new Entrada(Hovl + "Smoke effects/Dust ground mountain.prefab", Tipo.Polvo, Tierra),
+        new Entrada(Hovl + "Smoke effects/Dust ground.prefab", Tipo.Polvo, Tierra),
+        new Entrada(Hovl + "Smoke effects/Dust hemisphere loop.prefab", Tipo.Polvo, Tierra),
+        new Entrada(Hovl + "Smoke effects/Dust puff.prefab", Tipo.Humo, Tierra),
+        new Entrada(Hovl + "Smoke effects/Smoke ground.prefab", Tipo.Polvo, Crema),
+        new Entrada(Hovl + "Smoke effects/Smoke puff.prefab", Tipo.Humo, Crema),
+        new Entrada(Hovl + "Smoke effects/Smoke vortex.prefab", Tipo.Oscuro, Sombra),
+        new Entrada(Hovl + "Sparks/Sparks explode red.prefab", Tipo.Chispas, Rojo),
+        new Entrada(Hovl + "Sparks/Sparks explode white.prefab", Tipo.Chispas, Crema),
+        new Entrada(Hovl + "Sparks/Sparks explode yellow.prefab", Tipo.Chispas, Oro),
+        new Entrada(Hovl + "Sparks/Sparks flashing white.prefab", Tipo.Brillo, Crema),
+        new Entrada(Hovl + "Sparks/Sparks flashing yellow.prefab", Tipo.Brillo, Oro),
+        // Hovl: procedural fire
+        new Entrada("Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab", Tipo.Golpe, Fuego),
+        new Entrada("Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Magic fire 0.prefab", Tipo.Llama, Color.white),
+        // Lana Studio
+        new Entrada(Lana + "Confetti/Confetti_blast_multicolor.prefab", Tipo.Confeti, Color.white),
+        new Entrada(Lana + "Confetti/Confetti_directional_multicolor.prefab", Tipo.Confeti, Color.white),
+        new Entrada(Lana + "Flash/1 Flash_magic_ellow_blue.prefab", Tipo.Destello, Oro),
+        new Entrada(Lana + "Flash/2 Flash_round_ellow.prefab", Tipo.Destello, Oro),
+        new Entrada(Lana + "Flash/Flash_ellow_pink.prefab", Tipo.Destello, Rosa),
+        new Entrada(Lana + "Flash/Flash_blue_purple.prefab", Tipo.Destello, Lila),
+        new Entrada(Lana + "Flash/Flash_ellow.prefab", Tipo.Destello, Oro),
+        new Entrada(Lana + "Shine/Shine_blue.prefab", Tipo.Brillo, Cielo),
+        new Entrada(Lana + "Shine/Shine_ellow.prefab", Tipo.Brillo, Oro),
+        new Entrada(Lana + "Shine/Shine_pink.prefab", Tipo.Brillo, Rosa),
+        new Entrada(Lana + "Sparkle/Sparkle_ellow.prefab", Tipo.Brillo, Oro),
+        new Entrada(Lana + "Sparkle/Sparkle_ellow_flying.prefab", Tipo.Chispitas, Oro),
+        // Otros paquetes
+        new Entrada("Assets/VFX/Matthew Guz/Spell Area of Effect FREE/Prefab/AoE Poison.prefab", Tipo.Veneno, Verde),
+        new Entrada("Assets/VFX/Matthew Guz/Spell Area of Effect FREE/Prefab/AoE Stars.prefab", Tipo.Estrellas, Oro),
+        new Entrada("Assets/VFX/Travis Game Assets/Hit Impact Effects/Prefabs/Hits/Hit_02.prefab", Tipo.Golpe, Crema),
+        new Entrada("Assets/VFX/Univeral FX Shader/Prefab/Vortex.prefab", Tipo.Remolino, Lila),
+        new Entrada("Assets/VFX/Univeral FX Shader/Prefab/FireSmall.prefab", Tipo.Llama, Color.white),
+        // Propios: prólogo y cinemáticas
+        new Entrada("Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab", Tipo.Implosion, Sombra),
+        new Entrada("Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab", Tipo.Orbe, Oro),
+        new Entrada("Assets/_VFX/Prologo/VFX_CirculoDelArchimago.prefab", Tipo.Circulo, Oro),
+        new Entrada("Assets/_VFX/Prologo/VFX_CirculoDelMagoOscuro.prefab", Tipo.Circulo, Rojo),
+        new Entrada("Assets/_VFX/Prologo/VFX_LuzProtectora.prefab", Tipo.Brillo, Oro),
+        new Entrada("Assets/_VFX/Prologo/VFX_MagoOscuro_HechizoSostenido.prefab", Tipo.Oscuro, Rojo),
+        new Entrada("Assets/_VFX/Prologo/VFX_OrbeProtector.prefab", Tipo.Escudo, Oro),
+        new Entrada("Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab", Tipo.Remolino, Lila),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_ColapsoAmbiental.prefab", Tipo.Polvo, Sombra),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_GolpeTraicion.prefab", Tipo.Golpe, Rojo),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_MagoOscuro_CataclismoBarrido.prefab", Tipo.Oscuro, Rojo),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_MagoOscuro_Derrota.prefab", Tipo.Implosion, Sombra),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_PortalSendero_Colapso.prefab", Tipo.Portal, Lila),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_Rebobinado.prefab", Tipo.Remolino, Lila),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_SacrificioLiam.prefab", Tipo.Brillo, Lila),
+        new Entrada("Assets/_VFX/BatallaFinal/VFX_SenderoDestruccion.prefab", Tipo.Golpe, Crema),
+        new Entrada("Assets/_VFX/MananaDespues/VFX_VelaGrande.prefab", Tipo.Llama, Color.white),
+        new Entrada("Assets/_VFX/MananaDespues/VFX_VelaPequena.prefab", Tipo.Llama, Color.white),
+        new Entrada("Assets/_VFX/MananaDespues/VFX_Manga.prefab", Tipo.Llama, Color.white),
+        // Propios: ambiente
+        new Entrada("Assets/_VFX/Sendero/VFX_PolvoDeLuz.prefab", Tipo.Chispitas, Oro),
+        new Entrada("Assets/_VFX/Mundo/VFX_Pagina_Brillo.prefab", Tipo.Brillo, Oro),
+        // Propios: ataques de equipo
+        new Entrada(Equipo + "AuraConcentracion_Liam.prefab", Tipo.Brillo, Lila),
+        new Entrada(Equipo + "AuraConcentracion_Will.prefab", Tipo.Brillo, Oro),
+        new Entrada(Equipo + "AuraFormacion_Trio.prefab", Tipo.Circulo, Oro),
+        new Entrada(Equipo + "AuraLevitacion_Estela.prefab", Tipo.Brillo, Fuego),
+        new Entrada(Equipo + "FocoMano_Estela.prefab", Tipo.Llama, Color.white),
+        new Entrada(Equipo + "ImpactoRemate_Estela.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Equipo + "ImpactoRemate_Liam.prefab", Tipo.Golpe, Lila),
+        new Entrada(Equipo + "ImpactoRemate_Trio.prefab", Tipo.Golpe, Oro),
+        new Entrada(Equipo + "SpecialAttack_Estela.prefab", Tipo.Meteoro, Fuego),
+        new Entrada(Equipo + "SpecialAttack_EstelaLiam.prefab", Tipo.Golpe, Fuego),
+        new Entrada(Equipo + "SpecialAttack_Liam.prefab", Tipo.Implosion, Lila),
+        new Entrada(Equipo + "SpecialAttack_Trio.prefab", Tipo.Golpe, Oro),
+    };
+
+    [MenuItem("El Sendero/Magia/Todo el juego a dibujo (INC-1127)")]
+    public static void PasarTodo()
+    {
+        var log = new StringBuilder("=== Efectos del juego a dibujo (INC-1127) ===\n");
+        var avisos = new List<string>();
+        var t = VfxPropiosDeHechizosBuilder.TexturasDeDibujo();
+        foreach (var e in Tabla)
+        {
+            try { Pasar(e, t, log, avisos); }
+            catch (System.Exception ex) { avisos.Add($"{e.Ruta}: {ex.Message}"); }
+        }
+        AssetDatabase.SaveAssets();
+        log.AppendLine($"{Tabla.Length} entradas.");
+        if (avisos.Count == 0) Debug.Log(log.Append("Sin avisos.").ToString());
+        else Debug.LogWarning(log.Append($"{avisos.Count} aviso(s):\n  • ").Append(string.Join("\n  • ", avisos)).ToString());
+    }
+
+    private static void Pasar(Entrada e, Texturas t, StringBuilder log, List<string> avisos)
+    {
+        var original = AssetDatabase.LoadAssetAtPath<GameObject>(e.Ruta);
+        if (original == null) { avisos.Add($"No encuentro {e.Ruta}."); return; }
+        if (PrefabUtility.GetPrefabAssetType(original) == PrefabAssetType.Variant) { avisos.Add($"{e.Ruta} es una variante; sigue a su base."); return; }
+
+        bool bucle;
+        float tam = Medir(original, out bucle);
+
+        var raiz = PrefabUtility.LoadPrefabContents(e.Ruta);
+        try
+        {
+            var previo = raiz.transform.Find(NombreDelDibujo);
+            if (previo != null) { tam = previo.localScale.x; bucle = EraBucle(previo); }
+            Desnudar(raiz);
+
+            var dibujo = new GameObject(NombreDelDibujo);
+            dibujo.transform.SetParent(raiz.transform, false);
+            float escala = e.Tipo == Tipo.Escudo ? 1f : tam;
+            dibujo.transform.localScale = Vector3.one * escala;
+            Construir(e.Tipo, dibujo, t, e.Color);
+            foreach (var ps in dibujo.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var m = ps.main;
+                m.loop = bucle;
+                m.scalingMode = ParticleSystemScalingMode.Hierarchy;
+            }
+            PrefabUtility.SaveAsPrefabAsset(raiz, e.Ruta);
+            log.AppendLine($"   {System.IO.Path.GetFileNameWithoutExtension(e.Ruta)}: {e.Tipo}, tamaño {escala:0.##}{(bucle ? ", en bucle" : "")}.");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(raiz);
+        }
+    }
+
+    private static bool EraBucle(Transform dibujo)
+        => dibujo.GetComponentsInChildren<ParticleSystem>(true).Any(p => p.main.loop);
+
+    /// Tamaño (radio aproximado) y si va en bucle, viendo el efecto original medio segundo.
+    private static float Medir(GameObject original, out bool bucle)
+    {
+        var sistemas = original.GetComponentsInChildren<ParticleSystem>(true);
+        bucle = sistemas.Any(p => p.main.loop);
+        var escena = EditorSceneManager.NewPreviewScene();
+        try
+        {
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(original, escena);
+            inst.transform.position = Vector3.zero;
+            foreach (var ps in inst.GetComponentsInChildren<ParticleSystem>(true)) ps.Simulate(0.6f, false, true, true);
+            var b = new Bounds(Vector3.zero, Vector3.zero);
+            bool alguno = false;
+            foreach (var r in inst.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r.bounds.size == Vector3.zero) continue;
+                if (!alguno) { b = r.bounds; alguno = true; } else b.Encapsulate(r.bounds);
+            }
+            float radio = alguno ? Mathf.Max(b.extents.x, b.extents.z, b.extents.y * 0.6f) : 1f;
+            return Mathf.Clamp(radio * 0.8f, 0.3f, 8f);
+        }
+        finally
+        {
+            EditorSceneManager.ClosePreviewScene(escena);
+        }
+    }
+
+    /// Quita lo que se ve (partículas, mallas, luces, animación, scripts de paquetes) y deja lo que es
+    /// de juego: colisiones, cuerpos físicos y componentes del proyecto.
+    private static void Desnudar(GameObject raiz)
+    {
+        foreach (var hijo in raiz.GetComponentsInChildren<Transform>(true).Reverse())
+        {
+            if (hijo == null) continue;
+            if (PrefabUtility.IsOutermostPrefabInstanceRoot(hijo.gameObject) && hijo.gameObject != raiz)
+                PrefabUtility.UnpackPrefabInstance(hijo.gameObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+        }
+        Limpiar(raiz.transform, true);
+    }
+
+    private static bool Limpiar(Transform tr, bool esRaiz)
+    {
+        bool tieneJuego = false;
+        foreach (Transform hijo in tr.Cast<Transform>().ToList())
+            if (!Limpiar(hijo, false)) Object.DestroyImmediate(hijo.gameObject);
+            else tieneJuego = true;
+
+        for (int pasada = 0; pasada < 4; pasada++)
+            foreach (var c in tr.GetComponents<Component>())
+                if (c != null && EsVisual(c)) Object.DestroyImmediate(c);
+
+        foreach (var c in tr.GetComponents<Component>())
+            if (c != null && !(c is Transform)) tieneJuego = true;
+        return esRaiz || tieneJuego;
+    }
+
+    private static bool EsVisual(Component c)
+    {
+        if (c is ParticleSystem || c is ParticleSystemRenderer || c is Renderer || c is MeshFilter || c is Light ||
+            c is Animator || c is Animation || c is ParticleSystemForceField) return true;
+        if (c.GetType().Name == "VisualEffect") return true;
+        if (c is MonoBehaviour mb)
+        {
+            var script = MonoScript.FromMonoBehaviour(mb);
+            string ruta = script != null ? AssetDatabase.GetAssetPath(script) : "";
+            return string.IsNullOrEmpty(ruta) || ruta.StartsWith("Assets/VFX/");
+        }
+        return false;
+    }
+
+    private static void Construir(Tipo tipo, GameObject d, Texturas t, Color c)
+        => VfxPropiosDeHechizosBuilder.DibujoGenerico(tipo.ToString(), d, t, c);
+}

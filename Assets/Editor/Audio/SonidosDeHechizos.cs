@@ -10,15 +10,17 @@ using UnityEngine;
 /// cómo se lanza: carga durante el gesto (castDelaySeconds), salida, y cola según la velocidad;
 /// las zonas suenan lo que dura la zona. Los impactos van por elemento y tamaño
 /// («Impacto_&lt;Elemento&gt;_&lt;Pequeno|Grande&gt;»), salvo Amanecer, que lleva el suyo
-/// (Herramientas/SFX/disenar_amanecer.py, Ver INC-724). Las zonas y el Paso Sombrío no llevan impacto
+/// (Ver INC-724). Las zonas y el Paso Sombrío no llevan impacto
 /// (los golpes de cada 0,5 s de una zona saturarían el oído).
 ///
 /// Los hechizos con columna «capas» llevan además eventos de audio por capas (AudioEventSO en
 /// Assets/_SPELLS/Eventos): un impacto con un solo clip suena a nota; con transitorio + cuerpo +
 /// sub + cola suena a golpe. Las capas por elemento las genera
-/// Herramientas/Audio/disenar_capas_de_hechizo.py.
+/// el mismo disenar_hechizos_conjuro.py.
 ///
-/// Los audios salen de Herramientas/SFX/disenar_hechizos.py y viven en Assets/Audio/SFX_Hechizos/.
+/// Los audios salen de Herramientas/SFX/disenar_hechizos_conjuro.py (estilo del conjuro del prólogo,
+/// Ver INC-1139) y viven en Assets/Audio/SFX_Hechizos/; los de combate que no son hechizos (bloqueo,
+/// curación, daño, caída, fallo, choque de hechizos y ataques de equipo), en SFX_Hechizos/Combate/.
 /// El menú da de alta las claves en el perfil de audio, las pone en cada hechizo y rehace los
 /// eventos por capas. Se puede pasar las veces que haga falta: el resultado es siempre la tabla.
 /// </summary>
@@ -26,6 +28,26 @@ public static class SonidosDeHechizos
 {
     private const string Carpeta = "Assets/Audio/SFX_Hechizos/";
     private const string CarpetaCapas = "Assets/Audio/SFX_Hechizos/Capas/";
+
+    // Claves de combate que no son hechizos → su audio en SFX_Hechizos/Combate/. Las claves no cambian (las
+    // usan PlayerShieldController, PlayerHealthSystem, ProjectileCollisionSettingsSO, PresentacionDelCombo
+    // y los SpecialAttackSO); solo cambia el clip.
+    private static readonly (string clave, string archivo)[] Combate =
+    {
+        ("EstelaAppears_ShieldBlock",  "SFX_Combate_Bloqueo.wav"),
+        ("Player_Heal",                "SFX_Combate_Curacion.wav"),
+        ("Player_Damage",              "SFX_Combate_Dano.wav"),
+        ("Player_Death",               "SFX_Combate_Caida.wav"),
+        ("SpellFail",                  "SFX_Combate_HechizoFalla.wav"),
+        ("ProjectileClash",            "SFX_Combate_ChoqueDeHechizos.wav"),
+        ("SpecialAttack_Meteoros",     "SFX_Equipo_Meteoros.wav"),
+        ("SpecialAttack_AgujeroNegro", "SFX_Equipo_AgujeroNegro.wav"),
+        ("SpecialAttack_Trio",         "SFX_Equipo_Trio.wav"),
+        ("SpecialAttack_Trio_Bucle",   "SFX_Equipo_Trio_Bucle.wav"),
+        ("SpecialAttack_Liam",         "SFX_Equipo_Liam.wav"),
+        ("SpecialAttack_Estela",       "SFX_Equipo_Estela.wav"),
+        ("SpecialAttack_Impacto",      "SFX_Equipo_Impacto.wav"),
+    };
     private const string CarpetaHechizos = "Assets/_SPELLS/";
     private const string CarpetaEventos = "Assets/_SPELLS/Eventos";
     private const string RutaPerfil = "Assets/_AUDIOPROFILE/AudioGraphProfile.asset";
@@ -85,6 +107,7 @@ public static class SonidosDeHechizos
         var claves = new List<(string clave, string archivo)>();
         foreach (var (h, _, _) in Tabla) claves.Add(("Hechizo_" + h, "SFX_Hechizo_" + h + ".wav"));
         foreach (var i in Impactos) claves.Add((i, "SFX_" + i + ".wav"));
+        foreach (var (clave, archivo) in Combate) claves.Add((clave, "Combate/" + archivo));
 
         foreach (var (clave, archivo) in claves)
         {
