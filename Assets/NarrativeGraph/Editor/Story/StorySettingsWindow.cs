@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -35,6 +36,15 @@ namespace NarrativeGraphEditor.Story
             scroll.AddToClassList("story-panel__scroll");
             root.Add(scroll);
 
+            // Help
+            var help = Section(scroll, StoryText.T("Ayuda", "Help"));
+            Tool(help, StoryText.T("Ver el recorrido del editor", "Take the editor tour"),
+                StoryText.T("Un minuto por cada parte del editor.", "A minute through each part of the editor."),
+                () => { Close(); StoryGraphWindow.ShowTour(); });
+            Tool(help, StoryText.T("Abrir el manual de usuario", "Open the user manual"),
+                StoryText.T("El manual completo en PDF.", "The full manual as a PDF."),
+                () => StoryTour.OpenManual());
+
             // Tools
             var tools = Section(scroll, StoryText.T("Herramientas", "Tools"));
             var graph = _graph?.Invoke();
@@ -70,6 +80,9 @@ namespace NarrativeGraphEditor.Story
                 play.Add(scene);
             }
 
+            // Player sheet
+            BuildPlayerSheet(Section(scroll, StoryText.T("Ficha del jugador", "Player sheet")));
+
             // Language
             var language = Section(scroll, StoryText.T("Idioma del editor", "Editor language"));
             var lang = new DropdownField(new[] { "Español", "English" }.ToList(), StoryText.English ? 1 : 0);
@@ -86,7 +99,7 @@ namespace NarrativeGraphEditor.Story
             Hint(assistant, StoryText.T(
                 "Un chat dentro del editor que lee el capítulo y te propone cambios. Cada uno usa su propio servicio y su clave; se guardan solo en este ordenador.",
                 "A chat inside the editor that reads the chapter and proposes changes. Everyone uses their own service and key, stored only on this computer."));
-            var visible = new Toggle(StoryText.T("Mostrar la pestaña del asistente", "Show the assistant tab")) { value = StoryAssistantSettings.Visible };
+            var visible = new Toggle(StoryText.T("Mostrar el botón del asistente", "Show the assistant button")) { value = StoryAssistantSettings.Visible };
             visible.RegisterValueChangedCallback(e => StoryAssistantSettings.Visible = e.newValue);
             assistant.Add(visible);
 
@@ -123,17 +136,107 @@ namespace NarrativeGraphEditor.Story
             // Outside tools
             var outside = Section(scroll, StoryText.T("Herramientas externas", "Outside tools"));
             Hint(outside, StoryText.T(
-                $"Deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto (servidor MCP en Assets/NarrativeGraph/Tools~/mcp). Solo se escucha en este ordenador, puerto {StoryBridge.Port}.",
-                $"Lets assistants such as Claude Desktop or Claude Code, or other programs, read and change graphs while Unity is open (MCP server in Assets/NarrativeGraph/Tools~/mcp). It only listens on this computer, port {StoryBridge.Port}."));
+                $"Deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto (servidor MCP en Assets/NarrativeGraph/Tools/mcp). Solo se escucha en este ordenador, puerto {StoryBridge.Port}.",
+                $"Lets assistants such as Claude Desktop or Claude Code, or other programs, read and change graphs while Unity is open (MCP server in Assets/NarrativeGraph/Tools/mcp). It only listens on this computer, port {StoryBridge.Port}."));
             var bridge = new Toggle(StoryText.T("Permitir herramientas externas", "Allow outside tools")) { value = StoryBridge.Enabled };
             bridge.RegisterValueChangedCallback(e => StoryBridge.Enabled = e.newValue);
             outside.Add(bridge);
-            var readme = new Button(() => EditorUtility.RevealInFinder(System.IO.Path.GetFullPath("Assets/NarrativeGraph/Tools~/mcp/README.md")))
+            var readme = new Button(() => EditorUtility.RevealInFinder(System.IO.Path.GetFullPath("Assets/NarrativeGraph/Tools/mcp/README.md")))
                 { text = StoryText.T("Ver cómo conectarlo", "How to connect it") };
             readme.AddToClassList("story-button");
             readme.style.alignSelf = Align.FlexStart;
             readme.style.marginLeft = 0;
             outside.Add(readme);
+        }
+
+        /// Qué datos del jugador puede fijar el grafo: la plantilla de partida nueva y los campos.
+        void BuildPlayerSheet(VisualElement box)
+        {
+            Hint(box, StoryText.T(
+                "Los datos del jugador al empezar una partida nueva (un ScriptableObject, o un prefab con el componente que los guarda) y qué campos pueden fijar los puntos de arranque (◆) y retocarse al probar.",
+                "The player's data when starting a new game (a ScriptableObject, or a prefab with the component that holds it) and which fields start points (◆) can set and tests can tweak."));
+            var sheet = NarrativePlayerSheet.Find();
+            if (sheet == null)
+            {
+                var create = new Button(() =>
+                {
+                    var path = EditorUtility.SaveFilePanelInProject(StoryText.T("Ficha del jugador", "Player sheet"), "PlayerSheet", "asset", string.Empty, "Assets");
+                    if (string.IsNullOrEmpty(path)) return;
+                    AssetDatabase.CreateAsset(CreateInstance<NarrativePlayerSheet>(), path);
+                    AssetDatabase.SaveAssets();
+                    Build();
+                }) { text = StoryText.T("Crear la ficha del jugador", "Create the player sheet") };
+                create.AddToClassList("story-button");
+                create.style.alignSelf = Align.FlexStart;
+                create.style.marginLeft = 0;
+                box.Add(create);
+                return;
+            }
+
+            void Change(Action<NarrativePlayerSheet> change, bool rebuild)
+            {
+                Undo.RecordObject(sheet, StoryText.T("Ficha del jugador", "Player sheet"));
+                change(sheet);
+                EditorUtility.SetDirty(sheet);
+                AssetDatabase.SaveAssetIfDirty(sheet);
+                if (rebuild) Build();
+            }
+
+            var asset = new UnityEditor.UIElements.ObjectField(StoryText.T("Ficha", "Sheet")) { objectType = typeof(NarrativePlayerSheet), value = sheet };
+            asset.SetEnabled(false);
+            box.Add(asset);
+
+            var template = new UnityEditor.UIElements.ObjectField(StoryText.T("Partida nueva", "New game"))
+            {
+                objectType = typeof(UnityEngine.Object), allowSceneObjects = false, value = sheet.template,
+                tooltip = StoryText.T("Un ScriptableObject con los datos del jugador, o un prefab con el componente que los guarda.", "A ScriptableObject with the player data, or a prefab with the component that holds it."),
+            };
+            template.RegisterValueChangedCallback(e => Change(s => { s.template = e.newValue is ScriptableObject || e.newValue is GameObject ? e.newValue : null; }, true));
+            box.Add(template);
+
+            if (sheet.template is GameObject prefab)
+            {
+                var types = prefab.GetComponents<Component>().Where(c => c != null && c is not Transform).Select(c => c.GetType().FullName).Distinct().ToList();
+                var component = new DropdownField(StoryText.T("Componente", "Component"), types, Math.Max(0, types.IndexOf(sheet.componentType)));
+                component.RegisterValueChangedCallback(e => Change(s => s.componentType = e.newValue, true));
+                if (string.IsNullOrEmpty(sheet.componentType) && types.Count > 0) Change(s => s.componentType = types[0], false);
+                box.Add(component);
+            }
+
+            var available = sheet.AvailableFields();
+            if (available.Count == 0) return;
+
+            var positions = new List<string> { StoryText.T("(ninguno)", "(none)") };
+            positions.AddRange(available.Select(f => f.path));
+            var position = new DropdownField(StoryText.T("Dónde aparece", "Where it appears"), positions, Math.Max(0, positions.IndexOf(sheet.positionField)))
+            {
+                tooltip = StoryText.T("El campo que dice dónde aparece el jugador. Con él, el editor avisa si la historia cambia de sitio sin un punto que lo diga.",
+                                      "The field that says where the player appears. With it, the editor warns when the story moves somewhere without a point saying so."),
+            };
+            position.RegisterValueChangedCallback(e => Change(s => s.positionField = position.index <= 0 ? string.Empty : e.newValue, false));
+            box.Add(position);
+
+            var list = new Label(StoryText.T("Campos que se pueden fijar y retocar:", "Fields that can be set and tweaked:"));
+            list.AddToClassList("story-muted");
+            list.style.marginTop = 8;
+            box.Add(list);
+            foreach (var (path, label) in available)
+            {
+                var field = path;
+                var toggle = new Toggle(label) { value = sheet.fields.Contains(field), tooltip = field };
+                toggle.RegisterValueChangedCallback(e => Change(s =>
+                {
+                    s.fields.Remove(field);
+                    if (e.newValue)
+                    {
+                        // Se guardan en el orden de la plantilla.
+                        s.fields.Add(field);
+                        var order = available.Select(f => f.path).ToList();
+                        s.fields.Sort((x, y) => order.IndexOf(x).CompareTo(order.IndexOf(y)));
+                    }
+                }, false));
+                box.Add(toggle);
+            }
         }
 
         static VisualElement Section(VisualElement parent, string title)

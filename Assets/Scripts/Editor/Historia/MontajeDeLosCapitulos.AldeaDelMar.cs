@@ -227,19 +227,8 @@ public static partial class MontajeDeLosCapitulos
         r.tamanoCaja = new Vector3(0.38f, 0.22f, 0.3f);
         r.cajasPorPila = 4;
 
-        // El posadero sirve en la terraza: va de la puerta de la posada a la mesa de Benito y Rosario
-        // con una bandeja, y vuelve (INC-1033).
-        var servir = new GameObject("Ruta del posadero (servir en la terraza)");
-        servir.transform.SetParent(padre, false);
-        var rp = servir.AddComponent<NPCWorkRoute>();
-        rp.puestoId = PuestoDelPosadero;
-        rp.puntoRecogida = PuntoDeRuta(servir.transform, "Recogida (puerta de la posada)", new Vector3(283.2f, float.NaN, -423.2f), 33f);
-        rp.puntoEntrega = PuntoDeRuta(servir.transform, "Entrega (mesa de Benito y Rosario)", new Vector3(284.0f, float.NaN, -429.6f), 180f);
-        rp.materialCaja = MaterialDeColor(new Color(0.5f, 0.33f, 0.18f), "Aldea_BandejaDeLaPosada");
-        rp.tamanoCaja = new Vector3(0.42f, 0.05f, 0.3f);
-        rp.separacionCajas = new Vector2(0.46f, 0.07f);
-        rp.cajasPorPila = 2;
-        rp.pausaAntesDeVolver = 2.5f;
+        // El posadero ya no sirve con bandeja: los personajes no llevan objetos en las manos (Raúl,
+        // 13 nov). Atiende en la puerta de la posada con sus gestos de espera. Ver INC-1155.
         AsegurarOficiosDeLaAldea(informe);
 
         // Pistas de la madera: lo que se ve, dentro del punto de inspección (sale y se va con su tramo).
@@ -323,6 +312,29 @@ public static partial class MontajeDeLosCapitulos
         finally { Object.DestroyImmediate(pose); }
     }
 
+    /// Quita la ruta de servir del posadero de las escenas abiertas y le pone su oficio sin bandeja,
+    /// sin tener que montar el capítulo entero. Ver INC-1155.
+    [MenuItem("El Sendero/Historia/Aldea del mar: posadero sin bandeja (INC-1155)")]
+    private static void PosaderoSinBandeja()
+    {
+        var informe = new StringBuilder();
+        for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++)
+        {
+            var escena = UnityEngine.SceneManagement.SceneManager.GetSceneAt(i);
+            if (!escena.isLoaded) continue;
+            foreach (var raiz in escena.GetRootGameObjects())
+                foreach (var ruta in raiz.GetComponentsInChildren<NPCWorkRoute>(true))
+                {
+                    if (ruta == null || ruta.puestoId != PuestoDelPosadero) continue;
+                    informe.AppendLine($"Quitada «{ruta.name}» de {escena.name}.");
+                    UnityEngine.Object.DestroyImmediate(ruta.gameObject);
+                    UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(escena);
+                }
+        }
+        AsegurarOficiosDeLaAldea(informe);
+        Debug.Log("[Montaje] " + informe);
+    }
+
     private static Transform PuntoDeRuta(Transform padre, string nombre, Vector3 pos, float rumbo)
     {
         var go = new GameObject(nombre);
@@ -332,7 +344,7 @@ public static partial class MontajeDeLosCapitulos
     }
 
     /// <summary>
-    /// Que cada vecino haga algo de su oficio (INC-1033): el posadero sirve en la terraza (su ruta, arriba),
+    /// Que cada vecino haga algo de su oficio (INC-1033): el posadero atiende en la puerta de la posada (sin bandeja, INC-1155),
     /// Anselmo se sienta en el borde del muelle mirando al mar y Engracia atiende su puesto entre ratos quieta.
     /// </summary>
     private static void AsegurarOficiosDeLaAldea(StringBuilder informe)
@@ -341,11 +353,12 @@ public static partial class MontajeDeLosCapitulos
         if (posadero != null)
         {
             posadero.enableWander = false;
-            posadero.permitirTrabajo = true;
-            posadero.puestoId = PuestoDelPosadero;
+            posadero.permitirTrabajo = false;
+            posadero.puestoId = "";
             posadero.ambientActivity = NPCAmbientActivity.None;
             EditorUtility.SetDirty(posadero);
         }
+        GestosDeEsperaDelVecino("Posadero", "Idle01", "InteractWithPeople_NoWeapon", "Idle02", "Idle03");
         var anselmo = AmbienteDelVecino("Anselmo", "Eusebio");
         if (anselmo != null)
         {
@@ -357,7 +370,7 @@ public static partial class MontajeDeLosCapitulos
         }
         GestosDeEsperaDelVecino("Engracia", "Idle01", "InteractWithPeople_NoWeapon", "Idle02", "Idle03");
         AssetDatabase.SaveAssets();
-        informe.AppendLine("Aldea del mar: el posadero sirve en la terraza, Anselmo se sienta en el muelle y Engracia atiende su puesto.");
+        informe.AppendLine("Aldea del mar: el posadero atiende en la posada, Anselmo se sienta en el muelle y Engracia atiende su puesto.");
     }
 
     /// El ambiente de un vecino (se crea copiando el de otro si no tiene) y puesto en su prefab.

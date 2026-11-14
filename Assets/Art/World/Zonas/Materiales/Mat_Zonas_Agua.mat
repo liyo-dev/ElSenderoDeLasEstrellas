@@ -13,7 +13,6 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _EMISSION
-  - _PINCEL
   - _RECEIVE_SHADOWS_OFF
   m_InvalidKeywords:
   - DR_RIM_ON
@@ -120,7 +119,7 @@ Material:
     - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DecalPaintOver: 0
     - _DetailMapBlendingMode: 0
@@ -158,7 +157,7 @@ Material:
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
     - _Parallax: 0.02
-    - _Pincel: 1
+    - _Pincel: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 0

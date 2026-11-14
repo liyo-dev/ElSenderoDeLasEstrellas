@@ -1,8 +1,7 @@
-/* Step fields and the game's side tabs inside the story editor. Structure comes from the
-   original inspector; colours follow the story editor tokens (see StoryEditor.uss). */
+/* Campos del paso dentro del editor de la historia. La estructura viene del inspector de
+   siempre; los colores, de los del editor (ver StoryEditor.uss). */
 
-.narrative-inspector,
-.narrative-test {
+.narrative-inspector {
     flex-grow: 1;
     min-height: 0;
 }
@@ -106,108 +105,6 @@
 
 .narrative-inspector__link:hover {
     background-color: rgba(255, 255, 255, 0.14);
-}
-
-/* ─── Pestaña Prueba ─────────────────────────────────────────── */
-
-.narrative-test {
-    background-color: var(--panel);
-}
-
-.narrative-test__scroll {
-    flex-grow: 1;
-    padding: 6px 8px;
-}
-
-.narrative-test__title {
-    font-size: 13px;
-    -unity-font-style: bold;
-    padding: 4px 2px 2px 2px;
-    color: var(--text-strong);
-}
-
-.narrative-test__target {
-    font-size: 11px;
-    color: var(--text-strong);
-    padding: 0 2px 8px 2px;
-    white-space: normal;
-}
-
-.narrative-test__section {
-    margin: 4px 0;
-}
-
-.narrative-test__section > Toggle {
-    -unity-font-style: bold;
-    font-size: 11px;
-}
-
-.narrative-test__hint {
-    font-size: 10px;
-    color: var(--muted);
-    white-space: normal;
-    margin: 2px 0 6px 0;
-}
-
-.narrative-test__small-button {
-    margin: 3px 0;
-    font-size: 10px;
-    height: 20px;
-}
-
-.narrative-test__grid {
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.narrative-test__ability {
-    width: 50%;
-    font-size: 10px;
-}
-
-.narrative-test__preview {
-    margin-top: 4px;
-}
-
-.narrative-test__preview-line {
-    font-size: 10px;
-    white-space: normal;
-    margin: 1px 0;
-}
-
-.narrative-test__preview-line.is-ok { color: var(--ok); }
-.narrative-test__preview-line.is-warning { color: var(--warning); }
-.narrative-test__preview-line.is-error { color: #ff7a7a; }
-.narrative-test__preview-line.is-muted { color: var(--muted); }
-
-.narrative-test__actions {
-    margin-top: 14px;
-}
-
-.narrative-test__play {
-    height: 34px;
-    border-width: 0;
-    border-radius: 6px;
-    background-color: var(--accent);
-    color: var(--accent-ink);
-    -unity-font-style: bold;
-    font-size: 12px;
-}
-
-.narrative-test__play:hover {
-    background-color: #FF8F61;
-}
-
-.narrative-test__play.is-playing {
-    background-color: #a33f3f;
-}
-
-.narrative-test__status {
-    font-size: 10px;
-    color: var(--muted);
-    white-space: normal;
-    margin-top: 6px;
-    padding-bottom: 8px;
 }
 
 /* ─── Selector de habilidades del nodo ───────────────────────── */

@@ -1,0 +1,275 @@
+/* Step fields and the game's side tabs inside the story editor. Structure comes from the
+   original inspector; colours follow the story editor tokens (see StoryEditor.uss). */
+
+.narrative-inspector,
+.narrative-test {
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.narrative-inspector {
+    background-color: var(--panel);
+    min-width: 280px;
+}
+
+.narrative-inspector__header {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: var(--text-strong);
+    white-space: normal;
+    padding: 14px 14px 10px 14px;
+    border-left-width: 0;
+    background-color: var(--panel);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--line);
+}
+
+.narrative-inspector__scroll {
+    flex-grow: 1;
+}
+
+.narrative-inspector__description {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: normal;
+    padding: 6px 10px 2px 10px;
+    -unity-font-style: italic;
+}
+
+.narrative-inspector__hint {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: normal;
+    padding: 12px;
+}
+
+.narrative-inspector__section {
+    margin: 6px 10px;
+}
+
+.narrative-inspector__section > Toggle {
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.narrative-inspector__section > #unity-content {
+    padding: 4px 2px 6px 8px;
+    margin-left: 0;
+}
+
+.narrative-inspector__row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2px 0;
+}
+
+.narrative-inspector__asset-name {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--text-strong);
+    white-space: normal;
+    flex-shrink: 1;
+}
+
+.narrative-inspector__script {
+    margin-top: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.narrative-inspector__script-line {
+    flex-direction: row;
+    padding: 3px 2px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.narrative-inspector__script-num {
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 18px;
+    margin-right: 4px;
+}
+
+.narrative-inspector__link {
+    -unity-text-align: middle-left;
+    margin: 1px 0;
+    padding: 2px 6px;
+    font-size: 11px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-width: 0;
+    border-radius: 3px;
+    white-space: normal;
+}
+
+.narrative-inspector__link:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+/* ─── Pestaña Prueba ─────────────────────────────────────────── */
+
+.narrative-test {
+    background-color: var(--panel);
+}
+
+.narrative-test__scroll {
+    flex-grow: 1;
+    padding: 6px 8px;
+}
+
+.narrative-test__title {
+    font-size: 13px;
+    -unity-font-style: bold;
+    padding: 4px 2px 2px 2px;
+    color: var(--text-strong);
+}
+
+.narrative-test__target {
+    font-size: 11px;
+    color: var(--text-strong);
+    padding: 0 2px 8px 2px;
+    white-space: normal;
+}
+
+.narrative-test__section {
+    margin: 4px 0;
+}
+
+.narrative-test__section > Toggle {
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.narrative-test__hint {
+    font-size: 10px;
+    color: var(--muted);
+    white-space: normal;
+    margin: 2px 0 6px 0;
+}
+
+.narrative-test__small-button {
+    margin: 3px 0;
+    font-size: 10px;
+    height: 20px;
+}
+
+.narrative-test__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.narrative-test__ability {
+    width: 50%;
+    font-size: 10px;
+}
+
+.narrative-test__preview {
+    margin-top: 4px;
+}
+
+.narrative-test__preview-line {
+    font-size: 10px;
+    white-space: normal;
+    margin: 1px 0;
+}
+
+.narrative-test__preview-line.is-ok { color: var(--ok); }
+.narrative-test__preview-line.is-warning { color: var(--warning); }
+.narrative-test__preview-line.is-error { color: #ff7a7a; }
+.narrative-test__preview-line.is-muted { color: var(--muted); }
+
+.narrative-test__actions {
+    margin-top: 14px;
+}
+
+.narrative-test__play {
+    height: 34px;
+    border-width: 0;
+    border-radius: 6px;
+    background-color: var(--accent);
+    color: var(--accent-ink);
+    -unity-font-style: bold;
+    font-size: 12px;
+}
+
+.narrative-test__play:hover {
+    background-color: #FF8F61;
+}
+
+.narrative-test__play.is-playing {
+    background-color: #a33f3f;
+}
+
+.narrative-test__status {
+    font-size: 10px;
+    color: var(--muted);
+    white-space: normal;
+    margin-top: 6px;
+    padding-bottom: 8px;
+}
+
+/* ─── Selector de habilidades del nodo ───────────────────────── */
+
+.unlock-editor {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.unlock-editor__title {
+    font-size: 10px;
+    -unity-font-style: bold;
+    color: var(--muted);
+    margin: 6px 0 3px 0;
+}
+
+.unlock-editor__chips {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.unlock-editor__chip {
+    margin: 2px 4px 2px 0;
+    padding: 2px 7px;
+    border-width: 0;
+    border-radius: 9px;
+    background-color: rgba(255, 122, 69, 0.16);
+    color: #FFD9C7;
+    font-size: 10px;
+}
+
+.unlock-editor__chip:hover {
+    background-color: rgba(255, 122, 122, 0.25);
+    color: #ffd0d0;
+}
+
+.unlock-editor__add {
+    flex-direction: row;
+    align-items: center;
+    margin: 3px 0;
+}
+
+.unlock-editor__dropdown {
+    flex-grow: 1;
+    margin-right: 4px;
+}
+
+.unlock-editor__add-button {
+    width: 26px;
+    height: 20px;
+    min-width: 26px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 4px;
+    background-color: var(--accent);
+    color: white;
+    -unity-font-style: bold;
+}
+
+.unlock-editor__add-button:hover {
+    background-color: #FF8F61;
+}

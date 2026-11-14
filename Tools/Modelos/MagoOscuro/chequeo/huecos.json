@@ -1,0 +1,1736 @@
+[
+ {
+  "pose": "reposo",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 11442,
+  "huecos": 36,
+  "parte": 0.003146303093864709,
+  "culpa": {
+   "BajoLuz": 35,
+   "Cuerpo": 1
+  },
+  "reves": 29,
+  "parte_reves": 0.0025345219367243488,
+  "culpa_reves": {
+   "BajoLuz": 29
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 14804,
+  "huecos": 16,
+  "parte": 0.0010807889759524452,
+  "culpa": {
+   "Hair19_MagoOscuro": 2,
+   "BajoLuz": 14
+  },
+  "reves": 29,
+  "parte_reves": 0.001958930018913807,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 4,
+   "BajoLuz": 25
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 14219,
+  "huecos": 36,
+  "parte": 0.002531823616288065,
+  "culpa": {
+   "BajoLuz": 27,
+   "Hair19_MagoOscuro": 8,
+   "Head01_Male": 1
+  },
+  "reves": 21,
+  "parte_reves": 0.0014768971095013713,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 20
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 14705,
+  "huecos": 26,
+  "parte": 0.001768106086365182,
+  "culpa": {
+   "BajoLuz": 15,
+   "Hair19_MagoOscuro": 11
+  },
+  "reves": 16,
+  "parte_reves": 0.001088065283917035,
+  "culpa_reves": {
+   "BajoLuz": 16
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 17263,
+  "huecos": 30,
+  "parte": 0.0017378207727509704,
+  "culpa": {
+   "BajoLuz": 30
+  },
+  "reves": 22,
+  "parte_reves": 0.0012744019000173782,
+  "culpa_reves": {
+   "BajoLuz": 22
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 18915,
+  "huecos": 20,
+  "parte": 0.00105736188210415,
+  "culpa": {
+   "BajoLuz": 20
+  },
+  "reves": 16,
+  "parte_reves": 0.0008458895056833201,
+  "culpa_reves": {
+   "BajoLuz": 16
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 17273,
+  "huecos": 35,
+  "parte": 0.002026283795519018,
+  "culpa": {
+   "BajoLuz": 35
+  },
+  "reves": 12,
+  "parte_reves": 0.0006947258727493776,
+  "culpa_reves": {
+   "BajoLuz": 12
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 14712,
+  "huecos": 32,
+  "parte": 0.002175095160413268,
+  "culpa": {
+   "Hair19_MagoOscuro": 8,
+   "BajoLuz": 22,
+   "Cuello": 2
+  },
+  "reves": 21,
+  "parte_reves": 0.0014274061990212073,
+  "culpa_reves": {
+   "BajoLuz": 21
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 14250,
+  "huecos": 41,
+  "parte": 0.0028771929824561405,
+  "culpa": {
+   "Hair19_MagoOscuro": 10,
+   "BajoLuz": 31
+  },
+  "reves": 22,
+  "parte_reves": 0.001543859649122807,
+  "culpa_reves": {
+   "BajoLuz": 22
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 17319,
+  "huecos": 7,
+  "parte": 0.00040418037992955713,
+  "culpa": {
+   "BajoLuz": 6,
+   "Cuerpo": 1
+  },
+  "reves": 6,
+  "parte_reves": 0.00034644032565390613,
+  "culpa_reves": {
+   "BajoLuz": 5,
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 16283,
+  "huecos": 10,
+  "parte": 0.0006141374439599583,
+  "culpa": {
+   "Hair19_MagoOscuro": 4,
+   "BajoLuz": 5,
+   "Cuello": 1
+  },
+  "reves": 8,
+  "parte_reves": 0.0004913099551679666,
+  "culpa_reves": {
+   "BajoLuz": 8
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 16196,
+  "huecos": 15,
+  "parte": 0.0009261546060755742,
+  "culpa": {
+   "Cuello": 1,
+   "Hair19_MagoOscuro": 4,
+   "BajoLuz": 10
+  },
+  "reves": 4,
+  "parte_reves": 0.0002469745616201531,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 19360,
+  "huecos": 15,
+  "parte": 0.0007747933884297521,
+  "culpa": {
+   "BajoLuz": 14,
+   "Cuerpo": 1
+  },
+  "reves": 5,
+  "parte_reves": 0.00025826446280991736,
+  "culpa_reves": {
+   "BajoLuz": 5
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 21875,
+  "huecos": 3,
+  "parte": 0.00013714285714285713,
+  "culpa": {
+   "BajoLuz": 3
+  },
+  "reves": 13,
+  "parte_reves": 0.0005942857142857143,
+  "culpa_reves": {
+   "BajoLuz": 13
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 19363,
+  "huecos": 12,
+  "parte": 0.000619738676857925,
+  "culpa": {
+   "BajoLuz": 9,
+   "Cuello": 3
+  },
+  "reves": 8,
+  "parte_reves": 0.00041315911790528327,
+  "culpa_reves": {
+   "BajoLuz": 8
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 16226,
+  "huecos": 9,
+  "parte": 0.000554665351904351,
+  "culpa": {
+   "BajoLuz": 3,
+   "Hair19_MagoOscuro": 4,
+   "Cuello": 2
+  },
+  "reves": 7,
+  "parte_reves": 0.0004314063848144953,
+  "culpa_reves": {
+   "BajoLuz": 7
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 16288,
+  "huecos": 14,
+  "parte": 0.0008595284872298625,
+  "culpa": {
+   "Hair19_MagoOscuro": 4,
+   "BajoLuz": 8,
+   "Cuerpo": 1,
+   "Capa": 1
+  },
+  "reves": 7,
+  "parte_reves": 0.00042976424361493125,
+  "culpa_reves": {
+   "BajoLuz": 7
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 17926,
+  "huecos": 6,
+  "parte": 0.00033470936070512103,
+  "culpa": {
+   "BajoLuz": 6
+  },
+  "reves": 4,
+  "parte_reves": 0.00022313957380341404,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 17591,
+  "huecos": 4,
+  "parte": 0.0002273890057415724,
+  "culpa": {
+   "Tunica": 2,
+   "BajoLuz": 1,
+   "Cuello": 1
+  },
+  "reves": 5,
+  "parte_reves": 0.0002842362571769655,
+  "culpa_reves": {
+   "Tunica": 1,
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 15971,
+  "huecos": 3,
+  "parte": 0.00018784046083526393,
+  "culpa": {
+   "BajoLuz": 3
+  },
+  "reves": 4,
+  "parte_reves": 0.0002504539477803519,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 18804,
+  "huecos": 6,
+  "parte": 0.0003190810465858328,
+  "culpa": {
+   "Cuello": 1,
+   "BajoLuz": 5
+  },
+  "reves": 4,
+  "parte_reves": 0.00021272069772388852,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 20794,
+  "huecos": 8,
+  "parte": 0.0003847263633740502,
+  "culpa": {
+   "BajoLuz": 8
+  },
+  "reves": 3,
+  "parte_reves": 0.00014427238626526882,
+  "culpa_reves": {
+   "BajoLuz": 3
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 18800,
+  "huecos": 5,
+  "parte": 0.00026595744680851064,
+  "culpa": {
+   "Cuello": 2,
+   "BajoLuz": 3
+  },
+  "reves": 1,
+  "parte_reves": 5.319148936170213e-05,
+  "culpa_reves": {
+   "BajoLuz": 1
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 15976,
+  "huecos": 7,
+  "parte": 0.0004381572358537807,
+  "culpa": {
+   "BajoLuz": 3,
+   "Hair19_MagoOscuro": 2,
+   "Capa": 2
+  },
+  "reves": 3,
+  "parte_reves": 0.00018778167250876315,
+  "culpa_reves": {
+   "BajoLuz": 3
+  }
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 17592,
+  "huecos": 1,
+  "parte": 5.684402000909504e-05,
+  "culpa": {
+   "BajoLuz": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.00011368804001819008,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 9337,
+  "huecos": 45,
+  "parte": 0.004819535182606833,
+  "culpa": {
+   "Hair19_MagoOscuro": 15,
+   "BajoLuz": 30
+  },
+  "reves": 11,
+  "parte_reves": 0.0011781086001927813,
+  "culpa_reves": {
+   "BajoLuz": 11
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 13436,
+  "huecos": 22,
+  "parte": 0.001637392080976481,
+  "culpa": {
+   "BajoLuz": 22
+  },
+  "reves": 11,
+  "parte_reves": 0.0008186960404882405,
+  "culpa_reves": {
+   "BajoLuz": 10,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 13123,
+  "huecos": 22,
+  "parte": 0.0016764459346186086,
+  "culpa": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 21
+  },
+  "reves": 19,
+  "parte_reves": 0.00144783967080698,
+  "culpa_reves": {
+   "BajoLuz": 19
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 12986,
+  "huecos": 31,
+  "parte": 0.002387186200523641,
+  "culpa": {
+   "BajoLuz": 16,
+   "Hair19_MagoOscuro": 14,
+   "Tunica": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.00015401201293700908,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 14705,
+  "huecos": 26,
+  "parte": 0.001768106086365182,
+  "culpa": {
+   "BajoLuz": 21,
+   "Capa": 5
+  },
+  "reves": 10,
+  "parte_reves": 0.0006800408024481469,
+  "culpa_reves": {
+   "BajoLuz": 9,
+   "Capa": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 15189,
+  "huecos": 20,
+  "parte": 0.0013167423793534795,
+  "culpa": {
+   "BajoLuz": 19,
+   "Cuerpo": 1
+  },
+  "reves": 19,
+  "parte_reves": 0.0012509052603858054,
+  "culpa_reves": {
+   "BajoLuz": 19
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 14420,
+  "huecos": 24,
+  "parte": 0.001664355062413315,
+  "culpa": {
+   "BajoLuz": 24
+  },
+  "reves": 19,
+  "parte_reves": 0.001317614424410541,
+  "culpa_reves": {
+   "BajoLuz": 19
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 13150,
+  "huecos": 34,
+  "parte": 0.002585551330798479,
+  "culpa": {
+   "Hair19_MagoOscuro": 12,
+   "Cuerpo": 1,
+   "BajoLuz": 21
+  },
+  "reves": 14,
+  "parte_reves": 0.001064638783269962,
+  "culpa_reves": {
+   "BajoLuz": 14
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 13537,
+  "huecos": 24,
+  "parte": 0.001772918667356135,
+  "culpa": {
+   "Hair19_MagoOscuro": 8,
+   "BajoLuz": 15,
+   "Cuerpo": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.0001477432222796779,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 15846,
+  "huecos": 5,
+  "parte": 0.00031553704404897135,
+  "culpa": {
+   "BajoLuz": 5
+  },
+  "reves": 7,
+  "parte_reves": 0.0004417518616685599,
+  "culpa_reves": {
+   "BajoLuz": 6,
+   "Manga_r": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 15585,
+  "huecos": 18,
+  "parte": 0.0011549566891241579,
+  "culpa": {
+   "BajoLuz": 18
+  },
+  "reves": 13,
+  "parte_reves": 0.0008341353865896695,
+  "culpa_reves": {
+   "BajoLuz": 13
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 15172,
+  "huecos": 13,
+  "parte": 0.000856841550224097,
+  "culpa": {
+   "Cuello": 1,
+   "Hair19_MagoOscuro": 8,
+   "Tunica": 1,
+   "BajoLuz": 3
+  },
+  "reves": 8,
+  "parte_reves": 0.0005272871078302136,
+  "culpa_reves": {
+   "BajoLuz": 7,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 17287,
+  "huecos": 3,
+  "parte": 0.0001735408110140568,
+  "culpa": {
+   "BajoLuz": 2,
+   "Tunica": 1
+  },
+  "reves": 4,
+  "parte_reves": 0.0002313877480187424,
+  "culpa_reves": {
+   "BajoLuz": 3,
+   "Manga_l": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 18612,
+  "huecos": 3,
+  "parte": 0.00016118633139909736,
+  "culpa": {
+   "BajoLuz": 3
+  },
+  "reves": 2,
+  "parte_reves": 0.0001074575542660649,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 17560,
+  "huecos": 9,
+  "parte": 0.0005125284738041003,
+  "culpa": {
+   "BajoLuz": 9
+  },
+  "reves": 13,
+  "parte_reves": 0.0007403189066059225,
+  "culpa_reves": {
+   "BajoLuz": 13
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 15274,
+  "huecos": 21,
+  "parte": 0.001374885426214482,
+  "culpa": {
+   "BajoLuz": 7,
+   "Tunica": 4,
+   "Hair19_MagoOscuro": 9,
+   "Cuello": 1
+  },
+  "reves": 8,
+  "parte_reves": 0.0005237658766531361,
+  "culpa_reves": {
+   "BajoLuz": 7,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 15624,
+  "huecos": 6,
+  "parte": 0.00038402457757296467,
+  "culpa": {
+   "Hair19_MagoOscuro": 2,
+   "BajoLuz": 4
+  },
+  "reves": 3,
+  "parte_reves": 0.00019201228878648233,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 17019,
+  "huecos": 5,
+  "parte": 0.00029378929431811505,
+  "culpa": {
+   "BajoLuz": 5
+  },
+  "reves": 1,
+  "parte_reves": 5.875785886362301e-05,
+  "culpa_reves": {
+   "BajoLuz": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 16944,
+  "huecos": 10,
+  "parte": 0.0005901794145420207,
+  "culpa": {
+   "Tunica": 5,
+   "BajoLuz": 1,
+   "Hair19_MagoOscuro": 3,
+   "Cuello": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 15169,
+  "huecos": 6,
+  "parte": 0.00039554354275166457,
+  "culpa": {
+   "Capa": 2,
+   "Hair19_MagoOscuro": 2,
+   "Head01_Male": 1,
+   "Tunica": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.00013184784758388818,
+  "culpa_reves": {
+   "Manga_l": 1,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 17024,
+  "huecos": 5,
+  "parte": 0.000293703007518797,
+  "culpa": {
+   "Tunica": 2,
+   "BajoLuz": 3
+  },
+  "reves": 5,
+  "parte_reves": 0.000293703007518797,
+  "culpa_reves": {
+   "BajoLuz": 5
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 18863,
+  "huecos": 5,
+  "parte": 0.00026506918305677784,
+  "culpa": {
+   "BajoLuz": 5
+  },
+  "reves": 9,
+  "parte_reves": 0.00047712452950220006,
+  "culpa_reves": {
+   "BajoLuz": 9
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 17508,
+  "huecos": 6,
+  "parte": 0.0003427004797806717,
+  "culpa": {
+   "Capa": 1,
+   "BajoLuz": 5
+  },
+  "reves": 5,
+  "parte_reves": 0.00028558373315055975,
+  "culpa_reves": {
+   "BajoLuz": 5
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 15519,
+  "huecos": 2,
+  "parte": 0.00012887428313680004,
+  "culpa": {
+   "Cuerpo": 1,
+   "Hair19_MagoOscuro": 1
+  },
+  "reves": 1,
+  "parte_reves": 6.443714156840002e-05,
+  "culpa_reves": {
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 16642,
+  "huecos": 4,
+  "parte": 0.00024035572647518327,
+  "culpa": {
+   "BajoLuz": 2,
+   "Capa": 2
+  },
+  "reves": 9,
+  "parte_reves": 0.0005408003845691623,
+  "culpa_reves": {
+   "BajoLuz": 7,
+   "Manga_r": 1,
+   "Hair19_MagoOscuro": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 9720,
+  "huecos": 32,
+  "parte": 0.0032921810699588477,
+  "culpa": {
+   "BajoLuz": 32
+  },
+  "reves": 15,
+  "parte_reves": 0.0015432098765432098,
+  "culpa_reves": {
+   "BajoLuz": 15
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 13281,
+  "huecos": 30,
+  "parte": 0.00225886604924328,
+  "culpa": {
+   "BajoLuz": 30
+  },
+  "reves": 14,
+  "parte_reves": 0.001054137489646864,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 13
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 13365,
+  "huecos": 31,
+  "parte": 0.0023194912083800974,
+  "culpa": {
+   "BajoLuz": 25,
+   "Hair19_MagoOscuro": 5,
+   "Cuello": 1
+  },
+  "reves": 28,
+  "parte_reves": 0.0020950243172465394,
+  "culpa_reves": {
+   "BajoLuz": 25,
+   "Head01_Male": 1,
+   "Hair19_MagoOscuro": 1,
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 13664,
+  "huecos": 49,
+  "parte": 0.003586065573770492,
+  "culpa": {
+   "BajoLuz": 37,
+   "Hair19_MagoOscuro": 12
+  },
+  "reves": 24,
+  "parte_reves": 0.001756440281030445,
+  "culpa_reves": {
+   "BajoLuz": 24
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 15333,
+  "huecos": 12,
+  "parte": 0.000782625709254549,
+  "culpa": {
+   "BajoLuz": 12
+  },
+  "reves": 11,
+  "parte_reves": 0.0007174069001500032,
+  "culpa_reves": {
+   "BajoLuz": 11
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 16293,
+  "huecos": 14,
+  "parte": 0.0008592647149082428,
+  "culpa": {
+   "BajoLuz": 14
+  },
+  "reves": 11,
+  "parte_reves": 0.0006751365617136193,
+  "culpa_reves": {
+   "BajoLuz": 11
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 15828,
+  "huecos": 19,
+  "parte": 0.0012004043467273187,
+  "culpa": {
+   "BajoLuz": 17,
+   "Cuerpo": 1,
+   "Capa": 1
+  },
+  "reves": 27,
+  "parte_reves": 0.0017058377558756635,
+  "culpa_reves": {
+   "BajoLuz": 27
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 13916,
+  "huecos": 41,
+  "parte": 0.0029462489221040527,
+  "culpa": {
+   "Hair19_MagoOscuro": 8,
+   "BajoLuz": 28,
+   "Tunica": 4,
+   "Cuello": 1
+  },
+  "reves": 19,
+  "parte_reves": 0.0013653348663409026,
+  "culpa_reves": {
+   "BajoLuz": 19
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 13156,
+  "huecos": 49,
+  "parte": 0.0037245363332319855,
+  "culpa": {
+   "Hair19_MagoOscuro": 8,
+   "BajoLuz": 41
+  },
+  "reves": 24,
+  "parte_reves": 0.0018242626938279112,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 22,
+   "PunoForro_r": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 16129,
+  "huecos": 13,
+  "parte": 0.000806001612003224,
+  "culpa": {
+   "BajoLuz": 11,
+   "Tunica": 2
+  },
+  "reves": 17,
+  "parte_reves": 0.001054002108004216,
+  "culpa_reves": {
+   "BajoLuz": 17
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 15665,
+  "huecos": 21,
+  "parte": 0.0013405681455473987,
+  "culpa": {
+   "Hair19_MagoOscuro": 5,
+   "BajoLuz": 12,
+   "Cuerpo": 1,
+   "Tunica": 1,
+   "Cuello": 2
+  },
+  "reves": 18,
+  "parte_reves": 0.0011490584104691989,
+  "culpa_reves": {
+   "BajoLuz": 18
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 15429,
+  "huecos": 11,
+  "parte": 0.0007129431589863245,
+  "culpa": {
+   "Hair19_MagoOscuro": 6,
+   "BajoLuz": 5
+  },
+  "reves": 3,
+  "parte_reves": 0.00019443904335990667,
+  "culpa_reves": {
+   "Manga_l": 1,
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 17408,
+  "huecos": 12,
+  "parte": 0.0006893382352941177,
+  "culpa": {
+   "BajoLuz": 12
+  },
+  "reves": 4,
+  "parte_reves": 0.00022977941176470588,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 18984,
+  "huecos": 4,
+  "parte": 0.00021070375052675939,
+  "culpa": {
+   "BajoLuz": 4
+  },
+  "reves": 3,
+  "parte_reves": 0.00015802781289506955,
+  "culpa_reves": {
+   "BajoLuz": 3
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 17882,
+  "huecos": 5,
+  "parte": 0.0002796107817917459,
+  "culpa": {
+   "BajoLuz": 5
+  },
+  "reves": 6,
+  "parte_reves": 0.0003355329381500951,
+  "culpa_reves": {
+   "BajoLuz": 6
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 15996,
+  "huecos": 16,
+  "parte": 0.001000250062515629,
+  "culpa": {
+   "BajoLuz": 6,
+   "Hair19_MagoOscuro": 10
+  },
+  "reves": 2,
+  "parte_reves": 0.00012503125781445363,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 15547,
+  "huecos": 27,
+  "parte": 0.0017366694539139385,
+  "culpa": {
+   "Hair19_MagoOscuro": 3,
+   "Head01_Male": 1,
+   "BajoLuz": 23
+  },
+  "reves": 28,
+  "parte_reves": 0.0018009905447996398,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 27
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 17416,
+  "huecos": 4,
+  "parte": 0.00022967386311437759,
+  "culpa": {
+   "BajoLuz": 4
+  },
+  "reves": 2,
+  "parte_reves": 0.00011483693155718879,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 16840,
+  "huecos": 4,
+  "parte": 0.00023752969121140142,
+  "culpa": {
+   "BajoLuz": 2,
+   "Capa": 2
+  },
+  "reves": 3,
+  "parte_reves": 0.00017814726840855108,
+  "culpa_reves": {
+   "Tunica": 1,
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 15283,
+  "huecos": 5,
+  "parte": 0.00032716089772950337,
+  "culpa": {
+   "Capa": 3,
+   "BajoLuz": 2
+  },
+  "reves": 1,
+  "parte_reves": 6.543217954590067e-05,
+  "culpa_reves": {
+   "BajoLuz": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 16550,
+  "huecos": 7,
+  "parte": 0.0004229607250755287,
+  "culpa": {
+   "Capa": 2,
+   "BajoLuz": 4,
+   "Tunica": 1
+  },
+  "reves": 4,
+  "parte_reves": 0.00024169184290030211,
+  "culpa_reves": {
+   "BajoLuz": 3,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 18651,
+  "huecos": 7,
+  "parte": 0.00037531499651493217,
+  "culpa": {
+   "BajoLuz": 5,
+   "Tunica": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 17060,
+  "huecos": 1,
+  "parte": 5.861664712778429e-05,
+  "culpa": {
+   "Capa": 1
+  },
+  "reves": 6,
+  "parte_reves": 0.00035169988276670573,
+  "culpa_reves": {
+   "BajoLuz": 4,
+   "Capa": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 15763,
+  "huecos": 10,
+  "parte": 0.0006343970056461334,
+  "culpa": {
+   "BajoLuz": 4,
+   "Hair19_MagoOscuro": 4,
+   "Capa": 1,
+   "Cuello": 1
+  },
+  "reves": 3,
+  "parte_reves": 0.00019031910169384,
+  "culpa_reves": {
+   "BajoLuz": 3
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 16923,
+  "huecos": 6,
+  "parte": 0.0003545470661230278,
+  "culpa": {
+   "BajoLuz": 4,
+   "Cuello": 1,
+   "Tunica": 1
+  },
+  "reves": 6,
+  "parte_reves": 0.0003545470661230278,
+  "culpa_reves": {
+   "BajoLuz": 6
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 9828,
+  "huecos": 40,
+  "parte": 0.00407000407000407,
+  "culpa": {
+   "BajoLuz": 40
+  },
+  "reves": 26,
+  "parte_reves": 0.0026455026455026454,
+  "culpa_reves": {
+   "BajoLuz": 26
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 13765,
+  "huecos": 41,
+  "parte": 0.0029785688339992737,
+  "culpa": {
+   "BajoLuz": 41
+  },
+  "reves": 17,
+  "parte_reves": 0.0012350163458045768,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 16
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 13702,
+  "huecos": 34,
+  "parte": 0.0024813895781637717,
+  "culpa": {
+   "BajoLuz": 31,
+   "Hair19_MagoOscuro": 3
+  },
+  "reves": 19,
+  "parte_reves": 0.0013866588819150488,
+  "culpa_reves": {
+   "BajoLuz": 18,
+   "Hair19_MagoOscuro": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 14120,
+  "huecos": 42,
+  "parte": 0.002974504249291785,
+  "culpa": {
+   "BajoLuz": 29,
+   "Hair19_MagoOscuro": 13
+  },
+  "reves": 28,
+  "parte_reves": 0.00198300283286119,
+  "culpa_reves": {
+   "BajoLuz": 28
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 15811,
+  "huecos": 17,
+  "parte": 0.0010752008095629626,
+  "culpa": {
+   "BajoLuz": 16,
+   "Tunica": 1
+  },
+  "reves": 24,
+  "parte_reves": 0.0015179305546771235,
+  "culpa_reves": {
+   "BajoLuz": 23,
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 16510,
+  "huecos": 20,
+  "parte": 0.0012113870381586917,
+  "culpa": {
+   "BajoLuz": 19,
+   "Capa": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.00012113870381586917,
+  "culpa_reves": {
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 15842,
+  "huecos": 24,
+  "parte": 0.0015149602322939023,
+  "culpa": {
+   "BajoLuz": 24
+  },
+  "reves": 19,
+  "parte_reves": 0.0011993435172326726,
+  "culpa_reves": {
+   "BajoLuz": 18,
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 14206,
+  "huecos": 35,
+  "parte": 0.0024637477122342673,
+  "culpa": {
+   "Hair19_MagoOscuro": 12,
+   "BajoLuz": 22,
+   "Cuerpo": 1
+  },
+  "reves": 11,
+  "parte_reves": 0.0007743207095593411,
+  "culpa_reves": {
+   "BajoLuz": 11
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 13688,
+  "huecos": 37,
+  "parte": 0.0027030976037405027,
+  "culpa": {
+   "Hair19_MagoOscuro": 7,
+   "BajoLuz": 30
+  },
+  "reves": 18,
+  "parte_reves": 0.001315020455873758,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 2,
+   "BajoLuz": 16
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 16472,
+  "huecos": 9,
+  "parte": 0.0005463817387081107,
+  "culpa": {
+   "BajoLuz": 9
+  },
+  "reves": 6,
+  "parte_reves": 0.0003642544924720738,
+  "culpa_reves": {
+   "BajoLuz": 6
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 15936,
+  "huecos": 19,
+  "parte": 0.001192269076305221,
+  "culpa": {
+   "Hair19_MagoOscuro": 3,
+   "BajoLuz": 14,
+   "Cuello": 2
+  },
+  "reves": 29,
+  "parte_reves": 0.0018197791164658635,
+  "culpa_reves": {
+   "BajoLuz": 27,
+   "Hair19_MagoOscuro": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 16119,
+  "huecos": 12,
+  "parte": 0.000744463056020845,
+  "culpa": {
+   "Hair19_MagoOscuro": 6,
+   "BajoLuz": 6
+  },
+  "reves": 3,
+  "parte_reves": 0.00018611576400521124,
+  "culpa_reves": {
+   "Capa": 1,
+   "BajoLuz": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 18366,
+  "huecos": 1,
+  "parte": 5.4448437329848636e-05,
+  "culpa": {
+   "BajoLuz": 1
+  },
+  "reves": 4,
+  "parte_reves": 0.00021779374931939454,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 19391,
+  "huecos": 5,
+  "parte": 0.00025785158063018924,
+  "culpa": {
+   "BajoLuz": 5
+  },
+  "reves": 8,
+  "parte_reves": 0.0004125625290083028,
+  "culpa_reves": {
+   "BajoLuz": 8
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 17830,
+  "huecos": 7,
+  "parte": 0.0003925967470555244,
+  "culpa": {
+   "BajoLuz": 7
+  },
+  "reves": 10,
+  "parte_reves": 0.0005608524957936063,
+  "culpa_reves": {
+   "BajoLuz": 8,
+   "Cuerpo": 1,
+   "Tunica": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 16023,
+  "huecos": 19,
+  "parte": 0.0011857954190850652,
+  "culpa": {
+   "BajoLuz": 6,
+   "Hair19_MagoOscuro": 12,
+   "Cuello": 1
+  },
+  "reves": 11,
+  "parte_reves": 0.0006865131373650378,
+  "culpa_reves": {
+   "Cuerpo": 1,
+   "BajoLuz": 10
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 16089,
+  "huecos": 19,
+  "parte": 0.0011809310709180185,
+  "culpa": {
+   "Manga_l": 2,
+   "BajoLuz": 17
+  },
+  "reves": 18,
+  "parte_reves": 0.0011187768040275966,
+  "culpa_reves": {
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 17
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 17630,
+  "huecos": 7,
+  "parte": 0.0003970504821327283,
+  "culpa": {
+   "BajoLuz": 6,
+   "PuntaCapucha": 1
+  },
+  "reves": 6,
+  "parte_reves": 0.00034032898468519567,
+  "culpa_reves": {
+   "BajoLuz": 6
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 16908,
+  "huecos": 3,
+  "parte": 0.000177430801987225,
+  "culpa": {
+   "BajoLuz": 3
+  },
+  "reves": 1,
+  "parte_reves": 5.914360066240833e-05,
+  "culpa_reves": {
+   "BajoLuz": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 15977,
+  "huecos": 13,
+  "parte": 0.0008136696501220504,
+  "culpa": {
+   "Capa": 1,
+   "Hair19_MagoOscuro": 1,
+   "BajoLuz": 10,
+   "Cuerpo": 1
+  },
+  "reves": 11,
+  "parte_reves": 0.0006884897039494273,
+  "culpa_reves": {
+   "Capa": 1,
+   "Manga_l": 1,
+   "BajoLuz": 9
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 17720,
+  "huecos": 9,
+  "parte": 0.0005079006772009029,
+  "culpa": {
+   "Cuello": 1,
+   "BajoLuz": 8
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 18827,
+  "huecos": 3,
+  "parte": 0.00015934562065119244,
+  "culpa": {
+   "BajoLuz": 3
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 16946,
+  "huecos": 7,
+  "parte": 0.0004130768322908061,
+  "culpa": {
+   "Cuello": 1,
+   "BajoLuz": 6
+  },
+  "reves": 4,
+  "parte_reves": 0.00023604390416617492,
+  "culpa_reves": {
+   "BajoLuz": 4
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 15748,
+  "huecos": 9,
+  "parte": 0.000571501143002286,
+  "culpa": {
+   "BajoLuz": 1,
+   "Tunica": 1,
+   "Hair19_MagoOscuro": 6,
+   "Capa": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.000127000254000508,
+  "culpa_reves": {
+   "BajoLuz": 1,
+   "Manga_r": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 17447,
+  "huecos": 1,
+  "parte": 5.7316444087808795e-05,
+  "culpa": {
+   "BajoLuz": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ }
+]

@@ -21,6 +21,6 @@ MonoBehaviour:
   walkSpeed: 1.5
   minAnimSpeed: 0.25
   ambientActivity: 0
-  permitirTrabajo: 1
-  puestoId: posada_posadero
+  permitirTrabajo: 0
+  puestoId: 
   canSeekShelter: 0

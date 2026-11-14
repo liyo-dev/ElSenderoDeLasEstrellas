@@ -39,3 +39,24 @@ Es un personaje distinto del Mago Oscuro (cara y diseño aparte) y de Will (llev
 - El casquete se hinchaba 0,045 sobre la malla de la cabeza, que va en centímetros (escala 0,01): quedaba a 0,45 mm de la cabeza y en el juego la piel y la coronilla gris asomaban a ratos.
 - `../Caras/pelo_archimago.py` ahora hincha en metros: el pelo va de verdad a 4,5 cm. FBX rehecho y copiado a Assets; el anterior, en `Versiones antiguas/Hair20_Archimago_v3_casquete_pegado_a_la_cabeza.fbx`.
 - Segunda pasada (vídeo `prologo_vfx_nuevos_2`): por el hueco entre el borde del pelo y la cabeza se veían la piel y el revés del pelo, y la nuca quedaba al aire. El casquete lleva ahora un faldón en todo el borde hasta la cabeza, y por detrás la línea del pelo baja en cuanto deja la oreja. La versión anterior está en `Versiones antiguas/Hair20_Archimago_v4_sin_faldon_ni_nuca.fbx`, y la comparación en `archimago_pelo_antes_despues.png`.
+
+## 13 nov 2026 — puños con las manos juntas
+- En una cinemática conjurando, el puño (aro de oro y celeste, rígido a `lowerarm`, a ~4 cm del brazo) metía su mitad
+  de dentro en la túnica y se veía como una pulsera cortada separada de la manga; por la boca abierta se veía el hueco.
+- El chequeo lo había medido (`PunoOro_l` dentro de `pelvis`), pero lo perdonaba como «manos sobre la tripa».
+- Arreglo: las mangas son `Taller.manga_con_puno` (`../Prendas/taller.py`): vuelo en el antebrazo, recogidas en la
+  muñeca con un cordón celeste y un ribete fino de oro ceñidos al brazo, que copian sus pesos, y la boca tapada.
+- Chequeo (con la pose `manos_juntas`): antes NO PASA (los dos puños izquierdos dentro de la pelvis); ahora PASA.
+  Informe en `chequeo/`; comparación en `archimago_mangas_antes_despues.png`. FBX copiado a Assets.
+- Lo anterior está en `Versiones antiguas/Antes de la manga recogida (2026-11-13)/`.
+
+## 13 nov 2026 — huecos vistos desde abajo (INC-1169)
+- Desde abajo, por el bajo de la túnica se veía el interior vacío (el cuerpo quitado bajo la ropa sin tapar) y, por
+  debajo de los mechones del pelo, el cielo.
+- Arreglo: `T.quitar_lo_tapado(..., "Pantalon")` (tapa los cortes con el color del pantalón), grosor por dentro
+  automático en mangas, perneras y botas (taller), y `con_grosor` en los mechones (`../Caras/pelo_archimago.py`;
+  el pelo se rehízo y se le pasó otra vez `coleta_a_la_espalda.py`).
+- `chequeo/huecos.md`: de 4,6 % de hueco en la peor vista a 0,1 %, PASA. `chequeo/chequeo.md` sigue en PASA.
+  Comparación en `archimago_desde_abajo_antes_despues.png`. `Body34_Archimago.fbx` y `Hair20_Archimago.fbx`, ya en Assets.
+- Lo anterior está en `Versiones antiguas/Antes de tapar los huecos de abajo (2026-11-13)/` y, lo de Assets, en
+  `Versiones antiguas/` de la raíz.

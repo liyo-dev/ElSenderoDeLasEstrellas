@@ -89,6 +89,8 @@ public sealed class TutorialPromptNode : NarrativeNode
     private string _signalKey;
     [System.NonSerialized]
     private Action<bool> _cinematicHandler;
+    [System.NonSerialized]
+    private Action _popupHandler;
 
     [System.NonSerialized]
     private Action<GamepadInputReader.InputEvent> _waitHandler;
@@ -227,6 +229,9 @@ public sealed class TutorialPromptNode : NarrativeNode
                 _cinematicHandler = activa => { if (activa) CloseInformationalPrompt(); };
                 CinematicSequencerBase.OnAnySequenceActiveChanged += _cinematicHandler;
             }
+            // Un aviso informativo no se queda debajo de una pregunta que se abre: se quita. INC-1163.
+            _popupHandler = CloseInformationalPrompt;
+            ConfirmationPopupUI.AlAbrir += _popupHandler;
 
             onReadyToAdvance?.Invoke();
             return;
@@ -278,6 +283,11 @@ public sealed class TutorialPromptNode : NarrativeNode
         {
             CinematicSequencerBase.OnAnySequenceActiveChanged -= _cinematicHandler;
             _cinematicHandler = null;
+        }
+        if (_popupHandler != null)
+        {
+            ConfirmationPopupUI.AlAbrir -= _popupHandler;
+            _popupHandler = null;
         }
         if (_dialogueHandler != null)
         {

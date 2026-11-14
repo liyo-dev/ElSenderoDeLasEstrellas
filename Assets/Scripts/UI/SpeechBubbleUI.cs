@@ -117,6 +117,18 @@ public class SpeechBubbleUI : MonoBehaviour
     [Tooltip("Color del contorno de los circulitos (y del bocadillo sin pico con el arte antiguo).")]
     [SerializeField] Color _colorContornoADistancia = new Color(0.08f, 0.08f, 0.1f, 1f);
 
+    [Header("Voz fuera de escena (quien habla no está en el plano)")]
+    [Tooltip("Diámetro del medallón con la cara de quien habla, en proporción del tamaño de letra del bocadillo.")]
+    [SerializeField, Min(1f)] float _medallonPorLetra = 2.4f;
+    [Tooltip("Cuánto sube y baja el bocadillo en su vaivén, en píxeles de canvas.")]
+    [SerializeField, Min(0f)] float _vaivenVertical = 6f;
+    [Tooltip("Cuánto se mece de lado a lado, en píxeles de canvas.")]
+    [SerializeField, Min(0f)] float _vaivenLateral = 3f;
+    [Tooltip("Cuánto se inclina al mecerse, en grados.")]
+    [SerializeField, Min(0f)] float _vaivenGiro = 1.2f;
+    [Tooltip("Ciclos por segundo del vaivén.")]
+    [SerializeField, Min(0.01f)] float _vaivenFrecuencia = 0.45f;
+
     Image _bubbleImage;
     Camera _cam;
     Transform _target;
@@ -158,6 +170,15 @@ public class SpeechBubbleUI : MonoBehaviour
     // pegado al papel.
     bool _conCirculitos;
     TextMeshProUGUI _nombre;
+
+    // Voz de alguien que no está en el plano (tras una ventana, al otro lado de una puerta): el
+    // bocadillo va anclado al sitio de donde sale la voz, sin cola, con la cara de quien habla en
+    // un medallón y un vaivén suave. Ver Show(fueraDeEscena).
+    bool _fueraDeEscena;
+    float _faseDelVaiven;
+    string _ultimoHablanteFuera;
+    RectTransform _medallon;
+    Image _caraDelMedallon;
 
     // Estilo «a distancia» del modo fijo: cuerpo sin pico y circulitos hasta el nombre.
     static readonly (Vector2 centro, float diametro)[] Circulitos =
@@ -307,7 +328,7 @@ public class SpeechBubbleUI : MonoBehaviour
             var fija = new Vector2(
                 canvas.xMin + canvas.width * _posicionFija.x + _bubbleRect.rect.width * 0.5f + _margenFijo,
                 canvas.yMin + canvas.height * _posicionFija.y);
-            _bubbleRect.anchoredPosition = ClampToCanvas(fija);
+            _bubbleRect.anchoredPosition = ClampToCanvas(fija + Vaiven());
             return;
         }
 
@@ -319,7 +340,17 @@ public class SpeechBubbleUI : MonoBehaviour
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _parentCanvasRect, screenPos, null, out Vector2 local))
-            _bubbleRect.anchoredPosition = ClampToCanvas(local);
+            _bubbleRect.anchoredPosition = ClampToCanvas(local + Vaiven());
+    }
+
+    /// Desplazamiento del vaivén de la voz fuera de escena (y su inclinación); cero en los demás
+    /// bocadillos. Lento y pequeño: se nota que flota, no que tiembla.
+    Vector2 Vaiven()
+    {
+        if (!_fueraDeEscena) return Vector2.zero;
+        float t = Time.unscaledTime * _vaivenFrecuencia * Mathf.PI * 2f + _faseDelVaiven;
+        _bubbleRect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t * 0.7f + 1.3f) * _vaivenGiro);
+        return new Vector2(Mathf.Sin(t * 0.5f) * _vaivenLateral, Mathf.Sin(t) * _vaivenVertical);
     }
 
     /// FIX (17 sep 2026, Raúl: "los bocadillos se cortan por arriba" -- prólogo, planos
@@ -332,6 +363,8 @@ public class SpeechBubbleUI : MonoBehaviour
     /// verdad con este sistema. Se calcula el margen a partir del tamaño real del bocadillo (que ya
     /// cambia con el texto, ver Show()) y de su propio pivote, así que funciona igual sin importar
     /// si el pivote está abajo (como parece, por el pico) o en cualquier otro punto.
+    const float MargenSobreLaFranja = 12f;
+
     Vector2 ClampToCanvas(Vector2 local)
     {
         if (_parentCanvasRect == null || _bubbleRect == null) return local;
@@ -339,14 +372,23 @@ public class SpeechBubbleUI : MonoBehaviour
         Rect canvasRect = _parentCanvasRect.rect;
         float halfWidth    = _bubbleRect.rect.width * 0.5f;
         float bottomMargin = _bubbleRect.rect.height * _bubbleRect.pivot.y;
-        float extraArriba  = !_fijoEnPantalla || _nombre == null || !_nombre.gameObject.activeSelf ? 0f
+        float extraArriba  = !(_fijoEnPantalla || _fueraDeEscena) || _nombre == null || !_nombre.gameObject.activeSelf ? 0f
                            : _conCirculitos ? 60f : _nombre.fontSize * 1.4f;
         float topMargin    = _bubbleRect.rect.height * (1f - _bubbleRect.pivot.y) + extraArriba;
 
-        float minX = canvasRect.xMin + halfWidth;
+        float sobraDelMedallon = _fueraDeEscena && _medallon != null && _medallon.gameObject.activeSelf
+            ? _medallon.sizeDelta.x * 0.5f : 0f;
+        float minX = canvasRect.xMin + halfWidth + sobraDelMedallon;
         float maxX = canvasRect.xMax - halfWidth;
-        float minY = canvasRect.yMin + bottomMargin;
-        float maxY = canvasRect.yMax - topMargin;
+        // Con bandas de cine, el bocadillo se queda dentro de la imagen, entre las dos franjas.
+        float franja = 0f;
+        if (HayBandasDeCine)
+        {
+            var bandas = BandasDeCineUI.Instance;
+            franja = Mathf.Max(bandas.AlturaVisible, bandas.AlturaObjetivo) * canvasRect.height + MargenSobreLaFranja;
+        }
+        float minY = canvasRect.yMin + bottomMargin + sobraDelMedallon + franja;
+        float maxY = canvasRect.yMax - topMargin - franja;
 
         // Si el bocadillo es más grande que el propio canvas (no debería pasar nunca, pero por si
         // acaso) min > max invertiría el clamp -- se deja sin tocar ese eje en vez de forzarlo.
@@ -398,7 +440,8 @@ public class SpeechBubbleUI : MonoBehaviour
                      string speakerName = null, Vector3? worldOffset = null,
                      bool fijoEnPantalla = false,
                      PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo,
-                     Color colorDelNombre = default)
+                     Color colorDelNombre = default,
+                     bool fueraDeEscena = false, Sprite retrato = null)
     {
         // Una frase se ve de dos maneras: en bocadillo o en cinemática. El subtítulo vive en la
         // banda de cine de abajo; sin bandas (una frase del juego de alguien lejos o fuera de
@@ -406,8 +449,17 @@ public class SpeechBubbleUI : MonoBehaviour
         // los de encima de la cabeza: con su cola sobre quien habla si está en el encuadre y, si
         // no, quieto en un lado de la pantalla con el nombre pegado encima. Los circulitos hasta
         // el nombre son solo para quien pide fijoEnPantalla a propósito.
+        // Una voz fuera de escena es la excepción: va en bocadillo aunque la cinemática esté en
+        // modo cine, porque el subtítulo no diría de dónde sale la voz. Se ancla a ese sitio (si no
+        // se ve en el plano, se queda fija en pantalla) y lleva la cara de quien habla.
         bool conCirculitos = fijoEnPantalla;
-        if (presentacion == PresentacionDeTexto.Subtitulo && !HayBandasDeCine)
+        if (fueraDeEscena)
+        {
+            presentacion = PresentacionDeTexto.Bocadillo;
+            fijoEnPantalla = target == null || !SeVeEnPantalla(target, worldOffset);
+            conCirculitos = false;
+        }
+        else if (presentacion == PresentacionDeTexto.Subtitulo && !HayBandasDeCine)
         {
             presentacion = PresentacionDeTexto.Bocadillo;
             fijoEnPantalla = !SeVeEnPantalla(target, worldOffset);
@@ -424,17 +476,33 @@ public class SpeechBubbleUI : MonoBehaviour
         _isShowing = true;
         _fijoEnPantalla = fijoEnPantalla;
         _conCirculitos = fijoEnPantalla && conCirculitos;
+        _fueraDeEscena = fueraDeEscena;
+        if (fueraDeEscena)
+        {
+            // La fase cambia con quien habla: las páginas de una misma frase siguen el mismo vaivén.
+            string hablante = retrato != null ? retrato.name : speakerName ?? string.Empty;
+            if (hablante != _ultimoHablanteFuera) _faseDelVaiven = UnityEngine.Random.value * Mathf.PI * 2f;
+            _ultimoHablanteFuera = hablante;
+        }
+        else
+        {
+            _ultimoHablanteFuera = null;
+            _bubbleRect.localRotation = Quaternion.identity;
+        }
         if (presentacion == PresentacionDeTexto.Bocadillo)
         {
-            PonerNombre(fijoEnPantalla ? speakerName : null, colorDelNombre);
+            // La voz fuera de escena lleva siempre el nombre: no hay cola que diga quién habla.
+            PonerNombre(fijoEnPantalla || fueraDeEscena ? speakerName : null, colorDelNombre);
             PonerEstiloFijo(fijoEnPantalla);
         }
+        PonerMedallon(fueraDeEscena ? retrato : null);
+        bool conCola = !fijoEnPantalla && !fueraDeEscena;
         // Frases de más de _maxLineas líneas: páginas (INC-435). La medición aplica el estilo
         // del papel por su cuenta; después se deja con cola o sin ella según el modo.
         List<string> paginas = Paginar(text, presentacion);
         if (paginas.Count == 0) paginas.Add(text ?? string.Empty);
         string primera = paginas[0];
-        if (presentacion == PresentacionDeTexto.Bocadillo) AplicarEstilo(!fijoEnPantalla);
+        if (presentacion == PresentacionDeTexto.Bocadillo) AplicarEstilo(conCola);
         // Los mismos iconos que los diálogos: «presiona <sprite name="interactable_x">» sin esto
         // salía como «?» en el bocadillo (INC-468).
         Core.InputGlyphs.InputGlyphService.UsarIconos(_label);
@@ -477,11 +545,11 @@ public class SpeechBubbleUI : MonoBehaviour
             if (_usarArteGenerado)
             {
                 // El papel se dibuja a la medida exacta del bocadillo: sin deformarlo.
-                AplicarSpriteGenerado(!fijoEnPantalla);
+                AplicarSpriteGenerado(conCola);
             }
             else
             {
-                Sprite sprite = fijoEnPantalla ? SpriteSinPico()
+                Sprite sprite = !conCola ? SpriteSinPico()
                               : emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
                 if (sprite != null) _bubbleImage.sprite = sprite;
             }
@@ -731,6 +799,52 @@ public class SpeechBubbleUI : MonoBehaviour
         _nombre.color = color.a > 0f ? color : _colorNombre;
         _nombre.text = nombre;
         _nombre.gameObject.SetActive(true);
+    }
+
+    /// Medallón con la cara de quien habla, en la esquina de abajo a la izquierda del papel, donde
+    /// iría la cola: la voz fuera de escena no tiene a quién señalar. Sin retrato no sale (basta
+    /// el nombre).
+    void PonerMedallon(Sprite retrato)
+    {
+        if (retrato == null)
+        {
+            if (_medallon != null && _medallon.gameObject.activeSelf) _medallon.gameObject.SetActive(false);
+            return;
+        }
+        if (_medallon == null) CrearMedallon();
+
+        float letra = _usarArteGenerado ? TamanoDeTextoDelBocadillo : _tamanoTextoOriginal;
+        float diametro = Mathf.Clamp(letra * _medallonPorLetra, 56f, 120f);
+        _medallon.sizeDelta = new Vector2(diametro, diametro);
+        _medallon.anchoredPosition = new Vector2(DesplazamientoDelPapel + diametro * 0.12f,
+                                                 DesplazamientoDelPapel + diametro * 0.08f);
+        _medallon.SetAsLastSibling();
+        _caraDelMedallon.sprite = retrato;
+        if (!_medallon.gameObject.activeSelf) _medallon.gameObject.SetActive(true);
+    }
+
+    void CrearMedallon()
+    {
+        var go = new GameObject("Medallon", typeof(RectTransform));
+        go.transform.SetParent(_bubbleRect, false);
+        go.AddComponent<LayoutElement>().ignoreLayout = true;
+        _medallon = (RectTransform)go.transform;
+        _medallon.anchorMin = _medallon.anchorMax = Vector2.zero;
+        _medallon.pivot = new Vector2(0.5f, 0.5f);
+        var fondo = go.AddComponent<Image>();
+        fondo.sprite = SpriteCirculito();
+        fondo.raycastTarget = false;
+        go.AddComponent<Mask>().showMaskGraphic = true;
+
+        var cara = new GameObject("Cara", typeof(RectTransform));
+        cara.transform.SetParent(_medallon, false);
+        var rtCara = (RectTransform)cara.transform;
+        rtCara.anchorMin = new Vector2(0.08f, 0.08f);
+        rtCara.anchorMax = new Vector2(0.92f, 0.92f);
+        rtCara.offsetMin = rtCara.offsetMax = Vector2.zero;
+        _caraDelMedallon = cara.AddComponent<Image>();
+        _caraDelMedallon.preserveAspect = true;
+        _caraDelMedallon.raycastTarget = false;
     }
 
     /// Cuerpo sin pico (el relleno de abajo reservado al pico se iguala al de arriba) y, si se han

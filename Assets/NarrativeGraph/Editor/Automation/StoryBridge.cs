@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NarrativeGraphEditor
 {
-    /// Local bridge so outside tools (the MCP server in Tools~/mcp, scripts) can read and change
+    /// Local bridge so outside tools (the MCP server in Tools/mcp, scripts) can read and change
     /// graphs while the editor is open. Off by default; it only listens on this computer.
     ///
     ///   GET  /graphs                 names of the graphs

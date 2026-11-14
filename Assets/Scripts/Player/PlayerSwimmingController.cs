@@ -145,6 +145,8 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     private Vector3 _posicionEnLaOrilla;
     private bool _hayPosicionEnLaOrilla;
     private bool _frenadoEnLaOrilla;
+    // Sin saber nadar y con el agua ya por el pecho (se ha caído o se ha metido en lo hondo).
+    private bool _rescatarSinNadar;
 
     /// <summary>True mientras está en el agua (zambulléndose o flotando).</summary>
     public bool EstaEnElAgua => _fase != Fase.Fuera;
@@ -242,11 +244,18 @@ public sealed class PlayerSwimmingController : MonoBehaviour
 
             bool puedeNadar = _actionManager == null || _actionManager.CanSwim();
             _frenadoEnLaOrilla = hasSurface && !puedeNadar && DemasiadoHondoParaAndar(surfaceY);
-            if (!_frenadoEnLaOrilla)
+            bool hundido = hasSurface && !puedeNadar && ShouldEnter(surfaceY);
+            // El sitio seguro es el último donde hacía pie de verdad: en el aire (cayendo de una
+            // pasarela al agua) no se apunta, o el rescate lo devolvería encima del agua.
+            bool pisando = _thirdPersonController == null || _thirdPersonController.PisandoSuelo;
+            if (!_frenadoEnLaOrilla && !hundido && pisando)
             {
                 _posicionEnLaOrilla = transform.position;
                 _hayPosicionEnLaOrilla = true;
             }
+            // Sin la habilidad, el agua honda no se nada: si ya le cubre el pecho, vuelve a donde
+            // hacía pie, esté lo lejos que esté. Ver INC-1157.
+            if (hundido && _hayPosicionEnLaOrilla) _rescatarSinNadar = true;
 
             if (hasSurface && puedeNadar && ShouldEnter(surfaceY))
                 EnterSwimming(surfaceY);
@@ -292,6 +301,7 @@ public sealed class PlayerSwimmingController : MonoBehaviour
             return;
         if (_fase == Fase.Fuera)
         {
+            if (_rescatarSinNadar) VolverADondeHaciaPie();
             QuedarseEnLaOrilla();
             return;
         }
@@ -675,6 +685,16 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         if (_thirdPersonController != null && !_thirdPersonController.PisandoSuelo) return false;
         if (_actionManager != null && _actionManager.IsInMode(ActionMode.Flying)) return false;
         return TryGetSueloBajo(out float sueloY) && surfaceY - sueloY > fondoMaximoSinNadar;
+    }
+
+    // Sin saber nadar y dentro del agua honda: vuelve entero (también en altura) al último sitio
+    // donde hacía pie, parado.
+    void VolverADondeHaciaPie()
+    {
+        _rescatarSinNadar = false;
+        _rigidbody.position = _posicionEnLaOrilla;
+        _rigidbody.linearVelocity = Vector3.zero;
+        transform.position = _posicionEnLaOrilla;
     }
 
     // Sin saber nadar, el agua honda hace de pared: el jugador vuelve al último sitio donde

@@ -39,6 +39,8 @@ public class NPCEmotionController : MonoBehaviour
     [SerializeField] private string[] piezasQueBajanAlHablar = { "Head05_Santa" };
     [Tooltip("Metros que baja la pieza con la boca abierta (con la entreabierta, la mitad).")]
     [SerializeField, Min(0f)] private float metrosQueBajaAlHablar = 0.02f;
+    [Tooltip("Si hay una barba que tapa la boca, las bocas no se pintan: al bajar la barba asomarían por encima de ella.")]
+    [SerializeField] private bool ocultarBocaBajoLaBarba = true;
 
     // Una sola corrutina actualiza todas las caras; su propietario se releva al desactivarse.
     private static readonly List<NPCEmotionController> CarasActivas = new List<NPCEmotionController>();
@@ -78,6 +80,7 @@ public class NPCEmotionController : MonoBehaviour
     private float _finDeReaccion = float.PositiveInfinity;
     private Transform[] _piezasQueBajan;
     private Vector3[] _sitioDeLasPiezas;
+    private bool _bocaBajoLaBarba;
 
     /// Se dispara cuando cambia la emoción actual, incluida la vuelta al reposo.
     public event System.Action<NPCEmotion> OnEmotionChanged;
@@ -398,6 +401,13 @@ public class NPCEmotionController : MonoBehaviour
         _piezasQueBajan = piezas.ToArray();
         _sitioDeLasPiezas = new Vector3[_piezasQueBajan.Length];
         for (int i = 0; i < _piezasQueBajan.Length; i++) _sitioDeLasPiezas[i] = _piezasQueBajan[i].localPosition;
+        _bocaBajoLaBarba = ocultarBocaBajoLaBarba;
+        if (!_bocaBajoLaBarba) return;
+        foreach (var boca in _mouthMeshes.Values)
+        {
+            var r = boca != null ? boca.GetComponent<Renderer>() : null;
+            if (r != null) r.enabled = false;
+        }
     }
 
     private void BajarPiezas(float apertura)
@@ -425,7 +435,7 @@ public class NPCEmotionController : MonoBehaviour
         else if (mallas == _mouthMeshes)
         {
             var rBoca = destino.GetComponent<Renderer>();
-            if (rBoca != null && !rBoca.enabled) rBoca.enabled = true;
+            if (rBoca != null && rBoca.enabled == _bocaBajoLaBarba) rBoca.enabled = !_bocaBajoLaBarba;
         }
         foreach (var malla in mallas)
         {

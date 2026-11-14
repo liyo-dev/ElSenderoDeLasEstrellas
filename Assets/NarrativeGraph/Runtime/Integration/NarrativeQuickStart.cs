@@ -32,11 +32,19 @@ public static class NarrativeQuickStart
         return string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<Request>(json);
     }
 
+    /// true mientras esta sesión de Play la ha lanzado «Probar desde un paso»: los arranques
+    /// automáticos de la escena (NarrativeGraphStarter) no deben empezar el grafo por el inicio.
+    public static bool Active { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Active = false;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void OnPlay()
     {
         var request = Take();
         if (request == null) return;
+        Active = true;
         var host = new GameObject("[Narrative quick start]");
         UnityEngine.Object.DontDestroyOnLoad(host);
         host.AddComponent<Host>().Run(request);

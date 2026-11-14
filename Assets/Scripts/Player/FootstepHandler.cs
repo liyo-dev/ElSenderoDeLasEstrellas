@@ -7,8 +7,8 @@ namespace Game.Player
     /// Detecta pisadas monitorizando la velocidad vertical de los huesos de los pies (Humanoid rig).
     /// No requiere Animation Events ni modificar los clips. Añadir al GameObject raíz del personaje.
     /// También dispara opcionalmente un VFX de polvo en el pie cuando el personaje está corriendo
-    /// o esprintando (lectura de "InputMagnitude" en el Animator, igual criterio que SprintVFXController
-    /// y NPCSimpleAnimator: 0 = quieto, ~0.5 = caminar, ~1.0 = correr, >1.05 = sprint).
+    /// o esprintando (lectura de "InputMagnitude" en el Animator, igual criterio que
+    /// NPCSimpleAnimator: 0 = quieto, ~0.5 = caminar, ~1.0 = correr, >1.05 = sprint).
     /// </summary>
     public class FootstepHandler : MonoBehaviour
     {

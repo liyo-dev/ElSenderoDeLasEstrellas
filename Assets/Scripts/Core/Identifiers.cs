@@ -110,7 +110,9 @@ public enum EstadoDeCombate
     Ralentizar,
     Inmovilizar,
     Atraer,
-    Empujar      // aparta del centro (Nova de Luz, INC-501)
+    Empujar,     // aparta del centro (Nova de Luz, INC-501)
+    Aturdir,     // ni se mueve ni ataca un momento (INC-1165)
+    Dormir       // ni se mueve ni ataca hasta que pasa el tiempo o le golpean (INC-1165)
 }
 
 /// <summary>Tipos de comportamiento de un hechizo.</summary>

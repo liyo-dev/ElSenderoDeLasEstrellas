@@ -43,6 +43,17 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION3
   - NARRATIVE_FLAG:CAP2_INICIADO
   - QUEST_ACTIVE:PREPARA_VIAJE
+  - NARRATIVE_FLAG:GRIMORIO_RECIBIDO
+  - QUEST_COMPLETED:PREPARA_VIAJE
+  - QUEST_STEP_DONE:PREPARA_VIAJE:0
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:1
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:2
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
+  - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
+  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
+  - NARRATIVE_FLAG:CAP2_COMPLETADO
   abilities:
     swim: 1
     jump: 1
@@ -64,10 +75,13 @@ MonoBehaviour:
     partName: Body23_Aventurero
   unlockedWardrobeIds:
   - Body05
+  - Cloak02
   inventoryItems:
   - itemId: coin
     count: 1
   - itemId: trozo_del_aro
+    count: 1
+  - itemId: pocionHP
     count: 1
   defeatedBossIds:
   - Demon_1
@@ -84,7 +98,15 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap2-manana-despues-15
+      value: 
+    - key: __flowEnded
+      type: bool
+      value: 1
+  - graphLabel: Cap3
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: cap3-flag
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
@@ -111,7 +133,21 @@ MonoBehaviour:
   - LIAM_CRYSTAL_DONE
   - MANANA_DESPUES_START
   - MANANA_DESPUES_DONE
-  npcPositions: []
+  - NPC_INTERACT_NPC_Victoria
+  - NPC_INTERACT_NPC_Boticaria
+  - NPC_INTERACT_NPC_Erika
+  - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
+  - ERIKA_ENTRENAMIENTO_DERROTADA
+  - CAP2_A_DESPEDIRSE
+  - NPC_INTERACT_NPC_Oliver
+  - CH_Cap2_BACK_1
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
+    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

@@ -133,9 +133,6 @@ public class PlayerFlyingController : MonoBehaviour
 
     [Header("FX Vuelo")]
     [SerializeField] private Transform vfxAttach;
-    [SerializeField] private GameObject trailPrefab;
-    [SerializeField] private float trailSpeedThreshold = 1.5f;
-    [SerializeField] private GameObject boostVfxPrefab;
     [Tooltip("Efecto de un solo uso al aterrizar (pool de VFX). Vacío = nada.")]
     [SerializeField] private GameObject landingVfxPrefab;
     [SerializeField, Min(0.1f)] private float duracionVfxDeAterrizaje = 2f;
@@ -154,10 +151,6 @@ public class PlayerFlyingController : MonoBehaviour
     [Tooltip("Transform donde colocar las partículas de pies. Si es null, se usan las coordenadas del jugador.")]
     [SerializeField] private Transform feetAttach;
 
-    private GameObject _trailInstance;
-    private ParticleSystem _trailPs;
-    private GameObject _boostInstance;
-    private ParticleSystem _boostPs;
     // Instancia y sistema de partículas de los pies
     private GameObject _footVfxInstance;
     private ParticleSystem _footVfxPs;
@@ -278,7 +271,6 @@ public class PlayerFlyingController : MonoBehaviour
         if (_entrada != null) { StopCoroutine(_entrada); _entrada = null; }
         if (_isFlying)
             ExitFlight(force: true);
-        StopFlightVfx();
 
         if (_jumpAction != null)
             _jumpAction.performed -= OnJumpPerformed;
@@ -441,7 +433,6 @@ public class PlayerFlyingController : MonoBehaviour
 
         CacheCameraTransform();
         PlayFlightState(flyIdleState);
-        SpawnTrailIfNeeded();
         SpawnFootVfxIfNeeded();
 
         // Ensure flight animator layer has full weight so flight states take precedence
@@ -524,7 +515,6 @@ public class PlayerFlyingController : MonoBehaviour
                 _animator.CrossFade(locomotionStateName, 0.1f, locomotionLayerIndex);
         }
         PlayLandingVfx();
-        StopFlightVfx();
         StopFootVfx();
 
         // Restaurar posición local del visual root si se desplazó por bobbing
@@ -629,7 +619,6 @@ public class PlayerFlyingController : MonoBehaviour
 
         _rigidbody.linearVelocity = target;
         _currentPlanarSpeed = planar.magnitude * horizontalSpeed * speedMul;
-        UpdateFlightVfx();
         UpdateFootVfxState();
 
         Vector3 faceDir = planar;
@@ -788,43 +777,6 @@ public class PlayerFlyingController : MonoBehaviour
     _cameraTransform = Camera.main ? Camera.main.transform : ServiceLocator.Get<Camera>(false)?.transform;
     }
 
-    void SpawnTrailIfNeeded()
-    {
-        if (_trailInstance != null || trailPrefab == null) return;
-        var parent = vfxAttach != null ? vfxAttach : transform;
-        _trailInstance = Instantiate(trailPrefab, parent);
-        _trailPs = _trailInstance.GetComponent<ParticleSystem>();
-        _trailInstance.SetActive(false);
-    }
-
-    void UpdateFlightVfx()
-    {
-        if (_trailInstance != null)
-        {
-            bool shouldTrail = _isFlying && _currentPlanarSpeed >= trailSpeedThreshold;
-            if (_trailInstance.activeSelf != shouldTrail)
-                _trailInstance.SetActive(shouldTrail);
-            if (shouldTrail && _trailPs != null && !_trailPs.isPlaying) _trailPs.Play();
-        }
-
-        if (_isFlying && _isBoosting && boostVfxPrefab != null)
-        {
-            if (_boostInstance == null)
-            {
-                var parent = vfxAttach != null ? vfxAttach : transform;
-                _boostInstance = Instantiate(boostVfxPrefab, parent);
-                _boostPs = _boostInstance.GetComponent<ParticleSystem>();
-            }
-            if (!_boostInstance.activeSelf) _boostInstance.SetActive(true);
-            if (_boostPs != null && !_boostPs.isPlaying) _boostPs.Play();
-        }
-        else if (_boostInstance != null && _boostInstance.activeSelf)
-        {
-            if (_boostPs != null) _boostPs.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            _boostInstance.SetActive(false);
-        }
-    }
-
     // --- Gestión de VFX de pies ---
     void SpawnFootVfxIfNeeded()
     {
@@ -869,20 +821,6 @@ public class PlayerFlyingController : MonoBehaviour
         if (landingVfxPrefab == null || VfxPoolService.Instance == null) return;
         var parent = vfxAttach != null ? vfxAttach : transform;
         VfxPoolService.Instance.Play(landingVfxPrefab, parent.position, parent.rotation, duracionVfxDeAterrizaje);
-    }
-
-    void StopFlightVfx()
-    {
-        if (_trailInstance != null)
-        {
-            if (_trailPs != null) _trailPs.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            _trailInstance.SetActive(false);
-        }
-        if (_boostInstance != null)
-        {
-            if (_boostPs != null) _boostPs.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            _boostInstance.SetActive(false);
-        }
     }
 
     private void CacheControllerLockFields()

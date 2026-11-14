@@ -69,8 +69,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 2
     - _Smoothness: 0.95
-    - _VelocidadDeDestellos: 0.6
-    - _VelocidadDeEspuma: 0.4
+    - _VelocidadDeDestellos: 0.25
+    - _VelocidadDeEspuma: 0.18
     - _WF_FoamScale: 300
     - _WF_MaskScale: 0.03
     - _WF_Speed: 0.5

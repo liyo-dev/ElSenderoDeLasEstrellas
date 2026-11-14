@@ -7,8 +7,8 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// "World here": what the world looks like when the story reaches the selected step, and which
-    /// step left each thing that way. While playing, it compares it with the running game.
+    /// «Depuración»: cómo está la historia al llegar al paso elegido y qué paso dejó así cada cosa.
+    /// En Play, lo compara con la partida.
     public sealed class StoryWorldPanel : VisualElement
     {
         public event Action<string> NavigateTo;
@@ -44,7 +44,7 @@ namespace NarrativeGraphEditor.Story
             _scroll.Clear();
             if (_graph == null || _node == null)
             {
-                _scroll.Add(Muted(StoryText.T("Elige un paso para ver cómo está el mundo en ese punto.",
+                _scroll.Add(Muted(StoryText.T("Elige un paso para ver cómo está la historia al llegar a él.",
                                               "Pick a step to see what the world looks like at that point.")));
                 return;
             }
@@ -68,7 +68,7 @@ namespace NarrativeGraphEditor.Story
 
             var head = new VisualElement();
             head.AddToClassList("story-panel__head");
-            head.Add(Kicker(StoryText.T("MUNDO AL LLEGAR A", "WORLD WHEN REACHING")));
+            head.Add(Kicker(StoryText.T("ESTADO AL LLEGAR A", "WORLD WHEN REACHING")));
             var titleRow = new VisualElement();
             titleRow.AddToClassList("story-row");
             var num = new Label(_structure?.Number(_node));
@@ -79,14 +79,14 @@ namespace NarrativeGraphEditor.Story
             titleRow.Add(title);
             head.Add(titleRow);
             head.Add(Muted(result.ReachedTarget
-                ? StoryText.T($"{result.Order.Count} pasos antes desde el inicio de este grafo. El camino está marcado en el lienzo.",
+                ? StoryText.T($"{result.Order.Count} pasos desde el inicio del capítulo. El camino está resaltado en el lienzo.",
                               $"{result.Order.Count} steps before it from the start of this graph. The path is highlighted on the canvas.")
                 : StoryText.T("Este paso no está conectado al inicio: no hay camino que reconstruir.",
                               "This step is not connected to the start: there is no path to rebuild.")));
             if (result.ReachedTarget && previous.Count > 0)
             {
                 var names = string.Join(", ", previous.Select(c => c.Graph.name));
-                head.Add(Muted(StoryText.T($"Antes, terminados: {names}.", $"Finished before: {names}.")));
+                head.Add(Muted(StoryText.T($"Capítulos anteriores, ya terminados: {names}.", $"Finished before: {names}.")));
             }
             _scroll.Add(head);
 
@@ -94,7 +94,7 @@ namespace NarrativeGraphEditor.Story
             var toggle = new VisualElement();
             toggle.AddToClassList("story-segmented");
             var byGraph = new Button(() => { _compare = false; Rebuild(); }) { text = StoryText.T("Según el grafo", "By the graph") };
-            var byGame = new Button(() => { _compare = true; Rebuild(); }) { text = StoryText.T("En el juego (Play)", "In the game (Play)") };
+            var byGame = new Button(() => { _compare = true; Rebuild(); }) { text = StoryText.T("En la partida (Play)", "In the game (Play)") };
             byGraph.EnableInClassList("is-on", !_compare);
             byGame.EnableInClassList("is-on", _compare);
             toggle.Add(byGraph);
@@ -130,7 +130,7 @@ namespace NarrativeGraphEditor.Story
                 return Row(f.Key, (f.Value.value ? StoryText.T("Sí", "Yes") : StoryText.T("No", "No")) + (diff ? StoryText.T("  · distinto en el juego", "  · different in game") : string.Empty), f.Value.source, diff);
             }));
 
-            Section(StoryText.T("Ya ha pasado", "Already happened"), recorder.Signals.Select(s =>
+            Section(StoryText.T("Señales ya emitidas", "Signals already raised"), recorder.Signals.Select(s =>
             {
                 bool diff = comparing && !live.SignalRaised(s.Key);
                 if (diff) differences++;
@@ -146,6 +146,16 @@ namespace NarrativeGraphEditor.Story
 
             if (recorder.Notes.Count > 0)
                 Section(StoryText.T("A revisar", "To review"), recorder.Notes.Select(n => (VisualElement)Muted(n)));
+
+            var signals = new Button(() => EditorApplication.ExecuteMenuItem("Tools/Narrative Graph/Monitor de señales"))
+            {
+                text = StoryText.T("Abrir el monitor de señales", "Open the signal monitor"),
+                tooltip = StoryText.T("Las señales que se emiten y quién las espera, en directo.", "Signals as they are raised and who waits for them, live."),
+            };
+            signals.AddToClassList("story-button");
+            signals.style.alignSelf = Align.FlexStart;
+            signals.style.marginTop = 12;
+            _scroll.Add(signals);
         }
 
         static string CategoryLabel(string category) => category switch

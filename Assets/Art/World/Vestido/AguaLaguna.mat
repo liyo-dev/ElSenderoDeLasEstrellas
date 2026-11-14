@@ -69,8 +69,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 1
     - _Smoothness: 0.9
-    - _VelocidadDeDestellos: 0.6
-    - _VelocidadDeEspuma: 0.4
+    - _VelocidadDeDestellos: 0.25
+    - _VelocidadDeEspuma: 0.18
     m_Colors:
     - _ColorDestellos: {r: 1, g: 1, b: 1, a: 1}
     - _ColorEspuma: {r: 0.8537736, g: 0.8437736, b: 0.8037735, a: 1}

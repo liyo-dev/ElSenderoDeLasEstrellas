@@ -8,33 +8,15 @@ using UnityEngine;
 namespace Sendero.Narrative.Editor
 {
     /// <summary>
-    /// Configuración de una prueba del grafo desde un nodo. Es la misma que usa Quick Test:
-    /// cuerpo del jugador (nivel, vida, maná, habilidades y hechizos), punto de aparición,
-    /// Fast-Forward y restauración del boot preset al salir.
+    /// Configuración de una prueba del grafo desde un nodo: el grafo en el Hub, si se reconstruye
+    /// la historia anterior y la rama elegida en las decisiones. Cómo está el jugador lo dicen la
+    /// ficha del jugador, los puntos de arranque del grafo y los retoques (pestaña Arranque).
     /// </summary>
     [Serializable]
     public sealed class NarrativeTestConfig
     {
         /// Etiqueta del grafo en el NarrativeGraphHub. Vacía = se detecta al lanzar.
         public string graphLabel = "";
-        public string spawnAnchorId = "Bedroom";
-        public int level = 1;
-        public float maxHP = 100f;
-        public float maxMP = 50f;
-
-        public bool abilitySwim;
-        public bool abilityJump;
-        public bool abilityClimb;
-        public bool abilityMagic;
-        public bool abilityFly;
-        public bool abilitySprint;
-        public bool abilityShield;
-
-        /// Estela y Liam en el grupo al empezar la prueba (para cambiar de personaje al mando).
-        public bool grupoCompleto;
-
-        public SpellId[] basicSpellIds = new SpellId[MagicCaster.BasicSlotCount];
-        public SpellId comboSpellId = SpellId.None;
 
         public bool fastForward = true;
 
@@ -75,33 +57,15 @@ namespace Sendero.Narrative.Editor
                 try
                 {
                     var cfg = JsonUtility.FromJson<NarrativeTestConfig>(json);
-                    if (cfg != null)
-                    {
-                        cfg.EnsureSpellSlots();
-                        return cfg;
-                    }
+                    if (cfg != null) return cfg;
                 }
                 catch (Exception) { /* configuración vieja o corrupta: se empieza de cero */ }
             }
-            var fresh = new NarrativeTestConfig();
-            fresh.EnsureSpellSlots();
-            return fresh;
-        }
-
-        public void EnsureSpellSlots()
-        {
-            if (basicSpellIds == null || basicSpellIds.Length != MagicCaster.BasicSlotCount)
-            {
-                var slots = new SpellId[MagicCaster.BasicSlotCount];
-                if (basicSpellIds != null)
-                    for (int i = 0; i < Mathf.Min(basicSpellIds.Length, slots.Length); i++) slots[i] = basicSpellIds[i];
-                basicSpellIds = slots;
-            }
+            return new NarrativeTestConfig();
         }
 
         public void Save()
         {
-            EnsureSpellSlots();
             EditorPrefs.SetString(PrefsKey, JsonUtility.ToJson(this));
         }
     }
@@ -119,32 +83,16 @@ namespace Sendero.Narrative.Editor
         public readonly List<string> notes = new();
     }
 
-    /// <summary>Simulación de llegada a un nodo para la pestaña «En vivo» del editor del grafo.</summary>
-    public sealed class NarrativeTestArrivalPreview : INarrativeArrivalPreview
-    {
-        public void Preview(NarrativeGraph graph, string nodeGuid, List<string> actors, List<string> warnings)
-        {
-            var preview = NarrativeTestLauncher.Preview(graph, nodeGuid, NarrativeTestConfig.Load());
-            actors.AddRange(preview.actors);
-            warnings.AddRange(preview.warnings);
-            warnings.AddRange(preview.decisions.Select(d => d.ToString()));
-        }
-    }
-
     /// <summary>
-    /// Único camino para lanzar una prueba desde un nodo: crea el preset temporal, aplica el
-    /// estado del jugador, proyecta el progreso previo (Fast-Forward), coloca los blackboards
-    /// (capítulo objetivo en el nodo; capítulos previos terminados) y entra en Play Mode.
-    ///
-    /// Lo usan tanto la ventana Quick Test de siempre como la pestaña «Prueba» del editor del
-    /// grafo, para que no haya dos formas distintas de preparar la misma prueba.
+    /// Único camino para lanzar una prueba desde un nodo: crea el preset temporal con la partida
+    /// nueva, proyecta el progreso previo (Fast-Forward), aplica los puntos de arranque y los
+    /// retoques (NarrativeStartPlan), coloca los blackboards (capítulo objetivo en el nodo;
+    /// capítulos previos terminados) y entra en Play directamente en la escena del ancla.
     /// </summary>
     public static class NarrativeTestLauncher
     {
         public const string QuickTestPresetPath = "Assets/Editor/QuickTestPreset_Temp.asset";
         const string ProfilePath = "Assets/_BootProfile/GameBootProfile.asset";
-
-        const string StartScenePath = "Assets/Scenes/Systems/Start.unity";
 
         // Lo que hay que restaurar al salir de Play. Va en SessionState porque al entrar en Play
         // Unity recarga los scripts y los campos estáticos se pierden: así se quedaba el
@@ -181,8 +129,6 @@ namespace Sendero.Narrative.Editor
             set => SessionState.SetBool(KeyOriginalUsePreset, value);
         }
 
-        public static bool IsPlaying => EditorApplication.isPlaying;
-        public static bool NeedsRestore => _needsRestore;
 
         // La restauración no puede depender de que quede abierta una ventana concreta: si se
         // lanza una prueba desde el grafo y se cierra la ventana antes de salir de Play, el
@@ -202,7 +148,7 @@ namespace Sendero.Narrative.Editor
         }
 
         public static bool Launch(NarrativeGraph graph, string nodeGuid, NarrativeTestConfig cfg,
-            out string status, out NarrativeFastForwardPreview preview)
+            out string status, out NarrativeFastForwardPreview preview, Action<PlayerPresetSO> retocar = null)
         {
             preview = new NarrativeFastForwardPreview();
             if (EditorApplication.isPlaying)
@@ -242,11 +188,16 @@ namespace Sendero.Narrative.Editor
                 AssetDatabase.CreateAsset(tempPreset, QuickTestPresetPath);
             }
 
-            ApplyPlayerState(tempPreset, profile.defaultPlayerPreset, cfg);
+            // Capas: partida nueva → historia hasta el paso → puntos de arranque → retoques.
+            var plan = NarrativeStartPlanner.Plan(graph, nodeGuid, cfg.RouteChoicesMap());
+            if (plan.Sheet != null && plan.Sheet.TemplateData is PlayerPresetSO) plan.ApplyBase(tempPreset);
+            else if (profile.defaultPlayerPreset != null) EditorUtility.CopySerialized(profile.defaultPlayerPreset, tempPreset);
             tempPreset.name = "QuickTest_Temp";
 
             if (cfg.fastForward)
                 preview = RunFastForward(graph, nodeGuid, cfg, tempPreset);
+            plan.ApplyOverrides(tempPreset);
+            retocar?.Invoke(tempPreset);
 
             var graphLabel = string.IsNullOrEmpty(cfg.graphLabel)
                 ? DetectGraphLabel(graph) ?? graph.name
@@ -287,12 +238,12 @@ namespace Sendero.Narrative.Editor
                 : objetivo;
             status = $"Lanzando Play desde {nodeDesc} en {graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
 
-            // Un ancla de una escena aparte (Chuchelandia, Parque, Laberinto…) no se alcanza por
-            // Continuar, que siempre lleva a MainWorld: se abre esa escena sola y se da Play desde
-            // ella (AutoBootstrapOnPlay carga Start encima). El resto arranca por Start, que es la
-            // que tiene el GameBootService que lee el perfil, aunque en el editor esté abierta otra.
-            var escenaAparte = EscenaAparteDelAncla(tempPreset.spawnAnchorId);
-            if (escenaAparte != null)
+            // Directo a la escena del ancla, sin intro ni menú: se abre esa escena y se da Play
+            // desde ella (AutoBootstrapOnPlay carga Start encima y WorldBootstrap coloca al jugador
+            // en el ancla del preset, también en los interiores de MainWorld).
+            var escena = EscenaDelAncla(tempPreset.spawnAnchorId);
+            var activa = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+            if (activa.path != escena)
             {
                 if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 {
@@ -300,16 +251,10 @@ namespace Sendero.Narrative.Editor
                     status = "Prueba cancelada: hay escenas sin guardar.";
                     return false;
                 }
-                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(escenaAparte, UnityEditor.SceneManagement.OpenSceneMode.Single);
-                UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
-                status += $" Escena: {System.IO.Path.GetFileNameWithoutExtension(escenaAparte)}.";
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(escena, UnityEditor.SceneManagement.OpenSceneMode.Single);
             }
-            else
-            {
-                var start = AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(StartScenePath);
-                if (start != null) UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = start;
-                else Debug.LogWarning($"[QuickTest] No encuentro {StartScenePath}: se arranca por la escena abierta.");
-            }
+            UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
+            status += $" Escena: {System.IO.Path.GetFileNameWithoutExtension(escena)}.";
 
             EditorApplication.isPlaying = true;
             return true;
@@ -319,6 +264,20 @@ namespace Sendero.Narrative.Editor
         // trae sus interiores. Las de sistema no tienen anclas de juego.
         const string EscenaDelMenu = "Assets/Scenes/Worlds/MainWorld.unity";
         static readonly string[] CarpetasSinEscenasAparte = { "Assets/Scenes/Systems/", "Assets/Scenes/Interior/" };
+
+        static readonly Dictionary<string, string> EscenaPorAncla = new();
+
+        /// <summary>
+        /// Escena en la que se entra para aparecer en el ancla: la escena aparte que la tiene
+        /// (Chuchelandia, Parque, Laberinto…) o, si no, MainWorld, que trae sus interiores.
+        /// </summary>
+        public static string EscenaDelAncla(string anchorId)
+        {
+            var clave = anchorId ?? string.Empty;
+            if (!EscenaPorAncla.TryGetValue(clave, out var ruta))
+                EscenaPorAncla[clave] = ruta = EscenaAparteDelAncla(anchorId) ?? EscenaDelMenu;
+            return ruta;
+        }
 
         /// <summary>
         /// Ruta de la escena de la Build que tiene un <c>SpawnAnchor</c> con ese id, si es una escena
@@ -381,66 +340,14 @@ namespace Sendero.Narrative.Editor
             preview.actors.AddRange(writer.ApplyActorPlacements(new OpenScenesNarrativeWorld()));
             preview.reachedTarget = result.ReachedTarget;
             preview.decisions.AddRange(result.Decisions);
-            preview.notes.AddRange(writer.Notes);
+            preview.warnings.AddRange(writer.Notes);
             preview.objectiveTitle = graph.FindNode(objetivo)?.displayTitle ?? "";
             return preview;
         }
 
-        /// <summary>
-        /// Aplica a <paramref name="dst"/> el nivel/vida/maná/habilidades/hechizos configurados.
-        /// El progreso de historia se deja vacío a propósito; la apariencia se hereda del preset
-        /// cosmético del perfil. El Fast-Forward escribe el progreso encima después.
-        /// </summary>
-        public static void ApplyPlayerState(PlayerPresetSO dst, PlayerPresetSO cosmeticBase, NarrativeTestConfig cfg)
-        {
-            if (dst == null) return;
-            cfg.EnsureSpellSlots();
-
-            dst.spawnAnchorId = string.IsNullOrEmpty(cfg.spawnAnchorId) ? "Bedroom" : cfg.spawnAnchorId;
-            dst.level = cfg.level;
-            dst.maxHP = cfg.maxHP;
-            dst.currentHP = cfg.maxHP;
-            dst.maxMP = cfg.maxMP;
-            dst.currentMP = cfg.maxMP;
-
-            dst.abilities = new PlayerAbilities
-            {
-                swim = cfg.abilitySwim,
-                jump = cfg.abilityJump,
-                climb = cfg.abilityClimb,
-                magic = cfg.abilityMagic,
-                fly = cfg.abilityFly,
-                sprint = cfg.abilitySprint,
-                shield = cfg.abilityShield
-            };
-            dst.unlockedAbilities = new List<AbilityId>();
-
-            dst.basicSpellIds = cfg.basicSpellIds.Where(id => id != SpellId.None).Distinct().ToList();
-            dst.unlockedSpells = cfg.basicSpellIds.Append(cfg.comboSpellId)
-                .Where(id => id != SpellId.None)
-                .Distinct()
-                .ToList();
-
-            dst.appearance = new List<AppearanceEntry>(cosmeticBase?.appearance ?? new List<AppearanceEntry>());
-            dst.unlockedWardrobeIds = new List<string>(cosmeticBase?.unlockedWardrobeIds ?? new List<string>());
-
-            dst.flags = new List<string>();
-            dst.senalesEmitidas = new List<string>();
-            dst.inventoryItems = new List<InventoryItemSave>();
-            dst.defeatedBossIds = new List<string>();
-            dst.consumedInteractableIds = new List<string>();
-            dst.objetosDelMundo = new List<ObjetoPersistente.Estado>();
-            dst.completedInteractiveNarratives = new List<string>();
-            dst.seenLorePopupIds = new List<string>();
-            dst.partyMemberIds = cfg.grupoCompleto ? new List<string> { "_ESTELA", "_LIAM" } : new List<string>();
-            dst.activeCharacterSlot = 1;
-            dst.unlockedTeleportPoints = new List<string>();
-            dst.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
-        }
-
         static readonly Dictionary<string, string> LabelCache = new();
 
-        public static void InvalidateLabelCache() => LabelCache.Clear();
+        public static void InvalidateLabelCache() { LabelCache.Clear(); EscenaPorAncla.Clear(); }
 
         public static string DetectGraphLabel(NarrativeGraph graph)
         {
@@ -451,17 +358,6 @@ namespace Sendero.Narrative.Editor
             var label = LabelEnHub(graph);
             LabelCache[path] = label;
             return label;
-        }
-
-        public static string[] DetectSpawnAnchors()
-        {
-            var anchors = UnityEngine.Object.FindObjectsByType<SpawnAnchor>(FindObjectsInactive.Exclude);
-            return anchors
-                .Select(a => a.anchorId)
-                .Where(id => !string.IsNullOrEmpty(id))
-                .Distinct()
-                .OrderBy(id => id)
-                .ToArray();
         }
 
         public static void RestoreIfNeeded()

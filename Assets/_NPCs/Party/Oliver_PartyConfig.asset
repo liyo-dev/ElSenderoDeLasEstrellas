@@ -27,15 +27,10 @@ MonoBehaviour:
   radioVagabundeo: 2
   autoUnirseACombate: 0
   rangoAsistenciaCombate: 0
-  maxHP: 100
-  maxMP: 100
   useShield: 0
   shieldPrefab: {fileID: 0}
   shieldMinDuration: 2
   shieldMaxDuration: 4
-  spellLeft: {fileID: 0}
-  spellRight: {fileID: 0}
-  spellSpecial: {fileID: 0}
   distanciaMinimaAtaque: 2
   distanciaMaximaAtaque: 15
   followPromptIconPrefab: {fileID: 0}
@@ -45,7 +40,8 @@ MonoBehaviour:
   distanciaLateralDialogo: 1.5
   offsetDelanteDialogo: -0.3
   tiempoMaximoMovimientoDialogo: 2
-  footVfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+  footVfxPrefab: {fileID: 3012019044924043161, guid: 765fa7f5bd7b01748a063b780036faf7, type: 3}
   flightFormationSpread: 1.5
+  flightFormationBack: 1.8
   flightBobAmplitude: 0.18
   flightBobFrequency: 1.2

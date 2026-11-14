@@ -58,7 +58,7 @@ namespace NarrativeGraphEditor
 
             public void Actor(string actorId, string verb) => BuildActor(_root, actorId, verb);
 
-            public void Flag(string key, string shownAs = null) => NodeSummary.Line(_root, "⚑ " + (shownAs ?? key));
+            public void Flag(string key, string shownAs = null) => NodeSummary.Line(_root, "◆ " + (shownAs ?? key));
 
             public void Anchor(string anchorId) => KeyValue(_root, "anchor", anchorId);
 

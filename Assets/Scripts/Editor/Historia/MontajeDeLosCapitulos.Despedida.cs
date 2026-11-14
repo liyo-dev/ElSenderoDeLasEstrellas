@@ -150,7 +150,7 @@ public static partial class MontajeDeLosCapitulos
         oliverDlg.outputs = new List<string> { "cap2-adios-paso-oliver" };
         oliverDlg.displayTitle = "28.- Oliver: nos vemos pronto";
         join.displayTitle = "33.- Cap. 2 completado - Eldran espera en la salida del pueblo";
-        punto.spawnAnchorId = MarcaWillSalida;
+        Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla(punto, MarcaWillSalida);
 
         // La despedida de Eldran ya no es aquí: es la cinemática de la salida (Cap. 3).
         var fuera = new[] { "cap2-despedida-fork", "cap2-despedida-espera", "cap2-despedida-oliver-hecha",

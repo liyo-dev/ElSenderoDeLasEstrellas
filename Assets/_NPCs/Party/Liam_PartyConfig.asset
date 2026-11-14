@@ -21,22 +21,16 @@ MonoBehaviour:
   velocidadCaminando: 5
   velocidadCorriendo: 10
   quedarseDetras: 1
-  offsetLateral: {x: 2, y: 1}
   tiempoIdleMinimo: 1
   tiempoIdleMaximo: 3
   puedeVagarCerca: 0
   radioVagabundeo: 2
   autoUnirseACombate: 1
   rangoAsistenciaCombate: 30
-  maxHP: 100
-  maxMP: 100
   useShield: 1
   shieldPrefab: {fileID: 1289543790355709915, guid: b99922c2f59b1a542bdd06ae8bee47ae, type: 3}
   shieldMinDuration: 2
   shieldMaxDuration: 4
-  spellLeft: {fileID: 11400000, guid: 5e2557db11732694182c948ffac0eab8, type: 2}
-  spellRight: {fileID: 11400000, guid: 0686630f8f80a5c4291f775845a499d7, type: 2}
-  spellSpecial: {fileID: 11400000, guid: fb52c3e17e7394045aee1b7785a90735, type: 2}
   distanciaMinimaAtaque: 2
   distanciaMaximaAtaque: 15
   followPromptIconPrefab: {fileID: 3815242607192837001, guid: b4f7a2c3d8e19054f6a3b2c1d0e78f45, type: 3}
@@ -46,7 +40,8 @@ MonoBehaviour:
   distanciaLateralDialogo: 1.5
   offsetDelanteDialogo: -0.3
   tiempoMaximoMovimientoDialogo: 2
-  footVfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+  footVfxPrefab: {fileID: 3012019044924043161, guid: 765fa7f5bd7b01748a063b780036faf7, type: 3}
   flightFormationSpread: 1.5
+  flightFormationBack: 1.8
   flightBobAmplitude: 0.18
   flightBobFrequency: 1.2

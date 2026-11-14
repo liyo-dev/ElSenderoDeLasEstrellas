@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.NPC.Common;
@@ -371,7 +371,7 @@ namespace Game.NPC
         /// </summary>
         public void InterruptCasting()
         {
-            if (!_isActive) return;
+            if (!_isActive || _incapacitado) return;
             if (_fsmRoutine != null) StopCoroutine(_fsmRoutine);
             _currentState = CombatState.EVALUATE;
             _fsmRoutine = StartCoroutine(FSM_Loop());
@@ -386,7 +386,7 @@ namespace Game.NPC
         /// </summary>
         public void OnTakeDamage(Vector3 damageSourcePosition)
         {
-            if (!_isActive) return;
+            if (!_isActive || _incapacitado) return;
             
             // Actualizar última posición conocida del player
             _lastKnownPlayerPosition = damageSourcePosition;
@@ -458,9 +458,37 @@ namespace Game.NPC
             }
         }
 
+        // Aturdido o dormido (EstadosDeCombate): la IA deja de decidir, se queda mareado y, al
+        // pasársele, vuelve a evaluar desde cero. Ver INC-1165.
+        private bool _incapacitado;
+
+        private void ActualizarIncapacidad()
+        {
+            bool ahora = EstadosDeCombate.Incapacitado(gameObject);
+            if (ahora == _incapacitado) return;
+            _incapacitado = ahora;
+            if (ahora)
+            {
+                if (_fsmRoutine != null) StopCoroutine(_fsmRoutine);
+                _fsmRoutine = null;
+                StopMove();
+                _shieldController?.StopDefending();
+                _animator.PlayDizzy();
+            }
+            else
+            {
+                _animator.PlayIdleNormal();
+                _currentState = CombatState.EVALUATE;
+                _lastStateChangeTime = Time.time;
+                _fsmRoutine = StartCoroutine(FSM_Loop());
+            }
+        }
+
         private void Update()
         {
             if (!_isActive) return;
+            ActualizarIncapacidad();
+            if (_incapacitado) return;
 
             // Reducir Cooldowns
             float dt = Time.deltaTime * settings.attackFrequencyMultiplier;
@@ -542,6 +570,7 @@ namespace Game.NPC
         {
             while (_isActive && _player != null)
             {
+                if (_incapacitado) { yield return null; continue; }
                 // FIX (petición Raúl, 1 sep 2026): mientras hay un diálogo abierto en cualquier
                 // parte del mundo, el jugador está bloqueado (ActionMode.Cinematic) y no puede
                 // reaccionar ni recibir daño real (PlayerHealthSystem.TakeDamage ya lo bloquea) —

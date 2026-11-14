@@ -16,3 +16,14 @@ Sin comprobar: cómo se mueve al andar (los pesos se copian del cuerpo).
 ## 13 nov 2026 — chequeo de choques (INC-1138)
 Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
 - Cambio: el cuello copia los pesos de la túnica y es algo más estrecho abajo (se separaba de ella al bajar los brazos).
+
+## 13 nov 2026 — correa, botas y manos (capturas de Raúl)
+- La correa del zurrón se metía en el modelo junto al cuello: eran dos medias correas que acababan sobre el arranque
+  del brazo. Ahora es `T.bandolera` (una sola, por el hombro derecho junto al cuello, apoyada en la túnica).
+- Las botas se perdían: la pernera asomaba por fuera de la bota al andar. Ahora `T.pernera` (metida en la bota) y
+  `T.bota` con vuelta de cuero más claro.
+- Mangas con `T.manga_con_puno` (recogidas en la muñeca, puño naranja ceñido): dejan ver la mano y ya no se meten en la
+  tripa (el puño rígido era grave en el chequeo).
+- Por dentro de la túnica, el corte del cuerpo se tapa con el color del pantalón (`quitar_lo_tapado`).
+- Chequeos: choques PASA (antes NO PASA, 5 graves); huecos PASA; manos 71 % / 83 %. Comparación en
+  `oliver_correa_botas_manos_antes_despues.png`. Lo anterior, en `Versiones antiguas/Antes del taller (2026-11-13)/`.

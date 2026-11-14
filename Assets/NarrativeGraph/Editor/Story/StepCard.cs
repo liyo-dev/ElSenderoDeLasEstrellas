@@ -32,7 +32,7 @@ namespace NarrativeGraphEditor.Story
             header.AddToClassList("story-card__header");
             Add(header);
 
-            var breakpoint = new VisualElement { tooltip = StoryText.T("Play se pausa aquí", "Play pauses here") };
+            var breakpoint = new VisualElement { tooltip = StoryText.T("Aquí se pausa al jugar", "Play pauses here") };
             breakpoint.AddToClassList("story-card__breakpoint");
             header.Add(breakpoint);
 
@@ -90,7 +90,13 @@ namespace NarrativeGraphEditor.Story
             var entry = NarrativeNodeCatalog.Get(Model.GetType());
             _number.text = structure != null ? structure.Number(Model) : string.Empty;
             _number.style.display = string.IsNullOrEmpty(_number.text) ? DisplayStyle.None : DisplayStyle.Flex;
-            _type.text = (entry?.title ?? Model.GetType().Name).ToUpperInvariant();
+            // En la cabecera, el nombre corto del tipo; el completo, al pasar el ratón.
+            var typeName = entry?.title ?? Model.GetType().Name;
+            int paren = typeName.IndexOf(" (", StringComparison.Ordinal);
+            var shortName = paren > 0 ? typeName.Substring(0, paren) : typeName;
+            _type.text = (Model is CheckpointNode ? "◆ " : string.Empty) + shortName.ToUpperInvariant();
+            _type.tooltip = typeName;
+            EnableInClassList("is-checkpoint", Model is CheckpointNode);
             _type.style.color = StoryColors.Category(entry?.category);
 
             _title.text = string.IsNullOrWhiteSpace(Model.displayTitle) ? entry?.title ?? Model.GetType().Name : Model.displayTitle;

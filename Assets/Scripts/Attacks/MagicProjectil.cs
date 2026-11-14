@@ -625,8 +625,31 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             return;
         }
 
-        // El proyectil usa isTrigger y atraviesa geometría.
-        // Si llegamos aquí, el objeto no es un objetivo de interés → ignorar.
+        // Paredes, rocas, árboles, casas: lo sólido que se interpone para el hechizo (INC-1167).
+        // Antes lo atravesaba todo, así que esconderse detrás de algo no servía de nada (y los
+        // proyectiles enemigos, EnemyProjectile, sí se paraban: no era justo). Lo que queda por
+        // debajo del hechizo (el suelo que va rozando, un murete bajo) no lo para.
+        if (EsObstaculo(other))
+        {
+            SpawnImpactEffects(hitPoint);
+            End(true);
+        }
+    }
+
+    static int s_mascaraDeObstaculos = -1;
+
+    bool EsObstaculo(Collider other)
+    {
+        if (other.isTrigger || other is TerrainCollider) return false;
+        if (s_mascaraDeObstaculos == -1) s_mascaraDeObstaculos = LayerMask.GetMask("Default", "Obstacle", "Floor", "Climb");
+        if (((1 << other.gameObject.layer) & s_mascaraDeObstaculos) == 0) return false;
+        if (_instigator != null && other.transform.IsChildOf(_instigator.transform)) return false;
+        if (other.GetComponentInParent<CuerpoDelGrupo>() != null || ControlDelJugador.PersonajeDe(other.gameObject, out _)) return false;
+        // Solo lo que se alza por encima del hechizo: el suelo bajo un remolino que avanza no cuenta
+        // (ni una malla de suelo grande con cerros lejos: si está justo debajo, es suelo).
+        if (other.bounds.max.y <= transform.position.y + 0.3f) return false;
+        if (other.Raycast(new Ray(transform.position + Vector3.up * 0.2f, Vector3.down), out _, 0.9f)) return false;
+        return true;
     }
     
     /// <summary>

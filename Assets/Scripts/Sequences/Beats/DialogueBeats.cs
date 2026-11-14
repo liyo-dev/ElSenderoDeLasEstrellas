@@ -50,6 +50,16 @@ public class SayBeat : SequenceBeat
              "anima nada — sin gestos, sin pose de conversación.")]
     public string markName;
 
+    [Tooltip("Voz de alguien que no está en el plano (solo hablando desde 'markName'): sale en " +
+             "bocadillo aunque la cinemática esté en modo cine, anclado a la marca, sin cola, con " +
+             "su nombre encima, un vaivén suave y, si hay 'retrato', la cara en un medallón. Siempre " +
+             "dentro de la imagen, entre las bandas de cine. Es la única excepción al " +
+             "subtítulo en las cinemáticas.")]
+    public bool fueraDeEscena;
+
+    [Tooltip("Cara de quien habla para el medallón de 'fueraDeEscena'. Vacío = sin medallón, solo el nombre.")]
+    public Sprite retrato;
+
     [Tooltip("Clave de localización del texto. Los saltos de línea dentro del texto separan páginas.")]
     public string textKey;
 
@@ -95,7 +105,7 @@ public class SayBeat : SequenceBeat
     private static readonly string[] TalkVariations = { "Talk01", "Talk02", "Talk03" };
 
     public override string Describe()
-        => $"Dice: {(string.IsNullOrEmpty(actorId) ? $"(marca) {markName}" : actorId)} → {textKey}"
+        => $"Dice: {(string.IsNullOrEmpty(actorId) ? $"({(fueraDeEscena ? "fuera de escena" : "marca")}) {markName}" : actorId)} → {textKey}"
            + (!string.IsNullOrEmpty(actorId) && playGestures
                ? (string.IsNullOrEmpty(gesture) ? "" : $" ({gesture}×{gestureRepeats})")
                : " (sin gestos)");
@@ -231,7 +241,9 @@ public class SayBeat : SequenceBeat
         var bubble = SpeechBubbleUI.Instance;
         int turnoDelBocadillo = 0;
         ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
-        var estilo = presentacion.Resolver(
+        // La voz fuera de escena solo vale sin actor: quien está en el plano habla en modo cine.
+        bool vozFuera = fueraDeEscena && actor == null;
+        var estilo = vozFuera ? PresentacionDeTexto.Bocadillo : presentacion.Resolver(
             ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Subtitulo);
         var pages = new System.Collections.Generic.List<string>();
         foreach (string raw in text.Split('\n'))
@@ -278,7 +290,8 @@ public class SayBeat : SequenceBeat
             if (anchor != null) SenalesDeHabla.Empieza(anchor, duracion);
             AplicarExpresiones(ctx, totalCharacters > 0 ? (float)caracteresLeidos / totalCharacters : 0f, expresionesAplicadas);
             turnoDelBocadillo = PresentadorDeLinea.Mostrar(anchor, page, duracion, estilo,
-                speakerName, colorDelNombre, offsetOverride, () => done = true, trigger);
+                speakerName, colorDelNombre, offsetOverride, () => done = true, trigger,
+                fueraDeEscena: vozFuera, retrato: vozFuera ? retrato : null);
 
             if (hasVoice && !voiceStarted)
             {

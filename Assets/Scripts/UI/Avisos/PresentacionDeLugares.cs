@@ -5,7 +5,9 @@ using UnityEngine;
 /// (<see cref="PresentacionDeLugarUI"/>): la primera vez en la partida, con la pestaña de lugar
 /// nuevo; las siguientes, sin pestaña y más corta. Sin cinta, con un rótulo (<see cref="HudToastService"/>). Lo que ya se conoce lo
 /// recuerda la partida (<see cref="LugaresConocidos"/>). Si se sale de un lugar y se vuelve a
-/// entrar sin pasar por otro, no se anuncia de nuevo.
+/// entrar sin pasar por otro, no se anuncia de nuevo. La presentación de un lugar nuevo, si quien
+/// anuncia da la caja del lugar, va con un plano aéreo sobre él (<see cref="PlanoDelLugar"/>).
+/// Ver INC-1171.
 ///
 /// No conoce zonas, escenas ni mapas: lo llama quien sepa que el jugador ha entrado en un lugar
 /// con nombre (hoy <see cref="AmbientZone"/>, con el nombre de su <see cref="AmbientPreset"/>).
@@ -39,6 +41,9 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     private bool _aLaVista;
     private bool _empezada;
     private float _t;
+    // Caja del lugar para el plano aéreo de la presentación (sin caja, no hay plano).
+    private Bounds? _caja;
+    private PlanoDelLugar _plano;
 
     // En pleno combate no sale el nombre del lugar: espera a que acabe.
     private static readonly string[] s_cedeAnte = { Situaciones.Combate };
@@ -68,6 +73,7 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     private void OnDestroy()
     {
         PlayerPresetService.OnPresetApplying -= AlCargarPartida;
+        _plano?.Soltar();
         ArbitroDeAvisos.Terminar(this);
         if (Instance == this) Instance = null;
     }
@@ -82,14 +88,16 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     public static bool EnCurso => Instance != null && Instance._pendiente && !Instance._breve;
 
     /// <summary>El jugador acaba de entrar en el lugar cuyo nombre es <paramref name="claveDelLugar"/>.</summary>
-    public static void Anunciar(string claveDelLugar)
+    /// <param name="cajaDelLugar">Lo que ocupa el lugar: si se da, la presentación de lugar nuevo
+    /// lleva un plano aéreo sobre él. Null = solo la cinta.</param>
+    public static void Anunciar(string claveDelLugar, Bounds? cajaDelLugar = null)
     {
-        if (Instance != null) Instance.AnunciarLugar(claveDelLugar);
+        if (Instance != null) Instance.AnunciarLugar(claveDelLugar, cajaDelLugar);
     }
 
     #endregion
 
-    private void AnunciarLugar(string clave)
+    private void AnunciarLugar(string clave, Bounds? caja)
     {
         if (string.IsNullOrEmpty(clave) || clave == _ultimoLugar) return;
         _ultimoLugar = clave;
@@ -103,6 +111,8 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
 
         // Un lugar detrás de otro: manda el último, que es donde está el jugador.
         _nombre = nombre;
+        _caja = caja;
+        _plano?.Soltar();
         _pendiente = true;
         _empezada = false;
         _t = 0f;
@@ -118,6 +128,7 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
 
         _t += Time.unscaledDeltaTime;
         vista.Evaluar(_t);
+        _plano?.Evaluar(_t);
         if (_t >= vista.Duracion) Acabar();
     }
 
@@ -137,14 +148,17 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
         else Vista.Ver(true);
     }
 
+    // Si algo tapa la presentación a medias, la cámara vuelve al jugador; al seguir, solo la cinta.
     public void AlPerderTurno()
     {
         _aLaVista = false;
+        _plano?.Soltar();
         Vista?.Ver(false);
     }
 
     public void AlDescartar()
     {
+        _plano?.Soltar();
         _aLaVista = false;
         _pendiente = false;
         _empezada = false;
@@ -169,6 +183,15 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
         vista.Preparar(_nombre, _breve ? "" : Texto(ClaveDelEncabezado, ""), _breve);
         vista.Ver(true);
         if (!_breve) AudioService.Instance?.PlaySFX(SonidoDeLaPresentacion);
+        if (!_breve && _caja.HasValue) EmpezarPlano(vista.Duracion);
+    }
+
+    private void EmpezarPlano(float duracion)
+    {
+        var jugador = PlayerService.PlayerTransform;
+        if (jugador == null) return;
+        _plano ??= new PlanoDelLugar(this);
+        _plano.Empezar(_caja.Value, jugador, duracion);
     }
 
     // Sin cinta, el nombre sale en un rótulo y la presentación se da por hecha.
@@ -181,6 +204,7 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
 
     private void Acabar()
     {
+        _plano?.Soltar();
         Vista?.Ver(false);
         _pendiente = false;
         _empezada = false;

@@ -47,6 +47,7 @@ mech = []
 for s in (1, -1):
     mech.append(forma(f"Mechon_{s}", [(0.004 * s, 1.215), (0.09 * s, 1.205), (0.19 * s, 1.15), (0.265 * s, 1.07), (0.255 * s, 1.0), (0.215 * s, 1.07), (0.13 * s, 1.14), (0.03 * s, 1.17)], PLATA, 24))
     mech.append(forma(f"MechonSombra_{s}", [(0.03 * s, 1.17), (0.13 * s, 1.14), (0.215 * s, 1.07), (0.25 * s, 1.0), (0.2 * s, 1.03), (0.12 * s, 1.1), (0.02 * s, 1.14)], PLATA_O, 23))
+con_grosor(mech)   # desde abajo se ve su revés: con grosor, se pinta
 # 3) Coleta baja a la espalda, atada con un aro de oro.
 coleta = tubo("Coleta", [(0, 0.29, 0.98), (0, 0.325, 0.9), (0, 0.342, 0.8), (0, 0.345, 0.68), (0, 0.343, 0.56), (0, 0.338, 0.46)], [0.045, 0.052, 0.054, 0.05, 0.04, 0.012], PLATA, 12)
 nudo = tubo("AroOro", [(0, 0.31, 0.93), (0, 0.322, 0.91)], [0.066, 0.066], ORO, 14)

@@ -98,6 +98,9 @@ public static class CameraDirectorService
     /// True si hay algún owner con el control reclamado en este momento (incluida la ventana de gracia).
     public static bool HasOwner => s_currentOwner != null;
 
+    /// True si <paramref name="owner"/> tiene ahora el control (incluida su ventana de gracia).
+    public static bool EsDueno(object owner) => owner != null && s_currentOwner != null && Equals(s_currentOwner, owner);
+
     /// Fuerza el reseteo completo del estado interno (owner + liberación pendiente) y suelta el
     /// flag real, ignorando quién sea el owner actual. Pensado para los mismos puntos de entrada
     /// seguros de sesión que GameBootService.ResetTransientSessionState() (MainMenu, arranque de

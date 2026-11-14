@@ -2,7 +2,8 @@ Shader "El Sendero/Agua de dibujo"
 {
     // Agua con el aspecto de dibujo animado: bandas planas de color según la hondura (orilla, medio,
     // hondo), espuma de borde duro donde toca la orilla con una línea de tinta, y destellos blancos
-    // que se mueven por la superficie. La luz es la misma que la del resto del mundo (dos tonos con
+    // que se mueven por la superficie, más vivos al sol, y oleaje suave (la superficie sube y baja y
+    // pasan lomos de ola más claros). Ritmo lento: antes parecía cámara rápida (INC-1160). La luz es la misma que la del resto del mundo (dos tonos con
     // sombra de color, ajustes en AspectoDeDibujo). Necesita la textura de profundidad de la cámara.
     Properties
     {
@@ -19,7 +20,7 @@ Shader "El Sendero/Agua de dibujo"
         _ColorEspuma("Color", Color) = (0.96, 0.95, 0.88, 1)
         _AnchoDeEspuma("Ancho (m)", Float) = 0.35
         _OndulacionDeEspuma("Ondulación", Range(0, 1)) = 0.5
-        _VelocidadDeEspuma("Velocidad", Float) = 0.4
+        _VelocidadDeEspuma("Velocidad", Float) = 0.18
         _GrosorDeTinta("Línea de tinta tras la espuma (m)", Float) = 0.06
         _ColorTinta("Tinta", Color) = (0.20, 0.15, 0.22, 1)
 
@@ -28,8 +29,17 @@ Shader "El Sendero/Agua de dibujo"
         _EscalaDeDestellos("Tamaño de las celdas (m)", Float) = 3
         _GrosorDeDestellos("Grosor", Range(0.01, 0.3)) = 0.07
         _CantidadDeDestellos("Cantidad", Range(0, 1)) = 0.35
-        _VelocidadDeDestellos("Velocidad", Float) = 0.6
+        _VelocidadDeDestellos("Velocidad", Float) = 0.25
+        _MasDestellosAlSol("Más destellos con sol (0-1)", Range(0, 1)) = 0.6
         _Corriente("Corriente (dirección XZ, m/s)", Vector) = (0, 0, 0, 0)
+
+        [Header(Oleaje)]
+        _AlturaDeOla("Altura (m)", Float) = 0.05
+        _LargoDeOla("Largo (m)", Float) = 7
+        _VelocidadDeOla("Velocidad (m/s)", Float) = 0.45
+        _DireccionDeOla("Dirección (XZ)", Vector) = (1, 0.35, 0, 0)
+        _ColorLomo("Lomo de la ola", Color) = (1, 1, 1, 0.16)
+        _AnchoDeLomo("Ancho del lomo (0-1)", Range(0, 0.5)) = 0.08
     }
 
     SubShader
@@ -77,7 +87,23 @@ Shader "El Sendero/Agua de dibujo"
             half _CantidadDeDestellos;
             float _VelocidadDeDestellos;
             float4 _Corriente;
+            half _MasDestellosAlSol;
+            float _AlturaDeOla;
+            float _LargoDeOla;
+            float _VelocidadDeOla;
+            float4 _DireccionDeOla;
+            half4 _ColorLomo;
+            half _AnchoDeLomo;
             CBUFFER_END
+
+            // Fase de la ola en un punto del mundo (radianes): una ola larga y otra más corta cruzada.
+            float FaseDeOla(float2 xz, float t, out float fase2)
+            {
+                float2 d = normalize(_DireccionDeOla.xy + float2(1e-4, 0));
+                float k = 6.2831 / max(_LargoDeOla, 0.1);
+                fase2 = dot(xz, float2(-d.y, d.x) * 0.6 + d * 0.8) * k * 1.7 - t * _VelocidadDeOla * k * 1.3;
+                return dot(xz, d) * k - t * _VelocidadDeOla * k;
+            }
 
             struct Attributes
             {
@@ -103,6 +129,12 @@ Shader "El Sendero/Agua de dibujo"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                // Oleaje: la superficie sube y baja despacio (se nota donde la malla tiene vértices).
+                float3 mundo = TransformObjectToWorld(input.positionOS.xyz);
+                float fase2;
+                float fase = FaseDeOla(mundo.xz, _Time.y, fase2);
+                mundo.y += _AlturaDeOla * (sin(fase) + 0.4 * sin(fase2));
+                input.positionOS.xyz = TransformWorldToObject(mundo);
                 VertexPositionInputs p = GetVertexPositionInputs(input.positionOS.xyz);
                 o.positionCS = p.positionCS;
                 o.positionWS = p.positionWS;
@@ -176,11 +208,24 @@ Shader "El Sendero/Agua de dibujo"
                 color = lerp(color, _ColorHondo.rgb, step(_CorteHondo, k));
                 half alfa = lerp(_OpacidadEnLaOrilla, 1.0h, step(_CorteMedio, k));
 
+                // Lomos de ola: bandas claras y finas que pasan despacio (solo donde ya no es orilla).
+                float fase2;
+                float fase = FaseDeOla(input.positionWS.xz, t, fase2);
+                half lomo = step(1.0h - _AnchoDeLomo, 0.5h + 0.5h * sin(fase) * (0.8h + 0.2h * sin(fase2))) * step(_CorteMedio, k);
+                color = lerp(color, _ColorLomo.rgb, lomo * _ColorLomo.a);
+
+                // Sol: con luz directa fuerte y sin sombra hay más destellos (en días nublados o de
+                // noche, menos).
+                float4 coordSombra = TransformWorldToShadowCoord(input.positionWS);
+                Light sol = GetMainLight(coordSombra);
+                half alSol = saturate(dot(sol.color, half3(0.3h, 0.59h, 0.11h)) - 0.35h) * sol.shadowAttenuation;
+                half cantidad = saturate(_CantidadDeDestellos * (1.0h + _MasDestellosAlSol * (2.0h * alSol - 0.6h)));
+
                 // Destellos: bordes de celdas, solo donde la mancha de ruido lo permite (no por todas partes).
                 float2 pDestellos = xz / max(_EscalaDeDestellos, 0.05);
                 float borde = BordeDeCeldas(pDestellos, t * _VelocidadDeDestellos);
-                float mancha = Ruido(pDestellos * 0.37 + t * 0.07);
-                half destello = (1.0h - step(_GrosorDeDestellos, borde)) * step(1.0h - _CantidadDeDestellos, mancha) * step(_CorteMedio * 0.5h, k);
+                float mancha = Ruido(pDestellos * 0.37 + t * 0.03);
+                half destello = (1.0h - step(_GrosorDeDestellos, borde)) * step(1.0h - cantidad, mancha) * step(_CorteMedio * 0.5h, k);
                 color = lerp(color, _ColorDestellos.rgb, destello);
 
                 // Espuma de la orilla con borde ondulado y la línea de tinta detrás.

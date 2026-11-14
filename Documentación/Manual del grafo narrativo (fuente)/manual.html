@@ -1,0 +1,593 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><title>Narrative Graph · Manual de usuario</title></head><body>
+
+<!-- PORTADA -->
+<section class="page cover">
+  <div class="band"></div>
+  <div class="inner">
+    <div class="kicker">NARRATIVE GRAPH · PARA UNITY</div>
+    <h1>Manual<br>de usuario</h1>
+    <div class="sub">Escribe la historia de tu juego paso a paso, pruébala desde cualquier punto y conéctala a tus propios sistemas.</div>
+  </div>
+  <div class="art">
+    <svg viewBox="0 0 500 200" width="100%" height="100%">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#FF7A45"/></marker></defs>
+      <g font-family="Inter" font-size="9">
+        <path d="M92 40 H138" stroke="#FF7A45" stroke-width="2.4" marker-end="url(#ar)" fill="none"/>
+        <path d="M230 40 H276" stroke="#FF7A45" stroke-width="2.4" marker-end="url(#ar)" fill="none"/>
+        <path d="M368 40 H400 Q410 40 410 52 V96 Q410 108 398 108 H92 Q80 108 80 120 V138" stroke="#FF7A45" stroke-width="2.4" marker-end="url(#ar)" fill="none"/>
+        <path d="M230 160 H276" stroke="#57524B" stroke-width="1.6" fill="none"/>
+        <rect x="0" y="16" width="92" height="48" rx="5" fill="#262422" stroke="#FF7A45"/>
+        <text x="9" y="31" fill="#FF7A45" font-weight="700" font-size="7" letter-spacing="1">INICIO</text><text x="9" y="47" fill="#F3EEE6" font-weight="700">El faro</text>
+        <rect x="140" y="16" width="90" height="48" rx="5" fill="#262422" stroke="#FF7A45"/>
+        <text x="149" y="31" fill="#A8C8E8" font-weight="700" font-size="7" letter-spacing="1">DIÁLOGO</text><text x="149" y="47" fill="#F3EEE6" font-weight="700">Ana te llama</text>
+        <rect x="278" y="16" width="90" height="48" rx="5" fill="#262422" stroke="#FF7A45"/>
+        <text x="287" y="31" fill="#C8B6E8" font-weight="700" font-size="7" letter-spacing="1">MISIÓN</text><text x="287" y="47" fill="#F3EEE6" font-weight="700">La llave perdida</text>
+        <rect x="0" y="136" width="92" height="48" rx="5" fill="#2E2A26" stroke="#FF7A45" stroke-width="1.6"/>
+        <text x="9" y="151" fill="#FF7A45" font-weight="700" font-size="7" letter-spacing="1">◆ ARRANQUE</text><text x="9" y="167" fill="#F3EEE6" font-weight="700">En el muelle</text>
+        <rect x="140" y="136" width="90" height="48" rx="5" fill="#262422" stroke="#34312D" opacity="0.5"/>
+        <text x="149" y="151" fill="#E8C8A8" font-weight="700" font-size="7" letter-spacing="1" opacity="0.5">SEGÚN FLAG</text><text x="149" y="167" fill="#F3EEE6" font-weight="700" opacity="0.5">¿Tiene la llave?</text>
+        <rect x="278" y="136" width="90" height="48" rx="5" fill="#262422" stroke="#34312D" opacity="0.5"/>
+        <text x="287" y="151" fill="#A8D8B0" font-weight="700" font-size="7" letter-spacing="1" opacity="0.5">SEÑAL</text><text x="287" y="167" fill="#F3EEE6" font-weight="700" opacity="0.5">Se abre la puerta</text>
+      </g>
+    </svg>
+  </div>
+  <div class="meta">Versión del editor «Historia» · noviembre de 2026</div>
+</section>
+
+<!-- ÍNDICE -->
+<section class="page">
+  <div class="chapnum">CONTENIDO</div>
+  <h1 class="chap">Qué vas a encontrar</h1>
+  <p class="lead">Lee los capítulos 1 a 3 para escribir tu primera historia. El resto lo consultas cuando lo necesites.</p>
+  <div class="toc">
+    <div><span class="n">1</span><span class="t">Ideas básicas</span><span class="d">Capítulos, pasos, salidas, señales y datos</span><span class="p">3</span></div>
+    <div><span class="n">2</span><span class="t">El editor de un vistazo</span><span class="d">Barra, índice, lienzo y panel</span><span class="p">4</span></div>
+    <div><span class="n">3</span><span class="t">Tu primer capítulo</span><span class="d">Crear, añadir pasos y conectarlos</span><span class="p">5</span></div>
+    <div><span class="n">4</span><span class="t">Organizar la historia</span><span class="d">Secciones, búsqueda, plantillas</span><span class="p">6</span></div>
+    <div><span class="n">5</span><span class="t">Tipos de paso</span><span class="d">Todo lo que puede pasar en la historia</span><span class="p">7</span></div>
+    <div><span class="n">6</span><span class="t">Decisiones y memoria</span><span class="d">Datos de partida, contadores, señales, ramas</span><span class="p">9</span></div>
+    <div><span class="n">7</span><span class="t">Probar desde cualquier paso</span><span class="d">La pestaña Arranque y los puntos de arranque</span><span class="p">10</span></div>
+    <div><span class="n">8</span><span class="t">La ficha del jugador</span><span class="d">Qué datos del jugador puede fijar la historia</span><span class="p">12</span></div>
+    <div><span class="n">9</span><span class="t">Depurar</span><span class="d">Estado al llegar, pausas, señales y avisos</span><span class="p">13</span></div>
+    <div><span class="n">10</span><span class="t">Conectar tu juego</span><span class="d">Enchufes, servicios básicos y arranque propio</span><span class="p">14</span></div>
+    <div><span class="n">11</span><span class="t">Asistente y herramientas</span><span class="d">Chat, textos para traducir, herramientas externas</span><span class="p">16</span></div>
+    <div><span class="n">12</span><span class="t">Atajos y preguntas frecuentes</span><span class="d">Para tenerlo a mano</span><span class="p">17</span></div>
+  </div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>2</b></span></div>
+</section>
+
+<!-- 1 IDEAS -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 1</div>
+  <h1 class="chap">Ideas básicas</h1>
+  <p class="lead">Narrative Graph cuenta la historia de tu juego como una sucesión de pasos. Cada paso hace una cosa y, al terminar, deja paso al siguiente.</p>
+
+  <table class="c">
+    <tr><th>Concepto</th><th>Qué es</th></tr>
+    <tr><td>Capítulo</td><td>Un grafo (un asset <code>NarrativeGraph</code>). Un juego suele tener uno por capítulo, más alguno para misiones secundarias.</td></tr>
+    <tr><td>Paso</td><td>Una tarjeta del lienzo: un diálogo, una misión que empieza, una espera, una cinemática… Tiene un número (<b>3.2</b> = sección 3, paso 2) y el título que tú le pongas.</td></tr>
+    <tr><td>Conexión</td><td>La flecha que dice qué paso va después. Si de un paso salen varias, todas siguen a la vez, en paralelo.</td></tr>
+    <tr><td>Salida con nombre</td><td>Algunos pasos deciden: «Sí / No», «Gana / Pierde», una por respuesta. Cada salida se conecta por separado.</td></tr>
+    <tr><td>Sección</td><td>Un bloque del capítulo con nombre («El muelle», «La tormenta»). Ordena el índice y el lienzo.</td></tr>
+    <tr><td>Señal</td><td>Un aviso con nombre (<code>PUERTA_ABIERTA</code>). Un paso la emite y otro la espera; también la pueden emitir tus escenas. Sirven para unir capítulos.</td></tr>
+    <tr><td>Dato de partida</td><td>Un hecho que se recuerda y se guarda (<code>TIENE_LA_LLAVE</code>). Se consulta para decidir.</td></tr>
+    <tr><td>Contador</td><td>Un número de la historia (cuántas pistas, cuántas veces has hablado con alguien).</td></tr>
+    <tr><td>Punto de arranque ◆</td><td>Un paso que dice cómo está el jugador al llegar ahí (dónde aparece, su vida…). Al probar desde cualquier paso se usa el punto anterior más cercano.</td></tr>
+  </table>
+
+  <h2>Cómo encaja con tu juego</h2>
+  <p>El grafo no sabe nada de tu juego: cuando un paso necesita algo (enseñar un diálogo, dar un objeto, empezar una misión), se lo pide a una <b>conexión</b>. Narrative Graph trae una versión básica de las principales (diálogos con respuestas, misiones, objetos, datos de partida, bocadillos y fundidos) en el componente <b>Narrative Basic Services</b>, así que una historia funciona nada más instalarlo; cuando quieras, conectas tus propios sistemas (capítulo 10).</p>
+  <div class="tip"><b>Consejo.</b> Empieza con las versiones básicas y escribe la historia entera. Conectar tus sistemas no cambia el grafo: puedes hacerlo después.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>3</b></span></div>
+</section>
+<!-- 2 EDITOR -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 2</div>
+  <h1 class="chap">El editor de un vistazo</h1>
+  <p class="lead">Ábrelo en <span class="menu">Tools › Narrative Graph › Abrir editor</span> o con doble clic en un grafo. Se abre como pestaña junto a la vista de escena.</p>
+
+  <div style="position:relative">
+  <div class="ui">
+    <div class="bar"><span class="g">El faro ▾</span><span class="s">Buscar paso, personaje, misión o frase</span><span class="okc">✓ Todo correcto</span><span class="btn">Auto-ordenar</span><span class="btn">✦ Asistente</span><span class="btn">⚙</span><span class="btn pri">▶ Jugar desde 2.2</span><span class="btn">■</span></div>
+    <div class="body">
+      <div class="side">
+        <div class="kick">CAPÍTULO</div><div style="font-weight:700;font-size:9pt;color:#F3EEE6">El faro</div><div style="color:var(--faint)">9 pasos · 3 secciones</div>
+        <div class="btn" style="margin:2mm 0;text-align:center">+ Añadir paso <span style="color:var(--faint)">A</span></div>
+        <div style="display:flex;gap:1mm;margin-bottom:1.5mm"><span class="btn" style="flex:1;text-align:center">Pasos</span><span style="flex:1;text-align:center;color:var(--faint)">Vocabulario</span></div>
+        <div class="kick">1 · LLEGADA</div>
+        <div class="row on"><span class="num">1.1</span>Inicio</div>
+        <div class="row on"><span class="num">1.2</span>Ana te llama</div>
+        <div class="kick">2 · EL MUELLE</div>
+        <div class="row on"><span class="num">2.1</span>◆ En el muelle</div>
+        <div class="row sel"><span class="num">2.2</span>La llave perdida</div>
+        <div class="row off"><span class="num">2.3</span>¿Tiene la llave?</div>
+        <div class="kick">3 · EL FARO</div>
+        <div class="row off"><span class="num">3.1</span>Se abre la puerta</div>
+      </div>
+      <div class="canvas">
+        <div class="card path" style="left:4mm;top:6mm"><div class="ty" style="color:#FF7A45">INICIO</div><div class="ti">Inicio</div></div>
+        <div class="card path" style="left:34mm;top:6mm"><div class="ty" style="color:#A8C8E8">DIÁLOGO</div><div class="ti">Ana te llama</div><div class="su">Ana: «¡Por fin llegas!»</div></div>
+        <div class="card path" style="left:4mm;top:28mm"><div class="ty" style="color:#FF7A45">◆ ARRANQUE</div><div class="ti">En el muelle</div></div>
+        <div class="card sel" style="left:34mm;top:28mm"><div class="ty" style="color:#C8B6E8">INICIAR MISIÓN</div><div class="ti">La llave perdida</div><div class="su">LLAVE_PERDIDA</div></div>
+        <div class="card dim" style="left:4mm;top:50mm"><div class="ty" style="color:#E8C8A8">SEGÚN FLAG</div><div class="ti">¿Tiene la llave?</div><span class="chip">Sí</span><span class="chip">No</span></div>
+        <div class="card dim" style="left:34mm;top:50mm"><div class="ty" style="color:#A8D8B0">EMITIR SEÑAL</div><div class="ti">Se abre la puerta</div></div>
+      </div>
+      <div class="side">
+        <div class="tabs"><span class="on">Paso</span><span>Arranque</span><span>Depuración</span></div>
+        <div style="font-weight:700;font-size:8.6pt;color:#F3EEE6">Iniciar misión</div>
+        <div style="color:var(--faint);margin-bottom:1.5mm">Arranca la misión en el sistema de misiones del juego.</div>
+        <div class="kv"><span class="a">Etiqueta</span><span class="b">La llave perdida</span></div>
+        <div class="kv"><span class="a">Sección</span><span class="b">El muelle</span></div>
+        <div class="kv"><span class="a">Misión</span><span class="b">LLAVE_PERDIDA ▾</span></div>
+        <div class="kv"><span class="a">Quién la encarga</span><span class="b">Ana ▾</span></div>
+        <div class="kv"><span class="a">Mientras tanto</span><span class="b">«¿La has encontrado?»</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="left:2mm;top:-2.5mm">1</div>
+  <div class="callout" style="left:52mm;top:-2.5mm">2</div>
+  <div class="callout" style="left:-2.5mm;top:30mm">3</div>
+  <div class="callout" style="left:63mm;top:23.5mm">4</div>
+  <div class="callout" style="left:167.5mm;top:11mm">5</div>
+  </div>
+
+  <div class="legend">
+    <div><i>1</i><span><b>Capítulo abierto.</b> Cambia de grafo o crea uno nuevo.</span></div>
+    <div><i>2</i><span><b>Barra.</b> Buscar, estado de avisos, auto-ordenar, asistente, ajustes y ▶ jugar desde el paso elegido.</span></div>
+    <div><i>3</i><span><b>Índice.</b> El capítulo por secciones y pasos numerados. El camino hasta el paso elegido va marcado en naranja.</span></div>
+    <div><i>4</i><span><b>Lienzo.</b> Las tarjetas y sus conexiones. Con un paso elegido, lo que no es su camino se apaga.</span></div>
+    <div><i>5</i><span><b>Panel.</b> Paso (sus campos), Arranque (cómo empieza la prueba) y Depuración (cómo está la historia al llegar).</span></div>
+  </div>
+
+  <div class="note" style="margin-top:6mm">El editor está en español y en inglés: cámbialo en <span class="menu">⚙ › Idioma del editor</span>. Los paneles laterales se ensanchan arrastrando su borde, y el editor recuerda el último paso con el que trabajaste en cada capítulo.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>4</b></span></div>
+</section>
+
+<!-- 3 PRIMER CAPÍTULO -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 3</div>
+  <h1 class="chap">Tu primer capítulo</h1>
+  <p class="lead">En cinco minutos tendrás un capítulo que puedes jugar.</p>
+
+  <ol class="steps">
+    <li><b>Crea el grafo.</b> En el desplegable del capítulo, <span class="menu">Nuevo grafo…</span> Elige dónde guardarlo. Nace con un paso <b>Inicio</b>.</li>
+    <li><b>Añade el primer paso.</b> Pulsa <span class="k">A</span>, <span class="k">Espacio</span> o haz doble clic en un hueco del lienzo. Se abre el buscador «¿Qué pasa ahora?»: escribe lo que quieres («diálogo», «misión», «esperar») y elige.</li>
+    <li><b>Conéctalo.</b> Pasa el ratón por una tarjeta: aparece un tirador en cada lado. Arrastra desde el borde hasta otra tarjeta para conectarlas, o suéltalo en un hueco para crear ahí el siguiente paso ya conectado. Los pasos que deciden («Sí / No», una salida por respuesta) se conectan arrastrando desde cada etiqueta de salida.</li>
+    <li><b>Rellena sus campos</b> en la pestaña <b>Paso</b>. Los desplegables proponen los personajes, misiones, señales y diálogos que ya existen en tu proyecto. Ponle un título claro: es lo que verás en el índice.</li>
+    <li><b>Mete pasos en medio</b> con el <b>+</b> que aparece sobre cada conexión.</li>
+    <li><b>Juega.</b> Elige un paso y pulsa <b>▶ Jugar desde…</b> Antes, mira la pestaña <b>Arranque</b> para ver cómo va a empezar (capítulo 7).</li>
+  </ol>
+
+  <h2>Que el capítulo corra en el juego</h2>
+  <p>Lo más rápido: un objeto en la escena con <code>NarrativeBasicServices</code>, un <code>NarrativeRunner</code> con tu grafo y un <code>NarrativeGraphStarter</code> que apunte a ese runner. Para que los personajes se puedan «hablar», ponles <code>NarrativeBasicTalkTarget</code> con su id. En un juego con varias escenas, registra el grafo en el <code>NarrativeGraphHub</code> de tu escena de inicio con una etiqueta, y arráncalo con un <code>NarrativeGraphStarter</code> en la escena de juego (o con un <code>NarrativeRunner</code> propio de esa escena). El grafo guarda por dónde va a través de la conexión de guardado.</p>
+
+  <div class="tip"><b>Mira el ejemplo.</b> <span class="menu">Tools › Narrative Graph › Ejemplos › Montar «El faro»</span> crea en <code>Assets/El faro (ejemplo)</code> un capítulo completo con su escena: ábrela, elige cualquier paso y pulsa ▶. Usa los servicios básicos (botones para hablar, caja de diálogo, misiones en una esquina) y dos puntos de arranque ◆.</div>
+  <div class="tip"><b>Truco.</b> Clic derecho en una tarjeta: jugar desde aquí, pausar aquí al jugar, marcar como inicio, mover a otra sección, duplicar (<span class="k">Ctrl</span>+<span class="k">D</span>), guardar como plantilla o borrar.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>5</b></span></div>
+</section>
+
+<!-- 4 ORGANIZAR -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 4</div>
+  <h1 class="chap">Organizar la historia</h1>
+  <p class="lead">Un capítulo largo se lee bien si está partido en secciones, ordenado y con títulos claros.</p>
+
+  <h2>Secciones</h2>
+  <ul>
+    <li>Cada paso pertenece a una sección. Un paso nuevo hereda la del paso que lleva a él.</li>
+    <li>Para empezar una sección: clic derecho › <span class="menu">Mover a la sección › Nueva sección desde aquí…</span></li>
+    <li>Renómbrala con doble clic en su título, en el lienzo.</li>
+    <li>Los números de paso salen de las secciones: <b>2.3</b> es el tercer paso de la segunda.</li>
+  </ul>
+
+  <h2>Ordenar y moverse</h2>
+  <ul>
+    <li><b>Auto-ordenar</b> coloca el capítulo en filas, siguiendo el orden de la historia y aprovechando el espacio vertical.</li>
+    <li>Zoom con la rueda. <span class="k">F</span> encuadra el paso elegido, o todo el capítulo si no hay ninguno. De lejos, las tarjetas solo enseñan el título en grande.</li>
+    <li>Selección múltiple: <span class="k">Shift</span> o <span class="k">Ctrl</span> + arrastrar en un hueco.</li>
+  </ul>
+
+  <h2>Buscar y vocabulario</h2>
+  <p>La caja de búsqueda filtra por título, tipo, frase o número, y dice cuántos pasos coinciden. En el índice, la pestaña <b>Vocabulario</b> lista los personajes, misiones, objetos, datos, contadores y señales que usa el capítulo; pulsa uno para ver los pasos que lo usan.</p>
+
+  <h2>Plantillas</h2>
+  <p>Si repites un patrón (hablar con alguien → diálogo → misión → esperar entrega), selecciónalo y pulsa clic derecho › <span class="menu">Guardar como plantilla…</span> Se guarda en <code>Assets/NarrativeTemplates/</code> y sale arriba en el buscador de pasos, en «Mis plantillas». Si la metes sobre una conexión, entra por su primer paso y sale por el último.</p>
+
+  <h2>Notas</h2>
+  <p>El paso <b>Nota</b> no hace nada en el juego: sirve para dejar comentarios en el lienzo («aquí falta la música», «revisar con guion»).</p>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>6</b></span></div>
+</section>
+<!-- 5 TIPOS DE PASO -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 5</div>
+  <h1 class="chap">Tipos de paso</h1>
+  <p class="lead">Estos son los pasos que trae Narrative Graph. Tu juego puede añadir los suyos: salen en el mismo buscador. La lista completa, con todos sus campos, se genera en <span class="menu">⚙ › Guardar el manual de pasos</span>.</p>
+
+  <span class="cat">FLUJO</span>
+  <table class="c">
+    <tr><td>Inicio</td><td>Punto de entrada del capítulo. Cualquier paso se puede marcar como inicio desde su menú.</td></tr>
+    <tr><td>En paralelo</td><td>Todas sus salidas arrancan a la vez y siguen cada una por su lado.</td></tr>
+    <tr><td>Punto de arranque ◆</td><td>No hace nada al jugar. Dice cómo está el jugador al llegar aquí; lo usan las pruebas (capítulo 7).</td></tr>
+    <tr><td>Poner dato</td><td>Guarda un hecho de la historia (<code>PUENTE_REPARADO</code>) o lo borra.</td></tr>
+    <tr><td>Según dato</td><td>Sale por «Sí» o «No» según un dato de partida o una señal ya emitida.</td></tr>
+    <tr><td>Según el momento</td><td>Elige entre varias opciones con condiciones combinadas; gana la más concreta que se cumpla. Si ninguna, sale por «Si no».</td></tr>
+    <tr><td>Contador</td><td>Suma a un contador o le da un valor.</td></tr>
+  </table>
+
+  <span class="cat">MISIONES</span>
+  <table class="c">
+    <tr><td>Iniciar misión</td><td>La pone en marcha. Si dices quién la encarga, ese personaje dice su frase de «mientras tanto» si le hablas con la misión en curso.</td></tr>
+    <tr><td>Completar pasos</td><td>Marca pasos de una misión como hechos y, si quieres, la cierra.</td></tr>
+    <tr><td>Esperar misión</td><td>Se queda esperando hasta que la misión esté completada.</td></tr>
+    <tr><td>Según la misión</td><td>Sale por un camino u otro según el estado de la misión.</td></tr>
+  </table>
+
+  <span class="cat">DIÁLOGO Y PERSONAJES</span>
+  <table class="c">
+    <tr><td>Diálogo</td><td>Una conversación que el jugador avanza.</td></tr>
+    <tr><td>Pregunta</td><td>Una pregunta con respuestas; cada respuesta es una salida.</td></tr>
+    <tr><td>Bocadillo</td><td>Una frase corta sobre la cabeza de alguien, sin parar el juego.</td></tr>
+    <tr><td>Esperar hablar con</td><td>Espera a que el jugador hable con un personaje. Le pone encima el icono de «tiene algo que decir».</td></tr>
+    <tr><td>Colocar actor</td><td>Pone a un personaje en una marca del mundo al instante (fuera de cámara o tras un corte).</td></tr>
+  </table>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>7</b></span></div>
+</section>
+
+<section class="page">
+  <span class="cat" style="margin-top:0">SEÑALES</span>
+  <table class="c">
+    <tr><td>Emitir señal</td><td>Lanza un aviso con nombre. Lo escuchan otros pasos, otros capítulos y tus escenas.</td></tr>
+    <tr><td>Esperar señal</td><td>Espera un aviso. Si ya llegó antes, pasa de largo.</td></tr>
+    <tr><td>Esperar señal N veces</td><td>Cuenta avisos («derrota 8 arañas») y puede marcar un paso de misión con cada uno.</td></tr>
+  </table>
+
+  <span class="cat">ESCENA Y CINE</span>
+  <table class="c">
+    <tr><td>Lanzar y esperar</td><td>Pide a tu juego que empiece algo (una cinemática, un combate, un minijuego) y espera a que avise de que ha terminado.</td></tr>
+    <tr><td>Reproducir Timeline</td><td>Reproduce una Timeline de la escena y espera a que acabe.</td></tr>
+    <tr><td>Escena aditiva</td><td>Carga o descarga una escena encima de la actual.</td></tr>
+    <tr><td>Fundido</td><td>Tapa o destapa la pantalla.</td></tr>
+    <tr><td>Rótulo</td><td>Texto centrado sobre la pantalla tapada: «A la mañana siguiente…».</td></tr>
+    <tr><td>Enfocar cámara</td><td>Lleva la cámara a algo o alguien.</td></tr>
+    <tr><td>Bloquear jugador</td><td>Quita o devuelve el control al jugador.</td></tr>
+  </table>
+
+  <span class="cat">OBJETOS</span>
+  <table class="c">
+    <tr><td>Dar objeto</td><td>Añade un objeto al inventario.</td></tr>
+    <tr><td>Esperar objeto</td><td>Espera a que el jugador consiga un objeto.</td></tr>
+    <tr><td>Requiere objeto</td><td>Comprueba (y, si quieres, gasta) un objeto; tiene salida para cuando falta.</td></tr>
+  </table>
+
+  <span class="cat">AUDIO</span>
+  <table class="c">
+    <tr><td>Música</td><td>Pone una música. <b>Parar música</b> la quita con un fundido.</td></tr>
+    <tr><td>Efecto · Voz</td><td>Un sonido suelto o una línea de voz.</td></tr>
+    <tr><td>Volumen · Silenciar</td><td>Baja, sube o silencia un bus (música, efectos, diálogo).</td></tr>
+  </table>
+
+  <span class="cat">OTROS</span>
+  <table class="c">
+    <tr><td>Nota</td><td>Un comentario en el lienzo. No hace nada al jugar.</td></tr>
+  </table>
+
+  <div class="tip"><b>Cada paso declara lo que deja hecho.</b> Gracias a eso el editor sabe cómo está la historia en cualquier punto sin jugar: qué misiones van, qué datos hay, dónde está cada personaje. Es lo que usan las pestañas Arranque y Depuración.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>8</b></span></div>
+</section>
+
+<!-- 6 DECISIONES -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 6</div>
+  <h1 class="chap">Decisiones y memoria</h1>
+  <p class="lead">La historia recuerda lo que ha pasado y cambia según eso. Hay cuatro herramientas, de la más sencilla a la más flexible.</p>
+
+  <h2>Datos de partida</h2>
+  <p>Un dato es un hecho con nombre que se guarda con la partida: <code>TIENE_LA_LLAVE</code>, <code>ANA_ENFADADA</code>. Se pone con <b>Poner dato</b> y se consulta con <b>Según dato</b>, que sale por «Sí» o «No». Escríbelos en mayúsculas y con guiones bajos.</p>
+
+  <h2>Contadores</h2>
+  <p>Para números: pistas encontradas, veces que has visitado a alguien. <b>Contador</b> suma (también en negativo) o fija un valor. Sin conexión propia, cada contador se guarda junto a los datos de partida.</p>
+
+  <h2>Señales</h2>
+  <p>Una señal une cosas que no están en el mismo sitio: un paso de un capítulo con otro capítulo, o un paso con un objeto de la escena (una palanca, una zona). <b>Esperar señal</b> pasa de largo si la señal ya se emitió antes, así que el orden no importa.</p>
+  <div class="note">Los capítulos se encadenan solos: un capítulo va después de otro si espera una señal que el otro emite. Así el editor sabe qué capítulos dar por terminados al probar desde un paso.</div>
+
+  <h2>Según el momento</h2>
+  <p>Cuando la decisión depende de varias cosas a la vez. Cada opción tiene sus condiciones, que se combinan: <b>dato</b> o <b>no dato</b> puesto, estado de una <b>misión</b> (sin empezar, en curso, hecha), un <b>contador</b> comparado con un número, tener un <b>objeto</b>, o una <b>señal</b> ya emitida.</p>
+  <p>Si se cumplen varias opciones, gana la más concreta (la que pide más cosas). Si no se cumple ninguna, sale por «Si no». Úsalo para frases que cambian con la historia sin llenar el lienzo de ramas.</p>
+
+  <h2>Ramas en paralelo</h2>
+  <p>Si de un paso salen varias conexiones (o usas <b>En paralelo</b>), todas avanzan a la vez: por ejemplo, el jugador puede hacer tres encargos en el orden que quiera. Para juntarlas, haz que cada rama emita una señal y espera con <b>Esperar señal N veces</b>.</p>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>9</b></span></div>
+</section>
+<!-- 7 ARRANQUE -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 7</div>
+  <h1 class="chap">Probar desde cualquier paso</h1>
+  <p class="lead">Elige un paso, mira la pestaña <b>Arranque</b> y pulsa ▶. El juego empieza justo ahí, con todo lo anterior ya hecho.</p>
+
+  <h2>Qué se pone al empezar</h2>
+  <p>La prueba se monta por capas. Cada una pisa a la anterior en lo que diga:</p>
+  <div class="layers">
+    <div class="l1"><b>1 · Partida nueva</b>Los datos del jugador al empezar el juego.</div>
+    <div class="l2"><b>2 · La historia</b>Todo lo que dejan hecho los pasos anteriores y los capítulos previos.</div>
+    <div class="l3"><b>3 · Puntos ◆</b>Lo que fija cada punto de arranque anterior, en orden.</div>
+    <div class="l4"><b>4 · Retoques</b>Lo que cambies tú solo para esta prueba.</div>
+  </div>
+
+  <div class="two" style="margin-top:5mm">
+    <div class="ui" style="font-size:7pt">
+      <div class="side" style="padding:3mm">
+        <div class="tabs"><span>Paso</span><span class="on">Arranque</span><span>Depuración</span></div>
+        <div class="kick">ASÍ EMPIEZA LA PRUEBA</div>
+        <div style="font-weight:700;font-size:8.6pt;color:#F3EEE6"><span style="color:var(--accent)">3.2</span> La tormenta</div>
+        <div style="color:var(--faint);margin-bottom:1mm">Capítulos anteriores, ya terminados: Prólogo.</div>
+        <div class="kick">JUGADOR</div>
+        <div class="kv"><span class="a">Aparece en</span><span class="b">Muelle_Norte</span><span class="src lk">◆ 2.1</span></div>
+        <div class="kv"><span class="a">Vida</span><span class="b">60</span><span class="src tw">Retoque</span></div>
+        <div class="kv"><span class="a">Vida máxima</span><span class="b">100</span><span class="src">Partida nueva</span></div>
+        <div class="kv"><span class="a">Habilidades</span><span class="b">Saltar, Nadar</span><span class="src lk">◆ 2.1</span></div>
+        <div class="kick">PARTIDA</div>
+        <div class="kv"><span class="a">Escena</span><span class="b">Puerto</span><span class="src">por el ancla</span></div>
+        <div class="kick">HISTORIA HASTA AQUÍ</div>
+        <div class="kv"><span class="a">Pasos</span><span class="b">14</span></div>
+        <div class="kv"><span class="a">Misiones</span><span class="b">1 en curso · 2 hechas</span></div>
+        <div style="display:flex;gap:1.5mm;margin-top:2mm;flex-wrap:wrap"><span class="btn">Retocar para esta prueba</span><span class="btn">Quitar retoques</span><span class="btn">◆ Fijar aquí</span></div>
+        <div class="play">▶ Probar desde 3.2</div>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Cómo se lee</h3>
+      <p>Cada fila es un dato del jugador y, a la derecha, <b>de dónde sale</b>:</p>
+      <ul>
+        <li><span class="src-x" style="font-weight:700;color:#8F887F">Partida nueva</span>: nadie lo ha cambiado.</li>
+        <li><b style="color:#E0682F">◆ 2.1</b>: lo fija el punto de arranque 2.1. Pulsa para ir a él (si es de otro capítulo, lo abre).</li>
+        <li><b style="color:#C9902E">Retoque</b>: lo has cambiado tú para esta prueba.</li>
+      </ul>
+      <p><b>Partida</b> son las filas que añade tu juego: en qué escena se entra, cómo, y avisos. <b>Historia hasta aquí</b> resume lo que se reconstruye; lo ves entero en Depuración.</p>
+      <p>Si varias ramas llegan al paso, sale <b>Por dónde vienes</b>: elige la rama y el resumen se rehace.</p>
+    </div>
+  </div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>10</b></span></div>
+</section>
+
+<section class="page">
+  <h2 style="margin-top:0">Puntos de arranque</h2>
+  <p>Un <b>punto de arranque ◆</b> es un paso que dice cómo está el jugador al llegar ahí. No hace nada mientras se juega: lo usan las pruebas. Pon uno cada vez que la historia cambie al jugador de sitio o de estado (empieza un capítulo, llega a otra zona, recupera la magia…).</p>
+  <ul>
+    <li>Al probar desde cualquier paso se aplican <b>todos los puntos anteriores, en orden</b>, también los de capítulos previos. Así un punto solo tiene que decir lo que cambia: si solo fija dónde aparece, lo demás se hereda.</li>
+    <li>En el índice y en las tarjetas llevan <b>◆</b>.</li>
+    <li>En su pestaña <b>Paso</b>, el bloque <b>Jugador aquí</b> enseña lo que fija, campo a campo; la <b>×</b> quita un campo.</li>
+  </ul>
+
+  <h2>Crear un punto sin escribir nada</h2>
+  <ol class="steps">
+    <li>Elige el paso desde el que quieres probar y abre <b>Arranque</b>.</li>
+    <li>Pulsa <b>Retocar para esta prueba</b>. Las filas se vuelven editables: cambia dónde aparece, la vida, lo que necesites. Lo cambiado se marca como <b>Retoque</b>.</li>
+    <li>Prueba con ▶ hasta que esté bien. Los retoques solo valen en tu ordenador y no tocan el grafo.</li>
+    <li>Pulsa <b>◆ Fijar aquí</b>. Si el paso elegido ya es un punto de arranque, los retoques se guardan en él; si no, se crea uno justo antes del paso. Los retoques se vacían.</li>
+  </ol>
+
+  <h3>Tomar de la partida</h3>
+  <p>Mientras juegas, la pestaña Arranque ofrece <b>Tomar de la partida</b>: copia cómo va el jugador en ese momento como retoques. Juega hasta un sitio, tómalo y fíjalo. (Necesita que tu juego lo ofrezca; ver capítulo 10.)</p>
+
+  <h2>Avisos</h2>
+  <ul>
+    <li><b>Paso suelto:</b> el paso no está conectado al inicio, así que se empieza sin la historia anterior.</li>
+    <li><b>Ningún punto dice dónde aparece el jugador:</b> aparecerá donde empieza una partida nueva. Pon un punto antes.</li>
+    <li><b>Sin ficha del jugador:</b> los puntos no pueden decir nada hasta que la crees (capítulo 8).</li>
+  </ul>
+
+  <div class="tip"><b>Recuerda.</b> El resumen es exactamente lo que va a pasar al pulsar ▶. Si algo no cuadra, lo arreglas donde dice la etiqueta de su derecha.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>11</b></span></div>
+</section>
+
+<!-- 8 FICHA -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 8</div>
+  <h1 class="chap">La ficha del jugador</h1>
+  <p class="lead">Cada juego guarda los datos de su jugador a su manera. La ficha le dice al grafo dónde están y cuáles puede tocar.</p>
+
+  <h2>Crearla</h2>
+  <ol class="steps">
+    <li>Abre <span class="menu">⚙ › Ficha del jugador</span> y pulsa <b>Crear la ficha del jugador</b>. Elige dónde guardarla (por ejemplo, en la carpeta de datos de tu juego).</li>
+    <li>En <b>Partida nueva</b>, arrastra los datos con los que empieza una partida: un <b>ScriptableObject</b> o un <b>prefab</b> con el componente que los guarda (en ese caso, elige el componente).</li>
+    <li>Marca los <b>campos</b> que podrán fijar los puntos de arranque y retocarse al probar: posición, vida, habilidades, equipo…</li>
+    <li>En <b>Dónde aparece</b>, elige el campo que dice dónde aparece el jugador. Con él, el editor avisa cuando ningún punto lo dice.</li>
+  </ol>
+
+  <h2>Qué hace con ella el arranque básico</h2>
+  <table class="c">
+    <tr><th>Tu plantilla es…</th><th>Al probar</th></tr>
+    <tr><td>Un ScriptableObject</td><td>Antes de entrar en Play se escriben en él los puntos y retoques; al salir de Play vuelve a quedar como estaba.</td></tr>
+    <tr><td>Un prefab con componente</td><td>Al entrar en Play se escriben en los componentes de ese tipo que haya en la escena.</td></tr>
+  </table>
+  <p>Si tu juego tiene su propio arranque (partidas guardadas, pantallas de carga), lo hace a su manera con la misma información (capítulo 10).</p>
+
+  <div class="note"><b>Qué campos marcar.</b> Lo que la historia no decide por sí sola. Lo que ya dejan hecho los pasos (misiones, objetos, grupo) lo pone la capa de la historia; no hace falta repetirlo en los puntos.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>12</b></span></div>
+</section>
+
+<!-- 9 DEPURAR -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 9</div>
+  <h1 class="chap">Depurar</h1>
+  <p class="lead">Cuando algo no sale como esperas: ¿qué debería estar pasando, y qué está pasando de verdad?</p>
+
+  <h2>La pestaña Depuración</h2>
+  <p>Enseña el <b>estado al llegar</b> al paso elegido: personajes y dónde están, misiones, objetos, datos de partida, contadores y señales ya emitidas. Cada fila dice qué paso la dejó así; púlsalo para ir a él (o al capítulo anterior que lo hizo).</p>
+  <ul>
+    <li><b>Según el grafo:</b> lo que dicen los pasos, sin jugar.</li>
+    <li><b>En la partida (Play):</b> si el juego está en ese paso, lo compara con la partida y marca las diferencias. Una diferencia significa que un paso hace algo que no declara, o que algo de fuera del grafo lo cambió.</li>
+    <li><b>Abrir el monitor de señales:</b> las señales según se emiten y quién las espera, en directo.</li>
+  </ul>
+
+  <h2>Mientras juegas</h2>
+  <ul>
+    <li>El paso en el que va el juego se marca en verde en el lienzo; los ya recorridos se atenúan.</li>
+    <li><b>Puntos de pausa:</b> clic derecho › <span class="menu">Pausar aquí al jugar</span>. La tarjeta lleva un punto rojo; al llegar ahí, el juego se pausa y el editor te lleva al paso. Se guardan en tu ordenador, no en el grafo.</li>
+  </ul>
+
+  <h2>Avisos y comprobación del flujo</h2>
+  <p>La barra dice <span style="color:#3E8E57;font-weight:700">✓ Todo correcto</span> o <span style="color:#B7791F;font-weight:700">▲ N avisos</span>; púlsalo para ir al primero. El aviso también sale en la tarjeta (rombo amarillo) y arriba de su pestaña Paso. Se avisa, entre otras cosas, de:</p>
+  <ul>
+    <li>pasos a los que nunca se llega;</li>
+    <li>decisiones con una salida sin conectar;</li>
+    <li>campos obligatorios vacíos (una misión sin id, un diálogo sin asignar…);</li>
+    <li>misiones sin frase de «mientras tanto» ni quien las encargue.</li>
+  </ul>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>13</b></span></div>
+</section>
+<!-- 10 CONECTAR -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 10</div>
+  <h1 class="chap">Conectar tu juego</h1>
+  <p class="lead">El grafo pide cosas («enseña este diálogo», «da este objeto»); tu juego responde. Cada tipo de petición es una <b>conexión</b>, y todas traen una versión básica.</p>
+
+  <p><span class="menu">⚙ › Conexiones del juego</span> lista cada conexión y qué clase de tu juego la atiende ahora (o si usa la básica).</p>
+  <table class="c ports">
+    <tr><th>Conexión</th><th>Para qué</th><th>Interfaz</th></tr>
+    <tr><td>Diálogos · Respuestas</td><td>Enseñar conversaciones y preguntas</td><td><code>INarrativeDialoguePlayer</code>, <code>INarrativeChoicePresenter</code></td></tr>
+    <tr><td>Misiones</td><td>Empezar, avanzar y cerrar misiones</td><td><code>IQuestService</code></td></tr>
+    <tr><td>Inventario</td><td>Dar, quitar y contar objetos</td><td><code>INarrativeInventory</code></td></tr>
+    <tr><td>Datos · Contadores</td><td>Guardar hechos y números</td><td><code>INarrativeFlagStore</code>, <code>INarrativeCounterStore</code> (opcional)</td></tr>
+    <tr><td>Guardado</td><td>Recordar por dónde va cada capítulo</td><td><code>INarrativeSaveData</code></td></tr>
+    <tr><td>Personajes</td><td>Encontrarlos, colocarlos, ponerlos o quitarlos de escena</td><td><code>INarrativeActorDirectory</code>, <code>…Placement</code>, <code>…Presence</code></td></tr>
+    <tr><td>Marcadores</td><td>El icono sobre quien tiene algo que decir</td><td><code>INarrativeAttentionMarkers</code></td></tr>
+    <tr><td>Jugador · Cámara</td><td>Bloquear el control, enfocar</td><td><code>INarrativePlayerControl</code>, <code>INarrativeCameraFocus</code></td></tr>
+    <tr><td>Audio</td><td>Música, efectos y voces</td><td><code>INarrativeAudio</code></td></tr>
+    <tr><td>Pantalla · Rótulos · Bocadillos</td><td>Fundidos, textos grandes, frases sobre la cabeza</td><td><code>INarrativeScreen</code>, <code>…TitleCardPresenter</code>, <code>…SpeechBubbles</code></td></tr>
+    <tr><td>Escenas · Traducción</td><td>Cargar escenas; traducir claves de texto</td><td><code>INarrativeSceneHooks</code>, <code>INarrativeTextLocalizer</code></td></tr>
+  </table>
+
+  <h2>Conectar un sistema tuyo</h2>
+  <p>Implementa la interfaz y regístrala al arrancar el juego. Desde ese momento el grafo usa la tuya en lugar de la básica:</p>
+<pre style="background:#1B1A18;color:#E4DED5;border-radius:2mm;padding:3.5mm 4mm;font-family:'DejaVu Sans Mono';font-size:8pt;line-height:1.5;margin:2mm 0 3mm 0">public sealed class MisDatosDePartida : INarrativeFlagStore
+{
+    public bool IsAvailable =&gt; MiPartida.Actual != null;
+    public bool Has(string flag) =&gt; MiPartida.Actual.Flags.Contains(flag);
+    public void Set(string flag, bool value) { /* … */ }
+    public IEnumerable&lt;string&gt; All() =&gt; MiPartida.Actual.Flags;
+}
+<span style="color:#8F887F">// Al arrancar el juego:</span>
+NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());</pre>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>14</b></span></div>
+</section>
+
+<section class="page">
+  <h2 style="margin-top:0">Tu propio arranque de pruebas</h2>
+  <p>El arranque básico da Play en la escena de <span class="menu">⚙ › Probar desde un paso › Escena de arranque</span> (o en la que tengas abierta), pone la historia anterior y aplica la ficha del jugador. Si tu juego necesita otra cosa (cargar una partida, pasar por su escena de sistemas, entrar en la escena del sitio donde aparece el jugador), escribe el tuyo en una carpeta <code>Editor</code>:</p>
+<pre style="background:#1B1A18;color:#E4DED5;border-radius:2mm;padding:3.5mm 4mm;font-family:'DejaVu Sans Mono';font-size:8pt;line-height:1.5;margin:2mm 0 3mm 0">public sealed class MiArranque : INarrativePlayLauncher, INarrativeLaunchDetails
+{
+    public string Name =&gt; "Mi juego";
+    public int Priority =&gt; 100;          <span style="color:#8F887F">// gana al básico (0)</span>
+
+    public bool Launch(NarrativeGraph graph, string stepGuid,
+                       IReadOnlyDictionary&lt;string, int&gt; choices, out string message)
+    {
+        var plan = NarrativeStartPlanner.Plan(graph, stepGuid, choices);
+        <span style="color:#8F887F">// 1. Copia la partida nueva:   plan.ApplyBase(misDatos);</span>
+        <span style="color:#8F887F">// 2. Pon la historia anterior (NarrativeStateProjector).</span>
+        <span style="color:#8F887F">// 3. Puntos y retoques:        plan.ApplyOverrides(misDatos);</span>
+        <span style="color:#8F887F">// 4. Abre la escena y entra en Play.</span>
+        message = "Probando…";
+        return true;
+    }
+
+    <span style="color:#8F887F">// Filas propias en el resumen de Arranque (escena, avisos…).</span>
+    public void Describe(NarrativeStartPlan plan, Object player, List&lt;StartLine&gt; lines)
+        =&gt; lines.Add(new StartLine { Label = "Escena", Value = "Puerto" });
+}</pre>
+  <ul>
+    <li>El editor usa el arranque de mayor <code>Priority</code>. En <span class="menu">⚙</span> ves cuál está en uso.</li>
+    <li><code>INarrativeLaunchDetails</code> es opcional: añade filas a la sección <b>Partida</b> del resumen.</li>
+    <li>Para el botón <b>Tomar de la partida</b>, implementa <code>INarrativePlayerLive</code>: en Play devuelve los datos del jugador tal y como van (del mismo tipo que la ficha).</li>
+  </ul>
+
+  <h2>Tus propios pasos</h2>
+  <p>Un paso es una clase <code>[Serializable]</code> que hereda de <code>NarrativeNode</code> con el atributo <code>[NarrativeNodeInfo("Categoría", "Título", "Qué hace")]</code>. Sale sola en el buscador. Dos reglas:</p>
+  <ul>
+    <li>Declara lo que deja hecho (implementa <code>INarrativeStateEffect</code>) o marca que no cambia nada con <code>[NarrativeNoWorldEffect]</code>. Así las pruebas y la depuración saben reconstruirlo.</li>
+    <li>Pide lo que necesite del juego a una conexión, con <code>NarrativeServices.TryGet</code>; nunca a una clase concreta de tu juego.</li>
+  </ul>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>15</b></span></div>
+</section>
+
+<!-- 11 ASISTENTE -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 11</div>
+  <h1 class="chap">Asistente y herramientas</h1>
+  <p class="lead">Todo está en <span class="menu">⚙ Ajustes y herramientas</span>, en la barra del editor.</p>
+
+  <h2>Asistente</h2>
+  <p>Un chat dentro del editor que lee el capítulo, te contesta y te propone cambios. Los cambios se enseñan primero y solo se aplican si pulsas <b>Aplicar</b>; se deshacen con <span class="k">Ctrl</span>+<span class="k">Z</span>.</p>
+  <ol class="steps">
+    <li>En <span class="menu">⚙ › Asistente</span> marca <b>Mostrar el botón del asistente</b>.</li>
+    <li>Elige el servicio y pon tu clave de API y el modelo. También vale cualquier servicio con el formato de OpenAI, incluido uno en tu ordenador (Ollama, sin clave). Las claves se guardan solo en tu ordenador.</li>
+    <li>Pulsa <b>✦ Asistente</b> en la barra. Vuelve a pulsarlo para volver a tus pestañas.</li>
+  </ol>
+
+  <h2>Textos para traducir y doblar</h2>
+  <p><b>Exportar textos</b> genera una hoja de cálculo (CSV) con los diálogos y textos del capítulo en el orden de la historia: paso, título, tipo, personaje, clave, los dos idiomas y notas.</p>
+
+  <h2>El capítulo como texto</h2>
+  <p><b>Copiar el capítulo como texto</b> lo deja en el portapapeles para leerlo, revisarlo o pegarlo en otra herramienta. <b>Guardar el manual de pasos</b> escribe todos los tipos de paso con sus campos en <code>STEP_TYPES.md</code>.</p>
+
+  <h2>Herramientas externas</h2>
+  <p><b>Permitir herramientas externas</b> deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto. Incluye un servidor MCP (en <code>Assets/NarrativeGraph/Tools/mcp</code>, con su README) que escucha solo en tu ordenador, en el puerto <code>47821</code>. Viene apagado.</p>
+  <table class="c">
+    <tr><th>Herramienta MCP</th><th>Qué hace</th></tr>
+    <tr><td>list_graphs</td><td>Lista los capítulos del proyecto</td></tr>
+    <tr><td>read_chapter</td><td>Lee un capítulo como texto</td></tr>
+    <tr><td>step_manual</td><td>Devuelve los tipos de paso y sus campos</td></tr>
+    <tr><td>edit_chapter</td><td>Aplica cambios por lotes (añadir, cambiar, conectar, borrar); se comprueba todo antes y se aplica todo o nada</td></tr>
+  </table>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>16</b></span></div>
+</section>
+
+<!-- 12 ATAJOS -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 12</div>
+  <h1 class="chap">Atajos y preguntas frecuentes</h1>
+
+  <div class="two">
+    <div>
+      <h2 style="margin-top:2mm">Atajos del lienzo</h2>
+      <table class="c">
+        <tr><td><span class="k">A</span> · <span class="k">Espacio</span></td><td>Añadir un paso</td></tr>
+        <tr><td>Doble clic</td><td>Añadir un paso en ese hueco</td></tr>
+        <tr><td>Arrastrar borde</td><td>Conectar, o crear el siguiente paso</td></tr>
+        <tr><td><span class="k">+</span> en una flecha</td><td>Meter un paso en medio</td></tr>
+        <tr><td><span class="k">F</span></td><td>Encuadrar el paso o el capítulo</td></tr>
+        <tr><td><span class="k">Ctrl</span>+<span class="k">D</span></td><td>Duplicar</td></tr>
+        <tr><td><span class="k">Supr</span></td><td>Borrar la selección</td></tr>
+        <tr><td><span class="k">Shift</span>+arrastrar</td><td>Seleccionar con caja</td></tr>
+        <tr><td><span class="k">Ctrl</span>+<span class="k">Z</span></td><td>Deshacer</td></tr>
+        <tr><td>Rueda</td><td>Zoom</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2 style="margin-top:2mm">Dónde está…</h2>
+      <table class="c">
+        <tr><td>Abrir el editor</td><td>Tools › Narrative Graph</td></tr>
+        <tr><td>Idioma</td><td>⚙ › Idioma del editor</td></tr>
+        <tr><td>Ficha del jugador</td><td>⚙ › Ficha del jugador</td></tr>
+        <tr><td>Escena de arranque</td><td>⚙ › Probar desde un paso</td></tr>
+        <tr><td>Conexiones</td><td>⚙ › Conexiones del juego</td></tr>
+        <tr><td>Monitor de señales</td><td>Depuración, o Tools › Narrative Graph</td></tr>
+        <tr><td>Plantillas</td><td>Assets/NarrativeTemplates</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2>Preguntas frecuentes</h2>
+  <h3>Pruebo desde un paso y el jugador aparece en otro sitio.</h3>
+  <p>Mira la fila de posición en <b>Arranque</b>: dice de dónde sale. Si pone «Partida nueva», ningún punto anterior lo fija: retoca y pulsa <b>◆ Fijar aquí</b>.</p>
+  <h3>Un personaje no está donde debería al probar.</h3>
+  <p>Abre <b>Depuración</b> y busca al personaje: la fila dice qué paso lo colocó. Si no sale, ningún paso anterior declara dónde está; añade <b>Colocar actor</b> antes.</p>
+  <h3>En Play, Depuración marca diferencias.</h3>
+  <p>Algún paso hace algo que no declara, o un sistema de fuera del grafo cambió ese dato. Revisa el paso que indica la fila.</p>
+  <h3>¿Los retoques se guardan en el proyecto?</h3>
+  <p>No: son solo de tu ordenador y no tocan el grafo. Para compartirlos, fíjalos como punto de arranque.</p>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>17</b></span></div>
+</section>
+</body></html>

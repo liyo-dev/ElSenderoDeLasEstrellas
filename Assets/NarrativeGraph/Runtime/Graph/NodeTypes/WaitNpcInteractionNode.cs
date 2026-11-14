@@ -65,6 +65,10 @@ public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffec
     private static void ResetStatics() { s_esperando.Clear(); s_tomadaConMarca.Clear(); }
 #endif
 
+    /// <summary>true si algún paso del grafo espera ahora que el jugador hable con este actor.</summary>
+    public static bool IsWaitingFor(string npcId)
+        => !string.IsNullOrEmpty(npcId) && s_esperando.TryGetValue(npcId, out var lista) && lista.Count > 0;
+
     private static bool HayOtraConMarca(string npcId, WaitNpcInteractionNode yo)
     {
         if (s_tomadaConMarca.TryGetValue(npcId, out int f) && f == Time.frameCount) return true;

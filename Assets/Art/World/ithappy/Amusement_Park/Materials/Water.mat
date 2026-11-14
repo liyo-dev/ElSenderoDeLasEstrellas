@@ -149,8 +149,8 @@ Material:
     - _TessMaxDisp: 25
     - _Tessellation: 4
     - _UVSec: 0
-    - _VelocidadDeDestellos: 0.6
-    - _VelocidadDeEspuma: 0.4
+    - _VelocidadDeDestellos: 0.25
+    - _VelocidadDeEspuma: 0.18
     - _WaveBigPower: 3.8
     - _WaveBigScale: 0.9
     - _WaveBigSpeed: 1.5

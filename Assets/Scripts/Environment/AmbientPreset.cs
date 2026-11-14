@@ -49,6 +49,9 @@ public class AmbientPreset : ScriptableObject
     [Tooltip("Clave de texto del nombre del lugar. La primera vez que se entra en la partida sale su presentación (cinta de papel con el nombre); las siguientes, un rótulo breve. Ver PresentacionDeLugares. Vacío = no se anuncia.")]
     public string nombreDelLugar = "";
 
+    [Tooltip("La primera vez que se presenta el lugar, la cámara sube y lo enseña desde el aire mientras sale la cinta. Ver PlanoDelLugar.")]
+    public bool planoAlPresentar = true;
+
     [Header("Cámara")]
     [Tooltip("Si está activo, la zona anula la configuración de la cámara del jugador al entrar.")]
     public bool controlCamera = false;

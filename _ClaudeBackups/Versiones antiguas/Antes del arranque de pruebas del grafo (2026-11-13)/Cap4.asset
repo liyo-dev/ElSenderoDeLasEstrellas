@@ -1,0 +1,1393 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Cap4
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: cap4-inicio
+  nodes:
+  - rid: 6540294538172825832
+  - rid: 6540294538172825833
+  - rid: 6540294538172825834
+  - rid: 6540294538172825835
+  - rid: 6540294538172825836
+  - rid: 6540294538172825837
+  - rid: 6540294538172825838
+  - rid: 6540294538172825839
+  - rid: 6540294538172825840
+  - rid: 6540294538172825841
+  - rid: 6540294538172825842
+  - rid: 6540294538172825843
+  - rid: 6540294538172825844
+  - rid: 6540294538172825845
+  - rid: 6540294538172825846
+  - rid: 6540294538172825847
+  - rid: 6540294538172825848
+  - rid: 6540294538172825849
+  - rid: 6540294538172825850
+  - rid: 6540294538172825851
+  - rid: 6540294538172825852
+  - rid: 6540294538172825853
+  - rid: 6540294538172825854
+  - rid: 6540294538172825855
+  - rid: 6540294538172825856
+  - rid: 6540294538172825857
+  - rid: 6540294538172825858
+  - rid: 6540294538172825859
+  - rid: 6540294538172825860
+  - rid: 6540294538172825861
+  - rid: 6540294538172825862
+  - rid: 6540294538172825863
+  - rid: 6540294538172825864
+  - rid: 6540294538172825865
+  - rid: 6540294538172825866
+  - rid: 6540294538172825867
+  - rid: 6540294538172825868
+  - rid: 6540294538172825869
+  - rid: 6540294538172825870
+  - rid: 6540294538172825871
+  - rid: 6540294538172825872
+  - rid: 6540294538172825873
+  - rid: 6540294538172825874
+  - rid: 6540294538172825875
+  - rid: 6540294538172825876
+  - rid: 6540294538172825877
+  - rid: 6540294538172825878
+  - rid: 6540294538172825879
+  - rid: 6540294538172825880
+  - rid: 6540294538172825881
+  - rid: 6540294538172825882
+  - rid: 6540294538172825883
+  - rid: 6540294538172825884
+  - rid: 6540294538172825885
+  - rid: 6540294538172825886
+  - rid: 6540294538172825887
+  - rid: 6540294538172825888
+  - rid: 6540294538172825889
+  - rid: 6540294538172825890
+  - rid: 6540294538172825891
+  - rid: 6540294538172825892
+  - rid: 6540294538172825893
+  - rid: 6540294538172825894
+  - rid: 6540294538172825895
+  - rid: 6540294538172825896
+  - rid: 6540294538172825897
+  - rid: 6540294538172825898
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294538172825832
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio del Cap. 4
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-inicio
+        position: {x: 0, y: 0}
+        outputs:
+        - cap4-tras-cap3
+    - rid: 6540294538172825833
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Tras el Cap. 3 (CH_Cap3_BACK_1)
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-tras-cap3
+        position: {x: 380, y: 0}
+        outputs:
+        - cap4-flag
+        eventKey: CH_Cap3_BACK_1
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825834
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Fin del Cap. 4 (CH_Cap4_BACK_1)
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-fin
+        position: {x: 1900, y: 2160}
+        outputs:
+        - cap4-demo-rotulo
+        eventKey: CH_Cap4_BACK_1
+    - rid: 6540294538172825835
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "R\xF3tulo: fin de la Primera Parte"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-demo-rotulo
+        position: {x: 0, y: 2400}
+        outputs:
+        - cap4-demo-fin
+        text: Fin de la Primera Parte. Gracias por jugar a la demo.
+        textId: DEMO_FIN_ROTULO
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294538172825836
+      type: {class: FinDeLaDemoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Fin de la demo (en la build de la demo, a los cr\xE9ditos)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-demo-fin
+        position: {x: 380, y: 2400}
+        outputs:
+        - cap4-demo-destapa
+        escenaFinal: Credits
+        espera: 0.8
+    - rid: 6540294538172825837
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Comienza el Cap. 4
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-flag
+        position: {x: 760, y: 0}
+        outputs:
+        - cap4-estela-aparece
+        flagKey: CAP4_INICIADO
+        value: 1
+    - rid: 6540294538172825838
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Estela est\xE1 en su claro (el roster la pone)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-estela-aparece
+        position: {x: 1140, y: 0}
+        outputs:
+        - cap4-bosque
+        flagKey: ESTELA_APARECE
+        value: 1
+    - rid: 6540294538172825839
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Hacia el Bosque Prohibido (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bosque
+        position: {x: 1520, y: 0}
+        outputs:
+        - cap4-mision-estela
+        eventKey: CAP4_BOSQUE_EMPIEZA
+    - rid: 6540294538172825840
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n: la hechicera del bosque (aviso de misi\xF3n nueva)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mision-estela
+        position: {x: 1900, y: 0}
+        outputs:
+        - cap4-punto-bosque
+        questId: CAP4_ENCUENTRA_A_ESTELA
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294538172825841
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Punto de guardado: el cruce"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-bosque
+        position: {x: 0, y: 240}
+        outputs:
+        - cap4-llegada-claro
+        checkpointId: CAP4_INICIO
+        spawnAnchorId: Cap3_Amanecer
+        sceneName: MainWorld
+    - rid: 6540294538172825842
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Llega al claro de los troncos quemados"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-claro
+        position: {x: 380, y: 240}
+        outputs:
+        - cap4-mando-estela
+        eventKey: CAP4_LLEGADA_CLARO
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825843
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mando-estela
+        position: {x: 760, y: 240}
+        outputs:
+        - cap4-estela
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825844
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Cinem\xE1tica: Estela, el aro y \xABya me lo cobrar\xE9\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-estela
+        position: {x: 1140, y: 240}
+        outputs:
+        - cap4-estela-grupo
+        cinematicName: 'Cap. 4: Estela'
+        signalIn: CAP4_ESTELA_START
+        signalDone: CAP4_ESTELA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 80f759b73245ec145a401ca469e2b77f, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825845
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.1 \xB7 Estela entra en el grupo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-estela-grupo
+        position: {x: 1520, y: 240}
+        outputs:
+        - cap4-paso-estela
+        accion: 3
+        personaje: Estela
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825846
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: encontrar a Estela (cierra la misi\xF3n)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-estela
+        position: {x: 1900, y: 240}
+        outputs:
+        - cap4-casa
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_ENCUENTRA_A_ESTELA
+        stepConditionIds:
+        - CAP4_ESTELA
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294538172825847
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 La casa entre ra\xEDces (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-casa
+        position: {x: 0, y: 480}
+        outputs:
+        - cap4-casa-noche
+        eventKey: CAP4_CASA_EMPIEZA
+    - rid: 6540294538172825848
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Anochece en el claro"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-casa-noche
+        position: {x: 380, y: 480}
+        outputs:
+        - cap4-casa-boc
+        targetTime: 7
+        immediate: 0
+    - rid: 6540294538172825849
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 \xABPuedes mirar, pero no toques la cena\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-casa-boc
+        position: {x: 760, y: 480}
+        outputs:
+        - cap4-dormir
+        targetTag: Player
+        text: "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jerg\xF3n."
+        textId: CAP4_BOC_CASA
+        duration: 7.5857143
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294538172825850
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Will se acuesta en el jerg\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-dormir
+        position: {x: 1140, y: 480}
+        outputs:
+        - cap4-rotulo-manana
+        eventKey: CAP4_DORMIR
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825851
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 R\xF3tulo: a la ma\xF1ana siguiente"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-rotulo-manana
+        position: {x: 1520, y: 480}
+        outputs:
+        - cap4-manana-hora
+        text: "A la ma\xF1ana siguiente\u2026"
+        textId: CAP4_ROTULO_MANANA
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294538172825852
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Amanece"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-manana-hora
+        position: {x: 1900, y: 480}
+        outputs:
+        - cap4-manana-will
+        targetTime: 6
+        immediate: 1
+    - rid: 6540294538172825853
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Will se despierta junto a la casa"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-manana-will
+        position: {x: 0, y: 720}
+        outputs:
+        - cap4-punto-casa
+        actorId: Player
+        markId: Cap4_Campana_Salida
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294538172825854
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Punto de guardado: la casa de Estela"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-casa
+        position: {x: 380, y: 720}
+        outputs:
+        - cap4-mision-reino
+        checkpointId: CAP4_CASA
+        spawnAnchorId: Cap4_Campana_Salida
+        sceneName: MainWorld
+    - rid: 6540294538172825855
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n: rumbo al Reino (aviso de misi\xF3n nueva)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mision-reino
+        position: {x: 760, y: 720}
+        outputs:
+        - cap4-campana
+        questId: CAP4_RUMBO_AL_REINO
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294538172825856
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 La prueba de la campana (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana
+        position: {x: 1140, y: 720}
+        outputs:
+        - cap4-mando-manana
+        eventKey: CAP4_CAMPANA_EMPIEZA
+    - rid: 6540294538172825857
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Will al mando"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mando-manana
+        position: {x: 1520, y: 720}
+        outputs:
+        - cap4-manana
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825858
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Cinem\xE1tica: el cartel y la primera receta"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-manana
+        position: {x: 1900, y: 720}
+        outputs:
+        - cap4-cupula
+        cinematicName: "Cap. 4: la ma\xF1ana en la casa"
+        signalIn: CAP4_MANANA_START
+        signalDone: CAP4_MANANA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 69f80acd9fc3c2a43bf8dd1125bdb5d2, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825859
+      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Aprende C\xFApula Estelar (primera receta del combo)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-cupula
+        position: {x: 0, y: 960}
+        outputs:
+        - cap4-cupula-tuto
+        abilityKeysToUnlock: 
+        abilitiesToUnlock: 
+        spellsToUnlock: 1a000000i
+        assignSpellsToEmptySlot: 0
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+        saveAfterUnlock: 0
+    - rid: 6540294538172825860
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.2 \xB7 Tutorial: el combo m\xE1gico"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-cupula-tuto
+        position: {x: 380, y: 960}
+        outputs:
+        - cap4-reglas
+        action: 0
+        text: "Pulsa {BOTON} y teclea X, B, A: la C\xFApula Estelar protege a quien est\xE9 debajo."
+        textId: TUTORIAL_CAP4_CUPULA_ESTELAR
+        icon: {fileID: 0}
+        buttonName: interactable_y
+        dismissWithCancel: 0
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
+    - rid: 6540294538172825861
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Cinem\xE1tica: las reglas de la campana"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-reglas
+        position: {x: 760, y: 960}
+        outputs:
+        - cap4-campana-fork
+        cinematicName: 'Cap. 4: las reglas de la campana'
+        signalIn: CAP4_CAMPANA_START
+        signalDone: CAP4_CAMPANA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 58c2ea6a5f5dce14c9190aec94965a46, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825862
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 La prueba (y en paralelo, las figuras chamuscadas)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana-fork
+        position: {x: 1140, y: 960}
+        outputs:
+        - cap4-figura-0
+        - cap4-tocada
+    - rid: 6540294538172825863
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Will toca la campana"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-tocada
+        position: {x: 1520, y: 960}
+        outputs:
+        - cap4-liam-aparece
+        eventKey: CAP4_CAMPANA_TOCADA
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825864
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Liam les observa (el roster le pone en la loma)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-liam-aparece
+        position: {x: 1900, y: 960}
+        outputs:
+        - cap4-campana-fin
+        flagKey: LIAM_APARECE
+        value: 1
+    - rid: 6540294538172825865
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Fin de la prueba (Liam, en la loma)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana-fin
+        position: {x: 0, y: 1200}
+        outputs:
+        - cap4-figura
+        eventKey: CAP4_CAMPANA_FIN
+    - rid: 6540294538172825866
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Cinem\xE1tica: la figura que resbala, las figuras rehechas y el que observa"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura
+        position: {x: 380, y: 1200}
+        outputs:
+        - cap4-figura-destapa
+        cinematicName: 'Cap. 4: la figura que resbala'
+        signalIn: CAP4_FIGURA_START
+        signalDone: CAP4_FIGURA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 3fded739f8d058142b863900ef160039, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825867
+      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Aprende Levitaci\xF3n por instinto"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-levitacion
+        position: {x: 1140, y: 1200}
+        outputs:
+        - cap4-levitacion-tuto
+        abilityKeysToUnlock: 
+        abilitiesToUnlock: 
+        spellsToUnlock: 04000000i
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+        saveAfterUnlock: 0
+    - rid: 6540294538172825868
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: la prueba de la campana'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-campana
+        position: {x: 1900, y: 1200}
+        outputs:
+        - cap4-golem
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_CAMPANA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294538172825869
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Hacia el Reino: el G\xF3lem (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-golem
+        position: {x: 0, y: 1440}
+        outputs:
+        - cap4-punto-golem
+        eventKey: CAP4_GOLEM_EMPIEZA
+    - rid: 6540294538172825870
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Punto de guardado: el camino del Reino"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-golem
+        position: {x: 380, y: 1440}
+        outputs:
+        - cap4-llegada-arena
+        checkpointId: CAP4_CAMINO
+        spawnAnchorId: Cap4_Golem_Entrada
+        sceneName: MainWorld
+    - rid: 6540294538172825871
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Llegan al descanso del camino"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-arena
+        position: {x: 760, y: 1440}
+        outputs:
+        - cap4-mando-golem
+        eventKey: CAP4_LLEGADA_ARENA
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825872
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Will al mando"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mando-golem
+        position: {x: 1140, y: 1440}
+        outputs:
+        - cap4-golem-cine
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825873
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Cinem\xE1tica: Liam traza el pacto y el G\xF3lem sale de la tierra"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-golem-cine
+        position: {x: 1520, y: 1440}
+        outputs:
+        - cap4-golem-batalla
+        cinematicName: "Cap. 4: el G\xF3lem"
+        signalIn: CAP4_GOLEM_START
+        signalDone: CAP4_GOLEM_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: afcdc25aacfd9c049bdfa63a7eea8d59, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825874
+      type: {class: StartBattleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Batalla: el G\xF3lem (fuego de frente lo alimenta, el barro lo hunde, remate en d\xFAo)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-golem-batalla
+        position: {x: 1900, y: 1440}
+        outputs:
+        - cap4-tras-golem
+        battleId: Golem_1
+        bossArena: {fileID: 0}
+        useBattleById: 1
+        encounter: {fileID: 11400000, guid: 696c6915e9d17c549917392b09955271, type: 2}
+        spawnProfileIndex: 0
+        completeMission: 0
+        missionStringId: 
+        missionId: 0
+        arenaContext: 
+    - rid: 6540294538172825875
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 Cinem\xE1tica: agotados, la esquirla y el cuaderno de Liam"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-tras-golem
+        position: {x: 0, y: 1680}
+        outputs:
+        - cap4-esquirla
+        cinematicName: "Cap. 4: despu\xE9s del G\xF3lem"
+        signalIn: CAP4_TRAS_GOLEM_START
+        signalDone: CAP4_TRAS_GOLEM_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 38e62ec7231aa214f94952658d5928f5, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825876
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.4 \xB7 La esquirla de cristal"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-esquirla
+        position: {x: 380, y: 1680}
+        outputs:
+        - cap4-paso-golem
+        item: {fileID: 11400000, guid: 41b82b5e4530fb74aadb0af71d1b1162, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294538172825877
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: cruzar el bosque'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-golem
+        position: {x: 760, y: 1680}
+        outputs:
+        - cap4-manzana
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_GOLEM
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294538172825878
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.5 \xB7 Cinem\xE1tica: la manzana harinosa"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-manzana
+        position: {x: 1140, y: 1680}
+        outputs:
+        - cap4-punto-manzana
+        cinematicName: 'Cap. 4: la manzana harinosa'
+        signalIn: CAP4_MANZANA_START
+        signalDone: CAP4_MANZANA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 89835ad1150c13e4093e35147966cbb9, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825879
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.5 \xB7 Punto de guardado: el campamento"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-manzana
+        position: {x: 1520, y: 1680}
+        outputs:
+        - cap4-bifurcacion
+        checkpointId: CAP4_MANZANA
+        spawnAnchorId: Cap4_Manzana
+        sceneName: MainWorld
+    - rid: 6540294538172825880
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Hacia la bifurcaci\xF3n del r\xEDo (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bifurcacion
+        position: {x: 1900, y: 1680}
+        outputs:
+        - cap4-llegada-bifurcacion
+        eventKey: CAP4_BIFURCACION_EMPIEZA
+    - rid: 6540294538172825881
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Llegan a la bifurcaci\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-bifurcacion
+        position: {x: 0, y: 1920}
+        outputs:
+        - cap4-mando-bifurcacion
+        eventKey: CAP4_LLEGADA_BIFURCACION
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825882
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Will al mando"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mando-bifurcacion
+        position: {x: 380, y: 1920}
+        outputs:
+        - cap4-bifurcacion-cine
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825883
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Cinem\xE1tica: Liam aparece y se une; la corriente se lleva su bota"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bifurcacion-cine
+        position: {x: 760, y: 1920}
+        outputs:
+        - cap4-liam-grupo
+        cinematicName: "Cap. 4: la bifurcaci\xF3n"
+        signalIn: CAP4_BIFURCACION_START
+        signalDone: CAP4_BIFURCACION_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 4c90c8fb063278542b688f57d358503a, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825884
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Liam entra en el grupo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-liam-grupo
+        position: {x: 1140, y: 1920}
+        outputs:
+        - cap4-liam-grupo-senal
+        accion: 3
+        personaje: Liam
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825885
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Liam ya va en el grupo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-liam-grupo-senal
+        position: {x: 1520, y: 1920}
+        outputs:
+        - cap4-bota-boc
+        eventKey: CAP4_LIAM_EN_EL_GRUPO
+    - rid: 6540294538172825886
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 \xAB\xA1Mi bota!\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bota-boc
+        position: {x: 1900, y: 1920}
+        outputs:
+        - cap4-bota
+        targetTag: Player
+        text: "\xA1Se la lleva el r\xEDo! Voy a por ella, r\xEDo abajo."
+        textId: CAP4_BOC_BOTA
+        duration: 4.5142856
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294538172825887
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Will recoge la bota r\xEDo abajo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bota
+        position: {x: 0, y: 2160}
+        outputs:
+        - cap4-mando-bota
+        eventKey: CAP4_BOTA_RECOGIDA
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825888
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Will al mando"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mando-bota
+        position: {x: 380, y: 2160}
+        outputs:
+        - cap4-bota-cine
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 0
+    - rid: 6540294538172825889
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.6 \xB7 Cinem\xE1tica: \xABTampoco sal\xEDa en el mapa que alguien ir\xEDa a por mi bota\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bota-cine
+        position: {x: 760, y: 2160}
+        outputs:
+        - cap4-paso-vado
+        cinematicName: 'Cap. 4: la bota'
+        signalIn: CAP4_BOTA_START
+        signalDone: CAP4_BOTA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: f3c76db8407a8bc4698f3c388b25289a, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294538172825890
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: el camino del r\xEDo (cierra la misi\xF3n)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-vado
+        position: {x: 1140, y: 2160}
+        outputs:
+        - cap4-fin-punto
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_VADO
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294538172825891
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Cap. 4 \xB7 Fin (punto de guardado)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-fin-punto
+        position: {x: 1520, y: 2160}
+        outputs:
+        - cap4-fin
+        checkpointId: CAP4_FIN
+        spawnAnchorId: Cap4_Bota
+        sceneName: MainWorld
+    - rid: 6540294538172825892
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Una figura de barro, chamuscada"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-0
+        position: {x: 0, y: 2880}
+        outputs:
+        - cap4-figura-1
+        eventKey: CAP4_FIGURA_CHAMUSCADA
+        acceptEarlierEvent: 1
+    - rid: 6540294538172825893
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Queda apuntado"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-1
+        position: {x: 380, y: 2880}
+        outputs:
+        - cap4-figura-2
+        flagKey: CAP4_FIGURAS_CHAMUSCADAS
+        value: 1
+    - rid: 6540294538172825894
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Estela: \xAB\xA1Las ten\xEDas que proteger!\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-2
+        position: {x: 760, y: 2880}
+        outputs:
+        - cap4-figura-0
+        targetTag: Player
+        text: "\xA1Te has salvado t\xFA y has chamuscado a quien ten\xEDas que proteger!"
+        textId: CAP4_BOC_FIGURA
+        duration: 5.5857143
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294538172825895
+      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nota
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-nota
+        position: {x: 0, y: -240}
+        outputs: []
+        note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
+        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
+    - rid: 6540294538172825896
+      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Se destapa la pantalla tras la cinem\xE1tica"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-destapa
+        position: {x: 760, y: 1200}
+        outputs:
+        - cap4-levitacion
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2
+    - rid: 6540294538172825897
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4.3 \xB7 Tutorial: Levitaci\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-levitacion-tuto
+        position: {x: 1520, y: 1200}
+        outputs:
+        - cap4-paso-campana
+        action: 0
+        text: "Nuevo hechizo: Levitaci\xF3n. Ya est\xE1 entre tus hechizos: l\xE1nzalo para flotar sobre el agua, el barro y los huecos."
+        textId: TUTORIAL_CAP4_LEVITACION
+        icon: {fileID: 0}
+        buttonName: interactable_y
+        dismissWithCancel: 0
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
+    - rid: 6540294538172825898
+      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Fuera de la build de la demo: se destapa la pantalla y sigue el juego'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-demo-destapa
+        position: {x: 760, y: 2400}
+        outputs: []
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2

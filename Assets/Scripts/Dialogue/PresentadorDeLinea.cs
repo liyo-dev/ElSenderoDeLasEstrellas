@@ -124,14 +124,14 @@ public static class PresentadorDeLinea
     public static int Mostrar(Transform ancla, string texto, float duracion,
         PresentacionDeTexto presentacion, string nombreDelHablante, Color colorDelNombre,
         Vector3? desplazamiento, Action alTerminar = null, string gesto = null,
-        bool fijoEnPantalla = false)
+        bool fijoEnPantalla = false, bool fueraDeEscena = false, Sprite retrato = null)
     {
         var bocadillo = SpeechBubbleUI.Instance;
         if (bocadillo == null) return -1;
-        bool necesitaAncla = presentacion == PresentacionDeTexto.Bocadillo && !fijoEnPantalla;
+        bool necesitaAncla = (presentacion == PresentacionDeTexto.Bocadillo || fueraDeEscena) && !fijoEnPantalla;
         if (necesitaAncla && ancla == null) return -1;
         return Ensenar(bocadillo, ancla, texto, duracion, presentacion, nombreDelHablante,
-            colorDelNombre, desplazamiento, alTerminar, gesto, false, fijoEnPantalla);
+            colorDelNombre, desplazamiento, alTerminar, gesto, false, fijoEnPantalla, fueraDeEscena, retrato);
     }
 
     // ── Quitar la frase ──────────────────────────────────────────────────────────────────────
@@ -147,10 +147,12 @@ public static class PresentadorDeLinea
 
     private static int Ensenar(SpeechBubbleUI bocadillo, Transform ancla, string texto, float duracion,
         PresentacionDeTexto presentacion, string nombreDelHablante, Color colorDelNombre,
-        Vector3? desplazamiento, Action alTerminar, string gesto, bool enfasis, bool fijoEnPantalla)
+        Vector3? desplazamiento, Action alTerminar, string gesto, bool enfasis, bool fijoEnPantalla,
+        bool fueraDeEscena = false, Sprite retrato = null)
         => bocadillo.Show(ancla, texto, duracion, alTerminar, gesto, enfasis,
             speakerName: nombreDelHablante, worldOffset: desplazamiento,
-            fijoEnPantalla: fijoEnPantalla, presentacion: presentacion, colorDelNombre: colorDelNombre);
+            fijoEnPantalla: fijoEnPantalla, presentacion: presentacion, colorDelNombre: colorDelNombre,
+            fueraDeEscena: fueraDeEscena, retrato: retrato);
 }
 
 /// Una frase para `PresentadorDeLinea.Decir`. Todos los campos valen por defecto: basta con la

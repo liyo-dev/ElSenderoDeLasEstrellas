@@ -166,7 +166,12 @@ public static partial class MontajeDeLosCapitulos
     private static NarrativeNode Flag(string flag) => new SetFlagNode { flagKey = flag };
     private static NarrativeNode Hablar(string npc) => new WaitNpcInteractionNode { npcId = npc };
     private static NarrativeNode Dialogo(string ruta, string npc = "") => new PlayDialogueNode { dialogue = Cargar<DialogueAsset>(ruta), npcId = npc };
-    private static NarrativeNode Punto(string id, string ancla) => new CheckpointNode { checkpointId = id, spawnAnchorId = ancla, sceneName = "MainWorld" };
+    private static NarrativeNode Punto(string id, string ancla)
+    {
+        var punto = new CheckpointNode { checkpointId = id };
+        Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla(punto, ancla);
+        return punto;
+    }
     private static NarrativeNode Llevar(string actor, string marca) => new PlaceActorNode { actorId = actor, markId = marca, applyPlayerEnvironment = actor == "Player" };
     private static NarrativeNode Grupo(GrupoNode.Accion accion, string personaje, bool retirar = false) =>
         new GrupoNode { accion = accion, personaje = personaje, retirarDeLaEscena = retirar };

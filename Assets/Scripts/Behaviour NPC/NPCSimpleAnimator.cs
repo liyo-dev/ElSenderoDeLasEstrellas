@@ -1042,6 +1042,25 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void BeginInteraction() => BeginInteraction(girarAlJugador: true);
 
+    private int _retencionesDePanel;
+
+    /// Un panel que se abre hablando con el NPC (álbum, tienda, pregunta…) lo retiene: se queda
+    /// quieto y de cara al jugador aunque la charla ya haya terminado. Cada Retener lleva su Soltar.
+    /// Ver INC-1159.
+    public void RetenerPorPanel()
+    {
+        _retencionesDePanel++;
+        BeginInteraction();
+    }
+
+    public void SoltarPorPanel()
+    {
+        if (_retencionesDePanel <= 0) return;
+        if (--_retencionesDePanel > 0) return;
+        EndInteraction();
+        EnableAutoRotation();
+    }
+
     /// <param name="girarAlJugador">
     /// Girarse hacia el jugador al empezar a hablar. En el juego es lo correcto: te acercas a un
     /// NPC y se vuelve hacia ti. En una CINEMÁTICA es un fallo (INC-318), y de los gordos: el
@@ -1109,6 +1128,9 @@ public class NPCSimpleAnimator : MonoBehaviour
     public void EndInteraction()
     {
         if (!_isInteracting)
+            return;
+        // Retenido por un panel abierto desde la charla: lo suelta SoltarPorPanel. Ver INC-1159.
+        if (_retencionesDePanel > 0)
             return;
         
         _isInteracting = false;
@@ -1701,6 +1723,18 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Solo procesar si este NPC es el que estaba en el diálogo
         if (npcInvolved != transform)
             return;
+
+        // Un panel abierto desde la charla (álbum, tienda…) lo mantiene de cara al jugador hasta
+        // que se cierre: el final del diálogo llega DESPUÉS de que el panel lo retenga. Ver INC-1159.
+        if (_retencionesDePanel > 0)
+        {
+            if (_dialogueLookAtCoroutine != null)
+            {
+                StopCoroutine(_dialogueLookAtCoroutine);
+                _dialogueLookAtCoroutine = null;
+            }
+            return;
+        }
         
         if (debugMode)
             {

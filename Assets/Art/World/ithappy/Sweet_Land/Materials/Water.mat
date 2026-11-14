@@ -96,8 +96,8 @@ Material:
     - _Refraction_Strength: 0.147
     - _Smoothness: 0.017
     - _SurfaceOpacity: 1
-    - _VelocidadDeDestellos: 0.6
-    - _VelocidadDeEspuma: 0.4
+    - _VelocidadDeDestellos: 0.25
+    - _VelocidadDeEspuma: 0.18
     - _VoronoiDensity: 9
     - _VoronoiLevel: 0
     - _VoronoiOffset: 2

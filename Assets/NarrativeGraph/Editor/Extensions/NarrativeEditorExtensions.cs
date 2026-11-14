@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 namespace NarrativeGraphEditor
 {
     /// <summary>
-    /// Pestaña lateral que un juego añade al editor del grafo, p. ej. «Prueba»: lanzar el juego
-    /// desde un nodo con su propio estado de partida. El editor las encuentra solas: basta con una
-    /// clase no abstracta, con constructor sin parámetros, que herede de esta.
+    /// Pestaña lateral que un juego añade al editor del grafo, después de Paso, Arranque y
+    /// Depuración. El editor las encuentra solas: basta con una clase no abstracta, con
+    /// constructor sin parámetros, que herede de esta.
     /// </summary>
     public abstract class NarrativeGraphSideTab : VisualElement
     {
@@ -51,16 +51,6 @@ namespace NarrativeGraphEditor
 
         /// <summary>Añade las filas de la sección tal y como está el juego ahora.</summary>
         void Collect(List<string> rows);
-    }
-
-    /// <summary>
-    /// Simulación de cómo queda el mundo al llegar a un nodo sin entrar en Play (dónde está cada
-    /// actor y qué decisiones del camino no se pueden adivinar). La aporta el juego, que sabe
-    /// convertir marcas en posiciones.
-    /// </summary>
-    public interface INarrativeArrivalPreview
-    {
-        void Preview(NarrativeGraph graph, string nodeGuid, List<string> actors, List<string> warnings);
     }
 
     /// <summary>

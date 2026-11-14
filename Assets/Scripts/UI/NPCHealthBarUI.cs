@@ -35,6 +35,12 @@ namespace Game.UI
         [SerializeField] private Color criticalColor = Color.red;
         [SerializeField] private float warningThreshold = 0.5f;
         [SerializeField] private float criticalThreshold = 0.25f;
+
+        [Tooltip("Viste la barra con el arte de papel del juego (marco de tinta y relleno con los colores de la paleta). " +
+                 "Además, un relleno sin sprite no se recorta (Unity lo pinta entero): por eso la barra cambiaba de color pero no bajaba. Ver INC-1161.")]
+        [SerializeField] private bool vestirDePapel = true;
+
+        private static Sprite s_blanco;
         
         private Canvas _canvas;
         private Damageable _npcDamageable;
@@ -54,6 +60,8 @@ namespace Game.UI
                 fillImage = GetComponentInChildren<Image>();
             }
             
+            if (vestirDePapel) VestirDePapel();
+
             // Auto-buscar healthText si no está asignado (opcional)
             if (healthText == null)
             {
@@ -132,6 +140,46 @@ namespace Game.UI
             }
         }
         
+        /// Marco de tinta redondeado y relleno de color plano, con los tonos del juego.
+        private void VestirDePapel()
+        {
+            if (fillImage == null) return;
+            if (s_blanco == null)
+            {
+                var tex = Texture2D.whiteTexture;
+                s_blanco = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+                s_blanco.name = "BarraBlanca";
+            }
+            fillImage.sprite = s_blanco;
+            fillImage.type = Image.Type.Filled;
+            fillImage.fillMethod = Image.FillMethod.Horizontal;
+            fillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+
+            healthyColor = new Color(0.48f, 0.78f, 0.42f);   // verde hoja
+            warningColor = new Color(0.95f, 0.70f, 0.24f);   // ámbar
+            criticalColor = new Color(0.91f, 0.38f, 0.30f);  // coral
+            fillImage.color = healthyColor;
+
+            // El marco: la otra imagen de la barra (el fondo), en tinta y con esquinas redondas.
+            var rtRelleno = fillImage.rectTransform;
+            foreach (var imagen in GetComponentsInChildren<Image>(true))
+            {
+                if (imagen == fillImage) continue;
+                imagen.sprite = PiezasDeUI.RectanguloRedondeado;
+                imagen.type = Image.Type.Sliced;
+                imagen.color = PaletaUI.Tinta;
+                float alto = imagen.rectTransform.rect.height > 0f ? imagen.rectTransform.rect.height : 0.2f;
+                // Esquinas de un tercio del alto.
+                imagen.pixelsPerUnitMultiplier = Mathf.Max(1f, 32f / (100f * alto * 0.35f));
+                // El relleno, metido dentro del marco.
+                var marco = imagen.rectTransform;
+                rtRelleno.anchorMin = marco.anchorMin; rtRelleno.anchorMax = marco.anchorMax; rtRelleno.pivot = marco.pivot;
+                rtRelleno.anchoredPosition = marco.anchoredPosition;
+                rtRelleno.sizeDelta = marco.sizeDelta - new Vector2(alto * 0.3f, alto * 0.3f);
+                break;
+            }
+        }
+
         private void OnDestroy()
         {
             // Desuscribirse de eventos

@@ -15,6 +15,8 @@ using R = Kits.StylizedVfx.Editor.EnergyRecipes;
 ///   (no hace falta un ParticleSystem en la raíz).
 /// - Planeo: PlaneoDelJugador lo cuelga del personaje a «posicionDelEfecto» (0, 1,4, -0,2), así que
 ///   aquí se monta alrededor del origen.
+/// - Compañeros: el mismo efecto de pies en sus NPCPartyConfig (FollowPlayerState lo cuelga de la raíz).
+/// Ver INC-1166
 public static class VueloConVolumen
 {
     private const string Carpeta = "Assets/_VFX/Movimiento";
@@ -127,6 +129,23 @@ public static class VueloConVolumen
             }
         }
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
+
+        // Los compañeros vuelan con el mismo efecto de pies que Will.
+        var pies = AssetDatabase.LoadAssetAtPath<GameObject>($"{Carpeta}/VFX_Vuelo_Pies.prefab");
+        int compañeros = 0;
+        foreach (var guid in AssetDatabase.FindAssets("t:NPCPartyConfig"))
+        {
+            var config = AssetDatabase.LoadAssetAtPath<ScriptableObject>(AssetDatabase.GUIDToAssetPath(guid));
+            if (config == null) continue;
+            var so = new SerializedObject(config);
+            var prop = so.FindProperty("footVfxPrefab");
+            if (prop == null || pies == null || prop.objectReferenceValue == pies) continue;
+            prop.objectReferenceValue = pies;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(config);
+            compañeros++;
+        }
+        if (compañeros > 0) log.Append($"(compañeros con el efecto de pies: {compañeros}) ");
     }
 
     private static bool Poner(SerializedObject so, string campo, string prefab)

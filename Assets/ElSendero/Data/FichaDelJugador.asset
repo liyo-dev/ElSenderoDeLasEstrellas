@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89912d4a0d2f8e748988fba853c0a308, type: 3}
+  m_Name: FichaDelJugador
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::NarrativeGraphEditor.NarrativePlayerSheet
+  template: {fileID: 11400000, guid: c0f280fecc17c3f4fbcbe7f0d274f342, type: 2}
+  componentType: 
+  fields:
+  - spawnAnchorId
+  - maxHP
+  - currentHP
+  - maxMP
+  - currentMP
+  - ataque
+  - defensa
+  - abilities
+  - unlockedSpells
+  - basicSpellIds
+  - companionBasics
+  - companionHealth
+  - appearance
+  - unlockedWardrobeIds
+  positionField: spawnAnchorId

@@ -1,0 +1,1739 @@
+[
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.81
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.64
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@3.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.79
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@5.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "calf_r": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@8.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "calf_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 3,
+   "pelvis": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@12.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@15.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.76
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@17.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.7
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "calf_l": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "calf_l": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@22.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.77
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "calf_l": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@24.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "calf_l": 3,
+   "pelvis": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@26.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.78
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.68
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.81
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@2.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.76
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@3.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.62
+   }
+  },
+  "asoma": {
+   "pelvis": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@5.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 4,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body35_Liora:Faja (-0.00,0.45)": {
+    "puntos": 28,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@6.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.73
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "calf_r": 4,
+   "calf_l": 3,
+   "pelvis": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Suela_l (+0.12,0.01)": {
+    "puntos": 32,
+    "de": 314,
+    "en": "cuerpo/foot_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@7.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.71
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "calf_l": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Bajo (-0.00,0.12)": {
+    "puntos": 29,
+    "de": 280,
+    "en": "cuerpo/calf_l"
+   },
+   "Body35_Liora:Suela_l (+0.12,0.01)": {
+    "puntos": 32,
+    "de": 314,
+    "en": "cuerpo/foot_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@9.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.69
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Bajo (-0.00,0.12)": {
+    "puntos": 35,
+    "de": 280,
+    "en": "cuerpo/calf_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@10.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   },
+   "Body35_Liora:Botin_l (+0.12,0.07)": {
+    "aristas": 5,
+    "max": 1.64
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.73
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Bajo (-0.00,0.12)": {
+    "puntos": 29,
+    "de": 280,
+    "en": "cuerpo/foot_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@11.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "calf_l": 4,
+   "pelvis": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@13.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.7
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "calf_r": 4,
+   "pelvis": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@14.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 3,
+   "thigh_r": 3,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body35_Liora:Suela_r (-0.12,0.01)": {
+    "puntos": 41,
+    "de": 314,
+    "en": "cuerpo/foot_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@15.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.79
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   }
+  },
+  "asoma": {
+   "calf_r": 6,
+   "thigh_r": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Bajo (-0.00,0.12)": {
+    "puntos": 30,
+    "de": 280,
+    "en": "cuerpo/foot_r"
+   },
+   "Body35_Liora:Suela_r (-0.12,0.01)": {
+    "puntos": 49,
+    "de": 314,
+    "en": "cuerpo/foot_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@12.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@24.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@36.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@47.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.73
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.68
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@59.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@71.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@82.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@94.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.69
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@106.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.67
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@117.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.68
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@129.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.63
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@18.5",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.63
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@36.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@53.5",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@71.0",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.78
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.81
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 87,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 49,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@88.5",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.78
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.81
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 104,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 68,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@106.0",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.78
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.8
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 137,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 108,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@123.5",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.77
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.62
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.78
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 34,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body35_Liora:Petalo0 (+0.00,0.71)": {
+    "puntos": 107,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body35_Liora:Petalo1 (-0.02,0.70)": {
+    "puntos": 197,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 260,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 291,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo4 (+0.02,0.70)": {
+    "puntos": 180,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body35_Liora:CentroFlor (+0.00,0.69)": {
+    "puntos": 314,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@141.0",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 7,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 138,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body35_Liora:Petalo0 (+0.00,0.71)": {
+    "puntos": 129,
+    "de": 314,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body35_Liora:Petalo1 (-0.02,0.70)": {
+    "puntos": 142,
+    "de": 314,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 205,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 63,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo4 (+0.02,0.70)": {
+    "puntos": 182,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:CentroFlor (+0.00,0.69)": {
+    "puntos": 168,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@158.5",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 7,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 140,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body35_Liora:Petalo0 (+0.00,0.71)": {
+    "puntos": 73,
+    "de": 314,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 142,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 52,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:Petalo4 (+0.02,0.70)": {
+    "puntos": 124,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@176.0",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 7,
+    "max": 1.76
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "upperarm_l": 5,
+   "upperarm_r": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 142,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body35_Liora:Petalo0 (+0.00,0.71)": {
+    "puntos": 196,
+    "de": 314,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body35_Liora:Petalo1 (-0.02,0.70)": {
+    "puntos": 242,
+    "de": 314,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 123,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Petalo4 (+0.02,0.70)": {
+    "puntos": 160,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:CentroFlor (+0.00,0.69)": {
+    "puntos": 312,
+    "de": 314,
+    "en": "cuerpo/hand_r"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@193.5",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 4,
+    "max": 1.66
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.64
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 3,
+    "max": 1.67
+   }
+  },
+  "asoma": {
+   "upperarm_l": 4
+  },
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 133,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body35_Liora:Petalo0 (+0.00,0.71)": {
+    "puntos": 39,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:Petalo1 (-0.02,0.70)": {
+    "puntos": 60,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:Petalo2 (-0.01,0.67)": {
+    "puntos": 182,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:Petalo3 (+0.01,0.67)": {
+    "puntos": 55,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:CentroFlor (+0.00,0.69)": {
+    "puntos": 184,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@5.2",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.64
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@9.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.63
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@13.5",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@17.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@21.8",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.63
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@26.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.73
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@30.2",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@34.3",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@38.5",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.7
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@42.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@46.8",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.7
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.71
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@1.0",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.64
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.6
+   }
+  },
+  "asoma": {
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 26,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@5.2",
+  "desgarro": {},
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 3,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body35_Liora:Suela_r (-0.12,0.01)": {
+    "puntos": 32,
+    "de": 314,
+    "en": "cuerpo/foot_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@9.3",
+  "desgarro": {},
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 3,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@13.5",
+  "desgarro": {},
+  "asoma": {
+   "calf_r": 3,
+   "calf_l": 4,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@17.7",
+  "desgarro": {
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 30,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@21.8",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 27,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@26.0",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@30.2",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@34.3",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@38.5",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@42.7",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 25,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@46.8",
+  "desgarro": {
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.72
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 29,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_bajados",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.77
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.73
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Faja (-0.00,0.45)": {
+    "puntos": 34,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/pelvis"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/pelvis"
+   },
+   "Body35_Liora:PunoForro_r (-0.43,0.63)": {
+    "puntos": 20,
+    "de": 200,
+    "en": "cuerpo/pelvis"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "mano_al_frente",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.83
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.79
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_cruzados",
+  "desgarro": {
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.83
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.79
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_arriba",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:CuelloRibete (-0.00,0.70)": {
+    "puntos": 54,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "manos_juntas",
+  "desgarro": {
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "aristas": 1,
+    "max": 1.62
+   },
+   "Body35_Liora:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.78
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "aristas": 1,
+    "max": 1.62
+   },
+   "Body35_Liora:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.74
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body35_Liora:Nudo (+0.10,0.45)": {
+    "puntos": 74,
+    "de": 314,
+    "en": "cuerpo/hand_l"
+   },
+   "Body35_Liora:Manga_l (+0.34,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body35_Liora:Manga_r (-0.34,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ }
+]

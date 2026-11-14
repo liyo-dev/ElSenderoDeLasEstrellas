@@ -4,6 +4,9 @@ using UnityEngine;
 /// Bola hostil devuelta por el jugador con la B: toma el control del mismo objeto (conserva su
 /// aspecto y sus efectos continuos), la tiñe y le pone estela, y la guía hasta el objetivo con el
 /// daño del contraataque. Ver INC-689.
+/// Además del daño, pone el estado de su elemento (aturdir, dormir…: <see cref="EfectosDeLaDevolucion"/>).
+/// El guiado aprieta con el tiempo y, cerca del objetivo, va derecho y le da seguro: antes podía
+/// quedarse dando vueltas alrededor de quien la lanzó (radio de giro mayor que la distancia). INC-1165.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class ProyectilDevuelto : MonoBehaviour
@@ -22,6 +25,7 @@ public sealed class ProyectilDevuelto : MonoBehaviour
 
     private GameObject _dueno;
     private Transform _objetivo;
+    private Collider _colliderDelObjetivo;
     private Vector3 _direccion;
     private Vector3 _escala;
     private float _velocidad, _dano, _inicio;
@@ -57,6 +61,14 @@ public sealed class ProyectilDevuelto : MonoBehaviour
         _direccion = direccion.sqrMagnitude > 0.001f ? direccion.normalized : -transform.forward;
         if (objetivo != null) _direccion = (objetivo.position + Vector3.up - transform.position).normalized;
         _velocidad = Mathf.Max(1f, velocidad) * multiplicadorDeVelocidad;
+        _dano *= Mathf.Max(0f, EfectosDeLaDevolucion.De(_elemento).multiplicadorDeDano);
+        _colliderDelObjetivo = null;
+        if (objetivo != null)
+        {
+            var receptor = MagicProjectile.EncontrarReceptor(objetivo.GetComponentInChildren<Collider>());
+            foreach (var c in (receptor != null ? receptor.transform : objetivo).GetComponentsInChildren<Collider>())
+                if (c.enabled && !c.isTrigger) { _colliderDelObjetivo = c; break; }
+        }
         _inicio = Time.time; _escala = transform.localScale;
         _rb = GetComponent<Rigidbody>();
         if (_rb != null)
@@ -95,13 +107,25 @@ public sealed class ProyectilDevuelto : MonoBehaviour
         float edad = Time.time - _inicio;
         transform.localScale = _escala * (1f + (edad < 0.12f ? Mathf.Sin(edad / 0.12f * Mathf.PI) * 0.25f : 0f));
         if (edad >= vidaMaxima) { Terminar(transform.position); return; }
+        float distancia = _velocidad * Time.deltaTime;
         if (_objetivo != null)
         {
-            Vector3 hacia = _objetivo.position + Vector3.up - transform.position;
-            if (hacia.sqrMagnitude > 0.001f)
-                _direccion = Vector3.RotateTowards(_direccion, hacia.normalized, guiado * Time.deltaTime, 0f);
+            Vector3 alObjetivo = PuntoDelObjetivo();
+            Vector3 hacia = alObjetivo - transform.position;
+            float lejos = hacia.magnitude;
+            // Golpe asegurado: si en este paso llega, le da (no se pasa de largo ni se pone a orbitar).
+            if (lejos <= distancia + 0.5f && _colliderDelObjetivo != null)
+            {
+                Golpear(_colliderDelObjetivo, alObjetivo, 2);
+                return;
+            }
+            if (lejos > 0.001f)
+            {
+                // Cada vez gira más; a menos de 3 m va derecho.
+                float giro = lejos < 3f ? 60f : guiado * (1f + edad * 4f);
+                _direccion = Vector3.RotateTowards(_direccion, hacia / lejos, giro * Time.deltaTime, 0f);
+            }
         }
-        float distancia = _velocidad * Time.deltaTime;
         int n = Physics.SphereCastNonAlloc(transform.position, 0.2f, _direccion, _barrido, distancia, ~0, QueryTriggerInteraction.Collide);
         Collider primero = null; float cercano = float.PositiveInfinity; Vector3 punto = default; int tipoPrimero = 0;
         for (int i = 0; i < n; i++)
@@ -113,18 +137,24 @@ public sealed class ProyectilDevuelto : MonoBehaviour
             if (_barrido[i].distance >= cercano) continue;
             cercano = _barrido[i].distance; primero = col; punto = _barrido[i].point; tipoPrimero = tipo;
         }
-        if (primero != null)
-        {
-            if (tipoPrimero == 2)
-            {
-                GolpeandoAhora = true;
-                try { MagicProjectile.AplicarImpactoDirecto(primero, punto, _dueno, _dano); }
-                finally { GolpeandoAhora = false; }
-            }
-            else if (tipoPrimero == 3) ReaccionesAMagia.Notificar(primero, new ImpactoDeMagia(_elemento, punto, _dueno, true));
-            Terminar(punto); return;
-        }
+        if (primero != null) { Golpear(primero, punto, tipoPrimero); return; }
         transform.SetPositionAndRotation(transform.position + _direccion * distancia, Quaternion.LookRotation(_direccion));
+    }
+
+    private Vector3 PuntoDelObjetivo() =>
+        _colliderDelObjetivo != null && _colliderDelObjetivo.enabled ? _colliderDelObjetivo.bounds.center : _objetivo.position + Vector3.up;
+
+    private void Golpear(Collider col, Vector3 punto, int tipo)
+    {
+        if (tipo == 2)
+        {
+            GolpeandoAhora = true;
+            try { MagicProjectile.AplicarImpactoDirecto(col, punto, _dueno, _dano); }
+            finally { GolpeandoAhora = false; }
+            EfectosDeLaDevolucion.Aplicar(MagicProjectile.EncontrarReceptor(col), _elemento, punto);
+        }
+        else if (tipo == 3) ReaccionesAMagia.Notificar(col, new ImpactoDeMagia(_elemento, punto, _dueno, true));
+        Terminar(punto);
     }
 
     // Cada collider externo se clasifica al encontrarlo y se conserva en un buffer fijo.

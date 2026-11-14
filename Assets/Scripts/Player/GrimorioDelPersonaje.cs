@@ -226,6 +226,8 @@ public static class GrimorioDelPersonaje
             case EstadoDeCombate.Inmovilizar: parts.Add(L("SPELL_FX_ROOT", "Inmoviliza")); break;
             case EstadoDeCombate.Atraer: parts.Add(L("SPELL_FX_PULL", "Atrae al centro")); break;
             case EstadoDeCombate.Empujar: parts.Add(L("SPELL_FX_PUSH", "Aparta a los enemigos")); break;
+            case EstadoDeCombate.Aturdir: parts.Add(L("SPELL_FX_STUN", "Aturde")); break;
+            case EstadoDeCombate.Dormir: parts.Add(L("SPELL_FX_SLEEP", "Duerme (despierta al recibir un golpe)")); break;
         }
         if (s.knockbackForce > 12f && s.kind == MagicKind.Projectile) parts.Add(L("SPELL_FX_KNOCKBACK", "Empuja"));
         if (s.healPerTick > 0f) parts.Add(L("SPELL_FX_HEAL", "Cura al grupo"));

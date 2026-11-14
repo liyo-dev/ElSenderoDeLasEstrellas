@@ -1,8 +1,8 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-13 11:45 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-13 23:26 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
-**3:44,5** de secuencia · 32 frases · 61 planos · 196 efectos · 19 personajes
+**3:38,9** de secuencia · 32 frases · 59 planos · 196 efectos · 19 personajes
 
 Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,81/ojos 0,98 · nina 1,16/ojos 0,63 · v01 1,31/ojos 0,98 · v02 1,58/ojos 0,98 · v03 1,51/ojos 0,98 · v04 1,68/ojos 0,98 · v06 1,64/ojos 0,98 · v07 1,30/ojos 0,98 · v08 1,58/ojos 0,98 · v09 1,46/ojos 0,97 · v10 1,58/ojos 0,97 · panadera 1,55/ojos 0,95 · madre 1,44/ojos 0,94 · lucas 1,23/ojos 0,63 · vm 1,58/ojos 0,94 · ab 1,55/ojos 0,95 · vc 1,51/ojos 0,94
 
@@ -24,9 +24,9 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 1:34,5 → 1:37,0: 2,6 s sin voz entre PROLOGO_DESPEDIDA_ARCHIMAGO_1 y PROLOGO_HORA_ARCHIMAGO
 - 1:52,3 → 1:55,5: 3,1 s sin voz entre PROLOGO_DESPEDIDA_ELEGIR y PROLOGO_EVACUACION_LIORA
 - 1:59,1 → 2:10,5: 11,5 s sin voz entre PROLOGO_EVACUACION_LIORA y PROLOGO_DUELO_MAGO
-- 2:19,9 → 2:36,1: 16,1 s sin voz entre PROLOGO_DUELO_ARCHIMAGO y PROLOGO_MAGO_VALLE
-- 2:39,3 → 2:42,7: 3,4 s sin voz entre PROLOGO_MAGO_VALLE y PROLOGO_PLEGARIA_01
-- 2:50,1 → 2:52,8: 2,8 s sin voz entre PROLOGO_PLEGARIA_01 y PROLOGO_PLEGARIA_02
+- 2:19,9 → 2:35,0: 15,1 s sin voz entre PROLOGO_DUELO_ARCHIMAGO y PROLOGO_MAGO_VALLE
+- 2:38,3 → 2:41,7: 3,4 s sin voz entre PROLOGO_MAGO_VALLE y PROLOGO_PLEGARIA_01
+- 2:49,0 → 2:51,8: 2,8 s sin voz entre PROLOGO_PLEGARIA_01 y PROLOGO_PLEGARIA_02
 
 ## Línea de tiempo
 
@@ -227,123 +227,121 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 | 2:30,1 | efecto | Fogonazo (0,28s) |
 | 2:30,1 | efecto | Sacudida de cámara (0,75, 1s) |
 | 2:30,2 | efecto | SFX: Prologue_WarClashStinger_A |
-| 2:33,0 | plano 45 | medio de mago · 1,7 s · lente 38° · coste 9: ángulo 3 |
-| 2:33,0 | efecto | Conjuro en las manos: NPC_MagoOscuro (0,7 s) |
-| 2:33,2 | efecto | SFX: Prologo_SueloSeAbre |
-| 2:33,2 | efecto | SFX: SFX_Prologo_Latigazo |
-| 2:34,7 | plano 46 | dos: archimago y mago · 1,4 s · lente 58° |
-| 2:34,7 | efecto | Hechizo: NPC_MagoOscuro → NPC_Archimago |
-| 2:35,0 | efecto | VFX: Sombra_Grieta en NPC_Archimago |
-| 2:35,2 | efecto | SFX: Prologo_ImpactoHechizo |
-| 2:35,2 | efecto | VFX: Sombra_Onda en NPC_Archimago |
-| 2:35,2 | efecto | Sacudida de cámara (0,7, 0,9s) |
-| 2:35,2 | efecto | SFX: SFX_Prologo_Impacto |
-| 2:36,1 | **@ultimo** |  |
-| 2:36,1 | plano 47 | primer plano de mago · 3,3 s · lente 36° · coste 0: limpio |
-| 2:36,1 | mago | «Que este valle no haya existido nunca.» (3,3 s) · pose |
-| 2:39,3 | plano 48 | general de archimago y mago · 3,4 s · lente 46° |
-| 2:39,4 | efecto | SFX: Prologo_Despegue |
-| 2:39,4 | efecto | VFX: Polvo en NPC_MagoOscuro |
-| 2:39,7 | efecto | Rayo: 2 × fondo del plano |
-| 2:39,9 | efecto | SFX: Prologo_HechizoGrande |
-| 2:40,1 | efecto | SFX: SFX_Prologo_AgujeroNegro_Carga |
-| 2:40,1 | efecto | Ambiente: AGUJERO_NEGRO ← SFX_Prologo_AgujeroNegro_Bucle |
-| 2:40,1 | efecto | VFX: Sombra_CargaGrande en agujero |
-| 2:40,2 | efecto | Escalar: CARGA_ESFERA ×0,35 en 0 s |
-| 2:40,2 | efecto | Escalar: CARGA_ESFERA ×1 en 3,5 s |
-| 2:40,3 | efecto | VFX: Sombra_Circulo en NPC_MagoOscuro |
-| 2:40,3 | efecto | Sacudida de cámara (0,35, 1,6s) |
-| 2:42,7 | plano 49 | medio de archimago · 8,7 s · lente 40° · coste 2: ángulo 2 |
-| 2:42,7 | archimago | «No daré ni un paso atrás... ¡No dejaré que los toques! ¡Liora! ¡Nina! ¡A ninguno de ellos!» (7,3 s) |
-| 2:42,7 | efecto | Voz: Ninguno, +0,0 dB |
-| 2:42,7 | efecto | Mezcla: plegaria |
-| 2:42,9 | efecto | VFX: Luz_Circulo en NPC_Archimago |
-| 2:42,9 | efecto | SFX: Prologo_MagiaLevitar |
-| 2:46,0 | efecto | Cut-in 0: NPC_Liora (Cara) |
-| 2:46,1 | efecto | Música: parar (3s) |
-| 2:47,7 | efecto | Cut-in 0: NPC_Aldeano_05 (Cara) |
-| 2:49,1 | efecto | Mezcla: plegaria |
-| 2:49,1 | efecto | Música: PROLOGO_CLIMAX |
-| 2:50,1 | efecto | Pantalla: cubrir (1,2s) |
-| 2:51,4 | plano 50 | general de mago · 1,4 s · lente 46° |
-| 2:51,4 | efecto | Pantalla: descubrir (1,2s) |
-| 2:51,4 | efecto | Voz: Conjuro, +6,0 dB |
-| 2:51,4 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
-| 2:51,4 | efecto | Sacudida de cámara (0,25, 1s) |
-| 2:52,8 | plano 51 | medio de archimago · 8,2 s · lente 44° · coste 2: ángulo 2 |
-| 2:52,8 | archimago | «Más allá de la noche y del silencio... ¡Luz que naciste antes que el cielo y tendiste el camino entre las estrellas!» (8,2 s) |
-| 2:52,8 | efecto | Conjuro en las manos: NPC_Archimago (34,0 s) |
-| 2:52,8 | efecto | SFX: SFX_Prologo_CargaPlegaria |
-| 2:53,6 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
-| 3:01,0 | plano 52 | medio de archimago · 8,6 s · lente 40° · coste 17: ángulo 17 |
-| 3:01,0 | archimago | «Ningún poder de este mundo puede detenerlo... ¡Por eso llamo a lo que aún no existe! ¡Escucha mi voz y despierta en mis manos!» (8,6 s) |
-| 3:04,2 | efecto | Rayo: 1 × fondo del plano |
-| 3:06,6 | efecto | Escalar: CARGA_ESFERA ×2 en 2 s |
-| 3:06,6 | efecto | Sacudida de cámara (0,35, 1,2s) |
-| 3:09,7 | plano 53 | general de mago · 1,2 s · lente 46° |
-| 3:09,7 | efecto | Rayo: 1 × fondo del plano |
-| 3:10,9 | plano 54 | conjunto de archimago · 6,3 s · lente 52° · coste 12: ángulo 12 |
-| 3:10,9 | archimago | «Que mi vida sea el precio y mi alma el sello... ¡No importa lo que quede de mí cuando la luz se apague!» (6,3 s) |
-| 3:10,9 | efecto | Conjuro a la cabeza: NPC_Archimago (16,0 s) |
-| 3:14,4 | efecto | VFX: Pilar en NPC_Archimago |
-| 3:14,4 | efecto | Sacudida de cámara (0,3, 0,9s) |
-| 3:14,4 | efecto | SFX: Prologo_MagiaLevitar |
-| 3:17,2 | plano 55 | medio de archimago · 6,1 s · lente 50° · coste 2: ángulo 2 |
-| 3:17,2 | archimago | «¡Haz de mi último aliento un escudo inquebrantable! ¡Arde conmigo y detén la oscuridad!» (6,1 s) |
-| 3:17,2 | efecto | Líneas de concentración: mostrar |
-| 3:20,6 | efecto | Rayo: 2 × fondo del plano |
-| 3:20,7 | efecto | Escalar: CARGA_ESFERA ×2,6 en 1,4 s |
-| 3:20,7 | efecto | Sacudida de cámara (0,5, 1,6s) |
-| 3:23,3 | plano 56 | primer plano de archimago · 4,2 s · lente 32° · coste 0: limpio |
-| 3:23,3 | archimago | «Perdóname, Liora... No voy a volver a casa.» (3,8 s) |
-| 3:23,3 | efecto | Líneas de concentración: retirar |
-| 3:23,3 | efecto | Voz: Ninguno, +0,0 dB |
-| 3:27,5 | **@hechizo** |  |
-| 3:27,5 | plano 57 | primer plano de archimago · 1,0 s · lente 26° · coste 18: ángulo 18 |
-| 3:27,5 | efecto | Mezcla: plegaria (quitar) |
-| 3:27,5 | efecto | Mezcla: grito |
-| 3:27,5 | efecto | Líneas de concentración: mostrar |
-| 3:27,5 | efecto | Respiro: 0,9 s (música 0 dB) |
-| 3:28,5 | plano 58 | general de archimago y mago · 2,1 s · lente 44° |
-| 3:28,5 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
-| 3:28,5 | efecto | Voz: Conjuro, +6,0 dB |
-| 3:28,7 | efecto | Rayo: 2 × fondo del plano |
-| 3:28,8 | efecto | Sacudida de cámara (0,45, 2s) |
-| 3:28,8 | efecto | SFX: Prologo_ProteccionAbsoluta |
-| 3:28,8 | efecto | Escalar: CARGA_ESFERA ×2,8 en 0,6 s |
-| 3:29,2 | efecto | Fusión: BOLA_PROTECTORA + CARGA_ESFERA |
-| 3:29,2 | efecto | SFX: SFX_Prologo_LanzamientoConjuro |
-| 3:30,5 | **@choque_final** |  |
-| 3:30,5 | plano 59 | general de archimago y mago · 3,6 s · lente 58° |
-| 3:30,5 | efecto | VFX: Forcejeo en encuentro_hechizos |
-| 3:30,5 | efecto | VFX: Choque en encuentro_hechizos |
-| 3:30,5 | efecto | SFX: SFX_Prologo_Plin |
-| 3:30,5 | efecto | Fogonazo (0,6s) |
-| 3:30,5 | efecto | SFX: SFX_Prologo_LuchaFinal |
-| 3:30,7 | efecto | Sacudida de cámara (0,5, 3,4s) |
-| 3:32,5 | efecto | Líneas de concentración: mostrar |
-| 3:34,1 | plano 60 | general de archimago y mago · 1,6 s · lente 52° |
-| 3:35,7 | plano 61 | general de archimago y mago · 8,8 s · lente 52° |
-| 3:36,1 | efecto | SFX: SFX_Prologo_PreviaEstallido |
-| 3:37,5 | **@estallido** |  |
-| 3:37,5 | efecto | SFX: Prologo_Choque |
-| 3:37,5 | efecto | Ambiente: parar AGUJERO_NEGRO |
-| 3:37,5 | efecto | VFX: recoger efectos registrados |
-| 3:37,5 | efecto | SFX: Prologue_WarClashStinger_A |
-| 3:37,5 | efecto | VFX: EstallidoFinal en choque |
-| 3:37,5 | efecto | Sacudida de cámara (1, 1,8s) |
-| 3:37,5 | efecto | Fogonazo (0,35s) |
-| 3:37,5 | efecto | VFX: Choque en encuentro_hechizos |
-| 3:37,5 | efecto | Líneas de concentración: retirar |
-| 3:37,5 | efecto | SFX: SFX_Prologo_EstallidoSube |
-| 3:37,9 | efecto | Pantalla: cubrir (3,5s) |
-| 3:41,6 | **@explosion** |  |
-| 3:41,6 | efecto | VFX: recoger efectos registrados |
-| 3:41,6 | efecto | Mezcla: grito (quitar) |
-| 3:41,6 | efecto | Ambiente: parar TORMENTA |
-| 3:41,6 | efecto | Música: parar (2s) |
-| 3:41,8 | efecto | Hora del día: Morning (de golpe) (y es con la que se queda el mundo) |
-| 3:44,0 | efecto | Bandas de cine: retirar (0,5s) |
+| 2:33,0 | plano 45 | dos: archimago y mago · 2,1 s · lente 58° |
+| 2:33,2 | efecto | Hechizo: NPC_MagoOscuro → NPC_Archimago |
+| 2:33,5 | efecto | SFX: Prologo_SueloSeAbre |
+| 2:33,5 | efecto | SFX: SFX_Prologo_Latigazo |
+| 2:33,8 | efecto | VFX: Sombra_Grieta en NPC_Archimago |
+| 2:34,0 | efecto | SFX: Prologo_ImpactoHechizo |
+| 2:34,0 | efecto | VFX: Sombra_Onda en NPC_Archimago |
+| 2:34,0 | efecto | Sacudida de cámara (0,7, 0,9s) |
+| 2:34,1 | efecto | SFX: SFX_Prologo_Impacto |
+| 2:35,0 | **@ultimo** |  |
+| 2:35,0 | plano 46 | primer plano de mago · 3,3 s · lente 36° · coste 0: limpio |
+| 2:35,0 | mago | «Que este valle no haya existido nunca.» (3,3 s) · pose |
+| 2:38,3 | plano 47 | general de archimago y mago · 3,4 s · lente 46° |
+| 2:38,4 | efecto | SFX: Prologo_Despegue |
+| 2:38,4 | efecto | VFX: Polvo en NPC_MagoOscuro |
+| 2:38,6 | efecto | Rayo: 2 × fondo del plano |
+| 2:38,9 | efecto | SFX: Prologo_HechizoGrande |
+| 2:39,1 | efecto | SFX: SFX_Prologo_AgujeroNegro_Carga |
+| 2:39,1 | efecto | Ambiente: AGUJERO_NEGRO ← SFX_Prologo_AgujeroNegro_Bucle |
+| 2:39,1 | efecto | VFX: Sombra_CargaGrande en agujero |
+| 2:39,1 | efecto | Escalar: CARGA_ESFERA ×0,35 en 0 s |
+| 2:39,2 | efecto | Escalar: CARGA_ESFERA ×1 en 3,5 s |
+| 2:39,3 | efecto | VFX: Sombra_Circulo en NPC_MagoOscuro |
+| 2:39,3 | efecto | Sacudida de cámara (0,35, 1,6s) |
+| 2:41,7 | plano 48 | medio de archimago · 8,7 s · lente 40° · coste 2: ángulo 2 |
+| 2:41,7 | archimago | «No daré ni un paso atrás... ¡No dejaré que los toques! ¡Liora! ¡Nina! ¡A ninguno de ellos!» (7,3 s) |
+| 2:41,7 | efecto | Mezcla: plegaria |
+| 2:41,7 | efecto | Voz: Ninguno, +0,0 dB |
+| 2:41,9 | efecto | SFX: Prologo_MagiaLevitar |
+| 2:41,9 | efecto | VFX: Luz_Circulo en NPC_Archimago |
+| 2:45,0 | efecto | Cut-in 0: NPC_Liora (Cara) |
+| 2:45,0 | efecto | Música: parar (3s) |
+| 2:46,7 | efecto | Cut-in 0: NPC_Aldeano_05 (Cara) |
+| 2:48,0 | efecto | Mezcla: plegaria |
+| 2:48,0 | efecto | Música: PROLOGO_CLIMAX |
+| 2:49,0 | efecto | Pantalla: cubrir (1,2s) |
+| 2:50,4 | plano 49 | general de mago · 1,4 s · lente 46° |
+| 2:50,4 | efecto | Pantalla: descubrir (1,2s) |
+| 2:50,4 | efecto | Voz: Conjuro, +6,0 dB |
+| 2:50,4 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
+| 2:50,4 | efecto | Sacudida de cámara (0,25, 1s) |
+| 2:51,8 | plano 50 | medio de archimago · 8,2 s · lente 44° · coste 2: ángulo 2 |
+| 2:51,8 | archimago | «Más allá de la noche y del silencio... ¡Luz que naciste antes que el cielo y tendiste el camino entre las estrellas!» (8,2 s) |
+| 2:51,8 | efecto | Conjuro en las manos: NPC_Archimago (34,0 s) |
+| 2:51,8 | efecto | SFX: SFX_Prologo_CargaPlegaria |
+| 2:52,6 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
+| 2:60,0 | plano 51 | medio de archimago · 8,6 s · lente 40° · coste 17: ángulo 17 |
+| 2:60,0 | archimago | «Ningún poder de este mundo puede detenerlo... ¡Por eso llamo a lo que aún no existe! ¡Escucha mi voz y despierta en mis manos!» (8,6 s) |
+| 3:03,2 | efecto | Rayo: 1 × fondo del plano |
+| 3:05,6 | efecto | Escalar: CARGA_ESFERA ×2 en 2 s |
+| 3:05,6 | efecto | Sacudida de cámara (0,35, 1,2s) |
+| 3:08,6 | plano 52 | general de mago · 1,2 s · lente 46° |
+| 3:08,6 | efecto | Rayo: 1 × fondo del plano |
+| 3:09,8 | plano 53 | conjunto de archimago · 6,3 s · lente 52° · coste 12: ángulo 12 |
+| 3:09,8 | archimago | «Que mi vida sea el precio y mi alma el sello... ¡No importa lo que quede de mí cuando la luz se apague!» (6,3 s) |
+| 3:09,8 | efecto | Conjuro a la cabeza: NPC_Archimago (16,0 s) |
+| 3:13,3 | efecto | SFX: Prologo_MagiaLevitar |
+| 3:13,3 | efecto | Sacudida de cámara (0,3, 0,9s) |
+| 3:13,3 | efecto | VFX: Pilar en NPC_Archimago |
+| 3:16,1 | plano 54 | medio de archimago · 6,1 s · lente 50° · coste 2: ángulo 2 |
+| 3:16,1 | archimago | «¡Haz de mi último aliento un escudo inquebrantable! ¡Arde conmigo y detén la oscuridad!» (6,1 s) |
+| 3:16,1 | efecto | Líneas de concentración: mostrar |
+| 3:19,5 | efecto | Rayo: 2 × fondo del plano |
+| 3:19,6 | efecto | Escalar: CARGA_ESFERA ×2,6 en 1,4 s |
+| 3:19,6 | efecto | Sacudida de cámara (0,5, 1,6s) |
+| 3:22,2 | plano 55 | primer plano de archimago · 4,2 s · lente 32° · coste 0: limpio |
+| 3:22,2 | archimago | «Perdóname, Liora... No voy a volver a casa.» (3,8 s) |
+| 3:22,2 | efecto | Líneas de concentración: retirar |
+| 3:22,2 | efecto | Voz: Ninguno, +0,0 dB |
+| 3:26,4 | **@hechizo** |  |
+| 3:26,4 | plano 56 | primer plano de archimago · 1,0 s · lente 26° · coste 18: ángulo 18 |
+| 3:26,4 | efecto | Mezcla: plegaria (quitar) |
+| 3:26,4 | efecto | Mezcla: grito |
+| 3:26,4 | efecto | Líneas de concentración: mostrar |
+| 3:26,4 | efecto | Respiro: 0,9 s (música 0 dB) |
+| 3:27,4 | plano 57 | general de archimago y mago · 2,1 s · lente 44° |
+| 3:27,4 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
+| 3:27,4 | efecto | Voz: Conjuro, +6,0 dB |
+| 3:27,6 | efecto | Rayo: 2 × fondo del plano |
+| 3:27,7 | efecto | SFX: Prologo_ProteccionAbsoluta |
+| 3:27,7 | efecto | Escalar: CARGA_ESFERA ×2,8 en 0,6 s |
+| 3:27,7 | efecto | Sacudida de cámara (0,45, 2s) |
+| 3:28,2 | efecto | Fusión: BOLA_PROTECTORA + CARGA_ESFERA |
+| 3:28,2 | efecto | SFX: SFX_Prologo_LanzamientoConjuro |
+| 3:29,5 | **@choque_final** |  |
+| 3:29,5 | plano 58 | general de archimago y mago · 1,3 s · lente 58° |
+| 3:29,5 | efecto | Líneas de concentración: mostrar |
+| 3:29,5 | efecto | VFX: Choque en encuentro_hechizos |
+| 3:29,5 | efecto | VFX: Forcejeo en encuentro_hechizos |
+| 3:29,5 | efecto | SFX: SFX_Prologo_Plin |
+| 3:29,5 | efecto | Fogonazo (0,6s) |
+| 3:29,5 | efecto | Ambiente: LUCHA_FINAL ← SFX_Prologo_LuchaFinal |
+| 3:29,7 | efecto | Sacudida de cámara (0,5, 2,2s) |
+| 3:30,5 | efecto | SFX: SFX_Prologo_PreviaEstallido |
+| 3:30,8 | plano 59 | general de archimago y mago · 8,1 s · lente 52° |
+| 3:31,9 | **@estallido** |  |
+| 3:31,9 | efecto | SFX: Prologue_WarClashStinger_A |
+| 3:31,9 | efecto | Ambiente: parar LUCHA_FINAL |
+| 3:31,9 | efecto | Ambiente: parar AGUJERO_NEGRO |
+| 3:31,9 | efecto | VFX: recoger efectos registrados |
+| 3:31,9 | efecto | SFX: Prologo_Choque |
+| 3:31,9 | efecto | Fogonazo (0,35s) |
+| 3:31,9 | efecto | Sacudida de cámara (1, 1,8s) |
+| 3:31,9 | efecto | VFX: EstallidoFinal en choque |
+| 3:31,9 | efecto | VFX: Choque en encuentro_hechizos |
+| 3:31,9 | efecto | Líneas de concentración: retirar |
+| 3:31,9 | efecto | SFX: SFX_Prologo_EstallidoSube |
+| 3:32,3 | efecto | Pantalla: cubrir (3,5s) |
+| 3:36,0 | **@explosion** |  |
+| 3:36,0 | efecto | VFX: recoger efectos registrados |
+| 3:36,0 | efecto | Mezcla: grito (quitar) |
+| 3:36,0 | efecto | Ambiente: parar TORMENTA |
+| 3:36,0 | efecto | Música: parar (2s) |
+| 3:36,2 | efecto | Hora del día: Morning (de golpe) (y es con la que se queda el mundo) |
+| 3:38,4 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 
@@ -391,22 +389,22 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 2:22,4 gesto MagicLeft
 - 2:27,1 gesto MagicLeft
 - 2:29,1 gesto MagicSpecial
-- 2:35,2 bucle Pain01
-- 2:36,8 gesto HeadShake01
-- 2:42,7 bucle CastingIdle01
-- 2:42,7 reposo 
-- 2:42,7–2:50,1 habla
-- 2:52,8 bucle Beg01_Loop
-- 2:52,8–3:01,0 habla
-- 3:01,0–3:09,7 habla
-- 3:10,9 bucle Conjuro_Invocar
-- 3:10,9–3:17,2 habla
-- 3:17,2–3:23,3 habla
-- 3:23,3–3:27,1 habla
-- 3:28,5–3:30,5 habla
-- 3:29,1 bucle Conjuro_Lanzar
-- 3:37,6 reposo 
-- 3:37,6 bucle Die01_NoWeapon
+- 2:34,1 bucle Pain01
+- 2:35,7 gesto HeadShake01
+- 2:41,7 bucle CastingIdle01
+- 2:41,7 reposo 
+- 2:41,7–2:49,0 habla
+- 2:51,8 bucle Beg01_Loop
+- 2:51,8–2:60,0 habla
+- 2:60,0–3:08,6 habla
+- 3:09,8 bucle Conjuro_Invocar
+- 3:09,8–3:16,1 habla
+- 3:16,1–3:22,2 habla
+- 3:22,2–3:26,1 habla
+- 3:27,4–3:29,5 habla
+- 3:28,0 bucle Conjuro_Lanzar
+- 3:31,9 reposo 
+- 3:31,9 bucle Die01_NoWeapon
 
 ### liora (NPC_Liora)
 
@@ -471,14 +469,14 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 2:27,7 gesto Defend_NoWeapon
 - 2:29,1 gesto MagicSpecial
 - 2:33,0 gesto MagicRight
-- 2:36,1–2:39,3 habla
-- 2:36,1 gesto HeadShake01
-- 2:37,8 gesto Talk01
-- 2:39,3 bucle JumpAir_InPlace_NoWeapon
-- 2:39,3 bucle FoundSomething_NoWeapon
-- 3:29,1 bucle Conjuro_Lanzar
-- 3:37,6 reposo 
-- 3:37,6 bucle Die01_NoWeapon
+- 2:35,0–2:38,3 habla
+- 2:35,1 gesto HeadShake01
+- 2:36,8 gesto Talk01
+- 2:38,3 bucle JumpAir_InPlace_NoWeapon
+- 2:38,3 bucle FoundSomething_NoWeapon
+- 3:28,0 bucle Conjuro_Lanzar
+- 3:31,9 reposo 
+- 3:31,9 bucle Die01_NoWeapon
 
 ### nina (NPC_Aldeano_05)
 
@@ -603,7 +601,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 1:13,6 gesto FoundSomething_NoWeapon
 - 1:19,4 gesto Fear01
 - 1:38,0–1:56,9 anda de (6001,4, 6001,0) a (6046,0, 5999,0)
-- 2:40,1 bucle Reverence01_Loop
+- 2:39,0 bucle Reverence01_Loop
 
 ### v04 (NPC_Aldeano_04)
 
@@ -756,7 +754,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 0:50,9 gesto HandClap01
 - 1:19,6 gesto FoundSomething_NoWeapon
 - 1:38,8–2:01,7 anda de (5994,1, 6002,7) a (6048,0, 5997,5)
-- 2:41,1 bucle Beg01_Loop
+- 2:40,0 bucle Beg01_Loop
 
 ### panadera (PanaderaDelValle)
 
@@ -795,7 +793,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,58/ojos 0,99 · mago 1,8
 - 1:39,4 aparece
 - 1:39,5–2:05,8 anda de (5991,8, 5994,8) a (6049,3, 6009,0)
 - 2:14,2 gesto HeadNod01
-- 2:36,8 gesto HeadShake01
+- 2:35,7 gesto HeadShake01
 
 ### vm (VecinoDelMirador)
 

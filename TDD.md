@@ -826,6 +826,8 @@ El subtítulo usa un canvas overlay creado por SpeechBubbleUI, ancho del 70 % de
 
 Las frases no llaman a `SpeechBubbleUI` cada una por su lado: pasan por `PresentadorDeLinea` (§ 11), que traduce, resuelve el estilo (`PresentacionDeLinea.Resolver`), enseña el texto y suelta la voz.
 
+**Voces fuera de escena** (INC-1172). Es la única excepción al modo cine de las cinemáticas: alguien que habla sin estar en el plano (tras una ventana, al otro lado de una puerta). `SayBeat` con `markName` (sin `actorId`) y `fueraDeEscena` pasa `fueraDeEscena`/`retrato` a `PresentadorDeLinea.Mostrar` → `SpeechBubbleUI.Show`, que saca la frase en bocadillo aunque la secuencia vaya en subtítulo. El bocadillo va anclado a la marca, sin cola, con el nombre encima en `colorDelNombre` y, si hay `retrato`, la cara en un medallón (máscara circular) en la esquina de abajo a la izquierda. Con bandas de cine, `ClampToCanvas` deja cualquier bocadillo dentro de la imagen, entre las franjas. Tiene un vaivén suave aplicado en `ColocarBocadillo` (`Vaiven()`), con una fase nueva cuando cambia quien habla. Si la marca no se ve, se queda fijo en pantalla. Los ajustes están en el Inspector de `SpeechBubbleUI` (cabecera «Voz fuera de escena»). En el guion: `efecto SayBeat markName=… textKey=… fueraDeEscena=si speakerNameKey=… colorDelNombre=… [retrato=<sprite>]`.
+
 ### DialogueManager
 
 `Assets/Scripts/Dialogue/DialogueManager.cs`
@@ -1213,6 +1215,21 @@ El proyecto tiene **dos motores narrativos en paralelo**: `NarrativeGraph`/`Narr
 
 ---
 
+### Arranque de pruebas desde un paso (pestaña Arranque, INC-1170)
+
+- **Qué es:** al pulsar ▶ desde un paso, la prueba empieza con estas capas, cada una encima de la anterior: (1) la **partida nueva** de la ficha del jugador; (2) la **historia hasta el paso** (`NarrativeStateProjector`, con los capítulos anteriores terminados); (3) los **puntos de arranque** (`CheckpointNode`, ◆) anteriores en orden, también los de capítulos previos; (4) los **retoques** de esta prueba (solo en este ordenador). La pestaña Arranque enseña el resultado fila a fila con de dónde sale cada valor; Depuración enseña la historia entera.
+- **Ficha del jugador** (`NarrativePlayerSheet`, kit, ⚙ Ajustes): plantilla de partida nueva (ScriptableObject o prefab + componente), campos que pueden fijarse y el campo de posición (para avisar si ningún punto dice dónde aparece el jugador). El grafo no conoce los campos: los lee de la ficha. El Sendero: `Assets/ElSendero/Data/FichaDelJugador.asset` sobre el `PlayerPresetSO` por defecto del `GameBootProfile`.
+- **Punto de arranque:** `CheckpointNode.player` (`NarrativePlayerValues`: rutas de campo + JSON del editor de un objeto del tipo de la ficha). Se fija desde Arranque («Retocar» → «◆ Fijar aquí», o «Tomar de la partida» en Play vía `INarrativePlayerLive`); por código, `NarrativePlayerValuesEditor.Set/SetValue` (El Sendero: `ArranqueDeLasPruebas.FijarAncla`).
+- **Código:** `Editor/Player/` (`NarrativePlayerSheet`, `NarrativePlayerValuesEditor`, `NarrativeStartPlan`/`NarrativeStartPlanner`, `StartTweaks`, `StoryRouteChoices`, `INarrativeLaunchDetails`, `INarrativePlayerLive`), `Story/StoryStartPanel.cs`, `Fields/NarrativePlayerValuesDrawer.cs`.
+- **Arranque del juego:** `INarrativePlayLauncher` decide cómo se entra. El básico aplica la ficha al SO antes de Play (lo restaura al salir) o al componente al entrar. El Sendero (`SenderoPlayLauncher` → `NarrativeTestLauncher`) copia la partida nueva al preset temporal, proyecta, aplica `NarrativeStartPlan.ApplyOverrides` y abre **la escena del ancla** (`EscenaDelAncla`: la escena aparte que la tiene o MainWorld) para dar Play directo, sin intro ni menú; implementa `INarrativeLaunchDetails` para añadir al resumen la escena y cómo se entra.
+
+### Kit del grafo: servicios básicos, ejemplo y paquete (INC-1174, INC-1175)
+
+- **Servicios básicos** (`Runtime/Services/NarrativeBasicServices`): un componente en la escena registra versiones sencillas (IMGUI) de diálogo, respuestas, misiones, inventario, datos, guardado en memoria, bocadillos, pantalla y personajes, solo para los puertos que el juego no haya registrado. Assets: `NarrativeBasicDialogue`, `NarrativeBasicItem`; charla con `NarrativeBasicTalkTarget`. El Sendero no los usa (registra los suyos).
+- **Ejemplo «El faro»:** `Samples/El faro` (scripts y montador); *Tools › Narrative Graph › Ejemplos › Montar* genera `Assets/El faro (ejemplo)`.
+- **Ayuda:** manual en `Documentation/Manual de usuario.pdf` (fuente en `Documentación/Manual del grafo narrativo (fuente)`, se rehace con `node render.js`), recorrido `StoryTour`, botón «?».
+- **Paquete:** *El Sendero › Kits › Grafo narrativo: exportar…* → `Builds/Kits/NarrativeGraph.unitypackage` con Runtime, Editor, Samples, Documentation y Tools (los grafos `Cap*.asset` y `STEP_TYPES.md` no entran). «…y probar en un proyecto nuevo» lo importa en `../NarrativeGraphPrueba` y monta el ejemplo en segundo plano. Dependencias del paquete: uGUI/TextMeshPro, Timeline, Newtonsoft JSON.
+
 ## 11. UI
 
 ### MenuManager
@@ -1278,6 +1295,8 @@ Selector del grupo del panel de estado: bustos de Liam, Will y Estela que asoman
 ### Anunciar el lugar al entrar: `PresentacionDeLugares` (INC-1075)
 
 `PresentacionDeLugares.Anunciar(claveDelLugar)` (`Scripts/UI/Avisos/`, auto-creado) es el camino único para anunciar que el jugador entra en un lugar con nombre. Hoy lo llama `AmbientZone` con `AmbientPreset.nombreDelLugar` (clave de `ui_*.json`, prefijo `LUGAR_`); cualquier otro sistema (portal, teletransporte, mapa) puede llamarlo igual.
+
+**Plano aéreo de lugar nuevo (INC-1171):** `Anunciar(clave, cajaDelLugar)` con caja (la da `AmbientZone`, de su collider, si `AmbientPreset.planoAlPresentar`) hace que la presentación de lugar nuevo lleve `PlanoDelLugar`: la cámara sube en vertical, se abre en picado sobre el lugar (foco entre el jugador y el centro de la caja, radio 14–30 m), gira despacio y baja a la espalda del jugador, todo en función del tiempo de la cinta. Tiene la cámara con `CameraDirectorService` (`EsDueno` para saber si se la han quitado), bloquea al jugador y esconde lo de pantalla con `OcultablesDeCinematica` con la presentación como clave (el árbitro no se calla ante un aviso que despeja la pantalla). Si la presentación pierde el turno, la cámara vuelve al jugador; al seguir, solo la cinta. La cinta corta no lleva plano.
 - **Primera vez en la partida:** presentación en el canal `Cabecera` (`PresentacionDeLugarUI`, que monta `DramaticTextOverlayUI` en un lienzo propio de orden 112): cinta de papel que se despliega, pestaña de noche con `LUGAR_NUEVO` («Nuevo lugar»), estrella de oro con trazos de tinta, el nombre letra a letra y chispas de oro; quieta 2,6 s y se va (unos 4,5 s en total). Suena `UI_LugarDescubierto` (`AudioGraphProfile`). Todo lo que se ve es función del tiempo a la vista: con un menú o una cinemática se para y sigue después.
 - **Ya conocido:** rótulo breve con el nombre (2,5 s).
 - **Memoria:** `LugaresConocidos` (`Scripts/World/`), marcas `LUGAR_CONOCIDO:<clave>` en `Partida.Preset.flags`: se guardan con la partida y la partida nueva las borra. Sin partida o sin `DramaticTextOverlayUI` no se marca nada y sale el rótulo breve.

@@ -164,8 +164,7 @@ public static class Cap2CorregirPreparacionDelViaje
 
         // Checkpoint final en MainWorld, en la marca del punto de guardado de la entrada.
         var final = Nodo<CheckpointNode>(grafo, "cap2-final-checkpoint");
-        final.sceneName = "MainWorld";
-        final.spawnAnchorId = "Eldran_PuntoGuardado";
+        Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla(final, "Eldran_PuntoGuardado");
         var fin = Asegurar(grafo, "cap2-fin-senal", () => new RaiseCustomEventNode { eventKey = "CH_Cap2_BACK_1" },
             "35.- Fin del Cap. 2 (CH_Cap2_BACK_1)", final.position + new Vector2(260f, 0f));
         final.outputs = new List<string> { fin.guid };

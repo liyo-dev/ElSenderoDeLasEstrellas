@@ -238,7 +238,7 @@ namespace NarrativeGraphEditor.Story
                 }
                 if (route.Length < 70f || _mode != Mode.None) continue;
                 var captured = route;
-                var insert = new Button(() => OpenPopupOnRoute(captured)) { text = "+", tooltip = StoryText.T("Meter un paso aquí", "Insert a step here") };
+                var insert = new Button(() => OpenPopupOnRoute(captured)) { text = "+", tooltip = StoryText.T("Añadir un paso aquí", "Insert a step here") };
                 insert.AddToClassList("story-edge-insert");
                 insert.style.left = route.InsertAt.x;
                 insert.style.top = route.InsertAt.y;
@@ -299,6 +299,8 @@ namespace NarrativeGraphEditor.Story
                 var card = pair.Value;
                 card.EnableInClassList("is-selected", _selection.Contains(n));
                 card.EnableInClassList("is-on-path", _pathNodes.Contains(n.guid));
+                // Con un paso elegido, lo que no es su camino se apaga para que se lea la historia.
+                card.EnableInClassList("is-off-path", _pathNodes.Count > 0 && !_pathNodes.Contains(n.guid) && !_selection.Contains(n));
                 card.EnableInClassList("is-current", n.guid == _currentGuid);
                 card.EnableInClassList("has-breakpoint", StoryBreakpoints.Has(_edit.Graph, n.guid));
                 card.EnableInClassList("is-visited", _visited.Contains(n.guid));
@@ -708,7 +710,7 @@ namespace NarrativeGraphEditor.Story
             var node = card.Model;
             if (!_selection.Contains(node)) Select(node);
             e.menu.ClearItems();
-            e.menu.AppendAction(StoryText.T("Probar desde aquí", "Play from here"), _ => PlayRequested?.Invoke(node));
+            e.menu.AppendAction(StoryText.T("Jugar desde aquí", "Play from here"), _ => PlayRequested?.Invoke(node));
             e.menu.AppendAction(StoryText.T("Pausar aquí al jugar", "Pause here when playing"),
                 _ => { StoryBreakpoints.Toggle(_edit.Graph, node.guid); ApplyHighlights(); },
                 _ => StoryBreakpoints.Has(_edit.Graph, node.guid) ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal);

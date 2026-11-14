@@ -27,7 +27,7 @@ namespace NarrativeGraphEditor.Story
             string second = NarrativeProjectIndex.SecondaryLanguage ?? "en";
             var csv = new StringBuilder();
             Row(csv, StoryText.T("Paso", "Step"), StoryText.T("Título del paso", "Step title"), StoryText.T("Tipo", "Kind"),
-                StoryText.T("Habla", "Speaker"), StoryText.T("Clave", "Key"), first, second, StoryText.T("Notas", "Notes"));
+                StoryText.T("Personaje", "Speaker"), StoryText.T("Clave", "Key"), first, second, StoryText.T("Notas", "Notes"));
 
             int count = 0;
             var seen = new HashSet<string>();

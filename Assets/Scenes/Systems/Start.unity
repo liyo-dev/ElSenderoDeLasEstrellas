@@ -11571,6 +11571,7 @@ MonoBehaviour:
   bodyText: {fileID: 794523450}
   portraitImage: {fileID: 822553940}
   useTypewriter: 1
+  lineasPorPaginaPorDefecto: 3
   charsPerSecond: 35
   allowSkipCurrentLine: 1
   useLetterSound: 1
@@ -23482,6 +23483,11 @@ MonoBehaviour:
   _margenFijo: 40
   _colorNombre: {r: 1, g: 0.85, b: 0.35, a: 1}
   _colorContornoADistancia: {r: 0.08, g: 0.08, b: 0.1, a: 1}
+  _medallonPorLetra: 2.4
+  _vaivenVertical: 6
+  _vaivenLateral: 3
+  _vaivenGiro: 1.2
+  _vaivenFrecuencia: 0.45
 --- !u!114 &3313406703180634780
 MonoBehaviour:
   m_ObjectHideFlags: 0

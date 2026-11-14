@@ -1,0 +1,2552 @@
+[
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.81
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.64
+   }
+  },
+  "asoma": {
+   "pelvis": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@3.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.79
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@5.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "pelvis": 6
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@8.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.76
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "pelvis": 6
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 38,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.76
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "upperarm_r": 3,
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 32,
+    "de": 280,
+    "en": "Tunica (-0.00,0.51)"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 19,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@12.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 7,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@15.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.76
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 25,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@17.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "pelvis": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 9,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "pelvis": 7
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 28,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 15,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@22.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.77
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "pelvis": 6
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 40,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 15,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@24.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 10,
+    "max": 1.76
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "pelvis": 5
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 30,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@26.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 7,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.78
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.68
+   }
+  },
+  "asoma": {
+   "pelvis": 5,
+   "thigh_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 6,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.81
+   }
+  },
+  "asoma": {
+   "thigh_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 36,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@2.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.76
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 24,
+    "de": 218,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@3.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 10,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.62
+   }
+  },
+  "asoma": {
+   "pelvis": 6
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 50,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Nudo (-0.07,0.45)": {
+    "puntos": 33,
+    "de": 314,
+    "en": "cuerpo/pelvis"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@5.0",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 16,
+    "max": 1.83
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.76
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "pelvis": 7
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 50,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@6.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 14,
+    "max": 1.95
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "pelvis": 4,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 14,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/spine_03"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@7.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 10,
+    "max": 1.86
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@9.0",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 6,
+    "max": 1.68
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.69
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 9,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@10.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 4,
+    "max": 1.68
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 10,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/spine_03"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@11.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 4,
+    "max": 1.64
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   }
+  },
+  "asoma": {
+   "pelvis": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 40,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 123,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 19,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@13.0",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 17,
+    "max": 1.85
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "pelvis": 9
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Bajo (-0.00,0.29)": {
+    "puntos": 32,
+    "de": 280,
+    "en": "cuerpo/hand_r"
+   },
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 50,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 16,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@14.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 15,
+    "max": 1.99
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.76
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "pelvis": 7
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 32,
+    "de": 280,
+    "en": "cuerpo/lowerarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 197,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@15.7",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 11,
+    "max": 1.9
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.79
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Puntera_r (-0.12,0.03)": {
+    "puntos": 34,
+    "de": 314,
+    "en": "cuerpo/calf_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 38,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@12.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 37,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@24.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 33,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@36.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 28,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 237,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@47.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.68
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Bajo (-0.00,0.29)": {
+    "puntos": 29,
+    "de": 280,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 172,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@59.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 35,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 174,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@71.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 11,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@82.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 29,
+    "de": 280,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 11,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@94.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.69
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 30,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@106.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 32,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/spine_03"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@117.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.68
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 38,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 9,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@129.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 39,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.63
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 26,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@18.5",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.63
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 27,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@36.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.66
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@53.5",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.65
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 27,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@71.0",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 19,
+    "de": 66,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 37,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@88.5",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 6,
+    "max": 1.75
+   }
+  },
+  "asoma": {
+   "upperarm_l": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 20,
+    "de": 66,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 36,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@106.0",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 6,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "upperarm_l": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 19,
+    "de": 66,
+    "en": "cuerpo/index_01_r"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 37,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@123.5",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.62
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 6,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 17,
+    "de": 66,
+    "en": "cuerpo/thumb_01_r"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 49,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@141.0",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 4,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 26,
+    "de": 66,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 31,
+    "de": 280,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 38,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@158.5",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 4,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 24,
+    "de": 66,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 28,
+    "de": 280,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 38,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@176.0",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 4,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.67
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 5,
+    "max": 1.69
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 23,
+    "de": 66,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 38,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@193.5",
+  "desgarro": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "aristas": 1,
+    "max": 1.61
+   },
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 4,
+    "max": 1.64
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "aristas": 1,
+    "max": 1.61
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Tapeta (-0.00,0.60)": {
+    "puntos": 19,
+    "de": 66,
+    "en": "cuerpo/thumb_02_r"
+   },
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 44,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 8,
+    "max": 1.73
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 38,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@5.2",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.71
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.64
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@9.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.63
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@13.5",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@17.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@21.8",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.74
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.63
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@26.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.73
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@30.2",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@34.3",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.72
+   }
+  },
+  "asoma": {
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 17,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@38.5",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.7
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@42.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.72
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.65
+   }
+  },
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@46.8",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 6,
+    "max": 1.7
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.71
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 39,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 272,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 18,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@1.0",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 2,
+    "max": 1.64
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 1,
+    "max": 1.6
+   }
+  },
+  "asoma": {
+   "pelvis": 5,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 29,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 30,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@5.2",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 13,
+    "max": 1.79
+   }
+  },
+  "asoma": {
+   "pelvis": 9,
+   "lowerarm_r": 4,
+   "lowerarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 12,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 33,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@9.3",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 15,
+    "max": 1.87
+   }
+  },
+  "asoma": {
+   "lowerarm_l": 3,
+   "pelvis": 9,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 10,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 28,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 20,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@13.5",
+  "desgarro": {
+   "Body29_Aprendiz:Tunica (-0.00,0.51)": {
+    "aristas": 15,
+    "max": 1.89
+   }
+  },
+  "asoma": {
+   "pelvis": 9,
+   "lowerarm_r": 4,
+   "lowerarm_l": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 10,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 30,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@17.7",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 3,
+    "max": 1.65
+   }
+  },
+  "asoma": {
+   "pelvis": 7,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 31,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@21.8",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 28,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 29,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@26.0",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 28,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 22,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@30.2",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 27,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@34.3",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 41,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 26,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@38.5",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 63,
+    "de": 314,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 9,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 27,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@42.7",
+  "desgarro": {},
+  "asoma": {
+   "pelvis": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 10,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 33,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@46.8",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.72
+   }
+  },
+  "asoma": {
+   "pelvis": 5,
+   "lowerarm_r": 5
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 11,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 30,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body29_Aprendiz:PunoForro_r (-0.44,0.63)": {
+    "puntos": 21,
+    "de": 200,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_bajados",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 9,
+    "max": 1.77
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.73
+   }
+  },
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Bajo (-0.00,0.29)": {
+    "puntos": 59,
+    "de": 280,
+    "en": "cuerpo/lowerarm_r"
+   },
+   "Body29_Aprendiz:Cordon (-0.00,0.46)": {
+    "puntos": 40,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 11,
+    "de": 22,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "cuerpo/pelvis"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 19,
+    "de": 168,
+    "en": "cuerpo/pelvis"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "mano_al_frente",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.83
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.79
+   }
+  },
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_cruzados",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 10,
+    "max": 1.83
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 7,
+    "max": 1.79
+   }
+  },
+  "asoma": {
+   "upperarm_r": 3
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 22,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Cierre (+0.31,0.36)": {
+    "puntos": 238,
+    "de": 314,
+    "en": "cuerpo/hand_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 21,
+    "de": 168,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_arriba",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {
+   "Body29_Aprendiz:Cuello (-0.00,0.75)": {
+    "puntos": 32,
+    "de": 240,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "manos_juntas",
+  "desgarro": {
+   "Body29_Aprendiz:Hombro_l (+0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.78
+   },
+   "Body29_Aprendiz:Hombro_r (-0.17,0.64)": {
+    "aristas": 5,
+    "max": 1.74
+   }
+  },
+  "asoma": {
+   "lowerarm_r": 3,
+   "upperarm_r": 3,
+   "upperarm_l": 4
+  },
+  "se_mete": {
+   "Body29_Aprendiz:Correa (+0.10,0.55)": {
+    "puntos": 54,
+    "de": 218,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body29_Aprendiz:Pergamino (+0.25,0.46)": {
+    "puntos": 8,
+    "de": 22,
+    "en": "cuerpo/upperarm_l"
+   },
+   "Body29_Aprendiz:Manga_l (+0.35,0.63)": {
+    "puntos": 23,
+    "de": 168,
+    "en": "Hombro_l (+0.17,0.64)"
+   },
+   "Body29_Aprendiz:Manga_r (-0.35,0.63)": {
+    "puntos": 24,
+    "de": 168,
+    "en": "Hombro_r (-0.17,0.64)"
+   }
+  },
+  "suelta": {}
+ }
+]

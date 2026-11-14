@@ -25,6 +25,10 @@ p_lucia       277.3 -429.05
 mesa          279.0 -427.0
 cuchara       277.15 -429.62
 puerta        284.9 -420.6
+# Paso del posadero entre la mesa y la puerta: por fuera del asiento de la plaza (280,8, −427) y del
+# banco de la plaza del puerto (284,5, −425,8), que antes atravesaba. Ver INC-1156.
+paso_a        281.8 -428.3
+paso_b        283.4 -425.2
 # Cámara baja al sureste de la mesita: la cuchara delante y Lucía detrás, de frente.
 cam_cuchara   278.0 -431.1
 
@@ -68,8 +72,9 @@ posadero dice CAP3_POSADA_05 cara=alegre
 will dice CAP3_POSADA_06 cara=confuso gesto=Talk01
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Coin_Shaking-002.wav" volume=0.7
 posadero dice CAP3_POSADA_07 gesto=HeadNod01 cara=alegre
-# Se va a la cocina: el plano pasa ya a Will y Lucía, el posadero sale por el borde.
-posadero anda a puerta ritmo=normal
+# Se va a la cocina: el plano pasa ya a Will y Lucía, el posadero sale por el borde. No se le espera:
+# Lucía habla en cuanto se va (antes había un rato largo sin que pasara nada).
+posadero anda a paso_a paso_b puerta ritmo=prisa sin_esperar
 & will mira lucia
 & plano dos will lucia
 
@@ -99,16 +104,19 @@ efecto PropMoveBeat propId=PROP_Cuchara segundos=0.2 suavizar=false desdeDondeEs
 & prop PROP_BrilloCuchara oculto
 & lucia reposo
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.4
+espera 0.4
 plano medio lucia
+# El posadero vuelve con la sopa mientras hablan (llega para el consejo).
+& posadero anda a paso_b paso_a p_posadero ritmo=prisa sin_esperar
 lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
 plano dos will lucia
 will dice CAP3_POSADA_11 mira=lucia cara=alegre
 lucia dice CAP3_POSADA_13 cara=alegre gesto=Cheer01
 
 @sopa
-# El posadero vuelve con la sopa de Will y le da el consejo.
-posadero anda a p_posadero ritmo=normal
-& will mira posadero
+# El posadero ya ha vuelto con la sopa de Will y le da el consejo.
+will mira posadero
+& posadero mira will
 prop PROP_SopaWill
 plano dos will posadero
 posadero dice CAP3_POSADA_12 mira=will gesto=Talk01 cara=alegre

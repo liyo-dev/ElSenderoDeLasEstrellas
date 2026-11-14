@@ -49,7 +49,7 @@ public sealed class Coleccionista : MonoBehaviour
         if (_retenido) return;
         _retenido = true;
         if (_npcManager != null && _npcManager.Context != null) _npcManager.Context.IsInteracting = true;
-        if (_animator != null) _animator.BeginInteraction();
+        if (_animator != null) _animator.RetenerPorPanel();
     }
 
     private void Soltar()
@@ -57,7 +57,7 @@ public sealed class Coleccionista : MonoBehaviour
         if (!_retenido) return;
         _retenido = false;
         if (_npcManager != null && _npcManager.Context != null) _npcManager.Context.IsInteracting = false;
-        if (_animator != null) _animator.EndInteraction();
+        if (_animator != null) _animator.SoltarPorPanel();
     }
 
     public void Atender()

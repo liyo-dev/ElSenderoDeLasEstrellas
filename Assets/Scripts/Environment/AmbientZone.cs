@@ -206,7 +206,9 @@ public class AmbientZone : MonoBehaviour
     /// <summary>Anuncia el lugar al entrar (presentación la primera vez, rótulo breve después).</summary>
     private void NombrarElLugar()
     {
-        if (ambientPreset != null) PresentacionDeLugares.Anunciar(ambientPreset.nombreDelLugar);
+        if (ambientPreset == null) return;
+        Bounds? caja = ambientPreset.planoAlPresentar && _collider != null ? _collider.bounds : (Bounds?)null;
+        PresentacionDeLugares.Anunciar(ambientPreset.nombreDelLugar, caja);
     }
 
     private System.Collections.IEnumerator DeferredMusicTransition()

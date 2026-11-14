@@ -106,6 +106,10 @@ def pesar(o, cuerpo, arm, zona=TODO, faldon=None, suavizar=4, fijos=None, sobre=
                 mezcla = _suave((F.z_cintura + F.banda - p.z) / F.banda)
                 W[i] = (1 - mezcla) * W[i] + mezcla * Wf
         W[W < 0.01] = 0
+        # como mucho 4 huesos por vértice (Unity descarta el resto y la prenda se mueve distinto que en Blender)
+        if W.shape[1] > 4:
+            corte = np.sort(W, 1)[:, -4][:, None]
+            W[W < corte] = 0
         W /= np.maximum(W.sum(1, keepdims=True), 1e-9)
     for j, n in enumerate(nombres):
         col = W[:, j]

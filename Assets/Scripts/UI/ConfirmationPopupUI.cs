@@ -21,6 +21,10 @@ using UnityEngine.InputSystem;
 public class ConfirmationPopupUI : MonoBehaviour
 {
     public static ConfirmationPopupUI Instance { get; private set; }
+
+    /// Se abre una pregunta: los avisos informativos que sigan en pantalla se quitan para que
+    /// no se pisen (p. ej. el tutorial de la hoguera y la pregunta de descansar). Ver INC-1163.
+    public static event Action AlAbrir;
     /// El popup está en pantalla esperando respuesta.
     public bool Visible => _isShown;
 
@@ -101,6 +105,7 @@ public class ConfirmationPopupUI : MonoBehaviour
                      bool centrado = false)
     {
         if (_isShown) return;
+        AlAbrir?.Invoke();
 
         _onConfirm = onConfirm;
         _onCancel = onCancel;

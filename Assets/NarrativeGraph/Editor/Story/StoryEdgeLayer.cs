@@ -51,8 +51,10 @@ namespace NarrativeGraphEditor.Story
                 if (r.Points == null || r.Points.Count < 2) continue;
                 bool lit = _onPath.Contains(Key(r.From, r.To));
                 var color = ColorOf(r);
+                // Con un camino marcado, el resto de líneas se apaga.
+                if (!lit && _onPath.Count > 0) color.a *= 0.35f;
                 p.strokeColor = color;
-                p.lineWidth = lit ? 2.4f : 1.6f;
+                p.lineWidth = lit ? 3.2f : 1.6f;
                 if (r.Parallel) DrawDashed(p, r.Points);
                 else DrawRounded(p, r.Points, 8f);
                 DrawArrow(p, r.Points, color);

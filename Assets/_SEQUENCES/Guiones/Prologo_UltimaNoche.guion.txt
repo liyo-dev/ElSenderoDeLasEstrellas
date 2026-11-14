@@ -795,24 +795,22 @@ mago gesto MagicSpecial
 +1.1 sonido Prologue_WarClashStinger_A
 espera 2.6
 # La grieta: el Archimago sale despedido.
-# Se entiende en dos tiempos: el Mago la prepara entre las manos y la suelta contra el suelo; la
-# grieta corre por el suelo hasta el Archimago y ahí revientan los pinchos.
-plano medio mago lado=izq altura=1.0 altura_foco=1.05 lente=38 mano=0.3
-mago gesto MagicRight
-& efecto ConjuroEnLasManosBeat actorId=mago vfxPrefab=Assets/_VFX/Prologo/Piloto/Sombra_CargaEnLasManos.prefab entreLasManos=true duracion=0.7 avance=0 elevacion=0 escalaInicial=0.4 escalaFinal=1.2
-+0.2 sonido Prologo_SueloSeAbre en=mago
-+0.25 sonido SFX_Prologo_Latigazo volume=0.9
-espera 0.6
+# Un solo gesto en un dos de perfil: el destello nace en la mano del Mago y, con el golpe de la
+# mano, sale el camino de pinchos por el suelo hasta el Archimago, que revienta al llegar. Mismo
+# tiempo de mano que sus otros hechizos (destello a +0,2, sale a +0,55).
 plano dos archimago mago desde=cam_duelo_norte altura=1.3 altura_foco=0.8 lente=58 mano=0.3
-& efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Rastro.prefab velocidad=20 tiempoDeCarga=0 alturaDelImpacto=0 alPecho=false sacudidaAlImpacto=0 esperarAlImpacto=false
-+0.3 vfx Assets/_VFX/Prologo/Piloto/Sombra_Grieta.prefab en=archimago lifetime=2.4
-+0.5 vfx Assets/_VFX/Prologo/Piloto/Sombra_Onda.prefab en=archimago lifetime=2.0
-+0.5 sacudida 0.7 0.9
-+0.5 sonido Prologo_ImpactoHechizo en=archimago
-+0.55 sonido SFX_Prologo_Impacto volume=0.8
-+0.55 archimago desliza a arch_caida dura=0.35 seco mirando=mago
-+0.55 archimago bucle Pain01
-espera 1.4
+mago gesto MagicRight
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Rastro.prefab velocidad=20 tiempoDeCarga=0.35 alturaDelImpacto=0 alPecho=false sacudidaAlImpacto=0 esperarAlImpacto=false
++0.55 sonido Prologo_SueloSeAbre en=mago
++0.55 sonido SFX_Prologo_Latigazo volume=0.9
++0.85 vfx Assets/_VFX/Prologo/Piloto/Sombra_Grieta.prefab en=archimago lifetime=2.4
++1.05 vfx Assets/_VFX/Prologo/Piloto/Sombra_Onda.prefab en=archimago lifetime=2.0
++1.05 sacudida 0.7 0.9
++1.05 sonido Prologo_ImpactoHechizo en=archimago
++1.1 sonido SFX_Prologo_Impacto volume=0.8
++1.1 archimago desliza a arch_caida dura=0.35 seco mirando=mago
++1.1 archimago bucle Pain01
+espera 0.95
 
 # ── 7. EL ÚLTIMO HECHIZO ──────────────────────────────────────────────────────────────────
 @ultimo
@@ -942,7 +940,7 @@ desde @hechizo-41.4 silencio 3
 desde @hechizo-38.4 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.3
 # La música del clímax (INC-940), montada a medida desde la Cover de Suno de la maqueta
 # Tools/Musica/Climax del prologo: la plegaria, el respiro (33-37 s), el grito (39 s) y el golpe
-# del estallido a los 48,4 s justos desde aquí. Si se mueve @estallido, hay que moverla con él.
+# del estallido a los 43,8 s justos desde aquí. Si se mueve @estallido, hay que moverla con él.
 desde @hechizo-38.4 musica PROLOGO_CLIMAX fadeIn=0.3 continuarDondeIba=false
 # Abre los ojos: primer plano de frente, justo antes del grito.
 plano primer archimago lado=frente altura=1.05 altura_foco=1.1 lente=26
@@ -961,29 +959,27 @@ archimago dice PROLOGO_HECHIZO cara=enfado
 # En pleno «¡Protégelos a todos!» los dos lanzan su hechizo a la vez, empujando con las dos manos.
 +0.6 archimago bucle Conjuro_Lanzar congela fundido=0.15
 +0.6 mago bucle Conjuro_Lanzar congela fundido=0.15
-+0.75 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA efectoBRegistrado=CARGA_ESFERA puntoDeEncuentro=encuentro_hechizos fraccionDeViaje=0.26 duracionCrecimiento=5.4 duracionMezcla=0 entregarBlanco=false crecimientoA=2.4 crecimientoB=1.2 esperar=false
++0.75 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA efectoBRegistrado=CARGA_ESFERA puntoDeEncuentro=encuentro_hechizos fraccionDeViaje=0.4 duracionCrecimiento=3.5 duracionMezcla=0 entregarBlanco=false crecimientoA=2.4 crecimientoB=1.2 esperar=false
 # El disparo de los dos: pared que sube de tono y se corta al chocar (con el plin).
 +0.75 sonido SFX_Prologo_LanzamientoConjuro volume=0.9
 
-# Chocan: «plin», un destello que llena la pantalla, y se empujan en el aire con los planos de siempre.
-# El estallido va en el golpe de la música (@hechizo + 10 s).
+# Chocan: «plin», un destello que llena la pantalla y, enseguida, el estallido: el forcejeo es
+# corto para que no caiga el ritmo. El estallido va en el golpe de la música (@hechizo + 5,42 s).
 @choque_final
 # Aérea que gira alrededor de los dos mientras los hechizos chocan y se empujan.
 plano general archimago mago desde=cam_aerea_choque altura=7 mira=foco_aereo lente=58 gira=40
 & destello FFFFFFFF 0.6
 & sonido SFX_Prologo_Plin volume=0.9
-& sonido SFX_Prologo_LuchaFinal volume=0.55
+# El forcejeo suena en bucle propio para cortarlo en el estallido (el clip dura más que el choque).
+& ambiente LUCHA_FINAL eventKey=SFX_Prologo_LuchaFinal volumen=0.55
 & vfx Assets/_VFX/Prologo/Piloto/Choque.prefab en=encuentro_hechizos lifetime=2.5
 & vfx Assets/_VFX/Prologo/Piloto/Forcejeo.prefab en=encuentro_hechizos lifetime=8 registrarComo=FORCEJEO
-+0.2 sacudida 0.5 3.4
-+2.0 efecto LineasDeConcentracionBeat mostrar=true duracion=3.5
-espera 3.6
-# Más cerca del choque, a la vista.
-plano general archimago mago desde=cam_choque altura=1.6 mira=foco_choque lente=52
-espera 1.6
+& efecto LineasDeConcentracionBeat mostrar=true duracion=2.4
++0.2 sacudida 0.5 2.2
+espera 1.3
 # Por detrás del Archimago, como el plano del grito: su orbe contra el agujero, hasta el estallido.
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=3.2 altura=0.9 lente=52 mano=0.5
-espera 1.8
+espera 1.12
 
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
 # Estallido con estruendo; los dos salen despedidos cada uno hacia su lado y la pantalla se va
@@ -1001,6 +997,7 @@ vfx Assets/_VFX/Prologo/Piloto/Choque.prefab en=encuentro_hechizos lifetime=3
 & sonido Prologue_WarClashStinger_A
 & efecto RecogerVfxBeat ids=CARGA_CRECE|CIRCULO_PLEGARIA|FORCEJEO
 & ambiente AGUJERO_NEGRO sonar=false fundido=0.3
+& ambiente LUCHA_FINAL sonar=false fundido=0.3
 +0.05 archimago reposo
 +0.05 archimago bucle Die01_NoWeapon congela
 +0.05 archimago desliza a arch_despedido_aire dura=0.45 seco mirando=mago
@@ -1013,11 +1010,12 @@ espera 4.1
 
 @explosion
 efecto RecogerVfxBeat ids=CARGA_ESFERA|BOLA_PROTECTORA
-efecto MezclaBeat fuente=grito quitar=true fundido=0.6
+# Fundido largo: con uno corto el estallido, que sigue sonando, subía de golpe 3 dB y parecía otro sonido.
+efecto MezclaBeat fuente=grito quitar=true fundido=4
 ambiente TORMENTA sonar=false fundido=0.2
 +0.2 hora Morning immediate=true esLaHoraDeVolver=true
-# Con la pantalla ya blanca, la música se va despacio y no queda ningún SFX largo que se cuele en
-# la habitación de Will.
+# Con la pantalla ya blanca, la música se va despacio. El estallido (13,5 s, con su cola de eco) sigue sonando al
+# destaparse la habitación de Will y se apaga solo; ningún otro SFX largo se cuela en ella.
 silencio 2.0
 espera 2.4
 bandas quita

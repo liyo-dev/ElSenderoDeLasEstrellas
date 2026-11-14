@@ -55,8 +55,7 @@ public class MagicProjectileSpawner : MonoBehaviour
     // para que no se queden pegados a la mano.
     private readonly List<GameObject> _chargingProjectiles = new List<GameObject>();
 
-    // Vuelo y sprint se leen como SprintVFXController: parámetros del Animator de Invector y
-    // PlayerFlyingController.
+    // Vuelo y sprint se leen de los parámetros del Animator de Invector y de PlayerFlyingController.
     private Animator _animator;
     private PlayerFlyingController _flyingController;
     private static readonly int HashInputMagnitude = Animator.StringToHash("InputMagnitude");

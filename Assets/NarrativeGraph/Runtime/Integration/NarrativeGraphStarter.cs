@@ -51,8 +51,13 @@ public class NarrativeGraphStarter : MonoBehaviour
         // que el grafo empiece a ejecutar nodos.
         yield return null;
 
-        // Esperar hasta que el Hub esté disponible
-        while (NarrativeGraphHub.Instance == null)
+#if UNITY_EDITOR
+        // «Probar desde un paso» del editor arranca él mismo el grafo en ese paso.
+        if (NarrativeQuickStart.Active) yield break;
+#endif
+
+        // Esperar hasta que el Hub esté disponible (un grafo local no lo necesita).
+        while (localRunner == null && NarrativeGraphHub.Instance == null)
         {
             yield return null;
         }

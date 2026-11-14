@@ -65,11 +65,16 @@ public static class PruebaDeLaHistoria
                 var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>($"Assets/NarrativeGraph/{p[1]}.asset");
                 var cfg = NarrativeTestConfig.Load();
                 cfg.graphLabel = p[1];
-                cfg.spawnAnchorId = p.Length > 3 ? p[3] : cfg.spawnAnchorId;
-                cfg.grupoCompleto = p.Length > 4 && p[4] == "grupo";
-                cfg.abilityMagic = cfg.abilityJump = cfg.abilitySprint = cfg.abilityShield = cfg.abilitySwim = true;
                 cfg.fastForward = true;
-                bool ok = NarrativeTestLauncher.Launch(grafo, p[2], cfg, out var status, out var prev);
+                string ancla = p.Length > 3 ? p[3] : null;
+                bool grupo = p.Length > 4 && p[4] == "grupo";
+                bool ok = NarrativeTestLauncher.Launch(grafo, p[2], cfg, out var status, out var prev, preset =>
+                {
+                    if (!string.IsNullOrEmpty(ancla)) preset.spawnAnchorId = ancla;
+                    if (grupo) preset.partyMemberIds = new List<string> { "_ESTELA", "_LIAM" };
+                    preset.abilities ??= new PlayerAbilities();
+                    preset.abilities.magic = preset.abilities.jump = preset.abilities.sprint = preset.abilities.shield = preset.abilities.swim = true;
+                });
                 s_log.Clear();
                 return (ok ? "OK " : "NO ") + status + (prev.warnings.Count > 0 ? " · avisos: " + string.Join(" | ", prev.warnings) : "");
             }

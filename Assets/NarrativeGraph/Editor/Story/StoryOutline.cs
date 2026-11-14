@@ -3,7 +3,8 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// Left panel: the chapter as an index (sections → numbered steps) and its test points.
+    /// Panel izquierdo: el capítulo como índice (secciones → pasos numerados; los puntos de arranque
+    /// llevan ◆) y su vocabulario. Con un paso elegido, su camino se marca y el resto se apaga.
     public sealed class StoryOutline : VisualElement
     {
         public event Action<NarrativeNode> StepClicked;
@@ -20,7 +21,6 @@ namespace NarrativeGraphEditor.Story
         readonly Label _title;
         readonly Label _count;
         readonly ScrollView _list;
-        readonly VisualElement _checkpoints;
 
         public StoryOutline()
         {
@@ -75,10 +75,6 @@ namespace NarrativeGraphEditor.Story
             _words.AddToClassList("story-outline__list");
             Add(_words);
             ShowWords(false);
-
-            _checkpoints = new VisualElement();
-            _checkpoints.AddToClassList("story-outline__checkpoints");
-            Add(_checkpoints);
         }
 
         void ShowWords(bool words)
@@ -129,7 +125,6 @@ namespace NarrativeGraphEditor.Story
             _graph = graph;
             if (_showWords) RefreshWords();
             _list.Clear();
-            _checkpoints.Clear();
             _title.text = graph != null ? graph.name : "—";
             if (graph == null || structure == null) { _count.text = string.Empty; return; }
 
@@ -137,6 +132,7 @@ namespace NarrativeGraphEditor.Story
             foreach (var section in structure.Sections) steps += section.Steps.Count;
             _count.text = StoryText.T($"{steps} pasos · {structure.Sections.Count} secciones", $"{steps} steps · {structure.Sections.Count} sections");
 
+            VisualElement selectedRow = null;
             foreach (var section in structure.Sections)
             {
                 var head = new VisualElement();
@@ -153,34 +149,30 @@ namespace NarrativeGraphEditor.Story
                 _list.Add(head);
 
                 foreach (var step in section.Steps)
-                    _list.Add(Row(step, structure.Number(step), step == selected, onPath != null && onPath(step)));
+                {
+                    var row = Row(step, structure.Number(step), step == selected, onPath != null && onPath(step), selected != null);
+                    _list.Add(row);
+                    if (step == selected) selectedRow = row;
+                }
             }
 
-            bool anyCheckpoint = false;
-            foreach (var node in structure.StoryOrder)
-            {
-                if (node is not CheckpointNode) continue;
-                if (!anyCheckpoint)
-                {
-                    var t = new Label(StoryText.T("PUNTOS DE PRUEBA", "TEST POINTS"));
-                    t.AddToClassList("story-kicker");
-                    _checkpoints.Add(t);
-                    anyCheckpoint = true;
-                }
-                _checkpoints.Add(Row(node, structure.Number(node), node == selected, false));
-            }
+            // El índice baja solo hasta el paso elegido.
+            if (selectedRow != null)
+                _list.schedule.Execute(() => { if (_list.contentContainer.Contains(selectedRow)) _list.ScrollTo(selectedRow); }).StartingIn(30);
         }
 
-        VisualElement Row(NarrativeNode node, string number, bool selected, bool onPath)
+        VisualElement Row(NarrativeNode node, string number, bool selected, bool onPath, bool anySelected)
         {
             var row = new Button(() => StepClicked?.Invoke(node));
             row.AddToClassList("story-outline__row");
             row.EnableInClassList("is-selected", selected);
-            row.EnableInClassList("is-on-path", onPath);
+            row.EnableInClassList("is-on-path", onPath && !selected);
+            row.EnableInClassList("is-off-path", anySelected && !onPath && !selected);
             var num = new Label(number);
             num.AddToClassList("story-outline__row-number");
             row.Add(num);
-            var title = new Label(string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node.GetType()) : node.displayTitle);
+            var name = string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node.GetType()) : node.displayTitle;
+            var title = new Label(node is CheckpointNode ? "◆ " + name : name) { tooltip = name };
             title.AddToClassList("story-outline__row-title");
             row.Add(title);
             return row;

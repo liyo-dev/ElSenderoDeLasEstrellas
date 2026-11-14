@@ -6,7 +6,7 @@
 import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Prendas"))
-import ropa_lib as rl
+import ropa_lib as rl, taller as tl
 args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 bpy.ops.wm.open_mainfile(filepath=BASE)
@@ -19,94 +19,22 @@ COLORES = {
     "CueroOscuro": (0.2, 0.12, 0.07, 1), "Metal": (0.72, 0.74, 0.78, 1), "Capa": (0.2, 0.36, 0.24, 1), "CapaForro": (0.14, 0.24, 0.17, 1),
     "Panuelo": (0.55, 0.78, 0.95, 1), "Pantalon": (0.25, 0.27, 0.22, 1), "Laton": (0.8, 0.62, 0.25, 1),
 }
-MAT = {}
-for n, c in COLORES.items():
-    m = bpy.data.materials.new(n); m.use_nodes = True
-    m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = c
-    m.diffuse_color = c; MAT[n] = m
 
-GRUPOS = {"traje": []}
-def nueva(grupo, nombre, bm, mat, pesos=None, grosor=0.0):
-    me = bpy.data.meshes.new(nombre); bm.to_mesh(me); bm.free()
-    o = bpy.data.objects.new(nombre, me); bpy.context.scene.collection.objects.link(o)
-    o.data.materials.append(MAT[mat])
-    for p in o.data.polygons: p.use_smooth = True
-    if grosor:
-        s = o.modifiers.new("Grosor", 'SOLIDIFY'); s.thickness = grosor; s.offset = 1
-    GRUPOS[grupo].append((o, pesos)); return o
 
-def transformar(bm, centro, escala, rot):
-    M = Matrix.Translation(centro) @ Euler(rot).to_matrix().to_4x4() @ Matrix.Diagonal((*escala, 1))
-    bmesh.ops.transform(bm, matrix=M, verts=bm.verts)
 
-def esfera(g, nombre, centro, escala, mat, pesos, rot=(0, 0, 0)):
-    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=14, radius=1)
-    transformar(bm, centro, escala, rot); return nueva(g, nombre, bm, mat, pesos)
 
-def toro(g, nombre, centro, mayor, menor, mat, pesos, rot=(0, 0, 0), escala=(1, 1, 1)):
-    bpy.ops.mesh.primitive_torus_add(major_radius=mayor, minor_radius=menor, major_segments=28, minor_segments=10)
-    t = bpy.context.object; bm = bmesh.new(); bm.from_mesh(t.data); bpy.data.objects.remove(t)
-    transformar(bm, centro, escala, rot); return nueva(g, nombre, bm, mat, pesos)
 
-def torno(g, nombre, perfil, mat, pesos=None, seg=40, elip=0.92, cy=-0.01, onda=0.0, n_onda=8, grosor=0.0, abierto=None):
-    """abierto=(a0, a1): deja sin cerrar ese arco (radianes, 0 = +X, π/2 = +Y atrás) — para la capa."""
-    bm = bmesh.new(); filas = []
-    for f, (z, r) in enumerate(perfil):
-        u = f / max(1, len(perfil) - 1)
-        fila = []
-        for k in range(seg + (1 if abierto else 0)):
-            if abierto: a = abierto[0] + (abierto[1] - abierto[0]) * k / seg
-            else: a = 2*math.pi*k/seg
-            rr = r * (1 + onda * u * math.sin(n_onda * a))
-            fila.append(bm.verts.new((math.cos(a) * rr, cy + math.sin(a) * rr * elip, z)))
-        filas.append(fila)
-    n = len(filas[0])
-    for f in range(len(filas) - 1):
-        for k in range(n if not abierto else n - 1):
-            cara = (filas[f][k], filas[f][(k+1) % n], filas[f+1][(k+1) % n], filas[f+1][k])
-            bm.faces.new(cara if perfil[0][0] < perfil[-1][0] else cara[::-1])   # siempre hacia fuera (en Unity no se pinta el revés)
-    return nueva(g, nombre, bm, mat, pesos, grosor)
 
-def tubo(g, nombre, puntos, radios, mat, pesos, seg=14, cerrar=True):
-    """Tubo a lo largo de una curva de puntos, con su radio en cada punto (mechones, coleta)."""
-    bm = bmesh.new(); filas = []
-    pts = [Vector(p) for p in puntos]
-    if len(radios) != len(pts):   # se reparten los radios a lo largo del tubo
-        radios = [radios[min(len(radios)-1, round(i * (len(radios)-1) / max(1, len(pts)-1)))] for i in range(len(pts))]
-    # Marco que se transporta a lo largo de la curva (sin giros bruscos que retuerzan el tubo)
-    t_ant = None; a = None
-    for i, p in enumerate(pts):
-        t = (pts[min(i+1, len(pts)-1)] - pts[max(i-1, 0)]).normalized()
-        if a is None: a = Vector((1, 0, 0)) if abs(t.x) < 0.9 else Vector((0, 1, 0)); a = (a - t * a.dot(t)).normalized()
-        else: a = (t_ant.rotation_difference(t) @ a); a = (a - t * a.dot(t)).normalized()
-        t_ant = t; b = t.cross(a)
-        filas.append([bm.verts.new(p + (a * math.cos(2*math.pi*k/seg) + b * math.sin(2*math.pi*k/seg)) * radios[i]) for k in range(seg)])
-    for f in range(len(filas) - 1):
-        for k in range(seg):
-            bm.faces.new((filas[f][k], filas[f][(k+1) % seg], filas[f+1][(k+1) % seg], filas[f+1][k]))
-    if cerrar:
-        for fila, inv in ((filas[0], True), (filas[-1], False)):
-            c = bm.verts.new(sum((v.co for v in fila), Vector()) / len(fila))
-            for k in range(seg):
-                tri = (c, fila[k], fila[(k+1) % seg]); bm.faces.new(tri if not inv else tri[::-1])
-    return nueva(g, nombre, bm, mat, pesos)
 
 def curva(p0, p1, p2, n):
     return [tuple((1-u)**2 * Vector(p0) + 2*(1-u)*u * Vector(p1) + u*u * Vector(p2)) for u in (i/(n-1) for i in range(n))]
 
 
-def caja(g, nombre, centro, medidas, mat, pesos, rot=(0, 0, 0)):
-    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1)
-    transformar(bm, centro, medidas, rot); o = nueva(g, nombre, bm, mat, pesos)
-    for p in o.data.polygons: p.use_smooth = False
-    return o
 
 
-def caja(g, nombre, centro, medidas, mat, pesos, rot=(0, 0, 0)):
-    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1)
-    transformar(bm, centro, medidas, rot); o = nueva(g, nombre, bm, mat, pesos)
-    for p in o.data.polygons: p.use_smooth = False
-    return o
+T = tl.Taller(COLORES, grupos=('traje',))   # funciones de modelado comunes (../Prendas/taller.py)
+MAT, GRUPOS = T.mat, T.grupos
+nueva, transformar, esfera, toro, torno, tubo, caja = T.nueva, T.transformar, T.esfera, T.toro, T.torno, T.tubo, T.caja
 R = math.radians
 # ── Camisa y peto de cuero ──
 torno("traje", "Camisa", [(0.725, 0.14), (0.67, 0.192), (0.58, 0.2), (0.5, 0.19), (0.45, 0.19), (0.4, 0.2)], "Camisa", grosor=0.008)
@@ -171,13 +99,11 @@ for o, _ in GRUPOS["traje"]:
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
 rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm)
+tl.revisar_antes_de_exportar([x for g in GRUPOS.values() for x in g], cuerpo, arm)
 # Lo del cuerpo de debajo que queda tapado por la ropa se quita (después de copiar los pesos: la ropa los
 # toma del cuerpo entero). Del Body05 solo quedan las manos y el torso.
-bm = bmesh.new(); bm.from_mesh(cuerpo.data)
-mw = cuerpo.matrix_world
-fuera = [v for v in bm.verts if (mw @ v.co).z < 0.42 or (0.19 < abs((mw @ v.co).x) < 0.455 and (mw @ v.co).z > 0.55)]
-bmesh.ops.delete(bm, geom=fuera, context='VERTS')
-bm.to_mesh(cuerpo.data); bm.free()
+# Los cortes se tapan con «Pantalon»: es lo que se ve desde abajo por el bajo de la ropa (ver chequeo_huecos.py).
+T.quitar_lo_tapado(cuerpo, lambda p: p.z < 0.42 or (0.19 < abs(p.x) < 0.455 and p.z > 0.55), "Pantalon")
 cuerpo.name = "Body28_GuerreraLigera"   # el cuerpo de debajo va dentro: manos y torso
 unir(GRUPOS["traje"], "Body28_GuerreraLigera", extra=cuerpo)
 bpy.ops.wm.save_as_mainfile(filepath=SALIDA)

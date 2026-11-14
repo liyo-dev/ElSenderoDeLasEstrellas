@@ -1,12 +1,13 @@
 # Chequeo de choques de un personaje hecho en Blender, en movimiento.
 #
 # Mueve el personaje con animaciones reales del pack (andar, correr, idle, hablar, saludar, victoria) y con poses
-# de gesto (brazos bajados, cruzados, mano al frente, brazos arriba) y mide fotograma a fotograma:
+# de gesto (brazos bajados, cruzados, mano al frente, brazos arriba, manos juntas delante del pecho) y mide fotograma a fotograma:
 #   - DESGARRO: aristas de ropa que se estiran mucho respecto al reposo (tela que se rasga o se abre).
 #   - ASOMA: puntos del cuerpo de referencia que en reposo estaban tapados por la ropa y en la pose quedan fuera
 #     (pierna que sale por el faldón, brazo que atraviesa la manga, cráneo que asoma por el pelo).
 #   - SE MUETE: piezas de ropa que se hunden dentro de otra pieza o del cuerpo más que en reposo
 #     (manga dentro del costado, puño dentro del pecho, capa dentro de la manga).
+#     Un puño o una boca de manga metidos en el tronco (pelvis, spine) no se perdonan: se ven cortados.
 #   - SUELTA: piezas que se separan de la pieza a la que van pegadas (aros de puño, capa, coleta).
 # Saca un informe (texto y json) y una hoja de fotos con lo peor de cada cosa marcado en rojo.
 #
@@ -115,6 +116,8 @@ POSES = {
     "mano_al_frente": [("upperarm", 'Y', 62), ("upperarm", 'X', 45), ("lowerarm", 'X', 55)],
     "brazos_cruzados": [("upperarm", 'Y', 68), ("upperarm", 'X', 28), ("lowerarm", 'Z', -95)],
     "brazos_arriba": [("upperarm", 'Y', -55), ("upperarm", 'X', 20)],
+    # manos juntas delante del pecho (conjurar, sostener algo): los puños y bocas de manga rozan la tripa y el pecho
+    "manos_juntas": [("upperarm", 'Y', 60), ("upperarm", 'X', -45), ("lowerarm", 'X', -50), ("lowerarm", 'Z', -80)],
 }
 def poner_pose(nombre):
     pose_reposo()
@@ -317,6 +320,10 @@ resumen = {"desgarro": {}, "asoma": {}, "se_mete": {}, "suelta": {}}
 for f, r in resultados:
     for k in resumen:
         for nombre, val in r[k].items():
+            # un puño contra la cadera con el brazo caído a propósito no es un choque que se vea
+            if (k == "se_mete" and r["pose"].startswith(("brazos_bajados",)) and isinstance(val, dict)
+                    and any(w in nombre.lower() for w in ("puno", "puño", "brazal", "muñequera"))
+                    and any(h in val.get("en", "") for h in ("pelvis", "spine"))): continue
             peso = val if isinstance(val, int) else next(iter(val.values()))
             pose = r["pose"] + (f", dentro de {val['en']}" if isinstance(val, dict) and "en" in val else "")
             prev = resumen[k].get(nombre)
@@ -327,10 +334,20 @@ titulos = {"desgarro": "Tela que se rasga (aristas estiradas)", "asoma": "Cuerpo
            "se_mete": "Piezas que se meten dentro de otra (puntos)", "suelta": "Piezas que se separan (cm)"}
 total = graves = 0
 tam = {p.nombre: len(p.idx) for p in ropa_piezas}
+PIEZAS_DE_PUNO = ("puno", "puño", "brazal", "muñequera")
+POSES_BRAZO_PEGADO = ("brazos_bajados",)   # el brazo descansa sobre la cadera a propósito: ahí no cuenta
+HUESOS_DE_TRONCO = ("pelvis", "spine")
+def puno_en_el_tronco(k, nombre, pose):
+    """Puño o boca de manga metido en el tronco: no se perdona como «manos sobre la tripa» (el aro se ve cortado)."""
+    return (k == "se_mete" and any(p in nombre.lower() for p in PIEZAS_DE_PUNO)
+            and any(f"dentro de cuerpo/{h}" in pose for h in HUESOS_DE_TRONCO))
 def es_grave(k, nombre, peso, pose):
     f = 2 if any(pose.startswith(a) for a in ANIMS_CORRER) else 1
     if k == "desgarro": return peso > GRAVE_DESGARRO * f
     if k == "asoma": return peso > GRAVE_ASOMA * f
+    if k == "se_mete" and puno_en_el_tronco(k, nombre, pose):
+        if pose.startswith(POSES_BRAZO_PEGADO): return False
+        return peso > SE_METE_PARTE * f * tam.get(nombre, 1e9)
     if k == "se_mete": return "dentro de cuerpo" not in pose and peso > GRAVE_SE_METE * tam.get(nombre, 1e9)
     return k == "suelta"
 for k, t in titulos.items():

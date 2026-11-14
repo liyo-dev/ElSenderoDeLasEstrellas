@@ -51,7 +51,8 @@ public static class Cap2MananaDespues
         item.displayName = "Trozo del aro";
         item.useDescriptionId = "ITEM_TROZO_DEL_ARO_DESC";
         item.useDescription = "Un pedazo del aro de runas del demonio. Eldran guardó el resto en el cofre de sal.";
-        item.icon = AssetDatabase.LoadAssetAtPath<ItemData>("Assets/_ITEMS/IT_Key.asset").icon;
+        // Su propio icono de dibujo (antes se copiaba el de la llave: en este mundo no hay llaves). Ver INC-1162.
+        item.icon = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Items/trozo_del_aro.png");
         item.usableFromInventory = false;
         item.usageKind = ItemData.ItemUsageKind.Quest;
         item.buyPrice = item.sellValue = 0;
@@ -185,8 +186,9 @@ public static class Cap2MananaDespues
             new PlaceActorNode { actorId = "NPC_Eldran", markId = Cap2EldranYAroINC962.MarcaEldran, showActor = true },
             new GiveInventoryItemNode { item = item, amount = 1, onlyOnce = true },
             new StartQuestNode { questId = quest.questId, giverId = "NPC_Eldran", inProgressDialogue = dialogo },
-            new CheckpointNode { checkpointId = "CAP2_MANANA_DESPUES", spawnAnchorId = "Bedroom", sceneName = "WillHouse" }
+            new CheckpointNode { checkpointId = "CAP2_MANANA_DESPUES" }
         };
+        Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla((CheckpointNode)tramo[8], "Bedroom");
         string[] titulos = { "7.- Amanece tras la noche", "8.- Carga la habitación de Will", "9.- Will vuelve a WillHouse · Bedroom",
             "10.- Eldran entra en la habitación", "11.- La mañana después (SEQ_MananaDespues)", "12.- Eldran espera junto a la casa de Will (sale en la cinemática)", "13.- Trozo del aro", "14.- Prepárate para el viaje", "15.- Cap. 2 · La mañana después" };
         for (int i = 0; i < tramo.Length; i++)

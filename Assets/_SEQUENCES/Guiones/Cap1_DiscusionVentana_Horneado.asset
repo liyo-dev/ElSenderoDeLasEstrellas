@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Cap1_DiscusionVentana
   duracion: 18.901224
   presentacion: 1
-  huella: "2026-11-12 07:30 \xB7 75bc82ee560958eba668df000a9b04a6"
+  huella: "2026-11-13 22:28 \xB7 756a144b411990be4ed3420f9977e4cf"
   actores:
   - id: Player
     alias: will
@@ -158,7 +158,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1333598
+    alturaDelFoco: 1.1333597
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -189,31 +189,31 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705342
+      rid: 6540294592641368666
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.5
     beat:
-      rid: 6540294555676705343
-    linea: 35
+      rid: 6540294592641368667
+    linea: 36
   - onlyIfFlag: 
     skipIfFlag: 
     t: 4.4
     beat:
-      rid: 6540294555676705344
-    linea: 36
+      rid: 6540294592641368668
+    linea: 37
   - onlyIfFlag: 
     skipIfFlag: 
     t: 8.2
     beat:
-      rid: 6540294555676705345
-    linea: 40
+      rid: 6540294592641368669
+    linea: 41
   - onlyIfFlag: 
     skipIfFlag: 
     t: 18.901224
     beat:
-      rid: 6540294555676705346
+      rid: 6540294592641368670
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -235,7 +235,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705342
+    - rid: 6540294592641368666
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -243,67 +243,73 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705343
+    - rid: 6540294592641368667
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         presentacion: 0
-        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
         expresiones: []
         oyentes: []
         reaccionDeOyentes: 1
         actorId: 
         markName: VentanaIzq
+        fueraDeEscena: 1
+        retrato: {fileID: 0}
         textKey: HOOK_DISCUSION_01
         voiceKey: 
         pageDuration: 2.6
         gesture: 
         gestureRepeats: 1
-        speakerNameKey: 
+        speakerNameKey: Eldran
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 6540294555676705344
+    - rid: 6540294592641368668
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         presentacion: 0
-        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        colorDelNombre: {r: 0.9490196, g: 0.654902, b: 0.78431374, a: 1}
         expresiones: []
         oyentes: []
         reaccionDeOyentes: 1
         actorId: 
         markName: VentanaDcha
+        fueraDeEscena: 1
+        retrato: {fileID: 0}
         textKey: HOOK_DISCUSION_02
         voiceKey: 
         pageDuration: 2.6
         gesture: 
         gestureRepeats: 1
-        speakerNameKey: 
+        speakerNameKey: Victoria
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 6540294555676705345
+    - rid: 6540294592641368669
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         presentacion: 0
-        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
         expresiones: []
         oyentes: []
         reaccionDeOyentes: 1
         actorId: 
         markName: VentanaIzq
+        fueraDeEscena: 1
+        retrato: {fileID: 0}
         textKey: HOOK_DISCUSION_03
         voiceKey: 
         pageDuration: 2.6
         gesture: 
         gestureRepeats: 1
-        speakerNameKey: 
+        speakerNameKey: Eldran
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 6540294555676705346
+    - rid: 6540294592641368670
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

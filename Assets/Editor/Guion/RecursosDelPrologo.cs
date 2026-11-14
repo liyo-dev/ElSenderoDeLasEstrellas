@@ -74,7 +74,7 @@ public static class RecursosDelPrologo
     };
 
     /// Músicas propias de cinemáticas (reglas de secuencia del perfil de audio; suenan una vez).
-    /// PROLOGO_CLIMAX: la plegaria, el grito y el estallido, montada a medida (golpe a los 48,4 s). Ver INC-940.
+    /// PROLOGO_CLIMAX: la plegaria, el grito y el estallido, montada a medida (golpe a los 43,8 s). Ver INC-940.
     private static readonly (string id, string ruta, float fadeIn, float fadeOut)[] Musicas =
     {
         ("PROLOGO_CLIMAX", "Assets/Audio/Music/Cinematicas/Protegelos a todos (climax del prologo).mp3", 0.3f, 2f),

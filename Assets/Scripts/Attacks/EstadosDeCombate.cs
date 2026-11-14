@@ -37,6 +37,8 @@ public class EstadosDeCombate : MonoBehaviour
     private Vector3 _pullCenter;
     private float _pushUntil, _pushSpeed;
     private Vector3 _pushCenter;
+    private float _stunUntil, _sleepUntil;
+    private Damageable _damageable;
 
     private Vector3 _frameStart;
     private bool _frameValid;
@@ -50,6 +52,16 @@ public class EstadosDeCombate : MonoBehaviour
     public bool EstaInmovilizado => Time.time < _rootUntil;
     public bool EstaSiendoAtraido => Time.time < _pullUntil;
     public bool EstaSiendoEmpujado => Time.time < _pushUntil;
+    public bool EstaAturdido => Time.time < _stunUntil;
+    public bool EstaDormido => Time.time < _sleepUntil;
+    /// <summary>
+    /// Aturdido o dormido: no puede moverse ni atacar. Aquí solo se para el movimiento; la IA que
+    /// sepa de estados (NPCCombatBrain) deja de decidir y pone su animación. Ver INC-1165.
+    /// </summary>
+    public bool EstaIncapacitado => EstaAturdido || EstaDormido;
+
+    /// <summary>¿Está incapacitado el que lleva este objeto? (sin crear el componente si no lo tiene).</summary>
+    public static bool Incapacitado(GameObject go) => go != null && go.TryGetComponent(out EstadosDeCombate e) && e.isActiveAndEnabled && e.EstaIncapacitado;
 
     /// <summary>
     /// Pone un estado al enemigo de ese Damageable. 'fuerza': para ralentizar, la fracción de
@@ -79,6 +91,10 @@ public class EstadosDeCombate : MonoBehaviour
     {
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponentInChildren<Animator>();
+
+        _damageable = GetComponent<Damageable>() ?? GetComponentInParent<Damageable>() ?? GetComponentInChildren<Damageable>();
+        // Dormido, un golpe le despierta.
+        if (_damageable != null) _damageable.OnDamaged += AlRecibirDano;
 
         int boss = LayerMask.NameToLayer("Boss");
         _esJefe = boss >= 0 && gameObject.layer == boss;
@@ -113,6 +129,13 @@ public class EstadosDeCombate : MonoBehaviour
                 _pushSpeed = Mathf.Max(0f, fuerza);
                 _pushUntil = Mathf.Max(_pushUntil, hasta);
                 break;
+            case EstadoDeCombate.Aturdir:
+                _stunUntil = Mathf.Max(_stunUntil, hasta);
+                break;
+            case EstadoDeCombate.Dormir:
+                _sleepUntil = Mathf.Max(_sleepUntil, hasta);
+                _dormidoDesde = Time.time;
+                break;
         }
 
         if (vfx != null && (!_vfx.TryGetValue(estado, out var go) || go == null))
@@ -128,6 +151,19 @@ public class EstadosDeCombate : MonoBehaviour
         }
     }
 
+    private float _dormidoDesde;
+
+    // El golpe que le duerme llega antes que el estado; los siguientes le despiertan.
+    private void AlRecibirDano(float cantidad)
+    {
+        if (EstaDormido && Time.time - _dormidoDesde > 0.1f) _sleepUntil = 0f;
+    }
+
+    private void OnDestroy()
+    {
+        if (_damageable != null) _damageable.OnDamaged -= AlRecibirDano;
+    }
+
     private void Update()
     {
         _frameStart = transform.position;
@@ -136,7 +172,10 @@ public class EstadosDeCombate : MonoBehaviour
 
     private void LateUpdate()
     {
-        bool slow = EstaRalentizado, root = EstaInmovilizado, pull = EstaSiendoAtraido, push = EstaSiendoEmpujado;
+        bool incapacitado = EstaIncapacitado;
+        bool slow = EstaRalentizado, root = EstaInmovilizado || incapacitado, pull = EstaSiendoAtraido, push = EstaSiendoEmpujado;
+        if (!EstaAturdido) ClearVfx(EstadoDeCombate.Aturdir);
+        if (!EstaDormido) ClearVfx(EstadoDeCombate.Dormir);
 
         if (!slow) ClearVfx(EstadoDeCombate.Ralentizar);
         if (!root) ClearVfx(EstadoDeCombate.Inmovilizar);

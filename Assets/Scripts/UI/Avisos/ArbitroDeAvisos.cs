@@ -33,9 +33,11 @@ public static class ArbitroDeAvisos
     }
 
     /// Lo que se apunta al registro de cinemáticas: traduce «escóndete» en silencio con la misma clave.
+    /// Un aviso que despeja la pantalla para lucirse (la presentación de un lugar con su plano) no
+    /// calla a los avisos: se callaría a sí mismo.
     private sealed class SilencioDeCinematica : IOcultableDuranteCinematica
     {
-        public void Ocultar(object quien) => Silenciar(quien);
+        public void Ocultar(object quien) { if (!(quien is IAvisoEnPantalla)) Silenciar(quien); }
         public void Mostrar(object quien) => Reanudar(quien);
     }
 

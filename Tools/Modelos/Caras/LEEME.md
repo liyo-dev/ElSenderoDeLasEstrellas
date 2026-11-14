@@ -75,3 +75,9 @@ Reglas (`hinchar_casquete` de `caras_lib.txt`, usada por `pelo_archimago.py` y `
   `python chequeo_pelo.py -- modular.blend pelo.fbx salida [frente lado nuca] [tope]` → `salida.png` (rojo: piel de la zona del pelo que se ve; negro: revés del pelo) y `salida.md` (PASA / NO PASA).
 - `chequeo_pelo.py` mide también el **parpadeo**: superficies del pelo que miran hacia fuera y tienen otra (del pelo o de la piel) mirando al mismo lado a menos de 2 mm. Tope: 1 % del área. Comprobado con el pelo del Archimago que parpadeaba en el juego (v2, a 0,45 mm de la cabeza): da 5,6 %. Para pelo corto con las orejas a la vista, pasar la línea «lado» por encima de la oreja (`1.19 1.10 0.82`).
 - Protagonistas (13 nov 2026): Will PASA (parpadeo 0,4 %), Liam PASA (0 %), Estela NO PASA (parpadeo 18 %: los mechones de `Hair14_Coleta` se cruzan con las caras de arriba casi a la par; además, un 3,6 % de revés en una vista). Informes en `../<Personaje>/chequeo/pelo.md`.
+
+## Láminas sueltas con grosor (13 nov 2026, INC-1169)
+- `con_grosor(objetos, metros=0.006)` en `caras_lib.txt`: grosor hacia dentro a mechones y flequillos que se separan
+  de la cabeza. Sin él, desde abajo se ve su revés (Unity no lo pinta) y se ve el cielo a través del pelo.
+- Lo usa `pelo_archimago.py` (los cuatro mechones). Comprobar con `../Prendas/chequeo_huecos.py`.
+- Will (`Hair16_Heroe`) no pasa ese chequeo: pendiente.

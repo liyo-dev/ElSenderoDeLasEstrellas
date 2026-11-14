@@ -286,15 +286,19 @@ def casa_de_la_aldea(nombre, teja="TejaTurquesa", carpinteria="Carpinteria", esp
         casa.scale = (-1, 1, 1); aplicar(casa)
     return casa
 
+# Media anchura de las calles de tablas (pasarelas, rellanos y entradas): 2 m de paso, para andar y que
+# la cámara quepa (con 1,4 m se atascaba entre los cabos). Ver INC-1158.
+MEDIO_PASO = 1.0
+
 def pasarela(x0, x1, y, nombre="Pasarela"):
     """Tramo de pasarela de tablas entre dos plataformas, con pilotes y un cabo a cada lado."""
     zp, o = ALTO_PLATAFORMA, []
     n = max(2, int((x1 - x0) / 0.45))
     paso = (x1 - x0) / n
     for i in range(n):
-        o.append(caja(x0 + i * paso + 0.02, x0 + (i + 1) * paso - 0.02, y - 0.7, y + 0.7, zp - 0.14, zp, "Madera" if i % 2 else "MaderaOscura", 0.02))
+        o.append(caja(x0 + i * paso + 0.02, x0 + (i + 1) * paso - 0.02, y - MEDIO_PASO, y + MEDIO_PASO, zp - 0.14, zp, "Madera" if i % 2 else "MaderaOscura", 0.02))
     xm = (x0 + x1) / 2
-    for s in (-0.62, 0.62):
+    for s in (-(MEDIO_PASO - 0.08), MEDIO_PASO - 0.08):
         o.append(poste(xm, y + s, -2.4, zp + 0.9, 0.1, "MaderaOscura", 6))
         o.append(viga((x0, y + s, zp + 0.8), (xm, y + s, zp + 0.62), 0.05, "Cuerda"))
         o.append(viga((xm, y + s, zp + 0.62), (x1, y + s, zp + 0.8), 0.05, "Cuerda"))
@@ -589,20 +593,21 @@ def farol_de_poste(x, y, z, alto=2.2):
             caja(x - 0.17, x + 0.17, y - 0.17, y + 0.17, z + alto + 0.3, z + alto + 0.38, "Hierro", 0.02)]
 
 def rellano(nombre="RellanoDeLaAldea"):
-    """Rellano de descanso de 3 m de calle: la calle pasa a lo largo de X por y entre -0,7 y 0,7 y el rellano
-    se abre 3 m hacia -Y, con banco, farol y barriles. En el borde de -Y queda un paso de 1,4 m para un ramal."""
+    """Rellano de descanso de 3 m de calle: la calle pasa a lo largo de X por y entre -MEDIO_PASO y MEDIO_PASO y
+    el rellano se abre 3 m hacia -Y, con banco, farol y barriles. En el borde de -Y queda un paso de 2 m para un ramal."""
     zp, o = ALTO_PLATAFORMA, []
-    o += tablas(-1.5, 1.5, -3.7, 0.7, zp, 'y')
+    m = MEDIO_PASO
+    o += tablas(-1.5, 1.5, -3.7, m, zp, 'y')
     for x in (-1.3, 1.3):
-        for y in (-3.5, 0.5):
+        for y in (-3.5, m - 0.2):
             o.append(poste(x, y, -2.4, zp - 0.16, 0.15, "MaderaOscura"))
-    for y in (-3.5, -1.5, 0.5):
+    for y in (-3.5, -1.5, m - 0.2):
         o.append(caja(-1.55, 1.55, y - 0.1, y + 0.1, zp - 0.34, zp - 0.16, "MaderaOscura", 0.02))
-    o += baranda((-1.42, 0.62), (1.42, 0.62), zp)
-    o += baranda((-1.42, -0.85), (-1.42, -3.62), zp) + baranda((1.42, -0.85), (1.42, -3.62), zp)
-    o += baranda((-1.42, -3.62), (-0.75, -3.62), zp) + baranda((0.75, -3.62), (1.42, -3.62), zp)
+    o += baranda((-1.42, m - 0.08), (1.42, m - 0.08), zp)
+    o += baranda((-1.42, -m - 0.15), (-1.42, -3.62), zp) + baranda((1.42, -m - 0.15), (1.42, -3.62), zp)
+    o += baranda((-1.42, -3.62), (-m, -3.62), zp) + baranda((m, -3.62), (1.42, -3.62), zp)
     o += banco(-0.95, -2.2, zp, 1.9, 90)
-    o += farol_de_poste(1.42, -0.85, zp + 1.0, 1.3)
+    o += farol_de_poste(1.42, -m - 0.15, zp + 1.0, 1.3)
     o.append(cono(0.95, -3.1, zp, zp + 0.9, 0.36, 0.36, "MaderaOscura", 10))
     o.append(cono(0.95, -3.1, zp + 0.3, zp + 0.4, 0.38, 0.38, "Hierro", 10))
     o.append(cono(0.9, -2.3, zp, zp + 0.4, 0.26, 0.3, "Boya", 8)); o.append(bola((0.9, -2.3, zp + 0.6), 0.32, "Hojas", 2)); o.append(bola((1.0, -2.2, zp + 0.85), 0.14, "Flor"))
@@ -610,7 +615,7 @@ def rellano(nombre="RellanoDeLaAldea"):
 
 def tienda(nombre="TiendaDeLaAldea", toldo="ToldoRojo", teja="TejaTurquesa", zocalo="Zocalo", genero="Pescado"):
     """Tienda sobre pilotes: plataforma de 5,2 × 4,6 m con un quiosco encalado, mostrador y toldo de rayas.
-    Se llega por +Y (hueco de 1,4 m en la barandilla); el quiosco queda al fondo, en -Y."""
+    Se llega por +Y (hueco de 2 m en la barandilla); el quiosco queda al fondo, en -Y."""
     zp, o = ALTO_PLATAFORMA, []
     o += tablas(-2.6, 2.6, -2.3, 2.3, zp, 'y')
     for x in (-2.4, 0.0, 2.4):
@@ -618,7 +623,7 @@ def tienda(nombre="TiendaDeLaAldea", toldo="ToldoRojo", teja="TejaTurquesa", zoc
             o.append(poste(x, y, -2.4, zp - 0.16, 0.16, "MaderaOscura"))
     for y in (-2.1, 0.0, 2.1):
         o.append(caja(-2.65, 2.65, y - 0.1, y + 0.1, zp - 0.34, zp - 0.16, "MaderaOscura", 0.02))
-    o += baranda((-2.52, 2.22), (-0.75, 2.22), zp) + baranda((0.75, 2.22), (2.52, 2.22), zp)
+    o += baranda((-2.52, 2.22), (-MEDIO_PASO, 2.22), zp) + baranda((MEDIO_PASO, 2.22), (2.52, 2.22), zp)
     o += baranda((-2.52, 2.22), (-2.52, -0.6), zp) + baranda((2.52, 2.22), (2.52, -0.6), zp)
     # Quiosco: muro del fondo y costados, mostrador con género, tejado y toldo.
     o.append(caja(-2.3, 2.3, -2.2, -2.02, zp, zp + 2.4, "Cal", 0.04))
