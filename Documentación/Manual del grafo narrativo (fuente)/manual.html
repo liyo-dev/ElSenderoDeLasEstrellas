@@ -48,7 +48,7 @@
     <div><span class="n">6</span><span class="t">Decisiones y memoria</span><span class="d">Datos de partida, contadores, señales, ramas</span><span class="p">9</span></div>
     <div><span class="n">7</span><span class="t">Probar desde cualquier paso</span><span class="d">La pestaña Arranque y los puntos de arranque</span><span class="p">10</span></div>
     <div><span class="n">8</span><span class="t">La ficha del jugador</span><span class="d">Qué datos del jugador puede fijar la historia</span><span class="p">12</span></div>
-    <div><span class="n">9</span><span class="t">Depurar</span><span class="d">Estado al llegar, pausas, señales y avisos</span><span class="p">13</span></div>
+    <div><span class="n">9</span><span class="t">En vivo</span><span class="d">Por dónde va, qué espera y qué no cuadra</span><span class="p">13</span></div>
     <div><span class="n">10</span><span class="t">Conectar tu juego</span><span class="d">Enchufes, servicios básicos y arranque propio</span><span class="p">14</span></div>
     <div><span class="n">11</span><span class="t">Asistente y herramientas</span><span class="d">Chat, textos para traducir, herramientas externas</span><span class="p">16</span></div>
     <div><span class="n">12</span><span class="t">Atajos y preguntas frecuentes</span><span class="d">Para tenerlo a mano</span><span class="p">17</span></div>
@@ -113,7 +113,7 @@
         <div class="card dim" style="left:34mm;top:50mm"><div class="ty" style="color:#A8D8B0">EMITIR SEÑAL</div><div class="ti">Se abre la puerta</div></div>
       </div>
       <div class="side">
-        <div class="tabs"><span class="on">Paso</span><span>Arranque</span><span>Depuración</span></div>
+        <div class="tabs"><span class="on">Paso</span><span>Arranque</span><span>En vivo</span></div>
         <div style="font-weight:700;font-size:8.6pt;color:#F3EEE6">Iniciar misión</div>
         <div style="color:var(--faint);margin-bottom:1.5mm">Arranca la misión en el sistema de misiones del juego.</div>
         <div class="kv"><span class="a">Etiqueta</span><span class="b">La llave perdida</span></div>
@@ -136,7 +136,7 @@
     <div><i>2</i><span><b>Barra.</b> Buscar, estado de avisos, auto-ordenar, asistente, ajustes y ▶ jugar desde el paso elegido.</span></div>
     <div><i>3</i><span><b>Índice.</b> El capítulo por secciones y pasos numerados. El camino hasta el paso elegido va marcado en naranja.</span></div>
     <div><i>4</i><span><b>Lienzo.</b> Las tarjetas y sus conexiones. Con un paso elegido, lo que no es su camino se apaga.</span></div>
-    <div><i>5</i><span><b>Panel.</b> Paso (sus campos), Arranque (cómo empieza la prueba) y Depuración (cómo está la historia al llegar).</span></div>
+    <div><i>5</i><span><b>Panel.</b> Paso (sus campos), Arranque (cómo empieza la prueba) y En vivo (por dónde va y qué no cuadra).</span></div>
   </div>
 
   <div class="note" style="margin-top:6mm">El editor está en español y en inglés: cámbialo en <span class="menu">⚙ › Idioma del editor</span>. Los paneles laterales se ensanchan arrastrando su borde, y el editor recuerda el último paso con el que trabajaste en cada capítulo.</div>
@@ -271,7 +271,7 @@
     <tr><td>Nota</td><td>Un comentario en el lienzo. No hace nada al jugar.</td></tr>
   </table>
 
-  <div class="tip"><b>Cada paso declara lo que deja hecho.</b> Gracias a eso el editor sabe cómo está la historia en cualquier punto sin jugar: qué misiones van, qué datos hay, dónde está cada personaje. Es lo que usan las pestañas Arranque y Depuración.</div>
+  <div class="tip"><b>Cada paso declara lo que deja hecho.</b> Gracias a eso el editor sabe cómo está la historia en cualquier punto sin jugar: qué misiones van, qué datos hay, dónde está cada personaje. Es lo que usan las pestañas Arranque y En vivo.</div>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>8</b></span></div>
 </section>
 
@@ -317,7 +317,7 @@
   <div class="two" style="margin-top:5mm">
     <div class="ui" style="font-size:7pt">
       <div class="side" style="padding:3mm">
-        <div class="tabs"><span>Paso</span><span class="on">Arranque</span><span>Depuración</span></div>
+        <div class="tabs"><span>Paso</span><span class="on">Arranque</span><span>En vivo</span></div>
         <div class="kick">ASÍ EMPIEZA LA PRUEBA</div>
         <div style="font-weight:700;font-size:8.6pt;color:#F3EEE6"><span style="color:var(--accent)">3.2</span> La tormenta</div>
         <div style="color:var(--faint);margin-bottom:1mm">Capítulos anteriores, ya terminados: Prólogo.</div>
@@ -343,7 +343,7 @@
         <li><b style="color:#E0682F">◆ 2.1</b>: lo fija el punto de arranque 2.1. Pulsa para ir a él (si es de otro capítulo, lo abre).</li>
         <li><b style="color:#C9902E">Retoque</b>: lo has cambiado tú para esta prueba.</li>
       </ul>
-      <p><b>Partida</b> son las filas que añade tu juego: en qué escena se entra, cómo, y avisos. <b>Historia hasta aquí</b> resume lo que se reconstruye; lo ves entero en Depuración.</p>
+      <p><b>Partida</b> son las filas que añade tu juego: en qué escena se entra, cómo, y avisos. <b>Historia hasta aquí</b> resume lo que se reconstruye; lo ves entero en En vivo.</p>
       <p>Si varias ramas llegan al paso, sale <b>Por dónde vienes</b>: elige la rama y el resumen se rehace.</p>
     </div>
   </div>
@@ -407,36 +407,34 @@
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>12</b></span></div>
 </section>
 
-<!-- 9 DEPURAR -->
+<!-- 9 EN VIVO -->
 <section class="page">
   <div class="chapnum">CAPÍTULO 9</div>
-  <h1 class="chap">Depurar</h1>
-  <p class="lead">Cuando algo no sale como esperas: ¿qué debería estar pasando, y qué está pasando de verdad?</p>
+  <h1 class="chap">En vivo</h1>
+  <p class="lead">Tres preguntas cuando algo no sale como esperas: ¿por dónde va la historia?, ¿qué no cuadra?, ¿cómo debería estar todo aquí?</p>
 
-  <h2>La pestaña Depuración</h2>
-  <p>Enseña el <b>estado al llegar</b> al paso elegido: personajes y dónde están, misiones, objetos, datos de partida, contadores y señales ya emitidas. Cada fila dice qué paso la dejó así; púlsalo para ir a él (o al capítulo anterior que lo hizo).</p>
+  <h2>La pestaña En vivo</h2>
   <ul>
-    <li><b>Según el grafo:</b> lo que dicen los pasos, sin jugar.</li>
-    <li><b>En la partida (Play):</b> si el juego está en ese paso, lo compara con la partida y marca las diferencias. Una diferencia significa que un paso hace algo que no declara, o que algo de fuera del grafo lo cambió.</li>
-    <li><b>Abrir el monitor de señales:</b> las señales según se emiten y quién las espera, en directo.</li>
+    <li><b>Por dónde va</b> (en Play): el paso de cada capítulo en marcha y <b>qué está esperando</b>, por ejemplo «Esperando: que hables con Ana». Casi siempre que una historia se atasca es porque espera algo que no llega. Pulsa la fila para ir al paso.</li>
+    <li><b>No cuadra</b> (en Play): arriba del todo, en rojo, lo que el grafo dice que debería haber y la partida no tiene. Por ejemplo: «Ana en Muelle · en la partida: no está en la escena». Cada fila dice qué paso lo debería haber hecho.</li>
+    <li><b>Al llegar aquí debería…</b>: personajes, misiones, objetos, datos y señales, cada uno con el paso que lo deja así. En Play, con ✓ lo que coincide.</li>
   </ul>
+  <p>En Play la pestaña sigue sola al paso en el que va el juego y se actualiza cada segundo. Fuera de Play enseña el paso que elijas.</p>
+  <p><b>Copiar como texto</b> copia el mismo informe que lee el asistente, para pegarlo donde quieras.</p>
 
   <h2>Mientras juegas</h2>
   <ul>
     <li>El paso en el que va el juego se marca en verde en el lienzo; los ya recorridos se atenúan.</li>
     <li><b>Puntos de pausa:</b> clic derecho › <span class="menu">Pausar aquí al jugar</span>. La tarjeta lleva un punto rojo; al llegar ahí, el juego se pausa y el editor te lleva al paso. Se guardan en tu ordenador, no en el grafo.</li>
+    <li><b>Monitor de señales:</b> las señales según se emiten y quién las espera, en directo.</li>
   </ul>
 
   <h2>Avisos y comprobación del flujo</h2>
-  <p>La barra dice <span style="color:#3E8E57;font-weight:700">✓ Todo correcto</span> o <span style="color:#B7791F;font-weight:700">▲ N avisos</span>; púlsalo para ir al primero. El aviso también sale en la tarjeta (rombo amarillo) y arriba de su pestaña Paso. Se avisa, entre otras cosas, de:</p>
-  <ul>
-    <li>pasos a los que nunca se llega;</li>
-    <li>decisiones con una salida sin conectar;</li>
-    <li>campos obligatorios vacíos (una misión sin id, un diálogo sin asignar…);</li>
-    <li>misiones sin frase de «mientras tanto» ni quien las encargue.</li>
-  </ul>
+  <p>La barra dice <span style="color:#3E8E57;font-weight:700">✓ Todo correcto</span> o <span style="color:#B7791F;font-weight:700">▲ N avisos</span>; púlsalo para ir al primero. Se avisa de pasos a los que nunca se llega, decisiones con una salida sin conectar, campos obligatorios vacíos y misiones sin frase de «mientras tanto».</p>
+  <div class="tip"><b>Con el asistente.</b> Pregúntale «¿por qué no aparece Ana?»: lee este mismo informe y te contesta con el paso concreto.</div>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>13</b></span></div>
 </section>
+
 <!-- 10 CONECTAR -->
 <section class="page">
   <div class="chapnum">CAPÍTULO 10</div>
@@ -538,6 +536,7 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
     <tr><th>Herramienta MCP</th><th>Qué hace</th></tr>
     <tr><td>list_graphs</td><td>Lista los capítulos del proyecto</td></tr>
     <tr><td>read_chapter</td><td>Lee un capítulo como texto</td></tr>
+    <tr><td>read_state</td><td>Cómo está la historia: por dónde va, qué espera y qué no cuadra (el informe de En vivo)</td></tr>
     <tr><td>step_manual</td><td>Devuelve los tipos de paso y sus campos</td></tr>
     <tr><td>edit_chapter</td><td>Aplica cambios por lotes (añadir, cambiar, conectar, borrar); se comprueba todo antes y se aplica todo o nada</td></tr>
   </table>
@@ -573,7 +572,7 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
         <tr><td>Ficha del jugador</td><td>⚙ › Ficha del jugador</td></tr>
         <tr><td>Escena de arranque</td><td>⚙ › Probar desde un paso</td></tr>
         <tr><td>Conexiones</td><td>⚙ › Conexiones del juego</td></tr>
-        <tr><td>Monitor de señales</td><td>Depuración, o Tools › Narrative Graph</td></tr>
+        <tr><td>Monitor de señales</td><td>En vivo, o Tools › Narrative Graph</td></tr>
         <tr><td>Plantillas</td><td>Assets/NarrativeTemplates</td></tr>
       </table>
     </div>
@@ -582,10 +581,10 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <h2>Preguntas frecuentes</h2>
   <h3>Pruebo desde un paso y el jugador aparece en otro sitio.</h3>
   <p>Mira la fila de posición en <b>Arranque</b>: dice de dónde sale. Si pone «Partida nueva», ningún punto anterior lo fija: retoca y pulsa <b>◆ Fijar aquí</b>.</p>
-  <h3>Un personaje no está donde debería al probar.</h3>
-  <p>Abre <b>Depuración</b> y busca al personaje: la fila dice qué paso lo colocó. Si no sale, ningún paso anterior declara dónde está; añade <b>Colocar actor</b> antes.</p>
-  <h3>En Play, Depuración marca diferencias.</h3>
-  <p>Algún paso hace algo que no declara, o un sistema de fuera del grafo cambió ese dato. Revisa el paso que indica la fila.</p>
+  <h3>La historia se ha quedado parada.</h3>
+  <p>Abre <b>En vivo</b>: «Esperando» dice qué necesita para seguir (una charla, una señal…).</p>
+  <h3>Un personaje no está donde debería.</h3>
+  <p>En <b>En vivo</b> sale en rojo, con el paso que lo debería haber colocado. Si no sale, ningún paso anterior dice dónde está: añade <b>Colocar actor</b> antes.</p>
   <h3>¿Los retoques se guardan en el proyecto?</h3>
   <p>No: son solo de tu ordenador y no tocan el grafo. Para compartirlos, fíjalos como punto de arranque.</p>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>17</b></span></div>

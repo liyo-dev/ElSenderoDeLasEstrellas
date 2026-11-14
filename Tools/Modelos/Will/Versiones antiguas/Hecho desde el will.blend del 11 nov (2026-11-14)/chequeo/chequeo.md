@@ -1,0 +1,45 @@
+# Chequeo de choques — will.blend
+**NO PASA (9 graves, 32 avisos)**
+
+Poses revisadas: 78 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas, sentado)
+
+## Tela que se rasga (aristas estiradas)
+- **GRAVE** Body24_AventureroChaqueta:Chaqueta@spine_03 (-0.16,0.64): 54 (peor en Victory_NoWeapon@21.8)
+- **GRAVE** Body23_Aventurero:Camiseta@spine_03 (-0.16,0.64): 46 (peor en Victory_NoWeapon@34.3)
+- **GRAVE** Body24_AventureroChaqueta:Camiseta@spine_03 (-0.16,0.64): 46 (peor en Victory_NoWeapon@34.3)
+- **GRAVE** Body24_AventureroChaqueta:Chaqueta@spine_03 (+0.00,0.55): 38 (peor en Greeting01_NoWeapon@34.3)
+- **GRAVE** Body24_AventureroChaqueta:Chaqueta@spine_03 (+0.16,0.64): 32 (peor en InteractWithPeople_NoWeapon@176.0)
+- **GRAVE** Body23_Aventurero:Camiseta@spine_03 (+0.16,0.64): 28 (peor en WalkFWD_InPlace_NoWeapon@1.0)
+- **GRAVE** Body24_AventureroChaqueta:Camiseta@spine_03 (+0.16,0.64): 28 (peor en WalkFWD_InPlace_NoWeapon@1.0)
+- **GRAVE** Body23_Aventurero:Dorado@upperarm_r (-0.27,0.63): 11 (peor en InteractWithPeople_NoWeapon@141.0)
+- **GRAVE** Body24_AventureroChaqueta:Dorado@upperarm_r (-0.27,0.63): 11 (peor en InteractWithPeople_NoWeapon@141.0)
+- Body23_Aventurero:Dorado@upperarm_l (+0.27,0.63): 9 (peor en InteractWithPeople_NoWeapon@71.0)
+- Body24_AventureroChaqueta:Dorado@upperarm_l (+0.27,0.63): 9 (peor en InteractWithPeople_NoWeapon@71.0)
+- Body24_AventureroChaqueta:Chaqueta@upperarm_r (-0.24,0.64): 8 (peor en Victory_NoWeapon@21.8)
+- Body23_Aventurero:Cuero@thigh_r (-0.12,0.13): 6 (peor en MoveFWD_Normal_InPlace_NoWeapon@1.0)
+- Body24_AventureroChaqueta:Cuero@thigh_r (-0.12,0.13): 6 (peor en MoveFWD_Normal_InPlace_NoWeapon@1.0)
+- Body23_Aventurero:Cuero@thigh_l (+0.12,0.13): 6 (peor en MoveFWD_Normal_InPlace_NoWeapon@9.0)
+- Body24_AventureroChaqueta:Cuero@thigh_l (+0.12,0.13): 6 (peor en MoveFWD_Normal_InPlace_NoWeapon@9.0)
+- Body23_Aventurero:Camiseta@upperarm_r (-0.22,0.63): 5 (peor en Greeting01_NoWeapon@34.3)
+- Body24_AventureroChaqueta:Camiseta@upperarm_r (-0.22,0.63): 5 (peor en Greeting01_NoWeapon@34.3)
+- Body24_AventureroChaqueta:Chaqueta@upperarm_l (+0.24,0.64): 5 (peor en WalkFWD_InPlace_NoWeapon@3.3)
+- Body23_Aventurero:Camiseta@upperarm_l (+0.22,0.63): 4 (peor en WalkFWD_InPlace_NoWeapon@1.0)
+- Body24_AventureroChaqueta:Camiseta@upperarm_l (+0.22,0.63): 4 (peor en WalkFWD_InPlace_NoWeapon@1.0)
+
+## Cuerpo que asoma por la ropa (puntos, por hueso)
+- pelvis: 6 (peor en sentado)
+
+## Piezas que se meten dentro de otra (puntos)
+- Body24_AventureroChaqueta:Dorado@pelvis (+0.00,0.37): 94 (peor en brazos_bajados, dentro de cuerpo/lowerarm_l)
+- Body24_AventureroChaqueta:Chaqueta@upperarm_r (-0.32,0.63): 66 (peor en Victory_NoWeapon@46.8, dentro de Chaqueta@upperarm_r (-0.24,0.64))
+- Body24_AventureroChaqueta:Chaqueta@upperarm_l (+0.32,0.63): 44 (peor en manos_juntas, dentro de cuerpo/upperarm_l)
+- Body23_Aventurero:Cuero@foot_r (-0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@14.3, dentro de cuerpo/foot_r)
+- Body24_AventureroChaqueta:Cuero@foot_r (-0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@14.3, dentro de cuerpo/foot_r)
+- Body23_Aventurero:Cuero@foot_l (+0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@6.3, dentro de cuerpo/foot_l)
+- Body24_AventureroChaqueta:Cuero@foot_l (+0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@6.3, dentro de cuerpo/foot_l)
+- Body24_AventureroChaqueta:Dorado@spine_03 (+0.11,0.55): 31 (peor en InteractWithPeople_NoWeapon@141.0, dentro de cuerpo/lowerarm_l)
+- Body23_Aventurero:Panuelo@spine_03 (+0.00,0.66): 22 (peor en InteractWithPeople_NoWeapon@123.5, dentro de cuerpo/thumb_01_r)
+- Body24_AventureroChaqueta:Panuelo@spine_03 (+0.00,0.66): 22 (peor en InteractWithPeople_NoWeapon@123.5, dentro de cuerpo/thumb_01_r)
+
+## Piezas que se separan (cm)
+- nada

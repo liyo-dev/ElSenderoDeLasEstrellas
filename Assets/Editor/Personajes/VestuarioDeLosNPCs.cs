@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// Vestuario propio de los NPCs con peso en la historia (Eldran, Victoria, Erika, Oliver, el Rey, el
-/// posadero y la boticaria, con su pañuelo verde salvia en la cabeza), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
+/// posadero y la boticaria, con su pañuelo verde salvia en la cabeza; el Archimago, el Mago Oscuro y Liora), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
 /// protagonistas (<see cref="AspectoDeProtagonista.PonerPiezas"/>): la pieza de cuerpo nueva entra en
 /// el modelo de cada uno junto a la que llevaba, se enciende y la de antes se queda apagada. La piel
 /// de debajo (manos, brazos) usa el material de su cuerpo de siempre, así que conserva su tono de piel.
@@ -159,6 +159,22 @@ public static class VestuarioDeLosNPCs
             Colores = new[] { ("Tunica", new Color(0.075f, 0.055f, 0.13f)), ("Capa", new Color(0.05f, 0.038f, 0.095f)), ("Forro", new Color(0.3f, 0.12f, 0.52f)), ("Luz", new Color(0.74f, 0.45f, 1f)), ("Hueso", new Color(0.66f, 0.62f, 0.78f)), ("Vacio", new Color(0.012f, 0.008f, 0.025f)), ("Estrella", new Color(0.4f, 0.24f, 0.7f)), ("Cinto", new Color(0.12f, 0.09f, 0.19f)), ("PeloMago", new Color(0.04f, 0.035f, 0.06f)), ("PeloGris", new Color(0.62f, 0.6f, 0.7f)) },
             Brillan = new[] { ("Luz", 1.3f) },   // la franja del bajo y los puños
         },
+        new AspectoDeProtagonista.Ficha
+        {
+            Nombre = "Liora",
+            Carpeta = Carpeta + "/Liora",
+            PrefabPropio = PrefabDeLiora,
+            CuerpoDeAntes = "Body10",
+            Modelos = new[] { PrefabDeLiora },
+            Propios = new[] { PrefabDeLiora },
+            Piezas = new[]
+            {
+            new AspectoDeProtagonista.Pieza { Nombre = "Body35_Liora", Categoria = PartCategory.Body, Vecina = "Body10" },
+            new AspectoDeProtagonista.Pieza { Nombre = "Hair21_Liora", Categoria = PartCategory.Hair, Vecina = "Hair06" },
+            },
+            Apagar = new string[] {  },
+            Colores = new[] { ("Salvia", new Color(0.56f, 0.68f, 0.52f)), ("SalviaOscura", new Color(0.34f, 0.45f, 0.33f)), ("Crema", new Color(0.96f, 0.92f, 0.8f)), ("Flor", new Color(0.98f, 0.8f, 0.36f)), ("Cuero", new Color(0.42f, 0.27f, 0.16f)), ("CueroOscuro", new Color(0.26f, 0.16f, 0.09f)), ("PeloCastano", new Color(0.42f, 0.24f, 0.13f)), ("PeloCastanoOscuro", new Color(0.3f, 0.16f, 0.08f)), ("CintaCrema", new Color(0.96f, 0.92f, 0.8f)) },
+        },
     };
 
     [MenuItem("El Sendero/Personajes/Vestuario propio de los NPCs", priority = 60)]
@@ -166,6 +182,7 @@ public static class VestuarioDeLosNPCs
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Vestuario de los NPCs", "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
+        PrepararLiora(informe);
         foreach (var f in Fichas)
         {
             if (AssetDatabase.LoadAssetAtPath<GameObject>($"{f.Carpeta}/{f.Piezas[0].Nombre}.fbx") == null)
@@ -175,6 +192,29 @@ public static class VestuarioDeLosNPCs
         CoronarAlRey(informe);
         AssetDatabase.SaveAssets();
         OrdenesDelEditor.Avisar("Vestuario de los NPCs", informe.ToString());
+    }
+
+    private const string PrefabDeLiora = "Assets/_NPCs/Liora.prefab";
+
+    /// Liora salía con el prefab de la tendera del Reino (Tendera.prefab). Se le hace uno propio, copia de aquel,
+    /// y el roster del prólogo pasa a usarlo: así su ropa no le cambia a la tendera.
+    private static void PrepararLiora(StringBuilder informe)
+    {
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(PrefabDeLiora) == null)
+        {
+            if (!AssetDatabase.CopyAsset("Assets/_NPCs/Tendera.prefab", PrefabDeLiora)) { informe.AppendLine("Liora: no he podido copiar Tendera.prefab."); return; }
+            informe.AppendLine("Liora: prefab propio creado (copia de Tendera.prefab).");
+        }
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabDeLiora);
+        var roster = AssetDatabase.LoadAssetAtPath<NpcRosterSO>("Assets/Resources/NpcRosters/NpcRoster_PrologoValle.asset");
+        var entrada = roster != null ? roster.entries.Find(x => x != null && x.spawnId == "SPAWN_NPC_Liora") : null;
+        if (entrada == null) { informe.AppendLine("Liora: no encuentro SPAWN_NPC_Liora en el roster del prólogo."); return; }
+        if (entrada.prefab != prefab)
+        {
+            entrada.prefab = prefab;
+            EditorUtility.SetDirty(roster);
+            informe.AppendLine("Liora: el roster del prólogo usa ya su prefab.");
+        }
     }
 
     /// El Rey llevaba capucha (Hat10) y no parecía un rey: corona del pack y el pelo largo que Raúl pidió

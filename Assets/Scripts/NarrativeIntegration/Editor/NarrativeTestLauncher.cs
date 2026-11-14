@@ -188,7 +188,7 @@ namespace Sendero.Narrative.Editor
                 AssetDatabase.CreateAsset(tempPreset, QuickTestPresetPath);
             }
 
-            // Capas: partida nueva → historia hasta el paso → puntos de arranque → retoques.
+            // Capas: partida nueva → historia hasta el paso (con los puntos anteriores en su sitio) → punto del paso → retoques.
             var plan = NarrativeStartPlanner.Plan(graph, nodeGuid, cfg.RouteChoicesMap());
             if (plan.Sheet != null && plan.Sheet.TemplateData is PlayerPresetSO) plan.ApplyBase(tempPreset);
             else if (profile.defaultPlayerPreset != null) EditorUtility.CopySerialized(profile.defaultPlayerPreset, tempPreset);
@@ -196,8 +196,9 @@ namespace Sendero.Narrative.Editor
 
             if (cfg.fastForward)
                 preview = RunFastForward(graph, nodeGuid, cfg, tempPreset);
-            plan.ApplyOverrides(tempPreset);
+            plan.ApplyOverrides(tempPreset, storyHasPoints: cfg.fastForward && plan.ReachedTarget);
             retocar?.Invoke(tempPreset);
+            AprenderLoEquipado(tempPreset);
 
             var graphLabel = string.IsNullOrEmpty(cfg.graphLabel)
                 ? DetectGraphLabel(graph) ?? graph.name
@@ -314,6 +315,19 @@ namespace Sendero.Narrative.Editor
             }
         }
 
+        /// Solo lo que la historia hasta el paso deja en los datos del jugador (sin colocar actores):
+        /// lo que enseña el resumen de Arranque.
+        public static void ProyectarHistoria(NarrativeGraph graph, string nodeGuid, NarrativeTestConfig cfg, PlayerPresetSO dst)
+        {
+            if (graph == null || string.IsNullOrEmpty(nodeGuid) || dst == null) return;
+            var writer = new PresetNarrativeStateWriter(dst);
+            var objetivo = nodeGuid;
+            var elecciones = cfg.RouteChoicesMap();
+            foreach (var previo in CapitulosPrevios(graph, ref objetivo))
+                NarrativeStateProjector.Project(previo.grafo, previo.puenteGuid, writer, elecciones);
+            NarrativeStateProjector.Project(graph, objetivo, writer, elecciones);
+        }
+
         static NarrativeFastForwardPreview RunFastForward(NarrativeGraph graph, string nodeGuid,
             NarrativeTestConfig cfg, PlayerPresetSO dst)
         {
@@ -343,6 +357,17 @@ namespace Sendero.Narrative.Editor
             preview.warnings.AddRange(writer.Notes);
             preview.objectiveTitle = graph.FindNode(objetivo)?.displayTitle ?? "";
             return preview;
+        }
+
+        /// Un hechizo equipado (en un punto de arranque o un retoque) se da por aprendido: la partida
+        /// quita de los básicos lo que no está en unlockedSpells.
+        static void AprenderLoEquipado(PlayerPresetSO p)
+        {
+            p.unlockedSpells ??= new List<SpellId>();
+            IEnumerable<SpellId> equipados = p.basicSpellIds ?? new List<SpellId>();
+            if (p.companionBasics != null) equipados = equipados.Concat(p.companionBasics.Where(c => c?.hechizos != null).SelectMany(c => c.hechizos));
+            foreach (var id in equipados)
+                if (id != SpellId.None && !p.unlockedSpells.Contains(id)) p.unlockedSpells.Add(id);
         }
 
         static readonly Dictionary<string, string> LabelCache = new();

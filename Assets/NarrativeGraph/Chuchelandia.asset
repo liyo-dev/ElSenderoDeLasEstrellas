@@ -77,12 +77,24 @@ MonoBehaviour:
   - rid: 6540294316048253092
   - rid: 6540294316048253093
   - rid: 6540294316048253094
+  - rid: 6540294600349712501
+  - rid: 6540294600349712502
+  - rid: 6540294600349712503
+  - rid: 6540294600349712504
+  - rid: 6540294600349712505
+  - rid: 6540294600349712506
+  - rid: 6540294600349712525
+  - rid: 6540294600349712526
+  - rid: 6540294600349712527
+  - rid: 6540294600349712528
+  - rid: 6540294600349712529
+  - rid: 6540294600349712530
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
     - rid: 6540294316048253032
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio de Chuchelandia
         chapter: Chuchelandia
@@ -97,7 +109,7 @@ MonoBehaviour:
         outputs:
         - chuche-tras-sendero
     - rid: 6540294316048253033
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Puente con el Sendero: empieza la prueba de Estela (aviso para el resto del juego)'
         chapter: Chuchelandia
@@ -113,7 +125,7 @@ MonoBehaviour:
         - chuche-llegada
         eventKey: PRUEBA_ESTELA_EMPIEZA
     - rid: 6540294316048253034
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "1 \xB7 Llegada a Chuchelandia (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -130,7 +142,7 @@ MonoBehaviour:
         eventKey: CHUCHE_LLEGADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253035
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n: la princesa m\xE1s adorable (aviso de misi\xF3n nueva; primer paso: intentad abrir la Puerta del Coraz\xF3n)"
         chapter: Chuchelandia
@@ -173,7 +185,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253037
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "2 \xB7 El heraldo y la Puerta del Coraz\xF3n (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -231,7 +243,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253040
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "2 \xB7 Los intentos con el candado: magia de Estela, ganz\xFAa de Liam y empuj\xF3n de Will, cambiando con la cruceta (o hablar con el heraldo)"
         chapter: Chuchelandia
@@ -248,7 +260,7 @@ MonoBehaviour:
         eventKey: CHUCHE_PUERTA_INTENTOS
         acceptEarlierEvent: 1
     - rid: 6540294316048253041
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: la Puerta del Coraz\xF3n"
         chapter: Chuchelandia
@@ -331,7 +343,7 @@ MonoBehaviour:
         personaje: Estela
         retirarDeLaEscena: 1
     - rid: 6540294316048253045
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3 \xB7 Atuendos de candidata (tambi\xE9n los emiten las cinem\xE1ticas de la candidata y del vestidor)"
         chapter: Chuchelandia
@@ -347,7 +359,7 @@ MonoBehaviour:
         - chuche-vestidor-empieza
         eventKey: CHUCHE_ATUENDO_CANDIDATA
     - rid: 6540294316048253046
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3 \xB7 Hacia el vestidor real (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -363,7 +375,7 @@ MonoBehaviour:
         - chuche-vestidor-llegar
         eventKey: CHUCHE_VESTIDOR_EMPIEZA
     - rid: 6540294316048253047
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3 \xB7 Will y Liam llegan al vestidor real"
         chapter: Chuchelandia
@@ -440,7 +452,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253051
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Empieza la carrera (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -456,7 +468,7 @@ MonoBehaviour:
         - chuche-carrera
         eventKey: CHUCHE_CARRERA_EMPIEZA
     - rid: 6540294316048253052
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Carrera de obst\xE1culos (tanda 3)"
         chapter: Chuchelandia
@@ -473,7 +485,7 @@ MonoBehaviour:
         eventKey: CHUCHE_CARRERA_GANADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253053
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: la carrera'
         chapter: Chuchelandia
@@ -496,7 +508,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294316048253054
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Empieza la escalada (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -512,7 +524,7 @@ MonoBehaviour:
         - chuche-escalada
         eventKey: CHUCHE_ESCALADA_EMPIEZA
     - rid: 6540294316048253055
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Escalada de la torre (tanda 3)"
         chapter: Chuchelandia
@@ -529,7 +541,7 @@ MonoBehaviour:
         eventKey: CHUCHE_ESCALADA_GANADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253056
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: la escalada'
         chapter: Chuchelandia
@@ -552,7 +564,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294316048253057
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Empieza la punter\xEDa (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -568,7 +580,7 @@ MonoBehaviour:
         - chuche-punteria
         eventKey: CHUCHE_PUNTERIA_EMPIEZA
     - rid: 6540294316048253058
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4 \xB7 Punter\xEDa (tanda 3)"
         chapter: Chuchelandia
@@ -585,7 +597,7 @@ MonoBehaviour:
         eventKey: CHUCHE_PUNTERIA_GANADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253059
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: la punter\xEDa"
         chapter: Chuchelandia
@@ -608,7 +620,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294316048253060
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "5 \xB7 Hacia las clases de la Condesa (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -624,7 +636,7 @@ MonoBehaviour:
         - chuche-clases-llegar
         eventKey: CHUCHE_CLASES_EMPIEZA
     - rid: 6540294316048253061
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "5 \xB7 Llegan a las clases de la Condesa Merengue"
         chapter: Chuchelandia
@@ -641,7 +653,7 @@ MonoBehaviour:
         eventKey: CHUCHE_CLASES_LLEGADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253062
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "5 \xB7 Clases de la Condesa: reverencia, saludo, risita y cari\xF1o (concurso de pr\xE1ctica, como Estela)"
         chapter: Chuchelandia
@@ -658,7 +670,7 @@ MonoBehaviour:
         eventKey: CHUCHE_CLASES_HECHAS
         acceptEarlierEvent: 1
     - rid: 6540294316048253063
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: las clases'
         chapter: Chuchelandia
@@ -681,7 +693,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294316048253064
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 El reino, libre: los habitantes hablan (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -694,10 +706,10 @@ MonoBehaviour:
         guid: chuche-reino-libre
         position: {x: 13300, y: 0}
         outputs:
-        - chuche-reino-fork
+        - pieza-actor_chuchereino1-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
         eventKey: CHUCHE_REINO_LIBRE
     - rid: 6540294316048253065
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 En paralelo: la misi\xF3n opcional de las trompetillas (no bloquea el recorrido)"
         chapter: Chuchelandia
@@ -713,7 +725,7 @@ MonoBehaviour:
         - chuche-salon-llegar
         - chuche-tromp-hablar
     - rid: 6540294316048253066
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "7 \xB7 Entran en el sal\xF3n del duelo"
         chapter: Chuchelandia
@@ -726,7 +738,7 @@ MonoBehaviour:
         guid: chuche-salon-llegar
         position: {x: 14060, y: 0}
         outputs:
-        - chuche-mando-will-pompon
+        - pieza-actor_chuchereino1-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
         eventKey: CHUCHE_SALON_LLEGADA
         acceptEarlierEvent: 1
     - rid: 6540294316048253067
@@ -772,7 +784,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253069
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "8 \xB7 Empieza el Duelo de Ternura (probar desde aqu\xED)"
         chapter: Chuchelandia
@@ -788,7 +800,7 @@ MonoBehaviour:
         - chuche-duelo
         eventKey: CHUCHE_DUELO_EMPIEZA
     - rid: 6540294316048253070
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "8 \xB7 Duelo de Ternura: reverencia, canci\xF3n de cuna y ojitos, como Estela (concurso por rondas, sin derrota)"
         chapter: Chuchelandia
@@ -805,7 +817,7 @@ MonoBehaviour:
         eventKey: CHUCHE_DUELO_TERMINADO
         acceptEarlierEvent: 1
     - rid: 6540294316048253071
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "9 \xB7 \xAB\xA1TE QUIERO!\xBB como Will: el mantel, el sirope y la silla"
         chapter: Chuchelandia
@@ -846,7 +858,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253073
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: el duelo'
         chapter: Chuchelandia
@@ -893,7 +905,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294316048253075
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "10 \xB7 Atuendo de victoria (tambi\xE9n lo emite la cinem\xE1tica de victoria al coronarla)"
         chapter: Chuchelandia
@@ -909,7 +921,7 @@ MonoBehaviour:
         - chuche-superada
         eventKey: CHUCHE_ATUENDO_VICTORIA
     - rid: 6540294316048253076
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "10 \xB7 Prueba de Estela superada: se abre el portal al Sendero"
         chapter: Chuchelandia
@@ -925,7 +937,7 @@ MonoBehaviour:
         - chuche-salida
         eventKey: PRUEBA_ESTELA_SUPERADA
     - rid: 6540294316048253077
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "10 \xB7 Cruzan el portal de vuelta al Sendero"
         chapter: Chuchelandia
@@ -942,7 +954,7 @@ MonoBehaviour:
         eventKey: CHUCHE_SALIDA
         acceptEarlierEvent: 1
     - rid: 6540294316048253078
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: la vuelta (cierra la misi\xF3n)"
         chapter: Chuchelandia
@@ -964,7 +976,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294316048253079
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 Opcional: hablar con el heraldo suplente"
         chapter: Chuchelandia
@@ -983,7 +995,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294316048253080
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 El suplente encarga las trompetillas"
         chapter: Chuchelandia
@@ -1001,7 +1013,7 @@ MonoBehaviour:
         npcId: Actor_HeraldoSuplente
         oneShotFlag: 
     - rid: 6540294316048253081
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n opcional: las trompetillas perdidas"
         chapter: Chuchelandia
@@ -1020,7 +1032,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 48b09c92a08d6ae4eaa654fda4c46cf6, type: 2}
         noGiver: 0
     - rid: 6540294316048253082
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 Aparecen las trompetillas por el reino"
         chapter: Chuchelandia
@@ -1036,7 +1048,7 @@ MonoBehaviour:
         - chuche-tromp-recoger
         eventKey: CHUCHE_TROMPETILLAS_BUSCAR
     - rid: 6540294316048253083
-      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitSignalCountNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 Coger las 5 trompetillas (marca un paso de la misi\xF3n por cada una)"
         chapter: Chuchelandia
@@ -1054,7 +1066,7 @@ MonoBehaviour:
         count: 5
         questId: CHUCHE_TROMPETILLAS
     - rid: 6540294316048253084
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 \xAB\xA1Ya est\xE1n todas!\xBB"
         chapter: Chuchelandia
@@ -1072,7 +1084,7 @@ MonoBehaviour:
         npcId: 
         oneShotFlag: 
     - rid: 6540294316048253085
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 Volver con el heraldo suplente (en el reino o, con la prueba superada, en el sal\xF3n)"
         chapter: Chuchelandia
@@ -1091,7 +1103,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294316048253086
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 La entrega: \xAB\xBFDecidida? Me vale\xBB"
         chapter: Chuchelandia
@@ -1109,7 +1121,7 @@ MonoBehaviour:
         npcId: Actor_HeraldoSuplente
         oneShotFlag: 
     - rid: 6540294316048253087
-      type: {class: RequireInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: RequireInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "6 \xB7 Las trompetillas salen del inventario"
         chapter: Chuchelandia
@@ -1134,7 +1146,7 @@ MonoBehaviour:
         useAlternateOutputOnMissing: 0
         alternateOutputIndex: 1
     - rid: 6540294316048253088
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Cierra la misi\xF3n de las trompetillas (el suplente queda con su frase de despu\xE9s)"
         chapter: Chuchelandia
@@ -1156,7 +1168,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294316048253089
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Premio: 30 de Esencia'
         chapter: Chuchelandia
@@ -1174,7 +1186,7 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 6540294316048253090
-      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nota
         chapter: Chuchelandia
@@ -1190,7 +1202,7 @@ MonoBehaviour:
         note: "Conexi\xF3n con el Sendero: el grafo arranca al cargar Chuchelandia (su NarrativeGraphStarter) y emite PRUEBA_ESTELA_EMPIEZA (el grupo llega al ancla \xABChuchelandiaLlegada\xBB). Al final se emite PRUEBA_ESTELA_SUPERADA, que abre el portal de vuelta (flag SENDERO_PRUEBA_ESTELA_HECHA, ancla SenderoTrasPruebaEstela)."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
     - rid: 6540294316048253091
-      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nota
         chapter: Chuchelandia
@@ -1206,7 +1218,7 @@ MonoBehaviour:
         note: "Escena: las llegadas son disparadores en \xABChuchelandia (generado)/Disparadores\xBB; lo jugable est\xE1 en \xABPruebas\xBB (carrera, escalada, punter\xEDa, candado, clases, duelo y \xAB\xA1TE QUIERO!\xBB), cada cosa activa solo en su tramo y emitiendo su se\xF1al al acabar. Las cinem\xE1ticas son guiones horneados (Chuche_*.guion.txt, men\xFA \xABChuchelandia: hornear las cinem\xE1ticas\xBB). Cada tramo empieza en un nodo \xAB(probar desde aqu\xED)\xBB que emite su se\xF1al *_EMPIEZA. Antes de las cinem\xE1ticas que cuentan con Will, un nodo de grupo le pasa el mando."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
     - rid: 6540294316048253092
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n: bienvenidos a Chuchelandia (aviso de misi\xF3n nueva; paso: investigad el reino, el heraldo en el minimapa)"
         chapter: Chuchelandia
@@ -1225,7 +1237,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6540294316048253093
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "2 \xB7 Hablar con el heraldo, junto a la Puerta del Coraz\xF3n"
         chapter: Chuchelandia
@@ -1244,7 +1256,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294316048253094
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: investigar el reino (cierra la misi\xF3n de la llegada)"
         chapter: Chuchelandia
@@ -1266,3 +1278,251 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
+    - rid: 6540294600349712501
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino1 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino1-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 150}
+        outputs:
+        - pieza-actor_chuchereino2-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        actorId: Actor_ChucheReino1
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 604add5ec148e034696909161a4b7d77, type: 2}
+        - {fileID: 11400000, guid: 27b72ea922601bb468765d94ed6c9c46, type: 2}
+    - rid: 6540294600349712502
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino2 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino2-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 260}
+        outputs:
+        - pieza-actor_chuchereino3-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        actorId: Actor_ChucheReino2
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: a91ae1e6ca4ddef468ba1c5303685e88, type: 2}
+    - rid: 6540294600349712503
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino3 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino3-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 370}
+        outputs:
+        - pieza-actor_chuchereino4-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        actorId: Actor_ChucheReino3
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 9d1ba45a81e14194d83a0b562770262d, type: 2}
+    - rid: 6540294600349712504
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino4 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino4-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 480}
+        outputs:
+        - pieza-actor_chuchereino5-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        actorId: Actor_ChucheReino4
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: e4afe2d2eb291034fbf110941400fb69, type: 2}
+    - rid: 6540294600349712505
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino5 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino5-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 590}
+        outputs:
+        - pieza-actor_chuchereino6-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        actorId: Actor_ChucheReino5
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 379394d561107aa4da408ac80ad38c4d, type: 2}
+    - rid: 6540294600349712506
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino6 desde aqu\xED: Chuchelandia \xB7 el reino libre"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino6-fromhere-chuchelandia-el-reino-libre-chuche-reino-libre
+        position: {x: 13340, y: 700}
+        outputs:
+        - chuche-reino-fork
+        actorId: Actor_ChucheReino6
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 71a6d8c0ee42a374ea24f8cceae103a5, type: 2}
+        - {fileID: 11400000, guid: d8dd5472148c4d944bfebcd4ee29f5e4, type: 2}
+    - rid: 6540294600349712525
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino1: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino1-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 150}
+        outputs:
+        - pieza-actor_chuchereino2-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        actorId: Actor_ChucheReino1
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712526
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino2: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino2-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 260}
+        outputs:
+        - pieza-actor_chuchereino3-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        actorId: Actor_ChucheReino2
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712527
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino3: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino3-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 370}
+        outputs:
+        - pieza-actor_chuchereino4-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        actorId: Actor_ChucheReino3
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712528
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino4: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino4-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 480}
+        outputs:
+        - pieza-actor_chuchereino5-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        actorId: Actor_ChucheReino4
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712529
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino5: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino5-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 590}
+        outputs:
+        - pieza-actor_chuchereino6-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        actorId: Actor_ChucheReino5
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712530
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Actor_ChucheReino6: vuelve a lo de siempre (acaba \xABChuchelandia \xB7 el reino libre\xBB)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-actor_chuchereino6-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
+        position: {x: 14100, y: 700}
+        outputs:
+        - chuche-mando-will-pompon
+        actorId: Actor_ChucheReino6
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []

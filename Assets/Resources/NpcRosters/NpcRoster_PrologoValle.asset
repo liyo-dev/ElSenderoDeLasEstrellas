@@ -26,7 +26,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_NPC_Liora
-    prefab: {fileID: 8726245353716293871, guid: 8fa16dcdaf0691c4f85b29439cf26073, type: 3}
+    prefab: {fileID: 8726245353716293871, guid: 59a4729292663fd49b4c08369e8c64bc, type: 3}
     gameObjectName: NPC_Liora
     persistenceId: NPC_Liora
     vozDeReacciones: Vecino

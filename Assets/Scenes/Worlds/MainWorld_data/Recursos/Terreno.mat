@@ -27,6 +27,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas0:
+        m_Texture: {fileID: 4940010275790296484, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas1:
+        m_Texture: {fileID: -1485732168719628281, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}

@@ -28,3 +28,7 @@ pelo. Lo anterior, en `Versiones antiguas/Bufanda con cabo delante (2026-11-11)/
 
 ## 13 nov 2026 — chequeo de choques (INC-1138)
 Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
+
+## 14 nov 2026 — sin bolsas en el costado (INC-1183)
+- Quitado el zurrón con los dos libros y su correa: la mano se metía dentro al andar. Decisión de Raúl: los personajes no llevan bolsas ni mochilas.
+- Lo anterior, en `Versiones antiguas/Con bolsas en el costado (2026-11-13)/`.

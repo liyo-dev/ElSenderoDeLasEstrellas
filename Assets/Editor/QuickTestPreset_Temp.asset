@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: PiedraAncestral
+  spawnAnchorId: Will_SalidaDelPueblo
   level: 1
   maxHP: 100
   currentHP: 100
-  maxMP: 50
-  currentMP: 50
+  maxMP: 0
+  currentMP: 0
   ataque: 0
   defensa: 0
   sintoniaPuntos: 0
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 1800000005000000020000000300000001000000i
-  basicSpellIds: 18000000050000000200000003000000i
+  unlockedSpells: 0100000002000000i
+  basicSpellIds: 0100000002000000i
   companionBasics: []
   companionHealth: []
   flags:
@@ -51,16 +51,23 @@ MonoBehaviour:
   - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
   - QUEST_STEP_DONE:PREPARA_VIAJE:2
   - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
+  - NARRATIVE_FLAG:@actor:NPC_Boticaria=pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
+  - NARRATIVE_FLAG:@actor:NPC_Eldran=pieza-npc_eldran-fromhere-cap-23-espera-en-la-salida-del-pueblo-cap2-adios-senal
+  - NARRATIVE_FLAG:@actor:NPC_Erika=pieza-npc_erika-fromhere-cap-2-despedida-de-will-cap2-adios-senal
+  - NARRATIVE_FLAG:@actor:NPC_Tomasa=pieza-npc_tomasa-fromhere-cap-2-despedida-de-will-cap2-adios-senal
+  - NARRATIVE_FLAG:@actor:NPC_Oliver=pieza-npc_oliver-fromhere-cap-2-tras-despedirse-de-will-cap2-adios-senal
+  - NARRATIVE_FLAG:@actor:NPC_Victoria=pieza-npc_victoria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
   - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
   - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
   - NARRATIVE_FLAG:CAP2_COMPLETADO
+  - NARRATIVE_FLAG:CAP3_INICIADO
   abilities:
-    swim: 1
-    jump: 1
-    climb: 1
+    swim: 0
+    jump: 0
+    climb: 0
     magic: 1
-    fly: 1
-    sprint: 1
+    fly: 0
+    sprint: 0
     shield: 1
   appearance:
   - category: 2
@@ -106,7 +113,7 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap3-flag
+      value: cap3-adios-hablar
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
@@ -153,8 +160,6 @@ MonoBehaviour:
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []
-  partyMemberIds:
-  - _ESTELA
-  - _LIAM
+  partyMemberIds: []
   activeCharacterSlot: 1
   unlockedTeleportPoints: []

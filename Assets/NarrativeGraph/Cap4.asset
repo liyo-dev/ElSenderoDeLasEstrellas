@@ -81,12 +81,18 @@ MonoBehaviour:
   - rid: 6540294538172825896
   - rid: 6540294538172825897
   - rid: 6540294538172825898
+  - rid: 6540294600349712465
+  - rid: 6540294600349712466
+  - rid: 6540294600349712467
+  - rid: 6540294600349712468
+  - rid: 6540294600349712469
+  - rid: 6540294600349712470
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
     - rid: 6540294538172825832
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Cap. 4
         chapter: Cap. 4
@@ -101,7 +107,7 @@ MonoBehaviour:
         outputs:
         - cap4-tras-cap3
     - rid: 6540294538172825833
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Tras el Cap. 3 (CH_Cap3_BACK_1)
         chapter: Cap. 4
@@ -118,7 +124,7 @@ MonoBehaviour:
         eventKey: CH_Cap3_BACK_1
         acceptEarlierEvent: 1
     - rid: 6540294538172825834
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Fin del Cap. 4 (CH_Cap4_BACK_1)
         chapter: Cap. 4
@@ -134,7 +140,7 @@ MonoBehaviour:
         - cap4-demo-rotulo
         eventKey: CH_Cap4_BACK_1
     - rid: 6540294538172825835
-      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "R\xF3tulo: fin de la Primera Parte"
         chapter: Cap. 4
@@ -175,7 +181,7 @@ MonoBehaviour:
         escenaFinal: Credits
         espera: 0.8
     - rid: 6540294538172825837
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Comienza el Cap. 4
         chapter: Cap. 4
@@ -192,7 +198,7 @@ MonoBehaviour:
         flagKey: CAP4_INICIADO
         value: 1
     - rid: 6540294538172825838
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Estela est\xE1 en su claro (el roster la pone)"
         chapter: Cap. 4
@@ -209,7 +215,7 @@ MonoBehaviour:
         flagKey: ESTELA_APARECE
         value: 1
     - rid: 6540294538172825839
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Hacia el Bosque Prohibido (probar desde aqu\xED)"
         chapter: Cap. 4
@@ -225,7 +231,7 @@ MonoBehaviour:
         - cap4-mision-estela
         eventKey: CAP4_BOSQUE_EMPIEZA
     - rid: 6540294538172825840
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n: la hechicera del bosque (aviso de misi\xF3n nueva)"
         chapter: Cap. 4
@@ -244,7 +250,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6540294538172825841
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Punto de guardado: el cruce"
         chapter: Cap. 4
@@ -264,7 +270,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Amanecer","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825842
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Llega al claro de los troncos quemados"
         chapter: Cap. 4
@@ -341,7 +347,7 @@ MonoBehaviour:
         personaje: Estela
         retirarDeLaEscena: 0
     - rid: 6540294538172825846
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: encontrar a Estela (cierra la misi\xF3n)"
         chapter: Cap. 4
@@ -364,7 +370,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294538172825847
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 La casa entre ra\xEDces (probar desde aqu\xED)"
         chapter: Cap. 4
@@ -397,7 +403,7 @@ MonoBehaviour:
         targetTime: 7
         immediate: 0
     - rid: 6540294538172825849
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 \xABPuedes mirar, pero no toques la cena\xBB"
         chapter: Cap. 4
@@ -420,7 +426,7 @@ MonoBehaviour:
         emphasis: 0
         speakerName: 
     - rid: 6540294538172825850
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Will se acuesta en el jerg\xF3n"
         chapter: Cap. 4
@@ -437,7 +443,7 @@ MonoBehaviour:
         eventKey: CAP4_DORMIR
         acceptEarlierEvent: 1
     - rid: 6540294538172825851
-      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 R\xF3tulo: a la ma\xF1ana siguiente"
         chapter: Cap. 4
@@ -478,7 +484,7 @@ MonoBehaviour:
         targetTime: 6
         immediate: 1
     - rid: 6540294538172825853
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Will se despierta junto a la casa"
         chapter: Cap. 4
@@ -497,7 +503,7 @@ MonoBehaviour:
         applyPlayerEnvironment: 1
         showActor: 0
     - rid: 6540294538172825854
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Punto de guardado: la casa de Estela"
         chapter: Cap. 4
@@ -517,7 +523,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Campana_Salida","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825855
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n: rumbo al Reino (aviso de misi\xF3n nueva)"
         chapter: Cap. 4
@@ -536,7 +542,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6540294538172825856
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 La prueba de la campana (probar desde aqu\xED)"
         chapter: Cap. 4
@@ -665,7 +671,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825862
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 La prueba (y en paralelo, las figuras chamuscadas)"
         chapter: Cap. 4
@@ -681,7 +687,7 @@ MonoBehaviour:
         - cap4-figura-0
         - cap4-tocada
     - rid: 6540294538172825863
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Will toca la campana"
         chapter: Cap. 4
@@ -698,7 +704,7 @@ MonoBehaviour:
         eventKey: CAP4_CAMPANA_TOCADA
         acceptEarlierEvent: 1
     - rid: 6540294538172825864
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Liam les observa (el roster le pone en la loma)"
         chapter: Cap. 4
@@ -715,7 +721,7 @@ MonoBehaviour:
         flagKey: LIAM_APARECE
         value: 1
     - rid: 6540294538172825865
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Fin de la prueba (Liam, en la loma)"
         chapter: Cap. 4
@@ -728,7 +734,7 @@ MonoBehaviour:
         guid: cap4-campana-fin
         position: {x: 0, y: 1200}
         outputs:
-        - cap4-figura
+        - pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
         eventKey: CAP4_CAMPANA_FIN
     - rid: 6540294538172825866
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
@@ -778,7 +784,7 @@ MonoBehaviour:
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 0
     - rid: 6540294538172825868
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: la prueba de la campana'
         chapter: Cap. 4
@@ -801,7 +807,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825869
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Hacia el Reino: el G\xF3lem (probar desde aqu\xED)"
         chapter: Cap. 4
@@ -814,10 +820,10 @@ MonoBehaviour:
         guid: cap4-golem
         position: {x: 0, y: 1440}
         outputs:
-        - cap4-punto-golem
+        - pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
         eventKey: CAP4_GOLEM_EMPIEZA
     - rid: 6540294538172825870
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Punto de guardado: el camino del Reino"
         chapter: Cap. 4
@@ -837,7 +843,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Golem_Entrada","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825871
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Llegan al descanso del camino"
         chapter: Cap. 4
@@ -944,7 +950,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825876
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 La esquirla de cristal"
         chapter: Cap. 4
@@ -963,7 +969,7 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 6540294538172825877
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: cruzar el bosque'
         chapter: Cap. 4
@@ -1010,7 +1016,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825879
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.5 \xB7 Punto de guardado: el campamento"
         chapter: Cap. 4
@@ -1030,7 +1036,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Manzana","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825880
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Hacia la bifurcaci\xF3n del r\xEDo (probar desde aqu\xED)"
         chapter: Cap. 4
@@ -1043,10 +1049,10 @@ MonoBehaviour:
         guid: cap4-bifurcacion
         position: {x: 1900, y: 1680}
         outputs:
-        - cap4-llegada-bifurcacion
+        - pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
         eventKey: CAP4_BIFURCACION_EMPIEZA
     - rid: 6540294538172825881
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Llegan a la bifurcaci\xF3n"
         chapter: Cap. 4
@@ -1123,7 +1129,7 @@ MonoBehaviour:
         personaje: Liam
         retirarDeLaEscena: 0
     - rid: 6540294538172825885
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Liam ya va en el grupo"
         chapter: Cap. 4
@@ -1136,10 +1142,10 @@ MonoBehaviour:
         guid: cap4-liam-grupo-senal
         position: {x: 1520, y: 1920}
         outputs:
-        - cap4-bota-boc
+        - pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
         eventKey: CAP4_LIAM_EN_EL_GRUPO
     - rid: 6540294538172825886
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 \xAB\xA1Mi bota!\xBB"
         chapter: Cap. 4
@@ -1162,7 +1168,7 @@ MonoBehaviour:
         emphasis: 0
         speakerName: 
     - rid: 6540294538172825887
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Will recoge la bota r\xEDo abajo"
         chapter: Cap. 4
@@ -1221,7 +1227,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825890
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: el camino del r\xEDo (cierra la misi\xF3n)"
         chapter: Cap. 4
@@ -1244,7 +1250,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294538172825891
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Cap. 4 \xB7 Fin (punto de guardado)"
         chapter: Cap. 4
@@ -1264,7 +1270,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Bota","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825892
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Una figura de barro, chamuscada"
         chapter: Cap. 4
@@ -1281,7 +1287,7 @@ MonoBehaviour:
         eventKey: CAP4_FIGURA_CHAMUSCADA
         acceptEarlierEvent: 1
     - rid: 6540294538172825893
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Queda apuntado"
         chapter: Cap. 4
@@ -1298,7 +1304,7 @@ MonoBehaviour:
         flagKey: CAP4_FIGURAS_CHAMUSCADAS
         value: 1
     - rid: 6540294538172825894
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Estela: \xAB\xA1Las ten\xEDas que proteger!\xBB"
         chapter: Cap. 4
@@ -1321,7 +1327,7 @@ MonoBehaviour:
         emphasis: 0
         speakerName: 
     - rid: 6540294538172825895
-      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nota
         chapter: Cap. 4
@@ -1337,7 +1343,7 @@ MonoBehaviour:
         note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
     - rid: 6540294538172825896
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Se destapa la pantalla tras la cinem\xE1tica"
         chapter: Cap. 4
@@ -1382,7 +1388,7 @@ MonoBehaviour:
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
     - rid: 6540294538172825898
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Fuera de la build de la demo: se destapa la pantalla y sigue el juego'
         chapter: Cap. 4
@@ -1401,3 +1407,123 @@ MonoBehaviour:
         transicion: {fileID: 0}
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
+    - rid: 6540294600349712465
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam desde aqu\xED: Cap. 4 \xB7 en la loma de la campana"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
+        position: {x: 40, y: 1350}
+        outputs:
+        - cap4-figura
+        actorId: _LIAM
+        layer: 0
+        presence: 1
+        markId: Cap4_LiamLoma
+        lines: []
+    - rid: 6540294600349712466
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam: vuelve a lo de siempre (acaba \xABCap. 4 \xB7 en la loma de la campana\xBB)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
+        position: {x: 40, y: 1590}
+        outputs:
+        - pieza-_liam-fromhere-cap-4-en-el-saliente-del-golem-cap4-golem
+        actorId: _LIAM
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712467
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam desde aqu\xED: Cap. 4 \xB7 en el saliente del G\xF3lem"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-fromhere-cap-4-en-el-saliente-del-golem-cap4-golem
+        position: {x: 40, y: 1700}
+        outputs:
+        - cap4-punto-golem
+        actorId: _LIAM
+        layer: 0
+        presence: 1
+        markId: Cap4_LiamSaliente
+        lines: []
+    - rid: 6540294600349712468
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam: vuelve a lo de siempre (acaba \xABCap. 4 \xB7 en el saliente del G\xF3lem\xBB)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
+        position: {x: 1940, y: 1830}
+        outputs:
+        - pieza-_liam-fromhere-cap-4-en-la-bifurcacion-cap4-bifurcacion
+        actorId: _LIAM
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712469
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam desde aqu\xED: Cap. 4 \xB7 en la bifurcaci\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-fromhere-cap-4-en-la-bifurcacion-cap4-bifurcacion
+        position: {x: 1940, y: 1940}
+        outputs:
+        - cap4-llegada-bifurcacion
+        actorId: _LIAM
+        layer: 0
+        presence: 1
+        markId: Cap4_LiamBifurcacion
+        lines: []
+    - rid: 6540294600349712470
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Liam: vuelve a lo de siempre (acaba \xABCap. 4 \xB7 en la bifurcaci\xF3n\xBB)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
+        position: {x: 1560, y: 2070}
+        outputs:
+        - cap4-bota-boc
+        actorId: _LIAM
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []

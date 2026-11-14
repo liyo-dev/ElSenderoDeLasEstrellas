@@ -1,0 +1,21 @@
+{
+    "name": "Liyodev.NarrativeGraph.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Liyodev.NarrativeGraph",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

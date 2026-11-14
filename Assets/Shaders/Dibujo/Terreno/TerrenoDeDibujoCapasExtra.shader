@@ -9,6 +9,8 @@ Shader "Hidden/El Sendero/Terreno de dibujo (capas extra)"
 
         // set by terrain engine
         [HideInInspector] _Control("Control (RGBA)", 2D) = "red" {}
+        [HideInInspector] _ControlDeCapas0("Mapa de capas 0 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _ControlDeCapas1("Mapa de capas 1 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
         [HideInInspector] _Splat3("Layer 3 (A)", 2D) = "white" {}
         [HideInInspector] _Splat2("Layer 2 (B)", 2D) = "white" {}
         [HideInInspector] _Splat1("Layer 1 (G)", 2D) = "white" {}

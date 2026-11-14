@@ -1,0 +1,43 @@
+using System;
+using UnityEngine;
+
+/// <summary>
+/// Bifurca según el estado de una quest: «el personaje dice una cosa u otra según cómo vaya la
+/// misión».
+///
+/// Puertos: No iniciada / Activa / Pasos listos / Completada.
+/// "Pasos listos" = activa con todos los pasos completados pero sin entregar todavía.
+/// </summary>
+[Serializable]
+[NarrativeNodeInfo("Quests", "Según estado de quest", "Bifurca por el estado actual de una quest (no iniciada / activa / pasos listos / completada).")]
+[SavePoint("Solo consulta estado; seguro para guardar")]
+[NarrativeNoWorldEffect]
+[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
+public sealed class BranchQuestStateNode : NarrativeNode
+{
+    [NarrativeKey(NarrativeKeyKind.Quest)]
+    [Tooltip("ID de la quest a consultar.")]
+    public string questId;
+
+    static readonly string[] Ports = { "No iniciada", "Activa", "Pasos listos", "Completada" };
+    public override string[] GetOutputPorts() => Ports;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Bifurca según");
+
+    public override string DescribeDecision()
+        => $"Según estado de quest \"{displayTitle}\" (guid {guid}): quest '{questId}'. Salidas: No iniciada / Activa / Pasos listos / Completada.";
+
+    public override void Enter(NarrativeContext ctx, Action ready)
+    {
+        var state = NarrativeQuestState.NotStarted;
+        if (string.IsNullOrWhiteSpace(questId))
+            Debug.LogWarning($"[BranchQuestStateNode:{guid}] questId vacío → salida 'No iniciada'.");
+        else if (ctx?.Signals != null)
+            state = ctx.Signals.GetQuestState(questId);
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[BranchQuestStateNode:{guid}] {questId} → {state}");
+#endif
+        AdvanceThrough(ctx, ready, (int)state);
+    }
+}

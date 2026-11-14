@@ -120,7 +120,7 @@ public static class HechizosConVolumen
     /// Mallas preparadas por PrepararPaletas.
     public static EnergyMeshes Mallas => _m;
 
-    /// Paleta por nombre (Fuego, Viento, Luz, Mente, Oscuro, Cielo, Rosa, Blanco, Polvo, PolvoOscuro).
+    /// Paleta por nombre (Fuego, Viento, Luz, Mente, Oscuro, Cielo, Rosa, Demonio, Blanco, Polvo, PolvoOscuro).
     public static EnergyPalette Paleta(string nombre) => _p.TryGetValue(nombre, out var p) ? p : null;
 
     // ── Paletas y mallas ────────────────────────────────────────────────────────────────────
@@ -153,6 +153,8 @@ public static class HechizosConVolumen
         Paleta("Oscuro", new Color(1.3f, 0.45f, 1.9f), new Color(0.16f, 0.06f, 0.28f), new Color(0.05f, 0.02f, 0.09f), new Color(1.7f, 0.3f, 1.4f), new Color(0.85f, 0.35f, 1f), corteDelBrillo: 0.82f);
         Paleta("Cielo", new Color(2.2f, 2.3f, 2.4f), new Color(0.55f, 1.1f, 1.9f), new Color(0.2f, 0.4f, 0.9f), new Color(1.6f, 2.0f, 2.3f), new Color(0.6f, 0.8f, 1f));
         Paleta("Rosa", new Color(2.3f, 2.0f, 2.1f), new Color(1.8f, 0.8f, 1.0f), new Color(0.9f, 0.3f, 0.45f), new Color(2.1f, 1.6f, 1.8f), new Color(1f, 0.7f, 0.75f));
+        // Lo que lanzan el demonio y los magos rivales: rojo encendido con sombra granate.
+        Paleta("Demonio", new Color(2.4f, 1.5f, 0.9f), new Color(1.5f, 0.2f, 0.1f), new Color(0.35f, 0.03f, 0.08f), new Color(2.2f, 0.7f, 0.2f), new Color(1f, 0.35f, 0.2f));
         Paleta("Blanco", new Color(3f, 3f, 3f), new Color(2.2f, 2.1f, 2.0f), new Color(1.5f, 1.35f, 1.6f), new Color(1.5f, 1.6f, 2.2f), Color.white);
         Paleta("Polvo", new Color(0.95f, 0.9f, 0.8f), new Color(0.78f, 0.7f, 0.58f), new Color(0.55f, 0.45f, 0.38f), new Color(0.78f, 0.7f, 0.58f), Color.white, sinBorde: true);
         Paleta("PolvoOscuro", new Color(0.5f, 0.38f, 0.6f), new Color(0.25f, 0.18f, 0.32f), new Color(0.11f, 0.07f, 0.15f), new Color(0.25f, 0.18f, 0.32f), Color.white, sinBorde: true);

@@ -50,7 +50,7 @@ public sealed class AspectoDeDibujo : ScriptableObject
 
     [Header("Suelo")]
     [Tooltip("Cuánto se ve el dibujo de las texturas del terreno. 0 = cada capa de un color plano (su color medio); 1 = la textura entera.")]
-    [Range(0f, 1f)] public float texturaDelSuelo = 0.35f;
+    [Range(0f, 1f)] public float texturaDelSuelo = 0.2f;
 
     [Header("Pinceladas")]
     [Tooltip("Cuánto se notan las pinceladas en los modelos propios de color liso (los que llevan «Pinceladas» en el material). 0 = color liso.")]

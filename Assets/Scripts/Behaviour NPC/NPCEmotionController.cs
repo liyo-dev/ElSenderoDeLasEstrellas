@@ -35,10 +35,16 @@ public class NPCEmotionController : MonoBehaviour
     [SerializeField] private string[] ojosYaCerrados = { "Eye07", "Eye09" };
 
     [Header("Barba que tapa la boca")]
-    [Tooltip("Piezas (por nombre) que tapan la boca, como las barbas largas. Mientras habla bajan un poco, como si moviera la mandíbula, para que se note que habla. Ver INC-1090.")]
+    [Tooltip("Piezas (por nombre) que tapan la boca, como las barbas largas. Mientras habla se estira hacia abajo solo su parte de abajo y de delante (la barba), como si moviera la mandíbula; lo de arriba (pelo, cráneo) no se mueve. La malla tiene que tener Read/Write. Ver INC-1090 e INC-1184.")]
     [SerializeField] private string[] piezasQueBajanAlHablar = { "Head05_Santa" };
-    [Tooltip("Metros que baja la pieza con la boca abierta (con la entreabierta, la mitad).")]
+    [Tooltip("Metros que baja la punta de la barba con la boca abierta (con la entreabierta, la mitad).")]
     [SerializeField, Min(0f)] private float metrosQueBajaAlHablar = 0.02f;
+    [Tooltip("Altura de la línea de la boca, en fracción de la pieza contada desde abajo: lo que está por encima no se mueve.")]
+    [SerializeField, Range(0f, 1f)] private float alturaDeLaBoca = 0.30f;
+    [Tooltip("Por debajo de esta altura (fracción de la pieza desde abajo) la barba baja entera; entre esta y la de la boca, cada vez menos.")]
+    [SerializeField, Range(0f, 1f)] private float alturaQueBajaEntera = 0.12f;
+    [Tooltip("Qué parte de la pieza, de atrás (-1) a delante (1), se mueve: nada detrás del primer valor, todo delante del segundo. Así la nuca no baja con la barba.")]
+    [SerializeField] private Vector2 franjaDeDelante = new Vector2(-0.1f, 0.5f);
     [Tooltip("Si hay una barba que tapa la boca, las bocas no se pintan: al bajar la barba asomarían por encima de ella.")]
     [SerializeField] private bool ocultarBocaBajoLaBarba = true;
 
@@ -78,8 +84,8 @@ public class NPCEmotionController : MonoBehaviour
     private bool _tieneOjos, _tieneBoca;
     private float _finDelHabla, _proximoCambioDeBoca;
     private float _finDeReaccion = float.PositiveInfinity;
-    private Transform[] _piezasQueBajan;
-    private Vector3[] _sitioDeLasPiezas;
+    private BarbaQueBaja[] _barbas;
+    private float _aperturaDeLaBarba;
     private bool _bocaBajoLaBarba;
 
     /// Se dispara cuando cambia la emoción actual, incluida la vuelta al reposo.
@@ -98,6 +104,7 @@ public class NPCEmotionController : MonoBehaviour
         BuscarPiezasQueBajan();
     }
     void Start() => VolverAReposo();
+    void OnDestroy() => SoltarBarbas();
     void OnEnable()
     {
         ProgramarParpadeo();
@@ -111,6 +118,7 @@ public class NPCEmotionController : MonoBehaviour
     }
     void OnDisable()
     {
+        BajarPiezas(0f);
         CarasActivas.Remove(this);
         if (_duenoDelTick == this)
         {
@@ -390,17 +398,20 @@ public class NPCEmotionController : MonoBehaviour
         BajarPiezas(apertura);
     }
 
-    /// Las piezas activas que tapan la boca (barbas). Ver INC-1090.
+    /// Las piezas activas que tapan la boca (barbas): para cada una se preparan dos copias de su malla con
+    /// la barba entreabierta y abierta, que se cambian por la de reposo al hablar. Ver INC-1090 e INC-1184.
     private void BuscarPiezasQueBajan()
     {
         if (piezasQueBajanAlHablar == null || piezasQueBajanAlHablar.Length == 0) return;
-        var piezas = new List<Transform>();
+        var barbas = new List<BarbaQueBaja>();
         foreach (var t in GetComponentsInChildren<Transform>(true))
-            if (t.gameObject.activeSelf && System.Array.IndexOf(piezasQueBajanAlHablar, t.name) >= 0) piezas.Add(t);
-        if (piezas.Count == 0) return;
-        _piezasQueBajan = piezas.ToArray();
-        _sitioDeLasPiezas = new Vector3[_piezasQueBajan.Length];
-        for (int i = 0; i < _piezasQueBajan.Length; i++) _sitioDeLasPiezas[i] = _piezasQueBajan[i].localPosition;
+        {
+            if (!t.gameObject.activeSelf || System.Array.IndexOf(piezasQueBajanAlHablar, t.name) < 0) continue;
+            var barba = BarbaQueBaja.Preparar(t, transform, metrosQueBajaAlHablar, alturaDeLaBoca, alturaQueBajaEntera, franjaDeDelante);
+            if (barba != null) barbas.Add(barba);
+        }
+        if (barbas.Count == 0) return;
+        _barbas = barbas.ToArray();
         _bocaBajoLaBarba = ocultarBocaBajoLaBarba;
         if (!_bocaBajoLaBarba) return;
         foreach (var boca in _mouthMeshes.Values)
@@ -412,17 +423,100 @@ public class NPCEmotionController : MonoBehaviour
 
     private void BajarPiezas(float apertura)
     {
-        if (_piezasQueBajan == null) return;
-        for (int i = 0; i < _piezasQueBajan.Length; i++)
+        if (_barbas == null || apertura == _aperturaDeLaBarba) return;
+        _aperturaDeLaBarba = apertura;
+        for (int i = 0; i < _barbas.Length; i++) _barbas[i]?.Poner(apertura);
+    }
+
+    private void SoltarBarbas()
+    {
+        if (_barbas == null) return;
+        for (int i = 0; i < _barbas.Length; i++) _barbas[i]?.Soltar();
+        _barbas = null;
+    }
+
+    /// Una pieza con barba y sus tres mallas: reposo (la del modelo), entreabierta y abierta.
+    private sealed class BarbaQueBaja
+    {
+        private MeshFilter _filtro;
+        private SkinnedMeshRenderer _piel;
+        private Mesh _reposo, _entreabierta, _abierta;
+
+        public static BarbaQueBaja Preparar(Transform pieza, Transform personaje, float metros,
+                                             float alturaDeLaBoca, float alturaQueBajaEntera, Vector2 franjaDeDelante)
         {
-            var pieza = _piezasQueBajan[i];
-            if (pieza == null) continue;
-            var abajo = pieza.parent != null
-                ? pieza.parent.InverseTransformVector(Vector3.down * metrosQueBajaAlHablar * apertura)
-                : Vector3.down * metrosQueBajaAlHablar * apertura;
-            pieza.localPosition = _sitioDeLasPiezas[i] + abajo;
+            var filtro = pieza.GetComponent<MeshFilter>();
+            var piel = filtro == null ? pieza.GetComponent<SkinnedMeshRenderer>() : null;
+            var malla = filtro != null ? filtro.sharedMesh : piel != null ? piel.sharedMesh : null;
+            if (malla == null) return null;
+            if (!malla.isReadable)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[NPCEmotionController] La malla {malla.name} de {personaje.name} no tiene Read/Write: su barba no se moverá al hablar.", pieza);
+#endif
+                return null;
+            }
+            // Arriba, delante y la bajada, en el espacio de la malla, con el personaje de pie.
+            var arriba = pieza.InverseTransformDirection(personaje.up).normalized;
+            var delante = pieza.InverseTransformDirection(personaje.forward).normalized;
+            var bajada = pieza.InverseTransformVector(-personaje.up * metros);
+            var vertices = malla.vertices;
+            float hMin = float.MaxValue, hMax = float.MinValue, dMin = float.MaxValue, dMax = float.MinValue;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float h = Vector3.Dot(vertices[i], arriba), d = Vector3.Dot(vertices[i], delante);
+                if (h < hMin) hMin = h; if (h > hMax) hMax = h;
+                if (d < dMin) dMin = d; if (d > dMax) dMax = d;
+            }
+            if (hMax - hMin < 1e-5f || dMax - dMin < 1e-5f) return null;
+            float dCentro = (dMin + dMax) * 0.5f, dMitad = (dMax - dMin) * 0.5f;
+            var pesos = new float[vertices.Length];
+            bool algo = false;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float h = (Vector3.Dot(vertices[i], arriba) - hMin) / (hMax - hMin);
+                float d = (Vector3.Dot(vertices[i], delante) - dCentro) / dMitad;
+                pesos[i] = (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(alturaQueBajaEntera, alturaDeLaBoca, h)))
+                         * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(franjaDeDelante.x, franjaDeDelante.y, d));
+                algo |= pesos[i] > 0f;
+            }
+            if (!algo) return null;
+            return new BarbaQueBaja
+            {
+                _filtro = filtro, _piel = piel, _reposo = malla,
+                _entreabierta = Copiar(malla, vertices, pesos, bajada * 0.5f, "entreabierta"),
+                _abierta = Copiar(malla, vertices, pesos, bajada, "abierta"),
+            };
+        }
+
+        private static Mesh Copiar(Mesh malla, Vector3[] vertices, float[] pesos, Vector3 bajada, string sufijo)
+        {
+            var copia = Object.Instantiate(malla);
+            copia.name = $"{malla.name} ({sufijo})";
+            copia.hideFlags = HideFlags.DontSave;
+            var movidos = new Vector3[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++) movidos[i] = vertices[i] + bajada * pesos[i];
+            copia.vertices = movidos;
+            copia.RecalculateBounds();
+            return copia;
+        }
+
+        public void Poner(float apertura)
+        {
+            var malla = apertura >= 0.75f ? _abierta : apertura > 0f ? _entreabierta : _reposo;
+            if (_filtro != null) { if (_filtro.sharedMesh != malla) _filtro.sharedMesh = malla; }
+            else if (_piel != null && _piel.sharedMesh != malla) _piel.sharedMesh = malla;
+        }
+
+        /// Devuelve la malla del modelo y libera las copias.
+        public void Soltar()
+        {
+            Poner(0f);
+            if (_entreabierta != null) Object.Destroy(_entreabierta);
+            if (_abierta != null) Object.Destroy(_abierta);
         }
     }
+
     private void ActivateMesh(Dictionary<string, GameObject> mallas, string nombre, string tipo, bool diagnostico = true)
     {
         if ((mallas == _eyeMeshes && !_tieneOjos) || (mallas == _mouthMeshes && !_tieneBoca)) return;

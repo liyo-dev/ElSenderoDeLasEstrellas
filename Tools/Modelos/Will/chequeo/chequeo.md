@@ -1,7 +1,7 @@
-# Chequeo de choques — will.blend
+# Chequeo de choques — will_nuevo_sinpelo.blend
 **PASA (18 avisos menores: mirar las fotos)**
 
-Poses revisadas: 76 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba)
+Poses revisadas: 78 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas, sentado)
 
 ## Tela que se rasga (aristas estiradas)
 - Body23_Aventurero:Bota_l (+0.12,0.12): 3 (peor en MoveFWD_Normal_InPlace_NoWeapon@9.0)
@@ -17,7 +17,7 @@ Poses revisadas: 76 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, 
 - nada
 
 ## Piezas que se meten dentro de otra (puntos)
-- Body24_AventureroChaqueta:RibeteManga_l (+0.00,0.37): 94 (peor en brazos_bajados, dentro de cuerpo/lowerarm_l)
+- Body24_AventureroChaqueta:Manga_l (+0.00,0.37): 94 (peor en brazos_bajados, dentro de cuerpo/lowerarm_l)
 - Body23_Aventurero:Suela_r (-0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@14.3, dentro de cuerpo/foot_r)
 - Body24_AventureroChaqueta:Suela_r (-0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@14.3, dentro de cuerpo/foot_r)
 - Body23_Aventurero:Suela_l (+0.12,0.01): 37 (peor en MoveFWD_Normal_InPlace_NoWeapon@6.3, dentro de cuerpo/foot_l)

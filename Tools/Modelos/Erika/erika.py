@@ -1,5 +1,5 @@
 # Erika, vestuario propio: guerrera ligera. Camisa verde, peto y brazales de cuero, una hombrera, cinturón
-# con bolsa, capa corta a la espalda, pañuelo azul claro al cuello (el que luego lleva Will), pantalón y
+# capa corta a la espalda, pañuelo azul claro al cuello (el que luego lleva Will), pantalón y
 # botas altas. Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body28_GuerreraLigera → las manos y el torso de Body05 con la ropa encima, pesado como él.
@@ -44,11 +44,9 @@ toro("traje", "PetoArriba", (0, -0.01, 0.69), 0.199, 0.011, "CueroOscuro", None,
 for s in (1, -1):   # correas del peto con su hebilla
     tubo("traje", f"CorreaPeto{s}", curva((0.11 * s, -0.19, 0.69), (0.14 * s, -0.02, 0.795), (0.11 * s, 0.17, 0.69), 9), [0.016] * 9, "CueroOscuro", None, seg=8)
     esfera("traje", f"HebillaPeto{s}", (0.115 * s, -0.2, 0.685), (0.02, 0.01, 0.02), "Laton", None)
-# Cinturón ancho con hebilla y bolsa
+# Cinturón ancho con hebilla (sin bolsa: en el costado se la comía la mano al andar)
 toro("traje", "Cinturon", (0, -0.01, 0.45), 0.207, 0.024, "CueroOscuro", None, escala=(1, 0.92, 0.9))
 esfera("traje", "Hebilla", (0.0, -0.21, 0.45), (0.034, 0.014, 0.03), "Laton", None)
-caja("traje", "Bolsa", (-0.2, -0.06, 0.4), (0.07, 0.1, 0.09), "Cuero", {"pelvis": 1.0}, rot=(0, R(8), 0))
-caja("traje", "TapaBolsa", (-0.238, -0.06, 0.425), (0.012, 0.106, 0.05), "CueroOscuro", {"pelvis": 1.0}, rot=(0, R(8), 0))
 # Pañuelo azul claro al cuello, con el pico por delante (el que luego lleva Will)
 toro("traje", "Panuelo", (0, -0.012, 0.728), 0.165, 0.045, "Panuelo", {"spine_03": 1.0}, escala=(1, 0.98, 0.7))
 bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=4, radius1=0.11, radius2=0.0, depth=0.15)

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e624191733c4a8c4695841ac76aee686, type: 3}
+  m_Name: Prueba plantilla
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::NarrativeGraphEditor.Story.StoryTemplate
+  description: 
+  steps:
+  - rid: 6540294518730654203
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294518730654203
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio del Cap. 3
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: bbc5a8b3-d364-4c6b-8c8f-f606f6d90a64
+        position: {x: 0, y: 0}
+        outputs: []

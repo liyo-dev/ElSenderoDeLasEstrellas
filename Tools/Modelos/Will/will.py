@@ -286,6 +286,15 @@ def radio_camiseta(z):
     return p[-1][1]
 torno("traje", "Camiseta", CAMISETA, "Camiseta", elip=ELIP)
 toro("traje", "BajoCamiseta", (0, -0.01, 0.378), 0.188, 0.011, "Dorado", None, escala=(1, ELIP, 1))   # ribete del bajo
+# Fondo bajo la camiseta, del color del pantalón: el cuerpo de debajo está quitado y, tumbado o visto desde los pies,
+# por el bajo se veía el interior vacío de la camiseta (14 nov 2026; ver ../Prendas/chequeo_huecos.py).
+bm = bmesh.new(); _c = bm.verts.new((0, -0.01, 0.41))
+_anillo = [bm.verts.new((math.cos(2 * math.pi * k / 40) * 0.174, -0.01 + math.sin(2 * math.pi * k / 40) * 0.174 * ELIP, 0.41)) for k in range(40)]
+for k in range(40): bm.faces.new((_c, _anillo[(k + 1) % 40], _anillo[k]))
+bm.normal_update()
+for f in bm.faces:
+    if f.normal.z > 0: f.normal_flip()   # mira hacia abajo
+nueva("traje", "Fondo", bm, "Pantalon", {"pelvis": 1.0})
 Z_BRAZO = 0.633
 for lado, s in (("l", 1), ("r", -1)):
     # Manga corta: del hombro a medio brazo, con ribete dorado

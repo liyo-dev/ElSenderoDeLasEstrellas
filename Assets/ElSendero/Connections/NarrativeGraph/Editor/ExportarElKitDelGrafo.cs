@@ -7,17 +7,13 @@ using Debug = UnityEngine.Debug;
 
 namespace Sendero.Narrative.Editor
 {
-    /// Exporta el grafo narrativo (sin los capítulos del Sendero) a un .unitypackage y lo prueba en
-    /// un proyecto de Unity aparte (`../NarrativeGraphPrueba`, se crea la primera vez), en segundo plano: importa el paquete, monta el ejemplo «El faro» y
-    /// deja los logs en Logs/claude/kit_prueba_*.log. Luego el proyecto se abre desde Unity Hub.
+    /// El grafo narrativo es el paquete embebido Packages/com.liyodev.narrativegraph. Desde aquí se
+    /// exporta a .unitypackage y se prueba en un proyecto de Unity aparte (`../NarrativeGraphPrueba`,
+    /// se crea la primera vez) que usa el paquete directamente (file:), en segundo plano: importa el
+    /// ejemplo «El faro» y lo monta. Logs en Logs/claude/kit_prueba_*.log.
     public static class ExportarElKitDelGrafo
     {
-        static readonly string[] Carpetas =
-        {
-            "Assets/NarrativeGraph/Runtime", "Assets/NarrativeGraph/Editor", "Assets/NarrativeGraph/Samples",
-            "Assets/NarrativeGraph/Documentation", "Assets/NarrativeGraph/Tools",
-        };
-
+        const string Raiz = "Packages/com.liyodev.narrativegraph";
         const string Paquete = "Builds/Kits/NarrativeGraph.unitypackage";
         const string ProyectoDePrueba = "../NarrativeGraphPrueba";
 
@@ -25,24 +21,23 @@ namespace Sendero.Narrative.Editor
         public static string Exportar()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Paquete));
-            AssetDatabase.ExportPackage(Carpetas.Where(AssetDatabase.IsValidFolder).ToArray(), Paquete, ExportPackageOptions.Recurse);
+            AssetDatabase.ExportPackage(new[] { Raiz }, Paquete, ExportPackageOptions.Recurse);
             var ruta = Path.GetFullPath(Paquete);
             Debug.Log("[Kit del grafo] Exportado: " + ruta);
             return ruta;
         }
 
-        [MenuItem("El Sendero/Kits/Grafo narrativo: exportar y probar en un proyecto nuevo")]
-        public static void ExportarYProbar()
+        [MenuItem("El Sendero/Kits/Grafo narrativo: probar en el proyecto de prueba")]
+        public static void Probar()
         {
-            var paquete = Exportar();
-            // Si el proyecto de prueba ya existe, se reimporta el paquete encima.
             var proyecto = Path.GetFullPath(ProyectoDePrueba);
-            if (!Directory.Exists(proyecto))
-            {
-                Directory.CreateDirectory(Path.Combine(proyecto, "Assets"));
-                Directory.CreateDirectory(Path.Combine(proyecto, "Packages"));
-                File.WriteAllText(Path.Combine(proyecto, "Packages", "manifest.json"), Manifiesto());
-            }
+            Directory.CreateDirectory(Path.Combine(proyecto, "Assets"));
+            Directory.CreateDirectory(Path.Combine(proyecto, "Packages"));
+            File.WriteAllText(Path.Combine(proyecto, "Packages", "manifest.json"), Manifiesto(Path.GetFullPath(Raiz)));
+            // Lo que dejó una importación anterior del .unitypackage chocaría con el paquete.
+            var viejo = Path.Combine(proyecto, "Assets", "NarrativeGraph");
+            if (Directory.Exists(viejo)) Directory.Delete(viejo, true);
+            if (File.Exists(viejo + ".meta")) File.Delete(viejo + ".meta");
 
             var logs = Path.GetFullPath("Logs/claude");
             Directory.CreateDirectory(logs);
@@ -50,7 +45,7 @@ namespace Sendero.Narrative.Editor
             var cmd = new StringBuilder();
             cmd.AppendLine("@echo off");
             cmd.AppendLine($"echo INICIO {proyecto} > \"{logs}\\kit_prueba_estado.txt\"");
-            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -importPackage \"{paquete}\" -quit -logFile \"{logs}\\kit_prueba_import.log\"");
+            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod NarrativeGraphEditor.NarrativeSamples.ImportAll -quit -logFile \"{logs}\\kit_prueba_import.log\"");
             cmd.AppendLine($"echo IMPORTADO %ERRORLEVEL% >> \"{logs}\\kit_prueba_estado.txt\"");
             cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod NarrativeGraphSamples.ElFaro.ElFaroBuilder.BuildAndOpen -quit -logFile \"{logs}\\kit_prueba_ejemplo.log\"");
             cmd.AppendLine($"echo EJEMPLO %ERRORLEVEL% >> \"{logs}\\kit_prueba_estado.txt\"");
@@ -62,16 +57,15 @@ namespace Sendero.Narrative.Editor
             Debug.Log($"[Kit del grafo] Probando en {proyecto} (segundo plano). Estado en Logs/claude/kit_prueba_estado.txt");
         }
 
-        /// Las dependencias del kit (UI y TextMeshPro, Timeline, Newtonsoft) y los módulos de Unity
-        /// que tiene este proyecto, con sus versiones.
-        static string Manifiesto()
+        /// El paquete del grafo (por ruta), sus dependencias y los módulos de Unity de este proyecto.
+        static string Manifiesto(string paquete)
         {
-            var nuestro = File.ReadAllLines("Packages/manifest.json");
-            var lineas = nuestro.Where(l =>
+            var lineas = File.ReadAllLines("Packages/manifest.json").Where(l =>
                     l.Contains("\"com.unity.modules.") || l.Contains("\"com.unity.ugui\"") || l.Contains("\"com.unity.timeline\"") ||
                     l.Contains("\"com.unity.nuget.newtonsoft-json\"") || l.Contains("\"com.unity.test-framework\""))
                 .Select(l => l.Trim().TrimEnd(','))
                 .ToList();
+            lineas.Insert(0, $"\"com.liyodev.narrativegraph\": \"file:{paquete.Replace('\\', '/')}\"");
             return "{\n  \"dependencies\": {\n    " + string.Join(",\n    ", lineas) + "\n  }\n}\n";
         }
     }

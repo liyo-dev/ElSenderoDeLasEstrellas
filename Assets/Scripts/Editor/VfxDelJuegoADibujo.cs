@@ -23,7 +23,7 @@ public static class VfxDelJuegoADibujo
     {
         Destello, Brillo, Chispitas, Confeti, Humo, Polvo, Chispas, Golpe, GolpeDePiedra, Oscuro, Circulo,
         Tajo, Columna, Llama, Onda, Implosion, Portal, Remolino, Curacion, Velocidad, Meteoro, Juicio,
-        Veneno, Estrellas, Escudo, Orbe, Chimenea,
+        Veneno, Estrellas, Orbe, Chimenea,
     }
 
     private sealed class Entrada
@@ -104,9 +104,6 @@ public static class VfxDelJuegoADibujo
         new Entrada(Hovl + "Magic circles/Magic circle.prefab", Tipo.Circulo, Oro),
         new Entrada(Hovl + "Magic circles/Magic circle 2.prefab", Tipo.Circulo, Lila),
         new Entrada(Hovl + "Magic circles/Healing circle.prefab", Tipo.Circulo, Menta),
-        new Entrada(Hovl + "Magic shields/Magic shield blue.prefab", Tipo.Escudo, Cielo),
-        new Entrada(Hovl + "Magic shields/Magic shield pink.prefab", Tipo.Escudo, Rosa),
-        new Entrada(Hovl + "Magic shields/Magic shield yellow.prefab", Tipo.Escudo, Oro),
         new Entrada(Hovl + "Portals/Portal yellow.prefab", Tipo.Portal, Oro),
         new Entrada(Hovl + "Portals/Portal red.prefab", Tipo.Portal, Rojo),
         new Entrada(Hovl + "Portals/Portal blue.prefab", Tipo.Portal, Cielo),
@@ -513,7 +510,7 @@ public static class VfxDelJuegoADibujo
             float escalaDeLaRaiz = Mathf.Max(0.001f, Mathf.Abs(raiz.transform.localScale.x));
             var dibujo = new GameObject(NombreDelDibujo);
             dibujo.transform.SetParent(raiz.transform, false);
-            float escala = (e.Tipo == Tipo.Escudo ? 1f : radio) / escalaDeLaRaiz;
+            float escala = radio / escalaDeLaRaiz;
             dibujo.transform.localScale = Vector3.one * escala;
             Construir(e.Tipo, dibujo, t, e.Color);
             // Las luces se montan para tamaño 1: su alcance crece con el efecto.

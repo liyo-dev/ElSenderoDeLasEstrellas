@@ -310,6 +310,31 @@ def _contrastes(lista):
     return avisos
 
 
+# ── Piezas en el paso de las manos ───────────────────────────────────────────────────────────────
+# Con los brazos caídos y al andar, las manos van por los costados a la altura de la cadera. Una bolsa, un zurrón o un
+# frasco ahí se lo come la mano (Oliver y Eldran, 14 nov 2026: la mano se metía en el libro del zurrón). Decisión de
+# Raúl: los personajes no llevan bolsas ni mochilas; lo que vaya en la cintura, por delante o por detrás.
+PASO_MANOS_X = (0.17, 0.40)      # distancia al centro, a cada lado
+PASO_MANOS_Z = (0.22, 0.56)      # altura
+PASO_MANOS_FONDO = 0.12          # solo lo que sobresale del costado (|y| pequeño: el costado, no delante ni detrás)
+SOBRESALE = 0.215                # más lejos del eje del cuerpo que esto: no es la propia prenda del tronco
+
+def _en_el_paso_de_las_manos(lista):
+    avisos = []
+    for o, pesos in lista:
+        if isinstance(pesos, rl.Zona) and pesos.huesos and any("arm" in h or "hand" in h for h in pesos.huesos): continue
+        P = np.array([tuple(o.matrix_world @ v.co) for v in o.data.vertices])
+        if not len(P): continue
+        if P[:, 0].min() < -0.1 and P[:, 0].max() > 0.1: continue      # da la vuelta al cuerpo (bajos, fajas): es ropa del tronco
+        r = np.hypot(P[:, 0], (P[:, 1] + 0.01) / 0.92)
+        dentro = ((np.abs(P[:, 0]) > PASO_MANOS_X[0]) & (np.abs(P[:, 0]) < PASO_MANOS_X[1]) & (P[:, 2] > PASO_MANOS_Z[0])
+                  & (P[:, 2] < PASO_MANOS_Z[1]) & (np.abs(P[:, 1]) < PASO_MANOS_FONDO) & (r > SOBRESALE))
+        if dentro.mean() > 0.3:
+            avisos.append(f"Paso de las manos: {o.name} cuelga en el costado, donde van las manos al andar; la mano se mete "
+                          f"dentro. Sin bolsas ni mochilas en el costado: por delante o por detrás.")
+    return avisos
+
+
 # ── Revisión antes de exportar ────────────────────────────────────────────────────────────────────
 HOLGURA_RIGIDA = 0.02      # una pieza rígida alrededor de un miembro no se separa del cuerpo más que esto (m)
 
@@ -351,6 +376,7 @@ def revisar_antes_de_exportar(lista, cuerpo, arm, parar=False):
                 avisos.append(f"{o.name}: pieza rígida en {hueso} a {r_pieza - r_cuerpo:.3f} m del cuerpo (máx. {HOLGURA_RIGIDA}); "
                               f"se meterá en el tronco al doblar el brazo o la pierna. Usa una pieza que copie pesos o cíñela.")
     avisos += _contrastes(lista)
+    avisos += _en_el_paso_de_las_manos(lista)
     for a_ in avisos: print("REVISAR:", a_)
     if not avisos: print("REVISAR: nada")
     if parar and avisos: raise SystemExit("Revisión antes de exportar: " + "; ".join(avisos))

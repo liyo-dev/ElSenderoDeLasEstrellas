@@ -62,6 +62,8 @@ MonoBehaviour:
   - rid: 7428272564026736787
   - rid: 7428272610038513846
   - rid: 7428272656548102304
+  - rid: 6540294600349712507
+  - rid: 6540294600349712508
   applicableSceneNames: []
   references:
     version: 2
@@ -91,7 +93,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 5983492470211221218
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 13.- Will se acerca -> Oliver saluda (WILL_EXITS_HOUSE_OLIVER_GREETING)
         chapter: Cap. 1
@@ -108,7 +110,7 @@ MonoBehaviour:
         eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
         acceptEarlierEvent: 1
     - rid: 6000000000000000001
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: CAPITULO 1
         chapter: Cap. 1
@@ -147,7 +149,7 @@ MonoBehaviour:
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000004
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 6.- Pensamiento Will
         chapter: Cap. 1
@@ -194,7 +196,7 @@ MonoBehaviour:
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000013
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 21.- HAY QUE BUSCAR LA CAJA BAJO UN ARBOL
         chapter: Cap. 1
@@ -213,7 +215,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 39ef7fd3a6e9f8641acf2cced0f26532, type: 2}
         noGiver: 0
     - rid: 6000000000000000014
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 23.- Recoge la caja
         chapter: Cap. 1
@@ -230,7 +232,7 @@ MonoBehaviour:
         eventKey: CAP1_CAJA_ELDRAN
         acceptEarlierEvent: 1
     - rid: 6000000000000000015
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 26.- Habla con Eldran (entrega)
         chapter: Cap. 1
@@ -249,7 +251,7 @@ MonoBehaviour:
         questIcon: {fileID: 6303534759802428624, guid: e3166847a7c81b443bdbe623a681ae52, type: 3}
         showMarker: 1
     - rid: 6000000000000000016
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 27.- DLG_ELDRAN_MISSION2_TURNIN
         chapter: Cap. 1
@@ -267,7 +269,7 @@ MonoBehaviour:
         npcId: NPC_Eldran
         oneShotFlag: 
     - rid: 6000000000000000017
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 28.- Completa ELDRAN_MISSION2
         chapter: Cap. 1
@@ -289,7 +291,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 0
     - rid: 6000000000000000018
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 18.- La moneda de Eldran, adelantada (IT_Coin x1)
         chapter: Cap. 1
@@ -331,7 +333,7 @@ MonoBehaviour:
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 0
     - rid: 6000000000000000023
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 31.- HAY QUE DERROTAR AL DEMONIO
         chapter: Cap. 1
@@ -374,7 +376,7 @@ MonoBehaviour:
         missionId: 0
         arenaContext: 
     - rid: 6000000000000000027
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '33.- Demonio derrotado: completa ELDRAN_MISSION3'
         chapter: Cap. 1
@@ -396,7 +398,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 0
     - rid: 6000000000000000028
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Fin Cap. 1 -> puente (CH_Cap1_BACK_1)
         chapter: Cap. 1
@@ -408,10 +410,11 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
         position: {x: 1960, y: 1090}
-        outputs: []
+        outputs:
+        - pieza-npc_oliver-usual-desde-el-cap-2-charla-con-victoria-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
         eventKey: CH_Cap1_BACK_1
     - rid: 6000000000000000029
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 2.- ARRANCA EL SUENO DEL PROLOGO (PROLOGUE_START)
         chapter: Cap. 1
@@ -427,7 +430,7 @@ MonoBehaviour:
         - 413efe3c-2b7f-4292-b70b-c48b3b78f39a
         eventKey: PROLOGUE_START
     - rid: 6000000000000000030
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 3.- Espera fin del sueno (PROLOGUE_DONE)
         chapter: Cap. 1
@@ -491,7 +494,7 @@ MonoBehaviour:
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
     - rid: 6000000000000000034
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 8.- LA DISCUSION EN LA VENTANA (HOOK_DISCUSION_START)
         chapter: Cap. 1
@@ -507,7 +510,7 @@ MonoBehaviour:
         - bab7b6d6-bc6c-4021-890e-2617155a6862
         eventKey: HOOK_DISCUSION_START
     - rid: 6000000000000000035
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 9.- Espera fin de la discusion (HOOK_DISCUSION_DONE)
         chapter: Cap. 1
@@ -524,7 +527,7 @@ MonoBehaviour:
         eventKey: HOOK_DISCUSION_DONE
         acceptEarlierEvent: 1
     - rid: 6000000000000000036
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 10.- SAL A VER QUE PASA (WILL_MISSION0)
         chapter: Cap. 1
@@ -543,7 +546,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6000000000000000037
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 11.- Will sale de casa (WILL_EXITS_HOUSE)
         chapter: Cap. 1
@@ -560,7 +563,7 @@ MonoBehaviour:
         eventKey: WILL_EXITS_HOUSE
         acceptEarlierEvent: 1
     - rid: 6000000000000000038
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 12.- Completa WILL_MISSION0
         chapter: Cap. 1
@@ -582,7 +585,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 0
     - rid: 6000000000000000039
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 15.- LA DISCUSION SE RESUELVE (PERAS_START)
         chapter: Cap. 1
@@ -598,7 +601,7 @@ MonoBehaviour:
         - 18a57f1d-20e3-4539-b920-ac49b3750703
         eventKey: PERAS_START
     - rid: 6000000000000000040
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 16.- Espera fin de SEQ_PerasEldran (PERAS_DONE)
         chapter: Cap. 1
@@ -615,7 +618,7 @@ MonoBehaviour:
         eventKey: PERAS_DONE
         acceptEarlierEvent: 1
     - rid: 6000000000000000042
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 19.- ALGO INUTIL - compra en el mercado (WILL_MISSION1)
         chapter: Cap. 1
@@ -634,7 +637,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 974964efe9eb2c04e8b78a8b0d12e7c1, type: 2}
         noGiver: 0
     - rid: 6000000000000000043
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 20.- Espera la compra de la estrella (ESTRELLA_COMPRADA)
         chapter: Cap. 1
@@ -651,7 +654,7 @@ MonoBehaviour:
         eventKey: ESTRELLA_COMPRADA
         acceptEarlierEvent: 1
     - rid: 6000000000000000044
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 14b.- Busca a Eldran (ELDRAN_MISSION1)
         chapter: Cap. 1
@@ -670,7 +673,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6000000000000000045
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 14c.- Oliver se une al grupo (OLIVER_JOIN_PARTY)
         chapter: Cap. 1
@@ -710,7 +713,7 @@ MonoBehaviour:
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000047
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 14e.- Will llega hasta Eldran (WILL_REACHED_ELDRAN)
         chapter: Cap. 1
@@ -727,7 +730,7 @@ MonoBehaviour:
         eventKey: WILL_REACHED_ELDRAN
         acceptEarlierEvent: 1
     - rid: 6000000000000000048
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 14f.- Completa ELDRAN_MISSION1
         chapter: Cap. 1
@@ -749,7 +752,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 0
     - rid: 6000000000000000049
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 20b.- Completa WILL_MISSION1
         chapter: Cap. 1
@@ -770,8 +773,53 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 0
+    - rid: 6540294600349712507
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Oliver, lo de siempre: Desde el Cap. 2 \xB7 charla con Victoria en su puesto"
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_oliver-usual-desde-el-cap-2-charla-con-victoria-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
+        position: {x: 2000, y: 1240}
+        outputs:
+        - pieza-npc_victoria-usual-desde-el-cap-2-charla-con-oliver-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
+        actorId: NPC_Oliver
+        layer: 1
+        presence: 1
+        markId: Cap2_OliverCharla
+        lines:
+        - {fileID: 11400000, guid: 7cecb5c2f4974ff3beabf8d5e74bd74b, type: 2}
+        - {fileID: 11400000, guid: 5bf687a72b674581ab9af31a37c44df0, type: 2}
+        - {fileID: 11400000, guid: b1c00fcbbaa5410598cabcd7e2e1204f, type: 2}
+    - rid: 6540294600349712508
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Victoria, lo de siempre: Desde el Cap. 2 \xB7 charla con Oliver en su puesto"
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_victoria-usual-desde-el-cap-2-charla-con-oliver-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
+        position: {x: 2000, y: 1350}
+        outputs: []
+        actorId: NPC_Victoria
+        layer: 1
+        presence: 1
+        markId: Cap2_VictoriaCharla
+        lines:
+        - {fileID: 11400000, guid: c51f775b69b84263afb700937be9f475, type: 2}
+        - {fileID: 11400000, guid: 61105504cb7c47a69c7035fca3a4287d, type: 2}
+        - {fileID: 11400000, guid: 2c621a06b999487d980e2d5e1e729c6c, type: 2}
     - rid: 7428272359979352335
-      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 1.- Carga el valle del prologo (Prologo_Valle)
         chapter: Cap. 1
@@ -789,7 +837,7 @@ MonoBehaviour:
         sceneName: Prologo_Valle
         waitForCompletion: 1
     - rid: 7428272359979352336
-      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 3b.- Descarga el valle del prologo
         chapter: Cap. 1
@@ -882,7 +930,7 @@ MonoBehaviour:
         duracionMaxima: 240
         charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 20d2.- Eldran explica el punto de guardado (DG_ELDRAN_PUNTO_GUARDADO)
         chapter: Cap. 1
@@ -927,7 +975,7 @@ MonoBehaviour:
         duracionMaxima: 240
         charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 20e.- En el bosque, Eldran pide la caja (DG_ELDRAN_CAJA)
         chapter: Cap. 1
@@ -945,7 +993,7 @@ MonoBehaviour:
         npcId: NPC_Eldran
         oneShotFlag: 
     - rid: 7428272610038513845
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "20c2.- SIGUE A ELDRAN A VER QU\xC9 QUIERE (ELDRAN_SIGUEME)"
         chapter: Cap. 1
@@ -964,7 +1012,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 3b930c6537af08943b9c5df1d2d242f0, type: 2}
         noGiver: 0
     - rid: 7428272610038513846
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "20e2.- Completa ELDRAN_SIGUEME (ya sabe qu\xE9 quiere)"
         chapter: Cap. 1
@@ -986,7 +1034,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 7428272656548102303
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 4.- Se destapa la habitacion de Will (Easy Transitions)
         chapter: Cap. 1
@@ -1007,7 +1055,7 @@ MonoBehaviour:
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 3
     - rid: 7428272656548102304
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 5b.- Will ya esta de pie (will_wake_up)
         chapter: Cap. 1

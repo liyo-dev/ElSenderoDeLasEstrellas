@@ -170,8 +170,25 @@ namespace Sendero.UI
                 healthFillImage.DOKill();
                 healthFillImage.transform.DOKill(true);
             }
-            if (manaFillImage != null) manaFillImage.DOKill();
+            if (manaFillImage != null)
+            {
+                manaFillImage.DOKill();
+                if (manaFillImage.transform.parent != null) manaFillImage.transform.parent.DOKill(true);
+            }
             _currentFadeTween?.Kill();
+        }
+
+        /// <summary>
+        /// Hace temblar la barra de maná: se ha pedido magia sin maná suficiente
+        /// (<see cref="RespuestaSinMana"/>). Ver INC-1190.
+        /// </summary>
+        public void AvisarFaltaDeMana()
+        {
+            if (manaFillImage == null || !_isVisible) return;
+            var barra = manaFillImage.transform.parent as RectTransform;
+            if (barra == null) return;
+            barra.DOKill(true);
+            barra.DOShakeAnchorPos(0.35f, new Vector2(9f, 0f), 30, 0f, false, true);
         }
         
         #region Validación y Setup

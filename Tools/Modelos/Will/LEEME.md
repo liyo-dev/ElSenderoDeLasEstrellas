@@ -16,3 +16,14 @@
 
 ## 13 nov 2026 — chequeo de choques (INC-1138)
 Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
+
+## 14 nov 2026 — tumbado, sin cuerpo bajo la camiseta (INC-1186)
+- El cuerpo de debajo está quitado entero (solo quedan las manos) y por el bajo de la camiseta se veía el interior vacío.
+- Ahora lleva un `Fondo` del color del pantalón bajo la camiseta (z 0,41), pesado a la pelvis. Puesto en `will.blend` y en
+  `will.py`; reexportados `Body23_Aventurero` y `Body24_AventureroChaqueta` (y copiados a Assets).
+- Segunda tanda (14 nov): el fondo se había puesto sobre un `will.blend` del 11 nov, sin los arreglos de `ropa_lib`
+  (daba graves en la axila). Rehecho con `will.py` actual (que ya lleva el fondo): choques y huecos en PASA.
+- Pelo: el del juego es el de picos (`Hair16_Heroe` de Assets, con la nuca de `../Pelo/nuca.py`), no el que genera
+  `will.py`. Se le ha dado grosor por dentro con `../Caras/grosor_pelo.py` (6 mm) y ya no deja ver huecos desde abajo.
+  Ojo: el `Hair16_Heroe` que hay dentro de `will.blend` es el que genera el script, no el del juego.
+- Lo anterior, en `Versiones antiguas/Antes del faldón para sentarse (2026-11-14)/`.

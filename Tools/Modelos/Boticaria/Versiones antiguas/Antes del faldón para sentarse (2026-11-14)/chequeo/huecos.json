@@ -1,0 +1,1367 @@
+[
+ {
+  "pose": "reposo",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 6781,
+  "huecos": 2,
+  "parte": 0.0002949417490045716,
+  "culpa": {
+   "Head01_Male": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 9178,
+  "huecos": 2,
+  "parte": 0.00021791239921551536,
+  "culpa": {
+   "Head01_Male": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 8474,
+  "huecos": 2,
+  "parte": 0.0002360160490913382,
+  "culpa": {
+   "Head01_Male": 1,
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 7981,
+  "huecos": 1,
+  "parte": 0.0001252975817566721,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 8682,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 9272,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 8677,
+  "huecos": 1,
+  "parte": 0.00011524720525527257,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 7985,
+  "huecos": 1,
+  "parte": 0.00012523481527864746,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 8489,
+  "huecos": 2,
+  "parte": 0.00023559901048415596,
+  "culpa": {
+   "Head01_Male": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 11099,
+  "huecos": 1,
+  "parte": 9.009820704567979e-05,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 10092,
+  "huecos": 1,
+  "parte": 9.908838684106223e-05,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 8721,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 10400,
+  "huecos": 8,
+  "parte": 0.0007692307692307692,
+  "culpa": {
+   "Head01_Male": 8
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 11417,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 10349,
+  "huecos": 5,
+  "parte": 0.0004831384674847811,
+  "culpa": {
+   "Head01_Male": 4,
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 8805,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 10085,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 11838,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 11068,
+  "huecos": 1,
+  "parte": 9.035056017347308e-05,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 9404,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 11171,
+  "huecos": 3,
+  "parte": 0.00026855250201414377,
+  "culpa": {
+   "Head01_Male": 3
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 12034,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 11171,
+  "huecos": 3,
+  "parte": 0.00026855250201414377,
+  "culpa": {
+   "Head01_Male": 3
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 9439,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "reposo",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 11089,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 1,
+  "parte_reves": 9.017945711966815e-05,
+  "culpa_reves": {
+   "Head01_Male": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 5875,
+  "huecos": 1,
+  "parte": 0.00017021276595744682,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 8317,
+  "huecos": 2,
+  "parte": 0.0002404713237946375,
+  "culpa": {
+   "Manga_l": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 8320,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 7332,
+  "huecos": 1,
+  "parte": 0.00013638843426077467,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 7027,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 7133,
+  "huecos": 1,
+  "parte": 0.00014019346698443852,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 7227,
+  "huecos": 8,
+  "parte": 0.0011069600110696,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 7
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 7330,
+  "huecos": 1,
+  "parte": 0.00013642564802182812,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 7814,
+  "huecos": 1,
+  "parte": 0.0001279754287176862,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 2,
+  "parte_reves": 0.0002559508574353724,
+  "culpa_reves": {
+   "Cuerpo": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 10032,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 10040,
+  "huecos": 1,
+  "parte": 9.960159362549801e-05,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 9050,
+  "huecos": 5,
+  "parte": 0.0005524861878453039,
+  "culpa": {
+   "Falda": 3,
+   "Head01_Male": 2
+  },
+  "reves": 1,
+  "parte_reves": 0.00011049723756906077,
+  "culpa_reves": {
+   "Manga_l": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 8635,
+  "huecos": 1,
+  "parte": 0.00011580775911986103,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 9362,
+  "huecos": 1,
+  "parte": 0.00010681478316599017,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 9316,
+  "huecos": 11,
+  "parte": 0.0011807642765135251,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 10
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 8834,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 9082,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 10851,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 1,
+  "parte_reves": 9.21574048474795e-05,
+  "culpa_reves": {
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 10691,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 9617,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 9521,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 1,
+  "parte_reves": 0.00010503098414032139,
+  "culpa_reves": {
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 10719,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 10386,
+  "huecos": 4,
+  "parte": 0.00038513383400731754,
+  "culpa": {
+   "Head01_Male": 4
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 9551,
+  "huecos": 1,
+  "parte": 0.00010470107842110774,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 9791,
+  "huecos": 1,
+  "parte": 0.0001021346134204882,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 1,
+  "parte_reves": 0.0001021346134204882,
+  "culpa_reves": {
+   "Head01_Male": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 5157,
+  "huecos": 4,
+  "parte": 0.0007756447547023463,
+  "culpa": {
+   "Head01_Male": 3,
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 7839,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 7144,
+  "huecos": 4,
+  "parte": 0.0005599104143337066,
+  "culpa": {
+   "Head01_Male": 2,
+   "Cuerpo": 2
+  },
+  "reves": 1,
+  "parte_reves": 0.00013997760358342665,
+  "culpa_reves": {
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 6835,
+  "huecos": 1,
+  "parte": 0.0001463057790782736,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 7095,
+  "huecos": 6,
+  "parte": 0.0008456659619450317,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 5
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 7401,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 2,
+  "parte_reves": 0.00027023375219564923,
+  "culpa_reves": {
+   "Falda": 2
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 6876,
+  "huecos": 9,
+  "parte": 0.0013089005235602095,
+  "culpa": {
+   "Head01_Male": 3,
+   "Cuerpo": 6
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 6920,
+  "huecos": 1,
+  "parte": 0.00014450867052023122,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 7392,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 10172,
+  "huecos": 1,
+  "parte": 9.830908375933936e-05,
+  "culpa": {
+   "Hombro_r": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 8874,
+  "huecos": 1,
+  "parte": 0.0001126887536623845,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 8350,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 9158,
+  "huecos": 4,
+  "parte": 0.00043677658877484165,
+  "culpa": {
+   "Head01_Male": 4
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 9773,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 8561,
+  "huecos": 1,
+  "parte": 0.00011680878402055835,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 8636,
+  "huecos": 1,
+  "parte": 0.0001157943492357573,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 9450,
+  "huecos": 2,
+  "parte": 0.00021164021164021165,
+  "culpa": {
+   "Head01_Male": 1,
+   "Manga_l": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 11138,
+  "huecos": 3,
+  "parte": 0.00026934817741066616,
+  "culpa": {
+   "Manga_l": 3
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 9715,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 1,
+  "parte_reves": 0.0001029336078229542,
+  "culpa_reves": {
+   "Head01_Male": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 9080,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 2,
+  "parte_reves": 0.00022026431718061675,
+  "culpa_reves": {
+   "Manga_l": 1,
+   "Falda": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 10066,
+  "huecos": 6,
+  "parte": 0.0005960659646334195,
+  "culpa": {
+   "Head01_Male": 5,
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 11046,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 9529,
+  "huecos": 2,
+  "parte": 0.000209885612341274,
+  "culpa": {
+   "Head01_Male": 2
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 9290,
+  "huecos": 1,
+  "parte": 0.00010764262648008612,
+  "culpa": {
+   "Falda": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 10289,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -88,
+  "azim": 0,
+  "vistos": 5260,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 0,
+  "vistos": 8025,
+  "huecos": 1,
+  "parte": 0.00012461059190031152,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 45,
+  "vistos": 7308,
+  "huecos": 3,
+  "parte": 0.00041050903119868636,
+  "culpa": {
+   "Cuerpo": 3
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 90,
+  "vistos": 7043,
+  "huecos": 2,
+  "parte": 0.0002839698991906858,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 135,
+  "vistos": 7321,
+  "huecos": 9,
+  "parte": 0.0012293402540636525,
+  "culpa": {
+   "Head01_Male": 9
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 180,
+  "vistos": 7446,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 225,
+  "vistos": 6960,
+  "huecos": 8,
+  "parte": 0.0011494252873563218,
+  "culpa": {
+   "Cuerpo": 2,
+   "Head01_Male": 6
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 270,
+  "vistos": 7098,
+  "huecos": 1,
+  "parte": 0.00014088475626937165,
+  "culpa": {
+   "Head01_Male": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -65,
+  "azim": 315,
+  "vistos": 7753,
+  "huecos": 1,
+  "parte": 0.00012898232942086933,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 0,
+  "vistos": 10189,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 45,
+  "vistos": 8923,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 90,
+  "vistos": 8683,
+  "huecos": 4,
+  "parte": 0.00046067027525048944,
+  "culpa": {
+   "Cuerpo": 4
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 135,
+  "vistos": 9506,
+  "huecos": 9,
+  "parte": 0.0009467704607616243,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 8
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 180,
+  "vistos": 9810,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 225,
+  "vistos": 8568,
+  "huecos": 5,
+  "parte": 0.0005835667600373483,
+  "culpa": {
+   "Cuerpo": 1,
+   "Head01_Male": 4
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 270,
+  "vistos": 8755,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -40,
+  "azim": 315,
+  "vistos": 9748,
+  "huecos": 4,
+  "parte": 0.0004103405826836274,
+  "culpa": {
+   "Manga_l": 3,
+   "Cuerpo": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 0,
+  "vistos": 11236,
+  "huecos": 2,
+  "parte": 0.000177999288002848,
+  "culpa": {
+   "Falda": 1,
+   "Manga_l": 1
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 45,
+  "vistos": 9752,
+  "huecos": 1,
+  "parte": 0.00010254306808859722,
+  "culpa": {
+   "Cuerpo": 1
+  },
+  "reves": 1,
+  "parte_reves": 0.00010254306808859722,
+  "culpa_reves": {
+   "Cuerpo": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 90,
+  "vistos": 9293,
+  "huecos": 2,
+  "parte": 0.00021521575379317766,
+  "culpa": {
+   "Head01_Male": 1,
+   "Cuerpo": 1
+  },
+  "reves": 1,
+  "parte_reves": 0.00010760787689658883,
+  "culpa_reves": {
+   "Head01_Male": 1
+  }
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 135,
+  "vistos": 10494,
+  "huecos": 5,
+  "parte": 0.000476462740613684,
+  "culpa": {
+   "Head01_Male": 5
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 180,
+  "vistos": 11055,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 225,
+  "vistos": 9550,
+  "huecos": 6,
+  "parte": 0.0006282722513089005,
+  "culpa": {
+   "Head01_Male": 6
+  },
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 270,
+  "vistos": 9412,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "elev": -15,
+  "azim": 315,
+  "vistos": 10605,
+  "huecos": 0,
+  "parte": 0.0,
+  "culpa": {},
+  "reves": 0,
+  "parte_reves": 0.0,
+  "culpa_reves": {}
+ }
+]

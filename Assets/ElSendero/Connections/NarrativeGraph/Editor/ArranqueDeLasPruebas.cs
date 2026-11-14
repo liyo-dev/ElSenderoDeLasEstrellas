@@ -16,7 +16,7 @@ namespace Sendero.Narrative.Editor
         public const string RutaDeLaFicha = "Assets/ElSendero/Data/FichaDelJugador.asset";
         public const string CampoDelAncla = nameof(PlayerPresetSO.spawnAnchorId);
 
-        /// Campos de la partida que pueden fijar los puntos de arranque y retocarse al probar.
+        /// Campos de la partida que se enseñan al probar y puede cambiar un jugador de prueba.
         static readonly string[] Campos =
         {
             nameof(PlayerPresetSO.spawnAnchorId),
@@ -28,6 +28,32 @@ namespace Sendero.Narrative.Editor
             nameof(PlayerPresetSO.companionBasics), nameof(PlayerPresetSO.companionHealth),
             nameof(PlayerPresetSO.appearance), nameof(PlayerPresetSO.unlockedWardrobeIds),
         };
+
+        /// Los puntos de arranque solo dicen dónde aparece el jugador: quita lo demás que guardaban
+        /// (vida, magia, hechizos…), que ahora sale de la historia o de un jugador de prueba.
+        [MenuItem("El Sendero/Archivo/Narrativa/Grafo: puntos de arranque solo con el sitio")]
+        public static void DejarSoloElSitio()
+        {
+            var informe = new StringBuilder("[Puntos de arranque: solo el sitio]\n");
+            foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
+            {
+                var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
+                if (grafo == null || grafo.nodes == null) continue;
+                bool cambiado = false;
+                foreach (var punto in grafo.nodes.OfType<CheckpointNode>())
+                {
+                    var sobran = punto.player?.fields?.Where(f => f != CampoDelAncla).ToList();
+                    if (sobran == null || sobran.Count == 0) continue;
+                    foreach (var campo in sobran) NarrativePlayerValuesEditor.Remove(punto.player, campo);
+                    cambiado = true;
+                    informe.AppendLine($"{grafo.name} · {punto.displayTitle}: quitado {string.Join(", ", sobran)}");
+                }
+                if (!cambiado) continue;
+                EditorUtility.SetDirty(grafo);
+            }
+            AssetDatabase.SaveAssets();
+            File.WriteAllText("Logs/claude/puntos_solo_sitio.txt", informe.ToString());
+        }
 
         /// El punto de arranque deja al jugador en este ancla.
         public static void FijarAncla(CheckpointNode punto, string ancla)

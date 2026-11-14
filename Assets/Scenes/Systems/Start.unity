@@ -904,9 +904,9 @@ RectTransform:
   - {fileID: 1709141952}
   m_Father: {fileID: 2162008839060603504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 274, y: -186}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &44511057
@@ -1689,6 +1689,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -2948,6 +2949,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -3816,6 +3818,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -6370,6 +6373,7 @@ MonoBehaviour:
   - MainWorld
   - PlayerTest
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -14243,9 +14247,9 @@ RectTransform:
   - {fileID: 148723595}
   m_Father: {fileID: 2162008839060603504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 684, y: -1070}
   m_SizeDelta: {x: 1320, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1393248980
@@ -14810,6 +14814,7 @@ MonoBehaviour:
   - MainWorld
   - PlayerTest
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -16411,9 +16416,9 @@ RectTransform:
   - {fileID: 222058340}
   m_Father: {fileID: 2162008839060603504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 684, y: -518}
   m_SizeDelta: {x: 1320, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1580032194
@@ -17701,7 +17706,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1693690488
 MonoBehaviour:
@@ -18131,6 +18136,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -20024,9 +20030,9 @@ RectTransform:
   - {fileID: 2272225076407463481}
   m_Father: {fileID: 2162008839060603504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 274, y: -74}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1903234572
@@ -23178,7 +23184,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 560, y: 0}
+  m_SizeDelta: {x: 560, y: 283.52}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &1921952457937438494
 RectTransform:
@@ -23972,6 +23978,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -24122,10 +24129,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2351159725294911706}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 483, y: -35}
+  m_SizeDelta: {x: 786, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6431754415153183224
 MonoBehaviour:
@@ -24757,10 +24764,10 @@ RectTransform:
   - {fileID: 2306541836752694534}
   m_Father: {fileID: 2351159725294911706}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -35}
+  m_SizeDelta: {x: 52, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8832770965239243118
 MonoBehaviour:
@@ -24932,6 +24939,7 @@ MonoBehaviour:
   - PlayerTest
   - Sendero
   - Chuchelandia
+  - Cascaditas
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -24949,10 +24957,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1876604297839617995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 280, y: -126.76}
+  m_SizeDelta: {x: 516, y: 33.52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9199543654594312769
 MonoBehaviour:

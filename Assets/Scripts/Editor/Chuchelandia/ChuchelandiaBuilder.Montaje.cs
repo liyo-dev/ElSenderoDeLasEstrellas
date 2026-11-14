@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 /// <see cref="MontarSegundaMitad"/>), el reino libre y su misión opcional (<see cref="MontarReino"/>),
 /// los atuendos por tramo, la zona de magia transformada y el portal de vuelta al Sendero. Lo que
 /// estorba de la escena se retira con registro (<see cref="RetirarLoQueEstorba"/>). Fuera de la
-/// escena: el grafo y las misiones (<see cref="AsegurarGrafo"/>), los diálogos, agendas y objetos del
+/// escena: el grafo y las misiones (<see cref="AsegurarGrafo"/>), los diálogos, las piezas de los habitantes y los objetos del
 /// reino (<see cref="AsegurarReino"/>), los atuendos y el planeo de _WILL.
 /// Las marcas se colocan respecto a objetos de la escena buscados por nombre (el más cercano a la
 /// posición aproximada de la tabla) y se asientan en el suelo; se retocan en la tabla o moviéndolas a
@@ -239,6 +239,7 @@ public static partial class ChuchelandiaBuilder
             var trompetillas = AsegurarReino(informe);
             AsegurarSecuencias(informe);
             var grafo = AsegurarGrafo(informe);
+            PonerPiezasDelReino(informe);
 
             EditorUtility.DisplayProgressBar(TituloMontaje, "Escena…", 0.5f);
             MontarEscena(escena, atuendos, transformacion, informe);

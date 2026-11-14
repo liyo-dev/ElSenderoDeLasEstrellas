@@ -1,0 +1,415 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3de8054ce1595cf4bb6467f4fa336894, type: 3}
+  m_Name: Mapa de la historia
+  m_EditorClassIdentifier: Liyodev.NarrativeGraph.Editor::NarrativeGraphEditor.NarrativeWorldMap
+  background: {fileID: 2800000, guid: 850c0f63fd42d9745871789acef35e92, type: 3}
+  hasWorldRect: 1
+  worldRect:
+    serializedVersion: 2
+    x: -640
+    y: -700
+    width: 1280
+    height: 1280
+  markSpots:
+  - id: Cap3_Acampada
+    position: {x: -101, y: 20.246, z: -208.5}
+  - id: Cap3_AcampadaCamino
+    position: {x: 150, y: 17.753, z: -266.5}
+  - id: Cap3_Aldea
+    position: {x: 262, y: 5.177, z: -414}
+  - id: Cap3_Amanecer
+    position: {x: -96, y: 24.661, z: -126}
+  - id: Cap3_Caserio
+    position: {x: -171, y: 19.956, z: -200}
+  - id: Cap3_Claro
+    position: {x: -215, y: 21.454, z: -125}
+  - id: Cap3_Despedida_Camino
+    position: {x: 58.2, y: 23.326, z: -190.1}
+  - id: Cap3_Linde
+    position: {x: -193, y: 20.939, z: -168}
+  - id: Cap3_Matorral
+    position: {x: -208, y: 21.927, z: -134}
+  - id: Cap3_Posada
+    position: {x: 279, y: 5.004, z: -425.4}
+  - id: Cap3_Puente
+    position: {x: -129, y: 18.573, z: -235}
+  - id: Cap3_Puesto
+    position: {x: -90, y: 25.06, z: -124}
+  - id: Cap3_Ruta1
+    position: {x: -150, y: 17.9, z: -222}
+  - id: Cap3_Ruta2
+    position: {x: -186, y: 21.065, z: -186}
+  - id: Cap3_Ruta3
+    position: {x: -203, y: 22.231, z: -150}
+  - id: Cap3_Seguir_Vuelta
+    position: {x: -98, y: 20.286, z: -210}
+  - id: Cap3_Sigilo_Fin
+    position: {x: -217, y: 21.982, z: -143}
+  - id: Cap3_Sigilo_SalidaNpc
+    position: {x: -104.5, y: 19.937, z: -218.5}
+  - id: Cap4_Bifurcacion
+    position: {x: -180, y: 30.504, z: 40}
+  - id: Cap4_Bosque_Entrada
+    position: {x: -140, y: 22.295, z: -110}
+  - id: Cap4_Bota
+    position: {x: -184, y: 26.619, z: -24}
+  - id: Cap4_Campana
+    position: {x: -330, y: 36.892, z: 86}
+  - id: Cap4_Campana_Salida
+    position: {x: -330, y: 35.996, z: 60}
+  - id: Cap4_Casa
+    position: {x: -346, y: 36.028, z: 62}
+  - id: Cap4_Claro_Estela
+    position: {x: -322, y: 36.309, z: 66}
+  - id: Cap4_Claro_Will
+    position: {x: -313, y: 36.03, z: 62}
+  - id: Cap4_Golem_Entrada
+    position: {x: -125, y: 31.827, z: 60}
+  - id: Cap4_LiamBifurcacion
+    position: {x: -176.5, y: 29.934, z: 49.5}
+  - id: Cap4_LiamLoma
+    position: {x: -300, y: 39.072, z: 98}
+  - id: Cap4_LiamSaliente
+    position: {x: -110, y: 38.166, z: 86}
+  - id: Cap4_Manzana
+    position: {x: -104, y: 32.476, z: 52}
+  - id: Eldran_SalidaDelPueblo
+    position: {x: 55.5, y: 23.356, z: -187}
+  - id: Will_SalidaDelPueblo
+    position: {x: 53.4, y: 23.381, z: -185}
+  actorSpots:
+  - id: _ESTELA
+    position: {x: -322, y: 36.309, z: 66}
+  - id: _LIAM
+    position: {x: -300, y: 39.072, z: 98}
+  - id: npc_aldona
+    position: {x: 6.69, y: 29.433, z: -122.13}
+  - id: NPC_Anselmo
+    position: {x: 270, y: 3.76, z: -459.5}
+  - id: NPC_Benito
+    position: {x: 282.875, y: 5.249, z: -430.799}
+  - id: NPC_Boticaria
+    position: {x: 22.5, y: 26.301, z: -134.8}
+  - id: NPC_Contrabandista1
+    position: {x: -86, y: 20.659, z: -204.6}
+  - id: NPC_Contrabandista2
+    position: {x: -216.5, y: 21.748, z: -129.5}
+  - id: NPC_ContrabandistaJefe
+    position: {x: -213, y: 21.586, z: -128}
+  - id: NPC_Eldran
+    position: {x: -1.91, y: 26.36, z: -142.75}
+  - id: NPC_Engracia
+    position: {x: 256, y: 5.008, z: -440.8}
+  - id: NPC_Erika
+    position: {x: -14.5, y: 26.282, z: -125.5}
+  - id: NPC_Eusebio
+    position: {x: 255.525, y: 6.009, z: -425.799}
+  - id: NPC_Fermin
+    position: {x: 270, y: 5.259, z: -432}
+  - id: NPC_GuardiaCruce1
+    position: {x: -92, y: 24.889, z: -118}
+  - id: NPC_GuardiaCruce2
+    position: {x: -93, y: 24.661, z: -129}
+  - id: NPC_Lucia
+    position: {x: 277.2, y: 5.004, z: -425}
+  - id: NPC_Oliver
+    position: {x: 5.99, y: 26.364, z: -143.19}
+  - id: NPC_Posadero
+    position: {x: 281.2, y: 5.004, z: -424.6}
+  - id: NPC_Remedios
+    position: {x: 268.5, y: 5.004, z: -446}
+  - id: NPC_Renard
+    position: {x: -236.4, y: 26.283, z: 2.5}
+  - id: NPC_Rosario
+    position: {x: 285.103, y: 5.209, z: -430.801}
+  - id: NPC_Sargento
+    position: {x: -87, y: 25.041, z: -121}
+  - id: NPC_Tomasa
+    position: {x: 16.69, y: 26.36, z: -136.84}
+  - id: NPC_Victoria
+    position: {x: -0.997, y: 26.36, z: -144.064}
+  zones:
+  - id: casa
+    name: Casa de Will
+    color: {r: 0.21568628, g: 0.5411765, b: 0.8666667, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 525
+      y: 535
+      width: 170
+      height: 110
+    round: 0
+    marks:
+    - Bedroom
+    - M_Manana_EldranPuerta
+    - Eldran_JuntoACasaDeWill
+  - id: pueblo
+    name: El pueblo
+    color: {r: 0.11372549, g: 0.61960787, b: 0.45882353, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 615
+      y: 440
+      width: 170
+      height: 110
+    round: 0
+    marks:
+    - Cap2_VictoriaCharla
+    - Cap2_OliverCharla
+    - Eldran_PuntoGuardado
+  - id: bosque
+    name: Bosque prohibido
+    color: {r: 0.3882353, g: 0.6, b: 0.13333334, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 380
+      y: 345
+      width: 170
+      height: 110
+    round: 1
+    marks:
+    - Eldran_Bosque
+  - id: salida
+    name: Salida del pueblo
+    color: {r: 0.7294118, g: 0.45882353, b: 0.09019608, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 725
+      y: 560
+      width: 170
+      height: 110
+    round: 1
+    marks:
+    - Eldran_SalidaDelPueblo
+    - Will_SalidaDelPueblo
+  - id: torre
+    name: Torre de Liam
+    color: {r: 0.49803922, g: 0.46666667, b: 0.8666667, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 805
+      y: 190
+      width: 170
+      height: 110
+    round: 0
+    marks: []
+  - id: cruce
+    name: El cruce
+    color: {r: 0.53333336, g: 0.5294118, b: 0.5019608, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 485
+      y: 645
+      width: 170
+      height: 110
+    round: 0
+    marks:
+    - Cap3_Puesto
+  - id: puerto
+    name: Camino del puerto
+    color: {r: 0.53333336, g: 0.5294118, b: 0.5019608, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 805
+      y: 675
+      width: 170
+      height: 110
+    round: 1
+    marks:
+    - Cap3_AcampadaCamino
+    - Cap3_Acampada
+    - Cap3_Amanecer
+    - Cap3_Sigilo_Fin
+  - id: aldea
+    name: Aldea del mar
+    color: {r: 0.09411765, g: 0.37254903, b: 0.64705884, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 855
+      y: 435
+      width: 170
+      height: 110
+    round: 1
+    marks: []
+  - id: capital
+    name: La capital
+    color: {r: 0.84705883, g: 0.3529412, b: 0.1882353, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 620
+      y: 140
+      width: 170
+      height: 110
+    round: 0
+    marks: []
+  - id: reino
+    name: Camino del Reino
+    color: {r: 0.37254903, g: 0.36862746, b: 0.3529412, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 985
+      y: 470
+      width: 170
+      height: 110
+    round: 1
+    marks:
+    - Cap4_Campana_Salida
+    - Cap4_LiamLoma
+    - Cap4_Golem_Entrada
+    - Cap4_LiamSaliente
+    - Cap4_LiamBifurcacion
+    - Cap4_Manzana
+    - Cap4_Bota
+  - id: chuche
+    name: Chuchelandia
+    color: {r: 0.83137256, g: 0.3254902, b: 0.49411765, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 1010
+      y: 705
+      width: 170
+      height: 110
+    round: 1
+    marks: []
+  - id: sendero
+    name: El Sendero
+    color: {r: 0.3254902, g: 0.2901961, b: 0.7176471, a: 1}
+    rect:
+      serializedVersion: 2
+      x: 320
+      y: 95
+      width: 170
+      height: 110
+    round: 1
+    marks: []
+  characters:
+  - actorId: Player
+    name: Will
+    color: {r: 0.21568628, g: 0.5411765, b: 0.8666667, a: 1}
+    homeZone: casa
+    main: 1
+  - actorId: NPC_Eldran
+    name: Eldran
+    color: {r: 0.49803922, g: 0.46666667, b: 0.8666667, a: 1}
+    homeZone: casa
+    main: 1
+  - actorId: _LIAM
+    name: Liam
+    color: {r: 0.3882353, g: 0.6, b: 0.13333334, a: 1}
+    homeZone: torre
+    main: 1
+  - actorId: NPC_Erika
+    name: Erika
+    color: {r: 0.84705883, g: 0.3529412, b: 0.1882353, a: 1}
+    homeZone: pueblo
+    main: 1
+  - actorId: NPC_Oliver
+    name: Oliver
+    color: {r: 0.11372549, g: 0.61960787, b: 0.45882353, a: 1}
+    homeZone: pueblo
+    main: 1
+  - actorId: NPC_Victoria
+    name: Victoria
+    color: {r: 0.83137256, g: 0.3254902, b: 0.49411765, a: 1}
+    homeZone: pueblo
+    main: 0
+  - actorId: NPC_Boticaria
+    name: Boticaria
+    color: {r: 0.5921569, g: 0.76862746, b: 0.34901962, a: 1}
+    homeZone: pueblo
+    main: 0
+  - actorId: NPC_Tomasa
+    name: Tomasa
+    color: {r: 0.9372549, g: 0.62352943, b: 0.15294118, a: 1}
+    homeZone: pueblo
+    main: 0
+  - actorId: NPC_Lucia
+    name: "Luc\xEDa"
+    color: {r: 0.92941177, g: 0.5764706, b: 0.69411767, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Posadero
+    name: Posadero
+    color: {r: 0.7294118, g: 0.45882353, b: 0.09019608, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Anselmo
+    name: Anselmo
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Benito
+    name: Benito
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Eusebio
+    name: Eusebio
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Fermin
+    name: "Ferm\xEDn"
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Remedios
+    name: Remedios
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Rosario
+    name: Rosario
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Engracia
+    name: Engracia
+    color: {r: 0.52156866, g: 0.7176471, b: 0.92156863, a: 1}
+    homeZone: aldea
+    main: 0
+  - actorId: NPC_Sargento
+    name: Sargento
+    color: {r: 0.37254903, g: 0.36862746, b: 0.3529412, a: 1}
+    homeZone: cruce
+    main: 0
+  - actorId: NPC_GuardiaCruce1
+    name: Guardia 1
+    color: {r: 0.53333336, g: 0.5294118, b: 0.5019608, a: 1}
+    homeZone: cruce
+    main: 0
+  - actorId: NPC_GuardiaCruce2
+    name: Guardia 2
+    color: {r: 0.53333336, g: 0.5294118, b: 0.5019608, a: 1}
+    homeZone: cruce
+    main: 0
+  - actorId: NPC_ContrabandistaJefe
+    name: Jefe contrabandista
+    color: {r: 0.6392157, g: 0.1764706, b: 0.1764706, a: 1}
+    homeZone: puerto
+    main: 0
+  - actorId: NPC_Contrabandista1
+    name: Contrabandista 1
+    color: {r: 0.8862745, g: 0.29411766, b: 0.2901961, a: 1}
+    homeZone: puerto
+    main: 0
+  - actorId: NPC_Contrabandista2
+    name: Contrabandista 2
+    color: {r: 0.8862745, g: 0.29411766, b: 0.2901961, a: 1}
+    homeZone: puerto
+    main: 0
+  - actorId: NPC_Renard
+    name: Renard
+    color: {r: 0.6, g: 0.23529412, b: 0.11372549, a: 1}
+    homeZone: capital
+    main: 0

@@ -27,3 +27,7 @@ Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PAS
 - Por dentro de la túnica, el corte del cuerpo se tapa con el color del pantalón (`quitar_lo_tapado`).
 - Chequeos: choques PASA (antes NO PASA, 5 graves); huecos PASA; manos 71 % / 83 %. Comparación en
   `oliver_correa_botas_manos_antes_despues.png`. Lo anterior, en `Versiones antiguas/Antes del taller (2026-11-13)/`.
+
+## 14 nov 2026 — sin bolsas en el costado (INC-1183)
+- Quitado el zurrón con el pergamino y su correa: la mano se metía dentro al andar. Decisión de Raúl: los personajes no llevan bolsas ni mochilas.
+- Lo anterior, en `Versiones antiguas/Con bolsas en el costado (2026-11-13)/`.

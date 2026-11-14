@@ -98,12 +98,42 @@ MonoBehaviour:
   - rid: 6540294538172825829
   - rid: 6540294538172825830
   - rid: 6540294538172825831
+  - rid: 6540294600349712471
+  - rid: 6540294600349712472
+  - rid: 6540294600349712473
+  - rid: 6540294600349712474
+  - rid: 6540294600349712475
+  - rid: 6540294600349712476
+  - rid: 6540294600349712477
+  - rid: 6540294600349712478
+  - rid: 6540294600349712479
+  - rid: 6540294600349712480
+  - rid: 6540294600349712481
+  - rid: 6540294600349712482
+  - rid: 6540294600349712483
+  - rid: 6540294600349712484
+  - rid: 6540294600349712485
+  - rid: 6540294600349712486
+  - rid: 6540294600349712487
+  - rid: 6540294600349712488
+  - rid: 6540294600349712489
+  - rid: 6540294600349712490
+  - rid: 6540294600349712491
+  - rid: 6540294600349712492
+  - rid: 6540294600349712493
+  - rid: 6540294600349712494
+  - rid: 6540294600349712495
+  - rid: 6540294600349712496
+  - rid: 6540294600349712497
+  - rid: 6540294600349712498
+  - rid: 6540294600349712499
+  - rid: 6540294600349712500
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
     - rid: 6540294538172825748
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Cap. 3
         chapter: Cap. 3
@@ -114,11 +144,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-inicio
-        position: {x: 0, y: 0}
+        position: {x: 0, y: 44}
         outputs:
         - cap3-tras-cap2
     - rid: 6540294538172825749
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Tras el Cap. 2 (CH_Cap2_BACK_1)
         chapter: Cap. 3
@@ -129,13 +159,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-tras-cap2
-        position: {x: 380, y: 0}
+        position: {x: 280, y: 44}
         outputs:
         - cap3-flag
         eventKey: CH_Cap2_BACK_1
         acceptEarlierEvent: 1
     - rid: 6540294538172825750
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Comienza el Cap. 3 (aparece el reparto de la costa y del cruce)
         chapter: Cap. 3
@@ -146,13 +176,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-flag
-        position: {x: 760, y: 0}
+        position: {x: 560, y: 44}
         outputs:
         - cap3-adios-hablar
         flagKey: CAP3_INICIADO
         value: 1
     - rid: 6540294538172825751
-      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Interludio: carga la torre de Liam (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -163,7 +193,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-espejo-carga
-        position: {x: 1520, y: 240}
+        position: {x: 560, y: 572}
         outputs:
         - cap3-espejo
         operacion: 0
@@ -181,7 +211,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-espejo
-        position: {x: 1900, y: 240}
+        position: {x: 840, y: 572}
         outputs:
         - cap3-espejo-descarga
         cinematicName: "Cap. 3: Tob\xEDas en el espejo"
@@ -194,7 +224,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825753
-      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Descarga la torre de Liam"
         chapter: Cap. 3
@@ -205,14 +235,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-espejo-descarga
-        position: {x: 0, y: 480}
+        position: {x: 1120, y: 572}
         outputs:
         - cap3-camino-destapa
         operacion: 1
         sceneName: TorreDeLiam
         waitForCompletion: 1
     - rid: 6540294538172825754
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Sigue hacia la aldea del mar (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -223,12 +253,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-aldea
-        position: {x: 1140, y: 480}
+        position: {x: 280, y: 902}
         outputs:
-        - cap3-llegada
+        - pieza-npc_anselmo-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
         eventKey: CAP3_ALDEA_EMPIEZA
     - rid: 6540294538172825755
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n: las marcas de hierro (aviso de misi\xF3n nueva)"
         chapter: Cap. 3
@@ -239,7 +269,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-mision
-        position: {x: 0, y: 240}
+        position: {x: 1680, y: 44}
         outputs:
         - cap3-camino
         questId: CAP3_MARCAS_DE_HIERRO
@@ -247,7 +277,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 0}
         noGiver: 1
     - rid: 6540294538172825756
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Llega a la aldea del mar"
         chapter: Cap. 3
@@ -258,13 +288,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-llegada
-        position: {x: 1520, y: 480}
+        position: {x: 0, y: 1100}
         outputs:
         - cap3-paso-llegar
         eventKey: CAP3_LLEGADA_ALDEA
         acceptEarlierEvent: 1
     - rid: 6540294538172825757
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: llegar a la aldea'
         chapter: Cap. 3
@@ -275,7 +305,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-llegar
-        position: {x: 1900, y: 480}
+        position: {x: 280, y: 1100}
         outputs:
         - cap3-posadero
         standingActorId: 
@@ -287,7 +317,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825758
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Hablar con el posadero"
         chapter: Cap. 3
@@ -298,7 +328,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-posadero
-        position: {x: 0, y: 720}
+        position: {x: 560, y: 1100}
         outputs:
         - cap3-posada
         npcId: NPC_Posadero
@@ -317,7 +347,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-posada
-        position: {x: 380, y: 720}
+        position: {x: 840, y: 1100}
         outputs:
         - cap3-paso-posada
         cinematicName: 'Cap. 3: la posada'
@@ -330,7 +360,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825760
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: preguntar en la posada'
         chapter: Cap. 3
@@ -341,7 +371,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-posada
-        position: {x: 760, y: 720}
+        position: {x: 1120, y: 1100}
         outputs:
         - cap3-hoja
         standingActorId: 
@@ -353,7 +383,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825761
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Will saca su hoja para apuntar lo que vea"
         chapter: Cap. 3
@@ -364,7 +394,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hoja
-        position: {x: 1140, y: 720}
+        position: {x: 1400, y: 1100}
         outputs:
         - cap3-pistas
         item: {fileID: 11400000, guid: ba32d251435c4fb419a3dbe425cc196c, type: 2}
@@ -372,7 +402,7 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 6540294538172825762
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Las tres pistas, en el orden que quiera (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -383,12 +413,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pistas
-        position: {x: 1520, y: 720}
+        position: {x: 1680, y: 1100}
         outputs:
-        - cap3-pistas-fork
+        - pieza-npc_lucia-fromhere-cap-3-las-pistas-cap3-pistas
         eventKey: CAP3_PISTAS_EMPIEZA
     - rid: 6540294538172825763
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pistas en paralelo"
         chapter: Cap. 3
@@ -399,14 +429,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pistas-fork
-        position: {x: 1900, y: 720}
+        position: {x: 0, y: 1326}
         outputs:
         - cap3-pista1-hablar
         - cap3-pista2
         - cap3-pista3
         - cap3-pistas-espera
     - rid: 6540294538172825764
-      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitSignalCountNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Esperar las tres pistas"
         chapter: Cap. 3
@@ -417,14 +447,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pistas-espera
-        position: {x: 0, y: 960}
+        position: {x: 280, y: 1770}
         outputs:
         - cap3-hoja-volver
         eventKey: CAP3_PISTA_HECHA
         count: 3
         questId: 
     - rid: 6540294538172825765
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Volver con el posadero"
         chapter: Cap. 3
@@ -435,7 +465,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hoja-volver
-        position: {x: 380, y: 960}
+        position: {x: 560, y: 1770}
         outputs:
         - cap3-hoja-dlg
         npcId: NPC_Posadero
@@ -443,7 +473,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294538172825766
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 El posadero: \xABT\xFA eres el primero que trae uno encima\xBB"
         chapter: Cap. 3
@@ -454,14 +484,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hoja-dlg
-        position: {x: 760, y: 960}
+        position: {x: 840, y: 1770}
         outputs:
         - cap3-paso-hoja
         dialogue: {fileID: 11400000, guid: 96ab930b8efb1a645aafe8f0ea85cbb4, type: 2}
         npcId: NPC_Posadero
         oneShotFlag: 
     - rid: 6540294538172825767
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: cont\xE1rselo al posadero"
         chapter: Cap. 3
@@ -472,7 +502,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-hoja
-        position: {x: 1140, y: 960}
+        position: {x: 1120, y: 1474}
         outputs:
         - cap3-noche
         standingActorId: 
@@ -484,7 +514,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825768
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Ir andando al camino del bosque (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -495,12 +525,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-noche
-        position: {x: 1520, y: 960}
+        position: {x: 1400, y: 1326}
         outputs:
-        - cap3-bosque-llega
+        - pieza-npc_lucia-backtousual-cap-3-las-pistas-cap3-noche
         eventKey: CAP3_NOCHE_EMPIEZA
     - rid: 6540294538172825769
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Punto de guardado: el camino del bosque"
         chapter: Cap. 3
@@ -511,7 +541,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-punto-noche
-        position: {x: 760, y: 1440}
+        position: {x: 0, y: 2616}
         outputs:
         - cap3-carro
         checkpointId: CAP3_ACAMPADA
@@ -531,7 +561,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-carro
-        position: {x: 1140, y: 1440}
+        position: {x: 280, y: 2616}
         outputs:
         - cap3-seguir-tuto
         cinematicName: 'Cap. 3: el carro de noche'
@@ -555,7 +585,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-seguir-tuto
-        position: {x: 1520, y: 1440}
+        position: {x: 560, y: 2616}
         outputs:
         - cap3-seguir
         action: 0
@@ -579,7 +609,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-seguir
-        position: {x: 1900, y: 1440}
+        position: {x: 840, y: 2616}
         outputs:
         - cap3-paso-carro
         - cap3-pillado
@@ -613,7 +643,7 @@ MonoBehaviour:
         musica: {fileID: 8300000, guid: c450abf10ccb4544190c889de284ce72, type: 3}
         fundidoDeMusica: 1.5
     - rid: 6540294538172825773
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: seguir al carro'
         chapter: Cap. 3
@@ -624,7 +654,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-carro
-        position: {x: 0, y: 1680}
+        position: {x: 1120, y: 2616}
         outputs:
         - cap3-en-el-claro
         standingActorId: 
@@ -647,7 +677,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-claro
-        position: {x: 760, y: 1680}
+        position: {x: 1960, y: 2616}
         outputs:
         - cap3-decide
         cinematicName: 'Cap. 3: el claro'
@@ -660,7 +690,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825775
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 La decisi\xF3n, jugando (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -671,12 +701,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-decide
-        position: {x: 1140, y: 1680}
+        position: {x: 0, y: 2990}
         outputs:
         - cap3-pista-pluma
         eventKey: CAP3_DECIDE_EMPIEZA
     - rid: 6540294538172825776
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will ve la pluma de la zarza"
         chapter: Cap. 3
@@ -687,7 +717,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista-pluma
-        position: {x: 1520, y: 1680}
+        position: {x: 280, y: 2990}
         outputs:
         - cap3-decision
         targetTag: Player
@@ -699,7 +729,7 @@ MonoBehaviour:
         emphasis: 0
         speakerName: 
     - rid: 6540294538172825777
-      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 \xBFCoge la pluma o entra en el claro? Gana lo primero que haga"
         chapter: Cap. 3
@@ -710,12 +740,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-decision
-        position: {x: 1900, y: 1680}
+        position: {x: 560, y: 2990}
         outputs:
         - cap3-pluma-0
         - cap3-pelea-0
     - rid: 6540294538172825778
-      type: {class: WaitForItemAddedNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitForItemAddedNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Coge la pluma brillante"
         chapter: Cap. 3
@@ -726,7 +756,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-0
-        position: {x: 0, y: 1920}
+        position: {x: 840, y: 2990}
         outputs:
         - cap3-pluma-1
         itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
@@ -734,7 +764,7 @@ MonoBehaviour:
         completeIfAlreadyOwned: 1
         debugLogs: 0
     - rid: 6540294538172825779
-      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: BranchFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 \xBFYa hab\xEDa empezado a pelear?"
         chapter: Cap. 3
@@ -745,14 +775,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-1
-        position: {x: 380, y: 1920}
+        position: {x: 1120, y: 2990}
         outputs:
         - 
         - cap3-pluma-2
         flagKey: CAP3_PELEA_EN_EL_CLARO
         invert: 0
     - rid: 6540294538172825780
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Elige avisar a la guardia"
         chapter: Cap. 3
@@ -763,13 +793,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-2
-        position: {x: 760, y: 1920}
+        position: {x: 1400, y: 2990}
         outputs:
         - cap3-pluma-3
         flagKey: CAP3_AVISO_A_LA_GUARDIA
         value: 1
     - rid: 6540294538172825781
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 \xABTres piedras\u2026 y al cruce\xBB"
         chapter: Cap. 3
@@ -780,7 +810,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-3
-        position: {x: 1140, y: 1920}
+        position: {x: 1680, y: 2990}
         outputs:
         - cap3-pluma-4
         targetTag: Player
@@ -792,7 +822,7 @@ MonoBehaviour:
         emphasis: 0
         speakerName: 
     - rid: 6540294538172825782
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 Hablar con el sargento del cruce"
         chapter: Cap. 3
@@ -803,7 +833,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-4
-        position: {x: 1520, y: 1920}
+        position: {x: 1960, y: 2990}
         outputs:
         - cap3-pluma-5
         npcId: NPC_Sargento
@@ -811,7 +841,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294538172825783
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 A \xB7 El sargento ve la pluma"
         chapter: Cap. 3
@@ -822,7 +852,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-5
-        position: {x: 1900, y: 1920}
+        position: {x: 0, y: 3392}
         outputs:
         - cap3-pluma-6
         dialogue: {fileID: 11400000, guid: 696de4c4956c84346a8a585e01600c9d, type: 2}
@@ -840,7 +870,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-6
-        position: {x: 0, y: 2160}
+        position: {x: 280, y: 3392}
         outputs:
         - cap3-fin-contrabandistas
         cinematicName: "Cap. 3: los p\xE1jaros"
@@ -853,7 +883,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825785
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Will entra en el claro"
         chapter: Cap. 3
@@ -864,13 +894,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-0
-        position: {x: 380, y: 2160}
+        position: {x: 840, y: 3138}
         outputs:
         - cap3-pelea-1
         eventKey: CAP2_CONTRABANDISTAS_ATAQUE
         acceptEarlierEvent: 1
     - rid: 6540294538172825786
-      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: BranchFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 B \xB7 \xBFYa hab\xEDa elegido avisar?"
         chapter: Cap. 3
@@ -881,14 +911,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-1
-        position: {x: 760, y: 2160}
+        position: {x: 1120, y: 3166}
         outputs:
         - 
         - cap3-pelea-2
         flagKey: CAP3_AVISO_A_LA_GUARDIA
         invert: 0
     - rid: 6540294538172825787
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 B \xB7 Elige pelear"
         chapter: Cap. 3
@@ -899,13 +929,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-2
-        position: {x: 1140, y: 2160}
+        position: {x: 1400, y: 3138}
         outputs:
         - cap3-pelea-3
         flagKey: CAP3_PELEA_EN_EL_CLARO
         value: 1
     - rid: 6540294538172825788
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 B \xB7 En la pelea arden jaulas"
         chapter: Cap. 3
@@ -916,7 +946,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-3
-        position: {x: 1520, y: 2160}
+        position: {x: 1680, y: 3138}
         outputs:
         - cap3-pelea-4
         flagKey: CAP3_JAULAS_QUEMADAS
@@ -933,7 +963,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-4
-        position: {x: 1900, y: 2160}
+        position: {x: 1960, y: 3138}
         outputs:
         - cap3-pelea-5
         npcId: NPC_ContrabandistaJefe
@@ -953,7 +983,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pelea-5
-        position: {x: 0, y: 2400}
+        position: {x: 0, y: 3540}
         outputs:
         - cap3-fin-contrabandistas
         cinematicName: 'Cap. 3: las jaulas quemadas'
@@ -966,7 +996,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825791
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Los contrabandistas, detenidos"
         chapter: Cap. 3
@@ -977,12 +1007,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-fin-contrabandistas
-        position: {x: 380, y: 2400}
+        position: {x: 560, y: 3392}
         outputs:
-        - cap3-paso-claro
+        - pieza-npc_contrabandista1-usual-cap-3-detenidos-cap3-fin-contrabandistas
         eventKey: CAP3_CONTRABANDISTAS_FIN
     - rid: 6540294538172825792
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: el claro (cierra la misi\xF3n)"
         chapter: Cap. 3
@@ -993,7 +1023,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-claro
-        position: {x: 760, y: 2400}
+        position: {x: 1960, y: 3392}
         outputs:
         - cap3-manana-rotulo
         standingActorId: 
@@ -1005,7 +1035,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294538172825793
-      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "R\xF3tulo: a la ma\xF1ana siguiente"
         chapter: Cap. 3
@@ -1016,7 +1046,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-manana-rotulo
-        position: {x: 1140, y: 2400}
+        position: {x: 0, y: 3766}
         outputs:
         - cap3-manana-hora
         text: "A la ma\xF1ana siguiente\u2026"
@@ -1040,13 +1070,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-manana-hora
-        position: {x: 1520, y: 2400}
+        position: {x: 280, y: 3766}
         outputs:
         - cap3-manana-will
         targetTime: 6
         immediate: 1
     - rid: 6540294538172825795
-      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Will amanece en el cruce
         chapter: Cap. 3
@@ -1057,7 +1087,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-manana-will
-        position: {x: 1900, y: 2400}
+        position: {x: 560, y: 3766}
         outputs:
         - cap3-manana-destapa
         actorId: Player
@@ -1065,7 +1095,7 @@ MonoBehaviour:
         applyPlayerEnvironment: 1
         showActor: 0
     - rid: 6540294538172825796
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Cap. 3 \xB7 Fin (punto de guardado)"
         chapter: Cap. 3
@@ -1076,7 +1106,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-fin-punto
-        position: {x: 380, y: 2640}
+        position: {x: 0, y: 4068}
         outputs:
         - cap3-fin
         checkpointId: CAP3_FIN
@@ -1085,7 +1115,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Amanecer","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825797
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Fin del Cap. 3 (CH_Cap3_BACK_1)
         chapter: Cap. 3
@@ -1096,11 +1126,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-fin
-        position: {x: 760, y: 2640}
-        outputs: []
+        position: {x: 280, y: 4068}
+        outputs:
+        - pieza-npc_anselmo-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         eventKey: CH_Cap3_BACK_1
     - rid: 6540294538172825798
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 1 \xB7 hablar con el posadero"
         chapter: Cap. 3
@@ -1111,7 +1142,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista1-hablar
-        position: {x: 0, y: 3600}
+        position: {x: 280, y: 1326}
         outputs:
         - cap3-pista1-dlg
         npcId: NPC_Posadero
@@ -1119,7 +1150,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 6540294538172825799
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 1 \xB7 las luces que respiran"
         chapter: Cap. 3
@@ -1130,14 +1161,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista1-dlg
-        position: {x: 380, y: 3600}
+        position: {x: 560, y: 1326}
         outputs:
         - cap3-pista1-paso
         dialogue: {fileID: 11400000, guid: a1f5635302e8cfc4891aa1129f5ea70f, type: 2}
         npcId: NPC_Posadero
         oneShotFlag: 
     - rid: 6540294538172825800
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: lo que vio el posadero'
         chapter: Cap. 3
@@ -1148,7 +1179,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista1-paso
-        position: {x: 760, y: 3600}
+        position: {x: 840, y: 1326}
         outputs:
         - cap3-pista1-hecha
         standingActorId: 
@@ -1160,7 +1191,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825801
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 1 hecha"
         chapter: Cap. 3
@@ -1171,11 +1202,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista1-hecha
-        position: {x: 1140, y: 3600}
+        position: {x: 1120, y: 1326}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
     - rid: 6540294538172825802
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 2 \xB7 la cerca del huerto (Luc\xEDa dice d\xF3nde vio al zorro)"
         chapter: Cap. 3
@@ -1186,13 +1217,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista2
-        position: {x: 0, y: 4080}
+        position: {x: 280, y: 1474}
         outputs:
         - cap3-pista2-paso
         eventKey: CAP3_PISTA_HUERTO
         acceptEarlierEvent: 1
     - rid: 6540294538172825803
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: la cerca del huerto'
         chapter: Cap. 3
@@ -1203,7 +1234,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista2-paso
-        position: {x: 380, y: 4080}
+        position: {x: 560, y: 1474}
         outputs:
         - cap3-pista2-hecha
         standingActorId: 
@@ -1215,7 +1246,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825804
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 2 hecha"
         chapter: Cap. 3
@@ -1226,11 +1257,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista2-hecha
-        position: {x: 760, y: 4080}
+        position: {x: 840, y: 1474}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
     - rid: 6540294538172825805
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 3 \xB7 el cobertizo de las redes"
         chapter: Cap. 3
@@ -1241,13 +1272,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista3
-        position: {x: 0, y: 4560}
+        position: {x: 280, y: 1622}
         outputs:
         - cap3-pista3-paso
         eventKey: CAP3_PISTA_COBERTIZO
         acceptEarlierEvent: 1
     - rid: 6540294538172825806
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: el cobertizo'
         chapter: Cap. 3
@@ -1258,7 +1289,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista3-paso
-        position: {x: 380, y: 4560}
+        position: {x: 560, y: 1622}
         outputs:
         - cap3-pista3-hecha
         standingActorId: 
@@ -1270,7 +1301,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825807
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pista 3 hecha"
         chapter: Cap. 3
@@ -1281,11 +1312,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista3-hecha
-        position: {x: 760, y: 4560}
+        position: {x: 840, y: 1622}
         outputs: []
         eventKey: CAP3_PISTA_HECHA
     - rid: 6540294538172825808
-      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nota
         chapter: Cap. 3
@@ -1296,12 +1327,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-nota
-        position: {x: 0, y: -240}
+        position: {x: 0, y: 4326}
         outputs: []
         note: "Cap. 3 \xB7 La pista del mar (GDD \xA7 5.7). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap3-\u2026\xBB se rehacen. Escena: \xABCap\xEDtulos (generado)\xBB en MainWorld (marcas Cap3_*, puntos del roster, pistas, el campamento de los contrabandistas)."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
     - rid: 6540294538172825809
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Se destapa la pantalla en el cruce
         chapter: Cap. 3
@@ -1312,7 +1343,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-manana-destapa
-        position: {x: 0, y: 2640}
+        position: {x: 840, y: 3766}
         outputs:
         - cap3-fin-punto
         color: {r: 0, g: 0, b: 0, a: 1}
@@ -1322,7 +1353,7 @@ MonoBehaviour:
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
     - rid: 6540294538172825810
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.0 \xB7 Hablar con Eldran en la salida del pueblo (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -1333,7 +1364,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-adios-hablar
-        position: {x: 1140, y: 0}
+        position: {x: 840, y: 44}
         outputs:
         - cap3-adios
         npcId: NPC_Eldran
@@ -1352,7 +1383,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-adios
-        position: {x: 1520, y: 0}
+        position: {x: 1120, y: 44}
         outputs:
         - cap3-adios-paso
         cinematicName: 'Cap. 3: la despedida en la salida del pueblo'
@@ -1365,7 +1396,7 @@ MonoBehaviour:
         distanciaMaxima: 24
         distanciaDeAparicion: 12
     - rid: 6540294538172825812
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: reunirse con Eldran (cierra \xABHora de partir\xBB)"
         chapter: Cap. 3
@@ -1376,7 +1407,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-adios-paso
-        position: {x: 1900, y: 0}
+        position: {x: 1400, y: 44}
         outputs:
         - cap3-mision
         standingActorId: 
@@ -1388,7 +1419,7 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 6540294538172825813
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Camino del puerto, a pie (probar desde aqu\xED)"
         chapter: Cap. 3
@@ -1399,12 +1430,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-camino
-        position: {x: 380, y: 240}
+        position: {x: 1960, y: 44}
         outputs:
-        - cap3-camino-punto
+        - pieza-npc_boticaria-backtousual-cap-2-despedida-de-will-cap3-camino
         eventKey: CAP3_CAMINO_EMPIEZA
     - rid: 6540294538172825814
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: la salida del pueblo"
         chapter: Cap. 3
@@ -1415,7 +1446,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-camino-punto
-        position: {x: 760, y: 240}
+        position: {x: 0, y: 572}
         outputs:
         - cap3-acampada-llega
         checkpointId: CAP3_SALIDA
@@ -1424,7 +1455,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Will_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825815
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Pasa por la mitad del camino"
         chapter: Cap. 3
@@ -1435,13 +1466,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-acampada-llega
-        position: {x: 1140, y: 240}
+        position: {x: 280, y: 572}
         outputs:
         - cap3-espejo-carga
         eventKey: CAP3_ACAMPADA_CAMINO
         acceptEarlierEvent: 1
     - rid: 6540294538172825816
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Se destapa la pantalla y se sigue andando"
         chapter: Cap. 3
@@ -1452,7 +1483,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-camino-destapa
-        position: {x: 380, y: 480}
+        position: {x: 1400, y: 572}
         outputs:
         - cap3-camino-punto2
         color: {r: 0, g: 0, b: 0, a: 1}
@@ -1462,7 +1493,7 @@ MonoBehaviour:
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
     - rid: 6540294538172825817
-      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: a mitad del camino"
         chapter: Cap. 3
@@ -1473,7 +1504,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-camino-punto2
-        position: {x: 760, y: 480}
+        position: {x: 0, y: 902}
         outputs:
         - cap3-aldea
         checkpointId: CAP3_ACAMPADA_CAMINO
@@ -1482,7 +1513,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_AcampadaCamino","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294538172825818
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Llega al camino del bosque"
         chapter: Cap. 3
@@ -1493,13 +1524,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-bosque-llega
-        position: {x: 1900, y: 960}
+        position: {x: 280, y: 1968}
         outputs:
         - cap3-paso-bosque
         eventKey: CAP3_LLEGADA_BOSQUE
         acceptEarlierEvent: 1
     - rid: 6540294538172825819
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: ir hacia el bosque'
         chapter: Cap. 3
@@ -1510,7 +1541,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-bosque
-        position: {x: 0, y: 1200}
+        position: {x: 560, y: 1968}
         outputs:
         - cap3-bosque-dice
         standingActorId: 
@@ -1522,7 +1553,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825820
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will: los carros pasan de noche"
         chapter: Cap. 3
@@ -1533,7 +1564,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-bosque-dice
-        position: {x: 380, y: 1200}
+        position: {x: 840, y: 1968}
         outputs:
         - cap3-hora
         targetTag: Player
@@ -1556,7 +1587,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hora
-        position: {x: 760, y: 1200}
+        position: {x: 1120, y: 1968}
         outputs:
         - cap3-tuto-noche
         - cap3-hoguera-tuto
@@ -1573,7 +1604,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-tuto-noche
-        position: {x: 1140, y: 1200}
+        position: {x: 1400, y: 1968}
         outputs:
         - cap3-esperar-noche
         action: 0
@@ -1597,7 +1628,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hoguera-tuto
-        position: {x: 1520, y: 1200}
+        position: {x: 1400, y: 2116}
         outputs:
         - cap3-esperar-noche
         action: 0
@@ -1621,14 +1652,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-esperar-noche
-        position: {x: 1900, y: 1200}
+        position: {x: 1680, y: 1968}
         outputs:
         - cap3-cae-noche
         franja: 7
         anchorId: Cap3_Acampada
         radio: 6
     - rid: 6540294538172825825
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Anochece junto al fuego (aparecen los contrabandistas)"
         chapter: Cap. 3
@@ -1639,12 +1670,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-cae-noche
-        position: {x: 0, y: 1440}
+        position: {x: 1960, y: 1968}
         outputs:
-        - cap3-paso-noche
+        - pieza-npc_contrabandista1-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
         eventKey: CAP3_CAE_LA_NOCHE
     - rid: 6540294538172825826
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: esperar la noche'
         chapter: Cap. 3
@@ -1655,7 +1686,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-noche
-        position: {x: 380, y: 1440}
+        position: {x: 840, y: 2314}
         outputs:
         - cap3-punto-noche
         standingActorId: 
@@ -1667,7 +1698,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 6540294538172825827
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will llega al claro (el del seguimiento se queda fuera)"
         chapter: Cap. 3
@@ -1678,12 +1709,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-en-el-claro
-        position: {x: 380, y: 1680}
+        position: {x: 1400, y: 2616}
         outputs:
-        - cap3-claro
+        - pieza-npc_contrabandista1-usual-cap-3-fuera-del-claro-cap3-en-el-claro
         eventKey: CAP3_EN_EL_CLARO
     - rid: 6540294538172825828
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Le ha visto: \xAB\xBFMe ven\xEDas siguiendo?\xBB"
         chapter: Cap. 3
@@ -1694,7 +1725,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado
-        position: {x: 0, y: 3120}
+        position: {x: 1120, y: 2764}
         outputs:
         - cap3-pillado-combate
         dialogue: {fileID: 11400000, guid: 2a7e76a0ccffb184ba5d6a227909de5b, type: 2}
@@ -1712,7 +1743,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-combate
-        position: {x: 380, y: 3120}
+        position: {x: 1400, y: 2764}
         outputs:
         - cap3-pillado-gana
         - cap3-seguir
@@ -1722,7 +1753,7 @@ MonoBehaviour:
         waitForDefeat: 1
         restorePeacefulOnDefeat: 1
     - rid: 6540294538172825830
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Le gana: el contrabandista, aturdido"
         chapter: Cap. 3
@@ -1733,14 +1764,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-gana
-        position: {x: 760, y: 3120}
+        position: {x: 1680, y: 2764}
         outputs:
         - cap3-pillado-claro
         dialogue: {fileID: 11400000, guid: 2eb4c3109b25833439e9a1f699a07154, type: 2}
         npcId: NPC_Contrabandista1
         oneShotFlag: 
     - rid: 6540294538172825831
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will sigue solo hasta el claro"
         chapter: Cap. 3
@@ -1751,8 +1782,623 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-claro
-        position: {x: 1140, y: 3120}
+        position: {x: 1960, y: 2792}
         outputs:
         - cap3-paso-carro
         eventKey: CAP3_LLEGA_AL_CLARO
         acceptEarlierEvent: 1
+    - rid: 6540294600349712471
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Boticaria: vuelve a lo de siempre (acaba \xABCap. 2 \xB7 despedida de Will\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_boticaria-backtousual-cap-2-despedida-de-will-cap3-camino
+        position: {x: 0, y: 270}
+        outputs:
+        - pieza-npc_eldran-backtousual-cap-23-espera-en-la-salida-del-pueblo-cap3-camino
+        actorId: NPC_Boticaria
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712472
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Eldran: vuelve a lo de siempre (acaba \xABCap. 2\u20133 \xB7 espera en la salida del pueblo\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_eldran-backtousual-cap-23-espera-en-la-salida-del-pueblo-cap3-camino
+        position: {x: 280, y: 270}
+        outputs:
+        - pieza-npc_erika-backtousual-cap-2-despedida-de-will-cap3-camino
+        actorId: NPC_Eldran
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712473
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Erika: vuelve a lo de siempre (acaba \xABCap. 2 \xB7 despedida de Will\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_erika-backtousual-cap-2-despedida-de-will-cap3-camino
+        position: {x: 560, y: 270}
+        outputs:
+        - pieza-npc_tomasa-backtousual-cap-2-despedida-de-will-cap3-camino
+        actorId: NPC_Erika
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712474
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Tomasa: vuelve a lo de siempre (acaba \xABCap. 2 \xB7 despedida de Will\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_tomasa-backtousual-cap-2-despedida-de-will-cap3-camino
+        position: {x: 840, y: 270}
+        outputs:
+        - pieza-npc_oliver-backtousual-cap-2-tras-despedirse-de-will-cap3-camino
+        actorId: NPC_Tomasa
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712475
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Oliver: vuelve a lo de siempre (acaba \xABCap. 2 \xB7 tras despedirse de Will\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_oliver-backtousual-cap-2-tras-despedirse-de-will-cap3-camino
+        position: {x: 1120, y: 270}
+        outputs:
+        - pieza-npc_victoria-backtousual-cap-2-despedida-de-will-cap3-camino
+        actorId: NPC_Oliver
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712476
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Victoria: vuelve a lo de siempre (acaba \xABCap. 2 \xB7 despedida de Will\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_victoria-backtousual-cap-2-despedida-de-will-cap3-camino
+        position: {x: 1400, y: 270}
+        outputs:
+        - cap3-camino-punto
+        actorId: NPC_Victoria
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712477
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Anselmo desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_anselmo-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 560, y: 902}
+        outputs:
+        - pieza-npc_benito-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        actorId: NPC_Anselmo
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: c60dd40912086e74c951ee2038bbaf33, type: 2}
+        - {fileID: 11400000, guid: 219ce3d3b36b99548b0b0bd4269c2730, type: 2}
+    - rid: 6540294600349712478
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Benito desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_benito-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 840, y: 902}
+        outputs:
+        - pieza-npc_eusebio-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        actorId: NPC_Benito
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: f41f1f085a774b342817ebb40b6b2be9, type: 2}
+        - {fileID: 11400000, guid: a33c7816aea283744bdfd49cf0a17d70, type: 2}
+    - rid: 6540294600349712479
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Eusebio desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_eusebio-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 1120, y: 902}
+        outputs:
+        - pieza-npc_fermin-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        actorId: NPC_Eusebio
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 3edd256d3283a434484b3486b6614500, type: 2}
+        - {fileID: 11400000, guid: 487a5ea3f668bfc4c914c2671d20ff56, type: 2}
+    - rid: 6540294600349712480
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Fermin desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_fermin-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 1400, y: 902}
+        outputs:
+        - pieza-npc_remedios-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        actorId: NPC_Fermin
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: b1227af481eeee64488024ff160c29b5, type: 2}
+        - {fileID: 11400000, guid: e7c44a2a6271b6c47afc52365c0ac805, type: 2}
+    - rid: 6540294600349712481
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Remedios desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_remedios-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 1680, y: 902}
+        outputs:
+        - pieza-npc_rosario-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        actorId: NPC_Remedios
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 13dceb0295fe9304bb7b04327fdb6160, type: 2}
+        - {fileID: 11400000, guid: d8a3ac1323cf15f46946d0ebdf1a0b98, type: 2}
+    - rid: 6540294600349712482
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Rosario desde aqu\xED: Cap. 3 \xB7 la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_rosario-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+        position: {x: 1960, y: 902}
+        outputs:
+        - cap3-llegada
+        actorId: NPC_Rosario
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: cdde18683a8c3e24ba93abd5b34c3957, type: 2}
+        - {fileID: 11400000, guid: cf06e957d1a0e9540966be6606693d9f, type: 2}
+    - rid: 6540294600349712483
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Anselmo: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_anselmo-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 560, y: 4068}
+        outputs:
+        - pieza-npc_benito-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        actorId: NPC_Anselmo
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712484
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Benito: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_benito-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 840, y: 4068}
+        outputs:
+        - pieza-npc_eusebio-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        actorId: NPC_Benito
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712485
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Eusebio: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_eusebio-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 1120, y: 4068}
+        outputs:
+        - pieza-npc_fermin-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        actorId: NPC_Eusebio
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712486
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Fermin: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_fermin-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 1400, y: 4068}
+        outputs:
+        - pieza-npc_remedios-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        actorId: NPC_Fermin
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712487
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Remedios: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_remedios-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 1680, y: 4068}
+        outputs:
+        - pieza-npc_rosario-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        actorId: NPC_Remedios
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712488
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Rosario: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 la aldea del mar\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_rosario-backtousual-cap-3-la-aldea-del-mar-cap3-fin
+        position: {x: 1960, y: 4068}
+        outputs: []
+        actorId: NPC_Rosario
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712489
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista1: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 antes de la noche\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista1-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
+        position: {x: 0, y: 2314}
+        outputs:
+        - pieza-npc_contrabandista2-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
+        actorId: NPC_Contrabandista1
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712490
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista2: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 antes de la noche\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista2-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
+        position: {x: 280, y: 2314}
+        outputs:
+        - pieza-npc_contrabandistajefe-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
+        actorId: NPC_Contrabandista2
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712491
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "ContrabandistaJefe: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 antes de la noche\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandistajefe-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
+        position: {x: 560, y: 2314}
+        outputs:
+        - cap3-paso-noche
+        actorId: NPC_ContrabandistaJefe
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712492
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista1, lo de siempre: Cap. 3 \xB7 fuera del claro"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista1-usual-cap-3-fuera-del-claro-cap3-en-el-claro
+        position: {x: 1680, y: 2616}
+        outputs:
+        - cap3-claro
+        actorId: NPC_Contrabandista1
+        layer: 1
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712493
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista1, lo de siempre: Cap. 3 \xB7 detenidos"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista1-usual-cap-3-detenidos-cap3-fin-contrabandistas
+        position: {x: 840, y: 3392}
+        outputs:
+        - pieza-npc_contrabandista2-usual-cap-3-detenidos-cap3-fin-contrabandistas
+        actorId: NPC_Contrabandista1
+        layer: 1
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712494
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista2, lo de siempre: Cap. 3 \xB7 detenidos"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista2-usual-cap-3-detenidos-cap3-fin-contrabandistas
+        position: {x: 1120, y: 3392}
+        outputs:
+        - pieza-npc_contrabandistajefe-usual-cap-3-detenidos-cap3-fin-contrabandistas
+        actorId: NPC_Contrabandista2
+        layer: 1
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712495
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "ContrabandistaJefe, lo de siempre: Cap. 3 \xB7 detenidos"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandistajefe-usual-cap-3-detenidos-cap3-fin-contrabandistas
+        position: {x: 1400, y: 3392}
+        outputs:
+        - pieza-npc_sargento-usual-cap-3-vuelve-al-cruce-cap3-fin-contrabandistas
+        actorId: NPC_ContrabandistaJefe
+        layer: 1
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712496
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Sargento, lo de siempre: Cap. 3 \xB7 vuelve al cruce"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_sargento-usual-cap-3-vuelve-al-cruce-cap3-fin-contrabandistas
+        position: {x: 1680, y: 3392}
+        outputs:
+        - cap3-paso-claro
+        actorId: NPC_Sargento
+        layer: 1
+        presence: 1
+        markId: Cap3_Puesto
+        lines:
+        - {fileID: 11400000, guid: 0463725e5beba1741b70b4f1fbc3a990, type: 2}
+    - rid: 6540294600349712497
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Lucia desde aqu\xED: Cap. 3 \xB7 las pistas"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_lucia-fromhere-cap-3-las-pistas-cap3-pistas
+        position: {x: 1960, y: 1100}
+        outputs:
+        - cap3-pistas-fork
+        actorId: NPC_Lucia
+        layer: 0
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 03f455a13d79c1b408b7f00c4c089ed9, type: 2}
+    - rid: 6540294600349712498
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Lucia: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 las pistas\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_lucia-backtousual-cap-3-las-pistas-cap3-noche
+        position: {x: 1680, y: 1326}
+        outputs:
+        - pieza-npc_lucia-usual-cap-3-despues-cap3-noche
+        actorId: NPC_Lucia
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294600349712499
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Lucia, lo de siempre: Cap. 3 \xB7 despu\xE9s"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_lucia-usual-cap-3-despues-cap3-noche
+        position: {x: 1960, y: 1326}
+        outputs:
+        - pieza-npc_posadero-usual-cap-3-tras-la-hoja-cap3-noche
+        actorId: NPC_Lucia
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 39deedfbf1288a94dbec4336785f01cd, type: 2}
+    - rid: 6540294600349712500
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Posadero, lo de siempre: Cap. 3 \xB7 tras la hoja"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_posadero-usual-cap-3-tras-la-hoja-cap3-noche
+        position: {x: 0, y: 1968}
+        outputs:
+        - cap3-bosque-llega
+        actorId: NPC_Posadero
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: f0fa6d43ef8475043ad111c10a376afe, type: 2}

@@ -35,6 +35,8 @@ public class MagicCaster : MonoBehaviour
     [SerializeField, Min(0.1f)] private float seriesWindow = 1.1f;
     [Tooltip("Multiplicador de daño del tercer golpe de la serie (centro, a dos manos).")]
     [SerializeField, Min(1f)] private float finisherDamageMultiplier = 1.5f;
+    [Tooltip("Segundos mínimos entre dos avisos de falta de maná (OnFaltaDeMana). El buffer de entrada reintenta la X cada fotograma, así que sale como mucho uno por pulsación.")]
+    [SerializeField, Min(0f)] private float avisoSinManaCada = 0.45f;
 
     [Header("Gestos (rutas completas en la capa superior)")]
     [SerializeField] private string leftHandState = "UpperBody.Magic.MagicLeft";
@@ -90,6 +92,7 @@ public class MagicCaster : MonoBehaviour
     private bool _esperandoAterrizaje;
     private bool _gestoDeDevolucion;
     private float _esperaDeAterrizajeHasta;
+    private float _ultimoAvisoSinMana = -999f;
     private readonly Dictionary<MagicSpellSO, MagicSpellSO> _variantesEnPicado = new Dictionary<MagicSpellSO, MagicSpellSO>();
 
     // Transformaciones puestas (zonas donde la magia sale de otra forma), por quién las puso; manda
@@ -102,6 +105,15 @@ public class MagicCaster : MonoBehaviour
 
     /// <summary>Salió un hechizo: el hechizo y la mano.</summary>
     public event Action<MagicSpellSO, CastHand> OnSpellCast;
+
+    /// <summary>Por qué no sale un hechizo (<see cref="MotivoSinLanzar.Ninguno"/>: sí sale).</summary>
+    public enum MotivoSinLanzar { Ninguno, SinHechizo, Bloqueado, Defendiendo, ContraLaPared, SinMana }
+
+    /// <summary>
+    /// Se pidió el básico (X) y no salió por falta de maná. Como mucho uno cada
+    /// <see cref="avisoSinManaCada"/> segundos. Lo escucha <see cref="RespuestaSinMana"/>. Ver INC-1190.
+    /// </summary>
+    public event Action<MagicSpellSO> OnFaltaDeMana;
 
     /// <summary>True mientras dura el gesto del último lanzamiento (retraso + carga).</summary>
     public bool IsCasting => Time.time < _castingUntil;
@@ -272,7 +284,11 @@ public class MagicCaster : MonoBehaviour
         bool lanzado = step == 2 && PuedeRematarEnElAire(spell)
             ? CastRemateAereo(spell, multiplier)
             : Cast(spell, hand, multiplier, precise);
-        if (!lanzado) return false;
+        if (!lanzado)
+        {
+            AvisarSiFaltaMana(spell);
+            return false;
+        }
 
         _nextSeriesStep = (step + 1) % 3;
         _lastSeriesCastTime = Time.time;
@@ -575,28 +591,40 @@ public class MagicCaster : MonoBehaviour
     }
 
     /// <summary>¿Se puede lanzar este hechizo ahora? 'reason' explica el porqué si no.</summary>
-    public bool CanCast(MagicSpellSO spell, out string reason)
+    public bool CanCast(MagicSpellSO spell, out string reason) =>
+        PorQueNoSale(spell, out reason) == MotivoSinLanzar.Ninguno;
+
+    /// <summary>Por qué no saldría este hechizo ahora; 'reason' lo explica en texto.</summary>
+    public MotivoSinLanzar PorQueNoSale(MagicSpellSO spell, out string reason)
     {
         reason = "";
 
-        if (!spell) { reason = "Sin hechizo"; return false; }
+        if (!spell) { reason = "Sin hechizo"; return MotivoSinLanzar.SinHechizo; }
 
-        if (actionManager && !actionManager.CanCastMagic()) { reason = "Acción bloqueada"; return false; }
+        if (actionManager && !actionManager.CanCastMagic()) { reason = "Acción bloqueada"; return MotivoSinLanzar.Bloqueado; }
 
-        if (shieldController != null && shieldController.IsDefending) { reason = "Defendiendo"; return false; }
+        if (shieldController != null && shieldController.IsDefending) { reason = "Defendiendo"; return MotivoSinLanzar.Defendiendo; }
 
         // En tierra, de cara a una pendiente imposible o una pared (stopMove), no se lanza; en el
         // aire sí (INC-483).
-        if (controller && !controller.IsAirborne && controller.stopMove) { reason = "Bloqueado contra una pared"; return false; }
+        if (controller && !controller.IsAirborne && controller.stopMove) { reason = "Bloqueado contra una pared"; return MotivoSinLanzar.ContraLaPared; }
 
         float coste = RasgosDePrenda.CosteDeMana(spell);
         if (manaPool && manaPool.Current < coste)
         {
             reason = $"Maná insuficiente ({coste:F1} requerido, {manaPool.Current:F1} disponible)";
-            return false;
+            return MotivoSinLanzar.SinMana;
         }
 
-        return true;
+        return MotivoSinLanzar.Ninguno;
+    }
+
+    private void AvisarSiFaltaMana(MagicSpellSO spell)
+    {
+        if (OnFaltaDeMana == null || PorQueNoSale(spell, out _) != MotivoSinLanzar.SinMana) return;
+        if (Time.time - _ultimoAvisoSinMana < avisoSinManaCada) return;
+        _ultimoAvisoSinMana = Time.time;
+        OnFaltaDeMana(spell);
     }
 
     public bool CanCast(MagicSpellSO spell) => CanCast(spell, out _);

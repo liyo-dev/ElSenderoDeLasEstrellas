@@ -1,5 +1,5 @@
 # Eldran, vestuario propio: abrigo largo de mago viejo, verde musgo apagado, con coderas de cuero y
-# bufanda gris con un cabo a la espalda; cinturón, zurrón cruzado con libros, pantalón y botas. La cabeza, la barba, el pelo y los
+# bufanda gris con un cabo a la espalda; cinturón, pantalón y botas (el zurrón con libros se quitó el 14 nov 2026: la mano se metía en él). La cabeza, la barba, el pelo y los
 # ojos siguen siendo los suyos (Head05_Santa, Hair13). Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body26_AbrigoDeMago → las manos y el torso de Body05 con la ropa encima, pesado como él.
@@ -52,19 +52,7 @@ esfera("traje", "Hebilla", (0.0, -0.208, 0.45), (0.03, 0.013, 0.027), "Laton", N
 # salía por debajo de la barba de Head05_Santa y la atravesaba.
 toro("traje", "Bufanda", (0, -0.012, 0.722), 0.185, 0.058, "Bufanda", {"spine_03": 1.0}, escala=(1, 0.98, 0.75))
 tubo("traje", "CaboEspalda", curva((0.1, 0.17, 0.72), (0.14, 0.25, 0.66), (0.13, 0.235, 0.54), 7), [0.056, 0.054, 0.05], "Bufanda", {"spine_03": 0.6, "spine_02": 0.4}, seg=10)
-# Zurrón cruzado: la correa del hombro derecho a la cadera izquierda, y la bolsa con dos libros asomando
-correa = curva((-0.15, -0.09, 0.7), (-0.02, -0.37, 0.6), (0.22, -0.13, 0.44), 12)
-tubo("traje", "Correa", correa, [0.017] * 12, "Cuero", None, seg=8)
-correa_atras = curva((-0.15, 0.06, 0.7), (-0.02, 0.35, 0.6), (0.22, 0.1, 0.44), 12)
-tubo("traje", "CorreaAtras", correa_atras, [0.017] * 12, "Cuero", None, seg=8)
-P = {"pelvis": 1.0}
-caja("traje", "Zurron", (0.255, -0.015, 0.36), (0.085, 0.2, 0.17), "Cuero", P, rot=(0, math.radians(-6), 0))
-caja("traje", "Tapa", (0.302, -0.015, 0.405), (0.014, 0.21, 0.1), "CueroOscuro", P, rot=(0, math.radians(-6), 0))
-esfera("traje", "Cierre", (0.312, -0.015, 0.365), (0.008, 0.02, 0.02), "Laton", P)
-caja("traje", "LibroRojo", (0.245, -0.055, 0.465), (0.05, 0.075, 0.1), "LibroRojo", P, rot=(math.radians(8), 0, 0))
-caja("traje", "HojasRojo", (0.245, -0.055, 0.468), (0.04, 0.066, 0.1), "Papel", P, rot=(math.radians(8), 0, 0))
-caja("traje", "LibroAzul", (0.25, 0.04, 0.455), (0.045, 0.08, 0.1), "LibroAzul", P, rot=(math.radians(-10), 0, 0))
-caja("traje", "HojasAzul", (0.25, 0.04, 0.458), (0.036, 0.07, 0.1), "Papel", P, rot=(math.radians(-10), 0, 0))
+# Sin zurrón con libros: en el costado se lo comía la mano al andar (decisión de Raúl, 14 nov 2026: sin bolsas ni mochilas)
 for lado, s in (("l", 1), ("r", -1)):
     # manga de abrigo, ancha, con el hombro redondo, la codera de cuero por detrás y la vuelta del puño
     tubo("traje", f"Manga_{lado}", [(0.17 * s, -0.003, 0.636), (0.26 * s, -0.003, 0.635), (0.35 * s, -0.003, 0.634), (0.44 * s, -0.003, 0.633)],

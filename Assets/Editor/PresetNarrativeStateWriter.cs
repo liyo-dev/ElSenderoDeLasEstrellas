@@ -9,7 +9,7 @@ using UnityEngine;
 /// Las colocaciones de actores se acumulan en orden y se vuelcan a npcPositions con
 /// ApplyActorPlacements, porque para convertir un lugar en posición hace falta la escena. Manda la
 /// última que se pueda resolver en las escenas abiertas.
-public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerLoadoutState
+public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerLoadoutState, INarrativePlayerValuesState
 {
     readonly PlayerPresetSO _dst;
     readonly Dictionary<string, List<NarrativeLocation>> _placements = new();
@@ -129,6 +129,10 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
                 if (value != null) Note($"La escena '{key}' estaría cargada en este punto; la prueba solo carga la del Spawn Anchor.");
                 break;
             case NarrativeCoreFacts.Counter: AplicarContador(key, value); break;
+            case NarrativeCoreFacts.ActorState:
+            case NarrativeCoreFacts.ActorUsual:
+                NarrativeActorStates.SetFromFact(_dst.flags ??= new List<string>(), NarrativeFlags.Key, category, key, value);
+                break;
             default:
                 Note($"Hecho «{category}/{key}» sin traducción a la partida de El Sendero.");
                 break;
@@ -194,6 +198,11 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
         extension = this as T;
         return extension != null;
     }
+
+    // ── INarrativePlayerValuesState ─────────────────────────────────────────
+
+    /// Un punto de arranque pasado por la historia pone sus valores aquí, en su sitio.
+    public void ApplyPlayerValues(NarrativePlayerValues values) => NarrativeGraphEditor.NarrativePlayerValuesEditor.Apply(values, _dst);
 
     // ── IPlayerLoadoutState ─────────────────────────────────────────────────
 

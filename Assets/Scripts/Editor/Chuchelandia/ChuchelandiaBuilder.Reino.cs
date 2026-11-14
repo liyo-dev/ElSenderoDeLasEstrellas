@@ -11,8 +11,8 @@ using Slot = PartyControlManager.CharacterSlot;
 /// El reino libre (tramo 6, de CHUCHE_REINO_LIBRE a la llegada al salón) y su misión opcional,
 /// «Las trompetillas perdidas», con las piezas oficiales:
 /// - Habitantes que hablan: gominolas del pack (sin su IA de demo) con un <see cref="NarrativeActor"/>
-///   sin IA y un <see cref="Interactable"/>; lo que dicen es la frase de su <see cref="AgendaDelActor"/>
-///   (Resources/Agendas), que solo vale en el tramo. Sus charlas solo están encendidas en el tramo
+///   sin IA y un <see cref="Interactable"/>; lo que dicen es la frase de su pieza «Personaje desde aquí»
+///   del grafo, que solo vale en el tramo. Sus charlas solo están encendidas en el tramo
 ///   (<see cref="ActivoEnTramo"/>); la población de demo del pack no se toca.
 /// - El heraldo suplente encarga la misión: una copia suya ronda por el reino durante el tramo y,
 ///   con la prueba superada, el del reparto (en el salón) atiende la entrega (los dos con el mismo id
@@ -32,7 +32,6 @@ public static partial class ChuchelandiaBuilder
     private const string IdDelSuplente = "Actor_HeraldoSuplente";
     private const string RutaMisionTrompetillas = "Assets/_QUEST/SECUNDARIA/CHUCHELANDIA/Q_CHUCHE_TROMPETILLAS.asset";
     private const string CarpetaDialogosDelReino = "Assets/_DIALOGUES/DIALOGUE NPCS/Chuchelandia";
-    private const string CarpetaAgendas = "Assets/Resources/Agendas";
     private const string RutaTrompetilla = "Assets/_ITEMS/IT_Trompetilla.asset";
     private const string RutaIconoTrompetilla = "Assets/Art/UI/Items/trompetilla.png";
     private const string RutaEsenciaDelPremio = "Assets/_ITEMS/IT_Esencia.asset";
@@ -131,29 +130,25 @@ public static partial class ChuchelandiaBuilder
             EditorUtility.SetDirty(dialogo);
         }
 
-        AsegurarCarpeta(CarpetaAgendas);
-        foreach (var (papel, _, frases) in HabitantesDelReino)
-        {
-            string ruta = $"{CarpetaAgendas}/Agenda_{papel.ActorId}.asset";
-            var agenda = AssetDatabase.LoadAssetAtPath<AgendaDelActor>(ruta);
-            if (agenda == null)
-            {
-                agenda = ScriptableObject.CreateInstance<AgendaDelActor>();
-                AssetDatabase.CreateAsset(agenda, ruta);
-            }
-            agenda.actorId = papel.ActorId;
-            var entrada = new EntradaDeAgenda { nombre = "Chuchelandia · el reino libre", presencia = PresenciaEnAgenda.SinCambios };
-            entrada.tramo.empiezaConSenal.Add(Senal.ReinoLibre);
-            entrada.tramo.acabaConSenal.Add(Senal.SalonLlegada);
-            foreach (var frase in frases) entrada.frases.Add(Dialogo(frase));
-            agenda.entradas = new List<EntradaDeAgenda> { entrada };
-            EditorUtility.SetDirty(agenda);
-        }
-
         AsegurarTrompetillaDelInventario(informe);
         var mision = AsegurarMisionDeLasTrompetillas();
-        informe.AppendLine($"Reino: {DialogosDelReino.Length} diálogos, {HabitantesDelReino.Length} agendas de habitantes, misión {IdMisionTrompetillas}.");
+        informe.AppendLine($"Reino: {DialogosDelReino.Length} diálogos, {HabitantesDelReino.Length} habitantes con frases, misión {IdMisionTrompetillas}.");
         return mision;
+    }
+
+    /// <summary>Lo que dicen los habitantes mientras el reino está libre: piezas «Personaje desde aquí» en el grafo (ya montado).</summary>
+    private static void PonerPiezasDelReino(StringBuilder informe)
+    {
+        var situaciones = new List<Sendero.Narrative.Editor.PiezasDePersonaje.Situacion>();
+        foreach (var (papel, _, frases) in HabitantesDelReino)
+        {
+            var s = new Sendero.Narrative.Editor.PiezasDePersonaje.Situacion { actor = papel.ActorId, nombre = "Chuchelandia · el reino libre", presencia = ActorPresence.Unchanged };
+            s.empieza.Add(Senal.ReinoLibre);
+            s.acaba.Add(Senal.SalonLlegada);
+            foreach (var frase in frases) s.frases.Add(Dialogo(frase));
+            situaciones.Add(s);
+        }
+        Sendero.Narrative.Editor.PiezasDePersonaje.Poner(situaciones, informe);
     }
 
     private static DialogueAsset Dialogo(string asset) =>

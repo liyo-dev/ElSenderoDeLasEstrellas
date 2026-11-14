@@ -46,11 +46,14 @@ KIT = [
     ("Caras_mago_oscuro_sombra",      "Head01_Male",   "chicoL", "afilado",  "violeta", 300, 0,  False, "",             "fina",    False),   # Mago Oscuro (ojos de luz bajo el velo)
     # 12 nov 2026: el Archimago, diseño propio (adulto maduro; cejas grises, boca de reposo con sonrisa suave)
     ("Caras_archimago",               "Head01_Male",   "chicoL", "almendra", "gris",    320, 320, False, "mayor",        "gruesa",  False),   # Archimago (adulto maduro, ojos grises, sonrisa suave)
+    # 14 nov 2026: Liora, diseño propio (amiga del Archimago; adulta, ojos verdes, cejas finas castañas, sonrisa suave)
+    ("Caras_liora",                   "Head02_Female", "chicaL", "almendra", "verde",   330, 330, False, "suave",        "fina",    False),   # Liora
 ]
 # Ajustes sueltos por juego (variables de caras_lib): Estela, cejas 8 mm más bajas para que asomen bajo el flequillo
 # (más arriba quedaban más tapadas: las puntas del flequillo se ensanchan hacia arriba).
 AJUSTES = {"Caras_chica_marron": {"CEJA_DZ": "-0.008"},
            "Caras_archimago": {"BOCA_ESTILO": "amable", "CEJA_COLOR": "0.55,0.55,0.60"},
+           "Caras_liora": {"BOCA_ESTILO": "amable", "CEJA_COLOR": "0.30,0.16,0.08"},
            "Caras_mago_oscuro": {"SIN_BRILLO": "1", "BOCA_ESTILO": "fina", "OJO_ESCALA": "1.12", "CEJA_COLOR": "0.06,0.04,0.1"},   # ojos «sin luz», boca de línea fina, ojeras y líneas de la Piedra
            "Caras_mago_oscuro_sombra": {"OJO_SOMBRA": "1", "OJO_ESCALA": "1.12", "SIN_BRILLO": "1"}}   # ojos de luz violeta, algo más grandes
 os.makedirs(SALIDA, exist_ok=True)

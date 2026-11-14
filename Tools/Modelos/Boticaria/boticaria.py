@@ -49,7 +49,7 @@ for s in (1, -1):
 # ── Cinturón con dos bolsitas, un manojo de ramitas y un frasco ──
 toro("traje", "Cinturon", (0, -0.01, 0.46), 0.204, 0.017, "CueroOscuro", None, escala=(1, 0.92, 1))
 P = {"pelvis": 1.0}
-for k, (x, y) in enumerate(((-0.17, -0.13), (-0.215, -0.03))):
+for k, (x, y) in enumerate(((-0.17, -0.13), (-0.075, -0.2))):   # las dos por delante: en el costado se las comía la mano
     esfera("traje", f"Bolsita{k}", (x, y, 0.395), (0.045, 0.04, 0.052), "Cuero", P)
     toro("traje", f"CuelloBolsita{k}", (x, y, 0.44), 0.02, 0.008, "CueroOscuro", P)
 for k, (dx, dy, dz) in enumerate(((0.0, -0.01, 0.1), (0.025, -0.02, 0.085), (-0.022, -0.015, 0.09))):   # ramitas en el bolsillo del peto

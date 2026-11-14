@@ -1,6 +1,6 @@
 # Oliver, vestuario propio: aprendiz. Túnica de estudiante azul cielo, algo grande (mangas anchas que le
-# llegan a la mano, bajo por el muslo), con cuello y ribetes naranjas, cordón a la cintura, zurrón cruzado
-# con un pergamino, pantalón y botas. Propuesta aprobada por Raúl el 11 nov 2026.
+# llegan a la mano, bajo por el muslo), con cuello y ribetes naranjas, cordón a la cintura, pantalón y botas
+# (el zurrón cruzado con pergamino se quitó el 14 nov 2026: la mano se metía en él). Propuesta aprobada por Raúl el 11 nov 2026.
 # Sobre el esqueleto de RPG Tiny Hero (base.blend = AllBodiesCloaks importado). Mira a -Y; su izquierda es +X.
 #   Body29_Aprendiz → las manos y el torso de Body05 con la ropa encima, pesado como él.
 import bpy, bmesh, math, sys, os
@@ -47,14 +47,7 @@ toro("traje", "Cordon", (0, -0.01, 0.455), 0.211, 0.013, "Cordon", None, escala=
 esfera("traje", "Nudo", (-0.07, -0.212, 0.455), (0.022, 0.016, 0.022), "Cordon", None)
 for k, dx in enumerate((-0.085, -0.055)):
     tubo("traje", f"CaboCordon{k}", curva((-0.07, -0.212, 0.45), (dx, -0.245, 0.4), (dx, -0.25, 0.34 + 0.03 * k), 6), [0.01] * 6, "Cordon", {"pelvis": 1.0}, seg=6)
-# Zurrón cruzado, pequeño, con un pergamino enrollado que asoma
-# la correa da la vuelta entera por el hombro derecho, junto al cuello, apoyada en la túnica (pieza del taller)
-T.bandolera("traje", "Correa", tunica, -0.10, (0.23, -0.13, 0.43), (0.23, 0.1, 0.43), "Cuero")
-P = {"pelvis": 1.0}
-caja("traje", "Zurron", (0.265, -0.015, 0.36), (0.075, 0.17, 0.14), "Cuero", P, rot=(0, R(-6), 0))
-caja("traje", "Tapa", (0.306, -0.015, 0.395), (0.013, 0.18, 0.08), "CueroOscuro", P, rot=(0, R(-6), 0))
-esfera("traje", "Cierre", (0.315, -0.015, 0.365), (0.008, 0.018, 0.018), "Laton", P)
-tubo("traje", "Pergamino", [(0.25, -0.03, 0.4), (0.245, -0.045, 0.52)], [0.024, 0.024], "Papel", P, seg=10)
+# Sin zurrón: en el costado se lo comía la mano al andar (decisión de Raúl, 14 nov 2026: sin bolsas ni mochilas)
 for lado, s in (("l", 1), ("r", -1)):
     # manga ancha recogida en la muñeca con puño naranja (taller): deja ver la mano y no se mete en la tripa
     T.manga_con_puno("traje", lado, cuerpo, arm, "Tunica", "TunicaOscura", mat_puno="Naranja", boca=0.45, vuelo=0.098)

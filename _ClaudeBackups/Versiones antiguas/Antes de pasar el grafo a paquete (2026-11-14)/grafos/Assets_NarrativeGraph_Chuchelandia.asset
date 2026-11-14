@@ -1,0 +1,1268 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Chuchelandia
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: chuche-inicio
+  nodes:
+  - rid: 6540294316048253032
+  - rid: 6540294316048253033
+  - rid: 6540294316048253034
+  - rid: 6540294316048253035
+  - rid: 6540294316048253036
+  - rid: 6540294316048253037
+  - rid: 6540294316048253038
+  - rid: 6540294316048253039
+  - rid: 6540294316048253040
+  - rid: 6540294316048253041
+  - rid: 6540294316048253042
+  - rid: 6540294316048253043
+  - rid: 6540294316048253044
+  - rid: 6540294316048253045
+  - rid: 6540294316048253046
+  - rid: 6540294316048253047
+  - rid: 6540294316048253048
+  - rid: 6540294316048253049
+  - rid: 6540294316048253050
+  - rid: 6540294316048253051
+  - rid: 6540294316048253052
+  - rid: 6540294316048253053
+  - rid: 6540294316048253054
+  - rid: 6540294316048253055
+  - rid: 6540294316048253056
+  - rid: 6540294316048253057
+  - rid: 6540294316048253058
+  - rid: 6540294316048253059
+  - rid: 6540294316048253060
+  - rid: 6540294316048253061
+  - rid: 6540294316048253062
+  - rid: 6540294316048253063
+  - rid: 6540294316048253064
+  - rid: 6540294316048253065
+  - rid: 6540294316048253066
+  - rid: 6540294316048253067
+  - rid: 6540294316048253068
+  - rid: 6540294316048253069
+  - rid: 6540294316048253070
+  - rid: 6540294316048253071
+  - rid: 6540294316048253072
+  - rid: 6540294316048253073
+  - rid: 6540294316048253074
+  - rid: 6540294316048253075
+  - rid: 6540294316048253076
+  - rid: 6540294316048253077
+  - rid: 6540294316048253078
+  - rid: 6540294316048253079
+  - rid: 6540294316048253080
+  - rid: 6540294316048253081
+  - rid: 6540294316048253082
+  - rid: 6540294316048253083
+  - rid: 6540294316048253084
+  - rid: 6540294316048253085
+  - rid: 6540294316048253086
+  - rid: 6540294316048253087
+  - rid: 6540294316048253088
+  - rid: 6540294316048253089
+  - rid: 6540294316048253090
+  - rid: 6540294316048253091
+  - rid: 6540294316048253092
+  - rid: 6540294316048253093
+  - rid: 6540294316048253094
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294316048253032
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio de Chuchelandia
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-inicio
+        position: {x: 0, y: 183}
+        outputs:
+        - chuche-tras-sendero
+    - rid: 6540294316048253033
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Puente con el Sendero: empieza la prueba de Estela (aviso para el resto del juego)'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tras-sendero
+        position: {x: 380, y: 0}
+        outputs:
+        - chuche-llegada
+        eventKey: PRUEBA_ESTELA_EMPIEZA
+    - rid: 6540294316048253034
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "1 \xB7 Llegada a Chuchelandia (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-llegada
+        position: {x: 760, y: 0}
+        outputs:
+        - chuche-cine-llegada
+        eventKey: CHUCHE_LLEGADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253035
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n: la princesa m\xE1s adorable (aviso de misi\xF3n nueva; primer paso: intentad abrir la Puerta del Coraz\xF3n)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mision
+        position: {x: 3800, y: 0}
+        outputs:
+        - chuche-puerta-intentos
+        questId: CHUCHE_PRUEBA_ESTELA
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294316048253036
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "1 \xB7 Cinem\xE1tica: la puerta rosa, la purpurina y \xABOh, no\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-llegada
+        position: {x: 1140, y: 0}
+        outputs:
+        - chuche-bienvenida
+        cinematicName: 'Chuchelandia: la llegada'
+        signalIn: CHUCHE_CINE_LLEGADA_START
+        signalDone: CHUCHE_CINE_LLEGADA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 998e7d3e61468154e8ff4cfea0f1e367, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253037
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2 \xB7 El heraldo y la Puerta del Coraz\xF3n (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-puerta-empieza
+        position: {x: 1900, y: 0}
+        outputs:
+        - chuche-heraldo-hablar
+        eventKey: CHUCHE_PUERTA_EMPIEZA
+    - rid: 6540294316048253038
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-pergamino
+        position: {x: 2660, y: 0}
+        outputs:
+        - chuche-cine-heraldo
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253039
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2 \xB7 Cinem\xE1tica: el heraldo lee el pergamino"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-heraldo
+        position: {x: 3040, y: 0}
+        outputs:
+        - chuche-paso-investigar
+        cinematicName: 'Chuchelandia: el pergamino del heraldo'
+        signalIn: CHUCHE_CINE_PERGAMINO_START
+        signalDone: CHUCHE_CINE_PERGAMINO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: acb41d5ea6769be44992297c10d29ae8, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253040
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2 \xB7 Los intentos con el candado: magia de Estela, ganz\xFAa de Liam y empuj\xF3n de Will, cambiando con la cruceta (o hablar con el heraldo)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-puerta-intentos
+        position: {x: 4180, y: 0}
+        outputs:
+        - chuche-paso-puerta
+        eventKey: CHUCHE_PUERTA_INTENTOS
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253041
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: la Puerta del Coraz\xF3n"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-puerta
+        position: {x: 4560, y: 0}
+        outputs:
+        - chuche-mando-will-ejercito
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_PUERTA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253042
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-ejercito
+        position: {x: 4940, y: 0}
+        outputs:
+        - chuche-cine-ejercito
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253043
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Cinem\xE1tica: \xA1una candidata! El ej\xE9rcito se lleva a Estela y viste a Will y a Liam"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-ejercito
+        position: {x: 5320, y: 0}
+        outputs:
+        - chuche-estela-sale
+        cinematicName: "Chuchelandia: \xA1una candidata!"
+        signalIn: CHUCHE_CINE_CANDIDATA_START
+        signalDone: CHUCHE_CINE_CANDIDATA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0c7cfb520a76fc2489d3977d52101878, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253044
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Estela sale del grupo y de la escena: se la ha llevado el ej\xE9rcito"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-estela-sale
+        position: {x: 5700, y: 0}
+        outputs:
+        - chuche-atuendo-candidata
+        accion: 0
+        personaje: Estela
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253045
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Atuendos de candidata (tambi\xE9n los emiten las cinem\xE1ticas de la candidata y del vestidor)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-atuendo-candidata
+        position: {x: 6080, y: 0}
+        outputs:
+        - chuche-vestidor-empieza
+        eventKey: CHUCHE_ATUENDO_CANDIDATA
+    - rid: 6540294316048253046
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Hacia el vestidor real (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-vestidor-empieza
+        position: {x: 6460, y: 0}
+        outputs:
+        - chuche-vestidor-llegar
+        eventKey: CHUCHE_VESTIDOR_EMPIEZA
+    - rid: 6540294316048253047
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Will y Liam llegan al vestidor real"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-vestidor-llegar
+        position: {x: 6840, y: 0}
+        outputs:
+        - chuche-estela-vuelve
+        eventKey: CHUCHE_VESTIDOR_LLEGADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253048
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Estela vuelve al grupo (sale del vestidor en la cinem\xE1tica)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-estela-vuelve
+        position: {x: 7220, y: 0}
+        outputs:
+        - chuche-mando-will-vestidor
+        accion: 1
+        personaje: Estela
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253049
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-vestidor
+        position: {x: 7600, y: 0}
+        outputs:
+        - chuche-cine-vestidor
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253050
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "3 \xB7 Cinem\xE1tica: el vestidor, el lazo y \xABcon mucha rabia\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-vestidor
+        position: {x: 7980, y: 0}
+        outputs:
+        - chuche-carrera-empieza
+        cinematicName: 'Chuchelandia: el vestidor real'
+        signalIn: CHUCHE_CINE_VESTIDOR_START
+        signalDone: CHUCHE_CINE_VESTIDOR_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 5f7087e10faae96458146d07c269965a, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253051
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Empieza la carrera (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-carrera-empieza
+        position: {x: 8360, y: 0}
+        outputs:
+        - chuche-carrera
+        eventKey: CHUCHE_CARRERA_EMPIEZA
+    - rid: 6540294316048253052
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Carrera de obst\xE1culos (tanda 3)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-carrera
+        position: {x: 8740, y: 0}
+        outputs:
+        - chuche-paso-carrera
+        eventKey: CHUCHE_CARRERA_GANADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253053
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: la carrera'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-carrera
+        position: {x: 9120, y: 0}
+        outputs:
+        - chuche-escalada-empieza
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_CARRERA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253054
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Empieza la escalada (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-escalada-empieza
+        position: {x: 9500, y: 0}
+        outputs:
+        - chuche-escalada
+        eventKey: CHUCHE_ESCALADA_EMPIEZA
+    - rid: 6540294316048253055
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Escalada de la torre (tanda 3)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-escalada
+        position: {x: 9880, y: 0}
+        outputs:
+        - chuche-paso-escalada
+        eventKey: CHUCHE_ESCALADA_GANADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253056
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: la escalada'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-escalada
+        position: {x: 10260, y: 0}
+        outputs:
+        - chuche-punteria-empieza
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_ESCALADA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253057
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Empieza la punter\xEDa (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-punteria-empieza
+        position: {x: 10640, y: 0}
+        outputs:
+        - chuche-punteria
+        eventKey: CHUCHE_PUNTERIA_EMPIEZA
+    - rid: 6540294316048253058
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "4 \xB7 Punter\xEDa (tanda 3)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-punteria
+        position: {x: 11020, y: 0}
+        outputs:
+        - chuche-paso-punteria
+        eventKey: CHUCHE_PUNTERIA_GANADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253059
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: la punter\xEDa"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-punteria
+        position: {x: 11400, y: 0}
+        outputs:
+        - chuche-clases-empieza
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_PUNTERIA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253060
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "5 \xB7 Hacia las clases de la Condesa (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-clases-empieza
+        position: {x: 11780, y: 0}
+        outputs:
+        - chuche-clases-llegar
+        eventKey: CHUCHE_CLASES_EMPIEZA
+    - rid: 6540294316048253061
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "5 \xB7 Llegan a las clases de la Condesa Merengue"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-clases-llegar
+        position: {x: 12160, y: 0}
+        outputs:
+        - chuche-clases
+        eventKey: CHUCHE_CLASES_LLEGADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253062
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "5 \xB7 Clases de la Condesa: reverencia, saludo, risita y cari\xF1o (concurso de pr\xE1ctica, como Estela)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-clases
+        position: {x: 12540, y: 0}
+        outputs:
+        - chuche-paso-clases
+        eventKey: CHUCHE_CLASES_HECHAS
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253063
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: las clases'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-clases
+        position: {x: 12920, y: 0}
+        outputs:
+        - chuche-reino-libre
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_CLASES
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253064
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 El reino, libre: los habitantes hablan (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-reino-libre
+        position: {x: 13300, y: 0}
+        outputs:
+        - chuche-reino-fork
+        eventKey: CHUCHE_REINO_LIBRE
+    - rid: 6540294316048253065
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 En paralelo: la misi\xF3n opcional de las trompetillas (no bloquea el recorrido)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-reino-fork
+        position: {x: 13680, y: 0}
+        outputs:
+        - chuche-salon-llegar
+        - chuche-tromp-hablar
+    - rid: 6540294316048253066
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "7 \xB7 Entran en el sal\xF3n del duelo"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-salon-llegar
+        position: {x: 14060, y: 0}
+        outputs:
+        - chuche-mando-will-pompon
+        eventKey: CHUCHE_SALON_LLEGADA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253067
+      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "7 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-pompon
+        position: {x: 14440, y: 0}
+        outputs:
+        - chuche-cine-pompon
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294316048253068
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "7 \xB7 Cinem\xE1tica: Su Alteza Pomp\xF3n, \xABes un oso\xBB y el heraldo que explota"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-pompon
+        position: {x: 14820, y: 0}
+        outputs:
+        - chuche-duelo-empieza
+        cinematicName: "Chuchelandia: Su Alteza Pomp\xF3n"
+        signalIn: CHUCHE_CINE_POMPON_START
+        signalDone: CHUCHE_CINE_POMPON_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 62c433931f3a3c842b79ea60defa1721, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253069
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "8 \xB7 Empieza el Duelo de Ternura (probar desde aqu\xED)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-duelo-empieza
+        position: {x: 15200, y: 0}
+        outputs:
+        - chuche-duelo
+        eventKey: CHUCHE_DUELO_EMPIEZA
+    - rid: 6540294316048253070
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "8 \xB7 Duelo de Ternura: reverencia, canci\xF3n de cuna y ojitos, como Estela (concurso por rondas, sin derrota)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-duelo
+        position: {x: 15580, y: 0}
+        outputs:
+        - chuche-te-quiero
+        eventKey: CHUCHE_DUELO_TERMINADO
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253071
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "9 \xB7 \xAB\xA1TE QUIERO!\xBB como Will: el mantel, el sirope y la silla"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-te-quiero
+        position: {x: 15960, y: 0}
+        outputs:
+        - chuche-cine-te-quiero
+        eventKey: CHUCHE_TE_QUIERO_HECHO
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253072
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "9 \xB7 Cinem\xE1tica: la ca\xEDda en la fuente, la pancarta y la risa de Estela"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-te-quiero
+        position: {x: 16340, y: 0}
+        outputs:
+        - chuche-paso-duelo
+        cinematicName: "Chuchelandia: \xA1TE QUIERO!"
+        signalIn: CHUCHE_CINE_TEQUIERO_START
+        signalDone: CHUCHE_CINE_TEQUIERO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 107bd03dc01a7544fbad33bc033df0c1, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253073
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Paso: el duelo'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-duelo
+        position: {x: 16720, y: 0}
+        outputs:
+        - chuche-cine-victoria
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_DUELO
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294316048253074
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10 \xB7 Cinem\xE1tica: la tiara, \xABUno\xBB, la Puerta hace clic y las collejas pegadas"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-victoria
+        position: {x: 17100, y: 0}
+        outputs:
+        - chuche-atuendo-victoria
+        cinematicName: 'Chuchelandia: victoria'
+        signalIn: CHUCHE_CINE_VICTORIA_START
+        signalDone: CHUCHE_CINE_VICTORIA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0f822c4b9b02e864ea8b69bfbc550fe0, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 6540294316048253075
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10 \xB7 Atuendo de victoria (tambi\xE9n lo emite la cinem\xE1tica de victoria al coronarla)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-atuendo-victoria
+        position: {x: 17480, y: 0}
+        outputs:
+        - chuche-superada
+        eventKey: CHUCHE_ATUENDO_VICTORIA
+    - rid: 6540294316048253076
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10 \xB7 Prueba de Estela superada: se abre el portal al Sendero"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-superada
+        position: {x: 17860, y: 0}
+        outputs:
+        - chuche-salida
+        eventKey: PRUEBA_ESTELA_SUPERADA
+    - rid: 6540294316048253077
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10 \xB7 Cruzan el portal de vuelta al Sendero"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-salida
+        position: {x: 18240, y: 0}
+        outputs:
+        - chuche-cierre
+        eventKey: CHUCHE_SALIDA
+        acceptEarlierEvent: 1
+    - rid: 6540294316048253078
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: la vuelta (cierra la misi\xF3n)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cierre
+        position: {x: 18620, y: 0}
+        outputs: []
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_PRUEBA_ESTELA
+        stepConditionIds:
+        - CHUCHE_VUELTA
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294316048253079
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 Opcional: hablar con el heraldo suplente"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-hablar
+        position: {x: 14060, y: 177}
+        outputs:
+        - chuche-tromp-encargo
+        npcId: Actor_HeraldoSuplente
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294316048253080
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 El suplente encarga las trompetillas"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-encargo
+        position: {x: 14440, y: 160}
+        outputs:
+        - chuche-tromp-mision
+        dialogue: {fileID: 11400000, guid: 298b5780f28e13544ac4299bbe0c128e, type: 2}
+        npcId: Actor_HeraldoSuplente
+        oneShotFlag: 
+    - rid: 6540294316048253081
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n opcional: las trompetillas perdidas"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-mision
+        position: {x: 14820, y: 213}
+        outputs:
+        - chuche-tromp-buscar
+        questId: CHUCHE_TROMPETILLAS
+        giverId: Actor_HeraldoSuplente
+        inProgressDialogue: {fileID: 11400000, guid: 48b09c92a08d6ae4eaa654fda4c46cf6, type: 2}
+        noGiver: 0
+    - rid: 6540294316048253082
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 Aparecen las trompetillas por el reino"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-buscar
+        position: {x: 15200, y: 177}
+        outputs:
+        - chuche-tromp-recoger
+        eventKey: CHUCHE_TROMPETILLAS_BUSCAR
+    - rid: 6540294316048253083
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 Coger las 5 trompetillas (marca un paso de la misi\xF3n por cada una)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-recoger
+        position: {x: 15580, y: 177}
+        outputs:
+        - chuche-tromp-todas
+        eventKey: CHUCHE_TROMPETILLA
+        count: 5
+        questId: CHUCHE_TROMPETILLAS
+    - rid: 6540294316048253084
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 \xAB\xA1Ya est\xE1n todas!\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-todas
+        position: {x: 15960, y: 177}
+        outputs:
+        - chuche-tromp-volver
+        dialogue: {fileID: 11400000, guid: c36e7b885e322c443bc5e6d052a39dab, type: 2}
+        npcId: 
+        oneShotFlag: 
+    - rid: 6540294316048253085
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 Volver con el heraldo suplente (en el reino o, con la prueba superada, en el sal\xF3n)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-volver
+        position: {x: 16340, y: 213}
+        outputs:
+        - chuche-tromp-entrega
+        npcId: Actor_HeraldoSuplente
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294316048253086
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 La entrega: \xAB\xBFDecidida? Me vale\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-entrega
+        position: {x: 16720, y: 207}
+        outputs:
+        - chuche-tromp-devolver
+        dialogue: {fileID: 11400000, guid: 7907c310544c596478349a54199e50df, type: 2}
+        npcId: Actor_HeraldoSuplente
+        oneShotFlag: 
+    - rid: 6540294316048253087
+      type: {class: RequireInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "6 \xB7 Las trompetillas salen del inventario"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-devolver
+        position: {x: 17100, y: 213}
+        outputs:
+        - chuche-tromp-cierre
+        item: {fileID: 11400000, guid: 806a08f28d0be234d9b8d0af41d07255, type: 2}
+        requiredAmount: 5
+        consumeOnSuccess: 1
+        logWarnings: 1
+        questId: 
+        questStepIndex: -1
+        autoStartQuestIfInactive: 1
+        completeQuestInstead: 0
+        useAlternateOutputOnMissing: 0
+        alternateOutputIndex: 1
+    - rid: 6540294316048253088
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Cierra la misi\xF3n de las trompetillas (el suplente queda con su frase de despu\xE9s)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-cierre
+        position: {x: 17480, y: 177}
+        outputs:
+        - chuche-tromp-premio
+        standingActorId: Actor_HeraldoSuplente
+        standingDialogue: {fileID: 11400000, guid: 9f8b578d1a654f94c933e79b083c1c14, type: 2}
+        questId: CHUCHE_TROMPETILLAS
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294316048253089
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Premio: 30 de Esencia'
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-tromp-premio
+        position: {x: 17860, y: 177}
+        outputs: []
+        item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+        amount: 30
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294316048253090
+      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nota
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-nota-sendero
+        position: {x: 0, y: 0}
+        outputs: []
+        note: "Conexi\xF3n con el Sendero: el grafo arranca al cargar Chuchelandia (su NarrativeGraphStarter) y emite PRUEBA_ESTELA_EMPIEZA (el grupo llega al ancla \xABChuchelandiaLlegada\xBB). Al final se emite PRUEBA_ESTELA_SUPERADA, que abre el portal de vuelta (flag SENDERO_PRUEBA_ESTELA_HECHA, ancla SenderoTrasPruebaEstela)."
+        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
+    - rid: 6540294316048253091
+      type: {class: GraphNoteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nota
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-nota-maqueta
+        position: {x: 0, y: 343}
+        outputs: []
+        note: "Escena: las llegadas son disparadores en \xABChuchelandia (generado)/Disparadores\xBB; lo jugable est\xE1 en \xABPruebas\xBB (carrera, escalada, punter\xEDa, candado, clases, duelo y \xAB\xA1TE QUIERO!\xBB), cada cosa activa solo en su tramo y emitiendo su se\xF1al al acabar. Las cinem\xE1ticas son guiones horneados (Chuche_*.guion.txt, men\xFA \xABChuchelandia: hornear las cinem\xE1ticas\xBB). Cada tramo empieza en un nodo \xAB(probar desde aqu\xED)\xBB que emite su se\xF1al *_EMPIEZA. Antes de las cinem\xE1ticas que cuentan con Will, un nodo de grupo le pasa el mando."
+        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
+    - rid: 6540294316048253092
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Misi\xF3n: bienvenidos a Chuchelandia (aviso de misi\xF3n nueva; paso: investigad el reino, el heraldo en el minimapa)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-bienvenida
+        position: {x: 1520, y: 0}
+        outputs:
+        - chuche-puerta-empieza
+        questId: CHUCHE_BIENVENIDA
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294316048253093
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2 \xB7 Hablar con el heraldo, junto a la Puerta del Coraz\xF3n"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-heraldo-hablar
+        position: {x: 2280, y: 0}
+        outputs:
+        - chuche-mando-will-pergamino
+        npcId: Actor_Heraldo
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294316048253094
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Paso: investigar el reino (cierra la misi\xF3n de la llegada)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-paso-investigar
+        position: {x: 3420, y: 0}
+        outputs:
+        - chuche-mision
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CHUCHE_BIENVENIDA
+        stepConditionIds:
+        - CHUCHE_INVESTIGAR
+        steps: 
+        completeQuest: 1
+        logWarnings: 1

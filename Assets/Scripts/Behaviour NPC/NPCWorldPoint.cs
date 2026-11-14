@@ -11,6 +11,10 @@ public class NPCWorldPoint : MonoBehaviour
     [Tooltip("Tipo de actividad que se puede realizar en este punto")]
     public NPCAmbientActivity activityType = NPCAmbientActivity.SitMedium;
 
+    [Tooltip("Estado del Animator que sustituye al bucle de su actividad mientras se está aquí (vacío: el de la actividad). " +
+             "Para asientos con su propia postura, como el columpio (piernas adelante). Lo usa el jugador.")]
+    public string estadoDelBucle = "";
+
     [Header("Posición de Interacción")]
     [Tooltip("Transform exacto desde donde el NPC realiza la actividad. Si es null, usa este transform.")]
     public Transform interactionPoint;

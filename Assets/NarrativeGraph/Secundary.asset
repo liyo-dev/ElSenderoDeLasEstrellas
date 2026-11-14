@@ -59,6 +59,21 @@ MonoBehaviour:
   - rid: 5630202821400330241
   - rid: 5630202821400330242
   - rid: 5630202821400330243
+  - rid: 6540294600349712509
+  - rid: 6540294600349712510
+  - rid: 6540294600349712511
+  - rid: 6540294600349712512
+  - rid: 6540294600349712513
+  - rid: 6540294600349712514
+  - rid: 6540294600349712515
+  - rid: 6540294600349712516
+  - rid: 6540294600349712517
+  - rid: 6540294600349712518
+  - rid: 6540294600349712519
+  - rid: 6540294600349712520
+  - rid: 6540294600349712521
+  - rid: 6540294600349712522
+  - rid: 6540294600349712523
   applicableSceneNames:
   - MainWorld
   references:
@@ -69,6 +84,7 @@ MonoBehaviour:
       data:
         displayTitle: Recibo orejas de angel
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -80,10 +96,11 @@ MonoBehaviour:
         wardrobeItem: {fileID: 11400000, guid: e57680d74430c0041b9f24ed7e99989d, type: 2}
         logWarnings: 1
     - rid: 1033424269097474018
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: El remedio contra la resaca (Tabernera)
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -96,10 +113,11 @@ MonoBehaviour:
         questId: Q_TABERNERA_ALGAS
         debugLogs: 0
     - rid: 1078245657900615900
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Suministros para el hechizo (Nora)
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -116,6 +134,7 @@ MonoBehaviour:
       data:
         displayTitle: Recibo orejas de conejo
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -127,10 +146,11 @@ MonoBehaviour:
         wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
         logWarnings: 1
     - rid: 1479465354230462173
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 15 monedas
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -144,10 +164,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 1635490750706514273
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Pociones para la abuela (Manuel)
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -160,10 +181,11 @@ MonoBehaviour:
         questId: Q_MANUEL_POCIONES
         debugLogs: 0
     - rid: 1788894763175737732
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 3 pociones de vida
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -178,10 +200,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 1827795099163868709
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 25 monedas
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -195,10 +218,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 2337184645389222053
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Encuentro la caracola
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -211,10 +235,11 @@ MonoBehaviour:
         questId: "Q_NI\xD1OPEZ_CARACOLA"
         debugLogs: 0
     - rid: 5623891252771815605
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Recibo Algas
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -227,10 +252,11 @@ MonoBehaviour:
         eventKey: ALGAS_INVENTORY
         acceptEarlierEvent: 1
     - rid: 5623891252771815606
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "A\xF1ado Algas al Inventario"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -244,10 +270,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 5623891259268006325
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: MISIONES SECUNDARIAS
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -267,11 +294,13 @@ MonoBehaviour:
         - db4b04b0-fed3-4756-b4d8-6a01b4459193
         - 25b810b1-9ddd-48bd-9474-773389932a01
         - sec-erika-revancha-0
+        - pieza-npc_boticaria-usual-siempre-la-pocion-434108a8-8f50-407a-b807-74d22ff2a5ac
     - rid: 5623891481250759595
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Misi\xF3n buscar botas Rudolfo"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -288,6 +317,7 @@ MonoBehaviour:
       data:
         displayTitle: Desbloqueo el Salto
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -305,10 +335,11 @@ MonoBehaviour:
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 1
     - rid: 5623891500440224033
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Espero a completar la misi\xF3n"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -325,6 +356,7 @@ MonoBehaviour:
       data:
         displayTitle: Desbloqueo la habilidad de nadar
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -343,10 +375,11 @@ MonoBehaviour:
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 1
     - rid: 5623891572275806459
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: El mareo de Roberto
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -359,10 +392,11 @@ MonoBehaviour:
         questId: ROBERTO_MISION1
         debugLogs: 0
     - rid: 5623891572275806460
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 5 pociones de magia
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -376,10 +410,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 5630202287041282378
-      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: BranchFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Renard: \xBFya lo conozco?"
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -393,10 +428,11 @@ MonoBehaviour:
         flagKey: RENARD_CONOCIDO
         invert: 0
     - rid: 5630202287041282379
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Hablar con Renard
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -411,10 +447,11 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202287041282380
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard se presenta
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -428,10 +465,11 @@ MonoBehaviour:
         npcId: NPC_Renard
         oneShotFlag: 
     - rid: 5630202287041282381
-      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard conocido
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -444,10 +482,11 @@ MonoBehaviour:
         flagKey: RENARD_CONOCIDO
         value: 1
     - rid: 5630202287041282383
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard ofrece el primer contrato
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -461,10 +500,11 @@ MonoBehaviour:
         npcId: NPC_Renard
         oneShotFlag: 
     - rid: 5630202287041282384
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Contrato: Patas de sobra'
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -479,10 +519,11 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 8282f2b59520ed3469b28e6b6be7114b, type: 2}
         noGiver: 0
     - rid: 5630202287041282385
-      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitSignalCountNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Ocho ara\xF1as"
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -496,10 +537,11 @@ MonoBehaviour:
         count: 8
         questId: RENARD_CONTRATO_1
     - rid: 5630202287041282386
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Volver con Renard
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -514,10 +556,11 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202287041282387
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard paga el primer contrato
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -531,10 +574,11 @@ MonoBehaviour:
         npcId: NPC_Renard
         oneShotFlag: 
     - rid: 5630202287041282388
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Completa Patas de sobra
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -552,10 +596,11 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 5630202287041282389
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 20 de Esencia
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -570,10 +615,11 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 5630202287041282390
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard ofrece el segundo contrato
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -587,10 +633,11 @@ MonoBehaviour:
         npcId: NPC_Renard
         oneShotFlag: 
     - rid: 5630202287041282391
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Contrato: Donde no llega la luz'
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -605,10 +652,11 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: d01ab53fb53b23445aeedc7f8ee2ea99, type: 2}
         noGiver: 0
     - rid: 5630202287041282392
-      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitSignalCountNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Quince ara\xF1as"
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -622,10 +670,11 @@ MonoBehaviour:
         count: 15
         questId: RENARD_CONTRATO_2
     - rid: 5630202287041282393
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Volver con Renard
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -640,10 +689,11 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202287041282394
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Renard paga el segundo contrato
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -657,10 +707,11 @@ MonoBehaviour:
         npcId: NPC_Renard
         oneShotFlag: 
     - rid: 5630202287041282395
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Completa Donde no llega la luz
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -678,10 +729,11 @@ MonoBehaviour:
         completeQuest: 1
         logWarnings: 1
     - rid: 5630202287041282396
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 40 de Esencia
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -700,6 +752,7 @@ MonoBehaviour:
       data:
         displayTitle: El parche de Renard
         chapter: Renard
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -711,10 +764,11 @@ MonoBehaviour:
         wardrobeItem: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}
         logWarnings: 1
     - rid: 5630202821400330240
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Erika ya te ha entrenado
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -727,10 +781,11 @@ MonoBehaviour:
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         acceptEarlierEvent: 1
     - rid: 5630202821400330241
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Hablar con Erika (entrenar)
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -745,10 +800,11 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 0
     - rid: 5630202821400330242
-      type: {class: DialogueChoiceNode, ns: , asm: Assembly-CSharp}
+      type: {class: DialogueChoiceNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "\xBFOtra ronda?"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -771,6 +827,7 @@ MonoBehaviour:
       data:
         displayTitle: "Combate de pr\xE1ctica con Erika"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -785,11 +842,334 @@ MonoBehaviour:
         defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         waitForDefeat: 1
         restorePeacefulOnDefeat: 1
+    - rid: 6540294600349712509
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Boticaria, lo de siempre: Siempre \xB7 la poci\xF3n"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_boticaria-usual-siempre-la-pocion-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 150}
+        outputs:
+        - pieza-npc_anselmo-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Boticaria
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: e64286d292e2403bba2c1abbc3438f31, type: 2}
+    - rid: 6540294600349712510
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Anselmo, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_anselmo-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 260}
+        outputs:
+        - pieza-npc_benito-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Anselmo
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: e63bd0e375860de42ba4b5f3ffb3245c, type: 2}
+        - {fileID: 11400000, guid: 8d05bc897a16bcd4886dd67420ca138f, type: 2}
+    - rid: 6540294600349712511
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Benito, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_benito-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 370}
+        outputs:
+        - pieza-npc_engracia-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Benito
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 9556205f6d1144f41b95747ab7b45ed7, type: 2}
+        - {fileID: 11400000, guid: 9fa22e0e88233f34bb5b13d8a9848303, type: 2}
+    - rid: 6540294600349712512
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Engracia, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_engracia-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 480}
+        outputs:
+        - pieza-npc_eusebio-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Engracia
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 8b0837d0ba5ee6641b2a9763f67b8b89, type: 2}
+        - {fileID: 11400000, guid: c48fcb86c2c34414e9bb60e2b076a3c5, type: 2}
+    - rid: 6540294600349712513
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Eusebio, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_eusebio-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 590}
+        outputs:
+        - pieza-npc_fermin-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Eusebio
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 175d2db8707635f4187a6e6313e47aff, type: 2}
+        - {fileID: 11400000, guid: e4901166305eabf40839091ca7c9f3af, type: 2}
+    - rid: 6540294600349712514
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Fermin, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_fermin-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 700}
+        outputs:
+        - pieza-npc_guardiacruce1-usual-cap-3-el-cruce-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Fermin
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: fe721948c62dfc44ca7764d1a581d3ea, type: 2}
+        - {fileID: 11400000, guid: 2084b39017f30c34c95b5e3e0e89f559, type: 2}
+    - rid: 6540294600349712515
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "GuardiaCruce1, lo de siempre: Cap. 3 \xB7 el cruce"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_guardiacruce1-usual-cap-3-el-cruce-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 810}
+        outputs:
+        - pieza-npc_guardiacruce2-usual-cap-3-el-cruce-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_GuardiaCruce1
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: df91e760e2deab44e829c9a2b2903bcd, type: 2}
+    - rid: 6540294600349712516
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "GuardiaCruce2, lo de siempre: Cap. 3 \xB7 el cruce"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_guardiacruce2-usual-cap-3-el-cruce-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 920}
+        outputs:
+        - pieza-npc_remedios-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_GuardiaCruce2
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: df91e760e2deab44e829c9a2b2903bcd, type: 2}
+    - rid: 6540294600349712517
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Remedios, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_remedios-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1030}
+        outputs:
+        - pieza-npc_rosario-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Remedios
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 00bf0ec0b9c368f4cb1b889f131321e8, type: 2}
+        - {fileID: 11400000, guid: c37d042266667b44cb1101537c7de161, type: 2}
+    - rid: 6540294600349712518
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Rosario, lo de siempre: Aldea del mar \xB7 siempre"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_rosario-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1140}
+        outputs:
+        - pieza-npc_oliver-usual-siempre-pistas-para-su-coleccion-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Rosario
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 55779418b191ef3458833674823d6a6f, type: 2}
+        - {fileID: 11400000, guid: b0f35aa59f6ee57459b2b74db0d7846d, type: 2}
+    - rid: 6540294600349712519
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Oliver, lo de siempre: Siempre \xB7 pistas para su colecci\xF3n"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_oliver-usual-siempre-pistas-para-su-coleccion-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1250}
+        outputs:
+        - pieza-npc_victoria-usual-siempre-cuenta-cosas-de-eldran-y-de-will-de-pequeno-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Oliver
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: 7cecb5c2f4974ff3beabf8d5e74bd74b, type: 2}
+        - {fileID: 11400000, guid: 5bf687a72b674581ab9af31a37c44df0, type: 2}
+        - {fileID: 11400000, guid: b1c00fcbbaa5410598cabcd7e2e1204f, type: 2}
+    - rid: 6540294600349712520
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Victoria, lo de siempre: Siempre \xB7 cuenta cosas de Eldran y de Will de peque\xF1o"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_victoria-usual-siempre-cuenta-cosas-de-eldran-y-de-will-de-pequeno-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1360}
+        outputs:
+        - pieza-npc_contrabandista1-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Victoria
+        layer: 1
+        presence: 0
+        markId: 
+        lines:
+        - {fileID: 11400000, guid: c51f775b69b84263afb700937be9f475, type: 2}
+        - {fileID: 11400000, guid: 61105504cb7c47a69c7035fca3a4287d, type: 2}
+        - {fileID: 11400000, guid: 2c621a06b999487d980e2d5e1e729c6c, type: 2}
+    - rid: 6540294600349712521
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista1 desde aqu\xED: Cap. 3 \xB7 antes de la noche"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista1-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1470}
+        outputs:
+        - pieza-npc_contrabandista2-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Contrabandista1
+        layer: 0
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712522
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Contrabandista2 desde aqu\xED: Cap. 3 \xB7 antes de la noche"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandista2-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1580}
+        outputs:
+        - pieza-npc_contrabandistajefe-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Contrabandista2
+        layer: 0
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294600349712523
+      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "ContrabandistaJefe desde aqu\xED: Cap. 3 \xB7 antes de la noche"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_contrabandistajefe-fromhere-cap-3-antes-de-la-noche-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 1690}
+        outputs: []
+        actorId: NPC_ContrabandistaJefe
+        layer: 0
+        presence: 2
+        markId: 
+        lines: []
     - rid: 7719302845561928001
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "La plaga de ara\xF1as (Guardia del Bosque)"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -802,10 +1182,11 @@ MonoBehaviour:
         questId: Q_GUARDIABOSQUE_ARANAS
         debugLogs: 0
     - rid: 7719302845561928002
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 30 monedas
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -819,10 +1200,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 7719302845561928003
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "El remedio de B\xE1rbara (Tendera)"
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
@@ -835,10 +1217,11 @@ MonoBehaviour:
         questId: Q_TENDERA_ALGAS
         debugLogs: 0
     - rid: 7719302845561928004
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nos da 3 algas
         chapter: 
+        section: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1

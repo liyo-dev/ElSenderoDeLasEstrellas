@@ -132,6 +132,34 @@ public static class PosesDeActuacion
         return claves.ToArray();
     }
 
+    /// Posturas de todo el cuerpo que sustituyen al bucle de una actividad en un asiento concreto
+    /// (<see cref="NPCWorldPoint.estadoDelBucle"/>): parten del bucle de esa actividad y mueven unos músculos.
+    /// Van en la capa base de los controladores.
+    private sealed class PosturaDeAsiento
+    {
+        public string Estado, EstadoDeBase;
+        public float Duracion;
+        public Dictionary<string, (float t, float delta)[]> Musculos;
+    }
+
+    /// Ida y vuelta suave entre dos valores en un periodo (el vaivén de las piernas en el columpio).
+    private static (float t, float delta)[] Vaiven(float periodo, float a, float b)
+        => new[] { (0f, a), (periodo * 0.5f, b), (periodo, a) };
+
+    private static readonly PosturaDeAsiento[] PosturasDeAsiento =
+    {
+        // En el columpio: las rodillas algo abiertas y las piernas hacia delante, que se estiran y se recogen
+        // con el balanceo. Con la de sentarse normal, de frente el muslo apuntaba a la cámara y la bota alta
+        // ocupaba toda la pierna: parecía que no tenía piernas.
+        new PosturaDeAsiento { Estado = "SitSwing_Loop", EstadoDeBase = "SitMedium_Loop", Duracion = 2.2f, Musculos = new()
+        {
+            ["Left Upper Leg In-Out"] = new[] { (0f, 0.3f) },
+            ["Right Upper Leg In-Out"] = new[] { (0f, 0.3f) },
+            ["Left Lower Leg Stretch"] = Vaiven(2.2f, 0.3f, 0.6f),
+            ["Right Lower Leg Stretch"] = Vaiven(2.2f, 0.3f, 0.6f),
+        } },
+    };
+
     private static readonly Gesto[] Gestos =
     {
         // Risa (la de por defecto): las manos en la barriga, el cuerpo se echa un poco atrás y los hombros
@@ -562,7 +590,30 @@ public static class PosesDeActuacion
             }
             hecho.Append(". ");
         }
+        foreach (var postura in PosturasDeAsiento) hecho.Append(CrearPosturaDeAsiento(postura)).Append(' ');
         OrdenesDelEditor.Avisar("Poses de actuación", hecho.ToString());
+    }
+
+    /// Crea el clip de la postura sobre el bucle de su actividad (el del controlador de los NPC) y lo pone en la
+    /// capa base de cada controlador.
+    private static string CrearPosturaDeAsiento(PosturaDeAsiento postura)
+    {
+        var ctrlNpc = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controladores[0]);
+        var base_ = ctrlNpc?.layers[0].stateMachine.states.FirstOrDefault(s => s.state.name == postura.EstadoDeBase).state?.motion as AnimationClip;
+        if (base_ == null) return $"{postura.Estado}: no encuentro {postura.EstadoDeBase} en {Controladores[0]}.";
+        string ruta = $"{CarpetaDeClips}/Postura_{postura.Estado}.anim";
+        PoseSobreClip.CrearConMusculos(base_, ruta, postura.Duracion, postura.Musculos);
+        var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ruta);
+        var hecho = new StringBuilder($"{postura.Estado} (postura de asiento, sobre {base_.name})");
+        foreach (var rutaCtrl in Controladores)
+        {
+            var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(rutaCtrl);
+            if (ctrl == null) { hecho.Append($", falta {rutaCtrl}"); continue; }
+            bool nuevo = PoseSobreClip.EstadoEnBucle(ctrl, postura.Estado, clip);
+            hecho.Append(nuevo ? $", añadido a {ctrl.name}" : $", al día en {ctrl.name}");
+        }
+        hecho.Append(". Fotos: ").Append(Fotografiar(clip, postura.Estado));
+        return hecho.ToString();
     }
 
     /// Pone el clip en el estado con ese nombre de cada capa que lo tenga (antes llevaba el del pack);

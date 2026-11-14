@@ -44,8 +44,8 @@ public static partial class MontajeDeLosCapitulos
     }
     /// <summary>Un roster: entrada del NpcRoster_MainWorld.</summary>
     private sealed class Papel { public string SpawnId, Prefab, Nombre, Id, Voz = "Vecino", Flag; public bool Invertir, Activo = true, NavMesh = true; }
-    /// <summary>Una agenda: entradas (nombre, tramo, presencia, marca, frases: una ruta o varias separadas por «|»).</summary>
-    private sealed class Agenda { public string Actor; public List<(string nombre, TramoDeHistoria tramo, PresenciaEnAgenda presencia, string marca, string dialogo)> Entradas = new(); }
+    /// <summary>Lo que hace un personaje en cada situación de la historia: (nombre, tramo, presencia, marca, frases: una ruta o varias separadas por «|»). Se pone en el grafo como piezas «Personaje desde aquí».</summary>
+    private sealed class SituacionesDe { public string Actor; public List<(string nombre, TramoDeHistoria tramo, ActorPresence presencia, string marca, string dialogo)> Entradas = new(); }
 
     private static readonly List<Marca> s_marcas = new();
     private static readonly List<PuntoDeRoster> s_puntos = new();
@@ -54,12 +54,12 @@ public static partial class MontajeDeLosCapitulos
     private static readonly List<Atrezo> s_atrezo = new();
     private static readonly List<Cine> s_cines = new();
     private static readonly List<Papel> s_papeles = new();
-    private static readonly List<Agenda> s_agendas = new();
+    private static readonly List<SituacionesDe> s_personajes = new();
 
     private static void LimpiarTablas()
     {
         s_marcas.Clear(); s_puntos.Clear(); s_llegadas.Clear(); s_inspecciones.Clear(); s_atrezo.Clear();
-        s_cines.Clear(); s_papeles.Clear(); s_agendas.Clear(); s_misiones.Clear();
+        s_cines.Clear(); s_papeles.Clear(); s_personajes.Clear(); s_misiones.Clear();
     }
 
     private static TramoDeHistoria Tramo(string empieza, string acaba = null)
@@ -184,34 +184,18 @@ public static partial class MontajeDeLosCapitulos
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }
 
-    private static void AsegurarAgendas(StringBuilder informe)
+    private static void PonerPiezasDePersonajes(StringBuilder informe)
     {
-        AsegurarCarpeta(CarpetaAgendas);
-        foreach (var a in s_agendas)
-        {
-            // Una sola agenda por actor: si ya tiene una (p. ej. Agenda_Eldran), se amplía esa.
-            var agenda = AssetDatabase.FindAssets("t:AgendaDelActor")
-                .Select(g => AssetDatabase.LoadAssetAtPath<AgendaDelActor>(AssetDatabase.GUIDToAssetPath(g)))
-                .FirstOrDefault(x => x != null && x.actorId == a.Actor);
-            string ruta = $"{CarpetaAgendas}/Agenda_{a.Actor}.asset";
-            if (agenda == null) { agenda = ScriptableObject.CreateInstance<AgendaDelActor>(); AssetDatabase.CreateAsset(agenda, ruta); }
-            agenda.actorId = a.Actor;
-            // Las entradas de otros capítulos (las que no pone este montaje) se conservan detrás.
-            var propias = new HashSet<string>(a.Entradas.Select(e => e.nombre));
-            var otras = (agenda.entradas ?? new List<EntradaDeAgenda>()).Where(e => e != null && !propias.Contains(e.nombre)).ToList();
-            agenda.entradas = new List<EntradaDeAgenda>();
+        var situaciones = new List<Sendero.Narrative.Editor.PiezasDePersonaje.Situacion>();
+        foreach (var a in s_personajes)
             foreach (var (nombre, tramo, presencia, marca, dialogo) in a.Entradas)
             {
-                var entrada = new EntradaDeAgenda { nombre = nombre, tramo = tramo, presencia = presencia, marca = marca ?? "" };
                 // Varias frases (una por charla, rotando): rutas separadas por «|».
-                foreach (var ruta1 in (dialogo ?? "").Split('|'))
-                    if (!string.IsNullOrEmpty(ruta1)) entrada.frases.Add(Cargar<DialogueAsset>(ruta1));
-                agenda.entradas.Add(entrada);
+                var frases = (dialogo ?? "").Split('|').Where(r => !string.IsNullOrEmpty(r)).Select(r => (NarrativeDialogueAsset)Cargar<DialogueAsset>(r));
+                situaciones.Add(Sendero.Narrative.Editor.PiezasDePersonaje.Desde(a.Actor, nombre, tramo, presencia, marca, frases, informe));
             }
-            agenda.entradas.AddRange(otras);
-            EditorUtility.SetDirty(agenda);
-        }
-        informe.AppendLine($"Agendas: {s_agendas.Count}.");
+        informe.AppendLine($"Personajes según la historia: {s_personajes.Count} ({situaciones.Count} situaciones).");
+        Sendero.Narrative.Editor.PiezasDePersonaje.Poner(situaciones, informe);
     }
 
     // ── Start ───────────────────────────────────────────────────────────────────────────────

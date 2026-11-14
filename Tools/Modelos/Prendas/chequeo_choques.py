@@ -1,7 +1,7 @@
 # Chequeo de choques de un personaje hecho en Blender, en movimiento.
 #
 # Mueve el personaje con animaciones reales del pack (andar, correr, idle, hablar, saludar, victoria) y con poses
-# de gesto (brazos bajados, cruzados, mano al frente, brazos arriba, manos juntas delante del pecho) y mide fotograma a fotograma:
+# de gesto (brazos bajados, cruzados, mano al frente, brazos arriba, manos juntas delante del pecho, sentado) y mide fotograma a fotograma:
 #   - DESGARRO: aristas de ropa que se estiran mucho respecto al reposo (tela que se rasga o se abre).
 #   - ASOMA: puntos del cuerpo de referencia que en reposo estaban tapados por la ropa y en la pose quedan fuera
 #     (pierna que sale por el faldón, brazo que atraviesa la manga, cráneo que asoma por el pelo).
@@ -118,6 +118,8 @@ POSES = {
     "brazos_arriba": [("upperarm", 'Y', -55), ("upperarm", 'X', 20)],
     # manos juntas delante del pecho (conjurar, sostener algo): los puños y bocas de manga rozan la tripa y el pecho
     "manos_juntas": [("upperarm", 'Y', 60), ("upperarm", 'X', -45), ("lowerarm", 'X', -50), ("lowerarm", 'Z', -80)],
+    # sentado en un banco, con las manos en el regazo (cinemáticas en casa: Eldran, 14 nov 2026)
+    "sentado": [("thigh", 'X', -80), ("calf", 'X', 85), ("upperarm", 'Y', 65), ("upperarm", 'X', -25), ("lowerarm", 'X', -45)],
 }
 def poner_pose(nombre):
     pose_reposo()

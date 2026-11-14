@@ -68,6 +68,7 @@ public static class CarasDeLosNPCs
         J("h_pecas_azul", Azul, 270, Cabeza.Hombre), J("m_pecas_marron", Marron, 280, Cabeza.Mujer),
         // Los de un solo personaje: sus ojos, cejas y bocas propias (Tools/Modelos/Caras/kit_npcs.py)
         new Juego { Clave = "archimago", Fbx = $"{CarpetaKit}/Caras_NPC_archimago.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_archimago.fbx", Iris = Gris, Ojos = 320, Bocas = 320, Cabeza = Cabeza.Hombre, Ceja = new Color(0.55f, 0.55f, 0.6f) },
+        new Juego { Clave = "liora", Fbx = $"{CarpetaKit}/Caras_NPC_liora.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_liora.fbx", Iris = Verde, Ojos = 330, Bocas = 330, Cabeza = Cabeza.Mujer, Ceja = new Color(0.3f, 0.16f, 0.08f) },
         new Juego { Clave = "mago_oscuro", Fbx = $"{CarpetaKit}/Caras_NPC_mago_oscuro.fbx", FbxDeBocas = $"{CarpetaKit}/Caras_NPC_mago_oscuro.fbx", Iris = new Color(0.6f, 0.4f, 0.95f), Ojos = 290, Bocas = 310, Cabeza = Cabeza.Hombre,
                     Ceja = new Color(0.06f, 0.04f, 0.1f),
                     Extras = new[] { ("OjeraVioleta", new Color(0.55f, 0.38f, 0.78f)), ("LuzPiedra", Color.white), ("HaloPiedra", new Color(0.72f, 0.6f, 0.95f)) },
@@ -128,6 +129,8 @@ public static class CarasDeLosNPCs
         ("NiñoPez", "nino_chico_ambar"), ("AmigaDelNiñoPez", "nina_almendra_azul"), ("Recuerdos/WillNino", "will"),
         // El Archimago (prólogo y cinemática final): el modelo antiguo de Will, vestido por VestuarioDeLosNPCs
         ("Assets/Prefabs/_WILL_ORIGINAL.prefab", "archimago"),
+        // Liora (prólogo y final): su prefab propio lo crea VestuarioDeLosNPCs (copia de Tendera); pasar antes ese menú
+        ("Liora", "liora"),
         // El Mago Oscuro: sombra en el prólogo, revelado (con cara y pelo) para el final; el segundo lo crea MagoOscuroPorEstados
         ("Assets/Prefabs/_MAGO_OSCURO.prefab", "mago_oscuro_sombra"), ("Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab", "mago_oscuro"),
     };

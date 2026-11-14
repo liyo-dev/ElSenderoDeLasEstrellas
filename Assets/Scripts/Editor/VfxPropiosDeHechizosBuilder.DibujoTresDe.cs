@@ -80,30 +80,6 @@ public static partial class VfxPropiosDeHechizosBuilder
         return mat;
     }
 
-    /// Material de una pieza 3D suelta (no partícula): el color va en el tinte, no en los vértices,
-    /// porque la malla no los trae.
-    private static Material MaterialDePieza(Color luz)
-    {
-        string nombre = "Dibujo3D_Pieza_" + ColorUtility.ToHtmlStringRGB(luz);
-        if (_materiales3D.TryGetValue(nombre, out var mat) && mat != null) return mat;
-        CrearCarpeta(CarpetaMateriales3D);
-        string ruta = $"{CarpetaMateriales3D}/{nombre}.mat";
-        mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-        if (mat == null)
-        {
-            mat = new Material(Shader.Find(ShaderDelMundo)) { name = nombre };
-            AssetDatabase.CreateAsset(mat, ruta);
-        }
-        mat.SetColor("_Tinte", luz);
-        mat.SetFloat("_VertexColorsEnabled", 0f);
-        mat.DisableKeyword("DR_VERTEX_COLORS_ON");
-        mat.SetColor("_EmissionColor", luz * FuerzaDeLaEmision);
-        mat.EnableKeyword("_EMISSION");
-        EditorUtility.SetDirty(mat);
-        _materiales3D[nombre] = mat;
-        return mat;
-    }
-
     private static bool EsLuz3D(ParticleSystemRenderer r)
         => r.renderMode == ParticleSystemRenderMode.Mesh && r.sharedMaterial != null && r.sharedMaterial.name.StartsWith(PrefijoLuz);
 
@@ -123,39 +99,5 @@ public static partial class VfxPropiosDeHechizosBuilder
         main.startRotationZ = new ParticleSystem.MinMaxCurve(-Mathf.PI, Mathf.PI);
         main.startColor = pieza == "humo" ? new Color(1f, 0.97f, 0.92f) : Color.white;
         return ps;
-    }
-
-    // ── Protección: flor de luz ───────────────────────────────────────────
-
-    private const int PetalosDeLaFlor = 6;
-
-    /// Flor de luz abierta alrededor de la cintura, que aparece con rebote y gira despacio. Sustituye
-    /// a la burbuja: tiene volumen, la ilumina la escena y lleva el contorno del mundo, y al estar
-    /// abierta hacia fuera no tapa al personaje desde la cámara.
-    private static GameObject FlorDeLuz(Transform padre, Color color, float radio = 0.55f, float alto = 0.9f, float apertura = 38f)
-    {
-        var flor = new GameObject("Flor de luz");
-        flor.transform.SetParent(padre, false);
-        flor.transform.localPosition = Vector3.up * 0.15f;
-        var giro = flor.AddComponent<VfxGiroYAparicion>();
-        var mat = MaterialDePieza(color);
-        var malla = Malla("Petalo");
-        for (int i = 0; i < PetalosDeLaFlor; i++)
-        {
-            float a = i * 360f / PetalosDeLaFlor;
-            var fuera = Quaternion.Euler(0f, a, 0f) * Vector3.forward;
-            var petalo = new GameObject("Pétalo " + (i + 1));
-            petalo.transform.SetParent(flor.transform, false);
-            petalo.transform.localPosition = fuera * radio;
-            // El pétalo crece hacia arriba (Y) y se abre hacia fuera; su cuchara mira al centro.
-            petalo.transform.localRotation = Quaternion.LookRotation(-fuera, Vector3.up) * Quaternion.Euler(-apertura, 0f, 0f);
-            petalo.transform.localScale = Vector3.one * alto;
-            petalo.AddComponent<MeshFilter>().sharedMesh = malla;
-            var r = petalo.AddComponent<MeshRenderer>();
-            r.sharedMaterial = mat;
-            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            r.receiveShadows = false;
-        }
-        return flor;
     }
 }

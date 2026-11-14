@@ -237,45 +237,45 @@ public static partial class MontajeDeLosCapitulos
 
         // Los contrabandistas aparecen cuando anochece con Will junto al fuego; después, detenidos o huidos.
         // El del seguimiento no está en el claro: se queda descargando (o aturdido en el camino si Will le ganó).
-        s_agendas.Add(new Agenda
+        s_personajes.Add(new SituacionesDe
         {
             Actor = Contra1,
             Entradas =
             {
-                ("Cap. 3 · antes de la noche", Tramo(null, S3.CaeLaNoche), PresenciaEnAgenda.NoEsta, null, null),
-                ("Cap. 3 · fuera del claro", Tramo(S3.EnElClaro), PresenciaEnAgenda.NoEsta, null, null),
+                ("Cap. 3 · antes de la noche", Tramo(null, S3.CaeLaNoche), ActorPresence.Away, null, null),
+                ("Cap. 3 · fuera del claro", Tramo(S3.EnElClaro), ActorPresence.Away, null, null),
             },
         });
         foreach (var c in new[] { Contra2, Jefe })
-            s_agendas.Add(new Agenda
+            s_personajes.Add(new SituacionesDe
             {
                 Actor = c,
                 Entradas =
                 {
-                    ("Cap. 3 · antes de la noche", Tramo(null, S3.CaeLaNoche), PresenciaEnAgenda.NoEsta, null, null),
-                    ("Cap. 3 · detenidos", Tramo(S3.ContrabandistasFin), PresenciaEnAgenda.NoEsta, null, null),
+                    ("Cap. 3 · antes de la noche", Tramo(null, S3.CaeLaNoche), ActorPresence.Away, null, null),
+                    ("Cap. 3 · detenidos", Tramo(S3.ContrabandistasFin), ActorPresence.Away, null, null),
                 },
             });
-        s_agendas.Add(new Agenda { Actor = Posadero, Entradas = { ("Cap. 3 · tras la hoja", Tramo(S3.Noche), PresenciaEnAgenda.SinCambios, null, fPosadero) } });
-        s_agendas.Add(new Agenda
+        s_personajes.Add(new SituacionesDe { Actor = Posadero, Entradas = { ("Cap. 3 · tras la hoja", Tramo(S3.Noche), ActorPresence.Unchanged, null, fPosadero) } });
+        s_personajes.Add(new SituacionesDe
         {
             Actor = Lucia,
             Entradas =
             {
-                ("Cap. 3 · las pistas", Tramo(S3.Pistas, S3.Noche), PresenciaEnAgenda.SinCambios, null, dlgZorro),
-                ("Cap. 3 · después", Tramo(S3.Noche), PresenciaEnAgenda.SinCambios, null, fLucia),
+                ("Cap. 3 · las pistas", Tramo(S3.Pistas, S3.Noche), ActorPresence.Unchanged, null, dlgZorro),
+                ("Cap. 3 · después", Tramo(S3.Noche), ActorPresence.Unchanged, null, fLucia),
             },
         });
-        s_agendas.Add(new Agenda
+        s_personajes.Add(new SituacionesDe
         {
             Actor = Sargento,
             Entradas =
             {
-                ("Cap. 3 · vuelve al cruce", Tramo(S3.ContrabandistasFin), PresenciaEnAgenda.EnUnaMarca, "Cap3_Puesto", fSargento),
+                ("Cap. 3 · vuelve al cruce", Tramo(S3.ContrabandistasFin), ActorPresence.AtMark, "Cap3_Puesto", fSargento),
             },
         });
         foreach (var g in new[] { Guardia1, Guardia2 })
-            s_agendas.Add(new Agenda { Actor = g, Entradas = { ("Cap. 3 · el cruce", Tramo(null), PresenciaEnAgenda.SinCambios, null, fGuardia) } });
+            s_personajes.Add(new SituacionesDe { Actor = g, Entradas = { ("Cap. 3 · el cruce", Tramo(null), ActorPresence.Unchanged, null, fGuardia) } });
 
         s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Llegada a la aldea del mar", Senal = S3.LlegadaAldea, Mision = MisionCap3,
             Pos = new Vector3(262f, float.NaN, -414f), Radio = 16f, Tramo = Tramo(S3.Aldea, S3.Pistas) });

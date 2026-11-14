@@ -6,16 +6,23 @@ Poses: reposo, WalkFWD_InPlace_NoWeapon@1.0, WalkFWD_InPlace_NoWeapon@10.3, Walk
 Peor vista: WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 180°: 0.1 % de lo que se ve del muñeco es hueco.
 
 ## Piezas por las que se ve hueco: el fondo o el interior vacío (peor parte de una vista)
-- Hair20_Archimago: 0.07 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 180°)
-- Cuerpo: 0.04 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 40°, giro 90°)
+- Hair20_Archimago: 0.07 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 40°, giro 0°)
 - Head01_Male: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 65°, giro 45°)
+- Cuerpo: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°)
 - Pernera_l: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 88°, giro 0°)
-- Tunica: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 40°, giro 315°)
-- Sobretunica: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 135°)
-- Manga_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 0°)
-- RibeteD: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 270°)
-- PunoRibete_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 225°)
-- PunoForro_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 135°)
+- Tunica: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 270°)
+- Manga_l: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 40°, giro 315°)
+- Sobretunica: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 315°)
+- PunoRibete_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 225°)
+- PunoRibete_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 15°, giro 180°)
+
+## Manos con los brazos caídos (idle): parte que se ve desde algún lado
+- mano izquierda: 52 % (mínimo 35 %)
+- mano derecha: 70 % (mínimo 35 %)
+
+## Muslos sentado, de frente: parte que se ve
+- muslo izquierdo: 65 % (mínimo 15 %)
+- muslo derecho: 70 % (mínimo 15 %)
 
 ## Revés con algo pintado justo detrás (aviso menor: se ve lo de debajo por el borde)
 - Hair20_Archimago: 0.08 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 65°, giro 135°)

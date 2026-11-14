@@ -70,10 +70,10 @@ public static partial class MontajeDeLosCapitulos
             L("CHAR_TOMASA", "¿Te vas de viaje? Si encuentras por ahí algo que no sirva para nada, ya sabes dónde venderlo.", "Off on a trip? If you find anything useless out there, you know where to sell it.", NPCEmotion.Happy));
 
         var despedida = Tramo(SenalADespedirse, SD.Camino);
-        s_agendas.Add(new Agenda { Actor = Eldran, Entradas = { ("Cap. 2–3 · espera en la salida del pueblo", despedida, PresenciaEnAgenda.EnUnaMarca, MarcaEldranSalida, fEldran) } });
-        s_agendas.Add(new Agenda { Actor = Oliver, Entradas = { ("Cap. 2 · tras despedirse de Will", despedida, PresenciaEnAgenda.SinCambios, null, fOliver) } });
+        s_personajes.Add(new SituacionesDe { Actor = Eldran, Entradas = { ("Cap. 2–3 · espera en la salida del pueblo", despedida, ActorPresence.AtMark, MarcaEldranSalida, fEldran) } });
+        s_personajes.Add(new SituacionesDe { Actor = Oliver, Entradas = { ("Cap. 2 · tras despedirse de Will", despedida, ActorPresence.Unchanged, null, fOliver) } });
         foreach (var (actor, frase) in new[] { ("NPC_Victoria", fVictoria), ("NPC_Erika", fErika), ("NPC_Boticaria", fBoticaria), ("NPC_Tomasa", fTomasa) })
-            s_agendas.Add(new Agenda { Actor = actor, Entradas = { ("Cap. 2 · despedida de Will", despedida, PresenciaEnAgenda.SinCambios, null, frase) } });
+            s_personajes.Add(new SituacionesDe { Actor = actor, Entradas = { ("Cap. 2 · despedida de Will", despedida, ActorPresence.Unchanged, null, frase) } });
 
         // ── La cinemática de la despedida ───────────────────────────────────────────────
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_DESPEDIDA", Guion = "Cap3_00_LaDespedida", Texto = PresentacionDeTexto.Subtitulo,

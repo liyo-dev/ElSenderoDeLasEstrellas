@@ -201,14 +201,14 @@ public static partial class MontajeDeLosCapitulos
     private static string Frase(string clave, string hablante, string es, string en, NPCEmotion e = NPCEmotion.Neutral) =>
         DialogoDeCaja("DLG_ALDEA_" + clave, "DLG_ALDEA_" + clave, L(hablante, es, en, e));
 
-    /// <summary>Añade a la agenda del vecino una entrada con sus frases (una por charla). Sin tramo, siempre.</summary>
+    /// <summary>Añade al vecino una situación con sus frases (una por charla). Sin tramo, siempre.</summary>
     private static void Charla(string nombre, TramoDeHistoria tramo, params string[] frases)
     {
         string actor = "NPC_" + nombre;
-        var agenda = s_agendas.Find(a => a.Actor == actor);
-        if (agenda == null) { agenda = new Agenda { Actor = actor }; s_agendas.Add(agenda); }
+        var agenda = s_personajes.Find(a => a.Actor == actor);
+        if (agenda == null) { agenda = new SituacionesDe { Actor = actor }; s_personajes.Add(agenda); }
         string etiqueta = tramo == null ? "Aldea del mar · siempre" : "Cap. 3 · la aldea del mar";
-        agenda.Entradas.Add((etiqueta, tramo ?? new TramoDeHistoria(), PresenciaEnAgenda.SinCambios, null, string.Join("|", frases)));
+        agenda.Entradas.Add((etiqueta, tramo ?? new TramoDeHistoria(), ActorPresence.Unchanged, null, string.Join("|", frases)));
     }
 
     /// <summary>Lo que la aldea pone en MainWorld: la ruta de cajas y las marcas de las pistas.</summary>

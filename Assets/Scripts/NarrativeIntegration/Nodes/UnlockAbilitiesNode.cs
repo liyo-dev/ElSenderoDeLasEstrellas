@@ -55,6 +55,7 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
+        Traza($"ENTRA  {displayTitle}");
         // Si tiene oneShotFlag configurado, verificar si ya se ejecutó
         if (!string.IsNullOrEmpty(oneShotFlag))
         {
@@ -116,9 +117,20 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
         ExecuteUnlocks(ctx, onReadyToAdvance);
     }
 
+    // Traza temporal para INC del arranque desde el grafo (Erika): se quita al cerrarla.
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    static void Traza(string que)
+    {
+        var pr = UnlockService.GetActivePreset();
+        var linea = $"{DateTime.Now:HH:mm:ss.fff} {que} | preset={(pr ? pr.name : "null")}" +
+                    (pr ? $" magic={pr.abilities?.magic} shield={pr.abilities?.shield} aprendidos=[{string.Join(",", pr.unlockedSpells ?? new List<SpellId>())}] basicos=[{string.Join(",", pr.basicSpellIds ?? new List<SpellId>())}]" : "");
+        System.IO.File.AppendAllText(System.IO.Path.Combine(Application.dataPath, "../Logs/claude/traza_desbloqueos.txt"), linea + "\n");
+    }
+
     private void ExecuteUnlocks(NarrativeContext ctx, Action onReadyToAdvance)
     {
         bool changed = false;
+        Traza($"ANTES  {displayTitle}");
 
             try
             {
@@ -204,6 +216,7 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
                 Debug.LogWarning($"[UnlockAbilitiesNode] Error al aplicar unlock interno: {ex.Message}");
             }
 
+        Traza($"DESPUÉS {displayTitle} changed={changed}");
         // Avanzar inmediatamente sin esperar popup
         onReadyToAdvance?.Invoke();
     }

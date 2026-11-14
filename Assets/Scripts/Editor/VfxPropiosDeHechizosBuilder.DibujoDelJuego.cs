@@ -225,7 +225,6 @@ public static partial class VfxPropiosDeHechizosBuilder
                 Suelo(p, t, "Borde", "anillo", 2f, c, 0f);
                 Brotes(p, t, "Estrellas", "estrella", 0.9f, 1f, 16f, 0.35f, 0.7f, c, 1.6f);
                 break;
-            case "Escudo": Escudo(root, t, c, false); break;
             case "Orbe":
                 Cuerpo(p, t, "Núcleo", "destello", 1f, c, 30f);
                 Golpe(Cuerpo(p, t, "Aro", "anillo", 1.4f, TLila, 0f), 0.3f, 0.6f);

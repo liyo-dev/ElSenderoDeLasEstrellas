@@ -30,7 +30,6 @@ public static partial class MontajeDeLosCapitulos
     private const string CarpetaItems = "Assets/_ITEMS";
     private const string CarpetaSecuencias = "Assets/_SEQUENCES";
     private const string CarpetaGuiones = "Assets/_SEQUENCES/Guiones";
-    private const string CarpetaAgendas = "Assets/Resources/Agendas";
     private const string PerfilDeAudio = "Assets/_AUDIOPROFILE/AudioGraphProfile.asset";
     public const string NombreGenerado = "Capítulos (generado)";
     private const string TituloMenu = "Historia: montar los capítulos 3 y 4";
@@ -59,7 +58,7 @@ public static partial class MontajeDeLosCapitulos
         AjustarCap2(informe);
         AjustarSendero(informe);
         AsegurarRoster(informe);
-        AsegurarAgendas(informe);
+        PonerPiezasDePersonajes(informe);
         RegistrarEnStart(informe, (cap3.Etiqueta, g3), (cap4.Etiqueta, g4));
         MontarEnMainWorld(informe, cap3.Etiqueta, cap4.Etiqueta);
         int textos = TextosDeLaHistoria.Escribir();

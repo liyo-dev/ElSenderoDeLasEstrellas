@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 /// Informe de solo lectura: qué hace cada NPC de una escena en cada tramo de la historia.
 /// Junta los roster (`NpcRosterSO`), la configuración ambiental de cada prefab (oficio, paseo,
-/// actividad), las agendas (`Resources/Agendas`) y todo componente de la escena o del prefab que
+/// actividad), las piezas «Personaje desde aquí» de los grafos y todo componente de la escena o del prefab que
 /// tenga un campo `TramoDeHistoria` (rutas de trabajo, discusiones, objetos por tramo…).
 /// No modifica nada: si la escena no está abierta, la abre aditiva y la vuelve a cerrar.
 /// Escribe «Claude outputs/npcs-por-tramo-&lt;escena&gt;.md».
@@ -45,7 +45,7 @@ public static class InformeDeNpcsPorTramo
         {
             Roster(sb, escena);
             ComponentesConTramo(sb, escena);
-            Agendas(sb);
+            PiezasDePersonaje(sb);
         }
         finally
         {
@@ -125,20 +125,16 @@ public static class InformeDeNpcsPorTramo
         }
     }
 
-    private static void Agendas(StringBuilder sb)
+    private static void PiezasDePersonaje(StringBuilder sb)
     {
-        sb.Append("## Agendas (Resources/Agendas)\n\n");
-        foreach (var ag in Resources.LoadAll<ScriptableObject>("Agendas"))
+        sb.Append("## Piezas «Personaje desde aquí» (grafos)\n\n");
+        foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
         {
-            var so = new SerializedObject(ag);
-            sb.Append($"- **{so.FindProperty("actorId")?.stringValue}** (`{ag.name}`)\n");
-            var en = so.FindProperty("entradas");
-            for (int i = 0; en != null && i < en.arraySize; i++)
-            {
-                var e = en.GetArrayElementAtIndex(i);
-                var pres = e.FindPropertyRelative("presencia");
-                sb.Append($"  - «{e.FindPropertyRelative("nombre").stringValue}» · presencia={pres.enumNames[pres.enumValueIndex]} `{e.FindPropertyRelative("marca").stringValue}` · frases={e.FindPropertyRelative("frases").arraySize} · {Tramo(e.FindPropertyRelative("tramo"))}\n");
-            }
+            var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
+            if (grafo == null || grafo.nodes == null) continue;
+            foreach (var n in grafo.nodes)
+                if (n is ActorStateNode p)
+                    sb.Append($"- **{p.actorId}** · {grafo.name} · «{p.displayTitle}» · {p.layer} · presencia={p.presence} `{p.markId}` · frases={p.lines?.Count ?? 0}\n");
         }
     }
 

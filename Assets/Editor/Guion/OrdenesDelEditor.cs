@@ -29,6 +29,7 @@ using UnityEngine;
 ///   mover Escena/ruta/del/objeto x z [rumbo] pone un objeto de una escena abierta en (x, suelo, z) y, si se da, con
 ///                                           ese rumbo; la altura sale de un rayo contra el suelo. Marca la escena
 ///   guardar                                 guarda las escenas abiertas con cambios
+///   resolver                                vuelve a resolver los paquetes (p. ej. tras añadir uno embebido en Packages/)
 ///   ruta guid [guid…]                       la ruta del asset de cada GUID
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
@@ -265,6 +266,9 @@ public static class OrdenesDelEditor
                 string pregunta = salto < 0 ? null : orden.Substring(salto + 1).Trim();
                 return GeminiDelBuzon.Empezar(resto, pregunta);
             }
+            case "resolver":
+                UnityEditor.PackageManager.Client.Resolve();
+                return "paquetes resueltos";
             case "refrescar":
                 UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);

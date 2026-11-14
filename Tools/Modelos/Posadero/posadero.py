@@ -48,8 +48,8 @@ for z in (0.6, 0.52):
 # ── Delantal de cintura, largo hasta media pierna, con su cinta y el nudo a un lado ──
 torno("traje", "Delantal", [(0.455, 0.212), (0.4, 0.222), (0.3, 0.238), (0.2, 0.25)], "Delantal", abierto=(R(-165), R(-15)), grosor=0.008)
 toro("traje", "CintaDelantal", (0, -0.01, 0.452), 0.213, 0.016, "Delantal", None, escala=(1, 0.92, 1))
-esfera("traje", "NudoDelantal", (0.19, -0.09, 0.452), (0.024, 0.024, 0.022), "Delantal", None)
-tubo("traje", "CaboDelantal", curva((0.19, -0.09, 0.45), (0.22, -0.11, 0.4), (0.215, -0.11, 0.34), 6), [0.012] * 6, "Delantal", {"pelvis": 1.0}, seg=6)
+esfera("traje", "NudoDelantal", (0.0, 0.205, 0.452), (0.024, 0.024, 0.022), "Delantal", None)
+tubo("traje", "CaboDelantal", curva((0.0, 0.205, 0.45), (0.02, 0.23, 0.4), (0.015, 0.23, 0.34), 6), [0.012] * 6, "Delantal", {"pelvis": 1.0}, seg=6)
 # ── Paño al hombro izquierdo: cae por delante y por detrás, con una raya ──
 # Es una tira plana (una tela doblada), no un tubo: dos filas de vértices a lo ancho siguiendo el hombro.
 pano = [(0.135, -0.222, 0.54), (0.135, -0.218, 0.6), (0.137, -0.205, 0.67), (0.14, -0.14, 0.742), (0.14, -0.03, 0.772), (0.14, 0.08, 0.765),

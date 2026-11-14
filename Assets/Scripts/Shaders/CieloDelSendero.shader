@@ -21,6 +21,7 @@ Shader "El Sendero/Cielo"
         [HDR] _ColorDeNubesDeClima ("Nubes de clima", Color) = (0.52,0.58,0.66,1)
         _ColorDeNubesDeClimaEnSombra ("Sombra de clima", Color) = (0.34,0.38,0.43,1)
         _AvanceDelFrente ("Avance del frente", Float) = 0
+        _NubesDeDibujo ("Nubes de dibujo (0 = algodón, 1 = borde duro y dos tonos)", Range(0, 1)) = 1
     }
     CGINCLUDE
     #include "UnityCG.cginc"
@@ -30,7 +31,7 @@ Shader "El Sendero/Cielo"
     float4 _ColorDelResplandor, _ColorDeNubes, _ColorDeNubesEnSombra;
     float4 _ColorDeNubesDeClima, _ColorDeNubesDeClimaEnSombra;
     float _CaidaDelHorizonte, _GrosorDeLaBruma, _TamanoDelResplandor, _FuerzaDelResplandor;
-    float _NubosidadBase, _EscalaDeNubes, _SuavidadDeNubes, _VelocidadDeNubes, _Nubosidad, _AvanceDelFrente;
+    float _NubosidadBase, _EscalaDeNubes, _SuavidadDeNubes, _VelocidadDeNubes, _Nubosidad, _AvanceDelFrente, _NubesDeDibujo;
     // Las globales sin configurar valen cero y mantienen invisibles ambos astros.
     float4 _CieloDireccionDelSol, _CieloDireccionDeLaLuna, _CieloColorDelSol, _CieloColorDeLaLuna;
     float _CieloTamanoDelSol, _CieloTamanoDeLaLuna;
@@ -72,18 +73,24 @@ Shader "El Sendero/Cielo"
         float resplandor=exp(-angSol/max(0.01,_TamanoDelResplandor))*_FuerzaDelResplandor*(0.3+1.7*bajo)*saturate(_CieloColorDelSol.a);
         cielo+=_ColorDelResplandor.rgb*resplandor;
         float2 uv=d.xz/(max(d.y,0.0)+0.12)*max(0.01,_EscalaDeNubes)+_CieloViento.xy*_Time.y*_VelocidadDeNubes;
-        float n=fbm(uv);
+        // De dibujo: dos octavas de ruido en vez de cuatro, para manchas redondas y no deshilachadas.
+        float redondo=ruido(uv*0.55)*0.62+ruido(uv*1.2+float2(5.2,1.3))*0.38;
+        float n=lerp(fbm(uv),redondo,_NubesDeDibujo);
         float c=saturate(max(_NubosidadBase,_Nubosidad));
         float2 horizontal=d.xz*rsqrt(max(dot(d.xz,d.xz),0.000001));
         float local=saturate(c+_AvanceDelFrente*dot(horizontal,_CieloDireccionDelFrente.xy)*0.5);
-        float densidad=smoothstep(1-local,1-local+max(0.001,_SuavidadDeNubes),n);
+        // Nubes de dibujo: borde duro (lo justo para no dentar) y dos tonos con el corte marcado.
+        float suavidad=lerp(max(0.001,_SuavidadDeNubes),max(fwidth(n)*1.2,0.004),_NubesDeDibujo);
+        float densidad=smoothstep(1-local,1-local+suavidad,n);
         // La cobertura total conserva relieve de color y no deja huecos en el cénit.
         densidad=lerp(densidad,1,smoothstep(0.9,1,local));
         densidad=lerp(densidad,c,exp(-altura*18));
         if(d.y<0) densidad=c;
         float3 luz=lerp(_ColorDeNubes.rgb,_ColorDeNubesDeClima.rgb,saturate(_Nubosidad));
         float3 sombra=lerp(_ColorDeNubesEnSombra.rgb,_ColorDeNubesDeClimaEnSombra.rgb,saturate(_Nubosidad));
-        float3 nube=lerp(sombra,luz,smoothstep(0.15,0.85,n));
+        float corteDeLuz=lerp(0.15,0.62,_NubesDeDibujo), anchoDeLuz=lerp(0.7,max(fwidth(n)*1.5,0.004),_NubesDeDibujo);
+        float3 nube=lerp(sombra,luz,smoothstep(corteDeLuz,corteDeLuz+anchoDeLuz,n));
+
         nube+=_ColorDelResplandor.rgb*exp(-angSol*8)*densidad*(1-densidad)*2*saturate(_CieloColorDelSol.a);
         cielo=lerp(cielo,nube,densidad);
         float radioSol=max(0.0001,_CieloTamanoDelSol);

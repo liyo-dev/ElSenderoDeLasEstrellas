@@ -1,7 +1,7 @@
 # Chequeo de choques — erika.blend
 **PASA (23 avisos menores: mirar las fotos)**
 
-Poses revisadas: 77 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas)
+Poses revisadas: 78 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas, sentado)
 
 ## Tela que se rasga (aristas estiradas)
 - Body28_GuerreraLigera:Bota_l (+0.12,0.14): 10 (peor en MoveFWD_Normal_InPlace_NoWeapon@9.0)
@@ -24,7 +24,7 @@ Poses revisadas: 77 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, 
 - Body28_GuerreraLigera:Hebilla (+0.00,0.45): 138 (peor en InteractWithPeople_NoWeapon@141.0, dentro de cuerpo/hand_l)
 - Body28_GuerreraLigera:Remache50 (+0.24,0.72): 94 (peor en brazos_arriba, dentro de cuerpo/upperarm_l)
 - Body28_GuerreraLigera:Peto (-0.00,0.57): 43 (peor en InteractWithPeople_NoWeapon@176.0, dentro de cuerpo/lowerarm_l)
-- Body28_GuerreraLigera:Cinturon (-0.00,0.45): 41 (peor en brazos_bajados, dentro de cuerpo/upperarm_l)
+- Body28_GuerreraLigera:Cinturon (-0.00,0.45): 42 (peor en brazos_bajados, dentro de cuerpo/upperarm_l)
 - Body28_GuerreraLigera:Manga_r (-0.24,0.64): 32 (peor en Victory_NoWeapon@17.7, dentro de cuerpo/upperarm_r)
 - Body28_GuerreraLigera:PetoArriba (-0.00,0.69): 30 (peor en brazos_arriba, dentro de cuerpo/upperarm_r)
 - Body28_GuerreraLigera:CorreaBrazal_l340 (+0.34,0.63): 29 (peor en MoveFWD_Normal_InPlace_NoWeapon@5.0, dentro de cuerpo/pelvis)

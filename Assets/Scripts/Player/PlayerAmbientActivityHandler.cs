@@ -134,7 +134,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     {
         if (_currentWorldPoint == null) return;
 
-        string loopState = GetActivityLoopState(_currentWorldPoint.activityType);
+        string loopState = BucleDelAsiento(_currentWorldPoint, _currentWorldPoint.activityType);
         int layer = GetActivityLayer(_currentWorldPoint.activityType);
         if (!string.IsNullOrEmpty(loopState) && HasState(loopState, layer))
             CrossFade(loopState, 0.2f, layer);
@@ -332,8 +332,8 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     private IEnumerator ActivityRoutine(NPCAmbientActivity activity)
     {
         string beginState = GetActivityBeginState(activity);
-        string loopState  = GetActivityLoopState(activity);
         int layer = GetActivityLayer(activity);
+        string loopState  = BucleDelAsiento(_currentWorldPoint, activity);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerAmbientActivityHandler] Actividad: {activity} | Begin='{beginState}' (existe={HasState(beginState, layer)}) | Loop='{loopState}' (existe={HasState(loopState, layer)}) | Layer={layer} | Animator={_animator?.name}");
@@ -524,6 +524,14 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         NPCAmbientActivity.Sleep      => string.Empty,
         _                             => string.Empty
     };
+
+    /// El bucle del asiento: su estado propio si lo tiene y existe en el Animator; si no, el de su actividad.
+    private string BucleDelAsiento(NPCWorldPoint asiento, NPCAmbientActivity actividad)
+    {
+        if (asiento != null && !string.IsNullOrEmpty(asiento.estadoDelBucle) && HasState(asiento.estadoDelBucle, GetActivityLayer(actividad)))
+            return asiento.estadoDelBucle;
+        return GetActivityLoopState(actividad);
+    }
 
     private static string GetActivityLoopState(NPCAmbientActivity a) => a switch
     {

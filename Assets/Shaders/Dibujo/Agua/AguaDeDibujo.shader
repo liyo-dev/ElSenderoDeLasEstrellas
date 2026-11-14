@@ -24,21 +24,21 @@ Shader "El Sendero/Agua de dibujo"
         _GrosorDeTinta("Línea de tinta tras la espuma (m)", Float) = 0.06
         _ColorTinta("Tinta", Color) = (0.20, 0.15, 0.22, 1)
 
-        [Header(Destellos)]
+        [Header(Rizos de ola)]
         _ColorDestellos("Color", Color) = (1, 1, 1, 1)
-        _EscalaDeDestellos("Tamaño de las celdas (m)", Float) = 3
-        _GrosorDeDestellos("Grosor", Range(0.01, 0.3)) = 0.07
-        _CantidadDeDestellos("Cantidad", Range(0, 1)) = 0.35
-        _VelocidadDeDestellos("Velocidad", Float) = 0.25
-        _MasDestellosAlSol("Más destellos con sol (0-1)", Range(0, 1)) = 0.6
+        _EscalaDeDestellos("Separación entre rizos (m)", Float) = 4
+        _GrosorDeDestellos("Grosor del trazo (0-0.2)", Range(0.01, 0.2)) = 0.045
+        _CantidadDeDestellos("Cuántos hay (0-1)", Range(0, 1)) = 0.22
+        _VelocidadDeDestellos("Ritmo al aparecer y desaparecer", Float) = 0.12
+        _MasDestellosAlSol("Más rizos con sol (0-1)", Range(0, 1)) = 0.4
         _Corriente("Corriente (dirección XZ, m/s)", Vector) = (0, 0, 0, 0)
 
         [Header(Oleaje)]
         _AlturaDeOla("Altura (m)", Float) = 0.05
         _LargoDeOla("Largo (m)", Float) = 7
-        _VelocidadDeOla("Velocidad (m/s)", Float) = 0.45
+        _VelocidadDeOla("Velocidad (m/s)", Float) = 0.3
         _DireccionDeOla("Dirección (XZ)", Vector) = (1, 0.35, 0, 0)
-        _ColorLomo("Lomo de la ola", Color) = (1, 1, 1, 0.16)
+        _ColorLomo("Lomo de la ola", Color) = (1, 1, 1, 0.1)
         _AnchoDeLomo("Ancho del lomo (0-1)", Range(0, 0.5)) = 0.08
     }
 
@@ -159,22 +159,28 @@ Shader "El Sendero/Agua de dibujo"
                 return lerp(lerp(a, b, u.x), lerp(c, d, u.x), u.y);
             }
 
-            // Distancia al borde entre celdas que se mueven: las líneas finas son los destellos.
-            float BordeDeCeldas(float2 p, float t)
+            // Rizos de ola: en cada celda, a veces, un trazo corto y curvo (como en los dibujos) que
+            // crece, se queda y se encoge. Van tumbados según la ola y se mueven con la corriente.
+            float Rizos(float2 p, float t, float cantidad, float grosor, float2 dirOla)
             {
-                float2 i = floor(p);
-                float2 f = frac(p);
-                float d1 = 8.0, d2 = 8.0;
-                [unroll] for (int y = -1; y <= 1; y++)
-                [unroll] for (int x = -1; x <= 1; x++)
-                {
-                    float2 g = float2(x, y);
-                    float2 o = 0.5 + 0.5 * sin(t + 6.2831 * Azar2(i + g));
-                    float d = length(g + o - f);
-                    if (d < d1) { d2 = d1; d1 = d; }
-                    else if (d < d2) { d2 = d; }
-                }
-                return d2 - d1;
+                float2 celda = floor(p);
+                float2 azar = Azar2(celda);
+                float2 azar2 = Azar2(celda + 17.3);
+                if (azar.x > cantidad) return 0.0;
+                // Vida del trazo: aparece, se queda y se va; cada celda con su desfase.
+                float vida = frac(t + azar.y);
+                float tam = saturate(sin(vida * 3.14159) * 1.6);
+                float2 centro = celda + 0.3 + 0.4 * azar2;
+                float2 q = p - centro;
+                float2 eje = normalize(float2(-dirOla.y, dirOla.x) + float2(1e-4, 0));
+                float2 local = float2(dot(q, eje), dot(q, float2(-eje.y, eje.x)));
+                float largo = 0.24 * tam * (0.7 + 0.6 * azar2.x);
+                float curva = 1.6 + 1.5 * azar2.y;
+                float lejos = abs(local.y - curva * local.x * local.x + 0.04);
+                float dentro = step(abs(local.x), largo);
+                // Más fino en las puntas, como un trazo de pincel.
+                float punta = 1.0 - saturate(abs(local.x) / max(largo, 1e-4));
+                return dentro * step(lejos, grosor * (0.35 + 0.65 * punta));
             }
 
             // Hondura del fondo en metros de ojo; vale también con cámaras ortográficas (minimapa, maqueta).
@@ -221,11 +227,10 @@ Shader "El Sendero/Agua de dibujo"
                 half alSol = saturate(dot(sol.color, half3(0.3h, 0.59h, 0.11h)) - 0.35h) * sol.shadowAttenuation;
                 half cantidad = saturate(_CantidadDeDestellos * (1.0h + _MasDestellosAlSol * (2.0h * alSol - 0.6h)));
 
-                // Destellos: bordes de celdas, solo donde la mancha de ruido lo permite (no por todas partes).
-                float2 pDestellos = xz / max(_EscalaDeDestellos, 0.05);
-                float borde = BordeDeCeldas(pDestellos, t * _VelocidadDeDestellos);
-                float mancha = Ruido(pDestellos * 0.37 + t * 0.03);
-                half destello = (1.0h - step(_GrosorDeDestellos, borde)) * step(1.0h - cantidad, mancha) * step(_CorteMedio * 0.5h, k);
+                // Rizos de ola sueltos (no una red por todas partes); fuera de la orilla.
+                float2 pRizos = xz / max(_EscalaDeDestellos, 0.05);
+                half destello = Rizos(pRizos, t * _VelocidadDeDestellos, cantidad, _GrosorDeDestellos, _DireccionDeOla.xy)
+                              * step(_CorteMedio * 0.5h, k);
                 color = lerp(color, _ColorDestellos.rgb, destello);
 
                 // Espuma de la orilla con borde ondulado y la línea de tinta detrás.

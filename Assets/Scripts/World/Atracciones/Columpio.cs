@@ -12,6 +12,9 @@ public sealed class Columpio : MonoBehaviour
     [SerializeField] private NPCWorldPoint asiento;
     [Tooltip("Pieza que se balancea (cuerdas y tabla).")]
     [SerializeField] private BalanceoPendular balanceo;
+    [Tooltip("Postura de quien va sentado (estado del Animator): rodillas algo abiertas y piernas adelante que se balancean. " +
+             "Con la de sentarse normal, de frente parecía que no tenía piernas.")]
+    [SerializeField] private string postura = "SitSwing_Loop";
     [Tooltip("Segundos que tarda en coger el balanceo entero al sentarse.")]
     [SerializeField, Min(0.1f)] private float arranque = 3f;
     [Tooltip("Segundos que tarda en pararse al bajarse.")]
@@ -25,6 +28,7 @@ public sealed class Columpio : MonoBehaviour
     void Awake()
     {
         if (balanceo != null) balanceo.Intensidad = 0f;
+        if (asiento != null && string.IsNullOrEmpty(asiento.estadoDelBucle)) asiento.estadoDelBucle = postura;
     }
 
     void OnDisable()

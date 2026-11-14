@@ -27,9 +27,11 @@ class Faldon:
     """Parte de la prenda por debajo de la cintura que cuelga como falda.
     z_cintura: donde empieza a colgar (por encima, los pesos copiados); z_bajo: el bajo.
     muslo: cuánto sigue al muslo de su lado en el bajo (0 = rígida a la pelvis, 1 = como una pernera).
+    atras: la parte de detrás sigue al muslo solo esta fracción (sentado, la espalda queda en el asiento).
     Va de un lado a otro sin saltos: por delante y por detrás reparte entre los dos muslos, así no se abre."""
-    def __init__(self, z_cintura, z_bajo, muslo=0.5, huesos=("pelvis", "thigh_l", "thigh_r"), banda=0.06):
+    def __init__(self, z_cintura, z_bajo, muslo=0.5, huesos=("pelvis", "thigh_l", "thigh_r"), banda=0.06, atras=0.35):
         self.z_cintura, self.z_bajo, self.muslo, self.huesos, self.banda = z_cintura, z_bajo, muslo, huesos, banda
+        self.atras = atras   # cuánto sigue al muslo la parte de detrás respecto a la de delante (1 = igual)
 
 def _suave(t):
     t = min(1.0, max(0.0, t)); return t * t * (3 - 2 * t)
@@ -101,7 +103,10 @@ def pesar(o, cuerpo, arm, zona=TODO, faldon=None, suavizar=4, fijos=None, sobre=
                 t = _suave((F.z_cintura - p.z) / max(1e-6, F.z_cintura - F.z_bajo))
                 r = math.hypot(p.x, p.y) or 1e-6
                 s = max(-1.0, min(1.0, p.x / r))              # +1 su izquierda (+X), -1 su derecha
-                wl, wr = F.muslo * t * (1 + s) / 2, F.muslo * t * (1 - s) / 2
+                # por detrás sigue menos al muslo: sentado, la espalda del faldón se queda en el asiento y no se rasga
+                delante = max(-1.0, min(1.0, -(p.y + 0.01) / r))
+                m = F.muslo * (F.atras + (1 - F.atras) * (delante + 1) / 2)
+                wl, wr = m * t * (1 + s) / 2, m * t * (1 - s) / 2
                 Wf = np.zeros(len(nombres)); Wf[ip], Wf[il], Wf[ir] = 1 - wl - wr, wl, wr
                 mezcla = _suave((F.z_cintura + F.banda - p.z) / F.banda)
                 W[i] = (1 - mezcla) * W[i] + mezcla * Wf

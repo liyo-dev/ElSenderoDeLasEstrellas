@@ -123,14 +123,14 @@ public static partial class MontajeDeLosCapitulos
         s_papeles.Add(new Papel { SpawnId = "SPAWN__LIAM", Prefab = "Assets/Prefabs/_LIAM.prefab", Nombre = "_LIAM", Id = Liam, Flag = FlagLiamAparece, NavMesh = false });
 
         // Liam les sigue de lejos antes de unirse: la loma de la campana, el saliente del Gólem y la bifurcación.
-        s_agendas.Add(new Agenda
+        s_personajes.Add(new SituacionesDe
         {
             Actor = Liam,
             Entradas =
             {
-                ("Cap. 4 · en la loma de la campana", Tramo(S4.CampanaFin, S4.Golem), PresenciaEnAgenda.EnUnaMarca, "Cap4_LiamLoma", null),
-                ("Cap. 4 · en el saliente del Gólem", Tramo(S4.Golem, S4.Bifurcacion), PresenciaEnAgenda.EnUnaMarca, "Cap4_LiamSaliente", null),
-                ("Cap. 4 · en la bifurcación", Tramo(S4.Bifurcacion, S4.LiamEnGrupo), PresenciaEnAgenda.EnUnaMarca, "Cap4_LiamBifurcacion", null),
+                ("Cap. 4 · en la loma de la campana", Tramo(S4.CampanaFin, S4.Golem), ActorPresence.AtMark, "Cap4_LiamLoma", null),
+                ("Cap. 4 · en el saliente del Gólem", Tramo(S4.Golem, S4.Bifurcacion), ActorPresence.AtMark, "Cap4_LiamSaliente", null),
+                ("Cap. 4 · en la bifurcación", Tramo(S4.Bifurcacion, S4.LiamEnGrupo), ActorPresence.AtMark, "Cap4_LiamBifurcacion", null),
             },
         });
 

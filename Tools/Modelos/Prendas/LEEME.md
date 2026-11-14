@@ -36,6 +36,14 @@
   bota se fundía con el pantalón. → `t.pernera(...)` acaba 2 cm dentro de la bota y más estrecha; `t.bota(...)` lleva
   una vuelta más clara que corta la silueta. La revisión antes de exportar avisa de piezas que se tocan con casi la
   misma luz («Contraste»; si es a propósito, como el Mago Oscuro todo en sombra, se deja).
+- **Nada de bolsas ni mochilas en el costado** (Raúl, 14 nov 2026, INC-1183): la mano se metía en el libro del zurrón
+  de Oliver y de Eldran. Lo que va en la cintura, por delante o por detrás. La revisión antes de exportar avisa
+  («Paso de las manos») de piezas que cuelgan en el costado entre la cadera y el muslo.
+- **Sentado, el faldón se rasgaba por detrás** (Eldran, 14 nov 2026, INC-1186): la espalda del abrigo seguía a los muslos
+  hacia delante. → `Faldon(..., atras=0.35)` (por defecto): por detrás sigue menos al muslo. `chequeo_choques.py` tiene
+  la pose `sentado`.
+- **Tumbado, sin cuerpo bajo la camiseta** (Will, INC-1186): si se quita el cuerpo entero, la prenda de arriba necesita un
+  fondo (del color del pantalón) bajo su bajo; con `quitar_lo_tapado` ya se tapa solo.
 - **Manos que no se ven** (Nina, Oliver): faldón con mucho vuelo o mangas largas. → `chequeo_huecos.py` mide qué parte
   de cada mano se ve con los brazos caídos (idle); mínimo 35 %.
 - **Sentado sin piernas** (Will en el columpio, 13 nov 2026): `chequeo_huecos.py` mide los muslos de frente sentado
@@ -43,6 +51,8 @@
   pierna. Eso es pose y cámara, no el modelo (ver TRACKER INC-1170).
 
 ## Cómo se comprueba un personaje (los dos chequeos, más la revisión antes de exportar)
+Los chequeos se pasan sobre el `.blend` recién hecho por su script, nunca sobre uno guardado de otro día: el de Will
+era del 11 nov y no tenía los arreglos posteriores (14 nov 2026).
 1. `python chequeo_choques.py -- personaje.blend salida --piezas pelo.fbx` → `chequeo.md` / `chequeo.png` (en movimiento).
 2. `python chequeo_huecos.py -- personaje.blend salida --piezas pelo.fbx` → `huecos.md` / `huecos.png` (desde abajo:
    rayos desde 25 direcciones por debajo, en reposo y andando; en rojo, lo que en Unity se ve a través; además,

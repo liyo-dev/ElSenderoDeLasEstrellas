@@ -55,19 +55,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlturaDeOla: 0.05
     - _AmbientFresnel: 6
-    - _AnchoDeEspuma: 0.35
+    - _AnchoDeEspuma: 0.3
+    - _AnchoDeLomo: 0.08
     - _AngleOffset: 10
     - _BUILTIN_QueueControl: -1
     - _BUILTIN_QueueOffset: 0
-    - _CantidadDeDestellos: 0.35
+    - _CantidadDeDestellos: 0.15
     - _CausticsAmount: 1
     - _Caustics_Enabled: 1
     - _Caustics_Opacity: 1
     - _Caustics_Scale: 0.05
     - _CellDensity: 10
-    - _CorteHondo: 0.6
-    - _CorteMedio: 0.25
+    - _CorteHondo: 0.55
+    - _CorteMedio: 0.2
     - _Depth: 3.1
     - _Depth_Strength: 0.15
     - _Distortion_Scale: 500
@@ -80,11 +82,13 @@ Material:
     - _Foam_Noise_Scale: 200
     - _Foam_Size: 0
     - _Foam_Speed: 0.01
-    - _GrosorDeDestellos: 0.07
+    - _GrosorDeDestellos: 0.045
     - _GrosorDeTinta: 0.06
     - _IsCaustics: 0
     - _IsFoam: 1
     - _IsMask: 1
+    - _LargoDeOla: 7
+    - _MasDestellosAlSol: 0.4
     - _Mettalic: 0
     - _NormalStrength: 0.5
     - _Normal_Strength: 0.3
@@ -96,8 +100,9 @@ Material:
     - _Refraction_Strength: 0.147
     - _Smoothness: 0.017
     - _SurfaceOpacity: 1
-    - _VelocidadDeDestellos: 0.25
-    - _VelocidadDeEspuma: 0.18
+    - _VelocidadDeDestellos: 0.12
+    - _VelocidadDeEspuma: 0.1
+    - _VelocidadDeOla: 0.15
     - _VoronoiDensity: 9
     - _VoronoiLevel: 0
     - _VoronoiOffset: 2
@@ -112,6 +117,7 @@ Material:
     - _ColorEspuma: {r: 0.93268067, g: 0.97584903, b: 0.9299414, a: 1}
     - _ColorFoam: {r: 0.86536133, g: 0.9716981, b: 0.9598829, a: 1}
     - _ColorHondo: {r: 0.18189293, g: 0.5081611, b: 0.7665094, a: 1}
+    - _ColorLomo: {r: 1, g: 1, b: 1, a: 0}
     - _ColorMedio: {r: 0.31318966, g: 0.66732496, b: 0.8018868, a: 1}
     - _ColorOrilla: {r: 0.51923275, g: 0.76712745, b: 0.86132073, a: 1}
     - _ColorShallow: {r: 0.31318972, g: 0.66732496, b: 0.8018868, a: 1}
@@ -119,6 +125,7 @@ Material:
     - _ColorTinta: {r: 0.19999996, g: 0.14999998, b: 0.21999997, a: 1}
     - _Corriente: {r: 0, g: 0, b: 0, a: 0}
     - _Deep_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _DireccionDeOla: {r: 1, g: 0.35, b: 0, a: 0}
     - _Surface_Color: {r: 0, g: 0, b: 0, a: 0}
     - _VoronoiST: {r: 0.05, g: 0.05, b: 0.05, a: 0.05}
     - _VoronoiSpeed: {r: 1, g: 1, b: 1, a: 1}

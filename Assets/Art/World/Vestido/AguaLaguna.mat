@@ -47,18 +47,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AnchoDeEspuma: 0.35
-    - _CantidadDeDestellos: 0.35
-    - _CorteHondo: 0.6
-    - _CorteMedio: 0.25
+    - _AlturaDeOla: 0.05
+    - _AnchoDeEspuma: 0.3
+    - _AnchoDeLomo: 0.08
+    - _CantidadDeDestellos: 0.15
+    - _CorteHondo: 0.55
+    - _CorteMedio: 0.2
     - _Depth: 2.2
     - _EscalaDeDestellos: 3
     - _FoamAmount: 0
     - _FoamCutoff: 1
     - _FoamScale: 0
     - _FoamSpeed: 0
-    - _GrosorDeDestellos: 0.07
+    - _GrosorDeDestellos: 0.045
     - _GrosorDeTinta: 0.06
+    - _LargoDeOla: 7
+    - _MasDestellosAlSol: 0.4
     - _Normal01Strength: 2
     - _Normal02Strength: 0.6
     - _NormalSpeed: 0.5
@@ -69,17 +73,20 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 1
     - _Smoothness: 0.9
-    - _VelocidadDeDestellos: 0.25
-    - _VelocidadDeEspuma: 0.18
+    - _VelocidadDeDestellos: 0.12
+    - _VelocidadDeEspuma: 0.1
+    - _VelocidadDeOla: 0.15
     m_Colors:
     - _ColorDestellos: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorEspuma: {r: 0.8537736, g: 0.8437736, b: 0.8037735, a: 1}
-    - _ColorHondo: {r: 0.09249998, g: 0.27749997, b: 0.28999996, a: 0.8025}
-    - _ColorMedio: {r: 0.21999997, g: 0.29999998, b: 0.19999996, a: 0.45}
-    - _ColorOrilla: {r: 0.454, g: 0.51, b: 0.43999997, a: 0.615}
+    - _ColorEspuma: {r: 1, g: 0.99, b: 0.94, a: 1}
+    - _ColorHondo: {r: 0.17, g: 0.47, b: 0.58, a: 1}
+    - _ColorLomo: {r: 1, g: 1, b: 1, a: 0}
+    - _ColorMedio: {r: 0.3, g: 0.68, b: 0.68, a: 1}
+    - _ColorOrilla: {r: 0.62, g: 0.88, b: 0.74, a: 1}
     - _ColorTinta: {r: 0.19999996, g: 0.14999998, b: 0.21999997, a: 1}
     - _Corriente: {r: 0, g: 0, b: 0, a: 0}
     - _DeepWaterColor: {r: 0.05, g: 0.27, b: 0.32, a: 0.92}
+    - _DireccionDeOla: {r: 1, g: 0.35, b: 0, a: 0}
     - _FoamColor: {r: 0.7075471, g: 0.7075471, b: 0.7075471, a: 1}
     - _ShallowWaterColor: {r: 0.22, g: 0.3, b: 0.2, a: 0.45}
     - _UV4Normal01: {r: 5, g: 5, b: 0, a: 0}

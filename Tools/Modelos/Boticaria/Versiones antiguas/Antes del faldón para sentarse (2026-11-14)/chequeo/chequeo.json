@@ -1,0 +1,1129 @@
+[
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 13,
+   "lowerarm_l": 3,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@3.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "lowerarm_l": 3,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@5.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 12,
+   "lowerarm_l": 3,
+   "upperarm_r": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@8.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "pelvis": 3,
+   "lowerarm_l": 3,
+   "upperarm_r": 9,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 31,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@10.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "pelvis": 3,
+   "upperarm_r": 8,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@12.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 6,
+   "lowerarm_l": 3,
+   "upperarm_r": 9,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@15.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 6,
+   "lowerarm_l": 3,
+   "upperarm_r": 10,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@17.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 6,
+   "lowerarm_r": 3,
+   "upperarm_r": 10
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@19.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@22.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 10,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 30,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@24.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "pelvis": 5,
+   "lowerarm_l": 3,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "WalkFWD_InPlace_NoWeapon@26.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 11,
+   "lowerarm_l": 3,
+   "upperarm_r": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@2.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 6,
+   "upperarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@3.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 4,
+   "pelvis": 4
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 37,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body32_Herborista:CuelloBolsita1 (-0.08,0.44)": {
+    "puntos": 53,
+    "de": 280,
+    "en": "cuerpo/pelvis"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@5.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 12,
+   "pelvis": 5,
+   "upperarm_r": 5,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Falda (-0.00,0.35)": {
+    "puntos": 35,
+    "de": 320,
+    "en": "cuerpo/lowerarm_r"
+   },
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 37,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@6.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "lowerarm_r": 5,
+   "pelvis": 4,
+   "upperarm_r": 13
+  },
+  "se_mete": {
+   "Body32_Herborista:Suela_l (+0.12,0.01)": {
+    "puntos": 34,
+    "de": 314,
+    "en": "cuerpo/foot_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@7.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "upperarm_r": 11,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body32_Herborista:Suela_l (+0.12,0.01)": {
+    "puntos": 32,
+    "de": 314,
+    "en": "cuerpo/foot_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@9.0",
+  "desgarro": {
+   "Body32_Herborista:Media_l (+0.11,0.20)": {
+    "aristas": 5,
+    "max": 1.67
+   }
+  },
+  "asoma": {
+   "upperarm_l": 9,
+   "upperarm_r": 11,
+   "lowerarm_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@10.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 10,
+   "lowerarm_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@11.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 5,
+   "pelvis": 4,
+   "upperarm_r": 11,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 29,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@13.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 4,
+   "pelvis": 6,
+   "upperarm_r": 12,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Falda (-0.00,0.35)": {
+    "puntos": 33,
+    "de": 320,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 37,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@14.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "lowerarm_r": 3,
+   "pelvis": 4,
+   "upperarm_r": 7
+  },
+  "se_mete": {
+   "Body32_Herborista:Suela_r (-0.12,0.01)": {
+    "puntos": 33,
+    "de": 314,
+    "en": "cuerpo/foot_r"
+   },
+   "Body32_Herborista:Puntera_r (-0.12,0.04)": {
+    "puntos": 38,
+    "de": 314,
+    "en": "cuerpo/calf_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "MoveFWD_Normal_InPlace_NoWeapon@15.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 7
+  },
+  "se_mete": {
+   "Body32_Herborista:Puntera_r (-0.12,0.04)": {
+    "puntos": 50,
+    "de": 314,
+    "en": "cuerpo/calf_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 4,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 33,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@12.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 11,
+   "upperarm_r": 4,
+   "lowerarm_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@24.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 11,
+   "upperarm_r": 5,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@36.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "lowerarm_r": 4,
+   "upperarm_r": 8
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@47.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "lowerarm_r": 3,
+   "upperarm_r": 8
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@59.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 6,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@71.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@82.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "upperarm_r": 6,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@94.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 11,
+   "lowerarm_r": 3,
+   "lowerarm_l": 3,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@106.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "lowerarm_r": 3,
+   "lowerarm_l": 3,
+   "upperarm_r": 8
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@117.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 6,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Idle_Normal_NoWeapon@129.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 5,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 32,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@18.5",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@36.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 6,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@53.5",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "lowerarm_r": 3,
+   "upperarm_r": 9
+  },
+  "se_mete": {
+   "Body32_Herborista:CuelloBolsita1 (-0.08,0.44)": {
+    "puntos": 52,
+    "de": 280,
+    "en": "cuerpo/pelvis"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@71.0",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 3,
+   "upperarm_l": 7,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 80,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@88.5",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 3,
+   "upperarm_l": 7,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 101,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@106.0",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 3,
+   "upperarm_l": 7,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 117,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@123.5",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 3,
+   "upperarm_l": 9,
+   "upperarm_r": 8,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 130,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:Hoja2 (+0.04,0.70)": {
+    "puntos": 103,
+    "de": 314,
+    "en": "cuerpo/index_01_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@141.0",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 9,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 100,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:DelantalFalda (+0.00,0.37)": {
+    "puntos": 48,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:Hoja0 (+0.06,0.71)": {
+    "puntos": 116,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body32_Herborista:Hoja2 (+0.04,0.70)": {
+    "puntos": 244,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@158.5",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 9,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 100,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:DelantalFalda (+0.00,0.37)": {
+    "puntos": 46,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:Hoja0 (+0.06,0.71)": {
+    "puntos": 115,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body32_Herborista:Hoja2 (+0.04,0.70)": {
+    "puntos": 225,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@176.0",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 9,
+   "upperarm_r": 9,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 103,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:DelantalFalda (+0.00,0.37)": {
+    "puntos": 47,
+    "de": 328,
+    "en": "cuerpo/lowerarm_l"
+   },
+   "Body32_Herborista:Hoja0 (+0.06,0.71)": {
+    "puntos": 194,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body32_Herborista:Hoja1 (+0.09,0.69)": {
+    "puntos": 41,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   },
+   "Body32_Herborista:Hoja2 (+0.04,0.70)": {
+    "puntos": 149,
+    "de": 314,
+    "en": "cuerpo/index_02_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "InteractWithPeople_NoWeapon@193.5",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "upperarm_r": 6
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 67,
+    "de": 328,
+    "en": "cuerpo/hand_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 4,
+   "lowerarm_r": 4
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 33,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@5.2",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "lowerarm_r": 3,
+   "upperarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@9.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@13.5",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "lowerarm_r": 6,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@17.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@21.8",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "lowerarm_r": 6,
+   "upperarm_r": 8
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@26.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 6,
+   "lowerarm_r": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@30.2",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 7
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@34.3",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 9,
+   "upperarm_r": 10,
+   "lowerarm_r": 5
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@38.5",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 9,
+   "upperarm_r": 7,
+   "lowerarm_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@42.7",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 9,
+   "upperarm_r": 4
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Greeting01_NoWeapon@46.8",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 5
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 31,
+    "de": 280,
+    "en": "cuerpo/upperarm_r"
+   },
+   "Body32_Herborista:CuelloBolsita1 (-0.08,0.44)": {
+    "puntos": 47,
+    "de": 280,
+    "en": "cuerpo/pelvis"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@1.0",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 10,
+   "upperarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@5.2",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 5,
+   "pelvis": 4,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@9.3",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 5,
+   "pelvis": 6,
+   "lowerarm_l": 3,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@13.5",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 5,
+   "pelvis": 6,
+   "lowerarm_l": 3,
+   "lowerarm_r": 3
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@17.7",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 4,
+   "upperarm_l": 3,
+   "upperarm_r": 8
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 13,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@21.8",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_r": 8
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 13,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@26.0",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_l": 3,
+   "lowerarm_l": 3,
+   "upperarm_r": 7,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 13,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@30.2",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_l": 4,
+   "lowerarm_l": 3,
+   "upperarm_r": 6,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 18,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@34.3",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_l": 4,
+   "lowerarm_l": 3,
+   "upperarm_r": 5,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 17,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@38.5",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_l": 4,
+   "lowerarm_l": 3,
+   "upperarm_r": 5,
+   "lowerarm_r": 3
+  },
+  "se_mete": {
+   "Body32_Herborista:Manga_r (-0.30,0.63)": {
+    "puntos": 18,
+    "de": 112,
+    "en": "cuerpo/upperarm_r"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@42.7",
+  "desgarro": {},
+  "asoma": {
+   "spine_03": 5,
+   "upperarm_l": 5,
+   "lowerarm_l": 3,
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "Victory_NoWeapon@46.8",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_r": 6
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_bajados",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 7
+  },
+  "se_mete": {
+   "Body32_Herborista:Cinturon (-0.00,0.46)": {
+    "puntos": 34,
+    "de": 280,
+    "en": "cuerpo/upperarm_l"
+   }
+  },
+  "suelta": {}
+ },
+ {
+  "pose": "mano_al_frente",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 8,
+   "upperarm_r": 8
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_cruzados",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 15,
+   "upperarm_r": 15
+  },
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "brazos_arriba",
+  "desgarro": {},
+  "asoma": {},
+  "se_mete": {},
+  "suelta": {}
+ },
+ {
+  "pose": "manos_juntas",
+  "desgarro": {},
+  "asoma": {
+   "upperarm_l": 7,
+   "upperarm_r": 7
+  },
+  "se_mete": {
+   "Body32_Herborista:Peto (+0.00,0.56)": {
+    "puntos": 40,
+    "de": 328,
+    "en": "cuerpo/lowerarm_r"
+   }
+  },
+  "suelta": {}
+ }
+]

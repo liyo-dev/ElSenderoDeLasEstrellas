@@ -83,14 +83,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlturaDeOla: 0.05
     - _AmbientFresnel: 6
-    - _AnchoDeEspuma: 0.35
+    - _AnchoDeEspuma: 0.3
+    - _AnchoDeLomo: 0.08
     - _Blend1: -0.79
     - _Blend2: 0
     - _BumpScale: 1
-    - _CantidadDeDestellos: 0.35
-    - _CorteHondo: 0.6
-    - _CorteMedio: 0.25
+    - _CantidadDeDestellos: 0.15
+    - _CorteHondo: 0.55
+    - _CorteMedio: 0.2
     - _Cutoff: 0.5
     - _Depth: 3.1
     - _DepthMultiply: 2
@@ -113,16 +115,18 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GrosorDeDestellos: 0.07
+    - _GrosorDeDestellos: 0.045
     - _GrosorDeTinta: 0.06
     - _IsCaustics: 0
     - _IsFoam: 1
+    - _LargoDeOla: 7
     - _Layer1Speed: 0.6
     - _Layer1Tiling: 0.2
     - _Layer2Speed: 0.4
     - _Layer2Tiling: 0.15
     - _Layer3Speed: 0.2
     - _Layer3Tiling: 0.2
+    - _MasDestellosAlSol: 0.4
     - _Metallic: 0
     - _Mode: 0
     - _NormalStrength: 0.5
@@ -149,8 +153,9 @@ Material:
     - _TessMaxDisp: 25
     - _Tessellation: 4
     - _UVSec: 0
-    - _VelocidadDeDestellos: 0.25
-    - _VelocidadDeEspuma: 0.18
+    - _VelocidadDeDestellos: 0.12
+    - _VelocidadDeEspuma: 0.1
+    - _VelocidadDeOla: 0.15
     - _WaveBigPower: 3.8
     - _WaveBigScale: 0.9
     - _WaveBigSpeed: 1.5
@@ -172,15 +177,17 @@ Material:
     - _ColorDeep: {r: 0.1381274, g: 0.4551066, b: 0.754717, a: 1}
     - _ColorDepth: {r: 0.01568628, g: 0.41960788, b: 0.6313726, a: 1}
     - _ColorDestellos: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorEspuma: {r: 0.93268067, g: 0.97584903, b: 0.9299414, a: 1}
+    - _ColorEspuma: {r: 1, g: 0.99, b: 0.94, a: 1}
     - _ColorFoam: {r: 0.86536133, g: 0.9716981, b: 0.9598829, a: 1}
-    - _ColorHondo: {r: 0.18189293, g: 0.5081611, b: 0.7665094, a: 1}
-    - _ColorMedio: {r: 0.31318966, g: 0.66732496, b: 0.8018868, a: 1}
-    - _ColorOrilla: {r: 0.51923275, g: 0.76712745, b: 0.86132073, a: 1}
+    - _ColorHondo: {r: 0.17, g: 0.47, b: 0.58, a: 1}
+    - _ColorLomo: {r: 1, g: 1, b: 1, a: 0}
+    - _ColorMedio: {r: 0.3, g: 0.68, b: 0.68, a: 1}
+    - _ColorOrilla: {r: 0.62, g: 0.88, b: 0.74, a: 1}
     - _ColorShallow: {r: 0.31318972, g: 0.66732496, b: 0.8018868, a: 1}
     - _ColorSurface: {r: 0.4132787, g: 0.7937468, b: 0.8867924, a: 1}
     - _ColorTinta: {r: 0.19999996, g: 0.14999998, b: 0.21999997, a: 1}
     - _Corriente: {r: 0, g: 0, b: 0, a: 0}
+    - _DireccionDeOla: {r: 1, g: 0.35, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Layer1Direction: {r: 0.5, g: 0, b: 0, a: 0}
     - _Layer2Direction: {r: 0.5, g: 0, b: 0, a: 0}
