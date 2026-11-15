@@ -124,18 +124,21 @@ public static class TemploQueCantaBlockoutBuilder
         var dano = quema.AddComponent<ZonaDeDano>();
         Poner(dano, "danoPorSegundo", 30f);
 
-        // Losas del centro: anchas y con un hueco cómodo; se hunden alternando compás.
-        var centroDeLasLosas = new[] { 1.7f, 3.7f, 5.7f };
+        // Losas del centro: un puente de tres tramos que cubre el foso entero, sin huecos donde
+        // caerse (el salto no es el puzle: lo es el compás). Se hunden medio compás y avisan antes.
+        var centroDeLasLosas = new[] { 1.9f, 3.7f, 5.5f };
         for (int i = 0; i < centroDeLasLosas.Length; i++)
         {
             var losa = Caja($"Losa {i + 1}", sala.transform, escena,
-                            new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.4f), _gris, suelo: true);
+                            new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.8f), _gris, suelo: true);
             var tile = losa.AddComponent<PulseTile>();
             Poner(tile, "pulse", pulso);
             Poner(tile, "cycleMeasures", 2);
             Poner(tile, "sinkOnMeasureInCycle", i % 2);
-            Poner(tile, "sunkBeats", 2);
+            Poner(tile, "sunkBeats", 1);
             Poner(tile, "sinkDepth", 0.5f);
+            Poner(tile, "warnSquash", 0.14f);
+            Poner(tile, "warnShake", 0.06f);
         }
 
         // Muros de la sala y pared con el paso a la balanza.
@@ -167,6 +170,7 @@ public static class TemploQueCantaBlockoutBuilder
         // La rejilla lleva la misma luz en el dintel: dice a qué magia responde sin carteles.
         Caja("Luz en el dintel del paso", sala.transform, escena,
              new Vector3(0f, 3.55f, 6.95f), new Vector3(4.2f, 0.18f, 0.3f), _cristalLuz, suelo: false);
+        // Se abre dos compases, pero no se cierra mientras quede alguien del grupo por pasar.
         ConectarVoid(receptor.alActivarse, compuerta.TriggerForMeasures);
 
         // Tramo de la antesala: al caer a la lava, se vuelve al principio del foso.
@@ -245,6 +249,9 @@ public static class TemploQueCantaBlockoutBuilder
         Poner(puerta, "modo", (int)BeatGate.Modo.SeAbre);
         PonerVector(puerta, "activeOffset", new Vector3(0f, -3.6f, 0f));
         ConectarBool(receptor.alActivarse, puerta.SetPermanent, true);
+        // El fuego de la salida se lee en su marco: es magia de fuego, la de Estela.
+        Caja("Fuego en el marco de la salida", sala.transform, escena,
+             new Vector3(-6f, 8.25f, 34.6f), new Vector3(4.2f, 0.18f, 0.3f), _brasa, suelo: false);
 
         // Las velas de la cuenta atrás: una por compás, en una repisa del muro oeste.
         var velas = new GameObject[VelasDeLaBalanza];

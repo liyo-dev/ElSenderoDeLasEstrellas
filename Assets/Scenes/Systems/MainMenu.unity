@@ -149664,7 +149664,7 @@ MonoBehaviour:
   portada: {fileID: 1234489059}
   efectoAlComenzar: {fileID: 1706012242}
   nextSceneContinue: MainWorld
-  nextSceneNewGame: Prologo_Valle
+  nextSceneNewGame: MainWorld
   loadingOverlayScene: LoadingScreen
   fadeOverride: {fileID: 11400000, guid: c9f7b34f761c5c342ada8a4b2ab7a716, type: 2}
   fadeDelay: 0
@@ -215254,7 +215254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &158734255927335452
 GameObject:
   m_ObjectHideFlags: 0
@@ -274383,7 +274383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2052766923797243534
 GameObject:
   m_ObjectHideFlags: 0
@@ -296861,7 +296861,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2863027215785199845
 GameObject:
   m_ObjectHideFlags: 0
@@ -334476,7 +334476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &4130958291542644423
 GameObject:
   m_ObjectHideFlags: 0
@@ -361080,7 +361080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &5110943975338478316
 GameObject:
   m_ObjectHideFlags: 0
@@ -430910,7 +430910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &7612423805638978652
 GameObject:
   m_ObjectHideFlags: 0

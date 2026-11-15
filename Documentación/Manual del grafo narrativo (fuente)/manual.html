@@ -84,7 +84,7 @@
 <section class="page">
   <div class="chapnum">CAPÍTULO 2</div>
   <h1 class="chap">El editor de un vistazo</h1>
-  <p class="lead">Ábrelo en <span class="menu">Tools › Narrative Graph › Abrir editor</span> o con doble clic en un grafo. Se abre como pestaña junto a la vista de escena.</p>
+  <p class="lead">Ábrelo en <span class="menu">Liyodev › Grafo narrativo › Abrir editor</span> o con doble clic en un grafo. Se abre como pestaña junto a la vista de escena.</p>
 
   <div style="position:relative">
   <div class="ui">
@@ -161,7 +161,7 @@
   <h2>Que el capítulo corra en el juego</h2>
   <p>Lo más rápido: un objeto en la escena con <code>NarrativeBasicServices</code>, un <code>NarrativeRunner</code> con tu grafo y un <code>NarrativeGraphStarter</code> que apunte a ese runner. Para que los personajes se puedan «hablar», ponles <code>NarrativeBasicTalkTarget</code> con su id. En un juego con varias escenas, registra el grafo en el <code>NarrativeGraphHub</code> de tu escena de inicio con una etiqueta, y arráncalo con un <code>NarrativeGraphStarter</code> en la escena de juego (o con un <code>NarrativeRunner</code> propio de esa escena). El grafo guarda por dónde va a través de la conexión de guardado.</p>
 
-  <div class="tip"><b>Mira el ejemplo.</b> <span class="menu">Tools › Narrative Graph › Ejemplos › Montar «El faro»</span> crea en <code>Assets/El faro (ejemplo)</code> un capítulo completo con su escena: ábrela, elige cualquier paso y pulsa ▶. Usa los servicios básicos (botones para hablar, caja de diálogo, misiones en una esquina) y dos puntos de arranque ◆.</div>
+  <div class="tip"><b>Mira el ejemplo.</b> <span class="menu">Liyodev › Grafo narrativo › Ejemplos › Montar «El faro»</span> crea en <code>Assets/El faro (ejemplo)</code> un capítulo completo con su escena: ábrela, elige cualquier paso y pulsa ▶. Usa los servicios básicos (botones para hablar, caja de diálogo, misiones en una esquina) y dos puntos de arranque ◆.</div>
   <div class="tip"><b>Truco.</b> Clic derecho en una tarjeta: jugar desde aquí, pausar aquí al jugar, marcar como inicio, mover a otra sección, duplicar (<span class="k">Ctrl</span>+<span class="k">D</span>), guardar como plantilla o borrar.</div>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>5</b></span></div>
 </section>
@@ -201,7 +201,7 @@
 <section class="page">
   <div class="chapnum">CAPÍTULO 5</div>
   <h1 class="chap">Tipos de paso</h1>
-  <p class="lead">Estos son los pasos que trae Narrative Graph. Tu juego puede añadir los suyos: salen en el mismo buscador. La lista completa, con todos sus campos, se genera en <span class="menu">⚙ › Guardar el manual de pasos</span>.</p>
+  <p class="lead">Estos son los pasos que trae Narrative Graph. Tu juego puede añadir los suyos: salen en el bloque «Del juego» del buscador. La lista completa, con todos sus campos, se genera en <span class="menu">⚙ › Guardar el manual de pasos</span>.</p>
 
   <span class="cat">FLUJO</span>
   <table class="c">
@@ -243,7 +243,7 @@
 
   <span class="cat">ESCENA Y CINE</span>
   <table class="c">
-    <tr><td>Lanzar y esperar</td><td>Pide a tu juego que empiece algo (una cinemática, un combate, un minijuego) y espera a que avise de que ha terminado.</td></tr>
+    <tr><td>Pedir al juego</td><td>Pide a tu juego que haga algo (una cinemática, un combate, un minijuego) con un id y sus datos, y sigue por la salida que el juego diga. Si nadie lo atiende, sigue por la salida de reserva y lo avisa en consola.</td></tr>
     <tr><td>Reproducir Timeline</td><td>Reproduce una Timeline de la escena y espera a que acabe.</td></tr>
     <tr><td>Escena aditiva</td><td>Carga o descarga una escena encima de la actual.</td></tr>
     <tr><td>Fundido</td><td>Tapa o destapa la pantalla.</td></tr>
@@ -264,6 +264,11 @@
     <tr><td>Música</td><td>Pone una música. <b>Parar música</b> la quita con un fundido.</td></tr>
     <tr><td>Efecto · Voz</td><td>Un sonido suelto o una línea de voz.</td></tr>
     <tr><td>Volumen · Silenciar</td><td>Baja, sube o silencia un bus (música, efectos, diálogo).</td></tr>
+  </table>
+
+  <span class="cat">DEL JUEGO</span>
+  <table class="c">
+    <tr><td>Peticiones de tu juego</td><td>Batalla, combate, cinemática, minijuego, viaje, desbloqueo… Cada petición que añade tu juego sale como un paso del bloque «Del juego». El grafo solo la pide y sigue por la salida que diga.</td></tr>
   </table>
 
   <span class="cat">OTROS</span>
@@ -567,12 +572,12 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
     <div>
       <h2 style="margin-top:2mm">Dónde está…</h2>
       <table class="c">
-        <tr><td>Abrir el editor</td><td>Tools › Narrative Graph</td></tr>
+        <tr><td>Abrir el editor</td><td>Liyodev › Grafo narrativo</td></tr>
         <tr><td>Idioma</td><td>⚙ › Idioma del editor</td></tr>
         <tr><td>Ficha del jugador</td><td>⚙ › Ficha del jugador</td></tr>
         <tr><td>Escena de arranque</td><td>⚙ › Probar desde un paso</td></tr>
         <tr><td>Conexiones</td><td>⚙ › Conexiones del juego</td></tr>
-        <tr><td>Monitor de señales</td><td>En vivo, o Tools › Narrative Graph</td></tr>
+        <tr><td>Monitor de señales</td><td>En vivo, o Liyodev › Grafo narrativo</td></tr>
         <tr><td>Plantillas</td><td>Assets/NarrativeTemplates</td></tr>
       </table>
     </div>
@@ -588,5 +593,32 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <h3>¿Los retoques se guardan en el proyecto?</h3>
   <p>No: son solo de tu ordenador y no tocan el grafo. Para compartirlos, fíjalos como punto de arranque.</p>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>17</b></span></div>
+</section>
+<!-- 13 NOVEDADES -->
+<section class="page">
+  <div class="chapnum">CAPÍTULO 13</div>
+  <h1 class="chap">Novedades 0.9</h1>
+  <p class="lead">Lo último del paquete. Si vienes de una versión anterior, esto es lo que cambia.</p>
+
+  <h2>Menú con marca</h2>
+  <p>Todo el paquete vive en <span class="menu">Liyodev › Grafo narrativo</span>: Abrir editor, Nuevo grafo, Mapa de la historia, Monitor de señales, Dividir por capítulo, Guardar el manual de pasos, Abrir el manual y Comprobar el kit. Los ejemplos, en <span class="menu">Liyodev › Grafo narrativo › Ejemplos</span>.</p>
+
+  <h2>Dos bloques en «Nuevo paso»</h2>
+  <p>El buscador separa <b>Historia</b> (lo que el grafo sabe contar: flujo, misiones, diálogos, personajes, señales, objetos, puesta en escena) y <b>Del juego</b> (las peticiones que añade tu juego). El bloque del juego está plegado: escribe para buscarlo y se abre. Así el vocabulario de la historia no se mezcla con las mecánicas de un juego concreto.</p>
+
+  <h2>Pedir al juego</h2>
+  <p>Un solo paso para todo lo que hace tu juego: un id, datos (texto, número, asset) y salidas con nombre (<code>Victoria</code>, <code>Derrota</code>, <code>Hecho</code>, <code>Fallo</code>…). El juego lo atiende con su manejador; el grafo espera y sigue por la salida que diga. Si nadie lo atiende, la historia no se cuelga: sigue por la salida de reserva.</p>
+
+  <h2>El mapa solo enseña lo que la historia coloca</h2>
+  <p>Un personaje sale si un paso dice dónde está (una marca), si dice que no está (bandeja «No están en escena») o si un hecho de posición lo coloca. El jugador sale en el punto de arranque de la prueba. «Lo de siempre» sin posición no inventa un sitio: el mapa no rellena con todo el reparto.</p>
+
+  <h2>Mapa en esquema por escenas</h2>
+  <p>El mapa ya no es una foto: cada escena es una banda y cada sitio un rectángulo. Los personajes caen en el sitio que les da el paso; los que no están, en «No están en escena», y los que no tienen sitio, en «Sin sitio». Sin botón «Hacer vista desde arriba» y sin islas que no eran.</p>
+
+  <h2>Comprobar el kit</h2>
+  <p><span class="menu">Liyodev › Grafo narrativo › Comprobar el kit</span> revisa que todos los pasos tengan su ficha, que las peticiones se presenten y qué puertos no tienen implementación en tu proyecto. Deja el informe en <code>Logs/NarrativeGraph/qa.txt</code>.</p>
+
+  <div class="tip"><b>El manual completo sigue siendo esta guía.</b> La lista exacta de campos de cada paso se genera en <span class="menu">⚙ › Guardar el manual de pasos</span>.</div>
+  <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>18</b></span></div>
 </section>
 </body></html>

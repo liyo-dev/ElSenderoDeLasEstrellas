@@ -17,8 +17,10 @@ public interface ISceneBoundUIHideGuard
 
 /// <summary>
 /// UI persistente (Start.unity) que solo se ve en ciertas escenas: se enciende y se apaga sola al
-/// cambiar de escena o al aparecer la pantalla de carga. Esconderla durante una cinemática o la
-/// intro de un jefe no es cosa suya: eso va por <see cref="OcultablesDeCinematica"/>.
+/// cambiar de escena o al aparecer la pantalla de carga. Tampoco se enciende con una cinemática en
+/// marcha: el HUD del mundo se creaba justo al quitarse la pantalla de carga, ya empezado el
+/// prólogo, y salía en pantalla (INC-1229). Durante una cinemática, además, se esconde lo que
+/// apunta a <see cref="OcultablesDeCinematica"/>.
 /// </summary>
 public class SceneBoundUI : MonoBehaviour
 {
@@ -65,6 +67,12 @@ public class SceneBoundUI : MonoBehaviour
         // UI ligada al mundo: no se pinta encima de la pantalla de carga (INC-532). La que no tiene
         // escenas asignadas (diálogos, popups, texto dramático) gestiona su propia visibilidad.
         if (SceneTransitionLoader.PantallaDeCargaVisible) return false;
+
+        // Ni con una cinemática en marcha: se apaga al empezar y vuelve al acabar (ver
+        // OnAnySequenceActiveChanged). Si no, el HUD del jugador se encendía en mitad de la
+        // cinemática de entrada solo porque su escena seguía cargada (INC-1229).
+        if (CinematicSequencerBase.AnySequenceActive) return false;
+
         for (int i = 0; i < SceneManager.sceneCount; i++)
             if (allowedScenes.Contains(SceneManager.GetSceneAt(i).name))
                 return true;
@@ -93,8 +101,12 @@ public class SceneBoundUI : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
         SceneTransitionLoader.PantallaDeCargaCambiada += ApplySceneState;
+        CinematicSequencerBase.OnAnySequenceActiveChanged += OnAnySequenceActiveChanged;
         ApplySceneState();
     }
+
+    // Al empezar o acabar una cinemática se vuelve a mirar si esta UI puede estar encendida.
+    private void OnAnySequenceActiveChanged(bool _) => ApplySceneState();
 
     private void OnDestroy()
     {
@@ -105,6 +117,7 @@ public class SceneBoundUI : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
         SceneTransitionLoader.PantallaDeCargaCambiada -= ApplySceneState;
+        CinematicSequencerBase.OnAnySequenceActiveChanged -= OnAnySequenceActiveChanged;
     }
 
     private void OnActiveSceneChanged(Scene _, Scene newScene) => ApplySceneState();

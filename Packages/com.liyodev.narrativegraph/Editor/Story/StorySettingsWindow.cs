@@ -59,7 +59,7 @@ namespace NarrativeGraphEditor.Story
                 () => EditorGUIUtility.systemCopyBuffer = NarrativeGraphText.Chapter(_graph?.Invoke()), graph != null);
             Tool(tools, StoryText.T("Guardar el manual de pasos", "Save the step manual"),
                 StoryText.T("Todos los tipos de paso con sus campos, en STEP_TYPES.md.", "Every step type with its fields, in STEP_TYPES.md."),
-                () => EditorApplication.ExecuteMenuItem("Tools/Narrative Graph/Guardar el manual de pasos"));
+                () => EditorApplication.ExecuteMenuItem("Liyodev/Grafo narrativo/Guardar el manual de pasos"));
 
             // Play from a step
             var play = Section(scroll, StoryText.T("Probar desde un paso", "Play from a step"));

@@ -1,33 +1,35 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Sendero.Core.Feedback;
+using UnityEngine.AI;
 
 /// <summary>
 /// Componente para plataformas que pueden elevarse o hundirse.
 /// Usado por PressurePlate u otros mecanismos de puzzle.
 ///
-/// Se mueve por física: un Rigidbody cinemático (lo añade si falta) que avanza en el paso de física
-/// con MovePosition. Así el jugador, que también es un Rigidbody, sube empujado por
-/// la plataforma en cada paso en vez de recolocarse a tirones contra un collider que se movía por
+/// Se mueve por fÃ­sica: un Rigidbody cinemÃ¡tico (lo aÃ±ade si falta) que avanza en el paso de fÃ­sica
+/// con MovePosition. AsÃ­ el jugador, que tambiÃ©n es un Rigidbody, sube empujado por
+/// la plataforma en cada paso en vez de recolocarse a tirones contra un collider que se movÃ­a por
 /// Transform en Update. Ver INC-524.
 /// </summary>
 public class PlatformElevator : MonoBehaviour
 {
-    [Header("Configuración de Movimiento")]
-    [Tooltip("Altura a la que se eleva la plataforma (relativa a la posición inicial)")]
+    [Header("ConfiguraciÃ³n de Movimiento")]
+    [Tooltip("Altura a la que se eleva la plataforma (relativa a la posiciÃ³n inicial)")]
     [SerializeField] private float raiseHeight = 3f;
     
     [Tooltip("Velocidad de movimiento de la plataforma")]
     [SerializeField] private float moveSpeed = 2f;
     
-    [Tooltip("Curva de animación para suavizar el movimiento")]
+    [Tooltip("Curva de animaciÃ³n para suavizar el movimiento")]
     [SerializeField] private AnimationCurve movementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     
     [Header("Encadenamiento")]
-    [Tooltip("Delay antes de que esta plataforma comience a moverse (útil para efectos en cascada)")]
+    [Tooltip("Delay antes de que esta plataforma comience a moverse (Ãºtil para efectos en cascada)")]
     [SerializeField] private float delayBeforeMoving;
     
-    [Tooltip("Plataformas que se activarán después de que esta termine de moverse")]
+    [Tooltip("Plataformas que se activarÃ¡n despuÃ©s de que esta termine de moverse")]
     [SerializeField] private PlatformElevator[] chainedPlatforms;
     
     [Header("Feedback")]
@@ -37,13 +39,13 @@ public class PlatformElevator : MonoBehaviour
     [Tooltip("Clave de SFX al terminar de moverse")]
     [SerializeField] private string movementStopSfxKey = "Platform_Move_Stop";
     
-    [Tooltip("VFX que acompaña a la plataforma mientras se mueve (del pool de VFX)")]
+    [Tooltip("VFX que acompaÃ±a a la plataforma mientras se mueve (del pool de VFX)")]
     [SerializeField] private GameObject movementVFX;
     
-    [Tooltip("Transform donde se instancia el VFX (si es null, usa la posición de la plataforma)")]
+    [Tooltip("Transform donde se instancia el VFX (si es null, usa la posiciÃ³n de la plataforma)")]
     [SerializeField] private Transform vfxSpawnPoint;
     
-    [Tooltip("Segundos que sigue el VFX tras parar la plataforma, para que termine su animación, antes de volver al pool")]
+    [Tooltip("Segundos que sigue el VFX tras parar la plataforma, para que termine su animaciÃ³n, antes de volver al pool")]
     [SerializeField] private float vfxLifetime = 3f;
     
     [Header("Estado")]
@@ -64,7 +66,7 @@ public class PlatformElevator : MonoBehaviour
         _rb.isKinematic = true;
         _rb.useGravity = false;
 
-        // Posiciones en Awake (no en Start): una restauración de partida (EstadoPersistente,
+        // Posiciones en Awake (no en Start): una restauraciÃ³n de partida (EstadoPersistente,
         // ActivationCounter) puede llamar a TeleportToRaised antes del Start de este objeto.
         _originalPosition = transform.position;
         _raisedPosition = _originalPosition + Vector3.up * raiseHeight;
@@ -72,21 +74,21 @@ public class PlatformElevator : MonoBehaviour
 
     private void Start()
     {
-        // La misma interpolación que el jugador: si solo uno de los dos interpolara, al subir juntos
-        // se verían desfasados unos centímetros que cambian cada fotograma.
+        // La misma interpolaciÃ³n que el jugador: si solo uno de los dos interpolara, al subir juntos
+        // se verÃ­an desfasados unos centÃ­metros que cambian cada fotograma.
         var jugador = PlayerService.Player;
         var rbJugador = jugador != null ? jugador.GetComponent<Rigidbody>() : null;
         _rb.interpolation = rbJugador != null ? rbJugador.interpolation : RigidbodyInterpolation.Interpolate;
 
-        // Sincronizar el flag isRaised con la posición real
-        // Si está marcado en Inspector pero no está en posición elevada, teletransportar
+        // Sincronizar el flag isRaised con la posiciÃ³n real
+        // Si estÃ¡ marcado en Inspector pero no estÃ¡ en posiciÃ³n elevada, teletransportar
         if (isRaised && (transform.position - _raisedPosition).sqrMagnitude > 0.0001f)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlatformElevator] {name} está marcado como 'Is Raised', teletransportando a posición elevada");
+            Debug.Log($"[PlatformElevator] {name} estÃ¡ marcado como 'Is Raised', teletransportando a posiciÃ³n elevada");
 #endif
             Colocar(_raisedPosition);
-            _originalPosition = _raisedPosition - Vector3.up * raiseHeight; // Recalcular posición original
+            _originalPosition = _raisedPosition - Vector3.up * raiseHeight; // Recalcular posiciÃ³n original
         }
         
         // Debug.Log($"[PlatformElevator] {name} - Inicializado. Original: {_originalPosition}, Raised: {_raisedPosition}, Current: {transform.position}, IsRaised: {isRaised}");
@@ -95,18 +97,18 @@ public class PlatformElevator : MonoBehaviour
     /// <summary>
     /// Eleva la plataforma
     /// </summary>
-    /// <param name="isReversion">Si es true, es una reversión (sin VFX, solo shake)</param>
+    /// <param name="isReversion">Si es true, es una reversiÃ³n (sin VFX, solo shake)</param>
     public void Raise(bool isReversion = false)
     {
-        // Si ya está en movimiento hacia arriba, no hacer nada
+        // Si ya estÃ¡ en movimiento hacia arriba, no hacer nada
         if (_isMoving && isRaised) return;
         
-        // Si ya está en la posición elevada (tolerancia de 0.1), no mover
+        // Si ya estÃ¡ en la posiciÃ³n elevada (tolerancia de 0.1), no mover
         if (Vector3.Distance(transform.position, _raisedPosition) < 0.1f)
         {
             isRaised = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlatformElevator] {name} ya está en posición elevada");
+            Debug.Log($"[PlatformElevator] {name} ya estÃ¡ en posiciÃ³n elevada");
 #endif
             return;
         }
@@ -114,6 +116,7 @@ public class PlatformElevator : MonoBehaviour
         if (_moveCoroutine != null)
         {
             StopCoroutine(_moveCoroutine);
+            SoltarLoQueLleva();
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -123,20 +126,20 @@ public class PlatformElevator : MonoBehaviour
     }
 
     /// <summary>
-    /// Hunde la plataforma (vuelve a su posición original)
+    /// Hunde la plataforma (vuelve a su posiciÃ³n original)
     /// </summary>
-    /// <param name="isReversion">Si es true, es una reversión (sin VFX, solo shake)</param>
+    /// <param name="isReversion">Si es true, es una reversiÃ³n (sin VFX, solo shake)</param>
     public void Lower(bool isReversion = false)
     {
-        // Si ya está en movimiento hacia abajo, no hacer nada
+        // Si ya estÃ¡ en movimiento hacia abajo, no hacer nada
         if (_isMoving && !isRaised) return;
         
-        // Si ya está en la posición baja (tolerancia de 0.1), no mover
+        // Si ya estÃ¡ en la posiciÃ³n baja (tolerancia de 0.1), no mover
         if (Vector3.Distance(transform.position, _originalPosition) < 0.1f)
         {
             isRaised = false;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlatformElevator] {name} ya está en posición original");
+            Debug.Log($"[PlatformElevator] {name} ya estÃ¡ en posiciÃ³n original");
 #endif
             return;
         }
@@ -144,6 +147,7 @@ public class PlatformElevator : MonoBehaviour
         if (_moveCoroutine != null)
         {
             StopCoroutine(_moveCoroutine);
+            SoltarLoQueLleva();
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -169,21 +173,27 @@ public class PlatformElevator : MonoBehaviour
         float duration = distance / moveSpeed;
         float elapsed = 0f;
         
-        // Feedback al comenzar (sin VFX si es reversión)
+        // Feedback al comenzar (sin VFX si es reversiÃ³n)
         PlayMovementStartFeedback(duration, isReversion);
         
-        // Mover la plataforma en el paso de física (lo que va encima la acompaña sin tirones)
+        // Mover la plataforma en el paso de fÃ­sica (lo que va encima la acompaÃ±a sin tirones)
         var paso = new WaitForFixedUpdate();
+        Vector3 ultimo = _rb.position;
+        RecogerLoQueLleva();
         while (elapsed < duration)
         {
             yield return paso;
             elapsed += Time.fixedDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            _rb.MovePosition(Vector3.Lerp(startPosition, targetPosition, movementCurve.Evaluate(t)));
+            Vector3 destino = Vector3.Lerp(startPosition, targetPosition, movementCurve.Evaluate(t));
+            _rb.MovePosition(destino);
+            LlevarLoQueEsteEncima(destino - ultimo);
+            ultimo = destino;
         }
         
-        // Esperar a que la física aplique el último paso antes de dar el movimiento por acabado
+        // Esperar a que la fÃ­sica aplique el Ãºltimo paso antes de dar el movimiento por acabado
         yield return paso;
+        SoltarLoQueLleva();
         isRaised = raising;
         _isMoving = false;
         
@@ -225,21 +235,21 @@ public class PlatformElevator : MonoBehaviour
     /// </summary>
     private void PlayMovementStartFeedback(float duracion, bool isReversion = false)
     {
-        // SFX (siempre, reversión o no)
+        // SFX (siempre, reversiÃ³n o no)
         if (!string.IsNullOrEmpty(movementStartSfxKey))
         {
             AudioService.Instance?.PlaySFX(movementStartSfxKey, worldPosition: transform.position);
         }
         
-        // Camera shake - SOLO en reversión (al bajar después de quitar objeto)
+        // Camera shake - SOLO en reversiÃ³n (al bajar despuÃ©s de quitar objeto)
         // Al subir, el shake ya se hace en el PressurePlate.Activate()
         if (isReversion)
         {
             FeedbackService.CameraShake(0.2f, 0.3f);
         }
         
-        // VFX - Solo si NO es reversión. Va colgado de la plataforma y vuelve al pool cuando acaba
-        // el movimiento más vfxLifetime; si un movimiento nuevo corta al anterior, se recoge ya.
+        // VFX - Solo si NO es reversiÃ³n. Va colgado de la plataforma y vuelve al pool cuando acaba
+        // el movimiento mÃ¡s vfxLifetime; si un movimiento nuevo corta al anterior, se recoge ya.
         if (!isReversion && movementVFX != null && VfxPoolService.Instance != null)
         {
             RecogerVFX();
@@ -268,7 +278,7 @@ public class PlatformElevator : MonoBehaviour
             AudioService.Instance?.PlaySFX(movementStopSfxKey, worldPosition: transform.position);
         }
         
-        // El VFX sigue vfxLifetime más (ya programado en el pool) para que termine su animación.
+        // El VFX sigue vfxLifetime mÃ¡s (ya programado en el pool) para que termine su animaciÃ³n.
         _currentVFX = null;
     }
 
@@ -278,18 +288,19 @@ public class PlatformElevator : MonoBehaviour
     protected virtual void OnMovementComplete(bool wasRaised)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlatformElevator] {name} completó movimiento. Elevada: {wasRaised}");
+        Debug.Log($"[PlatformElevator] {name} completÃ³ movimiento. Elevada: {wasRaised}");
 #endif
     }
 
     /// <summary>
-    /// Teletransporta la plataforma a la posición elevada sin animación
+    /// Teletransporta la plataforma a la posiciÃ³n elevada sin animaciÃ³n
     /// </summary>
     public void TeleportToRaised()
     {
         if (_moveCoroutine != null)
         {
             StopCoroutine(_moveCoroutine);
+            SoltarLoQueLleva();
         }
         
         Colocar(_raisedPosition);
@@ -298,13 +309,14 @@ public class PlatformElevator : MonoBehaviour
     }
 
     /// <summary>
-    /// Teletransporta la plataforma a la posición original sin animación
+    /// Teletransporta la plataforma a la posiciÃ³n original sin animaciÃ³n
     /// </summary>
     public void TeleportToLowered()
     {
         if (_moveCoroutine != null)
         {
             StopCoroutine(_moveCoroutine);
+            SoltarLoQueLleva();
         }
         
         Colocar(_originalPosition);
@@ -312,7 +324,7 @@ public class PlatformElevator : MonoBehaviour
         _isMoving = false;
     }
 
-    /// Salto sin animación: mueve a la vez el Transform y el Rigidbody para que la física no lo
+    /// Salto sin animaciÃ³n: mueve a la vez el Transform y el Rigidbody para que la fÃ­sica no lo
     /// interpole desde donde estaba.
     private void Colocar(Vector3 posicion)
     {
@@ -321,7 +333,7 @@ public class PlatformElevator : MonoBehaviour
     }
 
     /// <summary>
-    /// Actualiza la altura de elevación (útil para ajustar en runtime)
+    /// Actualiza la altura de elevaciÃ³n (Ãºtil para ajustar en runtime)
     /// </summary>
     public void SetRaiseHeight(float height)
     {
@@ -342,13 +354,64 @@ public class PlatformElevator : MonoBehaviour
     public bool IsMoving => _isMoving;
     public bool IsRaised => isRaised;
 
-    /// <summary>Sube la plataforma (para eventos sin parámetros, p. ej. un interactuable).</summary>
+    // â”€â”€ Lo que va encima â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Los compaÃ±eros que lleva la IA van con el cuerpo cinemÃ¡tico y su NavMeshAgent: la fÃ­sica no
+    // los empuja, asÃ­ que la plataforma los traslada ella. El jugador lo empuja la fÃ­sica sola.
+
+    private readonly List<Transform> _llevados = new List<Transform>();
+    private readonly List<NavMeshAgent> _agentesParados = new List<NavMeshAgent>();
+
+    private void RecogerLoQueLleva()
+    {
+        SoltarLoQueLleva();
+        int cuantos = DanoEnZona.CuerposDelGrupo(out var cuerpos);
+        for (int i = 0; i < cuantos; i++)
+        {
+            if (cuerpos[i].EsElJugador) continue;
+            var cuerpo = cuerpos[i].Transform;
+            if (cuerpo == null || !Encima(cuerpo)) continue;
+
+            _llevados.Add(cuerpo);
+            var agente = cuerpo.GetComponent<NavMeshAgent>();
+            if (agente == null || !agente.enabled) continue;
+            agente.enabled = false;
+            _agentesParados.Add(agente);
+        }
+    }
+
+    private void LlevarLoQueEsteEncima(Vector3 delta)
+    {
+        if (_llevados.Count == 0 || delta.sqrMagnitude < 0.0000001f) return;
+        for (int i = 0; i < _llevados.Count; i++)
+            if (_llevados[i] != null) _llevados[i].position += delta;
+    }
+
+    private void SoltarLoQueLleva()
+    {
+        for (int i = 0; i < _agentesParados.Count; i++)
+            if (_agentesParados[i] != null) _agentesParados[i].enabled = true;
+        _agentesParados.Clear();
+        _llevados.Clear();
+    }
+
+    /// <summary>Â¿Ese cuerpo estÃ¡ de pie sobre la plataforma? (escala del cubo aparte).</summary>
+    private bool Encima(Transform cuerpo)
+    {
+        Vector3 local = transform.InverseTransformPoint(cuerpo.position);
+        if (Mathf.Abs(local.x) > 0.55f || Mathf.Abs(local.z) > 0.55f) return false;
+        float techo = transform.position.y + 0.5f * transform.localScale.y;
+        return cuerpo.position.y >= techo - 0.4f && cuerpo.position.y <= techo + 2.5f;
+    }
+
+    private void OnDisable() => SoltarLoQueLleva();
+
+    /// <summary>Sube la plataforma (para eventos sin parÃ¡metros, p. ej. un interactuable).</summary>
     public void MoveUp() => Raise();
 
-    /// <summary>Baja la plataforma (para eventos sin parámetros).</summary>
+    /// <summary>Baja la plataforma (para eventos sin parÃ¡metros).</summary>
     public void MoveDown() => Lower();
 
-    /// <summary>Si está arriba (o subiendo) la baja; si no, la sube.</summary>
+    /// <summary>Si estÃ¡ arriba (o subiendo) la baja; si no, la sube.</summary>
     public void Toggle()
     {
         if (isRaised) Lower();
@@ -362,22 +425,22 @@ public class PlatformElevator : MonoBehaviour
         Vector3 originalPos = Application.isPlaying ? _originalPosition : transform.position;
         Vector3 raisedPos = originalPos + Vector3.up * raiseHeight;
         
-        // Dibujar posición original
+        // Dibujar posiciÃ³n original
         Gizmos.color = Color.yellow;
         DrawPlatformGizmo(originalPos);
         
-        // Dibujar posición elevada
+        // Dibujar posiciÃ³n elevada
         Gizmos.color = Color.green;
         DrawPlatformGizmo(raisedPos);
         
-        // Dibujar línea de recorrido
+        // Dibujar lÃ­nea de recorrido
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(originalPos, raisedPos);
         
-        // Dibujar flechas para indicar dirección
+        // Dibujar flechas para indicar direcciÃ³n
         DrawArrow(originalPos, Vector3.up, raiseHeight);
         
-        // Dibujar líneas a plataformas encadenadas
+        // Dibujar lÃ­neas a plataformas encadenadas
         if (chainedPlatforms != null && chainedPlatforms.Length > 0)
         {
             Gizmos.color = Color.magenta;

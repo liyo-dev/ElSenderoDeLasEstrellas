@@ -30,11 +30,28 @@ public static class OcultablesDeCinematica
 
     private static readonly List<IOcultableDuranteCinematica> s_registrados = new();
 
+    /// Quién tiene pedida la pantalla tapada ahora mismo (cinemáticas, intro de jefe, textos
+    /// dramáticos). Se guarda para esconder también a los sistemas que se apunten más tarde: el
+    /// HUD del mundo se crea o se activa al cargar la escena, y a veces eso pasa después de que
+    /// arranque la cinemática de entrada (el prólogo), así que sin esto se quedaba en pantalla.
+    private static readonly List<object> s_quienesTapan = new();
+
     public static void Registrar(IOcultableDuranteCinematica ocultable)
     {
         if (ocultable == null) return;
         if (s_registrados.Contains(ocultable)) return;
         s_registrados.Add(ocultable);
+
+        for (int i = 0; i < s_quienesTapan.Count; i++)
+        {
+            try { ocultable.Ocultar(s_quienesTapan[i]); }
+            catch (System.Exception ex)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[OcultablesDeCinematica] Un sistema nuevo no se ha podido esconder: {ex.Message}");
+#endif
+            }
+        }
     }
 
     public static void Quitar(IOcultableDuranteCinematica ocultable)
@@ -48,6 +65,7 @@ public static class OcultablesDeCinematica
     /// empezar por la escena de una cinemática en vez de por Start).
     public static int OcultarTodos(object quien)
     {
+        if (quien != null && !s_quienesTapan.Contains(quien)) s_quienesTapan.Add(quien);
         LimpiarMuertos();
         for (int i = 0; i < s_registrados.Count; i++)
         {
@@ -64,6 +82,7 @@ public static class OcultablesDeCinematica
 
     public static void MostrarTodos(object quien)
     {
+        s_quienesTapan.Remove(quien);
         LimpiarMuertos();
         for (int i = 0; i < s_registrados.Count; i++)
         {
@@ -87,5 +106,9 @@ public static class OcultablesDeCinematica
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => s_registrados.Clear();
+    static void ResetStatics()
+    {
+        s_registrados.Clear();
+        s_quienesTapan.Clear();
+    }
 }

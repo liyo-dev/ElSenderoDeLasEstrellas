@@ -27,19 +27,3 @@ Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PAS
   `will.py`. Se le ha dado grosor por dentro con `../Caras/grosor_pelo.py` (6 mm) y ya no deja ver huecos desde abajo.
   Ojo: el `Hair16_Heroe` que hay dentro de `will.blend` es el que genera el script, no el del juego.
 - Lo anterior, en `Versiones antiguas/Antes del faldón para sentarse (2026-11-14)/`.
-
-## 15 nov 2026 — pelo de héroe barrido, estilo Duskfade (INC-1225)
-- Raúl: «mejorar el pelo de Will y hacerlo parecido a este [referencia de Duskfade] pero con su color rubito».
-- `pelo_duskfade.py` parte del `Hair16_Heroe.fbx` del juego (no de cero) y lo peina: quita la capa interior del
-  grosor viejo, recoge los picos pequeños al casquete, ensancha y baja los grandes hacia atrás/abajo (el copete se
-  queda alto), da volumen a la coronilla y la nuca, baja el flequillo en diagonal por su derecha y vuelve a dar
-  6 mm de grosor desde la cara exterior. Mismos materiales `Pelo`/`PeloClaro` y mismos pesos a «head»; el rubio
-  miel sigue saliendo de la ficha del personaje.
-- `pelo_duskfade.blend` es el resultado (cabeza + pelo + esqueleto modular). El FBX va a
-  `Assets/Art/Characters/Protagonistas/Will/Hair16_Heroe.fbx`, a `para_unity/Hair16_Heroe.fbx` y a
-  `../Pelo/para_unity/Will/Hair16_Heroe.fbx`; el anterior, en `Versiones antiguas/Antes del pelo Duskfade (2026-11-15)/`.
-- Chequeo `../Caras/chequeo_pelo.py` con la línea de Will (`1.19 1.10 0.82`): **PASA** (piel 0,33 %, revés 0,79 %,
-  peor vista 2,2 %, parpadeo 0,99 %). Informe y rejilla en `chequeo/pelo.md` y `chequeo/pelo.png`.
-- Regenerar: `python pelo_duskfade.py -- modular.blend Hair16_Heroe.fbx salida.blend`, exportar con
-  `../Prendas/exportar_prenda.py` y pasar el chequeo. `modular.blend` = `ModularCharacterPolyart.fbx` importado.
-- Sin probar en juego.

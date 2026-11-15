@@ -169,7 +169,14 @@ public class DeseoEnElSenderoBeat : SequenceBeat
             foreach (var rb in m.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
             creados.Add(m);
             cuerpo = m.transform;
-            animMago = m.GetComponentInChildren<Animator>();
+            // El prefab trae varios cuerpos de demo con Animator; el del NPC es el que lleva NPC_NoWeapon.
+            foreach (var a in m.GetComponentsInChildren<Animator>(true))
+            {
+                if (a.runtimeAnimatorController == null) continue;
+                if (animMago == null) animMago = a;
+                if (a.runtimeAnimatorController.name.Contains("NPC_NoWeapon")) { animMago = a; break; }
+            }
+            if (animMago == null) animMago = m.GetComponentInChildren<Animator>(true);
             if (animMago != null) animMago.applyRootMotion = false;
             emocion = m.GetComponentInChildren<NPCEmotionController>(true);
             emocion?.SetEmotion(NPCEmotion.Neutral);
@@ -273,7 +280,7 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         var deCara = new[] { nucleo, resplandor, contraluz, brilloI, brilloD, brilloEstrella };
         float t = 0f, fin = Mathf.Max(28f, segundos);
         bool dicho1 = false, dicho2 = false, dicho3 = false, gestoPoder = false;
-        bool hechizoDelEstallido = false, clin = false, risa = false, sonrisa = false;
+        bool hechizoDelEstallido = false, clin = false, risa = false, sonrisa = false, andando = false;
         var lenteBase = cam.Lens;
         while (t < fin)
         {
@@ -354,7 +361,8 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                 if (cuerpo != null)
                 {
                     cuerpo.position = origen + PiesDelMago - Vector3.forward * Mathf.Lerp(5f, 0f, f);
-                    Caminar(animMago, f < 0.98f ? 0.65f : 0f);
+                    if (!andando) { andando = true; Gesto(animMago, "Walk", 0.15f); }
+                    Caminar(animMago, 0.65f);
                 }
                 Vector3 pies = cuerpo != null ? cuerpo.position : origen + PiesDelMago;
                 Vector3 desde = pies - Vector3.forward * 5.2f + Vector3.up * 1.55f + Vector3.right * 0.35f;
@@ -364,7 +372,7 @@ public class DeseoEnElSenderoBeat : SequenceBeat
             else if (t < 13.5f)
             {
                 // Quieto en el altar, de espaldas: pide el deseo. La cara no se ve todavía.
-                if (cuerpo != null) { cuerpo.position = origen + PiesDelMago; Caminar(animMago, 0f); }
+                if (cuerpo != null) { cuerpo.position = origen + PiesDelMago; if (andando) { andando = false; Caminar(animMago, 0f); Gesto(animMago, "Idle_Normal_NoWeapon", 0.2f); } }
                 float f = VeloDeApertura.Suave((t - 6.5f) / 7f);
                 Vector3 desde = origen + PiesDelMago + new Vector3(0.35f, 1.55f, Mathf.Lerp(-5.2f, -3.9f, f));
                 cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(altar - desde));
@@ -403,10 +411,10 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                         VfxPoolService.Instance.Play(ondaDelEstallido, pecho, Quaternion.identity, 2.5f);
                 }
             }
-            else if (t < 19.1f)
+            else if (t < 19.6f)
             {
                 // «¡Por fin!» con los brazos al frente; la cámara rodea al mago hasta su cara y su sonrisa.
-                float f = VeloDeApertura.Suave((t - 16.2f) / 2.9f);
+                float f = VeloDeApertura.Suave((t - 16.2f) / 3.4f);
                 Vector3 centro = origen + PiesDelMago + Vector3.up * 1.3f;
                 float ang = Mathf.Lerp(95f, 15f, f) * Mathf.Deg2Rad;
                 float radio = Mathf.Lerp(4.2f, 2.3f, f);
@@ -436,13 +444,13 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                     Gesto(animMago, "Laugh_Carcajada");
                     if (!string.IsNullOrEmpty(textoRisa)) PresentadorDeLinea.SonarLaVoz(textoRisa);
                 }
-                if (!sonrisa && f > 0.75f && emocion != null) { sonrisa = true; emocion.SetEmotion(NPCEmotion.Smirk); }
+                if (!sonrisa && f > 0.8f && emocion != null) { sonrisa = true; emocion.SetEmotion(NPCEmotion.Smirk); }
             }
-            else if (t < 20.2f)
+            else if (t < 21.6f)
             {
                 // «Clin»: algo le llama la atención; sigue de cara a cámara y dice «…¿Y ese poder?».
                 Vector3 cara = cabeza != null ? cabeza.position : ojos;
-                float f = VeloDeApertura.Suave((t - 19.1f) / 1.1f);
+                float f = VeloDeApertura.Suave((t - 19.6f) / 2.0f);
                 float ang = Mathf.Lerp(15f, 26f, f) * Mathf.Deg2Rad;
                 Vector3 desde = cara + new Vector3(Mathf.Sin(ang) * 2.1f, 0.02f, Mathf.Cos(ang) * 2.1f);
                 cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(cara - desde));
@@ -453,7 +461,7 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                     Gesto(animMago, "SenseSomethingStart_NoWeapon", 0.12f);
                     AudioService.Instance?.PlaySFX("SFX_Prologo_Plin", 0.8f, pecho);
                 }
-                if (!dicho3 && t > 19.4f)
+                if (!dicho3 && t > 20.6f)
                 {
                     dicho3 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPoder), 2.8f,
@@ -461,28 +469,45 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                     PresentadorDeLinea.SonarLaVoz(textoPoder);
                 }
             }
-            else if (t < 26f)
-            {
-                // La cámara se va rápido a la luz del poder, que crece.
-                float f = VeloDeApertura.Suave((t - 20.2f) / 2.2f);
-                Vector3 mirando = HaciaLaEstrella.normalized;
-                Vector3 desde = Vector3.Lerp(ojos - mirando * 2.4f + Vector3.up * 0.5f, ojos - mirando * 1.2f + Vector3.up * 0.5f, f);
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(posEstrella - desde));
-                fov = Mathf.Lerp(40f, 30f, f);
-                float aparece = VeloDeApertura.Suave((t - 20.2f) / 1.2f);
-                estrella.transform.localScale = Vector3.one * (0.7f + 0.2f * Mathf.Sin(t * 6f)) * aparece;
-                brilloEstrella.transform.localScale = Vector3.one * 3.5f * aparece;
-            }
             else
             {
-                // Por encima de su hombro, la estrella crece hasta llenar la pantalla.
-                float f = VeloDeApertura.Suave((t - 26f) / Mathf.Max(0.1f, fin - 26f));
-                Vector3 desde = ojos - HaciaLaEstrella.normalized * 2.2f + Vector3.up * 0.4f;
-                Vector3 hacia = Vector3.Lerp(desde, posEstrella, f * 0.94f);
-                cam.transform.SetPositionAndRotation(hacia, Quaternion.LookRotation(posEstrella - hacia));
-                estrella.transform.localScale = Vector3.one * Mathf.Lerp(0.9f, 8f, f);
-                brilloEstrella.transform.localScale = Vector3.one * Mathf.Lerp(4f, 26f, f);
+                // La cámara se queda con él: al acabar la frase se gira y mira atrás, y el punto
+                // amarillo del poder aparece al fondo, detrás de él. Sin viaje de cámara: se ve el
+                // gesto de girarse y lo que encuentra, que es lo que cuenta el plano.
+                Vector3 cara = cabeza != null ? cabeza.position : ojos;
+                float f = VeloDeApertura.Suave((t - 21.6f) / 2.2f);
+                float ang = Mathf.Lerp(26f, 33f, f) * Mathf.Deg2Rad;
+                float radio = Mathf.Lerp(2.1f, 3.1f, f);
+                Vector3 desde = cara + new Vector3(Mathf.Sin(ang) * radio, Mathf.Lerp(0.02f, 0.4f, f), Mathf.Cos(ang) * radio);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(cara - desde));
+                fov = Mathf.Lerp(26f, 32f, f);
+
+                // El giro va por el transform, no por el Animator: la cabeza primero y el cuerpo
+                // después, 150° hasta quedar de espaldas al plano mirando al punto.
+                float giro = VeloDeApertura.Suave((t - 21.5f) / 1.5f) * 150f;
+                if (cuerpo != null) cuerpo.rotation = Quaternion.Euler(0f, giro, 0f);
+
+                // El punto amarillo, al fondo, en el hueco que deja el giro.
+                float aparece = VeloDeApertura.Suave((t - 22.4f) / 1.4f);
+                Vector3 atras = cuerpo != null ? cuerpo.forward : Vector3.forward;
+                Vector3 posPunto = (cuerpo != null ? cuerpo.position : origen + PiesDelMago) + atras * 26f + Vector3.up * 2.2f;
+                estrella.transform.position = posPunto;
+                brilloEstrella.transform.position = posPunto;
+                float latido = 0.9f + 0.1f * Mathf.Sin(t * 4f);
+                estrella.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 0.85f, aparece) * latido;
+                brilloEstrella.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 5.5f, aparece) * latido;
                 VeloDeApertura.Poner(VeloDeApertura.ColorPapel, VeloDeApertura.Suave((t - (fin - 1.2f)) / 1.2f));
+            }
+
+            // Vida en el cuerpo aunque el Animator no tenga el estado pedido: se mece al estar
+            // quieto y da un paso con balanceo al andar. Si el Animator sí anima, esto solo mueve
+            // la raíz y no se nota.
+            if (cuerpo != null)
+            {
+                if (t < 6.5f)
+                    cuerpo.rotation = Quaternion.Euler(0f, 2.2f * Mathf.Sin(t * 7.5f), 0f);
+                else if (t < 19.6f)
+                    cuerpo.rotation = Quaternion.Euler(Mathf.Sin(t * 1.1f) * 0.8f, Mathf.Sin(t * 0.7f) * 1.6f, 0f);
             }
             if (!Mathf.Approximately(cam.Lens.FieldOfView, fov))
             {
@@ -520,6 +545,8 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         int h = Animator.StringToHash(estado);
         for (int capa = 0; capa < animator.layerCount; capa++)
             if (animator.HasState(capa, h)) { animator.CrossFadeInFixedTime(h, fundido, capa); return; }
+        // Los estados de dentro de una sub-máquina no los ve HasState: se prueba a pelo en la capa base.
+        animator.CrossFadeInFixedTime(h, fundido, 0);
     }
 
     /// Pone al Animator a andar (o a pararse) sin motor: los parámetros de locomoción del NPC.
@@ -529,8 +556,6 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         animator.SetFloat("InputVertical", velocidad);
         animator.SetFloat("InputHorizontal", 0f);
         animator.SetFloat("InputMagnitude", velocidad);
-        animator.SetBool("IsGrounded", true);
-        animator.SetFloat("GroundDistance", 0f);
     }
 }
 

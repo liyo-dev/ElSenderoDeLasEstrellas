@@ -74,7 +74,7 @@ namespace NarrativeGraphEditor.Story
             public NarrativeNode Model { get; set; }
         }
 
-        [MenuItem("Tools/Narrative Graph/Abrir editor")]
+        [MenuItem("Liyodev/Grafo narrativo/Abrir editor")]
         public static StoryGraphWindow Open()
         {
             // Opens as a tab next to the Scene view, where there is room for the canvas.

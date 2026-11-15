@@ -22,7 +22,7 @@ namespace NarrativeGraphEditor
     {
         public const int Port = 47821;
         const string EnabledKey = "NarrativeGraph.Bridge.Enabled";
-        const string MenuPath = "Tools/Narrative Graph/Permitir herramientas externas (puerto local)";
+        const string MenuPath = "Liyodev/Grafo narrativo/Permitir herramientas externas (puerto local)";
 
         static HttpListener s_listener;
         static Thread s_thread;

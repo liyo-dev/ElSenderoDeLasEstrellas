@@ -34,6 +34,14 @@ namespace Kits.Puzzles
         [SerializeField] private Modo modo = Modo.SeAbre;
         [Tooltip("Cómo está al empezar (antes de que nadie la dispare).")]
         [SerializeField] private bool activeAtStart;
+        [Tooltip("No se cierra mientras quede alguien del grupo del lado de donde se viene: se cierra cuando han pasado todos.")]
+        [SerializeField] private bool esperarAlGrupo = true;
+
+        /// <summary>
+        /// ¿Queda alguien del grupo del lado de atrás de la puerta? Lo dice el juego: (punto de la
+        /// puerta, hacia donde se sale). El kit no sabe quién es el grupo.
+        /// </summary>
+        public static Func<Vector3, Vector3, bool> QuedaAlguienDetras;
 
         [Header("Aspecto")]
         [Tooltip("Lo que se mueve al abrirse o aparecer. Si se deja vacío, se mueve este objeto.")]
@@ -59,6 +67,11 @@ namespace Kits.Puzzles
         private Transform _visual;
         private Vector3 _visualLocalBase;
         private bool _permanente;
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics() => QuedaAlguienDetras = null;
+#endif
 
         private void Awake()
         {
@@ -122,6 +135,14 @@ namespace Kits.Puzzles
             if (!IsActive || _permanente) return;
             RemainingBeats--;
             if (RemainingBeats > 0) return;
+
+            // Se cierra cuando le toca… salvo que quede alguien del grupo por pasar.
+            if (esperarAlGrupo && QuedaAlguienDetras != null && QuedaAlguienDetras(transform.position, transform.forward))
+            {
+                RemainingBeats = 1;
+                return;
+            }
+
             Colocar(false);
             alCerrar.Invoke();
         }

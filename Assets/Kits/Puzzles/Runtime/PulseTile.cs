@@ -48,6 +48,7 @@ namespace Kits.Puzzles
         private MusicPulse _pulse;
         private Transform _visual;
         private Vector3 _visualLocalBase;
+        private Vector3 _visualLocalScale;
         private int _beatsLeft;
         private float _shakeTime;
 
@@ -55,6 +56,7 @@ namespace Kits.Puzzles
         {
             _visual = visualRoot != null ? visualRoot : transform;
             _visualLocalBase = _visual.localPosition;
+            _visualLocalScale = _visual.localScale;
             if (solidColliders == null || solidColliders.Length == 0)
                 solidColliders = GetComponentsInChildren<Collider>(true);
         }
@@ -86,7 +88,7 @@ namespace Kits.Puzzles
             _shakeTime = 0f;
             PonerColision(true);
             _visual.localPosition = _visualLocalBase;
-            _visual.localScale = Vector3.one;
+            _visual.localScale = _visualLocalScale;
         }
 
         /// <summary>Se engancha al pulso en cuanto esté: al cargar la escena puede activarse antes.</summary>

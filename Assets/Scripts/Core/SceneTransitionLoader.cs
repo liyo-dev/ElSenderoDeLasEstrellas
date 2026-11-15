@@ -160,6 +160,13 @@ public static class SceneTransitionLoader
                 // Mantener viva la UI durante el cambio de escena
                 Object.DontDestroyOnLoad(ui.gameObject);
 
+                // La pantalla de carga tiene que ir POR ENCIMA del telón (FeedbackService lo pinta
+                // en el orden 9998): si no, el negro del telón la tapa en cuanto se cierra para
+                // activar la escena, y el jugador ve que la carga "desaparece" y se queda a oscuras
+                // mientras el mundo termina de montarse (INC-1229).
+                foreach (var lienzo in ui.GetComponentsInChildren<Canvas>(true))
+                    lienzo.sortingOrder = 10000;
+
                 loadingUI = ui;
                 ui.ShowImmediate();
                 MarcarPantallaDeCarga(true);
@@ -260,8 +267,21 @@ public static class SceneTransitionLoader
         // descargada las descarta TimeScaleArbiterService al descargarse (sus claves mueren), y
         // forzar 1 anularía la pausa legítima de un sistema persistente.
 
-        // 4) La pantalla ya está en negro (se puso antes de activar la escena).
-        //    Pasamos directamente a apagar la overlay.
+        // 4) La pantalla ya está en negro (se puso antes de activar la escena). Pero la escena
+        //    activa todavía no es jugable: WorldBootstrap coloca al jugador, carga el interior del
+        //    ancla y no suelta el Telón hasta terminar, y la cinemática de arranque lo recoge
+        //    después. Hay que soltar la llave de esta carga y esperar a que el Telón se abra antes
+        //    de quitar la pantalla de carga; si no, la overlay se iba y se veía el negro del
+        //    Telón (INC-1229).
+        if (telonCerrado) { Telon.Soltar(ClaveTelon(targetScene)); telonCerrado = false; }
+
+        const float TopeEspera = 30f;
+        float limiteEspera = Time.unscaledTime + TopeEspera;
+        while (Telon.Cerrado && Time.unscaledTime < limiteEspera) yield return null;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (Telon.Cerrado)
+            Debug.LogWarning($"[SceneTransitionLoader] El Telón sigue cerrado {TopeEspera}s después de cargar '{targetScene}'; se quita la pantalla de carga igualmente.");
+#endif
 
         // 5) Apagar overlay con fade-out y limpieza
         if (ui != null)
@@ -279,12 +299,6 @@ public static class SceneTransitionLoader
             var unload = SceneManager.UnloadSceneAsync(overlayLoaded);
             while (unload != null && !unload.isDone) yield return null;
         }
-
-        // 6) Fade-out suave desde negro (revela la escena)
-        // Se activa si hubo overlay, o si la pantalla ya estaba en negro al iniciar la carga
-        // (p.ej. el minijuego hace fade a negro antes de llamar a Load).
-        // Ya no se destapa aquí: se suelta el telón y destapa él cuando nadie más lo retenga.
-        if (telonCerrado) Telon.Soltar(ClaveTelon(targetScene));
 
         yield break;
     }

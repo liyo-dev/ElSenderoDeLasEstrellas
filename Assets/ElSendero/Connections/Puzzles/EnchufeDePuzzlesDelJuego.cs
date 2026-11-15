@@ -20,10 +20,29 @@ public static class EnchufeDePuzzlesDelJuego
 
     private static bool EsElJugador(Collider col) => ControlDelJugador.EsElJugador(col);
 
+    /// <summary>
+    /// ¿Queda alguien del grupo por pasar la puerta? Cuenta a los que están del lado de donde se
+    /// viene (el contrario al que se sale) y cerca de ella: un compañero aparcado lejos no la deja
+    /// abierta para siempre.
+    /// </summary>
+    private static bool QuedaAlguienDetras(Vector3 punto, Vector3 salida)
+    {
+        const float Cerca = 18f;
+        int cuantos = DanoEnZona.CuerposDelGrupo(out var cuerpos);
+        for (int i = 0; i < cuantos; i++)
+        {
+            Vector3 desde = cuerpos[i].Posicion - punto;
+            if (desde.sqrMagnitude > Cerca * Cerca) continue;
+            if (Vector3.Dot(desde, salida) < 0f) return true;
+        }
+        return false;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void Enchufar()
     {
         WeightPlate.ResolveWeightBody = CuerpoQuePesa;
         PulseTide.IsTarget = EsElJugador;
+        BeatGate.QuedaAlguienDetras = QuedaAlguienDetras;
     }
 }

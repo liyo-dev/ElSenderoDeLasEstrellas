@@ -28,7 +28,7 @@ namespace NarrativeGraphEditor
         private string _lastReport = "";
         private Vector2 _scroll;
 
-        [MenuItem("Tools/Narrative Graph/Dividir por capítulo...")]
+        [MenuItem("Liyodev/Grafo narrativo/Dividir por capítulo...")]
         public static void OpenWindow()
         {
             var w = GetWindow<ChapterSplitWindow>();

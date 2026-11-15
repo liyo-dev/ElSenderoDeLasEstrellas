@@ -14,7 +14,7 @@ namespace NarrativeGraphSamples.ElFaro
     {
         public const string Folder = "Assets/El faro (ejemplo)";
 
-        [MenuItem("Tools/Narrative Graph/Ejemplos/Montar «El faro»")]
+        [MenuItem("Liyodev/Grafo narrativo/Ejemplos/Montar «El faro»")]
         public static void Build()
         {
             var folder = Folder;
@@ -55,7 +55,7 @@ namespace NarrativeGraphSamples.ElFaro
             Debug.Log("[El faro] Ejemplo montado en " + folder);
         }
 
-        [MenuItem("Tools/Narrative Graph/Ejemplos/Quitar «El faro»")]
+        [MenuItem("Liyodev/Grafo narrativo/Ejemplos/Quitar «El faro»")]
         public static void Remove()
         {
             if (AssetDatabase.IsValidFolder(Folder)) AssetDatabase.DeleteAsset(Folder);

@@ -138,7 +138,7 @@ namespace NarrativeGraphEditor
             return t.Name;
         }
 
-        [MenuItem("Tools/Narrative Graph/Guardar el manual de pasos")]
+        [MenuItem("Liyodev/Grafo narrativo/Guardar el manual de pasos")]
         static void SaveManual()
         {
             const string path = "Assets/STEP_TYPES.md";

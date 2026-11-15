@@ -11,6 +11,8 @@ using UnityEngine.Rendering;
 /// - el fantasma intangible (transparente) y la cinta roja de Mara, al shader de dibujo;
 /// - los últimos materiales con Quibli, para que su shader deje de entrar en la build: los de
 ///   escenario al dibujo y los de efectos a partículas sin luz;
+/// - las tarjetas de partículas de los packs (abejas, mariposas, diente de león, pétalos) al
+///   dibujo, translúcidas y por las dos caras, que es lo que les da la forma (INC-1219);
 /// - los cielos del menú principal y del prólogo, al cielo de dibujo del juego;
 /// - la imagen de reposo de los retratos del HUD (la que se ve antes de que el retrato elija su
 ///   expresión), que aún era el busto pintado antiguo.
@@ -32,14 +34,21 @@ public static class RestosAlAspectoDeDibujo
         "Assets/Plugins/Low Poly Modular Terrain Pack/Terrain_Assets/Materials/CPT_Terrain_01.mat",
         "Assets/Plugins/Invector-3rdPersonController_LITE/Resources/Materials/comparacao.mat",
         // Piezas de packs que seguían con shader de luz (Unity interno o el Toon de Ciro).
+        "Assets/Material & Textures/Black.mat",
+        "Assets/_NPCs/Chuchelandia/Materiales/Mat_Actor_Pompon_1.mat",
+    };
+
+    /// Tarjetas de partículas del pack: la forma del bicho o de la flor está en el alfa de una
+    /// textura pequeña sobre una tarjeta, así que van translúcidas, por las dos caras y con el
+    /// color de la partícula. Opacas, sin alfa y por una cara no se veían (INC-1219).
+    private static readonly string[] TarjetasDeParticula =
+    {
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Bee.mat",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly01.mat",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly02.mat",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly03.mat",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Dandelion.mat",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Petals01.mat",
-        "Assets/Material & Textures/Black.mat",
-        "Assets/_NPCs/Chuchelandia/Materiales/Mat_Actor_Pompon_1.mat",
     };
 
     /// Efectos que aún usaban Quibli: pasan a partículas sin luz con su textura y su color.
@@ -81,6 +90,15 @@ public static class RestosAlAspectoDeDibujo
 
         var registro = LeerElRegistro();
         int n = 0;
+
+        foreach (var ruta in TarjetasDeParticula)
+        {
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            if (mat == null) continue;
+            Apuntar(registro, ruta, mat);
+            TarjetaDeParticula(mat, dibujo);
+            n++;
+        }
 
         foreach (var ruta in AlDibujo)
         {
@@ -168,6 +186,29 @@ public static class RestosAlAspectoDeDibujo
         GuardarElRegistro(new Registro());
         AssetDatabase.SaveAssets();
         Debug.Log("[RestosAlAspectoDeDibujo] Devuelto a como estaba (los cielos del menú se rehacen con su constructor).");
+    }
+
+    /// Tarjeta de partícula con el dibujo: translúcida como era (el alfa de la textura da la
+    /// forma: alas, pelusa, pétalo), por las dos caras para que se vea mientras gira o cae, y con
+    /// el color de la partícula, que es el que la tiñe. Lleva un recorte mínimo (0,05) para que la
+    /// sombra siga la forma y no sea el cuadrado de la tarjeta.
+    private static void TarjetaDeParticula(Material mat, Shader dibujo)
+    {
+        Texture textura = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap")
+                        : mat.HasProperty("_MainTex") ? mat.GetTexture("_MainTex") : null;
+        mat.shader = dibujo;
+        mat.SetTexture("_BaseMap", textura);
+        mat.SetFloat("_TextureImpact", 1f);
+        mat.SetColor("_Tinte", Color.white);
+        mat.SetFloat("_Brillo", 0f);
+        mat.SetFloat("_AlphaClip", 1f);
+        mat.EnableKeyword("_ALPHATEST_ON");
+        mat.SetFloat("_Cutoff", 0.05f);
+        mat.SetFloat("_Cull", 0f);
+        mat.SetFloat("_VertexColorsEnabled", 1f);
+        mat.EnableKeyword("DR_VERTEX_COLORS_ON");
+        Transparente(mat, aditivo: false);
+        EditorUtility.SetDirty(mat);
     }
 
     /// Material del fantasma cuando no se le puede tocar: su textura con el dibujo, translúcido y algo luminoso.
@@ -273,6 +314,7 @@ public static class RestosAlAspectoDeDibujo
 
     private static void Apuntar(Registro registro, string ruta, Material mat)
     {
+        if (mat.shader != null && mat.shader.name == Dibujo) return;   // Ya pasado: su shader de antes solo se sabe la primera vez.
         if (registro.materiales.Exists(e => e.ruta == ruta)) return;
         registro.materiales.Add(new Entrada { ruta = ruta, shader = mat.shader.name, cola = mat.rawRenderQueue });
     }

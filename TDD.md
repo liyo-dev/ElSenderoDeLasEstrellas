@@ -40,6 +40,7 @@
 29. [Chuchelandia: la prueba de Estela](#29-chuchelandia-la-prueba-de-estela-inc-889)
 31. [Kits genéricos: separación de los sistemas](#31-kits-genéricos-separación-de-los-sistemas-inc-1049)
 32. [Quién cede ante quién: árbitros, contexto de juego y puentes con los kits](#32-quién-cede-ante-quién-árbitros-contexto-de-juego-y-puentes-con-los-kits-inc-1130)
+33. [Taller de rodaje: una sola puerta para las cinemáticas](#33-taller-de-rodaje-una-sola-puerta-para-las-cinemáticas-inc-1230)
 
 ---
 
@@ -86,7 +87,7 @@ Puedes hacer Play desde cualquier escena (MainWorld, Woods, etc.) sin configurac
 ### Herramientas de desarrollo
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
-- `Tools/Narrative Graph/Abrir editor` (Ctrl+Mayús+N) — editor del grafo narrativo; en el mismo submenú, *Monitor de señales*, *Dividir por capítulo...* y *Nuevo grafo* (ver § 10 — El grafo como paquete)
+- `Liyodev/Grafo narrativo/Abrir editor` (Ctrl+Mayús+N) - editor del grafo narrativo; en el mismo submenú, *Monitor de señales*, *Dividir por capítulo...* y *Nuevo grafo* (ver § 10 - El grafo como paquete)
 
 ### Presets de testing vs partida guardada
 
@@ -1206,7 +1207,7 @@ Bases abstractas para los assets: `NarrativeDialogueAsset` (hereda `DialogueAsse
 
 **5. Extensiones del editor** (`Assets/NarrativeGraph/Editor/Extensions/NarrativeEditorExtensions.cs`, namespace `NarrativeGraphEditor`): el editor encuentra solas, con `TypeCache`, las clases del juego que heredan o implementan `NarrativeGraphSideTab` (pestaña lateral propia; aquí `NarrativeTestPanel`, «Prueba»), `INarrativeLiveSection` (secciones de la pestaña «En vivo»; aquí grupo, actores y misiones en `SenderoLiveSections.cs`), `INarrativeArrivalPreview` (cómo queda el mundo al llegar a un nodo; aquí `NarrativeTestArrivalPreview`) e `INarrativeProjectCatalog` (misiones, actores, textos y señales que solo el juego sabe leer; aquí `SenderoProjectCatalog`).
 
-**6. Menús del paquete:** `Tools/Narrative Graph/Abrir editor` (Ctrl+Mayús+N), `Tools/Narrative Graph/Monitor de señales`, `Tools/Narrative Graph/Dividir por capítulo...`, `Tools/Narrative Graph/Nuevo grafo` y *Create ▸ Narrative Graph ▸ Grafo*. Del juego, sin cambios: `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)`, `El Sendero/Narrativa/Narrative Timeline` y `El Sendero/Narrativa/Cross-Reference`.
+**6. Menús del paquete:** `Liyodev/Grafo narrativo/Abrir editor` (Ctrl+Mayús+N), `Liyodev/Grafo narrativo/Monitor de señales`, `Liyodev/Grafo narrativo/Dividir por capítulo...`, `Liyodev/Grafo narrativo/Nuevo grafo`, `Liyodev/Grafo narrativo/Mapa de la historia`, `Liyodev/Grafo narrativo/Ejemplos/...`, `Liyodev/Grafo narrativo/Abrir el manual` y `Liyodev/Grafo narrativo/Comprobar el kit`; *Create ▸ Narrative Graph ▸ Grafo*. Del juego, los menús de `El Sendero/...` que no son del grafo.
 
 **Retirados** (en `Versiones antiguas/Codigo sin uso (2026-10-29)/`): los ocho nodos obsoletos `DeliverItemProximityNode`, `DeliverQuestCompleteNode`, `BranchBoolNode`, `ActivateGameObjectNode`, `UnlockTriggerNode`, `PlayTimelineNode`, `WaitBattleWinNode` y `OfferQuestNode`; `QuestEventBootstrap` y `NarrativeAutoSetup`.
 
@@ -1236,7 +1237,7 @@ El juego tiene un solo motor narrativo: `NarrativeGraph`/`NarrativeRunner`. El s
 ### Kit del grafo: servicios básicos, ejemplo y paquete (INC-1174, INC-1175)
 
 - **Servicios básicos** (`Runtime/Services/NarrativeBasicServices`): un componente en la escena registra versiones sencillas (IMGUI) de diálogo, respuestas, misiones, inventario, datos, guardado en memoria, bocadillos, pantalla y personajes, solo para los puertos que el juego no haya registrado. Assets: `NarrativeBasicDialogue`, `NarrativeBasicItem`; charla con `NarrativeBasicTalkTarget`. El Sendero no los usa (registra los suyos).
-- **Ejemplo «El faro»:** `Samples/El faro` (scripts y montador); *Tools › Narrative Graph › Ejemplos › Montar* genera `Assets/El faro (ejemplo)`.
+- **Ejemplo «El faro»:** `Samples~/El faro` (scripts y montador); *Liyodev › Grafo narrativo › Ejemplos › Montar* genera `Assets/El faro (ejemplo)`.
 - **Ayuda:** manual en `Documentation/Manual de usuario.pdf` (fuente en `Documentación/Manual del grafo narrativo (fuente)`, se rehace con `node render.js`), recorrido `StoryTour`, botón «?».
 - **Paquete (INC-1181):** el kit es el paquete embebido `Packages/com.liyodev.narrativegraph` (ensamblados `Liyodev.NarrativeGraph` y `Liyodev.NarrativeGraph.Editor`; los 36 tipos de paso con `[MovedFrom(true, null, "Assembly-CSharp")]` para que los grafos guardados antes sigan cargando). Los grafos del juego siguen en `Assets/NarrativeGraph`. Rutas internas con `NarrativeGraphPaths`. Ejemplo en `Samples~` (se importa desde el Package Manager o con `NarrativeSamples.ImportAll`). *El Sendero › Kits › Grafo narrativo: probar en el proyecto de prueba* (`../NarrativeGraphPrueba`, paquete por `file:`) y *…exportar el .unitypackage* (sin `Samples~`). Al añadir o mover un paquete embebido, Unity necesita resolver paquetes: verbo `resolver` del buzón de órdenes. Dependencias: uGUI/TextMeshPro, Timeline, Newtonsoft JSON.
 
@@ -1249,13 +1250,14 @@ El juego tiene un solo motor narrativo: `NarrativeGraph`/`NarrativeRunner`. El s
 - **El manejador (lógica del juego):** `NarrativeRequestRun<T>`: `Start()` empieza, `Finish(salida)` termina, `Stop()` suelta todo (se llama antes de seguir y también si la historia deja de esperar). Una ejecución por cada vez que se pide. Se registra al arrancar con `NarrativeRequests.Register<TPetición, TEjecución>()` (por debajo, `NarrativeGameSteps` con el nombre completo del tipo). Tiene `R` (los datos), `Ctx` / `Runner` (señales y corrutinas), `StepGuid` / `StepTitle` (avisos) e `IsExitConnected(n)` (p. ej. «Pierde» conectada).
 - **Sin código:** `NarrativeRequestValues` (la petición por defecto de un «Pedir al juego» nuevo): id que atiende un `NarrativeGameStepHook` de la escena o un `NarrativeGameSteps.Register("…")`, texto, número y asset libres, salidas con nombre, «no esperar», salida «Sin respuesta» y **`leaves`**: lo que deja hecho escrito a mano (categoría, clave, valor → `SetFact`).
 - **La guarda:** la historia nunca se queda colgada. Si nadie atiende el id (o «espera a que aparezca» y se agota el tiempo), si el juego no termina en `timeoutSeconds` o si quien lo atendía lo abandona, sale por la salida de reserva («Sin respuesta» en las peticiones sin código; la primera en las del juego) y lo avisa en consola. Mientras espera no se guarda (`UnsafeForSave`).
-- **El Sendero** (`Assets/ElSendero/Connections/NarrativeGraph/Peticiones/`, registro en `PeticionesDelJuego`): `PedirCinematica`, `PedirHoraDelDia`, `PedirSegunHoraDelDia`, `PedirEsperarHoraDelDia`, `PedirDesbloqueo`, `PedirVestuario`, `PedirGrupo`, `PedirTextoDramatico`, `PedirPopupDeLore`, `PedirFinDeLaDemo`, `PedirAvisoDeTutorial`, `PedirEntregaDeObjeto`, `PedirBatalla`, `PedirCombateContraNpc`, `PedirPillaPilla`, `PedirGuiarAlJugador`, `PedirSeguirSinSerVisto`, cada una con su `…EnCurso`. Sustituyen a los 17 nodos de `NarrativeIntegration/Nodes/` (retirados a `Versiones antiguas/Pasos del juego pasados a «Pedir al juego» (14 nov 2026)/`) y a `RunAndWaitNode`. Los 76 pasos de los 7 grafos se pasaron conservando guid, sitio, sección y conexiones. La espera de la noche y la pregunta por la hora ahora dejan dicho que es esa franja.
+- **El Sendero** (`Assets/ElSendero/Connections/NarrativeGraph/Peticiones/`, registro en `PeticionesDelJuego`): `PedirCinematica`, `PedirHoraDelDia`, `PedirSegunHoraDelDia`, `PedirEsperarHoraDelDia`, `PedirDesbloqueo`, `PedirVestuario`, `PedirGrupo`, `PedirTextoDramatico`, `PedirPopupDeLore`, `PedirFinDeLaDemo`, `PedirAvisoDeTutorial`, `PedirEntregaDeObjeto`, `PedirBatalla`, `PedirCombateContraNpc`, `PedirGuiarAlJugador`, `PedirSeguirSinSerVisto`, cada una con su `…EnCurso`. Sustituyen a los 17 nodos de `NarrativeIntegration/Nodes/` (retirados a `Versiones antiguas/Pasos del juego pasados a «Pedir al juego» (14 nov 2026)/`) y a `RunAndWaitNode`. Los 76 pasos de los 7 grafos se pasaron conservando guid, sitio, sección y conexiones. La espera de la noche y la pregunta por la hora ahora dejan dicho que es esa franja.
 - **Montajes por código:** `GameStepNode.For(new PedirX { … })`.
 - **Código del kit:** `Runtime/Graph/NarrativeRequest.cs`, `Runtime/Graph/NodeTypes/GameStepNode.cs`, `Runtime/Integration/NarrativeRequests.cs`, `Runtime/Integration/Ports/INarrativeGameStep.cs` (`NarrativeGameStepCall`: `Request`, `Step`, `Context`, `IsExitConnected`, `Ended`), `Runtime/Integration/NarrativeGameSteps.cs`, `Runtime/Integration/NarrativeGameStepHook.cs`.
 
 ### Mapa y «En vivo»: solo informativos (INC-1202)
 
 - El mapa de la historia (`StoryMapView`) y la pestaña **En vivo** enseñan lo que el grafo sabe en el paso elegido; no escriben en el grafo. Para cambiar dónde está alguien o qué dice, se abre el paso que lo decide («Lo dejó …» en la ficha del personaje) y se cambia ahí.
+- **Esquema por escenas (INC-1231):** `NarrativeWorldMap` son escenas (`scenes`: id, nombre, orden) y sitios (`Zone`: id, nombre, escena, color, marcas). No hay foto, `worldRect` ni posiciones horneadas: el mapa dibuja una banda por escena y, dentro, los sitios en rejilla; cada personaje cae en el sitio de su marca (o en «Sin sitio»/«No están en escena»). Para cambiar un sitio se edita el asset del mapa; para cambiar a un personaje, el paso.
 - Ficha del personaje en el mapa: dónde está y qué paso lo dejó así, si la historia le espera, qué dice si le hablas, **lo que le espera** (sus próximas piezas «Personaje desde aquí»), próximos diálogos y misiones que da. Salen solos todos los personajes que nombran las piezas, aunque no estén dados de alta en el mapa.
 - Retirado: «Editar mapa», arrastrar personajes o zonas, «+ Zona», «+ Personaje» y lo que creaba piezas o puntos de arranque desde el mapa.
 - Un solo «En vivo»: la pestaña. El registro de pasos por los que pasa la partida (`StoryLiveLog`, ahora solo datos) sale en ella («Pasos por los que ha pasado»); el panel de abajo es solo el mapa pequeño y se oculta si el mapa está en grande o en su ventana.
@@ -1803,7 +1805,7 @@ Hecho, verificado por referencias cruzadas en el código (no solo propuesto):
 - **Búsqueda por texto**: añadida a `NarrativeGraphWindow` (caja de búsqueda + Enter/Shift+Enter para saltar entre coincidencias, resalta el nodo con borde dorado usando `FrameSelection()`).
 - **Fase 1**: `CompleteQuestStepsNode` y `StartBattleNode` ya no llaman a `QuestManager.Instance` ni usan reflection — todo pasa por `ctx.Signals` (`INarrativeSignals.CompleteQuestStepByConditionId`, nuevo). `StartBattleNode` perdió ~150 líneas de reflection muerta contra un `MissionManager` que no existe en el proyecto (confirmado por búsqueda global). `QuestServiceAdapter.Offer()`/`Complete()` pasaron de `GetMethod(...).Invoke(...)` a llamadas tipadas directas.
 - **Fase 2**: `DefaultNarrativeSignals` tiene ahora un registro durable `_everRaised`/`HasEverRaised(key)` (no se vacía al consumirse, a diferencia de `_pending`/`_raised`, que siguen intactos) — `NarrativeCondition` lo usa como respaldo de su caché local de "evento custom recibido", cerrando el caso donde una suscripción tardía perdía el evento en silencio. `IsPartyMemberMatch`/`ExtractNarrativeBaseName`, que estaban copiados letra por letra en `QuestManager.cs` y `NPCQuestConfig.cs`, ahora viven en `Assets/Scripts/Quests/QuestMatchingUtils.cs` y ambos delegan ahí. Se encontró y cerró una variante real (no hipotética) del bug INC-020: `NPCQuestConfig.HandleQuestState()` consumía los ítems requeridos directamente y sin guardia de idempotencia, y a continuación `FinishQuest()` llamaba a `QuestManager.CompleteQuest()`, que los consume otra vez (esta vez con guardia, pero tarde). Se quitaron las tres llamadas duplicadas y el método que reimplementaba el consumo.
-- **Fase 4**: nueva herramienta de editor `Assets/NarrativeGraph/Editor/ChapterSplitWindow.cs` (`El Sendero/Narrativa/Dividir por Capítulo...`; hoy `Tools/Narrative Graph/Dividir por capítulo...`). `MainNarrative.asset` ya tiene 88 nodos reales etiquetados en 6 capítulos (Cap. 1–6), así que no hay que inventar dónde cortar. La herramienta extrae todos los nodos de un capítulo elegido a un `NarrativeGraph` nuevo, sustituye las aristas que cruzan la frontera por pares `RaiseCustomEventNode`/`WaitCustomEventNode` (en ambas direcciones), intenta asignar el `StartNode` del capítulo nuevo, corre `NarrativeGraphValidator` sobre los dos grafos resultantes y muestra un reporte. No toca el YAML a mano — opera en memoria sobre `NarrativeGraph.nodes` y deja que Unity serialice, igual que hace el propio editor de grafo. Deliberadamente NO registra el nuevo grafo como `GraphSlot` en el `NarrativeGraphHub` de `Start.unity` (eso requiere la escena abierta y una decisión de nombre/orden) ni asigna el Start cuando hay más de un punto de entrada — ambas cosas quedan como paso manual señalado en el reporte de la propia herramienta. Recomendación: haced commit antes de correrla (la propia herramienta lo pide con un diálogo de confirmación) y revisad el resultado visualmente antes de dar la separación por buena.
+- **Fase 4**: nueva herramienta de editor `Assets/NarrativeGraph/Editor/ChapterSplitWindow.cs` (`El Sendero/Narrativa/Dividir por Capítulo...`; hoy `Liyodev/Grafo narrativo/Dividir por capítulo...`). `MainNarrative.asset` ya tiene 88 nodos reales etiquetados en 6 capítulos (Cap. 1–6), así que no hay que inventar dónde cortar. La herramienta extrae todos los nodos de un capítulo elegido a un `NarrativeGraph` nuevo, sustituye las aristas que cruzan la frontera por pares `RaiseCustomEventNode`/`WaitCustomEventNode` (en ambas direcciones), intenta asignar el `StartNode` del capítulo nuevo, corre `NarrativeGraphValidator` sobre los dos grafos resultantes y muestra un reporte. No toca el YAML a mano — opera en memoria sobre `NarrativeGraph.nodes` y deja que Unity serialice, igual que hace el propio editor de grafo. Deliberadamente NO registra el nuevo grafo como `GraphSlot` en el `NarrativeGraphHub` de `Start.unity` (eso requiere la escena abierta y una decisión de nombre/orden) ni asigna el Start cuando hay más de un punto de entrada — ambas cosas quedan como paso manual señalado en el reporte de la propia herramienta. Recomendación: haced commit antes de correrla (la propia herramienta lo pide con un diálogo de confirmación) y revisad el resultado visualmente antes de dar la separación por buena.
 - **Fase 3 — hallazgo importante que cambia el plan**: añadí un puente aditivo y seguro (`NPCBrain.HandleInteraction()` ahora emite siempre `NPC_INTERACT_{persistenceId}` vía `DefaultNarrativeSignals`, sin condicionar ni cambiar el comportamiento existente) — es el mecanismo que le faltaba al grafo para poder reaccionar a "el jugador habló con el NPC X" sin pasar por `NPCInteractiveNarrativeExecutor`. Pero al buscar un NPC piloto sencillo para migrar de verdad (revisé los 12 `NPCInteractiveNarrativeConfig` del proyecto; el más simple con contenido real es `Victoria`, 2 líneas de diálogo condicionadas al estado de una quest, sin combate ni movimiento) me encontré con esto: el catálogo de nodos actual **no tiene forma de expresar "diálogo distinto según el estado de la quest, re-evaluado cada vez que hablas con el NPC"** — que es exactamente el patrón de `ConditionalNarrative`/`NPCInteractiveNarrativeExecutor.TryExecuteNarrative()` (re-chequea condiciones en cada interacción y elige la primera que aplica). El grafo es lineal/uno-de-una-vez por diseño; no hay un nodo tipo "branch por estado de quest" (`BranchBoolNode` existe pero está roto — según el análisis anterior, siempre avanza sin mirar el valor) ni un mecanismo de "esperar la próxima interacción y volver a evaluar" con bucle. Conclusión honesta: fusionar `NPCInteractiveNarrativeExecutor` en el grafo no es solo mover datos NPC a NPC como decía el plan original — primero hace falta construir 1-2 tipos de nodo nuevos (`BranchOnQuestStateNode` y algo como `WaitForNPCInteractionNode` con reentrada) antes de que la primera migración real tenga sentido. No lo he hecho a ciegas porque diseñar y verificar un nodo con lógica de bucle sin poder abrir el Editor y probarlo en juego es justo el tipo de cambio que no debería intentar sin que lo veas tú primero. Recomendación: cuando quieras seguir con esto, empezamos diseñando esos 1-2 nodos juntos (con Play Mode a mano para probarlos) antes de tocar el asset de ningún NPC real.
 
 **Nota de corrección — 12 de septiembre de 2026:** los dos nodos que este análisis de julio daba por no construidos ya existen. `BranchOnQuestStateNode` se construyó como `BranchQuestStateNode` y el "esperar la próxima interacción con reentrada" se construyó como `WaitNpcInteractionNode` (ambos, 11 de septiembre de 2026) — confirmado leyendo el código, no por lo que dice esta sección. `WaitNpcInteractionNode` recibió además soporte para mostrar el icono de quest (cabeza + minimapa) el 12 de septiembre, vía `NarrativeActor.ShowQuestIcon`/`HideQuestIcon` (INC-196). El diagnóstico de fondo de este apartado — que el catálogo de julio no permitía expresar "diálogo/estado re-evaluado en cada interacción" — ya no aplica: no se leáis como plan pendiente. Detalle actualizado en `claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md`.
@@ -1909,7 +1911,7 @@ Cada una es una herramienta sólida y bien escrita — el problema no es la cali
 
 De los obstáculos del apartado 5, el estado vigente (detalle en § 10 — El grafo como paquete, y § 27):
 
-- **Hecho:** el núcleo (`Assets/NarrativeGraph/`) ya no conoce clases del juego; los nodos piden por puertos a `NarrativeServices` y el juego registra sus adaptadores en `Assets/Scripts/NarrativeIntegration/NarrativeGameServices.cs`. Los doce nodos propios de El Sendero (batalla, minijuego, cinemática, guía, tutoriales, hechizos, vestuario, lore, hora del día…) viven en `Scripts/NarrativeIntegration/Nodes/`. `PlayerLockService` está en `Scripts/Player/`; `NarrativeActor`, `SignalEmitter`, `InteractableToNarrativeEvent` e `IPlayerLoadoutState`, en `Scripts/NarrativeIntegration/`; las herramientas propias (lanzador y panel de pruebas, validador cruzado), en `Scripts/NarrativeIntegration/Editor/`. El editor no tiene `switch` por tipo de nodo (`NarrativeNode.Describe`) y el juego se le enchufa con extensiones descubiertas por `TypeCache`. Los ocho nodos obsoletos, `NarrativeAutoSetup` (y su reflexión sobre `NarrativeRunner`) y `QuestEventBootstrap` están archivados. Los menús del paquete están en `Tools/Narrative Graph/`.
+- **Hecho:** el núcleo (`Assets/NarrativeGraph/`) ya no conoce clases del juego; los nodos piden por puertos a `NarrativeServices` y el juego registra sus adaptadores en `Assets/Scripts/NarrativeIntegration/NarrativeGameServices.cs`. Los doce nodos propios de El Sendero (batalla, minijuego, cinemática, guía, tutoriales, hechizos, vestuario, lore, hora del día…) viven en `Scripts/NarrativeIntegration/Nodes/`. `PlayerLockService` está en `Scripts/Player/`; `NarrativeActor`, `SignalEmitter`, `InteractableToNarrativeEvent` e `IPlayerLoadoutState`, en `Scripts/NarrativeIntegration/`; las herramientas propias (lanzador y panel de pruebas, validador cruzado), en `Scripts/NarrativeIntegration/Editor/`. El editor no tiene `switch` por tipo de nodo (`NarrativeNode.Describe`) y el juego se le enchufa con extensiones descubiertas por `TypeCache`. Los ocho nodos obsoletos, `NarrativeAutoSetup` (y su reflexión sobre `NarrativeRunner`) y `QuestEventBootstrap` están archivados. Los menús del paquete están en `Liyodev/Grafo narrativo/`.
 - **Queda:** extraerlo como paquete UPM local, una migración versionada de esquema, la documentación y el paquete de ejemplo para la Asset Store.
 
 ---
@@ -4564,11 +4566,11 @@ Propuesta y diagnóstico completos: doc de proyecto `propuesta-outline-quibli-y-
 - **Luz:** `iluminado = smoothstep(umbral ± suavidad, N·L)` (y la sombra proyectada, si el material la recibe). Color = `lerp(albedo × tinteDeSombra, albedo, iluminado) × luz`, con `luz = sol (teñido solo en parte) + término constante de la luz ambiente`, recortada a `topeDeLuz`. Las luces puntuales suman una mancha plana. El SSAO solo oscurece en la medida de `oclusion`.
 - **Material:** `albedo = lerp(1, textura, _TextureImpact) × _Tinte`. `_BaseColor` existe pero no tiñe (igual que en Quibli: el código que lo escribe sigue sin efecto); `_Brillo` enciende el brillo de pelo. Conserva los nombres de Quibli/URP para recorte, emisión (`_EMISSION`, variante siempre compilada por las ventanas de noche), colores de vértice, `_Cull`, transparencia y `_ReceiveShadows`.
 - **Ajustes globales:** `AspectoDeDibujo` (ScriptableObject en `Assets/Resources/Dibujo/AspectoDeDibujo.asset`). `Aplicar()` pone los globales `_Dibujo*`; se aplica al arrancar el juego (`BeforeSceneLoad`), al cargar el Editor y en `OnValidate`. Sin aplicar, el shader usa valores de fábrica. Menú *El Sendero ▸ Aspecto de dibujo ▸ Abrir los ajustes del aspecto*.
-- **Paso de materiales:** `PasoAlAspectoDeDibujo` (*El Sendero ▸ Aspecto de dibujo*). *Pasar…* recorre los `.mat` de `Assets/` con `Quibli/Stylized Lit`, `URP/Lit` o `URP/Simple Lit` (fuera de `Plugins/`, `VFX/`, `_VFX/`, `Art/VFX/`, `TextMesh Pro/`; los transparentes de URP no), cambia el shader, pone `_Tinte` (el punto más claro de la rampa de Quibli, o el `_BaseColor` de URP) y `_Brillo` si el nombre es de pelo, y apunta el shader anterior en `Assets/Settings/AspectoDeDibujo/MaterialesAntesDelDibujo.json`. *Volver…* devuelve cada material a su shader (sus propiedades de antes siguen en el material) y el contorno a como estaba. Se puede repetir al añadir packs. Lo que el paso general no coge (packs con shader interno de Unity, el Toon de Ciro, transparencias y efectos) lo resuelve `RestosAlAspectoDeDibujo` (*Restos: fantasma, Quibli, cielos del menú y del prólogo*): piezas al dibujo conservando el alfa, y fuego, humo y destellos a partículas sin luz; su registro es `RestosAntesDelDibujo.json`.
+- **Paso de materiales:** `PasoAlAspectoDeDibujo` (*El Sendero ▸ Aspecto de dibujo*). *Pasar…* recorre los `.mat` de `Assets/` con `Quibli/Stylized Lit`, `URP/Lit` o `URP/Simple Lit` (fuera de `Plugins/`, `VFX/`, `_VFX/`, `Art/VFX/`, `TextMesh Pro/`; los transparentes de URP no), cambia el shader, pone `_Tinte` (el punto más claro de la rampa de Quibli, o el `_BaseColor` de URP) y `_Brillo` si el nombre es de pelo, y apunta el shader anterior en `Assets/Settings/AspectoDeDibujo/MaterialesAntesDelDibujo.json`. *Volver…* devuelve cada material a su shader (sus propiedades de antes siguen en el material) y el contorno a como estaba. Se puede repetir al añadir packs. Lo que el paso general no coge (packs con shader interno de Unity, el Toon de Ciro, transparencias y efectos) lo resuelve `RestosAlAspectoDeDibujo` (*Restos: fantasma, Quibli, cielos del menú y del prólogo*): piezas al dibujo conservando el alfa, tarjetas de partículas translúcidas por las dos caras y con el color de la partícula, y fuego, humo y destellos a partículas sin luz; su registro es `RestosAntesDelDibujo.json`.
 - **Contorno:** `ContornoDeTinta` con intensidad 1, grosor 2 y tinta (0,20 · 0,15 · 0,22), en el perfil por defecto y como valores por defecto de la clase.
 - **Piel:** el tono sale de dos celdas de `RPG Tiny Hero Duo/Texture/Albedo.png` (piel y nariz), compartidas por todos los personajes del pack.
 - **Tonos de piel de los NPCs (INC-1043):** `TonosDePiel` hace por tono una copia de `Albedo.png` con las dos celdas cambiadas (`Assets/Art/Characters/NPCs/Piel/Albedo_<tono>.png`) y copias de los materiales del NPC que la usan (`…/Piel/Materiales/<material>__<tono>.mat`, con el GUID del original en `userData`); también las piezas `_Piel` y `_Arruga` de la cara. La tabla `Reparto` dice qué NPC lleva cada tono.
-- **No pasado a propósito:** los shaders de grafo de Quibli que se quedan (hierba, follaje, nubes del cielo y las nubes de lluvia `QuibliRainCloud3D`). Con INC-1219 no queda ningún material de las escenas de la build fuera del aspecto: las piezas de pack van al dibujo (abejas, mariposas, diente de león, pétalos, el espejo de TorreDeLiam y Pompon, que conserva su translucidez) y fuego, humo y destellos van a `Universal Render Pipeline/Particles/Unlit`. Recuento hecho sobre las escenas de la build: 0 materiales fuera. `ElSendero.shadervariants` no incluye aún el shader nuevo.
+- **No pasado a propósito:** los shaders de grafo de Quibli que se quedan (hierba, follaje, nubes del cielo y las nubes de lluvia `QuibliRainCloud3D`). Con INC-1219 no queda ningún material de las escenas de la build fuera del aspecto: las piezas de pack van al dibujo (abejas, mariposas, diente de león, pétalos, el espejo de TorreDeLiam y Pompon, que conserva su translucidez) y fuego, humo y destellos van a `Universal Render Pipeline/Particles/Unlit`. Las tarjetas de partículas (bichos y flores) van translúcidas, con `_Cull` 0 —se ven por las dos caras— y con el color de la partícula; llevan un recorte mínimo (`_Cutoff` 0,05) para que su sombra siga la forma de la textura y no sea el cuadrado de la tarjeta. Sin eso se quedaban opacas y sin verse. Recuento hecho sobre las escenas de la build: 0 materiales fuera. `ElSendero.shadervariants` no incluye aún el shader nuevo.
 - **Fotos:** `CapturaDeEscenario.FotoDesde` y `FotosDeCaras` dibujan sin MSAA (con MSAA el contorno se salta). Aun así el contorno no sale de forma fiable en una foto suelta; con el aviso «Ran out of Graphics Ring Buffer space» en consola, abrir Unity con `Abrir-Unity-BufferFix.bat`.
 
 ---
@@ -4613,7 +4615,7 @@ Revisión de código en busca de basura, duplicados y contradicciones, seguida d
 - **Enemigos:** `OrbDropper.CrearOrbe`/`SoltarMoneda` son públicos y los usa `ImpLadron` para soltar lo robado; `ImpDemonAI` encuentra su arena con `BossArenaController.TryGetArenaDelJefe` (sin `FindAnyObjectByType`).
 - **VFX al pool:** `Burnable`, `PressurePlate`, `PlatformElevator`, impacto de `LevitationTarget` (§ 12). `ReanimarManteniendoA` con VFX, SFX y pose sostenida (§ 4).
 - **Audio:** fin de minijuego y `DramaticTextNode` piden la música del lugar; `MuteAudioNode`/`SetAudioVolumeNode` piden atenuación con clave; `PlayMusicNode` siempre en bucle; fuera `PlaySpell`, `PlayAmbience`, `BeginMinigameById`/`EndMinigameById`, `StopSFX` y el alias `PlaySfx`.
-- **Grafo:** menús del paquete en `Tools/Narrative Graph/` (el validador cruzado y *Narrative Timeline* no cambian de menú); `NarrativeGraphValidator` sin `OfType` por tipo.
+- **Grafo:** menús del paquete en `Liyodev/Grafo narrativo/` (el validador cruzado y *Narrative Timeline* no cambian de menú); `NarrativeGraphValidator` sin `OfType` por tipo.
 - **Cinemáticas (fase 6, 30 oct):** un solo camino de cámaras, el guion horneado; fuera `ShotComposer` y los planos colocados a mano. Detalle en § 22.7.
 
 ### 27.3 Pendiente
@@ -4924,3 +4926,106 @@ Lo que hay que vigilar al migrar (se añade a la lista de § 31.2):
 | Pendiente | Migrar `AmbientZone` y el resto de predicados duplicados a `GameContext`; decidir si minimapa, comentarios del grupo y bocadillos ceden ante combate; test de arranque desde nodo en combate; `IContextPolicy` en `Kits.Core` si la política pasa a datos |
 
 **Cómo se usa (resumen).** Un dueño de situación: `GameContext.Enter(Situaciones.X, clave)` al empezar y `Exit(Situaciones.X, clave)` al acabar, también en `OnDisable`. Un consumidor que cede: consulta `GameContext.Has(Situaciones.X)` o escucha `GameContext.Changed`. Un aviso nuevo en pantalla que deba esperar a una situación declara `CedeAnte`. Notas de diseño: el registro no decide nada, solo recuerda qué está en curso; la música usa `_battleActive` y no `Combate` porque el combate de un NPC puede seguir registrado sin música de batalla (arañas) y no debe dejar el lugar en silencio.
+
+---
+
+## 33. Taller de rodaje: una sola puerta para las cinemáticas (INC-1230)
+
+**Origen (15 nov 2026).** Raúl: «me gusta el sistema de beats pero se hace complicado»; «no avanza ni rebobina la música ni las voces, a veces es solo el movimiento, los VFX tampoco». Preguntó cómo se hace en otros juegos. La respuesta corta: el guion horneado **ya es una línea temporal** (actores con claves, frases con `t0/t1`, planos con `t0/t1`, efectos con su segundo), pero conviven dos runtimes y la autoría se hace a ciegas. Esta sección diseña la **autoría**; el runtime determinista (estado/evento, audio con desplazamiento y VFX atados al reloj) es otra incidencia.
+
+**Medido el 15 nov 2026.** 40 `.guion.txt` en `Assets/_SEQUENCES/Guiones/` (el prólogo, 994 líneas; el final, 772) y **los 34 `SequenceDefinition` contienen un `GuionBeat`**: el guion de texto ya es la fuente de verdad de todas las cinemáticas. `HornoSalida` ya escribe el guion dentro del `SequenceDefinition` (`SetDirty` + `SaveAssets`), así que los dos sistemas ya están unidos por debajo; lo que falta es que el Inspector deje de ofrecer dos puertas. `ReproductorDeGuionWindow` ya tiene barra de tiempo, pausa y foto, pero **solo funciona en Play**. `CapturaDeEscenario.AbrirEscena` ya abre escenas aditivas y deja plano, marcas, NavMesh y catálogo de animaciones. `GeminiDelBuzon` ya revisa un vídeo grabado.
+
+**Decisión.** El `.guion.txt` es la única superficie de autoría. El `SequenceDefinition` es un host generado y validado, no una segunda puerta. Los beats siguen siendo la **biblioteca de efectos** (`efecto Clase campo=valor`), no una forma de montar una cinemática. Esto es coherente con § 25.6: el producto no es la capa de beats, es el horneador.
+
+### 33.1 Las cuatro fricciones y su pieza
+
+| Fricción (Raúl, 15 nov 2026) | Pieza |
+|---|---|
+| «Los dos sistemas»: no saber si tocar beats o guion | `FichaDeSecuenciaEditor`: inspector de solo lectura que enseña el resumen del guion y abre el `.txt`; los beats no se editan a mano |
+| «El catálogo de efectos»: no saber qué `efecto` existe ni qué campos acepta | `CatalogoDeEfectos` + `FabricaDeEfectos`: lista de todos los `SequenceBeat` con `Describe()`, campos y tooltips; botón «copiar línea» |
+| «No ver el resultado»: hornear y entrar en Play para saber si quedó bien | `PrevizDeGuion`: hoja de contactos, un fotograma por plano, en edición y sin Play |
+| «Los planos»: que la cámara cuente lo que quieres sin tapar a nadie | Previz + ajuste de encuadre que escribe en la línea del guion + horneado con diff |
+
+### 33.2 Piezas y archivos
+
+| Pieza | Archivo | Qué hace |
+|---|---|---|
+| `TallerDeRodajeWindow` | `Assets/Editor/Guion/TallerDeRodajeWindow.cs` | La mesa: elegir guion, hornear, lista de planos, contactos, errores clicables |
+| `FichaDeSecuenciaEditor` | `Assets/Editor/Guion/FichaDeSecuenciaEditor.cs` | `[CustomEditor(typeof(SequenceDefinition))]`: si hay `GuionBeat`, resumen de solo lectura + «Abrir el guion» + «Hornear»; si no, el inspector normal |
+| `CatalogoDeEfectos` | `Assets/Editor/Guion/CatalogoDeEfectos.cs` | `TypeCache.GetTypesDerivedFrom<SequenceBeat>()`, instancia con valores por defecto, `Describe()` y campos con `[Tooltip]`; busca y copia la línea base |
+| `FabricaDeEfectos` | `Assets/Editor/Guion/FabricaDeEfectos.cs` | El `CrearBeat` de `HorneadorDeGuion` (resolución por nombre + asignación de campos), extraído para que catálogo y horneador no se separen |
+| `PrevizDeGuion` | `Assets/Editor/Guion/PrevizDeGuion.cs` | Abre la escena aditiva, coloca actores y cámara por plano, rinde a `RenderTexture` y guarda PNG |
+| `HornoDiff` | `Assets/Editor/Guion/HornoDiff.cs` | Hornea a un asset temporal y compara con el actual: duración, planos cambiados, frases y efectos. Sin aceptar, no se escribe nada |
+| `RegistroDeCompilacion` | `Assets/Editor/Guion/RegistroDeCompilacion.cs` | Errores y avisos con `(línea, mensaje, gravedad)`, para pintarlos clicables |
+| Datos | `Assets/Scripts/Sequences/Guion/GuionHorneado.cs` | `GuionHorneado.rutaDelTexto` y `PlanoHorneado.linea`: de qué `.txt` viene y qué línea produjo cada plano |
+
+### 33.3 El bucle de trabajo
+
+1. Elegir guion (los `.guion.txt` de `_SEQUENCES/Guiones/`, recientes arriba).
+2. **Hornear**: refresca el `TextAsset` (el paso «refrescar» de § 22.7 deja de ser manual), hornea y enseña errores con línea clicable.
+3. **Hoja de contactos**: un fotograma por plano, en orden, con su segundo y su descripción.
+4. Clic en un fotograma: plano grande y campos de encuadre (`encuadre`, `lente`, `altura`, `suavidad`, `mezcla`, `mano`).
+5. **Aplicar al guion**: escribe solo esas claves en la línea del `plano` (guardando antes el texto anterior), hornea a temporal, enseña el diff y, si se acepta, escribe el asset; si no, revierte la línea y borra el temporal.
+6. Repetir. En ningún momento hace falta abrir el Inspector del `SequenceDefinition`.
+
+### 33.4 Previz: qué enseña y qué no
+
+**v1 (esta incidencia).** Por cada `PlanoHorneado`: actores en su posición horneada (`Interpolar.Posicion`), visibilidad según `TramoVisible`, cámara con `GuionHorneado.PoseDeCamara(t)` y render a `RenderTexture` (640×360 para la tira, 1280×720 al abrir). Escena abierta aditiva y cerrada al acabar; si ya está abierta, se usa tal cual. Durante el render se apagan las raíces de las demás escenas cargadas (`Start`, `MainWorld`…) para que no se cuelen geometrías ni luces, y se restauran al terminar. Se guarda en `Guiones/<escena>/previz/<guion>/<n>.png` y se invalida con la `huella` del horneado.
+
+**No enseña**: el gesto exacto (los actores van en su pose de reposo), VFX, partículas ni props de mano. Para juzgar encuadre, cabezas cortadas y oclusiones sirve; para juzgar una mano, no. La ventana lo dice: «previz, no fotograma».
+
+**v2 (solo si hace falta).** Muestrear el clip que toque con `AnimationMode.SampleAnimationClip` sobre el estado horneado. No entra en esta incidencia porque el intérprete que elige el estado en `t` es runtime y arrastra `SequenceActor`.
+
+### 33.5 Datos y compatibilidad
+
+- `GuionHorneado.rutaDelTexto` y `PlanoHorneado.linea` son campos nuevos: los assets viejos cargan con `null`/`0` y la ventana pide volver a hornear antes de editar el encuadre. No hay renombres, así que no hace falta `[MovedFrom]`.
+- `RegistroDeCompilacion` cambia de texto a entradas estructuradas; los informes `.md` siguen saliendo igual.
+- **El horneador sigue siendo el único que escribe assets** (regla 1 de AGENTS.md). La ventana no toca el `.asset` a mano: llama a `Hornear` y, si acaso, escribe el `.guion.txt`.
+
+### 33.6 Hornear con diff (protección del solver)
+
+Re-hornear no es «cambiar un campo»: vuelve a pasar el solver de cámaras y, si el solver ha cambiado desde el último horneado, los planos cambian (§ 25.5). Por eso «Aplicar al guion» nunca escribe directo:
+
+1. Guarda el texto anterior de la línea.
+2. Escribe solo las claves pedidas en el `.guion.txt` (conserva comentarios y el resto de opciones).
+3. Hornea a un `GuionHorneado` temporal.
+4. Compara con el actual: duración, nº de planos/frases/efectos, y por plano `[t0, t1]`, sujetos, lente y pose de cámara en el medio.
+5. Enseña la lista de cambios («3 planos movidos, 1 frase 0,4 s antes, el resto igual»).
+6. Si se acepta, escribe el asset; si no, revierte la línea con el texto guardado y borra el temporal.
+
+### 33.7 Errores y validación rápida
+
+- Errores del horneado con línea y gravedad, clicables.
+- **Validar sin hornear**: `GuionTexto.Leer` + resolución de reparto y de `efecto` (por `FabricaDeEfectos`), sin NavMesh, sin solver y sin escribir assets. Responde en un parpadeo a «¿está bien escrito?».
+- Avisos nuevos que el horneador ya conoce y hoy solo salen en el informe: `plano` con `&` (no avanza el hilo, § 22.7), frase sin voz, actor sin `REPARTO`, `efecto` con campo desconocido.
+
+### 33.8 Pruebas
+
+EditMode en `Assets/Editor/Guion/Tests/`:
+
+- El catálogo encuentra **todos** los `SequenceBeat` y los instancia con valores por defecto sin lanzar.
+- `FabricaDeEfectos` resuelve cada nombre que lista el catálogo (si lista algo que el horneador no crea, el test falla).
+- Reescritura de línea: conserva comentarios, orden y claves no tocadas; añade la clave si no estaba.
+- Previz: cada `PlanoHorneado` devuelve pose de cámara válida y cada sujeto se resuelve en el reparto.
+- Diff: un horneado idéntico da cero cambios; mover un plano a mano en un temporal se detecta.
+- Horneado dorado: un guion fixture pequeño produce la duración, los planos y las líneas esperadas.
+
+### 33.9 Fases
+
+| Fase | Qué | Coste |
+|---|---|---|
+| 1 | `FabricaDeEfectos`, `CatalogoDeEfectos`, `FichaDeSecuenciaEditor`, `rutaDelTexto` | Una sesión; quita los dos sistemas y hace descubribles los efectos |
+| 2 | `PrevizDeGuion` + `TallerDeRodajeWindow` con lista de planos y contactos | Una o dos; la de más riesgo técnico |
+| 3 | `PlanoHorneado.linea`, ajuste de encuadre y `HornoDiff` | Una; cierra el bucle «veo el plano, lo arreglo» |
+| 4 | Errores estructurados y validar sin hornear | Una |
+
+### 33.10 Fuera de alcance
+
+- **Runtime determinista**: contrato estado/evento con `t`, `PlayVoice(clip, desdeSegundo)`, VFX atados al reloj y pausa real. Es la otra mitad del problema y va en su propia incidencia; sin ella, el previz mejora la autoría pero el seek sigue sin ser fiable.
+- Timeline editable tipo DAW.
+- Editor de texto con resaltado (Raúl no lo marcó como fricción).
+- Storyboard + IA: se apoya en este taller para poder revisar lo generado.
+
+### 33.11 Relación con § 25
+
+El taller es la **capa de autoría** del producto que describe § 25.6. No hace las siete costuras de § 25.3 ni el empaquetado: eso es trabajo de extracción. Lo que sí hace es que el horneador se use como se diseñó (texto → botón → cinemática montada) en vez de escribiendo a ciegas.
