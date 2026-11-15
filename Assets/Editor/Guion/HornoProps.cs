@@ -183,8 +183,8 @@ internal sealed partial class Horno
         if (mano == "cabeza" && orden.verbo == "deja") { Error($"{orden}: «deja» suelta con una mano, no con la cabeza."); return 0f; }
         beat.mano = mano == "izquierda" ? HumanBodyBones.LeftHand : mano == "cabeza" ? HumanBodyBones.Head : HumanBodyBones.RightHand;
         if (beat.mano == HumanBodyBones.Head) beat.offset = Vector3.zero;
-        if (orden.opciones.TryGetValue("offset", out var offset) && Convertir(offset, typeof(Vector3), out var v, orden)) beat.offset = (Vector3)v;
-        if (orden.opciones.TryGetValue("giro", out var giro) && Convertir(giro, typeof(Vector3), out var r, orden)) beat.giro = (Vector3)r;
+        if (orden.opciones.TryGetValue("offset", out var offset) && FabricaDeEfectos.Convertir(offset, typeof(Vector3), out var v, orden)) beat.offset = (Vector3)v;
+        if (orden.opciones.TryGetValue("giro", out var giro) && FabricaDeEfectos.Convertir(giro, typeof(Vector3), out var r, orden)) beat.giro = (Vector3)r;
         float dura = 0f;
         float instante = t;
         if (beat.dejar)

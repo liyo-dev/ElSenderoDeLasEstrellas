@@ -49,6 +49,12 @@ public class GuionHorneado : ScriptableObject
     [Tooltip("Nombre del guion (el de la cabecera GUION del texto).")]
     public string nombre;
 
+    [Tooltip("Escena de Unity donde pasa (la de la cabecera ESCENA). La usa el previz del taller.")]
+    public string escena;
+
+    [Tooltip("Ruta del .guion.txt del que salió este horneado. La usa el taller para abrirlo y volver a hornear.")]
+    public string rutaDelTexto;
+
     [Tooltip("Duración total en segundos.")]
     public float duracion;
 
@@ -94,6 +100,10 @@ public class ActorHorneado
 {
     [Tooltip("Persistence ID del NPC (NPC_Archimago...) o 'Player'.")]
     public string id;
+
+    [Tooltip("Prefab del actor. El previz lo instancia cuando la escena no lo tiene colocado " +
+             "(los NPCs que aparecen en juego por un punto de aparición).")]
+    public string prefab;
 
     [Tooltip("Alias del guion, solo para leer avisos.")]
     public string alias;
@@ -234,6 +244,10 @@ public class PlanoHorneado
     public List<ClaveDePosicion> focos = new();
     public float t0;
     public float t1;
+
+    [Tooltip("Línea del guion de texto que pidió este plano (0 = horneado anterior a INC-1230).")]
+    public int linea;
+
     public TipoDePlano tipo;
     [Tooltip("Descripción legible, para el parte de rodaje.")]
     public string descripcion;

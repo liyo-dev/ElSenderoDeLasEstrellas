@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -76,6 +76,56 @@ public static partial class HorneadorDeGuion
         else if (horno.Avisos.Count > 0) Debug.LogWarning("[Guion] " + resumen);
         else Debug.Log("[Guion] " + resumen);
         return resultado;
+    }
+
+    /// Hornea sin escribir el asset, para el taller: devuelve el horneado en memoria y el Horno con
+    /// sus errores y avisos, para poder comparar con el actual antes de aceptar. Quien llama debe
+    /// soltar las poses (el taller lo hace en su finally) y destruir el horneado si no lo guarda.
+    internal static GuionHorneado HornearParaRevisar(string rutaTexto, out Horno horno, bool storyboard = false)
+    {
+        horno = null;
+        var texto = AssetDatabase.LoadAssetAtPath<TextAsset>(rutaTexto);
+        string fuente = texto != null ? texto.text : (File.Exists(rutaTexto) ? File.ReadAllText(rutaTexto) : null);
+        if (fuente == null) return null;
+
+        return HornearParaRevisar(rutaTexto, fuente, out horno, storyboard);
+    }
+
+    /// Igual, pero con el texto ya en memoria (el taller aplica un cambio en una línea sin escribirla
+    /// en disco hasta que el diff se acepta).
+    internal static GuionHorneado HornearParaRevisar(string rutaTexto, string fuente, out Horno horno,
+        bool storyboard = false)
+    {
+        horno = null;
+        if (string.IsNullOrEmpty(fuente)) return null;
+
+        horno = new Horno(GuionTexto.Leer(fuente), rutaTexto);
+        try { return horno.Hornear(storyboard, guardar: false); }
+        finally { horno.LiberarPoses(); EditorUtility.ClearProgressBar(); }
+    }
+
+    /// Comprobación rápida sin abrir la escena ni hornear: sintaxis del guion y que cada «efecto»
+    /// nombre un beat y unos campos que existen. No sustituye al horneado (no resuelve el reparto ni
+    /// los planos), pero responde en un parpadeo a «¿está bien escrito?». Ver INC-1230.
+    internal static List<string> ValidarTexto(string rutaTexto)
+    {
+        var errores = new List<string>();
+        if (string.IsNullOrEmpty(rutaTexto) || !File.Exists(rutaTexto))
+        {
+            errores.Add("No encuentro el .guion.txt.");
+            return errores;
+        }
+
+        GuionTexto guion = GuionTexto.Leer(File.ReadAllText(rutaTexto));
+        errores.AddRange(guion.errores);
+
+        foreach (GuionTexto.Orden orden in guion.hilo.Concat(guion.pistas))
+        {
+            if (orden.verbo != "efecto") continue;
+            FabricaDeEfectos.Crear(orden.args.FirstOrDefault(), orden.opciones, orden,
+                mensaje => errores.Add(mensaje), null);
+        }
+        return errores;
     }
 }
 
@@ -314,7 +364,7 @@ internal sealed partial class Horno
 
     // ── Hornear ─────────────────────────────────────────────────────────────────────────────
 
-    public GuionHorneado Hornear(bool storyboard)
+    public GuionHorneado Hornear(bool storyboard, bool guardar = true)
     {
         if (Errores.Count > 0) return null;
         EditorUtility.DisplayProgressBar("Hornear guion", "Escenario…", 0.05f);
@@ -372,10 +422,20 @@ internal sealed partial class Horno
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Cámaras…", 0.6f);
         _salida = ScriptableObject.CreateInstance<GuionHorneado>();
+        _salida.escena = _g.escena;
+        _salida.rutaDelTexto = _rutaTexto;
         ResolverPlanos();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Comprobando…", 0.8f);
         Validar();
+        PrepararSalida();
+
+        if (!guardar)
+        {
+            // Horneado en seco para el taller: el asset se queda en memoria hasta que se acepta el
+            // diff. No se escribe nada y no se dibujan recorridos ni storyboard.
+            return _salida;
+        }
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Guardando…", 0.85f);
         var asset = Guardar();
@@ -387,6 +447,9 @@ internal sealed partial class Horno
         }
         return asset;
     }
+
+    /// Escribe en disco el último horneado en seco, cuando el taller acepta el diff.
+    public GuionHorneado GuardarResultado() => Guardar();
 
     // ── Reparto y puntos ────────────────────────────────────────────────────────────────────
 
@@ -1496,8 +1559,6 @@ internal sealed partial class Horno
 
     // ── Efectos ─────────────────────────────────────────────────────────────────────────────
 
-    private static Dictionary<string, Type> _tiposDeBeat;
-
     private float Efecto(GuionTexto.Orden o, float t)
     {
         string clase = o.args.FirstOrDefault();
@@ -1509,95 +1570,8 @@ internal sealed partial class Horno
     }
 
     internal SequenceBeat CrearBeat(string clase, Dictionary<string, string> campos, GuionTexto.Orden o)
-    {
-        if (_tiposDeBeat == null)
-        {
-            _tiposDeBeat = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-            foreach (var t in TypeCache.GetTypesDerivedFrom<SequenceBeat>())
-                if (!t.IsAbstract) _tiposDeBeat[t.Name] = t;
-        }
-        if (string.IsNullOrEmpty(clase) || !_tiposDeBeat.TryGetValue(clase, out var tipo) && !_tiposDeBeat.TryGetValue(clase + "Beat", out tipo))
-        {
-            Error($"{o}: no existe el beat '{clase}'");
-            return null;
-        }
-        if (tipo == typeof(GuionBeat) || tipo == typeof(WaitBeat) || tipo == typeof(ParallelBeat))
-        {
-            Error($"{o}: '{tipo.Name}' no se usa dentro de un guion (el guion ya hace eso a su manera)");
-            return null;
-        }
-        var beat = (SequenceBeat)Activator.CreateInstance(tipo);
-        foreach (var kv in campos)
-        {
-            if (kv.Key == "dura" || kv.Key == "onlyIfFlag" || kv.Key == "skipIfFlag") continue;
-            if (beat is IConfigurableDesdeGuion configurable
-                && configurable.Configurar(kv.Key, kv.Value, alias => _actores.TryGetValue(alias, out var ac) ? ac.id : alias))
-                continue;
-            var campo = tipo.GetField(kv.Key, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            if (campo == null) { Error($"{o}: {tipo.Name} no tiene el campo '{kv.Key}'"); continue; }
-            if (!Convertir(kv.Value, campo.FieldType, out object valor, o)) continue;
-            campo.SetValue(beat, valor);
-        }
-        // Los ids de actor en un efecto pueden escribirse con su alias del guion.
-        foreach (var campo in tipo.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
-        {
-            if (campo.FieldType != typeof(string)) continue;
-            if (!(campo.Name.ToLowerInvariant().Contains("actor") || campo.Name.EndsWith("Id"))) continue;
-            var v = campo.GetValue(beat) as string;
-            if (v != null && _actores.TryGetValue(v, out var a)) campo.SetValue(beat, a.id);
-        }
-        return beat;
-    }
-
-    private bool Convertir(string texto, Type tipo, out object valor, GuionTexto.Orden o)
-    {
-        valor = null;
-        try
-        {
-            if (tipo == typeof(string)) { valor = texto; return true; }
-            if (tipo == typeof(float)) { valor = float.Parse(texto, CultureInfo.InvariantCulture); return true; }
-            if (tipo == typeof(int)) { valor = int.Parse(texto, CultureInfo.InvariantCulture); return true; }
-            if (tipo == typeof(bool)) { valor = texto == "si" || texto == "sí" || texto == "true" || texto == "1"; return true; }
-            if (tipo.IsEnum) { valor = Enum.Parse(tipo, texto, true); return true; }
-            if (tipo == typeof(Vector3))
-            {
-                var p = texto.Split(';', '|');
-                if (p.Length != 3) p = texto.Split(',');
-                valor = new Vector3(float.Parse(p[0], CultureInfo.InvariantCulture), float.Parse(p[1], CultureInfo.InvariantCulture), float.Parse(p[2], CultureInfo.InvariantCulture));
-                return true;
-            }
-            if (tipo == typeof(Color))
-            {
-                if (ColorUtility.TryParseHtmlString(texto.StartsWith("#") ? texto : "#" + texto, out var c)) { valor = c; return true; }
-                var p = texto.Split(';', '|');
-                valor = new Color(float.Parse(p[0], CultureInfo.InvariantCulture), float.Parse(p[1], CultureInfo.InvariantCulture),
-                    float.Parse(p[2], CultureInfo.InvariantCulture), p.Length > 3 ? float.Parse(p[3], CultureInfo.InvariantCulture) : 1f);
-                return true;
-            }
-            if (tipo == typeof(List<string>)) { valor = texto.Split('|').Select(s => s.Trim()).Where(s => s.Length > 0).ToList(); return true; }
-            if (typeof(UnityEngine.Object).IsAssignableFrom(tipo))
-            {
-                string ruta = texto;
-                if (!ruta.StartsWith("Assets/") && !ruta.StartsWith("Packages/"))
-                {
-                    var guid = AssetDatabase.FindAssets(Path.GetFileNameWithoutExtension(texto) + " t:" + tipo.Name)
-                        .FirstOrDefault(gd => Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(gd)) == Path.GetFileNameWithoutExtension(texto));
-                    if (guid == null && texto.Length == 32) guid = texto;
-                    ruta = guid != null ? AssetDatabase.GUIDToAssetPath(guid) : null;
-                }
-                valor = ruta != null ? AssetDatabase.LoadAssetAtPath(ruta, tipo) : null;
-                if (valor == null) { Error($"{o}: no encuentro el asset '{texto}' ({tipo.Name})"); return false; }
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Error($"{o}: no entiendo '{texto}' como {tipo.Name} ({ex.Message})");
-            return false;
-        }
-        Error($"{o}: campos de tipo {tipo.Name} no se pueden escribir en el guion");
-        return false;
-    }
+        => FabricaDeEfectos.Crear(clase, campos, o, Error,
+            alias => _actores.TryGetValue(alias, out var a) ? a.id : null);
 
     /// Órdenes cortas para los efectos de siempre.
     private float Azucar(GuionTexto.Orden o, float t)

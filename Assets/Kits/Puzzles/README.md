@@ -1,7 +1,7 @@
 # Kit Puzzles (niveles que van al compás)
 
-Piezas genéricas para niveles cuya geometría obedece a una música. Nada de aquí sabe de El Sendero:
-lo que cambia entre juegos va en datos o se enchufa desde fuera.
+Piezas genéricas para niveles cuya geometría obedece a una música. Nada de aquí sabe del juego que
+las usa: lo que cambia entre juegos va en datos o se enchufa desde fuera.
 
 - `MusicPulse`: reloj de tiempos y compases (BPM + tiempos por compás). Si hay una pista sonando,
   el reloj se lee de ella. Avisa de cada tiempo, de cada fuerte y del tiempo débil anterior.
@@ -16,5 +16,5 @@ lo que cambia entre juegos va en datos o se enchufa desde fuera.
 - `WeightPlate`: plato que cuenta cuerpos encima y avisa del peso. Quién es un cuerpo lo decide el
   juego con `WeightPlate.ResolveWeightBody`.
 
-En El Sendero, el enchufe está en `Assets/ElSendero/Connections/Puzzles/EnchufeDePuzzlesDelJuego.cs`
-y el nivel que las usa, en `Assets/ElSendero/Content/TemploQueCanta/` (TDD § 31, INC-1211).
+El juego enchufa quién cuenta como alcanzado, quién es un cuerpo y en qué nivel se usan desde su
+carpeta de `Connections/` (ver TDD § 31).

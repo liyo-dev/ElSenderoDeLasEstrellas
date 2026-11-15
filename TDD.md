@@ -1339,6 +1339,7 @@ Selector del grupo del panel de estado: bustos de Liam, Will y Estela que asoman
 `PresentacionDeLugares.Anunciar(claveDelLugar)` (`Scripts/UI/Avisos/`, auto-creado) es el camino único para anunciar que el jugador entra en un lugar con nombre. Hoy lo llama `AmbientZone` con `AmbientPreset.nombreDelLugar` (clave de `ui_*.json`, prefijo `LUGAR_`); cualquier otro sistema (portal, teletransporte, mapa) puede llamarlo igual.
 
 **Plano aéreo de lugar nuevo (INC-1171):** `Anunciar(clave, cajaDelLugar)` con caja (la da `AmbientZone`, de su collider, si `AmbientPreset.planoAlPresentar`) hace que la presentación de lugar nuevo lleve `PlanoDelLugar`: la cámara sube en vertical, se abre en picado sobre el lugar (foco entre el jugador y el centro de la caja, radio 14–30 m), gira despacio y baja a la espalda del jugador, todo en función del tiempo de la cinta. Tiene la cámara con `CameraDirectorService` (`EsDueno` para saber si se la han quitado), bloquea al jugador y esconde lo de pantalla con `OcultablesDeCinematica` con la presentación como clave (el árbitro no se calla ante un aviso que despeja la pantalla). Si la presentación pierde el turno, la cámara vuelve al jugador; al seguir, solo la cinta. La cinta corta no lleva plano.
+- **Orden con una cinemática (INC-1234):** el cine manda. La presentación cede ante `Situaciones.Cinematica` (igual que ante un combate), no se ve mientras dura y sale entera al terminar; la cinemática no espera a que acabe. Es lo que se quiere al salir de casa en el Cap. 1: primero el saludo de Oliver y, cuando acaba, la presentación del pueblo.
 - **Primera vez en la partida:** presentación en el canal `Cabecera` (`PresentacionDeLugarUI`, que monta `DramaticTextOverlayUI` en un lienzo propio de orden 112): cinta de papel que se despliega, pestaña de noche con `LUGAR_NUEVO` («Nuevo lugar»), estrella de oro con trazos de tinta, el nombre letra a letra y chispas de oro; quieta 2,6 s y se va (unos 4,5 s en total). Suena `UI_LugarDescubierto` (`AudioGraphProfile`). Todo lo que se ve es función del tiempo a la vista: con un menú o una cinemática se para y sigue después.
 - **Ya conocido:** rótulo breve con el nombre (2,5 s).
 - **Memoria:** `LugaresConocidos` (`Scripts/World/`), marcas `LUGAR_CONOCIDO:<clave>` en `Partida.Preset.flags`: se guardan con la partida y la partida nueva las borra. Sin partida o sin `DramaticTextOverlayUI` no se marca nada y sale el rótulo breve.
@@ -4921,7 +4922,7 @@ Lo que hay que vigilar al migrar (se añade a la lista de § 31.2):
 | `Kits.Core.GameContext` (`Has`, `Enter`, `Exit`, `Changed`; claves destruidas se descartan solas) | Escrito; falta compilar en Unity |
 | Situaciones del juego (`Situaciones.Combate`, `Situaciones.Cinematica`) | Escrito en `ElSendero/Connections/Core/` |
 | Publicadores | `ActiveCombatRegistry` (Combate, con cada NPC como clave) y `CinematicSequencerBase` (Cinemática, con cada secuencia como clave) |
-| Consumidores migrados | `ArbitroDeAvisos` lee `IAvisoEnPantalla.CedeAnte`; `PresentacionDeLugares` cede ante Combate (INC-1125). `AudioService.Co_MusicaDelLugar` no pone la música del lugar con una batalla sonando (INC-1124) |
+| Consumidores migrados | `ArbitroDeAvisos` lee `IAvisoEnPantalla.CedeAnte`; `PresentacionDeLugares` cede ante Combate (INC-1125) y Cinemática (INC-1234). `AudioService.Co_MusicaDelLugar` no pone la música del lugar con una batalla sonando (INC-1124) |
 | Política por consumidor | Hecha como declaración de cada aviso (`CedeAnte`), no como tabla central: es el patrón más pequeño que cubre el caso; se pasa a tabla de datos cuando haya más de un tipo de consumidor |
 | Pendiente | Migrar `AmbientZone` y el resto de predicados duplicados a `GameContext`; decidir si minimapa, comentarios del grupo y bocadillos ceden ante combate; test de arranque desde nodo en combate; `IContextPolicy` en `Kits.Core` si la política pasa a datos |
 
@@ -4950,82 +4951,100 @@ Lo que hay que vigilar al migrar (se añade a la lista de § 31.2):
 
 | Pieza | Archivo | Qué hace |
 |---|---|---|
-| `TallerDeRodajeWindow` | `Assets/Editor/Guion/TallerDeRodajeWindow.cs` | La mesa: elegir guion, hornear, lista de planos, contactos, errores clicables |
-| `FichaDeSecuenciaEditor` | `Assets/Editor/Guion/FichaDeSecuenciaEditor.cs` | `[CustomEditor(typeof(SequenceDefinition))]`: si hay `GuionBeat`, resumen de solo lectura + «Abrir el guion» + «Hornear»; si no, el inspector normal |
-| `CatalogoDeEfectos` | `Assets/Editor/Guion/CatalogoDeEfectos.cs` | `TypeCache.GetTypesDerivedFrom<SequenceBeat>()`, instancia con valores por defecto, `Describe()` y campos con `[Tooltip]`; busca y copia la línea base |
-| `FabricaDeEfectos` | `Assets/Editor/Guion/FabricaDeEfectos.cs` | El `CrearBeat` de `HorneadorDeGuion` (resolución por nombre + asignación de campos), extraído para que catálogo y horneador no se separen |
-| `PrevizDeGuion` | `Assets/Editor/Guion/PrevizDeGuion.cs` | Abre la escena aditiva, coloca actores y cámara por plano, rinde a `RenderTexture` y guarda PNG |
-| `HornoDiff` | `Assets/Editor/Guion/HornoDiff.cs` | Hornea a un asset temporal y compara con el actual: duración, planos cambiados, frases y efectos. Sin aceptar, no se escribe nada |
-| `RegistroDeCompilacion` | `Assets/Editor/Guion/RegistroDeCompilacion.cs` | Errores y avisos con `(línea, mensaje, gravedad)`, para pintarlos clicables |
-| Datos | `Assets/Scripts/Sequences/Guion/GuionHorneado.cs` | `GuionHorneado.rutaDelTexto` y `PlanoHorneado.linea`: de qué `.txt` viene y qué línea produjo cada plano |
+| `TallerDeRodajeWindow` | `Assets/Editor/Guion/TallerDeRodajeWindow.cs` | La mesa: elegir guion, validar, hornear, lista de planos, hoja de contactos, errores clicables y diff |
+| `FichaDeSecuenciaEditor` | `Assets/Editor/Guion/FichaDeSecuenciaEditor.cs` | `[CustomEditor(typeof(SequenceDefinition))]`: si hay `GuionBeat`, resumen de solo lectura + «Abrir el guion» + «Hornear» + «Abrir el taller»; si no, el inspector normal |
+| `CatalogoDeEfectosWindow` | `Assets/Editor/Guion/CatalogoDeEfectosWindow.cs` | Lista todos los `SequenceBeat` con `Describe()`, campos y tooltips; busca y copia la línea base |
+| `FabricaDeEfectos` | `Assets/Editor/Guion/FabricaDeEfectos.cs` | El `CrearBeat` de `HorneadorDeGuion`, extraído: resuelve la clase, convierte y asigna campos, y sirve también al catálogo |
+| `PrevizDeGuion` | `Assets/Editor/Guion/PrevizDeGuion.cs` | Abre la escena, coloca actores y cámara por plano, rinde a `RenderTexture` y guarda un PNG por plano |
+| `GuionDiff` | `Assets/Editor/Guion/GuionDiff.cs` | Compara el horneado actual con uno en memoria: duración, planos, lente, sujetos y cámara |
+| `GuionTextoEditable` | `Assets/Editor/Guion/GuionTextoEditable.cs` | Reescribe solo las claves pedidas en una línea del `.guion.txt`, conserva comentarios y el resto de opciones |
+| Datos | `Assets/Scripts/Sequences/Guion/GuionHorneado.cs` | `GuionHorneado.escena` y `rutaDelTexto`; `PlanoHorneado.linea`; `ActorHorneado.prefab` |
+| Errores | `Assets/Editor/Guion/HorneadorDeGuion.cs` | `Horno.Errores`/`Horno.Avisos` con su línea; `HornearParaRevisar` (sin escribir) y `ValidarTexto` (sin escena) |
 
 ### 33.3 El bucle de trabajo
 
-1. Elegir guion (los `.guion.txt` de `_SEQUENCES/Guiones/`, recientes arriba).
-2. **Hornear**: refresca el `TextAsset` (el paso «refrescar» de § 22.7 deja de ser manual), hornea y enseña errores con línea clicable.
-3. **Hoja de contactos**: un fotograma por plano, en orden, con su segundo y su descripción.
-4. Clic en un fotograma: plano grande y campos de encuadre (`encuadre`, `lente`, `altura`, `suavidad`, `mezcla`, `mano`).
-5. **Aplicar al guion**: escribe solo esas claves en la línea del `plano` (guardando antes el texto anterior), hornea a temporal, enseña el diff y, si se acepta, escribe el asset; si no, revierte la línea y borra el temporal.
-6. Repetir. En ningún momento hace falta abrir el Inspector del `SequenceDefinition`.
+1. Elegir guion horneado (el `.guion.txt` se encuentra por `rutaDelTexto` o por su nombre).
+2. **Validar** (opcional): sintaxis y catálogo de efectos, sin abrir la escena. Responde en un parpadeo.
+3. **Hornear**: hornea en seco, enseña errores y avisos con línea clicable y, si no hay errores, escribe el asset y el informe.
+4. **Hoja de contactos**: un fotograma por plano, en orden, con su segundo y su descripción.
+5. Clic en un fotograma: plano grande y campos de encuadre (`encuadre`, `lente`, `altura_foco`, `suave`, `mezcla`, `mano`).
+6. **Aplicar al guion**: aplica el cambio **en memoria**, hornea en seco, compara con el actual y enseña el diff. Solo al aceptar escribe el `.txt` y el asset. Si se descarta, no se ha tocado nada.
+7. Repetir. En ningún momento hace falta abrir el Inspector del `SequenceDefinition`.
 
 ### 33.4 Previz: qué enseña y qué no
 
-**v1 (esta incidencia).** Por cada `PlanoHorneado`: actores en su posición horneada (`Interpolar.Posicion`), visibilidad según `TramoVisible`, cámara con `GuionHorneado.PoseDeCamara(t)` y render a `RenderTexture` (640×360 para la tira, 1280×720 al abrir). Escena abierta aditiva y cerrada al acabar; si ya está abierta, se usa tal cual. Durante el render se apagan las raíces de las demás escenas cargadas (`Start`, `MainWorld`…) para que no se cuelen geometrías ni luces, y se restauran al terminar. Se guarda en `Guiones/<escena>/previz/<guion>/<n>.png` y se invalida con la `huella` del horneado.
+**v1 (esta incidencia).** Por cada `PlanoHorneado`: actores en su posición horneada (`Interpolar.Posicion`), visibilidad según `TramoVisible`, cámara con `GuionHorneado.PoseDeCamara(t)` y render a `RenderTexture` (640×360 para la tira, 1280×720 al abrir). Se guarda en `Guiones/previz/<guion>/<n>.png`.
 
-**No enseña**: el gesto exacto (los actores van en su pose de reposo), VFX, partículas ni props de mano. Para juzgar encuadre, cabezas cortadas y oclusiones sirve; para juzgar una mano, no. La ventana lo dice: «previz, no fotograma».
+- **Actores que la escena no tiene colocados**: los NPCs que aparecen en juego por un punto de aparición se montan desde su `ActorHorneado.prefab`, con los `MonoBehaviour` y los colliders apagados, y se destruyen al acabar.
+- **Pose**: a las copias se les muestrea el bucle base que tienen en ese segundo (`AnimationMode.SampleAnimationClip`), o su idle si no hay bucle. Así no salen en T. No se muestrean gestos ni poses de medio cuerpo.
+- **UI**: se apagan los `Canvas` y los `BillboardUI` de la escena durante el render (el icono de interacción «A» salía pegado al plano) y se restauran al acabar.
+- **Escena**: se usa tal como esté abierta; si el previz la abre, la cierra al terminar. Las posiciones, rotaciones y objetos activos se devuelven a como estaban.
 
-**v2 (solo si hace falta).** Muestrear el clip que toque con `AnimationMode.SampleAnimationClip` sobre el estado horneado. No entra en esta incidencia porque el intérprete que elige el estado en `t` es runtime y arrastra `SequenceActor`.
+**No enseña**: el gesto exacto, VFX, partículas ni props de mano. Para juzgar encuadre, cabezas cortadas y oclusiones sirve; para juzgar una mano, no. La ventana lo dice: «previz, no fotograma».
+
+**v2 (solo si hace falta).** Muestrear el gesto y la pose de medio cuerpo del segundo exacto, con el mismo criterio que el intérprete de runtime.
 
 ### 33.5 Datos y compatibilidad
 
-- `GuionHorneado.rutaDelTexto` y `PlanoHorneado.linea` son campos nuevos: los assets viejos cargan con `null`/`0` y la ventana pide volver a hornear antes de editar el encuadre. No hay renombres, así que no hace falta `[MovedFrom]`.
-- `RegistroDeCompilacion` cambia de texto a entradas estructuradas; los informes `.md` siguen saliendo igual.
-- **El horneador sigue siendo el único que escribe assets** (regla 1 de AGENTS.md). La ventana no toca el `.asset` a mano: llama a `Hornear` y, si acaso, escribe el `.guion.txt`.
+- `GuionHorneado.escena`, `GuionHorneado.rutaDelTexto`, `PlanoHorneado.linea` y `ActorHorneado.prefab` son campos nuevos: los assets viejos cargan con `null`/`0` y la ventana pide volver a hornear antes de editar el encuadre. No hay renombres, así que no hace falta `[MovedFrom]`.
+- Los errores y avisos del horneado siguen siendo las listas de texto de `Horno`; el taller les saca la línea con una expresión regular para hacerlos clicables.
+- **El horneador sigue siendo el único que escribe assets** (regla 1 de AGENTS.md). La ventana no toca el `.asset` a mano: escribe el `.guion.txt` y llama a `GuardarResultado`, que es el mismo `Guardar` de siempre.
 
 ### 33.6 Hornear con diff (protección del solver)
 
 Re-hornear no es «cambiar un campo»: vuelve a pasar el solver de cámaras y, si el solver ha cambiado desde el último horneado, los planos cambian (§ 25.5). Por eso «Aplicar al guion» nunca escribe directo:
 
-1. Guarda el texto anterior de la línea.
-2. Escribe solo las claves pedidas en el `.guion.txt` (conserva comentarios y el resto de opciones).
-3. Hornea a un `GuionHorneado` temporal.
-4. Compara con el actual: duración, nº de planos/frases/efectos, y por plano `[t0, t1]`, sujetos, lente y pose de cámara en el medio.
-5. Enseña la lista de cambios («3 planos movidos, 1 frase 0,4 s antes, el resto igual»).
-6. Si se acepta, escribe el asset; si no, revierte la línea con el texto guardado y borra el temporal.
+1. Aplica las claves pedidas sobre el texto **en memoria** (conserva comentarios y el resto de opciones).
+2. Hornea ese texto en seco, con el mismo `Horno` de siempre y sin escribir el asset.
+3. Compara con el horneado actual: duración, nº de planos/frases/efectos, y por plano `[t0, t1]`, sujetos, lente y pose de cámara en el medio.
+4. Enseña la lista de cambios («3 planos movidos, 1 frase 0,4 s antes, el resto igual»).
+5. Solo si se acepta, escribe el `.guion.txt` (con `ImportAsset`) y el asset. Si se descarta, el archivo no se ha tocado.
 
 ### 33.7 Errores y validación rápida
 
-- Errores del horneado con línea y gravedad, clicables.
-- **Validar sin hornear**: `GuionTexto.Leer` + resolución de reparto y de `efecto` (por `FabricaDeEfectos`), sin NavMesh, sin solver y sin escribir assets. Responde en un parpadeo a «¿está bien escrito?».
-- Avisos nuevos que el horneador ya conoce y hoy solo salen en el informe: `plano` con `&` (no avanza el hilo, § 22.7), frase sin voz, actor sin `REPARTO`, `efecto` con campo desconocido.
+- Errores y avisos del horneado con línea clicable; salen de `Horno.Errores`/`Horno.Avisos`.
+- **Validar sin hornear** (`ValidarTexto`): `GuionTexto.Leer` + resolución de cada `efecto` por `FabricaDeEfectos`, sin abrir la escena, sin NavMesh, sin solver y sin escribir assets. Detecta sintaxis, clases de beat y campos que no existen.
+- **Hornear en seco** (`HornearParaRevisar`): el horneado completo, pero con el asset en memoria. Es lo que alimenta el diff y el previz.
+- Avisos que el horneador ya conoce y salen en el informe: `plano` con `&` (no avanza el hilo, § 22.7), frase sin voz, actor sin `REPARTO`, `efecto` con campo desconocido.
 
 ### 33.8 Pruebas
 
-EditMode en `Assets/Editor/Guion/Tests/`:
+EditMode en `Assets/Editor/Guion/Tests/TallerDeRodajeTests.cs` (9 tests):
 
-- El catálogo encuentra **todos** los `SequenceBeat` y los instancia con valores por defecto sin lanzar.
-- `FabricaDeEfectos` resuelve cada nombre que lista el catálogo (si lista algo que el horneador no crea, el test falla).
-- Reescritura de línea: conserva comentarios, orden y claves no tocadas; añade la clave si no estaba.
-- Previz: cada `PlanoHorneado` devuelve pose de cámara válida y cada sujeto se resuelve en el reparto.
-- Diff: un horneado idéntico da cero cambios; mover un plano a mano en un temporal se detecta.
-- Horneado dorado: un guion fixture pequeño produce la duración, los planos y las líneas esperadas.
+- Todos los `SequenceBeat` del catálogo se instancian y los crea `FabricaDeEfectos`; la línea base empieza por `efecto <Nombre>`.
+- Reescritura de línea: cambia la clave, conserva comentarios y demás opciones, añade la que falta antes del comentario y no confunde un color `#FFAA00` con un comentario.
+- `ReescribirEnTexto` cambia solo la línea pedida.
+- El diff detecta otra lente y una cámara movida.
+
+**Comprobado el 15 nov 2026:** la suite EditMode entera, **60/60** (incluidos los 9 del taller). Prueba de humo con `Cap3_01_ElEspejo`: horneado en seco de 28,8 s, 6 planos, 2 actores, `linea0=40`; 6 fotogramas de previz; el diff detecta `lente 65 → 28`. Compila con 0 errores y 0 avisos.
 
 ### 33.9 Fases
 
-| Fase | Qué | Coste |
+| Fase | Qué | Estado |
 |---|---|---|
-| 1 | `FabricaDeEfectos`, `CatalogoDeEfectos`, `FichaDeSecuenciaEditor`, `rutaDelTexto` | Una sesión; quita los dos sistemas y hace descubribles los efectos |
-| 2 | `PrevizDeGuion` + `TallerDeRodajeWindow` con lista de planos y contactos | Una o dos; la de más riesgo técnico |
-| 3 | `PlanoHorneado.linea`, ajuste de encuadre y `HornoDiff` | Una; cierra el bucle «veo el plano, lo arreglo» |
-| 4 | Errores estructurados y validar sin hornear | Una |
+| 1 | `FabricaDeEfectos`, `CatalogoDeEfectosWindow`, `FichaDeSecuenciaEditor`, `rutaDelTexto` | Hecha |
+| 2 | `PrevizDeGuion` + `TallerDeRodajeWindow` con lista de planos y contactos | Hecha |
+| 3 | `PlanoHorneado.linea`, ajuste de encuadre y `GuionDiff` | Hecha |
+| 4 | Errores clicables y `ValidarTexto` sin hornear | Hecha |
 
 ### 33.10 Fuera de alcance
 
-- **Runtime determinista**: contrato estado/evento con `t`, `PlayVoice(clip, desdeSegundo)`, VFX atados al reloj y pausa real. Es la otra mitad del problema y va en su propia incidencia; sin ella, el previz mejora la autoría pero el seek sigue sin ser fiable.
+- **Runtime determinista**: contrato estado/evento con `t`, `PlayVoice(clip, desdeSegundo)`, VFX atados al reloj y pausa real. Es la otra mitad del problema y va en su propia incidencia; sin ella, el taller mejora la autoría pero el seek sigue sin ser fiable.
 - Timeline editable tipo DAW.
 - Editor de texto con resaltado (Raúl no lo marcó como fricción).
+- Gestos y poses de medio cuerpo en el previz (la pose base ya se muestrea).
 - Storyboard + IA: se apoya en este taller para poder revisar lo generado.
 
 ### 33.11 Relación con § 25
 
 El taller es la **capa de autoría** del producto que describe § 25.6. No hace las siete costuras de § 25.3 ni el empaquetado: eso es trabajo de extracción. Lo que sí hace es que el horneador se use como se diseñó (texto → botón → cinemática montada) en vez de escribiendo a ciegas.
+
+### 33.12 Estado
+
+| Punto | Estado |
+|---|---|
+| Fases 1–4 | Hechas (15 nov 2026) |
+| Compilación | 0 errores CS, 0 avisos (Editor) |
+| Tests | 60/60 EditMode; 9 del taller |
+| Prueba de humo | `Cap3_01_ElEspejo`: horneado en seco (28,8 s, 6 planos, 2 actores), 6 fotogramas de previz y diff de `lente 65 → 28` |
+| Pendiente | Probarlo en el editor con un guion real: abrir el taller, previsualizar y aplicar un encuadre |

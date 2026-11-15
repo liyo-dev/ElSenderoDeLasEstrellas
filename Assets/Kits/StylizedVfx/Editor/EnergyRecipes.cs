@@ -239,13 +239,13 @@ namespace Kits.StylizedVfx.Editor
             estela.Shape = ParticleSystemShapeType.Sphere; estela.Radius = c * 0.1f; estela.Tumble = s.TrailMesh != null && s.TrailMesh != m.Sphere;
             estela.SizeCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0f));
             var malla = s.TrailMesh ?? m.Sphere;
-            B.Particles(body, "Estela", malla, malla == m.Star ? p.Spark : p.Energy, estela);
+            B.Particles(body, "Trail", malla, malla == m.Star ? p.Spark : p.Energy, estela);
             if (s.TrailColors != null)
             {
                 foreach (var col in s.TrailColors)
                 {
                     var e = estela; e.Radius = c * 0.35f; e.RatePerMeter = estela.RatePerMeter * 0.6f;
-                    B.Particles(body, "Estela " + col.Name, malla, malla == m.Star ? col.Spark : col.Energy, e);
+                    B.Particles(body, "Trail " + col.Name, malla, malla == m.Star ? col.Spark : col.Energy, e);
                 }
             }
             Pulse(root, rs.ToArray(), B.PointLight(body, p.Light), spins.ToArray(), s.Light > 0 ? s.Light : 2.2f, 2.5f, 0.5f, 0.3f, 0.08f);

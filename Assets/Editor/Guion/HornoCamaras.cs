@@ -185,7 +185,7 @@ internal sealed partial class Horno
         }
 
         e.aireArriba = _g.texto == PresentacionDeTexto.Bocadillo && (e.tipo == TipoDePlano.Primer || e.tipo == TipoDePlano.Medio);
-        var plano = new PlanoHorneado { t0 = t0, t1 = t1, tipo = e.tipo, mezcla = o.OpF("mezcla", 0f), mano = Mathf.Clamp01(o.OpF("mano", 0.12f)) };
+        var plano = new PlanoHorneado { t0 = t0, t1 = t1, linea = o.linea, tipo = e.tipo, mezcla = o.OpF("mezcla", 0f), mano = Mathf.Clamp01(o.OpF("mano", 0.12f)) };
         e.lente = o.OpF("lente", LentePorDefecto(e.tipo));
         plano.lente = e.lente;
         plano.lenteFinal = o.OpF("zoom", 0f);

@@ -186,7 +186,10 @@ internal sealed partial class Horno
 
     // ── El asset ────────────────────────────────────────────────────────────────────────────
 
-    private GuionHorneado Guardar()
+    /// Rellena el GuionHorneado con lo que se ha calculado. Se llama siempre, también en el
+    /// horneado en seco del taller: sin esto, el asset en memoria no tendría ni nombre, ni duración,
+    /// ni actores, y el previz y el diff trabajarían con un guion vacío.
+    public void PrepararSalida()
     {
         _salida.nombre = _g.nombre;
         _salida.duracion = _fin;
@@ -197,6 +200,7 @@ internal sealed partial class Horno
         _salida.puntos = _puntos.Select(kv => new PuntoHorneado { nombre = kv.Key, posicion = kv.Value }).ToList();
         _salida.efectos = _efectos;
         _salida.etiquetas = _etiquetas.OrderBy(kv => kv.Value).Select(kv => new EtiquetaHorneada { nombre = kv.Key, t = kv.Value }).ToList();
+        _salida.actores.Clear();
         foreach (var a in _actores.Values)
         {
             Color color = default;
@@ -206,6 +210,7 @@ internal sealed partial class Horno
             {
                 id = a.id, alias = a.alias, colorDelNombre = color,
                 claveDelNombre = a.reparto.opciones.TryGetValue("nombre", out var n) ? n : null,
+                prefab = a.prefab != null ? AssetDatabase.GetAssetPath(a.prefab) : null,
             };
             h.posiciones.AddRange(Comprimir(a.pos));
             h.miradas.AddRange(a.miradas);
@@ -230,6 +235,13 @@ internal sealed partial class Horno
             }
             _salida.actores.Add(h);
         }
+    }
+
+    /// Escribe el asset y lo enlaza con su SequenceDefinition. Antes rellena la salida, para que
+    /// también sirva cuando se llama desde un horneado en seco ya preparado.
+    public GuionHorneado Guardar()
+    {
+        PrepararSalida();
 
         string dir = Path.GetDirectoryName(_rutaTexto).Replace('\\', '/');
         string ruta = $"{dir}/{_g.nombre}_Horneado.asset";
