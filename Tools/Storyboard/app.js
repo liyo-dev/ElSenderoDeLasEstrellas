@@ -426,9 +426,9 @@
       const provisional = {
         tipo: d.tipo,
         color: colorDe(panelId, elementoActual(panelId)),
-        puntos: d.puntos,
-        p1: d.p1,
-        p2: d.p2,
+        puntos: d.tipo === "trazo" ? d.puntos.map((q) => [q.x, q.y]) : null,
+        p1: d.p1 ? [d.p1.x, d.p1.y] : null,
+        p2: d.p2 ? [d.p2.x, d.p2.y] : null,
         caja: d.caja
       };
       dibujarAnotacion(ctx, canvas, provisional, 0.65);
