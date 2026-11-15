@@ -441,7 +441,8 @@ public class SpeechBubbleUI : MonoBehaviour
                      bool fijoEnPantalla = false,
                      PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo,
                      Color colorDelNombre = default,
-                     bool fueraDeEscena = false, Sprite retrato = null)
+                     bool fueraDeEscena = false, Sprite retrato = null,
+                     bool enCinematica = false)
     {
         // Una frase se ve de dos maneras: en bocadillo o en cinemática. El subtítulo vive en la
         // banda de cine de abajo; sin bandas (una frase del juego de alguien lejos o fuera de
@@ -459,7 +460,7 @@ public class SpeechBubbleUI : MonoBehaviour
             fijoEnPantalla = target == null || !SeVeEnPantalla(target, worldOffset);
             conCirculitos = false;
         }
-        else if (presentacion == PresentacionDeTexto.Subtitulo && !HayBandasDeCine)
+        else if (presentacion == PresentacionDeTexto.Subtitulo && !HayBandasDeCine && !enCinematica)
         {
             presentacion = PresentacionDeTexto.Bocadillo;
             fijoEnPantalla = !SeVeEnPantalla(target, worldOffset);

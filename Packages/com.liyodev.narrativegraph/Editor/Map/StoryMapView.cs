@@ -466,10 +466,10 @@ namespace NarrativeGraphEditor
                 return;
             }
 
-            LayoutMap();
             _placements = Compute(_step);
             var previousStep = PreviousStep();
             _previous = previousStep != null ? Compute(previousStep) : new Dictionary<string, Placement>();
+            LayoutMap();
             Layout(_placements, _positions, out int away, out int homeless);
             Layout(_previous, _previousPositions, out _, out _);
             RefreshSlider();
@@ -611,7 +611,12 @@ namespace NarrativeGraphEditor
             if (hasUnknown)
                 scenes.Add(new NarrativeWorldMap.Scene { id = string.Empty, name = StoryText.T("Sin escena", "No scene"), order = int.MaxValue });
 
-            const float bandX = 40f, bandW = CanvasW - 80f, headerH = 40f, gap = 18f, placeW = 300f, placeH = 170f;
+            const float bandX = 40f, bandW = CanvasW - 80f, headerH = 40f, gap = 18f, placeW = 300f;
+            int columns = Mathf.Max(1, Mathf.FloorToInt((bandW - gap) / (placeW + gap)));
+            int maxCount = _map.zones.Count == 0 ? 0 : _map.zones.Max(z =>
+                _placements.Values.Count(p => !p.Away && p.Zone != null && p.Zone.id == z.id));
+            int maxRows = Mathf.Max(1, Mathf.CeilToInt(maxCount / (float)columns));
+            float placeH = Mathf.Max(170f, 34f + maxRows * (TokenH + 6) + 10f);
             float cursor = 30f;
             foreach (var scene in scenes)
             {
@@ -653,7 +658,7 @@ namespace NarrativeGraphEditor
             var ring = new VisualElement { pickingMode = PickingMode.Ignore, style = { width = 40, height = 40, backgroundColor = col, overflow = Overflow.Hidden } };
             Round(ring, 20);
             SetBorder(ring, sel ? Color.white : col, 3);
-            var face = StoryCardImages.PortraitOf(c.actorId);
+            var face = StoryCardImages.PortraitOf(c.actorId, prefabFallback: false);
             if (face != null) ring.Add(new Image { image = face, scaleMode = ScaleMode.ScaleAndCrop, pickingMode = PickingMode.Ignore, style = { flexGrow = 1 } });
             else ring.Add(new Label(string.IsNullOrEmpty(c.name) ? "?" : c.name.Substring(0, 1)) { pickingMode = PickingMode.Ignore, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleCenter, fontSize = 17, unityFontStyleAndWeight = FontStyle.Bold, color = Color.white } });
             el.Add(ring);

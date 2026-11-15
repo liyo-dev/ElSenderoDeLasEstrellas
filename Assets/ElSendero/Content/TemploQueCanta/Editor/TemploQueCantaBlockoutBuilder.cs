@@ -29,8 +29,12 @@ public static class TemploQueCantaBlockoutBuilder
 
     // ── El sitio ────────────────────────────────────────────────────────────────────────────
     private const float AltoDeLosMuros = 7f;
-    private const float Foso = 0.9f;          // lo que baja el fondo del foso respecto al suelo
+    private const float Foso = 2.5f;          // lo que baja el fondo del foso respecto al suelo
     private const int VelasDeLaBalanza = 24;  // una por compás: 48 s para pensar
+    /// <summary>La balanza va detrás de la huida: todo lo suyo se construye y se corre este trecho.</summary>
+    private const float ZDeLaBalanza = 84f;
+    /// <summary>Filas de losas de la huida (una por compás, como mucho).</summary>
+    private const int FilasDeLaHuida = 12;
 
     private static Material _gris, _grisOscuro, _rojo, _cristal, _lava, _cristalLuz, _brasa;
 
@@ -38,8 +42,12 @@ public static class TemploQueCantaBlockoutBuilder
     public static void Montar()
     {
         var activaAntes = SceneManager.GetActiveScene();
-        var abierta = SceneManager.GetSceneByPath(RutaEscena);
-        if (abierta.IsValid() && abierta.isLoaded) EditorSceneManager.CloseScene(abierta, true);
+        // Se cierra por ruta aunque esté abierta: si no, SaveScene falla con «another open scene».
+        for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+        {
+            var abierta = SceneManager.GetSceneAt(i);
+            if (abierta.path == RutaEscena) EditorSceneManager.CloseScene(abierta, true);
+        }
 
         var escena = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         CrearCarpeta(CarpetaDatos);
@@ -54,7 +62,9 @@ public static class TemploQueCantaBlockoutBuilder
 
         var pulso = CrearPulso(raiz);
         CrearAntesala(raiz, escena, pulso);
+        CrearHuida(raiz, escena, pulso);
         var balanza = CrearBalanza(raiz, escena, pulso);
+        SinVuelo(raiz);
 
         var nav = raiz.gameObject.AddComponent<NavMeshSurface>();
         nav.collectObjects = CollectObjects.Children;
@@ -109,28 +119,27 @@ public static class TemploQueCantaBlockoutBuilder
         Suelo("Orilla este", sala.transform, escena, new Vector3(6f, -0.5f, 3.7f), new Vector3(6f, 1f, 5.4f));
         Suelo("Orilla del fondo", sala.transform, escena, new Vector3(0f, -0.5f, 6.8f), new Vector3(18f, 1f, 0.8f));
         Suelo("Fondo del foso", sala.transform, escena, new Vector3(0f, -0.5f - Foso, 3.7f), new Vector3(6f, 1f, 5.4f));
-        Suelo("Paso a la balanza", sala.transform, escena, new Vector3(0f, -0.5f, 9.6f), new Vector3(4.5f, 1f, 4.8f));
+        Suelo("Paso a la balanza", sala.transform, escena, new Vector3(0f, -0.5f, 7.8f), new Vector3(4.5f, 1f, 1.2f));
 
-        // La lava del fondo: se ve, y quema. Así, caerse se nota desde la antesala.
-        var lava = Caja("Lava", sala.transform, escena, new Vector3(0f, -0.86f, 3.7f),
+        // La lava del fondo: se ve, y quema. El foso es hondo y se sale de él por ningún lado.
+        var lava = Caja("Lava", sala.transform, escena, new Vector3(0f, -0.5f - Foso + 0.06f, 3.7f),
                         new Vector3(5.9f, 0.06f, 5.3f), _lava, suelo: false);
         Object.DestroyImmediate(lava.GetComponent<Collider>());
         var quema = new GameObject("Lava que quema");
         quema.transform.SetParent(sala, false);
-        quema.transform.position = new Vector3(0f, -0.45f, 3.7f);
+        quema.transform.position = new Vector3(0f, -0.5f - Foso + 1f, 3.7f);
         var zonaQuema = quema.AddComponent<BoxCollider>();
         zonaQuema.isTrigger = true;
-        zonaQuema.size = new Vector3(5.9f, 0.9f, 5.3f);
+        zonaQuema.size = new Vector3(5.9f, 2f, 5.3f);
         var dano = quema.AddComponent<ZonaDeDano>();
         Poner(dano, "danoPorSegundo", 30f);
 
-        // Losas del centro: un puente de tres tramos que cubre el foso entero, sin huecos donde
-        // caerse (el salto no es el puzle: lo es el compás). Se hunden medio compás y avisan antes.
-        var centroDeLasLosas = new[] { 1.9f, 3.7f, 5.5f };
+        // Losas del centro: tres, con un hueco de un metro que hay que saltar. Se hunden alternando.
+        var centroDeLasLosas = new[] { 1.4f, 3.6f, 5.8f };
         for (int i = 0; i < centroDeLasLosas.Length; i++)
         {
             var losa = Caja($"Losa {i + 1}", sala.transform, escena,
-                            new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.8f), _gris, suelo: true);
+                            new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.2f), _gris, suelo: true);
             var tile = losa.AddComponent<PulseTile>();
             Poner(tile, "pulse", pulso);
             Poner(tile, "cycleMeasures", 2);
@@ -181,7 +190,7 @@ public static class TemploQueCantaBlockoutBuilder
         salida.position = new Vector3(0f, 0.2f, -3.2f);
         var meta = new GameObject("Meta del tramo").transform;
         meta.SetParent(tramo.transform, false);
-        meta.position = new Vector3(0f, 0.2f, 11.2f);
+        meta.position = new Vector3(0f, 0.2f, 8.6f);
         var antesala = tramo.AddComponent<TramoDelTemploQueCanta>();
         PonerRef(antesala, "salidaDelJugador", salida);
         Poner(antesala, "empezarAlActivarse", true);
@@ -191,7 +200,7 @@ public static class TemploQueCantaBlockoutBuilder
         Poner(antesala, "fundido", 0.2f);
         Poner(antesala, "pausaAntesDelReintento", 0.25f);
         Poner(antesala, "reintentarAlFallar", true);
-        Poner(antesala, "alturaDelFoso", -0.4f);
+        Poner(antesala, "alturaDelFoso", -1.2f);
         PonerRef(antesala, "pulso", pulso);
         PonerRef(antesala, "meta", meta);
         Poner(antesala, "radioDeLaMeta", 2f);
@@ -279,13 +288,9 @@ public static class TemploQueCantaBlockoutBuilder
         Poner(mareaComp, "advanceAtStart", false);
 
         // Sin vuelo en todo el templo.
-        var sinVuelo = new GameObject("Sin vuelo en el templo");
-        sinVuelo.transform.SetParent(raiz, false);
-        sinVuelo.transform.position = new Vector3(0f, 4f, 14f);
-        var zona = sinVuelo.AddComponent<BoxCollider>();
-        zona.isTrigger = true;
-        zona.size = new Vector3(30f, 14f, 46f);
-        sinVuelo.AddComponent<ZonaQueBloqueaHabilidades>();
+        // La sala se construye a mano con sus coordenadas de siempre y luego se corre entera detrás
+        // de la huida: mover la raíz lleva consigo todo lo que cuelga de ella.
+        sala.transform.position = new Vector3(0f, 0f, ZDeLaBalanza);
 
         return new DatosDeLaBalanza
         {
@@ -297,21 +302,20 @@ public static class TemploQueCantaBlockoutBuilder
             Marea = mareaComp,
         };
     }
-
     private static TramoDelTemploQueCanta CrearTramo(Transform raiz, Scene escena, MusicPulse pulso, DatosDeLaBalanza balanza)
     {
         var go = new GameObject("Tramo 2: la balanza");
         go.transform.SetParent(raiz, false);
-        go.transform.position = new Vector3(0f, 0f, 12f);
+        go.transform.position = new Vector3(0f, 0f, 12f + ZDeLaBalanza);
 
         var salida = new GameObject("Salida del tramo").transform;
         salida.SetParent(go.transform, false);
-        salida.position = new Vector3(-6f, 0.2f, 14f);
+        salida.position = new Vector3(-6f, 0.2f, 14f + ZDeLaBalanza);
         salida.rotation = Quaternion.identity;
 
         var meta = new GameObject("Meta del tramo").transform;
         meta.SetParent(go.transform, false);
-        meta.position = new Vector3(-6f, 4.7f, 34.2f);
+        meta.position = new Vector3(-6f, 4.7f, 34.2f + ZDeLaBalanza);
 
         var tramo = go.AddComponent<TramoDelTemploQueCanta>();
         PonerRef(tramo, "salidaDelJugador", salida);
@@ -340,7 +344,118 @@ public static class TemploQueCantaBlockoutBuilder
         ConectarVoid(balanza.Plato.AlPerderElPeso, balanza.Ascensor.MoveDown);
     }
 
+    /// <summary>
+    /// Tramo 1: la primera huida. Un pasillo sobre lava con filas de losas que se hunden al compás y
+    /// la marea entrando por detrás. Los compañeros van por una cornisa paralela, sin saltos: la IA
+    /// no salta al compás. Se entra desde la antesala y se sale en el rellano de la balanza.
+    /// </summary>
+    private static void CrearHuida(Transform raiz, Scene escena, MusicPulse pulso)
+    {
+        var huida = new GameObject("1. La huida").transform;
+        huida.SetParent(raiz, false);
+
+        // Rellanos de entrada y salida, y el foso de lava en medio.
+        Suelo("Rellano de salida", huida, escena, new Vector3(0f, -0.5f, 9.6f), new Vector3(8f, 1f, 3.2f));
+        Suelo("Rellano de la balanza", huida, escena, new Vector3(0f, -0.5f, 88.5f), new Vector3(8f, 1f, 13f));
+        Suelo("Fondo del foso", huida, escena, new Vector3(0f, -0.5f - Foso, 46.6f), new Vector3(8f, 1f, 70.8f));
+
+        var lava = Caja("Lava de la huida", huida, escena, new Vector3(0f, -0.5f - Foso + 0.06f, 46.6f),
+                        new Vector3(7.9f, 0.06f, 70.6f), _lava, suelo: false);
+        Object.DestroyImmediate(lava.GetComponent<Collider>());
+        var quema = new GameObject("Lava de la huida que quema");
+        quema.transform.SetParent(huida, false);
+        quema.transform.position = new Vector3(0f, -0.5f - Foso + 1f, 46.6f);
+        var zonaQuema = quema.AddComponent<BoxCollider>();
+        zonaQuema.isTrigger = true;
+        zonaQuema.size = new Vector3(7.9f, 2f, 70.6f);
+        var dano = quema.AddComponent<ZonaDeDano>();
+        Poner(dano, "danoPorSegundo", 30f);
+
+        // La cornisa de los compañeros: al otro lado del muro, para que no sea un atajo. Se ven por
+        // las ventanas y solo se junta con el rellano al final (el muro se acaba antes).
+        Suelo("Cornisa de los compañeros", huida, escena, new Vector3(11.6f, -0.5f, 51.5f), new Vector3(4f, 1f, 87f));
+        Muro("Muro exterior de la cornisa", huida, escena, new Vector3(13.8f, AltoDeLosMuros * 0.5f, 51.5f), new Vector3(0.4f, AltoDeLosMuros, 87f));
+        Muro("Cierre sur de la cornisa", huida, escena, new Vector3(11.6f, AltoDeLosMuros * 0.5f, 7.9f), new Vector3(4.4f, AltoDeLosMuros, 0.4f));
+
+        // El muro que separa el pasillo de la cornisa, con ventanas: se les ve correr.
+        for (float z = 8f; z < 86f; z += 10f)
+            Muro($"Muro este de la huida ({z})", huida, escena, new Vector3(8.6f, AltoDeLosMuros * 0.5f, z + 4f), new Vector3(0.4f, AltoDeLosMuros, 8f));
+        Muro("Muro oeste de la huida", huida, escena, new Vector3(-4.2f, AltoDeLosMuros * 0.5f, 51.5f), new Vector3(0.4f, AltoDeLosMuros, 87f));
+
+        // Desde donde arrancan los compañeros en cada intento (los mete ahí el tramo).
+        var puesto = new GameObject("Puesto de los compañeros").transform;
+        puesto.SetParent(huida, false);
+        puesto.position = new Vector3(11.6f, 0.2f, 9.8f);
+
+        // Las losas: una fila por compás, anchas, con un hueco que se salta de sobra.
+        var losas = new GameObject[FilasDeLaHuida];
+        for (int i = 0; i < FilasDeLaHuida; i++)
+        {
+            var fila = Caja($"Losa de la huida {i + 1}", huida, escena,
+                            new Vector3(0f, 0.05f, 13.2f + i * 6.1f), new Vector3(5f, 0.3f, 3.5f), _gris, suelo: true);
+            var tile = fila.AddComponent<PulseTile>();
+            Poner(tile, "pulse", pulso);
+            Poner(tile, "cycleMeasures", 2);
+            // Las ocho primeras se hunden todas a la vez; las últimas, alternando (zigzag).
+            Poner(tile, "sinkOnMeasureInCycle", i < 8 ? 0 : i % 2);
+            Poner(tile, "sunkBeats", 1);
+            Poner(tile, "sinkDepth", 0.5f);
+            Poner(tile, "warnSquash", 0.14f);
+            Poner(tile, "warnShake", 0.06f);
+            losas[i] = fila;
+        }
+
+        // La marea, entrando por detrás al empezar el tramo.
+        var marea = Caja("Marea de la huida", huida, escena, new Vector3(0f, 0.75f, 9.2f),
+                         new Vector3(7.8f, 1.5f, 0.8f), _rojo, suelo: false);
+        var mareaComp = marea.AddComponent<PulseTide>();
+        Poner(mareaComp, "pulse", pulso);
+        PonerVector(mareaComp, "advanceDirection", Vector3.forward);
+        Poner(mareaComp, "metersPerMeasure", 3.5f);
+        Poner(mareaComp, "advanceAtStart", false);
+
+        // El tramo: al caer a la lava o si la marea alcanza, se vuelve a la entrada.
+        var go = new GameObject("Tramo 1: la huida");
+        go.transform.SetParent(huida, false);
+        var salida = new GameObject("Salida del tramo").transform;
+        salida.SetParent(go.transform, false);
+        salida.position = new Vector3(0f, 0.2f, 9f);
+        var meta = new GameObject("Meta del tramo").transform;
+        meta.SetParent(go.transform, false);
+        meta.position = new Vector3(0f, 0.2f, 90f);
+
+        var tramo = go.AddComponent<TramoDelTemploQueCanta>();
+        PonerRef(tramo, "salidaDelJugador", salida);
+        Poner(tramo, "empezarAlActivarse", false);
+        Poner(tramo, "radioDeLaSalida", 5f);
+        Poner(tramo, "segundosDeCuentaAtras", 0);
+        Poner(tramo, "claveDeSalida", "");
+        Poner(tramo, "textoDeSalida", "");
+        Poner(tramo, "fundido", 0.2f);
+        Poner(tramo, "pausaAntesDelReintento", 0.25f);
+        Poner(tramo, "reintentarAlFallar", true);
+        Poner(tramo, "alturaDelFoso", -1.2f);
+        PonerRef(tramo, "pulso", pulso);
+        PonerRef(tramo, "marea", mareaComp);
+        PonerRef(tramo, "meta", meta);
+        PonerRef(tramo, "puestoDeLosCompaneros", puesto);
+        Poner(tramo, "radioDeLaMeta", 3f);
+        PonerRefs(tramo, "losas", losas);
+    }
+
     // ── Piezas de escena ────────────────────────────────────────────────────────────────────
+
+    /// <summary>Sin vuelo en todo el templo: la magia de volar se apaga al entrar.</summary>
+    private static void SinVuelo(Transform raiz)
+    {
+        var go = new GameObject("Sin vuelo en el templo");
+        go.transform.SetParent(raiz, false);
+        go.transform.position = new Vector3(0f, 6f, 60f);
+        var zona = go.AddComponent<BoxCollider>();
+        zona.isTrigger = true;
+        zona.size = new Vector3(40f, 18f, 190f);
+        go.AddComponent<ZonaQueBloqueaHabilidades>();
+    }
 
     /// <summary>Por dónde entra el jugador al probar la escena desde Arranque («Probar esta escena»).</summary>
     private const string IdDelAncla = "InicioTemploQueCanta";

@@ -291,7 +291,7 @@ public class SayBeat : SequenceBeat
             AplicarExpresiones(ctx, totalCharacters > 0 ? (float)caracteresLeidos / totalCharacters : 0f, expresionesAplicadas);
             turnoDelBocadillo = PresentadorDeLinea.Mostrar(anchor, page, duracion, estilo,
                 speakerName, colorDelNombre, offsetOverride, () => done = true, trigger,
-                fueraDeEscena: vozFuera, retrato: vozFuera ? retrato : null);
+                fueraDeEscena: vozFuera, retrato: vozFuera ? retrato : null, enCinematica: true);
 
             if (hasVoice && !voiceStarted)
             {

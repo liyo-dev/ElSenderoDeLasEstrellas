@@ -361,8 +361,8 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                 if (cuerpo != null)
                 {
                     cuerpo.position = origen + PiesDelMago - Vector3.forward * Mathf.Lerp(5f, 0f, f);
-                    if (!andando) { andando = true; Gesto(animMago, "Walk", 0.15f); }
-                    Caminar(animMago, 0.65f);
+                    if (!andando) { andando = true; Locomocion(animMago); }
+                    Caminar(animMago, 0.5f);
                 }
                 Vector3 pies = cuerpo != null ? cuerpo.position : origen + PiesDelMago;
                 Vector3 desde = pies - Vector3.forward * 5.2f + Vector3.up * 1.55f + Vector3.right * 0.35f;
@@ -381,7 +381,8 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                 {
                     dicho1 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoDeseo), 3.4f,
-                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null,
+                        enCinematica: true);
                     PresentadorDeLinea.SonarLaVoz(textoDeseo);
                 }
             }
@@ -435,7 +436,8 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                 {
                     dicho2 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPorFin), 1.8f,
-                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null,
+                        enCinematica: true);
                     PresentadorDeLinea.SonarLaVoz(textoPorFin);
                 }
                 if (!risa && t > 17.8f)
@@ -465,37 +467,46 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                 {
                     dicho3 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPoder), 2.8f,
-                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null,
+                        enCinematica: true);
                     PresentadorDeLinea.SonarLaVoz(textoPoder);
                 }
             }
             else
             {
-                // La cámara se queda con él: al acabar la frase se gira y mira atrás, y el punto
-                // amarillo del poder aparece al fondo, detrás de él. Sin viaje de cámara: se ve el
-                // gesto de girarse y lo que encuentra, que es lo que cuenta el plano.
-                Vector3 cara = cabeza != null ? cabeza.position : ojos;
-                float f = VeloDeApertura.Suave((t - 21.6f) / 2.2f);
-                float ang = Mathf.Lerp(26f, 33f, f) * Mathf.Deg2Rad;
-                float radio = Mathf.Lerp(2.1f, 3.1f, f);
-                Vector3 desde = cara + new Vector3(Mathf.Sin(ang) * radio, Mathf.Lerp(0.02f, 0.4f, f), Mathf.Cos(ang) * radio);
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(cara - desde));
-                fov = Mathf.Lerp(26f, 32f, f);
+                // Sin pausas: la cámara gira alrededor del mago, se coloca justo detrás de él,
+                // sube por encima de su cabeza y, cuando el punto amarillo aparece al fondo, se
+                // va hacia él de un tirón hasta el fundido. Él no se mueve del sitio: el viaje
+                // lo hace la cámara.
+                Vector3 pies = cuerpo != null ? cuerpo.position : origen + PiesDelMago;
+                Vector3 adelante = cuerpo != null ? cuerpo.forward : Vector3.forward;
+                Vector3 cara = cabeza != null ? cabeza.position : pies + Vector3.up * 1.6f;
+                float t0 = 21.6f;
 
-                // El giro va por el transform, no por el Animator: la cabeza primero y el cuerpo
-                // después, 150° hasta quedar de espaldas al plano mirando al punto.
-                float giro = VeloDeApertura.Suave((t - 21.5f) / 1.5f) * 150f;
-                if (cuerpo != null) cuerpo.rotation = Quaternion.Euler(0f, giro, 0f);
-
-                // El punto amarillo, al fondo, en el hueco que deja el giro.
-                float aparece = VeloDeApertura.Suave((t - 22.4f) / 1.4f);
-                Vector3 atras = cuerpo != null ? cuerpo.forward : Vector3.forward;
-                Vector3 posPunto = (cuerpo != null ? cuerpo.position : origen + PiesDelMago) + atras * 26f + Vector3.up * 2.2f;
+                // El punto amarillo del poder, al fondo, delante de él (hacia donde mira).
+                float aparece = VeloDeApertura.Suave((t - t0 - 1.6f) / 1.6f);
+                Vector3 posPunto = pies + adelante * 26f + Vector3.up * 2.0f;
                 estrella.transform.position = posPunto;
                 brilloEstrella.transform.position = posPunto;
                 float latido = 0.9f + 0.1f * Mathf.Sin(t * 4f);
-                estrella.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 0.85f, aparece) * latido;
+                estrella.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 0.9f, aparece) * latido;
                 brilloEstrella.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 5.5f, aparece) * latido;
+
+                // Vuelta alrededor: del frente (26°) a justo detrás (205°), acercándose y subiendo.
+                float vuelta = VeloDeApertura.Suave(Mathf.Clamp01((t - t0) / 2.4f));
+                float ang = Mathf.Lerp(26f, 205f, vuelta) * Mathf.Deg2Rad;
+                float radio = Mathf.Lerp(2.1f, 1.55f, vuelta);
+                float alto = Mathf.Lerp(1.62f, 2.35f, VeloDeApertura.Suave(Mathf.Clamp01((t - t0 - 1.0f) / 2.0f)));
+                Vector3 detras = pies + new Vector3(Mathf.Sin(ang) * radio, alto, Mathf.Cos(ang) * radio);
+
+                // Y desde ahí, hacia el punto: pasa por encima de su cabeza y se aleja.
+                float finViaje = Mathf.Max(0.1f, (fin - 1.2f) - (t0 + 2.6f));
+                float viaje = VeloDeApertura.Suave(Mathf.Clamp01((t - (t0 + 2.6f)) / finViaje));
+                Vector3 pos = Vector3.Lerp(detras, posPunto, viaje * 0.94f);
+                pos.y += Mathf.Sin(viaje * Mathf.PI) * 0.35f;   // más aire al pasar sobre la cabeza
+                Vector3 mira = Vector3.Lerp(cara, posPunto, VeloDeApertura.Suave(Mathf.Clamp01((t - (t0 + 1.2f)) / 1.8f)));
+                cam.transform.SetPositionAndRotation(pos, Quaternion.LookRotation((mira - pos).sqrMagnitude > 0.0001f ? mira - pos : adelante));
+                fov = Mathf.Lerp(26f, 44f, vuelta) - 8f * viaje;
                 VeloDeApertura.Poner(VeloDeApertura.ColorPapel, VeloDeApertura.Suave((t - (fin - 1.2f)) / 1.2f));
             }
 
@@ -538,15 +549,31 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         Limpiar();
     }
 
-    /// Lanza un estado del Animator del mago (en la capa que lo tenga).
+    /// Lanza un estado del Animator del mago, en la capa que lo tenga. Los gestos viven en la capa
+    /// «UpperBody», que viene a peso 0 (la sube el script del NPC, que aquí está apagado): si no se
+    /// sube, el gesto se reproduce pero no se ve. Se sube al pedir el primero.
     static void Gesto(Animator animator, string estado, float fundido = 0.25f)
     {
         if (animator == null) return;
         int h = Animator.StringToHash(estado);
         for (int capa = 0; capa < animator.layerCount; capa++)
-            if (animator.HasState(capa, h)) { animator.CrossFadeInFixedTime(h, fundido, capa); return; }
-        // Los estados de dentro de una sub-máquina no los ve HasState: se prueba a pelo en la capa base.
-        animator.CrossFadeInFixedTime(h, fundido, 0);
+        {
+            if (!animator.HasState(capa, h)) continue;
+            if (animator.GetLayerWeight(capa) < 0.5f) animator.SetLayerWeight(capa, 1f);
+            animator.CrossFadeInFixedTime(h, fundido, capa);
+            return;
+        }
+    }
+
+    /// Entra en el estado de locomoción libre: «Walk» no es un estado, es el blend tree que hay
+    /// dentro de este, y es el que mueve las piernas con InputMagnitude (0 quieto, 0,5 andar, 1 correr).
+    static void Locomocion(Animator animator, float fundido = 0.2f)
+    {
+        if (animator == null) return;
+        int h = Animator.StringToHash("Base Layer.Free Locomotion.Free Locomotion");
+        if (animator.HasState(0, h)) { animator.CrossFadeInFixedTime(h, fundido, 0); return; }
+        int corto = Animator.StringToHash("Free Locomotion");
+        if (animator.HasState(0, corto)) animator.CrossFadeInFixedTime(corto, fundido, 0);
     }
 
     /// Pone al Animator a andar (o a pararse) sin motor: los parámetros de locomoción del NPC.

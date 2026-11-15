@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-15 12:52 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-15 17:38 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **4:36,5** de secuencia · 32 frases · 58 planos · 201 efectos · 19 personajes
 
@@ -54,7 +54,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 1:03,1 | **@saludo** |  |
 | 1:03,1 | plano 1 | medio de archimago · 3,7 s · lente 38° |
 | 1:03,1 | archimago | «Buenos días, pueblo. ¿Qué se te ha estropeado hoy?» (3,7 s) · pose |
-| 1:03,1 | efecto | Pantalla: descubrir (0,3s) |
+| 1:03,1 | efecto | Pantalla: descubrir (0,25s) |
 | 1:03,1 | efecto | Pantalla: cubrir (0,2s) |
 | 1:06,3 | efecto | SFX: SFX_Pueblo_Contraventana_Abre |
 | 1:06,3 | efecto | Hojas: abrir Mirador · Vecino |

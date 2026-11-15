@@ -83,10 +83,10 @@ MonoBehaviour:
     - Fx3311
     - Fx3312
     segundosPorSimbolo: 0.07
-    bodyAnimStateName: Beg01
+    bodyAnimStateName: HeadShake02
     bodyAnimVariants:
-    - Defend_NoWeapon
-    - HeadShake02
+    - Cry01
+    - SenseSomethingStart_NoWeapon
   - emotion: 6
     eyeMeshName: Eye336
     mouthMeshName: Mouth330

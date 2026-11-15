@@ -52,24 +52,29 @@ namespace NarrativeGraphEditor.Story
             catch (Exception) { return null; }
         }
 
-        public static Texture2D PortraitOf(string actorId)
+        /// <param name="prefabFallback">Si no hay retrato del juego, usar la miniatura del prefab.
+        /// El mapa pide false: si no hay retrato, enseña la inicial.</param>
+        public static Texture2D PortraitOf(string actorId, bool prefabFallback = true)
         {
             if (string.IsNullOrEmpty(actorId)) return null;
             if (s_portraits.TryGetValue(actorId, out var tex) && tex != null) return tex;
             if (!s_sourceLooked) { s_source = NarrativeEditorExtensions.CreateFirst<INarrativePortraitSource>(); s_sourceLooked = true; }
             tex = s_source?.PortraitOf(actorId);
-            if (tex == null)
+            if (tex != null)
             {
-                var path = NarrativeProjectIndex.FindActor(actorId)?.source;
-                var prefab = !string.IsNullOrEmpty(path) && path.EndsWith(".prefab") ? AssetDatabase.LoadAssetAtPath<GameObject>(path) : null;
-                if (prefab != null)
-                {
-                    tex = AssetPreview.GetAssetPreview(prefab);
-                    // La miniatura del prefab llega más tarde: se vuelve a pintar cuando esté.
-                    if (tex == null && AssetPreview.IsLoadingAssetPreview(prefab.GetEntityId())) EditorApplication.delayCall += () => Changed?.Invoke();
-                }
+                s_portraits[actorId] = tex;
+                return tex;
             }
-            if (tex != null) s_portraits[actorId] = tex;
+            if (!prefabFallback) return null;
+
+            var path = NarrativeProjectIndex.FindActor(actorId)?.source;
+            var prefab = !string.IsNullOrEmpty(path) && path.EndsWith(".prefab") ? AssetDatabase.LoadAssetAtPath<GameObject>(path) : null;
+            if (prefab != null)
+            {
+                tex = AssetPreview.GetAssetPreview(prefab);
+                // La miniatura del prefab llega más tarde: se vuelve a pintar cuando esté.
+                if (tex == null && AssetPreview.IsLoadingAssetPreview(prefab.GetEntityId())) EditorApplication.delayCall += () => Changed?.Invoke();
+            }
             return tex;
         }
 

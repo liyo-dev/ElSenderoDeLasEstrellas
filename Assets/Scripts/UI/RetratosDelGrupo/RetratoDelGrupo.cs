@@ -7,15 +7,17 @@ using Slot = PartyControlManager.CharacterSlot;
 namespace Sendero.UI
 {
     /// Dónde va un retrato en el carrusel del HUD.
-    public enum PosicionDeRetrato { Oculto, Centro, Izquierda, Derecha }
+    /// <see cref="Satelite"/> es el seguidor de la pareja del modo Libre: pegado al retrato de su líder.
+    public enum PosicionDeRetrato { Oculto, Centro, Izquierda, Derecha, Satelite }
 
     /// <summary>
     /// Retrato de busto de un personaje del grupo en el HUD. Lo coloca <see cref="PartyHUDPanel"/>
-    /// (centro el que va al mando, a los lados los demás) y reacciona a lo que le pasa al personaje:
-    /// sacudida y destello rojo al recibir un golpe, respiración cansada con poca vida, gris y
-    /// hundido si ha caído, halo dorado con el trío listo. La imagen la pide a una
-    /// <see cref="IFuenteDeRetrato"/>; el corte a la altura del pecho lo hace el RectMask2D del
-    /// contenedor, cuyo borde inferior es el borde superior del panel.
+    /// (centro el que va al mando, a los lados los demás, y pegado al líder el seguidor de la
+    /// pareja del modo Libre) y reacciona a lo que le pasa al personaje: sacudida y destello rojo
+    /// al recibir un golpe, respiración cansada con poca vida, gris y hundido si ha caído, halo
+    /// dorado con el trío listo. La imagen la pide a una <see cref="IFuenteDeRetrato"/>; el corte
+    /// a la altura del pecho lo hace el RectMask2D del contenedor, cuyo borde inferior es el borde
+    /// superior del panel.
     ///
     /// Jerarquía: raíz (posición y escala del carrusel) → Halo, Cuerpo (hundido de caído, saltito)
     /// → Vaivén (respiración, sacudida) → Imagen (RawImage con el shader UI/RetratoDelGrupo), y
@@ -49,6 +51,9 @@ namespace Sendero.UI
         [Header("Aspecto")]
         [SerializeField, Range(0f, 1f)] private float saturacionLateral = 0.45f;
         [SerializeField, Range(0f, 1f)] private float brilloLateral = 0.62f;
+        [Tooltip("Aspecto del seguidor de la pareja: va con el grupo, pero no se le pasa el mando, así que se ve más apagado que el que va al mando y sin aro dorado.")]
+        [SerializeField, Range(0f, 1f)] private float saturacionDelSeguidor = 0.8f;
+        [SerializeField, Range(0f, 1f)] private float brilloDelSeguidor = 0.9f;
         [SerializeField, Range(0f, 1f)] private float brilloCaido = 0.45f;
         [SerializeField, Range(0f, 1f)] private float haloDelActivo = 0.75f;
         [SerializeField] private Color colorDelTrio = new Color(1f, 0.85f, 0.35f, 1f);
@@ -240,8 +245,19 @@ namespace Sendero.UI
             RefrescarAspecto(false);
         }
 
+        /// Escala con la que se coloca el retrato en esa posición del carrusel.
+        public float EscalaDe(PosicionDeRetrato posicion) =>
+            posicion == PosicionDeRetrato.Centro ? 1f : escalaLateral;
+
         /// Coloca el retrato en el carrusel. <paramref name="x"/> es la posición horizontal en su contenedor.
-        public void Colocar(PosicionDeRetrato posicion, float x, bool animar)
+        public void Colocar(PosicionDeRetrato posicion, float x, bool animar) =>
+            Colocar(posicion, new Vector2(x, 0f), EscalaDe(posicion), animar);
+
+        /// <summary>
+        /// Coloca el retrato en el punto y la escala que se digan. Lo usa el seguidor de la pareja,
+        /// que va solapado con el retrato de su líder (<see cref="PosicionDeRetrato.Satelite"/>).
+        /// </summary>
+        public void Colocar(PosicionDeRetrato posicion, Vector2 destino, float escala, bool animar)
         {
             bool eraCentro = _posicion == PosicionDeRetrato.Centro;
             _posicion = posicion;
@@ -256,8 +272,6 @@ namespace Sendero.UI
                 return;
             }
 
-            float escala = posicion == PosicionDeRetrato.Centro ? 1f : escalaLateral;
-            var destino = new Vector2(x, 0f);
             Matar(ref _tCarrusel, false);
             Matar(ref _tEscala, false);
             if (animar)
@@ -493,6 +507,7 @@ namespace Sendero.UI
             if (_caido) { sat = 0f; bri = brilloCaido; haloA = 0f; haloC = _color; }
             else if (_trio) { sat = 1f; bri = 1.05f; haloA = 1f; haloC = colorDelTrio; }
             else if (centro) { sat = 1f; bri = 1f; haloA = haloDelActivo; haloC = _color; }
+            else if (_posicion == PosicionDeRetrato.Satelite) { sat = saturacionDelSeguidor; bri = brilloDelSeguidor; haloA = 0f; haloC = _color; }
             else { sat = saturacionLateral; bri = brilloLateral; haloA = 0f; haloC = _color; }
 
             float d = animar ? duracionDelCambio : 0f;

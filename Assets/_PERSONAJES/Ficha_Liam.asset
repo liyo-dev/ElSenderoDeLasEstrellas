@@ -13,13 +13,20 @@ MonoBehaviour:
   m_Name: Ficha_Liam
   m_EditorClassIdentifier: Assembly-CSharp::FichaDePersonaje
   personaje: 0
-  retrato: {fileID: 21300000, guid: 72dc8a10b4d7a53478018b46ea8ffeb7, type: 3}
+  retrato: {fileID: 21300000, guid: 8c6bd8d1ebfdec9499496e2f545f15be, type: 3}
   colorDelPersonaje: {r: 0.482, g: 0.749, b: 0.353, a: 1}
   estadisticasIniciales:
     vida: 100
     magia: 100
     ataque: 10
     defensa: 5
+  habilidadesIniciales:
+    swim: 1
+    jump: 1
+    magic: 1
+    fly: 0
+    sprint: 1
+    shield: 0
   hechizoIzquierdo: {fileID: 11400000, guid: 5e2557db11732694182c948ffac0eab8, type: 2}
   hechizoDerecho: {fileID: 11400000, guid: 0686630f8f80a5c4291f775845a499d7, type: 2}
   hechizoEspecial: {fileID: 11400000, guid: fb52c3e17e7394045aee1b7785a90735, type: 2}

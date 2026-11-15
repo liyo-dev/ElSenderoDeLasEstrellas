@@ -155,6 +155,75 @@ public static class PoseSobreClip
         return ctrl;
     }
 
+    /// <summary>
+    /// Quita la vuelta automática al reposo de los estados que se sostienen en bucle. Un clip en bucle no
+    /// termina: si su estado tiene una transición con hora de salida, Unity la dispara en cada vuelta, la
+    /// pose sale al reposo y <c>NPCSimpleAnimator.HoldPose</c> la vuelve a cruzar desde el principio. Eso es
+    /// el salto que se ve cada vez que una animación se repite. Los gestos de un solo uso no necesitan esa
+    /// transición: <c>PlayOneShot</c> suelta la capa al acabar. Ver <see cref="EsVueltaAlReposo"/>.
+    /// Devuelve los nombres de los estados a los que se les ha quitado.
+    /// </summary>
+    public static List<string> QuitarVueltaAlReposoDeLosBucles(AnimatorController ctrl, string capa = null)
+    {
+        var quitados = new List<string>();
+        if (ctrl == null || ctrl.layers == null) return quitados;
+
+        AnimatorControllerLayer elegida = default;
+        bool hay = false;
+        foreach (var l in ctrl.layers)
+            if (string.IsNullOrEmpty(capa) || l.name == capa) { elegida = l; hay = true; break; }
+        if (!hay || elegida.stateMachine == null) return quitados;
+
+        QuitarVueltas(elegida.stateMachine, quitados);
+
+        if (quitados.Count > 0)
+        {
+            EditorUtility.SetDirty(ctrl);
+            AssetDatabase.SaveAssets();
+        }
+        return quitados;
+    }
+
+    private static void QuitarVueltas(AnimatorStateMachine maquina, List<string> quitados)
+    {
+        foreach (var hijo in maquina.states)
+        {
+            var estado = hijo.state;
+            if (estado?.motion == null) continue;
+            var clip = estado.motion as AnimationClip;   // un BlendTree no lleva bucle propio: no se toca
+            if (clip == null) continue;
+            if (!AnimationUtility.GetAnimationClipSettings(clip).loopTime) continue;
+
+            var vueltas = estado.transitions
+                .Where(t => t != null && t.hasExitTime && EsVueltaAlReposo(t, maquina))
+                .ToArray();
+            if (vueltas.Length == 0) continue;
+
+            foreach (var vuelta in vueltas) estado.RemoveTransition(vuelta);
+            EditorUtility.SetDirty(estado);
+            quitados.Add(estado.name);
+        }
+
+        foreach (var sub in maquina.stateMachines)
+            if (sub.stateMachine != null) QuitarVueltas(sub.stateMachine, quitados);
+    }
+
+    /// <summary>
+    /// ¿Esa transición es la vuelta automática al reposo? El destino es el estado por defecto de la capa
+    /// (UpperIdle en la de gestos) o uno de los reposos de la capa base (`Idle_Normal_NoWeapon`,
+    /// `Idle_Battle_NoWeapon`, `Free Locomotion`). Las salidas a otra máquina (destino vacío) no cuentan:
+    /// ahí viven los flujos de verdad (terminar de saquear, levantarse de una voltereta).
+    /// </summary>
+    private static bool EsVueltaAlReposo(AnimatorStateTransition transicion, AnimatorStateMachine maquina)
+    {
+        var destino = transicion.destinationState;
+        if (destino == null) return false;
+        if (destino == maquina.defaultState) return true;
+        return destino.name == "Idle_Normal_NoWeapon"
+            || destino.name == "Idle_Battle_NoWeapon"
+            || destino.name == "Free Locomotion";
+    }
+
     // ---------------------------------------------------------------------------------------
     // Humanoides
     // ---------------------------------------------------------------------------------------
@@ -193,6 +262,8 @@ public static class PoseSobreClip
     /// desplazados en el tiempo. Cada músculo (nombre de <see cref="HumanTrait.MuscleName"/>) lleva sus claves
     /// (segundo, cuánto se suma al valor del clip de partida); entre claves, curva suave. Es lo directo para
     /// gestos (inclinarse, estirar un brazo): no busca direcciones, mueve articulaciones.
+    /// El último fotograma se lleva al primero (ver <see cref="CerrarElBucle"/>): el gesto casi nunca dura un
+    /// número entero de vueltas del clip de partida, y un bucle no puede quedarse con un salto.
     /// </summary>
     public static void CrearConMusculos(AnimationClip base_, string ruta, float duracion,
                                         IDictionary<string, (float t, float delta)[]> musculos)
@@ -214,6 +285,7 @@ public static class PoseSobreClip
                 if (tocado) v = Mathf.Clamp(v + DeltaEn(musculos[b.propertyName], t), -1f, 1f);
                 claves[f] = new Keyframe(t, v);
             }
+            CerrarElBucle(claves);
             AnimationUtility.SetEditorCurve(clip, b, new AnimationCurve(claves));
             if (tocado) hechos.Add(b.propertyName);
         }
@@ -227,6 +299,7 @@ public static class PoseSobreClip
                 float t = Mathf.Min(f / fps, largo);
                 claves[f] = new Keyframe(t, Mathf.Clamp(DeltaEn(kv.Value, t), -1f, 1f));
             }
+            CerrarElBucle(claves);
             AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve("", typeof(Animator), kv.Key), new AnimationCurve(claves));
         }
         var ajustes = AnimationUtility.GetAnimationClipSettings(base_);
@@ -240,6 +313,61 @@ public static class PoseSobreClip
         if (existente != null) { EditorUtility.CopySerialized(clip, existente); EditorUtility.SetDirty(existente); Object.DestroyImmediate(clip); }
         else AssetDatabase.CreateAsset(clip, ruta);
         AssetDatabase.SaveAssets();
+    }
+
+    /// <summary>
+    /// Lleva el último fotograma de la curva al primero sin cambiar el resto del gesto: la diferencia se
+    /// reparte con una curva suave en el tramo final. Sin esto, un clip marcado en bucle que acaba en una
+    /// pose distinta de la del principio da el salto que se ve cada vez que la animación se repite.
+    /// </summary>
+    private static void CerrarElBucle(Keyframe[] claves)
+    {
+        if (claves == null || claves.Length < 2) return;
+
+        float correccion = claves[0].value - claves[claves.Length - 1].value;
+        if (Mathf.Abs(correccion) < 1e-6f) return;
+
+        float primera = claves[0].time;
+        float ultima = claves[claves.Length - 1].time;
+        float cierre = Mathf.Max(0.05f, (ultima - primera) * 0.35f);
+        float desde = ultima - cierre;
+        for (int i = 0; i < claves.Length; i++)
+        {
+            float u = Mathf.InverseLerp(desde, ultima, claves[i].time);
+            claves[i].value += correccion * (u * u * (3f - 2f * u));
+        }
+    }
+
+    /// <summary>
+    /// Cierra el bucle de un clip ya horneado: el mismo cierre que hace <see cref="CrearConMusculos"/> al
+    /// generarlo, para los que ya estaban hechos (sus curvas no acaban donde empiezan y cada vuelta da un
+    /// salto). Solo toca clips marcados en bucle. Devuelve cuántas curvas ha corregido.
+    /// </summary>
+    public static int CerrarElBucle(AnimationClip clip)
+    {
+        if (clip == null || AnimationUtility.GetCurveBindings(clip).Length == 0) return 0;
+        if (!AnimationUtility.GetAnimationClipSettings(clip).loopTime) return 0;
+
+        int tocadas = 0;
+        foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+        {
+            var curva = AnimationUtility.GetEditorCurve(clip, binding);
+            if (curva == null || curva.keys == null || curva.keys.Length < 2) continue;
+
+            var claves = curva.keys;
+            if (Mathf.Abs(claves[0].value - claves[claves.Length - 1].value) < 1e-6f) continue;
+
+            CerrarElBucle(claves);
+            AnimationUtility.SetEditorCurve(clip, binding, new AnimationCurve(claves));
+            tocadas++;
+        }
+
+        if (tocadas > 0)
+        {
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+        }
+        return tocadas;
     }
 
     private static float DeltaEn((float t, float delta)[] claves, float t)

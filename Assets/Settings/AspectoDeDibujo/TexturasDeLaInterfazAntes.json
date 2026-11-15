@@ -1046,17 +1046,12 @@
             "compresion": 1
         },
         {
-            "ruta": "Assets/Art/UI/Retratos/retrato_estela.png",
+            "ruta": "Assets/Art/UI/Retratos/Grupo/estela_normal.png",
             "tamano": 2048,
             "compresion": 1
         },
         {
-            "ruta": "Assets/Art/UI/Retratos/retrato_liam.png",
-            "tamano": 2048,
-            "compresion": 1
-        },
-        {
-            "ruta": "Assets/Art/UI/Retratos/retrato_will.png",
+            "ruta": "Assets/Art/UI/Retratos/Grupo/liam_normal.png",
             "tamano": 2048,
             "compresion": 1
         },

@@ -78,7 +78,7 @@ Unity 6 (6000.0 o superior), uGUI/TextMeshPro, Timeline y Newtonsoft JSON. El ed
 ## Documentación
 
 - `Documentation/Manual de usuario.pdf`, también desde **Liyodev ▸ Grafo narrativo ▸ Abrir el manual**.
-- **Liyodev ▸ Grafo narrativo ▸ Comprobar el kit** deja un informe en `Logs/NarrativeGraph/qa.txt` con los pasos, las peticiones, los puertos sin implementar y las muestras.
+- **Liyodev ▸ Grafo narrativo ▸ Comprobar el kit** deja un informe en `Logs/NarrativeGraph/qa.txt` con los pasos, las peticiones, los puertos sin implementar, las muestras y qué retrato usa cada personaje del mapa.
 
 ## Versión
 

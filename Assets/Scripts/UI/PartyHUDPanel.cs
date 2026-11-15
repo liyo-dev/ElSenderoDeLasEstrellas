@@ -14,7 +14,9 @@ namespace Sendero.UI
     ///
     /// Carrusel: el personaje al mando va en el centro; a cada lado, el personaje al que se pasaría
     /// con DPad hacia ese lado (<see cref="PartyControlManager.SlotVecino"/>), así lo que se ve
-    /// coincide con lo que hace el botón. Quien no está en el grupo no se muestra.
+    /// coincide con lo que hace el botón. Quien no está en el grupo no se muestra. Con la pareja
+    /// del modo Libre, el seguidor pierde su hueco y va pegado al retrato de su líder: no se le
+    /// pasa el mando y el HUD no lo puede enseñar como si fuera otro del carrusel.
     ///
     /// Este panel decide quién va dónde; cómo se ve y reacciona cada retrato lo hace
     /// <see cref="RetratoDelGrupo"/>, y la vida, las caídas y el trío los da
@@ -43,6 +45,10 @@ namespace Sendero.UI
         [SerializeField] private JuegoDeRetratos retratosDeRespaldo;
         [Tooltip("Distancia horizontal del centro a los retratos de los lados (unidades del contenedor).")]
         [SerializeField] private float separacionLateral = 290f;
+        [Tooltip("Dónde se pega el retrato del seguidor de la pareja al de su líder: hacia el centro (x) y hacia abajo (y), en unidades del contenedor con el líder a escala 1.")]
+        [SerializeField] private Vector2 posicionDelSeguidor = new Vector2(150f, 0f);
+        [Tooltip("Escala del retrato del seguidor respecto al de su líder.")]
+        [SerializeField, Range(0.3f, 1f)] private float escalaDelSeguidor = 0.62f;
         [Tooltip("Por debajo de esta vida (0-1), el retrato se ve cansado.")]
         [SerializeField, Range(0f, 1f)] private float vidaBaja = 0.25f;
 
@@ -224,6 +230,11 @@ namespace Sendero.UI
             int activo = pcm != null ? pcm.ActiveIndex : (int)Slot.Will;
             for (int i = 0; i < _presente.Length; i++) _presente[i] = ControlDelJugador.EnElGrupo((Slot)i);
 
+            // Con pareja, el seguidor no ocupa un hueco del carrusel: va pegado a su líder.
+            int lider = -1, seguidor = -1;
+            if (pcm != null && pcm.LeerPareja(out lider, out seguidor) && !_presente[lider])
+                lider = seguidor = -1;
+
             int izquierda = pcm != null ? pcm.SlotVecino(activo, -1) : -1;
             int derecha = pcm != null ? pcm.SlotVecino(activo, 1) : -1;
             if (izquierda >= 0 && izquierda == derecha)
@@ -233,7 +244,7 @@ namespace Sendero.UI
             }
             for (int i = 0; i < 3; i++)
             {
-                if (i == activo || i == izquierda || i == derecha || !_presente[i]) continue;
+                if (i == activo || i == izquierda || i == derecha || i == seguidor || !_presente[i]) continue;
                 if (izquierda < 0) izquierda = i; else if (derecha < 0) derecha = i;
             }
 
@@ -245,10 +256,19 @@ namespace Sendero.UI
                 if (i == activo) r.Colocar(PosicionDeRetrato.Centro, 0f, animar);
                 else if (i == izquierda) r.Colocar(PosicionDeRetrato.Izquierda, -separacionLateral, animar);
                 else if (i == derecha) r.Colocar(PosicionDeRetrato.Derecha, separacionLateral, animar);
-                else r.Colocar(PosicionDeRetrato.Oculto, 0f, false);
+                else if (i != seguidor) r.Colocar(PosicionDeRetrato.Oculto, 0f, false);
             }
+
+            if (seguidor >= 0) ColocarSeguidor(lider, seguidor, activo, izquierda, derecha, animar);
+
             var central = Retrato(activo);
             if (central != null) central.transform.SetAsLastSibling();
+            // El líder de la pareja, por delante de su seguidor (los dos van solapados).
+            if (lider >= 0 && lider != activo)
+            {
+                var retratoDelLider = Retrato(lider);
+                if (retratoDelLider != null) retratoDelLider.transform.SetAsLastSibling();
+            }
             // La pista de la cruceta solo junto a quien se puede elegir (el seguidor de una pareja
             // sale en su retrato, pero no se le pasa el mando).
             MostrarPista(_pistaIzquierda, SeLePuedePasarElMando(pcm, activo, izquierda));
@@ -264,6 +284,35 @@ namespace Sendero.UI
                 }
             }
             PonerTrio(false);
+        }
+
+        /// <summary>
+        /// El seguidor de la pareja se tapa a medias con el retrato de su líder y va más pequeño:
+        /// se lee que los dos van juntos y que a él no se le pasa el mando con la cruceta. Se pega
+        /// hacia el centro del carrusel; con el líder en el medio, al lado contrario del que va solo.
+        /// </summary>
+        private void ColocarSeguidor(int lider, int seguidor, int activo, int izquierda, int derecha, bool animar)
+        {
+            var r = Retrato(seguidor);
+            if (r == null) return;
+
+            var posicionDelLider = lider == activo ? PosicionDeRetrato.Centro
+                : lider == izquierda ? PosicionDeRetrato.Izquierda
+                : PosicionDeRetrato.Derecha;
+            float xLider = posicionDelLider == PosicionDeRetrato.Centro ? 0f
+                : posicionDelLider == PosicionDeRetrato.Izquierda ? -separacionLateral
+                : separacionLateral;
+            var retratoDelLider = Retrato(lider);
+            float escalaDelLider = retratoDelLider != null ? retratoDelLider.EscalaDe(posicionDelLider) : 1f;
+
+            // Hacia el centro del carrusel; con el líder en el medio, al otro lado del que va solo.
+            float lado;
+            if (xLider > 0f) lado = -1f;
+            else if (xLider < 0f) lado = 1f;
+            else lado = derecha >= 0 ? -1f : 1f;
+            var destino = new Vector2(xLider + lado * posicionDelSeguidor.x * escalaDelLider,
+                                      posicionDelSeguidor.y * escalaDelLider);
+            r.Colocar(PosicionDeRetrato.Satelite, destino, escalaDelLider * escalaDelSeguidor, animar);
         }
 
         private static void MostrarPista(Component pista, bool ver)

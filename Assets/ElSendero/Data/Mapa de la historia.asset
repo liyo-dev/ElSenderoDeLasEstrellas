@@ -228,3 +228,33 @@ MonoBehaviour:
     color: {r: 0.6, g: 0.23529412, b: 0.11372549, a: 1}
     homeZone: capital
     main: 0
+  - actorId: Actor_ChucheReino1
+    name: Chuche 1
+    color: {r: 0.91, g: 0.45, b: 0.55, a: 1}
+    homeZone: chuche
+    main: 0
+  - actorId: Actor_ChucheReino2
+    name: Chuche 2
+    color: {r: 0.55, g: 0.78, b: 0.45, a: 1}
+    homeZone: chuche
+    main: 0
+  - actorId: Actor_ChucheReino3
+    name: Chuche 3
+    color: {r: 0.95, g: 0.72, b: 0.35, a: 1}
+    homeZone: chuche
+    main: 0
+  - actorId: Actor_ChucheReino4
+    name: Chuche 4
+    color: {r: 0.45, g: 0.72, b: 0.91, a: 1}
+    homeZone: chuche
+    main: 0
+  - actorId: Actor_ChucheReino5
+    name: Chuche 5
+    color: {r: 0.72, g: 0.52, b: 0.85, a: 1}
+    homeZone: chuche
+    main: 0
+  - actorId: Actor_ChucheReino6
+    name: Chuche 6
+    color: {r: 0.95, g: 0.58, b: 0.38, a: 1}
+    homeZone: chuche
+    main: 0

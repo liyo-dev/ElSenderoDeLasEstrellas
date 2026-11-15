@@ -84,6 +84,7 @@ public class SleepTrigger : MonoBehaviour
     void Start()
     {
         if (!sleepOnStart) return;
+        if (YaSeDesperto()) return;
         if (playOnlyOnce && AlreadyPlayed()) return;
         StartCoroutine(ForceSleepNextFrame());
     }
@@ -196,14 +197,28 @@ public class SleepTrigger : MonoBehaviour
     /// <summary>Pone a Will a dormir desde código (ej: llamado por el grafo narrativo o sleepOnStart).</summary>
     public void ForceSleep(GameObject playerGO)
     {
+        if (YaSeDesperto()) return;
         player = playerGO;
         SetupSleep(playerGO);
+    }
+
+    /// <summary>
+    /// Si la señal de despertar ya se emitió (la historia ya pasó la cama), este trigger no debe
+    /// volver a dormir a Will: al probar desde un paso posterior, la escena arranca en la cama y
+    /// antes lo acostaba otra vez, con su cinemática.
+    /// </summary>
+    private bool YaSeDesperto()
+    {
+        if (string.IsNullOrEmpty(wakeNarrativeEvent)) return false;
+        return DefaultNarrativeSignals.Instance != null &&
+               DefaultNarrativeSignals.Instance.HasEverRaised(wakeNarrativeEvent);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (!gameObject.activeInHierarchy) return;
         if (isSleeping) return;
+        if (YaSeDesperto()) return;
         if (!other.CompareTag(GameTags.Player)) return;
         if (playOnlyOnce && AlreadyPlayed()) return;
 

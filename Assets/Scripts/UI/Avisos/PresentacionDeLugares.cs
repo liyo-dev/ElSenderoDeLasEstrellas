@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -44,6 +45,8 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     // Caja del lugar para el plano aéreo de la presentación (sin caja, no hay plano).
     private Bounds? _caja;
     private PlanoDelLugar _plano;
+    // Espera corta antes de pedir el turno (ver Co_PedirTurno).
+    private Coroutine _pedirTurno;
 
     // En pleno combate no sale el nombre del lugar: espera a que acabe. Con una cinemática en
     // marcha, la presentación espera a que termine: el cine siempre manda y el lugar se anuncia
@@ -115,8 +118,19 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
         _pendiente = true;
         _empezada = false;
         _t = 0f;
+        if (_pedirTurno != null) { StopCoroutine(_pedirTurno); _pedirTurno = null; }
         if (_aLaVista) Empezar();
-        else ArbitroDeAvisos.Pedir(this);
+        else _pedirTurno = StartCoroutine(Co_PedirTurno());
+    }
+
+    /// El lugar y la cinemática que arranca al entrar suelen dispararse en el mismo paso de
+    /// física. Se espera un instante antes de tomar el turno para que el cine llegue primero:
+    /// entonces la presentación cede (INC-1234) y no suena su música para nada.
+    private IEnumerator Co_PedirTurno()
+    {
+        yield return new WaitForSecondsRealtime(0.15f);
+        _pedirTurno = null;
+        if (_pendiente && !_aLaVista) ArbitroDeAvisos.Pedir(this);
     }
 
     private void Update()

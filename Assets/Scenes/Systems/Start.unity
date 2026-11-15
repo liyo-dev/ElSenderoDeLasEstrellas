@@ -3078,6 +3078,8 @@ MonoBehaviour:
   fuenteDeRetratos: {fileID: 22572039}
   retratosDeRespaldo: {fileID: 11400000, guid: 8ea15efa0713dc049824c46a37c78448, type: 2}
   separacionLateral: 290
+  posicionDelSeguidor: {x: 150, y: 0}
+  escalaDelSeguidor: 0.62
   vidaBaja: 0.25
   nombreDelActivo: {fileID: 1696199073}
   lineaDeLuz: {fileID: 76074056}
@@ -15349,6 +15351,8 @@ MonoBehaviour:
   escalaLateral: 0.68
   saturacionLateral: 0.45
   brilloLateral: 0.62
+  saturacionDelSeguidor: 0.8
+  brilloDelSeguidor: 0.9
   brilloCaido: 0.45
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}
@@ -16068,6 +16072,8 @@ MonoBehaviour:
   escalaLateral: 0.68
   saturacionLateral: 0.45
   brilloLateral: 0.62
+  saturacionDelSeguidor: 0.8
+  brilloDelSeguidor: 0.9
   brilloCaido: 0.45
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}
@@ -20350,6 +20356,8 @@ MonoBehaviour:
   escalaLateral: 0.68
   saturacionLateral: 0.45
   brilloLateral: 0.62
+  saturacionDelSeguidor: 0.8
+  brilloDelSeguidor: 0.9
   brilloCaido: 0.45
   haloDelActivo: 0.75
   colorDelTrio: {r: 1, g: 0.85, b: 0.35, a: 1}

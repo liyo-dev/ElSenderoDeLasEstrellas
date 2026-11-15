@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using NarrativeGraphEditor.Story;
 using UnityEditor;
 using UnityEngine;
 
@@ -122,6 +123,37 @@ namespace NarrativeGraphEditor
                     warnings++;
                     report.AppendLine("AVISO falta el manual PDF");
                 }
+            }
+
+            report.AppendLine();
+            report.AppendLine("## Mapa");
+            var map = NarrativeWorldMap.Find();
+            if (map == null)
+            {
+                warnings++;
+                report.AppendLine("AVISO no hay mapa de la historia");
+            }
+            else
+            {
+                report.AppendLine($"Escenas: {map.scenes.Count} ({string.Join(", ", map.scenes.Select(s => s.name))})");
+                report.AppendLine($"Sitios: {map.zones.Count}");
+                int withPortrait = 0;
+                foreach (var c in map.characters)
+                {
+                    var tex = StoryCardImages.PortraitOf(c.actorId, prefabFallback: false);
+                    if (tex != null) withPortrait++;
+                    report.AppendLine($"- {c.name} ({c.actorId}): {(tex != null ? "retrato " + tex.name : "sin retrato (inicial)")}");
+                }
+                report.AppendLine($"Con retrato: {withPortrait} / {map.characters.Count}");
+
+                var graphActors = NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null)
+                    .SelectMany(g => g.nodes)
+                    .Select(n => n switch { ActorStateNode a => a.actorId, PlaceActorNode p => p.actorId, _ => null })
+                    .Where(id => !string.IsNullOrEmpty(id))
+                    .Distinct().OrderBy(id => id).ToList();
+                var missing = graphActors.Where(id => map.CharacterOf(id) == null).ToList();
+                report.AppendLine($"Actores que nombra el grafo: {graphActors.Count}; sin ficha en el mapa: {missing.Count}" +
+                                  (missing.Count > 0 ? " (" + string.Join(", ", missing) + ")" : string.Empty));
             }
 
             report.AppendLine();

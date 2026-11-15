@@ -278,6 +278,14 @@ namespace NarrativeGraphEditor.Story
                 int current = facts.TryGetValue(key, out var old) && int.TryParse(old.value, out var n) ? n : 0;
                 value = NarrativeCoreFacts.ApplyCounter(current, value).ToString();
             }
+            // Una escena que se descarga deja de estar cargada: no guardar el hecho con valor
+            // vacío, o las herramientas la enseñarían como si siguiera en la lista.
+            if (category == NarrativeCoreFacts.Scene && string.IsNullOrEmpty(value))
+            {
+                facts.Remove(key);
+                if (facts.Count == 0) Facts.Remove(category);
+                return;
+            }
             facts[key] = (value, _source);
         }
 

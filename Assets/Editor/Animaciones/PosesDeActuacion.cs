@@ -650,7 +650,54 @@ public static class PosesDeActuacion
         }
         foreach (var postura in PosturasDeAsiento) hecho.Append(CrearPosturaDeAsiento(postura)).Append(' ');
         foreach (var faena in Faenas) hecho.Append(CrearFaena(faena)).Append(' ');
+        hecho.Append(QuitarLasVueltasAlReposo());
         OrdenesDelEditor.Avisar("Poses de actuación", hecho.ToString());
+    }
+
+    [MenuItem("El Sendero/Personajes/Animaciones/Bucles de gestos: no volver solos al reposo", priority = 133)]
+    public static void QuitarVueltasAlReposoDelMenu()
+        => OrdenesDelEditor.Avisar("Bucles de gestos", QuitarLasVueltasAlReposo());
+
+    [MenuItem("El Sendero/Personajes/Animaciones/Gestos: cerrar el bucle de los clips ya generados", priority = 134)]
+    public static void CerrarLosBuclesDelMenu()
+    {
+        int clips = 0, curvas = 0;
+        var hecho = new StringBuilder();
+        foreach (var guid in AssetDatabase.FindAssets("t:AnimationClip", new[] { CarpetaDeClips }))
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(AssetDatabase.GUIDToAssetPath(guid));
+            if (clip == null) continue;
+            int tocadas = PoseSobreClip.CerrarElBucle(clip);
+            if (tocadas == 0) continue;
+            clips++;
+            curvas += tocadas;
+            hecho.Append(clip.name).Append(" (").Append(tocadas).Append("), ");
+        }
+        OrdenesDelEditor.Avisar("Cerrar el bucle de los gestos", clips == 0
+            ? "ningún clip necesitaba cerrar el bucle."
+            : $"{clips} clip(s), {curvas} curvas: {hecho}");
+    }
+
+    /// <summary>
+    /// Un estado en bucle no puede tener vuelta automática al reposo: Unity la dispara en cada vuelta y la
+    /// pose se corta y vuelve a empezar (el salto que se ve al repetirse una animación). Se limpia la capa
+    /// de gestos y la base (los bucles que se sostienen con «bucle» en los guiones: abrir, saquear,
+    /// tumbarse). Va aparte del menú para poder pasar solo esto, sin rehacer todas las poses.
+    /// </summary>
+    private static string QuitarLasVueltasAlReposo()
+    {
+        var hecho = new StringBuilder();
+        foreach (var rutaCtrl in Controladores)
+        {
+            var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(rutaCtrl);
+            if (ctrl == null) { hecho.Append($"{rutaCtrl}: falta. "); continue; }
+            var quitados = PoseSobreClip.QuitarVueltaAlReposoDeLosBucles(ctrl, Capa);
+            quitados.AddRange(PoseSobreClip.QuitarVueltaAlReposoDeLosBucles(ctrl, null));
+            hecho.Append(quitados.Count == 0
+                ? $"{ctrl.name}: ningún bucle volvía solo al reposo. "
+                : $"{ctrl.name}: {quitados.Count} bucle(s) ya no vuelven solos al reposo ({string.Join(", ", quitados)}). ");
+        }
+        return hecho.ToString();
     }
 
     /// Crea el clip de la postura sobre el bucle de su actividad (el del controlador de los NPC) y lo pone en la

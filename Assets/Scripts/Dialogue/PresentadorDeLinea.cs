@@ -130,14 +130,16 @@ public static class PresentadorDeLinea
     public static int Mostrar(Transform ancla, string texto, float duracion,
         PresentacionDeTexto presentacion, string nombreDelHablante, Color colorDelNombre,
         Vector3? desplazamiento, Action alTerminar = null, string gesto = null,
-        bool fijoEnPantalla = false, bool fueraDeEscena = false, Sprite retrato = null)
+        bool fijoEnPantalla = false, bool fueraDeEscena = false, Sprite retrato = null,
+        bool enCinematica = false)
     {
         var bocadillo = SpeechBubbleUI.Instance;
         if (bocadillo == null) return -1;
         bool necesitaAncla = (presentacion == PresentacionDeTexto.Bocadillo || fueraDeEscena) && !fijoEnPantalla;
         if (necesitaAncla && ancla == null) return -1;
         return Ensenar(bocadillo, ancla, texto, duracion, presentacion, nombreDelHablante,
-            colorDelNombre, desplazamiento, alTerminar, gesto, false, fijoEnPantalla, fueraDeEscena, retrato);
+            colorDelNombre, desplazamiento, alTerminar, gesto, false, fijoEnPantalla, fueraDeEscena, retrato,
+            enCinematica);
     }
 
     // ── Quitar la frase ──────────────────────────────────────────────────────────────────────
@@ -154,11 +156,11 @@ public static class PresentadorDeLinea
     private static int Ensenar(SpeechBubbleUI bocadillo, Transform ancla, string texto, float duracion,
         PresentacionDeTexto presentacion, string nombreDelHablante, Color colorDelNombre,
         Vector3? desplazamiento, Action alTerminar, string gesto, bool enfasis, bool fijoEnPantalla,
-        bool fueraDeEscena = false, Sprite retrato = null)
+        bool fueraDeEscena = false, Sprite retrato = null, bool enCinematica = false)
         => bocadillo.Show(ancla, texto, duracion, alTerminar, gesto, enfasis,
             speakerName: nombreDelHablante, worldOffset: desplazamiento,
             fijoEnPantalla: fijoEnPantalla, presentacion: presentacion, colorDelNombre: colorDelNombre,
-            fueraDeEscena: fueraDeEscena, retrato: retrato);
+            fueraDeEscena: fueraDeEscena, retrato: retrato, enCinematica: enCinematica);
 }
 
 /// Una frase para `PresentadorDeLinea.Decir`. Todos los campos valen por defecto: basta con la

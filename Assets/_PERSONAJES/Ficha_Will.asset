@@ -13,13 +13,20 @@ MonoBehaviour:
   m_Name: Ficha_Will
   m_EditorClassIdentifier: Assembly-CSharp::FichaDePersonaje
   personaje: 1
-  retrato: {fileID: 21300000, guid: 89077d38874895c4ea47ec6a80416bc7, type: 3}
+  retrato: {fileID: 21300000, guid: 79293b33d23bb994f96f5de953804229, type: 3}
   colorDelPersonaje: {r: 1, g: 0.604, b: 0.235, a: 1}
   estadisticasIniciales:
     vida: 100
     magia: 0
     ataque: 10
     defensa: 5
+  habilidadesIniciales:
+    swim: 1
+    jump: 1
+    magic: 1
+    fly: 0
+    sprint: 1
+    shield: 0
   hechizoIzquierdo: {fileID: 0}
   hechizoDerecho: {fileID: 0}
   hechizoEspecial: {fileID: 0}

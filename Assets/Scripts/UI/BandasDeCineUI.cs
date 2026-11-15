@@ -21,13 +21,28 @@ public sealed class BandasDeCineUI : MonoBehaviour
     public static BandasDeCineUI Obtener(Transform propietario)
     {
         if (Instance != null) return Instance;
+
+        // Las bandas son de la pantalla, no de la secuencia ni del reproductor. Van sueltas y
+        // persistentes: colgarlas de la raíz de la UI les hacía heredar su escala y salían como
+        // dos barritas negras en el centro, en vez de las bandas de arriba y abajo (INC-1242).
         var go = new GameObject("BandasDeCine", typeof(RectTransform), typeof(Canvas));
-        go.transform.SetParent(propietario, false);
+        Object.DontDestroyOnLoad(go);
         var canvas = go.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.overrideSorting = true;
         canvas.sortingOrder = 9995;
         return go.AddComponent<BandasDeCineUI>();
+    }
+
+    /// Deja las bandas puestas (creándolas si no existen): una escena en modo cine nunca debe
+    /// quedarse sin ellas aunque su beat se haya perdido o su reproductor se haya apagado.
+    public static BandasDeCineUI Asegurar(Transform propietario)
+    {
+        var bandas = Instance != null ? Instance : Obtener(propietario);
+        if (bandas == null) return null;
+        if (!bandas.gameObject.activeSelf) bandas.gameObject.SetActive(true);
+        if (bandas.AlturaObjetivo < 0.02f) bandas.Mostrar(true, 0.13f, 0.25f);
+        return bandas;
     }
 
     void Awake()

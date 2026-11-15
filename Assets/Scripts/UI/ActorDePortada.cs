@@ -22,6 +22,9 @@ public class ActorDePortada : MonoBehaviour
     [Tooltip("Fundido entre estados, en segundos.")]
     [Min(0f)] [SerializeField] private float fundido = 0.2f;
 
+    [Tooltip("Baja al personaje al suelo bajo sus pies (poses de pie o sentado en el suelo). Desmarcar en una pose sentada en un banco: si se baja, el cuerpo queda metido bajo el asiento.")]
+    [SerializeField] private bool forzarSuelo = true;
+
     [Header("Gestos de vez en cuando")]
     [Tooltip("Estados que el personaje hace de vez en cuando, al azar (p. ej. FoundSomething_NoWeapon, Laugh01, Talk01). Vacío = no hace gestos.")]
     [SerializeField] private string[] gestos = new string[0];
@@ -95,7 +98,7 @@ public class ActorDePortada : MonoBehaviour
         foreach (var p in _pistas)
         {
             if (!p.animator.isActiveAndEnabled) continue;
-            DecoradoDeMenu.ForzarEnSuelo(p.animator, p.suelo);
+            if (forzarSuelo) DecoradoDeMenu.ForzarEnSuelo(p.animator, p.suelo);
             if (p.capaBucle >= 0) p.animator.Play(_hashBucle, p.capaBucle, Random.value);
         }
     }
@@ -141,7 +144,7 @@ public class ActorDePortada : MonoBehaviour
             if (_haciendoGesto && i == _cuerpo && _gestoActual.capa == p.capaBucle) continue;
             if (p.animator.IsInTransition(p.capaBucle)) continue;
             if (p.animator.GetCurrentAnimatorStateInfo(p.capaBucle).shortNameHash == _hashBucle) continue;
-            DecoradoDeMenu.ForzarEnSuelo(p.animator, p.suelo);
+            if (forzarSuelo) DecoradoDeMenu.ForzarEnSuelo(p.animator, p.suelo);
             p.animator.Play(_hashBucle, p.capaBucle, 0f);
         }
     }

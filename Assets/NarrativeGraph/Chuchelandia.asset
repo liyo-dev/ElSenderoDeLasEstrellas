@@ -1537,6 +1537,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 998e7d3e61468154e8ff4cfea0f1e367, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084489
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1552,6 +1553,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: acb41d5ea6769be44992297c10d29ae8, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084491
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1567,6 +1569,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 0c7cfb520a76fc2489d3977d52101878, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084493
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1594,6 +1597,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 5f7087e10faae96458146d07c269965a, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084497
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1609,6 +1613,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 62c433931f3a3c842b79ea60defa1721, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084499
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
@@ -1618,6 +1623,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 107bd03dc01a7544fbad33bc033df0c1, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084500
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
@@ -1627,3 +1633,4 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 0f822c4b9b02e864ea8b69bfbc550fe0, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1

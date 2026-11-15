@@ -431,11 +431,15 @@ public sealed class ReproductorDeGuion
         string texto = PresentadorDeLinea.Texto(linea.clave);
         string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
         var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
+        // Modo cine: las bandas son de la pantalla y no pueden faltar. Si el beat que las pone se
+        // perdió o el reproductor anterior se las llevó, se recuperan aquí. Ver INC-1233.
+        if (presentacion != PresentacionDeTexto.Bocadillo && _ctx.Player != null)
+            BandasDeCineUI.Asegurar(_ctx.Player.transform);
         if (actor?.Transform != null)
         {
             PresentadorDeLinea.Mostrar(actor.Transform, texto, duracion,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
-                new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));
+                new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f), enCinematica: true);
         }
         else if (!string.IsNullOrWhiteSpace(texto))
         {
@@ -444,7 +448,7 @@ public sealed class ReproductorDeGuion
             // necesita a quién señalar. Ver INC-1233.
             PresentadorDeLinea.Mostrar(null, texto, duracion,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
-                null, fijoEnPantalla: presentacion == PresentacionDeTexto.Bocadillo);
+                null, fijoEnPantalla: presentacion == PresentacionDeTexto.Bocadillo, enCinematica: true);
         }
 
         // Con el guion en pausa no se suelta la voz: se guarda y arranca al reanudar, en el segundo

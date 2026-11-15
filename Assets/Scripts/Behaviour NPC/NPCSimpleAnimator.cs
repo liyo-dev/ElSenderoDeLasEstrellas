@@ -168,6 +168,9 @@ public class NPCSimpleAnimator : MonoBehaviour
     private Quaternion _targetRotation;
     private float _rotationVelocity;
 
+    // Quién lleva este cuerpo: con el jugador, este animador no toca rotación ni locomoción.
+    private PilotoDelCuerpo _piloto;
+
     // Anti-spam para animaciones de idle
     private float _lastBattleIdleTime = -999f;
     private const float BattleIdleCooldown = 0.5f; // Mínimo 0.5s entre llamadas (antes 0.3s)
@@ -315,6 +318,9 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (navAgent == null)
             navAgent = GetComponent<NavMeshAgent>();
+
+        // PilotoDelCuerpo tiene orden -1100: al llegar aquí ya sabe si lo lleva el jugador.
+        _piloto = GetComponentInParent<PilotoDelCuerpo>(true);
         
         _interactable = GetComponent<Interactable>();
         var emotionController = GetComponent<NPCEmotionController>();
@@ -410,8 +416,16 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
     }
     
+    /// El cuerpo lo lleva el jugador: su rotación, su locomoción y su root motion los manda
+    /// Invector. Este animador es el de la IA; si se enciende en el cuerpo del jugador (un cambio
+    /// de piloto o un prefab mal configurado), no debe tocar nada de eso. Ver INC-1243.
+    private bool LoLlevaElJugador =>
+        (_piloto != null && _piloto.LoLlevaElJugador) || ControlDelJugador.EsElJugador(this);
+
     void Start()
     {
+        if (LoLlevaElJugador) return;
+
         // Start in idle state
         TransitionToIdle();
     }
@@ -419,6 +433,9 @@ public class NPCSimpleAnimator : MonoBehaviour
     void Update()
     {
         if (animator == null)
+            return;
+
+        if (LoLlevaElJugador)
             return;
         
         // No procesar nada si el NPC está muerto
@@ -438,6 +455,12 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     void LateUpdate()
     {
+        // El jugador manda: sin esto, en cuanto se queda quieto ApplySmoothRotation lo devuelve
+        // a la rotación que tenía al aparecer (la del ancla o la cama) y se le ve girarse solo
+        // hacia el mismo sitio. Ver INC-1243.
+        if (LoLlevaElJugador)
+            return;
+
         // No procesar rotación si el NPC está muerto
         if (_currentState == AnimationState.Dead)
             return;

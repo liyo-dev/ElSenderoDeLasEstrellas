@@ -27,6 +27,10 @@ namespace Kits.Puzzles
         [Header("Aspecto")]
         [Tooltip("Lo que baja al hundirse. Si se deja vacío, baja este mismo objeto.")]
         [SerializeField] private Transform visualRoot;
+        [Tooltip("Lo que se ve de la losa: se apaga al hundirse y se enciende al volver.")]
+        [SerializeField] private Renderer[] visuales;
+        [Tooltip("Color con el que parpadea en el tiempo débil, antes de hundirse.")]
+        [SerializeField] private Color colorDeAviso = new Color(1f, 0.55f, 0.18f);
         [Tooltip("Cuánto baja el visual al hundirse (m).")]
         [SerializeField, Min(0f)] private float sinkDepth = 0.55f;
         [Tooltip("Cuánto se aplasta en el aviso (fracción: 0,08 = un 8 %).")]
@@ -51,6 +55,9 @@ namespace Kits.Puzzles
         private Vector3 _visualLocalScale;
         private int _beatsLeft;
         private float _shakeTime;
+        private MaterialPropertyBlock _bloque;
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private bool _avisando;
 
         private void Awake()
         {
@@ -59,6 +66,8 @@ namespace Kits.Puzzles
             _visualLocalScale = _visual.localScale;
             if (solidColliders == null || solidColliders.Length == 0)
                 solidColliders = GetComponentsInChildren<Collider>(true);
+            if (visuales == null || visuales.Length == 0)
+                visuales = GetComponentsInChildren<Renderer>(true);
         }
 
         private void OnEnable()
@@ -87,6 +96,8 @@ namespace Kits.Puzzles
             _beatsLeft = 0;
             _shakeTime = 0f;
             PonerColision(true);
+            PonerVisible(true);
+            PintarAviso(false);
             _visual.localPosition = _visualLocalBase;
             _visual.localScale = _visualLocalScale;
         }
@@ -109,6 +120,8 @@ namespace Kits.Puzzles
             IsSunk = true;
             _beatsLeft = Mathf.Max(1, sunkBeats);
             PonerColision(false);
+            // En el blockout la losa hundida desaparece: si se quedara a la vista, engaña.
+            PonerVisible(false);
         }
 
         private void AlAvisarElDebil(int compas)
@@ -125,6 +138,7 @@ namespace Kits.Puzzles
             if (_beatsLeft > 0) return;
             IsSunk = false;
             PonerColision(true);
+            PonerVisible(true);
         }
 
         private void PonerColision(bool activa)
@@ -132,6 +146,30 @@ namespace Kits.Puzzles
             if (solidColliders == null) return;
             for (int i = 0; i < solidColliders.Length; i++)
                 if (solidColliders[i] != null) solidColliders[i].enabled = activa;
+        }
+
+        private void PonerVisible(bool visible)
+        {
+            if (visuales == null) return;
+            for (int i = 0; i < visuales.Length; i++)
+                if (visuales[i] != null) visuales[i].enabled = visible;
+        }
+
+        /// <summary>En el aviso parpadea en naranja; fuera de él, su color de siempre.</summary>
+        private void PintarAviso(bool aviso)
+        {
+            if (visuales == null || aviso == _avisando) return;
+            _avisando = aviso;
+            _bloque ??= new MaterialPropertyBlock();
+            for (int i = 0; i < visuales.Length; i++)
+            {
+                var r = visuales[i];
+                if (r == null) continue;
+                if (!aviso) { r.SetPropertyBlock(null); continue; }
+                r.GetPropertyBlock(_bloque);
+                _bloque.SetColor(BaseColorId, colorDeAviso);
+                r.SetPropertyBlock(_bloque);
+            }
         }
 
         private void Update()
@@ -146,9 +184,12 @@ namespace Kits.Puzzles
                 objetivo += new Vector3(temblor, 0f, temblor * 0.5f);
             }
             _visual.localPosition = Vector3.MoveTowards(_visual.localPosition, objetivo, moveSpeed * Time.deltaTime);
-            _visual.localScale = IsWarning
+            // La escala se multiplica sobre la suya: si se pusiera a 1, la losa volvería a ser un cubo.
+            Vector3 aviso = IsWarning
                 ? new Vector3(1f + warnSquash, 1f - warnSquash, 1f + warnSquash)
                 : Vector3.one;
+            _visual.localScale = Vector3.Scale(_visualLocalScale, aviso);
+            PintarAviso(IsWarning);
         }
     }
 }

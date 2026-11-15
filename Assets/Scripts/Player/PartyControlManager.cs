@@ -18,7 +18,8 @@ using Game.NPC;
 /// (líder y seguidor; una sola a la vez). Con pareja, el cambio de personaje va por grupos: del
 /// líder al que está solo, y del que está solo otra vez al líder; el seguidor no se elige con la
 /// cruceta y se queda quieto junto al líder mientras el jugador lleva a otro. «Deja de seguir»
-/// (al seguidor, de frente) o volver a Siguiendo deshacen la pareja. Ver INC-1200.
+/// (al seguidor, de frente) o volver a Siguiendo deshacen la pareja. El HUD lo enseña así: el
+/// retrato del seguidor va pegado al de su líder (<see cref="LeerPareja"/>). Ver INC-1200.
 ///
 /// Cada personaje tiene su cuerpo: cambiar de personaje es pasar el mando de un cuerpo a otro
 /// (<see cref="ControlDelJugador.CambiarElMando"/>).
@@ -383,6 +384,18 @@ public class PartyControlManager : MonoBehaviour
     #region Pareja del modo Libre («Sígueme»)
     /// Hay pareja: en Libre, un compañero sigue al personaje que se lo pidió.
     public bool HayPareja => HayParejaValida();
+
+    /// <summary>
+    /// La pareja del modo Libre tal como está ahora: quién la pidió y quién le sigue, con la
+    /// pareja validada una sola vez. La usa el HUD para pintar al seguidor junto a su líder.
+    /// </summary>
+    public bool LeerPareja(out int lider, out int seguidor)
+    {
+        if (!HayParejaValida()) { lider = -1; seguidor = -1; return false; }
+        lider = _lider;
+        seguidor = _seguidor;
+        return true;
+    }
 
     /// Se le puede pedir «Sígueme» a ese personaje: grupo en Libre, sin otra pareja, lo lleva la IA,
     /// no está caído y el modo de acción permite cambios en el grupo.

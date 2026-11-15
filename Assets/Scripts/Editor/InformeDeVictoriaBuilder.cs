@@ -118,9 +118,9 @@ public static class InformeDeVictoriaBuilder
     {
         var retratos = new Dictionary<Slot, string>
         {
-            { Slot.Will, Retratos + "retrato_will.png" },
-            { Slot.Estela, Retratos + "retrato_estela.png" },
-            { Slot.Liam, Retratos + "retrato_liam.png" },
+            { Slot.Will, Retratos + "Grupo/will_normal.png" },
+            { Slot.Estela, Retratos + "Grupo/estela_normal.png" },
+            { Slot.Liam, Retratos + "Grupo/liam_normal.png" },
         };
         int puestos = 0;
         foreach (var guid in AssetDatabase.FindAssets("t:FichaDePersonaje"))
