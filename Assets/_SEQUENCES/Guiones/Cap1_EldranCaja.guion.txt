@@ -25,8 +25,6 @@ p_tomasa    16.69 -136.84
 # Eldran le llama desde la plaza y se para a 1,8 m de Will.
 p_eldran    7.0 -137.0
 p_llega     11.45 -136.0
-# Cámara fija para Tomasa y Will, desde el lado: el mostrador le tapa a Tomasa la parte de abajo, como en juego.
-cam_tomasa  12.3 -131.3
 
 HILO
 @inicio
@@ -36,7 +34,9 @@ will en p_will mirando tomasa
 
 # Tomasa y Will, en el mostrador, con la estrella recién comprada.
 @tomasa
-plano dos will tomasa desde=cam_tomasa altura=1.6 lente=34 quieta
+# El puesto no deja un plano de los dos limpio a la altura de los ojos: postes, toldo y mostrador
+# cruzan el cuadro. Se rueda desde arriba, por encima del toldo, con los dos en el mostrador.
+plano general will tomasa altura=6 lente=42 quieta
 tomasa dice TOMASA_ESTRELLA_1 gesto=Talk01
 will dice WILL_ESTRELLA_1
 tomasa dice TOMASA_ESTRELLA_2 gesto=Laugh01 cara=alegre

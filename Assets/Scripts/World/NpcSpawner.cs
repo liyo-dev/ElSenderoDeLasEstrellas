@@ -207,10 +207,19 @@ public static class NpcSpawner
             var brain = go.GetComponent<NPCBehaviourManagerV2>();
             if (brain != null)
                 brain.OverrideIdentityBeforeAwake(entry.persistenceId);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
-                Debug.LogWarning($"[NpcSpawner] '{entry.gameObjectName}' no tiene NPCBehaviourManagerV2 — no se puede aplicar persistenceId '{entry.persistenceId}'.");
-#endif
+            {
+                // NPC sencillo (un vendedor, una figura): no tiene FSM, pero el roster ya declara
+                // su id. Se le da como actor sin IA para que las cinemáticas lo encuentren igual
+                // que a un NPC con IA. Solo los que se pueden usar (tienen Interactable): un
+                // personaje mudo de una cinemática se marca a mano en su prefab. Ver INC-1233.
+                if (go.GetComponent<Interactable>() != null)
+                {
+                    var actor = go.GetComponent<NarrativeActor>();
+                    if (actor == null) actor = go.AddComponent<NarrativeActor>();
+                    actor.SetActorIdSinIA(entry.persistenceId);
+                }
+            }
         }
 
         // 5) Sacarlo del contenedor conservando la transform de mundo. AQUÍ corre Awake().

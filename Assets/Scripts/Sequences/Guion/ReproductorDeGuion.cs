@@ -387,14 +387,23 @@ public sealed class ReproductorDeGuion
 
         // El guion y los beats de diálogo enseñan las frases por el mismo camino, para que se
         // vean y se oigan igual (ver PresentadorDeLinea).
+        string texto = PresentadorDeLinea.Texto(linea.clave);
+        string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
+        var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
         if (actor?.Transform != null)
         {
-            string texto = PresentadorDeLinea.Texto(linea.clave);
-            string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
-            var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
             PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
                 new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));
+        }
+        else if (!string.IsNullOrWhiteSpace(texto))
+        {
+            // Sin actor resuelto (no está en esta escena, o es un personaje sin FSM que todavía no
+            // se ha dado de alta) la frase no puede desaparecer en silencio: un subtítulo no
+            // necesita a quién señalar. Ver INC-1233.
+            PresentadorDeLinea.Mostrar(null, texto, (linea.t1 - linea.t0) + 0.35f,
+                presentacion, nombre, datos != null ? datos.colorDelNombre : default,
+                null, fijoEnPantalla: presentacion == PresentacionDeTexto.Bocadillo);
         }
 
         PresentadorDeLinea.SonarLaVoz(linea.clave);

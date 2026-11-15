@@ -187,6 +187,32 @@ public class SequenceActor
 
         if (manager == null)
         {
+            // Un personaje sin FSM (un vendedor, una figura) no está en NPCRegistry, pero puede
+            // estar dado de alta como actor narrativo sin IA (NarrativeActor). Las cinemáticas lo
+            // tratan igual que a un NPC: lo colocan, lo encuadran y le dan sus frases. Ver INC-1233.
+            if (NarrativeActor.TryGetSinIA(actorId, out var sinIA) && sinIA != null)
+            {
+                actor = ForTransform(actorId, sinIA.transform);
+                if (actor != null) return true;
+            }
+
+#if UNITY_EDITOR
+            // Fuera de Play la consulta anterior puede estar vacía (OnEnable no ha corrido): se
+            // buscan los actores sin IA de las escenas abiertas por su id declarado.
+            if (!Application.isPlaying)
+            {
+                foreach (var candidato in Object.FindObjectsByType<NarrativeActor>(
+                             FindObjectsInactive.Include))
+                {
+                    if (candidato != null && candidato.ActorId == actorId)
+                    {
+                        actor = ForTransform(actorId, candidato.transform);
+                        if (actor != null) return true;
+                    }
+                }
+            }
+#endif
+
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SequenceActor] No hay ningún NPC registrado con el ID '{actorId}'. " +
                 "Revisa el Persistence ID del NPC en su prefab/escena, o si el NPC está presente en " +

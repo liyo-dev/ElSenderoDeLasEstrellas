@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Cap1_EldranCaja_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_EldranCaja
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap1_EldranCaja.guion.txt
   duracion: 18.050951
   presentacion: 1
-  huella: "2026-11-13 13:20 \xB7 1a2efcba721284f23bcbc0b30b2c683b"
+  huella: "2026-11-15 16:45 \xB7 ee2b912da0597cf8c34f9d283d9a0359"
   actores:
   - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
     alias: will
     colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
     claveDelNombre: Will
@@ -102,6 +105,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Eldran
+    prefab: Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
     alias: eldran
     colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
     claveDelNombre: Eldran
@@ -217,6 +221,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Tomasa
+    prefab: Assets/_NPCs/Pueblo/Generados/Tomasa.prefab
     alias: tomasa
     colorDelNombre: {r: 0.9098039, g: 0.7607843, b: 0.47843137, a: 1}
     claveDelNombre: Tomasa
@@ -367,12 +372,13 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 11.775919
-    tipo: 5
-    descripcion: 'dos: will y tomasa'
+    linea: 39
+    tipo: 0
+    descripcion: general de will y tomasa
     posiciones:
     - t: 0
-      p: {x: 12.3, y: 27.881815, z: -131.3}
-    lente: 34
+      p: {x: 11.19966, y: 32.281815, z: -128.34651}
+    lente: 42
     lenteFinal: 0
     sujetos:
     - Player
@@ -382,19 +388,20 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.86261994
+    alturaDelFoco: 0.8714766
     encuadre: {x: 0, y: 0}
-    suavidad: 0.6
+    suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 11.775919
     t1: 16.850952
+    linea: 45
     tipo: 0
     descripcion: general de eldran y will
     posiciones:
     - t: 11.775919
-      p: {x: -2.138772, y: 33.281815, z: -131.06334}
+      p: {x: 0.7662258, y: 33.281815, z: -134.96083}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -405,7 +412,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.87201035
+    alturaDelFoco: 0.87201023
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -413,6 +420,7 @@ MonoBehaviour:
   - focos: []
     t0: 16.850952
     t1: 18.050951
+    linea: 57
     tipo: 5
     descripcion: 'dos: eldran y will'
     posiciones:
@@ -438,19 +446,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294589977723070
+      rid: 6540294635039228363
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 16.850952
     beat:
-      rid: 6540294589977723071
+      rid: 6540294635039228364
     linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
     t: 18.050951
     beat:
-      rid: 6540294589977723072
+      rid: 6540294635039228365
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -472,13 +480,11 @@ MonoBehaviour:
     posicion: {x: 7, y: 26.281815, z: -137}
   - nombre: p_llega
     posicion: {x: 11.45, y: 26.281815, z: -136}
-  - nombre: cam_tomasa
-    posicion: {x: 12.3, y: 26.281815, z: -131.3}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294589977723070
+    - rid: 6540294635039228363
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -486,7 +492,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294589977723071
+    - rid: 6540294635039228364
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -501,7 +507,7 @@ MonoBehaviour:
           - HeadNod01
           emotions: 
         detenerEscena: 1
-    - rid: 6540294589977723072
+    - rid: 6540294635039228365
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

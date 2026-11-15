@@ -60,6 +60,16 @@ public class NarrativeActor : MonoBehaviour
     /// <summary>El persistenceId de <see cref="NPCBehaviourManagerV2"/> — no hay dos identidades —, o el id de actor sin IA.</summary>
     public string ActorId => _manager != null ? _manager.PersistenceId : actorIdSinIA;
 
+    /// <summary>
+    /// Da identidad a un NPC sencillo que no tiene <see cref="NPCBehaviourManagerV2"/>: el id que
+    /// el roster ya declara para él. Se llama antes de <see cref="Awake"/> (el NPC se instancia
+    /// dentro de un contenedor desactivado), que es cuando se registra como actor sin IA.
+    /// </summary>
+    public void SetActorIdSinIA(string id)
+    {
+        if (!string.IsNullOrEmpty(id)) actorIdSinIA = id;
+    }
+
     /// <summary>El actor sin IA activo con ese id (los NPCs con IA se buscan en <see cref="NPCRegistry"/>).</summary>
     public static bool TryGetSinIA(string actorId, out NarrativeActor actor)
     {

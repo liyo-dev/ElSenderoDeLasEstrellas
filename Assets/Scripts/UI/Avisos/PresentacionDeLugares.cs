@@ -45,8 +45,10 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     private Bounds? _caja;
     private PlanoDelLugar _plano;
 
-    // En pleno combate no sale el nombre del lugar: espera a que acabe.
-    private static readonly string[] s_cedeAnte = { Situaciones.Combate };
+    // En pleno combate no sale el nombre del lugar: espera a que acabe. Con una cinemática en
+    // marcha, la presentación espera a que termine: el cine siempre manda y el lugar se anuncia
+    // después (ver INC-1234).
+    private static readonly string[] s_cedeAnte = { Situaciones.Combate, Situaciones.Cinematica };
 
     public CanalDeAviso Canal => CanalDeAviso.Cabecera;
     public int Prioridad => 30;
@@ -83,9 +85,6 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
 
     // ────────────────────────────────────────────────────────────────────────
     #region API pública
-
-    /// True mientras hay una presentación de lugar nuevo pedida o a la vista (la corta no cuenta).
-    public static bool EnCurso => Instance != null && Instance._pendiente && !Instance._breve;
 
     /// <summary>El jugador acaba de entrar en el lugar cuyo nombre es <paramref name="claveDelLugar"/>.</summary>
     /// <param name="cajaDelLugar">Lo que ocupa el lugar: si se da, la presentación de lugar nuevo
