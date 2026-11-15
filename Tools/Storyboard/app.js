@@ -19,7 +19,8 @@
     panelActivo: null,
     elementoPorPanel: {},
     siguienteId: 1,
-    dibujo: null
+    dibujo: null,
+    colorManual: null
   };
 
   const refs = new Map();
@@ -84,6 +85,11 @@
 
   function anotacionesDe(panelId) {
     return estado.anotaciones.filter((a) => a.panel === panelId);
+  }
+
+  /// El color de una anotación: el elegido a mano o, si está en «Auto», el del elemento.
+  function colorDeAnotacion(panelId, elementoId) {
+    return estado.colorManual || colorDe(panelId, elementoId);
   }
 
   // ── Montaje ──────────────────────────────────────────────────────────────────────────────
@@ -273,10 +279,22 @@
   }
 
   nodos.barra.addEventListener("click", (e) => {
+    const color = e.target.closest("[data-color]");
+    if (color) {
+      estado.colorManual = color.dataset.color || null;
+      actualizarColores();
+      return;
+    }
+
     const boton = e.target.closest("[data-modo]");
     if (!boton) return;
     ponerModo(boton.dataset.modo);
   });
+
+  function actualizarColores() {
+    for (const boton of nodos.barra.querySelectorAll("[data-color]"))
+      boton.classList.toggle("activo", (boton.dataset.color || null) === estado.colorManual);
+  }
 
   // ── Dibujo ──────────────────────────────────────────────────────────────────────────────
 
@@ -382,7 +400,7 @@
       panel: d.panelId,
       elemento,
       tipo: d.tipo,
-      color: colorDe(d.panelId, elemento),
+      color: colorDeAnotacion(d.panelId, elemento),
       texto: ""
     };
 
@@ -425,7 +443,7 @@
       const d = estado.dibujo;
       const provisional = {
         tipo: d.tipo,
-        color: colorDe(panelId, elementoActual(panelId)),
+        color: colorDeAnotacion(panelId, elementoActual(panelId)),
         puntos: d.tipo === "trazo" ? d.puntos.map((q) => [q.x, q.y]) : null,
         p1: d.p1 ? [d.p1.x, d.p1.y] : null,
         p2: d.p2 ? [d.p2.x, d.p2.y] : null,
@@ -518,7 +536,7 @@
       panel: panelId,
       elemento,
       tipo: "nota",
-      color: colorDe(panelId, elemento),
+      color: colorDeAnotacion(panelId, elemento),
       texto
     });
 
@@ -762,4 +780,5 @@
   montarPaneles();
   for (const panel of SB.paneles) redibujar(panel.id);
   ponerModo("nota");
+  actualizarColores();
 })();

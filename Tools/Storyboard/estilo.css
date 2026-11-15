@@ -139,6 +139,47 @@ main {
   margin: 0 4px;
 }
 
+.color-etiqueta {
+  color: var(--tenue);
+  font-size: 12.5px;
+  margin-left: 4px;
+}
+
+.color {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: var(--color);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25);
+  transition: border-color .15s, transform .1s;
+}
+
+.color:hover { transform: scale(1.08); }
+
+.color.activo {
+  border-color: var(--texto);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .15);
+}
+
+.color[data-color=""] {
+  width: auto;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--papel-2);
+  color: var(--tenue);
+  border: 1px solid var(--borde);
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.color[data-color=""].activo {
+  color: var(--texto);
+  border-color: var(--amarillo);
+}
+
 .leyenda-modo {
   color: var(--tenue);
   font-size: 12.5px;

@@ -24,9 +24,11 @@ y entra en `http://localhost:8765/Tools/Storyboard/index.html`.
    - **Flecha**: de un punto a otro.
    - **Trazo libre**: un recorrido, una trayectoria, una corrección a mano.
    - **Caja**: una zona del plano.
-4. Cada anotación queda con su elemento, su plano y su color. La lista de debajo del plano las
+4. Elige el **color** en la barra: **Auto** usa el color del elemento (Liam amarillo, bola cian,
+   cámara naranja…); un círculo lo fija para la siguiente nota o trazo.
+5. Cada anotación queda con su elemento, su plano y su color. La lista de debajo del plano las
    enseña; la × las borra.
-5. Al terminar, **Copiar resumen** y pégalo en el chat. Si el navegador no deja copiar, abre una
+6. Al terminar, **Copiar resumen** y pégalo en el chat. Si el navegador no deja copiar, abre una
    ventana con el texto para copiarlo a mano. **Descargar JSON** guarda la geometría exacta de los
    trazos.
 
