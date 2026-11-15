@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-15 08:27 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-15 08:30 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **4:45,0** de secuencia · 32 frases · 59 planos · 200 efectos · 19 personajes
 
@@ -9,101 +9,14 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 ## Errores (0)
 
 
-## Avisos (93)
+## Avisos (6)
 
-- línea 240: v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago: v02 roza a v01 a 75,8 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 396: madre @carreta_magia+3.7 anda a M_Puerta_Madre_Fuera ritmo=paseo llega_mirando=cielo_globo: un punto queda fuera del NavMesh (-178,3, -369,1); voy en línea recta
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 180,2 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 192,8 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 298,8 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 311,5 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 417,5 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 430,1 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 479,0 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 491,7 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 559,8 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 270: v07 @globo_fin+2.4 pasea por mira_k2, k6, k7 ritmo=paseo pausa=0.9: v07 roza a v01 a 572,5 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 404: lucas @cielo+1.25 anda a M_Puerta_Madre_Dentro ritmo=trote: un punto queda fuera del NavMesh (-178,2, -370,2); voy en línea recta
-- línea 406: madre @cielo+2.3 anda a M_Puerta_Madre_Dentro ritmo=prisa: un punto queda fuera del NavMesh (-178,2, -370,2); voy en línea recta
 - línea 649: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: un punto queda fuera del NavMesh (-202,0, -365,0); voy en línea recta
-- línea 649: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: un punto queda fuera del NavMesh (-182,0, -364,5); voy en línea recta
-- línea 306: v06  @huida+0.0 huye a puente_s, otro_lado_s, M_Lejos_01: un punto queda fuera del NavMesh (-131,0, -364,0); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: un punto queda fuera del NavMesh (-128,4, -368,4); voy en línea recta
-- línea 307: v04  @huida+0.2 huye a puente_c, otro_lado_c, M_Lejos_02: v04 roza a archimago a 173,0 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 308: v09  @huida+0.4 huye a puente_n, otro_lado_n, M_Lejos_03: un punto queda fuera del NavMesh (-129,0, -359,0); voy en línea recta
-- línea 384: panadera @huida+0.8 huye a puente_c, otro_lado_c, lejos_panadera: panadera roza a archimago a 178,6 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: un punto queda fuera del NavMesh (-124,0, -366,0); voy en línea recta
-- línea 309: v03  @huida+0.9 huye a puente_c, otro_lado_c, M_Lejos_04: v03 roza a v04 a 173,9 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 310: v08  @huida+1.1 huye a puente_s, otro_lado_s, M_Lejos_05: un punto queda fuera del NavMesh (-132,0, -372,0); voy en línea recta
-- línea 310: v08  @huida+1.1 huye a puente_s, otro_lado_s, M_Lejos_05: un punto queda fuera del NavMesh (-132,0, -372,0); voy en línea recta
-- línea 311: v02  @huida+1.4 huye a puente_n, otro_lado_n, M_Lejos_06: un punto queda fuera del NavMesh (-126,0, -361,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: un punto queda fuera del NavMesh (-130,0, -374,5); voy en línea recta
-- línea 313: v01  @huida+1.6 huye a puente_s, otro_lado_s, M_Lejos_08: v01 roza a v08 a 185,6 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 312: v10  @huida+1.7 huye a puente_c, otro_lado_c, M_Lejos_07: un punto queda fuera del NavMesh (-122,0, -367,5); voy en línea recta
-- línea 312: v10  @huida+1.7 huye a puente_c, otro_lado_c, M_Lejos_07: un punto queda fuera del NavMesh (-122,0, -367,5); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: un punto queda fuera del NavMesh (-125,0, -357,0); voy en línea recta
-- línea 314: v07  @huida+2.0 huye a puente_n, otro_lado_n, M_Lejos_09: v07 roza a v09 a 186,5 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: un punto queda fuera del NavMesh (-153,2, -363,7); voy en línea recta
-- línea 409: madre @huida+2.5 huye a puente_n, otro_lado_n, lejos_madre: madre roza a archimago a 178,4 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 707: liora huye a puente_c, otro_lado_c, M_Lejos_10 sin_esperar: un punto queda fuera del NavMesh (-128,0, -365,0); voy en línea recta
-- línea 707: liora huye a puente_c, otro_lado_c, M_Lejos_10 sin_esperar: un punto queda fuera del NavMesh (-128,0, -365,0); voy en línea recta
-- línea 707: liora huye a puente_c, otro_lado_c, M_Lejos_10 sin_esperar: un punto queda fuera del NavMesh (-128,0, -365,0); voy en línea recta
-- línea 708: & nina huye a puente_n, otro_lado_n, M_Puente_06 sin_esperar: un punto queda fuera del NavMesh (-143,4, -357,5); voy en línea recta
 - El primer plano empieza en 66,1 s: hasta entonces la cámara se queda donde estuviera.
-- línea 468: plano medio v02 solo desde=cam_v02 altura=1.0 altura_foco=1.0 lente=38: v02 habla de espaldas a la cámara en 78,3 s (177°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
-- línea 631: plano conjunto mago contrapicado lente=30 suave=0.4: no hay ángulo limpio para «conjunto de mago» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 641: plano medio mago lado=der contrapicado lente=34: no hay ángulo limpio para «medio de mago» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 700: plano conjunto liora nina altura=1.0 altura_foco=0.9 lente=40: liora habla de espaldas a la cámara en 183,4 s (122°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
-- 1:16,0: v01 y v02 se atraviesan.
-- 2:54,4: liora y nina se atraviesan.
-- 2:54,6: panadera y lucas se atraviesan.
-- 2:58,6: archimago y panadera se atraviesan.
-- 2:58,6: archimago y madre se atraviesan.
-- 3:06,6: v07 y v09 se atraviesan.
-- 3:10,0: v09 y lucas se atraviesan.
-- 3:10,2: v04 y panadera se atraviesan.
+- línea 458: plano medio archimago desde=cam_cielo altura=10 mover=cam_baja altura_final=1.15 altura_foco=1.0 lente=40 suave=1.2: algo del decorado se mete delante y tapa un 36% del cuadro. Prueba lado= o desde=.
+- línea 700: plano conjunto liora nina altura=1.0 altura_foco=0.9 lente=40: liora habla de espaldas a la cámara en 183,4 s (157°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- 2:20,0: madre y lucas se atraviesan.
+- 3:10,2: v07 y lucas se atraviesan.
 
 ## Silencios largos entre frases (11)
 
@@ -151,7 +64,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 1:11,6 | archimago | «Buenos días, pueblo. ¿Qué se te ha estropeado hoy?» (3,7 s) · pose |
 | 1:15,3 | plano 3 | medio de v02 · 4,0 s · lente 38° |
 | 1:15,3 | v01 | «¡Buenos días, maestro!» (1,8 s) · pose |
-| 1:17,4 | v02 | «¡Muy buenas, maestro!» (1,8 s) |
+| 1:17,4 | v02 | «¡Muy buenas, maestro!» (1,8 s) · pose |
 | 1:19,2 | **@saludo_fin** |  |
 | 1:19,2 | plano 4 | medio de v06 · 5,7 s · lente 38° · coste 2: ángulo 2 |
 | 1:19,2 | v06 | «¡Maestro! Se me ha volcado otra vez la carreta. Y eso que hoy iba despacio.» (5,7 s) · pose |
@@ -166,24 +79,24 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 1:30,5 | efecto | Decorado: mover PROP_Carreta en 1,1s |
 | 1:31,8 | efecto | Decorado: mover PROP_Carreta en 0,8s |
 | 1:32,6 | efecto | SFX: Prologo_CarretaCae |
-| 1:33,0 | plano 7 | medio de v06 · 2,4 s · lente 38° · coste 18: ángulo 18 |
+| 1:33,0 | plano 7 | medio de v06 · 2,4 s · lente 38° · coste 14: ángulo 14 |
 | 1:35,4 | plano 8 | sobre el hombro de archimago a v06 · 4,2 s · lente 30° · coste 80: cara 80 |
 | 1:35,4 | v06 | «¡Gracias, maestro! No habría podido enderezarla yo solo.» (4,2 s) · pose |
-| 1:39,5 | plano 9 | sobre el hombro de archimago a nina · 4,3 s · lente 30° · coste 822: delante 400, cara 63, eje 350 |
+| 1:39,5 | plano 9 | sobre el hombro de archimago a nina · 4,3 s · lente 30° · coste 859: tapado 122, delante 665, cara 63 |
 | 1:39,5 | nina | «¡Maestro! El globo se ha enganchado en lo alto del campanario.» (4,3 s) · pose |
-| 1:43,9 | plano 10 | medio de archimago · 2,6 s · lente 38° · coste 352: ángulo 2, eje 350 |
+| 1:43,9 | plano 10 | medio de archimago · 2,6 s · lente 38° · coste 2: ángulo 2 |
 | 1:43,9 | archimago | «Con cuidado... Eso es.» (2,6 s) |
 | 1:43,9 | efecto | Hora del día: AfterNoon |
 | 1:44,3 | efecto | SFX: Prologo_MagiaLevitar |
 | 1:46,5 | **@globo_sube** |  |
 | 1:46,5 | plano 11 | general de el punto · 2,6 s · lente 48° |
 | 1:46,5 | efecto | Decorado: mover PROP_Globo en 8,0s |
-| 1:49,1 | plano 12 | conjunto de nina y v03 y v08 · 7,7 s · lente 40° · coste 6: limpio |
+| 1:49,1 | plano 12 | conjunto de nina y v03 y v08 · 7,7 s · lente 40° · coste 0: limpio |
 | 1:49,1 | nina | «¡Hala, ya vuela!» (2,6 s) · pose |
 | 1:52,0 | v03 | «¡Mira cómo sube!» (2,1 s) · pose |
 | 1:54,4 | v08 | «¡Va a llegar hasta las nubes!» (2,3 s) · pose |
 | 1:56,7 | **@globo_fin** |  |
-| 1:56,7 | plano 13 | medio de archimago · 2,2 s · lente 38° · coste 2: ángulo 2 |
+| 1:56,7 | plano 13 | medio de archimago · 2,2 s · lente 38° · coste 3: ángulo 3 |
 | 1:58,7 | efecto | Apagar: PROP_Globo |
 | 1:59,0 | **@rio** |  |
 | 1:59,0 | plano 14 | siguiendo a liora · 6,6 s · lente 34° |
@@ -198,11 +111,11 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:00,6 | liora | «¿Has pensado qué contestar a la academia? Llevas semanas con la carta.» (4,4 s) |
 | 2:05,6 | plano 15 | medio de archimago · 5,7 s · lente 38° · coste 121: cara 100, ángulo 15 |
 | 2:05,6 | archimago | «Hoy pensaba contestar. Pero siempre acaba surgiendo algo en el valle.» (5,7 s) |
-| 2:11,3 | plano 16 | medio de liora · 5,0 s · lente 38° · coste 121: cara 100, ángulo 15 |
+| 2:11,3 | plano 16 | medio de liora · 5,0 s · lente 38° · coste 163: cara 100, ángulo 57 |
 | 2:11,3 | liora | «No tienes que quedarte solo porque aquí te necesiten. ¿Qué quieres hacer tú?» (5,0 s) · pose |
 | 2:16,3 | plano 17 | dos: archimago y liora · 2,2 s · lente 40° |
 | 2:18,5 | **@cielo** |  |
-| 2:18,5 | plano 18 | medio de archimago · 1,6 s · lente 38° · coste 283: cara 213, ángulo 71 |
+| 2:18,5 | plano 18 | medio de archimago · 1,6 s · lente 38° · coste 289: cara 212, ángulo 71 |
 | 2:18,5 | efecto | Ambiente: parar AMBIENTE_RIO |
 | 2:18,5 | efecto | SFX: SFX_Prologo_Viento |
 | 2:18,5 | efecto | Tiempo: encender Viento |
@@ -224,7 +137,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:22,9 | plano 20 | conjunto de v02 y v10 y v01 y nina · 2,0 s · lente 34° · coste 14: ángulo 14 |
 | 2:23,2 | efecto | SFX: SFX_Pueblo_Contraventana_Golpe |
 | 2:24,9 | **@llegada** |  |
-| 2:24,9 | plano 21 | conjunto de mago · 4,0 s · lente 30° · coste 5000: decorado 5000 |
+| 2:24,9 | plano 21 | conjunto de mago · 4,0 s · lente 30° · coste 272: cara 187, ángulo 77 |
 | 2:24,9 | efecto | Voz: ExteriorNoche, +0,0 dB |
 | 2:24,9 | efecto | Fogonazo (0,18s) |
 | 2:24,9 | efecto | Rayo: 1 × fondo del plano |
@@ -234,7 +147,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:25,3 | efecto | Música: MAGOOSCURO_REVEAL |
 | 2:25,5 | efecto | Ambiente: TORMENTA ← Ambience_Prologo_Tormenta |
 | 2:25,5 | efecto | Tiempo: encender Lluvia |
-| 2:28,9 | plano 22 | medio de mago · 1,8 s · lente 34° · coste 5000: decorado 5000 |
+| 2:28,9 | plano 22 | medio de mago · 1,8 s · lente 34° · coste 199: cara 138, ángulo 62 |
 | 2:30,7 | plano 23 | medio de archimago · 1,0 s · lente 38° · coste 31: cara 25, ángulo 6 |
 | 2:31,7 | plano 24 | siguiendo a mago · 3,5 s · lente 34° |
 | 2:32,2 | efecto | Rayo: 1 × fondo del plano |
@@ -244,24 +157,24 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:35,2 | efecto | Ambiente: PANICO ← Ambience_Prologo_Panico |
 | 2:37,4 | plano 26 | medio de archimago · 3,1 s · lente 38° · coste 121: cara 100, ángulo 15 |
 | 2:37,4 | archimago | «No lo sé. Llévatelos al puente, deprisa.» (3,1 s) · pose |
-| 2:40,6 | plano 27 | medio de archimago · 5,2 s · lente 38° · coste 147: cara 126, ángulo 14 |
+| 2:40,6 | plano 27 | medio de archimago · 5,2 s · lente 38° · coste 538: delante 336, cara 176, ángulo 18 |
 | 2:43,1 | **@huida** |  |
 | 2:43,1 | archimago | «¡Al puente! ¡Todos, ahora!» (2,6 s) · pose |
 | 2:45,1 | efecto | Hojas: abrir Puerta de la madre |
 | 2:45,6 | efecto | De la mano: MadreDelValle coge a LucasDelValle |
-| 2:45,7 | plano 28 | general de v06 y v04 y v09 y v03 · 1,6 s · lente 40° · coste 64: cara 59, ángulo 5 |
+| 2:45,7 | plano 28 | general de v06 y v04 y v09 y v03 · 1,6 s · lente 40° · coste 436: tapado 220, delante 216 |
 | 2:46,1 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
-| 2:47,3 | plano 29 | medio de liora · 1,3 s · lente 38° · coste 0: limpio |
+| 2:47,3 | plano 29 | medio de liora · 1,3 s · lente 38° · coste 11: ángulo 5 |
 | 2:47,3 | liora | «¿Y tú?» (1,3 s) |
-| 2:48,6 | plano 30 | medio de archimago · 2,3 s · lente 38° · coste 905: tapado 183, delante 670, ángulo 44 |
+| 2:48,6 | plano 30 | medio de archimago · 2,3 s · lente 38° · coste 11: ángulo 3 |
 | 2:48,6 | archimago | «Ve. Yo me encargo de él.» (2,3 s) · pose |
 | 2:50,9 | plano 31 | dos: archimago y liora · 7,5 s · lente 40° |
 | 2:50,9 | liora | «Vuelve pronto.» (1,9 s) |
 | 2:53,0 | liora | «Y cuando vuelvas, nada de encargos. Te toca descansar.» (5,4 s) |
-| 2:58,4 | plano 32 | medio de archimago · 1,8 s · lente 38° · coste 329: delante 319, ángulo 2 |
+| 2:58,4 | plano 32 | medio de archimago · 1,8 s · lente 38° · coste 199: cara 175, ángulo 24 |
 | 3:00,3 | plano 33 | sobre el hombro de liora a nina · 1,3 s · lente 30° · coste 63: cara 63 |
 | 3:01,6 | **@vamos** |  |
-| 3:01,6 | plano 34 | conjunto de liora y nina · 3,6 s · lente 40° · coste 222: cara 195, ángulo 27 |
+| 3:01,6 | plano 34 | conjunto de liora y nina · 3,6 s · lente 40° · coste 331: cara 276, ángulo 50 |
 | 3:01,6 | liora | «¡Vamos, Nina! ...Ten mucho cuidado, por favor.» (3,6 s) |
 | 3:05,2 | **@acercan** |  |
 | 3:05,2 | plano 35 | siguiendo a archimago · 4,5 s · lente 34° |
@@ -375,7 +288,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 4:11,7 | efecto | Sacudida de cámara (0,35, 1,2s) |
 | 4:14,7 | plano 52 | general de mago · 1,2 s · lente 46° |
 | 4:14,7 | efecto | Rayo: 1 × fondo del plano |
-| 4:15,9 | plano 53 | conjunto de archimago · 6,3 s · lente 52° · coste 2: ángulo 2 |
+| 4:15,9 | plano 53 | conjunto de archimago · 6,3 s · lente 52° · coste 12: ángulo 12 |
 | 4:15,9 | archimago | «Que mi vida sea el precio y mi alma el sello... ¡No importa lo que quede de mí cuando la luz se apague!» (6,3 s) |
 | 4:15,9 | efecto | Conjuro a la cabeza: NPC_Archimago (16,0 s) |
 | 4:19,4 | efecto | VFX: Pilar en NPC_Archimago |
@@ -558,7 +471,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 3:01,6–3:05,2 habla
 - 3:01,7 gesto Talk01
 - 3:03,7 bucle ManoAlPecho
-- 3:05,2–3:17,7 anda de (-154,9, -367,2) a (-128,0, -365,0)
+- 3:05,2–3:17,2 anda de (-155,0, -367,1) a (-128,0, -365,0)
 
 ### mago (NPC_MagoOscuro)
 
@@ -608,10 +521,10 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:14,0 gesto Laugh01
 - 2:16,9 gesto Talk03
 - 2:18,8 reposo 
-- 2:44,2–2:55,0 anda de (-174,7, -364,1) a (-154,0, -366,8)
+- 2:43,8–2:54,8 anda de (-174,7, -364,1) a (-154,0, -366,8)
 - 2:47,2 gesto SenseSomethingStart_NoWeapon
 - 3:02,3 gesto Sobresalto01
-- 3:05,2–3:14,9 anda de (-154,0, -366,7) a (-143,4, -357,5)
+- 3:06,0–3:16,6 anda de (-154,0, -366,7) a (-143,4, -357,5)
 
 ### v01 (NPC_Aldeano_01)
 
@@ -694,7 +607,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:17,1–2:18,0 anda de (-173,1, -366,6) a (-174,5, -366,4)
 - 2:18,5–2:20,3 anda de (-174,4, -366,4) a (-173,1, -364,0)
 - 2:18,8 reposo 
-- 2:47,6–3:07,2 anda de (-173,0, -365,0) a (-130,0, -374,5)
+- 2:45,6–3:05,3 anda de (-172,9, -364,0) a (-130,0, -374,5)
 
 ### v02 (NPC_Aldeano_02)
 
@@ -719,8 +632,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:07,2 gesto Question01
 - 1:10,5 reposo 
 - 1:11,5 gesto HandWave02
+- 1:12,1–1:16,5 anda de (-173,8, -363,2) a (-165,7, -364,4)
 - 1:12,3 gesto Question01
-- 1:14,9–1:19,2 anda de (-173,8, -363,1) a (-165,7, -364,4)
 - 1:17,4–1:19,2 habla
 - 1:17,5 gesto HandWave02
 - 1:20,1–1:30,2 anda de (-165,7, -364,4) a (-173,9, -363,1)
@@ -735,7 +648,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:18,9 reposo 
 - 2:19,0 gesto SenseSomethingStart_NoWeapon
 - 2:25,4 bucle Fear01
-- 2:44,6–3:04,7 anda de (-173,7, -363,1) a (-126,0, -361,5)
+- 2:44,6–3:04,8 anda de (-173,7, -363,1) a (-126,0, -361,5)
 - 3:17,1 bucle Beg01_Loop
 
 ### v03 (NPC_Aldeano_03)
@@ -790,7 +703,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:18,7 reposo 
 - 2:19,7 gesto FoundSomething_NoWeapon
 - 2:25,5 gesto Fear01
-- 2:47,3–3:06,1 anda de (-168,5, -364,1) a (-124,0, -366,0)
+- 2:44,1–3:03,0 anda de (-168,6, -364,0) a (-124,0, -366,0)
 - 3:45,1 bucle Reverence01_Loop
 
 ### v04 (NPC_Aldeano_04)
@@ -835,8 +748,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:28,5–2:31,4 anda de (-172,2, -369,2) a (-170,1, -369,2)
 - 2:33,2–2:36,1 anda de (-170,1, -369,2) a (-172,2, -369,2)
 - 2:37,9–2:40,7 anda de (-172,2, -369,2) a (-170,1, -369,2)
-- 2:42,5–2:43,4 anda de (-170,1, -369,2) a (-170,6, -369,2)
-- 2:46,6–3:04,8 anda de (-170,5, -369,2) a (-128,4, -368,4)
+- 2:42,5–3:01,9 anda de (-170,1, -369,2) a (-128,4, -368,4)
 
 ### v06 (NPC_Aldeano_06)
 
@@ -861,7 +773,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:19,0 reposo 
 - 2:35,9 gesto Question02
 - 2:38,1 gesto HeadShake01
-- 2:43,2–2:55,3 anda de (-159,2, -367,5) a (-131,0, -364,0)
+- 2:43,2–2:56,1 anda de (-159,3, -367,5) a (-131,0, -364,0)
 - 2:43,8 gesto HeadNod01
 
 ### v07 (NPC_Aldeano_07)
@@ -902,7 +814,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:04,7–2:07,6 anda de (-172,0, -364,8) a (-171,4, -366,8)
 - 2:10,1–2:16,2 anda de (-171,4, -366,8) a (-175,1, -366,6)
 - 2:18,3–2:20,8 anda de (-175,1, -366,6) a (-172,0, -364,8)
-- 2:48,4–3:08,7 anda de (-171,8, -364,8) a (-125,0, -357,0)
+- 2:47,2–3:07,8 anda de (-171,8, -364,8) a (-125,0, -357,0)
 
 ### v08 (NPC_Aldeano_08)
 
@@ -950,7 +862,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:12,6 gesto HeadNod01
 - 2:15,2 gesto Talk02
 - 2:19,0 reposo 
-- 2:44,3–3:00,2 anda de (-167,5, -364,5) a (-132,0, -372,0)
+- 2:46,3–3:02,5 anda de (-167,5, -364,5) a (-132,0, -372,0)
 - 3:17,5 bucle Fear01
 
 ### v09 (NPC_Aldeano_09)
@@ -997,7 +909,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:16,5 gesto Laugh01
 - 2:18,9 reposo 
 - 2:25,8 gesto Fear01
-- 2:43,6–3:01,8 anda de (-170,9, -359,4) a (-129,0, -359,0)
+- 2:44,0–3:02,5 anda de (-171,0, -359,5) a (-129,0, -359,0)
 - 3:17,8 bucle Fear01
 
 ### v10 (NPC_Aldeano_10)
@@ -1022,7 +934,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:32,7 gesto HandClap01
 - 2:25,6 gesto Fear01
 - 2:43,9 reposo 
-- 2:47,2–3:15,0 anda de (-183,0, -368,5) a (-118,0, -371,5)
+- 2:44,0–3:12,0 anda de (-183,0, -368,5) a (-118,0, -371,5)
 
 ### madre (MadreDelValle)
 
@@ -1033,21 +945,21 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:22,8 gesto HeadNod01
 - 1:32,4 reposo 
 - 1:32,6–1:39,5 anda de (-183,1, -366,3) a (-178,3, -369,1)
+- 1:52,7 gesto HeadNod01
 - 1:57,1 gesto HeadNod01
-- 2:20,9–2:21,8 anda de (-178,3, -369,1) a (-178,2, -370,2)
+- 2:20,9–2:21,9 anda de (-178,4, -369,1) a (-178,2, -370,2)
 - 2:22,1 desaparece
 - 2:45,5 aparece
-- 2:48,9–3:13,9 anda de (-178,0, -370,2) a (-120,5, -356,5)
+- 2:45,7–3:12,3 anda de (-178,2, -370,1) a (-120,5, -356,5)
 
 ### lucas (LucasDelValle)
 
 - 0:00,1–0:10,7 anda de (-191,5, -365,3) a (-183,2, -366,8)
 - 1:32,5–1:39,5 anda de (-183,2, -366,8) a (-178,6, -369,5)
-- 2:19,8–2:20,3 anda de (-178,6, -369,6) a (-178,2, -370,2)
+- 2:19,8–2:20,7 anda de (-178,6, -369,5) a (-178,2, -370,2)
 - 2:20,7 desaparece
 - 2:45,5 aparece
-- 2:45,6–2:46,0 anda de (-178,2, -370,2) a (-178,8, -370,2)
-- 2:48,8–3:14,0 anda de (-178,7, -370,1) a (-120,7, -356,0)
+- 2:45,6–3:12,3 anda de (-178,2, -370,2) a (-120,7, -356,0)
 - 3:20,3 gesto HeadNod01
 - 3:41,8 gesto HeadShake01
 
@@ -1059,6 +971,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:32,7 gesto HandClap01
 - 1:44,6 gesto HeadNod01
 - 1:52,7 gesto HeadNod01
+- 2:06,3 gesto HeadNod01
+- 2:12,0 gesto Question01
 - 2:19,4 gesto Fear01
 - 2:21,5 desaparece
 
@@ -1077,5 +991,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:52,7 gesto HeadNod01
 - 1:57,5 gesto HeadNod01
 - 2:01,5 gesto HandWave02
+- 2:06,3 gesto HeadNod01
+- 2:12,0 gesto Question01
 - 2:21,1 desaparece
 
