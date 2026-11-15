@@ -162,7 +162,7 @@ public class SintoniaEstelarService : MonoBehaviour
     /// <summary>Hay combate en curso (lo enseña el menú de depuración de Sintonía).</summary>
     public bool EstaEnCombate()
     {
-        if (ActiveCombatRegistry.Count > 0) return true;
+        if (Kits.Core.GameContext.Has(Situaciones.Combate)) return true;
         return PlayerService.TryGetComponent(out PlayerActionManager am) && am.IsInMode(ActionMode.Combat);
     }
 

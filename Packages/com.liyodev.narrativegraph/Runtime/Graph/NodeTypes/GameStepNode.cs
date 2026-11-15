@@ -18,7 +18,7 @@ using UnityEngine;
 /// dicho en la consola.
 /// </summary>
 [Serializable]
-[NarrativeNodeInfo("Otros", "Pedir al juego", "Le pide al juego algo que sabe hacer (por su id) y sigue cuando avisa. Si nadie lo atiende, la historia no se cuelga.")]
+[NarrativeNodeInfo("Otros", "Pedir al juego", "Le pide al juego algo que sabe hacer (por su id) y sigue cuando avisa. Si nadie lo atiende, la historia no se cuelga.", Family = NarrativeStepFamily.Juego)]
 [UnsafeForSave("Esperando al juego")]
 public sealed class GameStepNode : NarrativeNode, INarrativeStateEffect, INarrativeRouteEffect
 {

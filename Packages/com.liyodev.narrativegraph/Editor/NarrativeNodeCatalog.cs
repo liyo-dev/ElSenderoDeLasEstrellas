@@ -9,8 +9,9 @@ namespace NarrativeGraphEditor
     /// <summary>
     /// Catálogo de tipos de paso para el editor: descubre por reflection (solo editor) todas las
     /// clases NarrativeNode y las peticiones al juego (NarrativeRequest, que se ponen con «Pedir al
-    /// juego») no abstractas ni obsoletas, y expone categoría / título / descripción / color a
-    /// partir de [NarrativeNodeInfo], que declara cada una. Es la única fuente de colores del editor.
+    /// juego») no abstractas ni obsoletas, y expone categoría / bloque (historia o juego) / título /
+    /// descripción / color a partir de [NarrativeNodeInfo], que declara cada una. Es la única
+    /// fuente de colores del editor.
     /// </summary>
     public static class NarrativeNodeCatalog
     {
@@ -21,6 +22,7 @@ namespace NarrativeGraphEditor
             public string title;
             public string description;
             public bool obsolete;
+            public NarrativeStepFamily family;
         }
 
         // Orden de categorías en la paleta y color de cada una.
@@ -32,12 +34,10 @@ namespace NarrativeGraphEditor
             ("NPCs",         new Color(0.85f, 0.56f, 0.22f)),
             ("Señales",      new Color(0.55f, 0.45f, 0.85f)),
             ("Cinemáticas",  new Color(0.72f, 0.36f, 0.72f)),
-            ("Combate",      new Color(0.86f, 0.32f, 0.32f)),
             ("Objetos",      new Color(0.78f, 0.62f, 0.25f)),
             ("Jugador",      new Color(0.92f, 0.48f, 0.30f)),
             ("Mundo",        new Color(0.28f, 0.58f, 0.62f)),
             ("Audio y cine", new Color(0.36f, 0.50f, 0.78f)),
-            ("Minijuegos",   new Color(0.60f, 0.70f, 0.30f)),
             ("Notas",        new Color(0.80f, 0.75f, 0.40f)),
             ("Otros",        new Color(0.45f, 0.45f, 0.45f)),
         };
@@ -96,7 +96,8 @@ namespace NarrativeGraphEditor
                 if (!e.obsolete) _entries.Add(e);
             }
             _entries = _entries
-                .OrderBy(e => CategoryOrder(e.category))
+                .OrderBy(e => e.family == NarrativeStepFamily.Juego ? 1 : 0)
+                .ThenBy(e => CategoryOrder(e.category))
                 .ThenBy(e => e.title, StringComparer.OrdinalIgnoreCase)
                 .ToList();
         }
@@ -105,13 +106,22 @@ namespace NarrativeGraphEditor
         {
             var info = t.GetCustomAttribute<NarrativeNodeInfoAttribute>(false);
             var obsolete = t.GetCustomAttribute<ObsoleteAttribute>(false) != null;
+
+            // Lo que viene en el paquete es vocabulario de la historia; lo que añade el proyecto es
+            // del juego, salvo que declare lo contrario.
+            var origin = t.Assembly == typeof(NarrativeNode).Assembly
+                ? NarrativeStepFamily.Historia
+                : NarrativeStepFamily.Juego;
+            var family = info != null && info.Family != NarrativeStepFamily.Auto ? info.Family : origin;
+
             return new Entry
             {
                 type = t,
                 category = info?.Category ?? "Otros",
                 title = info?.Title ?? PrettyName(t.Name),
                 description = info?.Description ?? "",
-                obsolete = obsolete
+                obsolete = obsolete,
+                family = family
             };
         }
 

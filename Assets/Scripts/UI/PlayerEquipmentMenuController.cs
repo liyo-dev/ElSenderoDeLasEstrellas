@@ -149,9 +149,6 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (_isOpen) CloseMenu();
             return;
         }
-        // Durante un minijuego Start sirve para abortarlo.
-        if (TagMinigameController.IsAnyMinigameActive) return;
-
         if (GamepadInputReader.StartPressed) _toggleRequested = true;
 
         if (!_isOpen)
@@ -230,7 +227,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void OpenMenu()
     {
-        if (TagMinigameController.IsAnyMinigameActive || _menu == null) return;
+        if (_menu == null) return;
         if (!MenuManager.TryOpen(MenuKind.Equipment)) return;
         GamepadInputReader.PlayUISound("UI_Submit");
 

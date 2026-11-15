@@ -44,7 +44,7 @@ namespace NarrativeGraphEditor
             return result;
         }
 
-        /// «en Eldran_SalidaDelPueblo · dice: DLG_X, DLG_Y».
+        /// «en <marca> · dice: <clave>, <clave>».
         public static string Describe(ActorStateNode n)
         {
             var parts = new List<string>();

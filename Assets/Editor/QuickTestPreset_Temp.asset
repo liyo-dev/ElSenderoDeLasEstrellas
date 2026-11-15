@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
-  m_Name: QuickTest_Temp
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Bedroom
+  spawnAnchorId: InicioTemploQueCanta
   level: 1
   maxHP: 100
   currentHP: 100
@@ -25,52 +25,10 @@ MonoBehaviour:
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
   unlockedSpells: 0100000002000000040000001a000000i
-  basicSpellIds: 01000000i
+  basicSpellIds: 
   companionBasics: []
-  companionHealth:
-  - personaje: 0
-    maxHP: 0
-    currentHP: 0
-    maxMP: 0
-    currentMP: 0
-    ataque: 0
-    defensa: 0
-    habilidadesAprendidas:
-      swim: 0
-      jump: 0
-      magic: 1
-      fly: 0
-      sprint: 0
-      shield: 0
-  - personaje: 2
-    maxHP: 0
-    currentHP: 0
-    maxMP: 0
-    currentMP: 0
-    ataque: 0
-    defensa: 0
-    habilidadesAprendidas:
-      swim: 0
-      jump: 0
-      magic: 1
-      fly: 0
-      sprint: 0
-      shield: 0
-  flags:
-  - QUEST_ACTIVE:WILL_MISSION0
-  - QUEST_COMPLETED:WILL_MISSION0
-  - QUEST_ACTIVE:ELDRAN_MISSION1
-  - QUEST_COMPLETED:ELDRAN_MISSION1
-  - QUEST_ACTIVE:WILL_MISSION1
-  - QUEST_COMPLETED:WILL_MISSION1
-  - QUEST_ACTIVE:ELDRAN_SIGUEME
-  - QUEST_COMPLETED:ELDRAN_SIGUEME
-  - QUEST_ACTIVE:ELDRAN_MISSION2
-  - QUEST_COMPLETED:ELDRAN_MISSION2
-  - QUEST_ACTIVE:ELDRAN_MISSION3
-  - QUEST_COMPLETED:ELDRAN_MISSION3
-  - NARRATIVE_FLAG:CAP2_INICIADO
-  - QUEST_ACTIVE:PREPARA_VIAJE
+  companionHealth: []
+  flags: []
   abilities:
     swim: 1
     jump: 1
@@ -154,62 +112,11 @@ MonoBehaviour:
   - Cloak01
   - Cloak02
   - Cloak03
-  inventoryItems:
-  - itemId: coin
-    count: 1
-  - itemId: estrella_torcida
-    count: 1
-  - itemId: trozo_del_aro
-    count: 1
-  defeatedBossIds:
-  - Demon_1
-  narrativeBlackboards:
-  - graphLabel: Cap1
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Cap3
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: cap2-prepara-viaje-fork
-  senalesEmitidas:
-  - PROLOGUE_START
-  - PROLOGUE_DONE
-  - will_wake_up
-  - HOOK_DISCUSION_START
-  - HOOK_DISCUSION_DONE
-  - WILL_EXITS_HOUSE
-  - WILL_EXITS_HOUSE_OLIVER_GREETING
-  - OLIVER_GREETING_START
-  - OLIVER_GREETING_DONE
-  - OLIVER_JOIN_PARTY
-  - WILL_REACHED_ELDRAN
-  - PERAS_START
-  - PERAS_DONE
-  - ESTRELLA_COMPRADA
-  - ELDRAN_CAJA_START
-  - ELDRAN_CAJA_DONE
-  - CAP1_CAJA_ELDRAN
-  - NPC_INTERACT_NPC_Eldran
-  - AWAKEN_START
-  - AWAKEN_DONE
-  - CH_Cap1_BACK_1
-  - LIAM_CRYSTAL_START
-  - LIAM_CRYSTAL_DONE
-  - MANANA_DESPUES_START
-  - MANANA_DESPUES_DONE
-  npcPositions:
-  - npcId: Eldran
-    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
-    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
+  inventoryItems: []
+  defeatedBossIds: []
+  narrativeBlackboards: []
+  senalesEmitidas: []
+  npcPositions: []
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

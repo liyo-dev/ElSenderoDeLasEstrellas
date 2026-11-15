@@ -1690,6 +1690,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -2950,6 +2951,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -3819,6 +3821,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -6374,6 +6377,7 @@ MonoBehaviour:
   - PlayerTest
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -14814,6 +14818,7 @@ MonoBehaviour:
   - PlayerTest
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -18136,6 +18141,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -23978,6 +23984,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -24939,6 +24946,7 @@ MonoBehaviour:
   - Sendero
   - Chuchelandia
   - Cascaditas
+  - TemploQueCanta
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1

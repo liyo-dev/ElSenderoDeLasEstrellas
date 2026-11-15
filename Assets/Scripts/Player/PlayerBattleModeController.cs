@@ -273,7 +273,7 @@ namespace Game.Player
         /// </summary>
         bool DetectEnemiesNearby()
         {
-            return ActiveCombatRegistry.Count > 0;
+            return Kits.Core.GameContext.Has(Situaciones.Combate);
         }
         
         /// <summary>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// En qué está cada personaje según la historia: la pieza «Personaje desde aquí» que vale ahora
 /// (<see cref="ActorStateNode"/>). Dos capas por personaje: «lo de siempre» y «desde aquí», que
 /// manda mientras exista. Se guarda con la partida como entradas del almacén de datos de la
-/// historia («@actor:Eldran=guid», «@usual:Eldran=guid»), igual que los contadores.
+/// historia («@actor:<id>=guid», «@usual:<id>=guid»), igual que los contadores.
 public static class NarrativeActorStates
 {
     const string CurrentTag = "@actor:";

@@ -372,19 +372,29 @@ namespace NarrativeGraphEditor
 
             foreach (var c in Cast())
             {
+                pieces.TryGetValue(c.actorId, out var e);
+                // «Lo de siempre» con presencia sin tocar no coloca a nadie: solo cuenta lo que la
+                // historia dice de verdad (una marca, un «no está» o un hecho de posición).
+                bool placedPiece = e != null && (e.Node.presence != ActorPresence.Unchanged
+                                                 || e.Node.layer != ActorStateNode.Layer.Usual);
+                bool named = placedPiece || (story != null && story.Actors.ContainsKey(c.actorId));
+                bool playerAtStart = c.actorId == "Player" && !string.IsNullOrEmpty(playerMark);
+                if (!named && !playerAtStart) continue;   // la historia no lo coloca: no sale
+
                 var p = new Placement();
                 string mark = null;
-                if (pieces.TryGetValue(c.actorId, out var e) && e.Node.presence != ActorPresence.Unchanged)
+                if (e != null && e.Node.presence != ActorPresence.Unchanged)
                 {
                     p.Piece = e.Node;
                     p.Away = e.Node.presence == ActorPresence.Away;
                     mark = e.Node.markId;
                     SetWhy(p, e.Graph, e.Source ?? e.Node.guid);
                 }
-                else if (c.actorId == "Player" && !string.IsNullOrEmpty(playerMark))
+                else if (playerAtStart)
                 {
                     // El jugador está donde le deja el arranque de la prueba: la historia con sus
                     // puntos (◆) en su sitio, que es lo que se usa al probar desde este paso.
+                    if (e != null) p.Piece = e.Node;
                     mark = playerMark;
                 }
                 else
@@ -396,7 +406,6 @@ namespace NarrativeGraphEditor
                         else mark = a.value;
                         SetWhy(p, story.SourceGraph.TryGetValue(a.source ?? "", out var g) ? g : _graph, a.source);
                     }
-                    if (mark == null && c.actorId == "Player" && !string.IsNullOrEmpty(playerMark)) mark = playerMark;
                 }
                 if (WorldMode && !p.Away)
                 {
@@ -516,7 +525,8 @@ namespace NarrativeGraphEditor
 
             // La compacta no enseña la ficha: no se monta.
             if (Compact) return;
-            if (_selectedActor != null && Cast().FirstOrDefault(x => x.actorId == _selectedActor) is { } ch)
+            if (_selectedActor != null && _placements.ContainsKey(_selectedActor)
+                && Cast().FirstOrDefault(x => x.actorId == _selectedActor) is { } ch)
             {
                 if (_dialogue != null) DialogueCard(ch);
                 else CharacterCard(ch);
@@ -669,8 +679,8 @@ namespace NarrativeGraphEditor
         void HelpCard()
         {
             Title(StoryText.T("Mapa de la historia", "Story map"), null);
-            Muted(StoryText.T("Elige un paso en el editor de la historia: los muñecos se colocan donde los deja la historia en ese momento. Pulsa uno para ver lo suyo. «…» = tiene algo que decir. El mapa solo enseña lo que dice el grafo: para cambiarlo, abre el paso.",
-                              "Pick a step in the story editor: characters move to where the story leaves them at that moment. Click one to see their things. “…” = has something to say. The map only shows what the graph says: to change it, open the step."));
+            Muted(StoryText.T("Elige un paso en el editor de la historia: solo salen los personajes que ese paso coloca o nombra; el resto no está en el mapa. Pulsa uno para ver lo suyo. «…» = tiene algo que decir. El mapa solo enseña lo que dice el grafo: para cambiarlo, abre el paso.",
+                              "Pick a step in the story editor: only the characters that step places or names are shown; the rest are not on the map. Click one to see their things. “…” = has something to say. The map only shows what the graph says: to change it, open the step."));
         }
 
         void CharacterCard(NarrativeWorldMap.Character c)

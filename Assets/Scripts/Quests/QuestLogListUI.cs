@@ -320,8 +320,7 @@ public class QuestLogListUI : MonoBehaviour
     /// botón que abre/oculta el detalle de misiones en el dispositivo activo (D-Pad arriba en mando,
     /// "J" en teclado — ver PlayerControls.inputactions). Antes este texto tenía el literal
     /// "[D-Pad ▲]" fijo en las claves UI_MISIONES_OCULTAR/UI_MISIONES_SHOW de ui_es.json/ui_en.json,
-    /// que era incorrecto en teclado+ratón (mismo patrón que Loc() en TagMinigameController con
-    /// "{SPRINT}"; ver InputGlyphNames.DpadUp/InputGlyphLabels).
+    /// que era incorrecto en teclado+ratón (ver InputGlyphNames.DpadUp/InputGlyphLabels).
     /// </summary>
     string ResolveDeviceTokens(string text)
     {

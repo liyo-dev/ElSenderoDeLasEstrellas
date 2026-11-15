@@ -149664,7 +149664,7 @@ MonoBehaviour:
   portada: {fileID: 1234489059}
   efectoAlComenzar: {fileID: 1706012242}
   nextSceneContinue: MainWorld
-  nextSceneNewGame: MainWorld
+  nextSceneNewGame: Prologo_Valle
   loadingOverlayScene: LoadingScreen
   fadeOverride: {fileID: 11400000, guid: c9f7b34f761c5c342ada8a4b2ab7a716, type: 2}
   fadeDelay: 0
@@ -216287,8 +216287,6 @@ MonoBehaviour:
     behaviourType: 192
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 11400000, guid: 2cc0b2e577149df4f8a3bc35ba74a5de, type: 2}
     partyConfig: {fileID: 11400000, guid: 275a911f69b78424dbc8e021c3b202a6, type: 2}
     socialConfig: {fileID: 11400000, guid: e47cccb532b393845b2c510109c3b00b, type: 2}
     walkSpeed: 1.5
@@ -216339,8 +216337,6 @@ MonoBehaviour:
     behaviourType: 192
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 11400000, guid: 2cc0b2e577149df4f8a3bc35ba74a5de, type: 2}
     partyConfig: {fileID: 11400000, guid: 275a911f69b78424dbc8e021c3b202a6, type: 2}
     socialConfig: {fileID: 11400000, guid: e47cccb532b393845b2c510109c3b00b, type: 2}
     walkSpeed: 1.5
@@ -246636,8 +246632,6 @@ MonoBehaviour:
     behaviourType: 192
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 11400000, guid: ebc54ede431cdc94d92eebbad35015b3, type: 2}
     partyConfig: {fileID: 11400000, guid: 326d143da8cd2de448dbe4f559b21085, type: 2}
     socialConfig: {fileID: 11400000, guid: 1f66da33c119a824ab0fc65fde39cf4f, type: 2}
     walkSpeed: 1.5
@@ -246688,8 +246682,6 @@ MonoBehaviour:
     behaviourType: 192
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 11400000, guid: ebc54ede431cdc94d92eebbad35015b3, type: 2}
     partyConfig: {fileID: 11400000, guid: 326d143da8cd2de448dbe4f559b21085, type: 2}
     socialConfig: {fileID: 11400000, guid: 1f66da33c119a824ab0fc65fde39cf4f, type: 2}
     walkSpeed: 1.5
@@ -249166,10 +249158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!114 &1267275146124086767
@@ -249184,10 +249172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!4 &1267820442128938605
@@ -265309,40 +265293,8 @@ MonoBehaviour:
   exitBattleDelay: 3
   layerFadeDuration: 0.3
   victoryAnimationDuration: 3
-  victorySfxKey: Npc_Battle_Victory
-  enableVictoryCamera: 1
-  victoryCamDistance: 2.8
-  victoryCamHeight: 1.6
-  victoryCamYawOffsetDeg: -35
-  victoryCamLookHeight: 1.3
-  victoryCamFOV: 38
-  victoryCamBlendSeconds: 0.4
   victoryJumpStateName: JumpFullSpin_InPlace_NoWeapon
   victoryJumpHeight: 1.4
-  victoryCamMoveSeconds: 3
-  victoryCamStartDistance: 6.5
-  victoryCamStartHeight: 3
-  victoryCamStartYawOffsetDeg: -110
-  victoryDelayAfterDefeat: 1.5
-  celebracionEnGrupo:
-    orden: 010000000200000000000000i
-    poses:
-    - personaje: 1
-      estado: Victory_NoWeapon
-    - personaje: 2
-      estado: HandClap01
-    - personaje: 0
-      estado: Cheer02
-    gestoFinal: Cheer01
-    separacion: 1.2
-    radioDeBusqueda: 25
-    distanciaParaColocarDeGolpe: 15
-    topeParaLlegar: 3.5
-    topeDePose: 3
-  victoryCamExtraDistancePerMember: 1.1
-  victoryCamGroupYawOffsetDeg: -15
-  victoryCamGroupScreenShift: 0.8
-  victoryFinalHoldSeconds: 0.4
   debugMode: 1
 --- !u!114 &1750471286887574618
 MonoBehaviour:
@@ -265371,40 +265323,8 @@ MonoBehaviour:
   exitBattleDelay: 3
   layerFadeDuration: 0.3
   victoryAnimationDuration: 3
-  victorySfxKey: Npc_Battle_Victory
-  enableVictoryCamera: 1
-  victoryCamDistance: 2.8
-  victoryCamHeight: 1.6
-  victoryCamYawOffsetDeg: -35
-  victoryCamLookHeight: 1.3
-  victoryCamFOV: 38
-  victoryCamBlendSeconds: 0.4
   victoryJumpStateName: JumpFullSpin_InPlace_NoWeapon
   victoryJumpHeight: 1.4
-  victoryCamMoveSeconds: 3
-  victoryCamStartDistance: 6.5
-  victoryCamStartHeight: 3
-  victoryCamStartYawOffsetDeg: -110
-  victoryDelayAfterDefeat: 1.5
-  celebracionEnGrupo:
-    orden: 010000000200000000000000i
-    poses:
-    - personaje: 1
-      estado: Victory_NoWeapon
-    - personaje: 2
-      estado: HandClap01
-    - personaje: 0
-      estado: Cheer02
-    gestoFinal: Cheer01
-    separacion: 1.2
-    radioDeBusqueda: 25
-    distanciaParaColocarDeGolpe: 15
-    topeParaLlegar: 3.5
-    topeDePose: 3
-  victoryCamExtraDistancePerMember: 1.1
-  victoryCamGroupYawOffsetDeg: -15
-  victoryCamGroupScreenShift: 0.8
-  victoryFinalHoldSeconds: 0.4
   debugMode: 1
 --- !u!23 &1750509369523546699
 MeshRenderer:
@@ -406909,7 +406829,6 @@ GameObject:
   - component: {fileID: 3392072196222326130}
   - component: {fileID: 1187040435354482931}
   - component: {fileID: 9069736355977778830}
-  - component: {fileID: 8633260300753076746}
   - component: {fileID: 1502966510876708547}
   - component: {fileID: 2189284623577607527}
   - component: {fileID: 4060681882094383538}
@@ -410228,10 +410147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!114 &6849745923929895127
@@ -410246,10 +410161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!1 &6850378638002114233
@@ -458315,25 +458226,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.005250141, y: -0.2560174, z: 0.843238}
     m_Extent: {x: 0.19693002, y: 0.040915012, z: 0.0704062}
   m_DirtyAABB: 0
---- !u!114 &8633260300753076746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6741617104218739782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71502e3d469043c39b0240edd3c4f296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChaserAI
-  target: {fileID: 0}
-  agent: {fileID: 3392072196222326130}
-  chaseSpeed: 20
-  catchDistance: 1.2
-  updatePathInterval: 0.2
-  animator: {fileID: 0}
-  runAnimParam: IsRunning
 --- !u!4 &8634440942480457711
 Transform:
   m_ObjectHideFlags: 0

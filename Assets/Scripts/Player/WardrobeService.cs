@@ -38,35 +38,9 @@ public static class WardrobeService
                 OnWardrobeItemUnlocked?.Invoke(item);
                 TryShowPopup(item);
                 
-                // Log del estado actual del wardrobe después del desbloqueo
-                var method = wardrobe.GetType().GetMethod("GetUnlockedOptions");
-                if (method != null)
-                {
-                    try
-                    {
-                        var paramType = method.GetParameters()[0].ParameterType;
-                        var categoryName = item.Category.ToString();
-                        var enumVal = System.Enum.Parse(paramType, categoryName);
-                        var result = method.Invoke(wardrobe, new object[] { enumVal });
-                        if (result != null)
-                        {
-                            var count = (int)result.GetType().GetProperty("Count").GetValue(result);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[WardrobeService] Tras desbloquear, categoría {categoryName} tiene {count} items");
+                Debug.Log($"[WardrobeService] Tras desbloquear, categoría {item.Category} tiene {wardrobe.GetUnlockedOptions(item.Category).Count} items");
 #endif
-                        }
-                    }
-                    catch (System.Exception
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        ex
-#endif
-                    )
-                    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogError($"[WardrobeService] Error al verificar opciones desbloqueadas: {ex.Message}");
-#endif
-                    }
-                }
             }
             else if (logWarnings)
             {

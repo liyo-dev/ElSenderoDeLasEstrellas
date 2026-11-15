@@ -62,27 +62,34 @@ namespace NarrativeGraphEditor
             sb.AppendLine("# Step types");
             sb.AppendLine();
             sb.AppendLine("Each step does one thing when the story reaches it. Fields are set per step; ways out are the named outputs (a step without them simply continues, and several connections from it run in parallel).");
-            foreach (var group in NarrativeNodeCatalog.All.Where(e => !e.obsolete).GroupBy(e => e.category).OrderBy(g => NarrativeNodeCatalog.CategoryOrder(g.Key)))
+            foreach (var family in NarrativeNodeCatalog.All.Where(e => !e.obsolete)
+                         .GroupBy(e => e.family)
+                         .OrderBy(g => g.Key == NarrativeStepFamily.Juego ? 1 : 0))
             {
                 sb.AppendLine();
-                sb.AppendLine($"## {group.Key}");
-                foreach (var entry in group.OrderBy(e => e.title))
+                sb.AppendLine($"# {(family.Key == NarrativeStepFamily.Juego ? "Del juego" : "Historia")}");
+                foreach (var group in family.GroupBy(e => e.category).OrderBy(g => NarrativeNodeCatalog.CategoryOrder(g.Key)))
                 {
                     sb.AppendLine();
-                    sb.AppendLine($"### {entry.title} (`{entry.type.Name}`)");
-                    if (!string.IsNullOrWhiteSpace(entry.description)) sb.AppendLine(entry.description);
-                    foreach (var field in EditableFields(entry.type))
+                    sb.AppendLine($"## {group.Key}");
+                    foreach (var entry in group.OrderBy(e => e.title))
                     {
-                        var tip = field.GetCustomAttribute<TooltipAttribute>()?.tooltip;
-                        sb.AppendLine($"- `{field.Name}` ({TypeName(field.FieldType)}){(string.IsNullOrEmpty(tip) ? string.Empty : ": " + tip)}");
+                        sb.AppendLine();
+                        sb.AppendLine($"### {entry.title} (`{entry.type.Name}`)");
+                        if (!string.IsNullOrWhiteSpace(entry.description)) sb.AppendLine(entry.description);
+                        foreach (var field in EditableFields(entry.type))
+                        {
+                            var tip = field.GetCustomAttribute<TooltipAttribute>()?.tooltip;
+                            sb.AppendLine($"- `{field.Name}` ({TypeName(field.FieldType)}){(string.IsNullOrEmpty(tip) ? string.Empty : ": " + tip)}");
+                        }
+                        try
+                        {
+                            var sample = (NarrativeNode)Activator.CreateInstance(entry.type);
+                            var ports = sample.GetOutputPorts();
+                            if (ports != null) sb.AppendLine($"- ways out: {string.Join(" / ", ports)}");
+                        }
+                        catch (Exception) { }
                     }
-                    try
-                    {
-                        var sample = (NarrativeNode)Activator.CreateInstance(entry.type);
-                        var ports = sample.GetOutputPorts();
-                        if (ports != null) sb.AppendLine($"- ways out: {string.Join(" / ", ports)}");
-                    }
-                    catch (Exception) { }
                 }
             }
             return sb.ToString();

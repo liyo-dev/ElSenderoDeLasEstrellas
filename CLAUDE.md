@@ -10,6 +10,29 @@ RPG de acción/aventura en Unity 6 (6000.6.2f1) + URP 17.6. Proyecto indie en so
 
 ---
 
+## 0. Mapa de carpetas reales
+
+Unity 6 + URP, multi-escena aditiva. Lo que hay de verdad en el repo:
+
+| Carpeta | Qué es |
+|---------|--------|
+| `Assets/Scenes/Systems/` | Arranque y servicios: `Start.unity` (managers persistentes), menú, carga, créditos, creador de personaje |
+| `Assets/Scenes/Worlds/` | Mundo jugable: `MainWorld`, `Prologo_Valle`, `Sendero`, `Parque`, `TemploQueCanta`, `Chuchelandia`, `Laberinto` |
+| `Assets/Scenes/Interior/` | Interiores: `WillHouse`, `TorreDeLiam` |
+| `Assets/Scenes/Test/` | Escenas de prueba (`Lab`, `BatallaFinal`, previews de cinemática) |
+| `Assets/Scripts/` | Assembly-CSharp: todo el código del juego. `Core/` (managers, `Partida/`, `Pooling/`, `Logging/`), `Player/`, `Combat/`, `Behaviour NPC/` (FSM de NPCs), `NarrativeIntegration/` (enchufe del juego al grafo), `UI/`, `Sequences/`, `Editor/` (Assembly-CSharp-Editor) y el resto por sistema |
+| `Assets/Kits/` | Sistemas genéricos reutilizables, cada uno con su asmdef: `Core`, `EditorTools`, `StylizedVfx`, `Waterfalls`, `WorldWrap`, `Puzzles` |
+| `Assets/ElSendero/` | Lo concreto de este juego: `Content/` (jefes, hechizos, mundo, prólogo), `Data/` (assets del juego, grafos `Cap*.asset`, ficha del jugador de prueba), `Connections/` (enchufes kit ↔ juego) |
+| `Assets/NarrativeGraph/` | Grafos de la historia del juego (`Cap*.asset`…) |
+| `Assets/_NPCs/`, `_SPELLS/`, `_QUEST/`, `_ITEMS/`, `_SHOPS/`, `_WARDROBE ITEMS/`, `_LORE POP UP CONFIG/`, `_DIALOGUES/`, `_SEQUENCES/`, `_AUDIOPROFILE/`, `_EmotionProfile/` | ScriptableObjects de contenido (datos, nunca lógica) |
+| `Assets/Art/`, `Audio/`, `Shaders/`, `VFX/`, `_VFX/`, `Prefabs/`, `Material & Textures/`, `Terrain/`, `Timeline/`, `Settings/`, `Resources/`, `_UI/`, `TextMesh Pro/`, `Plugins/` | Recursos: mallas, texturas, sonido, shaders, prefabs, ajustes |
+| `Packages/com.liyodev.narrativegraph/` | Paquete embebido del grafo narrativo (`Liyodev.NarrativeGraph` + `.Editor`) |
+| `ProjectSettings/` | Ajustes del proyecto Unity |
+| `Versiones antiguas/` (raíz, fuera de Assets) | Lo retirado, se conserva ahí por si acaso |
+| `TDD.md`, `GDD.md`, `TRACKER.md`, `README.md` | Documentación: técnica, diseño/narrativa, incidencias, portada |
+
+**Nunca se leen** `Library/`, `Temp/`, `obj/`/`Obj/`, `Build/`/`Builds/`, `Logs/`, `.vs/`, `.idea/`, `UserSettings/`, `*.csproj`, `*.sln`: son autogenerados (y están en `watcher.ignore` de `opencode.json`). Para errores de compilación se busca solo la línea de `error CS` en `Logs/Editor.log`.
+
 ## 1. Entrada al proyecto (detalle: TDD.md § 1)
 
 - **Escena de entrada:** `Assets/Scenes/Systems/Start.unity` — contiene todos los managers persistentes (`DontDestroyOnLoad`). Siempre debe estar cargada.
@@ -34,6 +57,13 @@ RPG de acción/aventura en Unity 6 (6000.6.2f1) + URP 17.6. Proyecto indie en so
 **APIs obsoletas (cero avisos CS0618 en código nuestro):** `FindFirstObjectByType<T>()` → `FindAnyObjectByType<T>()` · `FindObjectsByType<T>(FindObjectsSortMode.X)` → `FindObjectsByType<T>()` o `FindObjectsByType<T>(FindObjectsInactive.Include)` · `FindObjectOfType`/`FindObjectsOfType` → los dos anteriores · nada de ramas `#if UNITY_2022_3_OR_NEWER … #else` con la API vieja (el proyecto es Unity 6). `ObsoletosEnRojo` (Editor) saca en rojo cada CS0618 de nuestras carpetas al compilar: un trabajo no está terminado con ese error en consola.
 
 **Idioma:** comentarios, documentación y mensajes de commit **en español**.
+
+**Rendimiento C#/Unity (reglas duras):**
+
+- **Cero allocations en `Update` / `LateUpdate` / `FixedUpdate`**: nada de LINQ, `new`, concatenación de `string`, `foreach` sobre interfaces que boxean, ni closures nuevas por frame. Lo caro se prepara antes; lo que cambia poco se recalcula solo cuando cambia.
+- **Referencias cacheadas en `Awake` / `OnEnable`**: `GetComponent`, `GetComponentInChildren`, `transform`, `Camera.main`, `Animator`, buffers y `LayerMask` se guardan una vez en campos y se reutilizan. Nunca dentro de un bucle ni por frame.
+- **Nada de `Find*` ni `GetComponent` en bucles**: ni en `for`/`foreach`, ni por cada elemento de una lista, ni en callbacks que se disparan a menudo. Se busca una vez (registro, evento o referencia serializada) y se reutiliza.
+- **Campos `[SerializeField] private`, no `public`**: el Inspector no necesita `public`. Solo es `public` lo que forma parte de la API del componente (propiedades de lectura, métodos); nunca un campo de estado expuesto para que lo escriba cualquiera.
 
 ## 3. Arquitectura clave (detalle: TDD.md § 2)
 
@@ -96,6 +126,8 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
    - **Datos serializados.** Al mover a un asmdef o renombrar una clase usada en `[SerializeReference]` (nodos del grafo, beats de secuencias) o en assets, poner `[MovedFrom]` con el namespace y el ensamblado de antes, y comprobar que los assets cargan. Sin eso, los grafos y secuencias pierden los nodos.
    - **El grafo narrativo** sigue además sus propias reglas: SOLID, sin `switch` por tipo de nodo fuera del propio nodo, el juego entra solo por los puertos de `Integration/Ports/`. Objetivo: Asset Store con soporte para IA.
 10. **Dónde se trabaja: siempre en este proyecto (`C:/Users/luarb/dev/unity/ElSenderoDeLasEstrellas`, rama `main`).** Prohibido crear worktrees, ramas paralelas o carpetas de trabajo aparte para editar: los cambios hechos fuera no llegan a Unity y acaban en un sitio que Raúl no ve. Si una sesión arranca en otra ruta (worktree, `witty-star`, etc.), pasar el trabajo a este proyecto antes de dar nada por hecho. No commitear ni tocar cambios sin commitear que no sean de la tanda actual.
+11. **Nunca leer un `.unity`, `.prefab` o `.asset` completo.** Escenas, prefabs y ScriptableObjects son YAML enormes: queman cuota y no aportan. Se busca dentro con `rg` solo cuando hace falta un dato concreto (un GUID, un nombre de script o de componente) y se lee la línea que interesa. Para entender qué hace algo se lee el `.cs`; para cambiarlo, se hace desde el Editor o con un menú de Editor (regla 1).
+12. **Nunca crear, borrar ni modificar archivos `.meta` a mano.** Los `.meta` los gestiona Unity; un `.meta` suelto o con otro GUID rompe referencias del proyecto entero. Si hay que mover o renombrar un `.cs`, se avisa a Raúl para hacerlo desde el Editor de Unity, o se mueve el `.meta` emparejado en el mismo cambio — jamás se borra ni se genera uno nuevo a mano.
 
 **Sistema oficial por responsabilidad** (lo demás está congelado: se mantiene, no se amplía):
 
@@ -107,7 +139,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Componentes que solo actúan en un tramo de la historia (oficios, discusiones, barreras) | campo `TramoDeHistoria` (señales y misiones de inicio y fin; `EnCurso()`/`HaAcabado()`; consulta, no escucha) (TDD § 3); objetos que solo están en un tramo (portal abierto, punto usable): `ActivoEnTramo` | campos sueltos «solo si señal/misión»; condiciones de historia escritas en código |
 | Dependencias del grafo con el juego | puertos de `NarrativeGraph/Runtime/Integration/Ports/` pedidos con `NarrativeServices.TryGet`; adaptadores y nodos del juego en `Scripts/NarrativeIntegration/` (registro en `NarrativeGameServices`) (TDD § 10) | clases del juego dentro de `Assets/NarrativeGraph/` |
 | Qué toca y cómo se ve un nodo en el editor | `NarrativeNode.Describe` (+ `CollectWarnings`, `IsGraphEntry`, `IsAnnotation`, `BranchesInParallel`); extensiones del editor en `Editor/Extensions/` | `switch` por tipo de nodo en ventanas y herramientas |
-| Probar el juego desde un paso del grafo (dónde y cómo empieza el jugador) | Pestaña **Arranque** del editor «Historia»: ficha del jugador (`NarrativePlayerSheet`, en El Sendero `ElSendero/Data/FichaDelJugador.asset`) + puntos de arranque (`CheckpointNode.player`, ◆) + retoques; entra con el `INarrativePlayLauncher` del juego (El Sendero: directo a la escena del ancla, sin menú) (TDD § 10) | `NarrativeTestPanel`; configuración global del jugador de prueba; acordarse del ancla a mano |
+| Probar el juego desde un paso del grafo (dónde y cómo empieza el jugador) | Pestaña **Arranque** del editor «Historia»: ficha del jugador (`NarrativePlayerSheet`, en El Sendero `ElSendero/Data/FichaDelJugador.asset`) + puntos de arranque (`CheckpointNode.player`, ◆) + retoques; entra con el `INarrativePlayLauncher` del juego (El Sendero: directo a la escena del ancla, sin menú) (TDD § 10). **Escenas que aún no están en la historia** (maquetas, niveles nuevos): «▶ Probar esta escena» (`INarrativeOpenSceneLauncher`): entra en Play en la escena abierta con el jugador de prueba y sin capas de historia (INC-1212) | `NarrativeTestPanel`; configuración global del jugador de prueba; acordarse del ancla a mano; `autoJoinOnStart` o meter el grupo a mano (para eso, `GrupoAlEmpezar`) |
 | Ver cómo está la historia en un paso (dónde está cada personaje, qué dice, qué le espera; qué no cuadra en Play) | Mapa de la historia (`StoryMapView`) y pestaña **En vivo** del editor «Historia»: **solo informativos**, enseñan lo que el grafo sabe; para cambiar algo se abre el paso que lo decide (enlace «Lo dejó…») | editar en el mapa (arrastrar personajes, zonas a mano); ventanas de *El Sendero ▸ Narrativa* (retiradas) |
 | Cinemáticas | `SequencePlayer` + `SequenceDefinition`, lanzadas desde el grafo con «Pedir al juego» → `PedirCinematica` (campo `secuencia` para montarlas en vivo) | `*Sequencer.cs` escritos a mano, `SimpleCinematicDirector` |
 | Cámara | `CameraDirectorService` (Claim/Release) | apagar `Camera.main` o `vThirdPersonCamera` a mano |
@@ -132,7 +164,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Situaciones en curso (combate, cinemática…) y quién cede ante ellas | `Kits.Core.GameContext` (`Enter`/`Exit` con clave desde el dueño de la situación, `Has`/`Changed` desde quien cede); vocabulario del juego en `Situaciones`; un aviso en pantalla que deba esperar declara `IAvisoEnPantalla.CedeAnte` (TDD § 32) | `ActiveCombatRegistry.Count > 0 \|\| IsBattleActive` y otros predicados sueltos en cada sistema; `if` de combate dentro de un aviso |
 | Botones de combate del jugador (X, LB…) | `PlayerCombatInput` | leer botones de magia en cada sistema; reflexión en `vThirdPersonInput` |
 | Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`; el escudo lo desbloquea solo el grafo) | leer B en otro sitio; bloquear daño con `if` en cada IA; reglas de historia en el escudo |
-| Daño de área de enemigos al grupo | `DanoEnZona` (`GolpearEnCilindro`/`GolpearEnEsfera`; al mando por `PlayerHealthSystem`, compañeros por `CuerpoDelGrupo`) (TDD § 4) | recorrer colisionadores y llamar a `TakeDamage` en cada ataque de zona |
+| Daño de área de enemigos al grupo | `DanoEnZona` (`GolpearEnCilindro`/`GolpearEnEsfera`; al mando por `PlayerHealthSystem`, compañeros por `CuerpoDelGrupo`) (TDD § 4); un suelo que daña mientras se está dentro (lava, pinchos), con `ZonaDeDano` encima | recorrer colisionadores y llamar a `TakeDamage` en cada ataque de zona |
 | Combo mágico (Y) | `ComboCastController` (`IsComposing` para callar a los demás lectores) | abrir paneles de secuencia propios; leer A/B/X/Y mientras se teclea |
 | Carga de equipo, dúos y trío (LT+RT) | `DuoSpecialAttackSystem` (en `GrupoDelJugador`) | medidores por compañero; ataques de equipo fuera de `SpecialAttackSO` |
 | Lanzar un hechizo del jugador | `MagicCaster.Cast` (coste, giro, bloqueo, aire, gesto) → `MagicProjectileSpawner` | lanzar desde otro componente o instanciar el proyectil a mano |
@@ -157,6 +189,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Ambiente de noche (ventanas, faroles, estrellas fugaces) | `VentanasIluminadas` (emisión de materiales compartidos), `LuzNocturna` (Light), `EstrellasFugaces`, todos con `DayNightCycle.NocheActual` | encender luces o emisiones por hora en cada sistema |
 | Partículas de ambiente fijas en el mundo (luciérnagas, niebla de bosque, humo, estrellas con volumen que suben) | heredar de `ParticulasDeAmbiente` (`LuciernagasNocturnas`, `NieblaNocturna`, `HumoDeChimenea`, `EstrellasQueSuben`) | `ParticleSystem` sueltos con su propia activación por distancia |
 | Cascadas (agua que cae, espuma al pie, cortina que se atraviesa) | kit `Kits.Waterfalls`: `Waterfall` (cortina desde un recorrido; solo sale donde cae) + `WaterCurtainZone` + `WaterfallBuilder`; colores y recorridos del juego en `CascadasDelJuego` (*El Sendero ▸ Escenario ▸ Cascadas…*) (INC-1190) | partículas estiradas como agua que cae; el agua de un río tumbada en una pared |
+| Niveles que van al compás de una música (losas que se hunden, rejillas que duran compases, velas de cuenta atrás, marea que persigue, platos de peso) | kit `Kits.Puzzles`: `MusicPulse` (reloj de compases leído de la pista) + `PulseTile` + `BeatGate` + `MeasureCandles` + `PulseTide` + `WeightPlate`; el juego enchufa quién pesa y a quién alcanza la marea en `Connections/Puzzles/` (INC-1211) | cronómetros o `Time.time` propios en cada losa; rejillas con `Invoke` a mano; temporizadores por corrutina |
 | Mundo que da la vuelta (mar sin borde, techo de vuelo, salir por un lado y entrar por el contrario) | kit `Kits.WorldWrap`: `EndlessSea` en el plano del mar (sigue a cada cámara de juego); techo de vuelo, `AltitudeCeiling` (lo consulta `PlayerFlyingController`); bordes cosidos, `WorldWrapper` (mueve al jugador o lo que le lleva, con sus estelas, y avisa con `Shifted`; el juego lo enchufa con `MundoCiclicoDelJuego` en `Connections/WorldWrap/`); en MainWorld los monta *El Sendero ▸ Escenario ▸ MainWorld: mundo cíclico (mar sin fin, techo de vuelo y vuelta)* (INC-1197) | planos de mar fijos más grandes; muros o niebla puestos para tapar el borde; límites de altura propios en cada forma de volar; teletransportes con fundido para dar la vuelta al mundo |
 | Clima (lluvia, tormenta, nieve, viento, niebla) y su efecto en el jugador | `DayNightCycle` + cielo `El Sendero/Cielo` y materiales por franja en `TimeOfDaySettings.skybox`; sol y luna con `DayNightCycle.HoraDelDia`, dibujados por el cielo y publicados por `SolYLunaEnElCielo` (+ `VfxDeClima` si no hay prefab, `ClimaSobreElJugador` para frenar/arrastrar con viento y tiritar con frío); escenas de hora fija sin clima (una franja, ciclo parado, sin sorteo) con `ClimaDelCicloWiring.FijarHoraSinClima` y su cielo propio con `ClimaDelCicloWiring.CieloDeEscena` | partículas de clima, empujes del viento o reacciones del jugador al clima por su cuenta en cada sistema; sortear lluvia fuera del sorteo de `DayNightCycle` (las nubes sueltas solo informan su cobertura); fijar la hora o apagar el clima de una escena con componentes propios |
 | Vestir MainWorld (suelos de calle, capital y muralla, pavimento, vegetación, laguna, detalles, ruinas entre zonas) | `VestidoDelMundo` (*El Sendero ▸ Escenario ▸ MainWorld: vestir…*, TDD § 23): lo generado se rehace en cada ejecución, se retoca en sus tablas y reglas; lo que estorba se retira con `Retirar` (registro que *quitar* repone) | colocar a mano bajo «Vestido del mundo (generado)»; generadores de pueblos o plantadores de árboles aparte; borrar o desactivar a mano lo de la escena que estorba |

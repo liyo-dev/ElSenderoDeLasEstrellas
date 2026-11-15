@@ -908,6 +908,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 6ac34a156a67474d888221efb090025e, type: 2}
         plantillaDeAjustes: SEQ_PerasEldran
+        alMandoElProtagonista: 1
     - rid: 6540294618706084516
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
@@ -955,6 +956,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 0}
         plantillaDeAjustes: SEQ_PerasEldran
+        alMandoElProtagonista: 1
     - rid: 6540294618706084521
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
@@ -976,6 +978,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 3930047f776a498089eb0e8945f40aa3, type: 2}
         plantillaDeAjustes: SEQ_PerasEldran
+        alMandoElProtagonista: 1
     - rid: 6540294618706084523
       type: {class: PedirGuiarAlJugador, ns: , asm: Assembly-CSharp}
       data:

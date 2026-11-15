@@ -341,6 +341,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2361514900426968029, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2369833594381255202, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -537,10 +541,6 @@ PrefabInstance:
       propertyPath: 'conLaIA.Array.data[4]'
       value: 
       objectReference: {fileID: 9023505475637211739}
-    - target: {fileID: 5141261694448213059, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-      propertyPath: 'conLaIA.Array.data[5]'
-      value: 
-      objectReference: {fileID: 3077905409336591311}
     - target: {fileID: 5141261694448213059, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       propertyPath: 'conLaIA.Array.data[6]'
       value: 
@@ -949,9 +949,6 @@ PrefabInstance:
       addedObject: {fileID: 9023505475637211739}
     - targetCorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3077905409336591311}
-    - targetCorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4447919166599111724}
     - targetCorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       insertIndex: -1
@@ -966,11 +963,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2022621617222872083}
   m_SourcePrefab: {fileID: 100100000, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
---- !u!195 &1438919113245891580 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 5709113645342312756, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-  m_PrefabInstance: {fileID: 6684126709097976520}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2492702236771832282 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
@@ -1021,25 +1013,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   defaultSightHeight: 1.4
---- !u!114 &3077905409336591311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2492702236771832282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71502e3d469043c39b0240edd3c4f296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChaserAI
-  target: {fileID: 0}
-  agent: {fileID: 1438919113245891580}
-  chaseSpeed: 20
-  catchDistance: 1.2
-  updatePathInterval: 0.2
-  animator: {fileID: 0}
-  runAnimParam: IsRunning
 --- !u!114 &4447919166599111724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1165,10 +1138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!4 &4975844638462575476 stripped

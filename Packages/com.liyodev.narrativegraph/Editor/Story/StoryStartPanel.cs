@@ -21,6 +21,7 @@ namespace NarrativeGraphEditor.Story
 
         readonly ScrollView _scroll;
         readonly Button _play;
+        readonly Button _playScene;
         readonly Label _status;
         NarrativeGraph _graph;
         StoryStructure _structure;
@@ -43,6 +44,14 @@ namespace NarrativeGraphEditor.Story
             _play.AddToClassList("story-button--primary");
             _play.AddToClassList("story-start__play");
             foot.Add(_play);
+
+            // Probar la escena que está abierta, sin pasar por la historia: para maquetas y niveles
+            // que todavía no están en el grafo. Lo que se enchufa aquí es solo el jugador.
+            _playScene = new Button(PlayThisScene);
+            _playScene.AddToClassList("story-button");
+            _playScene.style.marginTop = 4;
+            foot.Add(_playScene);
+
             _status = new Label();
             _status.AddToClassList("story-muted");
             foot.Add(_status);
@@ -75,6 +84,38 @@ namespace NarrativeGraphEditor.Story
                                  : "▶ " + (_node != null ? StoryText.T($"Probar desde {_structure?.Number(_node)}", $"Play from {_structure?.Number(_node)}")
                                                          : StoryText.T("Elige un paso para jugar", "Pick a step to play"));
             _play.SetEnabled(playing || _node != null);
+
+            bool sabe = NarrativePlayLaunchers.Current is INarrativeOpenSceneLauncher;
+            _playScene.style.display = sabe ? DisplayStyle.Flex : DisplayStyle.None;
+            _playScene.text = playing ? "■ " + StoryText.T("Parar la prueba", "Stop the test")
+                                      : "▶ " + StoryText.T("Probar esta escena", "Play this scene");
+            _playScene.tooltip = StoryText.T(
+                "Entra en Play en la escena que tengas abierta, con el jugador de prueba de arriba y sin pasar por la historia. Para maquetas y niveles que aún no están en el grafo: el paso solo dice con qué jugador se prueba.",
+                "Enters Play in the scene you have open, with the test player above and without the story. For blockouts and levels not in the graph yet: the step only says which player to use.");
+            _playScene.SetEnabled(playing || (_node != null && _graph != null));
+        }
+
+        void PlayThisScene()
+        {
+            if (EditorApplication.isPlaying) { EditorApplication.isPlaying = false; return; }
+            if (NarrativePlayLaunchers.Current is not INarrativeOpenSceneLauncher launcher) return;
+            if (_graph == null || _node == null)
+            {
+                SetStatus(StoryText.T("Elige un paso: el jugador de prueba sale de ahí.",
+                                      "Pick a step: the test player comes from there."));
+                return;
+            }
+
+            var plan = NarrativeStartPlanner.Plan(_graph, _node.guid);
+            using var jugador = plan.Build(story: false, points: false, testPlayer: true);
+            if (jugador?.Data == null)
+            {
+                SetStatus(StoryText.T("No se pudo preparar el jugador de prueba.", "The test player could not be prepared."));
+                return;
+            }
+
+            bool ok = launcher.PlayOpenScene(jugador.Data, out var message);
+            SetStatus(ok ? StoryText.T("Probando la escena abierta…", "Playing the open scene…") : message);
         }
 
         public void Rebuild()

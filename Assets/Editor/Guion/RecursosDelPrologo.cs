@@ -81,6 +81,8 @@ public static class RecursosDelPrologo
         // SENDERO_CONJURO: «La puerta de las estrellas», el conjuro de Will ante la Piedra (Sendero_01_ElConjuro),
         // compuesta a medida: el grito cae en su segundo 28,0 y el portal en el 30,8. Ver INC-1055.
         ("SENDERO_CONJURO", "Assets/Audio/Music/Cinematicas/La puerta de las estrellas (conjuro de la Piedra).mp3", 0.3f, 2.5f),
+        // PROLOGO_DESEO: la cover de «El deseo del Mago Oscuro», bajo la escena del Sendero (31,5 s). Ver INC-1211.
+        ("PROLOGO_DESEO", "Assets/Audio/Music/Cinematicas/El deseo del Mago Oscuro.mp3", 1.2f, 1f),
     };
 
     /// Lo mismo que hace el horneado antes de hornear, suelto (p. ej. para crear un personaje nuevo antes de vestirlo).
@@ -88,6 +90,7 @@ public static class RecursosDelPrologo
     public static void Asegurar()
     {
         AsegurarSonidos();
+        AsegurarMusicaDeLaSecuencia();
         try { CrearAgujeroNegro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Agujero negro: " + ex.Message); }
         try { CrearLuzProtectora.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Luz protectora: " + ex.Message); }
         try { CrearBolaDeConjuro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Bola de conjuro: " + ex.Message); }
@@ -124,6 +127,20 @@ public static class RecursosDelPrologo
             cambiado = true;
         }
         if (cambiado) EditorUtility.SetDirty(perfil);
+    }
+
+    /// La secuencia arranca su propia música al empezar (SequencePlayer.PlaySequenceMusic). Es el tema
+    /// del Mago Oscuro; si se deja el viejo, suena el prólogo antiguo hasta que el guion lo cambia.
+    private const string RutaSecuencia = "Assets/_SEQUENCES/SEQ_Prologo_UltimaNoche.asset";
+    private const string MusicaDeLaSecuencia = "PROLOGO_DESEO";
+
+    private static void AsegurarMusicaDeLaSecuencia()
+    {
+        var secuencia = AssetDatabase.LoadAssetAtPath<SequenceDefinition>(RutaSecuencia);
+        if (secuencia == null) { Debug.LogWarning($"[Prólogo] No encuentro la secuencia en '{RutaSecuencia}'."); return; }
+        if (secuencia.musicId == MusicaDeLaSecuencia) return;
+        secuencia.musicId = MusicaDeLaSecuencia;
+        EditorUtility.SetDirty(secuencia);
     }
 
     private static void AsegurarAtardecer()

@@ -441,7 +441,7 @@ namespace Sendero.UI
             if (Time.unscaledTime < _finDelGolpe || _cansado) return ExpresionDeRetrato.Dolorido;
             if (_trio) return ExpresionDeRetrato.Contento;
             // En combate, cara de concentración (INC-1099).
-            if (ActiveCombatRegistry.Count > 0) return ExpresionDeRetrato.Concentrado;
+            if (Kits.Core.GameContext.Has(Situaciones.Combate)) return ExpresionDeRetrato.Concentrado;
             return ExpresionDeRetrato.Normal;
         }
 

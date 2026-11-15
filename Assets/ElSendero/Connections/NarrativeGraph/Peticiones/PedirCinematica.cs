@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Slot = PartyControlManager.CharacterSlot;
 
 /// Pide una cinemática al sistema de cinemáticas y espera a que termine. El grafo solo emite la
 /// señal de entrada y espera la de fin: la escena la monta y la dirige el SequencePlayer que la
@@ -35,6 +36,11 @@ public sealed class PedirCinematica : NarrativeRequest, INarrativeStateEffect
     [Tooltip("Nombre del GameObject del SequencePlayer ya montado del que copiar los ajustes.")]
     public string plantillaDeAjustes = "";
 
+    [Tooltip("La cinemática se cuenta con Will: al empezar se le pasa el mando (aunque el jugador venga " +
+             "con Estela o Liam) y al acabar vuelve a quien lo llevaba. Desmarcar solo si la cinemática " +
+             "la protagoniza otro personaje a propósito.")]
+    public bool alMandoElProtagonista = true;
+
     public override string[] Exits => Salidas;
 
     public override void Describe(INarrativeNodeDescriber d)
@@ -44,6 +50,7 @@ public sealed class PedirCinematica : NarrativeRequest, INarrativeStateEffect
         d.Signal(signalDone, SignalRole.Escucha, "hecho");
         if (!string.IsNullOrEmpty(signalFailed)) d.Signal(signalFailed, SignalRole.Escucha, "fallo");
         if (secuencia != null) d.Asset(secuencia, "secuencia");
+        if (!alMandoElProtagonista) d.Line("la protagoniza quien vaya al mando", NarrativeTextTone.Muted);
     }
 
     public override void CollectWarnings(List<string> warnings)
@@ -70,8 +77,14 @@ public sealed class CinematicaEnCurso : NarrativeRequestRun<PedirCinematica>
     Action _onDone;
     Action _onFailed;
 
+    // Quién llevaba el mando antes de cedérselo a Will y si llegó a cederse.
+    Slot _mandoDeAntes;
+    bool _mandoCedido;
+
     protected override void Start()
     {
+        CederElMandoAWill();
+
         if (R.secuencia != null) MontarSiFalta();
 
         _signals = Ctx?.Signals;
@@ -102,6 +115,8 @@ public sealed class CinematicaEnCurso : NarrativeRequestRun<PedirCinematica>
 
     protected override void Stop()
     {
+        DevolverElMando();
+
         if (_signals != null)
         {
             if (_onDone != null) _signals.OffCustom(R.signalDone, _onDone);
@@ -110,6 +125,35 @@ public sealed class CinematicaEnCurso : NarrativeRequestRun<PedirCinematica>
         _signals = null;
         _onDone = null;
         _onFailed = null;
+    }
+
+    /// La cinemática se cuenta con Will: se le pasa el mando para que el reparto lo resuelva como
+    /// jugador, en vez de salir el cuerpo de quien llevaba el jugador (Estela o Liam) diciendo sus
+    /// frases. Se devuelve al acabar, en Stop.
+    void CederElMandoAWill()
+    {
+        if (!R.alMandoElProtagonista) return;
+
+        var activo = ControlDelJugador.Activo;
+        if (activo == Slot.Will) return;
+        if (!ControlDelJugador.TieneCuerpo(Slot.Will) || SaludDelGrupo.EstaCaido(Slot.Will)) return;
+        if (!ControlDelJugador.PasarElMandoA(Slot.Will)) return;
+
+        _mandoDeAntes = activo;
+        _mandoCedido = true;
+    }
+
+    /// Devuelve el mando a quien lo llevaba antes de la cinemática. Si ha salido del grupo o ha
+    /// caído mientras dura, se queda Will: el jugador siempre tiene un cuerpo que mover.
+    void DevolverElMando()
+    {
+        if (!_mandoCedido) return;
+        _mandoCedido = false;
+
+        var antes = _mandoDeAntes;
+        if (antes == Slot.Will) return;
+        if (!ControlDelJugador.EnElGrupo(antes) || SaludDelGrupo.EstaCaido(antes)) return;
+        ControlDelJugador.PasarElMandoA(antes);
     }
 
     /// Si ninguna escena escucha esta secuencia, monta un SequencePlayer en vivo con los ajustes

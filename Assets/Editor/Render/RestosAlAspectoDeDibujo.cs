@@ -31,6 +31,15 @@ public static class RestosAlAspectoDeDibujo
         "Assets/Art/Materials/Sendero/Mat_CintaRoja_Mara.mat",
         "Assets/Plugins/Low Poly Modular Terrain Pack/Terrain_Assets/Materials/CPT_Terrain_01.mat",
         "Assets/Plugins/Invector-3rdPersonController_LITE/Resources/Materials/comparacao.mat",
+        // Piezas de packs que seguían con shader de luz (Unity interno o el Toon de Ciro).
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Bee.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly01.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly02.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly03.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Dandelion.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Petals01.mat",
+        "Assets/Material & Textures/Black.mat",
+        "Assets/_NPCs/Chuchelandia/Materiales/Mat_Actor_Pompon_1.mat",
     };
 
     /// Efectos que aún usaban Quibli: pasan a partículas sin luz con su textura y su color.
@@ -40,6 +49,21 @@ public static class RestosAlAspectoDeDibujo
         "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm.mat",
         "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm 1.mat",
         "Assets/VFX/PLASMA Houidisoft technology/Plasma Shader/Materials/plsm 2.mat",
+        // Humo, fuego y chispas de packs viejos, con shaders internos de Unity.
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Fire01.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Smoke01.mat",
+        "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Smoke02.mat",
+    };
+
+    /// Los que brillan (magia, destellos) van en aditivo; el resto, en alfa normal.
+    private static readonly string[] AParticulasAditivas =
+    {
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/Circle2.mat",
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/GlowFree1.mat",
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/MagicCircle.mat",
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/Point.mat",
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/SmokeFree1.mat",
+        "Assets/VFX/Hovl Studio/Magic effects pack/Materials/TechCircle.mat",
     };
 
     private const string FantasmaIntangible = "Assets/Prefabs/Enemy/Mundo/Materiales/Fantasma_Intangible.mat";
@@ -62,28 +86,51 @@ public static class RestosAlAspectoDeDibujo
         {
             var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
             if (mat == null || mat.shader == dibujo) continue;
-            Color tinte = PasoAlAspectoDeDibujo.ColorPlanoDe(mat); tinte.a = 1f;
-            Texture textura = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap") : null;
+            Color tinte = PasoAlAspectoDeDibujo.ColorPlanoDe(mat);
+            Texture textura = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap")
+                            : mat.HasProperty("_MainTex") ? mat.GetTexture("_MainTex") : null;
+            float alfa = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor").a
+                       : mat.HasProperty("_Color") ? mat.GetColor("_Color").a : 1f;
+            bool transparente = alfa < 0.999f
+                || (mat.HasProperty("_Surface") && mat.GetFloat("_Surface") > 0.5f)
+                || mat.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT");
             Apuntar(registro, ruta, mat);
             mat.shader = dibujo;
             mat.SetTexture("_BaseMap", textura);
+            tinte.a = transparente ? Mathf.Clamp(alfa, 0.05f, 1f) : 1f;
             mat.SetColor("_Tinte", tinte);
             mat.SetFloat("_TextureImpact", 1f);
-            mat.SetFloat("_ReceiveShadows", 1f);
+            if (transparente)
+            {
+                Transparente(mat, aditivo: false);
+                mat.SetFloat("_ReceiveShadows", 0f);
+                mat.EnableKeyword("_RECEIVE_SHADOWS_OFF");
+            }
+            else
+            {
+                mat.SetFloat("_ReceiveShadows", 1f);
+            }
             EditorUtility.SetDirty(mat); n++;
         }
 
-        foreach (var ruta in AParticulas)
+        var todosLosEfectos = new string[AParticulas.Length + AParticulasAditivas.Length];
+        Array.Copy(AParticulas, todosLosEfectos, AParticulas.Length);
+        Array.Copy(AParticulasAditivas, 0, todosLosEfectos, AParticulas.Length, AParticulasAditivas.Length);
+
+        foreach (var ruta in todosLosEfectos)
         {
             var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
             if (mat == null || mat.shader == particulas) continue;
-            Texture textura = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap") : null;
-            Color color = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : Color.white;
+            Texture textura = mat.HasProperty("_BaseMap") ? mat.GetTexture("_BaseMap")
+                            : mat.HasProperty("_MainTex") ? mat.GetTexture("_MainTex") : null;
+            Color color = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor")
+                        : mat.HasProperty("_Color") ? mat.GetColor("_Color") : Color.white;
+            bool aditivo = Array.IndexOf(AParticulasAditivas, ruta) >= 0;
             Apuntar(registro, ruta, mat);
             mat.shader = particulas;
             mat.SetTexture("_BaseMap", textura);
             mat.SetColor("_BaseColor", color);
-            Transparente(mat, aditivo: true);
+            Transparente(mat, aditivo);
             EditorUtility.SetDirty(mat); n++;
         }
 

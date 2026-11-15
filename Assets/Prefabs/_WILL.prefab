@@ -152,10 +152,6 @@ PrefabInstance:
       propertyPath: empiezaConElJugador
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5141261694448213059, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-      propertyPath: 'conLaIA.Array.data[4]'
-      value: 
-      objectReference: {fileID: 4072835681812970499}
     - target: {fileID: 5151905188443100448, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -270,9 +266,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4072835681812970499}
-    - targetCorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 792635594820857547}
   m_SourcePrefab: {fileID: 100100000, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
 --- !u!1 &47951082279173329 stripped
@@ -280,25 +273,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 9103202742228681490, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
   m_PrefabInstance: {fileID: 9151114231058235331}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4072835681812970499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47951082279173329}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71502e3d469043c39b0240edd3c4f296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChaserAI
-  target: {fileID: 0}
-  agent: {fileID: 3586432606440896247}
-  chaseSpeed: 20
-  catchDistance: 1.2
-  updatePathInterval: 0.2
-  animator: {fileID: 0}
-  runAnimParam: IsRunning
 --- !u!114 &792635594820857547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,8 +317,3 @@ MonoBehaviour:
     tiempoMaximoAndando: 6
   reacciones: []
   depurar: 0
---- !u!195 &3586432606440896247 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 5709113645342312756, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
-  m_PrefabInstance: {fileID: 9151114231058235331}
-  m_PrefabAsset: {fileID: 0}

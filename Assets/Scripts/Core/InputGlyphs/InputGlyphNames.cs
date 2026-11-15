@@ -34,8 +34,7 @@ namespace Core.InputGlyphs
         // que a propósito NO está en el array `All` de abajo — añadirlo ahí haría que
         // InputGlyphService.LoadFamilySprites lo busque cada arranque, no lo encuentre en ninguna
         // familia (ni siquiera Xbox de respaldo) y avise por consola sin necesidad. Se usa solo como
-        // clave de texto para InputGlyphLabels.GetLabel, resuelta por TagMinigameController contra el
-        // token literal "{SPRINT}" en MINIGAME_TAG_INSTRUCTION/MINIGAME_TASK (ver Loc() en ese script).
+        // clave de texto para InputGlyphLabels.GetLabel, para resolver el token "{SPRINT}".
         // Antes esas cadenas reutilizaban por error el sprite de Stick (WASD/joystick, que es Mover,
         // no Sprintar). Si en el futuro se encarga arte real para este botón, se le puede dar su propio
         // nombre de sprite aquí e incluirlo en `All` igual que el resto.

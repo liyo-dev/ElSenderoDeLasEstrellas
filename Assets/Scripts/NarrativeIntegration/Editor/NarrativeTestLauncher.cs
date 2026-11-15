@@ -261,6 +261,75 @@ namespace Sendero.Narrative.Editor
             return true;
         }
 
+        /// <summary>
+        /// Prepara una prueba de la escena que está abierta, sin historia: ese jugador y nada más
+        /// (para maquetas y niveles que aún no están en el grafo). La escena tiene que tener un
+        /// <see cref="SpawnAnchor"/>, que es por donde entra el jugador. Al salir de Play se deja el
+        /// arranque como estaba.
+        /// </summary>
+        public static bool PrepararEscenaAbierta(PlayerPresetSO jugador, out string status)
+        {
+            status = null;
+            if (EditorApplication.isPlaying)
+            {
+                status = "Ya estás en Play Mode. Para primero la prueba en curso.";
+                return false;
+            }
+
+            var escena = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+            if (!escena.IsValid() || string.IsNullOrEmpty(escena.path))
+            {
+                status = "Abre la escena que quieres probar.";
+                return false;
+            }
+
+            var ancla = PrimeraAnclaDeLaEscena(escena);
+            if (string.IsNullOrEmpty(ancla))
+            {
+                status = $"La escena «{escena.name}» no tiene ningún ancla de entrada (SpawnAnchor): pon una por donde entrar.";
+                return false;
+            }
+
+            var profile = FindProfile();
+            if (profile == null)
+            {
+                status = "GameBootProfile no encontrado.";
+                return false;
+            }
+
+            _originalBootPreset = profile.bootPreset;
+            _originalUsePreset = profile.usePresetInsteadOfSave;
+            _needsRestore = true;
+
+            var preset = AssetDatabase.LoadAssetAtPath<PlayerPresetSO>(QuickTestPresetPath);
+            if (preset == null)
+            {
+                preset = ScriptableObject.CreateInstance<PlayerPresetSO>();
+                AssetDatabase.CreateAsset(preset, QuickTestPresetPath);
+            }
+            if (jugador != null) EditorUtility.CopySerialized(jugador, preset);
+            preset.spawnAnchorId = ancla;
+            preset.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
+
+            profile.usePresetInsteadOfSave = true;
+            profile.bootPreset = preset;
+            EditorUtility.SetDirty(preset);
+            EditorUtility.SetDirty(profile);
+            AssetDatabase.SaveAssets();
+
+            status = $"Probando «{escena.name}» con el jugador de prueba (entra por el ancla «{ancla}»).";
+            return true;
+        }
+
+        /// El primer ancla de la escena abierta: por donde entra el jugador.
+        static string PrimeraAnclaDeLaEscena(UnityEngine.SceneManagement.Scene escena)
+        {
+            foreach (var raiz in escena.GetRootGameObjects())
+                foreach (var ancla in raiz.GetComponentsInChildren<SpawnAnchor>(true))
+                    if (!string.IsNullOrEmpty(ancla.anchorId)) return ancla.anchorId;
+            return null;
+        }
+
         // Escenas que la partida alcanza desde el menú: Continuar carga MainWorld y WorldBootstrap
         // trae sus interiores. Las de sistema no tienen anclas de juego.
         const string EscenaDelMenu = "Assets/Scenes/Worlds/MainWorld.unity";

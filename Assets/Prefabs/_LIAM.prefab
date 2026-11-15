@@ -591,6 +591,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2361514900426968029, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2487748991833446142, guid: f3cd07caa54f0304086b5781618068b9, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -1925,10 +1929,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!4 &7203712364531831581 stripped

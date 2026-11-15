@@ -449,7 +449,7 @@ public class MagicProjectileSpawner : MonoBehaviour
         if (cam != null && cam.TryGetComponent<vThirdPersonCamera>(out var tpCam) && tpCam.LockTarget != null)
             return tpCam.LockTarget;
 
-        if (ActiveCombatRegistry.Count > 0 && PlayerService.Player != null)
+        if (Kits.Core.GameContext.Has(Situaciones.Combate) && PlayerService.Player != null)
         {
             var nearest = ActiveCombatRegistry.GetClosestCombatNPC(PlayerService.Player.transform.position, 45f);
             if (nearest != null) return nearest.transform;

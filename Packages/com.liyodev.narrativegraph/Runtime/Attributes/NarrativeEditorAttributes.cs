@@ -9,9 +9,22 @@ using UnityEngine;
 // hot path (el editor los consulta por reflection, que en editor es aceptable).
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// <summary>Bloque de la paleta al que pertenece un tipo de paso.</summary>
+public enum NarrativeStepFamily
+{
+    /// <summary>Lo decide el origen: lo que viene en el paquete es historia; lo que añade el proyecto, juego.</summary>
+    Auto,
+
+    /// <summary>Vocabulario de la historia: el grafo cuenta con ello (diálogo, misión, cinemática, personaje…).</summary>
+    Historia,
+
+    /// <summary>Evento del juego: una mecánica que atiende un sistema del juego por su id.</summary>
+    Juego,
+}
+
 /// <summary>
-/// Describe un tipo de nodo para el editor: categoría (color/agrupación en la paleta),
-/// nombre legible en español y una frase de ayuda.
+/// Describe un tipo de nodo para el editor: categoría (color/agrupación dentro de su bloque),
+/// bloque de la paleta (historia o juego), nombre legible y una frase de ayuda.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class NarrativeNodeInfoAttribute : Attribute
@@ -19,6 +32,12 @@ public sealed class NarrativeNodeInfoAttribute : Attribute
     public string Category { get; }
     public string Title { get; }
     public string Description { get; }
+
+    /// <summary>
+    /// Bloque de la paleta. Auto (por defecto): historia si el tipo viene en el paquete y juego si
+    /// lo añade el proyecto. Un paso del proyecto que sea vocabulario de la historia lo declara.
+    /// </summary>
+    public NarrativeStepFamily Family { get; set; } = NarrativeStepFamily.Auto;
 
     public NarrativeNodeInfoAttribute(string category, string title, string description = "")
     {

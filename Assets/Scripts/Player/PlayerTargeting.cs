@@ -69,7 +69,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     /// hay un diálogo abierto o el jugador está en modo Cinematic.
     public bool DebeOcultarMarcador()
     {
-        if (ActiveCombatRegistry.Count > 0) return false;
+        if (Kits.Core.GameContext.Has(Situaciones.Combate)) return false;
         if (_hiddenByDialogue) return true;
         if (CinematicSequencerBase.AnySequenceActive) return true;
         if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;

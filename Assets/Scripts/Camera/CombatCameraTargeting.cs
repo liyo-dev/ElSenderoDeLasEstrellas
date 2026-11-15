@@ -122,7 +122,7 @@ public class CombatCameraTargeting : MonoBehaviour
 
     private bool DebeSuprimirMarcador()
     {
-        if (ActiveCombatRegistry.Count > 0) return false;
+        if (Kits.Core.GameContext.Has(Situaciones.Combate)) return false;
         if (_isInDialogue) return true;
         if (CinematicSequencerBase.AnySequenceActive) return true;
         if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;
@@ -162,7 +162,7 @@ public class CombatCameraTargeting : MonoBehaviour
 
         ProcesarPulsacionDeLock();
 
-        bool isInCombat = ActiveCombatRegistry.Count > 0;
+        bool isInCombat = Kits.Core.GameContext.Has(Situaciones.Combate);
         
         if (isInCombat && !wasInCombatLastFrame) OnEnterCombat();
         else if (!isInCombat && wasInCombatLastFrame) OnExitCombat();

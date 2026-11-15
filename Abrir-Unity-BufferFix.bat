@@ -1,13 +1,13 @@
 @echo off
 REM ============================================================
 REM  Lanzador de Unity con el ring buffer de graficos ampliado
-REM  Proyecto: ElSenderoDeLasEstrellas (Unity 6000.5.4f1)
+REM  Proyecto: ElSenderoDeLasEstrellas (Unity 6000.6.2f1)
 REM
 REM  Soluciona el aviso de consola:
 REM  "Ran out of Graphics Ring Buffer space..."
 REM ============================================================
 
-set UNITY_EXE="C:\Program Files\Unity\Hub\Editor\6000.5.4f1\Editor\Unity.exe"
+set UNITY_EXE="C:\Program Files\Unity\Hub\Editor\6000.6.2f1\Editor\Unity.exe"
 set PROJECT_PATH="C:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas"
 
 if not exist %UNITY_EXE% (
@@ -16,7 +16,7 @@ if not exist %UNITY_EXE% (
     echo.
     echo Abre este .bat con el boton derecho -^> Editar y corrige
     echo la linea UNITY_EXE con la ruta real de tu instalacion
-    echo de Unity 6000.5.4f1 ^(puedes verla en Unity Hub -^> Installs^).
+    echo de Unity 6000.6.2f1 ^(puedes verla en Unity Hub -^> Installs^).
     pause
     exit /b 1
 )

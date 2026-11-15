@@ -39,6 +39,91 @@
             "ruta": "Assets/Prefabs/Enemy/Mundo/Materiales/Fantasma_Intangible.mat",
             "shader": "Universal Render Pipeline/Lit",
             "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Bee.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly01.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly02.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Butterfly03.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Dandelion.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Petals01.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Material & Textures/Black.mat",
+            "shader": "Shader Graphs/Toon",
+            "cola": -1
+        },
+        {
+            "ruta": "Assets/_NPCs/Chuchelandia/Materiales/Mat_Actor_Pompon_1.mat",
+            "shader": "Shader Graphs/Toon",
+            "cola": -1
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Fire01.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Smoke01.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Smoke02.mat",
+            "shader": "Legacy Shaders/Particles/Alpha Blended",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/Circle2.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/GlowFree1.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/MagicCircle.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/Point.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/SmokeFree1.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
+        },
+        {
+            "ruta": "Assets/VFX/Hovl Studio/Magic effects pack/Materials/TechCircle.mat",
+            "shader": "Particles/Standard Unlit",
+            "cola": 3000
         }
     ],
     "cieloDelPrologo": "Assets/Art/Day-Night Skyboxes/Materials/SkyBrightMorning.mat"

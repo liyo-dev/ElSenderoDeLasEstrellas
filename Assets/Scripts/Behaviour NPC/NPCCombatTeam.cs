@@ -185,7 +185,7 @@ namespace Game.NPC
         // Bloqueo global: si ya hay un combate activo y ningún miembro de este equipo
         // está en combate todavía, no iniciar un segundo combate paralelo.
         ActiveCombatRegistry.CleanupDestroyedNPCs();
-        if (ActiveCombatRegistry.Count > 0 && !IsAnyTeamMemberInCombat())
+        if (Kits.Core.GameContext.Has(Situaciones.Combate) && !IsAnyTeamMemberInCombat())
         {
             if (showDebugLogs)
             {

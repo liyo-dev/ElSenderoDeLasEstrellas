@@ -580,7 +580,7 @@ public class AmbientZone : MonoBehaviour
         // No pisar la música de combate: si hay batalla en curso (p. ej. el jugador cruza el
         // borde del trigger de la zona durante un combate), dejar que la música de combate siga
         // sonando. RestorePreviousMusic() tiene el mismo guard para el camino de salida.
-        if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0) return;
+        if (Kits.Core.GameContext.Has(Situaciones.Combate)) return;
 
         // FIX 16 sep 2026. Mismo
         // criterio que el guard de combate de aquí al lado: durante una cinemática manda SU música.
@@ -644,7 +644,7 @@ public class AmbientZone : MonoBehaviour
         // Mismo guard que TransitionToZoneMusic(): con combate activo, la música de combate
         // manda. AudioService.EndBattleMusic ya se encarga de restaurar la música de zona
         // correcta cuando el combate termine de verdad (ver AudioService.PedirMusicaDelLugar).
-        if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0)
+        if (Kits.Core.GameContext.Has(Situaciones.Combate))
         {
             _previousMusic   = null;
             _wasMusicPlaying = false;

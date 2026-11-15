@@ -16,11 +16,13 @@ public partial class ModuloCinematicaFinal
         "SitLow_Begin", "SitLow_Loop", "SitLow_Exit", "Sleeping_NoWeapon", "Die01Stay_NoWeapon", "Die01_NoWeapon",
         "Cry01", "Cry01_Loop",
     };
-    /// Tumbados que se quedan quietos del todo. Sus clips son bucles y la pose sostenida de los NPC
-    /// solo congela los que no lo son: seguían en bucle (las piernas se cerraban y abrían) y, al
-    /// acabar cada vuelta, `Knockdown01_Ground` salía sola por su transición a
-    /// `Idle_Normal_NoWeapon` (un instante de pie: el parpadeo) y la pose sostenida la volvía a meter.
-    private static readonly string[] EstadosTumbadosQuietos = { "Knockdown01_Ground", "Die01Stay_NoWeapon" };
+    /// Tumbados que se quedan quietos del todo, incluido el que duerme. Sus clips son bucles y la
+    /// pose sostenida de los NPC solo congela los que no lo son: seguían en bucle (las piernas se
+    /// cerraban y abrían) y, al acabar cada vuelta, `Knockdown01_Ground` salía sola por su
+    /// transición a `Idle_Normal_NoWeapon` (un instante de pie: el parpadeo) y la pose sostenida la
+    /// volvía a meter. `Sleeping_NoWeapon` es el que usa Tobías al quedarse dormido.
+    private static readonly string[] EstadosTumbadosQuietos =
+        { "Knockdown01_Ground", "Die01Stay_NoWeapon", "Sleeping_NoWeapon" };
 
     /// Lo que se deja entre el punto más bajo del cuerpo y el suelo.
     private const float HolguraSobreElSuelo = 0.01f;

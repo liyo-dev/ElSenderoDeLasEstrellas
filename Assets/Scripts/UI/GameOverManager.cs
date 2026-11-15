@@ -280,7 +280,7 @@ public class GameOverManager : MonoBehaviour
         // para victoria), así que AudioService._battleActive y ActiveCombatRegistry se quedaban
         // "encendidos" para siempre (ambos sobreviven al viaje a MainMenu). Efecto observado:
         // tras morir, volver a cargar partida y entrar en una AmbientZone, la música de zona no
-        // sonaba porque AmbientZone.TransitionToZoneMusic ve IsBattleActive/Count>0 y aborta.
+        // sonaba porque la música de combate seguía en marcha y la de zona cede ante ella.
         AudioService.Instance?.ForceEndBattleState();
         ActiveCombatRegistry.ClearAll();
 

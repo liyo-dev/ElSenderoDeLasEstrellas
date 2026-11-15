@@ -25,3 +25,8 @@ Los `.blend` de cada personaje ya llevan la nuca; los de antes, en
 
 Sin comprobar en el juego. Desde abajo queda un poco de piel en la parte inferior de la cabeza (mira al suelo y
 la tapa el cuello de la ropa). Los pelos del pack que llevan los NPCs no se han revisado.
+
+## 15 nov 2026 — el pelo nuevo de Will
+`para_unity/Will/Hair16_Heroe.fbx` es el pelo barrido de héroe (INC-1225), generado con
+`../Will/pelo_duskfade.py` a partir del pelo anterior. Ya lleva la nuca y el grosor de 6 mm; no hace falta
+pasarle `nuca.py`.

@@ -390,10 +390,9 @@ namespace Game.NPC.States
         }
 
         /// <summary>
-        /// FIX INC-019: muestra el icono "!" sobre la cabeza del NPC al entrar en alerta,
-        /// usando el prefab configurado en NPCCombatConfig.exclamationIconPrefab.
-        /// Añade NPCAlertIconController de forma perezosa (igual que hace TagMinigameController)
-        /// para no requerir configuración manual por NPC.
+        /// Muestra el icono "!" sobre la cabeza del NPC al entrar en alerta, con el prefab de
+        /// NPCCombatConfig.exclamationIconPrefab. Añade NPCAlertIconController de forma perezosa para
+        /// no requerir configuración manual por NPC.
         /// </summary>
         private void ShowDetectionIcon(NPCStateContext context)
         {

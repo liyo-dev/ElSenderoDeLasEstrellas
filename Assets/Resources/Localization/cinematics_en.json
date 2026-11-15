@@ -2739,6 +2739,18 @@
         {
             "id": "PROLOGO_DESEO_PORFIN",
             "text": "At last!"
+        },
+        {
+            "id": "PROLOGO_DESEO_PORFIN_OSCURO",
+            "text": "At last!"
+        },
+        {
+            "id": "PROLOGO_DESEO_PODER_OSCURO",
+            "text": "…And that power? Where does it come from?"
+        },
+        {
+            "id": "PROLOGO_DESEO_RISA_OSCURO",
+            "text": "Ha, ha, ha…"
         }
     ]
 }

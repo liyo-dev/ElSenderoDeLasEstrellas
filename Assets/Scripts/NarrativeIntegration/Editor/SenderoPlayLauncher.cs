@@ -8,7 +8,7 @@ namespace Sendero.Narrative.Editor
     /// El arranque de pruebas de El Sendero: escribe una partida de prueba en el GameBootProfile y
     /// da Play directamente en la escena del ancla, sin intro ni menú (ver NarrativeTestLauncher).
     /// Sustituye al arranque básico y añade al resumen de Arranque la escena y cómo se entra.
-    public sealed class SenderoPlayLauncher : INarrativePlayLauncher, INarrativeLaunchDetails, INarrativeStoryOnPlayer
+    public sealed class SenderoPlayLauncher : INarrativePlayLauncher, INarrativeLaunchDetails, INarrativeStoryOnPlayer, INarrativeOpenSceneLauncher
     {
         public string Name => "El Sendero (GameBootProfile, directo a la escena)";
         public int Priority => 100;
@@ -23,6 +23,15 @@ namespace Sendero.Narrative.Editor
         public void ApplyStory(NarrativeStartPlan plan, UnityEngine.Object player)
         {
             if (player is PlayerPresetSO p) NarrativeTestLauncher.ProyectarHistoria(plan.Graph, plan.StepGuid, NarrativeTestConfig.Load(), p);
+        }
+
+        /// Prueba la escena que hay abierta, sin historia: el jugador de prueba y el grupo que ya
+        /// tenga la escena. Para maquetas y niveles que aún no están en el grafo.
+        public bool PlayOpenScene(UnityEngine.Object player, out string message)
+        {
+            if (!NarrativeTestLauncher.PrepararEscenaAbierta(player as PlayerPresetSO, out message)) return false;
+            UnityEditor.EditorApplication.isPlaying = true;
+            return true;
         }
 
         public void Describe(NarrativeStartPlan plan, UnityEngine.Object player, List<StartLine> lines)

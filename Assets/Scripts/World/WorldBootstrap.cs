@@ -54,6 +54,12 @@ public class WorldBootstrap : MonoBehaviour
 
     void OnEnable()
     {
+        // Solo el mundo de la escena ACTIVA se inicializa. Una escena de mundo cargada en
+        // aditivo (p. ej. Prologo_Valle sobre MainWorld) no debe colocar al jugador ni tocar el
+        // telón: ya lo hace el mundo que manda.
+        if (SceneManager.GetActiveScene() != gameObject.scene)
+            return;
+
         // Cierra el Telón antes de procesar nada más este frame y lo retiene hasta que el jugador
         // está colocado (se suelta al terminar, también en los early-return de InitializeWorld()).
         // Si detrás viene una cinemática o el grafo carga otra escena, ellos lo retienen también y
@@ -186,7 +192,10 @@ public class WorldBootstrap : MonoBehaviour
         //
         // Sin rosters en Resources/NpcRosters esto no hace absolutamente nada.
         NpcSpawner.Reset();
-        NpcSpawner.SpawnAllFromResources();
+        // En escenas sin marcadores propios (prólogo, interiores) no hay nada que instanciar:
+        // así no se cargan todos los rosters ni salen avisos de marcadores de otra escena.
+        if (NpcSpawnRegistry.All.Count > 0)
+            NpcSpawner.SpawnAllFromResources();
 
         // 1) Modo PRESET (test): SIEMPRE tiene prioridad sobre saves
         if (bootProfile.ShouldBootFromPreset())

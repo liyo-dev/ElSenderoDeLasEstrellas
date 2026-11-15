@@ -21,7 +21,7 @@ public class AudioGraphProfile : ScriptableObject
     [Serializable]
     public class MinigameRule
     {
-        [Tooltip("ID del minijuego (debe coincidir con TagMinigameController.MinigameId o similar)")]
+        [Tooltip("ID del minijuego (lo usa quien emite la señal MINIGAME_START:<id>)")]
         public string minigameId;
         [Tooltip("Música a reproducir durante el minijuego")]
         public AudioClip music;

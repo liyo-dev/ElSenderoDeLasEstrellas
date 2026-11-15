@@ -16,7 +16,7 @@ MonoBehaviour:
   summary: 'La pesadilla de Will, jugable: el Archimago resuelve tres encargos triviales en el valle (horno, carreta -- sustituye a la vaca, globo del campanario -- sustituye a la cometa), desayuna con Liora y no llega a responder la carta de la academia, evacua el valle sin poder salvar a todos, se despide de Liora, y se enfrenta al Mago Oscuro en un duelo que no puede ganar: solo redirigir el hechizo (destierro al Sendero) funciona de verdad. Termina con el corte a Will despertando, que gestiona la fase siguiente del grafo (Cap1) al recibir PROLOGUE_DONE. Sustituye a PrologueDreamSequencer.'
   signalIn: PROLOGUE_START
   signalOut: PROLOGUE_DONE
-  musicId: PROLOGUE_DREAM
+  musicId: PROLOGO_DESEO
   presentacionDeTexto: 1
   endStayBlack: 1
   skipMusicRestore: 1
@@ -26,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 6540294631505527185
+    - rid: 6540294635039228251
   references:
     version: 2
     RefIds:
-    - rid: 6540294631505527185
+    - rid: 6540294635039228251
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

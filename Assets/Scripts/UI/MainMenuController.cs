@@ -67,7 +67,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private string nextSceneContinue = "MainWorld";
 
     [Header("Scene when starting new game")]
-    [SerializeField] private string nextSceneNewGame = "Prologo";
+    [SerializeField] private string nextSceneNewGame = "Prologo_Valle";
 
     [Header("Loading Screen")]
     [SerializeField] private string loadingOverlayScene = "LoadingScreen";
@@ -560,14 +560,15 @@ public class MainMenuController : MonoBehaviour
                 }
             }
 
-            // una Nueva Partida real arranca MainWorld directamente en la cinemática del sueño
-            // inicial (la del prólogo), que pone su propia música vía PlaySequenceMusic()
-            // cuando el grafo narrativo lanza su señal de entrada. Ese lanzamiento ocurre en Start()/
-            // más adelante, pero AudioService.OnSceneLoaded (suscrito a SceneManager.sceneLoaded) se
-            // dispara ANTES, así que sin esto la música de mundo de MainWorld arranca sola un instante
-            // y enseguida se corta a la de la secuencia — el "doble arranque" que se oía mal. No se
-            // aplica en modo preset/test (forcePreset) porque ese bootPreset puede no arrancar con
-            // esta cinemática, y silenciar ahí dejaría MainWorld sin música alguna.
+            // una Nueva Partida real arranca Prologo_Valle (el mundo abierto se carga al empezar
+            // el capítulo) directamente en la cinemática del sueño inicial (la del prólogo), que
+            // pone su propia música vía PlaySequenceMusic() cuando el grafo narrativo lanza su
+            // señal de entrada. Ese lanzamiento ocurre en Start()/más adelante, pero
+            // AudioService.OnSceneLoaded (suscrito a SceneManager.sceneLoaded) se dispara ANTES,
+            // así que sin esto la música de mundo de Prologo_Valle arranca sola un instante y
+            // enseguida se corta a la de la secuencia - el "doble arranque" que se oía mal. No se
+            // aplica en modo preset/test (forcePreset) porque ese bootPreset puede no arrancar
+            // con esta cinemática, y silenciar ahí dejaría la escena sin música alguna.
             AudioService.MuteNextBaseSceneMusic = true;
         }
 

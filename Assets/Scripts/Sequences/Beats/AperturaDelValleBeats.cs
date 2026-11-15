@@ -83,10 +83,17 @@ public class DeseoEnElSenderoBeat : SequenceBeat
     [Tooltip("Dónde se monta el escenario (lejos del mundo, por encima de todo).")]
     public Vector3 origen = new Vector3(0f, 1500f, 0f);
     public string textoDeseo = "PROLOGO_DESEO";
-    public string textoPoder = "PROLOGO_DESEO_PODER";
-    public string textoPorFin = "PROLOGO_DESEO_PORFIN";
+    public string textoPoder = "PROLOGO_DESEO_PODER_OSCURO";
+    public string textoPorFin = "PROLOGO_DESEO_PORFIN_OSCURO";
+    public string textoRisa = "PROLOGO_DESEO_RISA_OSCURO";
     public string nombreDelMago = "Mago Oscuro";
     public float segundos = 31.5f;
+    [Tooltip("Onda de pinchos que sale del pecho al entrar el poder (vacío = ninguna).")]
+    public GameObject ondaDelEstallido;
+    [Tooltip("Círculo mágico a los pies en el «¡Por fin!» (vacío = ninguno).")]
+    public GameObject circuloMagico;
+    [Tooltip("Chispa en el pecho en el «¡Por fin!» (vacío = ninguna).")]
+    public GameObject destello;
 
     // Posiciones dentro del escenario (las del Sendero: el altar está en (0, 6, 656)).
     static readonly Vector3 Altar = new Vector3(0f, 6f, 656f);
@@ -150,30 +157,26 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         Transform cuerpo = null;
         Transform cabeza = null;
         Animator animMago = null;
+        NPCEmotionController emocion = null;
         if (mago != null)
         {
-            var m = UnityEngine.Object.Instantiate(mago, origen + PiesDelMago, Quaternion.LookRotation(Vector3.forward));
+            var m = UnityEngine.Object.Instantiate(mago, origen + PiesDelMago - Vector3.forward * 5f, Quaternion.LookRotation(Vector3.forward));
             m.name = "_MagoDelDeseo";
-            foreach (var mb in m.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+            foreach (var mb in m.GetComponentsInChildren<MonoBehaviour>(true))
+                if (mb is not NPCEmotionController) mb.enabled = false;
             foreach (var c in m.GetComponentsInChildren<Collider>(true)) c.enabled = false;
             foreach (var a in m.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true)) a.enabled = false;
             foreach (var rb in m.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
             creados.Add(m);
             cuerpo = m.transform;
             animMago = m.GetComponentInChildren<Animator>();
-            if (animMago != null && animMago.isHuman) cabeza = animMago.GetBoneTransform(HumanBodyBones.Head);
+            if (animMago != null) animMago.applyRootMotion = false;
+            emocion = m.GetComponentInChildren<NPCEmotionController>(true);
+            emocion?.SetEmotion(NPCEmotion.Neutral);
+            if (animMago != null && animMago.isHuman)
+                cabeza = animMago.GetBoneTransform(HumanBodyBones.Head);
         }
         var unlit = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Color");
-        if (cuerpo != null)
-        {
-            var negro = new Material(unlit) { color = new Color(0.012f, 0.008f, 0.02f) };
-            foreach (var r in cuerpo.GetComponentsInChildren<Renderer>(true))
-            {
-                var mats = r.sharedMaterials;
-                for (int k = 0; k < mats.Length; k++) mats[k] = negro;
-                r.sharedMaterials = mats;
-            }
-        }
         var violeta = new Material(unlit) { color = new Color(0.78f, 0.55f, 1f) };
         var ojoI = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         var ojoD = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -196,13 +199,41 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         suelo.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         var brilloI = BrilloDeApertura.Crear("_BrilloOjoI", ojos, 0.22f, new Color(1.1f, 0.6f, 1.8f), creados);
         var brilloD = BrilloDeApertura.Crear("_BrilloOjoD", ojos, 0.22f, new Color(1.1f, 0.6f, 1.8f), creados);
+        // Contraluz pegado a la espalda del mago: recorta la silueta contra el negro. Sin él, de
+        // espaldas solo se ve el halo del altar y el resto del cuadro queda vacío.
         var azar = new System.Random(16);
-        for (int i = 0; i < 70; i++)
+        var contraluz = BrilloDeApertura.Crear("_ContraluzDelMago",
+            origen + PiesDelMago + Vector3.forward * 0.7f + Vector3.up * 1.25f, 3.8f,
+            new Color(0.30f, 0.14f, 0.52f), creados);
+        // Motas cerca del mago: llenan el negro de los primeros planos (los ojos) con algo que se mueve.
+        var motes = new List<GameObject>();
+        for (int i = 0; i < 26; i++)
+        {
+            var dir = new Vector3((float)azar.NextDouble() * 2f - 1f, (float)azar.NextDouble(), (float)azar.NextDouble() * 2f - 1f);
+            var pm = ojos + dir.normalized * (1.1f + 3.4f * (float)azar.NextDouble());
+            motes.Add(BrilloDeApertura.Crear("_Mota", pm, 0.06f + 0.15f * (float)azar.NextDouble(),
+                new Color(0.32f, 0.19f, 0.58f), creados));
+        }
+        // Luz de relleno tenue pegada a la cámara: en los primeros planos le saca la cara del negro.
+        var luzMago = new GameObject("_LuzDelMago").AddComponent<Light>();
+        luzMago.type = LightType.Point;
+        luzMago.color = new Color(0.55f, 0.45f, 0.92f);
+        luzMago.intensity = 3.5f;
+        luzMago.range = 7f;
+        luzMago.shadows = LightShadows.None;
+        creados.Add(luzMago.gameObject);
+        // El haz del altar al pecho: la luz del poder se mete en el mago (13,5-15,6).
+        var pecho = origen + PiesDelMago + Vector3.up * 1.2f;
+        var haz = new List<GameObject>();
+        for (int i = 0; i < 12; i++)
+            haz.Add(BrilloDeApertura.Crear("_HazDelAltar", altar, 0.5f, new Color(1.6f, 1.3f, 2.2f), creados));
+        var destelloPecho = BrilloDeApertura.Crear("_DestelloEnElPecho", pecho, 0.01f, new Color(2.5f, 2f, 3f), creados);
+        for (int i = 0; i < 110; i++)
         {
             var dir = new Vector3((float)azar.NextDouble() * 2f - 1f, 0.05f + (float)azar.NextDouble(), (float)azar.NextDouble() * 2f - 1f).normalized;
-            float tono = 0.25f + 0.35f * (float)azar.NextDouble();
-            var e = BrilloDeApertura.Crear("_EstrellaTenue", ojos + dir * (60f + 25f * (float)azar.NextDouble()),
-                0.35f + 0.5f * (float)azar.NextDouble(), new Color(0.6f * tono, 0.65f * tono, 1f * tono), creados);
+            float tono = 0.32f + 0.42f * (float)azar.NextDouble();
+            var e = BrilloDeApertura.Crear("_EstrellaTenue", ojos + dir * (55f + 28f * (float)azar.NextDouble()),
+                0.5f + 0.7f * (float)azar.NextDouble(), new Color(0.7f * tono, 0.75f * tono, 1f * tono), creados);
             e.transform.rotation = Quaternion.LookRotation(e.transform.position - ojos);
         }
 
@@ -231,15 +262,18 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         // Línea de tiempo (s), con la música «El deseo del Mago Oscuro» encima:
         //   0-6,5     de espaldas contra el halo, la silueta; sale del negro (0-2)
         //   6,5-10    los ojos se abren en la oscuridad (muy cerca)
-        //   10-14,5   de frente: «Que ningún poder pueda destruirme» (10,6)
-        //   14,5-16,3 estalla el altar; desde abajo, abre los brazos y recibe el poder; «¡Por fin!» (16,2)
-        //   17,8-22   la carcajada (los ojos se entornan)
-        //   22-23,2   los ojos, de golpe muy abiertos: ha notado algo
-        //   23,2-27,5 de perfil; gira la cabeza (23,6), aparece la estrella (24), «…¿Y ese poder?» (24,4)
-        //   27,5-fin  por encima de su hombro, la estrella llena la pantalla; papel en el último 1,2 s
-        var deCara = new[] { nucleo, resplandor, brilloI, brilloD, brilloEstrella };
+        //   10-13,5   de frente: «Que ningún poder pueda destruirme» (10,6)
+        //   13,5-16,2 el altar manda su luz al pecho del mago; al entrar, le cambia la voz
+        //   16,2-17,5 desde abajo, abre los brazos: «¡Por fin!», ya con la voz oscura
+        //   17,5-19,1 la carcajada malvada, con los ojos entornados
+        //   19,1      «clin»; mira atrás, gira la cabeza hacia la estrella
+        //   19,1-21,4 la cámara va a su cara y sus ojos: «…¿Y ese poder?» (21,5)
+        //   21,4-27,5 la cámara va a la luz del poder (la estrella), que crece
+        //   27,5-fin  por encima del hombro, la estrella llena la pantalla; papel en el último 1,2 s
+        var deCara = new[] { nucleo, resplandor, contraluz, brilloI, brilloD, brilloEstrella };
         float t = 0f, fin = Mathf.Max(28f, segundos);
-        bool dicho1 = false, dicho2 = false, dicho3 = false, gestoPoder = false, gestoRisa = false, gestoNota = false;
+        bool dicho1 = false, dicho2 = false, dicho3 = false, gestoPoder = false;
+        bool hechizoDelEstallido = false, clin = false, risa = false, sonrisa = false;
         var lenteBase = cam.Lens;
         while (t < fin)
         {
@@ -249,8 +283,9 @@ public class DeseoEnElSenderoBeat : SequenceBeat
 
             // Apertura de los ojos: cerrados al principio, se abren (6,5-7,6), se entornan al reír, se abren de golpe al notar algo.
             float apertura = VeloDeApertura.Suave((t - 6.5f) / 1.1f);
-            if (t > 17.8f && t < 22f) apertura *= Mathf.Lerp(1f, 0.45f, VeloDeApertura.Suave((t - 17.8f) / 0.5f));
-            if (t >= 22f && t < 23.2f) apertura = Mathf.Lerp(1.5f, 1.2f, (t - 22f) / 1.2f);
+            if (t > 15.2f && t < 17.5f) apertura = Mathf.Max(apertura, Mathf.Lerp(1f, 1.5f, VeloDeApertura.Suave((t - 15.2f) / 0.5f)));
+            if (t > 17.5f && t < 19f) apertura *= Mathf.Lerp(1f, 0.5f, VeloDeApertura.Suave((t - 17.5f) / 0.4f));
+            if (t >= 19f) apertura = Mathf.Max(apertura, Mathf.Lerp(0.5f, 1.45f, VeloDeApertura.Suave((t - 19f) / 0.45f)));
             if (cuerpo != null)
             {
                 Vector3 c = cabeza != null ? cabeza.position : cuerpo.position + Vector3.up * 1.55f;
@@ -273,12 +308,40 @@ public class DeseoEnElSenderoBeat : SequenceBeat
             }
 
             // El altar respira; en el estallido (14,5-16,3 s) se dispara y enciende el fondo un instante.
-            float estallido = t > 14.5f && t < 16.3f ? Mathf.Sin(Mathf.Clamp01((t - 14.5f) / 1.8f) * Mathf.PI) : 0f;
+            float estallido = t > 15.0f && t < 16.6f ? Mathf.Sin(Mathf.Clamp01((t - 15.0f) / 1.6f) * Mathf.PI) : 0f;
             float respira = 0.8f + 0.2f * Mathf.Sin(t * 1.7f);
             BrilloDeApertura.Intensidad(nucleo, respira * (1f + 5f * estallido));
             BrilloDeApertura.Intensidad(resplandor, respira * (1f + 3f * estallido));
             resplandor.transform.localScale = Vector3.one * 7f * (1f + 1.5f * estallido);
             BrilloDeApertura.Intensidad(suelo, respira * (1f + 2f * estallido));
+            BrilloDeApertura.Intensidad(contraluz, (0.55f + 0.15f * Mathf.Sin(t * 1.3f)) * (1f + 2.5f * estallido));
+            // El contraluz se pone siempre al otro lado del mago que la cámara: recorta la silueta en
+            // todos los planos (si no, en los frontales se cuela delante y solo se ve azul).
+            if (cuerpo != null)
+            {
+                Vector3 atras = cuerpo.position - posCam; atras.y = 0f;
+                contraluz.transform.position = cuerpo.position + (atras.sqrMagnitude > 0.01f ? atras.normalized : Vector3.back) * 0.85f + Vector3.up * 1.3f;
+            }
+            // Luz tenue pegada a la cara, del lado de la cámara: le saca la cara del negro.
+            if (cabeza != null)
+                luzMago.transform.position = cabeza.position + (posCam - cabeza.position).normalized * 0.35f;
+            // El haz del altar al pecho (13,4-15,6).
+            float avance = Mathf.Clamp01((t - 13.4f) / 1.9f);
+            for (int i = 0; i < haz.Count; i++)
+            {
+                var g = haz[i];
+                if (g == null) continue;
+                float u = Mathf.Clamp01(avance * 1.45f - i * 0.035f);
+                Vector3 ph = Vector3.Lerp(altar, pecho, u);
+                ph.y += Mathf.Sin(u * Mathf.PI) * 0.45f;
+                g.transform.position = ph;
+                float visible = (t > 13.3f && t < 15.7f) ? 1f : 0f;
+                BrilloDeApertura.Intensidad(g, visible * (0.45f + 0.55f * Mathf.Sin(u * Mathf.PI)));
+                g.transform.rotation = Quaternion.LookRotation(ph - posCam);
+            }
+            float entra = (t > 15.0f && t < 16.8f) ? Mathf.Sin(Mathf.Clamp01((t - 15.0f) / 1.8f) * Mathf.PI) : 0f;
+            BrilloDeApertura.Intensidad(destelloPecho, entra * 1.8f);
+            destelloPecho.transform.localScale = Vector3.one * (0.15f + 1.4f * entra);
             if (camara != null) camara.backgroundColor = Color.Lerp(FondoNegro, new Color(1f, 0.9f, 0.78f), estallido * estallido);
             // Fundido de entrada desde negro.
             if (t < 2f) VeloDeApertura.Poner(Color.black, 1f - VeloDeApertura.Suave(t / 2f));
@@ -286,85 +349,134 @@ public class DeseoEnElSenderoBeat : SequenceBeat
             float fov = lenteBase.FieldOfView;
             if (t < 6.5f)
             {
-                // De espaldas y bajo: la silueta recortada contra el halo del altar, acercándose despacio.
+                // Viene caminando hacia el altar; la cámara le sigue por detrás.
                 float f = VeloDeApertura.Suave(t / 6.5f);
-                Vector3 desde = Vector3.Lerp(origen + PiesDelMago + new Vector3(0.9f, 0.7f, -6.2f), origen + PiesDelMago + new Vector3(0.5f, 0.95f, -3.6f), f);
+                if (cuerpo != null)
+                {
+                    cuerpo.position = origen + PiesDelMago - Vector3.forward * Mathf.Lerp(5f, 0f, f);
+                    Caminar(animMago, f < 0.98f ? 0.65f : 0f);
+                }
+                Vector3 pies = cuerpo != null ? cuerpo.position : origen + PiesDelMago;
+                Vector3 desde = pies - Vector3.forward * 5.2f + Vector3.up * 1.55f + Vector3.right * 0.35f;
                 cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(altar - desde));
+                fov = 40f;
             }
-            else if (t < 10f)
+            else if (t < 13.5f)
             {
-                // Los ojos, muy cerca: se abren en la oscuridad.
-                float f = VeloDeApertura.Suave((t - 6.5f) / 3.5f);
-                Vector3 desde = ojos + new Vector3(0.05f, 0.03f, Mathf.Lerp(0.95f, 0.75f, f));
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.up * 0.03f - desde));
-                fov = 18f;
-            }
-            else if (t < 14.5f)
-            {
-                // De frente y cerca: pide el deseo.
-                float f = VeloDeApertura.Suave((t - 10f) / 4.5f);
-                Vector3 desde = ojos + new Vector3(0.28f, 0.02f, Mathf.Lerp(1.5f, 1.15f, f));
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos - desde));
+                // Quieto en el altar, de espaldas: pide el deseo. La cara no se ve todavía.
+                if (cuerpo != null) { cuerpo.position = origen + PiesDelMago; Caminar(animMago, 0f); }
+                float f = VeloDeApertura.Suave((t - 6.5f) / 7f);
+                Vector3 desde = origen + PiesDelMago + new Vector3(0.35f, 1.55f, Mathf.Lerp(-5.2f, -3.9f, f));
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(altar - desde));
+                fov = 40f;
                 if (!dicho1 && t > 10.6f)
                 {
                     dicho1 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoDeseo), 3.4f,
                         PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                    PresentadorDeLinea.SonarLaVoz(textoDeseo);
                 }
             }
-            else if (t < 17.8f)
+            else if (t < 15.2f)
             {
-                // Desde abajo: abre los brazos y recibe el poder. «¡Por fin!»
-                float f = VeloDeApertura.Suave((t - 14.5f) / 3.3f);
-                Vector3 desde = ojos + new Vector3(Mathf.Lerp(-1.2f, -0.9f, f), -1.35f, Mathf.Lerp(2.9f, 2.4f, f));
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.down * 0.3f - desde));
-                fov = 44f;
-                if (!gestoPoder) { gestoPoder = true; Gesto(animMago, "Conjuro_Abrirse"); }
+                // De lado: el altar le manda la luz al pecho. La cámara los coge a los dos.
+                float f = VeloDeApertura.Suave((t - 13.5f) / 1.7f);
+                Vector3 desde = origen + PiesDelMago + new Vector3(6.0f - 0.3f * f, 1.6f, 4.2f - 0.3f * f);
+                Vector3 mira = Vector3.Lerp(pecho, altar, 0.38f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(mira - desde));
+                fov = 42f;
+            }
+            else if (t < 16.2f)
+            {
+                // Los pinchos del poder salen del pecho: empieza pegado a ellos y se aleja hasta su perfil.
+                float f = VeloDeApertura.Suave((t - 15.2f) / 1.0f);
+                Vector3 desde = Vector3.Lerp(pecho + new Vector3(1.3f, 0.2f, 1.3f),
+                                             origen + PiesDelMago + new Vector3(5.6f, 2.1f, 4.4f), f);
+                Vector3 mira = Vector3.Lerp(pecho, origen + PiesDelMago + Vector3.up * 1.3f, f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(mira - desde));
+                fov = Mathf.Lerp(34f, 46f, f);
+                if (!hechizoDelEstallido)
+                {
+                    hechizoDelEstallido = true;
+                    Gesto(animMago, "Conjuro_Esfuerzo", 0.1f);
+                    if (ondaDelEstallido != null && VfxPoolService.Instance != null)
+                        VfxPoolService.Instance.Play(ondaDelEstallido, pecho, Quaternion.identity, 2.5f);
+                }
+            }
+            else if (t < 19.1f)
+            {
+                // «¡Por fin!» con los brazos al frente; la cámara rodea al mago hasta su cara y su sonrisa.
+                float f = VeloDeApertura.Suave((t - 16.2f) / 2.9f);
+                Vector3 centro = origen + PiesDelMago + Vector3.up * 1.3f;
+                float ang = Mathf.Lerp(95f, 15f, f) * Mathf.Deg2Rad;
+                float radio = Mathf.Lerp(4.2f, 2.3f, f);
+                Vector3 desde = centro + new Vector3(Mathf.Sin(ang) * radio, 0.05f, Mathf.Cos(ang) * radio);
+                Vector3 cara = cabeza != null ? cabeza.position : centro + Vector3.up * 0.3f;
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(cara - desde));
+                fov = Mathf.Lerp(44f, 30f, f);
+                if (!gestoPoder)
+                {
+                    gestoPoder = true;
+                    Gesto(animMago, "Conjuro_Lanzar");
+                    if (circuloMagico != null && VfxPoolService.Instance != null)
+                        VfxPoolService.Instance.Play(circuloMagico, origen + PiesDelMago + Vector3.up * 0.05f, Quaternion.identity, 3.5f);
+                    if (destello != null && VfxPoolService.Instance != null)
+                        VfxPoolService.Instance.Play(destello, pecho, Quaternion.identity, 2f);
+                }
                 if (!dicho2 && t > 16.2f)
                 {
                     dicho2 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPorFin), 1.8f,
                         PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                    PresentadorDeLinea.SonarLaVoz(textoPorFin);
                 }
+                if (!risa && t > 17.8f)
+                {
+                    risa = true;
+                    Gesto(animMago, "Laugh_Carcajada");
+                    if (!string.IsNullOrEmpty(textoRisa)) PresentadorDeLinea.SonarLaVoz(textoRisa);
+                }
+                if (!sonrisa && f > 0.75f && emocion != null) { sonrisa = true; emocion.SetEmotion(NPCEmotion.Smirk); }
             }
-            else if (t < 22f)
+            else if (t < 20.2f)
             {
-                // La carcajada: de tres cuartos, la cámara se le acerca despacio.
-                float f = VeloDeApertura.Suave((t - 17.8f) / 4.2f);
-                Vector3 desde = ojos + new Vector3(Mathf.Lerp(1.1f, 0.8f, f), -0.15f, Mathf.Lerp(2.3f, 1.7f, f));
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.down * 0.2f - desde));
-                if (!gestoRisa) { gestoRisa = true; Gesto(animMago, "Laugh_Carcajada"); }
-            }
-            else if (t < 23.2f)
-            {
-                // Los ojos otra vez, de golpe muy abiertos: ha notado algo.
-                Vector3 desde = ojos + new Vector3(0.05f, 0.03f, 0.8f);
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.up * 0.03f - desde));
-                fov = 18f;
-                if (!gestoNota) { gestoNota = true; Gesto(animMago, "SenseSomethingStart_NoWeapon", 0.12f); }
-            }
-            else if (t < fin - 4f)
-            {
-                // Primer plano de perfil; gira la cabeza hacia la estrella.
-                Vector3 desde = ojos + new Vector3(-1.4f, 0.1f, 2.1f);
-                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos - desde));
-                float giro = VeloDeApertura.Suave((t - 23.6f) / 0.7f);
-                if (cuerpo != null) cuerpo.rotation = Quaternion.Slerp(Quaternion.LookRotation(Vector3.forward),
-                    Quaternion.LookRotation(new Vector3(HaciaLaEstrella.x, 0f, HaciaLaEstrella.z)), giro * 0.75f);
-                float aparece = VeloDeApertura.Suave((t - 24f) / 0.6f);
-                estrella.transform.localScale = Vector3.one * (0.7f + 0.2f * Mathf.Sin(t * 6f)) * aparece;
-                brilloEstrella.transform.localScale = Vector3.one * 3.5f * aparece;
-                if (!dicho3 && t > 24.4f)
+                // «Clin»: algo le llama la atención; sigue de cara a cámara y dice «…¿Y ese poder?».
+                Vector3 cara = cabeza != null ? cabeza.position : ojos;
+                float f = VeloDeApertura.Suave((t - 19.1f) / 1.1f);
+                float ang = Mathf.Lerp(15f, 26f, f) * Mathf.Deg2Rad;
+                Vector3 desde = cara + new Vector3(Mathf.Sin(ang) * 2.1f, 0.02f, Mathf.Cos(ang) * 2.1f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(cara - desde));
+                fov = 26f;
+                if (!clin)
+                {
+                    clin = true;
+                    Gesto(animMago, "SenseSomethingStart_NoWeapon", 0.12f);
+                    AudioService.Instance?.PlaySFX("SFX_Prologo_Plin", 0.8f, pecho);
+                }
+                if (!dicho3 && t > 19.4f)
                 {
                     dicho3 = true;
                     PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPoder), 2.8f,
                         PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                    PresentadorDeLinea.SonarLaVoz(textoPoder);
                 }
+            }
+            else if (t < 26f)
+            {
+                // La cámara se va rápido a la luz del poder, que crece.
+                float f = VeloDeApertura.Suave((t - 20.2f) / 2.2f);
+                Vector3 mirando = HaciaLaEstrella.normalized;
+                Vector3 desde = Vector3.Lerp(ojos - mirando * 2.4f + Vector3.up * 0.5f, ojos - mirando * 1.2f + Vector3.up * 0.5f, f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(posEstrella - desde));
+                fov = Mathf.Lerp(40f, 30f, f);
+                float aparece = VeloDeApertura.Suave((t - 20.2f) / 1.2f);
+                estrella.transform.localScale = Vector3.one * (0.7f + 0.2f * Mathf.Sin(t * 6f)) * aparece;
+                brilloEstrella.transform.localScale = Vector3.one * 3.5f * aparece;
             }
             else
             {
                 // Por encima de su hombro, la estrella crece hasta llenar la pantalla.
-                float f = VeloDeApertura.Suave((t - (fin - 4f)) / 4f);
+                float f = VeloDeApertura.Suave((t - 26f) / Mathf.Max(0.1f, fin - 26f));
                 Vector3 desde = ojos - HaciaLaEstrella.normalized * 2.2f + Vector3.up * 0.4f;
                 Vector3 hacia = Vector3.Lerp(desde, posEstrella, f * 0.94f);
                 cam.transform.SetPositionAndRotation(hacia, Quaternion.LookRotation(posEstrella - hacia));
@@ -383,6 +495,18 @@ public class DeseoEnElSenderoBeat : SequenceBeat
             posCam = cam.transform.position;
             foreach (var b in deCara)
                 b.transform.rotation = Quaternion.LookRotation(b.transform.position - posCam);
+            // Las motas suben despacio y se mecen; al salir por arriba vuelven por abajo.
+            for (int i = 0; i < motes.Count; i++)
+            {
+                var m = motes[i];
+                if (m == null) continue;
+                var pm = m.transform.position;
+                pm.y += dt * (0.05f + 0.02f * (i % 3));
+                pm.x += Mathf.Sin(t * 0.7f + i) * 0.02f * dt;
+                if (pm.y > ojos.y + 2.6f) pm.y = ojos.y - 1.4f;
+                m.transform.position = pm;
+                m.transform.rotation = Quaternion.LookRotation(pm - posCam);
+            }
             yield return null;
         }
         VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 1f);
@@ -396,6 +520,17 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         int h = Animator.StringToHash(estado);
         for (int capa = 0; capa < animator.layerCount; capa++)
             if (animator.HasState(capa, h)) { animator.CrossFadeInFixedTime(h, fundido, capa); return; }
+    }
+
+    /// Pone al Animator a andar (o a pararse) sin motor: los parámetros de locomoción del NPC.
+    static void Caminar(Animator animator, float velocidad)
+    {
+        if (animator == null) return;
+        animator.SetFloat("InputVertical", velocidad);
+        animator.SetFloat("InputHorizontal", 0f);
+        animator.SetFloat("InputMagnitude", velocidad);
+        animator.SetBool("IsGrounded", true);
+        animator.SetFloat("GroundDistance", 0f);
     }
 }
 
@@ -615,12 +750,12 @@ public class VueloDeAperturaBeat : SequenceBeat
     const float LogoDesdePunto = 7.4f, LogoHastaPunto = 9.8f;
 
     /// Tabla tiempo→s. La rapidez base sube con la altura (arriba planea, abajo no pasa todo de golpe) y
-    /// cada tramo lleva un factor ajustado para que el vuelo de 35 s quede así: 0-8 s el mundo entero
-    /// casi quieto, 8-18 s baja hasta el mar, 18-26 s roza el agua hasta el pie de la cascada,
-    /// 26-31 s sube por ella (con el logo) y 31-35 s se posa en el valle. Los factores se suavizan
-    /// medio tramo a cada lado para que la velocidad no pegue saltos en los puntos.
+    /// cada tramo lleva un factor ajustado para que el vuelo de 35 s quede así: el mundo entero desde muy
+    /// alto y ya bajando desde el primer segundo, 8-18 s baja hasta el mar, 18-26 s roza el agua hasta el
+    /// pie de la cascada, 26-31 s sube por ella (con el logo) y 31-35 s se posa en el valle. Los factores
+    /// se suavizan medio tramo a cada lado para que la velocidad no pegue saltos en los puntos.
     static readonly float[] FactorDelTramo =
-        { 0.049f, 1.562f, 1.520f, 3.208f, 3.189f, 2.085f, 0.770f, 1.275f, 0.647f, 0.866f, 1.742f, 0.417f };
+        { 0.8f, 1.562f, 1.520f, 3.208f, 3.189f, 2.085f, 0.770f, 1.275f, 0.647f, 0.866f, 1.742f, 0.417f };
     static float[] s_tiempos;
     const int Muestras = 2400;
     static void PrepararTiempos()

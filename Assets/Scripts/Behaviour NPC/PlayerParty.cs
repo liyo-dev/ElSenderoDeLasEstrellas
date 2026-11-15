@@ -1396,7 +1396,7 @@ namespace Game.NPC
             if (enemy == null || IsEmpty) return;
             
             // Verificar si ya no hay más enemigos en combate
-            if (ActiveCombatRegistry.Count == 0)
+            if (!Kits.Core.GameContext.Has(Situaciones.Combate))
             {
                 Log("No quedan enemigos en combate");
                 NotifyPlayerExitedCombat();

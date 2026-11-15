@@ -133,7 +133,8 @@ public static class MedirArranqueDePlay
         if (hueco >= FotogramaLentoMs) Apuntar($"⏸ Fotograma {Time.frameCount} parado {hueco:0} ms");
 
         if (Telon.Cerrado) s_vioCerrado = true;
-        else if (s_abiertoEn < 0 && (s_vioCerrado || Time.frameCount > 5))
+        else if (s_abiertoEn < 0 && (s_vioCerrado || Time.frameCount > 5)
+                 && !EsEscenaDeCarga(SceneManager.GetActiveScene().name))
         {
             s_abiertoEn = ahora;
             Apuntar("Telón abierto: se ve el juego");
@@ -178,6 +179,13 @@ public static class MedirArranqueDePlay
     }
 
     static double Ahora() => EditorApplication.timeSinceStartup;
+
+    /// Las pantallas de arranque y el menú no cuentan como «se ve el juego»: el telón de
+    /// `arranque` se abre sobre SplashScreen, el de la carga sobre LoadingScreen y el del menú
+    /// sobre MainMenu. Antes se paraba la medida ahí y no se llegaba a medir la escena de verdad
+    /// (INC-1210). El mundo de la partida (MainWorld, Prologo_Valle…) sí cuenta.
+    static bool EsEscenaDeCarga(string nombre) =>
+        nombre == "SplashScreen" || nombre == "LoadingScreen" || nombre == "Start" || nombre == "MainMenu";
 
     static void Escribir()
     {

@@ -21,7 +21,6 @@ public static class PeticionesDelJuego
         NarrativeRequests.Register<PedirEntregaDeObjeto, EntregaDeObjetoEnCurso>();
         NarrativeRequests.Register<PedirBatalla, BatallaEnCurso>();
         NarrativeRequests.Register<PedirCombateContraNpc, CombateContraNpcEnCurso>();
-        NarrativeRequests.Register<PedirPillaPilla, PillaPillaEnCurso>();
         NarrativeRequests.Register<PedirGuiarAlJugador, GuiarAlJugadorEnCurso>();
         NarrativeRequests.Register<PedirSeguirSinSerVisto, SeguirSinSerVistoEnCurso>();
     }

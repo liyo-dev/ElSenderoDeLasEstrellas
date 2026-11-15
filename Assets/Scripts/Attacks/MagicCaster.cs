@@ -519,7 +519,7 @@ public class MagicCaster : MonoBehaviour
             target = tpCam.LockTarget;
             return true;
         }
-        if (ActiveCombatRegistry.Count > 0 && controller != null)
+        if (Kits.Core.GameContext.Has(Situaciones.Combate) && controller != null)
         {
             var nearest = ActiveCombatRegistry.GetClosestCombatNPC(controller.transform.position, 45f);
             if (nearest != null)

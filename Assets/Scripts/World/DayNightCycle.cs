@@ -684,8 +684,6 @@ public class DayNightCycle : MonoBehaviour
 
     private bool _wasCinematicOverrideActive;
 
-    private bool _wasMinigameActive;
-
     public Material SkyboxEnUso => _runtimeSkybox;
 
     void Awake()
@@ -764,7 +762,6 @@ public class DayNightCycle : MonoBehaviour
     void TryRollWeather()
     {
         if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm || IsSnowing) return;
-        if (TagMinigameController.IsAnyMinigameActive) return;
         if (!PuedeSortearClima) return;
 
         if (_zoneMistForced) { TryActivateZoneMist(); return; }
@@ -1025,15 +1022,6 @@ public class DayNightCycle : MonoBehaviour
             if (!effectivelyInteriorNow) ReapplyPendingSkybox();
         }
 
-        bool minigameActiveNow = TagMinigameController.IsAnyMinigameActive;
-        if (minigameActiveNow && !_wasMinigameActive)
-        {
-
-            if (IsThunderstorm) StopThunderstorm();
-            else if (IsRaining || _isCloudBuildingUp) StopRain();
-        }
-        _wasMinigameActive = minigameActiveNow;
-
         ActualizarViento();
 
         if (autoAdvance)
@@ -1126,14 +1114,6 @@ public class DayNightCycle : MonoBehaviour
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartRain() no ha hecho nada: ya está lloviendo o nublándose (IsRaining/_isCloudBuildingUp). Usa StopRain() primero si quieres reiniciarla.");
-#endif
-            return;
-        }
-
-        if (TagMinigameController.IsAnyMinigameActive)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[DayNightCycle] StartRain() no ha hecho nada: hay un minijuego activo (TagMinigameController.IsAnyMinigameActive).");
 #endif
             return;
         }
@@ -1914,14 +1894,6 @@ public class DayNightCycle : MonoBehaviour
 #endif
             return;
         }
-        if (TagMinigameController.IsAnyMinigameActive)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[DayNightCycle] StartThunderstorm() no ha hecho nada: hay un minijuego activo.");
-#endif
-            return;
-        }
-
         if (_thunderstormCoroutine != null)
             StopCoroutine(_thunderstormCoroutine);
 

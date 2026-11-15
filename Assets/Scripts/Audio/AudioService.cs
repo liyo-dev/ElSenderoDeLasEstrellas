@@ -96,6 +96,21 @@ public sealed class AudioService : MonoBehaviour
     float AtaqueDeAtenuacion => VoiceDuck?.attackSeconds ?? 0f;
     float RelajacionDeAtenuacion => VoiceDuck?.releaseSeconds ?? 0f;
     bool _battleActive;
+
+    /// Música de batalla en marcha. Además de lo suyo, abre y cierra la situación «combate» del
+    /// contexto de juego: una batalla guionizada sin NPCs registrados también cuenta como combate
+    /// para quien cede ante él (avisos, música de zona, interacción).
+    bool BattleActive
+    {
+        get => _battleActive;
+        set
+        {
+            if (_battleActive == value) return;
+            _battleActive = value;
+            if (value) Kits.Core.GameContext.Enter(Situaciones.Combate, this);
+            else Kits.Core.GameContext.Exit(Situaciones.Combate, this);
+        }
+    }
     // id de la batalla cuya música está activa ahora mismo. Ver guard
     // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
     // ya cableada desde el arranque + fallback directo de BossArenaController.StartBattleInternal()
@@ -186,6 +201,7 @@ public sealed class AudioService : MonoBehaviour
 
     void OnDestroy()
     {
+        Kits.Core.GameContext.Exit(Situaciones.Combate, this);
         SceneManager.sceneLoaded   -= OnSceneLoaded;
         EnvironmentController.OnInteriorEntered -= HandleInteriorEntered;
         EnvironmentController.OnInteriorExited  -= HandleInteriorExited;
@@ -309,7 +325,7 @@ public sealed class AudioService : MonoBehaviour
             _signals.OnCustom(startKey, startHandler);
             _minigameStartHandlers[startKey] = startHandler;
 
-            // Evento de victoria/fin: MINIGAME_{id}_WON (el TagMinigameController emite esto)
+            // Evento de victoria/fin: MINIGAME_{id}_WON (lo emite el minijuego al terminar)
             string endKey = $"MINIGAME_{r.minigameId}_WON";
             Action endHandler = () => OnMinigameEndRestoreMusic(r);
             _signals.OnCustom(endKey, endHandler);
@@ -613,7 +629,7 @@ public sealed class AudioService : MonoBehaviour
 
         var current = GetCurrentMusicClip();
         _musicStack.Push(new MusicStackItem { clip = current });
-        _battleActive = true;
+        BattleActive = true;
         _activeBattleId = r.battleId;
         PlayMusic(r.music, r.fade);
     }
@@ -629,7 +645,7 @@ public sealed class AudioService : MonoBehaviour
         _musicA.loop = true;
         _musicB.loop = true;
         if (_musicStack.Count > 0) _musicStack.Pop();
-        _battleActive = false;
+        BattleActive = false;
         _activeBattleId = null;
 
         // Si detrás del combate viene una cinemática, suena la suya: la del lugar se pide, no
@@ -817,7 +833,7 @@ public sealed class AudioService : MonoBehaviour
         // había apilado legítimamente y aún no le tocaba restaurarse.
         bool wasBattleActive = _battleActive;
         if (wasBattleActive && _musicStack.Count > 0) _musicStack.Pop();
-        _battleActive = false;
+        BattleActive = false;
 
         // Un combate sin música propia no cambió nada al empezar: al acabar solo vuelve la de la
         // zona, si la hay. Se pide, no se pone (ver PedirMusicaDelLugar).
@@ -883,7 +899,7 @@ public sealed class AudioService : MonoBehaviour
         if (_battleActive)
         {
             if (_musicStack.Count > 0) _musicStack.Pop();
-            _battleActive = false;
+            BattleActive = false;
             _activeBattleId = null;
         }
 
@@ -1954,13 +1970,13 @@ public sealed class AudioService : MonoBehaviour
     /// llamar a EndBattleById/RestoreAfterBattle/OnBattleWonRestoreMusic porque el jugador
     /// murió en vez de ganar. Sin esto, _battleActive se queda a true indefinidamente —
     /// AudioService es DontDestroyOnLoad y sobrevive al viaje Game Over → MainMenu → Continuar—
-    /// y AmbientZone.TransitionToZoneMusic/RestorePreviousMusic usan IsBattleActive como guard
-    /// para no pisar música de combate, bloqueando la música de zona para siempre tras morir.
+    /// y la situación «combate» se queda abierta para siempre, bloqueando la música de zona tras
+    /// morir.
     /// </summary>
     public void ForceEndBattleState()
     {
         _musicStack.Clear();
-        _battleActive = false;
+        BattleActive = false;
         _activeBattleId = null;
     }
 

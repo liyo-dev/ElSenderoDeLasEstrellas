@@ -4394,6 +4394,26 @@
             "guid": "44750de99f0c6014c83f04573a478d03",
             "shader": "Universal Render Pipeline/Lit",
             "cola": -1
+        },
+        {
+            "guid": "7aa480f889d86d749bec67b14bb109a3",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "9e057df4a6230ed4289a4864cf8cc19b",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "85eee0068f085544c814f7c35f6a7689",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
+        },
+        {
+            "guid": "79a5e3d62338c2143b3676c140ff0d6f",
+            "shader": "Universal Render Pipeline/Lit",
+            "cola": -1
         }
     ],
     "hayContorno": true,

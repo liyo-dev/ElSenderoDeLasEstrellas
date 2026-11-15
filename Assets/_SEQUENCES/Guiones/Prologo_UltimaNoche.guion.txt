@@ -1,4 +1,4 @@
-# ═══════════════════════════════════════════════════════════════════════════════════════════
+﻿# ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
 #  Guion de rodaje. Se hornea con «El Sendero → Cinemáticas → Guion → 2. Hornear el guion del prólogo».
 #  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
@@ -426,8 +426,9 @@ efecto EfectoDeVozBeat preset=ExteriorDia
 # ── 0. LA APERTURA (INC-1200) ─────────────────────────────────────────────────────────────
 # El Sendero, siglos antes: el Mago Oscuro pide su deseo, nota un poder lejano y la estrella llena la
 # pantalla; el mapa del mundo; el vuelo hasta el valle con el logo. Cada beat lleva su propia cámara.
-silencio 0.5
-efecto DeseoEnElSenderoBeat escenario=Assets/Art/Cinematic/Apertura/SenderoDeLaApertura.prefab mago=Assets/Prefabs/_MAGO_OSCURO.prefab segundos=31.5 dura=31.5
+# La música del deseo la arranca la propia secuencia (`musicId` = PROLOGO_DESEO): suena desde el
+# primer fotograma, sin esperar a un beat. Ver INC-1211.
+efecto DeseoEnElSenderoBeat escenario=Assets/Art/Cinematic/Apertura/SenderoDeLaApertura.prefab mago=Assets/Prefabs/_MAGO_OSCURO.prefab segundos=31.5 dura=31.5 ondaDelEstallido=Assets/_VFX/Prologo/Piloto/Sombra_Onda.prefab circuloMagico=Assets/_VFX/Prologo/Piloto/Sombra_Circulo.prefab destello=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab
 musica PROLOGO_AMANECER_VALLE
 # (INC-1200: el «mapa» es el propio mundo desde el aire, lo abre el vuelo) efecto MapaDeAperturaBeat mapa=Assets/Art/Cinematic/Apertura/MapaDeLaApertura.png segundos=7 dura=7
 ambiente AMBIENTE eventKey=Ambience_Prologo_Pueblo volumen=0.5
@@ -448,18 +449,18 @@ vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly03_P.prefab en=marip
 # Apertura: las nubes se abren y la cámara baja del cielo directa al maestro, que ya está en la
 # plaza. Los vecinos se vuelven a saludarle mientras llega la cámara (pistas con @entra).
 # El vuelo acaba donde empieza la grúa (cam_cielo), así que el corte no se nota.
-efecto VueloDeAperturaBeat logo=Assets/Art/Cinematic/Apertura/liyodev-logo-transparente.png nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab segundos=35 dura=34.6
+efecto VueloDeAperturaBeat logo=Assets/Art/Cinematic/Apertura/liyodev-logo-transparente.png nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab segundos=32 dura=31.6
 @entra
 # El vecino del mirador abre las contraventanas para saludar al maestro (de fondo).
 desde @entra+3.2 efecto HojasConBisagraBeat nombre="Mirador · Vecino" abrir=true segundos=0.8
 desde @entra+4.2 efecto HojasConBisagraBeat nombre="Mirador · Abuela" abrir=true segundos=0.9
 desde @entra+4.2 sonido SFX_Pueblo_Contraventana_Abre en=M_Mirador_Abuela volume=0.5 tono=0.95
 desde @entra+3.2 sonido SFX_Pueblo_Contraventana_Abre en=M_Mirador_Vecino volume=0.6
-plano medio archimago desde=cam_cielo altura=10 mover=cam_baja altura_final=1.15 altura_foco=1.0 lente=40 suave=1.2
-espera 5.5
+# El vuelo acaba sobre la plaza. En vez de la grúa lenta hasta el maestro, un fundido de papel y su cara.
+efecto ScreenFadeBeat fadeIn=true color=FFEDC2FF duration=0.2 waitForEnd=true
+plano medio archimago solo desde=cam_baja altura=1.15 altura_foco=1.0 lente=38
+efecto ScreenFadeBeat fadeIn=false color=FFEDC2FF duration=0.3 waitForEnd=true
 @saludo
-# Mismo sitio en el que acaba la grúa: no se nota el corte.
-plano medio archimago solo desde=cam_baja altura=1.15 altura_foco=1.0 lente=40
 archimago dice PROLOGO_MANANA_INTRO gesto=Talk01 cara=alegre
 # Solo el maestro y la Vecina: v01 anda por el otro lado de la plaza y, al meterlo en el plano,
 # la cámara se alejaba y el grupo entero quedaba en miniatura. La voz de v01 sale del grupo.

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap4_03_LaCampana_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_03_LaCampana
-  duracion: 11.245
+  duracion: 13.36102
   presentacion: 1
-  huella: "2026-11-12 07:30 \xB7 d6a733d0a64e5757d71700236fe26dca"
+  huella: "2026-11-15 08:58 \xB7 d6a733d0a64e5757d71700236fe26dca"
   actores:
   - id: Player
     alias: will
@@ -35,12 +35,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -330, y: 36.89159, z: 86}
       actor: 
-    - t: 3.7450001
+    - t: 4.528775
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 9.295
+    - t: 10.939183
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -51,17 +51,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -330, y: 36.89159, z: 86}
       actor: 
-    - t: 3.6950002
+    - t: 4.478775
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 7.415
+    - t: 8.660612
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 9.245
+    - t: 10.889183
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -75,35 +75,35 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 4.295
+      t: 5.078775
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 7.365
+      t: 8.610612
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 7.4449997
+      t: 8.690612
       tipo: 2
       estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 8.845
+      t: 10.489183
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 9.625
+      t: 11.457918
       tipo: 2
       estado: HeadNod01
       congelar: 0
@@ -113,9 +113,9 @@ MonoBehaviour:
     - t: 1.2
       emocion: sorpresa
       dura: 2
-    - t: 7.365
+    - t: 8.610612
       emocion: confuso
-      dura: 1.8299999
+      dura: 2.2285714
     visible: []
     deslizando: []
   - id: _ESTELA
@@ -136,7 +136,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -330, y: 36.89159, z: 86}
       actor: 
-    - t: 7.515
+    - t: 8.760612
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -147,17 +147,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -330, y: 36.89159, z: 86}
       actor: 
-    - t: 3.645
+    - t: 4.4287753
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 7.4649997
+    - t: 8.710611
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 9.195001
+    - t: 10.839184
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -178,50 +178,50 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 3.445
+      t: 4.2287755
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.4
-      t: 3.595
+      t: 4.378775
       tipo: 1
       estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 9.225
+      t: 10.869184
       tipo: 2
       estado: Shrug01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.3
-      t: 10.575001
+      t: 12.219183
       tipo: 1
       estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
       voz: 
     caras:
-    - t: 3.595
+    - t: 4.378775
       emocion: decidido
-      dura: 4.17
-    - t: 7.8654995
+      dura: 4.631837
+    - t: 9.210612
       emocion: sorpresa
-      dura: 1.43
-    - t: 9.145
+      dura: 1.8285714
+    - t: 10.789184
       emocion: picaro
-      dura: 1.6
+      dura: 2.0718367
     visible: []
     deslizando: []
   lineas:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 0.6
-    t1: 3.395
+    t1: 4.1787753
     actor: _ESTELA
     clave: CAP4_CAMPANA_01
     gesto: FoundSomething_NoWeapon
@@ -229,8 +229,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 3.595
-    t1: 7.365
+    t0: 4.378775
+    t1: 8.610612
     actor: _ESTELA
     clave: CAP4_CAMPANA_02
     gesto: 
@@ -238,8 +238,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 7.365
-    t1: 8.795
+    t0: 8.610612
+    t1: 10.439183
     actor: Player
     clave: CAP4_CAMPANA_03
     gesto: Question01
@@ -247,8 +247,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 9.145
-    t1: 10.345
+    t0: 10.789184
+    t1: 12.46102
     actor: _ESTELA
     clave: CAP4_CAMPANA_04
     gesto: Shrug01
@@ -257,7 +257,7 @@ MonoBehaviour:
   planos:
   - focos: []
     t0: 0
-    t1: 7.365
+    t1: 8.610612
     tipo: 0
     descripcion: general de will y estela
     posiciones:
@@ -274,18 +274,18 @@ MonoBehaviour:
     extras:
     - {x: -330, y: 36.89159, z: 86}
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8648523
+    alturaDelFoco: 0.89049673
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 7.365
-    t1: 11.245
+    t0: 8.610612
+    t1: 13.36102
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 7.365
+    - t: 8.610612
       p: {x: -330.39917, y: 36.893333, z: 63.798378}
     lente: 32
     lenteFinal: 0
@@ -307,13 +307,13 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705391
+      rid: 6540294631505527648
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 11.245
+    t: 13.36102
     beat:
-      rid: 6540294555676705392
+      rid: 6540294631505527649
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -331,7 +331,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705391
+    - rid: 6540294631505527648
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -339,7 +339,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705392
+    - rid: 6540294631505527649
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

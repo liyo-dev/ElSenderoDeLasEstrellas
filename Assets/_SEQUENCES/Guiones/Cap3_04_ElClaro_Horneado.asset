@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap3_04_ElClaro_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_04_ElClaro
-  duracion: 29.115
+  duracion: 21.965815
   presentacion: 1
-  huella: "2026-11-14 14:25 \xB7 4c4b85e5b5a4c31f537eec864d588f14"
+  huella: "2026-11-15 08:58 \xB7 4c4b85e5b5a4c31f537eec864d588f14"
   actores:
   - id: Player
     alias: will
@@ -56,7 +56,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Contrabandista2
-    - t: 17.755
+    - t: 16.958672
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Contrabandista2
+    - t: 18.873774
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -84,42 +89,35 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.355
+      t: 16.558672
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.705
+      t: 16.908672
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.785
+      t: 16.988672
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 20.351667
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 23.085
+      t: 18.473774
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.6
-      t: 23.435
+      t: 18.823774
       tipo: 1
       estado: ManoAlPecho
       congelar: 0
@@ -131,16 +129,16 @@ MonoBehaviour:
       dura: 0
     - t: 14.445
       emocion: enfado
-      dura: 3.26
-    - t: 17.705
+      dura: 2.4636736
+    - t: 16.908672
       emocion: pensativo
       dura: 0
-    - t: 17.705
+    - t: 16.908672
       emocion: preocupado
-      dura: 5.73
-    - t: 23.435
+      dura: 1.915102
+    - t: 18.823774
       emocion: decidido
-      dura: 5.08
+      dura: 2.5420408
     visible: []
     deslizando: []
   - id: NPC_Contrabandista2
@@ -176,12 +174,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 17.855
+    - t: 17.058672
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.585
+    - t: 18.973774
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -212,12 +210,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 17.805
+    - t: 17.008673
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.535
+    - t: 18.923775
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -280,7 +278,7 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 24.135
+      t: 19.523775
       tipo: 2
       estado: HeadShake01
       congelar: 0
@@ -325,12 +323,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 17.975
+    - t: 17.178673
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.705
+    - t: 19.093775
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -361,12 +359,12 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 17.925001
+    - t: 17.128674
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.655
+    - t: 19.043776
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -436,7 +434,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 14.445
-    t1: 17.305
+    t1: 16.508673
     actor: Player
     clave: CAP3_CLARO_05
     gesto: Angry01
@@ -444,8 +442,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 17.705
-    t1: 23.035
+    t0: 16.908672
+    t1: 18.423775
     actor: Player
     clave: CAP3_CLARO_06
     gesto: Talk02
@@ -453,8 +451,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 23.435
-    t1: 28.115
+    t0: 18.823774
+    t1: 20.965815
     actor: Player
     clave: CAP3_CLARO_07
     gesto: 
@@ -486,7 +484,7 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 13.445
-    t1: 29.115
+    t1: 21.965815
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -510,19 +508,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294600349713158
+      rid: 6540294631505527636
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 13.445
     beat:
-      rid: 6540294600349713159
+      rid: 6540294631505527637
     linea: 42
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 29.115
+    t: 21.965815
     beat:
-      rid: 6540294600349713160
+      rid: 6540294631505527638
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -544,7 +542,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294600349713158
+    - rid: 6540294631505527636
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -552,7 +550,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294600349713159
+    - rid: 6540294631505527637
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -565,7 +563,7 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 0.25
-    - rid: 6540294600349713160
+    - rid: 6540294631505527638
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

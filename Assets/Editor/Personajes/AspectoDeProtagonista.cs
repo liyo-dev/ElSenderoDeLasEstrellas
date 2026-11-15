@@ -206,6 +206,61 @@ public static class AspectoDeProtagonista
         finally { if (cerrar) EditorSceneManager.CloseScene(escena, true); }
     }
 
+    /// <summary>
+    /// Deja cada cuerpo del grupo con sus piezas de serie y sin las de otro protagonista. Hace falta
+    /// porque los tres son variantes del mismo cuerpo (<c>Prefabs/Personajes/_CUERPO_DEL_GRUPO</c>),
+    /// que es el de Will: una variante hereda lo que tenga encendido el común y, si solo enciende lo
+    /// suyo, se queda también con lo de Will (le pasaba a Estela y a Liam con <c>Hair16_Heroe</c>).
+    /// Se puede repetir.
+    /// </summary>
+    [MenuItem("El Sendero/Personajes/Cuerpos del grupo: cada uno con lo suyo")]
+    public static void CadaCuerpoConLoSuyo()
+    {
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("Cuerpos del grupo", "Hazlo fuera de Play."); return; }
+        var informe = new StringBuilder();
+        CadaCuerpoConLoSuyo(informe);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[CadaCuerpoConLoSuyo] " + informe.ToString().Replace('\n', ' '));
+        OrdenesDelEditor.Avisar("Cuerpos del grupo", informe.ToString());
+    }
+
+    public static void CadaCuerpoConLoSuyo(StringBuilder informe)
+    {
+        var fichas = new[] { FichaWill, FichaEstela, FichaLiam };
+        foreach (var f in fichas)
+        {
+            var propias = new HashSet<string>(f.Piezas.Where(p => p.DeSerie).Select(p => p.Nombre));
+            var ajenas = new HashSet<string>(fichas
+                .Where(o => !ReferenceEquals(o, f))
+                .SelectMany(o => o.Piezas)
+                .Where(p => p.DeSerie)
+                .Select(p => p.Nombre));
+
+            var raiz = AssetDatabase.LoadAssetAtPath<GameObject>(f.PrefabPropio) != null
+                ? PrefabUtility.LoadPrefabContents(f.PrefabPropio) : null;
+            if (raiz == null) { informe.AppendLine($"{f.Nombre}: no encuentro {f.PrefabPropio}."); continue; }
+            try
+            {
+                int apagadas = 0, encendidas = 0;
+                foreach (var r in raiz.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (propias.Contains(r.name))
+                    {
+                        if (!r.gameObject.activeSelf) { r.gameObject.SetActive(true); encendidas++; }
+                    }
+                    else if (ajenas.Contains(r.name) && r.gameObject.activeSelf)
+                    {
+                        r.gameObject.SetActive(false);
+                        apagadas++;
+                    }
+                }
+                if (apagadas + encendidas > 0) PrefabUtility.SaveAsPrefabAsset(raiz, f.PrefabPropio);
+                informe.AppendLine($"{f.Nombre}: {apagadas} de otro apagadas, {encendidas} suyas encendidas.");
+            }
+            finally { PrefabUtility.UnloadPrefabContents(raiz); }
+        }
+    }
+
     // ── Los protagonistas ────────────────────────────────────────────────────────────────────
 
     [MenuItem("El Sendero/Personajes/Estela: aspecto de hechicera")]

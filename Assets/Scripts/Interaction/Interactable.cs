@@ -511,12 +511,8 @@ public class Interactable : MonoBehaviour
     private bool IsInteractionBlockedByCurrentState(GameObject interactor)
     {
         // Regla global: si existe combate activo en el mundo, no se permite interactuar.
-        if (ActiveCombatRegistry.Count > 0)
-        {
-            ActiveCombatRegistry.CleanupDestroyedNPCs();
-            if (ActiveCombatRegistry.Count > 0)
-                return true;
-        }
+        if (Kits.Core.GameContext.Has(Situaciones.Combate))
+            return true;
 
         PlayerActionManager actionManager = null;
         if (interactor != null)

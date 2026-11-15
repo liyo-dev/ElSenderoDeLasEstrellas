@@ -23,6 +23,16 @@ namespace NarrativeGraphEditor
         bool Launch(NarrativeGraph graph, string stepGuid, IReadOnlyDictionary<string, int> choices, out string message);
     }
 
+    /// Un arranque que además sabe probar la escena que hay abierta, sin paso del grafo: para
+    /// escenas que todavía no están en la historia (una maqueta, un nivel nuevo). El jugador sale
+    /// de la ficha y del jugador de prueba, igual que en la prueba desde un paso.
+    public interface INarrativeOpenSceneLauncher
+    {
+        /// Entra en Play en la escena abierta con ese jugador, y deja el arranque del juego como
+        /// estaba al salir de Play.
+        bool PlayOpenScene(UnityEngine.Object player, out string message);
+    }
+
     public static class NarrativePlayLaunchers
     {
         /// The launcher in use: the game's if there is one, otherwise the basic one.
@@ -38,7 +48,7 @@ namespace NarrativeGraphEditor
     /// historia anterior al paso a través de las conexiones del juego y empieza el grafo en el paso.
     /// Si hay ficha del jugador, aplica los puntos de arranque y los retoques: en un ScriptableObject,
     /// antes de empezar (y lo deja como estaba al salir de Play); en un componente, al entrar en Play.
-    public sealed class BasicPlayLauncher : INarrativePlayLauncher
+    public sealed class BasicPlayLauncher : INarrativePlayLauncher, INarrativeOpenSceneLauncher
     {
         const string StartScenePref = "NarrativeGraph.Play.StartScene";
         const string RestoreKey = "NarrativeGraph.Play.RestoreStartScene";
@@ -118,8 +128,7 @@ namespace NarrativeGraphEditor
         }
 
         public bool Launch(NarrativeGraph graph, string stepGuid, IReadOnlyDictionary<string, int> choices, out string message)
-        {
-            message = null;
+        {            message = null;
             if (EditorApplication.isPlaying) { message = StoryText.T("Ya estás en Play.", "Already playing."); return false; }
             if (graph == null || string.IsNullOrEmpty(stepGuid)) { message = StoryText.T("Elige un paso.", "Pick a step."); return false; }
 
@@ -140,6 +149,35 @@ namespace NarrativeGraphEditor
                 EditorSceneManager.playModeStartScene = scene;
                 SessionState.SetBool(RestoreKey, true);
             }
+            EditorApplication.isPlaying = true;
+            return true;
+        }
+
+        /// Entra en Play en la escena abierta con ese jugador. El básico no sabe cómo se prepara el
+        /// jugador en el juego (lo hace el arranque del proyecto); sí deja el asset del jugador como
+        /// estaba al salir de Play.
+        public bool PlayOpenScene(UnityEngine.Object player, out string message)
+        {
+            message = null;
+            if (EditorApplication.isPlaying)
+            {
+                message = StoryText.T("Ya estás en Play.", "Already playing.");
+                return false;
+            }
+
+            var escena = EditorSceneManager.GetActiveScene();
+            if (!escena.IsValid() || string.IsNullOrEmpty(escena.path))
+            {
+                message = StoryText.T("Abre la escena que quieres probar.", "Open the scene you want to try.");
+                return false;
+            }
+
+            if (player != null && EditorUtility.IsPersistent(player))
+            {
+                SessionState.SetString(AssetPathKey, AssetDatabase.GetAssetPath(player));
+                SessionState.SetString(AssetSnapshotKey, EditorJsonUtility.ToJson(player));
+            }
+            EditorSceneManager.playModeStartScene = null;
             EditorApplication.isPlaying = true;
             return true;
         }

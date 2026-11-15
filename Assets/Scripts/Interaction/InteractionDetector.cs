@@ -355,12 +355,8 @@ public class InteractionDetector : MonoBehaviour
 
     private bool IsCombatBlockingInteractions()
     {
-        if (ActiveCombatRegistry.Count > 0)
-        {
-            ActiveCombatRegistry.CleanupDestroyedNPCs();
-            if (ActiveCombatRegistry.Count > 0)
-                return true;
-        }
+        if (Kits.Core.GameContext.Has(Situaciones.Combate))
+            return true;
 
         if (_battleModeController != null && _battleModeController.IsInBattleMode)
             return true;
