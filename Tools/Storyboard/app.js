@@ -170,9 +170,6 @@
       });
 
       canvas.addEventListener("pointerdown", (e) => empezarDibujo(e, panel.id));
-      canvas.addEventListener("pointermove", moverDibujo);
-      canvas.addEventListener("pointerup", terminarDibujo);
-      canvas.addEventListener("pointercancel", cancelarDibujo);
       canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
       img.addEventListener("load", () => {
@@ -267,7 +264,7 @@
   function ponerModo(modo) {
     estado.modo = modo;
     for (const boton of nodos.barra.querySelectorAll("[data-modo]")) {
-      boton.classList.toggle("activo", boton.dataset.modo === modo);
+      boton.classList.toggle("activa", boton.dataset.modo === modo);
     }
     for (const ref of refs.values()) {
       ref.canvas.classList.toggle("modo-nota", modo === "nota");
@@ -450,35 +447,53 @@
 
     if (a.tipo === "trazo" && a.puntos && a.puntos.length) {
       const puntos = a.puntos;
-      ctx.beginPath();
-      ctx.moveTo(puntos[0][0] * canvas.width, puntos[0][1] * canvas.height);
-      for (let i = 1; i < puntos.length; i++) {
-        ctx.lineTo(puntos[i][0] * canvas.width, puntos[i][1] * canvas.height);
+      if (puntos.length === 1) {
+        ctx.beginPath();
+        ctx.arc(puntos[0][0] * canvas.width, puntos[0][1] * canvas.height, ancho * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(puntos[0][0] * canvas.width, puntos[0][1] * canvas.height);
+        for (let i = 1; i < puntos.length; i++) {
+          ctx.lineTo(puntos[i][0] * canvas.width, puntos[i][1] * canvas.height);
+        }
+        ctx.stroke();
       }
-      ctx.stroke();
     } else if (a.tipo === "flecha" && a.p1 && a.p2) {
       const x1 = a.p1[0] * canvas.width, y1 = a.p1[1] * canvas.height;
       const x2 = a.p2[0] * canvas.width, y2 = a.p2[1] * canvas.height;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
+      if (Math.hypot(x2 - x1, y2 - y1) < ancho * 1.6) {
+        ctx.beginPath();
+        ctx.arc(x1, y1, ancho * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
 
-      const ang = Math.atan2(y2 - y1, x2 - x1);
-      const largo = Math.max(10, canvas.width / 50);
-      ctx.beginPath();
-      ctx.moveTo(x2, y2);
-      ctx.lineTo(x2 - largo * Math.cos(ang - 0.45), y2 - largo * Math.sin(ang - 0.45));
-      ctx.lineTo(x2 - largo * Math.cos(ang + 0.45), y2 - largo * Math.sin(ang + 0.45));
-      ctx.closePath();
-      ctx.fill();
+        const ang = Math.atan2(y2 - y1, x2 - x1);
+        const largo = Math.max(10, canvas.width / 50);
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - largo * Math.cos(ang - 0.45), y2 - largo * Math.sin(ang - 0.45));
+        ctx.lineTo(x2 - largo * Math.cos(ang + 0.45), y2 - largo * Math.sin(ang + 0.45));
+        ctx.closePath();
+        ctx.fill();
+      }
     } else if (a.tipo === "caja" && a.caja) {
-      ctx.strokeRect(
-        a.caja.x * canvas.width,
-        a.caja.y * canvas.height,
-        a.caja.w * canvas.width,
-        a.caja.h * canvas.height
-      );
+      if (a.caja.w * canvas.width < 2 && a.caja.h * canvas.height < 2) {
+        ctx.beginPath();
+        ctx.arc(a.caja.x * canvas.width, a.caja.y * canvas.height, ancho * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.strokeRect(
+          a.caja.x * canvas.width,
+          a.caja.y * canvas.height,
+          a.caja.w * canvas.width,
+          a.caja.h * canvas.height
+        );
+      }
     }
 
     ctx.restore();
@@ -726,6 +741,12 @@
       else cancelarDibujo();
     }
   });
+
+  // Los movimientos se escuchan en la ventana, no solo en el lienzo: así el trazo sigue vivo
+  // aunque el puntero salga del panel o el navegador esté capturando el gesto.
+  window.addEventListener("pointermove", moverDibujo);
+  window.addEventListener("pointerup", terminarDibujo);
+  window.addEventListener("pointercancel", cancelarDibujo);
 
   function escapar(texto) {
     return String(texto == null ? "" : texto)
