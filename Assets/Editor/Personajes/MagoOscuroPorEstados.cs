@@ -19,7 +19,7 @@ public static class MagoOscuroPorEstados
     const string Cabeza = "Head01_Male";
     const string Pelo = "Hair19_MagoOscuro";
 
-    [MenuItem("El Sendero/Personajes/Mago Oscuro: sombra y revelado", priority = 61)]
+    [MenuItem("El Sendero/Personajes/NPCs/Mago Oscuro: sombra y revelado", priority = 61)]
     public static void Preparar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Mago Oscuro", "Hazlo fuera de Play."); return; }

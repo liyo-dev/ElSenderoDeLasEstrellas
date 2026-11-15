@@ -42,7 +42,7 @@ public static partial class VestidoDelMundo
         {
             foreach (GameObject raiz in o.Raiz.gameObject.scene.GetRootGameObjects())
                 foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
-                    if (t.name == nombre && t.GetComponent<MeshFilter>() != null) return t;
+                    if (t.name == nombre && t.gameObject.activeInHierarchy && t.GetComponent<MeshFilter>() != null) return t;
             return null;
         }
 

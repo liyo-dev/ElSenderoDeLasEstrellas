@@ -15,14 +15,14 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_CONTRABANDISTA
     textId: DLG_CAP3_PILLADO_01
-    text: "\xBFMe ven\xEDas siguiendo, cr\xEDo? Mala idea."
+    text: "\xBFNos ven\xEDas siguiendo, cr\xEDo? Mala idea."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 3
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_PILLADO_02
-    text: "Esa luz que llevas no es un farol. \xBFQu\xE9 escondes?"
+    text: "Esa luz de la paja no es un farol. \xBFQu\xE9 llev\xE1is ah\xED?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 

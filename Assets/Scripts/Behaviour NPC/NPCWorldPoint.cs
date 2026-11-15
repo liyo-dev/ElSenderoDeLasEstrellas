@@ -178,7 +178,7 @@ public class NPCWorldPoint : MonoBehaviour
             if (wp == null || wp._isOccupied || wp.soloJugador) continue;
             if (activityFilter != NPCAmbientActivity.None && wp.activityType != activityFilter) continue;
 
-            // FIX INC-130 (5 sept 2026): no ofrecer puntos cuya actividad todavía no tiene clips de
+            // FIX INC-130: no ofrecer puntos cuya actividad todavía no tiene clips de
             // animación reales asignados en el Animator Controller (ver
             // NPCSimpleAnimator.HasWorkingAnimation). Sin este filtro, el NPC camina hasta el banco,
             // PlayAmbientActivity ahora rechaza la actividad, pero WalkToActivityState.Arrive() ya

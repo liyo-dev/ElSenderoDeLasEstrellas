@@ -79,7 +79,7 @@ namespace Game.NPC.States
         }
 
         // =================================================================================
-        // 🌳 APROXIMACIÓN MANUAL FUERA DEL NAVMESH (refugio bajo copas de árbol)
+        // APROXIMACIÓN MANUAL FUERA DEL NAVMESH (refugio bajo copas de árbol)
         // =================================================================================
         //
         // Muchos árboles tienen su malla completa (tronco + copa) marcada como Navigation
@@ -250,7 +250,7 @@ namespace Game.NPC.States
         }
 
         // =================================================================================
-        // 🗣️ ENCUENTROS SOCIALES (compartido entre WanderState e IdleState)
+        // ENCUENTROS SOCIALES (compartido entre WanderState e IdleState)
         // =================================================================================
 
         protected static readonly int SocialNpcLayerMask = LayerMask.GetMask("Interactable", "Default");

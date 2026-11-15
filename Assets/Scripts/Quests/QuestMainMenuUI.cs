@@ -60,7 +60,6 @@ public class QuestMainMenuUI : MonoBehaviour
     {
         get
         {
-            // FIX (flechas de teclado mueven al player con el menú detallado abierto):
             // Antes se exigía panelGroup.alpha > 0.001f, pero ShowMenu() deja alpha en
             // 0f de forma síncrona y solo el tween de DOTween lo sube en frames
             // posteriores. Como QuestMenuManager.RefreshMenuRegistration() lee IsOpen
@@ -643,12 +642,12 @@ public class QuestMainMenuUI : MonoBehaviour
             visibleScrollRect.vertical = true;
             visibleScrollRect.movementType = ScrollRect.MovementType.Clamped;
             visibleScrollRect.scrollSensitivity = 15f;
-            // Debug.Log($"[QuestMainMenuUI] ✅ ScrollRect visible configurado: content={visibleContentRoot.name}, viewport={visibleScrollRect.viewport?.name ?? "null"}");
+            // Debug.Log($"[QuestMainMenuUI] ScrollRect visible configurado: content={visibleContentRoot.name}, viewport={visibleScrollRect.viewport?.name ?? "null"}");
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[QuestMainMenuUI] ⚠️ ScrollRect o Content visible es null: scrollRect={visibleScrollRect != null}, content={visibleContentRoot != null}");
+            Debug.LogWarning($"[QuestMainMenuUI] ScrollRect o Content visible es null: scrollRect={visibleScrollRect != null}, content={visibleContentRoot != null}");
 #endif
         }
         
@@ -660,12 +659,12 @@ public class QuestMainMenuUI : MonoBehaviour
             hiddenScrollRect.vertical = true;
             hiddenScrollRect.movementType = ScrollRect.MovementType.Clamped;
             hiddenScrollRect.scrollSensitivity = 15f;
-            // Debug.Log($"[QuestMainMenuUI] ✅ ScrollRect oculto configurado: content={hiddenContentRoot.name}, viewport={hiddenScrollRect.viewport?.name ?? "null"}");
+            // Debug.Log($"[QuestMainMenuUI] ScrollRect oculto configurado: content={hiddenContentRoot.name}, viewport={hiddenScrollRect.viewport?.name ?? "null"}");
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[QuestMainMenuUI] ⚠️ ScrollRect o Content oculto es null: scrollRect={hiddenScrollRect != null}, content={hiddenContentRoot != null}");
+            Debug.LogWarning($"[QuestMainMenuUI] ScrollRect o Content oculto es null: scrollRect={hiddenScrollRect != null}, content={hiddenContentRoot != null}");
 #endif
         }
     }

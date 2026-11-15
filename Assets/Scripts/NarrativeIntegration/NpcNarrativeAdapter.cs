@@ -14,10 +14,16 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
 
     public Transform FindActor(string actorId)
     {
+        // El jugador no es un NPC del registro: se busca con los mismos ids que acepta
+        // SequenceActor («Player», «Actor_Will», «will»).
+        if (EsElJugador(actorId)) return Game.NPC.Common.PlayerLocator.ResolvePlayer();
         if (NarrativeActor.TryGetSinIA(actorId, out var sinIA)) return sinIA.transform;
         var npc = FindNpc(actorId);
         return npc != null ? npc.transform : null;
     }
+
+    static bool EsElJugador(string actorId)
+        => actorId == SequenceActor.PlayerId || actorId == "Actor_Will" || actorId == "will";
 
     static NPCBehaviourManagerV2 FindNpc(string actorId)
     {
@@ -91,11 +97,24 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
     // Actores retirados por una agenda: se apagan y se guardan aquí para poder devolverlos.
     readonly Dictionary<string, GameObject> _retirados = new();
 
+    public NpcNarrativeAdapter() => RepartoDeEscena.Tomado += TraerParaLaEscena;
+
+    /// Una cinemática toma al personaje: si la historia lo tenía retirado, vuelve ya, esté donde
+    /// esté el jugador. La cinemática manda en la pantalla y lo coloca ella.
+    void TraerParaLaEscena(string actorId)
+    {
+        if (!_retirados.TryGetValue(actorId, out var go)) return;
+        _retirados.Remove(actorId);
+        if (go != null) go.SetActive(true);
+    }
+
     public bool IsPresent(string actorId) => BuscarSinAviso(actorId) != null;
 
     public bool TrySetPresent(string actorId, bool present)
     {
         if (string.IsNullOrEmpty(actorId)) return true;
+        // Mientras una cinemática lo tiene, es suyo: la historia lo hará al terminar.
+        if (RepartoDeEscena.EstaTomado(actorId)) return false;
         if (!present)
         {
             var npc = BuscarSinAviso(actorId);
@@ -119,6 +138,7 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
     public bool TryPlaceUnseen(string actorId, string markId)
     {
         if (string.IsNullOrWhiteSpace(markId)) return true; // Sin marca no hay nada que hacer.
+        if (RepartoDeEscena.EstaTomado(actorId)) return false; // Ver TrySetPresent.
         // La marca o el actor pueden no estar aún (la agenda empieza antes de cargar el mundo):
         // se reintenta hasta que estén.
         var mark = SpawnAnchor.FindById(markId);

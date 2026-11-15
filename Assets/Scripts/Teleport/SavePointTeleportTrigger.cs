@@ -163,7 +163,7 @@ public class SavePointTeleportTrigger : MonoBehaviour
 
         /// <summary>
         /// True si no hay requisito configurado, o si el boss indicado en `requiredDefeatedBossId`
-        /// ya consta como derrotado en BossProgressTracker (mismo tracker que usa StartBattleNode
+        /// ya consta como derrotado en BossProgressTracker (mismo tracker que usa PedirBatalla
         /// para no volver a lanzar una batalla ya ganada al restaurar una partida).
         /// </summary>
         private bool RequirementSatisfied()

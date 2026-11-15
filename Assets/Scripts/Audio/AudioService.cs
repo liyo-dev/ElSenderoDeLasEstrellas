@@ -96,7 +96,7 @@ public sealed class AudioService : MonoBehaviour
     float AtaqueDeAtenuacion => VoiceDuck?.attackSeconds ?? 0f;
     float RelajacionDeAtenuacion => VoiceDuck?.releaseSeconds ?? 0f;
     bool _battleActive;
-    // FIX (5 sep 2026): id de la batalla cuya música está activa ahora mismo. Ver guard
+    // id de la batalla cuya música está activa ahora mismo. Ver guard
     // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
     // ya cableada desde el arranque + fallback directo de BossArenaController.StartBattleInternal()
     // "por si el wiring llega tarde"), y sin este guard BeginBattleMusic() se ejecutaba las dos
@@ -396,7 +396,7 @@ public sealed class AudioService : MonoBehaviour
     // vez que se destapa la imagen. Si para entonces hay una cinemática, manda la suya.
     bool _musicaEsperandoAlTelon;
 
-    // (6 oct 2026) La pantalla también puede quedar tapada sin telón: una cinemática que acaba
+    // La pantalla también puede quedar tapada sin telón: una cinemática que acaba
     // en negro (FeedbackService) y lo que viene detrás (un rótulo «A la mañana siguiente…», la
     // siguiente cinemática). Al final de «Los planes de Liam» se teletransporta a la casa de Will
     // con la pantalla así, sonaba la música de la habitación durante el rótulo y, a los pocos
@@ -456,7 +456,7 @@ public sealed class AudioService : MonoBehaviour
         if (CinematicSequencerBase.AnySequenceActive) return;
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
 
-        // (21 sep) Con la pantalla en negro no suena la música del interior: es lo que hacía sonar
+        // Con la pantalla en negro no suena la música del interior: es lo que hacía sonar
         // la habitación de Will al empezar partida nueva, antes del prólogo. Espera al telón
         // (o a que se retire el fundido de pantalla, ver PantallaTapada).
         if (PantallaTapada) { EsperarPantallaDestapada(); return; }
@@ -604,7 +604,7 @@ public sealed class AudioService : MonoBehaviour
     // Batallas
     void BeginBattleMusic(AudioGraphProfile.BattleRule r)
     {
-        // FIX (5 sep 2026): BATTLE_START:{id} puede llegar a este método dos veces en el mismo
+        // BATTLE_START:{id} puede llegar a este método dos veces en el mismo
         // frame (señal narrativa en vivo + fallback directo de BossArenaController) — sin este
         // guard, la segunda llamada volvía a empujar _musicStack (quedando desbalanceado para
         // siempre) y reiniciaba el crossfade a mitad de camino. Idempotente por battleId: si esta
@@ -657,7 +657,7 @@ public sealed class AudioService : MonoBehaviour
             _musicB.loop = r.loop;
             RestartMusicClipFromBeginning(r.music, r.fade);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[AudioService] 🔁 Música de minijuego '{r.minigameId}' reiniciada desde el inicio");
+            Debug.Log($"[AudioService] Música de minijuego '{r.minigameId}' reiniciada desde el inicio");
 #endif
             return;
         }
@@ -672,7 +672,7 @@ public sealed class AudioService : MonoBehaviour
         
         PlayMusic(r.music, r.fade);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' iniciada");
+        Debug.Log($"[AudioService] Música de minijuego '{r.minigameId}' iniciada");
 #endif
     }
 
@@ -1379,7 +1379,7 @@ public sealed class AudioService : MonoBehaviour
     // Fuentes de musica ritual (el lecho del cantico): van al bus de musica y no se
     // duckean con la voz, porque si no el conjuro se queda sin musica.
     readonly HashSet<AudioSource> _musicaRitual = new();
-    // FIX M4 (auditoría 2026-08-07): fade-out en curso por loopId, para poder cancelarlo si el
+    // fade-out en curso por loopId, para poder cancelarlo si el
     // mismo loop se reinicia (PlayLoopingSFX) o si se pide otro StopLoopingSFX antes de que
     // termine el anterior. Antes, un fade-out viejo seguía corriendo tras rearrancar el loop y
     // acababa cortando en seco el loop nuevo cuando el temporizador viejo llegaba a cero.
@@ -1412,7 +1412,7 @@ public sealed class AudioService : MonoBehaviour
         if (musicaRitual) _musicaRitual.Add(src);
         else _musicaRitual.Remove(src);
 
-        // FIX M4: si había un fade-out en curso para este loopId (StopLoopingSFX con fadeOut>0
+        // si había un fade-out en curso para este loopId (StopLoopingSFX con fadeOut>0
         // seguido de un reinicio), cancelarlo — si no, el fade viejo termina llamando src.Stop()
         // sobre el loop recién reiniciado.
         if (_loopFadeRoutines.TryGetValue(loopId, out var pendingFade) && pendingFade != null)
@@ -1442,7 +1442,7 @@ public sealed class AudioService : MonoBehaviour
         if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null) return;
         if (!src.isPlaying) return;
 
-        // FIX M4: cancelar cualquier fade-out previo de este mismo loopId antes de arrancar uno
+        // cancelar cualquier fade-out previo de este mismo loopId antes de arrancar uno
         // nuevo (o un Stop en seco), para no dejar dos corrutinas escribiendo src.volume a la vez.
         if (_loopFadeRoutines.TryGetValue(loopId, out var existingFade) && existingFade != null)
         {
@@ -1906,7 +1906,7 @@ public sealed class AudioService : MonoBehaviour
 
     IEnumerator ReturnWhenDone(AudioSource src, Queue<AudioSource> pool)
     {
-        // FIX M4 (auditoría 2026-08-07): WaitForSeconds está escalado por Time.timeScale. En
+        // WaitForSeconds está escalado por Time.timeScale. En
         // pausa (timeScale=0) esta corrutina nunca avanza, así que la fuente SFX nunca vuelve al
         // pool y Rent2D/Rent3D siguen creando "SFX2D_dyn"/"SFX3D_dyn" sin límite mientras dure la
         // pausa. WaitForSecondsRealtime no depende de timeScale.

@@ -181,7 +181,7 @@ public class PerformanceCapture : MonoBehaviour
         if (FrameTimingManager.GetLatestTimings(1, _frameTimingBuffer) > 0)
         {
             var ft = _frameTimingBuffer[0];
-            // FIX (revisión rendimiento 24/08, Parte 17): FrameTimingManager a veces devuelve un
+            // FrameTimingManager a veces devuelve un
             // valor absurdamente grande en vez de un centinela limpio de "sin datos" (visto en una
             // captura real: 439.208.083.456 ms en un único frame), lo que contamina el promedio de
             // todo el bucket. "> 0" ya filtraba el -1/0 de "sin datos", pero no un valor imposible
@@ -272,7 +272,7 @@ public class PerformanceCapture : MonoBehaviour
             _lastSaveFailed = true;
             _lastSavedPath = ex.Message;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[PerformanceCapture] ❌ No se pudo guardar la captura: {ex}");
+            Debug.LogError($"[PerformanceCapture] No se pudo guardar la captura: {ex}");
 #endif
         }
 

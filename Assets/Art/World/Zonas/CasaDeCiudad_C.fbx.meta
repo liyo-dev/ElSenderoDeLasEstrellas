@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Arena
+    second: {fileID: 2100000, guid: 2bf58f5302c93984f80fe546569a0e57, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Boya
     second: {fileID: 2100000, guid: 56eecea46997e094390c81a6ade9363b, type: 2}
   - first:
@@ -87,6 +92,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Geranio
+    second: {fileID: 2100000, guid: a9f27f69aeab7c4458180b18f8e78333, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Hiedra
     second: {fileID: 2100000, guid: c48a409c94c46fc4c952af1a5cbacc12, type: 2}
   - first:
@@ -122,8 +132,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: MaderaRisco
+    second: {fileID: 2100000, guid: 9c101c1330190984499c4e46e7412740, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Musgo
     second: {fileID: 2100000, guid: a56d449b4aa1ee5419deb0ce1f0019fb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Nieve
+    second: {fileID: 2100000, guid: 916f61d7367f0c24294f37fcce9f9e4d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -192,6 +212,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: PiedraRisco
+    second: {fileID: 2100000, guid: 6000ae47ea557844c8418221cb816922, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PiedraRiscoOscura
+    second: {fileID: 2100000, guid: 06cb1e306e83cc746890bdeaf1bb5e20, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: PiedraTemplo
     second: {fileID: 2100000, guid: 0862eb036c84e3d4aa1762184f3dd8c8, type: 2}
   - first:
@@ -204,6 +234,16 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: PizarraOscura
     second: {fileID: 2100000, guid: e380e74c79f7bc540b6db9cb3f875e70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PizarraRisco
+    second: {fileID: 2100000, guid: 473284ddd2b36004c97ae20b81fa0bc3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PizarraRiscoSombra
+    second: {fileID: 2100000, guid: f90693cd516795b468cba47bbf437588, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

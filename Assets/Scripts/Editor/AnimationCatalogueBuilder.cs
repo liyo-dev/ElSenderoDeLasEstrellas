@@ -29,11 +29,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class AnimationCatalogueBuilder
 {
-    private const string PersonajePath = "Assets/_NPCs/Eldran.prefab";
+    private const string PersonajePath = "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab";
     private const string EscenaPath    = "Assets/Scenes/Test/CatalogoAnimaciones.unity";
     private const string IndicePath    = "docs/catalogo-animaciones.md";
 
-    [MenuItem("El Sendero/Personajes/Catálogo de animaciones (crear escena de prueba)")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Catálogo de animaciones (escena de prueba)")]
     public static void Construir()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

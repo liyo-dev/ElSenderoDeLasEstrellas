@@ -61,7 +61,7 @@ namespace Core.InputGlyphs.EditorTools
             },
         };
 
-        [MenuItem("Tools/Input Glyphs/Asignar Icon Sets a todos los consumidores")]
+        [MenuItem("El Sendero/Interfaz/Iconos de botones: asignarlos en todo el proyecto")]
         public static void AssignToAll()
         {
             var resolved = new List<(Target target, InteractionHintIconSet asset)>();

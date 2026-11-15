@@ -43,7 +43,7 @@ public class DreamBackgroundController : MonoBehaviour
     void Awake()
     {
         _rect      = GetComponent<RectTransform>();
-        // FIX (11 sep 2026): "el fondo solo se ve en el lado izquierdo" — el RectTransform de este
+        // "el fondo solo se ve en el lado izquierdo" — el RectTransform de este
         // GameObject se coloca a mano como hijo del Canvas del sequencer, y si sus anchors no
         // quedan estirados a pantalla completa (ej. mitad izquierda por accidente en el Editor),
         // _rect.rect.size de abajo solo cubre ese hueco: los blobs nacen y flotan dentro de esa

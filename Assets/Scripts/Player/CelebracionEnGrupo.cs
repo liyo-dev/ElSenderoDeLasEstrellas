@@ -21,7 +21,7 @@ public struct PoseDeVictoria
     }
 }
 
-/// Cómo se hace la foto de victoria del grupo. Vive en PlayerBattleModeController.
+/// Cómo se hace la foto de victoria del grupo. Vive en CelebracionDeVictoria.
 [Serializable]
 public sealed class AjustesCelebracionEnGrupo
 {
@@ -61,7 +61,7 @@ public sealed class AjustesCelebracionEnGrupo
 ///
 /// Los compañeros se mueven con el sistema de secuencias (SequenceActor + SequenceMovement): se
 /// retienen al empezar y se sueltan en Soltar(). El jugador no se mueve de su sitio; lo que hace él
-/// lo lleva PlayerBattleModeController. Ver INC-542.
+/// lo lleva su PlayerBattleModeController, a petición de CelebracionDeVictoria. Ver INC-542.
 public sealed class CelebracionEnGrupo
 {
     private sealed class Integrante

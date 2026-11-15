@@ -15,7 +15,7 @@ namespace Game.NPC.Modules
     [RequireComponent(typeof(NPCBehaviourManagerV2))]
     public class NPCCombatLifecycleHandler : MonoBehaviour
     {
-        #region ⚙️ Configuration
+        #region Configuration
         [Header("💥 Damage Feedback")]
         [SerializeField] private bool playDamageAnimation = true;
         [SerializeField, Range(0f, 2f)] private float damageStunDuration = 0.8f; // Reducido un poco para mayor dinamismo
@@ -45,21 +45,21 @@ namespace Game.NPC.Modules
         [SerializeField, Range(0f, 1f)] private float deathReturnDuration = 0.35f;
         #endregion
 
-        #region 🔌 Dependencies
+        #region Dependencies
         private NPCBehaviourManagerV2 _manager;
         private Damageable _damageable;
         private NPCSimpleAnimator _animator;
         private NavMeshAgent _agent;
         private NPCCombatBrain _brain;
         private NPCShieldController _shieldController;
-        // ✅ FIX #25 (auditoría combate, 15 ago 2026): antes se llamaba GetComponent<NPCTeamMember>()
+        // FIX #25: antes se llamaba GetComponent<NPCTeamMember>()
         // en OnDied/DeathRoutine/HandleGetUpDizzy/HandleMoveToAnchor/MoveTeamMembersToRandomPoints
         // (5 sitios distintos). Se cachea una sola vez... pero NO en Awake(): NPCTeamMember lo añade
         // dinámicamente NPCCombatTeam.Start() (ver NPCCombatTeam.cs, "AddComponent<NPCTeamMember>()"),
         // y Unity ejecuta TODOS los Awake() de la escena antes que CUALQUIER Start() — así que en el
         // momento de este Awake() el componente todavía no existe en el GameObject y GetComponent
         // devolvía null para siempre (el campo nunca se refrescaba después).
-        // ✅ FIX #26 (16 ago 2026, bug reportado por Raúl - "combate dual"): ese null permanente
+        // FIX #26 (16 ago 2026, bug reportado por Raúl - "combate dual"): ese null permanente
         // hacía que isInTeam fuera SIEMPRE false para cualquier NPC en equipo (dúo o grupo) — la
         // música/animación de victoria sonaba al derrotar al PRIMER enemigo (no al último) y la
         // música de combate se restauraba (se quitaba) justo después de esa primera derrota, en vez
@@ -81,7 +81,7 @@ namespace Game.NPC.Modules
             }
         }
 
-        // ✅ CAMBIO: Obtener _config dinámicamente para asegurar que siempre tenga los valores actualizados
+        // CAMBIO: Obtener _config dinámicamente para asegurar que siempre tenga los valores actualizados
         // Esto es necesario porque NPCInteractiveNarrativeExecutor puede actualizar combatConfig después de Start()
         private NPCCombatConfig _config => _manager?.Configuration?.combatConfig;
 
@@ -98,7 +98,7 @@ namespace Game.NPC.Modules
         }
         #endregion
 
-        #region 📊 State
+        #region State
         public bool IsDefeatedAndInactive { get; private set; }
         public bool IsStunned { get; private set; }
         
@@ -133,46 +133,46 @@ namespace Game.NPC.Modules
             _agent = GetComponent<NavMeshAgent>();
             _brain = GetComponent<NPCCombatBrain>();
             _shieldController = GetComponent<NPCShieldController>();
-            // ✅ FIX #26: NO cachear NPCTeamMember aquí — todavía no existe (ver comentario en la
+            // FIX #26: NO cachear NPCTeamMember aquí — todavía no existe (ver comentario en la
             // declaración del campo más arriba). Se resuelve perezosamente vía ResolvedTeamMember.
 
-            // ✅ CRÍTICO: Configurar destroyOnDeath=false INMEDIATAMENTE en Awake
+            // CRÍTICO: Configurar destroyOnDeath=false INMEDIATAMENTE en Awake
             // Esto se aplica tanto si el componente ya existía como si se acaba de añadir
             if (_damageable != null)
             {
                 _damageable.SetDestroyOnDeath(false);
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                // Debug.Log($"[Lifecycle] ✅ destroyOnDeath establecido a FALSE en Awake para {name} (actual valor: {_damageable.GetComponent<Damageable>() != null})");
+                // Debug.Log($"[Lifecycle] destroyOnDeath establecido a FALSE en Awake para {name} (actual valor: {_damageable.GetComponent<Damageable>() != null})");
                 #endif
             }
             else
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ Damageable no encontrado en Awake para {name} - esperando que se añada después");
+                Debug.LogWarning($"[Lifecycle] Damageable no encontrado en Awake para {name} - esperando que se añada después");
                 #endif
             }
         }
 
         private void Start()
         {
-            // ✅ _config ahora es una propiedad que obtiene el valor dinámicamente
+            // _config ahora es una propiedad que obtiene el valor dinámicamente
             // No necesita asignación aquí
 
-            // ✅ Verificación de respaldo: Si Damageable no estaba en Awake, obtenerlo ahora
+            // Verificación de respaldo: Si Damageable no estaba en Awake, obtenerlo ahora
             if (_damageable == null)
             {
                 _damageable = GetComponent<Damageable>();
                 if (_damageable != null)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[Lifecycle] ⚠️ Damageable se añadió después de Awake - configurando destroyOnDeath=false ahora");
+                    Debug.LogWarning($"[Lifecycle] Damageable se añadió después de Awake - configurando destroyOnDeath=false ahora");
                     #endif
                     _damageable.SetDestroyOnDeath(false);
                 }
                 else
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogError($"[Lifecycle] ❌ Damageable SIGUE siendo null en Start() para {name}");
+                    Debug.LogError($"[Lifecycle] Damageable SIGUE siendo null en Start() para {name}");
 #endif
                     return;
                 }
@@ -181,7 +181,7 @@ namespace Game.NPC.Modules
             // Verificación final: Asegurar que destroyOnDeath esté en false
             _damageable.SetDestroyOnDeath(false);
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Debug.Log($"[Lifecycle] 🔒 Verificación final en Start: destroyOnDeath=false para {name}");
+            // Debug.Log($"[Lifecycle] Verificación final en Start: destroyOnDeath=false para {name}");
             #endif
 
             // Suscribirse a eventos
@@ -189,7 +189,7 @@ namespace Game.NPC.Modules
             _damageable.OnDied += OnDied;
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Debug.Log($"[Lifecycle] ✅ Suscrito a eventos OnDamaged y OnDied para {name}");
+            // Debug.Log($"[Lifecycle] Suscrito a eventos OnDamaged y OnDied para {name}");
             #endif
         }
 
@@ -202,7 +202,7 @@ namespace Game.NPC.Modules
             }
             // Salvaguarda final por si se destruye durante slow-mo: cancelamos el efecto cinematográfico
             // (restaura FOV y libera _isEffectActive, si no quedaría bloqueado para la próxima muerte).
-            // FIX C6 (auditoría 2026-08-07): antes forzaba Time.timeScale=1 "por si acaso", pisando
+            // antes forzaba Time.timeScale=1 "por si acaso", pisando
             // cualquier otro efecto activo (hitstop, cinemática) que no tuviera relación con esta
             // muerte. CancelDeathEffect() ya libera la petición de este NPC en TimeScaleArbiterService
             // (vía DeathCameraEffect.CancelEffect); no hace falta tocar Time.timeScale aquí.
@@ -210,7 +210,7 @@ namespace Game.NPC.Modules
         }
 
         // =================================================================================
-        // ⚔️ DAMAGE HANDLING
+        // DAMAGE HANDLING
         // =================================================================================
 
         public void StartCasting(string animName, int layer) { _isCasting = true; }
@@ -229,12 +229,12 @@ namespace Game.NPC.Modules
                     _manager.ForceEnterCombat(attacker);
             }
 
-            // 🔍 DEBUG: Log de vida actual
+            // DEBUG: Log de vida actual
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] ⚔️ {name} recibió {amount} de daño - Vida: {_damageable.Current}/{_damageable.Max} - IsAlive: {_damageable.IsAlive}");
+            Debug.Log($"[Lifecycle] {name} recibió {amount} de daño - Vida: {_damageable.Current}/{_damageable.Max} - IsAlive: {_damageable.IsAlive}");
             #endif
 
-            // ✅ Notificar al CombatBrain (para detectar ataques por la espalda durante búsqueda)
+            // Notificar al CombatBrain (para detectar ataques por la espalda durante búsqueda)
             if (_brain != null && _manager != null && _manager.Context != null && _manager.Context.Player != null)
             {
                 _brain.OnTakeDamage(_manager.Context.Player.position);
@@ -244,10 +244,10 @@ namespace Game.NPC.Modules
             if (_isCasting)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] ⚡ Interrumpiendo hechizo por daño!");
+                Debug.Log($"[Lifecycle] Interrumpiendo hechizo por daño!");
                 #endif
                 _isCasting = false;
-                // ✅ FIX #19 (auditoría combate, 15 ago 2026): StopAllCoroutines() detenía el FSM del
+                // FIX #19: StopAllCoroutines() detenía el FSM del
                 // brain sin dejar nada que lo reiniciara — un NPC golpeado mientras lanzaba un hechizo
                 // se quedaba con la FSM de combate congelada para siempre (ningún otro código volvía a
                 // llamar a StartCoroutine(FSM_Loop())). InterruptCasting() para la corrutina actual Y
@@ -264,16 +264,16 @@ namespace Game.NPC.Modules
             IsStunned = true;
             _isInvulnerable = true;
 
-            // ✅ Si este golpe es LETAL, aplicar slow-mo AHORA (durante la animación de Hit)
+            // Si este golpe es LETAL, aplicar slow-mo AHORA (durante la animación de Hit)
             bool isLethalHit = !_damageable.IsAlive;
             
             if (isLethalHit && enableDeathEffects)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 💀 GOLPE LETAL detectado - Aplicando slow motion cinematográfico durante animación de Hit");
+                Debug.Log($"[Lifecycle] GOLPE LETAL detectado - Aplicando slow motion cinematográfico durante animación de Hit");
                 #endif
                 FeedbackService.CameraShake(cameraShakeIntensity * 2f, 0.5f);
-                // ✅ Usamos el efecto cinematográfico (zoom + easing de entrada/salida) en vez de un
+                // Usamos el efecto cinematográfico (zoom + easing de entrada/salida) en vez de un
                 // Time.timeScale seco: el corte instantáneo se sentía como un cuelgue en vez de un
                 // golpe deliberado. El zoom hacia el enemigo comunica que la pausa es intencional.
                 FeedbackService.TriggerDeathEffect(transform, deathSlowMoScale, deathSlowMoDuration, deathZoomFactor, deathZoomDuration, deathReturnDuration);
@@ -285,7 +285,7 @@ namespace Game.NPC.Modules
             if (!isLethalHit && enableHitStop) FeedbackService.HitStop(hitStopTimeScale, hitStopDuration);
 
             // 2. Detener movimiento físico
-            // ✅ FIX (04 sep 2026): mismo patrón de bug que Spider1AI.EnterChaseMode (incidencia de
+            // mismo patrón de bug que Spider1AI.EnterChaseMode (incidencia de
             // hoy) — tocar _agent.isStopped comprobando solo _agent.enabled no basta. Desde que
             // NPCBehaviourManagerV2 tiene el sistema de sueño por distancia (EnterFarState/
             // ExitFarState, hoy), un NPC recién "despertado" puede tener _agent.enabled = true un
@@ -306,7 +306,7 @@ namespace Game.NPC.Modules
                 // misma duración para mantener sincronizado el stun del NPC con el efecto visual.
                 yield return new WaitForSecondsRealtime(deathSlowMoDuration);
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] ⏱️ Slow motion cinematográfico terminado");
+                Debug.Log($"[Lifecycle] Slow motion cinematográfico terminado");
                 #endif
             }
             else
@@ -314,7 +314,7 @@ namespace Game.NPC.Modules
                 yield return new WaitForSeconds(damageStunDuration);
             }
 
-            // ✅ FIX #2 (auditoría combate, 15 ago 2026): condición de carrera DamageSequence/DeathRoutine.
+            // FIX #2: condición de carrera DamageSequence/DeathRoutine.
             // Un golpe casi simultáneo (o daño en área) puede disparar OnDied() — y por tanto DeathRoutine(),
             // que pasa a ser dueño del agent/animator para la secuencia cinemática de muerte — mientras
             // esta corrutina seguía suspendida en el stun de arriba. Sin este guard, al reanudar podía
@@ -353,19 +353,19 @@ namespace Game.NPC.Modules
         }
 
         // =================================================================================
-        // 💀 DEATH SEQUENCE
+        // DEATH SEQUENCE
         // =================================================================================
 
         private void OnDied()
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 💀💀💀 OnDied() LLAMADO para {name} - _isProcessingDefeat: {_isProcessingDefeat}");
+            Debug.Log($"[Lifecycle] OnDied() LLAMADO para {name} - _isProcessingDefeat: {_isProcessingDefeat}");
             #endif
             
             if (_isProcessingDefeat)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ OnDied() ya en proceso, ignorando duplicado");
+                Debug.LogWarning($"[Lifecycle] OnDied() ya en proceso, ignorando duplicado");
                 #endif
                 return;
             }
@@ -375,7 +375,7 @@ namespace Game.NPC.Modules
             _yaHabiaCaidoAntes = FlagDePartida.EstaPuesto(ClaveDeDerrota());
             FlagDePartida.Marcar(ClaveDeDerrota());
             
-            // ✅ Notificar al equipo si pertenece a uno
+            // Notificar al equipo si pertenece a uno
             var teamMember = ResolvedTeamMember;
             if (teamMember != null)
             {
@@ -388,12 +388,12 @@ namespace Game.NPC.Modules
         private IEnumerator DeathRoutine()
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 💀 Iniciando secuencia de muerte: {name}");
+            Debug.Log($"[Lifecycle] Iniciando secuencia de muerte: {name}");
             #endif
             
-            // ✅ DEBUG: Verificar configuración de eventos de derrota
+            // DEBUG: Verificar configuración de eventos de derrota
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🔍 Config de derrota para {name}:");
+            Debug.Log($"[Lifecycle] Config de derrota para {name}:");
             #endif
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"    - _config es null: {_config == null}");
@@ -413,13 +413,13 @@ namespace Game.NPC.Modules
 
             // 1. DETENER TODO INMEDIATAMENTE
             if (_brain) _brain.StopCombat();
-            // ✅ FIX #12 (auditoría combate, 15 ago 2026): parada explícita del escudo aquí también.
+            // FIX #12: parada explícita del escudo aquí también.
             // _brain.StopCombat() ya para el escudo si _brain existe, pero este NPC puede tener
             // NPCShieldController sin _brain (o con _brain null por timing) — sin este guard extra,
             // el NPC podía morir a mitad de una animación de defensa y quedarse con el prefab del
             // escudo instanciado y visible sobre el cadáver.
             _shieldController?.StopDefending();
-            // ✅ FIX (04 sep 2026): mismo guard isOnNavMesh que en DamageSequence (ver comentario
+            // mismo guard isOnNavMesh que en DamageSequence (ver comentario
             // arriba) — un NPC muerto por un golpe justo al "despertar" del sueño por distancia
             // podía llegar aquí con _agent.enabled = true pero isOnNavMesh todavía false.
             if (_agent && _agent.enabled && _agent.isOnNavMesh) { _agent.isStopped = true; _agent.velocity = Vector3.zero; }
@@ -429,17 +429,17 @@ namespace Game.NPC.Modules
                 _manager.Context.WasDefeatedInCombat = true;
             }
             
-            // ✅ NUEVO: Enviar evento de derrota ANTES de la muerte si está configurado así
+            // NUEVO: Enviar evento de derrota ANTES de la muerte si está configurado así
             if (_config != null && _config.sendEventOnDefeat && _config.sendDefeatEventBeforeDeath && !string.IsNullOrEmpty(_config.defeatEventKey))
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 📤 Enviando evento de derrota ANTES de muerte: '{_config.defeatEventKey}'");
+                Debug.Log($"[Lifecycle] Enviando evento de derrota ANTES de muerte: '{_config.defeatEventKey}'");
                 #endif
                 DefaultNarrativeSignals.Instance?.RaiseCustom(_config.defeatEventKey, name);
             }
 
             // 2. VFX inicial
-            // ✅ FIX: VfxPoolService en vez de Instantiate suelto — el prefab no se autodestruía
+            // VfxPoolService en vez de Instantiate suelto — el prefab no se autodestruía
             // y quedaba flotando en el suelo indefinidamente tras terminar el combate.
             if (deathVFXPrefab) VfxPoolService.Instance.Play(deathVFXPrefab, transform.position + deathVFXOffset, Quaternion.identity, 3f);
 
@@ -451,11 +451,11 @@ namespace Game.NPC.Modules
                 transform.rotation = Quaternion.LookRotation(dir);
             }
 
-            // ✅ 4. Pequeña pausa para que termine la animación de Hit
+            // 4. Pequeña pausa para que termine la animación de Hit
             // El slow-mo ya se aplicó en DamageSequence durante la animación de Hit
             yield return new WaitForSeconds(0.1f);
 
-            // ✅ 5. INICIAR ANIMACIÓN DE MUERTE INMEDIATAMENTE
+            // 5. INICIAR ANIMACIÓN DE MUERTE INMEDIATAMENTE
             PostDeathBehavior behavior = _config != null ? _config.postDeathBehavior : PostDeathBehavior.GetUpDizzy;
             
             if (behavior == PostDeathBehavior.GetUpDizzy && _animator)
@@ -463,16 +463,16 @@ namespace Game.NPC.Modules
                 // Iniciar animación de muerte YA
                 _animator.PlayDeath();
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 💀 Animación de muerte iniciada - transición directa desde Hit");
+                Debug.Log($"[Lifecycle] Animación de muerte iniciada - transición directa desde Hit");
                 #endif
             }
 
-            // ✅ VERIFICAR SI PERTENECE A UN EQUIPO
+            // VERIFICAR SI PERTENECE A UN EQUIPO
             var teamMember = ResolvedTeamMember;
             bool isInTeam = teamMember != null && teamMember.HasTeam;
             bool isLastTeamMember = isInTeam && teamMember.Team.IsTeamDefeated;
             
-            // ✅ 6. CELEBRACIÓN DEL JUGADOR
+            // 6. CELEBRACIÓN DEL JUGADOR
             // Solo celebrar si: NO es equipo, O es el último miembro del equipo
             bool shouldCelebrate = !isInTeam || isLastTeamMember;
             
@@ -483,21 +483,21 @@ namespace Game.NPC.Modules
                     if (IsPlayerDeadOrGameOverActive())
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log("[Lifecycle] ⚠️ Jugador ya murió (game over en curso) — se omite la celebración de victoria.");
+                        Debug.Log("[Lifecycle] Jugador ya murió (game over en curso) — se omite la celebración de victoria.");
                         #endif
                     }
                     else
                     {
-                        var playerVictory = playerGo.GetComponent<PlayerBattleModeController>();
+                        PlayerService.TryGetComponent(out CelebracionDeVictoria playerVictory, allowSceneLookup: false);
                         if (playerVictory != null)
                         {
                             string battleId = _config?.battleMusicId;
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎉 Llamando a PlayVictory() del player con battleId: {battleId}");
+                            Debug.Log($"[Lifecycle] Llamando a PlayVictory() del player con battleId: {battleId}");
                             #endif
                             playerVictory.PlayVictory(battleId);
 
-                            // ✅ Esperar a que termine la animación de victoria del jugador
+                            // Esperar a que termine la animación de victoria del jugador
                             float victoryTimeout = 15f; // Timeout de seguridad
                             float elapsed = 0f;
 
@@ -512,7 +512,7 @@ namespace Game.NPC.Modules
                             }
 
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] ✅ Animación de victoria completada - la música se restaurará después del diálogo");
+                            Debug.Log($"[Lifecycle] Animación de victoria completada - la música se restaurará después del diálogo");
                             #endif
                         }
                     }
@@ -525,13 +525,13 @@ namespace Game.NPC.Modules
             else
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 👥 {name} derrotado pero quedan miembros del equipo - sin celebración aún");
+                Debug.Log($"[Lifecycle] {name} derrotado pero quedan miembros del equipo - sin celebración aún");
                 #endif
                 // Pequeña pausa para la animación de muerte
                 yield return new WaitForSeconds(1f);
             }
             
-            // ✅ 7. POST-MUERTE (Desaparecer o continuar con Dizzy)
+            // 7. POST-MUERTE (Desaparecer o continuar con Dizzy)
             // El evento de derrota sale al acabar la secuencia completa (tras el diálogo del NPC),
             // para que lo que dé el grafo llegue después de lo que dice el NPC. Al desaparecer, el
             // objeto se apaga dentro de HandleDisappear y la corrutina ya no sigue: se envía antes.
@@ -578,23 +578,23 @@ namespace Game.NPC.Modules
         {
             _shouldCancelDizzySequence = true;
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🛑 Secuencia dizzy cancelada para {name} - movimiento narrativo iniciado");
+            Debug.Log($"[Lifecycle] Secuencia dizzy cancelada para {name} - movimiento narrativo iniciado");
             #endif
         }
 
         private IEnumerator HandleGetUpDizzy()
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 😵 Esperando transición a animación dizzy para {name}");
+            Debug.Log($"[Lifecycle] Esperando transición a animación dizzy para {name}");
             #endif
             
-            // ✅ Calcular si estamos en equipo y si somos el último miembro
+            // Calcular si estamos en equipo y si somos el último miembro
             var teamMember = ResolvedTeamMember;
             bool isInTeam = teamMember != null && teamMember.Team != null;
             bool isLastTeamMember = isInTeam && teamMember.Team.IsTeamDefeated;
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🔍 DEBUG HandleGetUpDizzy INICIO: isInTeam={isInTeam}, isLastTeamMember={isLastTeamMember}, battleMusicId='{_config?.battleMusicId}'");
+            Debug.Log($"[Lifecycle] DEBUG HandleGetUpDizzy INICIO: isInTeam={isInTeam}, isLastTeamMember={isLastTeamMember}, battleMusicId='{_config?.battleMusicId}'");
             #endif
             
             // 1. La animación de muerte ya se inició en DeathRoutine()
@@ -607,7 +607,7 @@ namespace Game.NPC.Modules
                 if (_animator != null && _animator.IsInDizzyAnimation())
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ✅ NPC ahora está en animación dizzy");
+                    Debug.Log($"[Lifecycle] NPC ahora está en animación dizzy");
                     #endif
                     break;
                 }
@@ -619,11 +619,11 @@ namespace Game.NPC.Modules
             if (elapsed >= timeout)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ Timeout esperando animación dizzy - continuando de todas formas");
+                Debug.LogWarning($"[Lifecycle] Timeout esperando animación dizzy - continuando de todas formas");
                 #endif
             }
             
-            // ✅ REDISEÑO (15 ago 2026, a petición de Raúl): cada NPC del equipo ahora dice su
+            // REDISEÑO (15 ago 2026, a petición de Raúl): cada NPC del equipo ahora dice su
             // PROPIA frase de derrota y ejecuta su PROPIA acción post-derrota de forma
             // independiente en cuanto ÉL MISMO muere — ya no espera a que caiga todo el equipo ni
             // a que el líder termine de hablar. Antes, un miembro no-líder que moría primero se
@@ -642,7 +642,7 @@ namespace Game.NPC.Modules
             if (isInTeam)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 👥 {name} es parte de un equipo - IsLeader: {teamMember.IsLeader}, isLastTeamMember: {isLastTeamMember}, Derrotados: {teamMember.Team.DefeatedCount}/{teamMember.Team.TeamSize}");
+                Debug.Log($"[Lifecycle] {name} es parte de un equipo - IsLeader: {teamMember.IsLeader}, isLastTeamMember: {isLastTeamMember}, Derrotados: {teamMember.Team.DefeatedCount}/{teamMember.Team.TeamSize}");
                 #endif
             }
 
@@ -657,17 +657,17 @@ namespace Game.NPC.Modules
                     : _config?.dialogueOnDizzy ?? _config?.dialogueOnDefeat;
                 if (dialogue != null)
                 {
-                    // ✅ Verificar antes de mostrar diálogo
+                    // Verificar antes de mostrar diálogo
                     if (_shouldCancelDizzySequence)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[Lifecycle] 🛑 Diálogo omitido para {name} - movimiento iniciado");
+                        Debug.Log($"[Lifecycle] Diálogo omitido para {name} - movimiento iniciado");
                         #endif
                         yield break;
                     }
                     
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 💬 Iniciando diálogo post-derrota para {name}");
+                    Debug.Log($"[Lifecycle] Iniciando diálogo post-derrota para {name}");
                     #endif
                     bool finished = false;
                     DialogueManager.Instance.StartDialogue(dialogue, transform, () => finished = true);
@@ -675,11 +675,11 @@ namespace Game.NPC.Modules
                     // Esperar a que termine el diálogo
                     while (!finished) 
                     {
-                        // ✅ Verificar durante el diálogo también
+                        // Verificar durante el diálogo también
                         if (_shouldCancelDizzySequence)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🛑 Diálogo interrumpido para {name}");
+                            Debug.Log($"[Lifecycle] Diálogo interrumpido para {name}");
                             #endif
                             // Cerrar el diálogo si está abierto
                             if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
@@ -693,25 +693,25 @@ namespace Game.NPC.Modules
                     }
                     
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 💬 Diálogo de mareo completado");
+                    Debug.Log($"[Lifecycle] Diálogo de mareo completado");
                     #endif
                     
-                    // ✅ Restaurar música de batalla DESPUÉS del diálogo
+                    // Restaurar música de batalla DESPUÉS del diálogo
                     // Solo si es el último enemigo derrotado (líder o sin equipo)
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 🔍 DEBUG Restauración música: isInTeam={isInTeam}, IsLeader={teamMember?.IsLeader}, isLastTeamMember={isLastTeamMember}");
+                    Debug.Log($"[Lifecycle] DEBUG Restauración música: isInTeam={isInTeam}, IsLeader={teamMember?.IsLeader}, isLastTeamMember={isLastTeamMember}");
                     #endif
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 🔍 DEBUG Config: battleMusicId='{_config?.battleMusicId}', AudioService={AudioService.Instance != null}");
+                    Debug.Log($"[Lifecycle] DEBUG Config: battleMusicId='{_config?.battleMusicId}', AudioService={AudioService.Instance != null}");
                     #endif
                     
                     if (IsPlayerDeadOrGameOverActive())
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log("[Lifecycle] ⚠️ Jugador ya murió (game over en curso) — se omite la restauración de música tras el diálogo.");
+                        Debug.Log("[Lifecycle] Jugador ya murió (game over en curso) — se omite la restauración de música tras el diálogo.");
                         #endif
                     }
-                    // ✅ REDISEÑO (15 ago 2026): ya no se exige ser el líder — la música/celebración
+                    // REDISEÑO: ya no se exige ser el líder — la música/celebración
                     // se restaura una única vez, cuando el NPC cuya muerte completó al equipo
                     // (isLastTeamMember) termina SU PROPIO diálogo. Da igual si es el líder o no.
                     else if (!isInTeam || isLastTeamMember)
@@ -719,14 +719,14 @@ namespace Game.NPC.Modules
                         if (!string.IsNullOrEmpty(_config?.battleMusicId) && AudioService.Instance != null)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎵 Restaurando música de batalla después del diálogo: {_config.battleMusicId}");
+                            Debug.Log($"[Lifecycle] Restaurando música de batalla después del diálogo: {_config.battleMusicId}");
                             #endif
                             AudioService.Instance.EndBattleById(_config.battleMusicId);
                         }
                         else if (AudioService.Instance != null)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎵 Restaurando música después del diálogo (sin battleMusicId)");
+                            Debug.Log($"[Lifecycle] Restaurando música después del diálogo (sin battleMusicId)");
                             #endif
                             AudioService.Instance.RestoreAfterBattle();
                         }
@@ -734,11 +734,11 @@ namespace Game.NPC.Modules
                     else
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[Lifecycle] ℹ️ No se restaura música aún - quedan compañeros de equipo con vida");
+                        Debug.Log($"[Lifecycle] No se restaura música aún - quedan compañeros de equipo con vida");
                         #endif
                     }
 
-                    // ✅ REDISEÑO (15 ago 2026): notifica "diálogo post-derrota terminado" quien
+                    // REDISEÑO: notifica "diálogo post-derrota terminado" quien
                     // remató al equipo, no necesariamente el líder.
                     if (isInTeam && isLastTeamMember)
                     {
@@ -753,11 +753,11 @@ namespace Game.NPC.Modules
                         teamMember.Team.NotifyPostDefeatDialogueFinished();
                     }
 
-                    // ✅ Restaurar música si no hay diálogo
+                    // Restaurar música si no hay diálogo
                     if (IsPlayerDeadOrGameOverActive())
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log("[Lifecycle] ⚠️ Jugador ya murió (game over en curso) — se omite la restauración de música (sin diálogo).");
+                        Debug.Log("[Lifecycle] Jugador ya murió (game over en curso) — se omite la restauración de música (sin diálogo).");
                         #endif
                     }
                     else if (!isInTeam || isLastTeamMember)
@@ -765,14 +765,14 @@ namespace Game.NPC.Modules
                         if (!string.IsNullOrEmpty(_config?.battleMusicId) && AudioService.Instance != null)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎵 Restaurando música de batalla (sin diálogo): {_config.battleMusicId}");
+                            Debug.Log($"[Lifecycle] Restaurando música de batalla (sin diálogo): {_config.battleMusicId}");
                             #endif
                             AudioService.Instance.EndBattleById(_config.battleMusicId);
                         }
                         else if (AudioService.Instance != null)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎵 Restaurando música (sin diálogo, sin battleMusicId)");
+                            Debug.Log($"[Lifecycle] Restaurando música (sin diálogo, sin battleMusicId)");
                             #endif
                             AudioService.Instance.RestoreAfterBattle();
                         }
@@ -782,10 +782,10 @@ namespace Game.NPC.Modules
             
             // 3. Ejecutar acción post-derrota (si está configurada)
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🔍 Verificando postDefeatAction para {name}: config={(_config != null ? "OK" : "NULL")}, action={_config?.postDefeatAction}");
+            Debug.Log($"[Lifecycle] Verificando postDefeatAction para {name}: config={(_config != null ? "OK" : "NULL")}, action={_config?.postDefeatAction}");
             #endif
             
-            // ✅ Si es miembro de equipo (no líder) y el líder tiene moveTeamMembersOnDefeat activo,
+            // Si es miembro de equipo (no líder) y el líder tiene moveTeamMembersOnDefeat activo,
             // NO ejecutar postDefeatAction individual porque el líder nos moverá
             bool skipPostDefeatBecauseLeaderWillMove = false;
             if (isInTeam && !teamMember.IsLeader)
@@ -797,7 +797,7 @@ namespace Game.NPC.Modules
                 {
                     skipPostDefeatBecauseLeaderWillMove = true;
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ℹ️ {name} omitirá postDefeatAction individual - el líder moverá al equipo");
+                    Debug.Log($"[Lifecycle] {name} omitirá postDefeatAction individual - el líder moverá al equipo");
                     #endif
                 }
             }
@@ -805,28 +805,28 @@ namespace Game.NPC.Modules
             if (!skipPostDefeatBecauseLeaderWillMove && _config != null && _config.postDefeatAction != PostDefeatAction.None)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 🎬 {name} ejecutará acción post-derrota: {_config.postDefeatAction}");
+                Debug.Log($"[Lifecycle] {name} ejecutará acción post-derrota: {_config.postDefeatAction}");
                 #endif
                 yield return HandlePostDefeatAction(_config.postDefeatAction);
             }
             else
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] ℹ️ {name} no tiene postDefeatAction configurada - configurando como interactuable");
+                Debug.Log($"[Lifecycle] {name} no tiene postDefeatAction configurada - configurando como interactuable");
                 #endif
                 // 4. Configurar para interacción futura (Hablar con el NPC derrotado)
                 SetupPostCombatInteraction();
             }
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] ✅ Secuencia GetUpDizzy completada para {name}");
+            Debug.Log($"[Lifecycle] Secuencia GetUpDizzy completada para {name}");
             #endif
         }
 
         private IEnumerator HandlePostDefeatAction(PostDefeatAction action)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🎬 Ejecutando acción post-derrota: {action}");
+            Debug.Log($"[Lifecycle] Ejecutando acción post-derrota: {action}");
             #endif
             
             switch (action)
@@ -848,7 +848,7 @@ namespace Game.NPC.Modules
                         // Activar movimiento
                         if (_agent != null)
                         {
-                            // FIX: si el NPC quedó fuera de malla mientras el agent estaba
+                            // si el NPC quedó fuera de malla mientras el agent estaba
                             // desactivado, hacer "_agent.enabled = true" a secas AQUÍ ya loggea
                             // "Failed to create agent because there is no valid NavMesh" (Unity
                             // valida transform.position en el instante de habilitar, antes de que
@@ -858,24 +858,24 @@ namespace Game.NPC.Modules
                             // seguridad para cuando no hay NavMesh cerca.
                             Game.NPC.Common.NavMeshAgentUtility.SafeEnable(_agent, transform, transform.position);
 
-                            // ✅ VALIDACIÓN 1: Verificar que está en NavMesh
+                            // VALIDACIÓN 1: Verificar que está en NavMesh
                             if (!_agent.isOnNavMesh)
                             {
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.LogWarning($"[Lifecycle] ⚠️ {name} NO está en NavMesh! No puede huir. Posición: {transform.position}");
+                                Debug.LogWarning($"[Lifecycle] {name} NO está en NavMesh! No puede huir. Posición: {transform.position}");
                                 #endif
                                 if (NavMesh.SamplePosition(transform.position, out NavMeshHit repoHit, 2f, NavMesh.AllAreas))
                                 {
                                     transform.position = repoHit.position;
                                     _agent.Warp(repoHit.position);
                                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                    Debug.Log($"[Lifecycle] 🔄 {name} recolocado en NavMesh: {repoHit.position}");
+                                    Debug.Log($"[Lifecycle] {name} recolocado en NavMesh: {repoHit.position}");
                                     #endif
                                 }
                                 else
                                 {
                                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                    Debug.LogWarning($"[Lifecycle] ⚠️ No se pudo recolocar {name} en NavMesh - se aplicará fallback de desaparición");
+                                    Debug.LogWarning($"[Lifecycle] No se pudo recolocar {name} en NavMesh - se aplicará fallback de desaparición");
                                     #endif
                                 }
                             }
@@ -893,13 +893,13 @@ namespace Game.NPC.Modules
                                 if (!_agent.Warp(transform.position))
                                 {
                                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                    Debug.LogWarning($"[Lifecycle] ⚠️ {name} no pudo hacer Warp a {transform.position} - se aplicará fallback de desaparición");
+                                    Debug.LogWarning($"[Lifecycle] {name} no pudo hacer Warp a {transform.position} - se aplicará fallback de desaparición");
                                     #endif
                                 }
                                 else if (!TryResolveReachableDestination(_agent, fleePos, out Vector3 resolvedFleePos))
                                 {
                                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                    Debug.LogWarning($"[Lifecycle] ⚠️ {name} no encontró destino alcanzable para huida cerca de {fleePos}");
+                                    Debug.LogWarning($"[Lifecycle] {name} no encontró destino alcanzable para huida cerca de {fleePos}");
                                     #endif
                                 }
                                 else
@@ -924,7 +924,7 @@ namespace Game.NPC.Modules
                                             _animator.SetMovementSpeed(1f, 0.1f);
                                         }
 
-                                        // ✅ EXTRA: Dar 1 frame para que el agent procese el destino
+                                        // EXTRA: Dar 1 frame para que el agent procese el destino
                                         yield return null;
 
                                         float fleeTime = 0f;
@@ -973,7 +973,7 @@ namespace Game.NPC.Modules
                                     else
                                     {
                                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                        Debug.LogWarning($"[Lifecycle] ⚠️ {name} no puede calcular path hacia {fleePos}! Status: {(_agent.hasPath ? _agent.path.status.ToString() : "NO PATH")}");
+                                        Debug.LogWarning($"[Lifecycle] {name} no puede calcular path hacia {fleePos}! Status: {(_agent.hasPath ? _agent.path.status.ToString() : "NO PATH")}");
                                         #endif
                                     }
                                 }
@@ -992,18 +992,18 @@ namespace Game.NPC.Modules
                     if (!fleeMovementStarted)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogWarning($"[Lifecycle] ⚠️ {name} no pudo ejecutar huida - aplicando desaparición directa");
+                        Debug.LogWarning($"[Lifecycle] {name} no pudo ejecutar huida - aplicando desaparición directa");
                         #endif
                     }
                     
-                    // ✅ Desaparecer con TransitionManager si está configurado
+                    // Desaparecer con TransitionManager si está configurado
                     if (_config?.disappearTransition != null)
                     {
                         var transitionManager = EasyTransition.TransitionManager.Instance();
                         if (transitionManager != null)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🎭 Iniciando transición de desaparición para {name}");
+                            Debug.Log($"[Lifecycle] Iniciando transición de desaparición para {name}");
                             #endif
                             
                             bool transitionCompleted = false;
@@ -1021,7 +1021,7 @@ namespace Game.NPC.Modules
                                 gameObject.SetActive(false);
                                 transitionCompleted = true;
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.Log($"[Lifecycle] ✅ {name} desactivado durante transición");
+                                Debug.Log($"[Lifecycle] {name} desactivado durante transición");
                                 #endif
                             }
                             
@@ -1045,7 +1045,7 @@ namespace Game.NPC.Modules
                             if (!transitionCompleted)
                             {
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.LogWarning($"[Lifecycle] ⚠️ Timeout esperando transición, desactivando {name} directamente");
+                                Debug.LogWarning($"[Lifecycle] Timeout esperando transición, desactivando {name} directamente");
                                 #endif
                                 gameObject.SetActive(false);
                             }
@@ -1053,7 +1053,7 @@ namespace Game.NPC.Modules
                         else
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.LogWarning($"[Lifecycle] ⚠️ No se encontró TransitionManager, desapareciendo sin transición");
+                            Debug.LogWarning($"[Lifecycle] No se encontró TransitionManager, desapareciendo sin transición");
                             #endif
                             // Fallback: desaparecer sin transición
                             if (_config?.disappearVFXPrefab)
@@ -1064,7 +1064,7 @@ namespace Game.NPC.Modules
                     else
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[Lifecycle] ℹ️ No hay TransitionSettings configurado, desapareciendo sin transición");
+                        Debug.Log($"[Lifecycle] No hay TransitionSettings configurado, desapareciendo sin transición");
                         #endif
                         // Desaparecer sin transición (comportamiento original)
                         if (_config?.disappearVFXPrefab)
@@ -1074,9 +1074,9 @@ namespace Game.NPC.Modules
                     break;
                     
                 case PostDefeatAction.ReturnToIdle:
-                    // ✅ Transicionar de dizzy a idle
+                    // Transicionar de dizzy a idle
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 🔄 {name} volviendo a idle desde dizzy");
+                    Debug.Log($"[Lifecycle] {name} volviendo a idle desde dizzy");
                     #endif
                     
                     if (_animator != null)
@@ -1103,7 +1103,7 @@ namespace Game.NPC.Modules
             if (string.IsNullOrEmpty(_config?.postDefeatMoveAnchor))
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ {name} tiene MoveToAnchor pero no hay anchor configurado");
+                Debug.LogWarning($"[Lifecycle] {name} tiene MoveToAnchor pero no hay anchor configurado");
                 #endif
                 SetupPostCombatInteraction();
                 yield break;
@@ -1114,7 +1114,7 @@ namespace Game.NPC.Modules
             if (anchorTransform == null)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ No se encontró el anchor '{_config.postDefeatMoveAnchor}' para {name}");
+                Debug.LogWarning($"[Lifecycle] No se encontró el anchor '{_config.postDefeatMoveAnchor}' para {name}");
                 #endif
                 SetupPostCombatInteraction();
                 yield break;
@@ -1122,7 +1122,7 @@ namespace Game.NPC.Modules
             
             Vector3 targetPos = anchorTransform.position;
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🚶 {name} moviéndose a anchor '{_config.postDefeatMoveAnchor}'");
+            Debug.Log($"[Lifecycle] {name} moviéndose a anchor '{_config.postDefeatMoveAnchor}'");
             #endif
             
             // Cancelar la secuencia dizzy para que no interfiera
@@ -1135,7 +1135,7 @@ namespace Game.NPC.Modules
                 externalMovementOverridePushed = true;
             }
             
-            // ✅ Transicionar a animación de caminar
+            // Transicionar a animación de caminar
             if (_animator != null)
             {
                 _animator.SetTalking(false);
@@ -1143,7 +1143,7 @@ namespace Game.NPC.Modules
                 _animator.TransitionToIdle();
                 yield return new WaitForSeconds(0.3f);
                 
-                // ✅ Habilitar rotación automática ANTES de empezar a mover
+                // Habilitar rotación automática ANTES de empezar a mover
                 _animator.AllowManualRotation = false;
                 _animator.EnableAutoRotation();
             }
@@ -1153,11 +1153,11 @@ namespace Game.NPC.Modules
                 // Activar NavMeshAgent y mover
                 if (_agent != null)
                 {
-                    // ✅ Validación exhaustiva del NavMeshAgent
+                    // Validación exhaustiva del NavMeshAgent
                     if (!_agent.isOnNavMesh)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogError($"[Lifecycle] ❌ {name} NO está en NavMesh! Posición: {transform.position}");
+                        Debug.LogError($"[Lifecycle] {name} NO está en NavMesh! Posición: {transform.position}");
 #endif
                         SetupPostCombatInteraction();
                         yield break;
@@ -1166,20 +1166,20 @@ namespace Game.NPC.Modules
                     _agent.enabled = true;
                     _agent.isStopped = false;
                     
-                    // ✅ Guardar configuración original para restaurar después
+                    // Guardar configuración original para restaurar después
                     float originalSpeed = _agent.speed;
                     bool originalUpdateRotation = _agent.updateRotation;
                     
                     _agent.speed = originalSpeed * 0.5f; // Más lento de lo normal
                     _agent.updateRotation = false; // NPCSimpleAnimator maneja la rotación
                     
-                    // ✅ CRÍTICO: Establecer destino y verificar que el path es válido
+                    // CRÍTICO: Establecer destino y verificar que el path es válido
                     _agent.SetDestination(targetPos);
                     
                     // Esperar un frame para que Unity calcule el path
                     yield return null;
                     
-                    // ✅ Verificar que el path es válido
+                    // Verificar que el path es válido
                     if (_agent.pathPending)
                     {
                         float waitTime = 0f;
@@ -1193,14 +1193,14 @@ namespace Game.NPC.Modules
                     if (_agent.path.status != NavMeshPathStatus.PathComplete)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogError($"[Lifecycle] ❌ {name} no puede calcular path hacia {targetPos}! Status: {_agent.path.status}");
+                        Debug.LogError($"[Lifecycle] {name} no puede calcular path hacia {targetPos}! Status: {_agent.path.status}");
 #endif
                         SetupPostCombatInteraction();
                         yield break;
                     }
                     
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ✅ {name} iniciando movimiento:\n" +
+                    Debug.Log($"[Lifecycle] {name} iniciando movimiento:\n" +
                              $"  Destino: {targetPos}\n" +
                              $"  Distancia: {Vector3.Distance(transform.position, targetPos):F2}m\n" +
                              $"  Speed: {_agent.speed}\n" +
@@ -1219,14 +1219,14 @@ namespace Game.NPC.Modules
                     {
                         if (_agent == null || !_agent.isOnNavMesh) break;
                         
-                        // ✅ Verificar si está "atascado" (no se ha movido en 1 segundo)
+                        // Verificar si está "atascado" (no se ha movido en 1 segundo)
                         if (elapsed - lastStuckCheck >= stuckCheckInterval)
                         {
                             float movedDistance = Vector3.Distance(transform.position, lastCheckPos);
                             if (movedDistance < 0.1f && !_agent.pathPending)
                             {
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.LogWarning($"[Lifecycle] ⚠️ {name} parece estar atascado (movido {movedDistance:F3}m en {stuckCheckInterval}s)");
+                                Debug.LogWarning($"[Lifecycle] {name} parece estar atascado (movido {movedDistance:F3}m en {stuckCheckInterval}s)");
                                 #endif
                                 
                                 // Intentar reconfigurar el agent
@@ -1236,7 +1236,7 @@ namespace Game.NPC.Modules
                                 _agent.SetDestination(targetPos);
                                 
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.Log($"[Lifecycle] 🔄 {name} reconfigurado - Velocity: {_agent.velocity.magnitude:F2}, IsOnNavMesh: {_agent.isOnNavMesh}");
+                                Debug.Log($"[Lifecycle] {name} reconfigurado - Velocity: {_agent.velocity.magnitude:F2}, IsOnNavMesh: {_agent.isOnNavMesh}");
                                 #endif
                             }
                             
@@ -1244,18 +1244,18 @@ namespace Game.NPC.Modules
                             lastCheckPos = transform.position;
                         }
                         
-                        // ✅ CRÍTICO: Actualizar animación CADA FRAME
+                        // CRÍTICO: Actualizar animación CADA FRAME
                         if (_animator != null)
                         {
                             float agentSpeed = _agent.velocity.magnitude;
                             
-                            // ✅ Log si velocity es 0 pero debería moverse
+                            // Log si velocity es 0 pero debería moverse
                             if (agentSpeed < 0.01f && !_agent.pathPending && _agent.remainingDistance > _agent.stoppingDistance + 0.5f)
                             {
                                 if (Time.frameCount % 60 == 0) // Cada 60 frames (~1 segundo)
                                 {
                                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                    Debug.LogWarning($"[Lifecycle] ⚠️ {name} velocity = 0 pero debería moverse!\n" +
+                                    Debug.LogWarning($"[Lifecycle] {name} velocity = 0 pero debería moverse!\n" +
                                                    $"  remainingDistance: {_agent.remainingDistance:F2}\n" +
                                                    $"  stoppingDistance: {_agent.stoppingDistance:F2}\n" +
                                                    $"  isStopped: {_agent.isStopped}\n" +
@@ -1274,7 +1274,7 @@ namespace Game.NPC.Modules
                                 // Aplicar velocidad más lenta (derrotado)
                                 _animator.SetMovementSpeed(normalizedSpeed * 0.5f, 0.1f);
                                 
-                                // ✅ Rotar hacia la dirección del movimiento
+                                // Rotar hacia la dirección del movimiento
                                 Vector3 moveDir = _agent.velocity.normalized;
                                 moveDir.y = 0f;
                                 if (moveDir.sqrMagnitude > 0.01f)
@@ -1293,7 +1293,7 @@ namespace Game.NPC.Modules
                         if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance + 0.1f)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] ✅ {name} llegó a su destino (elapsed: {elapsed:F1}s)");
+                            Debug.Log($"[Lifecycle] {name} llegó a su destino (elapsed: {elapsed:F1}s)");
                             #endif
                             break;
                         }
@@ -1305,7 +1305,7 @@ namespace Game.NPC.Modules
                     if (elapsed >= timeout)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogWarning($"[Lifecycle] ⏱️ {name} timeout alcanzado ({timeout}s) - Forzando parada");
+                        Debug.LogWarning($"[Lifecycle] {name} timeout alcanzado ({timeout}s) - Forzando parada");
                         #endif
                     }
                     
@@ -1347,7 +1347,7 @@ namespace Game.NPC.Modules
                 yield return new WaitForSeconds(0.5f);
                 gameObject.SetActive(false);
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Lifecycle] 👋 {name} desapareció al llegar a destino");
+                Debug.Log($"[Lifecycle] {name} desapareció al llegar a destino");
                 #endif
             }
             else
@@ -1379,7 +1379,7 @@ namespace Game.NPC.Modules
                     memberHandler.CancelDizzySequence();
                 }
                 
-                // ✅ FIX: Primero intentar usar el anchor individual del miembro
+                // Primero intentar usar el anchor individual del miembro
                 Vector3 targetPos;
                 var memberConfig = member.Configuration?.combatConfig;
                 bool hasIndividualAnchor = false;
@@ -1395,7 +1395,7 @@ namespace Game.NPC.Modules
                         targetPos = memberAnchor.transform.position;
                         hasIndividualAnchor = true;
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[Lifecycle] 🚶 Miembro {member.name} moviéndose a su SpawnAnchor: '{memberConfig.postDefeatMoveAnchor}'");
+                        Debug.Log($"[Lifecycle] Miembro {member.name} moviéndose a su SpawnAnchor: '{memberConfig.postDefeatMoveAnchor}'");
                         #endif
                     }
                     else
@@ -1407,7 +1407,7 @@ namespace Game.NPC.Modules
                             targetPos = anchorGo.transform.position;
                             hasIndividualAnchor = true;
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[Lifecycle] 🚶 Miembro {member.name} moviéndose a su anchor (GameObject): '{memberConfig.postDefeatMoveAnchor}'");
+                            Debug.Log($"[Lifecycle] Miembro {member.name} moviéndose a su anchor (GameObject): '{memberConfig.postDefeatMoveAnchor}'");
                             #endif
                         }
                         else
@@ -1417,7 +1417,7 @@ namespace Game.NPC.Modules
                             randomOffset.y = 0;
                             targetPos = transform.position + randomOffset;
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.LogWarning($"[Lifecycle] ⚠️ No se encontró anchor '{memberConfig.postDefeatMoveAnchor}' para {member.name}, usando punto aleatorio");
+                            Debug.LogWarning($"[Lifecycle] No se encontró anchor '{memberConfig.postDefeatMoveAnchor}' para {member.name}, usando punto aleatorio");
                             #endif
                         }
                     }
@@ -1429,7 +1429,7 @@ namespace Game.NPC.Modules
                     randomOffset.y = 0;
                     targetPos = transform.position + randomOffset;
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 🚶 Miembro {member.name} sin anchor configurado, moviendo a punto aleatorio");
+                    Debug.Log($"[Lifecycle] Miembro {member.name} sin anchor configurado, moviendo a punto aleatorio");
                     #endif
                 }
                 
@@ -1443,11 +1443,11 @@ namespace Game.NPC.Modules
                 
                 if (memberAgent != null)
                 {
-                    // ✅ Validación exhaustiva del NavMeshAgent
+                    // Validación exhaustiva del NavMeshAgent
                     if (!memberAgent.isOnNavMesh)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogError($"[Lifecycle] ❌ Miembro {member.name} NO está en NavMesh! Posición: {member.transform.position}");
+                        Debug.LogError($"[Lifecycle] Miembro {member.name} NO está en NavMesh! Posición: {member.transform.position}");
 #endif
                         continue; // Saltar este miembro
                     }
@@ -1455,7 +1455,7 @@ namespace Game.NPC.Modules
                     memberAgent.enabled = true;
                     memberAgent.isStopped = false;
                     
-                    // ✅ Guardar configuración original
+                    // Guardar configuración original
                     float originalSpeed = memberAgent.speed;
                     bool originalUpdateRotation = memberAgent.updateRotation;
                     
@@ -1463,7 +1463,7 @@ namespace Game.NPC.Modules
                     memberAgent.updateRotation = false; // NPCSimpleAnimator maneja la rotación
                     member.PushExternalMovementOverride();
                     
-                    // ✅ Establecer destino y esperar cálculo de path
+                    // Establecer destino y esperar cálculo de path
                     memberAgent.SetDestination(targetPos);
                     
                     if (memberAnimator != null)
@@ -1473,7 +1473,7 @@ namespace Game.NPC.Modules
                         memberAnimator.TransitionToIdle();
                         yield return new WaitForSeconds(0.1f); // Pequeña espera para transición
                         
-                        // ✅ Habilitar rotación automática
+                        // Habilitar rotación automática
                         memberAnimator.AllowManualRotation = false;
                         memberAnimator.EnableAutoRotation();
                     }
@@ -1481,7 +1481,7 @@ namespace Game.NPC.Modules
                     // Esperar un frame para que Unity calcule el path
                     yield return null;
                     
-                    // ✅ Verificar que el path es válido
+                    // Verificar que el path es válido
                     if (memberAgent.pathPending)
                     {
                         float waitTime = 0f;
@@ -1495,14 +1495,14 @@ namespace Game.NPC.Modules
                     if (memberAgent.path.status != NavMeshPathStatus.PathComplete)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogError($"[Lifecycle] ❌ Miembro {member.name} no puede calcular path hacia {targetPos}! Status: {memberAgent.path.status}");
+                        Debug.LogError($"[Lifecycle] Miembro {member.name} no puede calcular path hacia {targetPos}! Status: {memberAgent.path.status}");
 #endif
                         member.PopExternalMovementOverride();
                         continue; // Saltar este miembro
                     }
                     
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ✅ Miembro {member.name} iniciando movimiento:\n" +
+                    Debug.Log($"[Lifecycle] Miembro {member.name} iniciando movimiento:\n" +
                              $"  Destino: {targetPos}\n" +
                              $"  Distancia: {Vector3.Distance(member.transform.position, targetPos):F2}m\n" +
                              $"  Speed: {memberAgent.speed}\n" +
@@ -1510,7 +1510,7 @@ namespace Game.NPC.Modules
                              $"  UpdateRotation: {memberAgent.updateRotation}");
                     #endif
                     
-                    // ✅ Iniciar corrutina para esperar llegada y manejar post-acción
+                    // Iniciar corrutina para esperar llegada y manejar post-acción
                     member.StartCoroutine(WaitForMemberArrivalAndHandle(member, memberConfig, hasIndividualAnchor, originalSpeed, originalUpdateRotation, true));
                 }
             }
@@ -1535,14 +1535,14 @@ namespace Game.NPC.Modules
             
             while (elapsed < timeout && member != null && agent != null && agent.isOnNavMesh)
             {
-                // ✅ Verificar si está "atascado" (no se ha movido en 1 segundo)
+                // Verificar si está "atascado" (no se ha movido en 1 segundo)
                 if (elapsed - lastStuckCheck >= stuckCheckInterval)
                 {
                     float movedDistance = Vector3.Distance(member.transform.position, lastCheckPos);
                     if (movedDistance < 0.1f && !agent.pathPending)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogWarning($"[Lifecycle] ⚠️ Miembro {member.name} parece estar atascado (movido {movedDistance:F3}m en {stuckCheckInterval}s)");
+                        Debug.LogWarning($"[Lifecycle] Miembro {member.name} parece estar atascado (movido {movedDistance:F3}m en {stuckCheckInterval}s)");
                         #endif
                         
                         // Intentar reconfigurar el agent
@@ -1553,7 +1553,7 @@ namespace Game.NPC.Modules
                         agent.SetDestination(currentDest);
                         
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[Lifecycle] 🔄 Miembro {member.name} reconfigurado - Velocity: {agent.velocity.magnitude:F2}");
+                        Debug.Log($"[Lifecycle] Miembro {member.name} reconfigurado - Velocity: {agent.velocity.magnitude:F2}");
                         #endif
                     }
                     
@@ -1561,19 +1561,19 @@ namespace Game.NPC.Modules
                     lastCheckPos = member.transform.position;
                 }
                 
-                // ✅ Actualizar animación CADA FRAME
+                // Actualizar animación CADA FRAME
                 var animator = member.GetComponent<NPCSimpleAnimator>();
                 if (animator != null)
                 {
                     float agentSpeed = agent.velocity.magnitude;
                     
-                    // ✅ Log si velocity es 0 pero debería moverse
+                    // Log si velocity es 0 pero debería moverse
                     if (agentSpeed < 0.01f && !agent.pathPending && agent.remainingDistance > agent.stoppingDistance + 0.5f)
                     {
                         if (Time.frameCount % 60 == 0) // Cada 60 frames
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.LogWarning($"[Lifecycle] ⚠️ Miembro {member.name} velocity = 0 pero debería moverse!\n" +
+                            Debug.LogWarning($"[Lifecycle] Miembro {member.name} velocity = 0 pero debería moverse!\n" +
                                            $"  remainingDistance: {agent.remainingDistance:F2}\n" +
                                            $"  stoppingDistance: {agent.stoppingDistance:F2}\n" +
                                            $"  isStopped: {agent.isStopped}\n" +
@@ -1611,7 +1611,7 @@ namespace Game.NPC.Modules
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ✅ Miembro {member.name} llegó a su destino (elapsed: {elapsed:F1}s)");
+                    Debug.Log($"[Lifecycle] Miembro {member.name} llegó a su destino (elapsed: {elapsed:F1}s)");
                     #endif
                     break;
                 }
@@ -1623,7 +1623,7 @@ namespace Game.NPC.Modules
             if (elapsed >= timeout)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⏱️ Miembro {member.name} timeout alcanzado ({timeout}s)");
+                Debug.LogWarning($"[Lifecycle] Miembro {member.name} timeout alcanzado ({timeout}s)");
                 #endif
             }
             
@@ -1658,7 +1658,7 @@ namespace Game.NPC.Modules
                     yield return new WaitForSeconds(0.5f);
                     member.gameObject.SetActive(false);
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] 👋 Miembro {member.name} desapareció al llegar a destino");
+                    Debug.Log($"[Lifecycle] Miembro {member.name} desapareció al llegar a destino");
                     #endif
                 }
                 else
@@ -1670,7 +1670,7 @@ namespace Game.NPC.Modules
                         memberHandler.SetupPostCombatInteraction();
                     }
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Lifecycle] ✅ Miembro {member.name} configurado como interactuable en destino");
+                    Debug.Log($"[Lifecycle] Miembro {member.name} configurado como interactuable en destino");
                     #endif
                 }
             }
@@ -1725,7 +1725,7 @@ namespace Game.NPC.Modules
         }
 
         // =================================================================================
-        // 🛠️ HELPER: Configurar NPC como interactuable tras combate
+        // HELPER: Configurar NPC como interactuable tras combate
         // =================================================================================
         
         public void SetupPostCombatInteraction()
@@ -1758,12 +1758,12 @@ namespace Game.NPC.Modules
             }
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] ✅ NPC {name} configurado como interactuable post-combate.");
+            Debug.Log($"[Lifecycle] NPC {name} configurado como interactuable post-combate.");
             #endif
         }
         
         // =================================================================================
-        // 🎭 POST-DEFEAT INTERACTION HANDLING
+        // POST-DEFEAT INTERACTION HANDLING
         // =================================================================================
         
         /// <summary>
@@ -1779,7 +1779,7 @@ namespace Game.NPC.Modules
             // Este método existe principalmente para validación y lógica adicional
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 💬 Jugador interactúa con NPC derrotado: {name}");
+            Debug.Log($"[Lifecycle] Jugador interactúa con NPC derrotado: {name}");
             #endif
             
             // El Interactable component ya maneja el diálogo automáticamente
@@ -1788,7 +1788,7 @@ namespace Game.NPC.Modules
         }
         
         // =================================================================================
-        // 🔄 RESURRECTION (Para sistema de equipos)
+        // RESURRECTION (Para sistema de equipos)
         // =================================================================================
         
         /// <summary>
@@ -1800,13 +1800,13 @@ namespace Game.NPC.Modules
             if (!IsDefeatedAndInactive)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[Lifecycle] ⚠️ {name} no está derrotado, no se puede resucitar");
+                Debug.LogWarning($"[Lifecycle] {name} no está derrotado, no se puede resucitar");
                 #endif
                 return;
             }
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] 🔄 Resucitando {name}...");
+            Debug.Log($"[Lifecycle] Resucitando {name}...");
             #endif
             
             // 1. Restaurar vida, colisionador y Rigidbody (Heal no hace nada sobre un Damageable
@@ -1855,7 +1855,7 @@ namespace Game.NPC.Modules
             }
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Lifecycle] ✅ {name} resucitado exitosamente");
+            Debug.Log($"[Lifecycle] {name} resucitado exitosamente");
             #endif
         }
     }

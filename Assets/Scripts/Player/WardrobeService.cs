@@ -32,8 +32,8 @@ public static class WardrobeService
             if (changed)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[WardrobeService] ✅ Item '{item.WardrobeId}' desbloqueado correctamente");
-                Debug.Log($"[WardrobeService] 📢 Invocando OnWardrobeItemUnlocked para '{item.WardrobeId}'");
+                Debug.Log($"[WardrobeService] Item '{item.WardrobeId}' desbloqueado correctamente");
+                Debug.Log($"[WardrobeService] Invocando OnWardrobeItemUnlocked para '{item.WardrobeId}'");
 #endif
                 OnWardrobeItemUnlocked?.Invoke(item);
                 TryShowPopup(item);
@@ -110,7 +110,7 @@ public static class WardrobeService
 
         preset.unlockedWardrobeIds.Add(item.WardrobeId);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WardrobeService] ✅ Item '{item.WardrobeId}' añadido al preset");
+        Debug.Log($"[WardrobeService] Item '{item.WardrobeId}' añadido al preset");
 #endif
         OnWardrobeItemUnlocked?.Invoke(item);
         TryShowPopup(item);

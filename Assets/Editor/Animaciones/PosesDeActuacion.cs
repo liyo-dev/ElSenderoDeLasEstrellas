@@ -13,7 +13,11 @@ using UnityEngine;
 /// de la capa UpperBody (valen de pie y sentado) en el controlador de los NPC y en el del jugador,
 /// para los guiones: «bucle ManoAlPecho», o <c>HoldPose("ManoAlPecho")</c>.
 /// Añadir una pose es añadir una fila y volver a pasar el menú. Ver INC-1051.
+/// Una pose puede ocupar el cuerpo entero (capa base, como los brazos cruzados) y conservar el clip
+/// que ya usan los estados (<see cref="Pose.Clip"/>).
 ///
+/// Las faenas (<see cref="Faenas"/>) son los bucles de los oficios (<see cref="NPCWorkRoute"/>): unos
+/// músculos que se mueven sobre un reposo del pack, en la capa base del controlador de los NPC.
 /// Los gestos (<see cref="Gestos"/>) son poses con movimiento: sobre la pose, unos músculos se mueven
 /// en el tiempo (<see cref="PoseSobreClip.CrearConMusculos"/>). Un gesto puede sustituir al clip de un
 /// estado que ya usan los guiones (la risa y el miedo del pack metían los brazos en la cabeza): el
@@ -24,8 +28,9 @@ public static class PosesDeActuacion
     private const string CarpetaDeClips = "Assets/Art/Animations/Propias";
     private const string ClipBase = "Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Idles/HumanM@Idle01.fbx";
     private const string Modelo = "Assets/Prefabs/_LIAM.prefab";
-    private const string ModeloDeLasFotos = "Assets/Prefabs/_WILL_NPC.prefab";
+    private const string ModeloDeLasFotos = "Assets/Prefabs/_WILL.prefab";
     private const string Capa = "UpperBody";
+    public const string ClipDeFrio = "Assets/Art/Animations/Propias/Frio_Abrazarse.anim";
 
     private static readonly string[] Controladores =
     {
@@ -39,6 +44,10 @@ public static class PosesDeActuacion
         /// Hueso respecto al que se fijan las direcciones (el pecho; la cadera si la pose mueve el tronco).
         public HumanBodyBones Marco = HumanBodyBones.Chest;
         public PoseSobreClip.ApunteHumano[] Apuntes;
+        /// Ruta del clip, si no es la de la tabla (Pose_<Estado>).
+        public string Clip;
+        /// En la capa base: la pose ocupa todo el cuerpo. Si no, va en la de medio cuerpo.
+        public bool CuerpoEntero;
     }
 
     private static PoseSobreClip.ApunteHumano H(HumanBodyBones hueso, HumanBodyBones punta, float x, float y, float z)
@@ -86,6 +95,55 @@ public static class PosesDeActuacion
             H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.12f, -0.96f, 0.22f),
             H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.12f, -0.96f, 0.22f),
         } },
+        // Los antebrazos cruzados delante del pecho, el izquierdo por debajo: espera, desconfianza. Ver INC-922.
+        new Pose { Estado = "BrazosCruzados", CuerpoEntero = true, Clip = CarpetaDeClips + "/BrazosCruzados_Idle.anim", Apuntes = new[]
+        {
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.3f, -0.6f, 0.75f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -1f, 0.6f, 0.3f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.3f, -0.6f, 0.75f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 1f, 0.5f, 0.15f),
+        } },
+        // Abrazarse de frío: los brazos pegados al cuerpo y cada mano al brazo contrario, el izquierdo por
+        // debajo. Lo usa ClimaSobreElJugador con lluvia o nieve, quieto. Ver INC-959.
+        new Pose { Estado = ClimaSobreElJugador.EstadoDeFrio, Clip = ClipDeFrio, Apuntes = new[]
+        {
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, -0.1f, -0.6f, 0.78f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.9f, 0.42f, -0.12f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, 0.15f, -0.66f, 0.74f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.9f, 0.36f, -0.12f),
+        } },
+    };
+
+    private sealed class Faena
+    {
+        public string Estado, Clip, ClipBase;
+        public float Duracion;
+        /// Cuánto se mueve cada músculo respecto al reposo en cada clave.
+        public Dictionary<string, (float t, float delta)[]> Musculos;
+    }
+
+    private static readonly Faena[] Faenas =
+    {
+        // Recoger hierbas (la boticaria): agachada sobre la mata, la mano derecha baja, arranca y deja lo
+        // cogido en la cesta, que sujeta la izquierda junto a la cadera. Claves: quieta, baja a la mata (0,8),
+        // la sujeta (1,2), tira (1,55), la echa en la cesta (2,2), la suelta (2,6) y vuelve. Front-Back
+        // negativo es hacia delante; Twist Left-Right negativo, a su izquierda. Ver INC-1034.
+        new Faena { Estado = "RecogerHierbas_Loop", Clip = CarpetaDeClips + "/RecogerHierbas.anim", Duracion = 3.4f,
+            ClipBase = "Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Idles/HumanF@Idle01.fbx",
+            Musculos = new Dictionary<string, (float t, float delta)[]>
+            {
+                ["Spine Front-Back"] = new[] { (0f, -0.15f), (0.8f, -0.6f), (1.55f, -0.5f), (2.2f, -0.2f), (3.4f, -0.15f) },
+                ["Chest Front-Back"] = new[] { (0f, -0.1f), (0.8f, -0.45f), (1.55f, -0.35f), (2.2f, -0.15f), (3.4f, -0.1f) },
+                ["Chest Twist Left-Right"] = new[] { (0f, 0f), (1.55f, 0f), (2.2f, -0.35f), (2.6f, -0.3f), (3.4f, 0f) },
+                ["Head Nod Down-Up"] = new[] { (0f, -0.15f), (0.8f, -0.35f), (2.2f, -0.2f), (3.4f, -0.15f) },
+                ["Right Arm Front-Back"] = new[] { (0f, -0.1f), (0.8f, -0.75f), (1.2f, -0.75f), (1.55f, -0.6f), (2.2f, -0.55f), (2.6f, -0.5f), (3.4f, -0.1f) },
+                ["Right Arm Down-Up"] = new[] { (0f, 0f), (0.8f, 0.1f), (1.2f, 0.1f), (1.55f, 0.35f), (2.2f, 0.15f), (2.6f, 0.15f), (3.4f, 0f) },
+                ["Right Forearm Stretch"] = new[] { (0f, 0f), (0.8f, 0.6f), (1.2f, 0.6f), (1.55f, -0.2f), (2.2f, -0.5f), (2.6f, -0.4f), (3.4f, 0f) },
+                ["Right Arm Twist In-Out"] = new[] { (0f, 0f), (1.55f, 0f), (2.2f, 0.4f), (2.6f, 0.4f), (3.4f, 0f) },
+                ["Right Hand Down-Up"] = new[] { (0f, 0f), (0.8f, -0.4f), (1.55f, 0.3f), (2.2f, -0.2f), (3.4f, 0f) },
+                ["Left Arm Front-Back"] = new[] { (0f, -0.35f), (2.2f, -0.45f), (3.4f, -0.35f) },
+                ["Left Forearm Stretch"] = new[] { (0f, -0.55f), (2.2f, -0.45f), (3.4f, -0.55f) },
+            } },
     };
 
     private sealed class Gesto
@@ -560,7 +618,7 @@ public static class PosesDeActuacion
         var hecho = new StringBuilder();
         foreach (var pose in Poses)
         {
-            string ruta = $"{CarpetaDeClips}/Pose_{pose.Estado}.anim";
+            string ruta = pose.Clip ?? $"{CarpetaDeClips}/Pose_{pose.Estado}.anim";
             float desvio = PoseSobreClip.CrearHumanoide(prefab, base_, ruta, pose.Apuntes, pose.Marco);
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ruta);
             hecho.Append($"{pose.Estado}: desvío máx. {desvio:0.0}°");
@@ -568,7 +626,7 @@ public static class PosesDeActuacion
             {
                 var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(rutaCtrl);
                 if (ctrl == null) { hecho.Append($", falta {rutaCtrl}"); continue; }
-                bool nuevo = PoseSobreClip.EstadoEnBucle(ctrl, pose.Estado, clip, Capa);
+                bool nuevo = PoseSobreClip.EstadoEnBucle(ctrl, pose.Estado, clip, pose.CuerpoEntero ? null : Capa);
                 hecho.Append(nuevo ? $", añadido a {ctrl.name}" : $", al día en {ctrl.name}");
             }
             hecho.Append(". Fotos: ").Append(Fotografiar(clip, pose.Estado)).Append(' ');
@@ -591,6 +649,7 @@ public static class PosesDeActuacion
             hecho.Append(". ");
         }
         foreach (var postura in PosturasDeAsiento) hecho.Append(CrearPosturaDeAsiento(postura)).Append(' ');
+        foreach (var faena in Faenas) hecho.Append(CrearFaena(faena)).Append(' ');
         OrdenesDelEditor.Avisar("Poses de actuación", hecho.ToString());
     }
 
@@ -604,16 +663,39 @@ public static class PosesDeActuacion
         string ruta = $"{CarpetaDeClips}/Postura_{postura.Estado}.anim";
         PoseSobreClip.CrearConMusculos(base_, ruta, postura.Duracion, postura.Musculos);
         var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ruta);
+        // Fuera los objetivos de pie del clip de partida: con el pie clavado donde estaba, al estirar la pierna la
+        // rodilla se doblaba al revés.
+        foreach (var b in AnimationUtility.GetCurveBindings(clip))
+            if (b.type == typeof(Animator) && (b.propertyName.StartsWith("LeftFoot") || b.propertyName.StartsWith("RightFoot")))
+                AnimationUtility.SetEditorCurve(clip, b, null);
+        EditorUtility.SetDirty(clip);
+        AssetDatabase.SaveAssets();
         var hecho = new StringBuilder($"{postura.Estado} (postura de asiento, sobre {base_.name})");
         foreach (var rutaCtrl in Controladores)
         {
             var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(rutaCtrl);
             if (ctrl == null) { hecho.Append($", falta {rutaCtrl}"); continue; }
             bool nuevo = PoseSobreClip.EstadoEnBucle(ctrl, postura.Estado, clip);
+            var estado = ctrl.layers[0].stateMachine.states.First(s => s.state.name == postura.Estado).state;
+            estado.iKOnFeet = false;   // los pies van con la pierna, no clavados
+            EditorUtility.SetDirty(ctrl);
             hecho.Append(nuevo ? $", añadido a {ctrl.name}" : $", al día en {ctrl.name}");
         }
         hecho.Append(". Fotos: ").Append(Fotografiar(clip, postura.Estado));
         return hecho.ToString();
+    }
+
+    /// Crea el clip de la faena sobre su reposo del pack y lo pone en la capa base del controlador de los NPC.
+    private static string CrearFaena(Faena faena)
+    {
+        var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controladores[0]);
+        var base_ = AssetDatabase.LoadAllAssetsAtPath(faena.ClipBase).OfType<AnimationClip>()
+            .FirstOrDefault(c => !c.name.StartsWith("__preview__"));
+        if (ctrl == null || base_ == null) return $"{faena.Estado}: falta {(ctrl == null ? Controladores[0] : faena.ClipBase)}.";
+        PoseSobreClip.CrearConMusculos(base_, faena.Clip, faena.Duracion, faena.Musculos);
+        var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(faena.Clip);
+        bool nuevo = PoseSobreClip.EstadoEnBucle(ctrl, faena.Estado, clip);
+        return $"{faena.Estado} (faena, {clip.length:0.00} s){(nuevo ? $", añadido a {ctrl.name}" : $", al día en {ctrl.name}")}. Fotos: {Fotografiar(clip, faena.Estado)}";
     }
 
     /// Pone el clip en el estado con ese nombre de cada capa que lo tenga (antes llevaba el del pack);

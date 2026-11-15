@@ -1749,14 +1749,6 @@
             "value": "Basic ability to overcome obstacles."
         },
         {
-            "key": "ABILITY_CLIMB_TITLE",
-            "value": "Climb"
-        },
-        {
-            "key": "ABILITY_CLIMB_DESC",
-            "value": "Lets you climb vertical surfaces."
-        },
-        {
             "key": "ABILITY_MAGIC_TITLE",
             "value": "Magic"
         },
@@ -2049,10 +2041,6 @@
             "value": "You need to know how to jump to get past here."
         },
         {
-            "key": "REQUISITO_FALTA_CLIMB",
-            "value": "You need to know how to climb to get up here."
-        },
-        {
             "key": "REQUISITO_FALTA_MAGIC",
             "value": "You need magic here."
         },
@@ -2263,7 +2251,7 @@
         },
         {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Follow him without being seen. When he stops to look back, hide in a bush or behind a wall."
+            "value": "Follow them without being seen. When they stop to look back, hide in a bush or behind a wall."
         },
         {
             "key": "CAP3_ROTULO_MANANA",
@@ -2344,6 +2332,22 @@
         {
             "key": "TUTORIAL_CAP3_HOGUERA",
             "value": "Press {BOTON} by a campfire to rest: by day, time passes until night; at night, until morning."
+        },
+        {
+            "key": "LUGAR_RISCO",
+            "value": "Risco"
+        },
+        {
+            "key": "LUGAR_VEGA",
+            "value": "Vega"
+        },
+        {
+            "key": "CAP3_TUTO_DOS",
+            "value": "There are two of them. Press {BOTON} to switch between them."
+        },
+        {
+            "key": "LUGAR_VALLE",
+            "value": "The Valley"
         }
     ]
 }

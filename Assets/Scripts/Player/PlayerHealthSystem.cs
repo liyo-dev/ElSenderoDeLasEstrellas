@@ -82,7 +82,7 @@ public class PlayerHealthSystem : MonoBehaviour
     private Renderer[] _renderers;
     private WardrobeInventory _wardrobeInventory; // FIX 4 sep 2026, ver Awake()/RefreshRenderersForWardrobeChange
     private Material[] _originalMaterials;
-    // FIX A10 (auditoría 2026-08-07): resuelto en Awake para god-frame en Cinematic (TakeDamage)
+    // resuelto en Awake para god-frame en Cinematic (TakeDamage)
     // y para vaciar la pila de modos en Die()/ReviveInternal (ver comentarios más abajo).
     private PlayerActionManager _actionManager;
 
@@ -159,15 +159,21 @@ public class PlayerHealthSystem : MonoBehaviour
         // se quedaba fija, quedando raro (reportado por Raúl). Nos suscribimos a
         // WardrobeInventory.OnWardrobeChanged para añadir al array cualquier Renderer nuevo que
         // aparezca al equipar (ver RefreshRenderersForWardrobeChange).
-        if (_wardrobeInventory == null)
-            PlayerService.TryGetComponent(out _wardrobeInventory, includeInactive: true, allowSceneLookup: true);
-        if (_wardrobeInventory != null)
-            _wardrobeInventory.OnWardrobeChanged += RefreshRenderersForWardrobeChange;
     }
 
     // Reemplaza Start/Coroutine por evento del boot service
     void OnEnable()
     {
+        // La ropa nueva entra en el parpadeo de daño (ver RefreshRenderersForWardrobeChange). Se
+        // escucha mientras está encendido: el cuerpo se apaga cuando lo lleva la IA.
+        if (_wardrobeInventory == null)
+            PlayerService.TryGetComponent(out _wardrobeInventory, includeInactive: true, allowSceneLookup: true);
+        if (_wardrobeInventory != null)
+        {
+            _wardrobeInventory.OnWardrobeChanged -= RefreshRenderersForWardrobeChange;
+            _wardrobeInventory.OnWardrobeChanged += RefreshRenderersForWardrobeChange;
+        }
+
         GameBootService.OnProfileReady += HandleProfileReady;
         ProfileReadyDiagnostics.RegisterSubscriber(nameof(PlayerHealthSystem));
         if (GameBootService.IsAvailable)
@@ -182,7 +188,7 @@ public class PlayerHealthSystem : MonoBehaviour
         if (_wardrobeInventory != null)
             _wardrobeInventory.OnWardrobeChanged -= RefreshRenderersForWardrobeChange;
 
-        // FIX A10 (auditoría 2026-08-07): si el GameObject se desactiva a mitad del ciclo "apagado"
+        // si el GameObject se desactiva a mitad del ciclo "apagado"
         // de InvulnerabilityFlashCoroutine (SetRenderersVisibility(false)), la corrutina muere en
         // seco sin llegar a su reactivación — el jugador queda invisible para siempre, incluso al
         // reactivarse, porque nada volvía a llamar a ResetDamageVisuals(). Se llama siempre al
@@ -227,7 +233,7 @@ public class PlayerHealthSystem : MonoBehaviour
         GameBootService.OnProfileReady -= HandleProfileReady;
     }
     
-    // FIX Bajos (auditoría 2026-08-07): `renderer.material` (getter) ya auto-instancia una copia
+    // FIX Bajos: `renderer.material` (getter) ya auto-instancia una copia
     // única del material la primera vez que se accede, y esa copia se descarta inmediatamente al
     // envolverla en `new Material(...)` — una fuga por renderer cada vez que se llama a este
     // método. Se usa `sharedMaterial` como origen (no instancia nada) y se destruyen instancias
@@ -302,7 +308,7 @@ public class PlayerHealthSystem : MonoBehaviour
     public bool TakeDamage(float damageAmount, bool ignoreInvulnerability = false)
     {
         if (!IsAlive || damageAmount <= 0f) return false;
-        // FIX A10 (auditoría 2026-08-07): god-frame durante cinemáticas. Sin esto, un AoE/proyectil
+        // god-frame durante cinemáticas. Sin esto, un AoE/proyectil
         // residual que impacta justo cuando arranca una cinemática (o un daño en curso que se
         // resuelve un frame después de que ActionMode.Cinematic ya esté en la pila) podía matar al
         // jugador y disparar el GameOver DENTRO de la cinemática — pantalla de muerte superpuesta a
@@ -332,7 +338,7 @@ public class PlayerHealthSystem : MonoBehaviour
         if (!string.IsNullOrEmpty(selectedDamageAnim))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerHealthSystem] 💥 Reproduciendo animación de daño: '{selectedDamageAnim}' ({damageAnimationNames?.Length ?? 0} variantes disponibles)");
+            Debug.Log($"[PlayerHealthSystem] Reproduciendo animación de daño: '{selectedDamageAnim}' ({damageAnimationNames?.Length ?? 0} variantes disponibles)");
 #endif
             TriggerAnimation(selectedDamageAnim);
             _animDeDanoLanzada = selectedDamageAnim;
@@ -514,7 +520,7 @@ public class PlayerHealthSystem : MonoBehaviour
 
         _isDead = true;
 
-        // FIX A10 (auditoría 2026-08-07): vaciar la pila de modos al morir. Sin esto, morir con
+        // vaciar la pila de modos al morir. Sin esto, morir con
         // Flying/Carrying/Cinematic/Stunned pushed (p. ej. un AoE que mata en pleno vuelo) dejaba
         // esos modos "vivos" de cara al respawn — el jugador reaparecía con el input parcialmente
         // bloqueado por un modo que ya no tiene sentido tras la muerte.
@@ -711,11 +717,11 @@ public class PlayerHealthSystem : MonoBehaviour
         _caidaIniciada = false;
         RestaurarAnimatorTrasCaida();
 
-        // FIX A10 (auditoría 2026-08-07): red de seguridad — vaciar la pila de nuevo por si algún
+        // red de seguridad — vaciar la pila de nuevo por si algún
         // sistema empujó un modo entre la muerte y el revive (p. ej. una cinemática de Game Over).
         _actionManager?.ResetToDefault();
 
-        // FIX A10 (auditoría 2026-08-07): invulnerabilidad temporal al revivir. Sin esto, el
+        // invulnerabilidad temporal al revivir. Sin esto, el
         // jugador podía reaparecer exactamente sobre el peligro que lo mató (el anchor de
         // respawn no garantiza estar fuera del radio de un AoE/trampa) y morir de nuevo antes de
         // recuperar el control.
@@ -1033,7 +1039,7 @@ public class PlayerHealthSystem : MonoBehaviour
         if (damageAnimationNames == null || damageAnimationNames.Length == 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerHealthSystem] ⚠️ No hay animaciones de daño configuradas en el array damageAnimationNames");
+            Debug.LogWarning("[PlayerHealthSystem] No hay animaciones de daño configuradas en el array damageAnimationNames");
 #endif
             return null;
         }

@@ -7,7 +7,7 @@ using Sendero.Core.Feedback;
 
 /// El TELÓN: el único que decide cuándo la pantalla está lista para verse.
 ///
-/// ── Por qué existe (21 sep 2026) ─────────────────────────────────────────────────────────────
+/// ── Por qué existe ─────────────────────────────────────────────────────────────
 /// «Cuando iniciamos partida nueva sale la habitación de Will y luego ya el prólogo. Tenemos
 /// sistemas de guardas para las cámaras, para los sonidos, y queda raro, ensucia el juego.»
 ///

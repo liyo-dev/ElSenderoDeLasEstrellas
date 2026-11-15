@@ -417,7 +417,7 @@ internal sealed partial class Horno
         string json = Path.Combine(carpetaEscenario, "escenario.json");
         if (!File.Exists(json))
         {
-            Aviso("No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.");
+            Aviso("No hay captura del escenario: usa «El Sendero → Cinemáticas → Guion → 1. Capturar el escenario del prólogo» para tener los dibujos.");
             return;
         }
         var esc = JsonUtility.FromJson<EscenarioJson>(File.ReadAllText(json));

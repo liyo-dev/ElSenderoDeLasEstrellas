@@ -55,8 +55,11 @@ namespace Game.NPC.Common
         {
             if (agent == null) return false;
             if (agent.enabled) return true;
-
+            // Un cuerpo que lleva el jugador lo mueve su controlador: su agente sigue apagado.
+            var piloto = agent.GetComponent<PilotoDelCuerpo>();
+            if (piloto != null && piloto.LoLlevaElJugador) return false;
             if (NavMesh.SamplePosition(desiredPosition, out var hit, Mathf.Max(1f, searchRadius), NavMesh.AllAreas))
+
             {
                 if (t != null) t.position = hit.position;
                 agent.enabled = true;
@@ -96,7 +99,7 @@ namespace Game.NPC.Common
             // antes de que LateUpdate lo lea, produciendo falsos warnings del safety check.
             agent.velocity = Vector3.zero;
 
-            // FIX INC-NPCS-EN-ARBOLES (14 ago 2026): este reseteo de nextPosition solo tiene
+            // FIX INC-NPCS-EN-ARBOLES: este reseteo de nextPosition solo tiene
             // sentido con el agente sobre el NavMesh (limpiar residuo de un path real). Si se
             // llama con el agente fuera de malla (p.ej. mientras SeekShelterState lo mueve a mano
             // bajo la copa de un árbol, ver NPCStateBase.BeginManualApproach), asignar aquí una

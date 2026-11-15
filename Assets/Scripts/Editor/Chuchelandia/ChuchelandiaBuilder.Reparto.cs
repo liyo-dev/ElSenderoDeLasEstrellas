@@ -113,7 +113,7 @@ public static partial class ChuchelandiaBuilder
     {
         var modelo = AssetDatabase.LoadAssetAtPath<GameObject>(papel.Prefab);
         if (modelo == null) { informe.AppendLine($"Reparto: no encuentro {papel.Prefab} ({papel.Nombre})."); return null; }
-        AsegurarCarpeta(CarpetaPrefabsDelReparto);
+        Kits.EditorTools.AssetFolders.Ensure(CarpetaPrefabsDelReparto);
 
         var go = (GameObject)PrefabUtility.InstantiatePrefab(modelo);
         try
@@ -240,7 +240,7 @@ public static partial class ChuchelandiaBuilder
         if (existente != null) return existente;
         var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(papel.Reposo);
         if (clip == null) return null;
-        AsegurarCarpeta($"{CarpetaReparto}/Animacion");
+        Kits.EditorTools.AssetFolders.Ensure($"{CarpetaReparto}/Animacion");
         return AnimatorController.CreateAnimatorControllerAtPathWithClip(ruta, clip);
     }
 

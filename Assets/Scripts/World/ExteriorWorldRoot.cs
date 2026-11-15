@@ -15,7 +15,7 @@ using UnityEngine;
 /// Mismo patrón que AnchorRegistry (SpawnAnchor) y PlayerService: coste de resolución pagado una
 /// sola vez (aquí en Awake), lookup O(1) después.
 ///
-/// FIX (15 sep 2026, pedido de Raúl): hasta ahora EnvironmentController ocultaba este root entero
+/// hasta ahora EnvironmentController ocultaba este root entero
 /// con GameObject.SetActive(false). Eso apagaba TODO lo que cuelga de aquí, no solo el
 /// renderizado: ningún Update()/FixedUpdate() corre, ningún NavMeshAgent avanza, y ninguna
 /// coroutine en marcha puede seguir ni pararse limpiamente. Un NPC del root "AI" (p. ej. Oliver)
@@ -46,7 +46,7 @@ public class ExteriorWorldRoot : MonoBehaviour
     private Light[] _lights;
     // Además de Renderer: el Terrain (hierba/árboles pintados con el pincel de detalle, no son
     // GameObjects propios) se dibuja desde el propio componente Terrain, no desde un Renderer —
-    // Renderer.enabled no le afecta nada. FIX (15 sep 2026, pedido de Raúl): la vegetación del
+    // Renderer.enabled no le afecta nada. la vegetación del
     // terreno seguía viéndose por detrás de las paredes del interior tras el cambio a
     // Renderer.enabled/Light.enabled porque no se estaba tocando esto.
     private Terrain[] _terrains;

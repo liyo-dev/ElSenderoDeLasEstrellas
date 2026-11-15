@@ -1,0 +1,1208 @@
+0	1	Luz Primordial Astral	0,00	0,00	0,00	328		Light,UniversalAdditionalLightData,	
+0	1	SENDERO_WORLD	0,00	0,00	0,00	0			
+1	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION	0,00	0,00	0,00	0			
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_01_Manifestar_Will	0,00	1,00	20,00	0		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_01_Entrar_Will	5,60	3,73	150,00	270		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_02_Manifestar_Estela	0,00	2,50	166,00	0		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_02_Entrar_Estela	5,60	5,23	300,00	270		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_03_Manifestar_Liam	0,00	4,00	318,00	0		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_03_Entrar_Liam	5,60	6,73	450,00	270		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_04_Avanzar_Altar	0,00	5,50	560,00	0		BoxCollider,SenderoTriggerArea,	
+2	1	SENDERO_WORLD/TRIGGERS_DE_PROGRESION/Trigger_05_Aparicion_MagoOscuro	0,00	7,00	640,00	0		BoxCollider,SenderoTriggerArea,	
+1	1	SENDERO_WORLD/SENDERO_PROGRESSION_CONTROLLER	0,00	0,00	0,00	0		SenderoProgressionController,	
+1	1	SENDERO_WORLD/Vestido del Sendero (generado)	0,00	0,00	0,00	0		PisadasEnElSendero,TinteDelSendero,NavMeshSurface,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 01	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 02	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 03	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 04	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 05	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 06	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 07	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 08	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Camino/Camino 09	0,00	0,00	0,00	0	R	MeshCollider,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Llegada	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Puerta de Will	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Puerta de Estela y descanso	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Puerta de Liam	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Ruptura	0,00	0,00	0,00	0	R	MeshCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Plazas/Plaza — Altar	0,00	0,00	0,00	0	R	MeshCollider,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Cielos cosidos (primer tramo)	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Cielos cosidos (primer tramo)/Amanecer	0,00	0,00	0,00	0	R		
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Cielos cosidos (primer tramo)/Noche de lunas	0,00	0,00	0,00	0	R		
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 01	0,00	-2,00	-6,00	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 02	-2,58	-1,11	70,94	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 03	-0,59	-0,54	164,91	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 04	-5,06	0,44	242,84	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 05	-0,44	0,96	314,59	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 06	-7,40	1,95	391,86	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 07	0,00	2,50	467,62	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 08	-5,97	2,93	542,84	0		PolvoDeLuzDelSendero,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Polvo de luz/Polvo 09	0,77	3,93	619,09	0		PolvoDeLuzDelSendero,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Will	5,60	1,53	150,00	270			
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Will/Arco	5,60	1,53	150,00	270	R		
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Will/Luz	5,60	1,53	150,00	270		AparecerConFundido,	
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Will/Luz/Superficie de Will	5,60	1,53	150,00	270	R		
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Will/Luz/Brillo	4,40	3,73	150,00	270		Light,UniversalAdditionalLightData,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Estela	5,60	3,03	300,00	270			
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Estela/Arco	5,60	3,03	300,00	270	R		
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Estela/Luz	5,60	3,03	300,00	270		AparecerConFundido,	
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Estela/Luz/Superficie de Estela	5,60	3,03	300,00	270	R		
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Estela/Luz/Brillo	4,40	5,23	300,00	270		Light,UniversalAdditionalLightData,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Liam	5,60	4,53	450,00	270			
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Liam/Arco	5,60	4,53	450,00	270	R		
+4	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Liam/Luz	5,60	4,53	450,00	270		AparecerConFundido,	
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Liam/Luz/Superficie de Liam	5,60	4,53	450,00	270	R		
+5	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puertas/Puerta de Liam/Luz/Brillo	4,40	6,73	450,00	270		Light,UniversalAdditionalLightData,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Altar de piedra blanca	0,00	6,00	656,00	180		RespiracionDeLuz,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Altar de piedra blanca/Piedra	0,00	6,00	656,00	180	R	BoxCollider,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Altar de piedra blanca/Anillo	0,00	6,00	656,00	180	R		
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Altar de piedra blanca/Luz que respira	0,00	9,40	656,00	180		Light,UniversalAdditionalLightData,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Umbral de la Piedra	0,00	0,00	-4,50	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Umbral de la Piedra/Ventana del portal	0,00	1,65	-4,50	180	R	VentanaDePortal,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Umbral de la Piedra/Luz del portal	0,00	1,65	-3,30	0		Light,UniversalAdditionalLightData,	
+2	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate	0,00	0,00	0,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate/Rescate 0	0,00	0,50	4,00	0			
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate/Rescate 1	0,00	2,00	162,00	0		SpawnAnchor,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate/Rescate 2	0,00	3,50	312,00	0		SpawnAnchor,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate/Rescate 3	0,00	5,00	470,00	0		SpawnAnchor,	
+3	1	SENDERO_WORLD/Vestido del Sendero (generado)/Puntos de rescate/Rescate 4	0,00	6,50	630,00	0			
+0	1	_WILL	0,00	0,10	3,00	0		MuelleDeHuesos,	Assets/Prefabs/_WILL.prefab
+1	1	_WILL/vBasicController_MaleCharacterPBR	0,00	0,10	3,00	0		Animator,Rigidbody,CapsuleCollider,vThirdPersonController,vThirdPersonInput,PlayerPresetService,PlayerTargeting,MagicProjectileSpawner,InteractionDetector,PlayerHealthSystem,PlayerCarrySystem,PlayerActionManager,ManaPool,MagicCaster,PlayerClimbingController,PlayerPickupCollector,PlayerSwimmingController,ModularAutoBuilder,PlayerFlyingController,PlayerShieldController,PlayerBattleModeController,PlayerLevitationController,NPCEmotionController,ActiveCharacterSwapper,FootstepHandler,NPCEmotionController,PlayerDialogueAnimator,PlayerAmbientActivityHandler,Personaje,PlayerCombatInput,TurnStreakFeedback,ComboCastController,ElevacionVisual,PresentacionDelCombo,VolteretaDelJugador,AvisoDeAmenazas,ManosIK,PresentacionDelContraataque,AerialKnockbackReceiver,PlaneoDelJugador,RespuestaSinMana,	Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body01	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body02	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body03	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body04	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	1	_WILL/vBasicController_MaleCharacterPBR/Body05	0,00	0,56	2,54	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body06	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body07	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body08	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body09	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body10	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body11	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body12	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body13	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body14	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body15	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body16	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body17	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body18	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body19	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body20	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Cloak01	0,00	0,68	2,18	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Cloak02	0,00	0,68	2,18	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Cloak03	0,00	0,68	2,18	0	R		Assets/Prefabs/_WILL.prefab
+2	1	_WILL/vBasicController_MaleCharacterPBR/root	0,00	0,10	3,00	180			Assets/Prefabs/_WILL.prefab
+3	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis	0,01	0,43	3,00	80			Assets/Prefabs/_WILL.prefab
+4	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01	0,01	0,53	3,02	90			Assets/Prefabs/_WILL.prefab
+5	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02	0,01	0,63	3,02	90			Assets/Prefabs/_WILL.prefab
+6	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03	0,01	0,73	3,00	90			Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/BackpackBone	0,01	0,76	2,78	270			Assets/Prefabs/_WILL.prefab
+8	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack01	0,01	0,76	2,78	0	R		Assets/Prefabs/_WILL.prefab
+8	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack02	0,01	0,76	2,78	0	R		Assets/Prefabs/_WILL.prefab
+8	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack03	0,01	0,76	2,78	0	R		Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l	-0,05	0,75	3,02	270			Assets/Prefabs/_WILL.prefab
+8	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/shoulderPadJoint_l	-0,15	0,72	3,00	270			Assets/Prefabs/_WILL.prefab
+8	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l	-0,15	0,72	3,00	287			Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l	-0,24	0,55	2,95	279			Assets/Prefabs/_WILL.prefab
+10	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l	-0,27	0,43	3,00	183			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l	-0,31	0,36	3,03	186			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l	-0,26	0,30	3,05	185			Assets/Prefabs/_WILL.prefab
+13	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l/index_03_l	-0,24	0,35	3,03	186			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l	-0,25	0,39	3,07	296			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l	-0,21	0,36	3,10	299			Assets/Prefabs/_WILL.prefab
+13	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l	-0,23	0,34	3,06	297			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l	-0,26	0,34	3,04	269			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows	-0,26	0,33	3,04	344		Animator,	Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow01	-0,26	0,33	3,04	344	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow02	-0,26	0,33	3,04	344	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow03	-0,26	0,33	3,04	344	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow04	-0,26	0,33	3,04	344	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow05	-0,26	0,33	3,04	344	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL	-0,26	0,33	3,04	183			Assets/Prefabs/_WILL.prefab
+14	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01	-0,26	0,33	3,04	269			Assets/Prefabs/_WILL.prefab
+15	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02	-0,26	0,30	2,97	269			Assets/Prefabs/_WILL.prefab
+16	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03	-0,27	0,19	2,67	269			Assets/Prefabs/_WILL.prefab
+17	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04	-0,26	0,29	2,32	89			Assets/Prefabs/_WILL.prefab
+18	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04/BowJoint05	-0,23	0,52	2,94	183			Assets/Prefabs/_WILL.prefab
+15	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06	-0,25	0,36	3,11	89			Assets/Prefabs/_WILL.prefab
+16	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07	-0,24	0,52	3,40	89			Assets/Prefabs/_WILL.prefab
+17	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07/BowJoint08	-0,20	0,84	3,55	269			Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS01_Stick	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS02_Niddle	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS03_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS04_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS05_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS06_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS07_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS08_Sword	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS09_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS10_Axe	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS11_Hammer	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS12_Sword	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS13_Axe	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS14_Hammer	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS15_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS16_Sword	-0,26	0,34	3,04	269	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield01	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield02	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield03	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield04	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield05	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield06	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield07	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield08	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield09	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield10	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield11	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield12	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield13	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield14	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield15	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield16	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield17	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield18	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield19	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield20	-0,26	0,34	3,04	344	R		Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r	0,07	0,75	3,02	270			Assets/Prefabs/_WILL.prefab
+8	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/shoulderPadJoint_r	0,18	0,73	3,00	270			Assets/Prefabs/_WILL.prefab
+8	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r	0,17	0,73	3,00	258			Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r	0,27	0,56	2,97	263			Assets/Prefabs/_WILL.prefab
+10	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r	0,32	0,45	3,03	348			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r	0,36	0,37	3,04	345			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r	0,31	0,30	3,04	346			Assets/Prefabs/_WILL.prefab
+13	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r/index_03_r	0,29	0,36	3,03	345			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r	0,29	0,39	3,08	238			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r	0,25	0,36	3,09	234			Assets/Prefabs/_WILL.prefab
+13	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r	0,27	0,33	3,06	237			Assets/Prefabs/_WILL.prefab
+11	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r	0,32	0,35	3,04	259			Assets/Prefabs/_WILL.prefab
+12	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows	0,32	0,35	3,04	43		Animator,	Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow02	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow03	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow04	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+13	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow05	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+13	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL	0,32	0,35	3,04	259			Assets/Prefabs/_WILL.prefab
+14	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL/arrowBone	0,32	0,35	3,04	259			Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS01_Stick	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS02_Niddle	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS03_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS04_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS05_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS06_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS07_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS08_Sword	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS09_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS10_Axe	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS11_Hammer	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS12_Sword	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS13_Axe	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS14_Hammer	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS15_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS16_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS01_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS02_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS03_Sword	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS04_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS05_Sword	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS06_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS07_Sword	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand01	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand02	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand03	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand04	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand05	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand06	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand07	0,32	0,35	3,04	43	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear01	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear02	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear03	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear04	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+12	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear05	0,32	0,35	3,04	259	R		Assets/Prefabs/_WILL.prefab
+7	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/CloakBone01	0,01	0,79	2,88	269			Assets/Prefabs/_WILL.prefab
+8	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02	0,03	0,54	2,80	269			Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02/CloakBone03	0,07	0,24	2,77	269			Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01	0,01	0,80	2,99	90			Assets/Prefabs/_WILL.prefab
+8	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head	0,01	1,01	3,01	90			Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC01_Heart	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC02_Leaf	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_BlackGlass	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NerdGlass	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_HeavyMetalGlass	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NightVision	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_BunnyEars	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_ShortEars	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AnthenaEars	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AngelEars	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC07_PiratePatch	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask07	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask08	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC09_Ribbon	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye07	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye08	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye09	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye10	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye11	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye12	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth07	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth08	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth09	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth10	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth11	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth12	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair01	0,01	1,01	3,01	0	R	CejasPorEmocion,	Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair02	0,01	1,01	3,01	0	R	RendererColorOverride,	Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair07	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair08	0,01	1,01	3,01	0	R	RendererColorOverride,	Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair09	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair10	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair11	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair12	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair13	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head01_Male	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head02_Female	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Yellow	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Brown	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Red	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Blue	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Purple	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Grey	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Yellow	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Brown	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Red	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Blue	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Purple	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Grey	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head05_Santa	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat03	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat04	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat05	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat06	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat07	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat08	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat09	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat10	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat11	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat12	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat13	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat14	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow01	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow02	0,01	1,01	3,01	0	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair15_Flequillo	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC12_Capucha	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/ColetaBone01	0,00	1,41	2,73	182			Assets/Prefabs/_WILL.prefab
+10	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/ColetaBone01/ColetaBone02	0,00	1,30	2,50	180			Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair14_Coleta	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye20	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye21	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye22	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye23	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye24	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye25	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye26	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye27	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye28	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye29	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx200	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx201	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx202	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx203	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx204	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx205	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx206	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx207	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx208	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx209	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx210	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx211	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx212	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth20	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth21	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth22	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth23	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth24	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth25	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth26	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth27	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth28	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth29	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye30	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye31	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye32	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye33	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye34	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye35	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye36	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye37	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye38	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye39	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx300	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx301	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx302	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx303	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx304	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx305	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx306	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx307	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx308	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx309	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx310	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx311	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx312	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye40	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye41	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye42	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye43	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye44	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye45	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye46	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye47	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye48	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye49	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye50	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye51	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye52	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx400	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx401	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx402	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx403	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx404	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx405	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx406	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx407	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx408	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx409	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx410	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx411	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx412	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth40	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth41	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth42	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth43	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth44	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth45	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth46	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth47	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth48	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth49	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	0	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth50	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+9	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair16_Heroe	0,01	1,01	3,01	90	R		Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/spine_01/spine_02/spine_03/CarryPoint	0,02	0,35	3,45	90			Assets/Prefabs/_WILL.prefab
+4	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_l	-0,08	0,39	3,00	93			Assets/Prefabs/_WILL.prefab
+5	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_l/calf_l	-0,11	0,26	3,01	104			Assets/Prefabs/_WILL.prefab
+6	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_l/calf_l/foot_l	-0,15	0,14	2,99	90			Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_l/calf_l/foot_l/ball_l	-0,15	0,12	3,10	90			Assets/Prefabs/_WILL.prefab
+4	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_r	0,11	0,40	3,00	91			Assets/Prefabs/_WILL.prefab
+5	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_r/calf_r	0,12	0,26	3,02	84			Assets/Prefabs/_WILL.prefab
+6	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_r/calf_r/foot_r	0,12	0,14	2,99	90			Assets/Prefabs/_WILL.prefab
+7	1	_WILL/vBasicController_MaleCharacterPBR/root/pelvis/thigh_r/calf_r/foot_r/ball_r	0,12	0,12	3,10	90			Assets/Prefabs/_WILL.prefab
+2	1	_WILL/vBasicController_MaleCharacterPBR/FlyingTrailPoint	0,00	0,08	3,01	0			Assets/Prefabs/_WILL.prefab
+2	1	_WILL/vBasicController_MaleCharacterPBR/PortraitAnchor	0,00	-0,40	4,50	0			Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body22_Tunica	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body21_Hechicera	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Cloak04_Hechicera	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	1	_WILL/vBasicController_MaleCharacterPBR/Body23_Aventurero	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+2	0	_WILL/vBasicController_MaleCharacterPBR/Body24_AventureroChaqueta	0,00	0,10	3,00	0	R		Assets/Prefabs/_WILL.prefab
+0	1	_ESTELA	1,60	0,10	1,60	0		Animator,CapsuleCollider,Rigidbody,NPCSimpleAnimator,Interactable,NavMeshAgent,NPCBehaviourManagerV2,NPCEmotionController,ChaserAI,FootstepHandler,NPCShieldController,QuestObjectiveMarker,EstelaIdleCommentary,NPCObstacleAvoidance,Personaje,SenueloDeCombate,MuelleDeHuesos,NarrativeActor,	Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Canvas	1,60	0,10	1,60	0		Canvas,CanvasScaler,BillboardUI,	Assets/Prefabs/_ESTELA.prefab
+2	0	_ESTELA/Canvas/Image	1,60	0,10	1,60	0		CanvasRenderer,Image,	Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body09	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	1	_ESTELA/root	1,60	0,10	1,60	180			Assets/Prefabs/_ESTELA.prefab
+2	1	_ESTELA/root/pelvis	1,61	0,43	1,60	80			Assets/Prefabs/_ESTELA.prefab
+3	1	_ESTELA/root/pelvis/spine_01	1,61	0,53	1,62	90			Assets/Prefabs/_ESTELA.prefab
+4	1	_ESTELA/root/pelvis/spine_01/spine_02	1,61	0,63	1,62	90			Assets/Prefabs/_ESTELA.prefab
+5	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03	1,61	0,73	1,60	90			Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/BackpackBone	1,61	0,76	1,38	270			Assets/Prefabs/_ESTELA.prefab
+7	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack01	1,61	0,76	1,38	0	R		Assets/Prefabs/_ESTELA.prefab
+7	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack02	1,61	0,76	1,38	0	R		Assets/Prefabs/_ESTELA.prefab
+7	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack03	1,61	0,76	1,38	0	R		Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l	1,55	0,75	1,62	270			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/shoulderPadJoint_l	1,45	0,72	1,60	270			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l	1,45	0,72	1,60	287			Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l	1,36	0,55	1,55	279			Assets/Prefabs/_ESTELA.prefab
+9	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l	1,33	0,43	1,60	183			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l	1,29	0,36	1,63	186			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l	1,34	0,30	1,65	185			Assets/Prefabs/_ESTELA.prefab
+12	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l/index_03_l	1,36	0,35	1,63	186			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l	1,35	0,39	1,67	296			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l	1,39	0,36	1,70	299			Assets/Prefabs/_ESTELA.prefab
+12	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l	1,37	0,34	1,66	297			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l	1,34	0,34	1,64	269			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows	1,34	0,33	1,64	344		Animator,	Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow01	1,34	0,33	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow02	1,34	0,33	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow03	1,34	0,33	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow04	1,34	0,33	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow05	1,34	0,33	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL	1,34	0,33	1,64	183			Assets/Prefabs/_ESTELA.prefab
+13	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01	1,34	0,33	1,64	269			Assets/Prefabs/_ESTELA.prefab
+14	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02	1,34	0,30	1,57	269			Assets/Prefabs/_ESTELA.prefab
+15	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03	1,33	0,19	1,27	269			Assets/Prefabs/_ESTELA.prefab
+16	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04	1,34	0,29	0,92	89			Assets/Prefabs/_ESTELA.prefab
+17	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04/BowJoint05	1,37	0,52	1,54	183			Assets/Prefabs/_ESTELA.prefab
+14	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06	1,35	0,36	1,71	89			Assets/Prefabs/_ESTELA.prefab
+15	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07	1,36	0,52	2,00	89			Assets/Prefabs/_ESTELA.prefab
+16	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07/BowJoint08	1,40	0,84	2,15	269			Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS01_Stick	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS02_Niddle	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS03_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS04_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS05_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS06_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS07_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS08_Sword	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS09_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS10_Axe	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS11_Hammer	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS12_Sword	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS13_Axe	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS14_Hammer	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS15_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS16_Sword	1,34	0,34	1,64	269	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield01	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield02	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield03	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield04	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield05	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield06	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield07	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield08	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield09	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield10	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield11	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield12	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield13	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield14	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield15	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield16	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield17	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield18	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield19	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield20	1,34	0,34	1,64	344	R		Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r	1,67	0,75	1,62	270			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/shoulderPadJoint_r	1,78	0,73	1,60	270			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r	1,77	0,73	1,60	258			Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r	1,87	0,56	1,57	263			Assets/Prefabs/_ESTELA.prefab
+9	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r	1,92	0,45	1,63	348			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r	1,96	0,37	1,64	345			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r	1,91	0,30	1,64	346			Assets/Prefabs/_ESTELA.prefab
+12	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r/index_03_r	1,89	0,36	1,63	345			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r	1,89	0,39	1,68	238			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r	1,85	0,36	1,69	234			Assets/Prefabs/_ESTELA.prefab
+12	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r	1,87	0,33	1,66	237			Assets/Prefabs/_ESTELA.prefab
+10	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r	1,92	0,35	1,64	259			Assets/Prefabs/_ESTELA.prefab
+11	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows	1,92	0,35	1,64	43		Animator,	Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow02	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow03	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow04	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+12	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow05	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+12	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL	1,92	0,35	1,64	259			Assets/Prefabs/_ESTELA.prefab
+13	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL/arrowBone	1,92	0,35	1,64	259			Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS01_Stick	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS02_Niddle	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS03_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS04_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS05_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS06_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS07_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS08_Sword	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS09_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS10_Axe	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS11_Hammer	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS12_Sword	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS13_Axe	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS14_Hammer	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS15_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS16_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS01_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS02_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS03_Sword	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS04_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS05_Sword	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS06_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS07_Sword	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand01	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand02	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand03	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand04	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand05	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand06	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand07	1,92	0,35	1,64	43	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear01	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear02	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear03	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear04	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+11	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear05	1,92	0,35	1,64	259	R		Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01	1,61	0,80	1,59	90			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head	1,61	1,01	1,61	90			Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC01_Heart	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC02_Leaf	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_BlackGlass	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NerdGlass	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_HeavyMetalGlass	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NightVision	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_BunnyEars	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_ShortEars	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AnthenaEars	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AngelEars	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC07_PiratePatch	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask07	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask08	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC09_Ribbon	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye07	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye08	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye09	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye10	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye11	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye12	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth07	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth08	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth09	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth10	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth11	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth12	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair07	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair08	1,61	1,01	1,61	0	R	CejasPorEmocion,	Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair09	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair10	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair11	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair12	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair13	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head01_Male	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head02_Female	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Yellow	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Brown	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Red	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Blue	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Purple	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Grey	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Yellow	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Brown	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Red	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Blue	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Purple	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Grey	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head05_Santa	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat03	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat04	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat05	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat06	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat07	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat08	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat09	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat10	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat11	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat12	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat13	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat14	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow01	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow02	1,61	1,01	1,61	0	R		Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/ColetaBone01	1,60	1,41	1,32	182			Assets/Prefabs/_ESTELA.prefab
+9	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/ColetaBone01/ColetaBone02	1,60	1,30	1,10	180			Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair14_Coleta	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye20	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye21	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye22	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye23	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye24	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye25	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye26	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye27	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye28	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye29	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx200	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx201	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx202	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx203	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx204	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx205	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx206	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx207	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx208	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx209	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx210	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx211	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx212	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth20	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth21	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth22	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth23	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth24	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth25	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth26	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth27	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth28	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth29	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye30	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye31	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye32	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye33	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye34	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye35	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye36	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye37	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye38	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye39	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx300	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx301	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx302	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx303	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx304	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx305	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx306	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx307	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx308	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx309	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx310	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx311	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx312	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye40	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye41	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye42	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye43	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye44	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye45	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye46	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye47	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye48	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye49	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye50	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye51	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye52	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx400	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx401	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx402	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx403	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx404	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx405	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx406	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx407	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx408	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx409	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx410	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx411	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx412	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth40	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth41	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth42	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth43	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth44	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth45	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth46	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth47	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth48	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth49	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+8	0	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth50	1,61	1,01	1,61	90	R		Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/CloakBone01	1,61	0,79	1,48	270			Assets/Prefabs/_ESTELA.prefab
+7	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02	1,61	0,54	1,40	270			Assets/Prefabs/_ESTELA.prefab
+8	1	_ESTELA/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02/CloakBone03	1,62	0,24	1,37	270			Assets/Prefabs/_ESTELA.prefab
+3	1	_ESTELA/root/pelvis/thigh_l	1,52	0,39	1,60	93			Assets/Prefabs/_ESTELA.prefab
+4	1	_ESTELA/root/pelvis/thigh_l/calf_l	1,49	0,26	1,61	104			Assets/Prefabs/_ESTELA.prefab
+5	1	_ESTELA/root/pelvis/thigh_l/calf_l/foot_l	1,45	0,14	1,59	90			Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/thigh_l/calf_l/foot_l/ball_l	1,45	0,12	1,70	90			Assets/Prefabs/_ESTELA.prefab
+3	1	_ESTELA/root/pelvis/thigh_r	1,71	0,40	1,60	91			Assets/Prefabs/_ESTELA.prefab
+4	1	_ESTELA/root/pelvis/thigh_r/calf_r	1,72	0,26	1,62	84			Assets/Prefabs/_ESTELA.prefab
+5	1	_ESTELA/root/pelvis/thigh_r/calf_r/foot_r	1,72	0,14	1,59	90			Assets/Prefabs/_ESTELA.prefab
+6	1	_ESTELA/root/pelvis/thigh_r/calf_r/foot_r/ball_r	1,72	0,12	1,70	90			Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body01	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body02	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body03	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body04	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body05	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body06	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body07	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body08	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body10	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body11	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body12	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body13	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body14	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body15	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body16	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body17	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body18	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body19	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Body20	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Cloak01	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Cloak02	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	0	_ESTELA/Cloak03	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	1	_ESTELA/Body21_Hechicera	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+1	1	_ESTELA/Cloak04_Hechicera	1,60	0,10	1,60	0	R		Assets/Prefabs/_ESTELA.prefab
+0	1	_LIAM	-1,60	0,10	1,60	0		Animator,CapsuleCollider,Rigidbody,NPCSimpleAnimator,Interactable,NavMeshAgent,NPCBehaviourManagerV2,NPCEmotionController,FootstepHandler,LiamIdleCommentary,NPCObstacleAvoidance,Personaje,SenueloDeCombate,NarrativeActor,	Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Canvas	-1,60	0,10	1,60	0		Canvas,CanvasScaler,BillboardUI,	Assets/Prefabs/_LIAM.prefab
+2	0	_LIAM/Canvas/Image	-1,60	0,10	1,60	0		CanvasRenderer,Image,BillboardUI,	Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body03	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body12	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	1	_LIAM/root	-1,60	0,10	1,60	180			Assets/Prefabs/_LIAM.prefab
+2	1	_LIAM/root/pelvis	-1,60	0,43	1,60	80			Assets/Prefabs/_LIAM.prefab
+3	1	_LIAM/root/pelvis/spine_01	-1,60	0,53	1,62	90			Assets/Prefabs/_LIAM.prefab
+4	1	_LIAM/root/pelvis/spine_01/spine_02	-1,60	0,64	1,62	90			Assets/Prefabs/_LIAM.prefab
+5	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03	-1,60	0,73	1,60	90			Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/BackpackBone	-1,60	0,77	1,38	0			Assets/Prefabs/_LIAM.prefab
+7	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack01	-1,60	0,77	1,38	0	R		Assets/Prefabs/_LIAM.prefab
+7	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack02	-1,60	0,77	1,38	0	R		Assets/Prefabs/_LIAM.prefab
+7	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/BackpackBone/BackPack03	-1,60	0,77	1,38	0	R		Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l	-1,66	0,75	1,62	270			Assets/Prefabs/_LIAM.prefab
+7	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/shoulderPadJoint_l	-1,76	0,73	1,60	0			Assets/Prefabs/_LIAM.prefab
+7	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l	-1,76	0,73	1,60	358			Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l	-1,96	0,73	1,59	4			Assets/Prefabs/_LIAM.prefab
+9	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l	-2,10	0,73	1,60	180			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l	-2,18	0,76	1,60	180			Assets/Prefabs/_LIAM.prefab
+11	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l	-2,24	0,70	1,60	180			Assets/Prefabs/_LIAM.prefab
+12	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l/index_03_l	-2,18	0,69	1,60	181			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l	-2,16	0,71	1,65	271			Assets/Prefabs/_LIAM.prefab
+11	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l	-2,19	0,67	1,66	268			Assets/Prefabs/_LIAM.prefab
+12	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l	-2,18	0,68	1,62	269			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l	-2,19	0,71	1,60	0			Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows	-2,20	0,71	1,60	270		Animator,	Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow01	-2,20	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow02	-2,20	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow03	-2,20	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow04	-2,20	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow05	-2,20	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL	-2,20	0,71	1,60	180			Assets/Prefabs/_LIAM.prefab
+13	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01	-2,20	0,71	1,60	271			Assets/Prefabs/_LIAM.prefab
+14	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02	-2,20	0,71	1,52	266			Assets/Prefabs/_LIAM.prefab
+15	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03	-2,18	0,71	1,20	229			Assets/Prefabs/_LIAM.prefab
+16	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04	-1,94	0,71	0,93	93			Assets/Prefabs/_LIAM.prefab
+17	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint02/BowJoint03/BowJoint04/BowJoint05	-1,98	0,71	1,59	183			Assets/Prefabs/_LIAM.prefab
+14	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06	-2,20	0,71	1,68	94			Assets/Prefabs/_LIAM.prefab
+15	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07	-2,18	0,71	2,00	131			Assets/Prefabs/_LIAM.prefab
+16	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Bows/Bow_CTRL/BowJoint01/BowJoint06/BowJoint07/BowJoint08	-1,94	0,71	2,27	87			Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS01_Stick	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS02_Niddle	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS03_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS04_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS05_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS06_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS07_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS08_Sword	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS09_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS10_Axe	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS11_Hammer	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS12_Sword	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS13_Axe	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS14_Hammer	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS15_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/OHS16_Sword	-2,19	0,71	1,60	180	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield01	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield02	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield03	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield04	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield05	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield06	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield07	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield08	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield09	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield10	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield11	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield12	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield13	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield14	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield15	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield16	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield17	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield18	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield19	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/weapon_l/Shield20	-2,19	0,71	1,60	270	R		Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r	-1,54	0,75	1,62	270			Assets/Prefabs/_LIAM.prefab
+7	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/shoulderPadJoint_r	-1,44	0,73	1,60	0			Assets/Prefabs/_LIAM.prefab
+7	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r	-1,44	0,73	1,60	2			Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r	-1,24	0,73	1,59	356			Assets/Prefabs/_LIAM.prefab
+9	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r	-1,10	0,73	1,60	0			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r	-1,02	0,76	1,60	0			Assets/Prefabs/_LIAM.prefab
+11	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r	-0,96	0,70	1,60	360			Assets/Prefabs/_LIAM.prefab
+12	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r/index_03_r	-1,02	0,69	1,60	359			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r	-1,04	0,71	1,65	267			Assets/Prefabs/_LIAM.prefab
+11	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r	-1,02	0,66	1,67	269			Assets/Prefabs/_LIAM.prefab
+12	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r	-1,02	0,66	1,62	269			Assets/Prefabs/_LIAM.prefab
+10	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r	-1,01	0,71	1,60	0			Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows	-1,01	0,71	1,60	90		Animator,	Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow01	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow02	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow03	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow04	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow05	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+12	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL	-1,01	0,71	1,60	270			Assets/Prefabs/_LIAM.prefab
+13	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Arrows/Arrow_CTRL/arrowBone	-1,01	0,71	1,60	180			Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS01_Stick	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS02_Niddle	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS03_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS04_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS05_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS06_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS07_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS08_Sword	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS09_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS10_Axe	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS11_Hammer	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS12_Sword	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS13_Axe	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS14_Hammer	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS15_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/OHS16_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS01_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS02_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS03_Sword	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS04_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS05_Sword	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS06_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/THS07_Sword	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand01	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand02	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand03	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand04	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand05	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand06	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Wand07	-1,01	0,71	1,60	90	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear01	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear02	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear03	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear04	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+11	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/weapon_r/Spear05	-1,01	0,71	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+6	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/CloakBone01	-1,60	0,80	1,48	270			Assets/Prefabs/_LIAM.prefab
+7	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02	-1,60	0,55	1,40	270			Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/CloakBone01/CloakBone02/CloakBone03	-1,60	0,25	1,37	270			Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01	-1,60	0,81	1,59	90			Assets/Prefabs/_LIAM.prefab
+7	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head	-1,60	1,01	1,61	90			Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC01_Heart	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC02_Leaf	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_BlackGlass	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NerdGlass	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_HeavyMetalGlass	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC03_NightVision	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_BunnyEars	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_ShortEars	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AnthenaEars	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC04_AngelEars	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC05_Horn04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC06_Crown03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC07_PiratePatch	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask07	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC08_NinjaMask08	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC09_Ribbon	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC10_Mustache06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC11_Mustache06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye07	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye08	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye09	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye10	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye11	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye12	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth07	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth08	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth09	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth10	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth11	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth12	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair02	-1,60	1,01	1,61	0	R	RendererColorOverride,CejasPorEmocion,	Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair07	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair08	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair09	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair10	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair11	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair12	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair13	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head01_Male	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head02_Female	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Yellow	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Brown	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Red	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Blue	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Purple	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head03_Grey	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Yellow	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Brown	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Red	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Blue	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Purple	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head04_Grey	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Head05_Santa	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor04	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/HeadArmor05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat03	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat04	-1,60	1,18	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat05	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat06	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat07	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat08	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat09	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat10	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat11	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat12	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat13	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hat14	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow01	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eyebrow02	-1,60	1,01	1,61	0	R		Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Hair15_Flequillo	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/AC12_Capucha	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye20	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye21	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye22	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye23	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye24	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye25	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye26	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye27	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye28	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye29	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx200	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx201	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx202	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx203	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx204	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx205	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx206	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx207	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx208	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx209	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx210	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx211	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx212	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	1	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth20	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth21	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth22	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth23	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth24	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth25	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth26	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth27	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth28	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth29	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye30	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye31	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye32	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye33	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye34	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye35	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye36	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye37	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye38	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye39	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx300	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx301	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx302	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx303	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx304	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx305	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx306	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx307	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx308	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx309	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx310	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx311	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx312	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye40	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye41	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye42	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye43	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye44	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye45	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye46	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye47	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye48	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye49	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye50	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye51	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Eye52	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx400	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx401	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx402	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx403	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx404	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx405	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx406	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx407	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx408	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx409	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx410	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx411	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Fx412	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth40	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth41	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth42	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth43	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth44	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth45	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth46	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth47	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth48	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth49	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+8	0	_LIAM/root/pelvis/spine_01/spine_02/spine_03/neck_01/head/Mouth50	-1,60	1,01	1,61	90	R		Assets/Prefabs/_LIAM.prefab
+3	1	_LIAM/root/pelvis/thigh_l	-1,70	0,40	1,60	84			Assets/Prefabs/_LIAM.prefab
+4	1	_LIAM/root/pelvis/thigh_l/calf_l	-1,71	0,27	1,60	87			Assets/Prefabs/_LIAM.prefab
+5	1	_LIAM/root/pelvis/thigh_l/calf_l/foot_l	-1,72	0,14	1,59	90			Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/thigh_l/calf_l/foot_l/ball_l	-1,72	0,12	1,70	90			Assets/Prefabs/_LIAM.prefab
+3	1	_LIAM/root/pelvis/thigh_r	-1,50	0,40	1,60	96			Assets/Prefabs/_LIAM.prefab
+4	1	_LIAM/root/pelvis/thigh_r/calf_r	-1,49	0,27	1,60	93			Assets/Prefabs/_LIAM.prefab
+5	1	_LIAM/root/pelvis/thigh_r/calf_r/foot_r	-1,48	0,14	1,59	90			Assets/Prefabs/_LIAM.prefab
+6	1	_LIAM/root/pelvis/thigh_r/calf_r/foot_r/ball_r	-1,48	0,12	1,70	90			Assets/Prefabs/_LIAM.prefab
+1	1	_LIAM/Body22_Tunica	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body01	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body02	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body04	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body05	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body06	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body07	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body08	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body09	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body10	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body11	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body13	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body14	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body15	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body16	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body17	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body18	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body19	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Body20	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Cloak01	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Cloak02	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+1	0	_LIAM/Cloak03	-1,60	0,10	1,60	0	R		Assets/Prefabs/_LIAM.prefab
+0	1	CamaraDelJugador	0,00	2,50	-4,00	0		Camera,vThirdPersonCamera,UniversalAdditionalCameraData,CameraOcclusionShadowsOnly,AudioListener,CombatCameraTargeting,	Assets/Prefabs/CamaraDelJugador.prefab
+1	1	CamaraDelJugador/Hint Camera	0,00	2,50	-4,00	0		Camera,UniversalAdditionalCameraData,	Assets/Prefabs/CamaraDelJugador.prefab
+0	1	Ancla — SenderoLlegada	0,00	0,60	3,00	0		SpawnAnchor,	
+0	1	WorldBootstrap	0,00	0,00	0,00	0		WorldBootstrap,	

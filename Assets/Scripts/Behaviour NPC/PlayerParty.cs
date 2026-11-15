@@ -34,7 +34,7 @@ namespace Game.NPC
             _instance = go.AddComponent<PlayerParty>();
             DontDestroyOnLoad(go);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerParty] 🚀 Bootstrap: Instancia creada automáticamente");
+            Debug.Log("[PlayerParty] Bootstrap: Instancia creada automáticamente");
 #endif
         }
         #endregion
@@ -42,7 +42,7 @@ namespace Game.NPC
         #region Singleton
         private static PlayerParty _instance;
 
-        // FIX (2026-08-12): igual que TransitionManager (ver auditoría 2026-08-11), Instance
+        // igual que TransitionManager (ver auditoría 2026-08-11), Instance
         // recreaba un GameObject "PlayerParty" nuevo cada vez que se consultaba con _instance en
         // null. PlayerParty es DontDestroyOnLoad y se destruye junto al resto de la escena al
         // cerrar partida / salir de Play Mode; el orden de destrucción entre objetos no está
@@ -97,13 +97,13 @@ namespace Game.NPC
         private PlayerActionManager _playerActionManager;
         private bool _isInitialized;
         
-        // ✅ OPTIMIZACIÓN FASE 1: Timer para throttling de verificación de distancias
+        // OPTIMIZACIÓN FASE 1: Timer para throttling de verificación de distancias
         private float _distanceCheckTimer;
         
-        // ✅ Sistema robusto: Timer para retry de miembros pendientes
+        // Sistema robusto: Timer para retry de miembros pendientes
         private float _retryPendingTimer;
         
-        // ✅ OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries
+        // OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries
         private Collider[] _enemySearchBuffer = new Collider[32];
 
         // Buffer y ruta reutilizables para comprobar si un compañero puede llegar hasta el
@@ -185,13 +185,13 @@ namespace Game.NPC
         void Awake()
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerParty] 🚀 Awake iniciado");
+            Debug.Log("[PlayerParty] Awake iniciado");
 #endif
             
             if (_instance != null && _instance != this)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[PlayerParty] ⚠️ Instancia duplicada detectada, destruyendo...");
+                Debug.Log("[PlayerParty] Instancia duplicada detectada, destruyendo...");
 #endif
                 Destroy(gameObject);
                 return;
@@ -208,7 +208,7 @@ namespace Game.NPC
             ActiveCombatRegistry.OnNPCEnteredCombat += OnEnemyEnteredCombat;
             ActiveCombatRegistry.OnNPCExitedCombat += OnEnemyExitedCombat;
             
-            // 🔔 Subscribirse cuando el jugador ataca para alertar compañeros
+            // Subscribirse cuando el jugador ataca para alertar compañeros
             MagicProjectileSpawner.OnPlayerAttacked += OnPlayerAttacked;
             
             // Subscribirse a OnProfileReady para restaurar el party al cargar partida
@@ -221,12 +221,12 @@ namespace Game.NPC
             // Intentar obtener referencia inicial
             ResolvePlayerReference();
             
-            // ✅ Si GameBootService ya disparó el evento antes de que nos suscribiéramos,
+            // Si GameBootService ya disparó el evento antes de que nos suscribiéramos,
             // llamamos manualmente a OnProfileReady para leer el runtimePreset
             if (GameBootService.Profile != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[PlayerParty] ℹ️ GameBootService ya inicializado, leyendo runtimePreset...");
+                Debug.Log("[PlayerParty] GameBootService ya inicializado, leyendo runtimePreset...");
 #endif
                 OnProfileReady();
             }
@@ -259,7 +259,7 @@ namespace Game.NPC
         {
             if (!_isInitialized || _playerTransform == null) return;
             
-            // ✅ OPTIMIZACIÓN MEJORADA: Verificar distancias cada 0.3 segundos (era 0.5)
+            // OPTIMIZACIÓN MEJORADA: Verificar distancias cada 0.3 segundos (era 0.5)
             // Más frecuente para respuesta más rápida sin ser demasiado intensivo
             _distanceCheckTimer += Time.deltaTime;
             if (_distanceCheckTimer >= 0.3f)
@@ -268,7 +268,7 @@ namespace Game.NPC
                 CheckMemberDistances();
             }
             
-            // ✅ NUEVO: Retry agresivo de miembros pendientes cada 2 segundos
+            // NUEVO: Retry agresivo de miembros pendientes cada 2 segundos
             if (_pendingMemberIds.Count > 0)
             {
                 _retryPendingTimer += Time.deltaTime;
@@ -316,7 +316,7 @@ namespace Game.NPC
             member.OnJoinedParty(this, isRestore);
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] ✨✨✨ {member.DisplayName} se unió al equipo [{MemberCount}/{maxPartySize}] - PartyConfig: {(member.PartyConfig != null ? "✅" : "❌")}, autoJoinCombat: {member.PartyConfig?.autoJoinPlayerCombat}");
+            Debug.Log($"[PlayerParty] {member.DisplayName} se unió al equipo [{MemberCount}/{maxPartySize}] - PartyConfig: {(member.PartyConfig != null ? "sí" : "no")}, autoJoinCombat: {member.PartyConfig?.autoJoinPlayerCombat}");
 #endif
             
             // Sincronizar con el preset para persistencia
@@ -329,7 +329,7 @@ namespace Game.NPC
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
             {
-                Debug.Log($"[PlayerParty] ℹ️ {member.DisplayName} restaurado al equipo (isRestore=true) — OnMemberJoined omitido, sin efectos de unión en vivo.");
+                Debug.Log($"[PlayerParty] {member.DisplayName} restaurado al equipo (isRestore=true) — OnMemberJoined omitido, sin efectos de unión en vivo.");
             }
 #endif
             OnPartyChanged?.Invoke(_members);
@@ -368,7 +368,7 @@ namespace Game.NPC
             _members.Remove(member);
             member.OnLeftParty();
             
-            Log($"👋 {member.DisplayName} abandonó el equipo [{MemberCount}/{maxPartySize}]");
+            Log($"{member.DisplayName} abandonó el equipo [{MemberCount}/{maxPartySize}]");
             
             // Sincronizar con el preset para persistencia
             SyncPartyToPreset();
@@ -437,8 +437,8 @@ namespace Game.NPC
 
         /// <summary>
         /// Fuerza a todos los miembros a teletransportarse cerca del jugador.
-        /// Con <paramref name="forzar"/> se omite la comprobación de alcance (viaje rápido, fin de
-        /// escalada, reinicios de minijuego); si no, un compañero no cruza paredes ni rejas.
+        /// Con <paramref name="forzar"/> se omite la comprobación de alcance (viaje rápido,
+        /// reinicios de minijuego); si no, un compañero no cruza paredes ni rejas.
         /// <paramref name="avisar"/> muestra el aviso HUD cuando un compañero no puede llegar.
         /// Ver INC-819.
         /// </summary>
@@ -454,13 +454,27 @@ namespace Game.NPC
                 if (member.NPCManager?.Context?.EstaAnclado == true) continue;
                 TeleportMemberToPlayer(member, i, forzar, avisar);
             }
+            ReunirAWill(forzar, avisar);
+        }
+
+        /// <summary>
+        /// Will no es miembro de PlayerParty (siempre está en el grupo): cuando lo lleva la IA ocupa
+        /// el siguiente hueco de la formación, detrás de los miembros. Anclado (modo Libre, barco)
+        /// o en cinemática se queda donde está.
+        /// </summary>
+        public void ReunirAWill(bool forzar = false, bool avisar = false)
+        {
+            var will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
+            if (will == null || will.NPCManager?.Context?.EstaAnclado == true || (will.NPCManager?.IsInCinematic ?? false)) return;
+            if (TeleportMemberToPlayer(will, _members.Count, forzar, avisar) && PartyControlManager.DebeSeguirAlJugador(will))
+                will.StartFollowingIgnorePartyCheck();
         }
 
         /// <summary>
         /// ¿Puede un compañero llegar hasta <paramref name="destino"/> sin cruzar una pared o
         /// una reja? El paso corto de Liam (Paso Sombrío) sí cruza <see cref="RejaAtravesable"/>;
         /// el resto del equipo no, así que aquí la reja cuenta como muro. Con
-        /// <paramref name="forzar"/> se omite la comprobación (viaje rápido, fin de escalada,
+        /// <paramref name="forzar"/> se omite la comprobación (viaje rápido,
         /// cinemáticas y reinicios de minijuego). Ver INC-819.
         /// </summary>
         public static bool PuedeLlegarHasta(Transform origen, Vector3 destino, bool forzar = false)
@@ -542,9 +556,9 @@ namespace Game.NPC
             if (_playerTransform == null || _members.Count == 0)
                 return;
             
-            Log($"📍 Posicionando {_members.Count} party members para diálogo");
+            Log($"Posicionando {_members.Count} party members para diálogo");
             
-            // ✅ Rotar al player hacia el NPC
+            // Rotar al player hacia el NPC
             if (npcTarget != null)
             {
                 Vector3 toNpc = (npcTarget.position - _playerTransform.position);
@@ -553,7 +567,7 @@ namespace Game.NPC
                 {
                     Quaternion lookRotation = Quaternion.LookRotation(toNpc);
                     _playerTransform.rotation = lookRotation;
-                    Log($"👁️ Player girado hacia {npcTarget.name}");
+                    Log($"Player girado hacia {npcTarget.name}");
                 }
             }
             
@@ -569,7 +583,7 @@ namespace Game.NPC
                 }
             }
             
-            // ✅ Calcular la derecha del player MIRANDO al NPC
+            // Calcular la derecha del player MIRANDO al NPC
             // Right = Vector3.Cross(up, forward) → la derecha cuando miras hacia adelante
             Vector3 playerRight = Vector3.Cross(Vector3.up, playerForward).normalized;
             
@@ -692,7 +706,7 @@ namespace Game.NPC
             // formación clásica de dos arcos laterales, que ya evita la zona detrás del player.
             if (Mathf.Abs(sideDot) < 0.25f)
             {
-                Log("📍 Formación grupal: cámara alineada con el eje player-NPC → usando formación lateral clásica");
+                Log("Formación grupal: cámara alineada con el eje player-NPC → usando formación lateral clásica");
                 PositionMembersForDialogue(npcTarget);
                 return;
             }
@@ -709,7 +723,7 @@ namespace Game.NPC
             float arcMin = cameraOnRight ? 110f : 10f;
             float arcMax = cameraOnRight ? 170f : 70f;
 
-            Log($"📍 Formación grupal ({n} compañeros): cámara al lado {(cameraOnRight ? "derecho" : "izquierdo")} → arco en el lado {(cameraOnRight ? "izquierdo" : "derecho")} θ∈[{arcMin:F0}°,{arcMax:F0}°]");
+            Log($"Formación grupal ({n} compañeros): cámara al lado {(cameraOnRight ? "derecho" : "izquierdo")} → arco en el lado {(cameraOnRight ? "izquierdo" : "derecho")} θ∈[{arcMin:F0}°,{arcMax:F0}°]");
 
             for (int i = 0; i < n; i++)
             {
@@ -744,7 +758,7 @@ namespace Game.NPC
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, 3f, NavMesh.AllAreas))
                 targetPosition = hit.position;
 
-            // FIX (17 ago 2026): mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
+            // mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
             // no gatear Warp() detrás de isOnNavMesh, porque si da false en ese instante deja al
             // agente desincronizado del NavMesh para siempre (ver comentario extenso allí).
             var navAgent = member.NPCManager?.Agent;
@@ -817,7 +831,7 @@ namespace Game.NPC
         {
             if (_members.Count == 0) return;
             
-            Log($"🔓 Liberando posicionamiento de diálogo para {_members.Count} members");
+            Log($"Liberando posicionamiento de diálogo para {_members.Count} members");
             
             foreach (var member in _members)
             {
@@ -834,7 +848,7 @@ namespace Game.NPC
         public void NotifyPlayerEnteredCombat(Transform enemy)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] 🔔 NotifyPlayerEnteredCombat - Enemigo: {enemy.name}, Compañeros en party: {_members.Count}");
+            Debug.Log($"[PlayerParty] NotifyPlayerEnteredCombat - Enemigo: {enemy.name}, Compañeros en party: {_members.Count}");
 #endif
             
             int notifiedCount = 0;
@@ -843,7 +857,7 @@ namespace Game.NPC
                 if (member == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[PlayerParty] ⚠️ Miembro null en party!");
+                    Debug.LogWarning($"[PlayerParty] Miembro null en party!");
 #endif
                     continue;
                 }
@@ -851,7 +865,7 @@ namespace Game.NPC
                 if (member.PartyConfig == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[PlayerParty] ⚠️ {member.name} no tiene PartyConfig asignado!");
+                    Debug.LogWarning($"[PlayerParty] {member.name} no tiene PartyConfig asignado!");
 #endif
                     continue;
                 }
@@ -859,20 +873,20 @@ namespace Game.NPC
                 if (!member.PartyConfig.autoJoinPlayerCombat)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[PlayerParty] ⚠️ {member.DisplayName} tiene autoJoinPlayerCombat=FALSE, no se notificará");
+                    Debug.Log($"[PlayerParty] {member.DisplayName} tiene autoJoinPlayerCombat=FALSE, no se notificará");
 #endif
                     continue;
                 }
                 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ✅ Notificando a {member.DisplayName} sobre combate con {enemy.name}");
+                Debug.Log($"[PlayerParty] Notificando a {member.DisplayName} sobre combate con {enemy.name}");
 #endif
                 member.OnPlayerEnteredCombat(enemy);
                 notifiedCount++;
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] 📊 Total notificados: {notifiedCount}/{_members.Count}");
+            Debug.Log($"[PlayerParty] Total notificados: {notifiedCount}/{_members.Count}");
 #endif
             
             // Notificar al Will NPC instanciado (no está en _members pero debe asistir en combate)
@@ -880,7 +894,7 @@ namespace Game.NPC
             if (willNpc != null && willNpc.PartyConfig != null && willNpc.PartyConfig.autoJoinPlayerCombat)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ✅ Notificando al Will NPC instanciado sobre combate con {enemy.name}");
+                Debug.Log($"[PlayerParty] Notificando al Will NPC instanciado sobre combate con {enemy.name}");
 #endif
                 willNpc.OnPlayerEnteredCombat(enemy);
                 notifiedCount++;
@@ -910,7 +924,7 @@ namespace Game.NPC
         /// </summary>
         public void DisbandParty()
         {
-            Log("🔥 Disolviendo equipo...");
+            Log("Disolviendo equipo...");
             
             // Crear copia para evitar modificar durante iteración
             var membersToRemove = new List<NPCPartyMember>(_members);
@@ -925,7 +939,7 @@ namespace Game.NPC
         /// </summary>
         public void ResetForNewGame()
         {
-            Log("🧼 ResetForNewGame: limpiando miembros y pendientes del party");
+            Log("ResetForNewGame: limpiando miembros y pendientes del party");
 
             _pendingMemberIds.Clear();
             DisbandParty();
@@ -950,13 +964,7 @@ namespace Game.NPC
         {
             _playerTransform = null;
             _isInitialized = false;
-            // Desubscribir cambios de modo si teníamos referencia
-            try
-            {
-                if (_playerActionManager != null)
-                    _playerActionManager.OnTopModeChanged -= OnPlayerTopModeChanged;
-            }
-            catch { }
+            _playerActionManager = null;
         }
 
         private void ResolvePlayerReference()
@@ -966,22 +974,8 @@ namespace Game.NPC
                 _playerTransform = player.transform;
                 _isInitialized = true;
                 Log("Referencia al jugador establecida");
-                // Subscribir a cambios de modo del player para orquestar al party
-                try
-                {
-                    var pam = player.GetComponent<PlayerActionManager>();
-                    if (pam != null && _playerActionManager != pam)
-                    {
-                        // Desubscribir previa si existía
-                        if (_playerActionManager != null)
-                            _playerActionManager.OnTopModeChanged -= OnPlayerTopModeChanged;
-
-                        _playerActionManager = pam;
-                        _playerActionManager.OnTopModeChanged += OnPlayerTopModeChanged;
-                        Log("Subscribed to PlayerActionManager.OnTopModeChanged");
-                    }
-                }
-                catch { }
+                // El del cuerpo que lleva el jugador (cambia al pasar el mando a otro).
+                _playerActionManager = player.GetComponent<PlayerActionManager>();
             }
         }
 
@@ -995,7 +989,7 @@ namespace Game.NPC
             if (profile == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerParty] ⚠️ OnProfileReady llamado pero GameBootService.Profile es null");
+                Debug.LogWarning("[PlayerParty] OnProfileReady llamado pero GameBootService.Profile es null");
 #endif
                 return;
             }
@@ -1004,7 +998,7 @@ namespace Game.NPC
             if (preset == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerParty] ⚠️ OnProfileReady: GetActivePresetResolved() devolvió null");
+                Debug.LogWarning("[PlayerParty] OnProfileReady: GetActivePresetResolved() devolvió null");
 #endif
                 return;
             }
@@ -1014,7 +1008,7 @@ namespace Game.NPC
                 if (_members.Count > 0)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[PlayerParty] 🔄 Preset sin partyMemberIds; limpiando {_members.Count} miembros residuales");
+                    Debug.Log($"[PlayerParty] Preset sin partyMemberIds; limpiando {_members.Count} miembros residuales");
 #endif
                     ResetForNewGame();
                 }
@@ -1025,12 +1019,12 @@ namespace Game.NPC
                     if (_pendingMemberIds.Count > 0)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[PlayerParty] 🧹 Limpiando {_pendingMemberIds.Count} IDs pendientes residuales (preset vacío)");
+                        Debug.Log($"[PlayerParty] Limpiando {_pendingMemberIds.Count} IDs pendientes residuales (preset vacío)");
 #endif
                         _pendingMemberIds.Clear();
                     }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[PlayerParty] ℹ️ No hay miembros de party en el preset para restaurar");
+                    Debug.Log("[PlayerParty] No hay miembros de party en el preset para restaurar");
 #endif
                 }
                 // Ocultar NPCs con hideWhenNotInParty aunque no haya party (ej: nueva partida)
@@ -1039,7 +1033,7 @@ namespace Game.NPC
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] 🔄 Restaurando {preset.partyMemberIds.Count} miembros del party: [{string.Join(", ", preset.partyMemberIds)}]");
+            Debug.Log($"[PlayerParty] Restaurando {preset.partyMemberIds.Count} miembros del party: [{string.Join(", ", preset.partyMemberIds)}]");
 #endif
 
             // Sistema robusto sin delays: intentar restaurar AHORA
@@ -1051,7 +1045,7 @@ namespace Game.NPC
             // Si quedaron pendientes, el Update los manejará automáticamente
             if (_pendingMemberIds.Count > 0)
             {
-                Log($"⏳ {_pendingMemberIds.Count} miembros pendientes. Update los reintentará cuando estén disponibles.");
+                Log($"{_pendingMemberIds.Count} miembros pendientes. Update los reintentará cuando estén disponibles.");
             }
         }
         
@@ -1071,7 +1065,7 @@ namespace Game.NPC
                 {
                     foreach (var r in member.GetComponentsInChildren<Renderer>(true))
                         r.enabled = false;
-                    Log($"🙈 Ocultando renderers de {member.DisplayName}: no está en el party activo");
+                    Log($"Ocultando renderers de {member.DisplayName}: no está en el party activo");
                 }
             }
         }
@@ -1088,67 +1082,67 @@ namespace Game.NPC
         {
             if (_pendingMemberIds.Count == 0) return;
             
-            Log($"🔄 === RETRY PENDIENTES ===  {_pendingMemberIds.Count} miembros: [{string.Join(", ", _pendingMemberIds)}]");
+            Log($"=== RETRY PENDIENTES ===  {_pendingMemberIds.Count} miembros: [{string.Join(", ", _pendingMemberIds)}]");
             
             // Log de NPCs registrados actualmente
             string[] registeredIds = System.Array.Empty<string>();
             if (NPCRegistry.Instance != null)
             {
                 registeredIds = NPCRegistry.Instance.GetAllRegisteredIDs();
-                Log($"📋 NPCs registrados ({registeredIds.Length}): [{string.Join(", ", registeredIds)}]");
+                Log($"NPCs registrados ({registeredIds.Length}): [{string.Join(", ", registeredIds)}]");
             }
             else
             {
-                LogWarning("⚠️ NPCRegistry.Instance es NULL - no se pueden buscar NPCs");
+                LogWarning("NPCRegistry.Instance es NULL - no se pueden buscar NPCs");
                 return;
             }
             
             var stillPending = new List<string>();
             foreach (var id in _pendingMemberIds)
             {
-                Log($"🔍 Buscando: '{id}'");
+                Log($"Buscando: '{id}'");
                 NPCBehaviourManagerV2 npcManager = null;
                 
                 // 1. Buscar por ID exacto
                 npcManager = NPCRegistry.Instance?.GetNPCByID(id);
                 if (npcManager != null)
                 {
-                    Log($"  ✅ Encontrado por ID exacto");
+                    Log($"  Encontrado por ID exacto");
                 }
                 
                 // 2. Intentar sin guion bajo inicial
                 if (npcManager == null && id.StartsWith("_"))
                 {
                     var idSinGuion = id.Substring(1);
-                    Log($"  🔍 Intentando sin guion: '{idSinGuion}'");
+                    Log($"  Intentando sin guion: '{idSinGuion}'");
                     npcManager = NPCRegistry.Instance?.GetNPCByID(idSinGuion);
-                    if (npcManager != null) Log($"  ✅ Encontrado sin guion");
+                    if (npcManager != null) Log($"  Encontrado sin guion");
                 }
                 
                 // 3. Intentar añadiendo guion bajo inicial
                 if (npcManager == null && !id.StartsWith("_"))
                 {
                     var idConGuion = "_" + id;
-                    Log($"  🔍 Intentando con guion: '{idConGuion}'");
+                    Log($"  Intentando con guion: '{idConGuion}'");
                     npcManager = NPCRegistry.Instance?.GetNPCByID(idConGuion);
-                    if (npcManager != null) Log($"  ✅ Encontrado con guion");
+                    if (npcManager != null) Log($"  Encontrado con guion");
                 }
                 
                 // 4. Buscar por coincidencia parcial en registrados
                 if (npcManager == null && registeredIds.Length > 0)
                 {
                     var idLower = id.ToLowerInvariant().Replace("_", "").Replace(" ", "");
-                    Log($"  🔍 Buscando coincidencia parcial con: '{idLower}'");
+                    Log($"  Buscando coincidencia parcial con: '{idLower}'");
                     foreach (var regId in registeredIds)
                     {
                         var regIdClean = regId.ToLowerInvariant().Replace("_", "").Replace(" ", "");
                         if (Parecidos(regIdClean, idLower))
                         {
-                            Log($"  🎯 Coincidencia parcial con: '{regId}'");
+                            Log($"  Coincidencia parcial con: '{regId}'");
                             npcManager = NPCRegistry.Instance?.GetNPCByID(regId);
                             if (npcManager != null)
                             {
-                                Log($"  ✅ Encontrado por coincidencia parcial");
+                                Log($"  Encontrado por coincidencia parcial");
                                 break;
                             }
                         }
@@ -1158,8 +1152,8 @@ namespace Game.NPC
                 // 5. ÚLTIMO RECURSO: Buscar NPCPartyMember directamente en la escena
                 if (npcManager == null)
                 {
-                    Log($"  🔍 ÚLTIMO RECURSO: Buscando en escena...");
-                    // FIX (17/08/2026): esta búsqueda es el último recurso precisamente para cubrir
+                    Log($"  ÚLTIMO RECURSO: Buscando en escena...");
+                    // esta búsqueda es el último recurso precisamente para cubrir
                     // los casos en que NPCRegistry no tiene (o aún no tiene) a este NPC — por lo que
                     // NO debe depender de que el NPC esté activo. FindObjectsByType<T>() sin
                     // FindObjectsInactive excluye por defecto los GameObjects inactivos; si Liam o
@@ -1171,7 +1165,7 @@ namespace Game.NPC
                     // cerrar el juego del todo y recargar una partida con Estela/Liam en el equipo,
                     // solo aparece Will.
                     var allPartyMembers = UnityEngine.Object.FindObjectsByType<NPCPartyMember>(UnityEngine.FindObjectsInactive.Include);
-                    Log($"  📋 {allPartyMembers.Length} NPCPartyMember encontrados en escena");
+                    Log($"  {allPartyMembers.Length} NPCPartyMember encontrados en escena");
 
                     var idLower = id.ToLowerInvariant().Replace("_", "").Replace(" ", "");
                     foreach (var pm in allPartyMembers)
@@ -1183,7 +1177,7 @@ namespace Game.NPC
 
                         if (Parecidos(goNameClean, idLower) || Parecidos(displayNameClean, idLower))
                         {
-                            Log($"  ✅ Encontrado en escena: '{pm.gameObject.name}'");
+                            Log($"  Encontrado en escena: '{pm.gameObject.name}'");
                             if (!HasMember(pm))
                             {
                                 // Si lo encontramos gracias al FIX de arriba (FindObjectsInactive.Include),
@@ -1192,7 +1186,7 @@ namespace Game.NPC
                                 // así que _npcManager/_agent ya estarán listos para el JoinParty() siguiente.
                                 if (!pm.gameObject.activeSelf)
                                 {
-                                    Log($"  🔆 '{pm.gameObject.name}' estaba inactivo — reactivando antes de unirlo al equipo");
+                                    Log($"  '{pm.gameObject.name}' estaba inactivo — reactivando antes de unirlo al equipo");
                                     pm.gameObject.SetActive(true);
                                 }
                                 pm.JoinParty(isRestore: true);
@@ -1210,27 +1204,27 @@ namespace Game.NPC
                     {
                         bool joined = partyMember.JoinParty(isRestore: true);
                         if (joined)
-                            Log($"✅ Reintento exitoso: {partyMember.DisplayName} unido al party");
+                            Log($"Reintento exitoso: {partyMember.DisplayName} unido al party");
                         else
                         {
                             // JoinParty puede fallar si el NavMesh aún no está listo; reintentar
-                            LogWarning($"  ⚠️ JoinParty() falló para {partyMember.DisplayName} - sigue pendiente");
+                            LogWarning($"  JoinParty() falló para {partyMember.DisplayName} - sigue pendiente");
                             stillPending.Add(id);
                         }
                     }
                     else if (partyMember == null)
                     {
-                        LogWarning($"  ⚠️ NPC encontrado pero sin NPCPartyMember component");
+                        LogWarning($"  NPC encontrado pero sin NPCPartyMember component");
                         stillPending.Add(id);
                     }
                     else
                     {
-                        Log($"  ℹ️ Ya está en el party");
+                        Log($"  Ya está en el party");
                     }
                 }
                 else
                 {
-                    LogWarning($"  ❌ No encontrado - sigue pendiente");
+                    LogWarning($"  No encontrado - sigue pendiente");
                     stillPending.Add(id);
                 }
             }
@@ -1238,11 +1232,11 @@ namespace Game.NPC
             
             if (stillPending.Count > 0)
             {
-                LogWarning($"⏳ Aún pendientes tras reintento: [{string.Join(", ", stillPending)}]");
+                LogWarning($"Aún pendientes tras reintento: [{string.Join(", ", stillPending)}]");
             }
             else
             {
-                Log($"✅ Todos los miembros pendientes restaurados exitosamente!");
+                Log($"Todos los miembros pendientes restaurados exitosamente!");
             }
         }
         
@@ -1251,7 +1245,7 @@ namespace Game.NPC
         /// </summary>
         private void OnSceneLoadedHandler(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
         {
-            // FIX (19/08/2026): al volver al MainMenu, PlayerParty (DontDestroyOnLoad) conservaba
+            // al volver al MainMenu, PlayerParty (DontDestroyOnLoad) conservaba
             // o repoblaba _pendingMemberIds desde el preset activo (ver bloque de abajo en
             // OnSceneLoaded) y Update() los reintentaba cada 2s para siempre, porque el MainMenu
             // no tiene NPCs de party que registrar — solo generaba spam de logs ("RETRY
@@ -1262,7 +1256,7 @@ namespace Game.NPC
             {
                 if (_pendingMemberIds.Count > 0)
                 {
-                    Log($"🧹 MainMenu cargado — descartando {_pendingMemberIds.Count} miembro(s) pendiente(s) ([{string.Join(", ", _pendingMemberIds)}]); no hay NPCs de party que restaurar aquí.");
+                    Log($"MainMenu cargado — descartando {_pendingMemberIds.Count} miembro(s) pendiente(s) ([{string.Join(", ", _pendingMemberIds)}]); no hay NPCs de party que restaurar aquí.");
                     _pendingMemberIds.Clear();
                 }
                 _retryPendingTimer = 0;
@@ -1280,7 +1274,7 @@ namespace Game.NPC
             // Limpiar referencias nulas por si algún miembro no usó RemoveMemberFromDestroy
             var nullCount = _members.RemoveAll(m => m == null);
             if (nullCount > 0)
-                Log($"🧹 Limpiados {nullCount} miembros null tras cambio de escena");
+                Log($"Limpiados {nullCount} miembros null tras cambio de escena");
 
             // Si no quedan miembros activos ni pendientes, recuperar IDs desde el preset.
             // Cubre el caso donde el cambio de escena destruyó todos los GOs del party:
@@ -1296,12 +1290,12 @@ namespace Game.NPC
                             _pendingMemberIds.Add(id);
                     }
                     if (_pendingMemberIds.Count > 0)
-                        Log($"⏳ {_pendingMemberIds.Count} IDs recuperados del preset para restaurar en nueva escena");
+                        Log($"{_pendingMemberIds.Count} IDs recuperados del preset para restaurar en nueva escena");
                 }
             }
 
             if (_pendingMemberIds.Count > 0)
-                Log($"🔄 Nueva escena cargada — {_pendingMemberIds.Count} miembros pendientes, Update() los reintentará");
+                Log($"Nueva escena cargada — {_pendingMemberIds.Count} miembros pendientes, Update() los reintentará");
         }
 
         /// <summary>
@@ -1313,7 +1307,7 @@ namespace Game.NPC
             if (enemy == null || _playerTransform == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ⚠️ OnEnemyEnteredCombat - enemy={enemy}, player={_playerTransform}, members={_members.Count}");
+                Debug.Log($"[PlayerParty] OnEnemyEnteredCombat - enemy={enemy}, player={_playerTransform}, members={_members.Count}");
 #endif
                 return;
             }
@@ -1321,7 +1315,7 @@ namespace Game.NPC
             if (IsEmpty)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ⚠️ OnEnemyEnteredCombat({enemy.name}) - El party está VACÍO, no hay compañeros para notificar");
+                Debug.Log($"[PlayerParty] OnEnemyEnteredCombat({enemy.name}) - El party está VACÍO, no hay compañeros para notificar");
 #endif
                 return;
             }
@@ -1331,26 +1325,26 @@ namespace Game.NPC
             if (enemyPartyMember != null && HasMember(enemyPartyMember))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ⚠️ OnEnemyEnteredCombat - {enemy.name} es un compañero, ignorando");
+                Debug.Log($"[PlayerParty] OnEnemyEnteredCombat - {enemy.name} es un compañero, ignorando");
 #endif
                 return;
             }
             
             // Verificar que el enemigo esté cerca del jugador (para asegurar que es combate relevante)
             float distanceToPlayer = Vector3.Distance(enemy.transform.position, _playerTransform.position);
-            if (distanceToPlayer > 50f) // ✅ Aumentado a 50m para bosses grandes como Golem
+            if (distanceToPlayer > 50f) // Aumentado a 50m para bosses grandes como Golem
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ⚠️ OnEnemyEnteredCombat - {enemy.name} está demasiado lejos del jugador ({distanceToPlayer:F1}m > 50m)");
+                Debug.Log($"[PlayerParty] OnEnemyEnteredCombat - {enemy.name} está demasiado lejos del jugador ({distanceToPlayer:F1}m > 50m)");
 #endif
                 return;
             }
             
-            // ✅ ANTES de notificar combate, teletransportar compañeros lejanos cerca del jugador
+            // ANTES de notificar combate, teletransportar compañeros lejanos cerca del jugador
             TeleportFarMembersForCombat();
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] ⚔️⚔️⚔️ Enemigo '{enemy.name}' entró en combate cerca del jugador ({distanceToPlayer:F1}m) - Notificando a {_members.Count} compañeros");
+            Debug.Log($"[PlayerParty] Enemigo '{enemy.name}' entró en combate cerca del jugador ({distanceToPlayer:F1}m) - Notificando a {_members.Count} compañeros");
 #endif
             NotifyPlayerEnteredCombat(enemy.transform);
         }
@@ -1387,7 +1381,7 @@ namespace Game.NPC
                 if (distance > combatTeleportThreshold)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[PlayerParty] ⚡ Teletransportando a {member.DisplayName} para combate (estaba a {distance:F1}m)");
+                    Debug.Log($"[PlayerParty] Teletransportando a {member.DisplayName} para combate (estaba a {distance:F1}m)");
 #endif
                     TeleportMemberToPlayer(member, i);
                 }
@@ -1404,7 +1398,7 @@ namespace Game.NPC
             // Verificar si ya no hay más enemigos en combate
             if (ActiveCombatRegistry.Count == 0)
             {
-                Log("🏳️ No quedan enemigos en combate");
+                Log("No quedan enemigos en combate");
                 NotifyPlayerExitedCombat();
             }
         }
@@ -1417,7 +1411,7 @@ namespace Game.NPC
         {
             if (IsEmpty || _playerTransform == null) return;
             
-            // ✅ OPTIMIZACIÓN FASE 1: Usar ActiveCombatRegistry primero (más eficiente)
+            // OPTIMIZACIÓN FASE 1: Usar ActiveCombatRegistry primero (más eficiente)
             Transform nearestEnemy = null;
             float nearestDistance = 25f;
             
@@ -1445,7 +1439,7 @@ namespace Game.NPC
             if (nearestEnemy == null)
             {
                 int enemyLayer = LayerMask.GetMask("Enemy", "Boss");
-                int hitCount = Physics.OverlapSphereNonAlloc(_playerTransform.position, 25f, _enemySearchBuffer, enemyLayer); // ✅ OPTIMIZACIÓN: NonAlloc
+                int hitCount = Physics.OverlapSphereNonAlloc(_playerTransform.position, 25f, _enemySearchBuffer, enemyLayer); // OPTIMIZACIÓN: NonAlloc
                 
                 for (int i = 0; i < hitCount; i++)
                 {
@@ -1467,7 +1461,7 @@ namespace Game.NPC
             if (nearestEnemy != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] 🔔 Jugador atacó! Enemigo cercano: {nearestEnemy.name} a {nearestDistance:F1}m");
+                Debug.Log($"[PlayerParty] Jugador atacó! Enemigo cercano: {nearestEnemy.name} a {nearestDistance:F1}m");
 #endif
                 
                 // Teletransportar compañeros lejanos primero
@@ -1504,7 +1498,7 @@ namespace Game.NPC
 
                 if (distance > teleportThreshold)
                 {
-                    Log($"⚡ {member.DisplayName} demasiado lejos ({distance:F1}m > {teleportThreshold:F1}m), teletransportando...");
+                    Log($"{member.DisplayName} demasiado lejos ({distance:F1}m > {teleportThreshold:F1}m), teletransportando...");
                     TeleportMemberToPlayer(member, i);
                 }
             }
@@ -1520,9 +1514,10 @@ namespace Game.NPC
                 float willThreshold = willNpc.PartyConfig?.distanciaParaTeletransporte ?? 15f;
                 if (willDist > willThreshold)
                 {
-                    Log($"⚡ Will NPC demasiado lejos ({willDist:F1}m > {willThreshold:F1}m), teletransportando...");
-                    ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer();
+                    Log($"Will demasiado lejos ({willDist:F1}m > {willThreshold:F1}m), teletransportando...");
+                    ReunirAWill(forzar: false, avisar: false);
                 }
+
             }
         }
 
@@ -1552,7 +1547,7 @@ namespace Game.NPC
                 }
             }
 
-            // FIX (17 ago 2026): mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
+            // mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
             // no gatear Warp() detrás de isOnNavMesh, porque si da false en ese instante deja al
             // agente desincronizado del NavMesh para siempre (ver comentario extenso allí).
             var agent = member.GetComponent<NavMeshAgent>();
@@ -1569,81 +1564,6 @@ namespace Game.NPC
 
             member.OnTeleportedToPlayer();
             return true;
-        }
-
-        // -----------------------------------------------------------------
-        // Manejo de escalada: preparación y notificaciones para los party members
-        // -----------------------------------------------------------------
-        // FIX INC-034: antes el "else" se disparaba en CUALQUIER cambio a un modo que no fuera
-        // Climbing (nadar, saltar, combate, sentarse...), no solo al abandonar la escalada.
-        // Eso hacía que NotifyPlayerClimbStopped() -> TeleportAllMembersToPlayer() reagrupara
-        // al equipo entero cada vez que el jugador entraba en agua (ActionMode.Swimming),
-        // incluso con el equipo disuelto (modo Libre). Ahora solo notifica el fin de escalada
-        // si el modo anterior realmente era Climbing.
-        private bool _wasClimbingTopMode;
-
-        private void OnPlayerTopModeChanged(ActionMode mode)
-        {
-            if (mode == ActionMode.Climbing)
-            {
-                _wasClimbingTopMode = true;
-                // El PlayerClimbingController también llamará NotifyPlayerClimbStarted
-                // pero escuchamos el cambio de modo como medida de seguridad.
-                NotifyPlayerClimbStarted(_playerTransform != null ? _playerTransform.position : Vector3.zero);
-            }
-            else if (_wasClimbingTopMode)
-            {
-                // Solo limpiar estado de preparación si de verdad veníamos de Climbing
-                _wasClimbingTopMode = false;
-                NotifyPlayerClimbStopped(_playerTransform != null ? _playerTransform.position : Vector3.zero);
-            }
-        }
-
-        /// <summary>
-        /// Llamado por PlayerClimbingController al iniciarse la escalada.
-        /// Posiciona a los companions en la base de la pared y los marca como esperando.
-        /// </summary>
-        public void NotifyPlayerClimbStarted(Vector3 basePosition)
-        {
-            // No mover a los NPCs cuando el player inicia la escalada.
-            // Los NPCs permanecerán donde están. Al finalizar la escalada,
-            // se teletransportarán cerca del jugador para reanudar el seguimiento.
-            Log($"🔔 NotifyPlayerClimbStarted en {basePosition} (no se moviliza a los miembros)");
-        }
-
-        /// <summary>
-        /// Llamado cuando la escalada termina (player suelta o finaliza).
-        /// Limpia banderas de espera y libera a los companions para seguir.
-        /// </summary>
-        public void NotifyPlayerClimbStopped(Vector3 stopPosition)
-        {
-            Log($"🔔 NotifyPlayerClimbStopped en {stopPosition} - teleportando miembros al jugador");
-            // Teletransportar todos los miembros cerca del jugador cuando el player termine de escalar.
-            // Es un reagrupado legítimo (el jugador puede haber subido a una cornisa inaccesible
-            // andando), así que se omite la comprobación de alcance. Ver INC-819.
-            TeleportAllMembersToPlayer(forzar: true);
-        }
-
-        /// <summary>
-        /// Variante de GetFormationPosition que usa un centro arbitrario en lugar de la posición del player.
-        /// Útil para posicionar los companions en la base de una escalada.
-        /// </summary>
-        public Vector3 GetFormationPositionAt(Vector3 centerPosition, int memberIndex)
-        {
-            // Reutiliza la lógica de formación pero centrada en centerPosition
-            float angle = CalculateFormationAngle(memberIndex);
-            float distance = CalculateFormationDistance(memberIndex);
-
-            Vector3 forward = (_playerTransform != null) ? _playerTransform.forward : Vector3.forward;
-            Vector3 right = (_playerTransform != null) ? _playerTransform.right : Vector3.right;
-            Vector3 offset = Quaternion.Euler(0, angle, 0) * (-forward * distance);
-            Vector3 targetPos = centerPosition + offset;
-
-            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-            {
-                return hit.position;
-            }
-            return targetPos;
         }
 
         private float CalculateFormationAngle(int index)
@@ -1679,7 +1599,7 @@ namespace Game.NPC
         private void LogWarning(string message)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PlayerParty] ⚠️ {message}");
+            Debug.LogWarning($"[PlayerParty] {message}");
 #endif
         }
         #endregion
@@ -1693,14 +1613,14 @@ namespace Game.NPC
             try
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] 🔄 SyncPartyToPreset() llamado - _members.Count = {_members.Count}");
+                Debug.Log($"[PlayerParty] SyncPartyToPreset() llamado - _members.Count = {_members.Count}");
 #endif
                 
                 var profile = GameBootService.Profile;
                 if (profile == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[PlayerParty] ⚠️ GameBootService.Profile es null, no se puede sincronizar party");
+                    Debug.LogWarning("[PlayerParty] GameBootService.Profile es null, no se puede sincronizar party");
 #endif
                     return;
                 }
@@ -1709,17 +1629,17 @@ namespace Game.NPC
                 if (preset == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[PlayerParty] ⚠️ No hay preset activo, no se puede sincronizar party");
+                    Debug.LogWarning("[PlayerParty] No hay preset activo, no se puede sincronizar party");
 #endif
                     return;
                 }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] 📋 Preset encontrado: '{preset.name}', llamando a GetMemberIdsForSave()...");
+                Debug.Log($"[PlayerParty] Preset encontrado: '{preset.name}', llamando a GetMemberIdsForSave()...");
 #endif
                 var memberIds = GetMemberIdsForSave(allowPresetFallbackWhenEmpty: false);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] 📋 GetMemberIdsForSave() retornó {memberIds.Count} IDs: [{string.Join(", ", memberIds)}]");
+                Debug.Log($"[PlayerParty] GetMemberIdsForSave() retornó {memberIds.Count} IDs: [{string.Join(", ", memberIds)}]");
 #endif
 
                 preset.partyMemberIds = memberIds;
@@ -1728,7 +1648,7 @@ namespace Game.NPC
                 // PartyControlManager lo lea: lo escribe Partida.VolcarEstadoDelJuego al guardar.
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ✅ Party sincronizado con preset '{preset.name}': {preset.partyMemberIds.Count} miembros [{string.Join(", ", memberIds)}]");
+                Debug.Log($"[PlayerParty] Party sincronizado con preset '{preset.name}': {preset.partyMemberIds.Count} miembros [{string.Join(", ", memberIds)}]");
 #endif
             }
             catch (System.Exception ex)
@@ -1743,14 +1663,14 @@ namespace Game.NPC
         public List<string> GetMemberIdsForSave(bool allowPresetFallbackWhenEmpty = true)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] 📊 GetMemberIdsForSave() - _members.Count = {_members.Count}");
+            Debug.Log($"[PlayerParty] GetMemberIdsForSave() - _members.Count = {_members.Count}");
 #endif
             
-            // ✅ CRÍTICO: Si _members está vacío o solo tiene nulls, leer desde el preset actual
+            // CRÍTICO: Si _members está vacío o solo tiene nulls, leer desde el preset actual
             // Esto ocurre cuando se guarda justo después de un cambio de escena (ej: al salir al menú)
             int validMembersCount = _members.Count(m => m != null);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] 📊 Valid members (non-null): {validMembersCount}");
+            Debug.Log($"[PlayerParty] Valid members (non-null): {validMembersCount}");
 #endif
             
             if (validMembersCount == 0)
@@ -1758,13 +1678,13 @@ namespace Game.NPC
                 if (!allowPresetFallbackWhenEmpty)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[PlayerParty] ℹ️ GetMemberIdsForSave sin fallback: retornando lista vacía");
+                    Debug.Log("[PlayerParty] GetMemberIdsForSave sin fallback: retornando lista vacía");
 #endif
                     return new List<string>();
                 }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerParty] ⚠️ _members está vacío o solo tiene nulls - Leyendo desde preset actual");
+                Debug.LogWarning("[PlayerParty] _members está vacío o solo tiene nulls - Leyendo desde preset actual");
 #endif
                 
                 var profile = GameBootService.Profile;
@@ -1774,32 +1694,32 @@ namespace Game.NPC
                     if (preset != null && preset.partyMemberIds != null && preset.partyMemberIds.Count > 0)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[PlayerParty] ✅ Usando {preset.partyMemberIds.Count} IDs desde preset: [{string.Join(", ", preset.partyMemberIds)}]");
+                        Debug.Log($"[PlayerParty] Usando {preset.partyMemberIds.Count} IDs desde preset: [{string.Join(", ", preset.partyMemberIds)}]");
 #endif
                         return new List<string>(preset.partyMemberIds);
                     }
                     else
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogWarning($"[PlayerParty] ⚠️ Preset no tiene IDs (preset={preset != null}, partyMemberIds={(preset?.partyMemberIds != null ? preset.partyMemberIds.Count.ToString() : "null")})");
+                        Debug.LogWarning($"[PlayerParty] Preset no tiene IDs (preset={preset != null}, partyMemberIds={(preset?.partyMemberIds != null ? preset.partyMemberIds.Count.ToString() : "null")})");
 #endif
                     }
                 }
                 else
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[PlayerParty] ⚠️ GameBootService.Profile es null");
+                    Debug.LogWarning("[PlayerParty] GameBootService.Profile es null");
 #endif
                 }
                 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerParty] ⚠️ No se encontraron IDs en el preset - Retornando lista vacía");
+                Debug.LogWarning("[PlayerParty] No se encontraron IDs en el preset - Retornando lista vacía");
 #endif
                 return new List<string>();
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerParty] ✅ Extrayendo IDs de {validMembersCount} miembros válidos...");
+            Debug.Log($"[PlayerParty] Extrayendo IDs de {validMembersCount} miembros válidos...");
 #endif
             
             var result = new List<string>();
@@ -1809,7 +1729,7 @@ namespace Game.NPC
                 if (member == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[PlayerParty] ⚠️ Miembro null en la lista - omitido");
+                    Debug.LogWarning("[PlayerParty] Miembro null en la lista - omitido");
 #endif
                     continue;
                 }
@@ -1841,7 +1761,7 @@ namespace Game.NPC
                 
                 result.Add(persistenceId);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerParty] ✅ Miembro '{member.name}' guardado con ID '{persistenceId}'");
+                Debug.Log($"[PlayerParty] Miembro '{member.name}' guardado con ID '{persistenceId}'");
 #endif
             }
             
@@ -1880,13 +1800,13 @@ namespace Game.NPC
                 // Ignorar explícitamente IDs narrativos antiguos o corruptos que se guardaron antes de este parche
                 if (id.StartsWith("NPC_InteractiveNarrative_Config_"))
                 {
-                    Log($"⚠️ Ignorando ID narrativo del party '{id}'. Tratando de extraer el nombre real...");
+                    Log($"Ignorando ID narrativo del party '{id}'. Tratando de extraer el nombre real...");
                     string possibleName = "Estela";
                     if (id.ToLower().Contains("oliver")) possibleName = "Oliver";
                     else if (id.ToLower().Contains("victoria")) possibleName = "Victoria";
                     else if (id.ToLower().Contains("liam")) possibleName = "Liam";
                     
-                    Log($"⚠️ Reemplazando ID '{id}' -> '{possibleName}'");
+                    Log($"Reemplazando ID '{id}' -> '{possibleName}'");
                     var newId = possibleName;
                     
                     // Solo intentar restaurar si no está ya restaurado
@@ -1936,7 +1856,7 @@ namespace Game.NPC
 
             if (npcManager != null)
             {
-                Log($"✅ NPC encontrado: {npcManager.name}");
+                Log($"NPC encontrado: {npcManager.name}");
                 var partyMember = npcManager.GetComponent<NPCPartyMember>();
                 if (partyMember != null && !HasMember(partyMember))
                 {
@@ -1961,7 +1881,7 @@ namespace Game.NPC
             }
             else
             {
-                LogWarning($"❌ No se encontró NPC con ID: '{id}' en el registro - marcado como pendiente");
+                LogWarning($"No se encontró NPC con ID: '{id}' en el registro - marcado como pendiente");
                 _pendingMemberIds.Add(id);
             }
         }

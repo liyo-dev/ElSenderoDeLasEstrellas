@@ -35,7 +35,7 @@ public static class CorrectorDeAnimaciones
 
     private static readonly string[] PrefabsRig =
     {
-        "Assets/_NPCs/Eldran.prefab",
+        "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab",
         "Assets/Prefabs/_WILL.prefab",
         "Assets/Prefabs/_LIAM.prefab",
         "Assets/Prefabs/_ESTELA.prefab",

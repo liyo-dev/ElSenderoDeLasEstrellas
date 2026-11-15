@@ -1,8 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using Slot = PartyControlManager.CharacterSlot;
 
+/// <summary>
+/// Pone la partida en curso (<see cref="Partida.Preset"/>) en el grupo: inventario, ropa que se
+/// tiene, habilidades, la apariencia y los hechizos de Will y los de Estela y Liam, y el maná del
+/// que va al mando. Va en <see cref="GrupoDelJugador"/>: hay uno, aunque cada personaje tenga su
+/// cuerpo. Lo de cada personaje se pone en su cuerpo (<see cref="ControlDelJugador.PilotoDe"/>), lo
+/// lleve el jugador o la IA; un cuerpo que aparece después (carga de escena) recibe lo suyo al
+/// aparecer. La vida y el maná de cada uno los lleva <see cref="SaludDelGrupo"/>.
+/// </summary>
 [DefaultExecutionOrder(-50)]
 [DisallowMultipleComponent]
 public class PlayerPresetService : MonoBehaviour
@@ -12,78 +20,54 @@ public class PlayerPresetService : MonoBehaviour
     public SpellLibrarySO SpellLibrary => spellLibrary;
 
     [Header("Opciones")]
-    [SerializeField] private bool autoFillEmptySlotsFromUnlocked; // default false por defecto
-    [SerializeField] private GameObject instigatorOverride;
+    [Tooltip("Completa los básicos de Will con los hechizos desbloqueados aunque el preset traiga los suyos.")]
+    [SerializeField] private bool autoFillEmptySlotsFromUnlocked;
 
-    MagicProjectileSpawner _spawner;
-    MagicCaster _magicCaster; // ← NUEVO: referencia al MagicCaster
-    ManaPool _manaPool;       // ← NUEVO: referencia al ManaPool
-    PlayerActionManager _actionManager; // ← NUEVO: referencia al PlayerActionManager
-    ModularAutoBuilder _appearanceBuilder;
-    Inventory _inventory;     // ← NUEVO: referencia al Inventory
-    WardrobeInventory _wardrobeInventory;
-    
     // Evitar inicialización doble si el evento llega más de una vez o ya está listo al habilitar
     bool _initialized;
-    bool _warnedMissingAppearanceBuilder;
-
-    // Cacheado una sola vez: Enum.GetValues usa reflexión y aloca un array nuevo en cada llamada,
-    // y este enum se recorre en cada cambio de personaje/apariencia (ApplyAppearanceFromPreset,
-    // SnapshotAppearanceToPreset), así que evitamos repetir esa alocación cada vez.
-    static readonly PartCategory[] _allPartCategories = (PartCategory[])Enum.GetValues(typeof(PartCategory));
 
     public static bool HasAppliedPreset { get; private set; }
 
-    void Awake()
+    // Evento público para notificar re-aplicación de preset (subscriptores UI o sistemas)
+    public static Action OnPresetApplying;
+    public static Action OnPresetApplied;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
     {
-        // Buscar spawner y magicCaster también en los padres del GameObject.
-        // Esto evita crear un MagicProjectileSpawner LOCAL cuando ya existe uno en el root del jugador.
-        _spawner = GetComponent<MagicProjectileSpawner>() ?? GetComponentInParent<MagicProjectileSpawner>();
-        if (_spawner == null)
-        {
-            // Como último recurso, añadimos uno local (solo si realmente no existe en la jerarquía)
-            _spawner = gameObject.AddComponent<MagicProjectileSpawner>();
-        }
-
-        _magicCaster = GetComponent<MagicCaster>() ?? GetComponentInParent<MagicCaster>();
-        _manaPool = GetComponent<ManaPool>() ?? GetComponentInParent<ManaPool>(); // ← NUEVO: obtener ManaPool
-        if (_manaPool != null)
-        {
-            ServiceLocator.Register(_manaPool);
-        }
-        _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>(); // ← NUEVO: obtener PlayerActionManager
+        HasAppliedPreset = false;
+        OnPresetApplying = null;
+        OnPresetApplied = null;
     }
+#endif
 
-    // Suscribirnos al evento y cubrir el caso de que ya esté disponible
     void OnEnable()
     {
         GameBootService.OnProfileReady += HandleProfileReady;
+        PilotoDelCuerpo.Aparece += AlAparecerCuerpo;
         ProfileReadyDiagnostics.RegisterSubscriber(nameof(PlayerPresetService));
         if (GameBootService.IsAvailable)
-        {
             HandleProfileReady();
-        }
     }
 
     void OnDisable()
     {
         GameBootService.OnProfileReady -= HandleProfileReady;
+        PilotoDelCuerpo.Aparece -= AlAparecerCuerpo;
     }
 
     private void HandleProfileReady()
     {
         if (_initialized) return;
-        InitializePresetService();
         _initialized = true;
-        // Ya no necesitamos el evento tras inicializar
         GameBootService.OnProfileReady -= HandleProfileReady;
+        InitializePresetService();
     }
 
     private void InitializePresetService()
     {
-        var profile = GameBootService.Profile;
-        
-        if (!profile)
+        if (!GameBootService.Profile)
         {
             enabled = false;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -91,583 +75,27 @@ public class PlayerPresetService : MonoBehaviour
 #endif
             return;
         }
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (!spellLibrary)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] SpellLibrary no asignada en el inspector — algunas funcionalidades (resolución de SpellId) no estarán disponibles.");
+            Debug.LogWarning("[PlayerPresetService] SpellLibrary no asignada en el inspector: no se resolverán los SpellId.");
 #endif
-        }
-
-        // Log diagnóstico: comprobar qué componentes hemos encontrado para evitar configuraciones en el objeto equivocado
-        EnsureAppearanceBuilderReference();
-        // Debug.Log($"[PlayerPresetService] Componentes encontrados -> spawner={( _spawner != null ? _spawner.GetType().Name : "null" )}, magicCaster={( _magicCaster != null ? _magicCaster.GetType().Name : "null" )}, manaPool={( _manaPool != null ? _manaPool.GetType().Name : "null" )}, actionManager={( _actionManager != null ? _actionManager.GetType().Name : "null" )}, appearanceBuilder={( _appearanceBuilder != null ? _appearanceBuilder.GetType().Name : "null" )}, inventory={( _inventory != null ? _inventory.GetType().Name : "null" )}");
 
         var preset = Partida.Preset;
-        if (!preset) 
-        { 
+        if (!preset)
+        {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] Sin preset activo."); 
+            Debug.LogWarning("[PlayerPresetService] Sin preset activo.");
 #endif
-            return; 
+            return;
         }
 
-        OnPresetApplying?.Invoke();
-        HasAppliedPreset = false;
-
-        // Log inicial de diagnóstico
-        var spellsCount = spellLibrary.Spells != null ? spellLibrary.Spells.Count : -1;
-        int unlockedCount = preset.unlockedSpells != null ? preset.unlockedSpells.Count : 0;
-        // Debug.Log($"[PlayerPresetService] SpellLibrary spells: {spellsCount} | Unlocked: {unlockedCount} | Slots IDs → L:{preset.leftSpellId} R:{preset.rightSpellId} S:{preset.specialSpellId}");
-
-        // USAR EL ANCHOR DEL PRESET SO
         if (!string.IsNullOrEmpty(preset.spawnAnchorId))
-        {
             SpawnManager.SetCurrentAnchor(preset.spawnAnchorId);
-        }
 
-        // Pre-snapshot de Will ANTES de cualquier cambio en el builder.
-        // Si preset.appearance está corrompido con partes de otro personaje, el snapshot
-        // del prefab sirve como referencia correcta para detectar la corrupción y corregirla.
-        EnsureAppearanceBuilderReference();
-        CharacterAppearanceRegistry.Instance?.SnapshotWillFromBuilderIfNeeded(_appearanceBuilder);
-
-        // Sincronizar maná del preset → ManaPool (evita arrancar 50/50 si el preset está en 0/0)
-        ApplyManaFromPreset(preset);
-
-        // Sincronizar inventario del preset → Inventory
-        ApplyInventoryFromPreset(preset);
-
-        // Configurar hechizos del preset
-        ConfigureSpells(preset);
-        ApplyAppearanceFromPreset(preset);
-        ApplyWardrobeFromPreset(preset);
-
-        // === NUEVO: Aplicar abilities del preset al PlayerActionManager si existe ===
-        if (_actionManager == null)
-            _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
-
-        if (_actionManager != null && preset != null)
-        {
-            if (preset.abilities == null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerPresetService] preset.abilities es NULL — creando con valores por defecto");
-#endif
-                preset.abilities = new PlayerAbilities { swim = false, jump = false, climb = false, magic = false, fly = false };
-            }
-            // Debug.Log($"[PlayerPresetService] Aplicando abilities del preset: Swim={preset.abilities.swim} Jump={preset.abilities.jump} Climb={preset.abilities.climb} Fly={preset.abilities.fly} Magic={preset.abilities.magic}");
-            _actionManager.ApplyAbilities(preset.abilities);
-            // Debug.Log("[PlayerPresetService] Abilities del preset aplicadas al PlayerActionManager");
-            // Debug.Log($"[PlayerPresetService] PlayerActionManager.AllowMagic = {_actionManager.AllowMagic}");
-        }
-        else if (_actionManager == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] No se encontró PlayerActionManager para aplicar abilities del preset");
-#endif
-        }
-
-        // Notificar a subscriptores (HUD, UI u otros) que el preset ha sido aplicado
-        HasAppliedPreset = true;
-        OnPresetApplied?.Invoke();
+        Aplicar(preset, includeInventory: true, includeAbilities: true);
     }
 
-    private void EnsureAppearanceBuilderReference()
-    {
-        if (_appearanceBuilder != null) return;
-
-        _appearanceBuilder = GetComponent<ModularAutoBuilder>()
-            ?? GetComponentInChildren<ModularAutoBuilder>(true)
-            ?? GetComponentInParent<ModularAutoBuilder>();
-
-        if (_appearanceBuilder == null && PlayerService.TryGetComponent<ModularAutoBuilder>(out var builder, includeInactive: true, allowSceneLookup: true))
-        {
-            _appearanceBuilder = builder;
-        }
-
-        if (_appearanceBuilder == null && !_warnedMissingAppearanceBuilder)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] No se encontro ModularAutoBuilder para sincronizar la apariencia del jugador.");
-#endif
-            _warnedMissingAppearanceBuilder = true;
-        }
-    }
-
-    private void ApplyAppearanceFromPreset(PlayerPresetSO preset)
-    {
-        if (preset == null) return;
-
-        EnsureAppearanceBuilderReference();
-        if (_appearanceBuilder == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[PlayerPresetService] ❌ APARIENCIA NO APLICADA: _appearanceBuilder es NULL. El jugador mantendrá la apariencia del prefab.");
-#endif
-            return;
-        }
-
-        var entries = preset.appearance;
-
-        // Si el preset no tiene apariencia definida (lista vacía o null) y Will es el activo,
-        // no tocar el builder — dejar al jugador con la apariencia actual del prefab.
-        // NUNCA aplicar una selección vacía si hay un personaje visible: haría al jugador invisible.
-        if (entries == null || entries.Count == 0)
-        {
-            var currentSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PlayerPresetService] ⚠️ Preset '{preset.name}' sin apariencia definida (activeSlot={currentSlot}). " +
-                "Se omite la aplicación al builder para evitar invisibilidad. " +
-                "Define la apariencia en el Inspector del preset para control preciso.");
-            #endif
-            return;
-        }
-
-        var selection = new Dictionary<PartCategory, string>();
-        foreach (PartCategory cat in _allPartCategories)
-        {
-            selection[cat] = null;
-        }
-        foreach (var entry in entries)
-        {
-            selection[entry.category] = string.IsNullOrEmpty(entry.partName) ? null : entry.partName;
-        }
-
-        var activeSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Guardado tras el mismo patrón que otros logs del proyecto:
-        // el ConvertAll+string.Join alocaba en cada cambio de personaje/apariencia incluso en build
-        // final, donde nadie lee la consola. Ahora solo se construye el string en Editor/dev builds.
-        Debug.Log($"[PlayerPresetService] 🎨 ApplyAppearanceFromPreset — preset='{preset.name}' activeSlot={activeSlot} entries=[{string.Join(", ", entries.ConvertAll(e => $"{e.category}:{e.partName}"))}] builder={_appearanceBuilder.gameObject.name}");
-#endif
-
-        if (activeSlot != PartyControlManager.CharacterSlot.Will)
-        {
-            // Proteger el registry de Will contra datos corrompidos del preset antes de guardarlos.
-            var registry = CharacterAppearanceRegistry.Instance;
-            var snap = registry?.GetAppearance(PartyControlManager.CharacterSlot.Will);
-            if (registry != null && registry.HasWillSnapshot && snap?.Count > 0 && IsSelectionCorrupted(selection, registry))
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerPresetService] ↩️ preset.appearance corrompido — registry de Will NO se sobreescribe.");
-#endif
-                return;
-            }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerPresetService] ↩️ Slot activo es {activeSlot} (no Will): guardando apariencia de Will en registry sin tocar el builder.");
-#endif
-            CharacterAppearanceRegistry.Instance?.SetAppearanceFromList(
-                PartyControlManager.CharacterSlot.Will, entries);
-            return;
-        }
-
-        // Aplicar a través del registry para mantener _currentBuilderSlot sincronizado.
-        // SetAppearanceFromList actualiza _appearances[Will] con los datos del preset,
-        // y ApplyAppearance lo aplica al builder y actualiza _currentBuilderSlot = Will.
-        var reg = CharacterAppearanceRegistry.Instance;
-        if (reg != null)
-        {
-            // Detectar corrupción: si el preset contiene partes de otro personaje, usar el
-            // snapshot del registry en lugar de sobreescribirlo con datos corruptos.
-            // Requisito: el snapshot debe ser no-vacío para ser válido como referencia.
-            var willSnap = reg.GetAppearance(PartyControlManager.CharacterSlot.Will);
-            bool corrupted = reg.HasWillSnapshot && willSnap.Count > 0 && IsSelectionCorrupted(selection, reg);
-            if (corrupted)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerPresetService] ⚠️ Corrupción detectada en preset.appearance. Aplicando snapshot existente del registry sin sobreescribir.");
-#endif
-                reg.ApplyAppearance(PartyControlManager.CharacterSlot.Will);
-            }
-            else
-            {
-                reg.SetAppearanceFromList(PartyControlManager.CharacterSlot.Will, entries);
-                reg.ApplyAppearance(PartyControlManager.CharacterSlot.Will);
-            }
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] CharacterAppearanceRegistry no disponible — aplicando directamente al builder.");
-#endif
-            _appearanceBuilder.DeactivateAllCategories();
-            _appearanceBuilder.ApplySelection(selection);
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerPresetService] ✅ Apariencia de Will aplicada al builder. Partes activas: [{string.Join(", ", _appearanceBuilder.GetSelection().Select(kv => $"{kv.Key}:{kv.Value}"))}]");
-#endif
-    }
-
-    /// <summary>
-    /// Devuelve true si la selección contiene ≥2 partes de otro personaje (Estela o Liam)
-    /// que además difieren del pre-snapshot de Will, indicando corrupción.
-    /// </summary>
-    private static bool IsSelectionCorrupted(Dictionary<PartCategory, string> selection,
-                                              CharacterAppearanceRegistry registry)
-    {
-        var willSnap  = registry.GetAppearance(PartyControlManager.CharacterSlot.Will);
-        var estelaApp = registry.GetAppearance(PartyControlManager.CharacterSlot.Estela);
-        var liamApp   = registry.GetAppearance(PartyControlManager.CharacterSlot.Liam);
-
-        // willSnap se toma de lo que muestra el builder al arrancar (SnapshotWillFromBuilderIfNeeded),
-        // antes de aplicar nada. Si en ese momento el builder ya enseñaba la apariencia de Estela o
-        // Liam, la propia referencia está corrompida: la selección correcta del preset difiere de
-        // ella en todo, bastan dos partes genéricas compartidas (ojos, boca) para darla por
-        // «corrupta», y se reaplicaría el snapshot malo (Will vestido de Estela junto a la Estela
-        // real del grupo: «dos Estelas y un Will»). Si el snapshot se parece a otro personaje no es
-        // una referencia fiable: se omite la detección y se confía en preset.appearance, que
-        // SnapshotAppearanceToPreset() solo escribe con Will al mando.
-        if (LooksLikeOtherCharacter(willSnap, estelaApp, liamApp))
-        {
-            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] ⚠️ El pre-snapshot de Will coincide con la " +
-                "apariencia de Estela/Liam — no es una referencia fiable para detectar corrupción " +
-                "(bug 'dos Estelas y un Will'). Se omite la comprobación y se confía en preset.appearance.");
-            #endif
-            return false;
-        }
-
-        int corruptCount = 0;
-        foreach (var kv in selection)
-        {
-            if (string.IsNullOrEmpty(kv.Value)) continue;
-
-            bool inOtherChar =
-                (estelaApp.TryGetValue(kv.Key, out var ev) && ev == kv.Value) ||
-                (liamApp.TryGetValue(kv.Key,   out var lv) && lv == kv.Value);
-
-            bool differsFromSnap =
-                !willSnap.TryGetValue(kv.Key, out var sv) || sv != kv.Value;
-
-            if (inOtherChar && differsFromSnap)
-                corruptCount++;
-        }
-
-        if (corruptCount >= 2)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PlayerPresetService] 🔍 {corruptCount} partes de otro personaje detectadas en preset.appearance.");
-#endif
-            return true;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// True si <paramref name="snap"/> coincide en ≥2 categorías con la apariencia registrada de
-    /// Estela o de Liam — es decir, si el propio snapshot "es" ya otro personaje en vez de Will.
-    /// Ver comentario en IsSelectionCorrupted (FIX 20 ago 2026, bug "dos Estelas y un Will").
-    /// </summary>
-    private static bool LooksLikeOtherCharacter(Dictionary<PartCategory, string> snap,
-        Dictionary<PartCategory, string> estelaApp, Dictionary<PartCategory, string> liamApp)
-    {
-        int matches = 0;
-        foreach (var kv in snap)
-        {
-            if (string.IsNullOrEmpty(kv.Value)) continue;
-            bool matchesOther =
-                (estelaApp.TryGetValue(kv.Key, out var ev) && ev == kv.Value) ||
-                (liamApp.TryGetValue(kv.Key,   out var lv) && lv == kv.Value);
-            if (matchesOther)
-                matches++;
-        }
-        return matches >= 2;
-    }
-
-    public void SnapshotAppearanceToPreset()
-    {
-        EnsureAppearanceBuilderReference();
-        if (_appearanceBuilder == null) return;
-
-        // preset.appearance siempre almacena la apariencia de Will.
-        // Si el personaje activo no es Will, solo actualizamos el registry del personaje activo
-        // y salimos sin tocar preset.appearance para evitar corromperla con partes de otro personaje.
-        var activeSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-        if (activeSlot != PartyControlManager.CharacterSlot.Will)
-        {
-            CharacterAppearanceRegistry.Instance?.CaptureActiveCharacterAppearance();
-            return;
-        }
-
-        if (!GameBootService.IsAvailable)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] GameBootService no esta listo; no se guarda la apariencia.");
-#endif
-            return;
-        }
-
-        var profile = GameBootService.Profile;
-        if (profile == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] GameBootService.Profile es null; no se guarda la apariencia.");
-#endif
-            return;
-        }
-
-        var preset = Partida.Preset;
-        if (preset == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] No hay preset activo; no se guarda la apariencia.");
-#endif
-            return;
-        }
-
-        // Con un atuendo de escena puesto, al preset va la ropa de debajo.
-        var registro = CharacterAppearanceRegistry.Instance;
-        var selection = registro != null && registro.LlevaAtuendo(PartyControlManager.CharacterSlot.Will)
-            ? registro.RopaDeDebajo(PartyControlManager.CharacterSlot.Will)
-            : _appearanceBuilder.GetSelection();
-
-        if (preset.appearance == null)
-            preset.appearance = new List<AppearanceEntry>();
-        else
-            preset.appearance.Clear();
-
-        var processed = new HashSet<PartCategory>();
-        foreach (PartCategory cat in _allPartCategories)
-        {
-            if (!processed.Add(cat)) continue;
-
-            var options = _appearanceBuilder.GetOptions(cat);
-            if (options == null || options.Count == 0) continue;
-
-            selection.TryGetValue(cat, out var partName);
-            preset.appearance.Add(new AppearanceEntry
-            {
-                category = cat,
-                partName = string.IsNullOrEmpty(partName) ? null : partName
-            });
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[PlayerPresetService] Apariencia guardada en el preset activo.");
-#endif
-        
-        // Sincronizar con CharacterAppearanceRegistry para que el switch de personaje
-        // mantenga los cambios de vestuario realizados (ej: la capa)
-        CharacterAppearanceRegistry.Instance?.CaptureActiveCharacterAppearance();
-    }
-
-    void ApplyWardrobeFromPreset(PlayerPresetSO preset)
-    {
-        if (preset == null) return;
-
-        if (_wardrobeInventory == null)
-            PlayerService.TryGetComponent(out _wardrobeInventory, includeInactive: true, allowSceneLookup: true);
-
-        _wardrobeInventory?.ApplyFromPreset(preset);
-    }
-
-    // === NUEVO: Aplica el inventario desde el preset al componente Inventory del jugador ===
-    private void ApplyInventoryFromPreset(PlayerPresetSO preset)
-    {
-        if (!preset) return;
-        
-        if (_inventory == null)
-        {
-            // Intentar obtener el Inventory del jugador
-            if (PlayerService.TryGetComponent<Inventory>(out var inv, includeInactive: false, allowSceneLookup: true))
-            {
-                _inventory = inv;
-            }
-        }
-
-        if (_inventory != null)
-        {
-            var items = preset.inventoryItems;
-            if (items != null && items.Count > 0)
-            {
-                _inventory.LoadSnapshot(items, clearExisting: true, notifyChanges: false);
-                //Debug.Log($"[PlayerPresetService] Inventario cargado desde preset ({items.Count} tipos de ítems)");
-            }
-            else
-            {
-                _inventory.LoadSnapshot(null, clearExisting: true, notifyChanges: false);
-                //Debug.Log("[PlayerPresetService] Inventario inicializado vacío (preset sin items)");
-            }
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] No se encontró componente Inventory para cargar el inventario del preset");
-#endif
-        }
-    }
-
-    // === NUEVO: Aplica valores de maná desde el preset al ManaPool del jugador ===
-    private void ApplyManaFromPreset(PlayerPresetSO preset)
-    {
-        if (!preset) return;
-        // El maná del preset es el de Will: con otro personaje al mando, el cuerpo lleva el suyo
-        // (SaludDelGrupo, INC-717).
-        if (ControlDelJugador.Activo != PartyControlManager.CharacterSlot.Will && SaludDelGrupo.Instance != null)
-        {
-            SaludDelGrupo.Instance.CargarManaDelActivo();
-            return;
-        }
-        if (_manaPool == null)
-        {
-            // Obtener ManaPool directamente desde el ServiceLocator
-            _manaPool = ServiceLocator.Get<ManaPool>(false);
-        }
-        if (_manaPool != null)
-        {
-            //Debug.Log($"[PlayerPresetService] Using ManaPool on GameObject: {_manaPool.gameObject.name}");
-        }
-        if (_manaPool != null)
-        {
-            // Log del estado actual del preset ANTES de cualquier modificación
-            //Debug.Log($"[PlayerPresetService] ApplyManaFromPreset - Preset inicial: maxMP={preset.maxMP}, currentMP={preset.currentMP}, abilities.magic={preset.abilities?.magic}");
-            
-            // Si el preset NO tiene la ability de magia, no queremos mostrar una barra de maná llena.
-            if (preset.abilities != null && !preset.abilities.magic)
-            {
-                _manaPool.Init(0f, 0f);
-                //Debug.Log("[PlayerPresetService] Preset indica que no tiene magia -> maxMP y currentMP seteados a 0");
-                return;
-            }
-
-            // Si el preset explícitamente no define maná, intentar inferir un valor mínimo a partir
-            // de los hechizos asignados o desbloqueados para evitar que el jugador tenga 0 MP y no pueda lanzar.
-            float maxMP = Mathf.Max(0f, preset.maxMP);
-            float currentMP = Mathf.Clamp(preset.currentMP, 0f, maxMP > 0f ? maxMP : float.MaxValue);
-            
-            //Debug.Log($"[PlayerPresetService] ApplyManaFromPreset - Valores calculados: maxMP={maxMP}, currentMP={currentMP}");
-
-            if (maxMP <= 0f)
-            {
-                float highestCost = 0f;
-                // Revisar básicos equipados
-                foreach (var id in preset.basicSpellIds ?? new List<SpellId>())
-                {
-                    if (id == SpellId.None) continue;
-                    var s = spellLibrary != null ? spellLibrary.Get(id) : null;
-                    if (s != null) highestCost = Mathf.Max(highestCost, s.manaCost);
-                }
-                // Revisar desbloqueados
-                if (preset.unlockedSpells != null && spellLibrary != null)
-                {
-                    foreach (var id in preset.unlockedSpells)
-                    {
-                        if (id == SpellId.None) continue;
-                        var s = spellLibrary.Get(id);
-                        if (s != null) highestCost = Mathf.Max(highestCost, s.manaCost);
-                    }
-                }
-
-                if (highestCost > 0f)
-                {
-                    // Dar suficiente maná para lanzar al menos 1-2 veces el hechizo más caro
-                    maxMP = Mathf.Max(20f, highestCost * 2f);
-                    currentMP = Mathf.Max(currentMP, maxMP);
-                    //Debug.Log($"[PlayerPresetService] Preset maxMP was 0 — inferred maxMP={maxMP} from highest spell cost {highestCost}");
-                }
-                else
-                {
-                    // Si no hay hechizos conocidos, respetar explícitamente un preset 0/0.
-                    // Anteriormente forzábamos maxMP=50 para evitar que el jugador no pudiera lanzar,
-                    // pero esto sobreescribía presets donde el diseñador quería 0/0. Ahora:
-                    // - Si el preset explícitamente tiene maxMP<=0 y currentMP<=0 -> respetar 0/0
-                    // - En caso contrario (p.ej. currentMP > 0) usar un fallback razonable
-                    if (preset.currentMP <= 0f && preset.maxMP <= 0f)
-                    {
-                        maxMP = 0f;
-                        currentMP = 0f;
-                        //Debug.Log("[PlayerPresetService] Preset explicitly sets 0/0 and no spells found -> respecting 0/0");
-                    }
-                    else
-                    {
-                        // Fallback: si el preset pide algo de currentMP pero no definió max, usar el valor histórico por compatibilidad
-                        maxMP = 50f;
-                        if (currentMP <= 0f) currentMP = Mathf.Clamp(preset.currentMP, 0f, maxMP);
-                        //Debug.Log("[PlayerPresetService] Preset maxMP was 0 and no spells found; using default maxMP=50 to satisfy preset currentMP");
-                    }
-                 }
-             }
-
-             // El preset guarda solo la magia de base; lo que suma el equipo (la capa, por ejemplo) va
-             // encima, igual que en EstadisticasDelPersonaje. Sin esto, cada vez que se aplica el
-             // preset (al cambiar de ropa en el menú, al desbloquear algo...) el maná máximo volvía a
-             // la base y los bonos de magia del equipo se perdían, aunque la prenda siguiera puesta.
-             float bonoMagia = EstadisticasDelPersonaje.Bonos.magia;
-             if (bonoMagia != 0f)
-             {
-                 maxMP = Mathf.Max(0f, maxMP + bonoMagia);
-                 // currentMP se recortó arriba contra la base: el maná actual guardado puede incluir
-                 // la parte del bono (GameBootProfile guarda el maná actual tal cual).
-                 currentMP = Mathf.Clamp(Mathf.Max(currentMP, preset.currentMP), 0f, maxMP);
-             }
-
-             _manaPool.Init(maxMP, currentMP);
-             //Debug.Log($"[PlayerPresetService] ApplyManaFromPreset - ManaPool.Init({maxMP}, {currentMP}) llamado. ManaPool ahora: {_manaPool.Max}/{_manaPool.Current}");
-         }
-         else
-         {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-             Debug.LogWarning("[PlayerPresetService] No se encontró ManaPool en escena para sincronizar MP");
-#endif
-         }
-    }
-
-    /// Equipa en MagicCaster los hechizos básicos del preset (hasta cuatro, en orden de rotación).
-    /// Se descartan los que no están en SpellLibrary, los de solo especial y los repetidos. Si el
-    /// preset no trae ninguno, o autoFillEmptySlotsFromUnlocked está activo, se completan con los
-    /// desbloqueados.
-    private void ConfigureSpells(PlayerPresetSO preset)
-    {
-        var basics = new List<MagicSpellSO>(MagicCaster.BasicSlotCount);
-
-        void TryAdd(SpellId id)
-        {
-            if (id == SpellId.None || basics.Count >= MagicCaster.BasicSlotCount) return;
-            var spell = spellLibrary.Get(id);
-            if (spell == null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[PlayerPresetService] El hechizo {id} no está en SpellLibrary");
-#endif
-                return;
-            }
-            if (spell.slotType == SpellSlotType.SpecialOnly || basics.Contains(spell)) return;
-            // Los básicos de Estela y Liam van en sus propias ranuras (INC-503).
-            if (spell.caster != PartyControlManager.CharacterSlot.Will) return;
-            basics.Add(spell);
-        }
-
-        if (preset.basicSpellIds != null)
-            foreach (var id in preset.basicSpellIds) TryAdd(id);
-
-        if ((autoFillEmptySlotsFromUnlocked || basics.Count == 0) && preset.unlockedSpells != null)
-            foreach (var id in preset.unlockedSpells) TryAdd(id);
-
-        if (_spawner != null)
-            _spawner.SetInstigator(instigatorOverride ? instigatorOverride : gameObject);
-
-        // Con Estela o Liam al mando, el MagicCaster lleva los suyos: los de Will se guardan para
-        // cuando vuelva (INC-498).
-        var swapper = ActiveCharacterSwapper.Instance;
-        if (swapper != null && swapper.TrySetWillBasicsWhileAway(basics))
-        {
-        }
-        else if (_magicCaster)
-        {
-            _magicCaster.SetBasicSpells(basics);
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerPresetService] No se encontró MagicCaster en el GameObject");
-#endif
-        }
-    }
-
-    // === NUEVO: API pública para re-aplicar el preset activo en runtime (incluye mana) ===
+    /// <summary>Vuelve a poner la partida en curso en el grupo (tras cambiar algo en el preset).</summary>
     public void ApplyCurrentPreset(bool includeInventory = false, bool includeAbilities = true)
     {
         if (!GameBootService.IsAvailable)
@@ -685,54 +113,212 @@ public class PlayerPresetService : MonoBehaviour
 #endif
             return;
         }
+        // Solo al cargar partida o empezar una nueva se rehace el inventario: al cambiar el equipo en
+        // juego se perderían los objetos recogidos desde entonces.
+        Aplicar(preset, includeInventory, includeAbilities);
+    }
+
+    private void Aplicar(PlayerPresetSO preset, bool includeInventory, bool includeAbilities)
+    {
         OnPresetApplying?.Invoke();
         HasAppliedPreset = false;
 
-        // Aplicar stats (maná) y luego los hechizos
+        if (includeAbilities && preset.abilities == null) preset.abilities = new PlayerAbilities();
+
         ApplyManaFromPreset(preset);
-        
-        // IMPORTANTE: Solo restaurar inventario cuando cargamos partida o iniciamos nueva
-        // NO cuando solo cambiamos equipamiento en runtime (evita perder items recogidos)
-        if (includeInventory)
-        {
-            ApplyInventoryFromPreset(preset);
-        }
-        
-        ConfigureSpells(preset);
-        ApplyAppearanceFromPreset(preset);
+        if (includeInventory) ApplyInventoryFromPreset(preset);
         ApplyWardrobeFromPreset(preset);
+        ApplyAppearanceFromPreset(preset);
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+            AplicarAlCuerpo((Slot)i, preset, includeAbilities);
 
-        if (includeAbilities)
-        {
-            // NUEVO: aplicar abilities al action manager solo cuando se solicita
-            if (_actionManager == null)
-                _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
-
-            if (_actionManager != null)
-            {
-                if (preset.abilities == null)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[PlayerPresetService] preset.abilities es NULL en ApplyCurrentPreset — creando con valores por defecto");
-#endif
-                    preset.abilities = new PlayerAbilities { swim = true, jump = true, climb = true, magic = false, fly = true };
-                }
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[PlayerPresetService] Re-aplicando abilities: Swim={preset.abilities.swim} Jump={preset.abilities.jump} Climb={preset.abilities.climb} Fly={preset.abilities.fly} Magic={preset.abilities.magic}");
-#endif
-                _actionManager.ApplyAbilities(preset.abilities);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[PlayerPresetService] Re-aplicado preset: abilities actualizadas");
-#endif
-            }
-        }
-
-        // Notificar a subscriptores que el preset ha sido aplicado (p.ej. UI)
         HasAppliedPreset = true;
         OnPresetApplied?.Invoke();
     }
 
-    // Evento público para notificar re-aplicación de preset (subscriptores UI o sistemas)
-    public static System.Action OnPresetApplying;
-    public static System.Action OnPresetApplied;
+    // Un cuerpo que aparece después de leer la partida (carga de escena, un compañero que entra en
+    // ella) recibe sus hechizos y sus habilidades.
+    private void AlAparecerCuerpo(PilotoDelCuerpo cuerpo)
+    {
+        if (!HasAppliedPreset || cuerpo == null) return;
+        var preset = Partida.Preset;
+        if (!preset || !ControlDelJugador.PersonajeDe(cuerpo.gameObject, out var p)) return;
+        AplicarAlCuerpo(p, preset, includeAbilities: true);
+    }
+
+    // Lo de cada personaje en su cuerpo: sus básicos (en su MagicCaster y en su IA) y sus
+    // habilidades (nadar, volar, magia…; ver HabilidadesDelPersonaje).
+    private void AplicarAlCuerpo(Slot p, PlayerPresetSO preset, bool includeAbilities)
+    {
+        var cuerpo = ControlDelJugador.PilotoDe(p);
+        if (cuerpo == null) return;
+
+        if (p == Slot.Will) PonerBasicosDeWill(cuerpo, preset);
+        else GrimorioDelPersonaje.Aplicar(p);
+
+        if (!includeAbilities) return;
+        var acciones = cuerpo.GetComponent<PlayerActionManager>();
+        if (acciones != null) acciones.ApplyAbilities(HabilidadesDelPersonaje.De(preset, p));
+    }
+
+    // ─── Apariencia de Will ───────────────────────────────────────────────
+
+    /// La apariencia guardada de Will se pone en su cuerpo. Sin apariencia guardada se deja la que
+    /// trae su cuerpo: un cuerpo vacío no se viste nunca.
+    private static void ApplyAppearanceFromPreset(PlayerPresetSO preset)
+    {
+        var registro = CharacterAppearanceRegistry.Instance;
+        if (registro == null) return;
+        if (preset.appearance != null && preset.appearance.Count > 0)
+            registro.SetAppearanceFromList(Slot.Will, preset.appearance);
+        registro.ApplyAppearance(Slot.Will);
+    }
+
+    /// <summary>Guarda en el preset lo que lleva puesto Will (la ropa de debajo, sin atuendos).</summary>
+    public void SnapshotAppearanceToPreset()
+    {
+        var preset = GameBootService.IsAvailable ? Partida.Preset : null;
+        var registro = CharacterAppearanceRegistry.Instance;
+        if (preset == null || registro == null) return;
+
+        var seleccion = registro.RopaDeDebajo(Slot.Will);
+        if (seleccion.Count == 0) return;
+        preset.appearance = registro.GetAppearanceAsList(Slot.Will);
+    }
+
+    // ─── Grupo ────────────────────────────────────────────────────────────
+
+    void ApplyWardrobeFromPreset(PlayerPresetSO preset)
+    {
+        if (PlayerService.TryGetComponent(out WardrobeInventory armario, includeInactive: true, allowSceneLookup: true))
+            armario.ApplyFromPreset(preset);
+    }
+
+    private void ApplyInventoryFromPreset(PlayerPresetSO preset)
+    {
+        if (!PlayerService.TryGetComponent(out Inventory inventario, includeInactive: true, allowSceneLookup: true))
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[PlayerPresetService] No se encontró componente Inventory para cargar el inventario del preset");
+#endif
+            return;
+        }
+        var items = preset.inventoryItems;
+        inventario.LoadSnapshot(items != null && items.Count > 0 ? items : null, clearExisting: true, notifyChanges: false);
+    }
+
+    // ─── Maná ─────────────────────────────────────────────────────────────
+
+    /// El maná del preset es el de Will y va en su cuerpo cuando él va al mando; con otro al mando
+    /// cada uno lleva el suyo (SaludDelGrupo).
+    private void ApplyManaFromPreset(PlayerPresetSO preset)
+    {
+        if (ControlDelJugador.Activo != Slot.Will)
+        {
+            SaludDelGrupo.Instance?.CargarManaDelActivo();
+            return;
+        }
+        var cuerpo = ControlDelJugador.PilotoDe(Slot.Will);
+        var mana = cuerpo != null ? cuerpo.GetComponent<ManaPool>() : null;
+        if (mana == null)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[PlayerPresetService] Will no tiene ManaPool en escena para poner el maná del preset.");
+#endif
+            return;
+        }
+
+        // Sin la habilidad de magia no se enseña una barra de maná llena.
+        if (preset.abilities != null && !preset.abilities.magic)
+        {
+            mana.Init(0f, 0f);
+            return;
+        }
+
+        float maxMP = Mathf.Max(0f, preset.maxMP);
+        float currentMP = Mathf.Clamp(preset.currentMP, 0f, maxMP > 0f ? maxMP : float.MaxValue);
+
+        // Sin maná guardado: el justo para lanzar un par de veces el hechizo más caro que conoce. Un
+        // preset 0/0 sin hechizos se respeta.
+        if (maxMP <= 0f)
+        {
+            float masCaro = Mathf.Max(CosteMasAlto(preset.basicSpellIds), CosteMasAlto(preset.unlockedSpells));
+            if (masCaro > 0f)
+            {
+                maxMP = Mathf.Max(20f, masCaro * 2f);
+                currentMP = Mathf.Max(currentMP, maxMP);
+            }
+            else if (preset.currentMP <= 0f && preset.maxMP <= 0f)
+            {
+                maxMP = 0f;
+                currentMP = 0f;
+            }
+            else
+            {
+                maxMP = 50f;
+                if (currentMP <= 0f) currentMP = Mathf.Clamp(preset.currentMP, 0f, maxMP);
+            }
+        }
+
+        // El preset guarda la magia de base; lo que suma el equipo va encima (EstadisticasDelPersonaje).
+        float bonoMagia = EstadisticasDelPersonaje.Bonos.magia;
+        if (bonoMagia != 0f)
+        {
+            maxMP = Mathf.Max(0f, maxMP + bonoMagia);
+            currentMP = Mathf.Clamp(Mathf.Max(currentMP, preset.currentMP), 0f, maxMP);
+        }
+
+        mana.Init(maxMP, currentMP);
+    }
+
+    private float CosteMasAlto(List<SpellId> ids)
+    {
+        float coste = 0f;
+        if (ids == null || spellLibrary == null) return coste;
+        foreach (var id in ids)
+        {
+            if (id == SpellId.None) continue;
+            var s = spellLibrary.Get(id);
+            if (s != null) coste = Mathf.Max(coste, s.manaCost);
+        }
+        return coste;
+    }
+
+    // ─── Hechizos de Will ─────────────────────────────────────────────────
+
+    /// Los básicos de Will del preset (hasta cuatro, en orden de rotación) en su MagicCaster y en
+    /// su IA. Se descartan los que no están en SpellLibrary, los de solo especial, los repetidos y
+    /// los de otro personaje. Si el preset no trae ninguno, o autoFillEmptySlotsFromUnlocked está
+    /// activo, se completan con los desbloqueados.
+    private void PonerBasicosDeWill(PilotoDelCuerpo cuerpo, PlayerPresetSO preset)
+    {
+        if (spellLibrary == null) return;
+        var basics = new List<MagicSpellSO>(MagicCaster.BasicSlotCount);
+
+        void TryAdd(SpellId id)
+        {
+            if (id == SpellId.None || basics.Count >= MagicCaster.BasicSlotCount) return;
+            var spell = spellLibrary.Get(id);
+            if (spell == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[PlayerPresetService] El hechizo {id} no está en SpellLibrary");
+#endif
+                return;
+            }
+            if (spell.slotType == SpellSlotType.SpecialOnly || basics.Contains(spell)) return;
+            if (spell.caster != Slot.Will) return;
+            basics.Add(spell);
+        }
+
+        if (preset.basicSpellIds != null)
+            foreach (var id in preset.basicSpellIds) TryAdd(id);
+        if ((autoFillEmptySlotsFromUnlocked || basics.Count == 0) && preset.unlockedSpells != null)
+            foreach (var id in preset.unlockedSpells) TryAdd(id);
+
+        var caster = cuerpo.GetComponent<MagicCaster>();
+        if (caster != null) caster.SetBasicSpells(basics);
+        var ia = cuerpo.GetComponent<Game.NPC.NPCPartyMember>();
+        if (ia != null) ia.SetRuntimeBasics(basics);
+    }
 }

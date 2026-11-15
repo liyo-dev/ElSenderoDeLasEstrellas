@@ -58,6 +58,7 @@ namespace NarrativeGraphEditor.Story
         /// del juego.
         public static StoryLiveReport Build(NarrativeGraph graph, NarrativeNode step)
         {
+            using var medida = StoryTiming.Measure(StoryText.T("informe En vivo", "live report"));
             var r = new StoryLiveReport { Graph = graph, Playing = EditorApplication.isPlaying };
             if (r.Playing) CollectRunners(r);
             var here = r.Runners.FirstOrDefault(x => x.Graph == graph);
@@ -123,7 +124,7 @@ namespace NarrativeGraphEditor.Story
             if (talk != null) return StoryText.T($"que hables con {talk.Substring(Talk.Length)}", $"you to talk to {talk.Substring(Talk.Length)}");
             if (listens.Count > 0) return StoryText.T($"la señal {string.Join(" o ", listens)}", $"the signal {string.Join(" or ", listens)}");
             var summary = StepSummary.For(node, 90);
-            return string.IsNullOrEmpty(summary) ? NarrativeNodeCatalog.TitleOf(node.GetType()) : summary;
+            return string.IsNullOrEmpty(summary) ? NarrativeNodeCatalog.TitleOf(node) : summary;
         }
 
         static void BuildChecks(StoryLiveReport r, RecordingStateWriter s)

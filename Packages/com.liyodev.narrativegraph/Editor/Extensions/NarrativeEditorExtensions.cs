@@ -36,24 +36,6 @@ namespace NarrativeGraphEditor
     }
 
     /// <summary>
-    /// Sección que un juego añade a la pestaña «En vivo» (grupo, misiones, actores en escena…).
-    /// Solo se consulta en Play, cada pocos cientos de milisegundos.
-    /// </summary>
-    public interface INarrativeLiveSection
-    {
-        string Title { get; }
-
-        /// <summary>Orden entre las secciones del juego (menor = más arriba).</summary>
-        int Order { get; }
-
-        /// <summary>Texto si no hay filas.</summary>
-        string EmptyText { get; }
-
-        /// <summary>Añade las filas de la sección tal y como está el juego ahora.</summary>
-        void Collect(List<string> rows);
-    }
-
-    /// <summary>
     /// Aporta al índice del proyecto (NarrativeProjectIndex) lo que solo el juego sabe leer: sus
     /// misiones, sus actores, sus textos localizados, las señales de sus propios assets y las
     /// convenciones de nombres de campo de sus escenas.

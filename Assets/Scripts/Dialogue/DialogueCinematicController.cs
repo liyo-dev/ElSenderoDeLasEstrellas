@@ -136,7 +136,7 @@ public class DialogueCinematicController : MonoBehaviour
     // PlayerParty.FindClearDialogueFormationPosition): un compañero de pie no es una pared.
     private readonly RaycastHit[] _groupCamProbeBuffer = new RaycastHit[16];
 
-    // ✅ Sistema de tracking de speakers para cambios de cámara
+    // Sistema de tracking de speakers para cambios de cámara
     private string currentSpeakerId;     // ID del speaker actual (speakerNameId o "Player")
     private Transform currentSpeaker;     // Transform del speaker actual
     private Dictionary<string, Transform> speakerCache = new Dictionary<string, Transform>(); // Cache de speakers
@@ -194,13 +194,13 @@ public class DialogueCinematicController : MonoBehaviour
 
     void Awake()
     {
-        // Debug.Log($"[DialogueCinematicController] ⚡ Awake iniciado en GameObject: {gameObject.name}");
+        // Debug.Log($"[DialogueCinematicController] Awake iniciado en GameObject: {gameObject.name}");
         
         // CRÍTICO: El GameObject DEBE estar activo para funcionar
         if (!gameObject.activeSelf)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[DialogueCinematicController] ❌ GameObject '{gameObject.name}' estaba DESACTIVADO - Activándolo automáticamente");
+            Debug.LogError($"[DialogueCinematicController] GameObject '{gameObject.name}' estaba DESACTIVADO - Activándolo automáticamente");
 #endif
             gameObject.SetActive(true);
         }
@@ -217,7 +217,7 @@ public class DialogueCinematicController : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        // Debug.Log($"[DialogueCinematicController] ✅ Instancia marcada como DontDestroyOnLoad");
+        // Debug.Log($"[DialogueCinematicController] Instancia marcada como DontDestroyOnLoad");
 
         // Cachear máscara de colisión para obstrucciones de cámara grupal
         // Default (0), Floor (10), Obstacle (15) — geometría estática que puede bloquear la vista
@@ -371,7 +371,7 @@ public class DialogueCinematicController : MonoBehaviour
         dialogueBrain.DefaultBlend.Time = 0.8f;
         dialogueBrain.ChannelMask = (OutputChannels)1; // Canal 1 para cámaras de diálogo
         
-        // Debug.Log($"[DialogueCinematicController] ✅ Cámara de diálogo creada - GameObject: {dialogueCameraObject.activeSelf}, Camera.enabled: {dialogueCamera.enabled}, Depth: {dialogueCamera.depth}, CullingMask incluye UI: {((dialogueCamera.cullingMask & (1 << LayerMask.NameToLayer("UI"))) != 0)}");
+        // Debug.Log($"[DialogueCinematicController] Cámara de diálogo creada - GameObject: {dialogueCameraObject.activeSelf}, Camera.enabled: {dialogueCamera.enabled}, Depth: {dialogueCamera.depth}, CullingMask incluye UI: {((dialogueCamera.cullingMask & (1 << LayerMask.NameToLayer("UI"))) != 0)}");
     }
 
 
@@ -399,12 +399,12 @@ public class DialogueCinematicController : MonoBehaviour
         // Desactivar todas las cámaras del pool inicialmente
         DisableAllDialogueCameras();
         
-        // Debug.Log("[DialogueCinematicController] ✅ Start completado - Sistema listo");
+        // Debug.Log("[DialogueCinematicController] Start completado - Sistema listo");
     }
 
     void OnDestroy()
     {
-        // ✅ LIMPIEZA: Destruir todas las cámaras del pool y sus objetos temporales
+        // LIMPIEZA: Destruir todas las cámaras del pool y sus objetos temporales
         if (cameraPool != null)
         {
             foreach (var vcam in cameraPool)
@@ -590,7 +590,7 @@ public class DialogueCinematicController : MonoBehaviour
                     currentLineIndex = 0;
                     nextCutAtLine = CalculateNextCutLine();
 
-                    // FIX (20 ago 2026) — "la cámara está en otro sitio" en diálogos grupales tras
+                    // FIX — "la cámara está en otro sitio" en diálogos grupales tras
                     // un teletransporte. Esta rama solo actualizaba el plano (shot) del diálogo
                     // encadenado, pero nunca recalculaba el montaje grupal (_groupCamBaseDir,
                     // _cachedGroupCenter/_groupLookAtTarget, ni el semicírculo de
@@ -644,7 +644,7 @@ public class DialogueCinematicController : MonoBehaviour
         currentLineIndex = 0;
         nextCutAtLine = CalculateNextCutLine();
 
-        // FIX (25 ago 2026) — "hay nubes tan bajas que tapan la cámara en los diálogos": la
+        // FIX — "hay nubes tan bajas que tapan la cámara en los diálogos": la
         // cámara de diálogo suele mirar desde más cerca/arriba que la cámara de exploración
         // normal, así que una nube ambiental (AmbientCloudDrifter) que en ese instante esté
         // cruzando cerca puede cortar el plano. AmbientCloudDirector.SetAmbientCloudsVisible ya
@@ -661,7 +661,7 @@ public class DialogueCinematicController : MonoBehaviour
             SetupGroupConversationStaging();
         }
 
-        // ✅ Reiniciar sistema de tracking de speakers
+        // Reiniciar sistema de tracking de speakers
         currentSpeakerId = null;
         currentSpeaker = null;
         _currentLineFocusOverride = null;
@@ -729,7 +729,7 @@ public class DialogueCinematicController : MonoBehaviour
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DialogueCinematicController] ❌ dialogueCamera es NULL - no se puede activar!");
+            Debug.LogError("[DialogueCinematicController] dialogueCamera es NULL - no se puede activar!");
 #endif
         }
 
@@ -753,7 +753,7 @@ public class DialogueCinematicController : MonoBehaviour
         ///
         /// Extraído del cuerpo de <see cref="StartCinematic"/> (antes solo se ejecutaba ahí) para
         /// poder reutilizarlo también desde la rama de "diálogo encadenado" de StartCinematic —
-        /// ver el FIX (20 ago 2026) documentado junto a esa rama: sin volver a llamar a este
+        /// ver el FIX documentado junto a esa rama: sin volver a llamar a este
         /// método ahí, un diálogo grupal encadenado (p.ej. tras un TeleportPlayer del mismo
         /// NPCInteractiveNarrativeExecutor) heredaba el encuadre/posiciones calculados para la
         /// ubicación del diálogo ANTERIOR en vez de la actual.
@@ -776,7 +776,7 @@ public class DialogueCinematicController : MonoBehaviour
                 _groupCamBaseDir = Vector3.back;
             }
 
-            // ✅ ESCENARIO TEATRAL: recolocar a los compañeros en un semicírculo en el lado
+            // ESCENARIO TEATRAL: recolocar a los compañeros en un semicírculo en el lado
             // OPUESTO a la cámara, ahora que ya sabemos dónde va a estar (_groupCamBaseDir).
             // Sustituye al posicionamiento genérico de dos arcos (que DialogueManager se salta
             // en diálogos grupales): aquel no conocía la cámara y podía dejar a un compañero
@@ -799,15 +799,11 @@ public class DialogueCinematicController : MonoBehaviour
             // (CalculateCameraPosition, LateUpdate) promedia su posición real y desactualizada,
             // tirando de la mirada de la cámara hacia el castillo en cuanto el sesgo por speaker
             // se combina con ese arrastre. Forzar aquí el mismo reenganche que ya usa el
-            // auto-teleport (TeleportWillNpcToPlayer, slot de formación tras los miembros reales)
+            // auto-teleport (PlayerParty.ReunirAWill, hueco de formación tras los miembros reales)
             // asegura que el NPC de Will ya esté en su sitio ANTES de que se calcule el primer
             // encuadre de esta conversación, en vez de depender de que el temporizador de 0.3s
             // llegue a tiempo.
-            var relevo = ActiveCharacterSwapper.Instance;
-            if (relevo != null && ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will) != null)
-            {
-                relevo.TeleportWillNpcToPlayer(forzar: true);
-            }
+            if (Game.NPC.PlayerParty.HasInstance) Game.NPC.PlayerParty.Instance.ReunirAWill(forzar: true);
 
             // Calcular centro del grupo para orientar a los participantes
             Vector3 initGroupCenter = currentPlayer.position + currentNPC.position;
@@ -909,7 +905,7 @@ public class DialogueCinematicController : MonoBehaviour
         /// <summary>
         /// Apaga el modo cinematográfico YA, sin esperar el período de gracia.
         ///
-        /// FIX 16 sep 2026 (Raúl: "se sigue viendo la cabeza de Will al final"). EndCinematic() no
+        /// FIX 16 sep 2026. EndCinematic() no
         /// apaga nada: lanza EndCinematicDelayed(), que espera `chainDialogueGracePeriod` (0,5 s en
         /// Start.unity) por si viene otro diálogo encadenado. Durante ese medio segundo la cámara de
         /// diálogo SIGUE SIENDO LA ACTIVA, congelada donde se quedó — y si ese último encuadre era
@@ -1136,7 +1132,7 @@ public class DialogueCinematicController : MonoBehaviour
         }
     }
     
-    // ✅ Variables para guardar el estado del NPC
+    // Variables para guardar el estado del NPC
     private Renderer[] npcRenderers;
     private bool[] npcRenderersWereEnabled;
     
@@ -1392,7 +1388,7 @@ public class DialogueCinematicController : MonoBehaviour
             // ya garantizó que no había nada aquí al fijar el plano, así que si algo aparece ahora es,
             // por definición, un objeto que se ha movido durante la línea — el caso que se nos escapaba.
             //
-            // FIX: aquí NO se debe usar 'root' (la raíz absoluta de la jerarquía) como objetivo a
+            // aquí NO se debe usar 'root' (la raíz absoluta de la jerarquía) como objetivo a
             // ocultar. 'root' solo sirve para identificar si el collider pertenece al speaker/player/
             // NPC/party (arriba). Para decidir QUÉ ocultar hace falta acotar al objeto físico real que
             // obstruye: en muchas escenas todo el escenario cuelga de un único GameObject contenedor
@@ -1411,7 +1407,7 @@ public class DialogueCinematicController : MonoBehaviour
                 HideIntruderRenderers(intruder);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (showDebugInfo)
-                    Debug.Log($"[DialogueCinematicController] 🙈 Intruso oculto (se cruzó en cámara): {intruder.name}");
+                    Debug.Log($"[DialogueCinematicController] Intruso oculto (se cruzó en cámara): {intruder.name}");
 #endif
             }
         }
@@ -1799,7 +1795,7 @@ public class DialogueCinematicController : MonoBehaviour
             }
             lookAtTarget.position = lookAtPos;
 
-            // ✅ CORREGIDO: Calcular rotación usando el camino más corto
+            // CORREGIDO: Calcular rotación usando el camino más corto
             // Esto evita rotaciones de 360° cuando el NPC está en diagonal
             Vector3 lookDirection = (lookAtPos - position).normalized;
             if (lookDirection.sqrMagnitude > 0.001f)
@@ -1956,7 +1952,7 @@ public class DialogueCinematicController : MonoBehaviour
                         if (showDebugInfo && backoffSteps > 0)
                         {
                             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[DialogueCinematicController] 📷 Cámara de grupo encajada en vano - {backoffSteps} paso(s) de retroceso lateral");
+                            Debug.Log($"[DialogueCinematicController] Cámara de grupo encajada en vano - {backoffSteps} paso(s) de retroceso lateral");
                             #endif
                         }
                     }
@@ -1996,14 +1992,14 @@ public class DialogueCinematicController : MonoBehaviour
             }
             else if (IsPartyMember(target) && currentNPC != null)
             {
-                // ✅ NUEVO: Para party members (como Estela), usar la dirección desde el NPC hacia el party member
+                // NUEVO: Para party members (como Estela), usar la dirección desde el NPC hacia el party member
                 // Esto asegura que la cámara vea la CARA del party member (que mira al NPC)
                 fromOther = (target.position - currentNPC.position).normalized;
                 
                 if (showDebugInfo)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueCinematicController] 🎬 Party member detectado: calculando dirección desde {currentNPC.name} hacia {target.name}");
+                    Debug.Log($"[DialogueCinematicController] Party member detectado: calculando dirección desde {currentNPC.name} hacia {target.name}");
                     #endif
                 }
             }
@@ -2024,7 +2020,7 @@ public class DialogueCinematicController : MonoBehaviour
 
             Vector3 camPos;
             
-            // ✅ AJUSTE: Aumentar distancia mínima para alejar MUCHO MÁS todos los planos
+            // AJUSTE: Aumentar distancia mínima para alejar MUCHO MÁS todos los planos
             // Aumentado especialmente para Player y Party Members (como Estela)
             float effectiveDistance = Mathf.Max(shot.Distance * 2.2f, 3.0f); // Multiplicador 2.2x y mínimo de 3m
 
@@ -2035,7 +2031,7 @@ public class DialogueCinematicController : MonoBehaviour
                     {
                         Vector3 midPoint = (currentPlayer.position + currentNPC.position) / 2f;
                         
-                        // ✅ CORREGIDO: Calcular dirección desde el punto medio hacia "atrás" de la conversación
+                        // CORREGIDO: Calcular dirección desde el punto medio hacia "atrás" de la conversación
                         // Usar la dirección promedio de ambos personajes mirando entre sí
                         Vector3 playerToNPC = (currentNPC.position - currentPlayer.position).normalized;
                         playerToNPC.y = 0;
@@ -2045,7 +2041,7 @@ public class DialogueCinematicController : MonoBehaviour
                         Vector3 sideDir = Vector3.Cross(Vector3.up, playerToNPC).normalized;
                         Vector3 backDir = -playerToNPC; // Dirección hacia atrás desde el punto medio
                         
-                        // ✅ Combinar movimiento lateral (más hacia la izquierda) y hacia atrás
+                        // Combinar movimiento lateral (más hacia la izquierda) y hacia atrás
                         float wideDistance = Mathf.Max(shot.Distance * 2.0f, 5.0f); // Más alejado: mínimo 5m
                         float lateralAmount = wideDistance * 0.4f; // 40% lateral hacia la izquierda
                         float backAmount = wideDistance * 0.6f; // 60% hacia atrás
@@ -2063,11 +2059,11 @@ public class DialogueCinematicController : MonoBehaviour
                         if (playerToNPC.sqrMagnitude < 0.01f) playerToNPC = currentPlayer.forward;
                         playerToNPC.Normalize();
 
-                        // ✅ CONFIGURACIÓN MEJORADA: Offset lateral más pronunciado para evitar tapar al NPC
+                        // CONFIGURACIÓN MEJORADA: Offset lateral más pronunciado para evitar tapar al NPC
                         float lateralOffsetAmount = shot.LateralOffset != 0 ? shot.LateralOffset : 1.3f;
                         Vector3 shoulderOffset = Vector3.Cross(Vector3.up, playerToNPC).normalized * lateralOffsetAmount;
 
-                        // ✅ AUMENTADO: Retroceder MUCHO MÁS del player para mejor perspectiva
+                        // AUMENTADO: Retroceder MUCHO MÁS del player para mejor perspectiva
                         float behindDistance = Mathf.Max(3.0f, actualDistance * 0.75f); // Aumentado de 2.4f a 3.0f
 
                         // Avance ligero hacia el NPC para centrar mejor el encuadre
@@ -2076,7 +2072,7 @@ public class DialogueCinematicController : MonoBehaviour
                         // Posición base: atrás del player + offset lateral + ligero avance hacia NPC
                         camPos = currentPlayer.position - playerToNPC * behindDistance + shoulderOffset + playerToNPC * forwardOffset;
 
-                        // ✅ ALTURA AUMENTADA: Subir la cámara para ver por encima de la cabeza del player
+                        // ALTURA AUMENTADA: Subir la cámara para ver por encima de la cabeza del player
                         camPos.y = currentPlayer.position.y + shot.Height + 0.8f; // Aumentado a +0.8f
                     }
                     break;
@@ -2089,16 +2085,16 @@ public class DialogueCinematicController : MonoBehaviour
                         if (npcToPlayer.sqrMagnitude < 0.01f) npcToPlayer = currentNPC.forward;
                         npcToPlayer.Normalize();
 
-                        // ✅ MEJORADO: Offset lateral más pronunciado
+                        // MEJORADO: Offset lateral más pronunciado
                         float lateralOffsetAmount = shot.LateralOffset != 0 ? shot.LateralOffset : 1.1f;
                         Vector3 shoulderOffset = Vector3.Cross(Vector3.up, npcToPlayer).normalized * lateralOffsetAmount;
 
-                        // ✅ AUMENTADO: Retroceder MUCHO MÁS de la posición del NPC
+                        // AUMENTADO: Retroceder MUCHO MÁS de la posición del NPC
                         float behindDistance = Mathf.Max(2.5f, actualDistance * 0.6f); // Aumentado de 1.8f a 2.5f
 
                         camPos = currentNPC.position - npcToPlayer * behindDistance + shoulderOffset;
 
-                        // ✅ MEJORADO: Altura más elevada
+                        // MEJORADO: Altura más elevada
                         camPos.y = currentNPC.position.y + shot.Height + 0.5f; // Aumentado a +0.5f
                     }
                     break;
@@ -2112,7 +2108,7 @@ public class DialogueCinematicController : MonoBehaviour
 
                 case DialogueShotType.MediumNPC:
                 case DialogueShotType.CloseUpNPC:
-                    // ✅ CORREGIDO COMPLETAMENTE: Cámara FRENTE al target viendo su CARA
+                    // CORREGIDO COMPLETAMENTE: Cámara FRENTE al target viendo su CARA
                     // La cámara debe estar del lado del OTRO personaje mirando hacia el target
                     {
                         // Dirección DESDE el target HACIA el otro personaje
@@ -2131,14 +2127,14 @@ public class DialogueCinematicController : MonoBehaviour
                         }
                         else if (IsPartyMember(target) && currentNPC != null)
                         {
-                            // ✅ NUEVO: Target es Party Member (Estela, Liam, etc.)
+                            // NUEVO: Target es Party Member (Estela, Liam, etc.)
                             // La cámara debe estar del lado del NPC mirando hacia el party member
                             towardsOther = (currentNPC.position - target.position).normalized;
                             
                             if (showDebugInfo)
                             {
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.Log($"[DialogueCinematicController] 📷 CloseUp/Medium para Party Member: cámara desde dirección del NPC hacia {target.name}");
+                                Debug.Log($"[DialogueCinematicController] CloseUp/Medium para Party Member: cámara desde dirección del NPC hacia {target.name}");
                                 #endif
                             }
                         }
@@ -2155,7 +2151,7 @@ public class DialogueCinematicController : MonoBehaviour
                         // Offset lateral para variedad visual
                         Vector3 lateral = Vector3.Cross(Vector3.up, towardsOther).normalized * shot.LateralOffset;
                         
-                        // ✅ CORREGIDO: Posicionar cámara FRENTE al target (en dirección al otro personaje)
+                        // CORREGIDO: Posicionar cámara FRENTE al target (en dirección al otro personaje)
                         // Esto garantiza que vemos la CARA del target, no su cogote
                         camPos = target.position + towardsOther * effectiveDistance + lateral;
                         camPos.y = target.position.y + shot.Height;
@@ -2163,7 +2159,7 @@ public class DialogueCinematicController : MonoBehaviour
                     break;
 
                 default:
-                    // ✅ CORREGIDO: Fallback debe estar FRENTE al target viendo su cara
+                    // CORREGIDO: Fallback debe estar FRENTE al target viendo su cara
                     // Usar la dirección hacia el otro personaje, no desde el otro personaje
                     {
                         Vector3 towardsOther = Vector3.zero;
@@ -2178,7 +2174,7 @@ public class DialogueCinematicController : MonoBehaviour
                         }
                         else if (IsPartyMember(target) && currentNPC != null)
                         {
-                            // ✅ NUEVO: Party member - cámara desde dirección del NPC
+                            // NUEVO: Party member - cámara desde dirección del NPC
                             towardsOther = (currentNPC.position - target.position).normalized;
                         }
                         else
@@ -2201,7 +2197,7 @@ public class DialogueCinematicController : MonoBehaviour
             // de cámara, acercamos la cámara hasta justo delante del obstáculo. Sin esto, la cámara
             // podía terminar detrás de un objeto y dejar al personaje cortado a medias en pantalla.
             //
-            // FIX: el SphereCast arrancaba exactamente en headPos (la cabeza del propio target).
+            // el SphereCast arrancaba exactamente en headPos (la cabeza del propio target).
             // Cualquier collider del propio personaje (armas, props, pelo) o una pared a pocos
             // centímetros se detectaba como "obstrucción" a distancia ~0, y el clamp mínimo
             // (antes 0.6m) dejaba la cámara pegada a la barbilla mirando hacia arriba (bug
@@ -2227,7 +2223,7 @@ public class DialogueCinematicController : MonoBehaviour
                     if (showDebugInfo)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[DialogueCinematicController] 📷 Obstrucción detectada ({obstructionHit.collider.name}) - cámara reubicada a {clearDist:F2}m");
+                        Debug.Log($"[DialogueCinematicController] Obstrucción detectada ({obstructionHit.collider.name}) - cámara reubicada a {clearDist:F2}m");
                         #endif
                     }
                 }
@@ -2287,14 +2283,14 @@ public class DialogueCinematicController : MonoBehaviour
                     if (showDebugInfo)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log("[DialogueCinematicController] 📷 Cámara encajada - retroceso lateral insuficiente, elevando por encima");
+                        Debug.Log("[DialogueCinematicController] Cámara encajada - retroceso lateral insuficiente, elevando por encima");
                         #endif
                     }
                 }
                 else if (showDebugInfo && lateralSteps > 0)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueCinematicController] 📷 Cámara encajada en vano - {lateralSteps} paso(s) de retroceso lateral");
+                    Debug.Log($"[DialogueCinematicController] Cámara encajada en vano - {lateralSteps} paso(s) de retroceso lateral");
 #endif
                 }
             }
@@ -2583,7 +2579,7 @@ public class DialogueCinematicController : MonoBehaviour
             if (showDebugInfo)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueCinematicController] 👀 {speaker.name} ahora mira hacia {currentNPC.name}");
+                Debug.Log($"[DialogueCinematicController] {speaker.name} ahora mira hacia {currentNPC.name}");
                 #endif
             }
         }
@@ -2764,7 +2760,7 @@ public class DialogueCinematicController : MonoBehaviour
             if (showDebugInfo)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[DialogueCinematicController] 🎬 HUD ocultado con fade");
+                Debug.Log("[DialogueCinematicController] HUD ocultado con fade");
                 #endif
             }
         }
@@ -2783,7 +2779,7 @@ public class DialogueCinematicController : MonoBehaviour
             if (showDebugInfo)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[DialogueCinematicController] 🎬 HUD mostrado con fade");
+                Debug.Log("[DialogueCinematicController] HUD mostrado con fade");
                 #endif
             }
         }

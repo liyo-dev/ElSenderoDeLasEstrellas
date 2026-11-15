@@ -3,6 +3,11 @@ Shader "Hidden/El Sendero/Terreno de dibujo (capas extra)"
     // Capas 5 a 8 del terreno de dibujo: se suman sobre el primer pase.
     Properties
     {
+        [HideInInspector] _ParedActiva("Paredes de roca (lo pone SueloYAguaDeDibujo)", Float) = 0
+        [HideInInspector] _InclinacionDePared("Inclinación desde la que es pared (grados)", Float) = 50
+        [HideInInspector] _TexturaDePared("Textura de la pared", 2D) = "grey" {}
+        [HideInInspector] _TamanoDePared("Tamaño de la textura de la pared (m)", Float) = 8
+        [HideInInspector] _ColorDePared("Tono de la pared", Color) = (1,1,1,1)
         // Layer count is passed down to guide height-blend enable/disable, due
         // to the fact that heigh-based blend will be broken with multipass.
         [HideInInspector] [PerRendererData] _NumLayersCount ("Total Layer Count", Float) = 1.0
@@ -11,6 +16,11 @@ Shader "Hidden/El Sendero/Terreno de dibujo (capas extra)"
         [HideInInspector] _Control("Control (RGBA)", 2D) = "red" {}
         [HideInInspector] _ControlDeCapas0("Mapa de capas 0 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
         [HideInInspector] _ControlDeCapas1("Mapa de capas 1 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _ControlDeCapas2("Mapa de capas 2 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _ControlDeCapas3("Mapa de capas 3 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _ControlDeCapas4("Mapa de capas 4 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _ControlDeCapas5("Mapa de capas 5 (lo pone SueloYAguaDeDibujo)", 2D) = "black" {}
+        [HideInInspector] _MapasDeCapas("Mapas de capas puestos (lo pone SueloYAguaDeDibujo)", Float) = 2
         [HideInInspector] _Splat3("Layer 3 (A)", 2D) = "white" {}
         [HideInInspector] _Splat2("Layer 2 (B)", 2D) = "white" {}
         [HideInInspector] _Splat1("Layer 1 (G)", 2D) = "white" {}

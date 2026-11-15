@@ -84,14 +84,16 @@ namespace Game.NPC.Common
         {
             if (CinematicSequencerBase.AnySequenceActive) return true;
 
-            if (s_accionesJugador == null)
+            if (!PlayerService.HasInstance) return false;
+            var jugador = PlayerService.Player;
+            if (jugador == null) return false;
+            // Se vuelve a leer si el jugador ha pasado a otro personaje.
+            if (s_accionesJugador == null || s_accionesJugador.gameObject != jugador)
             {
-                if (!PlayerService.HasInstance) return false;
-                var jugador = PlayerService.Player;
-                if (jugador == null) return false;
                 s_accionesJugador = jugador.GetComponent<PlayerActionManager>();
                 if (s_accionesJugador == null) return false;
             }
+
             return s_accionesJugador.IsInMode(ActionMode.Cinematic);
         }
         private static PlayerActionManager s_accionesJugador;
@@ -156,7 +158,7 @@ namespace Game.NPC.Common
                     if (showDebugLogs)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada via Animator: {_headBone.name}");
+                        Debug.Log($"[NPCAlertIcon:{name}] Cabeza encontrada via Animator: {_headBone.name}");
                         #endif
                     }
                     return;
@@ -172,7 +174,7 @@ namespace Game.NPC.Common
                     if (showDebugLogs)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada por nombre: {_headBone.name}");
+                        Debug.Log($"[NPCAlertIcon:{name}] Cabeza encontrada por nombre: {_headBone.name}");
                         #endif
                     }
                     return;
@@ -182,7 +184,7 @@ namespace Game.NPC.Common
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ No se encontró hueso de cabeza, usando fallback height={fallbackHeight}");
+                Debug.LogWarning($"[NPCAlertIcon:{name}] No se encontró hueso de cabeza, usando fallback height={fallbackHeight}");
                 #endif
             }
         }
@@ -269,7 +271,7 @@ namespace Game.NPC.Common
                 if (showDebugLogs)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCAlertIcon:{name}] 🔇 Ocultando icono durante diálogo");
+                    Debug.Log($"[NPCAlertIcon:{name}] Ocultando icono durante diálogo");
                     #endif
                 }
             }
@@ -330,7 +332,7 @@ namespace Game.NPC.Common
                 if (showDebugLogs)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCAlertIcon:{name}] 🔊 Restaurando icono tras diálogo (después de {restoreAfterDialogueDelay}s de delay)");
+                    Debug.Log($"[NPCAlertIcon:{name}] Restaurando icono tras diálogo (después de {restoreAfterDialogueDelay}s de delay)");
                     #endif
                 }
             }
@@ -414,13 +416,13 @@ namespace Game.NPC.Common
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAlertIcon:{name}] 🔔 Mostrando icono por {useDuration}s");
+                Debug.Log($"[NPCAlertIcon:{name}] Mostrando icono por {useDuration}s");
                 #endif
             }
         }
 
         /// <summary>
-        /// Muestra el icono de alerta (❗) - Detectó al jugador
+        /// Muestra el icono de alerta - Detectó al jugador
         /// </summary>
         public void ShowAlert(GameObject alertPrefab, float duration = -1f)
         {
@@ -431,13 +433,13 @@ namespace Game.NPC.Common
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ alertPrefab no proporcionado");
+                Debug.LogWarning($"[NPCAlertIcon:{name}] alertPrefab no proporcionado");
 #endif
             }
         }
         
         /// <summary>
-        /// Muestra el icono de interrogación (❓) - Buscando al jugador
+        /// Muestra el icono de interrogación - Buscando al jugador
         /// </summary>
         public void ShowQuestion(GameObject questionPrefab, float duration = -1f)
         {
@@ -448,45 +450,11 @@ namespace Game.NPC.Common
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ questionPrefab no proporcionado");
+                Debug.LogWarning($"[NPCAlertIcon:{name}] questionPrefab no proporcionado");
 #endif
             }
         }
         
-        /// <summary>
-        /// Establece la altura del icono sobre el NPC.
-        /// El valor representa la altura TOTAL desde los pies del NPC donde debe aparecer el icono.
-        /// Si se encuentra la cabeza del NPC, se usa como referencia y se ajusta el offset.
-        /// Si no se encuentra, se usa directamente como altura desde transform.position.
-        /// </summary>
-        public void SetIconOffset(Vector3 offset)
-        {
-            // Guardar la altura deseada como fallbackHeight (altura desde los pies)
-            if (offset.y > 0)
-            {
-                fallbackHeight = offset.y;
-            }
-            
-            // El iconOffset será un pequeño offset adicional sobre el punto de anclaje
-            // (ya sea la cabeza encontrada o el fallbackHeight)
-            iconOffset = new Vector3(offset.x, 0.2f, offset.z);
-            
-            if (showDebugLogs) 
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAlertIcon:{name}] SetIconOffset: altura deseada={offset.y}, fallbackHeight={fallbackHeight}");
-#endif
-                }
-        }
-        
-        /// <summary>
-        /// Establece la escala del icono (multiplica sobre la escala del prefab)
-        /// </summary>
-        public void SetIconScale(float scale)
-        {
-            iconScale = Mathf.Max(0.01f, scale);
-        }
-
         /// <summary>
         /// Establece directamente la altura del icono (valor Y desde los pies del NPC)
         /// </summary>
@@ -506,7 +474,7 @@ namespace Game.NPC.Common
         }
         
         /// <summary>
-        /// Muestra el icono de admiración (❗) - ¡Encontró al jugador!
+        /// Muestra el icono de admiración - ¡Encontró al jugador!
         /// </summary>
         public void ShowExclamation(GameObject exclamationPrefab, float duration = -1f)
         {
@@ -517,7 +485,7 @@ namespace Game.NPC.Common
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ exclamationPrefab no proporcionado");
+                Debug.LogWarning($"[NPCAlertIcon:{name}] exclamationPrefab no proporcionado");
 #endif
             }
         }
@@ -531,7 +499,7 @@ namespace Game.NPC.Common
             if (iconPrefab == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAlertIconController:{name}] ⚠️ persistentIconPrefab es null");
+                Debug.LogWarning($"[NPCAlertIconController:{name}] persistentIconPrefab es null");
 #endif
                 return;
             }
@@ -557,7 +525,7 @@ namespace Game.NPC.Common
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAlertIcon:{name}] 📌 Mostrando icono persistente");
+                Debug.Log($"[NPCAlertIcon:{name}] Mostrando icono persistente");
                 #endif
             }
         }
@@ -627,7 +595,7 @@ namespace Game.NPC.Common
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAlertIcon:{name}] 🔕 Ocultando icono con animación");
+                Debug.Log($"[NPCAlertIcon:{name}] Ocultando icono con animación");
                 #endif
             }
         }
@@ -659,7 +627,7 @@ namespace Game.NPC.Common
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAlertIcon:{name}] ⚡ Icono eliminado inmediatamente");
+                Debug.Log($"[NPCAlertIcon:{name}] Icono eliminado inmediatamente");
                 #endif
             }
         }

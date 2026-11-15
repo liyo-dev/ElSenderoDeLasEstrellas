@@ -28,7 +28,7 @@ using UnityEngine;
 /// Se actualizan al preparar cambios nuevos; generar un ejecutable no equivale a publicarlo.
 /// El panel muestra únicamente la entrada actual, sin archivar un histórico. Ver INC-737.
 ///
-/// El menú "El Sendero → Build → Saltar autoincremento de versión (solo el próximo build)" permite
+/// El menú "El Sendero → Proyecto → Build: no subir la versión en la próxima build" permite
 /// generar un build de pruebas sin validar las notas. El preprocess consulta
 /// BuildVersionIncrementer.SeSaltaraElProximoBuild porque el incrementador aún no consume el aviso.
 /// </summary>
@@ -61,7 +61,7 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport
     }
 
     /// Valida sin modificar archivos ni consumir el permiso de build de pruebas.
-    [MenuItem("El Sendero/Build/Validar notas del parche")]
+    [MenuItem("El Sendero/Proyecto/Build: validar las notas del parche")]
     public static void ValidarNotas()
     {
         if (BuildVersionIncrementer.SeSaltaraElProximoBuild) return;
@@ -83,7 +83,7 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport
             throw new BuildFailedException(
                 $"[PatchNotesBuildGuard] Build cancelado: '{CurrentEntryFile}' está vacío o sigue con " +
                 "el marcador de pendiente. Añade los cambios reales de esta build antes de compilar " +
-                "(o usa 'El Sendero → Build → Saltar autoincremento de versión' si es un build de " +
+                "(o usa 'El Sendero → Proyecto → Build: no subir la versión en la próxima build' si es un build de " +
                 "pruebas que no vas a publicar).");
         }
 

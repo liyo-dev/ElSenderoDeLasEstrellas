@@ -12,7 +12,7 @@ using UnityEngine;
 /// Assets/Art/Characters/NPCs/Caras/) y una tabla que dice qué juego lleva cada NPC. Las bocas son las de los
 /// protagonistas: Mouth20-29 en cabeza de hombre, Mouth40-49 en cabeza de mujer; los niños llevan las suyas.
 /// Por cada NPC: quita las cejas que traen dentro el pelo o el sombrero del pack (malla sin cejas, guardada aparte)
-/// y pinta las cejas de la cara nueva de su color; quita <see cref="CejasPorEmocion"/>; añade las piezas de su juego,
+/// y pinta las cejas de la cara nueva de su color; añade las piezas de su juego,
 /// le pone su perfil de emociones y la cara neutra. Se puede repetir (también tras cambiar la tabla).
 /// </summary>
 public static class CarasDeLosNPCs
@@ -91,8 +91,8 @@ public static class CarasDeLosNPCs
     static readonly (string npc, string juego)[] Reparto =
     {
         // Hombres
-        ("_GrafoNarrativo/Eldran", "h_mayor_ambar"), ("Eldran", "h_mayor_ambar"),
-        ("_GrafoNarrativo/Oliver", "h_pecas_azul"), ("Oliver", "h_pecas_azul"),
+        ("_GrafoNarrativo/Eldran", "h_mayor_ambar"),
+        ("_GrafoNarrativo/Oliver", "h_pecas_azul"),
         ("Leonardo", "h_chico_gris"), ("Manuel", "h_almendra_marron"), ("WoodsGuard", "h_tostado_marron"),
         ("Pueblo/Amigo Eldran", "h_chico_gris"), ("Pueblo/Generados/Renard", "h_almendra_marron"),
         ("Pueblo/MC01 (1)", "h_chico_azul"), ("Pueblo/MC01 (1) 1", "h_almendra_ambar"), ("Pueblo/MC01 (1) 2", "h_chico_oscuro"),
@@ -128,7 +128,7 @@ public static class CarasDeLosNPCs
         // Niños (con su cuerpo de adulto encogido hasta que tengan cuerpo de niño propio)
         ("NiñoPez", "nino_chico_ambar"), ("AmigaDelNiñoPez", "nina_almendra_azul"), ("Recuerdos/WillNino", "will"),
         // El Archimago (prólogo y cinemática final): el modelo antiguo de Will, vestido por VestuarioDeLosNPCs
-        ("Assets/Prefabs/_WILL_ORIGINAL.prefab", "archimago"),
+        ("Assets/Prefabs/_ARCHIMAGO_NPC.prefab", "archimago"),
         // Liora (prólogo y final): su prefab propio lo crea VestuarioDeLosNPCs (copia de Tendera); pasar antes ese menú
         ("Liora", "liora"),
         // El Mago Oscuro: sombra en el prólogo, revelado (con cara y pelo) para el final; el segundo lo crea MagoOscuroPorEstados
@@ -137,7 +137,7 @@ public static class CarasDeLosNPCs
 
     static readonly Regex PiezaDeCara = new Regex(@"^(Eye|Mouth|Fx)(\d+)$");   // Fx: los símbolos de anime (lágrimas, sudor…)
 
-    [MenuItem("El Sendero/Personajes/Caras de los NPCs")]
+    [MenuItem("El Sendero/Personajes/NPCs/Caras de los NPCs")]
     public static void Aplicar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Caras de los NPCs", "Hazlo fuera de Play."); return; }
@@ -234,7 +234,6 @@ public static class CarasDeLosNPCs
         }
         if (j.Ceja.HasValue) ceja = PersonajeHechoEnBlender.Liso(estilo, $"{CarpetaCejas}/Mat_Ceja_{j.Clave}.mat", j.Ceja.Value);
         if (ceja == null) ceja = PersonajeHechoEnBlender.Liso(estilo, $"{CarpetaCejas}/Mat_Ceja_Defecto.mat", CejaPorDefecto);
-        foreach (var c in raiz.GetComponentsInChildren<CejasPorEmocion>(true)) Object.DestroyImmediate(c, true);
 
         // Fuera las piezas de cara nuevas de otro juego (si cambió la tabla); dentro las del suyo
         var suyas = new HashSet<string>(piezas.Select(p => p.nombre));
@@ -267,7 +266,7 @@ public static class CarasDeLosNPCs
 
     /// <summary>
     /// Malla sin cejas de un pelo o sombrero del pack (las dos islas de las cejas fuera; se localizan como en
-    /// <see cref="CejasPorEmocion.BuscarIslasDeCejas"/>), guardada en SinCejas y compartida por todos los que lo
+    /// <see cref="CejasDelPack.BuscarIslasDeCejas"/>), guardada en SinCejas y compartida por todos los que lo
     /// llevan; y el material del color de esas cejas. Null si la malla no tiene cejas o ya es la de sin cejas.
     /// </summary>
     static Mesh QuitarCejas(MeshFilter filtro, Renderer ojos, Renderer renderer, Material estilo, out Material ceja)
@@ -286,8 +285,8 @@ public static class CarasDeLosNPCs
         if (malla == null) return null;
         var vertices = malla.vertices;
         var indices = Enumerable.Range(0, malla.subMeshCount).SelectMany(s => malla.GetTriangles(s)).ToArray();
-        var caja = CejasPorEmocion.BoundsDeOjosEnEspacio(ojos, filtro.transform);
-        if (!CejasPorEmocion.BuscarIslasDeCejas(vertices, indices, caja, out var izq, out var der, out _, out _)) return null;
+        var caja = CejasDelPack.BoundsDeOjosEnEspacio(ojos, filtro.transform);
+        if (!CejasDelPack.BuscarIslasDeCejas(vertices, indices, caja, out var izq, out var der, out _, out _)) return null;
         var fuera = new HashSet<int>(izq.Concat(der));
 
         var nueva = Object.Instantiate(malla);

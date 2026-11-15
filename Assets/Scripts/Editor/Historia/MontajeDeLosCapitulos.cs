@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 /// los puntos del roster, los disparadores y los puntos de inspección, que se rehacen enteros.
 ///
 /// Encadenado solo por señales: el Cap. 2 emite CH_Cap2_BACK_1 → Cap. 3 → CH_Cap3_BACK_1 → Cap. 4
-/// → CH_Cap4_BACK_1 → fin de la demo (<see cref="FinDeLaDemoNode"/>). Cada tramo empieza en un nodo
+/// → CH_Cap4_BACK_1 → fin de la demo (<see cref="PedirFinDeLaDemo"/>). Cada tramo empieza en un nodo
 /// «(probar desde aquí)» que emite su señal *_EMPIEZA.
 /// </summary>
 public static partial class MontajeDeLosCapitulos
@@ -172,8 +172,8 @@ public static partial class MontajeDeLosCapitulos
         return punto;
     }
     private static NarrativeNode Llevar(string actor, string marca) => new PlaceActorNode { actorId = actor, markId = marca, applyPlayerEnvironment = actor == "Player" };
-    private static NarrativeNode Grupo(GrupoNode.Accion accion, string personaje, bool retirar = false) =>
-        new GrupoNode { accion = accion, personaje = personaje, retirarDeLaEscena = retirar };
+    private static NarrativeNode Grupo(PedirGrupo.Accion accion, string personaje, bool retirar = false) =>
+        GameStepNode.For(new PedirGrupo { accion = accion, personaje = personaje, retirarDeLaEscena = retirar });
     /// <summary>
     /// Destapa la pantalla. Un rótulo, o una cinemática que acaba en «fundido cubre», dejan la
     /// pantalla tapada para quien venga después; si lo que viene es jugar, hay que destaparla.
@@ -192,7 +192,7 @@ public static partial class MontajeDeLosCapitulos
     private static NarrativeNode Tutorial(string clave, string es, string en, string boton = Core.InputGlyphs.InputGlyphNames.North, bool esperar = false)
     {
         TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Interfaz, clave, es, en);
-        return new TutorialPromptNode { textId = clave, text = es, buttonName = boton, dismissWithCancel = !esperar, cerrarAlEmpezarDialogo = !esperar };
+        return GameStepNode.For(new PedirAvisoDeTutorial { textId = clave, text = es, buttonName = boton, dismissWithCancel = !esperar, cerrarAlEmpezarDialogo = !esperar });
     }
     private static NarrativeNode Bocadillo(string clave, string es, string en, float dura = 3f)
     {
@@ -205,11 +205,11 @@ public static partial class MontajeDeLosCapitulos
     {
         questId = mision, stepConditionIds = new List<string> { paso }, completeQuest = cerrar,
     };
-    private static NarrativeNode Desbloquear(SpellId hechizo, bool equipar) => new UnlockAbilitiesNode
+    private static NarrativeNode Desbloquear(SpellId hechizo, bool equipar) => GameStepNode.For(new PedirDesbloqueo
     {
         spellsToUnlock = new List<SpellId> { hechizo }, assignSpellsToEmptySlot = equipar,
-        forceWillBeforeSpellUnlock = true, applyPresetAfterUnlock = true, saveAfterUnlock = false,
-    };
+        forceWillBeforeSpellUnlock = true, applyPresetAfterUnlock = true,
+    });
     private static NarrativeNode Dar(string rutaItem) => new GiveInventoryItemNode { item = Cargar<ItemData>(rutaItem) };
 
     // ── Misiones, objetos y diálogos ────────────────────────────────────────────────────────
@@ -218,7 +218,7 @@ public static partial class MontajeDeLosCapitulos
                                     params (string condicion, string es, string en)[] pasos)
     {
         string carpeta = $"{CarpetaMisiones}/{CarpetaDeCapitulo(archivo).ToUpperInvariant()}";
-        AsegurarCarpeta(carpeta);
+        Kits.EditorTools.AssetFolders.Ensure(carpeta);
         string ruta = $"{carpeta}/{archivo}.asset";
         var m = AssetDatabase.LoadAssetAtPath<QuestData>(ruta);
         if (m == null) { m = ScriptableObject.CreateInstance<QuestData>(); AssetDatabase.CreateAsset(m, ruta); }
@@ -286,7 +286,7 @@ public static partial class MontajeDeLosCapitulos
     private static string DialogoDeCaja(string archivo, string clave, params Linea[] lineas)
     {
         string carpeta = $"{CarpetaDialogos}/{CarpetaDeCapitulo(archivo)}";
-        AsegurarCarpeta(carpeta);
+        Kits.EditorTools.AssetFolders.Ensure(carpeta);
         string ruta = $"{carpeta}/{archivo}.asset";
         var d = AssetDatabase.LoadAssetAtPath<DialogueAsset>(ruta);
         if (d == null) { d = ScriptableObject.CreateInstance<DialogueAsset>(); AssetDatabase.CreateAsset(d, ruta); }
@@ -320,7 +320,7 @@ public static partial class MontajeDeLosCapitulos
     {
         const string ruta = "Assets/Resources/Demo/ConfiguracionDeLaDemo.asset";
         if (AssetDatabase.LoadAssetAtPath<ConfiguracionDeLaDemo>(ruta) != null) return;
-        AsegurarCarpeta("Assets/Resources/Demo");
+        Kits.EditorTools.AssetFolders.Ensure("Assets/Resources/Demo");
         var c = ScriptableObject.CreateInstance<ConfiguracionDeLaDemo>();
         c.esDemo = true;
         AssetDatabase.CreateAsset(c, ruta);
@@ -336,13 +336,6 @@ public static partial class MontajeDeLosCapitulos
         return a;
     }
 
-    private static void AsegurarCarpeta(string ruta)
-    {
-        if (AssetDatabase.IsValidFolder(ruta)) return;
-        string padre = Path.GetDirectoryName(ruta).Replace('\\', '/');
-        AsegurarCarpeta(padre);
-        AssetDatabase.CreateFolder(padre, Path.GetFileName(ruta));
-    }
 
     private static T Buscar<T>(Scene escena) where T : Component
     {

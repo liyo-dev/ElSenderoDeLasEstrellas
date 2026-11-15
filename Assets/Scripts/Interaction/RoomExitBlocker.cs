@@ -222,7 +222,7 @@ public class RoomExitBlocker : MonoBehaviour
         _stopLockHeld = true;
         _safetyReleaseCoroutine = StartCoroutine(Co_SafetyReleaseStopLock());
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[RoomExitBlocker:{gameObject.name}] ⛔ Jugador congelado (zona bloqueada).");
+        Debug.Log($"[RoomExitBlocker:{gameObject.name}] Jugador congelado (zona bloqueada).");
 #endif
     }
 
@@ -231,7 +231,7 @@ public class RoomExitBlocker : MonoBehaviour
         yield return new WaitForSecondsRealtime(Mathf.Max(0.1f, stopLockSafetyTimeout));
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[RoomExitBlocker:{gameObject.name}] ⏱️ Timeout de seguridad ({stopLockSafetyTimeout}s) — " +
+        Debug.LogWarning($"[RoomExitBlocker:{gameObject.name}] Timeout de seguridad ({stopLockSafetyTimeout}s) — " +
                           "el freeze seguía activo sin OnTriggerExit/OnCollisionExit. Liberando para evitar bloqueo permanente.");
 #endif
         _safetyReleaseCoroutine = null;
@@ -252,7 +252,7 @@ public class RoomExitBlocker : MonoBehaviour
             PlayerLockService.Instance.Release(this);
         _stopLockHeld = false;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[RoomExitBlocker:{gameObject.name}] ✅ Jugador liberado.");
+        Debug.Log($"[RoomExitBlocker:{gameObject.name}] Jugador liberado.");
 #endif
     }
 

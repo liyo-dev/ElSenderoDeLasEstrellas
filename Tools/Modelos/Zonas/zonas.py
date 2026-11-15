@@ -1286,33 +1286,490 @@ def entrada_de_templo(nombre="EntradaDeTemplo"):
         o.append(caja(x - 0.06, x + 0.06, -0.18, -0.1, 6.0 - largo, 6.05, "Hiedra", 0.01)); o.append(bola((x, -0.16, 6.0 - largo), 0.16, "Hojas"))
     return juntar(o, nombre)
 
+# ── Montaña de Risco: pueblo colgado de la cara norte, camino y cueva del río ─────────────────
+
+COLORES.update({
+    "PiedraRisco": "#b3a79c", "PiedraRiscoOscura": "#86797a", "PizarraRisco": "#555169", "PizarraRiscoSombra": "#454158",
+    "MaderaRisco": "#6e4b33", "Geranio": "#e8473f", "Nieve": "#eef2f6", "Arena": "#ecd9a0",
+})
+
+def tejado_de_pizarra(u, zt, h, d0, d1, eje):
+    """Tejado de pizarra a dos aguas, empinado, con vuelo y caballete: «u» es el medio ancho del faldón."""
+    o = [prisma([(-u, zt - 0.18), (u, zt - 0.18), (0.08, zt + h), (-0.08, zt + h)], d0, d1, "PizarraRisco", eje=eje)]
+    o += hiladas((u, zt - 0.18), (0.08, zt + h), d0, d1, ("PizarraRisco", "PizarraRiscoSombra"), eje, n=6, vuelo=-0.01)
+    o.append(prisma([(-0.22, zt + h - 0.05), (0.22, zt + h - 0.05), (0.12, zt + h + 0.22), (-0.12, zt + h + 0.22)], d0 - 0.05, d1 + 0.05, "PiedraRiscoOscura", eje=eje))
+    return o
+
+def hiladas_de_piedra(x0, x1, y, z0, z1, lado=-1):
+    """Llagas de sillería en una fachada (líneas de hilada salientes cada 0,55 m) pegadas al plano y."""
+    o, z, k = [], z0 + 0.5, 0
+    while z < z1 - 0.2:
+        o.append(caja(x0, x1, y + lado * 0.03 - 0.02, y + lado * 0.03 + 0.02, z - 0.03, z + 0.03, "PiedraRiscoOscura", 0.0))
+        z += 0.55; k += 1
+    return o
+
+def balcon_de_madera(x0, x1, y, z):
+    """Balcón corrido de madera volado 1 m sobre la fachada (que mira a -Y), con barandilla y geranios."""
+    o = [caja(x0, x1, y - 1.05, y, z - 0.16, z, "MaderaRisco", 0.02)]
+    for x in (x0 + 0.15, (x0 + x1) / 2, x1 - 0.15):
+        o.append(viga((x, y, z - 0.9), (x, y - 0.95, z - 0.12), 0.1, "MaderaRisco"))
+    n = max(2, int((x1 - x0) / 0.32))
+    for i in range(n + 1):
+        x = x0 + 0.05 + i * (x1 - x0 - 0.1) / n
+        o.append(caja(x - 0.03, x + 0.03, y - 1.0, y - 0.94, z, z + 0.9, "MaderaRisco", 0.0))
+    o.append(caja(x0, x1, y - 1.06, y - 0.9, z + 0.88, z + 0.98, "MaderaRisco", 0.01))
+    for s in (x0, x1):
+        o.append(caja(s - 0.03, s + 0.03, y - 1.0, y, z, z + 0.98, "MaderaRisco", 0.0))
+    o.append(caja(x0 + 0.1, x1 - 0.1, y - 1.18, y - 0.98, z + 0.98, z + 1.12, "MaderaRisco", 0.02))
+    for i in range(int((x1 - x0) / 0.45)):
+        x = x0 + 0.3 + i * 0.45
+        o.append(bola((x, y - 1.08, z + 1.2), 0.14, "Geranio" if i % 3 else "Hojas"))
+    return o
+
+def casa_de_risco(nombre, ancho=5.6, fondo=5.0, plantas=2, contra="ContraVerde", espejo=False, torre=False):
+    """Casa de piedra de Risco: muros de sillería gris cálida con esquinas de sillar, tejado de pizarra empinado,
+    balcón corrido de madera con geranios en la planta de arriba y chimenea de piedra. Fachada a -Y."""
+    w, f, piso = ancho, fondo, 2.7
+    zt = 0.3 + piso * plantas
+    o = [caja(-w / 2 - 0.1, w / 2 + 0.1, -f / 2 - 0.1, f / 2 + 0.1, -1.2, 0.3, "PiedraRiscoOscura", 0.05),
+         caja(-w / 2, w / 2, -f / 2, f / 2, 0.3, zt, "PiedraRisco", 0.04)]
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o += sillares(sx * w / 2, sy * f / 2 - 0.08, sy * f / 2 + 0.08, 0.3, zt, "PiedraRiscoOscura", -sx)
+    o += hiladas_de_piedra(-w / 2 + 0.5, w / 2 - 0.5, -f / 2, 0.3, zt)
+    o += poner(hiladas_de_piedra(-f / 2 + 0.5, f / 2 - 0.5, 0, 0.3, zt), -w / 2, 0, 0, -90)
+    o += poner(hiladas_de_piedra(-f / 2 + 0.5, f / 2 - 0.5, 0, 0.3, zt), w / 2, 0, 0, 90)
+    # Tejado de pizarra a dos aguas con el hastial en los costados (la caída va hacia la fachada y la trasera).
+    h = f * (0.75 if not torre else 0.95)
+    o.append(prisma([(-f / 2, zt - 0.02), (f / 2, zt - 0.02), (0, zt + h)], -w / 2, w / 2, "PiedraRisco", eje='X'))
+    o += tejado_de_pizarra(f / 2 + 0.55, zt, h, -w / 2 - 0.45, w / 2 + 0.45, 'X')
+    # Chimenea de piedra con caperuza de lajas.
+    xc = w * 0.28
+    o.append(caja(xc - 0.45, xc + 0.45, f * 0.08 - 0.4, f * 0.08 + 0.4, zt, zt + h + 1.0, "PiedraRiscoOscura", 0.04))
+    o.append(caja(xc - 0.55, xc + 0.55, f * 0.08 - 0.5, f * 0.08 + 0.5, zt + h + 1.0, zt + h + 1.1, "PizarraRisco", 0.02))
+    for s in (-1, 1):
+        o.append(caja(xc - 0.12 + s * 0.3, xc + 0.12 + s * 0.3, f * 0.08 - 0.12, f * 0.08 + 0.12, zt + h + 1.1, zt + h + 1.35, "PiedraRiscoOscura", 0.02))
+    o.append(caja(xc - 0.55, xc + 0.55, f * 0.08 - 0.5, f * 0.08 + 0.5, zt + h + 1.35, zt + h + 1.45, "PizarraRisco", 0.02))
+    # Puerta con dintel de piedra y escalón.
+    xd = -w * 0.22
+    o.append(caja(xd - 0.72, xd + 0.72, -f / 2 - 0.1, -f / 2 + 0.02, 0.3, 2.55, "PiedraRiscoOscura", 0.03))
+    o.append(caja(xd - 0.52, xd + 0.52, -f / 2 - 0.14, -f / 2 - 0.06, 0.32, 2.3, "MaderaRisco", 0.02))
+    for k in range(4):
+        o.append(caja(xd - 0.5 + k * 0.26, xd - 0.47 + k * 0.26, -f / 2 - 0.16, -f / 2 - 0.12, 0.34, 2.28, "MaderaOscura", 0.0))
+    o.append(bola((xd + 0.36, -f / 2 - 0.18, 1.3), 0.05, "Hierro"))
+    o.append(caja(xd - 0.85, xd + 0.85, -f / 2 - 0.75, -f / 2, -0.4, 0.3, "PiedraRiscoOscura", 0.04))
+    # Ventanas pequeñas en la planta baja; balcón y puerta-ventana arriba.
+    o += poner(ventana(0.75, 0.9, contra, "PiedraRiscoOscura"), w * 0.24, -f / 2, 1.2)
+    o += poner(ventana(0.7, 0.85, contra, "PiedraRiscoOscura", jardinera=False), 0, f / 2, 1.2, 180)
+    for k in range(1, plantas):
+        z = 0.3 + piso * k
+        o += poner(ventana(0.85, 1.6, contra, "PiedraRiscoOscura", jardinera=False), -w * 0.18, -f / 2, z + 0.1)
+        o += poner(ventana(0.85, 1.6, contra, "PiedraRiscoOscura", jardinera=False), w * 0.22, -f / 2, z + 0.1)
+        o += balcon_de_madera(-w / 2 + 0.35, w / 2 - 0.35, -f / 2, z)
+        o += poner(ventana(0.7, 0.85, contra, "PiedraRiscoOscura", jardinera=False), -w / 2, 0.0, z + 0.9, -90)
+    if torre:
+        o += poner(ventana(0.6, 0.7, contra, "PiedraRiscoOscura", jardinera=False), 0, -f / 2, zt + 0.3)
+    # Farol junto a la puerta y leña bajo el balcón.
+    o.append(viga((xd + 0.95, -f / 2, 2.2), (xd + 0.95, -f / 2 - 0.4, 2.3), 0.05, "Hierro"))
+    o.append(caja(xd + 0.84, xd + 1.06, -f / 2 - 0.52, -f / 2 - 0.3, 1.92, 2.22, "Luz", 0.02))
+    az = random.Random(len(nombre) * 3)
+    for fila in range(3):
+        for i in range(5):
+            x = w / 2 - 0.4 - i * 0.3
+            o.append(caja(x - 0.13, x + 0.13, -f / 2 - 0.6, -f / 2 - 0.05, 0.3 + fila * 0.26, 0.54 + fila * 0.26, "Madera" if az.random() < 0.6 else "MaderaOscura", 0.05))
+    casa = juntar(o, nombre)
+    if espejo:
+        casa.scale = (-1, 1, 1); aplicar(casa)
+    return casa
+
+VARIANTES_DE_RISCO = (
+    ("CasaDeRisco_A", dict(ancho=5.6, fondo=5.0, plantas=2, contra="ContraVerde")),
+    ("CasaDeRisco_B", dict(ancho=7.0, fondo=5.2, plantas=2, contra="ContraRoja", espejo=True)),
+    ("CasaDeRisco_C", dict(ancho=4.4, fondo=4.6, plantas=3, contra="CarpinteriaAzul", torre=True)),
+    ("CasaDeRisco_D", dict(ancho=6.2, fondo=4.8, plantas=1, contra="ContraVerde", espejo=True)),
+)
+
+def bancal(nombre, ancho=12.0, fondo=9.0, alto=40.0):
+    """Bancal de piedra de Risco: plataforma con la cara de arriba en z = 0 (empedrada), muros de mampostería que
+    bajan «alto» metros y se abren hacia abajo (talud), pretil en el frente (-Y) y en los costados. La trasera (+Y)
+    se mete en la ladera. Los pretiles dejan un paso de 2 m junto a cada esquina trasera para las escaleras."""
+    w, f = ancho, fondo
+    t = alto * 0.12
+    o = [prisma([(-w / 2, 0.0), (w / 2, 0.0), (w / 2 + t, -alto), (-w / 2 - t, -alto)], -f / 2, f / 2 + 1.5, "PiedraRisco", eje='Y'),
+         prisma([(-f / 2, 0.0), (f / 2 + 1.5, 0.0), (f / 2 + 1.5, -alto), (-f / 2 - t, -alto)], -w / 2 - t * 0.02, w / 2 + t * 0.02, "PiedraRisco", eje='X')]
+    # Empedrado de arriba.
+    az = random.Random(len(nombre) * 7 + int(w))
+    x = -w / 2 + 0.05
+    while x < w / 2 - 0.1:
+        y = -f / 2 + 0.05
+        while y < f / 2 + 1.4:
+            a, b = az.uniform(0.6, 1.1), az.uniform(0.6, 1.1)
+            o.append(caja(x, min(x + a, w / 2) - 0.04, y, min(y + b, f / 2 + 1.5) - 0.04, -0.06, 0.02, "PiedraRiscoOscura" if az.random() < 0.3 else "PiedraGris", 0.02))
+            y += b
+        x += 0.85
+    # Hiladas del muro del frente, inclinadas con el talud.
+    for k in range(1, int(alto / 0.9)):
+        z = -k * 0.9
+        u = w / 2 + t * k * 0.9 / alto
+        o.append(caja(-u, u, -f / 2 - t * k * 0.9 / alto - 0.05, -f / 2 - t * k * 0.9 / alto + 0.02, z - 0.04, z + 0.04, "PiedraRiscoOscura", 0.0))
+    # Pretil con albardilla: frente entero y costados hasta 2 m de la trasera.
+    o.append(caja(-w / 2, w / 2, -f / 2, -f / 2 + 0.45, 0.0, 0.62, "PiedraRiscoOscura", 0.04))
+    o.append(caja(-w / 2 - 0.06, w / 2 + 0.06, -f / 2 - 0.06, -f / 2 + 0.51, 0.62, 0.74, "PiedraGris", 0.03))
+    for s in (-1, 1):
+        x0, x1 = (w / 2 - 0.45, w / 2) if s > 0 else (-w / 2, -w / 2 + 0.45)
+        o.append(caja(x0, x1, -f / 2, f / 2 - 2.0, 0.0, 0.62, "PiedraRiscoOscura", 0.04))
+        o.append(caja(x0 - 0.06, x1 + 0.06, -f / 2 - 0.06, f / 2 - 1.94, 0.62, 0.74, "PiedraGris", 0.03))
+    # Macetas de geranios sobre el pretil y hiedra colgando.
+    for i in range(int(w / 2.4)):
+        x = -w / 2 + 1.2 + i * 2.4
+        o.append(cono(x, -f / 2 + 0.22, 0.74, 1.02, 0.18, 0.24, "TejaCoral", 8))
+        o.append(bola((x, -f / 2 + 0.22, 1.12), 0.22, "Geranio" if i % 2 == 0 else "Hojas"))
+    for k in range(6):
+        x = az.uniform(-w / 2 + 0.5, w / 2 - 0.5)
+        largo = az.uniform(1.5, 4.0)
+        o.append(caja(x - 0.06, x + 0.06, -f / 2 - 0.08, -f / 2 - 0.02, -largo, 0.0, "Hiedra", 0.01))
+        o.append(bola((x, -f / 2 - 0.08, -largo), 0.15, "Hojas"))
+    return juntar(o, nombre)
+
+def campanario(nombre="CapillaDeRisco"):
+    """Capilla de Risco: nave de piedra de 6 × 9 m con tejado de pizarra, espadaña de dos campanas sobre la
+    fachada (-Y), óculo y puerta en arco con escalinata."""
+    w, f, zt = 6.0, 9.0, 5.2
+    o = [caja(-w / 2 - 0.12, w / 2 + 0.12, -f / 2 - 0.12, f / 2 + 0.12, -1.2, 0.35, "PiedraRiscoOscura", 0.05),
+         caja(-w / 2, w / 2, -f / 2, f / 2, 0.35, zt, "PiedraRisco", 0.04)]
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o += sillares(sx * w / 2, sy * f / 2 - 0.09, sy * f / 2 + 0.09, 0.35, zt, "PiedraRiscoOscura", -sx)
+        for k in range(3):
+            y = -f / 2 + 1.5 + k * 3.0
+            o.append(caja(sx * w / 2 - 0.25 if sx < 0 else sx * w / 2 - 0.05, sx * w / 2 + 0.05 if sx < 0 else sx * w / 2 + 0.25,
+                          y - 0.35, y + 0.35, 0.35, zt - 0.6, "PiedraRiscoOscura", 0.04))
+    h = w * 0.62
+    o.append(prisma([(-w / 2, zt - 0.02), (w / 2, zt - 0.02), (0, zt + h)], -f / 2, f / 2, "PiedraRisco", eje='Y'))
+    o += tejado_de_pizarra(w / 2 + 0.5, zt, h, -f / 2 + 0.15, f / 2 + 0.5, 'Y')
+    # Espadaña: muro sobre la fachada con dos vanos y sus campanas.
+    y0 = -f / 2 - 0.25
+    o.append(prisma([(-w / 2 + 0.2, zt - 0.5), (w / 2 - 0.2, zt - 0.5), (w / 2 - 0.2, zt + h + 0.8), (1.2, zt + h + 2.6), (0, zt + h + 3.3),
+                     (-1.2, zt + h + 2.6), (-w / 2 + 0.2, zt + h + 0.8)], y0, y0 + 0.55, "PiedraRisco", eje='Y'))
+    for s in (-1, 1):
+        cx, cz = s * 1.05, zt + h + 0.75
+        o.append(caja(cx - 0.55, cx + 0.55, y0 - 0.02, y0 + 0.57, cz - 0.6, cz + 0.55, "Fondo", 0.0))
+        o.append(cono(cx, y0 + 0.27, cz - 0.55, cz + 0.2, 0.42, 0.18, "Bronce", 12))
+        o.append(bola((cx, y0 + 0.27, cz + 0.22), 0.17, "Bronce"))
+        o.append(caja(cx - 0.6, cx + 0.6, y0 - 0.06, y0 + 0.61, cz + 0.55, cz + 0.7, "PiedraRiscoOscura", 0.02))
+    o.append(cono(0, y0 + 0.27, zt + h + 3.3, zt + h + 3.9, 0.09, 0.05, "Hierro", 6))
+    o.append(viga((-0.25, y0 + 0.27, zt + h + 3.75), (0.25, y0 + 0.27, zt + h + 3.75), 0.07, "Hierro"))
+    # Óculo y puerta en arco.
+    ojo = [cono(0, 0, -0.08, 0.08, 0.7, 0.7, "PiedraRiscoOscura", 16), cono(0, 0, -0.12, 0.02, 0.5, 0.5, "Luz", 16)]
+    for p in ojo:
+        p.rotation_euler = (math.radians(90), 0, 0); p.location = (0, -f / 2 - 0.05, zt - 1.3); aplicar(p)
+    o += ojo
+    perfil = [(-1.25, 0.35), (-1.25, 2.5), (-0.9, 3.05), (0, 3.35), (0.9, 3.05), (1.25, 2.5), (1.25, 0.35),
+              (0.85, 0.35), (0.85, 2.35), (0.6, 2.75), (0, 2.95), (-0.6, 2.75), (-0.85, 2.35), (-0.85, 0.35)]
+    o.append(arco_hueco(perfil, -f / 2 - 0.25, -f / 2 + 0.02, "PiedraRiscoOscura"))
+    o.append(prisma([(-0.85, 0.36), (0.85, 0.36), (0.85, 2.35), (0.6, 2.75), (0, 2.95), (-0.6, 2.75), (-0.85, 2.35)], -f / 2 - 0.08, -f / 2 - 0.02, "MaderaRisco"))
+    for i in range(3):
+        o.append(caja(-1.6 - 0.2 * (2 - i), 1.6 + 0.2 * (2 - i), -f / 2 - 0.35 - 0.45 * (3 - i), -f / 2 - 0.2, -1.2, 0.12 * (i + 1), "PiedraGris", 0.03))
+    for sy in (-1, 1):
+        for k in range(2):
+            y = -f / 2 + 2.5 + k * 4.0
+            o += poner(ventana(0.55, 1.3, "Cristal", "PiedraRiscoOscura", jardinera=False), -w / 2, y, 2.0, -90)
+            o += poner(ventana(0.55, 1.3, "Cristal", "PiedraRiscoOscura", jardinera=False), w / 2, y, 2.0, 90)
+    return juntar(o, nombre)
+
+def presa(nombre="PresaDeRisco", largo=14.0, alto=5.0):
+    """Presa de mampostería a lo largo de X: el agua queda detrás (+Y) a 0,6 m de la coronación (z = alto). Por
+    delante (-Y), contrafuertes y dos compuertas de madera con su torno sobre la pasarela; bajo cada compuerta, un
+    caño. La lámina de agua no va en el modelo (la pone el montador)."""
+    w = largo
+    o = [prisma([(-1.4, -1.5), (1.2, -1.5), (1.2, alto), (-0.6, alto)], -w / 2, w / 2, "PiedraRisco", eje='X')]
+    for k in range(1, int(alto / 0.7) + 1):
+        z = -1.5 + k * 0.7
+        yk = -1.4 + 0.8 * (z + 1.5) / (alto + 1.5)
+        o.append(caja(-w / 2, w / 2, yk - 0.05, yk + 0.02, z - 0.04, z + 0.04, "PiedraRiscoOscura", 0.0))
+    o.append(caja(-w / 2 - 0.3, w / 2 + 0.3, -0.8, 1.3, alto, alto + 0.25, "PiedraGris", 0.04))
+    for s in (-1, 1):
+        o.append(caja(s * w / 2 - 0.9 if s > 0 else -w / 2 - 0.6, s * w / 2 + 0.6 if s > 0 else -w / 2 + 0.9, -1.0, 1.3, alto + 0.25, alto + 0.95, "PiedraRiscoOscura", 0.04))
+    for x in (-w * 0.36, 0.0, w * 0.36):
+        o.append(prisma([(-2.6, -1.5), (-0.9, -1.5), (-0.9, alto - 0.3), (-1.3, alto - 0.3)], x - 0.45, x + 0.45, "PiedraRiscoOscura", eje='X'))
+    for x in (-w * 0.18, w * 0.18):
+        o.append(caja(x - 0.85, x + 0.85, -1.05, -0.75, -0.6, alto - 0.6, "MaderaRisco", 0.03))
+        for k in range(5):
+            o.append(caja(x - 0.88, x + 0.88, -1.12, -1.02, -0.4 + k * 0.9, -0.3 + k * 0.9, "MaderaOscura", 0.01))
+        for s in (-1, 1):
+            o.append(caja(x + s * 0.95 - 0.12, x + s * 0.95 + 0.12, -1.25, -0.7, -1.5, alto + 0.25, "Hierro", 0.02))
+            o.append(poste(x + s * 0.5, -0.1, alto + 0.25, alto + 1.5, 0.08, "Hierro", 6))
+        o.append(viga((x - 0.6, -0.1, alto + 1.45), (x + 0.6, -0.1, alto + 1.45), 0.1, "Hierro"))
+        rueda = cono(0, 0, -0.05, 0.05, 0.55, 0.55, "MaderaRisco", 10)
+        rueda.rotation_euler = (math.radians(90), 0, 0); rueda.location = (x, -0.1, alto + 1.45); aplicar(rueda); o.append(rueda)
+        for a in range(4):
+            r = viga((x - 0.6 * math.cos(a * math.pi / 4), -0.1, alto + 1.45 - 0.6 * math.sin(a * math.pi / 4)),
+                     (x + 0.6 * math.cos(a * math.pi / 4), -0.1, alto + 1.45 + 0.6 * math.sin(a * math.pi / 4)), 0.05, "MaderaOscura")
+            o.append(r)
+        o.append(caja(x - 0.4, x + 0.4, -2.4, -1.4, -1.5, -1.1, "PiedraRiscoOscura", 0.03))
+        o.append(caja(x - 0.3, x + 0.3, -2.45, -1.3, -1.15, -1.08, "Agua", 0.0))
+    for s in (-1, 1):
+        for k in range(3):
+            o.append(roca((s * (w / 2 + 1.2 + k * 0.8), -0.5 + k * 1.2, alto * 0.5 - k), 1.4 - k * 0.2, "Roca", 400 + k + 5 * s))
+    for x in (-w / 2 - 0.1, w / 2 + 0.1):
+        o += farol_de_poste(x, 0.2, alto + 0.95, 1.4)
+    return juntar(o, nombre)
+
+def refugio(nombre="RefugioDelPastor"):
+    """Refugio de pastores: choza de piedra de 5 × 4 m con tejado de pizarra, porche de madera con banco, farol y
+    leña. Fachada a -Y."""
+    w, f, zt = 5.0, 4.0, 2.7
+    o = [caja(-w / 2 - 0.1, w / 2 + 0.1, -f / 2 - 0.1, f / 2 + 0.1, -1.0, 0.25, "PiedraRiscoOscura", 0.05),
+         caja(-w / 2, w / 2, -f / 2, f / 2, 0.25, zt, "PiedraRisco", 0.05)]
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o += sillares(sx * w / 2, sy * f / 2 - 0.08, sy * f / 2 + 0.08, 0.25, zt, "PiedraRiscoOscura", -sx)
+    h = f * 0.55
+    o.append(prisma([(-f / 2, zt - 0.02), (f / 2, zt - 0.02), (0, zt + h)], -w / 2, w / 2, "PiedraRisco", eje='X'))
+    o += tejado_de_pizarra(f / 2 + 1.8, zt - 0.6, h + 0.6, -w / 2 - 0.4, w / 2 + 0.4, 'X')
+    for s in (-1, 1):
+        o.append(poste(s * (w / 2 - 0.2), -f / 2 - 1.55, -0.1, zt - 0.5, 0.11, "MaderaRisco", 6))
+    o += tablas(-w / 2, w / 2, -f / 2 - 1.8, -f / 2, 0.28, 'x', 0.45)
+    o.append(caja(-0.55, 0.55, -f / 2 - 0.12, -f / 2 + 0.02, 0.25, 2.2, "MaderaRisco", 0.02))
+    o += poner(ventana(0.6, 0.7, "ContraRoja", "PiedraRiscoOscura", jardinera=False), w * 0.3, -f / 2, 1.1)
+    o += banco(-w * 0.28, -f / 2 - 0.5, 0.28, 1.4, 0)
+    o.append(viga((0.75, -f / 2, 2.05), (0.75, -f / 2 - 0.4, 2.15), 0.05, "Hierro"))
+    o.append(caja(0.64, 0.86, -f / 2 - 0.52, -f / 2 - 0.3, 1.78, 2.08, "Luz", 0.02))
+    o.append(caja(-w / 2 + 0.1, -w / 2 + 0.9, f * 0.1 - 0.4, f * 0.1 + 0.4, zt, zt + h + 0.9, "PiedraRiscoOscura", 0.04))
+    az = random.Random(77)
+    for fila in range(4):
+        for i in range(6):
+            y = -f / 2 + 0.45 + i * 0.5
+            o.append(caja(w / 2 + 0.15, w / 2 + 1.05, y - 0.2, y + 0.2, fila * 0.32 - 0.02, fila * 0.32 + 0.28, "Madera" if az.random() < 0.6 else "MaderaOscura", 0.05))
+    return juntar(o, nombre)
+
+def hito_del_camino(nombre="HitoDelCamino"):
+    """Hito de piedra que marca el arranque de un camino: pilar con una estrella tallada y un farolillo encima."""
+    o = [caja(-0.7, 0.7, -0.7, 0.7, -0.6, 0.3, "PiedraRiscoOscura", 0.05), caja(-0.42, 0.42, -0.42, 0.42, 0.3, 2.1, "PiedraRisco", 0.05),
+         caja(-0.52, 0.52, -0.52, 0.52, 2.1, 2.25, "PiedraRiscoOscura", 0.03)]
+    puntas = []
+    for i in range(10):
+        a = math.pi / 2 + i * math.pi / 5
+        r = 0.3 if i % 2 == 0 else 0.13
+        puntas.append((r * math.cos(a), 1.35 + r * math.sin(a)))
+    o.append(prisma(puntas, -0.46, -0.4, "Oro"))
+    o += farol_de_poste(0, 0, 2.25, 0.35)
+    return juntar(o, nombre)
+
+def mojon(nombre="MojonDePiedras"):
+    """Mojón de piedras apiladas que guía por la senda cuando hay nieve o niebla."""
+    o, z = [], 0.0
+    for k, r in enumerate((0.55, 0.45, 0.38, 0.3, 0.22)):
+        o.append(roca((0.04 * (k % 2), -0.03 * (k % 3), z + r * 0.55), r, "PiedraGris" if k % 2 else "Roca", 700 + k, 0.62))
+        z += r * 0.95
+    return juntar(o, nombre)
+
+def noria(nombre="NoriaDeVega", radio=3.2):
+    """Noria de madera para el riego: rueda de radio «radio» que gira en un eje a lo largo de X, sobre dos pilas
+    de piedra, con cangilones. El eje queda a z = radio - 0.6 (la rueda moja 0,6 m en el agua, z = 0)."""
+    zc = radio - 0.6
+    o = []
+    for s in (-1, 1):
+        o.append(caja(s * 1.1 - 0.4, s * 1.1 + 0.4, -0.5, 0.5, -1.0, zc + 0.3, "PiedraCampo", 0.05))
+    eje = viga((-1.5, 0, zc), (1.5, 0, zc), 0.25, "MaderaOscura"); o.append(eje)
+    for s in (-0.55, 0.55):
+        n = 16
+        for i in range(n):
+            a0, a1 = 2 * math.pi * i / n, 2 * math.pi * (i + 1) / n
+            o.append(viga((s, radio * math.cos(a0), zc + radio * math.sin(a0)), (s, radio * math.cos(a1), zc + radio * math.sin(a1)), 0.16, "Madera"))
+        for i in range(8):
+            a = math.pi * i / 8
+            o.append(viga((s, -radio * math.cos(a), zc - radio * math.sin(a)), (s, radio * math.cos(a), zc + radio * math.sin(a)), 0.1, "MaderaOscura"))
+    for i in range(12):
+        a = 2 * math.pi * i / 12
+        y, z = (radio + 0.1) * math.cos(a), zc + (radio + 0.1) * math.sin(a)
+        o.append(caja(-0.55, 0.55, y - 0.18, y + 0.18, z - 0.18, z + 0.18, "MaderaRisco", 0.03))
+    return juntar(o, nombre)
+
+def charco(nombre="CharcoDeCueva", semilla=1):
+    """Charco del suelo de la cueva: lámina de agua con un reborde de piedrecillas (z = 0 es el suelo)."""
+    az = random.Random(semilla)
+    pts = []
+    for i in range(10):
+        a = 2 * math.pi * i / 10
+        r = az.uniform(0.9, 1.5)
+        pts.append((r * math.cos(a) * 1.4, r * math.sin(a)))
+    o = [losa(pts, -0.05, 0.03, "Agua")]
+    for k in range(9):
+        a = az.uniform(0, 6.28)
+        o.append(roca((1.45 * math.cos(a) * 1.3, 1.25 * math.sin(a), 0.03), az.uniform(0.12, 0.25), "RocaOscura", semilla * 13 + k, 0.5))
+    return juntar(o, nombre)
+
+def arena_de_cueva(nombre="ArenaDeCueva", semilla=2):
+    """Lengua de arena que el mar mete en la cueva: 3,2 × 6 m a lo largo de Y, con ondas, conchas y algas."""
+    az = random.Random(semilla)
+    pts = [(1.6 * math.cos(a) * az.uniform(0.9, 1.05), 3.0 * math.sin(a) * az.uniform(0.9, 1.05)) for a in [i * 2 * math.pi / 12 for i in range(12)]]
+    o = [losa(pts, -0.06, 0.04, "Arena")]
+    for k in range(5):
+        y = -2.2 + k * 1.1
+        o.append(caja(-1.2, 1.2, y - 0.06, y + 0.06, 0.04, 0.07, "PiedraC", 0.02))
+    for k in range(7):
+        o.append(cono(az.uniform(-1.1, 1.1), az.uniform(-2.5, 2.5), 0.04, 0.12, 0.1, 0.02, "PiedraD", 6))
+    for k in range(4):
+        o.append(bola((az.uniform(-1.2, 1.2), az.uniform(-2.5, 2.5), 0.06), 0.12, "Hiedra"))
+    return juntar(o, nombre)
+
+def grieta_del_manantial(nombre="GrietaDelManantial"):
+    """Grieta en la pared por la que entra el agua del manantial: dos lajas que dejan una raja oscura, y la poza
+    a sus pies (z = 0 es el suelo; la raja mira a -Y)."""
+    o = [prisma([(-1.6, 0.0), (-0.25, 0.0), (-0.05, 3.6), (-0.6, 4.4), (-1.6, 4.2)], 0.0, 1.2, "Roca", eje='Y'),
+         prisma([(0.2, 0.0), (1.7, 0.0), (1.7, 4.1), (0.5, 4.5), (0.15, 3.5)], 0.0, 1.2, "Roca", eje='Y'),
+         prisma([(-0.3, 0.0), (0.25, 0.0), (0.1, 3.6), (-0.1, 3.6)], 0.3, 1.3, "Fondo", eje='Y'),
+         prisma([(-0.18, 0.05), (0.16, 0.05), (0.06, 3.0), (-0.05, 3.0)], 0.2, 0.28, "Agua", eje='Y')]
+    o.append(cono(0, -0.6, -0.08, 0.02, 1.1, 1.0, "Agua", 12))
+    for k in range(7):
+        a = math.pi * (0.1 + 0.8 * k / 6)
+        o.append(roca((1.2 * math.cos(a), -0.6 - 0.9 * math.sin(a), 0.05), 0.3, "RocaOscura", 800 + k, 0.6))
+    o.append(roca((-1.5, -0.2, 4.0), 1.0, "Roca", 820)); o.append(roca((1.4, -0.1, 4.2), 1.1, "Roca", 821))
+    return juntar(o, nombre)
+
+def piedras_del_derrumbe(nombre="PiedrasDelDerrumbe", semilla=31):
+    """Montón de peñas y lajas sueltas de un derrumbe, 6 × 4 m (z = 0 es el suelo)."""
+    az = random.Random(semilla)
+    o = []
+    for k in range(9):
+        o.append(roca((az.uniform(-2.6, 2.6), az.uniform(-1.6, 1.6), az.uniform(0.0, 0.4)), az.uniform(0.45, 1.2), "Roca" if k % 3 else "PiedraGris", semilla + k, 0.6))
+    for k in range(5):
+        x, y = az.uniform(-2.5, 2.5), az.uniform(-1.5, 1.5)
+        lj = caja(-0.9, 0.9, -0.5, 0.5, -0.12, 0.12, "PiedraRisco", 0.04)
+        lj.rotation_euler = (az.uniform(-0.5, 0.5), az.uniform(-0.4, 0.4), az.uniform(0, 3.1)); lj.location = (x, y, 0.3); aplicar(lj)
+        o.append(lj)
+    return juntar(o, nombre)
+
+def piezas_de_la_montana():
+    for nombre, opciones in VARIANTES_DE_RISCO:
+        limpiar(); exportar(casa_de_risco(nombre, **opciones))
+    for nombre, w, f in (("BancalDeRisco_Ancho", 13.0, 9.0), ("BancalDeRisco_Estrecho", 8.5, 8.0)):
+        limpiar(); exportar(bancal(nombre, w, f))
+    for pieza in (campanario, presa, refugio, hito_del_camino, mojon, noria, charco, arena_de_cueva,
+                  grieta_del_manantial, piedras_del_derrumbe):
+        limpiar(); exportar(pieza())
+
+# ── Montacargas de los pescadores ─────────────────────────────────────────────────────────────
+
+def tramo_de_castillete(nombre="TramoDeCastillete", alto=10.0):
+    """Tramo de 10 m del castillete del montacargas: cuatro pies derechos de madera en un cuadro de 4,2 m (el
+    hueco de la jaula, 3,4 m, queda libre en el centro), riostras en aspa en los costados y la trasera (+Y) y un
+    cerco abajo y a media altura. El frente (-Y) queda abierto. Se apilan uno sobre otro."""
+    o, m = [], 2.1
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o.append(caja(sx * m - 0.17, sx * m + 0.17, sy * m - 0.17, sy * m + 0.17, 0.0, alto, "MaderaRisco", 0.02))
+    # Cerco en la trasera y los costados; el frente (-Y) queda libre para entrar y salir de la jaula.
+    for z in (0.0, alto * 0.5):
+        o.append(caja(-m, m, m - 0.12, m + 0.12, z, z + 0.24, "MaderaOscura", 0.01))
+        for sx in (-1, 1):
+            o.append(caja(sx * m - 0.12, sx * m + 0.12, -m, m, z, z + 0.24, "MaderaOscura", 0.01))
+    for sx in (-1, 1):
+        for z0 in (0.2, alto * 0.5 + 0.2):
+            o.append(viga((sx * m, -m, z0), (sx * m, m, z0 + alto * 0.5 - 0.4), 0.12, "MaderaRisco"))
+            o.append(viga((sx * m, m, z0), (sx * m, -m, z0 + alto * 0.5 - 0.4), 0.12, "MaderaRisco"))
+    for z0 in (0.2, alto * 0.5 + 0.2):
+        o.append(viga((-m, m, z0), (m, m, z0 + alto * 0.5 - 0.4), 0.12, "MaderaRisco"))
+        o.append(viga((m, m, z0), (-m, m, z0 + alto * 0.5 - 0.4), 0.12, "MaderaRisco"))
+    return juntar(o, nombre)
+
+def cabria(nombre="CabriaDelMontacargas"):
+    """Remate del castillete: tejadillo de pizarra, viga con la polea grande y el torno con su manivela.
+    Se pone encima del último tramo (z = 0 es su base)."""
+    m = 2.1
+    o = [caja(-m - 0.3, m + 0.3, -m - 0.3, m + 0.3, 3.4, 3.65, "MaderaOscura", 0.02)]
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o.append(caja(sx * m - 0.17, sx * m + 0.17, sy * m - 0.17, sy * m + 0.17, 0.0, 3.4, "MaderaRisco", 0.02))
+    o += tejado_de_pizarra(m + 0.8, 3.65, 1.6, -m - 0.8, m + 0.8, 'X')
+    o.append(viga((-m, 0, 3.1), (m, 0, 3.1), 0.3, "MaderaOscura"))
+    rueda = cono(0, 0, -0.12, 0.12, 1.1, 1.1, "MaderaRisco", 16)
+    rueda.rotation_euler = (0, math.radians(90), 0); rueda.location = (0, 0, 2.4); aplicar(rueda); o.append(rueda)
+    for a in range(4):
+        ang = a * math.pi / 4
+        o.append(viga((0, -1.0 * math.cos(ang), 2.4 - 1.0 * math.sin(ang)), (0, 1.0 * math.cos(ang), 2.4 + 1.0 * math.sin(ang)), 0.08, "MaderaOscura"))
+    o.append(viga((0, -1.1, 2.4), (0, -1.1, -0.2), 0.05, "Cuerda"))
+    o.append(viga((0, 1.1, 2.4), (0, 1.1, -0.2), 0.05, "Cuerda"))
+    tambor = cono(0, 0, -0.9, 0.9, 0.35, 0.35, "MaderaRisco", 10)
+    tambor.rotation_euler = (0, math.radians(90), 0); tambor.location = (0, m + 1.2, 0.9); aplicar(tambor); o.append(tambor)
+    for sx in (-1, 1):
+        o.append(caja(sx * 1.0 - 0.12, sx * 1.0 + 0.12, m + 0.9, m + 1.5, -0.2, 1.3, "MaderaOscura", 0.02))
+    o.append(viga((1.0, m + 1.2, 0.9), (1.5, m + 1.2, 0.9), 0.06, "Hierro"))
+    o.append(viga((1.5, m + 1.2, 0.9), (1.5, m + 1.2, 0.3), 0.06, "Hierro"))
+    o.append(bola((0, -m - 0.4, 3.0), 0.18, "Luz"))
+    return juntar(o, nombre)
+
+def jaula(nombre="JaulaDelMontacargas"):
+    """Jaula del montacargas: suelo de tablas de 3,2 × 3,2 m (cara de arriba en z = 0), barandilla en tres lados y
+    portezuela abierta al frente (-Y), cuatro cadenas al aro de arriba y una palanca junto a la entrada."""
+    a = 1.6
+    o = tablas(-a, a, -a, a, 0.0, 'x', 0.4)
+    o.append(caja(-a, a, -a, a, -0.45, -0.16, "MaderaOscura", 0.02))
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o.append(poste(sx * (a - 0.08), sy * (a - 0.08), 0.0, 1.1, 0.07, "MaderaRisco", 6))
+    for sx in (-1, 1):
+        o.append(viga((sx * (a - 0.08), -a + 0.08, 1.05), (sx * (a - 0.08), a - 0.08, 1.05), 0.08, "MaderaRisco"))
+        o.append(viga((sx * (a - 0.08), -a + 0.08, 0.55), (sx * (a - 0.08), a - 0.08, 0.55), 0.05, "Cuerda"))
+    o.append(viga((-a + 0.08, a - 0.08, 1.05), (a - 0.08, a - 0.08, 1.05), 0.08, "MaderaRisco"))
+    o.append(viga((-a + 0.08, a - 0.08, 0.55), (a - 0.08, a - 0.08, 0.55), 0.05, "Cuerda"))
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            o.append(viga((sx * (a - 0.1), sy * (a - 0.1), 1.1), (sx * 0.3, sy * 0.3, 3.4), 0.04, "Hierro"))
+    aro = cono(0, 0, 3.35, 3.5, 0.45, 0.45, "Hierro", 10); o.append(aro)
+    o.append(viga((0, 0, 3.5), (0, 0, 4.2), 0.08, "Cuerda"))
+    o.append(caja(a - 0.6, a - 0.3, -a + 0.15, -a + 0.45, 0.0, 0.9, "MaderaOscura", 0.02))
+    o.append(viga((a - 0.45, -a + 0.3, 0.9), (a - 0.45, -a + 0.05, 1.45), 0.05, "Hierro"))
+    o.append(bola((a - 0.45, -a + 0.05, 1.45), 0.08, "TejaCoral"))
+    return juntar(o, nombre)
+
+def poste_de_llamada(nombre="PosteDeLlamada"):
+    """Poste para llamar al montacargas: pie de madera con una campana y su cuerda."""
+    o = [caja(-0.5, 0.5, -0.5, 0.5, -0.4, 0.2, "PiedraRiscoOscura", 0.04), poste(0, 0, 0.2, 2.6, 0.1, "MaderaRisco", 6),
+         viga((0, 0, 2.5), (0, -0.7, 2.5), 0.09, "MaderaRisco"), cono(0, -0.7, 1.95, 2.42, 0.24, 0.1, "Bronce", 10),
+         bola((0, -0.7, 2.44), 0.08, "Bronce"), viga((0, -0.7, 1.95), (0, -0.7, 1.15), 0.025, "Cuerda"), bola((0, -0.7, 1.12), 0.06, "MaderaOscura")]
+    return juntar(o, nombre)
+
+_PIEZAS_ANTES = piezas_de_la_montana
+def piezas_de_la_montana():
+    _PIEZAS_ANTES()
+    for pieza in (tramo_de_castillete, cabria, jaula, poste_de_llamada):
+        limpiar(); exportar(pieza())
+
 # ── Salida ──────────────────────────────────────────────────────────────────────────────────
 
-for nombre, opciones in VARIANTES_DE_ALDEA:
-    limpiar(); exportar(casa_de_la_aldea(nombre, **opciones))
-limpiar(); exportar(pasarela(0, 3.0, 0, "PasarelaDeLaAldea"))
-for nombre, opciones in VARIANTES_DE_CIUDAD:
-    limpiar(); exportar(casa_de_ciudad(nombre, **opciones))
-for nombre, opciones in (("PuestoDeMercado_Fruta", dict(toldo="ToldoRojo", genero="Flor")), ("PuestoDeMercado_Verdura", dict(toldo="ToldoVerde", genero="Hojas")),
-                         ("PuestoDeMercado_Pan", dict(toldo="ToldoAmarillo", genero="TejaAmarilla")), ("PuestoDeMercado_Pescado", dict(toldo="Pizarra", genero="Pescado"))):
-    limpiar(); exportar(puesto(nombre, **opciones))
-for pieza in (faro, lonja, secadero, torre_del_reloj, arbol_con_columpio, columpio_del_arbol, rellano, mirador, fuente, arbol_de_plaza, rosa_de_los_vientos, banderines, paseo):
-    limpiar(); exportar(pieza())
-for nombre, opciones in (("TiendaDeLaAldea_Pescado", dict(toldo="ToldoRojo", teja="TejaTurquesa", zocalo="Zocalo", genero="Pescado")),
-                         ("TiendaDeLaAldea_Fruta", dict(toldo="ToldoAmarillo", teja="TejaCoral", zocalo="ZocaloCoral", genero="Flor")),
-                         ("TiendaDeLaAldea_Aparejos", dict(toldo="ToldoVerde", teja="TejaAzul", zocalo="ZocaloTurquesa", genero="Cuerda"))):
-    limpiar(); exportar(tienda(nombre, **opciones))
+# Con «montana» solo salen las piezas de la montaña de Risco (el resto de FBX no se toca).
+SOLO_MONTANA = "montana" in ARGS
 
-for nombre, opciones in VARIANTES_DEL_PUEBLO:
-    limpiar(); exportar(casa_del_pueblo(nombre, **opciones))
-for pieza in (granero, pozo, arco_del_pueblo, arco_de_la_aldea, escalones, puente_colgante, mirador_de_cumbre, sala_de_cueva, cortina_de_hiedra, grieta, entrada_de_templo):
-    limpiar(); exportar(pieza())
-for nombre, radio, semilla in (("RepisaDeRoca_Grande", 5.5, 1), ("RepisaDeRoca_Mediana", 3.8, 2), ("RepisaDeRoca_Pequena", 2.4, 3)):
-    limpiar(); exportar(repisa(nombre, radio, semilla))
-limpiar(); exportar(tunel("TunelDeRoca", 8.0))
-limpiar(); exportar(tunel_escalonado())
-limpiar(); exportar(tunel("BocaDeCueva", 5.0, boca=True, semilla=2))
-limpiar(); exportar(puente_colgante("PuenteColgante_Largo", 16.0))
+if SOLO_MONTANA:
+    piezas_de_la_montana()
+else:
+    for nombre, opciones in VARIANTES_DE_ALDEA:
+        limpiar(); exportar(casa_de_la_aldea(nombre, **opciones))
+    limpiar(); exportar(pasarela(0, 3.0, 0, "PasarelaDeLaAldea"))
+    for nombre, opciones in VARIANTES_DE_CIUDAD:
+        limpiar(); exportar(casa_de_ciudad(nombre, **opciones))
+    for nombre, opciones in (("PuestoDeMercado_Fruta", dict(toldo="ToldoRojo", genero="Flor")), ("PuestoDeMercado_Verdura", dict(toldo="ToldoVerde", genero="Hojas")),
+                             ("PuestoDeMercado_Pan", dict(toldo="ToldoAmarillo", genero="TejaAmarilla")), ("PuestoDeMercado_Pescado", dict(toldo="Pizarra", genero="Pescado"))):
+        limpiar(); exportar(puesto(nombre, **opciones))
+    for pieza in (faro, lonja, secadero, torre_del_reloj, arbol_con_columpio, columpio_del_arbol, rellano, mirador, fuente, arbol_de_plaza, rosa_de_los_vientos, banderines, paseo):
+        limpiar(); exportar(pieza())
+    for nombre, opciones in (("TiendaDeLaAldea_Pescado", dict(toldo="ToldoRojo", teja="TejaTurquesa", zocalo="Zocalo", genero="Pescado")),
+                             ("TiendaDeLaAldea_Fruta", dict(toldo="ToldoAmarillo", teja="TejaCoral", zocalo="ZocaloCoral", genero="Flor")),
+                             ("TiendaDeLaAldea_Aparejos", dict(toldo="ToldoVerde", teja="TejaAzul", zocalo="ZocaloTurquesa", genero="Cuerda"))):
+        limpiar(); exportar(tienda(nombre, **opciones))
+
+    for nombre, opciones in VARIANTES_DEL_PUEBLO:
+        limpiar(); exportar(casa_del_pueblo(nombre, **opciones))
+    for pieza in (granero, pozo, arco_del_pueblo, arco_de_la_aldea, escalones, puente_colgante, mirador_de_cumbre, sala_de_cueva, cortina_de_hiedra, grieta, entrada_de_templo):
+        limpiar(); exportar(pieza())
+    for nombre, radio, semilla in (("RepisaDeRoca_Grande", 5.5, 1), ("RepisaDeRoca_Mediana", 3.8, 2), ("RepisaDeRoca_Pequena", 2.4, 3)):
+        limpiar(); exportar(repisa(nombre, radio, semilla))
+    limpiar(); exportar(tunel("TunelDeRoca", 8.0))
+    limpiar(); exportar(tunel_escalonado())
+    limpiar(); exportar(tunel("BocaDeCueva", 5.0, boca=True, semilla=2))
+    limpiar(); exportar(puente_colgante("PuenteColgante_Largo", 16.0))
 
 if FOTOS:
     limpiar()
@@ -1354,3 +1811,22 @@ if "piezas" in ARGS:
     rellano("XRellano").location = (44, -5, -1.4); mirador("XMirador").location = (52, -5, -1.4)
     tienda("XT1").location = (44, 5, -1.4); tienda("XT2", "ToldoAmarillo", "TejaCoral", "ZocaloCoral", "Flor").location = (51, 5, -1.4)
     foto(os.path.join(OUT, "piezas.png"), (28, -44, 16), (28, 2, 4), "Barro", 26)
+
+if "fotos_montana" in ARGS:
+    limpiar()
+    x = 0.0
+    for nombre, opciones in VARIANTES_DE_RISCO:
+        casa_de_risco("F" + nombre, **opciones).location = (x, 0, 0); x += opciones["ancho"] + 2.0
+    campanario("FCapilla").location = (x + 3, 2, 0)
+    bancal("FBancal", 13.0, 9.0).location = (6, -14, 0)
+    casa_de_risco("FCasaBancal", 5.6, 5.0, 2).location = (6, -14, 0)
+    presa("FPresa").location = (-12, 6, 0)
+    refugio("FRefugio").location = (x + 12, -8, 0)
+    hito_del_camino("FHito").location = (-2, -12, 0)
+    mojon("FMojon").location = (0, -13, 0)
+    noria("FNoria").location = (x + 12, 6, 0)
+    t = tramo_de_castillete("FTramo"); t.location = (x + 22, 4, 0)
+    cabria("FCabria").location = (x + 22, 4, 10)
+    jaula("FJaula").location = (x + 22, 4, 0.5)
+    poste_de_llamada("FPoste").location = (x + 17, -3, 0)
+    foto(os.path.join(OUT, "montana.png"), (20, -58, 20), (18, 0, 4), "Hierba", 26)

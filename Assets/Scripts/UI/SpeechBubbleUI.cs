@@ -158,7 +158,7 @@ public class SpeechBubbleUI : MonoBehaviour
     // Offset por llamada, para cuando el punto de anclaje ya está a la altura que toca (una marca
     // de posición colocada a mano, en vez de la cabeza de un personaje) y sumar el offset de
     // siempre lo dejaría demasiado alto. Null = usar '_worldOffset' de siempre, sin cambiar nada
-    // del comportamiento existente. Ver SayBeat.overrideBubbleOffset (17 sep 2026).
+    // del comportamiento existente. Ver SayBeat.overrideBubbleOffset.
     Vector3? _offsetOverride;
 
     // Oculto temporalmente porque hay un menú (pausa, equipo, tienda...) abierto encima.

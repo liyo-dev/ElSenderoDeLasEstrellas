@@ -10,7 +10,7 @@ using UnityEngine;
 /// animación de casteo ya existente), pero en vez de instanciarse en la mano y volar, este
 /// prefab se instancia directamente en el punto de impacto calculado por
 /// MagicProjectileSpawner.SpawnZoneNow() — "sale de la mano pero se materializa al instante como
-/// zona", que es el pedido de diseño original (30 ago 2026).
+/// zona", que es el pedido de diseño original.
 ///
 /// No requiere Collider: usa Physics.OverlapSphereNonAlloc en vez de triggers físicos, mismo
 /// criterio que la rama AOE de MagicProjectile.ResolveHit(), para no depender de que los

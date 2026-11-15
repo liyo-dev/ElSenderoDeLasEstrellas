@@ -30,7 +30,7 @@ using Unity.AI.Navigation;
 ///    recién añadido, antes del siguiente pase de clasificación) se queda con el obstáculo para
 ///    siempre aunque ya no tenga sentido.
 ///
-///    1c) EXCLUSIÓN DE INTERACTUABLES (12 sept 2026): además de Floor/Player/NavMeshAgent/UI/
+///    1c) EXCLUSIÓN DE INTERACTUABLES: además de Floor/Player/NavMeshAgent/UI/
 ///    Terrain, se excluye cualquier GameObject con el componente `Interactable` (recogibles como
 ///    `Goods_Interactable`, cofres, hogueras, la Carta...). Estos objetos llevan Collider sólido
 ///    para el raycast de interacción, pero no son geometría fija del mundo — algunos, además, se
@@ -508,7 +508,7 @@ public static class NavMeshAutoSetup
         if (go.GetComponentInParent<Canvas>() != null) return true; // UI
         if (go.GetComponent<Terrain>() != null) return true; // el propio terreno (su collider ya está excluido por layer normalmente, doble seguro)
 
-        // FIX (12 sept 2026): objetos interactuables (cajas recogibles, cofres, cartas, hogueras...)
+        // objetos interactuables (cajas recogibles, cofres, cartas, hogueras...)
         // llevan Collider sólido para poder recibir el raycast de interacción/recogida, pero NO son
         // geometría estática del mundo — algunos incluso se recogen y se cargan pegados al jugador
         // (ver PlayerCarrySystem.AttachObject: desactiva los Colliders pero nunca tocaba este

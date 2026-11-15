@@ -174,22 +174,22 @@ public enum ComboButton
 }
 
 // Player / Actions
-/// <summary>Modos de acción globales del sistema de personajes.</summary>
+/// <summary>Modos de acción globales del sistema de personajes. Los números van fijos porque se
+/// guardan en prefabs y escenas (el 8 era escalar, retirado).</summary>
 public enum ActionMode
 {
-    Default,
-    Carrying,
-    Casting,
-    Cinematic,
-    Inventory,
-    Stunned,
-    Swimming,
-    Flying,
-    Climbing,
-    Combat,
-    Minigame,
-    UsingWorldPoint,
-    Boating
+    Default = 0,
+    Carrying = 1,
+    Casting = 2,
+    Cinematic = 3,
+    Inventory = 4,
+    Stunned = 5,
+    Swimming = 6,
+    Flying = 7,
+    Combat = 9,
+    Minigame = 10,
+    UsingWorldPoint = 11,
+    Boating = 12
 }
 
 /// <summary>Habilidades básicas que puede usar el jugador.</summary>
@@ -204,8 +204,7 @@ public enum PlayerAbility
     Interact,
     Carry,
     Aim,
-    Fly,
-    Climb
+    Fly
 }
 
 // Interactable / Session

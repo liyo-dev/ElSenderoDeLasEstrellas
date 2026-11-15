@@ -14,13 +14,13 @@ using Game.NPC;
 /// y ANTES del paso de escolta que mueve al grupo hacia el castillo.
 /// Añadir al GameObject de Eldran.
 ///
-/// INC-114 (27 ago 2026): Eldran también se reposiciona aquí mismo al anchor `OutSideKingdom` —
+/// INC-114: Eldran también se reposiciona aquí mismo al anchor `OutSideKingdom` —
 /// el mismo punto donde la novela lo sitúa esperando cuando el trío sale del castillo, Cap. XIII:
 /// "Eldran los esperaba fuera, y en cuanto los vio, no pudo evitar soltar una risa cargada de
 /// alivio". Antes de este fix, ese reposicionamiento lo hacía un paso legacy de
 /// `NPC_InteractiveNarrative_Config_Eldran.asset` (Move+disappear) disparado mucho más tarde, al
 /// arrancar la Misión 13 (justo tras hablar con el rey) — con un corte de cámara real
-/// (`DialogueCameraController.FocusOnNPC` + bloqueo de input) que enseñaba a Eldran caminando
+/// (enfoque de cámara + bloqueo de input) que enseñaba a Eldran caminando
 /// desde su posición ANTERIOR. Eso tenía sentido cuando Eldran seguía cerca del grupo hasta ese
 /// punto, pero con este mismo fix (Eldran se separa mucho antes, en la escena del guardia) ese
 /// corte de cámara pasaría a enseñar a Eldran caminando desde un sitio arbitrario/lejano justo al

@@ -152,7 +152,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
 
     /// <summary>Zona del cielo (dirección de centro + radio angular en grados) que
     /// <c>NightSkyStarSpawner</c> debe evitar al colocar polvo de fondo, para no "pisar" ninguna
-    /// estrella guía ni línea de una constelación — ver comentario de clase (25 ago 2026).</summary>
+    /// estrella guía ni línea de una constelación — ver comentario de clase.</summary>
     public struct SkyExclusionZone
     {
         public Vector3 direction;
@@ -415,7 +415,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
         renderer.sharedMaterial = _starMaterial;
-        // FIX (25 ago 2026) — INC-101, "mirando de frente a una constelación se borran algunas
+        // FIX — INC-101, "mirando de frente a una constelación se borran algunas
         // estrellas guía, girando la cámara reaparecen": cada estrella guía vive en el MISMO punto
         // exacto que el extremo de línea que la conecta (ver SpawnLine, misma expresión
         // direction * _activeRadius) — ambos materiales son Sprites/Default (transparente,
@@ -460,7 +460,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
         lr.numCapVertices = 2;
         lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         lr.receiveShadows = false;
-        // FIX (25 ago 2026) — INC-101: sortingOrder explícito (por debajo del de las estrellas guía,
+        // FIX — INC-101: sortingOrder explícito (por debajo del de las estrellas guía,
         // ver SpawnBeaconStar) para que nunca gane el desempate de orden transparente en los puntos
         // donde una línea comparte posición exacta con una estrella guía.
         lr.sortingOrder = 0;

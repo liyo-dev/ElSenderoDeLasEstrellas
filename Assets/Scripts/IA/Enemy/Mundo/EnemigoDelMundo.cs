@@ -161,8 +161,7 @@ public abstract class EnemigoDelMundo : MonoBehaviour
     protected bool Danar(Transform quien, float dano)
     {
         if (quien == null || dano <= 0f) return false;
-        var jugador = quien.GetComponentInParent<PlayerHealthSystem>();
-        if (jugador != null) return jugador.TakeDamage(dano);
+        if (ControlDelJugador.DelJugador(quien, out PlayerHealthSystem jugador)) return jugador.TakeDamage(dano);
         var vida = quien.GetComponentInParent<Damageable>();
         if (vida != null && vida.IsAlive)
         {
@@ -182,8 +181,7 @@ public abstract class EnemigoDelMundo : MonoBehaviour
     protected static void Empujar(Transform quien, Vector3 direccion, float fuerza)
     {
         if (quien == null) return;
-        var jugador = quien.GetComponentInParent<PlayerHealthSystem>();
-        if (jugador != null) jugador.Empujar(direccion, fuerza);
+        if (ControlDelJugador.DelJugador(quien, out PlayerHealthSystem jugador)) jugador.Empujar(direccion, fuerza);
     }
 
     // ── Animación, efectos y sonido ──────────────────────────────────────

@@ -48,8 +48,12 @@ namespace NarrativeGraphEditor.Story
             foot.Add(_status);
             Add(foot);
 
-            schedule.Execute(RefreshPlay).Every(300);
+            // El botón cambia al entrar o salir de Play: se escucha ese momento en vez de mirar cada poco.
+            RegisterCallback<AttachToPanelEvent>(_ => { EditorApplication.playModeStateChanged -= OnPlayModeChanged; EditorApplication.playModeStateChanged += OnPlayModeChanged; RefreshPlay(); });
+            RegisterCallback<DetachFromPanelEvent>(_ => EditorApplication.playModeStateChanged -= OnPlayModeChanged);
         }
+
+        void OnPlayModeChanged(PlayModeStateChange _) => RefreshPlay();
 
         public void SetStatus(string text) => _status.text = text ?? string.Empty;
 
@@ -200,31 +204,46 @@ namespace NarrativeGraphEditor.Story
                 edit.AddToClassList("story-button");
                 row.Add(edit);
             }
-            var create = new Button(() => CreateTestPlayer(sheet, current, null))
+            Button create = null;
+            create = new Button(() => ShowNewTestPlayerMenu(sheet, create))
             {
-                text = StoryText.T("Nuevo…", "New…"),
-                tooltip = StoryText.T("Crea un jugador de prueba (sin cambios: marca en él lo que quieras cambiar).", "Creates a test player (no changes: tick in it what you want to change)."),
+                text = StoryText.T("Nuevo ▾", "New ▾"),
+                tooltip = StoryText.T("Crea un jugador de prueba: vacío (marca en él lo que quieras cambiar), uno de los que prepara el juego o, en Play, como va la partida.",
+                                      "Creates a test player: empty (tick in it what you want to change), one the game prepares or, in Play, as the game is going."),
             };
             create.AddToClassList("story-button");
             row.Add(create);
-            var live = EditorApplication.isPlaying ? NarrativeEditorExtensions.CreateFirst<INarrativePlayerLive>() : null;
-            if (live != null)
-            {
-                var take = new Button(() => CreateTestPlayer(sheet, live.CaptureLive(), sheet.fields.Where(f => f != sheet.positionField)))
-                {
-                    text = StoryText.T("Desde la partida", "From the game"),
-                    tooltip = StoryText.T("Crea un jugador de prueba con cómo va el jugador ahora mismo.", "Creates a test player with how the player is right now."),
-                };
-                take.AddToClassList("story-button");
-                row.Add(take);
-            }
             box.Add(row);
         }
 
-        void CreateTestPlayer(NarrativePlayerSheet sheet, UnityEngine.Object from, IEnumerable<string> fields)
+        void ShowNewTestPlayerMenu(NarrativePlayerSheet sheet, VisualElement anchor)
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(new GUIContent(StoryText.T("Vacío", "Empty")), false, () => CreateTestPlayer(sheet, null, null));
+            foreach (var preset in NarrativeEditorExtensions.CreateAll<INarrativeTestPlayerPreset>())
+            {
+                var p = preset;
+                menu.AddItem(new GUIContent(p.Name), false, () =>
+                {
+                    var data = p.Build(sheet);
+                    CreateTestPlayer(sheet, data, p.Fields, p.Name);
+                    if (data != null && !EditorUtility.IsPersistent(data)) UnityEngine.Object.DestroyImmediate(data);
+                });
+            }
+            var live = EditorApplication.isPlaying ? NarrativeEditorExtensions.CreateFirst<INarrativePlayerLive>() : null;
+            if (live != null)
+            {
+                menu.AddSeparator(string.Empty);
+                menu.AddItem(new GUIContent(StoryText.T("Como va la partida", "As the game is going")), false,
+                    () => CreateTestPlayer(sheet, live.CaptureLive(), sheet.fields.Where(f => f != sheet.positionField)));
+            }
+            menu.DropDown(anchor.worldBound);
+        }
+
+        void CreateTestPlayer(NarrativePlayerSheet sheet, UnityEngine.Object from, IEnumerable<string> fields, string name = null)
         {
             if (from != null && from.GetType() != sheet.DataType) { SetStatus(StoryText.T("El juego no ha dado los datos del jugador.", "The game gave no player data.")); return; }
-            var player = TestPlayers.Create(StoryText.T("Jugador de prueba", "Test player"), from, fields);
+            var player = TestPlayers.Create(name ?? StoryText.T("Jugador de prueba", "Test player"), from, fields);
             TestPlayers.Selected = player;
             Selection.activeObject = player;
             EditorGUIUtility.PingObject(player);

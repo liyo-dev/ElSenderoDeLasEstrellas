@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // ───────────────────────────────────────────────────────────────────────────
-// CONGELADO (12 sept 2026) — uno de los 7 micro-componentes de quest legacy.
+// CONGELADO — uno de los 7 micro-componentes de quest legacy.
 // Sustituto: BranchQuestStateNode del grafo decidiendo, + el propio grafo
 // desactivando el GO (hoy no hay nodo directo "desactivar GO por condición" —
 // se resuelve con ActivateGameObjectNode, pero ese está Obsolete; de momento

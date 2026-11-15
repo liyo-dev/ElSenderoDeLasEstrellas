@@ -27,6 +27,13 @@ public static class SueloYAguaDeDibujo
         ("Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.mat", "Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.asset"),
     };
 
+    /// Capa del terreno con la que se pintan las paredes (toda superficie muy empinada); ver
+    /// CuantoDePared en TerrenoDeDibujo.hlsl. Un terreno sin esta capa se queda sin paredes de roca.
+    private const string CapaDePared = "Capa2"; // roca de talud
+    /// Inclinación (grados) desde la que el terreno se pinta de roca. Por debajo, las orillas de los ríos y los
+    /// taludes de 40–50° quedaban de tierra con el borde en dientes.
+    private const float InclinacionDePared = 40f;
+
     /// De qué es el agua: decide sus colores de dibujo. «Propia» conserva los que tenga (sirope…).
     private enum Tono { Mar, Dulce, Propia }
 
@@ -63,6 +70,58 @@ public static class SueloYAguaDeDibujo
     [Serializable]
     private sealed class Registro { public List<Entrada> materiales = new List<Entrada>(); }
 
+    /// Mapas de capas que lee el borde de pincel del terreno (4 capas por mapa).
+    private const int MapasDeCapasDelShader = 6;
+
+    [MenuItem("El Sendero/Aspecto de dibujo/Terreno: poner los mapas de capas y las paredes de roca en el material")]
+    public static void PonerMapasDeCapasEnLosTerrenos()
+    {
+        int puestos = 0;
+        foreach (var (ruta, rutaDeDatos) in Terrenos)
+        {
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            var datos = AssetDatabase.LoadAssetAtPath<TerrainData>(rutaDeDatos);
+            if (mat == null || datos == null) continue;
+            PonerMapasDeCapas(mat, datos);
+            PonerParedes(mat, datos);
+            EditorUtility.SetDirty(mat);
+            puestos++;
+        }
+        AssetDatabase.SaveAssets();
+        Debug.Log($"[SueloYAguaDeDibujo] Mapas de capas y paredes de roca puestos en {puestos} materiales de terreno.");
+    }
+
+    /// Pone en el material la capa con la que se pintan las paredes (textura, tamaño y tono).
+    private static void PonerParedes(Material mat, TerrainData datos)
+    {
+        var capa = datos != null ? System.Array.Find(datos.terrainLayers, c => c != null && c.name == CapaDePared) : null;
+        if (capa == null || capa.diffuseTexture == null)
+        {
+            mat.SetFloat("_ParedActiva", 0f);
+            Debug.LogWarning($"[SueloYAguaDeDibujo] {(datos != null ? datos.name : "?")} no tiene la capa «{CapaDePared}»: sin paredes de roca.");
+            return;
+        }
+        mat.SetTexture("_TexturaDePared", capa.diffuseTexture);
+        mat.SetFloat("_TamanoDePared", Mathf.Max(0.5f, capa.tileSize.x));
+        mat.SetColor("_ColorDePared", capa.diffuseRemapMax);
+        mat.SetFloat("_InclinacionDePared", InclinacionDePared);
+        mat.SetFloat("_ParedActiva", 1f);
+    }
+
+    /// Pone en el material todos los mapas de capas del terreno y cuántos son, para que cada pasada
+    /// del shader cuente las capas de todas las demás.
+    private static void PonerMapasDeCapas(Material mat, TerrainData datos)
+    {
+        var mapas = datos != null ? datos.alphamapTextures : null;
+        if (mapas == null || mapas.Length == 0) return;
+        if (mapas.Length > MapasDeCapasDelShader)
+            Debug.LogWarning($"[SueloYAguaDeDibujo] {datos.name} tiene {datos.terrainLayers.Length} capas ({mapas.Length} mapas); el shader solo cuenta {MapasDeCapasDelShader * 4}.");
+        int n = Mathf.Min(mapas.Length, MapasDeCapasDelShader);
+        for (int i = 0; i < MapasDeCapasDelShader; i++)
+            mat.SetTexture($"_ControlDeCapas{i}", i < n ? mapas[i] : null);
+        mat.SetFloat("_MapasDeCapas", n);
+    }
+
     [MenuItem("El Sendero/Aspecto de dibujo/Terreno y agua: pasar al dibujo")]
     public static void Pasar()
     {
@@ -89,11 +148,8 @@ public static class SueloYAguaDeDibujo
             }
             var datos = AssetDatabase.LoadAssetAtPath<TerrainData>(rutaDeDatos);
             var mapas = datos != null ? datos.alphamapTextures : null;
-            if (mapas != null && mapas.Length >= 2)
-            {
-                mat.SetTexture("_ControlDeCapas0", mapas[0]);
-                mat.SetTexture("_ControlDeCapas1", mapas[1]);
-            }
+            PonerMapasDeCapas(mat, datos);
+            PonerParedes(mat, datos);
             EditorUtility.SetDirty(mat);
             pasados++;
         }

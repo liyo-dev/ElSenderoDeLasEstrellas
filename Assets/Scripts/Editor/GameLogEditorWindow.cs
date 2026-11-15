@@ -7,24 +7,24 @@ using UnityEngine;
 
 /// <summary>
 /// Ventana para controlar el filtrado de logs por tag en tiempo de ejecución.
-/// Menú: El Sendero > GameLog > Ventana de Logs
+/// Menú: El Sendero > Proyecto > Registro de logs > Ventana
 /// </summary>
 public class GameLogEditorWindow : EditorWindow
 {
     private Vector2 _scroll;
     private string  _filter = "";
 
-    [MenuItem("El Sendero/GameLog/Ventana de Logs %#l")]
+    [MenuItem("El Sendero/Proyecto/Registro de logs/Ventana %#l")]
     static void Open() => GetWindow<GameLogEditorWindow>("GameLog").Show();
 
-    [MenuItem("El Sendero/GameLog/Silenciar todo _F9")]
+    [MenuItem("El Sendero/Proyecto/Registro de logs/Silenciar todo _F9")]
     static void DisableAll()
     {
         GameLog.DisableAll();
         Debug.Log("[GameLog] Todos los tags DESACTIVADOS");
     }
 
-    [MenuItem("El Sendero/GameLog/Activar todo _F10")]
+    [MenuItem("El Sendero/Proyecto/Registro de logs/Activar todo _F10")]
     static void EnableAll()
     {
         GameLog.EnableAll();

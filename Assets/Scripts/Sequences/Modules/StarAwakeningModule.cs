@@ -280,7 +280,7 @@ public class StarAwakeningModule : SequenceModule
     /// Will devuelve el golpe con su sistema de magia real, y los dos proyectiles chocan.
     /// Resuelve el lanzador de hechizos de Will.
     ///
-    /// FIX (17 sep 2026): este campo llevaba VACÍO desde siempre — también en el sequencer viejo,
+    /// este campo llevaba VACÍO desde siempre — también en el sequencer viejo,
     /// según avisó el montaje —, y vacío significa que el contraataque de Will NO EXISTE: la
     /// animación de lanzar se reproduce, pero no sale ningún hechizo, la espera de colisión agota
     /// sus 3 segundos y el proyectil enemigo acaba alcanzando a Will, que se come 10 de daño en

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Will_SalidaDelPueblo
+  spawnAnchorId: Bedroom
   level: 1
   maxHP: 100
   currentHP: 100
@@ -24,10 +24,38 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 0100000002000000i
-  basicSpellIds: 0100000002000000i
+  unlockedSpells: 0100000002000000040000001a000000i
+  basicSpellIds: 01000000i
   companionBasics: []
-  companionHealth: []
+  companionHealth:
+  - personaje: 0
+    maxHP: 0
+    currentHP: 0
+    maxMP: 0
+    currentMP: 0
+    ataque: 0
+    defensa: 0
+    habilidadesAprendidas:
+      swim: 0
+      jump: 0
+      magic: 1
+      fly: 0
+      sprint: 0
+      shield: 0
+  - personaje: 2
+    maxHP: 0
+    currentHP: 0
+    maxMP: 0
+    currentMP: 0
+    ataque: 0
+    defensa: 0
+    habilidadesAprendidas:
+      swim: 0
+      jump: 0
+      magic: 1
+      fly: 0
+      sprint: 0
+      shield: 0
   flags:
   - QUEST_ACTIVE:WILL_MISSION0
   - QUEST_COMPLETED:WILL_MISSION0
@@ -43,31 +71,12 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION3
   - NARRATIVE_FLAG:CAP2_INICIADO
   - QUEST_ACTIVE:PREPARA_VIAJE
-  - NARRATIVE_FLAG:GRIMORIO_RECIBIDO
-  - QUEST_COMPLETED:PREPARA_VIAJE
-  - QUEST_STEP_DONE:PREPARA_VIAJE:0
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
-  - QUEST_STEP_DONE:PREPARA_VIAJE:1
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
-  - QUEST_STEP_DONE:PREPARA_VIAJE:2
-  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
-  - NARRATIVE_FLAG:@actor:NPC_Boticaria=pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-  - NARRATIVE_FLAG:@actor:NPC_Eldran=pieza-npc_eldran-fromhere-cap-23-espera-en-la-salida-del-pueblo-cap2-adios-senal
-  - NARRATIVE_FLAG:@actor:NPC_Erika=pieza-npc_erika-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-  - NARRATIVE_FLAG:@actor:NPC_Tomasa=pieza-npc_tomasa-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-  - NARRATIVE_FLAG:@actor:NPC_Oliver=pieza-npc_oliver-fromhere-cap-2-tras-despedirse-de-will-cap2-adios-senal
-  - NARRATIVE_FLAG:@actor:NPC_Victoria=pieza-npc_victoria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-  - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
-  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
-  - NARRATIVE_FLAG:CAP2_COMPLETADO
-  - NARRATIVE_FLAG:CAP3_INICIADO
   abilities:
-    swim: 0
-    jump: 0
-    climb: 0
+    swim: 1
+    jump: 1
     magic: 1
-    fly: 0
-    sprint: 0
+    fly: 1
+    sprint: 1
     shield: 1
   appearance:
   - category: 2
@@ -81,14 +90,76 @@ MonoBehaviour:
   - category: 0
     partName: Body23_Aventurero
   unlockedWardrobeIds:
+  - AC01_Heart
+  - AC02_Leaf
+  - AC03_BlackGlass
+  - AC03_HeavyMetalGlass
+  - AC03_NerdGlass
+  - AC03_NightVision
+  - AC04_AngelEars
+  - AC04_AnthenaEars
+  - AC04_BunnyEars
+  - AC04_ShortEars
+  - AC05_Horn01
+  - AC05_Horn02
+  - AC05_Horn03
+  - AC05_Horn04
+  - AC06_Crown01
+  - AC06_Crown02
+  - AC06_Crown03
+  - AC07_PiratePatch
+  - AC08_NinjaMask01
+  - AC08_NinjaMask02
+  - AC08_NinjaMask03
+  - AC08_NinjaMask04
+  - AC08_NinjaMask05
+  - AC08_NinjaMask06
+  - AC08_NinjaMask07
+  - AC08_NinjaMask08
+  - AC09_Ribbon
+  - AC10_Mustache01
+  - AC10_Mustache02
+  - AC10_Mustache03
+  - AC10_Mustache04
+  - AC10_Mustache05
+  - AC10_Mustache06
+  - AC11_Mustache01
+  - AC11_Mustache02
+  - AC11_Mustache03
+  - AC11_Mustache04
+  - AC11_Mustache05
+  - AC11_Mustache06
+  - Body01
+  - Body02
+  - Body03
+  - Body04
   - Body05
+  - Body06
+  - Body07
+  - Body08
+  - Body09
+  - Body10
+  - Body11
+  - Body12
+  - Body13
+  - Body14
+  - Body15
+  - Body16
+  - Body17
+  - Body18
+  - Body19
+  - Body20
+  - Body23_Aventurero
+  - Body24_AventureroChaqueta
+  - Cloak01
   - Cloak02
+  - Cloak03
   inventoryItems:
   - itemId: coin
     count: 1
-  - itemId: trozo_del_aro
+  - itemId: estrella_torcida
     count: 1
-  - itemId: pocionHP
+  - itemId: trozo_del_aro
     count: 1
   defeatedBossIds:
   - Demon_1
@@ -101,19 +172,11 @@ MonoBehaviour:
     - key: __flowEnded
       type: bool
       value: 1
-  - graphLabel: Cap2
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
   - graphLabel: Cap3
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap3-adios-hablar
+      value: cap2-prepara-viaje-fork
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
@@ -140,14 +203,6 @@ MonoBehaviour:
   - LIAM_CRYSTAL_DONE
   - MANANA_DESPUES_START
   - MANANA_DESPUES_DONE
-  - NPC_INTERACT_NPC_Victoria
-  - NPC_INTERACT_NPC_Boticaria
-  - NPC_INTERACT_NPC_Erika
-  - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
-  - ERIKA_ENTRENAMIENTO_DERROTADA
-  - CAP2_A_DESPEDIRSE
-  - NPC_INTERACT_NPC_Oliver
-  - CH_Cap2_BACK_1
   npcPositions:
   - npcId: Eldran
     position: {x: 0.6200002, y: 26.301186, z: -130.90999}

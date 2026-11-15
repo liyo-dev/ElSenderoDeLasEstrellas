@@ -27,7 +27,7 @@ public static class CapturaDeEscenario
     public static string CarpetaDeGuiones
         => Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Guiones");
 
-    [MenuItem("El Sendero/Guion/1. Capturar el escenario del prólogo", priority = 1)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/1. Capturar el escenario del prólogo", priority = 1)]
     public static void MenuPrologo() => Capturar("Prologo_Valle");
 
     /// Carpeta de un escenario: la escena, o «escena_zona» si es un trozo de una escena grande.

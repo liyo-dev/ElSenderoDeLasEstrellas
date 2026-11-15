@@ -38,7 +38,7 @@ namespace ElSendero.Editor.Rendimiento
         private const string OutputDir = "Assets/Settings";
         private const string OutputPath = OutputDir + "/ElSendero.shadervariants";
 
-        [MenuItem("El Sendero/Rendimiento/Generar Shader Variant Collection (desde Materiales)")]
+        [MenuItem("El Sendero/Proyecto/Build: generar la colección de variantes de shader")]
         public static void Generate()
         {
             var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>(OutputPath);

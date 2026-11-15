@@ -108,6 +108,7 @@ namespace Sendero.UI
             PlayerParty.OnPartyChanged += OnPartyChanged;
             PartyControlManager.OnActiveCharacterChanged += OnActiveCharacterChanged;
             PartyControlManager.OnFollowModeChanged += OnFollowModeChanged;
+            PartyControlManager.OnParejaChanged += OnParejaChanged;
             if (estado != null)
             {
                 estado.Golpeado += AlGolpear;
@@ -123,6 +124,7 @@ namespace Sendero.UI
             PlayerParty.OnPartyChanged -= OnPartyChanged;
             PartyControlManager.OnActiveCharacterChanged -= OnActiveCharacterChanged;
             PartyControlManager.OnFollowModeChanged -= OnFollowModeChanged;
+            PartyControlManager.OnParejaChanged -= OnParejaChanged;
             if (estado != null)
             {
                 estado.Golpeado -= AlGolpear;
@@ -175,6 +177,8 @@ namespace Sendero.UI
 
         private void OnPartyChanged(IReadOnlyList<NPCPartyMember> members) => Recolocar(true);
         private void OnActiveCharacterChanged(int newIndex) => Recolocar(true);
+        // Con pareja («Sígueme») el seguidor no se elige con la cruceta: cambian las pistas.
+        private void OnParejaChanged() => Recolocar(true);
 
         private void OnFollowModeChanged(bool isFollowing)
         {
@@ -204,6 +208,12 @@ namespace Sendero.UI
             _trioMostrado = estado != null && estado.TrioListo && Presentes() == 3;
             PonerTrio(false);
             UpdateFollowText(following);
+        }
+
+        private bool SeLePuedePasarElMando(PartyControlManager pcm, int activo, int slot)
+        {
+            if (slot < 0 || !_presente[slot]) return false;
+            return pcm == null || pcm.SlotVecino(activo, -1) == slot || pcm.SlotVecino(activo, 1) == slot;
         }
 
         private void Recolocar(bool animar)
@@ -239,8 +249,10 @@ namespace Sendero.UI
             }
             var central = Retrato(activo);
             if (central != null) central.transform.SetAsLastSibling();
-            MostrarPista(_pistaIzquierda, izquierda >= 0 && _presente[izquierda]);
-            MostrarPista(_pistaDerecha, derecha >= 0 && _presente[derecha]);
+            // La pista de la cruceta solo junto a quien se puede elegir (el seguidor de una pareja
+            // sale en su retrato, pero no se le pasa el mando).
+            MostrarPista(_pistaIzquierda, SeLePuedePasarElMando(pcm, activo, izquierda));
+            MostrarPista(_pistaDerecha, SeLePuedePasarElMando(pcm, activo, derecha));
 
             if (activo != _activoMostrado)
             {

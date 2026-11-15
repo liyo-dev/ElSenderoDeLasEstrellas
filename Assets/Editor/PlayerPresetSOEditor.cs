@@ -295,9 +295,9 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
             return;
         }
         
-        // ✅ CRÍTICO: Actualizar el runtimePreset con el estado ACTUAL de todos los sistemas
+        // CRÍTICO: Actualizar el runtimePreset con el estado ACTUAL de todos los sistemas
         // Esto captura las quests, inventario, wardrobe, etc. desde los managers vivos
-        Debug.Log("[PlayerPresetSOEditor] 🔄 Actualizando runtimePreset desde el estado actual...");
+        Debug.Log("[PlayerPresetSOEditor] Actualizando runtimePreset desde el estado actual...");
         Partida.VolcarEstadoDelJuego();
         
         var activePreset = Partida.Preset;
@@ -309,14 +309,14 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         
         // Log de debug para verificar que las quests se capturaron
         var questFlags = activePreset.flags?.Where(f => f.StartsWith("QUEST_")).ToList() ?? new List<string>();
-        Debug.Log($"[PlayerPresetSOEditor] 📋 Flags de quests capturados: {questFlags.Count}");
+        Debug.Log($"[PlayerPresetSOEditor] Flags de quests capturados: {questFlags.Count}");
         if (questFlags.Count > 0)
         {
             Debug.Log($"[PlayerPresetSOEditor] Quest flags: {string.Join(", ", questFlags)}");
         }
         else
         {
-            Debug.LogWarning("[PlayerPresetSOEditor] ⚠️ No se capturaron flags de quests. ¿Hay quests activas o completadas?");
+            Debug.LogWarning("[PlayerPresetSOEditor] No se capturaron flags de quests. ¿Hay quests activas o completadas?");
         }
         
         // Pedir nombre para el nuevo preset
@@ -357,7 +357,7 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         int stepsDone = questFlagsInPreset.Count(f => f.StartsWith("QUEST_STEP_DONE:"));
         
         // Log detallado de datos capturados
-        Debug.Log($"[PlayerPresetSOEditor] 📸 Datos capturados del preset:");
+        Debug.Log($"[PlayerPresetSOEditor] Datos capturados del preset:");
         Debug.Log($"  • Apariencia: {newPreset.appearance?.Count ?? 0} partes");
         if (newPreset.appearance != null && newPreset.appearance.Count > 0)
         {
@@ -401,23 +401,23 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         
         EditorUtility.DisplayDialog("Preset de Test Creado", summary, "OK");
         
-        Debug.Log($"[PlayerPresetSOEditor] ✅ Preset de test creado: {newName}");
-        Debug.Log($"[PlayerPresetSOEditor] 📋 Quests: {activeQuests} activas, {completedQuests} completadas, {stepsDone} steps");
+        Debug.Log($"[PlayerPresetSOEditor] Preset de test creado: {newName}");
+        Debug.Log($"[PlayerPresetSOEditor] Quests: {activeQuests} activas, {completedQuests} completadas, {stepsDone} steps");
         
         // Log de blackboards narrativos
         if (newPreset.narrativeBlackboards != null && newPreset.narrativeBlackboards.Count > 0)
         {
-            Debug.Log($"[PlayerPresetSOEditor] 📖 Narrativas capturadas: {newPreset.narrativeBlackboards.Count} grafos");
+            Debug.Log($"[PlayerPresetSOEditor] Narrativas capturadas: {newPreset.narrativeBlackboards.Count} grafos");
             foreach (var bb in newPreset.narrativeBlackboards)
             {
                 var currentNodeEntry = bb.blackboardData?.FirstOrDefault(e => e.key == "__currentNodeGuid");
                 var hasCurrentNode = currentNodeEntry != null && !string.IsNullOrEmpty(currentNodeEntry.value);
-                Debug.Log($"[PlayerPresetSOEditor]   • Grafo '{bb.graphLabel}': {bb.blackboardData?.Count ?? 0} entradas, __currentNodeGuid: {(hasCurrentNode ? "✅ SÍ" : "❌ NO")}");
+                Debug.Log($"[PlayerPresetSOEditor]   • Grafo '{bb.graphLabel}': {bb.blackboardData?.Count ?? 0} entradas, __currentNodeGuid: {(hasCurrentNode ? "SÍ" : "NO")}");
             }
         }
         else
         {
-            Debug.LogWarning("[PlayerPresetSOEditor] ⚠️ No se capturaron blackboards narrativos");
+            Debug.LogWarning("[PlayerPresetSOEditor] No se capturaron blackboards narrativos");
         }
     }
     
@@ -447,7 +447,7 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         }
         
         // Actualizar el runtimePreset con el estado actual
-        Debug.Log("[PlayerPresetSOEditor] 🔄 Actualizando runtimePreset desde el estado actual...");
+        Debug.Log("[PlayerPresetSOEditor] Actualizando runtimePreset desde el estado actual...");
         Partida.VolcarEstadoDelJuego();
         
         var activePreset = Partida.Preset;
@@ -474,11 +474,11 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
                 if (currentNodeEntry != null && !string.IsNullOrEmpty(currentNodeEntry.value))
                 {
                     blackboardsWithNode++;
-                    Debug.Log($"[PlayerPresetSOEditor] ✅ Grafo '{bb.graphLabel}': __currentNodeGuid = {currentNodeEntry.value.Substring(0, System.Math.Min(8, currentNodeEntry.value.Length))}...");
+                    Debug.Log($"[PlayerPresetSOEditor] Grafo '{bb.graphLabel}': __currentNodeGuid = {currentNodeEntry.value.Substring(0, System.Math.Min(8, currentNodeEntry.value.Length))}...");
                 }
                 else
                 {
-                    Debug.LogWarning($"[PlayerPresetSOEditor] ⚠️ Grafo '{bb.graphLabel}': NO tiene __currentNodeGuid");
+                    Debug.LogWarning($"[PlayerPresetSOEditor] Grafo '{bb.graphLabel}': NO tiene __currentNodeGuid");
                 }
             }
         }
@@ -502,7 +502,7 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         
         EditorUtility.DisplayDialog("Preset Actualizado", summary, "OK");
         
-        Debug.Log($"[PlayerPresetSOEditor] ✅ Preset '{preset.name}' actualizado con {blackboardsWithNode}/{blackboardCount} grafos con posición guardada");
+        Debug.Log($"[PlayerPresetSOEditor] Preset '{preset.name}' actualizado con {blackboardsWithNode}/{blackboardCount} grafos con posición guardada");
     }
     
     private void CopyPresetData(PlayerPresetSO source, PlayerPresetSO destination)
@@ -530,7 +530,6 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         {
             swim = source.abilities.swim,
             jump = source.abilities.jump,
-            climb = source.abilities.climb,
             fly = source.abilities.fly,
             magic = source.abilities.magic
         };

@@ -14,9 +14,8 @@ namespace Sendero.UI
     /// <see cref="EstudioDeRetratos"/>; gira con el stick derecho) y a la derecha lo que hay en el
     /// armario para ese hueco, con su descripción. Al pasar por una prenda se la prueba la copia;
     /// A se la pone de verdad, X la quita.
-    /// La ropa se pone en el cuerpo de ese personaje: si va al mando, se guarda en la partida como
-    /// siempre (<see cref="PlayerPresetService.SnapshotAppearanceToPreset"/>); si no, en el
-    /// registro de apariencias del grupo.
+    /// La ropa se pone en el cuerpo de ese personaje y pasa al registro de apariencias del grupo; la
+    /// de Will se guarda además en la partida.
     /// </summary>
     public sealed class VistaDeEquipoDelMenu : IVistaDelMenuDeStart
     {
@@ -387,22 +386,11 @@ namespace Sendero.UI
             if (cuerpo == null) return;
             var cat = CategoriaActual;
             cuerpo.SetByName(cat, pieza);
-            if (Personaje == ControlDelJugador.Activo)
-            {
-                if (PlayerService.TryGetComponent<PlayerPresetService>(out var pps, includeInactive: true, allowSceneLookup: true) && pps != null)
-                {
-                    pps.SnapshotAppearanceToPreset();
-                    pps.ApplyCurrentPreset(includeInventory: false, includeAbilities: false);
-                }
-            }
-            else
-            {
-                var registro = CharacterAppearanceRegistry.Instance;
-                registro?.UpdatePart(Personaje, cat, pieza);
-                // La ropa de Will se guarda en la partida aunque no vaya al mando.
-                if (Personaje == Slot.Will && registro != null && GameBootService.IsAvailable && GameBootService.Profile != null)
-                    Partida.Preset.appearance = registro.GetAppearanceAsList(Slot.Will);
-            }
+            // Lo que lleva su cuerpo pasa a ser su ropa; la de Will se guarda además en la partida.
+            var registro = CharacterAppearanceRegistry.Instance;
+            registro?.CaptureCurrentAppearance(Personaje);
+            if (Personaje == Slot.Will && registro != null && GameBootService.IsAvailable && GameBootService.Profile != null)
+                Partida.Preset.appearance = registro.GetAppearanceAsList(Slot.Will);
             EstudioDeRetratos.Activo?.QuitarPruebas(Personaje);
             EntradaDelMenu.Sonido("UI_Submit");
             Pintar();

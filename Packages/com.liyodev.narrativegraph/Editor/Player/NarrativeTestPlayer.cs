@@ -27,6 +27,9 @@ namespace NarrativeGraphEditor
                 .Select(g => AssetDatabase.LoadAssetAtPath<NarrativeTestPlayer>(AssetDatabase.GUIDToAssetPath(g)))
                 .Where(p => p != null).OrderBy(p => p.name).ToList());
 
+        /// Ha cambiado el jugador de prueba elegido (para quien lo enseña sin consultarlo cada poco).
+        public static event System.Action SelectionChanged;
+
         /// El que se usa al probar, o null: el jugador sale de la historia.
         public static NarrativeTestPlayer Selected
         {
@@ -39,6 +42,7 @@ namespace NarrativeGraphEditor
             {
                 EditorPrefs.SetString(Key, value != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(value)) : string.Empty);
                 Story.StoryCache.Invalidate();
+                SelectionChanged?.Invoke();
             }
         }
 
@@ -47,8 +51,9 @@ namespace NarrativeGraphEditor
         public static NarrativeTestPlayer Create(string name, Object from, IEnumerable<string> fields)
         {
             var sheet = NarrativePlayerSheet.Find();
-            var root = sheet != null ? Path.GetDirectoryName(AssetDatabase.GetAssetPath(sheet)) : "Assets";
-            var folder = $"{root}/{FolderName}".Replace('\\', '/');
+            // AssetDatabase solo acepta rutas con «/»; Path.GetDirectoryName devuelve «\» en Windows.
+            var root = sheet != null ? Path.GetDirectoryName(AssetDatabase.GetAssetPath(sheet)).Replace('\\', '/') : "Assets";
+            var folder = $"{root}/{FolderName}";
             if (!AssetDatabase.IsValidFolder(folder)) AssetDatabase.CreateFolder(root, FolderName);
             var player = ScriptableObject.CreateInstance<NarrativeTestPlayer>();
             if (from != null && fields != null) NarrativePlayerValuesEditor.Set(player.values, from, fields);

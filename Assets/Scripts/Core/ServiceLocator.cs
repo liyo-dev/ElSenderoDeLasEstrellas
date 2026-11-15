@@ -114,13 +114,7 @@ public static class ServiceLocator
     /// </summary>
     public static IReadOnlyList<T> GetAll<T>(bool includeInactive = true) where T : UnityEngine.Object
     {
-#if UNITY_2022_3_OR_NEWER
         var results = UnityEngine.Object.FindObjectsByType<T>(includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude);
-#else
-#pragma warning disable 618
-        var results = UnityEngine.Object.FindObjectsOfType<T>(includeInactive);
-#pragma warning restore 618
-#endif
         return results ?? Array.Empty<T>();
     }
 }

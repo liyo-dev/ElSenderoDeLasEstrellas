@@ -15,7 +15,7 @@ public static class CollidersConEscalaNegativa
 {
     private const string Titulo = "Colliders con escala negativa";
 
-    [MenuItem("El Sendero/Escenario/Colliders con escala negativa: arreglar en las escenas abiertas")]
+    [MenuItem("El Sendero/Mundo/Colliders con escala negativa: arreglar en las escenas abiertas")]
     public static void Arreglar()
     {
         var informe = new StringBuilder();

@@ -12,7 +12,7 @@ namespace EasyTransition
 
         private bool runningTransition;
 
-        // FIX (14 sep 2026): referencia a la instancia de Transition (overlay visual) actualmente
+        // referencia a la instancia de Transition (overlay visual) actualmente
         // en juego, para poder forzar su cierre desde fuera si queda huérfana — ver
         // ForceCompleteCurrentTransition() y Transition.ForceComplete() más abajo.
         private Transition currentTransition;
@@ -24,7 +24,7 @@ namespace EasyTransition
         private static TransitionManager instance;
         private static bool duplicateWarningShown;
 
-        // FIX (auditoría 2026-08-11): Instance() logueaba LogError cada vez que 'instance' era
+        // Instance() logueaba LogError cada vez que 'instance' era
         // null, sin distinguir un uso indebido real (llamar antes de que Awake() haya corrido) de
         // un cierre normal del juego / salida de Play Mode. TransitionManager es DontDestroyOnLoad
         // y se destruye junto con el resto de la escena al cerrar; el orden de destrucción entre
@@ -206,7 +206,7 @@ namespace EasyTransition
             return SceneManager.GetSceneByName(sceneName).buildIndex;
         }
 
-        // FIX Bajos (auditoría 2026-08-07): las tres corrutinas Timer solo ponían
+        // FIX Bajos: las tres corrutinas Timer solo ponían
         // runningTransition = false al final del bloque "feliz". Si cualquier suscriptor de
         // onTransitionBegin/onTransitionCutPointReached/onTransitionEnd lanzaba una excepción sin
         // capturar, Unity aborta la corrutina en ese punto — el código de después (incluido el

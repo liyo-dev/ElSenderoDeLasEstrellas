@@ -31,7 +31,7 @@ namespace Game.NPC.States
         private const float WORK_CHECK_INTERVAL = 0.5f;
         private NPCWorkRoute _rutaDeTrabajo;
 
-        // ✅ FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
+        // FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
         // (cada 0.2s por NPC parado). Mismo patrón que AlertState (FIX #10). La mayoría de NPCs
         // ambiente no tiene NPCTeamMember, así que el GetComponent fallaba constantemente y
         // aparecía como GC.Alloc en el profiler (NPCBehaviourManagerV2.Update -> CheckPlayerDetection).
@@ -73,7 +73,7 @@ namespace Game.NPC.States
             _socialScanTimer = 0f;
             _workCheckTimer = 0f;
             _rutaDeTrabajo = null;
-            _teamMember = context.Transform.GetComponent<NPCTeamMember>(); // ✅ FIX rendimiento: una vez por entrada al estado
+            _teamMember = context.Transform.GetComponent<NPCTeamMember>(); // FIX rendimiento: una vez por entrada al estado
         }
 
         public override void OnExit(NPCStateContext context)
@@ -91,26 +91,26 @@ namespace Game.NPC.States
             
             _idleTimer += Time.deltaTime;
             
-            // ✅ FIX CRÍTICO: Asegurar que el NavMeshAgent permanezca detenido
+            // FIX CRÍTICO: Asegurar que el NavMeshAgent permanezca detenido
             // Esto previene que paths residuales o velocidad acumulada cause movimiento
             if (context.Agent != null && context.Agent.enabled && context.Agent.isOnNavMesh)
             {
-                // ⚠️ DETENCIÓN MUY AGRESIVA: Forzar cada frame
+                // DETENCIÓN MUY AGRESIVA: Forzar cada frame
                 if (!context.Agent.isStopped)
                 {
-                    context.Log("[IdleState] ⚠️ Agent NO ESTABA DETENIDO - forzando detención");
+                    context.Log("[IdleState] Agent NO ESTABA DETENIDO - forzando detención");
                     context.Agent.isStopped = true;
                 }
                 
                 if (context.Agent.hasPath)
                 {
-                    context.Log("[IdleState] ⚠️ Agent TIENE PATH ACTIVO - reseteando");
+                    context.Log("[IdleState] Agent TIENE PATH ACTIVO - reseteando");
                     context.Agent.ResetPath();
                 }
                 
                 if (context.Agent.velocity.sqrMagnitude > 0.01f)
                 {
-                    context.Log($"[IdleState] ⚠️ Agent TIENE VELOCIDAD ({context.Agent.velocity.magnitude:F1}) - limpiando");
+                    context.Log($"[IdleState] Agent TIENE VELOCIDAD ({context.Agent.velocity.magnitude:F1}) - limpiando");
                     context.Agent.velocity = Vector3.zero;
                 }
             }
@@ -201,7 +201,7 @@ namespace Game.NPC.States
             if (context.WasDefeatedInCombat) return;
             if (context.Player == null) return;
 
-            var teamMember = _teamMember; // ✅ FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
+            var teamMember = _teamMember; // FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
 
             // Bloqueo global: si ya hay otro combate activo, este NPC no debe iniciar uno nuevo.
             // EXCEPCIÓN: si un compañero de MI equipo ya está en combate, no bloquear. Este es
@@ -216,7 +216,7 @@ namespace Game.NPC.States
                 && ActiveCombatRegistry.HasActiveCombatExcluding(context.Transform.gameObject))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                // 🔍 DIAGNÓSTICO (incidencia recurrente "no me detectan" - Lety/Vicky y otros):
+                // DIAGNÓSTICO (incidencia recurrente "no me detectan" - Lety/Vicky y otros):
                 // este early-return era totalmente silencioso, así que cada vez que el bloqueo
                 // global de combate (un solo combate activo a la vez, ver ActiveCombatRegistry)
                 // impedía la detección, no quedaba ningún rastro en consola de POR QUÉ. Log único
@@ -228,7 +228,7 @@ namespace Game.NPC.States
                     string blockerNames = blockers.Count > 0
                         ? string.Join(", ", blockers.ConvertAll(b => b != null ? b.name : "?"))
                         : "(ninguno con nombre resoluble - revisar CleanupDestroyedNPCs)";
-                    context.Log($"[IdleState] 🚫 '{context.Transform.name}' NO detecta al jugador: bloqueo global de combate activo. Ocupando el registro: {blockerNames}");
+                    context.Log($"[IdleState] '{context.Transform.name}' NO detecta al jugador: bloqueo global de combate activo. Ocupando el registro: {blockerNames}");
                 }
 #endif
                 return;
@@ -237,7 +237,7 @@ namespace Game.NPC.States
             _loggedCombatBlockThisIdle = false;
 #endif
 
-            // ✅ FIX: Si soy miembro de un equipo y ya notifiqué, no sigo detectando
+            // Si soy miembro de un equipo y ya notifiqué, no sigo detectando
             // Esto evita el bucle infinito de detección
             if (teamMember != null && teamMember.HasNotifiedTeam)
             {
@@ -287,9 +287,9 @@ namespace Game.NPC.States
             }
             
             // --- JUGADOR DETECTADO ---
-            context.Log($"[IdleState] 👁️ Jugador visto. ¡Alerta!");
+            context.Log($"[IdleState] Jugador visto. ¡Alerta!");
 
-            // ✅ TEAM SUPPORT: da igual cuál de los miembros detecte — solo notificar al equipo y
+            // TEAM SUPPORT: da igual cuál de los miembros detecte — solo notificar al equipo y
             // dejar que NPCCombatTeam.Co_DetectAndEngage gestione TODA la secuencia (parar+mirar,
             // diálogo una sola vez para el equipo, combate para todos a la vez). NO crear un
             // AlertState individual aquí: competía con NPCCombatTeam y dejaba a los miembros en

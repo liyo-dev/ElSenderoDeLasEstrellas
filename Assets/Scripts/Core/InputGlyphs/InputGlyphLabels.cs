@@ -4,7 +4,7 @@ namespace Core.InputGlyphs
     /// Texto corto ("A", "Espacio", "WASD"...) del botón/tecla que corresponde a cada nombre de
     /// <see cref="InputGlyphNames"/> en la familia de dispositivo activa. Es el equivalente en TEXTO
     /// de lo que <see cref="InputGlyphService.GetSprite(string)"/> ya hace con sprites — pensado para
-    /// frases tipo "Pulsa {BOTON} para continuar" en <c>TutorialPromptNode</c>, donde el LITERAL (no
+    /// frases tipo "Pulsa {BOTON} para continuar" en <c>PedirAvisoDeTutorial</c>, donde el LITERAL (no
     /// solo el icono) tiene que cambiar según el dispositivo conectado.
     ///
     /// Las etiquetas están escritas a mano a partir de los bindings reales de

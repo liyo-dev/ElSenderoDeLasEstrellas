@@ -19,7 +19,7 @@ namespace Sendero.Core.Feedback
             public CinemachineBrain Brain; // null si la camara de este shake no tiene Brain (p.ej. _stageCamera de cinematicas)
         }
 
-        // FIX M5 (auditoría 2026-08-07): antes cada shake capturaba pivot.localPosition como su
+        // antes cada shake capturaba pivot.localPosition como su
         // "posición original" en el momento de arrancar. Con dos shakes solapados sobre el mismo
         // pivot, el segundo capturaba una posición ya desplazada por el ruido del primero; al
         // terminar, cada uno restauraba a SU captura (incorrecta) en vez de a la pose real de
@@ -35,7 +35,7 @@ namespace Sendero.Core.Feedback
         private readonly List<ActiveShake> _active = new List<ActiveShake>();
         private readonly Dictionary<Transform, PivotState> _pivotStates = new Dictionary<Transform, PivotState>();
 
-        // FIX (1 sep 2026): recuento de referencias de Brains pausados mientras dura un shake -
+        // recuento de referencias de Brains pausados mientras dura un shake -
         // ver comentario en Shake() para el porque.
         private readonly Dictionary<CinemachineBrain, int> _brainRefCounts = new Dictionary<CinemachineBrain, int>();
 
@@ -57,7 +57,7 @@ namespace Sendero.Core.Feedback
             }
             state.RefCount++;
 
-            // FIX (1 sep 2026): si la camara tiene un CinemachineBrain activo (el caso normal en
+            // si la camara tiene un CinemachineBrain activo (el caso normal en
             // gameplay, donde Camera.main sigue al vcam de juego via PlayerBattleModeController/
             // el resto del rig de Cinemachine), el Brain reescribe camT.position/rotation en cada
             // LateUpdate con el blend del vcam activo - cancelando en el mismo frame cualquier
@@ -139,7 +139,7 @@ namespace Sendero.Core.Feedback
             }
         }
 
-        // FIX (1 sep 2026): ver comentario en Shake(). Pausa el Brain la primera vez que se le
+        // ver comentario en Shake(). Pausa el Brain la primera vez que se le
         // pide un shake y lo reactiva solo cuando el ultimo shake que lo necesitaba termina -
         // mismo patron de recuento que PivotState/ReleasePivot de mas arriba.
         private void AcquireBrain(CinemachineBrain brain)

@@ -34,7 +34,7 @@ public static class PruebaDeLaHistoria
     private static readonly string[] Actores =
     {
         "_ESTELA", "_LIAM", "NPC_Posadero", "NPC_Lucia", "NPC_Sargento", "NPC_GuardiaCruce1", "NPC_GuardiaCruce2",
-        "NPC_Contrabandista1", "NPC_Contrabandista2", "NPC_ContrabandistaJefe", "NPC_Eldran", "NPC_Oliver",
+        "NPC_Contrabandista1", "NPC_Contrabandista2", "NPC_Eldran", "NPC_Oliver",
     };
 
     [MenuItem("El Sendero/Historia/Prueba: ejecutar prueba.txt")]

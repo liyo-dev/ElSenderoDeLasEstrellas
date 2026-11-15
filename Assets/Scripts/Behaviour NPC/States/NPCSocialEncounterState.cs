@@ -58,7 +58,7 @@ namespace Game.NPC.States
             // Diagnóstico siempre visible: confirma si el encuentro realmente se dispara y con
             // qué gesto, para distinguir "el encuentro no se activó" de "se activó pero la
             // animación no se ve" (ver también el warning en NPCSimpleAnimator.PlaySocialGesture).
-            Debug.Log($"[Social] 🗣️ {context.Transform.name} ↔ {_partner?.name ?? "?"} — " +
+            Debug.Log($"[Social] {context.Transform.name} ↔ {_partner?.name ?? "?"} — " +
                 $"encuentro iniciado (relación: {_relation}, duración: {_duration:F1}s, gesto: {openingGesture})");
 #endif
 

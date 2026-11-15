@@ -17,7 +17,7 @@ public class LoadScene : MonoBehaviour
 
     [Header("Audio")]
     [Tooltip("Si true, suprime el arranque automático de música de la escena destino. " +
-             "Úsalo cuando esa escena tiene un DramaticTextNode que restaura la música al terminar.")]
+             "Úsalo cuando esa escena tiene un PedirTextoDramatico que restaura la música al terminar.")]
     public bool suppressNextSceneMusic = false;
 
     void Start()

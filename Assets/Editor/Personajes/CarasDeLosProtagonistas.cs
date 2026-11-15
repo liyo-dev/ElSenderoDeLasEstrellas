@@ -39,7 +39,7 @@ public static class CarasDeLosProtagonistas
     static readonly Juego[] Juegos =
     {
         new Juego { Personaje = Slot.Will, Nombre = "Will", Ojos = 30, Bocas = 20, BocaDeReposo = 7,
-                    Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_WILL_NPC.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" } },
+                    Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" } },
         new Juego { Personaje = Slot.Liam, Nombre = "Liam", Ojos = 20, Bocas = 20,
                     Modelos = new[] { "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab" } },
         new Juego { Personaje = Slot.Estela, Nombre = "Estela", Ojos = 40, Bocas = 40, Llorar = 12, BocaDeReposo = 7,
@@ -48,7 +48,7 @@ public static class CarasDeLosProtagonistas
 
     static readonly string[] TodosLosModelos =
     {
-        "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_WILL_NPC.prefab", "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/_ESTELA.prefab",
+        "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/_ESTELA.prefab",
         "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab",
         "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab",
     };

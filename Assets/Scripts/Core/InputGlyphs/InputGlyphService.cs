@@ -13,8 +13,7 @@ namespace Core.InputGlyphs
     /// (Xbox / PlayStation / Switch / Teclado&amp;Ratón) y expone los sprites de botón correctos
     /// para esa familia. Las imágenes en sí NO se generan por código en tiempo de ejecución — son
     /// archivos PNG reales en <c>Assets/Resources/InputGlyphs/&lt;Familia&gt;/&lt;nombre&gt;.png</c>
-    /// (mismos nombres que <see cref="InputGlyphNames"/>), creados con la herramienta de Editor
-    /// <c>Tools/Input Glyphs/Generar Assets de Botones</c> (ver <c>Assets/Scripts/Editor/InputGlyphs</c>).
+    /// (mismos nombres que <see cref="InputGlyphNames"/>).
     /// Este servicio solo detecta qué familia usar y los carga con <see cref="Resources.Load"/>; si se
     /// quiere sustituir el arte de un botón basta con reemplazar su PNG en esa carpeta, no hace falta
     /// tocar ni una línea de este archivo.

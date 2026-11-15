@@ -21,7 +21,7 @@ public sealed class PasoInformeDeBatalla : IPasoDeCierre
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PasoInformeDeBatalla] No existe el prefab Resources/" + InformeDeVictoriaUI.RutaEnResources +
-                             ": ejecuta «El Sendero/UI/Crear o regenerar el informe de victoria».");
+                             ": ejecuta «El Sendero/Interfaz/Crear o regenerar el informe de victoria».");
 #endif
             yield break;
         }

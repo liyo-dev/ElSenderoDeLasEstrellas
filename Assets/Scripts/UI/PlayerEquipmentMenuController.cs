@@ -234,7 +234,8 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (!MenuManager.TryOpen(MenuKind.Equipment)) return;
         GamepadInputReader.PlayUISound("UI_Submit");
 
-        if (_actionManager == null) PlayerService.TryGetComponent(out _actionManager, includeInactive: true, allowSceneLookup: true);
+        // El modo se pone en el cuerpo que lleva el jugador al abrir y se quita del mismo al cerrar.
+        PlayerService.TryGetComponent(out _actionManager, includeInactive: true, allowSceneLookup: true);
         if (_actionManager != null)
         {
             _actionManager.PushMode(ActionMode.Inventory);

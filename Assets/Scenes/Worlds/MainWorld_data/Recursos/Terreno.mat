@@ -35,6 +35,22 @@ Material:
         m_Texture: {fileID: -1485732168719628281, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas2:
+        m_Texture: {fileID: -5123220698799838730, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas3:
+        m_Texture: {fileID: -6240807664372935800, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas4:
+        m_Texture: {fileID: -7332250566872948538, guid: 74c0be06beed43849b7a47394b739ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ControlDeCapas5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -91,22 +107,31 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TexturaDePared:
+        m_Texture: {fileID: 2800000, guid: 937d86b4db61d7247990c281a6e2c49e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _EnableHeightBlend: 0
     - _EnableInstancedPerPixelNormal: 1
     - _HeightTransition: 0
+    - _InclinacionDePared: 40
+    - _MapasDeCapas: 5
     - _Metallic0: 0
     - _Metallic1: 0
     - _Metallic2: 0
     - _Metallic3: 0
     - _NumLayersCount: 1
+    - _ParedActiva: 1
     - _Smoothness0: 0.5
     - _Smoothness1: 0.5
     - _Smoothness2: 0.5
     - _Smoothness3: 0.5
+    - _TamanoDePared: 12
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorDePared: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7105486364181691507

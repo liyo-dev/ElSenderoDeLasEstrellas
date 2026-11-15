@@ -28,11 +28,11 @@ namespace ElSendero.Editor.Iconos
         Vector2 desplazamientoResumen;
         string resumen = "";
 
-        [MenuItem("El Sendero/Herramientas/Iconos del armario desde 3D")]
+        [MenuItem("El Sendero/Interfaz/Iconos del armario/Abrir la ventana")]
         static void Abrir() => GetWindow<IconosDelArmarioWindow>("Iconos del armario");
 
         /// Fotografía solo las piezas que aún no tienen icono (ropa nueva), sin tocar las demás.
-        [MenuItem("El Sendero/Herramientas/Iconos del armario: generar los que faltan")]
+        [MenuItem("El Sendero/Interfaz/Iconos del armario/Generar los que faltan")]
         static void GenerarLosQueFaltan()
         {
             var ventana = CreateInstance<IconosDelArmarioWindow>();
@@ -46,7 +46,7 @@ namespace ElSendero.Editor.Iconos
         }
 
         /// Vuelve a fotografiar todas las piezas (p. ej. tras pasar los materiales al aspecto de dibujo).
-        [MenuItem("El Sendero/Herramientas/Iconos del armario: rehacer todos")]
+        [MenuItem("El Sendero/Interfaz/Iconos del armario/Rehacer todos")]
         static void RehacerTodos()
         {
             var ventana = CreateInstance<IconosDelArmarioWindow>();
@@ -62,7 +62,7 @@ namespace ElSendero.Editor.Iconos
         void OnEnable()
         {
             minSize = new Vector2(620f, 640f);
-            if (modelo == null) modelo = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_WILL_NPC.prefab");
+            if (modelo == null) modelo = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_WILL.prefab");
             if (otrosModelos == null || otrosModelos.Length == 0)
                 otrosModelos = new[]
                 {

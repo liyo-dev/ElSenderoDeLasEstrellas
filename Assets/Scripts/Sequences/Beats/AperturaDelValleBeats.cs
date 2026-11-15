@@ -1,0 +1,785 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.UI;
+
+// Apertura del prólogo (INC-1200, storyboard «nuevo inicio del prólogo» del 14 nov 2026):
+//   1. El Sendero: el Mago Oscuro pide su deseo ante el altar, el altar estalla en luz, nota un poder lejano y
+//      una estrella dorada crece hasta llenar la pantalla.               → DeseoEnElSenderoBeat
+//   2. El mapa del mundo en papel, con el punto del valle que late.     → MapaDeAperturaBeat
+//   3. Vuelo de cámara: del mar a la cascada, sube por el agua, sale el logo y llega al valle, donde
+//      empieza la grúa de siempre.                                      → VueloDeAperturaBeat
+// Los tres llevan su propia cámara de Cinemachine con la prioridad más alta (mandan sobre las del guion) y se
+// limpian solos al terminar o al saltar la escena. Pantallas de unión: un velo de color de papel que pasa de un
+// beat al siguiente (Velo).
+
+/// Velo a pantalla completa entre los beats de la apertura (se reutiliza de uno a otro).
+public static class VeloDeApertura
+{
+    static Canvas _lienzo;
+    static Image _velo;
+    public static readonly Color ColorPapel = new Color(1f, 0.93f, 0.76f, 1f);
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { _lienzo = null; _velo = null; }
+#endif
+
+    public static Image Velo
+    {
+        get
+        {
+            if (_velo != null) return _velo;
+            var go = new GameObject("_VeloDeApertura");
+            UnityEngine.Object.DontDestroyOnLoad(go);
+            _lienzo = go.AddComponent<Canvas>();
+            _lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
+            _lienzo.sortingOrder = 4900;
+            var img = new GameObject("Velo").AddComponent<Image>();
+            img.transform.SetParent(go.transform, false);
+            var rt = img.rectTransform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
+            img.raycastTarget = false;
+            img.color = new Color(1f, 1f, 1f, 0f);
+            _velo = img;
+            return _velo;
+        }
+    }
+
+    public static void Poner(Color c, float alfa) { var v = Velo; c.a = alfa; v.color = c; }
+
+    public static void Quitar()
+    {
+        if (_lienzo != null) UnityEngine.Object.Destroy(_lienzo.gameObject);
+        _lienzo = null; _velo = null;
+    }
+
+    public static CinemachineCamera CamaraPropia(string nombre, float fov)
+    {
+        var go = new GameObject(nombre);
+        var cam = go.AddComponent<CinemachineCamera>();
+        cam.Priority = 1000000;
+        var lente = cam.Lens;
+        lente.FieldOfView = fov;
+        lente.NearClipPlane = 0.1f;
+        lente.FarClipPlane = 3000f;
+        cam.Lens = lente;
+        return cam;
+    }
+
+    public static float Suave(float t) { t = Mathf.Clamp01(t); return t * t * (3f - 2f * t); }
+}
+
+/// 1. El deseo en el Sendero.
+[Serializable]
+public class DeseoEnElSenderoBeat : SequenceBeat
+{
+    [Tooltip("Plaza del altar del Sendero (prefab hecho por «Valle del prólogo: preparar la apertura»).")]
+    public GameObject escenario;
+    [Tooltip("Modelo del Mago Oscuro (solo se usa su malla y su Animator).")]
+    public GameObject mago;
+    [Tooltip("Dónde se monta el escenario (lejos del mundo, por encima de todo).")]
+    public Vector3 origen = new Vector3(0f, 1500f, 0f);
+    public string textoDeseo = "PROLOGO_DESEO";
+    public string textoPoder = "PROLOGO_DESEO_PODER";
+    public string textoPorFin = "PROLOGO_DESEO_PORFIN";
+    public string nombreDelMago = "Mago Oscuro";
+    public float segundos = 31.5f;
+
+    // Posiciones dentro del escenario (las del Sendero: el altar está en (0, 6, 656)).
+    static readonly Vector3 Altar = new Vector3(0f, 6f, 656f);
+    static readonly Vector3 PiesDelMago = new Vector3(0f, 6.05f, 649.5f);
+    static readonly Vector3 HaciaLaEstrella = new Vector3(-0.55f, -0.18f, -0.82f);
+    const float DistanciaDeLaEstrella = 90f;
+    static readonly Color FondoNegro = new Color(0.008f, 0.004f, 0.016f);
+
+    public override string Describe() => $"Apertura: el deseo en el Sendero ({segundos:F1}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var rutina = ctx.Player.StartCoroutine(Co(ctx));
+        ctx.Player.TrackBackgroundRoutine(rutina);
+    }
+
+    IEnumerator Co(SequenceContext ctx)
+    {
+        // Clave de villano de anime de los 90: solo se ve lo que brilla. Fondo negro (sin cielo ni mundo), el
+        // Sendero apagado salvo el halo del altar, el mago como silueta negra recortada contra ese halo y sus
+        // ojos violeta. En el estallido de luz el fondo se enciende un instante y la silueta salta a la vista.
+        var creados = new List<GameObject>();
+        var camara = Camera.main;
+        var fondoAntes = camara != null ? camara.clearFlags : CameraClearFlags.Skybox;
+        var colorAntes = camara != null ? camara.backgroundColor : Color.black;
+        var ciclo = DayNightCycle.Instance;
+        const string claveDeNiebla = "Deseo en el Sendero";
+        bool limpio = false;
+        void Limpiar()
+        {
+            if (limpio) return;
+            limpio = true;
+            foreach (var g in creados)
+            {
+                if (g == null) continue;
+                BrilloDeApertura.SoltarMaterial(g);
+                UnityEngine.Object.Destroy(g);
+            }
+            if (camara != null) { camara.clearFlags = fondoAntes; camara.backgroundColor = colorAntes; }
+            if (ciclo != null) ciclo.SoltarNiebla(claveDeNiebla);
+        }
+        ctx.Player.RegisterCleanup(Limpiar);
+        if (camara != null) { camara.clearFlags = CameraClearFlags.SolidColor; camara.backgroundColor = FondoNegro; }
+        // Sin niebla: en el negro, la del mundo agrisaría las estrellas lejanas.
+        if (ciclo != null) ciclo.PrestarNiebla(claveDeNiebla, 0f, FondoNegro, 1f);
+
+        GameObject set = escenario != null ? UnityEngine.Object.Instantiate(escenario, origen, Quaternion.identity) : new GameObject("_SenderoDeLaApertura");
+        creados.Add(set);
+        // Del escenario solo quedan los brillos del altar; el resto (suelo, plaza, camino, cielos) no se ve.
+        Vector3 altarMundo = origen + Altar;
+        foreach (var r in set.GetComponentsInChildren<Renderer>(true))
+        {
+            var sh = r.sharedMaterial != null ? r.sharedMaterial.shader : null;
+            Vector3 d = r.bounds.center - altarMundo; d.y = 0f;
+            r.enabled = sh != null && sh.name.Contains("LuzSimple") && d.magnitude < 6f;
+        }
+        foreach (var l in set.GetComponentsInChildren<Light>(true)) l.enabled = false;
+
+        // El mago: solo malla y Animator, de espaldas a cámara, mirando al altar.
+        Transform cuerpo = null;
+        Transform cabeza = null;
+        Animator animMago = null;
+        if (mago != null)
+        {
+            var m = UnityEngine.Object.Instantiate(mago, origen + PiesDelMago, Quaternion.LookRotation(Vector3.forward));
+            m.name = "_MagoDelDeseo";
+            foreach (var mb in m.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+            foreach (var c in m.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+            foreach (var a in m.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true)) a.enabled = false;
+            foreach (var rb in m.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
+            creados.Add(m);
+            cuerpo = m.transform;
+            animMago = m.GetComponentInChildren<Animator>();
+            if (animMago != null && animMago.isHuman) cabeza = animMago.GetBoneTransform(HumanBodyBones.Head);
+        }
+        var unlit = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Color");
+        if (cuerpo != null)
+        {
+            var negro = new Material(unlit) { color = new Color(0.012f, 0.008f, 0.02f) };
+            foreach (var r in cuerpo.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = r.sharedMaterials;
+                for (int k = 0; k < mats.Length; k++) mats[k] = negro;
+                r.sharedMaterials = mats;
+            }
+        }
+        var violeta = new Material(unlit) { color = new Color(0.78f, 0.55f, 1f) };
+        var ojoI = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        var ojoD = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        foreach (var o in new[] { ojoI, ojoD })
+        {
+            UnityEngine.Object.Destroy(o.GetComponent<Collider>());
+            o.GetComponent<Renderer>().sharedMaterial = violeta;
+            o.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            o.transform.localScale = new Vector3(0.05f, 0.022f, 0.02f);
+            creados.Add(o);
+        }
+        Vector3 ojos = origen + PiesDelMago + Vector3.up * 1.6f;
+        Vector3 altar = altarMundo + Vector3.up * 1.2f;
+
+        // Brillos: el halo del altar (núcleo cálido y resplandor violeta), su reflejo en el suelo (para que el
+        // mago tenga dónde pisar), el brillo de los ojos y unas estrellas tenues muy lejos.
+        var nucleo = BrilloDeApertura.Crear("_HaloDelAltar", altar, 2.4f, new Color(2.4f, 1.9f, 1.3f), creados);
+        var resplandor = BrilloDeApertura.Crear("_ResplandorDelAltar", altar, 7f, new Color(0.55f, 0.32f, 1.1f), creados);
+        var suelo = BrilloDeApertura.Crear("_ReflejoDelAltar", altarMundo + Vector3.up * 0.05f, 10f, new Color(0.32f, 0.2f, 0.5f), creados);
+        suelo.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+        var brilloI = BrilloDeApertura.Crear("_BrilloOjoI", ojos, 0.22f, new Color(1.1f, 0.6f, 1.8f), creados);
+        var brilloD = BrilloDeApertura.Crear("_BrilloOjoD", ojos, 0.22f, new Color(1.1f, 0.6f, 1.8f), creados);
+        var azar = new System.Random(16);
+        for (int i = 0; i < 70; i++)
+        {
+            var dir = new Vector3((float)azar.NextDouble() * 2f - 1f, 0.05f + (float)azar.NextDouble(), (float)azar.NextDouble() * 2f - 1f).normalized;
+            float tono = 0.25f + 0.35f * (float)azar.NextDouble();
+            var e = BrilloDeApertura.Crear("_EstrellaTenue", ojos + dir * (60f + 25f * (float)azar.NextDouble()),
+                0.35f + 0.5f * (float)azar.NextDouble(), new Color(0.6f * tono, 0.65f * tono, 1f * tono), creados);
+            e.transform.rotation = Quaternion.LookRotation(e.transform.position - ojos);
+        }
+
+        // La estrella lejana: un punto dorado que late (dentro del alcance de la cámara, que no ve más allá).
+        var estrella = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        estrella.name = "_EstrellaLejana";
+        UnityEngine.Object.Destroy(estrella.GetComponent<Collider>());
+        var rEst = estrella.GetComponent<Renderer>();
+        var matEst = new Material(unlit);
+        matEst.color = new Color(1f, 0.82f, 0.4f);
+        rEst.sharedMaterial = matEst;
+        rEst.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        Vector3 posEstrella = ojos + HaciaLaEstrella.normalized * DistanciaDeLaEstrella;
+        estrella.transform.position = posEstrella;
+        estrella.transform.localScale = Vector3.one * 0.01f;
+        creados.Add(estrella);
+        var brilloEstrella = BrilloDeApertura.Crear("_BrilloDeLaEstrella", posEstrella, 0.01f, new Color(2.2f, 1.6f, 0.6f), creados);
+
+        var cam = VeloDeApertura.CamaraPropia("_CamaraDelDeseo", 38f);
+        var lente = cam.Lens;
+        lente.FarClipPlane = DistanciaDeLaEstrella + 40f;
+        cam.Lens = lente;
+        creados.Add(cam.gameObject);
+        VeloDeApertura.Poner(Color.black, 1f);
+
+        // Línea de tiempo (s), con la música «El deseo del Mago Oscuro» encima:
+        //   0-6,5     de espaldas contra el halo, la silueta; sale del negro (0-2)
+        //   6,5-10    los ojos se abren en la oscuridad (muy cerca)
+        //   10-14,5   de frente: «Que ningún poder pueda destruirme» (10,6)
+        //   14,5-16,3 estalla el altar; desde abajo, abre los brazos y recibe el poder; «¡Por fin!» (16,2)
+        //   17,8-22   la carcajada (los ojos se entornan)
+        //   22-23,2   los ojos, de golpe muy abiertos: ha notado algo
+        //   23,2-27,5 de perfil; gira la cabeza (23,6), aparece la estrella (24), «…¿Y ese poder?» (24,4)
+        //   27,5-fin  por encima de su hombro, la estrella llena la pantalla; papel en el último 1,2 s
+        var deCara = new[] { nucleo, resplandor, brilloI, brilloD, brilloEstrella };
+        float t = 0f, fin = Mathf.Max(28f, segundos);
+        bool dicho1 = false, dicho2 = false, dicho3 = false, gestoPoder = false, gestoRisa = false, gestoNota = false;
+        var lenteBase = cam.Lens;
+        while (t < fin)
+        {
+            float dt = Time.deltaTime;
+            t += dt;
+            Vector3 posCam = cam.transform.position;
+
+            // Apertura de los ojos: cerrados al principio, se abren (6,5-7,6), se entornan al reír, se abren de golpe al notar algo.
+            float apertura = VeloDeApertura.Suave((t - 6.5f) / 1.1f);
+            if (t > 17.8f && t < 22f) apertura *= Mathf.Lerp(1f, 0.45f, VeloDeApertura.Suave((t - 17.8f) / 0.5f));
+            if (t >= 22f && t < 23.2f) apertura = Mathf.Lerp(1.5f, 1.2f, (t - 22f) / 1.2f);
+            if (cuerpo != null)
+            {
+                Vector3 c = cabeza != null ? cabeza.position : cuerpo.position + Vector3.up * 1.55f;
+                Vector3 fw = cuerpo.forward, der = cuerpo.right;
+                Vector3 pI = c + fw * 0.13f + Vector3.up * 0.03f - der * 0.045f;
+                Vector3 pD = c + fw * 0.13f + Vector3.up * 0.03f + der * 0.045f;
+                ojoI.transform.SetPositionAndRotation(pI, cuerpo.rotation);
+                ojoD.transform.SetPositionAndRotation(pD, cuerpo.rotation);
+                var escalaOjo = new Vector3(0.05f, Mathf.Max(0.001f, 0.022f * apertura), 0.02f);
+                ojoI.transform.localScale = escalaOjo;
+                ojoD.transform.localScale = escalaOjo;
+                float brillo = (0.75f + 0.25f * Mathf.Sin(t * 3f)) * Mathf.Clamp01(apertura);
+                violeta.color = new Color(0.78f * brillo, 0.55f * brillo, 1f * brillo);
+                // El brillo de los ojos solo cuando se le ve la cara (de espaldas no se ven).
+                float deFrente = Mathf.Clamp01(Vector3.Dot(fw, (posCam - c).normalized) * 3f);
+                brilloI.transform.position = pI + fw * 0.02f;
+                brilloD.transform.position = pD + fw * 0.02f;
+                BrilloDeApertura.Intensidad(brilloI, brillo * deFrente);
+                BrilloDeApertura.Intensidad(brilloD, brillo * deFrente);
+            }
+
+            // El altar respira; en el estallido (14,5-16,3 s) se dispara y enciende el fondo un instante.
+            float estallido = t > 14.5f && t < 16.3f ? Mathf.Sin(Mathf.Clamp01((t - 14.5f) / 1.8f) * Mathf.PI) : 0f;
+            float respira = 0.8f + 0.2f * Mathf.Sin(t * 1.7f);
+            BrilloDeApertura.Intensidad(nucleo, respira * (1f + 5f * estallido));
+            BrilloDeApertura.Intensidad(resplandor, respira * (1f + 3f * estallido));
+            resplandor.transform.localScale = Vector3.one * 7f * (1f + 1.5f * estallido);
+            BrilloDeApertura.Intensidad(suelo, respira * (1f + 2f * estallido));
+            if (camara != null) camara.backgroundColor = Color.Lerp(FondoNegro, new Color(1f, 0.9f, 0.78f), estallido * estallido);
+            // Fundido de entrada desde negro.
+            if (t < 2f) VeloDeApertura.Poner(Color.black, 1f - VeloDeApertura.Suave(t / 2f));
+
+            float fov = lenteBase.FieldOfView;
+            if (t < 6.5f)
+            {
+                // De espaldas y bajo: la silueta recortada contra el halo del altar, acercándose despacio.
+                float f = VeloDeApertura.Suave(t / 6.5f);
+                Vector3 desde = Vector3.Lerp(origen + PiesDelMago + new Vector3(0.9f, 0.7f, -6.2f), origen + PiesDelMago + new Vector3(0.5f, 0.95f, -3.6f), f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(altar - desde));
+            }
+            else if (t < 10f)
+            {
+                // Los ojos, muy cerca: se abren en la oscuridad.
+                float f = VeloDeApertura.Suave((t - 6.5f) / 3.5f);
+                Vector3 desde = ojos + new Vector3(0.05f, 0.03f, Mathf.Lerp(0.95f, 0.75f, f));
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.up * 0.03f - desde));
+                fov = 18f;
+            }
+            else if (t < 14.5f)
+            {
+                // De frente y cerca: pide el deseo.
+                float f = VeloDeApertura.Suave((t - 10f) / 4.5f);
+                Vector3 desde = ojos + new Vector3(0.28f, 0.02f, Mathf.Lerp(1.5f, 1.15f, f));
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos - desde));
+                if (!dicho1 && t > 10.6f)
+                {
+                    dicho1 = true;
+                    PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoDeseo), 3.4f,
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                }
+            }
+            else if (t < 17.8f)
+            {
+                // Desde abajo: abre los brazos y recibe el poder. «¡Por fin!»
+                float f = VeloDeApertura.Suave((t - 14.5f) / 3.3f);
+                Vector3 desde = ojos + new Vector3(Mathf.Lerp(-1.2f, -0.9f, f), -1.35f, Mathf.Lerp(2.9f, 2.4f, f));
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.down * 0.3f - desde));
+                fov = 44f;
+                if (!gestoPoder) { gestoPoder = true; Gesto(animMago, "Conjuro_Abrirse"); }
+                if (!dicho2 && t > 16.2f)
+                {
+                    dicho2 = true;
+                    PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPorFin), 1.8f,
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                }
+            }
+            else if (t < 22f)
+            {
+                // La carcajada: de tres cuartos, la cámara se le acerca despacio.
+                float f = VeloDeApertura.Suave((t - 17.8f) / 4.2f);
+                Vector3 desde = ojos + new Vector3(Mathf.Lerp(1.1f, 0.8f, f), -0.15f, Mathf.Lerp(2.3f, 1.7f, f));
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.down * 0.2f - desde));
+                if (!gestoRisa) { gestoRisa = true; Gesto(animMago, "Laugh_Carcajada"); }
+            }
+            else if (t < 23.2f)
+            {
+                // Los ojos otra vez, de golpe muy abiertos: ha notado algo.
+                Vector3 desde = ojos + new Vector3(0.05f, 0.03f, 0.8f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos + Vector3.up * 0.03f - desde));
+                fov = 18f;
+                if (!gestoNota) { gestoNota = true; Gesto(animMago, "SenseSomethingStart_NoWeapon", 0.12f); }
+            }
+            else if (t < fin - 4f)
+            {
+                // Primer plano de perfil; gira la cabeza hacia la estrella.
+                Vector3 desde = ojos + new Vector3(-1.4f, 0.1f, 2.1f);
+                cam.transform.SetPositionAndRotation(desde, Quaternion.LookRotation(ojos - desde));
+                float giro = VeloDeApertura.Suave((t - 23.6f) / 0.7f);
+                if (cuerpo != null) cuerpo.rotation = Quaternion.Slerp(Quaternion.LookRotation(Vector3.forward),
+                    Quaternion.LookRotation(new Vector3(HaciaLaEstrella.x, 0f, HaciaLaEstrella.z)), giro * 0.75f);
+                float aparece = VeloDeApertura.Suave((t - 24f) / 0.6f);
+                estrella.transform.localScale = Vector3.one * (0.7f + 0.2f * Mathf.Sin(t * 6f)) * aparece;
+                brilloEstrella.transform.localScale = Vector3.one * 3.5f * aparece;
+                if (!dicho3 && t > 24.4f)
+                {
+                    dicho3 = true;
+                    PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoPoder), 2.8f,
+                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null);
+                }
+            }
+            else
+            {
+                // Por encima de su hombro, la estrella crece hasta llenar la pantalla.
+                float f = VeloDeApertura.Suave((t - (fin - 4f)) / 4f);
+                Vector3 desde = ojos - HaciaLaEstrella.normalized * 2.2f + Vector3.up * 0.4f;
+                Vector3 hacia = Vector3.Lerp(desde, posEstrella, f * 0.94f);
+                cam.transform.SetPositionAndRotation(hacia, Quaternion.LookRotation(posEstrella - hacia));
+                estrella.transform.localScale = Vector3.one * Mathf.Lerp(0.9f, 8f, f);
+                brilloEstrella.transform.localScale = Vector3.one * Mathf.Lerp(4f, 26f, f);
+                VeloDeApertura.Poner(VeloDeApertura.ColorPapel, VeloDeApertura.Suave((t - (fin - 1.2f)) / 1.2f));
+            }
+            if (!Mathf.Approximately(cam.Lens.FieldOfView, fov))
+            {
+                var lente2 = cam.Lens;
+                lente2.FieldOfView = fov;
+                cam.Lens = lente2;
+            }
+
+            // Los brillos (menos el reflejo del suelo y las estrellas tenues) miran siempre a la cámara.
+            posCam = cam.transform.position;
+            foreach (var b in deCara)
+                b.transform.rotation = Quaternion.LookRotation(b.transform.position - posCam);
+            yield return null;
+        }
+        VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 1f);
+        Limpiar();
+    }
+
+    /// Lanza un estado del Animator del mago (en la capa que lo tenga).
+    static void Gesto(Animator animator, string estado, float fundido = 0.25f)
+    {
+        if (animator == null) return;
+        int h = Animator.StringToHash(estado);
+        for (int capa = 0; capa < animator.layerCount; capa++)
+            if (animator.HasState(capa, h)) { animator.CrossFadeInFixedTime(h, fundido, capa); return; }
+    }
+}
+
+/// Brillos de la apertura: un cuadrado con un degradado redondo que suma luz (el halo del altar, los ojos, las
+/// estrellas). Se ven sobre el negro y los recoge el resplandor del postprocesado.
+public static class BrilloDeApertura
+{
+    static Texture2D s_textura;
+    static Mesh s_malla;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { s_textura = null; s_malla = null; }
+#endif
+
+    public static GameObject Crear(string nombre, Vector3 posicion, float tamano, Color color, List<GameObject> creados)
+    {
+        var go = new GameObject(nombre);
+        go.transform.position = posicion;
+        go.transform.localScale = Vector3.one * tamano;
+        go.AddComponent<MeshFilter>().sharedMesh = Malla();
+        var r = go.AddComponent<MeshRenderer>();
+        r.sharedMaterial = Material(color);
+        r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        r.receiveShadows = false;
+        creados?.Add(go);
+        return go;
+    }
+
+    /// Destruye el material propio del brillo (cada brillo lleva el suyo para poder latir por separado).
+    public static void SoltarMaterial(GameObject brillo)
+    {
+        var r = brillo.GetComponent<MeshRenderer>();
+        if (r != null && r.sharedMaterial != null && r.sharedMaterial.name == NombreDelMaterial)
+            UnityEngine.Object.Destroy(r.sharedMaterial);
+    }
+
+    /// Multiplica el color con el que se creó el brillo (0 = apagado).
+    public static void Intensidad(GameObject brillo, float k)
+    {
+        var r = brillo.GetComponent<MeshRenderer>();
+        if (r == null) return;
+        var m = r.sharedMaterial;
+        if (!m.HasProperty(ColorBase) || !m.HasProperty(ColorOriginal)) return;
+        m.SetColor(ColorBase, m.GetColor(ColorOriginal) * Mathf.Max(0f, k));
+    }
+
+    const string NombreDelMaterial = "BrilloDeApertura";
+    static readonly int ColorBase = Shader.PropertyToID("_BaseColor");
+    static readonly int ColorOriginal = Shader.PropertyToID("_EmissionColor");
+
+    static Material Material(Color color)
+    {
+        var sh = Shader.Find("Universal Render Pipeline/Particles/Unlit") ?? Shader.Find("Sprites/Default");
+        var m = new Material(sh) { name = NombreDelMaterial };
+        m.SetTexture("_BaseMap", Textura());
+        m.SetColor(ColorBase, color);
+        // El color de partida se guarda en una propiedad que este shader no usa sin su palabra clave.
+        m.SetColor(ColorOriginal, color);
+        m.SetFloat("_Surface", 1f);
+        m.SetFloat("_Blend", 2f);
+        m.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+        m.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
+        m.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
+        m.SetFloat("_ZWrite", 0f);
+        m.SetFloat("_Cull", 0f);
+        m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        return m;
+    }
+
+    static Texture2D Textura()
+    {
+        if (s_textura != null) return s_textura;
+        const int n = 128;
+        var tx = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, name = "BrilloDeApertura" };
+        var px = new Color32[n * n];
+        for (int y = 0; y < n; y++)
+            for (int x = 0; x < n; x++)
+            {
+                float dx = (x + 0.5f) / n * 2f - 1f, dy = (y + 0.5f) / n * 2f - 1f;
+                float a = Mathf.Pow(Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy)), 2.2f);
+                px[y * n + x] = new Color32(255, 255, 255, (byte)(a * 255f));
+            }
+        tx.SetPixels32(px);
+        tx.Apply(false, true);
+        return s_textura = tx;
+    }
+
+    static Mesh Malla()
+    {
+        if (s_malla != null) return s_malla;
+        var m = new Mesh { name = "BrilloDeApertura" };
+        m.vertices = new[] { new Vector3(-0.5f, -0.5f, 0f), new Vector3(0.5f, -0.5f, 0f), new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.5f, 0.5f, 0f) };
+        m.uv = new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) };
+        m.colors = new[] { Color.white, Color.white, Color.white, Color.white };
+        m.triangles = new[] { 0, 2, 1, 2, 3, 1 };
+        m.RecalculateBounds();
+        return s_malla = m;
+    }
+}
+
+/// 2. El mapa del mundo en papel crema, con el punto del valle que late.
+[Serializable]
+public class MapaDeAperturaBeat : SequenceBeat
+{
+    public Texture2D mapa;
+    [Tooltip("Dónde está el valle en el mapa (0–1, desde abajo a la izquierda).")]
+    public Vector2 puntoDelValle = new Vector2(0.39f, 0.274f);
+    public float segundos = 7f;
+
+    public override string Describe() => $"Apertura: el mapa del mundo ({segundos:F1}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var rutina = ctx.Player.StartCoroutine(Co(ctx));
+        ctx.Player.TrackBackgroundRoutine(rutina);
+    }
+
+    IEnumerator Co(SequenceContext ctx)
+    {
+        var raiz = new GameObject("_MapaDeApertura");
+        bool limpio = false;
+        void Limpiar() { if (limpio) return; limpio = true; if (raiz != null) UnityEngine.Object.Destroy(raiz); }
+        ctx.Player.RegisterCleanup(Limpiar);
+        var lienzo = raiz.AddComponent<Canvas>();
+        lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
+        lienzo.sortingOrder = 4800;
+        var fondo = new GameObject("Papel").AddComponent<Image>();
+        fondo.transform.SetParent(raiz.transform, false);
+        Estirar(fondo.rectTransform);
+        fondo.color = VeloDeApertura.ColorPapel;
+        var marco = new GameObject("Marco").AddComponent<RectTransform>();
+        marco.SetParent(raiz.transform, false);
+        Estirar(marco);
+        var img = new GameObject("Mapa").AddComponent<RawImage>();
+        img.transform.SetParent(marco, false);
+        img.texture = mapa;
+        var rt = img.rectTransform;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        float alto = Screen.height * 0.92f;
+        float ancho = mapa != null ? alto * mapa.width / Mathf.Max(1, mapa.height) : alto;
+        rt.sizeDelta = new Vector2(ancho, alto);
+        var punto = new GameObject("Valle").AddComponent<Image>();
+        punto.transform.SetParent(rt, false);
+        punto.color = new Color(1f, 0.7f, 0.25f, 1f);
+        var rp = punto.rectTransform;
+        rp.anchorMin = rp.anchorMax = puntoDelValle;
+        rp.sizeDelta = Vector2.one * (alto * 0.022f);
+        // El papel tapa el velo; el velo se suelta ya.
+        VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 0f);
+
+        float t = 0f;
+        Vector2 aCentro = new Vector2((0.5f - puntoDelValle.x) * ancho, (0.5f - puntoDelValle.y) * alto);
+        while (t < segundos)
+        {
+            t += Time.deltaTime;
+            // Primero el mapa entero, quieto; luego se acerca despacio al valle.
+            float f = VeloDeApertura.Suave((t - 1.8f) / (segundos - 1.8f));
+            float zoom = Mathf.Lerp(1f, 1.7f, f * f);
+            marco.localScale = Vector3.one * zoom;
+            marco.anchoredPosition = aCentro * zoom * f;
+            img.color = new Color(1f, 1f, 1f, VeloDeApertura.Suave(t / 0.8f));
+            float latido = 1f + 0.45f * Mathf.Abs(Mathf.Sin(t * 4.2f));
+            rp.localScale = Vector3.one * latido;
+            if (t > segundos - 0.8f) VeloDeApertura.Poner(VeloDeApertura.ColorPapel, VeloDeApertura.Suave((t - (segundos - 0.8f)) / 0.8f));
+            yield return null;
+        }
+        VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 1f);
+        Limpiar();
+    }
+
+    static void Estirar(RectTransform rt) { rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero; }
+}
+
+/// 3. El vuelo: del mar a la cascada, sube por el agua (sale el logo) y llega sobre la plaza del valle, donde
+/// empieza la grúa del guion.
+[Serializable]
+public class VueloDeAperturaBeat : SequenceBeat
+{
+    public Texture2D logo;
+    public float segundos = 35f;
+    [Tooltip("Nube del mar de nubes que atraviesa la cámara al bajar (Cloud3D). Vacío = sin nubes.")]
+    public GameObject nube;
+
+    // Luz de amanecer de cara a la cámara (contraluz dorado): el sol, bajo y hacia donde vuela.
+    const float RumboDelSol = 10f, ElevacionDelSol = 9f;
+    // Neblina con color en vez del gris del ciclo: malva lejos, más clara cuanto más alta va la cámara.
+    static readonly Color ColorDeLaNeblina = new Color(0.72f, 0.74f, 0.96f);
+    const string ClaveDeNiebla = "Vuelo de apertura";
+    // El mar de nubes: capa entre estas alturas; la cámara la cruza bajando (velo blanco al pasar).
+    const float NubesAbajo = 430f, NubesArriba = 540f;
+
+    // Recorrido (mundo de MainWorld): posición de la cámara y adónde mira. Acaba en la grúa del guion (cam_cielo,
+    // 10 m sobre la plaza, mirando al maestro).
+    // El mundo entero desde muy alto (es «el mapa»: el mundo de verdad, no un pergamino), luego baja
+    // hacia la costa suroeste, roza el mar, sube por la cascada y se posa en el valle.
+    static readonly Vector3[] Pos =
+    {
+        new Vector3(-215f, 880f, -770f), new Vector3(-212f, 830f, -735f), new Vector3(-220f, 380f, -740f),
+        new Vector3(-220f, 150f, -660f),
+        new Vector3(-168f, 34f, -585f), new Vector3(-160f, 20f, -500f), new Vector3(-153.5f, 7f, -446f),
+        new Vector3(-152.6f, 14f, -434f), new Vector3(-152.4f, 30f, -428.5f), new Vector3(-151.5f, 42f, -414f),
+        new Vector3(-155f, 47f, -392f), new Vector3(-166f, 45f, -372f), new Vector3(-170.4f, 44f, -366.5f),
+    };
+    static readonly Vector3[] Mira =
+    {
+        new Vector3(-55f, 0f, -75f), new Vector3(-55f, 0f, -110f), new Vector3(-150f, 30f, -420f),
+        new Vector3(-155f, 25f, -440f),
+        new Vector3(-152f, 20f, -425f), new Vector3(-152f, 16f, -425f), new Vector3(-152.4f, 14f, -423f),
+        new Vector3(-152.4f, 26f, -422f), new Vector3(-151f, 40f, -405f), new Vector3(-158f, 36f, -372f),
+        new Vector3(-166f, 34.5f, -364f), new Vector3(-166.8f, 34.6f, -362.7f), new Vector3(-166.8f, 34.6f, -362.7f),
+    };
+    // Tramo de la curva (en puntos) en el que se ve el logo: subiendo por la cascada.
+    const float LogoDesdePunto = 7.4f, LogoHastaPunto = 9.8f;
+
+    /// Tabla tiempo→s. La rapidez base sube con la altura (arriba planea, abajo no pasa todo de golpe) y
+    /// cada tramo lleva un factor ajustado para que el vuelo de 35 s quede así: 0-8 s el mundo entero
+    /// casi quieto, 8-18 s baja hasta el mar, 18-26 s roza el agua hasta el pie de la cascada,
+    /// 26-31 s sube por ella (con el logo) y 31-35 s se posa en el valle. Los factores se suavizan
+    /// medio tramo a cada lado para que la velocidad no pegue saltos en los puntos.
+    static readonly float[] FactorDelTramo =
+        { 0.049f, 1.562f, 1.520f, 3.208f, 3.189f, 2.085f, 0.770f, 1.275f, 0.647f, 0.866f, 1.742f, 0.417f };
+    static float[] s_tiempos;
+    const int Muestras = 2400;
+    static void PrepararTiempos()
+    {
+        if (s_tiempos != null) return;
+        int tramos = Pos.Length - 1;
+        var logF = new float[Muestras + 1];
+        for (int i = 0; i <= Muestras; i++)
+            logF[i] = Mathf.Log(FactorDelTramo[Mathf.Min(tramos - 1, (int)(i / (float)Muestras * tramos))]);
+        int w = Muestras / tramos / 2;
+        s_tiempos = new float[Muestras + 1];
+        Vector3 prev = Curva(Pos, 0f);
+        float acum = 0f;
+        for (int i = 1; i <= Muestras; i++)
+        {
+            float suma = 0f;
+            for (int k = -w; k <= w; k++) suma += logF[Mathf.Clamp(i + k, 0, Muestras)];
+            float factor = Mathf.Exp(suma / (2 * w + 1));
+            Vector3 p = Curva(Pos, i / (float)Muestras);
+            float rapidez = (10f + Mathf.Max(0f, p.y - 30f) * 0.15f) * factor;
+            acum += Vector3.Distance(prev, p) / rapidez;
+            s_tiempos[i] = acum;
+            prev = p;
+        }
+        for (int i = 0; i <= Muestras; i++) s_tiempos[i] /= acum;
+    }
+    static float SDeTiempo(float f)
+    {
+        int lo = 0, hi = Muestras;
+        while (hi - lo > 1) { int m = (lo + hi) / 2; if (s_tiempos[m] < f) lo = m; else hi = m; }
+        float a = s_tiempos[lo], b = s_tiempos[hi];
+        return (lo + (b > a ? (f - a) / (b - a) : 0f)) / Muestras;
+    }
+    static float TiempoDeS(float sv) => s_tiempos[Mathf.Clamp(Mathf.RoundToInt(sv * Muestras), 0, Muestras)];
+
+    public override string Describe() => $"Apertura: vuelo de cámara al valle con el logo ({segundos:F1}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var rutina = ctx.Player.StartCoroutine(Co(ctx));
+        ctx.Player.TrackBackgroundRoutine(rutina);
+    }
+
+    IEnumerator Co(SequenceContext ctx)
+    {
+        var cam = VeloDeApertura.CamaraPropia("_CamaraDelVuelo", 50f);
+        var raiz = new GameObject("_LogoDeApertura");
+        var nubes = MontarMarDeNubes();
+        var ciclo = DayNightCycle.Instance;
+        SolForzado sol = null;
+        if (DayNightCycle.Sun != null)
+        {
+            sol = DayNightCycle.Sun.GetComponent<SolForzado>();
+            if (sol == null) sol = DayNightCycle.Sun.gameObject.AddComponent<SolForzado>();
+            Vector3 haciaElSol = Quaternion.Euler(-ElevacionDelSol, RumboDelSol, 0f) * Vector3.forward;
+            sol.Colocar(Quaternion.LookRotation(-haciaElSol, Vector3.up), 0f);
+        }
+        bool limpio = false, solSuelto = false;
+        void Limpiar()
+        {
+            if (limpio) return;
+            limpio = true;
+            if (cam != null) UnityEngine.Object.Destroy(cam.gameObject);
+            if (raiz != null) UnityEngine.Object.Destroy(raiz);
+            if (nubes != null) UnityEngine.Object.Destroy(nubes);
+            if (ciclo != null) ciclo.SoltarNiebla(ClaveDeNiebla);
+            if (sol != null && !solSuelto) sol.Soltar(0f);
+            VeloDeApertura.Quitar();
+        }
+        ctx.Player.RegisterCleanup(Limpiar);
+        var lienzo = raiz.AddComponent<Canvas>();
+        lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
+        lienzo.sortingOrder = 4700;
+        var img = new GameObject("Logo").AddComponent<RawImage>();
+        img.transform.SetParent(raiz.transform, false);
+        img.texture = logo;
+        img.raycastTarget = false;
+        var rt = img.rectTransform;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        float ancho = Screen.width * 0.34f;
+        rt.sizeDelta = new Vector2(ancho, logo != null ? ancho * logo.height / Mathf.Max(1, logo.width) : ancho * 0.4f);
+        img.color = new Color(1f, 1f, 1f, 0f);
+
+        PrepararTiempos();
+        float logoDesde = TiempoDeS(LogoDesdePunto / (Pos.Length - 1));
+        float logoHasta = TiempoDeS(LogoHastaPunto / (Pos.Length - 1));
+        float t = 0f;
+        while (t < segundos)
+        {
+            t += Time.deltaTime;
+            float u = Mathf.Clamp01(t / segundos);
+            // Arranca y se posa con suavidad; entre medias, la velocidad la da la altura (PrepararTiempos).
+            float fv = Mathf.Lerp(u, VeloDeApertura.Suave(u), 0.5f);
+            float s = SDeTiempo(fv);
+            Vector3 p = Curva(Pos, s), m = Curva(Mira, s);
+            cam.transform.SetPositionAndRotation(p, Quaternion.LookRotation(m - p));
+            if (t < 2f) VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 1f - VeloDeApertura.Suave(t / 2f));
+            else if (p.y < NubesArriba && p.y > NubesAbajo - 40f)
+                // Dentro del mar de nubes: blanco que llega y se va.
+                VeloDeApertura.Poner(new Color(1f, 0.97f, 0.93f), 0.9f * Mathf.Sin(Mathf.Clamp01((NubesArriba - p.y) / (NubesArriba - NubesAbajo + 40f)) * Mathf.PI));
+            else if (t - Time.deltaTime < 2f || p.y <= NubesAbajo - 40f) VeloDeApertura.Poner(VeloDeApertura.ColorPapel, 0f);
+
+            // Neblina: casi transparente arriba (se ve el mundo entero, con un velo malva lejos) y más
+            // espesa abajo; en los últimos 3 s se devuelve la del ciclo para que el corte a la grúa no salte.
+            if (ciclo != null)
+            {
+                float alto = VeloDeApertura.Suave((p.y - 40f) / 380f);
+                float devolver = VeloDeApertura.Suave((t - (segundos - 3f)) / 3f);
+                ciclo.PrestarNiebla(ClaveDeNiebla, Mathf.Lerp(Mathf.Lerp(0.35f, 0.08f, alto), 1f, devolver),
+                    ColorDeLaNeblina, Mathf.Lerp(Mathf.Lerp(0.55f, 0.8f, alto), 0f, devolver));
+            }
+            if (sol != null && !solSuelto && t > segundos - 4f)
+            {
+                solSuelto = true;
+                sol.Soltar(5f);
+            }
+            float a = VeloDeApertura.Suave((fv - logoDesde) / 0.07f) * (1f - VeloDeApertura.Suave((fv - (logoHasta - 0.07f)) / 0.07f));
+            img.color = new Color(1f, 1f, 1f, a);
+            yield return null;
+        }
+        Limpiar();
+    }
+
+    /// Capa de nubes por debajo del vuelo alto: deja ver el mundo por los huecos y la cámara la atraviesa al
+    /// bajar. Unas pocas más bajas, cerca del descenso hacia el mar, para que se note la velocidad.
+    GameObject MontarMarDeNubes()
+    {
+        if (nube == null) return null;
+        var raiz = new GameObject("_MarDeNubes");
+        var azar = new System.Random(1200);
+        float R(float a, float b) => a + (float)azar.NextDouble() * (b - a);
+        void Poner(Vector3 pos, float ancho)
+        {
+            var n = UnityEngine.Object.Instantiate(nube, pos, Quaternion.Euler(0f, R(0f, 360f), 0f), raiz.transform);
+            foreach (var mb in n.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+            foreach (var c in n.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+            var b = new Bounds(n.transform.position, Vector3.zero);
+            foreach (var r in n.GetComponentsInChildren<Renderer>(true)) b.Encapsulate(r.bounds);
+            float medida = Mathf.Max(0.01f, Mathf.Max(b.size.x, b.size.z));
+            n.transform.localScale *= ancho / medida;
+        }
+        for (int i = 0; i < 46; i++)
+            Poner(new Vector3(R(-560f, 420f), R(NubesAbajo, NubesArriba), R(-980f, 200f)), R(70f, 160f));
+        // La que la cámara atraviesa al bajar.
+        Poner(new Vector3(-216f, (NubesAbajo + NubesArriba) * 0.5f, -738f), 120f);
+        for (int i = 0; i < 10; i++)
+            Poner(new Vector3(R(-320f, -100f), R(180f, 260f), R(-760f, -560f)), R(30f, 60f));
+        return raiz;
+    }
+
+    /// Catmull-Rom por los puntos, con s de 0 a 1 en todo el recorrido.
+    static Vector3 Curva(Vector3[] p, float s)
+    {
+        int n = p.Length - 1;
+        float f = Mathf.Clamp01(s) * n;
+        int i = Mathf.Min(n - 1, Mathf.FloorToInt(f));
+        float u = f - i;
+        Vector3 p0 = p[Mathf.Max(0, i - 1)], p1 = p[i], p2 = p[i + 1], p3 = p[Mathf.Min(n, i + 2)];
+        return 0.5f * (2f * p1 + (-p0 + p2) * u + (2f * p0 - 5f * p1 + 4f * p2 - p3) * u * u + (-p0 + 3f * p1 - 3f * p2 + p3) * u * u * u);
+    }
+}

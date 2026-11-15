@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 /// (Quibli, luces y postproceso de la escena): de cerca, plano medio y a distancia de juego.
 /// En MainWorld va delante de la fuente de la plaza (el sitio del escaparate); en otra escena, al origen.
 /// Las fotos salen en «Guiones/_fotos_caras/<personaje>/». No deja nada en la escena (todo DontSave y se
-/// borra al acabar). Desde el buzón: «menu El Sendero/Personajes/Fotos de caras de Will (prueba)».
+/// borra al acabar). Desde el buzón: «menu El Sendero/Personajes/Fotos de prueba/Caras de Will».
 public static class FotosDeCaras
 {
     private static readonly NPCEmotion[] Emociones =
@@ -24,32 +24,32 @@ public static class FotosDeCaras
     };
     private const int W = 1280, H = 720;
 
-    [MenuItem("El Sendero/Personajes/Fotos de caras de Will (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Caras de Will")]
     public static void Will() => Hacer(WILL, "Will", null);
 
     /// Lo mismo, con los otros dos a los lados (con su cara de reposo), para comparar a distancia de juego.
-    [MenuItem("El Sendero/Personajes/Fotos de caras de Will con Liam y Estela (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Caras de Will con Liam y Estela")]
     public static void WillConCompis() => Hacer(WILL, "Will", new[] { LIAM, ESTELA });
 
-    [MenuItem("El Sendero/Personajes/Fotos de caras de Estela con Will y Liam (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Caras de Estela con Will y Liam")]
     public static void EstelaConCompis() => Hacer(ESTELA, "Estela", new[] { WILL, LIAM });
 
-    [MenuItem("El Sendero/Personajes/Fotos de caras de Liam con Will y Estela (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Caras de Liam con Will y Estela")]
     public static void LiamConCompis() => Hacer(LIAM, "Liam", new[] { WILL, ESTELA });
 
     /// El grupo abrazándose de frío (estado UpperBody.ClimaFrio) con la cara de helado, de frente y de tres
     /// cuartos, en «Guiones/_fotos_caras/Frio/». Sin la tiritona ni los hombros encogidos, que se ponen en juego.
-    [MenuItem("El Sendero/Personajes/Fotos del grupo con frío (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/El grupo con frío")]
     public static void GrupoConFrio()
     {
-        var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(AbrazarseDeFrio.RutaDelClip);
-        if (clip == null) { OrdenesDelEditor.Avisar("Fotos de caras", "Falta " + AbrazarseDeFrio.RutaDelClip + ": pasa antes el menú de abrazarse de frío."); return; }
+        var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(PosesDeActuacion.ClipDeFrio);
+        if (clip == null) { OrdenesDelEditor.Avisar("Fotos de caras", "Falta " + PosesDeActuacion.ClipDeFrio + ": pasa antes el menú de poses de actuación."); return; }
         Hacer(WILL, "Frio", new[] { LIAM, ESTELA }, cuerpo: (ClimaSobreElJugador.EstadoDeFrio, clip), soloEmocion: NPCEmotion.Frozen);
     }
 
     /// Hoja de caras: la cara neutra de cerca de los NPCs con caras nuevas y de los niños, uno a uno, en
     /// «Guiones/_fotos_caras/NPCs/». Si un NPC no se ve en el Editor (o no tiene perfil), lo dice en el informe.
-    [MenuItem("El Sendero/Personajes/Hoja de caras de los NPCs y los niños (prueba)")]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Hoja de caras de los NPCs y los niños")]
     public static void HojaNPCs()
     {
         foreach (var n in HojaDeNPCs)
@@ -70,7 +70,7 @@ public static class FotosDeCaras
         "_GrafoNarrativo/Eldran", "King", "Victoria", "_GrafoNarrativo/Oliver", "Combat/Vicky", "Combat/Erika", "Combat/Lety",
         "_GrafoNarrativo/Boticaria", "_GrafoNarrativo/Selene", "Tendera", "Nora", "WoodsGuard", "Roberto", "Pueblo/Jorge",
         "NonInteractable/TownNpc#4", "NiñoPez", "AmigaDelNiñoPez", "_GrafoNarrativo/Tobi", "NonInteractable/Nina_Prologo",
-        "Assets/Prefabs/_WILL_ORIGINAL.prefab",
+        "Assets/Prefabs/_ARCHIMAGO_NPC.prefab",
         "AldeaDelMar/Posadero", "AldeaDelMar/Remedios", "AldeaDelMar/Anselmo", "AldeaDelMar/Engracia", "AldeaDelMar/Eusebio", "AldeaDelMar/Fermin",
     };
 

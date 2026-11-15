@@ -29,11 +29,11 @@ public sealed class RaiseCustomEventNode : NarrativeNode, INarrativeStateEffect
     {
         if (string.IsNullOrWhiteSpace(eventKey))
         {
-            Debug.LogWarning("[RaiseCustomEventNode] ⚠️ eventKey está vacío. No se emitió ningún evento.");
+            Debug.LogWarning("[RaiseCustomEventNode] eventKey está vacío. No se emitió ningún evento.");
         }
         else
         {
-            NarrativeLog.Info($"[RaiseCustomEventNode] 📤 Emitiendo evento: '{eventKey}'");
+            NarrativeLog.Info($"[RaiseCustomEventNode] Emitiendo evento: '{eventKey}'");
             ctx.Signals?.RaiseCustom(eventKey, $"[Nodo] {eventKey}");
         }
         

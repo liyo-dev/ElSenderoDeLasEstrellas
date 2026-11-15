@@ -29,8 +29,8 @@ using UnityEngine.SceneManagement;
 ///
 /// ── Orden de uso ──────────────────────────────────────────────────────────────────────────────
 ///   1. Abre Prologo_Valle.
-///   2. «Mundo: rehornear el NavMesh de las escenas abiertas» (el suelo nuevo).
-///   3. «Prólogo: pegar marcas y marcadores al suelo» (esto).
+///   2. «Navegación ▸ Rehornear el NavMesh de las escenas abiertas» (el suelo nuevo).
+///   3. «Mundo ▸ Marcas y marcadores: pegarlos al suelo» (esto).
 ///   4. Ctrl+S y PREPARAR TODO.
 ///
 /// Es idempotente: si ya está todo pegado, no toca nada.
@@ -44,10 +44,10 @@ public static class PegarMarcasAlSuelo
     /// arreglando a propósito, no sorteando un fallo.
     private const float RadioDeNavMesh = 6f;
 
-    [MenuItem("El Sendero/Prólogo: diagnóstico de marcas y marcadores", priority = 30)]
+    [MenuItem("El Sendero/Mundo/Marcas y marcadores: diagnóstico", priority = 30)]
     public static void Diagnostico() => Ejecutar(arreglar: false);
 
-    [MenuItem("El Sendero/Archivo/Prólogo: pegar marcas y marcadores al suelo", priority = 31)]
+    [MenuItem("El Sendero/Mundo/Marcas y marcadores: pegarlos al suelo", priority = 31)]
     public static void Arreglar() => Ejecutar(arreglar: true);
 
     private static void Ejecutar(bool arreglar)
@@ -144,7 +144,7 @@ public static class PegarMarcasAlSuelo
             $"Sin suelo debajo: {sinSuelo}\n" +
             (hayNavMesh ? $"Con suelo pero sin NavMesh cerca: {sinNavMesh}\n"
                         : "No hay NavMesh horneado en las escenas abiertas: hornéalo primero " +
-                          "(El Sendero → Mundo: rehornear el NavMesh) y vuelve a darle.\n");
+                          "(El Sendero → Navegación → Rehornear el NavMesh de las escenas abiertas) y vuelve a darle.\n");
 
         if (problemas.Count > 0)
             Debug.LogWarning("[Marcas] Puntos que hay que mirar a mano:\n" + string.Join("\n", problemas.Take(40)));

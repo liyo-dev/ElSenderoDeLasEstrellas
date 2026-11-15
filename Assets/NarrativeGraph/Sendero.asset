@@ -18,7 +18,7 @@ MonoBehaviour:
   - rid: 5630202821400330501
   - rid: 5630202821400330502
   - rid: 5630202821400330503
-  - rid: 5630202821400330504
+  - rid: 6540294618706084397
   - rid: 5630202821400330505
   - rid: 5630202821400330506
   applicableSceneNames: []
@@ -26,7 +26,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 5630202821400330500
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Sendero
         chapter: Sendero
@@ -41,7 +41,7 @@ MonoBehaviour:
         outputs:
         - sendero-tras-capitulo
     - rid: 5630202821400330501
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Espera: libro prohibido y ritual (lo emite el cap\xEDtulo de la Piedra)"
         chapter: Sendero
@@ -57,8 +57,10 @@ MonoBehaviour:
         - sendero-ritual-listo
         eventKey: SENDERO_REQUISITOS_CUMPLIDOS
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202821400330502
-      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "La Piedra admite el conjuro (probar desde aqu\xED)"
         chapter: Sendero
@@ -74,7 +76,7 @@ MonoBehaviour:
         - sendero-espera-conjuro
         eventKey: SENDERO_RITUAL_LISTO
     - rid: 5630202821400330503
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Will acepta leer el conjuro ante la Piedra
         chapter: Sendero
@@ -90,32 +92,10 @@ MonoBehaviour:
         - sendero-cinematica-conjuro
         eventKey: SENDERO_CONJURO_ACEPTADO
         acceptEarlierEvent: 0
-    - rid: 5630202821400330504
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "Cinem\xE1tica: el conjuro abre el portal"
-        chapter: Sendero
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: sendero-cinematica-conjuro
-        position: {x: 1900, y: 0}
-        outputs:
-        - sendero-llegada
-        cinematicName: El conjuro de la Piedra Ancestral
-        signalIn: SENDERO_CONJURO_START
-        signalDone: SENDERO_CONJURO_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 7f276964bd44ff146b92b5a907aa0d04, type: 2}
-        plantillaDeAjustes: SEQ_PerasEldran
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202821400330505
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Llegada al Sendero
         chapter: Sendero
@@ -130,8 +110,10 @@ MonoBehaviour:
         outputs: []
         eventKey: SENDERO_LLEGADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202821400330506
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap4_BACK_1)"
         chapter: Sendero
@@ -147,3 +129,34 @@ MonoBehaviour:
         - sendero-requisitos
         eventKey: CH_Cap4_BACK_1
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294618706084397
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Cinem\xE1tica: el conjuro abre el portal"
+        chapter: Sendero
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sendero-cinematica-conjuro
+        position: {x: 1900, y: 0}
+        outputs:
+        - sendero-llegada
+        - 
+        request:
+          rid: 6540294618706084398
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084398
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: El conjuro de la Piedra Ancestral
+        signalIn: SENDERO_CONJURO_START
+        signalDone: SENDERO_CONJURO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 7f276964bd44ff146b92b5a907aa0d04, type: 2}
+        plantillaDeAjustes: SEQ_PerasEldran

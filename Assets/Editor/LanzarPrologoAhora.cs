@@ -22,7 +22,7 @@ public static class LanzarPrologoAhora
 {
     private const string SeñalPrologo = "PROLOGUE_START";
 
-    [MenuItem("El Sendero/Secuencias/Prólogo: lanzarlo AHORA (en Play)", priority = 1)]
+    [MenuItem("El Sendero/Cinemáticas/Prólogo: lanzarlo ahora (en Play)", priority = 1)]
     public static void Lanzar()
     {
         if (!Application.isPlaying)
@@ -44,6 +44,6 @@ public static class LanzarPrologoAhora
         señales.RaiseCustom(SeñalPrologo, "menú: lanzar el prólogo a mano");
     }
 
-    [MenuItem("El Sendero/Secuencias/Prólogo: lanzarlo AHORA (en Play)", validate = true)]
+    [MenuItem("El Sendero/Cinemáticas/Prólogo: lanzarlo ahora (en Play)", validate = true)]
     private static bool PuedeLanzar() => Application.isPlaying;
 }

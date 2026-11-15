@@ -7,8 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// Pone a un protagonista un aspecto nuevo hecho en Blender (Tools/Modelos/&lt;Nombre&gt;/): sus piezas
-/// (pelo, cuerpo, capa…) se añaden a los modelos que pueden enseñarlo (el del jugador, su NPC y su
-/// retrato) con <see cref="PiezaNuevaDelModelo"/>, se encienden en los suyos y pasan a ser su aspecto de
+/// (pelo, cuerpo, capa…) se añaden a los modelos que pueden enseñarlo (su cuerpo y su retrato) con <see cref="PiezaNuevaDelModelo"/>, se encienden en los suyos y pasan a ser su aspecto de
 /// partida (CharacterAppearanceRegistry de Start). Lo de antes se queda en el modelo, sin usar.
 /// Los colores van en materiales lisos con el estilo del material de su cuerpo de siempre; la parte del
 /// cuerpo de debajo (ranura «lambert1» del FBX) usa ese mismo material. Se puede repetir.
@@ -32,7 +31,7 @@ public static class AspectoDeProtagonista
         public PartyControlManager.CharacterSlot Personaje;   // de quién es su ropa en el armario
         public string Carpeta;             // donde están los FBX (<pieza>.fbx) y donde van sus materiales
         public string CampoDePartida;      // estelaDefault, liamDefault… (vacío: el de Will sale del propio modelo del jugador)
-        public string PrefabPropio;        // su NPC (de él sale el material de estilo)
+        public string PrefabPropio;        // su cuerpo (de él sale el material de estilo)
         public string CuerpoDeAntes;       // pieza de cuerpo de la que sale el material de estilo
         public string[] Modelos;           // todos los que pueden enseñarlo
         public string[] Propios;           // los que lo enseñan siempre a él: se les cambia lo que llevan puesto
@@ -219,7 +218,7 @@ public static class AspectoDeProtagonista
         CampoDePartida = "estelaDefault",
         PrefabPropio = "Assets/Prefabs/_ESTELA.prefab",
         CuerpoDeAntes = "Body09",
-        Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_ESTELA.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab" },
+        Modelos = new[] { "Assets/Prefabs/_ESTELA.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab" },
         Propios = new[] { "Assets/Prefabs/_ESTELA.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab" },
         Piezas = new[]
         {
@@ -235,7 +234,7 @@ public static class AspectoDeProtagonista
         {
             ("Medias", new Color(0.1f, 0.12f, 0.28f)),   // el trozo de pierna entre la túnica y las botas
             ("Botas", new Color(0.09f, 0.11f, 0.3f)),   // a juego con los guantes, con la vuelta dorada
-            ("Pelo", new Color(0.9f, 0.2f, 0.05f)), ("PeloClaro", new Color(1f, 0.34f, 0.1f)), ("LazoAzul", new Color(0.2f, 0.45f, 0.95f)),   // pelo zanahoria (Raúl, 1 nov)
+            ("Pelo", new Color(0.9f, 0.2f, 0.05f)), ("PeloClaro", new Color(1f, 0.34f, 0.1f)), ("LazoAzul", new Color(0.2f, 0.45f, 0.95f)),   // pelo zanahoria
             ("Tunica", new Color(0.18f, 0.32f, 0.72f)), ("Capa", new Color(0.93f, 0.86f, 0.7f)), ("Hombrera", new Color(0.32f, 0.34f, 0.42f)),
             ("Gema", new Color(0.9f, 0.08f, 0.15f)), ("Cuero", new Color(0.48f, 0.28f, 0.14f)), ("Dorado", new Color(1f, 0.8f, 0.3f)),
         },
@@ -251,14 +250,14 @@ public static class AspectoDeProtagonista
         CampoDePartida = null,   // Will empieza con lo que lleva puesto el modelo del jugador
         PrefabPropio = "Assets/Prefabs/_WILL.prefab",
         CuerpoDeAntes = "Body05",
-        Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_WILL_NPC.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" },
-        Propios = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_WILL_NPC.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" },
+        Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" },
+        Propios = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab" },
         Piezas = new[]
         {
             new Pieza { Nombre = "Hair16_Heroe", Categoria = PartCategory.Hair, Vecina = "Hair01" },
             new Pieza { Nombre = "Body23_Aventurero", Categoria = PartCategory.Body, Vecina = "Body05",
                         NombreEnArmario = "Ropa de aventurero", Descripcion = "Camiseta azul marino con ribete dorado y el pañuelo de siempre al cuello." },
-            // Raúl (8 nov): la chaqueta deja de ir puesta y queda en su armario. Es otro cuerpo (la misma ropa con la
+            // la chaqueta deja de ir puesta y queda en su armario. Es otro cuerpo (la misma ropa con la
             // chaqueta encima), no una pieza de capa: así se puede llevar con la capa.
             new Pieza { Nombre = "Body24_AventureroChaqueta", Categoria = PartCategory.Body, Vecina = "Body05", DeSerie = false,
                         NombreEnArmario = "Ropa de aventurero con chaqueta", Descripcion = "La camiseta de siempre con la chaqueta corta azul marino encima, abierta y remangada." },
@@ -282,7 +281,7 @@ public static class AspectoDeProtagonista
         CampoDePartida = "liamDefault",
         PrefabPropio = "Assets/Prefabs/_LIAM.prefab",
         CuerpoDeAntes = "Body12",
-        Modelos = new[] { "Assets/Prefabs/_WILL.prefab", "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab" },
+        Modelos = new[] { "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab" },
         Propios = new[] { "Assets/Prefabs/_LIAM.prefab", "Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Liam.prefab" },
         Piezas = new[]
         {

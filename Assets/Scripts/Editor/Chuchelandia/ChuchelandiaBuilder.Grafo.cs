@@ -117,7 +117,7 @@ public static partial class ChuchelandiaBuilder
         // 2 · El heraldo y la Puerta del Corazón
         P("puerta-empieza", "2 · El heraldo y la Puerta del Corazón (probar desde aquí)", Emitir(Senal.PuertaEmpieza)),
         P("heraldo-hablar", "2 · Hablar con el heraldo, junto a la Puerta del Corazón", new WaitNpcInteractionNode { npcId = IdDelHeraldo }),
-        P("mando-will-pergamino", "2 · Will al mando (la cinemática cuenta con él)", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+        P("mando-will-pergamino", "2 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
         P("cine-heraldo", "2 · Cinemática: el heraldo lee el pergamino", Cinematica("cine-heraldo")),
         P("paso-investigar", "Paso: investigar el reino (cierra la misión de la llegada)", Completar(PasoInvestigar, cerrar: true, mision: IdMisionBienvenida)),
         // Con la prueba ya contada sale el aviso de la misión de verdad; su primer paso, abrir la Puerta.
@@ -126,14 +126,14 @@ public static partial class ChuchelandiaBuilder
         P("puerta-intentos", "2 · Los intentos con el candado: magia de Estela, ganzúa de Liam y empujón de Will, cambiando con la cruceta (o hablar con el heraldo)", Esperar(Senal.PuertaIntentos)),
         P("paso-puerta", "Paso: la Puerta del Corazón", Completar("CHUCHE_PUERTA")),
         // 3 · La candidata
-        P("mando-will-ejercito", "3 · Will al mando (la cinemática cuenta con él)", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+        P("mando-will-ejercito", "3 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
         P("cine-ejercito", "3 · Cinemática: ¡una candidata! El ejército se lleva a Estela y viste a Will y a Liam", Cinematica("cine-ejercito")),
-        P("estela-sale", "3 · Estela sale del grupo y de la escena: se la ha llevado el ejército", Grupo(GrupoNode.Accion.SaleDelGrupo, "Estela")),
+        P("estela-sale", "3 · Estela sale del grupo y de la escena: se la ha llevado el ejército", Grupo(PedirGrupo.Accion.SaleDelGrupo, "Estela")),
         P("atuendo-candidata", "3 · Atuendos de candidata (también los emiten las cinemáticas de la candidata y del vestidor)", Emitir(Senal.AtuendoCandidata)),
         P("vestidor-empieza", "3 · Hacia el vestidor real (probar desde aquí)", Emitir(Senal.VestidorEmpieza)),
         P("vestidor-llegar", "3 · Will y Liam llegan al vestidor real", Esperar(Senal.VestidorLlegada)),
-        P("estela-vuelve", "3 · Estela vuelve al grupo (sale del vestidor en la cinemática)", Grupo(GrupoNode.Accion.VuelveAlGrupo, "Estela")),
-        P("mando-will-vestidor", "3 · Will al mando (la cinemática cuenta con él)", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+        P("estela-vuelve", "3 · Estela vuelve al grupo (sale del vestidor en la cinemática)", Grupo(PedirGrupo.Accion.VuelveAlGrupo, "Estela")),
+        P("mando-will-vestidor", "3 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
         P("cine-vestidor", "3 · Cinemática: el vestidor, el lazo y «con mucha rabia»", Cinematica("cine-vestidor")),
         // 4 · Pruebas de candidata
         P("carrera-empieza", "4 · Empieza la carrera (probar desde aquí)", Emitir(Senal.CarreraEmpieza)),
@@ -155,7 +155,7 @@ public static partial class ChuchelandiaBuilder
         P("reino-fork", "6 · En paralelo: la misión opcional de las trompetillas (no bloquea el recorrido)", new ForkNode(), "salon-llegar", "tromp-hablar"),
         // 7-9 · Pompón, el duelo y «¡TE QUIERO!»
         P("salon-llegar", "7 · Entran en el salón del duelo", Esperar(Senal.SalonLlegada)),
-        P("mando-will-pompon", "7 · Will al mando (la cinemática cuenta con él)", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+        P("mando-will-pompon", "7 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
         P("cine-pompon", "7 · Cinemática: Su Alteza Pompón, «es un oso» y el heraldo que explota", Cinematica("cine-pompon")),
         P("duelo-empieza", "8 · Empieza el Duelo de Ternura (probar desde aquí)", Emitir(Senal.DueloEmpieza)),
         P("duelo", "8 · Duelo de Ternura: reverencia, canción de cuna y ojitos, como Estela (concurso por rondas, sin derrota)", Esperar(Senal.DueloTerminado)),
@@ -252,8 +252,8 @@ public static partial class ChuchelandiaBuilder
 
     private static NarrativeNode Emitir(string senal) => new RaiseCustomEventNode { eventKey = senal };
 
-    private static NarrativeNode Grupo(GrupoNode.Accion accion, string personaje) =>
-        new GrupoNode { accion = accion, personaje = personaje, retirarDeLaEscena = true };
+    private static NarrativeNode Grupo(PedirGrupo.Accion accion, string personaje) =>
+        GameStepNode.For(new PedirGrupo { accion = accion, personaje = personaje, retirarDeLaEscena = true });
 
     private static NarrativeNode Completar(string condicion, bool cerrar = false, string mision = IdMision) => new CompleteQuestStepsNode
     {
@@ -269,7 +269,7 @@ public static partial class ChuchelandiaBuilder
         var mision = AssetDatabase.LoadAssetAtPath<QuestData>(RutaMision);
         if (mision == null)
         {
-            AsegurarCarpeta(System.IO.Path.GetDirectoryName(RutaMision).Replace('\\', '/'));
+            Kits.EditorTools.AssetFolders.Ensure(System.IO.Path.GetDirectoryName(RutaMision).Replace('\\', '/'));
             mision = ScriptableObject.CreateInstance<QuestData>();
             AssetDatabase.CreateAsset(mision, RutaMision);
             informe.AppendLine("Misión " + IdMision + " creada.");
@@ -294,7 +294,7 @@ public static partial class ChuchelandiaBuilder
         var mision = AssetDatabase.LoadAssetAtPath<QuestData>(RutaMisionBienvenida);
         if (mision == null)
         {
-            AsegurarCarpeta(System.IO.Path.GetDirectoryName(RutaMisionBienvenida).Replace('\\', '/'));
+            Kits.EditorTools.AssetFolders.Ensure(System.IO.Path.GetDirectoryName(RutaMisionBienvenida).Replace('\\', '/'));
             mision = ScriptableObject.CreateInstance<QuestData>();
             AssetDatabase.CreateAsset(mision, RutaMisionBienvenida);
             informe.AppendLine("Misión " + IdMisionBienvenida + " creada.");
@@ -404,11 +404,4 @@ public static partial class ChuchelandiaBuilder
         return null;
     }
 
-    private static void AsegurarCarpeta(string ruta)
-    {
-        if (AssetDatabase.IsValidFolder(ruta)) return;
-        string padre = System.IO.Path.GetDirectoryName(ruta).Replace('\\', '/');
-        AsegurarCarpeta(padre);
-        AssetDatabase.CreateFolder(padre, System.IO.Path.GetFileName(ruta));
-    }
 }

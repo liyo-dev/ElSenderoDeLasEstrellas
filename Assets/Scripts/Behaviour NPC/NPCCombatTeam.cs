@@ -23,7 +23,7 @@ namespace Game.NPC
         [Tooltip("NPCs que forman parte de este equipo. El NPC con este componente es el líder.")]
         [SerializeField] private List<NPCBehaviourManagerV2> teamMembers = new List<NPCBehaviourManagerV2>();
     
-    // NOTA (15 ago 2026): regroupDistance/maxRegroupTime/waitForAllMembers se eliminaron —
+    // NOTA: regroupDistance/maxRegroupTime/waitForAllMembers se eliminaron —
     // pertenecían a Co_RegroupAndStartCombat/Co_MoveMemberToPosition, borrados al migrar a
     // Co_DetectAndEngage (la detección ahora dispara diálogo+combate al instante, sin caminar a
     // una formación antes). Si algún encuentro concreto necesita ese comportamiento, reintroducir
@@ -48,10 +48,10 @@ namespace Game.NPC
     private NPCBehaviourManagerV2 _leaderManager;
     private bool _isTeamInCombat;
     private bool _isRegrouping;
-    private bool _isResurrecting; // ✅ FIX #21: guard contra Co_ResurrectTeam concurrentes
+    private bool _isResurrecting; // FIX #21: guard contra Co_ResurrectTeam concurrentes
     private int _defeatedCount;
     private List<NPCBehaviourManagerV2> _allMembers = new List<NPCBehaviourManagerV2>(); // Líder + compañeros
-    private Transform _currentTarget; // ✅ FIX: Referencia al jugador para calcular formación
+    private Transform _currentTarget; // Referencia al jugador para calcular formación
 
     // Ancla invisible en el punto medio de los miembros vivos del equipo, usada como "npc" al
     // llamar a DialogueManager.StartBattleDialogue para que la cámara de diálogo (legacy o
@@ -173,7 +173,7 @@ namespace Game.NPC
     /// usa este valor para no marcar la notificación como "hecha" cuando en realidad no lo fue.
     /// </summary>
     /// <param name="detector">
-    /// ✅ NUEVO (15 ago 2026, a petición de Raúl): el miembro del equipo que detectó al jugador.
+    /// NUEVO (15 ago 2026, a petición de Raúl): el miembro del equipo que detectó al jugador.
     /// Habla primero en la secuencia de diálogo de entrada. Puede ser null (p.ej. si algún día se
     /// llama desde otro sitio que no sea NPCTeamMember) — en ese caso se usa el orden por defecto
     /// (líder primero).
@@ -193,7 +193,7 @@ namespace Game.NPC
                 Debug.Log($"[NPCCombatTeam] {name}: Combate global activo, se cancela nueva detección del equipo.");
 #endif
             }
-            // ✅ FIX (auditoría combate, 15 ago 2026): antes esto era void y el llamador se
+            // antes esto era void y el llamador se
             // quedaba con _hasNotifiedTeam=true para siempre aunque la notificación se
             // descartara aquí — el equipo quedaba sordo a la detección del jugador de por vida.
             // Ahora se devuelve false para que el llamador pueda reintentar más adelante.
@@ -270,7 +270,7 @@ namespace Game.NPC
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCCombatTeam] {name}: ⚠️ FORZANDO finalización de diálogo post-derrota");
+                Debug.LogWarning($"[NPCCombatTeam] {name}: FORZANDO finalización de diálogo post-derrota");
                 #endif
             }
             IsPostDefeatDialogueFinished = true;
@@ -298,7 +298,7 @@ namespace Game.NPC
         _isTeamInCombat = false;
         _isRegrouping = false;
 
-        // ✅ FIX: Resetear el flag de notificación en todos los miembros
+        // Resetear el flag de notificación en todos los miembros
         foreach (var member in _allMembers)
         {
             if (member == null) continue;
@@ -350,7 +350,7 @@ namespace Game.NPC
     public void ResurrectTeam()
     {
         if (!resurrectAsTeam) return;
-        if (_isResurrecting) return; // ✅ FIX #21: evita corrutinas Co_ResurrectTeam concurrentes
+        if (_isResurrecting) return; // FIX #21: evita corrutinas Co_ResurrectTeam concurrentes
 
         StartCoroutine(Co_ResurrectTeam());
     }
@@ -365,13 +365,13 @@ namespace Game.NPC
         _isTeamInCombat = true;
         _defeatedCount = 0;
         IsPostDefeatDialogueFinished = false; // Resetear flag
-        _currentTarget = player; // ✅ FIX #23: para que GetFormationPosition funcione también por esta ruta
+        _currentTarget = player; // FIX #23: para que GetFormationPosition funcione también por esta ruta
 
         foreach (var member in _allMembers)
         {
             if (member != null && member.gameObject.activeInHierarchy)
             {
-                TryForceMemberIntoCombat(member, player); // ✅ FIX #1
+                TryForceMemberIntoCombat(member, player); // FIX #1
             }
         }
 
@@ -379,7 +379,7 @@ namespace Game.NPC
     }
 
     /// <summary>
-    /// ✅ FIX #1 (CRÍTICO, auditoría combate 15 ago 2026): fuerza a un miembro a entrar en
+    /// FIX #1 (CRÍTICO, auditoría combate 15 ago 2026): fuerza a un miembro a entrar en
     /// combate SOLO si tiene combatConfig asignado. Sin esta guarda, un miembro mal configurado
     /// (el caso real de Lety: combatConfig vacío) entraba igualmente en CombatState y se
     /// registraba en ActiveCombatRegistry, pero NPCBehaviourManagerV2 solo añade Damageable si
@@ -413,7 +413,7 @@ namespace Game.NPC
         if (memberIndex < 0 || _allMembers.Count <= 0) return transform.position;
         if (_currentTarget == null) return transform.position;
         
-        // ✅ FIX: Calcular posición relativa al JUGADOR, no al líder
+        // Calcular posición relativa al JUGADOR, no al líder
         // Esto asegura que todos los NPCs se agrupen frente al jugador para el diálogo
         
         Vector3 playerPos = _currentTarget.position;
@@ -524,7 +524,7 @@ namespace Game.NPC
             member.Brain?.ForceState(new AlertState(duration: 999f, walk: false, stopDist: 0f, skipDialogue: true));
         }
 
-        // ✅ MEJORA (1 sep 2026, petición de Raúl): "cuando Lety y Vicky me ven, el jugador se
+        // MEJORA (1 sep 2026, petición de Raúl): "cuando Lety y Vicky me ven, el jugador se
         // congela, las dos caminan hacia mí y ENTONCES empieza el diálogo — ese es el
         // comportamiento correcto y debe ser igual para cualquier NPC de combate". Antes, aquí no
         // había ninguna fase de aproximación real: el equipo se paraba en seco (walk:false arriba)
@@ -535,13 +535,13 @@ namespace Game.NPC
         // secuencia de diálogo de abajo.
         yield return Co_ApproachFormation(player);
 
-        // ✅ REDISEÑO (15 ago 2026, a petición de Raúl): "cada NPC con su propia frase; quien te
+        // REDISEÑO (15 ago 2026, a petición de Raúl): "cada NPC con su propia frase; quien te
         // ve primero habla primero, luego el resto — así se siente como un equipo sin necesitar
         // un único diálogo compartido escrito a mano para cada combinación posible". Antes solo
         // sonaba leaderConfig.dialogueOnAlert (la frase del líder, siempre, sin importar quién
         // detectó); se pasó a recorrer el equipo completo empezando por el detector.
         //
-        // 🔧 FIX (9 sept 2026): "detector primero" rompía el guion en Lety+Vicky. Sus líneas de
+        // "detector primero" rompía el guion en Lety+Vicky. Sus líneas de
         // alerta están escritas dando por hecho un orden fijo — las de Lety son la apertura
         // ("Mira Vicky, una presa fácil"), las de Vicky son una RESPUESTA que nombra a Lety
         // explícitamente ("Ya veo Lety... atento muchacho..."). Cuando quien detectaba primero al
@@ -610,7 +610,7 @@ namespace Game.NPC
         foreach (var member in _allMembers)
         {
             if (member != null && member.gameObject.activeInHierarchy)
-                TryForceMemberIntoCombat(member, player); // ✅ FIX #1
+                TryForceMemberIntoCombat(member, player); // FIX #1
         }
 
         if (showDebugLogs)
@@ -624,7 +624,7 @@ namespace Game.NPC
     }
 
     /// <summary>
-    /// ✅ NUEVO (1 sep 2026, petición de Raúl): fase de aproximación del equipo antes del
+    /// NUEVO (1 sep 2026, petición de Raúl): fase de aproximación del equipo antes del
     /// diálogo de alerta — reemplaza el "pararse en seco" por un acercamiento real, en formación,
     /// hacia el jugador (congelado mientras tanto por Co_DetectAndEngage). Reutiliza
     /// GetFormationPosition (ya existente, antes solo usado por gizmos) para que cada miembro
@@ -676,7 +676,6 @@ namespace Game.NPC
                     ctx.Animator.SetMovementSpeed(speedFactor);
                 }
 
-                // ✅ FIX (4 sep 2026, "caminan hacia ti y luego hay que esperar ~5s" — Lety/Vicky):
                 // antes se comparaba la distancia en línea recta del NPC al punto de destino
                 // contra APPROACH_ARRIVE_DIST (0.5m) sin mirar el propio NavMeshAgent. Si el
                 // agente tenía un stoppingDistance heredado (de combate u otro estado previo)
@@ -759,7 +758,7 @@ namespace Game.NPC
     /// </summary>
     private IEnumerator Co_ResurrectTeam()
     {
-        _isResurrecting = true; // ✅ FIX #21
+        _isResurrecting = true; // FIX #21
 
         if (showDebugLogs)
         {
@@ -791,7 +790,7 @@ namespace Game.NPC
 #endif
         }
 
-        _isResurrecting = false; // ✅ FIX #21
+        _isResurrecting = false; // FIX #21
     }
     
     #endregion

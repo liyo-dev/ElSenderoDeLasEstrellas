@@ -88,7 +88,7 @@ public static class NarrativeQuickStart
         {
             var hub = NarrativeGraphHub.Instance;
             var fromHub = hub != null ? hub.GetAllRunners().FirstOrDefault(r => r != null && r.graph == graph) : null;
-            return fromHub != null ? fromHub : FindObjectsByType<NarrativeRunner>(FindObjectsSortMode.None).FirstOrDefault(r => r.graph == graph);
+            return fromHub != null ? fromHub : FindObjectsByType<NarrativeRunner>().FirstOrDefault(r => r.graph == graph);
         }
     }
 #endif

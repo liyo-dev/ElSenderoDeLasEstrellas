@@ -69,7 +69,7 @@ public class SavePoint : MonoBehaviour
             return;
         }
 
-        // ✅ Verificar si el nodo narrativo actual bloquea el guardado
+        // Verificar si el nodo narrativo actual bloquea el guardado
         var narrativeRunner = FindAnyObjectByType<NarrativeRunner>();
         if (narrativeRunner != null && narrativeRunner.IsCurrentNodeBlockingSave)
         {
@@ -171,7 +171,7 @@ public class SavePoint : MonoBehaviour
         var saveSystem = ServiceLocator.Get<SaveSystem>(logIfMissing: false);
         if (saveSystem != null)
         {
-            // ✅ NUEVO: Si estamos en modo testeo, guardar el runtime actual para poder continuar
+            // NUEVO: Si estamos en modo testeo, guardar el runtime actual para poder continuar
             // sin modo testeo más adelante. Esto permite "capturar" el progreso desde un preset.
             bool wasTestingMode = GameBootService.IsPresetOverrideActive;
             
@@ -182,7 +182,7 @@ public class SavePoint : MonoBehaviour
                 if (wasTestingMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[SavePoint] 🧪 Partida guardada en MODO TESTEO - El estado runtime actual se ha guardado en el JSON. " +
+                    Debug.Log("[SavePoint] Partida guardada en MODO TESTEO - El estado runtime actual se ha guardado en el JSON. " +
                               "Ahora puedes desactivar 'usePresetInsteadOfSave' para continuar desde aquí.");
                     #endif
                 }

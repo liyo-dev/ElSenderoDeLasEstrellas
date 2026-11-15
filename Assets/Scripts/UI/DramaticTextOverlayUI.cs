@@ -284,7 +284,7 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
 
                 // FIX: si nos llaman con la pantalla ya cubierta por el overlay de FeedbackService
                 // (ej: una cinemática que terminó con Co_EndCinematicStayBlack y nos pasa el
-                // testigo, como la secuencia del prólogo → DramaticTextNode), la frase 0 haciendo su
+                // testigo, como la secuencia del prólogo → PedirTextoDramatico), la frase 0 haciendo su
                 // fade-in normal desde alpha=0 exponía durante entryDuration lo que hubiera detrás
                 // (la escena/cámara de gameplay ya reactivada) antes de que este overlay llegara a
                 // opacidad completa. Tratarla como "ya estamos en negro" evita ese hueco — solo

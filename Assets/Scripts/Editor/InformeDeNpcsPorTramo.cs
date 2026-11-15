@@ -18,7 +18,7 @@ public static class InformeDeNpcsPorTramo
 {
     private const string Escena = "MainWorld";
 
-    [MenuItem("El Sendero/NPCs/Informe: qué hace cada NPC por tramo (MainWorld)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Informe: qué hace cada NPC por tramo (MainWorld)")]
     public static void GenerarMainWorld() => Generar(Escena);
 
     public static void Generar(string nombreEscena)

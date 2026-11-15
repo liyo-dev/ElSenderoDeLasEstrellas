@@ -131,7 +131,7 @@ namespace Core
                 _controls?.UI.Enable();
                 ScheduleEnableControls(); // aplicará también GamePlay.Disable() de forma diferida
 
-                // FIX (16 ago 2026): "se queda el player andando" al entrar en modo UI (visto
+                // "se queda el player andando" al entrar en modo UI (visto
                 // primero en el menú de misiones, pero es genérico a CUALQUIER Push aquí: puntos
                 // de guardado, diálogo, tienda, equipo, mapa, etc. — todos pasan por este mismo
                 // método). Los lectores de input (GamepadInputReader.Move, etc.) ya devuelven

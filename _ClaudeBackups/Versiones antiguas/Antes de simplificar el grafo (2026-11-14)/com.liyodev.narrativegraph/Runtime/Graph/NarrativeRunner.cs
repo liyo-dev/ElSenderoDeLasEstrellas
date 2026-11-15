@@ -1,0 +1,643 @@
+using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class NarrativeRunner : MonoBehaviour
+{
+    public NarrativeGraph graph;
+
+    /// <summary>Clave del blackboard con el nodo del flujo principal en curso.</summary>
+    public const string CurrentNodeKey = "__currentNodeGuid";
+    /// <summary>Clave del blackboard que marca que el flujo principal llegó a su final.
+    /// Distingue «grafo terminado» de «grafo sin empezar» al cargar una partida.</summary>
+    public const string FlowEndedKey = "__flowEnded";
+
+    // SimpleBlackboard no es [Serializable] (usa Dictionary<string, object> internamente); Unity ya
+    // lo saltaba al serializar. [NonSerialized] documenta esto y silencia el warning del analizador.
+    // El guardado/restaurado real de su contenido pasa por ExportToSerializable/ImportFromSerializable.
+    [System.NonSerialized] public SimpleBlackboard Blackboard = new SimpleBlackboard();
+
+    [SerializeField] private DefaultNarrativeSignals signalsProvider;
+
+    NarrativeContext _ctx;
+    NarrativeNode _current;
+
+    // Generación activa por nodo fork. Cada vez que un fork se (re)lanza (la primera vez, al
+    // reanudar tras una recarga o al volver a él en vivo por un bucle de reintento) se incrementa
+    // el contador de su guid. Las ramas de una generación anterior se descartan en cuanto se ven
+    // obsoletas, en vez de seguir avanzando y duplicar el tramo de éxito si el evento que esperaban
+    // llega igualmente para una rama ya abandonada. Vive solo en memoria: una recarga reconstruye
+    // los forks desde cero con RelaunchForkBranches, que también abre generación nueva.
+    readonly Dictionary<string, int> _forkGeneration = new();
+
+    int BumpForkGeneration(string forkGuid)
+    {
+        int gen = _forkGeneration.TryGetValue(forkGuid, out var v) ? v + 1 : 1;
+        _forkGeneration[forkGuid] = gen;
+        return gen;
+    }
+
+    bool IsForkGenerationStale(string forkGuid, int gen)
+        => _forkGeneration.TryGetValue(forkGuid, out var current) && current != gen;
+
+    // Nodos de ramas de fork que están esperando su callback (ver RunSubGraph). StopExecution()
+    // les llama a Exit() igual que al nodo del flujo principal: los nodos guardan su suscripción en
+    // el asset compartido, y sin Exit() seguirían escuchando tras parar el runner y podrían
+    // completar algo (una misión, una batalla) de una sesión ya terminada.
+    readonly HashSet<NarrativeNode> _activeBranchNodes = new();
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Puertos con nombre.
+    // Un nodo con GetOutputPorts() != null elige su salida con SelectOutput(); el runner
+    // consume esa elección justo al avanzar (TakeSelectedOutput). Vive en el runner (no en el
+    // asset compartido) para no guardar estado de ejecución en el ScriptableObject.
+    // ─────────────────────────────────────────────────────────────────────────
+    readonly Dictionary<NarrativeNode, int> _selectedOutputs = new();
+
+    /// <summary>Registra por qué puerto quiere avanzar un nodo con puertos con nombre.</summary>
+    public void SelectOutput(NarrativeNode node, int portIndex)
+    {
+        if (node == null) return;
+        _selectedOutputs[node] = portIndex;
+    }
+
+    int TakeSelectedOutput(NarrativeNode node)
+    {
+        if (node != null && _selectedOutputs.TryGetValue(node, out var idx))
+        {
+            _selectedOutputs.Remove(node);
+            return idx;
+        }
+        return 0; // sin elección explícita → primer puerto
+    }
+
+    /// <summary>
+    /// Resuelve el siguiente nodo para un nodo con puertos con nombre. Devuelve null cuando el
+    /// puerto elegido no está conectado: una salida sin conectar es un fin de flujo legítimo.
+    /// </summary>
+    NarrativeNode ResolveNamedOutput(NarrativeNode node, out int chosenPort)
+    {
+        chosenPort = TakeSelectedOutput(node);
+        var guid = node.GetOutputGuid(chosenPort);
+        if (string.IsNullOrEmpty(guid))
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[Narrative] '{node.GetType().Name}' salió por el puerto {chosenPort} sin conectar. Flujo detenido.");
+#endif
+            return null;
+        }
+        var next = graph.FindNode(guid);
+        if (next == null)
+            Debug.LogError($"[Narrative] No existe nodo con guid={guid} (puerto {chosenPort} de {node.GetType().Name}).");
+        return next;
+    }
+
+    /// <summary>Nodo del flujo principal en curso (null si espera en ramas de un fork o terminó).</summary>
+    public NarrativeNode CurrentNode => _current;
+    public bool IsCurrentNodeBlockingSave => _current != null && _current.blockSaving;
+
+    /// <summary>
+    /// Detiene toda ejecución en curso: para corrutinas huérfanas y limpia el nodo actual.
+    /// Llamar antes de iniciar una nueva sesión de grafo sobre el mismo runner.
+    /// </summary>
+    public void StopExecution()
+    {
+        StopAllCoroutines();
+        if (_current != null && _ctx != null)
+        {
+            try { _current.Exit(_ctx); }
+            catch (System.Exception ex) { Debug.LogError($"[NarrativeRunner] StopExecution Exit error: {ex.Message}"); }
+        }
+        _current = null;
+
+        if (_ctx != null && _activeBranchNodes.Count > 0)
+        {
+            foreach (var node in _activeBranchNodes)
+            {
+                try { node.Exit(_ctx); }
+                catch (System.Exception ex) { Debug.LogError($"[NarrativeRunner] StopExecution Exit error (rama fork): {ex.Message}"); }
+            }
+        }
+        _activeBranchNodes.Clear();
+        _selectedOutputs.Clear();
+    }
+
+    /// <summary>
+    /// Inicia el grafo desde un nodo específico mediante su GUID.
+    /// Útil cuando un evento/señal quiere activar el grafo.
+    /// </summary>
+    public void StartFromNode(string nodeGuid)
+    {
+        StopExecution();
+        if (!TryBuildContext()) return;
+
+        if (string.IsNullOrEmpty(nodeGuid))
+        {
+            Debug.LogError("[NarrativeRunner] StartFromNode: nodeGuid vacío.");
+            return;
+        }
+
+        var node = graph.FindNode(nodeGuid);
+        if (node == null)
+        {
+            Debug.LogError($"[NarrativeRunner] No existe nodo con guid={nodeGuid}");
+            return;
+        }
+
+        GoTo(node);
+    }
+
+    /// <summary>
+    /// Inicia el grafo desde el nodo marcado como Start.
+    /// Si hay un nodo guardado en el blackboard, continúa desde ahí.
+    /// </summary>
+    public void StartFromStartNode()
+    {
+        StopExecution();
+        if (!TryBuildContext()) return;
+
+        // Verificar si hay un nodo guardado en el blackboard
+        var savedNodeGuid = Blackboard.Get<string>("__currentNodeGuid", null);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[NarrativeRunner] StartFromStartNode() - savedNodeGuid='{savedNodeGuid ?? "NULL"}'");
+#endif
+
+        if (string.IsNullOrEmpty(savedNodeGuid) && Blackboard.Get<bool>(FlowEndedKey, false))
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] Grafo '{graph.name}' ya terminado: no se vuelve a empezar.");
+#endif
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(savedNodeGuid))
+        {
+            var savedNode = graph.FindNode(savedNodeGuid);
+            if (savedNode != null && IsLaunchedFork(savedNode))
+            {
+                // El fork ya hizo su trabajo: solo se reanudan sus ramas, sin volver a ejecutarlo.
+                _current = null;
+                RelaunchForkBranches(savedNode.guid, savedNode.outputs);
+                return;
+            }
+            if (savedNode != null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NarrativeRunner] ✅ Continuando desde nodo guardado: {savedNode.GetType().Name} (guid={savedNodeGuid})");
+#endif
+                GoTo(savedNode);
+                return;
+            }
+            else
+            {
+                Debug.LogWarning($"[NarrativeRunner] Nodo guardado con guid={savedNodeGuid} no encontrado. Iniciando desde Start.");
+            }
+        }
+        else
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] ⚠️ No hay nodo guardado - iniciando desde StartNode");
+#endif
+        }
+
+        if (string.IsNullOrEmpty(graph.startNodeGuid))
+        {
+            Debug.LogError("[NarrativeRunner] startNodeGuid vacío. Añade un StartNode y márcalo como 'Set as Start' en el editor.");
+            return;
+        }
+
+        var start = graph.FindNode(graph.startNodeGuid);
+        if (start == null)
+        {
+            Debug.LogError($"[NarrativeRunner] No encuentro el StartNode guid={graph.startNodeGuid}");
+            return;
+        }
+
+        GoTo(start);
+    }
+
+    bool TryBuildContext()
+    {
+        if (graph == null)
+        {
+            Debug.LogError("[Narrative] Graph no asignado en NarrativeRunner.");
+            return false;
+        }
+
+        if (Blackboard == null)
+            Blackboard = new SimpleBlackboard();
+
+        if (signalsProvider == null)
+            signalsProvider = DefaultNarrativeSignals.EnsureInstance();
+
+        _ctx = new NarrativeContext
+        {
+            Graph = graph,
+            Runner = this,
+            Blackboard = Blackboard,
+            Exposed = new ExposedPropertyTable(),
+            Signals = signalsProvider
+        };
+        return true;
+    }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+    /// Raised when any runner enters a step (main flow or a parallel branch). For tools only.
+    public static event System.Action<NarrativeRunner, NarrativeNode> StepEntered;
+#endif
+
+    public void GoTo(NarrativeNode node)
+    {
+        _current?.Exit(_ctx);
+        _current = node;
+
+        if (_current == null)
+        {
+            Debug.LogWarning("[Narrative] GoTo(null). Fin del flujo.");
+            EndMainFlow();
+            return;
+        }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[NarrativeRunner] ▶ GoTo → {_current.GetType().Name} '{_current.displayTitle}' ({_current.guid})");
+#endif
+        Blackboard.Set(CurrentNodeKey, _current.guid);
+        if (Blackboard.Get<bool>(FlowEndedKey, false)) Blackboard.Set(FlowEndedKey, false);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        StepEntered?.Invoke(this, _current);
+#endif
+        _current.Enter(_ctx, () =>
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] ✅ Advance desde {_current?.GetType().Name ?? "null"} '{_current?.displayTitle}'");
+#endif
+            Advance();
+        });
+    }
+
+    void Advance()
+    {
+        if (_current == null)
+        {
+            Debug.LogWarning("[Narrative] Advance() sin nodo actual.");
+            return;
+        }
+
+        var outs = _current.outputs;
+
+        // Nodos con puertos con nombre: bifurcación real, nunca fork (ver NarrativeNode.GetOutputPorts).
+        if (_current.HasNamedOutputs)
+        {
+            var chosen = ResolveNamedOutput(_current, out _);
+            if (chosen == null)
+            {
+                EndMainFlow();
+                return;
+            }
+            GoTo(chosen);
+            return;
+        }
+
+        if (outs == null || outs.Count == 0)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[Narrative] '{_current.GetType().Name}' no tiene salidas. Flujo detenido.");
+#endif
+            EndMainFlow();
+            return;
+        }
+
+        // Una sola salida: paso normal.
+        if (outs.Count == 1)
+        {
+            var nextGuid = outs.FirstOrDefault(g => !string.IsNullOrEmpty(g));
+            if (string.IsNullOrEmpty(nextGuid))
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[Narrative] Salida vacía desde '{_current.GetType().Name}'. Flujo detenido.");
+#endif
+                EndMainFlow();
+                return;
+            }
+
+            var next = graph.FindNode(nextGuid);
+            if (next == null)
+            {
+                Debug.LogError($"[Narrative] No existe nodo con guid={nextGuid}. ¿Se borró sin actualizar edges?");
+                return;
+            }
+
+            GoTo(next);
+            return;
+        }
+
+        // Fork: múltiples salidas
+        var forkNode = _current;
+        var forkGuid = forkNode.guid;
+        var forkKey = $"__forked_{forkGuid}";
+
+        // __currentNodeGuid sigue apuntando al fork (puesto por GoTo): al cargar partida,
+        // StartFromStartNode reanuda sus ramas sin volver a ejecutar el fork ni lo anterior.
+
+        _current = null;
+
+        if (Blackboard.Get<bool>(forkKey, false))
+        {
+            // Fork ya ejecutado en sesión anterior — reanudar ramas en progreso
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] Fork '{forkGuid}' ya ejecutado — reanudando ramas persistidas.");
+#endif
+            RelaunchForkBranches(forkGuid, outs);
+            return;
+        }
+
+        // Primera vez: marcar fork activo
+        Blackboard.Set(forkKey, true);
+        int gen = BumpForkGeneration(forkGuid);
+
+        for (int i = 0; i < outs.Count; i++)
+        {
+            var guid = outs[i];
+            if (string.IsNullOrEmpty(guid)) continue;
+            var node = graph.FindNode(guid);
+            if (node == null)
+            {
+                Debug.LogError($"[Narrative] Fork: no existe nodo guid={guid}.");
+                continue;
+            }
+            StartCoroutine(RunSubGraph(node, forkGuid, i, gen));
+        }
+    }
+
+    /// <summary>Fin del flujo principal: no hay nodo en curso y el grafo no debe volver a empezar.</summary>
+    void EndMainFlow()
+    {
+        Blackboard.Set(CurrentNodeKey, string.Empty);
+        Blackboard.Set(FlowEndedKey, true);
+    }
+
+    bool IsLaunchedFork(NarrativeNode node)
+        => !node.HasNamedOutputs && node.outputs != null && node.outputs.Count > 1
+           && Blackboard.Get<bool>($"__forked_{node.guid}", false);
+
+    /// <summary>
+    /// Reanuda las ramas de un fork que ya fue ejecutado, usando el estado guardado en el blackboard.
+    /// Si una rama no tiene estado guardado (save antiguo) se relanza desde el inicio de esa rama.
+    /// </summary>
+    void RelaunchForkBranches(string forkGuid, List<string> branchStartGuids)
+    {
+        int gen = BumpForkGeneration(forkGuid);
+        for (int i = 0; i < branchStartGuids.Count; i++)
+        {
+            var branchStartGuid = branchStartGuids[i];
+            if (string.IsNullOrEmpty(branchStartGuid)) continue;
+
+            var branchKey = $"__fork_{forkGuid}_{i}_node";
+            var savedNodeGuid = Blackboard.Get<string>(branchKey, null);
+
+            if (savedNodeGuid == "__DONE__")
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NarrativeRunner] Fork '{forkGuid}' rama {i}: completada, omitiendo.");
+#endif
+                continue;
+            }
+
+            // Sin estado guardado de la rama, se relanza desde su inicio
+            string resumeGuid = !string.IsNullOrEmpty(savedNodeGuid) ? savedNodeGuid : branchStartGuid;
+            var resumeNode = graph.FindNode(resumeGuid);
+
+            if (resumeNode == null)
+            {
+                Debug.LogWarning($"[NarrativeRunner] Fork '{forkGuid}' rama {i}: nodo '{resumeGuid}' no encontrado. Saltando.");
+                continue;
+            }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] Fork '{forkGuid}' rama {i}: reanudando desde {resumeNode.GetType().Name} ({resumeGuid}).");
+#endif
+            StartCoroutine(RunSubGraph(resumeNode, forkGuid, i, gen));
+        }
+    }
+
+    bool AreAllBranchesDone(string nestedForkGuid, List<string> branchStartGuids)
+    {
+        for (int i = 0; i < branchStartGuids.Count; i++)
+        {
+            if (string.IsNullOrEmpty(branchStartGuids[i])) continue;
+            if (Blackboard.Get<string>($"__fork_{nestedForkGuid}_{i}_node", null) != "__DONE__")
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Llama a Exit() de un nodo al abandonarlo dentro de una rama, igual que hace GoTo() en el
+    /// flujo principal, para que el nodo deshaga lo suyo (suscripciones, marcas sobre actores…).
+    /// </summary>
+    void ExitNodeSafe(NarrativeNode node)
+    {
+        if (node == null || _ctx == null) return;
+        try { node.Exit(_ctx); }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[NarrativeRunner] Exit() falló en {node.GetType().Name} '{node.displayTitle}': {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Ejecuta una rama de nodos secuencialmente a partir de 'start'.
+    /// Rastrea el progreso en el blackboard para permitir guardar y reanudar.
+    /// </summary>
+    System.Collections.IEnumerator RunSubGraph(NarrativeNode start, string forkGuid, int branchIndex, int forkGeneration = 0)
+    {
+        bool track = !string.IsNullOrEmpty(forkGuid) && branchIndex >= 0;
+        var node = start;
+
+        if (track)
+            Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+
+        while (node != null)
+        {
+            // Detectar fork anidado ya ejecutado ANTES de hacer Enter para evitar re-ejecutar el nodo.
+            // Los nodos con puertos con nombre nunca son fork aunque tengan varias salidas.
+            if (!node.HasNamedOutputs && node.outputs != null && node.outputs.Count > 1)
+            {
+                var nestedForkKey = $"__forked_{node.guid}";
+                if (Blackboard.Get<bool>(nestedForkKey, false))
+                {
+                    // "node == start" solo es cierto en la primera vuelta del while: significa que
+                    // esta corrutina ARRANCA en este fork porque se está reanudando desde el
+                    // blackboard (recarga/guardado). Ahí sí toca reanudar subramas persistidas.
+                    //
+                    // Si en cambio se llega a este mismo nodo avanzando en vivo dentro de la misma
+                    // sesión (p. ej. un bucle de reintento cuya salida de fallo vuelve a este
+                    // fork), no se puede tratar como reanudación: RelaunchForkBranches resolvería
+                    // esta rama al mismo nodo sin ningún yield de por medio y entraría en recursión
+                    // síncrona infinita. En ese caso se vuelve a lanzar el fork limpio.
+                    if (node == start)
+                    {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.Log($"[NarrativeRunner] Fork anidado '{node.guid}' en rama {branchIndex} — reanudando subramas sin re-ejecutar nodo.");
+#endif
+                        if (track)
+                            Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+                        RelaunchForkBranches(node.guid, node.outputs);
+                        // Si todas las subramas del fork anidado ya estaban completas, marcar esta rama como completa
+                        if (track && AreAllBranchesDone(node.guid, node.outputs))
+                            Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                        yield break;
+                    }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogWarning($"[NarrativeRunner] Fork '{node.guid}' revisitado en vivo (rama {branchIndex}) — re-forkeando en vez de reanudar, para evitar recursión infinita.");
+#endif
+                    Blackboard.Set(nestedForkKey, false);
+                    // No hacemos yield break: cae al Enter normal de abajo, que volverá a marcar
+                    // el fork como activo y relanzará sus ramas desde cero.
+                }
+            }
+
+            bool ready = false;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] ▶ SubGraph[{branchIndex}] → {node.GetType().Name} '{node.displayTitle}' ({node.guid})");
+#endif
+            // El nodo queda registrado como «esperando» mientras dure el WaitUntil de abajo, para
+            // que StopExecution() le llame a Exit() si el runner se para a mitad de espera.
+            _activeBranchNodes.Add(node);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            StepEntered?.Invoke(this, node);
+#endif
+            try
+            {
+                node.Enter(_ctx, () =>
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.Log($"[NarrativeRunner] ✅ SubGraph[{branchIndex}] completó {node.GetType().Name} '{node.displayTitle}'");
+#endif
+                    ready = true;
+                });
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[Narrative] RunSubGraph Enter error en {node.GetType().Name}: {ex.Message}");
+                _activeBranchNodes.Remove(node);
+                yield break;
+            }
+
+            yield return new WaitUntil(() => ready);
+
+            // El nodo completó por su cuenta (no fue interrumpido externamente): ya no está
+            // "esperando", deja de estar sujeto al Exit() de StopExecution.
+            _activeBranchNodes.Remove(node);
+
+            // Si el fork se volvió a lanzar con una generación más nueva mientras esta rama esperaba
+            // (bucle de reintento que vuelve al mismo fork), esta rama es obsoleta: se descarta para
+            // no ejecutar dos veces el tramo de éxito si el evento que esperaba llega igualmente.
+            if (forkGeneration != 0 && IsForkGenerationStale(forkGuid, forkGeneration))
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NarrativeRunner] SubGraph[{branchIndex}] del fork '{forkGuid}' (gen {forkGeneration}) obsoleta tras un reintento — descartando avance.");
+#endif
+                if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                yield break;
+            }
+
+            var outs = node.outputs;
+
+            // Nodos con puertos con nombre dentro de una rama: seguir el puerto elegido, sin fork.
+            if (node.HasNamedOutputs)
+            {
+                var chosen = ResolveNamedOutput(node, out _);
+                if (chosen == null)
+                {
+                    if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                    yield break;
+                }
+                ExitNodeSafe(node);
+                node = chosen;
+                if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+                continue;
+            }
+
+            if (outs == null || outs.Count == 0)
+            {
+                if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                yield break;
+            }
+
+            if (outs.Count == 1)
+            {
+                var nextGuid = outs[0];
+                if (string.IsNullOrEmpty(nextGuid))
+                {
+                    if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                    yield break;
+                }
+                var next = graph.FindNode(nextGuid);
+                if (next == null)
+                {
+                    if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                    yield break;
+                }
+                ExitNodeSafe(node);
+                node = next;
+                if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+                continue;
+            }
+
+            // Fork anidado — primera vez (también el punto de llegada cuando el bloque de arriba
+            // resetea nfKey por ser un "revisitado en vivo": se re-forkea limpio con una generación
+            // nueva, invalidando las ramas hermanas que quedaron colgadas de la generación anterior).
+            var nfKey = $"__forked_{node.guid}";
+            Blackboard.Set(nfKey, true);
+            // Mantener puntero al nodo fork para poder reanudar en recargas futuras
+            if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+            int nestedGen = BumpForkGeneration(node.guid);
+            for (int ni = 0; ni < outs.Count; ni++)
+            {
+                var gid = outs[ni];
+                if (string.IsNullOrEmpty(gid)) continue;
+                var n = graph.FindNode(gid);
+                if (n != null) StartCoroutine(RunSubGraph(n, node.guid, ni, nestedGen));
+            }
+            yield break;
+        }
+    }
+
+    public void ForceJumpToOutput(NarrativeNode from, int outputIndex)
+    {
+        if (from == null)
+        {
+            Debug.LogWarning("[Narrative] ForceJumpToOutput: 'from' es null.");
+            return;
+        }
+        if (from.outputs == null || outputIndex < 0 || outputIndex >= from.outputs.Count)
+        {
+            Debug.LogWarning($"[Narrative] ForceJumpToOutput: índice {outputIndex} fuera de rango en {from.GetType().Name}.");
+            return;
+        }
+
+        var guid = from.outputs[outputIndex];
+        if (string.IsNullOrEmpty(guid))
+        {
+            Debug.LogWarning($"[Narrative] ForceJumpToOutput: salida {outputIndex} vacía en {from.GetType().Name}.");
+            return;
+        }
+
+        var next = graph.FindNode(guid);
+        if (next == null)
+        {
+            Debug.LogError($"[Narrative] ForceJumpToOutput: no existe nodo guid={guid}.");
+            return;
+        }
+
+        GoTo(next);
+    }
+
+    public void SetSignalsProvider(DefaultNarrativeSignals provider)
+    {
+        if (provider != null)
+            signalsProvider = provider;
+    }
+}

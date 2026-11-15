@@ -12,9 +12,6 @@ public static class CrearAgujeroNegro
     public const string Carpeta = "Assets/_VFX/Prologo";
     public const string RutaPrefab = Carpeta + "/VFX_AgujeroNegro.prefab";
 
-    [MenuItem("El Sendero/VFX/Crear agujero negro INC-576")]
-    public static void Menu() => Asegurar();
-
     public static string Asegurar()
     {
         AsegurarCarpeta(Carpeta);

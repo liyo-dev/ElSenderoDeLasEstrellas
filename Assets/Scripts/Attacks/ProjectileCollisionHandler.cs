@@ -79,7 +79,7 @@ public static class ProjectileCollisionHandler
         var config = GetConfig();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 💥 Colisión detectada en {collisionPoint}");
+        Debug.Log($"[ProjectileCollision] Colisión detectada en {collisionPoint}");
 #endif
 
         // El choque solo quita al jugador el daño del hechizo enemigo (no el suyo propio). Se lee
@@ -135,7 +135,7 @@ public static class ProjectileCollisionHandler
         VfxPoolService.Instance.Play(config.collisionVFX, position, Quaternion.identity, destroyTime);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] ✨ VFX spawneado en {position}");
+        Debug.Log($"[ProjectileCollision] VFX spawneado en {position}");
 #endif
     }
     
@@ -148,7 +148,7 @@ public static class ProjectileCollisionHandler
         {
             AudioService.Instance.PlaySFX(config.collisionSFXKey);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] 🔊 SFX reproducido: {config.collisionSFXKey}");
+            Debug.Log($"[ProjectileCollision] SFX reproducido: {config.collisionSFXKey}");
 #endif
         }
     }
@@ -162,7 +162,7 @@ public static class ProjectileCollisionHandler
                 config.cameraShakeDuration);
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] 📹 Camera shake aplicado: {config.cameraShakeIntensity}");
+            Debug.Log($"[ProjectileCollision] Camera shake aplicado: {config.cameraShakeIntensity}");
 #endif
         }
     }
@@ -177,7 +177,7 @@ public static class ProjectileCollisionHandler
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollision] ⚠️ Player NO encontrado");
+            Debug.LogWarning($"[ProjectileCollision] Player NO encontrado");
 #endif
             return;
         }
@@ -186,14 +186,14 @@ public static class ProjectileCollisionHandler
         if (playerHealth == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollision] ⚠️ Player '{playerGo.name}' no tiene PlayerHealthSystem, no se puede aplicar daño de choque de hechizos");
+            Debug.LogWarning($"[ProjectileCollision] Player '{playerGo.name}' no tiene PlayerHealthSystem, no se puede aplicar daño de choque de hechizos");
 #endif
             return;
         }
 
         bool applied = playerHealth.TakeDamage(enemyDamage);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 💥 Choque de hechizos: {enemyDamage} de daño (solo hechizo enemigo) {(applied ? "aplicado" : "IGNORADO (invulnerable/muerto/god mode)")} al jugador");
+        Debug.Log($"[ProjectileCollision] Choque de hechizos: {enemyDamage} de daño (solo hechizo enemigo) {(applied ? "aplicado" : "IGNORADO (invulnerable/muerto/god mode)")} al jugador");
 #endif
     }
 
@@ -233,7 +233,7 @@ public static class ProjectileCollisionHandler
                 
                 rb.AddForce(knockback, ForceMode.Impulse);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[ProjectileCollision] 👊 Knockback aplicado al NPC '{closestNPC.name}': {knockback}");
+                Debug.Log($"[ProjectileCollision] Knockback aplicado al NPC '{closestNPC.name}': {knockback}");
 #endif
             }
             else
@@ -266,7 +266,7 @@ public static class ProjectileCollisionHandler
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[ProjectileCollision] 💀 Proyectil del jugador destruido");
+            Debug.Log("[ProjectileCollision] Proyectil del jugador destruido");
 #endif
         }
         
@@ -283,7 +283,7 @@ public static class ProjectileCollisionHandler
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[ProjectileCollision] 💀 Proyectil del enemigo destruido");
+            Debug.Log("[ProjectileCollision] Proyectil del enemigo destruido");
 #endif
         }
     }

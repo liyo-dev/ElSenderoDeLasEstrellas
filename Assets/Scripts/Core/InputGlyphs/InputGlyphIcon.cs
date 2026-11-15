@@ -15,7 +15,7 @@ namespace Core.InputGlyphs
     /// InputGlyphService), válida para cualquiera de los 14 nombres de InputGlyphNames sin tener que
     /// crear un ScriptableObject nuevo por cada hint.
     ///
-    /// Caso de uso original (2026-08-12): las dos Image "ImageArrowLeft" del panel "MainCharacters" en
+    /// Caso de uso original: las dos Image "ImageArrowLeft" del panel "MainCharacters" en
     /// Start.unity (hint de cambiar de personaje activo, a los lados de los retratos de Liam/Will/
     /// Estela) eran Image ESTÁTICAS que siempre mostraban la misma flecha dorada
     /// (Assets/Art/UI/Buttons/left.png), sin importar el dispositivo — así que en teclado/ratón

@@ -29,85 +29,12 @@ namespace Sendero.Narrative.Editor
             nameof(PlayerPresetSO.appearance), nameof(PlayerPresetSO.unlockedWardrobeIds),
         };
 
-        /// Los puntos de arranque solo dicen dónde aparece el jugador: quita lo demás que guardaban
-        /// (vida, magia, hechizos…), que ahora sale de la historia o de un jugador de prueba.
-        [MenuItem("El Sendero/Archivo/Narrativa/Grafo: puntos de arranque solo con el sitio")]
-        public static void DejarSoloElSitio()
-        {
-            var informe = new StringBuilder("[Puntos de arranque: solo el sitio]\n");
-            foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
-            {
-                var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-                if (grafo == null || grafo.nodes == null) continue;
-                bool cambiado = false;
-                foreach (var punto in grafo.nodes.OfType<CheckpointNode>())
-                {
-                    var sobran = punto.player?.fields?.Where(f => f != CampoDelAncla).ToList();
-                    if (sobran == null || sobran.Count == 0) continue;
-                    foreach (var campo in sobran) NarrativePlayerValuesEditor.Remove(punto.player, campo);
-                    cambiado = true;
-                    informe.AppendLine($"{grafo.name} · {punto.displayTitle}: quitado {string.Join(", ", sobran)}");
-                }
-                if (!cambiado) continue;
-                EditorUtility.SetDirty(grafo);
-            }
-            AssetDatabase.SaveAssets();
-            File.WriteAllText("Logs/claude/puntos_solo_sitio.txt", informe.ToString());
-        }
-
         /// El punto de arranque deja al jugador en este ancla.
         public static void FijarAncla(CheckpointNode punto, string ancla)
         {
             if (punto == null || string.IsNullOrEmpty(ancla)) return;
             punto.player ??= new NarrativePlayerValues();
             NarrativePlayerValuesEditor.SetValue(punto.player, typeof(PlayerPresetSO), CampoDelAncla, p => p.stringValue = ancla);
-        }
-
-        /// Crea la ficha del jugador (si falta) y pasa a ella el ancla de los puntos de arranque
-        /// que la tenían en su campo de antes (spawnAnchorId del propio nodo). La escena sale del ancla.
-        [MenuItem("El Sendero/Archivo/Narrativa/Grafo: ficha del jugador y anclas de los puntos de arranque")]
-        public static void Montar()
-        {
-            var informe = new StringBuilder("[Arranque de pruebas]\n");
-            var ficha = AssetDatabase.LoadAssetAtPath<NarrativePlayerSheet>(RutaDeLaFicha);
-            if (ficha == null)
-            {
-                var perfil = AssetDatabase.LoadAssetAtPath<GameBootProfile>("Assets/_BootProfile/GameBootProfile.asset");
-                ficha = ScriptableObject.CreateInstance<NarrativePlayerSheet>();
-                ficha.template = perfil != null ? perfil.defaultPlayerPreset : null;
-                ficha.fields = Campos.ToList();
-                ficha.positionField = CampoDelAncla;
-                AssetDatabase.CreateAsset(ficha, RutaDeLaFicha);
-                informe.AppendLine($"Ficha creada en {RutaDeLaFicha} (partida nueva: {(ficha.template != null ? ficha.template.name : "FALTA")}).");
-            }
-
-            var bloque = new Regex(@"type: \{class: CheckpointNode[^\n]*\n(?<datos>(?:(?!\n    - rid:)[\s\S])*)");
-            foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
-            {
-                var ruta = AssetDatabase.GUIDToAssetPath(guid);
-                var texto = File.ReadAllText(ruta);
-                var anclas = new Dictionary<string, string>();
-                foreach (Match m in bloque.Matches(texto))
-                {
-                    var datos = m.Groups["datos"].Value;
-                    var id = Regex.Match(datos, @"\n\s+guid: (.+)").Groups[1].Value.Trim();
-                    var ancla = Regex.Match(datos, @"\n\s+spawnAnchorId: (.*)").Groups[1].Value.Trim();
-                    if (id.Length > 0 && ancla.Length > 0) anclas[id] = ancla;
-                }
-                if (anclas.Count == 0) continue;
-
-                var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(ruta);
-                foreach (var par in anclas)
-                {
-                    if (grafo.FindNode(par.Key) is not CheckpointNode punto) continue;
-                    if (punto.player != null && punto.player.Has(CampoDelAncla)) continue;
-                    FijarAncla(punto, par.Value);
-                    informe.AppendLine($"{grafo.name} · {punto.displayTitle}: ancla {par.Value}");
-                }
-                EditorUtility.SetDirty(grafo);
-            }
-            AssetDatabase.SaveAssets();
-            Debug.Log(informe.ToString());
         }
     }
 

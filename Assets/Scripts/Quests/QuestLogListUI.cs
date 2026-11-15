@@ -113,7 +113,7 @@ public class QuestLogListUI : MonoBehaviour
         if (!contentRoot || itemPrefab == null) return;
         if (QuestManager.Instance == null) return; // por si se descargó la escena
 
-        // PERF (7 sept 2026): antes se hacia Destroy+Instantiate de TODAS las filas en
+        // PERF: antes se hacia Destroy+Instantiate de TODAS las filas en
         // cada evento OnQuestsChanged (arranque/paso/archivado de CUALQUIER quest, no
         // solo al abrir un menu -- este tracker esta activo en juego normal todo el
         // rato). Mismo patron de pool que QuestMainMenuUI.Rebuild()/ShopUI.RebuildItemList().

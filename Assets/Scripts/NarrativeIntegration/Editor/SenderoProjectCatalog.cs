@@ -30,6 +30,7 @@ namespace Sendero.Narrative.Editor
             // cosas apartadas para borrar y versiones antiguas. (MainWorld_old sí se lee: queda en caché.)
             into.ExcludePaths("/EldoriaCodex_", "/CatalogoAssets_", "/_to_delete/", "/Versiones antiguas/");
             into.ScanScriptsIn("Assets/Scripts");
+            into.WatchFiles(".json");   // textos de Resources/Localization
 
             into.SceneField("_signalIn", NarrativeKeyKind.Signal, SignalRole.Escucha, "Sequencer en");
             into.SceneField("_signalOut", NarrativeKeyKind.Signal, SignalRole.Emite, "Sequencer en");

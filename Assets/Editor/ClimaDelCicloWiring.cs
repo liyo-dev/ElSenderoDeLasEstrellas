@@ -15,7 +15,7 @@ public static class ClimaDelCicloWiring
         "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Rain_01.prefab",
     };
 
-    [MenuItem("El Sendero/Mundo: completar el clima de las escenas abiertas")]
+    [MenuItem("El Sendero/Mundo/Clima: completar el de las escenas abiertas")]
     public static void Menu()
     {
         int n = Ejecutar(avisar: true) + CompletarCielos() + AsegurarEstadoDeTaparse();

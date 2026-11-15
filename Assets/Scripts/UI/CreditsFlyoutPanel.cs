@@ -42,7 +42,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
     [Header("Contenido")]
     [TextArea(10, 60)]
     [SerializeField] string creditsText =
-        // FIX (16 ago 2026): Raúl pidió quitar su nombre de los créditos y seguía apareciendo
+        // Raúl pidió quitar su nombre de los créditos y seguía apareciendo
         // — estaba también duplicado en CreditsSceneController.cs (el crawl completo de
         // Credits.unity), así que había que editar los dos sitios a la vez para que
         // desapareciera de verdad en ambas pantallas de créditos (el panel rápido de pausa y
@@ -143,7 +143,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
 
     void Start()
     {
-        // FIX (16 ago 2026): "el botón CRÉDITOS del menú principal a veces funciona y a veces no".
+        // "el botón CRÉDITOS del menú principal a veces funciona y a veces no".
         // WireCreditsButton() localizaba el botón CRÉDITOS con FindObjectsByType<Button>(...) UNA
         // sola vez, en este Start(). Ese overload de FindObjectsByType excluye objetos inactivos
         // por defecto, y el botón/panel de MainMenu.unity puede no estar activo todavía en el mismo
@@ -206,7 +206,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
 
     void HandleFamilyChanged(InputGlyphDeviceFamily _) => RefreshGlyphs();
 
-    // FIX: la "X" del botón cerrar es un carácter de teclado/ratón (convención de ventana), no un
+    // la "X" del botón cerrar es un carácter de teclado/ratón (convención de ventana), no un
     // botón real de ningún mando — mostrarla ahí confundía en vez de indicar qué pulsar. En mando se
     // sustituye por el icono real del botón que YA cierra el panel (Cancelar/East, ver Update()), y
     // el footer "Ver créditos completos" antepone el icono real de su propio atajo (North). En
@@ -259,7 +259,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // valor por defecto (Exclude) — el botón puede estar temporalmente inactivo (panel de
         // menú aún no revelado por su animación de entrada) en el frame en que se busca.
         //
-        // FIX (20 ago 2026): "el botón CRÉDITOS del MainMenu ya no abre nada". El footer de
+        // "el botón CRÉDITOS del MainMenu ya no abre nada". El footer de
         // ESTE MISMO panel (BuildFooter(), más abajo) tiene el texto "Ver créditos completos >>",
         // que también contiene "credit" — así que la búsqueda por texto podía encontrar y
         // engancharse a nuestro propio botón de footer en vez del botón CRÉDITOS real del
@@ -454,7 +454,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         _panelRoot = (RectTransform)panelGo.transform;
         _panelRoot.anchorMin = new Vector2(1f, 0f);
         _panelRoot.anchorMax = new Vector2(1f, 1f);
-        // FIX: con pivot.x=0 (borde izquierdo del panel como pivote) y anclado al borde derecho de
+        // con pivot.x=0 (borde izquierdo del panel como pivote) y anclado al borde derecho de
         // la pantalla, anchoredPosition.x=0 deja el panel ENTERO fuera de pantalla (se extiende hacia
         // la derecha desde el borde), no pegado y visible como parecía la intención. Por eso
         // OpenPanel() (que anima a x=0) nunca mostraba nada: el panel viajaba de "fuera de pantalla"
@@ -507,7 +507,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
 
         // Botón cerrar ("X" en teclado/ratón; icono real del botón Cancelar del mando cuando la
         // familia activa es un mando — ver RefreshGlyphs()), esquina superior derecha del panel.
-        // FIX: usaba el glifo unicode "✕" (U+2715), que la fuente TMP del proyecto no tiene en su
+        // usaba el glifo unicode "✕" (U+2715), que la fuente TMP del proyecto no tiene en su
         // atlas — se veía como un cuadrado "tofu" en vez del icono. Se sustituye por una X normal,
         // garantizada en cualquier fuente, sin depender de generar el atlas con ese glifo extra.
         var closeGo = new GameObject("CloseButton", typeof(RectTransform));
@@ -633,7 +633,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         labelGo.transform.SetParent(footerRt, false);
         StretchToParent((RectTransform)labelGo.transform);
         var label = labelGo.AddComponent<TextMeshProUGUI>();
-        // FIX: mismo problema de glifo que el botón de cerrar — "↗" (U+2197) no está en el atlas
+        // mismo problema de glifo que el botón de cerrar — "↗" (U+2197) no está en el atlas
         // de la fuente y se veía como un cuadrado. ">>" usa solo caracteres ASCII normales. En
         // mando, RefreshGlyphs() quita el ">>" (no es un botón real) y antepone el icono real de
         // North en su lugar (ver _footerIcon más abajo).

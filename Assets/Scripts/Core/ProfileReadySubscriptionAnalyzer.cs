@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 
 /// <summary>
-/// 🔍 HERRAMIENTA DE DIAGNÓSTICO AVANZADO
+/// HERRAMIENTA DE DIAGNÓSTICO AVANZADO
 /// 
 /// Analiza TODOS los MonoBehaviours activos en la escena y detecta cuáles tienen métodos
 /// que DEBERÍAN suscribirse a OnProfileReady pero NO lo están haciendo.
@@ -94,7 +94,7 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
     public void AnalyzeAllSystems()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[ProfileReadySubscriptionAnalyzer] 🔍 INICIANDO ANÁLISIS COMPLETO DE SUSCRIPCIONES OnProfileReady...");
+        Debug.Log("[ProfileReadySubscriptionAnalyzer] INICIANDO ANÁLISIS COMPLETO DE SUSCRIPCIONES OnProfileReady...");
 #endif
         
         var allMonoBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include);
@@ -302,7 +302,7 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
     {
         // Registrar comando de consola si hay un sistema de comandos
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[ProfileReadySubscriptionAnalyzer] 💡 Usa [ContextMenu] 'Analizar Suscripciones OnProfileReady' para análisis manual");
+        Debug.Log("[ProfileReadySubscriptionAnalyzer] Usa [ContextMenu] 'Analizar Suscripciones OnProfileReady' para análisis manual");
 #endif
     }
 }

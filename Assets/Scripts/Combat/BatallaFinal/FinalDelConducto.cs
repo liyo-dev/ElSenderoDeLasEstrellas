@@ -461,7 +461,8 @@ public sealed class FinalDelConducto : MonoBehaviour
     private void PonerCinematica()
     {
         if (_cinematica) return;
-        if (_accion == null) _accion = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
+        // El modo se quita del mismo cuerpo al que se puso.
+        PlayerService.TryGetComponent(out _accion, allowSceneLookup: false);
         if (_accion != null) _accion.PushMode(ActionMode.Cinematic);
         _cinematica = true;
 

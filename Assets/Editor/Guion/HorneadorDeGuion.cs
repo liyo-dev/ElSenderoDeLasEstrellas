@@ -29,22 +29,22 @@ public static partial class HorneadorDeGuion
 
     public const string RutaPrologo = "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt";
 
-    [MenuItem("El Sendero/Guion/2. Hornear el guion del prólogo", priority = 2)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/2. Hornear el guion del prólogo", priority = 2)]
     public static void MenuPrologo() => Hornear(RutaPrologo, storyboard: false);
 
-    [MenuItem("El Sendero/Guion/3. Hornear el prólogo + storyboard", priority = 3)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/3. Hornear el prólogo + storyboard", priority = 3)]
     public static void MenuPrologoConStoryboard() => Hornear(RutaPrologo, storyboard: true);
 
-    [MenuItem("El Sendero/Guion/4. Hornear Batalla Final (Intro)", priority = 10)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/4. Hornear Batalla Final (Intro)", priority = 10)]
     public static void MenuBatallaFinal() => Hornear("Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt", storyboard: false);
 
-    [MenuItem("El Sendero/Guion/5. Hornear Final Parte 1 (El Sacrificio)", priority = 12)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/5. Hornear Final Parte 1 (El Sacrificio)", priority = 12)]
     public static void MenuFinalParte1() => Hornear("Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt", storyboard: false);
 
-    [MenuItem("El Sendero/Guion/6. Hornear Final Parte 2 (El Río)", priority = 13)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/6. Hornear Final Parte 2 (El Río)", priority = 13)]
     public static void MenuFinalParte2() => Hornear("Assets/_SEQUENCES/Guiones/Final_02_ElRio.guion.txt", storyboard: false);
 
-    [MenuItem("El Sendero/Guion/7. Hornear Mañana Después (Capítulo 2)", priority = 14)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/7. Hornear Mañana Después (Capítulo 2)", priority = 14)]
     public static void MenuMananaDespues() => Hornear("Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt", storyboard: false);
 
     public static GuionHorneado Hornear(string rutaTexto, bool storyboard)

@@ -28,7 +28,7 @@ public static class TinteDeMaterial
         var copia = AssetDatabase.LoadAssetAtPath<Material>(ruta);
         if (copia == null)
         {
-            AsegurarCarpeta(Path.GetDirectoryName(ruta).Replace('\\', '/'));
+            Kits.EditorTools.AssetFolders.Ensure(Path.GetDirectoryName(ruta).Replace('\\', '/'));
             copia = new Material(original);
             AssetDatabase.CreateAsset(copia, ruta);
         }
@@ -83,13 +83,6 @@ public static class TinteDeMaterial
         return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
     }
 
-    private static void AsegurarCarpeta(string ruta)
-    {
-        if (string.IsNullOrEmpty(ruta) || AssetDatabase.IsValidFolder(ruta)) return;
-        string padre = Path.GetDirectoryName(ruta).Replace('\\', '/');
-        AsegurarCarpeta(padre);
-        AssetDatabase.CreateFolder(padre, Path.GetFileName(ruta));
-    }
 
     /// <summary>Los píxeles de una textura aunque no sea legible: se copia a una RenderTexture y se lee de ahí.</summary>
     private static Color[] LeerPixeles(Texture2D origen)

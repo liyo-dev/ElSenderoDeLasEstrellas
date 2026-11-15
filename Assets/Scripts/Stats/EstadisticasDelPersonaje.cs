@@ -9,8 +9,9 @@ using UnityEngine;
 ///  - Base: lo que tiene por sí mismo. Sube al ganar combates (PasoPremioDeEstadisticas) y con la
 ///    Sintonía Estelar, siempre con <see cref="Sumar"/>. La vida y la magia son de cada personaje y
 ///    las lleva SaludDelGrupo (único dueño: <see cref="Sumar"/> le pasa lo que suben, para los
-///    tres); aquí no se escriben. El ataque y la defensa se guardan en el preset (ataque, defensa)
-///    y de momento los comparten los tres.
+///    tres); aquí no se escriben. El ataque y la defensa son de cada personaje: los de Will en el
+///    preset (ataque, defensa), los de Estela y Liam en su entrada de companionHealth; sin guardar,
+///    los de su ficha (cada uno el suyo: no hay base compartida).
 ///  - Bonos: lo que suman las fuentes registradas (IFuenteDeBonos: la ropa del cuerpo del jugador).
 ///    No se guardan; las vuelve a registrar quien las da. SaludDelGrupo escucha
 ///    <see cref="Cambiadas"/> para sumar los de vida y magia al personaje que va al mando.
@@ -69,26 +70,26 @@ public static class EstadisticasDelPersonaje
             var p = GameBootService.IsAvailable ? UnlockService.GetActivePreset() : null;
             // Sin partida cargada (escenas de prueba, primeros frames): valores iniciales, para
             // que los hechizos no hagan 0 de daño.
-            if (p == null) { var ini = Iniciales; return new Estadisticas(0f, 0f, ini.ataque, ini.defensa); }
-            AsegurarAtaqueYDefensa(p);
+            var activo = ControlDelJugador.Activo;
+            if (p == null) { var ini = InicialesDe(activo); return new Estadisticas(0f, 0f, ini.ataque, ini.defensa); }
+            var (ataque, defensa) = AtaqueYDefensa(p, activo);
             // La vida y la magia del que va al mando, de SaludDelGrupo; sin grupo en la escena, las
             // de Will guardadas en el preset.
             float vida = p.maxHP, magia = p.maxMP;
             var grupo = SaludDelGrupo.Instance;
             if (grupo != null && grupo.EstaListo)
             {
-                var activo = ControlDelJugador.Activo;
                 vida = grupo.VidaMaxBase(activo);
                 magia = grupo.ManaMaxBase(activo);
             }
-            return new Estadisticas(vida, magia, p.ataque, p.defensa);
+            return new Estadisticas(vida, magia, ataque, defensa);
         }
     }
 
     public static Estadisticas Total => Base + Bonos;
 
-    /// Suma a la base (un premio de combate, un don de Sintonía): el ataque y la defensa aquí, la
-    /// vida y la magia a los tres personajes por SaludDelGrupo. Devuelve el total de antes y el de
+    /// Suma a la base de los tres personajes (un premio de combate, un don de Sintonía): el ataque
+    /// y la defensa aquí, la vida y la magia por SaludDelGrupo. Devuelve el total de antes y el de
     /// después del que va al mando, para contarlo en el informe.
     public static (Estadisticas antes, Estadisticas despues) Sumar(Estadisticas delta)
     {
@@ -96,8 +97,13 @@ public static class EstadisticasDelPersonaje
         if (p == null) return (default, default);
 
         var antes = Total;
-        p.ataque += delta.ataque;
-        p.defensa += delta.defensa;
+        if (delta.ataque != 0f || delta.defensa != 0f)
+            for (int i = 0; i < ControlDelJugador.Personajes; i++)
+            {
+                var s = (PartyControlManager.CharacterSlot)i;
+                var (ataque, defensa) = AtaqueYDefensa(p, s);
+                PonerAtaqueYDefensa(p, s, ataque + delta.ataque, defensa + delta.defensa);
+            }
         if (delta.vida != 0f || delta.magia != 0f)
         {
             var grupo = SaludDelGrupo.Instance;
@@ -134,19 +140,44 @@ public static class EstadisticasDelPersonaje
     /// después del cambio; quien escucha vuelve a leer <see cref="Bonos"/>.
     public static void AvisarCambioDeBonos() => Cambiadas?.Invoke();
 
-    /// Con lo que empieza el personaje que lleva el jugador: su ficha, o los valores por defecto si
-    /// el cuerpo no tiene.
-    public static Estadisticas Iniciales =>
-        PlayerService.TryGetComponent(out Personaje personaje, allowSceneLookup: false) && personaje.Ficha != null
-            ? personaje.Ficha.EstadisticasIniciales
-            : new Estadisticas(0f, 0f, AtaqueInicial, DefensaInicial);
+    /// Con lo que empieza el personaje que lleva el jugador.
+    public static Estadisticas Iniciales => InicialesDe(ControlDelJugador.Activo);
 
-    // El ataque y la defensa sin inicializar (0: partidas de antes de INC-470) toman los de la ficha.
-    private static void AsegurarAtaqueYDefensa(PlayerPresetSO p)
+    /// Con lo que empieza ese personaje: la ficha de su cuerpo (o la del proyecto si no está en
+    /// escena), o los valores por defecto si no la hay.
+    public static Estadisticas InicialesDe(PartyControlManager.CharacterSlot personaje)
     {
-        if (p.ataque > 0f && p.defensa > 0f) return;
-        var ini = Iniciales;
-        if (p.ataque <= 0f) p.ataque = ini.ataque;
-        if (p.defensa <= 0f) p.defensa = ini.defensa;
+        var ficha = FichaDePersonaje.De(personaje);
+        return ficha != null ? ficha.EstadisticasIniciales : new Estadisticas(0f, 0f, AtaqueInicial, DefensaInicial);
+    }
+
+    /// El ataque y la defensa de base de ese personaje. Will, los del preset (ataque, defensa);
+    /// Estela y Liam, los de su entrada. Lo que no esté guardado (a 0) es el de su ficha.
+    public static (float ataque, float defensa) AtaqueYDefensa(PlayerPresetSO p, PartyControlManager.CharacterSlot personaje)
+    {
+        float ataque, defensa;
+        if (personaje == PartyControlManager.CharacterSlot.Will) { ataque = p.ataque; defensa = p.defensa; }
+        else
+        {
+            var e = p.EstadoDe(personaje, crear: false);
+            ataque = e != null ? e.ataque : 0f;
+            defensa = e != null ? e.defensa : 0f;
+        }
+        if (ataque > 0f && defensa > 0f) return (ataque, defensa);
+        var ini = InicialesDe(personaje);
+        return (ataque > 0f ? ataque : ini.ataque, defensa > 0f ? defensa : ini.defensa);
+    }
+
+    private static void PonerAtaqueYDefensa(PlayerPresetSO p, PartyControlManager.CharacterSlot personaje, float ataque, float defensa)
+    {
+        if (personaje == PartyControlManager.CharacterSlot.Will)
+        {
+            p.ataque = ataque;
+            p.defensa = defensa;
+            return;
+        }
+        var e = p.EstadoDe(personaje, crear: true);
+        e.ataque = ataque;
+        e.defensa = defensa;
     }
 }

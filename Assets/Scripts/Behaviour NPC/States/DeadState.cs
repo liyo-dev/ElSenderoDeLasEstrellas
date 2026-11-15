@@ -51,7 +51,7 @@ namespace Game.NPC.States
         {
             base.OnExit(context);
             // Este estado no debería tener exit, pero por si acaso
-            context.Log("[DeadState] ⚠️ Saliendo del estado Dead (esto no debería ocurrir)");
+            context.Log("[DeadState] Saliendo del estado Dead (esto no debería ocurrir)");
         }
     }
 }

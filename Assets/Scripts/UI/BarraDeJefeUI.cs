@@ -54,7 +54,7 @@ public sealed class BarraDeJefeUI : MonoBehaviour
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BarraDeJefeUI] Falta Resources/" + RutaEnResources +
-                             ": ejecuta «El Sendero/UI/Crear o regenerar la barra de jefe (INC-645)».");
+                             ": ejecuta «El Sendero/Interfaz/Crear o regenerar la barra de jefe».");
 #endif
             return null;
         }

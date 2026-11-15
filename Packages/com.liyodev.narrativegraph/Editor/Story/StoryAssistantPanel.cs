@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// Optional chat inside the editor, with the service each user picks in the settings (⚙).
+    /// Optional chat inside the editor, with the service each user picks in the settings.
     /// Changes the assistant proposes are shown first and applied only on "Apply".
     public sealed class StoryAssistantPanel : VisualElement
     {

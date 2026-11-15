@@ -26,7 +26,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN__LIAM
-    prefab: {fileID: 3335879819108417999, guid: de7b566c44b3b6949964c333227535b2, type: 3}
+    prefab: {fileID: 6240641739715126112, guid: 2db79d01abddae142bf5e9e098e00d53, type: 3}
     gameObjectName: _LIAM
     persistenceId: _LIAM
     vozDeReacciones: Vecino
@@ -196,7 +196,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN__ESTELA
-    prefab: {fileID: 6741617104233437454, guid: a75e3ceddb1bc844683082087c61b2d5, type: 3}
+    prefab: {fileID: 2492702236771832282, guid: 32f72536e3ea86349ba8d44f419f74b9, type: 3}
     gameObjectName: _ESTELA
     persistenceId: _ESTELA
     vozDeReacciones: Vecino

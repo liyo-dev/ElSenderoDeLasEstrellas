@@ -6,7 +6,7 @@ using UnityEngine;
 ///   dirección (vThirdPersonMotor.empujeExterno); todos se tapan la cara en bucle (estado
 ///   UpperBody.ClimaTaparse, piernas libres).
 /// - Lluvia o nieve: quien está quieto un momento se abraza (estado UpperBody.ClimaFrio, ver
-///   AbrazarseDeFrio), encoge los hombros y tirita (procedural sobre la animación, en LateUpdate) y
+///   PosesDeActuacion), encoge los hombros y tirita (procedural sobre la animación, en LateUpdate) y
 ///   pone cara de helado (NPCEmotion.Frozen como cara de fondo); andando no cambia nada.
 /// Solo con el jugador libre: en el suelo, en modo Default, sin bloqueo de PlayerLockService
 /// (diálogos, cinemáticas). Nadie pisa la capa UpperBody ni la cara de fondo si otro sistema las
@@ -16,7 +16,7 @@ public static class ClimaSobreElJugador
     /// Estado en bucle de la capa UpperBody (lo crea el menú de clima). Sin él se usa Fear01, que
     /// solo dura un momento porque su estado tiene salida.
     public const string EstadoDeTaparse = "ClimaTaparse";
-    /// Estado en bucle de la capa UpperBody para abrazarse de frío (lo crea AbrazarseDeFrio). Sin él
+    /// Estado en bucle de la capa UpperBody para abrazarse de frío (lo crea PosesDeActuacion). Sin él
     /// solo se encogen los hombros y se tirita.
     public const string EstadoDeFrio = "ClimaFrio";
     private const string GestoDeReserva = "Fear01";

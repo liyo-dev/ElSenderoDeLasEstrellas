@@ -16,9 +16,6 @@ public static class CrearBolaDeConjuro
     private const string CarpetaTexturas = "Assets/_VFX/Prologo/Texturas";
     private const string CarpetaMateriales = "Assets/_VFX/Prologo/Materiales";
 
-    [MenuItem("El Sendero/VFX/Crear bola de conjuro INC-801")]
-    public static void Menu() => Asegurar();
-
     public static string Asegurar()
     {
         var t = new VfxProcedural.Texturas(CarpetaTexturas, CarpetaMateriales, "Prologo");

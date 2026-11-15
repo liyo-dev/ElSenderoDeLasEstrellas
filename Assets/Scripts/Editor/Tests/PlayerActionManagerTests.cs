@@ -5,7 +5,7 @@ using UnityEngine;
 /// Tests de EditMode para el refcount de PushMode/PopMode de PlayerActionManager.
 /// Añadido en la auditoría de seguimiento del 12 de agosto de 2026 (TDD.md §19.2/§19.4),
 /// que recomendaba precisamente este escenario como primer test del proyecto: reproducir
-/// el bug C2 (auditoría 2026-08-07, TDD.md §19.1) como red de seguridad permanente contra
+/// el bug C2 como red de seguridad permanente contra
 /// una regresión futura, no solo confiar en el comentario "FIX C2" del código.
 ///
 /// Vive en una carpeta Editor sin .asmdef propio a propósito: el proyecto no tiene ningún

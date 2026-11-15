@@ -1749,14 +1749,6 @@
             "value": "Habilidad básica para superar obstáculos."
         },
         {
-            "key": "ABILITY_CLIMB_TITLE",
-            "value": "Trepar"
-        },
-        {
-            "key": "ABILITY_CLIMB_DESC",
-            "value": "Accede a superficies verticales."
-        },
-        {
             "key": "ABILITY_MAGIC_TITLE",
             "value": "Magia"
         },
@@ -2049,10 +2041,6 @@
             "value": "Necesitas saber saltar para pasar por aquí."
         },
         {
-            "key": "REQUISITO_FALTA_CLIMB",
-            "value": "Necesitas saber trepar para subir aquí."
-        },
-        {
             "key": "REQUISITO_FALTA_MAGIC",
             "value": "Aquí hace falta magia."
         },
@@ -2263,7 +2251,7 @@
         },
         {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Síguele sin que te vea. Cuando se pare a mirar atrás, escóndete en un matorral o detrás de una pared."
+            "value": "Síguelos sin que te vean. Cuando se paren a mirar atrás, escóndete en un matorral o detrás de una pared."
         },
         {
             "key": "CAP3_ROTULO_MANANA",
@@ -2344,6 +2332,22 @@
         {
             "key": "TUTORIAL_CAP3_HOGUERA",
             "value": "Pulsa {BOTON} junto a una hoguera para descansar: de día pasa el tiempo hasta la noche, y de noche hasta la mañana."
+        },
+        {
+            "key": "LUGAR_RISCO",
+            "value": "Risco"
+        },
+        {
+            "key": "LUGAR_VEGA",
+            "value": "Vega"
+        },
+        {
+            "key": "CAP3_TUTO_DOS",
+            "value": "Son dos. Pulsa {BOTON} para pasar de uno a otro."
+        },
+        {
+            "key": "LUGAR_VALLE",
+            "value": "El Valle"
         }
     ]
 }

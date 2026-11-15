@@ -24,7 +24,7 @@ public class ConductorDeBarco : MonoBehaviour
              "la cámara de exploración se queda dentro de la barco.")]
     [SerializeField] private float distanciaExtraEnBarco = 1.6f;
 
-    // Modo de acción propio: bloquea salto, sprint, voltereta, ataque, magia, porteo, trepar y
+    // Modo de acción propio: bloquea salto, sprint, voltereta, ataque, magia, porteo y
     // volar. El movimiento NO se bloquea (el barco lo lee) ni la interacción (para volver a
     // pulsar el botón y bajar).
     private readonly PasajeroJugador _pasajero = new PasajeroJugador(ActionMode.Boating);

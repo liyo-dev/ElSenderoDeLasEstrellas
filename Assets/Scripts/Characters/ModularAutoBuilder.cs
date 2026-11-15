@@ -328,8 +328,7 @@ public class ModularAutoBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// FIX AABB de culling atascado tras un cambio de apariencia (ver el comentario extenso en
-    /// ActiveCharacterSwapper.SpawnWillNpc, sección "FIX Will invisible parte 2"). Encender/apagar
+    /// FIX AABB de culling atascado tras un cambio de apariencia. Encender/apagar
     /// categorías aquí (SetActive en los SkinnedMeshRenderer de cada parte) dejaba el bounds de
     /// culling de cada renderer calculado con la pose/posición ANTERIOR — o sin calcular nunca, si
     /// la parte estaba desactivada — hasta que ALGO forzara su recálculo. En el editor eso "se
@@ -342,14 +341,10 @@ public class ModularAutoBuilder : MonoBehaviour
     ///
     /// Se llama SIEMPRE desde CharacterAppearanceRegistry.ApplyAppearance() justo después de
     /// ApplySelection()/RestoreInitialSelection() — así CUALQUIER cambio de apariencia queda
-    /// cubierto de una vez, sin depender de que cada llamador nuevo recuerde replicar el fix (como
-    /// pasó con SleepTrigger y ActiveCharacterSwapper.WarpNpcToPosition, que no lo tenían y donde
-    /// también se ha añadido como red de seguridad adicional).
+    /// cubierto de una vez, sin depender de que cada llamador nuevo recuerde replicar el fix.
     ///
-    /// IMPORTANTE: a diferencia de SpawnWillNpc() (que SÍ hace un `Animator.Update(0f)` extra),
-    /// aquí NO se fuerza — este builder vive en el rig del jugador YA activo y animándose cada
-    /// frame (a diferencia de un NPC recién instanciado que aún no ha posado ni un frame), así que
-    /// sus huesos ya están en una pose válida y no hace falta forzar nada. Confirmado por build real
+    /// IMPORTANTE: aquí NO se fuerza `Animator.Update(0f)` — el cuerpo ya está activo y animándose
+    /// cada frame, así que sus huesos ya están en una pose válida. Confirmado por build real
     /// (Player.log): forzar `Animator.Update(0f)` aquí, durante el primer ApplyAppearance() del
     /// arranque, dispara `OnAnimatorMove()` del controller de Invector (`vThirdPersonInput`) antes de
     /// que termine de inicializarse — `NullReferenceException` en `cc.ControlAnimatorRootMotion()`

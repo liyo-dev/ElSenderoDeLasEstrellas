@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// mando a teclado con la pantalla de Controles abierta, la fila cambia de icono/etiqueta sin
 /// necesidad de cerrarla y reabrirla.
 ///
-/// FIX: la descripción (y los overrides de etiqueta tipo "Ratón"/"Espacio"/"Stick derecho") se
+/// la descripción (y los overrides de etiqueta tipo "Ratón"/"Espacio"/"Stick derecho") se
 /// pintaban con el literal del ScriptableObject, que está en español. Jugando en inglés la fila
 /// salía a medias — "Left click / Hechizo — slot izquierdo" — porque la etiqueta de tecla sí pasa
 /// por InputGlyphLabels (claves GLYPH_*) pero el texto del asset no pasaba por ningún sitio. Ahora

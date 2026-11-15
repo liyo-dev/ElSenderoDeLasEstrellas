@@ -31,15 +31,16 @@ namespace NarrativeGraphEditor
                     sb.AppendLine();
                     string title = string.IsNullOrWhiteSpace(node.displayTitle) ? "(untitled)" : node.displayTitle;
                     sb.AppendLine($"### {s.Number(node)} {title}");
-                    sb.AppendLine($"- type: {node.GetType().Name} ({NarrativeNodeCatalog.TitleOf(node.GetType())})");
+                    sb.AppendLine($"- type: {node.KindType.Name} ({NarrativeNodeCatalog.TitleOf(node)})");
                     sb.AppendLine($"- id: {node.guid}");
                     var summary = StepSummary.For(node, 400);
                     if (!string.IsNullOrWhiteSpace(summary)) sb.AppendLine($"- does: {summary}");
-                    foreach (var field in EditableFields(node.GetType()))
-                    {
-                        var value = Format(field.GetValue(node));
-                        if (!string.IsNullOrEmpty(value)) sb.AppendLine($"- {field.Name}: {value}");
-                    }
+                    foreach (var owner in node.FieldOwners())
+                        foreach (var field in EditableFields(owner.GetType()))
+                        {
+                            var value = Format(field.GetValue(owner));
+                            if (!string.IsNullOrEmpty(value)) sb.AppendLine($"- {field.Name}: {value}");
+                        }
                     var ports = node.GetOutputPorts();
                     if (node.outputs != null)
                         for (int i = 0; i < node.outputs.Count; i++)
@@ -90,7 +91,8 @@ namespace NarrativeGraphEditor
         /// Public, serialized, visible fields a person can edit on a step.
         public static FieldInfo[] EditableFields(Type type)
             => type.GetFields(BindingFlags.Instance | BindingFlags.Public)
-                   .Where(f => f.DeclaringType != typeof(NarrativeNode))
+                   .Where(f => f.DeclaringType != typeof(NarrativeNode) && f.DeclaringType != typeof(NarrativeRequest))
+                   .Where(f => !typeof(NarrativeRequest).IsAssignableFrom(f.FieldType))
                    .Where(f => f.GetCustomAttribute<HideInInspector>() == null && f.GetCustomAttribute<NonSerializedAttribute>() == null)
                    .ToArray();
 

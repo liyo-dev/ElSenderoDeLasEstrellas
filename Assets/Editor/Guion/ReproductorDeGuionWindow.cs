@@ -34,7 +34,7 @@ public class ReproductorDeGuionWindow : EditorWindow
     private GuionBeat _beatDeLaEntrada;
     private bool _arrastrando;
 
-    [MenuItem("El Sendero/Guion/Reproductor", false, 20)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/Reproductor", false, 20)]
     private static void Abrir() => GetWindow<ReproductorDeGuionWindow>("Reproductor");
 
     private void OnEnable()

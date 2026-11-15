@@ -31,7 +31,7 @@ namespace Game.NPC.States
         // Punto de actividad elegido al entrar en el estado
         private NPCWorldPoint _pendingWorldPoint;
 
-        // ✅ FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
+        // FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
         // (cada 0.2s por NPC vagando). Mismo patrón que AlertState (FIX #10) e IdleState.
         private NPCTeamMember _teamMember;
 
@@ -58,7 +58,7 @@ namespace Game.NPC.States
             _lastPosition       = context.Transform.position;
             _socialScanTimer    = 0f;
             _pendingWorldPoint  = null;
-            _teamMember         = context.Transform.GetComponent<NPCTeamMember>(); // ✅ FIX rendimiento: una vez por entrada al estado
+            _teamMember         = context.Transform.GetComponent<NPCTeamMember>(); // FIX rendimiento: una vez por entrada al estado
 
             float wanderSpeed = 2.0f;
             if (context.Config?.ambientConfig != null)
@@ -183,7 +183,7 @@ namespace Game.NPC.States
         }
         
         // =================================================================================
-        // 🧩 LÓGICA INTERNA
+        // LÓGICA INTERNA
         // =================================================================================
 
         private bool TryFindWanderPoint(NPCStateContext context, out Vector3 point)
@@ -241,9 +241,9 @@ namespace Game.NPC.States
             // Pre-requisitos rápidos
             if (context.WasDefeatedInCombat || context.Player == null) return;
             
-            // ✅ FIX: Si soy miembro de un equipo y ya notifiqué, no sigo detectando
+            // Si soy miembro de un equipo y ya notifiqué, no sigo detectando
             // Esto evita el bucle infinito de detección
-            var teamMember = _teamMember; // ✅ FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
+            var teamMember = _teamMember; // FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
             if (teamMember != null && teamMember.HasNotifiedTeam)
             {
                 return; // Ya se notificó al equipo, el NPCCombatTeam se encarga
@@ -291,12 +291,12 @@ namespace Game.NPC.States
             }
 
             // --- JUGADOR DETECTADO ---
-            context.Log($"[WanderState] 👁️ Jugador detectado visualmente. Iniciando Alerta.");
+            context.Log($"[WanderState] Jugador detectado visualmente. Iniciando Alerta.");
             
-            // ✅ TEAM SUPPORT: Notificar al equipo (reutilizamos teamMember del inicio)
+            // TEAM SUPPORT: Notificar al equipo (reutilizamos teamMember del inicio)
             if (teamMember != null && teamMember.TryNotifyTeamOfPlayer(context.Player))
             {
-                // ✅ FIX: Todos los miembros entran en AlertState, pero los no-líderes saltan el diálogo
+                // Todos los miembros entran en AlertState, pero los no-líderes saltan el diálogo
                 var alertState = new AlertState(
                     duration: combatConfig.alertIconDuration,
                     walk: true,

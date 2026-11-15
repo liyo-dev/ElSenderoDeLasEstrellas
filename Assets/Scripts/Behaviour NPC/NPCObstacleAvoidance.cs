@@ -67,7 +67,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _effectiveCastRadius = castRadius > 0f ? castRadius : (_agent.radius + 0.15f);
 
-        // FIX (6 sept 2026): excluir siempre la capa "Floor" (el suelo/terreno de todo el
+        // excluir siempre la capa "Floor" (el suelo/terreno de todo el
         // proyecto, ver AGENTS.md § 2 y el resto de raycasts de suelo ya existentes) del set de
         // obstáculos. Sin esto, cualquier ondulación/pendiente del terreno que el SphereCast
         // rozara a la altura del pecho del NPC se interpretaba como un obstáculo real y
@@ -108,7 +108,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
             EvaluateObstacle(desired);
         }
 
-        // FIX (6 sept 2026): red de seguridad contra bloqueo permanente — ver comentario del campo
+        // red de seguridad contra bloqueo permanente — ver comentario del campo
         // maxContinuousAvoidSeconds. Reportado por Raúl como "barrera invisible" bloqueando el avance
         // en la plaza de MainWorld (mobiliario urbano apretado: bancos + farolas), justo tras activar
         // el componente por primera vez en los prefabs reales de party (Eldran/_LIAM/_ESTELA).
@@ -141,7 +141,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
         {
             Vector3 lateral = Vector3.Cross(Vector3.up, dir).normalized;
 
-            // FIX (6 sept 2026): comprobar los DOS lados, no solo uno. Antes solo se comprobaba
+            // comprobar los DOS lados, no solo uno. Antes solo se comprobaba
             // "rightBlocked" y, si estaba bloqueado, se esquivaba hacia el lado contrario SIN
             // comprobar que ese lado estuviera realmente libre — en una zona con mobiliario urbano
             // apretado (bancos + farolas de la plaza de MainWorld) un NPC podía quedar encajado entre

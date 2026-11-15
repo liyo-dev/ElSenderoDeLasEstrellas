@@ -86,8 +86,7 @@ public static class VfxDeHechizos
         new Ficha { Asset = "MagoOscuroGrieta", Visual = Propio(VfxPropiosDeHechizosBuilder.GrietaDibujoZona) },
     };
 
-    [MenuItem("El Sendero/Magia/VFX de los hechizos · aplicar (INC-640)")]
-    [MenuItem("El Sendero/Magia/Aplicar VFX Liam")]
+    [MenuItem("El Sendero/Magia/VFX de los hechizos: aplicar la tabla")]
     public static void AplicarMenu()
     {
         var log = new StringBuilder("=== VFX de los hechizos (INC-640) ===\n");

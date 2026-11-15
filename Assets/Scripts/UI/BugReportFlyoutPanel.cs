@@ -428,7 +428,6 @@ public class BugReportFlyoutPanel : MonoBehaviour
         closeLabel.margin = Vector4.zero;
         closeLabel.raycastTarget = false;
         _closeLabel = closeLabel;
-        // FIX (24 ago 2026, tras una segunda captura de Raúl donde la "X" seguía sin verse centrada):
         // la ronda anterior compensaba con un offset horizontal fijo de -6, calibrado a ojo contra UNA
         // captura concreta — insuficiente/impreciso, y el mismo problema existía también (sin ningún
         // fix) en CreditsFlyoutPanel.cs/PatchNotesFlyoutPanel.cs con Capline. En vez de seguir afinando
@@ -511,7 +510,6 @@ public class BugReportFlyoutPanel : MonoBehaviour
 
         CreateFieldLabel("Número de Build *", "BugReport_LabelBuild");
         _buildField = CreateInputField("0.0.0", "BugReport_PlaceholderBuild", multiline: false);
-        // FIX (24 ago 2026, Raúl: "confuso ver en el placeholder 0.1.5 y que la versión sea 0.1.7"):
         // un placeholder con un número de versión concreto ("0.1.5") se queda desactualizado en
         // cuanto sale una build nueva — este proyecto además autoincrementa la versión en cada build
         // (BuildVersionIncrementer.cs), así que un valor fijo aquí garantiza volver a quedar mal más
@@ -552,7 +550,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         go.AddComponent<LocalizedText>().key = locKey;
     }
 
-    // FIX (24 ago 2026, captura de Raúl: "el placeholder no se ve entero y da mala imagen"): el texto
+    // el texto
     // de ayuda de Número de Build ("Puedes encontrarlo en la esquina inferior izquierda de la
     // pantalla") vivía como PLACEHOLDER dentro de un campo de una sola línea — no cabía entero ni
     // envolviendo (se recortaba la mitad de abajo tapado por el RectMask2D del campo, bug ya corregido
@@ -848,7 +846,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     // métricas de la fuente (avance de carácter, cap height, ascender/descender) que usa
     // TextAlignmentOptions y que no siempre coinciden con los píxeles visibles de un glifo concreto
     // — evita tener que recalibrar constantes a mano cada vez que cambia la fuente o el carácter.
-    // FIX (24 ago 2026, captura de Raúl: "la X primero sale mal y al hacer click se pone bien"): esto
+    // esto
     // se llama desde BuildHeader(), justo después de AddComponent<CanvasScaler>() en el mismo Awake()
     // — el CanvasScaler recién añadido todavía no ha calculado su escala real (eso lo hace Unity en su
     // propio paso de actualización de Canvas, no de forma síncrona al añadir el componente), así que

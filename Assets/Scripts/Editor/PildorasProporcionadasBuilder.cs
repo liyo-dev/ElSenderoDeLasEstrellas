@@ -1,66 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Pone BordesProporcionales en todos los Image Sliced del proyecto que usan un sprite de píldora
-/// (puntas redondeadas: borde lateral mucho mayor que el vertical), en prefabs y escenas. Las
-/// instancias de prefab se saltan: se arreglan en su prefab. Se puede repetir sin efectos.
+/// Pone BordesProporcionales en los Image Sliced que usan un sprite de píldora (puntas redondeadas:
+/// borde lateral mucho mayor que el vertical). Lo usan los constructores de UI que montan un prefab
+/// desde cero, antes de guardarlo.
 /// </summary>
 public static class PildorasProporcionadasBuilder
 {
     static readonly string[] CarpetasExcluidas = { "Assets/Plugins", "Assets/TextMesh Pro", "Assets/Art/World" };
-
-    [MenuItem("El Sendero/UI/Píldoras · bordes proporcionales en todo el proyecto")]
-    public static void Aplicar()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-        { Debug.LogWarning("Los bordes proporcionales se aplican fuera de Play."); return; }
-
-        var texturas = TexturasDePildora();
-        if (texturas.Count == 0) { Debug.Log("No hay sprites de píldora en el proyecto."); return; }
-        var tocados = new List<string>();
-        try
-        {
-            var prefabs = Rutas("t:Prefab").Where(r => DependeDe(r, texturas)).ToList();
-            for (int i = 0; i < prefabs.Count; i++)
-            {
-                EditorUtility.DisplayProgressBar("Píldoras", prefabs[i], i / (float)Mathf.Max(1, prefabs.Count));
-                var raiz = PrefabUtility.LoadPrefabContents(prefabs[i]);
-                try
-                {
-                    var propias = raiz.GetComponentsInChildren<Image>(true).Where(img => !PrefabUtility.IsPartOfPrefabInstance(img));
-                    int n = Arreglar(propias, texturas, prefabs[i], tocados);
-                    if (n > 0) PrefabUtility.SaveAsPrefabAsset(raiz, prefabs[i]);
-                }
-                finally { PrefabUtility.UnloadPrefabContents(raiz); }
-            }
-
-            foreach (var ruta in Rutas("t:Scene").Where(r => r.StartsWith("Assets/Scenes") && DependeDe(r, texturas)))
-            {
-                var escena = SceneManager.GetSceneByPath(ruta);
-                bool abiertaAqui = !escena.isLoaded;
-                if (abiertaAqui) escena = EditorSceneManager.OpenScene(ruta, OpenSceneMode.Additive);
-                var imagenes = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Image>(true))
-                    .Where(img => !PrefabUtility.IsPartOfPrefabInstance(img)).ToArray();
-                if (Arreglar(imagenes, texturas, ruta, tocados) > 0)
-                {
-                    EditorSceneManager.MarkSceneDirty(escena);
-                    EditorSceneManager.SaveScene(escena);
-                }
-                if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
-            }
-        }
-        finally { EditorUtility.ClearProgressBar(); }
-        AssetDatabase.SaveAssets();
-        Debug.Log(tocados.Count == 0
-            ? "Píldoras: ya estaba todo con bordes proporcionales."
-            : $"Píldoras: {tocados.Count} imágenes con bordes proporcionales:\n" + string.Join("\n", tocados));
-    }
 
     /// Para constructores de UI que generan un prefab desde cero: deja sus píldoras con bordes
     /// proporcionales antes de guardarlo. Devuelve cuántas ha tocado.
@@ -107,9 +58,6 @@ public static class PildorasProporcionadasBuilder
     static IEnumerable<string> Rutas(string filtro) =>
         AssetDatabase.FindAssets(filtro, new[] { "Assets" }).Select(g => AssetDatabase.GUIDToAssetPath(g))
             .Where(r => !CarpetasExcluidas.Any(c => r.StartsWith(c))).Distinct();
-
-    static bool DependeDe(string ruta, HashSet<string> texturas) =>
-        AssetDatabase.GetDependencies(ruta, false).Any(texturas.Contains);
 
     static string RutaEnJerarquia(Transform t)
     {

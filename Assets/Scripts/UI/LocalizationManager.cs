@@ -136,7 +136,7 @@ public class LocalizationManager : MonoBehaviour
 
     public string Get(string key, string fallback = "")
     {
-        // FIX: Dictionary<string,>.TryGetValue lanza ArgumentNullException si key es null (no admite
+        // Dictionary<string,>.TryGetValue lanza ArgumentNullException si key es null (no admite
         // claves null). Antes esto solo lo evitaba quien llamara a Get() con cuidado; ahora es
         // defensivo aquí también, para que ninguna llamada externa con clave null/vacía pueda tirar
         // abajo un panel de UI entero (ver fix en LocalizedText.cs para el caso concreto que lo

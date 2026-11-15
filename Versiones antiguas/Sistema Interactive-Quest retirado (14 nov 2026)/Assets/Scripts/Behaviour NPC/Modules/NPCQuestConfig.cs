@@ -1,0 +1,938 @@
+﻿using UnityEngine;
+using System.Linq;
+
+namespace Game.NPC.Modules
+{
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — no ampliar ni usar para NPCs/quests nuevas de
+    // la maqueta de Eldoria (MainWorld.unity). Sustituto en el grafo narrativo:
+    // WaitNpcInteractionNode + BranchQuestStateNode + PlayDialogueNode/
+    // DialogueChoiceNode + StartQuestNode/CompleteQuestStepsNode.
+    // Sigue en uso tal cual en MainWorld_old.unity — no tocar su comportamiento.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
+    /// <summary>
+    /// Configuración de misiones para NPCs.
+    /// Aquí se configura la cadena de misiones (Quest Chain) que ofrece el NPC.
+    /// </summary>
+    [CreateAssetMenu(fileName = "NPC_Quest_Config", menuName = "El Sendero/NPCs/Módulos/Quest Config", order = 4)]
+    public class NPCQuestConfig : NPCModuleConfigBase
+    {
+        [Header("Quest Chain")]
+        [Tooltip("Cadena de misiones que ofrece este NPC. Cada elemento representa una quest en orden.")]
+        public QuestChainEntry[] questChain = System.Array.Empty<QuestChainEntry>();
+        [Header("Item Detection (Global)")]
+        [Tooltip("¿Detectar automáticamente cuando el jugador entrega ítems? (Se aplica globalmente)")]
+        public bool enableItemDetection = true;
+        [Min(0f)]
+        [Tooltip("Radio de detección de ítems por defecto")]
+        public float detectionRadius = 3f;
+        [Range(0f, 180f)]
+        [Tooltip("Ángulo de detección de ítemsor defecto")]
+        public float detectionAngle = 90f;
+        [Tooltip("Layer de detección de ítems")]
+        public LayerMask detectionLayer = ~0;
+        [Min(0.05f)]
+        [Tooltip("Intervalo de escaneo de ítems")]
+        public float detectionInterval = 0.33f;
+        [Header("Auto-Detection")]
+        [Tooltip("¿Iniciar la quest automáticamente cuando el jugador entre en el radio de detección del NPC?")]
+        public bool autoStartOnDetection = false;
+
+        [Header("Behavior")]
+        [Min(0f)]
+        [Tooltip("Velocidad de rotación hacia el jugador (grados por segundo) - Ahora manejado por DialogueManager")]
+        public float rotationSpeed = 360f;
+        
+        [Header("Persistent Icon")]
+        [Tooltip("Prefab del icono persistente que se muestra cuando hay quests disponibles (ej: signo de exclamación amarillo)")]
+        public GameObject questIconPrefab;
+        
+        [Tooltip("Offset del icono respecto a la posición del NPC")]
+        public Vector3 questIconOffset = new Vector3(0, 2.5f, 0);
+        
+        [Tooltip("¿Mostrar icono cuando hay una quest disponible para iniciar?")]
+        public bool showIconWhenQuestAvailable = true;
+        
+        [Tooltip("¿Mostrar icono cuando hay una quest activa en progreso?")]
+        public bool showIconWhenQuestInProgress = true;
+        
+        [Tooltip("¿Mostrar icono cuando una quest está lista para entregar?")]
+        public bool showIconWhenQuestReadyToTurnIn = true;
+        
+        [Tooltip("Prefab alternativo para cuando la quest está lista para entregar (ej: signo de interrogación). Si es null, usa questIconPrefab.")]
+        public GameObject turnInIconPrefab;
+        
+        [Tooltip("¿Ocultar el icono persistente automáticamente cuando todas las quests se completen?")]
+        public bool hideIconWhenAllCompleted = true;
+
+        public override bool ValidateConfig(out string errorMessage)
+        {
+            errorMessage = "";
+            if (questChain == null || questChain.Length == 0)
+            {
+                errorMessage = "Quest chain no puede estar vacío. Añade al menos una quest.";
+                return false;
+            }
+            for (int i = 0; i < questChain.Length; i++)
+            {
+                var entry = questChain[i];
+                if (entry == null)
+                {
+                    errorMessage = $"Quest chain entry {i} es null";
+                    return false;
+                }
+                if (entry.questData == null)
+                {
+                    errorMessage = $"Quest chain entry {i} no tiene questData asignado";
+                    return false;
+                }
+                if (entry.autoDetectItemDelivery && string.IsNullOrEmpty(entry.itemTag))
+                {
+                    errorMessage = $"Quest {i} tiene autoDetectItemDelivery activado pero itemTag vacío";
+                    return false;
+                }
+                
+                // Validar requiredItems (nuevo sistema)
+                if (entry.requiredItems != null && entry.requiredItems.Length > 0)
+                {
+                    for (int j = 0; j < entry.requiredItems.Length; j++)
+                    {
+                        var itemReq = entry.requiredItems[j];
+                        if (itemReq.item == null)
+                        {
+                            errorMessage = $"Quest {i}, item requirement {j}: item es null";
+                            return false;
+                        }
+                        
+                        // Verificar que el item tenga itemId configurado
+                        if (string.IsNullOrEmpty(itemReq.item.itemId))
+                        {
+                            errorMessage = $"Quest {i}, item requirement {j}: el ItemData '{itemReq.item.name}' no tiene itemId configurado";
+                            return false;
+                        }
+                        
+                        // stepConditionId es opcional - se auto-genera en GetStepConditionId() si es necesario
+                        // No necesita validación aquí
+                    }
+                }
+            }
+            if (detectionRadius <= 0f)
+            {
+                errorMessage = "Detection radius debe ser mayor a 0";
+                return false;
+            }
+            return true;
+        }
+        
+        /// <summary>
+        /// Estado del icono persistente de quest
+        /// </summary>
+        public enum QuestIconState
+        {
+            None,           // No mostrar icono
+            Available,      // Quest disponible para iniciar (!)
+            InProgress,     // Quest activa en progreso (!)
+            ReadyToTurnIn   // Quest lista para entregar (?)
+        }
+        
+        /// <summary>
+        /// Obtiene el estado actual del icono basado en las quests de este NPC
+        /// </summary>
+        public QuestIconState GetCurrentIconState()
+        {
+            var qm = QuestManager.Instance;
+            if (qm == null || questChain == null || questChain.Length == 0)
+                return QuestIconState.None;
+
+            if (hideIconWhenAllCompleted && AreAllQuestsCompleted())
+                return QuestIconState.None;
+
+            // Buscar quest activa
+            foreach (var entry in questChain)
+            {
+                if (entry?.questData == null) continue;
+
+                var state = qm.GetState(entry.questData.questId);
+                if (state == QuestState.Active)
+                {
+                    if (qm.AreAllStepsCompleted(entry.questData.questId))
+                    {
+                        if (showIconWhenQuestReadyToTurnIn)
+                            return QuestIconState.ReadyToTurnIn;
+                    }
+                    else
+                    {
+                        if (showIconWhenQuestInProgress)
+                            return QuestIconState.InProgress;
+                    }
+                    return QuestIconState.None;
+                }
+            }
+
+            // Si no hay quest activa, verificar si hay alguna disponible para iniciar.
+            // Solo mostrar icono si el NPC puede ofrecerla él mismo (dlgBefore != null).
+            // Si dlgBefore es null, la quest la inicia un agente externo (grafo narrativo)
+            // y no debe aparecer el icono de "disponible" antes de que empiece.
+            // Tampoco debe aparecer si la quest todavía está bloqueada por unlockRequirement
+            // (ej: acceso a una zona que se abre con otra misión principal).
+            var first = GetFirstInactiveQuest();
+            if (first != null && first.dlgBefore != null && showIconWhenQuestAvailable && IsUnlockRequirementSatisfied(first))
+                return QuestIconState.Available;
+
+            return QuestIconState.None;
+        }
+        
+        /// <summary>
+        /// Obtiene el prefab del icono a mostrar según el estado actual
+        /// </summary>
+        public GameObject GetCurrentIconPrefab()
+        {
+            var state = GetCurrentIconState();
+            
+            switch (state)
+            {
+                case QuestIconState.ReadyToTurnIn:
+                    // Usar turnInIconPrefab si existe, sino el normal
+                    return turnInIconPrefab != null ? turnInIconPrefab : questIconPrefab;
+                    
+                case QuestIconState.Available:
+                case QuestIconState.InProgress:
+                    return questIconPrefab;
+                    
+                default:
+                    return null;
+            }
+        }
+        
+        /// <summary>
+        /// Verifica si debe mostrarse el icono persistente
+        /// </summary>
+        public bool ShouldShowIcon()
+        {
+            return GetCurrentIconState() != QuestIconState.None && questIconPrefab != null;
+        }
+        
+        /// <summary>
+        /// Verifica si todas las quests de la cadena están completadas
+        /// </summary>
+        public bool AreAllQuestsCompleted()
+        {
+            var qm = QuestManager.Instance;
+            if (qm == null) return false;
+            
+            foreach (var entry in questChain)
+            {
+                if (entry?.questData == null) continue;
+                if (qm.GetState(entry.questData.questId) != QuestState.Completed)
+                    return false;
+            }
+            return true;
+        }
+        
+        /// <summary>
+        /// Obtiene la primera quest inactiva de la cadena (disponible para iniciar)
+        /// </summary>
+        private QuestChainEntry GetFirstInactiveQuest()
+        {
+            var qm = QuestManager.Instance;
+            if (qm == null) return null;
+            
+            foreach (var entry in questChain)
+            {
+                if (entry?.questData == null) continue;
+                if (qm.GetState(entry.questData.questId) == QuestState.Inactive)
+                    return entry;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Procesa la interacción del jugador con el NPC.
+        /// Maneja la lógica de quests, completion modes y diálogos.
+        /// </summary>
+        public bool ProcessInteraction(GameObject interactor, Common.NPCStateContext context)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.ProcessInteraction] Iniciando interacción con NPC. Interactor: {interactor?.name}, Context válido: {context != null}");
+            
+            // Activar animación de hablar/interactuar
+            // La rotación ahora la maneja automáticamente DialogueManager.StartDialogue(dialogue, npcTransform, ...)
+            Debug.Log($"[NPCQuestConfig.ProcessInteraction] Activando animación de hablar");
+#endif
+            StartTalkingAnimation(context);
+            
+            var qm = QuestManager.Instance;
+            if (qm == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogError("[NPCQuestConfig] QuestManager.Instance es null");
+#endif
+                return false;
+            }
+
+            if (questChain == null || questChain.Length == 0)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning("[NPCQuestConfig] questChain vacío");
+#endif
+                return false;
+            }
+
+            // Buscar quest activa en la cadena (de atrás hacia adelante)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.ProcessInteraction] Escaneando cadena ({questChain.Length} entradas) de atrás hacia adelante:");
+#endif
+            for (int i = questChain.Length - 1; i >= 0; i--)
+            {
+                var entry = questChain[i];
+                if (entry?.questData == null)
+                {
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.Log($"  [{i}] questData NULL - skip");
+                    #endif
+                    continue;
+                }
+
+                var questId = entry.questData.questId;
+                var state = qm.GetState(questId);
+                if (state == QuestState.Active || state == QuestState.Completed)
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.Log($"[NPCQuestConfig.ProcessInteraction] → Seleccionada entrada [{i}] quest={questId} estado={state}");
+#endif
+                    HandleQuestState(qm, entry, questId, state, context);
+                    return true;
+                }
+            }
+
+            // Si no hay quest activa, iniciar la primera
+            var first = questChain[0];
+            if (first?.questData != null)
+            {
+                var firstState = qm.GetState(first.questData.questId);
+                if (firstState == QuestState.Inactive)
+                {
+                    // Bloqueo por progreso narrativo (ej: el guardia del bosque no ofrece la
+                    // quest de las arañas hasta que ELDRAN_MISSION6 esté activa/completada).
+                    // Sin unlockRequirement configurado, esto es un no-op y no cambia nada.
+                    if (!IsUnlockRequirementSatisfied(first))
+                    {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.Log($"[NPCQuestConfig] Quest '{first.questData.questId}' bloqueada por unlockRequirement — mostrando dlgLocked");
+#endif
+                        PlayDialogue(first.dlgLocked, context);
+                        return true;
+                    }
+
+                    if (!IsRequiredCharacterActive(first))
+                    {
+                        PlayDialogue(first.dlgWrongCharacter, context);
+                        return true;
+                    }
+
+                    // Si tiene dlgBefore, reproducir diálogo primero y luego iniciar quest
+                    if (first.dlgBefore != null)
+                    {
+                        first.onOfferDialogueStarted?.Invoke();
+                        PlayDialogueWithCallback(first.dlgBefore, context, () =>
+                        {
+                            // Callback ejecutado cuando termina el diálogo
+                            qm.AddQuest(first.questData);
+                            qm.StartQuest(first.questData.questId);
+                            first.onOfferDialogueFinished?.Invoke();
+                            
+                            // ELIMINADO: CheckAutoCompletedQuest
+                            // La quest ya no se auto-completa, el jugador debe volver a hablar con el NPC
+                        });
+                    }
+                    else
+                    {
+                        // Sin diálogo, NO iniciar automáticamente (se iniciará desde otro lado)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.Log($"[NPCQuestConfig] Quest '{first.questData.questId}' sin dlgBefore - no se inicia automáticamente");
+#endif
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void HandleQuestState(QuestManager qm, QuestChainEntry entry, string questId, QuestState state, Common.NPCStateContext context)
+        {
+            switch (state)
+            {
+                case QuestState.Active:
+                    if (!IsRequiredCharacterActive(entry))
+                    {
+                        PlayDialogue(entry.dlgWrongCharacter, context);
+                        return;
+                    }
+
+                    // Verificar si el jugador tiene los items requeridos en inventario
+                    // Esto marca automáticamente los pasos correspondientes como completados
+                    CheckAndMarkInventoryRequirements(qm, entry, questId);
+                    
+                    // Verificar si el jugador tiene los party members requeridos
+                    // Esto marca automáticamente los pasos correspondientes como completados
+                    CheckAndMarkPartyMemberRequirements(qm, entry, questId);
+                    
+                    bool allDone = qm.AreAllStepsCompleted(questId);
+                    
+                    // NUEVO: Verificar si tiene todos los items requeridos del inventario
+                    bool hasAllRequiredItems = HasAllRequiredItems(entry);
+
+                    switch (entry.completionMode)
+                    {
+                        case QuestCompletionMode.AutoCompleteOnTalk:
+                            // MODIFICADO: AutoCompleteOnTalk ahora respeta requiredItems
+                            // Si hay items requeridos, DEBE tenerlos para completar
+                            if (entry.requiredItems != null && entry.requiredItems.Length > 0)
+                            {
+                                if (hasAllRequiredItems)
+                                {
+                                    // Completar quest — el consumo de items lo hace QuestManager.CompleteQuest()
+                                    // de forma idempotente (ver ConsumeRequiredItems en QuestManager.cs). No
+                                    // consumir aquí también: duplicaría el consumo (bug INC-020 en este camino).
+                                    CompleteAllSteps(qm, entry, questId, context);
+                                }
+                                else
+                                {
+                                    // No tiene los items -> mostrar diálogo in progress
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                                    Debug.Log($"[NPCQuestConfig] Quest '{questId}' - AutoCompleteOnTalk bloqueado: faltan items requeridos");
+#endif
+                                    PlayDialogue(entry.dlgInProgress, context);
+                                }
+                            }
+                            else
+                            {
+                                // No hay items requeridos -> completar directamente (comportamiento original)
+                                CompleteAllSteps(qm, entry, questId, context);
+                            }
+                            break;
+
+                        case QuestCompletionMode.CompleteOnTalkIfStepsReady:
+                            if (allDone && hasAllRequiredItems)
+                            {
+                                // El consumo de items lo hace QuestManager.CompleteQuest() (idempotente).
+                                FinishQuest(qm, entry, questId, context);
+                            }
+                            else
+                            {
+                                PlayDialogue(entry.dlgInProgress, context);
+                            }
+                            break;
+
+                        case QuestCompletionMode.Manual:
+                            // Modo estrictamente manual: este módulo no completa la quest automáticamente
+                            // al hablar con el NPC, incluso si todos los steps están listos.
+                            PlayDialogue(entry.dlgInProgress, context);
+                            break;
+
+                        case QuestCompletionMode.AutoCompleteWhenStepsReady:
+                            // Seguridad: normalmente esta modalidad se completa automáticamente
+                            // desde QuestManager.MarkStepDone cuando todos los steps están listos.
+                            if (allDone && hasAllRequiredItems)
+                            {
+                                // El consumo de items lo hace QuestManager.CompleteQuest() (idempotente).
+                                FinishQuest(qm, entry, questId, context);
+                            }
+                            else
+                            {
+                                PlayDialogue(entry.dlgInProgress, context);
+                            }
+                            break;
+                    }
+                    break;
+
+                case QuestState.Completed:
+                    PlayDialogue(entry.dlgCompleted, context);
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// Verifica si el jugador tiene TODOS los items requeridos en el inventario.
+        /// </summary>
+        private bool HasAllRequiredItems(QuestChainEntry entry)
+        {
+            if (entry.requiredItems == null || entry.requiredItems.Length == 0)
+                return true; // Sin items requeridos = siempre true
+            
+            // Obtener el inventario del jugador
+            if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[NPCQuestConfig] No se encontró Inventory del jugador para verificar items");
+#endif
+                return false;
+            }
+            
+            foreach (var req in entry.requiredItems)
+            {
+                if (req?.item == null) continue;
+                
+                if (!inventory.HasItem(req.item, req.amount))
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.Log($"[NPCQuestConfig] Falta item '{req.item.displayName}' (tiene {inventory.Count(req.item.itemId)}/{req.amount})");
+#endif
+                    return false;
+                }
+            }
+            
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig] Todos los items requeridos están en el inventario");
+#endif
+            return true;
+        }
+        
+        /// <summary>
+        /// Verifica si el jugador tiene los items requeridos en el inventario y marca los pasos correspondientes.
+        /// </summary>
+        private void CheckAndMarkInventoryRequirements(QuestManager qm, QuestChainEntry entry, string questId)
+        {
+            if (entry.requiredItems == null || entry.requiredItems.Length == 0)
+                return;
+            
+            // Obtener el inventario del jugador
+            if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[NPCQuestConfig] No se encontró Inventory del jugador para verificar items requeridos");
+#endif
+                return;
+            }
+            
+            foreach (var req in entry.requiredItems)
+            {
+                if (req?.item == null) continue;
+                
+                // Verificar si tiene suficiente cantidad del item
+                bool hasItem = inventory.HasItem(req.item, req.amount);
+                
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig] Verificando item '{req.item.displayName}' (x{req.amount}): {(hasItem ? "TIENE" : "NO TIENE")}");
+#endif
+                
+                if (hasItem)
+                {
+                    // Determinar qué step marcar como completado
+                    int stepToMark = -1;
+                    
+                    if (req.stepIndex >= 0)
+                    {
+                        // Usar stepIndex directamente
+                        stepToMark = req.stepIndex;
+                    }
+                    else
+                    {
+                        // Buscar por conditionId
+                        string conditionId = req.GetStepConditionId();
+                        if (!string.IsNullOrEmpty(conditionId))
+                        {
+                            stepToMark = qm.FindStepIndexByConditionId(questId, conditionId);
+                        }
+                    }
+                    
+                    if (stepToMark >= 0)
+                    {
+                        // Verificar si el paso ya está completado
+                        var quest = qm.GetAll().FirstOrDefault(q => q.Id == questId);
+                        if (quest?.Steps != null && stepToMark < quest.Steps.Length && !quest.Steps[stepToMark].completed)
+                        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                            Debug.Log($"[NPCQuestConfig] Marcando step {stepToMark} de quest '{questId}' como completado (item '{req.item.displayName}' entregado)");
+#endif
+                            qm.MarkStepDone(questId, stepToMark);
+                        }
+                    }
+                    else
+                    {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.LogWarning($"[NPCQuestConfig] No se pudo determinar el step a marcar para item '{req.item.displayName}'");
+#endif
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Verifica si el jugador tiene los party members requeridos y marca los pasos correspondientes.
+        /// Se llama cuando el jugador habla con el NPC para verificar si los NPCs requeridos están en el party.
+        /// </summary>
+        private void CheckAndMarkPartyMemberRequirements(QuestManager qm, QuestChainEntry entry, string questId)
+        {
+            if (entry.requiredPartyMembers == null || entry.requiredPartyMembers.Length == 0)
+                return;
+            
+            // Verificar si PlayerParty está disponible
+            if (!Game.NPC.PlayerParty.HasInstance)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[NPCQuestConfig] PlayerParty no está disponible para verificar party members");
+#endif
+                return;
+            }
+            
+            var party = Game.NPC.PlayerParty.Instance;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig] Verificando {entry.requiredPartyMembers.Length} party members requeridos (party tiene {party.MemberCount} miembros)");
+#endif
+            
+            foreach (var memberReq in entry.requiredPartyMembers)
+            {
+                if (string.IsNullOrEmpty(memberReq.memberId))
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogWarning($"[NPCQuestConfig] PartyMemberRequirement con memberId vacío en quest '{questId}'");
+#endif
+                    continue;
+                }
+                
+                // Verificar si el miembro está en el equipo (comparación robusta con distintos formatos de ID)
+                bool isInParty = party.Members.Any(m => QuestMatchingUtils.IsPartyMemberMatch(m, memberReq.memberId));
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig] Verificando member '{memberReq.memberId}': {(isInParty ? "EN PARTY" : "NO EN PARTY")}");
+#endif
+                
+                if (!isInParty) continue;
+                
+                // Determinar qué step marcar como completado
+                int stepToMark = -1;
+                
+                if (memberReq.stepIndex >= 0)
+                {
+                    // Usar stepIndex directamente
+                    stepToMark = memberReq.stepIndex;
+                }
+                else
+                {
+                    // Buscar por conditionId
+                    string conditionId = memberReq.GetStepConditionId();
+                    if (!string.IsNullOrEmpty(conditionId))
+                    {
+                        stepToMark = qm.FindStepIndexByConditionId(questId, conditionId);
+                    }
+                }
+                
+                if (stepToMark >= 0)
+                {
+                    // Verificar si el paso ya está completado
+                    var quest = qm.GetAll().FirstOrDefault(q => q.Id == questId);
+                    if (quest?.Steps != null && stepToMark < quest.Steps.Length && !quest.Steps[stepToMark].completed)
+                    {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.Log($"[NPCQuestConfig] Marcando step {stepToMark} de quest '{questId}' como completado (member '{memberReq.memberId}' está en party)");
+#endif
+                        qm.MarkStepDone(questId, stepToMark);
+                    }
+                    else if (quest?.Steps != null && stepToMark < quest.Steps.Length && quest.Steps[stepToMark].completed)
+                    {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        Debug.Log($"[NPCQuestConfig] Step {stepToMark} ya estaba completado para member '{memberReq.memberId}'");
+#endif
+                    }
+                }
+                else
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogWarning($"[NPCQuestConfig] No se pudo determinar el step a marcar para party member '{memberReq.memberId}'");
+#endif
+                }
+            }
+        }
+        
+        // El consumo de items requeridos ya no se reimplementa aquí: lo hace QuestManager.CompleteQuest()
+        // de forma idempotente (guardia _itemsConsumedForQuest, ver QuestManager.cs). La versión que
+        // existía en este archivo consumía sin esa guardia y se ejecutaba ANTES de FinishQuest() →
+        // qm.CompleteQuest(), duplicando el consumo del mismo item (variante de INC-020 en este camino).
+
+        private void CompleteAllSteps(QuestManager qm, QuestChainEntry entry, string questId, Common.NPCStateContext context)
+        {
+            var quest = qm.GetAll().FirstOrDefault(q => q.Id == questId);
+            if (quest?.Steps != null)
+            {
+                for (int i = 0; i < quest.Steps.Length; i++)
+                {
+                    if (!quest.Steps[i].completed)
+                    {
+                        qm.MarkStepDone(questId, i);
+                    }
+                }
+            }
+            FinishQuest(qm, entry, questId, context);
+        }
+
+        private void FinishQuest(QuestManager qm, QuestChainEntry entry, string questId, Common.NPCStateContext context)
+        {
+            // IMPORTANTE: Reproducir el diálogo turn in PRIMERO
+            // La quest se completa DESPUÉS del diálogo para que el grafo narrativo
+            // se ejecute en el momento correcto (después del feedback al jugador)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.FinishQuest] Iniciando diálogo de turn-in para quest '{questId}'");
+#endif
+            
+            PlayDialogueWithCallback(entry.dlgTurnIn, context, () =>
+            {
+                // Callback ejecutado cuando termina el diálogo turn in
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.FinishQuest] Diálogo de turn-in completado. Completando quest '{questId}'");
+#endif
+                
+                // AHORA sí, completar la quest (dispara OnQuestCompleted → grafo narrativo)
+                qm.CompleteQuest(questId);
+                entry.onQuestCompleted?.Invoke();
+                
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.FinishQuest] Quest completada. Intentando iniciar siguiente en la cadena");
+#endif
+                
+                // Intentar iniciar la siguiente quest en la cadena
+                TryStartNextQuestInChain(questId, context);
+            });
+        }
+
+        private void TryStartNextQuestInChain(string completedQuestId, Common.NPCStateContext context)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Buscando siguiente quest después de '{completedQuestId}'");
+#endif
+            
+            // Diferir la ejecución para dar tiempo a que el grafo narrativo termine
+            // y el sistema de input se estabilice antes de iniciar el siguiente diálogo
+            if (context?.Transform != null)
+            {
+                // Buscar un MonoBehaviour para ejecutar la coroutine
+                var behaviourManager = context.Transform.GetComponent<NPCBehaviourManagerV2>();
+                if (behaviourManager != null)
+                {
+                    behaviourManager.StartCoroutine(TryStartNextQuestInChainDelayed(completedQuestId, context));
+                }
+                else
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogError("[NPCQuestConfig.TryStartNextQuestInChain] No se encontró NPCBehaviourManagerV2 en el NPC");
+#endif
+                    // Ejecutar directamente como fallback
+                    TryStartNextQuestInChainImmediately(completedQuestId, context);
+                }
+            }
+            else
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogError("[NPCQuestConfig.TryStartNextQuestInChain] Context.Transform es null, no se puede diferir la ejecución");
+#endif
+                // Ejecutar directamente como fallback
+                TryStartNextQuestInChainImmediately(completedQuestId, context);
+            }
+        }
+
+        private System.Collections.IEnumerator TryStartNextQuestInChainDelayed(string completedQuestId, Common.NPCStateContext context)
+        {
+            // Esperar varios frames para que el grafo narrativo termine completamente
+            // Aumentamos a 5 frames para asegurar que todos los callbacks terminen
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChainDelayed] Ejecutando búsqueda de siguiente quest después de 5 frames");
+#endif
+            
+            TryStartNextQuestInChainImmediately(completedQuestId, context);
+        }
+
+        private void TryStartNextQuestInChainImmediately(string completedQuestId, Common.NPCStateContext context)
+        {
+            // Encontrar índice de la quest completada
+            int completedIndex = -1;
+            for (int i = 0; i < questChain.Length; i++)
+            {
+                if (questChain[i]?.questData?.questId == completedQuestId)
+                {
+                    completedIndex = i;
+                    break;
+                }
+            }
+
+            if (completedIndex < 0 || completedIndex >= questChain.Length - 1)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] No hay siguiente quest (completedIndex={completedIndex}, total={questChain.Length})");
+#endif
+                return; // No hay siguiente quest
+            }
+
+            var nextEntry = questChain[completedIndex + 1];
+            if (nextEntry?.questData == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Siguiente entrada no tiene questData");
+#endif
+                return;
+            }
+
+            var qm = QuestManager.Instance;
+            if (qm == null) return;
+
+            var nextState = qm.GetState(nextEntry.questData.questId);
+            if (nextState != QuestState.Inactive)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Quest '{nextEntry.questData.questId}' ya está iniciada (estado={nextState})");
+#endif
+                return; // Ya está iniciada
+            }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Iniciando siguiente quest '{nextEntry.questData.questId}'");
+#endif
+
+            // Si tiene dlgBefore, reproducir diálogo y luego iniciar quest
+            if (nextEntry.dlgBefore != null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Reproduciendo diálogo de oferta");
+#endif
+                nextEntry.onOfferDialogueStarted?.Invoke();
+                PlayDialogueWithCallback(nextEntry.dlgBefore, context, () =>
+                {
+                    // Callback ejecutado cuando termina el diálogo
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Diálogo de oferta completado. Añadiendo y arrancando quest");
+#endif
+                    qm.AddQuest(nextEntry.questData);
+                    qm.StartQuest(nextEntry.questData.questId);
+                    nextEntry.onOfferDialogueFinished?.Invoke();
+                    
+                    // ELIMINADO: CheckAutoCompletedQuest
+                    // La quest ya no se auto-completa
+                });
+            }
+            // Si NO tiene dlgBefore, NO iniciar automáticamente
+            // (se iniciará desde otro lugar: grafo narrativo, etc.)
+        }
+
+
+        private bool IsRequiredCharacterActive(QuestChainEntry entry)
+        {
+            if (entry.requiredCharacter == QuestRequiredCharacter.Any) return true;
+            var manager = PartyControlManager.Instance;
+            if (manager == null) return true;
+            return (int)manager.ActiveSlot == (int)entry.requiredCharacter;
+        }
+
+        /// <summary>
+        /// Comprueba el requisito opcional de desbloqueo de esta entrada (unlockRequirement).
+        /// Sin configurar (Mode.None, el valor por defecto) siempre devuelve true: no cambia
+        /// el comportamiento de ningún NPC existente que no use este campo.
+        /// </summary>
+        private bool IsUnlockRequirementSatisfied(QuestChainEntry entry)
+        {
+            if (entry?.unlockRequirement == null) return true;
+            if (!entry.unlockRequirement.IsConfigured) return true;
+            return entry.unlockRequirement.IsSatisfied();
+        }
+
+        private void PlayDialogue(DialogueAsset dialogue, Common.NPCStateContext context)
+        {
+            if (dialogue == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning("[NPCQuestConfig.PlayDialogue] dialogue es null - no se reproduce diálogo");
+#endif
+                return;
+            }
+
+            var dm = DialogueManager.Instance;
+            if (dm == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogError("[NPCQuestConfig] DialogueManager.Instance es null");
+#endif
+                return;
+            }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NPCQuestConfig.PlayDialogue] Iniciando diálogo '{dialogue.name}' con NPC en {context.Transform?.position}. Líneas: {dialogue.lines?.Length ?? 0}");
+#endif
+            
+            // Callback para detener animación de hablar cuando termine el diálogo
+            dm.StartDialogue(dialogue, context.Transform, () => 
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[NPCQuestConfig.PlayDialogue] Diálogo '{dialogue.name}' terminado - deteniendo animación");
+#endif
+                StopTalkingAnimation(context);
+            });
+        }
+
+        private void PlayDialogueWithCallback(DialogueAsset dialogue, Common.NPCStateContext context, System.Action onFinished)
+        {
+            if (dialogue == null)
+            {
+                onFinished?.Invoke();
+                return;
+            }
+
+            var dm = DialogueManager.Instance;
+            if (dm == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogError("[NPCQuestConfig] DialogueManager.Instance es null");
+#endif
+                onFinished?.Invoke();
+                return;
+            }
+
+            // Combinar callback original con detener animación de hablar
+            System.Action combinedCallback = () =>
+            {
+                StopTalkingAnimation(context);
+                onFinished?.Invoke();
+            };
+
+            // DialogueManager maneja la rotación del NPC automáticamente
+            dm.StartDialogue(dialogue, context.Transform, combinedCallback);
+        }
+        
+
+        /// <summary>
+        /// Activa la animación de hablar en el NPC
+        /// </summary>
+        private void StartTalkingAnimation(Common.NPCStateContext context)
+        {
+            if (context?.Animator == null) return;
+            
+            // Reproducir animación de interacción (saludo/hablar)
+            context.Animator.PlayOneShot("Talk01", 0, onComplete: null);
+            
+            // Usar el NPCSimpleAnimator para activar la animación de hablar
+            context.Animator.SetTalking(true);
+        }
+        
+        /// <summary>
+        /// Detiene la animación de hablar en el NPC
+        /// </summary>
+        private void StopTalkingAnimation(Common.NPCStateContext context)
+        {
+            if (context?.Animator == null) return;
+
+            // Desactivar la animación de hablar
+            context.Animator.SetTalking(false);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Comparación de IDs de party member: ver QuestMatchingUtils (Assets/Scripts/Quests/
+        // QuestMatchingUtils.cs). Antes había una copia literal de esta lógica aquí y en
+        // QuestManager.cs; ambas delegan ahora en la misma utilidad compartida.
+        // ─────────────────────────────────────────────────────────────────────
+    }
+}

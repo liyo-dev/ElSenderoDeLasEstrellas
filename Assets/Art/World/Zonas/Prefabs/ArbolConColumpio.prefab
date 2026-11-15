@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCWorldPoint
   activityType: 3
+  estadoDelBucle: 
   interactionPoint: {fileID: 8263612879288767412}
   overrideFacing: 1
   puntoAlLevantarse: {fileID: 8070230832664592983}
@@ -622,6 +623,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Columpio
   asiento: {fileID: 7056916102677899894}
   balanceo: {fileID: 3522089099595786143}
+  postura: SitSwing_Loop
   arranque: 3
   frenada: 4
   acercarse: 0.3

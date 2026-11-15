@@ -101,11 +101,12 @@
         /// <summary>
         /// Hace un fade de pantalla completa. fadeIn=true va de transparente a color, fadeIn=false va de color a transparente.
         /// </summary>
-        // FIX M5 (auditoría 2026-08-07): ScreenFade lanzaba una corrutina nueva en cada llamada
+        // ScreenFade lanzaba una corrutina nueva en cada llamada
         // sin cancelar una anterior todavía en curso. Con N llamadas solapadas, N corrutinas
         // escriben el mismo img.color a la vez y la pantalla puede quedarse en negro (o en
         // cualquier color a medias) según cuál termine última — no necesariamente la más reciente.
         private static Coroutine _activeFadeRoutine;
+        private const float PasoMaximoDeFundido = 1f / 20f;
 
         public static void ScreenFade(Color color, float duration, bool fadeIn = true)
         {
@@ -235,7 +236,9 @@
                 c.a = Mathf.Lerp(desde, hasta, t);
                 
                 img.color = c;
-                elapsed += Time.unscaledDeltaTime;
+                // Un fotograma lento (un tirón) avanza como mucho PasoMaximoDeFundido: el fundido se alarga
+                // un poco en vez de saltar de golpe a medio camino.
+                elapsed += Mathf.Min(Time.unscaledDeltaTime, PasoMaximoDeFundido);
                 yield return null;
             }
             

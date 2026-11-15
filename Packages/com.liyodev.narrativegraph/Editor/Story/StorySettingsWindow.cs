@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// Settings and tools of the story editor, in one place (the ⚙ button).
+    /// Settings and tools of the story editor, in one place (the button).
     public sealed class StorySettingsWindow : EditorWindow
     {
         Func<NarrativeGraph> _graph;

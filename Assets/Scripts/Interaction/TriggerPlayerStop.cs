@@ -121,7 +121,7 @@ public class TriggerPlayerStop : MonoBehaviour
     /// un timeout de seguridad si eso nunca llega a pasar. Mismo patrón ya probado en
     /// KingdomBoundaryTrigger y DayOnlyInspectionTrigger. Sin efecto si el modo no incluye Parar.
     ///
-    /// FIX (Agosto 2026): antes liberaba el lock un frame fijo después vía una corrutina alojada
+    /// antes liberaba el lock un frame fijo después vía una corrutina alojada
     /// en ESTE componente. Eso se quedaba corto en dos casos reales del proyecto: (1) el grafo
     /// narrativo puede tardar más de 1 frame en encadenar desde el WaitCustomEventNode que
     /// consume este evento hasta el nodo que realmente bloquea (cada salto de

@@ -46,23 +46,23 @@ namespace Game.NPC.Modules
         
         [Header("🎯 Rangos de Combate (CRÍTICO)")]
         [Min(0f)]
-        [Tooltip("📡 DETECTION RANGE: Radio de detección para iniciar combate (metros)\n• Debe ser MAYOR que Max Attack Distance\n• Recomendado: 10-15m para magos, 8-10m para melee")]
+        [Tooltip("DETECTION RANGE: Radio de detección para iniciar combate (metros)\n• Debe ser MAYOR que Max Attack Distance\n• Recomendado: 10-15m para magos, 8-10m para melee")]
         public float detectionRange = 10f;
         
         [Range(30f, 360f)]
-        [Tooltip("👁️ FIELD OF VIEW: Ángulo de visión del NPC en grados\n• 180° = visión frontal amplia\n• 90° = visión frontal estrecha\n• 360° = visión completa (ojos en la nuca)")]
+        [Tooltip("FIELD OF VIEW: Ángulo de visión del NPC en grados\n• 180° = visión frontal amplia\n• 90° = visión frontal estrecha\n• 360° = visión completa (ojos en la nuca)")]
         public float fieldOfView = 160f;
         
         [Min(0f)]
-        [Tooltip("🔴 MIN ATTACK DISTANCE (minDistance en logs)\nDistancia MÍNIMA ideal para atacar. Si el jugador está MÁS CERCA, el NPC RETROCEDE.\n\n📊 Valores Recomendados:\n• Magos: 4-6m (mantener distancia)\n• Melee: 1.5-2.5m (rango de espada)\n\n⚠️ IMPORTANTE:\n• DEBE ser MENOR que Max Attack Distance\n• Si minDistance >= maxDistance, el NPC NUNCA atacará")]
+        [Tooltip("MIN ATTACK DISTANCE (minDistance en logs)\nDistancia MÍNIMA ideal para atacar. Si el jugador está MÁS CERCA, el NPC RETROCEDE.\n\n Valores Recomendados:\n• Magos: 4-6m (mantener distancia)\n• Melee: 1.5-2.5m (rango de espada)\n\n IMPORTANTE:\n• DEBE ser MENOR que Max Attack Distance\n• Si minDistance >= maxDistance, el NPC NUNCA atacará")]
         public float minAttackDistance = 2f;
         
         [Min(0f)]
-        [Tooltip("🟢 MAX ATTACK DISTANCE (maxDistance en logs)\nDistancia MÁXIMA ideal para atacar. Si el jugador está MÁS LEJOS, el NPC SE ACERCA.\n\n📊 Valores Recomendados:\n• Magos: 8-12m (rango de hechizos)\n• Melee: 3-5m (persecución)\n\n⚠️ IMPORTANTE:\n• DEBE ser MAYOR que Min Attack Distance\n• DEBE ser MENOR que Detection Range\n• El rango IDEAL de ataque es: [minAttackDistance, maxAttackDistance]")]
+        [Tooltip("MAX ATTACK DISTANCE (maxDistance en logs)\nDistancia MÁXIMA ideal para atacar. Si el jugador está MÁS LEJOS, el NPC SE ACERCA.\n\n Valores Recomendados:\n• Magos: 8-12m (rango de hechizos)\n• Melee: 3-5m (persecución)\n\n IMPORTANTE:\n• DEBE ser MAYOR que Min Attack Distance\n• DEBE ser MENOR que Detection Range\n• El rango IDEAL de ataque es: [minAttackDistance, maxAttackDistance]")]
         public float maxAttackDistance = 8f;
         
-        // ✅ DEPRECATED: Propiedades obsoletas para compatibilidad con assets antiguos
-        // ⚠️ NO USAR: Solo existen para migración automática
+        // DEPRECATED: Propiedades obsoletas para compatibilidad con assets antiguos
+        // NO USAR: Solo existen para migración automática
         [System.Obsolete("❌ OBSOLETO: Usar minAttackDistance en su lugar. Esta propiedad será eliminada.", true)]
         public float meleeRange { get => minAttackDistance; set => minAttackDistance = value; }
         
@@ -84,10 +84,10 @@ namespace Game.NPC.Modules
         [Tooltip("Prefab del icono de alerta (exclamación, etc.) que aparece al detectar al jugador")]
         public GameObject alertIconPrefab;
         
-        [Tooltip("Prefab del icono de interrogación (❓) que aparece cuando el NPC está buscando al jugador")]
+        [Tooltip("Prefab del icono de interrogación que aparece cuando el NPC está buscando al jugador")]
         public GameObject questionIconPrefab;
         
-        [Tooltip("Prefab del icono de admiración (❗) que aparece cuando el NPC encuentra al jugador")]
+        [Tooltip("Prefab del icono de admiración que aparece cuando el NPC encuentra al jugador")]
         public GameObject exclamationIconPrefab;
         
         [Tooltip("Duración del icono de alerta en segundos")]
@@ -355,15 +355,15 @@ namespace Game.NPC.Modules
         public bool activelySearchForPlayer = true;
         
         [Min(0f)]
-        [Tooltip("⏱️ BÚSQUEDA ACTIVA: Duración máxima de búsqueda en segundos (si activelySearchForPlayer = TRUE)\n• Recomendado: 15-20s para búsqueda persistente\n• El NPC hará hasta 5 intentos de movimiento dentro de este tiempo")]
+        [Tooltip("BÚSQUEDA ACTIVA: Duración máxima de búsqueda en segundos (si activelySearchForPlayer = TRUE)\n• Recomendado: 15-20s para búsqueda persistente\n• El NPC hará hasta 5 intentos de movimiento dentro de este tiempo")]
         public float searchDuration = 15f;
         
         [Min(0f)]
-        [Tooltip("⏱️ BÚSQUEDA PASIVA: Tiempo que espera quieto antes de abandonar (si activelySearchForPlayer = FALSE)\n• Recomendado: 5-10s para espera breve\n• El NPC solo mostrará ❓ sin moverse")]
+        [Tooltip("BÚSQUEDA PASIVA: Tiempo que espera quieto antes de abandonar (si activelySearchForPlayer = FALSE)\n• Recomendado: 5-10s para espera breve\n• El NPC solo mostrará sin moverse")]
         public float passiveSearchDuration = 8f;
         
         [Min(2f)]
-        [Tooltip("📍 Radio de movimiento durante búsqueda activa en metros\n• El NPC se moverá aleatoriamente dentro de este radio\n• Recomendado: 5-8m para búsqueda natural")]
+        [Tooltip("Radio de movimiento durante búsqueda activa en metros\n• El NPC se moverá aleatoriamente dentro de este radio\n• Recomendado: 5-8m para búsqueda natural")]
         public float searchMovementRadius = 6f;
         
         [Tooltip("Si TRUE, el NPC vuelve a su posición inicial después de agotar la búsqueda\nSi FALSE, se queda donde está y simplemente abandona el combate")]
@@ -410,7 +410,7 @@ namespace Game.NPC.Modules
             if (spell1Prefab == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCCombatConfig] ⚠️ Spell1 (básico) no configurado. Se recomienda siempre tener al menos el hechizo básico.");
+                Debug.LogWarning($"[NPCCombatConfig] Spell1 (básico) no configurado. Se recomienda siempre tener al menos el hechizo básico.");
 #endif
             }
             
@@ -502,7 +502,7 @@ namespace Game.NPC.Modules
         /// <returns>Índice del hechizo seleccionado (0-2) o -1 si ninguno está disponible</returns>
         public int SelectRandomSpell()
         {
-            // ✅ FIX #24 (auditoría combate, 15 ago 2026): antes se alocaba una List<(int,float)>
+            // FIX #24: antes se alocaba una List<(int,float)>
             // nueva en cada llamada. Al ser como máximo 3 elementos fijos, se sustituye por
             // variables locales sin heap allocation — este método puede llamarse varias veces
             // por combate (una por decisión de ataque).

@@ -198,7 +198,7 @@ public class WardrobeInventory : MonoBehaviour
                     existing.description = entry.description;
                     existing.icon = entry.icon;
                     list[existingIndex] = existing;
-                    // Debug.Log($"[WardrobeInventory.AddEntry] ✅ Actualizada entrada existente con wardrobeId '{entry.wardrobeId}'");
+                    // Debug.Log($"[WardrobeInventory.AddEntry] Actualizada entrada existente con wardrobeId '{entry.wardrobeId}'");
                     return true;
                 }
             }
@@ -211,7 +211,7 @@ public class WardrobeInventory : MonoBehaviour
         else
             list.Add(entry);
 
-        // Debug.Log($"[WardrobeInventory.AddEntry] ✅ Añadida nueva entrada '{entry.partName}' ({entry.displayName}) a {entry.category}. Total items en categoría: {list.Count}");
+        // Debug.Log($"[WardrobeInventory.AddEntry] Añadida nueva entrada '{entry.partName}' ({entry.displayName}) a {entry.category}. Total items en categoría: {list.Count}");
 
         if (persistable && !string.IsNullOrEmpty(entry.wardrobeId))
             _persistedIds.Add(entry.wardrobeId);
@@ -240,7 +240,7 @@ public class WardrobeInventory : MonoBehaviour
             return false;
         }
 
-        // Debug.Log($"[WardrobeInventory] ✅ Item '{item.WardrobeId}' añadido correctamente a la categoría {item.Category}");
+        // Debug.Log($"[WardrobeInventory] Item '{item.WardrobeId}' añadido correctamente a la categoría {item.Category}");
 
         if (persistToPreset && !string.IsNullOrEmpty(entry.wardrobeId))
         {

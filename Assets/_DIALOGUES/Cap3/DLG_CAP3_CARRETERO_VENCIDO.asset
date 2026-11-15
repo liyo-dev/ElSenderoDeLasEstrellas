@@ -15,14 +15,14 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_CONTRABANDISTA
     textId: DLG_CAP3_CARRETERO_VENCIDO_01
-    text: "Ay\u2026 mi cabeza\u2026 Vale, vale, me quedo aqu\xED quieto."
+    text: "Ay\u2026 mi cabeza\u2026 \xA1V\xE1monos, al campamento!"
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 12
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_CARRETERO_VENCIDO_02
-    text: "Ven\xEDa del bosque. Los dem\xE1s tienen que estar por ah\xED."
+    text: "Van hacia el bosque. Ah\xED tienen que tener algo m\xE1s."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 

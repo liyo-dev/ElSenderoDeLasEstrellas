@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Ventana de debug para inspeccionar todos los iconos del minimapa en tiempo real.
 /// Muestra: GO, escena, estado de visibilidad, icono, color y quién lo lanzó.
-/// Menú: Juego → Debug → Minimapa – Iconos activos
+/// Menú: El Sendero → Pruebas y comprobaciones → Minimapa: iconos activos (en Play)
 /// </summary>
 public class MinimapDebugWindow : EditorWindow
 {
@@ -44,7 +44,7 @@ public class MinimapDebugWindow : EditorWindow
 
     // ── Apertura ─────────────────────────────────────────────────────────────
 
-    [MenuItem("Juego/Debug/Minimapa – Iconos activos")]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Minimapa: iconos activos (en Play)")]
     static void Open() => GetWindow<MinimapDebugWindow>("Minimapa Debug");
 
     // ── Ciclo ────────────────────────────────────────────────────────────────
@@ -256,19 +256,6 @@ public class MinimapDebugWindow : EditorWindow
                 return $"QuestObjectiveMarker  quest={questId}  step={stepIdx}  showAfter={afterStep}";
             }
             return "QuestObjectiveMarker (quest desconocida)";
-        }
-
-        // NPCQuestIconManager añade MinimapMarker directamente al root del NPC
-        var npcMgr = marker.GetComponent<NPCQuestIconManager>()
-                  ?? marker.GetComponentInParent<NPCQuestIconManager>();
-        if (npcMgr != null)
-        {
-            // _questConfig es privado sin [SerializeField] — usamos reflection (solo editor)
-            var field   = typeof(NPCQuestIconManager).GetField("_questConfig",
-                              System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var config  = field?.GetValue(npcMgr) as UnityEngine.Object;
-            string cfgName = config != null ? config.name : npcMgr.gameObject.name;
-            return $"NPCQuestIconManager  ({cfgName})";
         }
 
         // Fallback: listar los componentes que convivan con el marker

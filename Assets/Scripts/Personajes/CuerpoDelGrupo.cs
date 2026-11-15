@@ -17,7 +17,7 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
     /// En el suelo: no lucha, no sigue y espera a que lo levanten.
     public bool Caido { get; private set; }
     /// Se le puede hacer daño ahora (vivo y visible).
-    public bool PuedeRecibirDano => !Caido && Vida != null && Vida.IsAlive && isActiveAndEnabled;
+    public bool PuedeRecibirDano => !Caido && !LoLlevaElJugador && Vida != null && Vida.IsAlive && isActiveAndEnabled;
 
     /// Ha cambiado su vida (golpe, curación, caída o levantarse).
     public event Action<CuerpoDelGrupo> VidaCambiada;
@@ -31,6 +31,8 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
     private Rigidbody _rb;
     private bool _rbEraCinematico;
     private Collider _colisionador;
+    private PilotoDelCuerpo _piloto;
+
 
     /// Pone (o reutiliza) el cuerpo del grupo en el NPC de un compañero.
     public static CuerpoDelGrupo Preparar(NPCPartyMember npc, Slot personaje)
@@ -48,6 +50,7 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
         Personaje = personaje;
         if (Vida != null) return;
 
+        _piloto = GetComponent<PilotoDelCuerpo>();
         _rb = GetComponent<Rigidbody>();
         _rbEraCinematico = _rb != null && _rb.isKinematic;
         _colisionador = GetComponent<Collider>();
@@ -127,8 +130,13 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
         if (!(brain.CurrentState is CaidoState)) brain.ChangeState(new CaidoState());
     }
 
+    // Con el cuerpo en manos del jugador, su Damageable no cuenta: la vida va por PlayerHealthSystem
+    // y SaludDelGrupo le vuelve a poner la suya al pasar a la IA.
+    private bool LoLlevaElJugador => _piloto != null && _piloto.LoLlevaElJugador;
+
     private void AlDanar(float cantidad)
     {
+        if (LoLlevaElJugador) return;
         Golpeado?.Invoke(this, cantidad);
         VidaCambiada?.Invoke(this);
     }
@@ -137,7 +145,7 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
 
     private void AlMorir()
     {
-        if (Caido) return;
+        if (Caido || LoLlevaElJugador) return;
         Caido = true;
         if (_rb != null) _rbEraCinematico = _rb.isKinematic;
         if (_charla != null && _charla.HabilitadoParaUsar)
@@ -152,9 +160,12 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
         VidaCambiada?.Invoke(this);
     }
 
-    /// Sin fuego amigo: los golpes del propio grupo no le hacen daño (INC-727 lo decidirá).
+    /// Sin fuego amigo: los golpes del propio grupo no le hacen daño (INC-727 lo decidirá). Con el
+    /// cuerpo en manos del jugador no decide nada: su vida es la de PlayerHealthSystem, que pasa por
+    /// sus propias reglas (este filtro también lo consulta).
     public float Filtrar(float cantidad, GameObject instigador)
     {
+        if (LoLlevaElJugador) return cantidad;
         if (Caido) return 0f;
         if (instigador == null) return cantidad;
         if (instigador.GetComponentInParent<NPCPartyMember>() != null) return 0f;

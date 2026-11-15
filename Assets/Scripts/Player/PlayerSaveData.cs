@@ -73,7 +73,7 @@ public class PlayerSaveData
     // Hechizos básicos equipados, en orden de rotación (hasta cuatro).
     public List<SpellId> basicSpellIds = new();
     public List<PlayerPresetSO.BasicosDeCompanero> companionBasics = new(); // INC-503
-    public List<PlayerPresetSO.SaludDeCompanero> companionHealth = new(); // INC-717
+    public List<PlayerPresetSO.EstadoDeCompanero> companionHealth = new(); // INC-717
 
     // Ranuras del sistema anterior: solo se leen para convertir partidas guardadas antes de
     // INC-486 (GameBootProfile). No se escriben.
@@ -84,7 +84,6 @@ public class PlayerSaveData
     // Permisos de movimiento y magia. En un guardado que no los tenga quedan en false.
     public bool canSwim;
     public bool canJump;
-    public bool canClimb;
     public bool canFly;
     public bool canMagic;
 }

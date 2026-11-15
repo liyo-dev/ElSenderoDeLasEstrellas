@@ -280,6 +280,9 @@ public class BattleOrb : MonoBehaviour
 
         UpdateVisuals();
 
+        // Va hacia el personaje que lleva el jugador, aunque cambie mientras flota.
+        var jugador = PlayerService.Player;
+        if (jugador != null) _playerTransform = jugador.transform;
         if (_playerTransform == null) return;
 
         switch (_phase)

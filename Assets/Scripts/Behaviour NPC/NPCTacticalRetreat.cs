@@ -57,7 +57,7 @@ namespace Game.NPC
         private float _coverStayTimer;
         private bool _isBehindCover;
 
-        // ✅ FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation): la llegada a
+        // la llegada a
         // cobertura se detectaba solo por distancia en línea recta (1.5m) sin mirar el propio
         // NavMeshAgent.stoppingDistance NI tener ningún margen de seguridad — si el
         // stoppingDistance heredado era >= 1.5m, Unity frenaba al NPC un poco antes de esos
@@ -66,7 +66,7 @@ namespace Game.NPC
         private const float RETREAT_APPROACH_MAX_TIME = 8f;
         private List<Vector3> _evaluatedPositions = new List<Vector3>();
         
-        // ✅ OPTIMIZACIÓN FASE 2: Buffer reutilizable para Physics queries
+        // OPTIMIZACIÓN FASE 2: Buffer reutilizable para Physics queries
         private Collider[] _coverSearchBuffer = new Collider[32];
 
         public bool IsRetreating { get; private set; }
@@ -92,7 +92,7 @@ namespace Game.NPC
             if (!FindNearestCover(out Vector3 coverPosition, out Transform coverObject))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[NPCTacticalRetreat] ❌ No se encontró cobertura disponible");
+                Debug.Log("[NPCTacticalRetreat] No se encontró cobertura disponible");
 #endif
                 return false;
             }
@@ -110,7 +110,7 @@ namespace Game.NPC
                 _agent.isStopped = false;
                 _agent.SetDestination(coverPosition);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCTacticalRetreat] 🏃 Huyendo hacia cobertura: {coverObject?.name} en {coverPosition}");
+                Debug.Log($"[NPCTacticalRetreat] Huyendo hacia cobertura: {coverObject?.name} en {coverPosition}");
 #endif
             }
 
@@ -130,7 +130,7 @@ namespace Game.NPC
             _evaluatedPositions.Clear();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[NPCTacticalRetreat] 🛡️ Saliendo de cobertura, volviendo a combate");
+            Debug.Log("[NPCTacticalRetreat] Saliendo de cobertura, volviendo a combate");
 #endif
         }
 
@@ -165,7 +165,7 @@ namespace Game.NPC
                     _isBehindCover = true;
                     _agent.isStopped = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[NPCTacticalRetreat] ✅ Llegó a cobertura, permanecerá por " + coverStayDuration + "s");
+                    Debug.Log("[NPCTacticalRetreat] Llegó a cobertura, permanecerá por " + coverStayDuration + "s");
 #endif
                 }
             }
@@ -177,7 +177,7 @@ namespace Game.NPC
                 if (HasLineOfSight(_player.position))
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[NPCTacticalRetreat] ⚠️ Cobertura comprometida, jugador tiene LOS");
+                    Debug.LogWarning("[NPCTacticalRetreat] Cobertura comprometida, jugador tiene LOS");
 #endif
                     // Podría buscar nueva cobertura aquí si se desea
                 }
@@ -201,7 +201,7 @@ namespace Game.NPC
             }
 
             // Buscar objetos cercanos que puedan servir de cobertura
-            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, coverSearchRadius, _coverSearchBuffer, coverLayerMask); // ✅ OPTIMIZACIÓN FASE 2: NonAlloc
+            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, coverSearchRadius, _coverSearchBuffer, coverLayerMask); // OPTIMIZACIÓN FASE 2: NonAlloc
             
             if (hitCount == 0)
             {
@@ -265,7 +265,7 @@ namespace Game.NPC
                 coverPosition = bestPosition;
                 coverObject = bestObject;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCTacticalRetreat] ✅ Cobertura encontrada: {bestObject.name} (Score: {bestScore:F2})");
+                Debug.Log($"[NPCTacticalRetreat] Cobertura encontrada: {bestObject.name} (Score: {bestScore:F2})");
 #endif
                 return true;
             }

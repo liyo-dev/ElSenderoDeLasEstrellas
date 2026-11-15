@@ -112,6 +112,7 @@ namespace NarrativeGraphEditor
 
         static NarrativeStartPlan Build(NarrativeGraph graph, string stepGuid, IReadOnlyDictionary<string, int> choices)
         {
+            using var medida = StoryTiming.Measure(StoryText.T("plan de arranque", "start plan"));
             var plan = new NarrativeStartPlan { Sheet = NarrativePlayerSheet.Find(), Graph = graph, StepGuid = stepGuid, TargetGuid = stepGuid };
             if (graph == null || string.IsNullOrEmpty(stepGuid)) return plan;
             choices ??= StoryRouteChoices.All();
@@ -173,7 +174,7 @@ namespace NarrativeGraphEditor
         }
 
         public static string Title(NarrativeNode node)
-            => node == null ? "?" : string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node.GetType()) : node.displayTitle;
+            => node == null ? "?" : string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node) : node.displayTitle;
     }
 
     /// La rama elegida en las decisiones del camino cuando varias llevan al paso (de cualquier

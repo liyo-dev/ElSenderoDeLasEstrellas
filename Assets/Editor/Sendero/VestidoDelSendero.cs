@@ -101,6 +101,7 @@ public static class VestidoDelSendero
         Suelo(raiz, muestras, m);
         foreach (var p in Plazas) PlazaDeLuz(raiz, p, m);
         Polvo(raiz, muestras);
+        var estrellas = SubidaDeEstrellas(raiz, muestras, MaterialDeEstrellas());
         var luces = new GameObject[Puertas.Length];
         for (int i = 0; i < Puertas.Length; i++) luces[i] = PuertaDeLuz(raiz, Puertas[i], m, i);
         AltarDePiedraBlanca(raiz, m);
@@ -109,6 +110,7 @@ public static class VestidoDelSendero
         raiz.gameObject.AddComponent<PisadasEnElSendero>();
         var tinte = raiz.gameObject.AddComponent<TinteDelSendero>();
         foreach (var t in Tintes) tinte.Tramos.Add(new TinteDelSendero.Tramo { desdeZ = t.desdeZ, color = t.color, fuerza = t.fuerza });
+        tinte.Estrellas.AddRange(estrellas);
 
         var rescate = Rescates(raiz);
         Recorrido(escena, umbral, luces, rescate, vfx);
@@ -302,6 +304,62 @@ public static class VestidoDelSendero
             polvo.tamano = new Vector3(18f, 8f, 60f);
             polvo.distanciaDeActivacion = 60f;
         }
+    }
+
+    // Estrellas con volumen que suben desde el vacío a los lados y por encima del camino; toman el
+    // color de la puerta que viene (TinteDelSendero).
+    static List<EstrellasQueSuben> SubidaDeEstrellas(Transform raiz, List<Muestra> muestras, Material mat)
+    {
+        var padre = Hijo(raiz, "Estrellas que suben");
+        var lista = new List<EstrellasQueSuben>();
+        for (int i = 0; i < muestras.Count; i += 60)
+        {
+            var go = new GameObject($"Estrellas {i / 60 + 1:00}");
+            go.transform.SetParent(padre, false);
+            go.transform.position = muestras[i].p + Vector3.down * 8f;
+            var e = go.AddComponent<EstrellasQueSuben>();
+            e.tamano = new Vector3(44f, 16f, 60f);
+            e.cantidad = 12;
+            e.distanciaDeActivacion = 70f;
+            e.material = mat;
+            lista.Add(e);
+        }
+        return lista;
+    }
+
+    // Material opaco de las estrellas que suben: textura de dos tonos (claro a la izquierda, oscuro a
+    // la derecha) que la malla elige cara a cara. Opaco para que el contorno de tinta las coja.
+    static Material MaterialDeEstrellas()
+    {
+        string rutaTex = Carpeta + "/Texturas/EstrellaDosTonos.png";
+        if (AssetDatabase.LoadAssetAtPath<Texture2D>(rutaTex) == null)
+        {
+            var tex = new Texture2D(4, 1, TextureFormat.RGBA32, false);
+            var clara = new Color(1f, 1f, 1f, 1f);
+            var oscura = new Color(0.8f, 0.66f, 0.5f, 1f);
+            tex.SetPixels(new[] { clara, clara, oscura, oscura });
+            File.WriteAllBytes(rutaTex, tex.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(tex);
+            AssetDatabase.ImportAsset(rutaTex);
+            var imp = (TextureImporter)AssetImporter.GetAtPath(rutaTex);
+            imp.filterMode = FilterMode.Point;
+            imp.wrapMode = TextureWrapMode.Clamp;
+            imp.mipmapEnabled = false;
+            imp.textureCompression = TextureImporterCompression.Uncompressed;
+            imp.SaveAndReimport();
+        }
+        return Mat("Sendero_EstrellaQueSube", "Universal Render Pipeline/Particles/Unlit", x =>
+        {
+            x.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(rutaTex));
+            x.SetColor("_BaseColor", Color.white);
+            x.SetFloat("_Surface", 0);
+            x.SetFloat("_ZWrite", 1);
+            x.SetFloat("_Cull", (float)CullMode.Back);
+            x.SetFloat("_SrcBlend", (float)BlendMode.One);
+            x.SetFloat("_DstBlend", (float)BlendMode.Zero);
+            x.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            x.renderQueue = (int)RenderQueue.Geometry;
+        });
     }
 
     static GameObject Umbral(Transform raiz)

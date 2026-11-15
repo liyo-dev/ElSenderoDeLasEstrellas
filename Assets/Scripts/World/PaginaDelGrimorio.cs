@@ -7,7 +7,7 @@ using UnityEngine;
 /// aparecer tras guardar en un punto de guardado. Para las que piden volar, levitar o bucear, basta
 /// con ponerla donde solo se llega así.
 ///
-/// Los maestros y las misiones enseñan con el nodo UnlockAbilitiesNode del grafo narrativo, que usa
+/// Los maestros y las misiones enseñan con el nodo PedirDesbloqueo del grafo narrativo, que usa
 /// el mismo UnlockService.
 /// </summary>
 [RequireComponent(typeof(SphereCollider))]

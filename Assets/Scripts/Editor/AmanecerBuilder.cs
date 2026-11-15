@@ -38,7 +38,7 @@ public static class AmanecerBuilder
     // Paleta.
     private static readonly Color Dorado = new Color(1f, 0.80f, 0.35f);
 
-    [MenuItem("El Sendero/Magia/Amanecer · crear o actualizar (INC-724)")]
+    [MenuItem("El Sendero/Magia/Amanecer: crear o actualizar")]
     public static void Montar()
     {
         var log = new StringBuilder();
@@ -56,7 +56,7 @@ public static class AmanecerBuilder
         AssetDatabase.SaveAssets();
 
         SonidosDeHechizos.Aplicar();
-        ComboWiring.ValidateMenu();
+        ComprobacionDeCombos.Comprobar();
 
         var final = new StringBuilder("=== Amanecer (INC-724, INC-760) ===\n").Append(log);
         if (avisos.Count == 0) { final.AppendLine("Sin avisos."); Debug.Log(final.ToString()); }

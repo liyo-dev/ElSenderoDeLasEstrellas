@@ -73,7 +73,7 @@ public class UISelectVisual : MonoBehaviour, ISelectHandler, IDeselectHandler, I
 
     public void OnSelect(BaseEventData eventData) => PlaySelect(true);
     public void OnDeselect(BaseEventData eventData) => PlaySelect(false);
-    // FIX (20/08, insuficiente): filtrar solo por familia de input activa no basta. Cuando un
+    // filtrar solo por familia de input activa no basta. Cuando un
     // panel (Ajustes/Controles) se cierra con Cancelar/Esc/mando y buttonPanel se reactiva con
     // SetActive(true), Unity reevalúa el raycast de hover ESE MISMO FRAME (o el siguiente) y
     // dispara OnPointerEnter sobre lo que quede bajo el cursor aunque el ratón lleve rato

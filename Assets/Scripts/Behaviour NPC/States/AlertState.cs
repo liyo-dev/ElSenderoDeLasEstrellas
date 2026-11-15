@@ -15,14 +15,14 @@ namespace Game.NPC.States
         private readonly float _alertDuration;
         private readonly bool _walkTowardsPlayer;
         private readonly float _stopDistance;
-        private readonly bool _skipDialogue; // ✅ FIX: Para miembros no-líderes de equipos
+        private readonly bool _skipDialogue; // Para miembros no-líderes de equipos
 
         // Estado Interno
         private float _timer;
         private bool _waitingForDialogue;
         private bool _hasPlayedChallenge;
         private bool _dialogueCompleted;
-        private NPCTeamMember _teamMember; // ✅ FIX #10: cacheado en OnEnter, no GetComponent cada frame en OnUpdate
+        private NPCTeamMember _teamMember; // FIX #10: cacheado en OnEnter, no GetComponent cada frame en OnUpdate
         // Congelado del jugador al detectar (ver NPCCombatConfig.freezePlayerOnAlert). Solo se
         // aplica cuando este AlertState es el que lleva la voz (skipDialogue=false) - los
         // miembros no-líderes de un equipo (skipDialogue=true) nunca congelan por su cuenta, eso
@@ -33,7 +33,7 @@ namespace Game.NPC.States
         private float _senseTimer;
         private const float SENSE_DURATION = 1.2f;
 
-        // ✅ MEJORA (1 sep 2026, petición de Raúl): "cuando Lety y Vicky me ven, el jugador se
+        // MEJORA (1 sep 2026, petición de Raúl): "cuando Lety y Vicky me ven, el jugador se
         // congela, las dos caminan hacia mí y ENTONCES empieza el diálogo — ese es el
         // comportamiento correcto y debe ser igual para cualquier NPC de combate". Antes, un NPC
         // en solitario con walk=true (p.ej. Boy_Pirate) arrancaba el diálogo con un simple
@@ -47,14 +47,14 @@ namespace Game.NPC.States
         private float _approachTimer;
         private const float MAX_APPROACH_TIME = 8f; // salvaguarda: pathing bloqueado, jugador huye, etc. — no caminar para siempre antes de hablar
 
-        // ✅ MEJORA (1 sep 2026, petición de Raúl): el diálogo de alerta (y por tanto el corte a
+        // MEJORA (1 sep 2026, petición de Raúl): el diálogo de alerta (y por tanto el corte a
         // la cámara de diálogo) arrancaba en el mismo frame que el icono de detección y la
         // animación SenseSomethingStart_NoWeapon, cortándolos a medias. Se retrasó el arranque
         // del diálogo hasta que ambos hubieran tenido tiempo de verse — primero nivelando la
-        // espera con combatConfig.alertIconDuration (hasta 2s), luego (4 sep 2026) recortada a una
+        // espera con combatConfig.alertIconDuration (hasta 2s), luego recortada a una
         // pausa fija de 0.4s.
         //
-        // ✅ FIX 4 sep 2026 (petición de Raúl, tras probar la pausa de 0.4s: "KO, vamos a quitar el
+        // FIX 4 sep 2026 (petición de Raúl, tras probar la pausa de 0.4s: "KO, vamos a quitar el
         // retraso aquí también, lo dejamos como en el resto"): se elimina la pausa por completo —
         // el diálogo arranca en el mismo frame en que el NPC llega a distancia de diálogo (o de
         // inmediato si no camina), igual que ya hacía NPCCombatTeam.Co_DetectAndEngage para los
@@ -90,11 +90,11 @@ namespace Game.NPC.States
 
             if (context.WasDefeatedInCombat)
             {
-                context.Log("[AlertState] ⛔ NPC derrotado. Cancelando alerta.");
+                context.Log("[AlertState] NPC derrotado. Cancelando alerta.");
                 return;
             }
 
-            context.Log("[AlertState] ⚠️ INICIANDO ALERTA");
+            context.Log("[AlertState] INICIANDO ALERTA");
 
             // Congelar al jugador en el instante de la detección (si procede), igual que ya
             // hace el Rey vía el módulo narrativo. Solo para el AlertState "principal" (no para
@@ -111,7 +111,7 @@ namespace Game.NPC.States
                 }
             }
 
-            // ✅ FIX #10: cachear una vez, en vez de GetComponent en cada frame de OnUpdate
+            // FIX #10: cachear una vez, en vez de GetComponent en cada frame de OnUpdate
             _teamMember = context.Transform.GetComponent<NPCTeamMember>();
 
             // Ocultar de inmediato el icono de quest del grafo si este NPC tiene uno (INC-851)
@@ -130,7 +130,7 @@ namespace Game.NPC.States
             if (!_skipDialogue && context.Transform != null)
                 CombatCameraTargeting.Instance?.Enfocar(context.Transform.gameObject);
 
-            // FIX INC-019: el icono de detección (❗) estaba definido en NPCCombatConfig
+            // FIX INC-019: el icono de detección estaba definido en NPCCombatConfig
             // (alertIconPrefab/questionIconPrefab/exclamationIconPrefab) y el sistema que lo
             // dibuja (NPCAlertIconController) ya existía, pero solo se usaba dentro del
             // minigame de Tag — ningún NPC normal lo mostraba al detectar al jugador porque
@@ -233,9 +233,9 @@ namespace Game.NPC.States
                 StartAlertDialogue(context);
             }
 
-            // ✅ FIX: Si el NPC pertenece a un equipo que está reagrupándose,
+            // Si el NPC pertenece a un equipo que está reagrupándose,
             // dejar que NPCCombatTeam maneje el movimiento
-            // ✅ FIX #10: _teamMember ya viene cacheado desde OnEnter (antes: GetComponent cada frame)
+            // FIX #10: _teamMember ya viene cacheado desde OnEnter (antes: GetComponent cada frame)
             if (_teamMember != null && _teamMember.Team != null && _teamMember.Team.IsRegrouping)
             {
                 // Solo mirar al jugador, el movimiento lo maneja NPCCombatTeam
@@ -300,7 +300,7 @@ namespace Game.NPC.States
             // Si el jugador se esfuma
             if (context.Player == null) return new IdleState();
 
-            // ✅ FIX: Si es miembro no-líder, solo transicionar cuando context.IsInCombat sea true
+            // Si es miembro no-líder, solo transicionar cuando context.IsInCombat sea true
             // Esto ocurre cuando ForceTeamCombat lo establece
             if (_skipDialogue)
             {
@@ -315,7 +315,7 @@ namespace Game.NPC.States
             // Bloqueo por diálogo
             if (_waitingForDialogue) return null;
 
-            // ⭐ MEJORA: Si el diálogo completó, transicionar inmediatamente a combate
+            // MEJORA: Si el diálogo completó, transicionar inmediatamente a combate
             // No esperar _alertDuration completo
             if (_dialogueCompleted)
             {
@@ -334,7 +334,7 @@ namespace Game.NPC.States
         }
 
         // =================================================================================
-        // 🛠️ HELPERS
+        // HELPERS
         // =================================================================================
 
         private void FacePlayer(NPCStateContext context)
@@ -359,7 +359,7 @@ namespace Game.NPC.States
                     context.Agent.isStopped = false;
                     context.Agent.SetDestination(context.Player.position);
 
-                    // ✅ FIX: Desactivar updateRotation del NavMeshAgent
+                    // Desactivar updateRotation del NavMeshAgent
                     // Dejar que NPCSimpleAnimator.SyncWithNavMeshAgent() maneje la rotación
                     // para evitar conflictos entre sistemas
                     context.Agent.updateRotation = false;
@@ -390,7 +390,7 @@ namespace Game.NPC.States
         }
 
         /// <summary>
-        /// FIX INC-019: muestra el icono "❗" sobre la cabeza del NPC al entrar en alerta,
+        /// FIX INC-019: muestra el icono "!" sobre la cabeza del NPC al entrar en alerta,
         /// usando el prefab configurado en NPCCombatConfig.exclamationIconPrefab.
         /// Añade NPCAlertIconController de forma perezosa (igual que hace TagMinigameController)
         /// para no requerir configuración manual por NPC.
@@ -410,10 +410,10 @@ namespace Game.NPC.States
 
         private void StartAlertDialogue(NPCStateContext context)
         {
-            // ✅ FIX: Si skipDialogue está activo (miembros no-líderes), no iniciar diálogo
+            // Si skipDialogue está activo (miembros no-líderes), no iniciar diálogo
             if (_skipDialogue)
             {
-                context.Log("[AlertState] ⏭️ Saltando diálogo (miembro de equipo no-líder)");
+                context.Log("[AlertState] Saltando diálogo (miembro de equipo no-líder)");
                 return;
             }
 
@@ -434,10 +434,10 @@ namespace Game.NPC.States
                 DialogueManager.Instance.StartBattleDialogue(dialogo, context.Transform, () =>
                 {
                     _waitingForDialogue = false;
-                    _dialogueCompleted = true; // ⭐ Marcar que el diálogo completó para transición inmediata
+                    _dialogueCompleted = true; // Marcar que el diálogo completó para transición inmediata
                     AvisarAlGrafo(context);
 
-                    // ⭐ NO manipular animaciones del player - Invector maneja todo automáticamente
+                    // NO manipular animaciones del player - Invector maneja todo automáticamente
                     // El player usará siempre su idle normal sin forzar poses de batalla
                 });
             }

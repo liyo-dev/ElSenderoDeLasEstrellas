@@ -27,8 +27,8 @@ using UnityEngine;
 /// Pendiente a mano en el Editor tras usar la herramienta (esto es dressing visual, no se puede
 /// automatizar del todo):
 ///   1) Abrir cada escena de arena, seleccionar el GameObject raíz de la arena (el que lleva
-///      BossArenaController + el BoxCollider trigger) y ejecutar "El Sendero → Entorno →
-///      Variación de Altura de Arena...".
+///      BossArenaController + el BoxCollider trigger) y ejecutar "El Sendero → Mundo →
+///      Relieve alrededor de las arenas...".
 ///   2) Revisar que el Raycast haya encontrado suelo en todos los puntos (el log avisa de cuántos
 ///      puntos se descartaron por no encontrar la capa de suelo) — si una arena tiene un layout
 ///      raro, puede hacer falta subir "Intentos por Punto" o ajustar el margen.
@@ -77,7 +77,7 @@ public class ArenaHeightVariationBuilder : EditorWindow
     private LayerMask _floorLayer = 1 << 6; // "Floor" — mismo layer por defecto que BossArenaController.floorLayer
     private int _raycastAttemptsPerPoint = 6;
 
-    [MenuItem("El Sendero/Entorno/Variación de Altura de Arena...")]
+    [MenuItem("El Sendero/Mundo/Relieve alrededor de las arenas...")]
     public static void ShowWindow()
     {
         var window = GetWindow<ArenaHeightVariationBuilder>("Variación de Altura (INC-106)");

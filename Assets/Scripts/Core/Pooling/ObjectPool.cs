@@ -124,7 +124,7 @@ namespace Game.Core.Pooling
                 return;
             }
 
-            // FIX A3 (auditoría 2026-08-07): antes, si el objeto ya no estaba en _inUse (doble
+            // antes, si el objeto ya no estaba en _inUse (doble
             // devolución, p.ej. un caller que llama Return() dos veces sobre la misma instancia),
             // se detectaba con el LogWarning de abajo pero SE HACÍA PUSH IGUALMENTE — la misma
             // instancia terminaba dos veces en la pila de disponibles, y dos Get() consecutivos
@@ -150,7 +150,7 @@ namespace Game.Core.Pooling
         /// cuando el objeto fue destruido externamente (p. ej. su padre, ver
         /// VfxPoolService.Update) y por tanto no se debe reactivar ni reutilizar — solo hay que
         /// dejar de contarlo como "en uso" para no agotar el pool con referencias fake-null.
-        /// FIX A3 (auditoría 2026-08-07).
+        /// FIX A3.
         /// </summary>
         public void ForceRelease(T obj)
         {

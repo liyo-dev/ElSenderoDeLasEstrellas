@@ -702,8 +702,10 @@ public partial class DuoSpecialAttackSystem
     private void PonerModoCinematico(bool poner)
     {
         if (poner == _modoCinematico) return;
-        if (_accion == null) _accion = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
+        // Se pone en el cuerpo que lleva el jugador y se quita del mismo al que se puso.
+        if (poner) PlayerService.TryGetComponent(out _accion, allowSceneLookup: false);
         if (_accion == null) return;
+
         if (poner) _accion.PushMode(ActionMode.Cinematic); else _accion.PopMode(ActionMode.Cinematic);
         _modoCinematico = poner;
     }

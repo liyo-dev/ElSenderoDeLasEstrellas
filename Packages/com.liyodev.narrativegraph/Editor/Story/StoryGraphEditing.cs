@@ -26,7 +26,7 @@ namespace NarrativeGraphEditor.Story
         {
             if (Graph == null || type == null) return null;
             Begin(StoryText.T("Añadir paso", "Add step"));
-            var node = (NarrativeNode)Activator.CreateInstance(type);
+            var node = NarrativeNode.Create(type);
             node.position = position;
             node.section = section ?? string.Empty;
             node.outputs ??= new List<string>();
@@ -178,33 +178,5 @@ namespace NarrativeGraphEditor.Story
 
         /// The caller already changed a field through a SerializedObject: only notify.
         public void NotifyFieldChanged() => End();
-
-        /// Un cambio cualquiera en los pasos, con deshacer.
-        public void Modify(string undoName, Action change)
-        {
-            if (Graph == null || change == null) return;
-            Begin(undoName);
-            change();
-            End();
-        }
-
-        /// Mete <paramref name="step"/> justo antes de <paramref name="before"/>: lo que llevaba a
-        /// <paramref name="before"/> pasa a llevar a <paramref name="step"/>.
-        public void InsertBefore(NarrativeNode before, NarrativeNode step)
-        {
-            if (Graph == null || before == null || step == null || before == step) return;
-            Begin(StoryText.T("Añadir paso", "Add step"));
-            foreach (var n in Graph.nodes)
-            {
-                if (n?.outputs == null || n == step) continue;
-                for (int i = 0; i < n.outputs.Count; i++)
-                    if (n.outputs[i] == before.guid) n.outputs[i] = step.guid;
-            }
-            if (Graph.startNodeGuid == before.guid) Graph.startNodeGuid = step.guid;
-            step.outputs ??= new List<string>();
-            step.outputs.Clear();
-            step.outputs.Add(before.guid);
-            End();
-        }
     }
 }

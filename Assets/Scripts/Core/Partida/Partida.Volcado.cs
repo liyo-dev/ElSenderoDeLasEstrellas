@@ -18,15 +18,8 @@ public static partial class Partida
 
         VolcarMisiones(p);
 
-        if (PlayerService.TryGetComponent<PlayerActionManager>(out var acciones, includeInactive: true, allowSceneLookup: true))
-        {
-            p.abilities ??= new PlayerAbilities();
-            p.abilities.swim = acciones.AllowSwim;
-            p.abilities.jump = acciones.AllowJump;
-            p.abilities.climb = acciones.AllowClimb;
-            p.abilities.fly = acciones.AllowFly;
-            p.abilities.magic = acciones.AllowMagic;
-        }
+        // Las habilidades de cada personaje ya están en el preset (las escribe quien las
+        // desbloquea, UnlockService); el cuerpo solo las refleja.
 
         p.inventoryItems = PlayerService.TryGetComponent<Inventory>(out var inventario, includeInactive: true, allowSceneLookup: true)
             ? SanearInventario(inventario.GetSaveSnapshot())
@@ -77,32 +70,14 @@ public static partial class Partida
         p.flags = marcas;
     }
 
-    /// El preset guarda siempre la apariencia de Will, vaya quien vaya al mando, y sin atuendos de
-    /// escena: con uno puesto se guarda la ropa de debajo.
+    /// El preset guarda la apariencia de Will, vaya quien vaya al mando, leída de su cuerpo y sin
+    /// atuendos de escena (con uno puesto, la ropa de debajo).
     private static void VolcarApariencia(PlayerPresetSO p)
     {
-        if (!PlayerService.TryGetComponent<ModularAutoBuilder>(out var builder, includeInactive: true, allowSceneLookup: true))
-            return;
-
-        Dictionary<PartCategory, string> seleccion;
-        var mando = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-        if (mando == PartyControlManager.CharacterSlot.Will)
-        {
-            var registro = CharacterAppearanceRegistry.Instance;
-            seleccion = registro != null && registro.LlevaAtuendo(PartyControlManager.CharacterSlot.Will)
-                ? registro.RopaDeDebajo(PartyControlManager.CharacterSlot.Will)
-                : builder.GetSelection();
-        }
-        else
-        {
-            seleccion = CharacterAppearanceRegistry.Instance?.GetAppearance(PartyControlManager.CharacterSlot.Will);
-            // Sin la apariencia de Will a mano, mejor no tocar lo guardado que guardar la de otro.
-            if (seleccion == null || seleccion.Count == 0) return;
-        }
-        if (seleccion == null) return;
-
-        p.appearance = new List<AppearanceEntry>(seleccion.Count);
-        foreach (var kv in seleccion)
-            p.appearance.Add(new AppearanceEntry { category = kv.Key, partName = string.IsNullOrEmpty(kv.Value) ? null : kv.Value });
+        var registro = CharacterAppearanceRegistry.Instance;
+        if (registro == null) return;
+        // Sin la apariencia de Will a mano, mejor no tocar lo guardado.
+        if (registro.RopaDeDebajo(PartyControlManager.CharacterSlot.Will).Count == 0) return;
+        p.appearance = registro.GetAppearanceAsList(PartyControlManager.CharacterSlot.Will);
     }
 }

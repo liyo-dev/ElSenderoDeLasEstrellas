@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Events;
@@ -11,7 +11,7 @@ using UnityEngine.Events;
 /// receta del combo (Cúpula Estelar) · 4.3 la prueba de la campana (llegar sin chamuscar las
 /// figuras de barro; Levitación por instinto) · 4.4 el Gólem (Encuentro_Golem1, con el barro del
 /// arroyo: <see cref="ZonaDeBarro"/>) · 4.5 la manzana harinosa · 4.6 la bifurcación, Liam entra en
-/// el grupo y la bota del vado · fin de la demo (<see cref="FinDeLaDemoNode"/>).
+/// el grupo y la bota del vado · fin de la demo (<see cref="PedirFinDeLaDemo"/>).
 /// Escenario: el claro de Estela (−330, 65) reúne la entrada de Estela, su casa (una tienda entre
 /// las raíces) y la campana; la arena del Gólem es el descanso del camino (−95, 65); la bifurcación,
 /// el puente del camino 8 sobre el río del bosque.
@@ -169,22 +169,22 @@ public static partial class MontajeDeLosCapitulos
             P("mision-estela", "Misión: la hechicera del bosque (aviso de misión nueva)", new StartQuestNode { questId = MisionEstela, noGiver = true }),
             P("punto-bosque", "4.1 · Punto de guardado: el cruce", Punto("CAP4_INICIO", "Cap3_Amanecer")),
             P("llegada-claro", "4.1 · Llega al claro de los troncos quemados", Esperar(S4.LlegadaClaro)),
-            P("mando-estela", "4.1 · Will al mando (la cinemática cuenta con él)", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+            P("mando-estela", "4.1 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("estela", "4.1 · Cinemática: Estela, el aro y «ya me lo cobraré»", Cinematica("CAP4_ESTELA")),
-            P("estela-grupo", "4.1 · Estela entra en el grupo", Grupo(GrupoNode.Accion.EntraEnElGrupo, "Estela")),
+            P("estela-grupo", "4.1 · Estela entra en el grupo", Grupo(PedirGrupo.Accion.EntraEnElGrupo, "Estela")),
             P("paso-estela", "Paso: encontrar a Estela (cierra la misión)", Completar(MisionEstela, "CAP4_ESTELA", cerrar: true)),
             // 4.2 · La casa entre raíces
             P("casa", "4.2 · La casa entre raíces (probar desde aquí)", Emitir(S4.Casa)),
-            P("casa-noche", "4.2 · Anochece en el claro", new SetTimeOfDayNode { targetTime = DayNightCycle.TimeOfDay.Night }),
+            P("casa-noche", "4.2 · Anochece en el claro", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Night })),
             P("casa-boc", "4.2 · «Puedes mirar, pero no toques la cena»", Bocadillo("CAP4_BOC_CASA", "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón.", "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress.", 4f)),
             P("dormir", "4.2 · Will se acuesta en el jergón", Esperar(S4.Dormir)),
             P("rotulo-manana", "4.2 · Rótulo: a la mañana siguiente", Rotulo("CAP4_ROTULO_MANANA", "A la mañana siguiente…", "The next morning…")),
-            P("manana-hora", "4.2 · Amanece", new SetTimeOfDayNode { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true }),
+            P("manana-hora", "4.2 · Amanece", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true })),
             P("manana-will", "4.2 · Will se despierta junto a la casa", Llevar("Player", "Cap4_Campana_Salida")),
             P("punto-casa", "4.2 · Punto de guardado: la casa de Estela", Punto("CAP4_CASA", "Cap4_Campana_Salida")),
             P("mision-reino", "Misión: rumbo al Reino (aviso de misión nueva)", new StartQuestNode { questId = MisionReino, noGiver = true }),
             P("campana", "4.3 · La prueba de la campana (probar desde aquí)", Emitir(S4.Campana)),
-            P("mando-manana", "4.2 · Will al mando", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+            P("mando-manana", "4.2 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("manana", "4.2 · Cinemática: el cartel y la primera receta", Cinematica("CAP4_MANANA")),
             P("cupula", "4.2 · Aprende Cúpula Estelar (primera receta del combo)", Desbloquear(SpellId.CupulaEstelar, equipar: false)),
             P("cupula-tuto", "4.2 · Tutorial: el combo mágico", Tutorial("TUTORIAL_CAP4_CUPULA_ESTELAR", "Pulsa {BOTON} y teclea X, B, A: la Cúpula Estelar protege a quien esté debajo.", "Press {BOTON} and type X, B, A: the Star Dome protects whoever is beneath it.", esperar: true)),
@@ -205,12 +205,12 @@ public static partial class MontajeDeLosCapitulos
             P("golem", "4.4 · Hacia el Reino: el Gólem (probar desde aquí)", Emitir(S4.Golem)),
             P("punto-golem", "4.4 · Punto de guardado: el camino del Reino", Punto("CAP4_CAMINO", "Cap4_Golem_Entrada")),
             P("llegada-arena", "4.4 · Llegan al descanso del camino", Esperar(S4.LlegadaArena)),
-            P("mando-golem", "4.4 · Will al mando", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+            P("mando-golem", "4.4 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("golem-cine", "4.4 · Cinemática: Liam traza el pacto y el Gólem sale de la tierra", Cinematica("CAP4_GOLEM")),
-            P("golem-batalla", "4.4 · Batalla: el Gólem (fuego de frente lo alimenta, el barro lo hunde, remate en dúo)", new StartBattleNode
+            P("golem-batalla", "4.4 · Batalla: el Gólem (fuego de frente lo alimenta, el barro lo hunde, remate en dúo)", GameStepNode.For(new PedirBatalla
             {
-                battleId = "Golem_1", useBattleById = true, encounter = Cargar<BattleEncounterSO>("Assets/BOSSBATTLES/Encuentro_Golem1.asset"),
-            }),
+                battleId = "Golem_1", encounter = Cargar<BattleEncounterSO>("Assets/BOSSBATTLES/Encuentro_Golem1.asset"),
+            })),
             P("tras-golem", "4.4 · Cinemática: agotados, la esquirla y el cuaderno de Liam", Cinematica("CAP4_TRAS_GOLEM")),
             P("esquirla", "4.4 · La esquirla de cristal", Dar(RutaEsquirla)),
             P("paso-golem", "Paso: cruzar el bosque", Completar(MisionReino, "CAP4_GOLEM")),
@@ -220,19 +220,19 @@ public static partial class MontajeDeLosCapitulos
             // 4.6 · La bifurcación y la bota
             P("bifurcacion", "4.6 · Hacia la bifurcación del río (probar desde aquí)", Emitir(S4.Bifurcacion)),
             P("llegada-bifurcacion", "4.6 · Llegan a la bifurcación", Esperar(S4.LlegadaBifurcacion)),
-            P("mando-bifurcacion", "4.6 · Will al mando", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+            P("mando-bifurcacion", "4.6 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("bifurcacion-cine", "4.6 · Cinemática: Liam aparece y se une; la corriente se lleva su bota", Cinematica("CAP4_BIFURCACION")),
-            P("liam-grupo", "4.6 · Liam entra en el grupo", Grupo(GrupoNode.Accion.EntraEnElGrupo, "Liam")),
+            P("liam-grupo", "4.6 · Liam entra en el grupo", Grupo(PedirGrupo.Accion.EntraEnElGrupo, "Liam")),
             P("liam-grupo-senal", "4.6 · Liam ya va en el grupo", Emitir(S4.LiamEnGrupo)),
             P("bota-boc", "4.6 · «¡Mi bota!»", Bocadillo("CAP4_BOC_BOTA", "¡Se la lleva el río! Voy a por ella, río abajo.", "The river's taking it! I'll go after it, downstream.", 3.5f)),
             P("bota", "4.6 · Will recoge la bota río abajo", Esperar(S4.Bota)),
-            P("mando-bota", "4.6 · Will al mando", Grupo(GrupoNode.Accion.PasaAlMando, "Will")),
+            P("mando-bota", "4.6 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("bota-cine", "4.6 · Cinemática: «Tampoco salía en el mapa que alguien iría a por mi bota»", Cinematica("CAP4_BOTA")),
             P("paso-vado", "Paso: el camino del río (cierra la misión)", Completar(MisionReino, "CAP4_VADO", cerrar: true)),
             P("fin-punto", "Cap. 4 · Fin (punto de guardado)", Punto("CAP4_FIN", "Cap4_Bota")),
             P("fin", "Fin del Cap. 4 (" + FinCap4 + ")", Emitir(FinCap4)),
             P("demo-rotulo", "Rótulo: fin de la Primera Parte", Rotulo("DEMO_FIN_ROTULO", "Fin de la Primera Parte. Gracias por jugar a la demo.", "End of Part One. Thank you for playing the demo.")),
-            P("demo-fin", "Fin de la demo (en la build de la demo, a los créditos)", new FinDeLaDemoNode()),
+            P("demo-fin", "Fin de la demo (en la build de la demo, a los créditos)", GameStepNode.For(new PedirFinDeLaDemo())),
             P("demo-destapa", "Fuera de la build de la demo: se destapa la pantalla y sigue el juego", Destapar()),
         };
         c4.Ramas.Add(new List<Paso>
@@ -350,7 +350,7 @@ public static partial class MontajeDeLosCapitulos
     private static Material MaterialDeColor(Color color, string nombre, float brillo = 0f)
     {
         string ruta = "Assets/Art/Capitulos/" + nombre + ".mat";
-        AsegurarCarpeta("Assets/Art/Capitulos");
+        Kits.EditorTools.AssetFolders.Ensure("Assets/Art/Capitulos");
         // URP Lit: un Quibli creado por código sin pasar por su inspector sale negro.
         var shader = Shader.Find("Universal Render Pipeline/Lit");
         var m = AssetDatabase.LoadAssetAtPath<Material>(ruta);

@@ -36,4 +36,14 @@ namespace NarrativeGraphEditor
     {
         UnityEngine.Object CaptureLive();
     }
+
+    /// Un jugador de prueba ya preparado que el juego ofrece al crear uno nuevo en Arranque
+    /// («Todo desbloqueado», «Sin magia»…). <see cref="Build"/> devuelve los datos, del mismo tipo
+    /// que la ficha; el jugador de prueba cambia solo los campos de <see cref="Fields"/>.
+    public interface INarrativeTestPlayerPreset
+    {
+        string Name { get; }
+        UnityEngine.Object Build(NarrativePlayerSheet sheet);
+        System.Collections.Generic.IEnumerable<string> Fields { get; }
+    }
 }

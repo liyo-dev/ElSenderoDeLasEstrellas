@@ -58,7 +58,7 @@ public static class PortadasDelMenuBuilder
     // El barco vive lejos del pueblo para que no se vean entre sí.
     static readonly Vector3 OrigenViaje     = new Vector3(1000f, 0f, 0f);
 
-    [MenuItem("El Sendero/MainMenu/Portadas: montar las tres etapas %#&0")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: montar las tres etapas %#&0")]
     public static void Montar()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -117,13 +117,13 @@ public static class PortadasDelMenuBuilder
         Debug.Log("[PortadasDelMenuBuilder] Portadas montadas en MainMenu.unity (Península, Viaje, Sendero).");
     }
 
-    [MenuItem("El Sendero/MainMenu/Portadas: previsualizar 1 Península %#&1")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 1 Península %#&1")]
     static void Ver1() => Previsualizar(0);
-    [MenuItem("El Sendero/MainMenu/Portadas: previsualizar 2 Viaje %#&2")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 2 Viaje %#&2")]
     static void Ver2() => Previsualizar(1);
-    [MenuItem("El Sendero/MainMenu/Portadas: previsualizar 3 Sendero %#&3")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 3 Sendero %#&3")]
     static void Ver3() => Previsualizar(2);
-    [MenuItem("El Sendero/MainMenu/Portadas: según la partida (quitar previsualización) %#&4")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: según la partida (quitar previsualización) %#&4")]
     static void VerSegunPartida() => Previsualizar(-1);
 
     /// <summary>

@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class PuntosDeAparicionQueFaltan
 {
-    [MenuItem("El Sendero/NPCs/Crear los puntos de aparición que faltan (donde mira la vista de escena)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Crear los puntos de aparición que faltan (donde mira la vista de escena)")]
     private static void Crear()
     {
         var vista = SceneView.lastActiveSceneView;

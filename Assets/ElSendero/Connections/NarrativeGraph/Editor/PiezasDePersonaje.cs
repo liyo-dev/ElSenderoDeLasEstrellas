@@ -107,8 +107,69 @@ namespace Sendero.Narrative.Editor
                 }
             }
 
+            // Un montaje que rehace las conexiones de sus pasos deja sueltas las piezas que ya
+            // estaban (no se vuelven a crear): se enganchan otra vez tras su paso.
+            foreach (var g in grafos)
+                if (Reenganchar(g, informe) > 0) tocados.Add(g);
+
             foreach (var g in tocados) EditorUtility.SetDirty(g);
             AssetDatabase.SaveAssets();
+        }
+
+        /// Vuelve a meter en la historia las piezas sueltas (ningún paso lleva a ellas): cada cadena
+        /// de piezas va tras el paso cuyo guid lleva al final la suya. Devuelve cuántas cadenas.
+        public static int Reenganchar(NarrativeGraph grafo, StringBuilder informe)
+        {
+            if (grafo?.nodes == null) return 0;
+            var conEntrada = new HashSet<string>(grafo.nodes.Where(n => n?.outputs != null).SelectMany(n => n.outputs).Where(g => !string.IsNullOrEmpty(g)));
+            var alcanzables = Alcanzables(grafo);
+            var sueltas = grafo.nodes.OfType<ActorStateNode>()
+                .Where(p => p.guid.StartsWith("pieza-") && p.guid != grafo.startNodeGuid && !conEntrada.Contains(p.guid)).ToList();
+            int hechas = 0;
+            foreach (var cabeza in sueltas)
+            {
+                var tras = grafo.nodes.Where(n => n != null && n is not ActorStateNode && cabeza.guid.EndsWith("-" + n.guid))
+                    .OrderByDescending(n => n.guid.Length).FirstOrDefault();
+                if (tras == null) continue;
+                var cadena = new List<ActorStateNode> { cabeza };
+                // La cadena sigue mientras el paso siguiente tampoco esté en la historia (otra pieza,
+                // o algo que se metió entre ellas, como un punto de arranque).
+                var enCadena = new List<NarrativeNode> { cabeza };
+                NarrativeNode actual = cabeza;
+                while (actual.outputs != null && actual.outputs.Count == 1 && grafo.FindNode(actual.outputs[0]) is { } siguiente
+                       && !alcanzables.Contains(siguiente.guid) && !enCadena.Contains(siguiente))
+                {
+                    enCadena.Add(siguiente);
+                    actual = siguiente;
+                    if (siguiente is ActorStateNode pieza) cadena.Add(pieza);
+                }
+                tras.outputs ??= new List<string>();
+                if (!tras.HasNamedOutputs && tras.outputs.Count <= 1)
+                {
+                    actual.outputs = new List<string>(tras.outputs);
+                    tras.outputs = new List<string> { cabeza.guid };
+                }
+                else tras.outputs.Add(cabeza.guid);
+                informe?.AppendLine($"  {grafo.name} · enganchadas tras «{tras.displayTitle}»: {string.Join(", ", cadena.Select(c => c.displayTitle))}");
+                hechas++;
+            }
+            return hechas;
+        }
+
+        static HashSet<string> Alcanzables(NarrativeGraph grafo)
+        {
+            var vistos = new HashSet<string>();
+            if (string.IsNullOrEmpty(grafo.startNodeGuid)) return vistos;
+            var pila = new Stack<string>();
+            pila.Push(grafo.startNodeGuid);
+            while (pila.Count > 0)
+            {
+                var g = pila.Pop();
+                if (string.IsNullOrEmpty(g) || !vistos.Add(g)) continue;
+                var n = grafo.FindNode(g);
+                if (n?.outputs != null) foreach (var o in n.outputs) pila.Push(o);
+            }
+            return vistos;
         }
 
         static bool Usa(NarrativeNode n, string senal, SignalRole papel)

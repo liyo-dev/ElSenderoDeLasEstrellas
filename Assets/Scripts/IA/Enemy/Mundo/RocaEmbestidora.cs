@@ -152,7 +152,7 @@ public sealed class RocaEmbestidora : EnemigoDelMundo, IFiltroDeDano, IExpuestoA
             var golpe = _impactos[elegido];
             var col = golpe.collider;
             Vector3 punto = golpe.distance <= 0f ? Centro + _direccion * radio : golpe.point;
-            if (col.GetComponentInParent<PlayerHealthSystem>() != null || AmenazasAlJugador.EsDelGrupoDelJugador(col.gameObject))
+            if (ControlDelJugador.EsElJugador(col) || AmenazasAlJugador.EsDelGrupoDelJugador(col.gameObject))
             {
                 Atropellar(col.transform);
                 return;
@@ -183,8 +183,7 @@ public sealed class RocaEmbestidora : EnemigoDelMundo, IFiltroDeDano, IExpuestoA
         AmenazasAlJugador.RetirarAnuncio(transform);
         if (Danar(quien, dano))
         {
-            var jugador = quien.GetComponentInParent<PlayerHealthSystem>();
-            if (jugador == null || !derribo.Aplicar(jugador.gameObject, transform.position))
+            if (!ControlDelJugador.DelJugador(quien, out PlayerHealthSystem jugador) || !derribo.Aplicar(jugador.gameObject, transform.position))
                 Empujar(quien, _direccion, 8f);
         }
         Descansar(descansoSinChoque);

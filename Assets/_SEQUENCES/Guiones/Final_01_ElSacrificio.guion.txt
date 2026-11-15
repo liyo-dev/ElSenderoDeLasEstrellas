@@ -25,7 +25,7 @@ REPARTO
 will       Player           nombre=Will color=FFE3A8 prefab=Assets/Prefabs/_WILL.prefab
 estela     Actor_Estela     nombre=Estela color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
 liam       Actor_Liam       nombre=Liam color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
-archimago  Actor_Archimago  nombre=Archimago color=FFD27A prefab=Assets/Prefabs/_WILL_ORIGINAL.prefab oculto
+archimago  Actor_Archimago  nombre=Archimago color=FFD27A prefab=Assets/Prefabs/_ARCHIMAGO_NPC.prefab oculto
 
 PUNTOS
 # ── ZONA 1: EL SENDERO ──

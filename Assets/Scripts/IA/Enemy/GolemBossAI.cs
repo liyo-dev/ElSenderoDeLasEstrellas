@@ -195,7 +195,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                     ActiveCombatRegistry.RegisterNPC(gameObject);
                     _registeredInCombat = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 🔴🔴🔴 GOLEM REGISTRADO EN COMBATE INMEDIATAMENTE - ActiveCombatRegistry.Count = {ActiveCombatRegistry.Count}");
+                    Debug.Log($"[GolemBossAI] GOLEM REGISTRADO EN COMBATE INMEDIATAMENTE - ActiveCombatRegistry.Count = {ActiveCombatRegistry.Count}");
 #endif
                 }
             }
@@ -249,7 +249,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     private Vector3 _homePosition;
     private bool _isReturningHome;
     
-    // ✅ OPTIMIZACIÓN FASE 1: Buffers reutilizables para Physics queries (evita allocations)
+    // OPTIMIZACIÓN FASE 1: Buffers reutilizables para Physics queries (evita allocations)
     private Collider[] _punchHitBuffer = new Collider[16];
     private Collider[] _shockwaveHitBuffer = new Collider[32];
 
@@ -320,7 +320,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         // Iniciar la rutina de IA
         _aiRoutine = StartCoroutine(AIBehaviorRoutine());
         
-        Log("✅ Golem inicializado");
+        Log("Golem inicializado");
     }
 
     void OnDestroy()
@@ -380,7 +380,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     {
         if (!_hasSpawned || _isDead) return;
 
-        // FIX (petición Raúl, 1 sep 2026): durante un diálogo, congelar también la rotación hacia
+        // durante un diálogo, congelar también la rotación hacia
         // el jugador (el resto de la lógica de ataque vive en AIBehaviorRoutine, ver arriba).
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
         {
@@ -405,7 +405,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         if (!canStartCombat && autoStartOnDetection && distance <= detectionRange)
         {
             canStartCombat = true;
-            Log("⚔️ Combate iniciado");
+            Log("Combate iniciado");
         }
         
         if (!canStartCombat) return;
@@ -450,7 +450,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     {
         while (true)
         {
-            // FIX (petición Raúl, 1 sep 2026): congelar IA hostil mientras hay un diálogo abierto
+            // congelar IA hostil mientras hay un diálogo abierto
             // en cualquier parte del mundo (ver mismo fix en Spider1AI.Update/ImpDemonAI.Update).
             // No corta un ataque ya en marcha (vive en su propia corrutina), solo evita que este
             // tick periódico dispare la siguiente decisión mientras el jugador está bloqueado.
@@ -524,7 +524,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         // Fuera de rango - perseguir
         else
         {
-            // FIX (petición Raúl, 4 sep 2026): ver comentario de kitingChargeDelay más arriba —
+            // ver comentario de kitingChargeDelay más arriba —
             // sin esto, mantenerse fuera de attackRange disparando dejaba al Golem caminando
             // indefinidamente a walkSpeed (2.5, deliberadamente lento) sin ninguna posibilidad de
             // respuesta. Ahora, tras kitingChargeDelay segundos de persecución sin alcanzar rango,
@@ -534,7 +534,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             if (Time.time - _kitingSinceTime >= kitingChargeDelay && CanCharge() && distance >= chargeMinDistance)
             {
                 _kitingSinceTime = -1f;
-                Log("🏃💨 Jugador hostigando a distancia prolongada — embestida forzada para cerrar distancia");
+                Log("Jugador hostigando a distancia prolongada — embestida forzada para cerrar distancia");
                 StartCoroutine(ChargeAttack());
                 return;
             }
@@ -557,18 +557,18 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         if (_currentPhase < 3 && healthPercent <= phase3HealthThreshold)
         {
             _currentPhase = 3;
-            Log($"🔥🔥🔥 FASE 3 ACTIVADA - Vida: {healthPercent:P0}");
+            Log($"FASE 3 ACTIVADA - Vida: {healthPercent:P0}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🔥🔥🔥 FASE 3 ACTIVADA - El Golem ahora usará SALTO CON ONDA EXPANSIVA!");
+            Debug.Log($"[GolemBossAI] FASE 3 ACTIVADA - El Golem ahora usará SALTO CON ONDA EXPANSIVA!");
 #endif
         }
         // Fase 2: Lluvia de rocas
         else if (_currentPhase < 2 && healthPercent <= phase2HealthThreshold)
         {
             _currentPhase = 2;
-            Log($"⚡⚡⚡ FASE 2 ACTIVADA - Vida: {healthPercent:P0}");
+            Log($"FASE 2 ACTIVADA - Vida: {healthPercent:P0}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] ⚡⚡⚡ FASE 2 ACTIVADA - El Golem ahora usará lluvia de rocas!");
+            Debug.Log($"[GolemBossAI] FASE 2 ACTIVADA - El Golem ahora usará lluvia de rocas!");
 #endif
         }
         
@@ -720,9 +720,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         if (!_isReturningHome)
         {
             _isReturningHome = true;
-            Log("🚧 Fuera del área de batalla — el Golem regresa a su posición de origen.");
+            Log("Fuera del área de batalla — el Golem regresa a su posición de origen.");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🚧 Leash superado ({distanceFromHome:F1}m > {maxLeashDistance}m) — volviendo a {_homePosition}");
+            Debug.Log($"[GolemBossAI] Leash superado ({distanceFromHome:F1}m > {maxLeashDistance}m) — volviendo a {_homePosition}");
 #endif
         }
 
@@ -822,7 +822,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     #region Ataque - Lanzar Roca
 
     /// <summary>
-    /// FIX: la roca se lanzaba en línea recta (sin gravedad) apuntando a la posición del jugador
+    /// la roca se lanzaba en línea recta (sin gravedad) apuntando a la posición del jugador
     /// en el instante exacto del lanzamiento, sin ningún tipo de predicción. Entre el tell de la
     /// animación (~1s) y el tiempo de vuelo (hasta ~0.83s a rango máximo), un jugador que camina
     /// se aleja de sobra del punto apuntado — el resultado es que la roca "ni siquiera pasa cerca"
@@ -870,9 +870,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         StopAgent();
         
-        Log("🪨 Iniciando lanzar roca");
+        Log("Iniciando lanzar roca");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🪨 Iniciando lanzar roca");
+        Debug.Log($"[GolemBossAI] Iniciando lanzar roca");
 #endif
 
         // Reproducir animación
@@ -887,7 +887,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         if (rockPickupVFX)
         {
-            // FIX (10 sept 2026): sustituye Instantiate/Destroy por VfxPoolService (pool de VFX de
+            // sustituye Instantiate/Destroy por VfxPoolService (pool de VFX de
             // un solo uso, ver Core/Pooling/VfxPoolService.cs — patrón obligatorio de CLAUDE.md § 2,
             // ya resolvía exactamente este TODO). Mismo lifetime (2s), mismo resultado visual.
             Transform dustVFX = VfxPoolService.Instance.Play(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), 2f);
@@ -918,7 +918,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             var col = rock.GetComponent<Collider>();
             if (col) col.enabled = false;
             
-            Log($"🪨 Roca creada en mano");
+            Log($"Roca creada en mano");
         }
         
         // Esperar hasta el momento de lanzar (0.7s más = 1.0s total)
@@ -968,7 +968,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             var col = rock.GetComponent<Collider>();
             if (col) col.enabled = true;
             
-            // ✅ IMPORTANTE: Inicializar el proyectil - él maneja el daño
+            // IMPORTANTE: Inicializar el proyectil - él maneja el daño
             var proj = rock.GetComponent<EnemyProjectile>();
             if (proj)
             {
@@ -983,22 +983,22 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 // Pasamos -1 para usar el daño configurado en el prefab
                 proj.Initialize(direction, DanoDeRoca(proj));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[GolemBossAI] 🎯 Roca lanzada - EnemyProjectile usará su baseDamage del prefab, velocidad {rockSpeed}");
+                Debug.Log($"[GolemBossAI] Roca lanzada - EnemyProjectile usará su baseDamage del prefab, velocidad {rockSpeed}");
 #endif
             }
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[GolemBossAI] ❌ EnemyProjectile NO encontrado en la roca!");
+                Debug.LogError("[GolemBossAI] EnemyProjectile NO encontrado en la roca!");
 #endif
             }
             
             // Auto-destruir (si no se usa pooling)
             Destroy(rock, 5f);
             
-            Log($"🪨 Roca lanzada hacia jugador");
+            Log($"Roca lanzada hacia jugador");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🪨 Roca lanzada: dir={direction}, speed={rockSpeed}");
+            Debug.Log($"[GolemBossAI] Roca lanzada: dir={direction}, speed={rockSpeed}");
 #endif
         }
         
@@ -1024,9 +1024,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         Transform handPoint = _useLeftHand && rockHandPointLeft ? rockHandPointLeft : rockHandPoint;
         string animName = _useLeftHand ? ANIM_ATTACK02 : ANIM_ATTACK01;
         
-        Log($"🪨 [Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
+        Log($"[Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🪨 [Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
+        Debug.Log($"[GolemBossAI] [Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
 #endif
 
         // Reproducir animación
@@ -1041,7 +1041,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         if (rockPickupVFX)
         {
-            // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+            // VfxPoolService en vez de Instantiate/Destroy — ver nota en
             // RockThrowAttack(). Mismo lifetime (2s).
             Transform dustVFX = VfxPoolService.Instance.Play(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), 2f);
             if (dustVFX) dustVFX.localScale = Vector3.one * 1.5f;
@@ -1105,9 +1105,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         StopAgent();
 
-        Log("🌧️ [Fase 2] ¡LLUVIA DE ROCAS!");
+        Log("[Fase 2] ¡LLUVIA DE ROCAS!");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🌧️ [Fase 2] ¡LLUVIA DE ROCAS! - {rockRainCount} rocas");
+        Debug.Log($"[GolemBossAI] [Fase 2] ¡LLUVIA DE ROCAS! - {rockRainCount} rocas");
 #endif
 
         if (!player)
@@ -1140,7 +1140,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             // VFX de advertencia en el suelo
             if (rockWarningVFX)
             {
-                // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+                // VfxPoolService en vez de Instantiate/Destroy — ver nota en
                 // RockThrowAttack(). Mismo lifetime (1.5s).
                 Kits.StylizedVfx.GroundMark.On(
                     VfxPoolService.Instance.Play(rockWarningVFX, targetPos, Quaternion.identity, 1.5f));
@@ -1158,7 +1158,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
 
         EndAttack();
 
-        Log("🌧️ Lluvia de rocas finalizada");
+        Log("Lluvia de rocas finalizada");
     }
 
     /// <summary>
@@ -1177,7 +1177,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         Transform handPoint = _useLeftHand && rockHandPointLeft ? rockHandPointLeft : rockHandPoint;
         if (rockPickupVFX && handPoint)
         {
-            // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+            // VfxPoolService en vez de Instantiate/Destroy — ver nota en
             // RockThrowAttack(). Mismo lifetime (1s).
             VfxPoolService.Instance.Play(rockPickupVFX, handPoint.position, Quaternion.identity, 1f);
         }
@@ -1277,9 +1277,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         _lastChargeTime = Time.time;
         _lastAttackTime = Time.time;
         
-        Log("🏃💨 ¡EMBESTIDA INICIADA!");
+        Log("¡EMBESTIDA INICIADA!");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🏃💨 ¡EMBESTIDA! El Golem corre hacia el jugador!");
+        Debug.Log($"[GolemBossAI] ¡EMBESTIDA! El Golem corre hacia el jugador!");
 #endif
         
         if (!player)
@@ -1303,12 +1303,12 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         // Reproducir animación de correr más rápido para mayor impacto
         PlayAnim(ANIM_WALK);
         
-        // ✅ Acelerar la animación para que sea más impactante
+        // Acelerar la animación para que sea más impactante
         if (animator)
         {
             animator.speed = chargeAnimationSpeedMultiplier;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🏃💨 Velocidad de animación aumentada a {chargeAnimationSpeedMultiplier}x para embestida!");
+            Debug.Log($"[GolemBossAI] Velocidad de animación aumentada a {chargeAnimationSpeedMultiplier}x para embestida!");
 #endif
         }
         
@@ -1359,14 +1359,14 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             // devuelva al área en vez de seguir persiguiendo indefinidamente.
             if (Vector3.Distance(transform.position, _homePosition) > maxLeashDistance * 1.5f)
             {
-                Log("🚧 Embestida cortada: el Golem se estaba alejando demasiado del área de batalla.");
+                Log("Embestida cortada: el Golem se estaba alejando demasiado del área de batalla.");
                 break;
             }
 
             yield return null;
         }
         
-        // ✅ Asegurar que volvemos a la altura original
+        // Asegurar que volvemos a la altura original
         if (agent != null && agent.isOnNavMesh)
         {
             Vector3 finalPos = transform.position;
@@ -1384,12 +1384,12 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             agent.stoppingDistance = 0f;
         }
         
-        // ✅ Restaurar velocidad normal de la animación
+        // Restaurar velocidad normal de la animación
         if (animator)
         {
             animator.speed = 1f;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🏃 Velocidad de animación restaurada a normal (1.0x)");
+            Debug.Log($"[GolemBossAI] Velocidad de animación restaurada a normal (1.0x)");
 #endif
         }
         
@@ -1407,7 +1407,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         EndAttack();
         _isCharging = false;
         
-        Log("🏃 Embestida completada");
+        Log("Embestida completada");
     }
     
     /// <summary>
@@ -1415,9 +1415,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     /// </summary>
     private IEnumerator ExecutePunch()
     {
-        Log("👊 ¡PUÑETAZO!");
+        Log("¡PUÑETAZO!");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 👊 ¡PUÑETAZO!");
+        Debug.Log($"[GolemBossAI] ¡PUÑETAZO!");
 #endif
         
         // Animación de ataque con la otra mano
@@ -1448,27 +1448,27 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         Vector3 punchCenter = transform.position + transform.forward * 1.5f + Vector3.up;
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 👊 Verificando daño de puñetazo en posición {punchCenter}, radio {punchRadius}");
+        Debug.Log($"[GolemBossAI] Verificando daño de puñetazo en posición {punchCenter}, radio {punchRadius}");
 #endif
         
-        int hitCount = Physics.OverlapSphereNonAlloc(punchCenter, punchRadius * MultAlcance, _punchHitBuffer); // ✅ OPTIMIZACIÓN: NonAlloc
+        int hitCount = Physics.OverlapSphereNonAlloc(punchCenter, punchRadius * MultAlcance, _punchHitBuffer); // OPTIMIZACIÓN: NonAlloc
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 👊 Detectados {hitCount} colliders en el área");
+        Debug.Log($"[GolemBossAI] Detectados {hitCount} colliders en el área");
 #endif
         
         for (int i = 0; i < hitCount; i++)
         {
             var hit = _punchHitBuffer[i];
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 👊 Evaluando collider: {hit.name} (Tag: {hit.tag})");
+            Debug.Log($"[GolemBossAI] Evaluando collider: {hit.name} (Tag: {hit.tag})");
 #endif
             
             // No dañarse a sí mismo
             if (hit.transform == transform || hit.transform.IsChildOf(transform))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[GolemBossAI] 👊 Ignorando a sí mismo: {hit.name}");
+                Debug.Log($"[GolemBossAI] Ignorando a sí mismo: {hit.name}");
 #endif
                 continue;
             }
@@ -1479,7 +1479,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             bool isAlly = partyMember != null;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 👊 {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
+            Debug.Log($"[GolemBossAI] {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
 #endif
             
             if (isPlayer || isAlly)
@@ -1494,15 +1494,14 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 // compañeros, por su Damageable.
                 bool damageApplied = false;
 
-                var playerHealth = hit.GetComponent<PlayerHealthSystem>();
-                if (playerHealth != null)
+                if (ControlDelJugador.DelJugador(hit, out PlayerHealthSystem playerHealth))
                 {
                     // Un golpe que la defensa anula no derriba ni empuja.
                     if (!playerHealth.TakeDamage(punchDamage * MultDano)) continue;
                     damageApplied = true;
-                    Log($"👊 Puñetazo golpeó a {hit.name} por {punchDamage}");
+                    Log($"Puñetazo golpeó a {hit.name} por {punchDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 👊 ✅ DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {punchDamage}!");
+                    Debug.Log($"[GolemBossAI] DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {punchDamage}!");
 #endif
                 }
                 else
@@ -1512,9 +1511,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                     {
                         hitDamageable.TakeDamage(punchDamage * MultDano);
                         damageApplied = true;
-                        Log($"👊 Puñetazo golpeó a {hit.name} por {punchDamage}");
+                        Log($"Puñetazo golpeó a {hit.name} por {punchDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[GolemBossAI] 👊 ✅ DAÑO APLICADO a {hit.name} via Damageable por {punchDamage}!");
+                        Debug.Log($"[GolemBossAI] DAÑO APLICADO a {hit.name} via Damageable por {punchDamage}!");
 #endif
                     }
                 }
@@ -1522,7 +1521,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 if (!damageApplied)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[GolemBossAI] 👊 ⚠️ {hit.name} no tiene PlayerHealthSystem ni Damageable!");
+                    Debug.LogWarning($"[GolemBossAI] {hit.name} no tiene PlayerHealthSystem ni Damageable!");
 #endif
                 }
                 
@@ -1532,7 +1531,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 {
                     rb.AddForce(knockbackDir * punchKnockback, ForceMode.Impulse);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 👊 Knockback aplicado a {hit.name}");
+                    Debug.Log($"[GolemBossAI] Knockback aplicado a {hit.name}");
 #endif
                 }
             }
@@ -1558,9 +1557,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         StopAgent();
         
-        Log("🦘 [Fase 3] ¡SALTO HACIA EL JUGADOR!");
+        Log("[Fase 3] ¡SALTO HACIA EL JUGADOR!");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🦘 [Fase 3] ¡SALTO HACIA EL JUGADOR!");
+        Debug.Log($"[GolemBossAI] [Fase 3] ¡SALTO HACIA EL JUGADOR!");
 #endif
         
         // Guardar posición inicial
@@ -1641,20 +1640,20 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         transform.position = _jumpTargetPos;
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 🦘 ¡ATERRIZAJE! Posición: {transform.position}");
+        Debug.Log($"[GolemBossAI] ¡ATERRIZAJE! Posición: {transform.position}");
 #endif
         
         // Reactivar NavMeshAgent
         if (agent)
         {
-            // FIX: _jumpTargetPos se calcula a partir de la posición del jugador, sin validar
+            // _jumpTargetPos se calcula a partir de la posición del jugador, sin validar
             // contra el NavMesh — si el punto de aterrizaje cae fuera de malla, hacer
             // "agent.enabled = true" aquí ANTES de recolocar loggea "Failed to create agent
             // because there is no valid NavMesh" (Unity valida transform.position en el instante
             // de habilitar, no después). SafeEnable recoloca el transform al punto de NavMesh
             // válido más cercano antes de habilitar, evitando el falso error.
             Game.NPC.Common.NavMeshAgentUtility.SafeEnable(agent, transform, transform.position);
-            // ✅ Asegurar que updateRotation siga desactivado para control manual de rotación
+            // Asegurar que updateRotation siga desactivado para control manual de rotación
             agent.updateRotation = false;
         }
         
@@ -1666,7 +1665,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         
         EndAttack();
 
-        Log("🦘 Salto completado");
+        Log("Salto completado");
     }
     
     /// <summary>
@@ -1676,9 +1675,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     {
         Vector3 impactPos = transform.position;
         
-        Log($"💥 [Fase 3] ¡ONDA EXPANSIVA! Radio: {shockwaveRadius}, Daño: {shockwaveDamage}");
+        Log($"[Fase 3] ¡ONDA EXPANSIVA! Radio: {shockwaveRadius}, Daño: {shockwaveDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 💥 [Fase 3] ¡ONDA EXPANSIVA! en {impactPos}, Radio: {shockwaveRadius}m, Daño: {shockwaveDamage}");
+        Debug.Log($"[GolemBossAI] [Fase 3] ¡ONDA EXPANSIVA! en {impactPos}, Radio: {shockwaveRadius}m, Daño: {shockwaveDamage}");
 #endif
         
         // VFX de onda expansiva
@@ -1687,13 +1686,13 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             Transform vfx = VfxPoolService.Instance.Play(shockwaveVFX, impactPos, Quaternion.identity, 3f);
             if (vfx != null) vfx.localScale = Vector3.one * (shockwaveRadius * MultAlcance / 5f); // Escalar según radio
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 VFX de onda expansiva creado");
+            Debug.Log($"[GolemBossAI] VFX de onda expansiva creado");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ No hay VFX de onda expansiva configurado!");
+            Debug.LogWarning($"[GolemBossAI] No hay VFX de onda expansiva configurado!");
 #endif
         }
 
@@ -1703,7 +1702,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             Transform dust = VfxPoolService.Instance.Play(landingDustVFX, impactPos, Quaternion.identity, 3f);
             if (dust != null) dust.localScale = Vector3.one * 2f;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 VFX de polvo creado");
+            Debug.Log($"[GolemBossAI] VFX de polvo creado");
 #endif
         }
         
@@ -1720,28 +1719,28 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     private void ApplyShockwaveDamage(Vector3 center)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 💥 Verificando daño de onda expansiva en {center}, radio {shockwaveRadius}");
+        Debug.Log($"[GolemBossAI] Verificando daño de onda expansiva en {center}, radio {shockwaveRadius}");
 #endif
         
         // Buscar todos los colliders en el radio
-        int hitCount = Physics.OverlapSphereNonAlloc(center, shockwaveRadius * MultAlcance, _shockwaveHitBuffer); // ✅ OPTIMIZACIÓN: NonAlloc
+        int hitCount = Physics.OverlapSphereNonAlloc(center, shockwaveRadius * MultAlcance, _shockwaveHitBuffer); // OPTIMIZACIÓN: NonAlloc
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GolemBossAI] 💥 Detectados {hitCount} colliders en el área de onda");
+        Debug.Log($"[GolemBossAI] Detectados {hitCount} colliders en el área de onda");
 #endif
         
         for (int i = 0; i < hitCount; i++)
         {
             var hit = _shockwaveHitBuffer[i];
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 Evaluando collider: {hit.name} (Tag: {hit.tag})");
+            Debug.Log($"[GolemBossAI] Evaluando collider: {hit.name} (Tag: {hit.tag})");
 #endif
             
             // No dañarse a sí mismo
             if (hit.transform == transform || hit.transform.IsChildOf(transform))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[GolemBossAI] 💥 Ignorando a sí mismo: {hit.name}");
+                Debug.Log($"[GolemBossAI] Ignorando a sí mismo: {hit.name}");
 #endif
                 continue;
             }
@@ -1752,7 +1751,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             bool isAlly = partyMember != null;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
+            Debug.Log($"[GolemBossAI] {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
 #endif
             
             if (isPlayer || isAlly)
@@ -1766,15 +1765,14 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 // compañeros, por su Damageable.
                 bool damageApplied = false;
 
-                var playerHealth = hit.GetComponent<PlayerHealthSystem>();
-                if (playerHealth != null)
+                if (ControlDelJugador.DelJugador(hit, out PlayerHealthSystem playerHealth))
                 {
                     // Una onda que la defensa anula no derriba ni empuja.
                     if (!playerHealth.TakeDamage(shockwaveDamage * MultDano)) continue;
                     damageApplied = true;
-                    Log($"💥 Onda dañó a {hit.name} por {shockwaveDamage}");
+                    Log($"Onda dañó a {hit.name} por {shockwaveDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {shockwaveDamage}!");
+                    Debug.Log($"[GolemBossAI] DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {shockwaveDamage}!");
 #endif
                 }
                 else
@@ -1784,9 +1782,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                     {
                         hitDamageable.TakeDamage(shockwaveDamage * MultDano);
                         damageApplied = true;
-                        Log($"💥 Onda dañó a {hit.name} por {shockwaveDamage}");
+                        Log($"Onda dañó a {hit.name} por {shockwaveDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO APLICADO a {hit.name} via Damageable por {shockwaveDamage}!");
+                        Debug.Log($"[GolemBossAI] DAÑO APLICADO a {hit.name} via Damageable por {shockwaveDamage}!");
 #endif
                     }
                 }
@@ -1794,7 +1792,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 if (!damageApplied)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ {hit.name} no tiene PlayerHealthSystem ni Damageable!");
+                    Debug.LogWarning($"[GolemBossAI] {hit.name} no tiene PlayerHealthSystem ni Damageable!");
 #endif
                 }
                 
@@ -1804,7 +1802,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 {
                     rb.AddForce(knockbackDir * shockwaveKnockback, ForceMode.Impulse);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 💥 Knockback aplicado a {hit.name}");
+                    Debug.Log($"[GolemBossAI] Knockback aplicado a {hit.name}");
 #endif
                 }
                 
@@ -1815,7 +1813,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                     // El knockback se aplicará en el siguiente frame via el sistema de movimiento
                     // Por ahora solo hacemos daño, el knockback es opcional
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 💥 {hit.name} tiene CharacterController (knockback manual necesario)");
+                    Debug.Log($"[GolemBossAI] {hit.name} tiene CharacterController (knockback manual necesario)");
 #endif
                 }
             }
@@ -1827,7 +1825,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     
     /// <summary>
     /// Activa el temblor de cámara.
-    /// FIX A11 (auditoría 2026-08-07): antes buscaba un método "Shake" por reflection en
+    /// antes buscaba un método "Shake" por reflection en
     /// cualquier MonoBehaviour de la cámara principal — costoso (GetComponents + GetMethod +
     /// Invoke en cada llamada) y frágil (depende de que exista un componente con ese nombre de
     /// método exacto), cuando el propio archivo ya usa FeedbackService.CameraShake directamente
@@ -1874,7 +1872,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         {
             damage *= chargeDamageMultiplier;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 ¡COLISIÓN DURANTE EMBESTIDA! Daño aumentado a {damage}");
+            Debug.Log($"[GolemBossAI] ¡COLISIÓN DURANTE EMBESTIDA! Daño aumentado a {damage}");
 #endif
         }
         
@@ -1887,9 +1885,9 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             _lastContactDamageTime = Time.time;
             if (entra && _isCharging) DerribarAlJugador(player.gameObject, transform.position);
             
-            Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
+            Log($"Daño por contacto: {damage} (Embestida: {_isCharging})");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO POR CONTACTO aplicado al jugador via PlayerHealthSystem: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
+            Debug.Log($"[GolemBossAI] DAÑO POR CONTACTO aplicado al jugador via PlayerHealthSystem: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
 #endif
             return;
         }
@@ -1901,15 +1899,15 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             playerDamageable.TakeDamage(damage);
             _lastContactDamageTime = Time.time;
             
-            Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
+            Log($"Daño por contacto: {damage} (Embestida: {_isCharging})");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO POR CONTACTO aplicado al jugador via Damageable: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
+            Debug.Log($"[GolemBossAI] DAÑO POR CONTACTO aplicado al jugador via Damageable: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
 #endif
             return;
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ El jugador no tiene PlayerHealthSystem ni Damageable!");
+        Debug.LogWarning($"[GolemBossAI] El jugador no tiene PlayerHealthSystem ni Damageable!");
 #endif
     }
     
@@ -1925,7 +1923,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     {
         if (_isDead) return;
         
-        Log($"💥 Recibió {amount} de daño");
+        Log($"Recibió {amount} de daño");
         
         // No interrumpir ataques con animación de daño
         if (!_isAttacking)
@@ -1953,7 +1951,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         _currentState = BossState.Dead;
         SoltarSenuelo();
         
-        Log("💀 Golem derrotado");
+        Log("Golem derrotado");
         
         StopAllCoroutines();
         StopAgent();

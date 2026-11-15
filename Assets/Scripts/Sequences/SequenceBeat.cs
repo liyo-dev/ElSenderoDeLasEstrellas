@@ -91,6 +91,8 @@ public sealed class SequenceContext
 
     private readonly Dictionary<string, SequenceActor> _actors = new();
     private readonly Dictionary<string, SequenceActor> _personajesVisibles = new();
+    // Ids que esta secuencia tiene tomados en RepartoDeEscena (se sueltan en SoltarReparto).
+    private readonly HashSet<string> _reparto = new();
     public Dictionary<string, SequenceActor>.ValueCollection PersonajesVisibles => _personajesVisibles.Values;
     private readonly Dictionary<string, (VfxPoolService pool, ulong uso)> _vfxRegistrados = new();
 
@@ -138,6 +140,10 @@ public sealed class SequenceContext
             return cached;
         }
 
+        // La escena toma al personaje antes de buscarlo: si la historia lo tenía retirado del
+        // mundo, vuelve ahora (la escena manda en la pantalla) y nadie lo mueve hasta soltarlo.
+        if (_reparto.Add(actorId)) RepartoDeEscena.Tomar(actorId);
+
         if (!_personajesVisibles.TryGetValue(actorId, out var actor))
         {
             SequenceActor.TryResolve(actorId, out actor);
@@ -163,6 +169,13 @@ public sealed class SequenceContext
     /// cuerpo, no en el pelo -- y en este juego el pelo es media cabeza. Con los actores en la
     /// mano se puede comparar contra su volumen real, que SequenceActor mide de los Renderer.
     public Dictionary<string, SequenceActor>.ValueCollection Actores => _actors.Values;
+
+    /// Devuelve a cada sistema los personajes que esta secuencia tenía tomados. Idempotente.
+    public void SoltarReparto()
+    {
+        foreach (var id in _reparto) RepartoDeEscena.Soltar(id);
+        _reparto.Clear();
+    }
 
     /// Da de alta un objeto como actor de la escena, con un nombre. A partir de ese momento
     /// cualquier beat puede referirse a él igual que a un personaje: encuadrarlo, seguirlo con la

@@ -25,7 +25,7 @@ public static class TexturasDeLaInterfaz
     [Serializable] private sealed class Entrada { public string ruta; public int tamano; public int compresion; }
     [Serializable] private sealed class Registro { public List<Entrada> texturas = new List<Entrada>(); }
 
-    [MenuItem("El Sendero/UI/Aligerar las texturas de la interfaz")]
+    [MenuItem("El Sendero/Interfaz/Aligerar las texturas de la interfaz")]
     public static void Aligerar()
     {
         var registro = Leer();
@@ -61,7 +61,7 @@ public static class TexturasDeLaInterfaz
         Debug.Log($"[TexturasDeLaInterfaz] {cambiadas} texturas de la interfaz aligeradas.");
     }
 
-    [MenuItem("El Sendero/UI/Aligerar las texturas de la interfaz: volver a como estaban")]
+    [MenuItem("El Sendero/Interfaz/Aligerar las texturas de la interfaz: volver a como estaban")]
     public static void Volver()
     {
         var registro = Leer();

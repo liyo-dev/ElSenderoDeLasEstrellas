@@ -13,9 +13,6 @@ public static class CrearLuzProtectora
 {
     public const string RutaPrefab = CrearAgujeroNegro.Carpeta + "/VFX_LuzProtectora.prefab";
 
-    [MenuItem("El Sendero/VFX/Crear luz protectora INC-585")]
-    public static void Menu() => Asegurar();
-
     public static string Asegurar()
     {
         var shader = AssetDatabase.LoadAssetAtPath<Shader>(CrearAgujeroNegro.Carpeta + "/Shaders/LuzProtectora.shader");

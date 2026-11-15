@@ -42,8 +42,7 @@ public static class MontarCinematicaFinal
     private static readonly Vector3 OrigenMainWorldPiedra = new(565f, 18.6f, -505f);
     private static readonly Vector3 OrigenMainWorldRio = new(176f, 24.5f, -44f);
 
-    [MenuItem("El Sendero/Cinemáticas/1. Montar Escena de Cinemática Final (Escenarios Finales)", priority = 20)]
-    [MenuItem("El Sendero/Cinematicas/MontarEscenaFinal", priority = 21)]
+    [MenuItem("El Sendero/Cinemáticas/Cinemática final: montar la escena de rodaje", priority = 20)]
     public static void MenuMontarEscena()
     {
         try
@@ -1597,7 +1596,7 @@ public static class MontarCinematicaFinal
 
         archimagoGo = InstanciarActor(
             parent,
-            "Assets/Prefabs/_WILL_ORIGINAL.prefab",
+            "Assets/Prefabs/_ARCHIMAGO_NPC.prefab",
             "Actor_Archimago",
             "Assets/_NPCs/_GrafoNarrativo/CHAR_ARCHIMAGO.asset",
             CentroZonaPiedra + new Vector3(0f, 0.25f, 3.6f),

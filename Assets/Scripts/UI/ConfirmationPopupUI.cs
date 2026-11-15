@@ -121,7 +121,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         // usan DialogueManager, QuestMenuManager, TeleportUI, etc.
         Core.PlayerInputManager.Instance?.PushUIMode();
 
-        // FIX (recurrente — INC-048 y bug de "el player no se detiene al guardar"): PushUIMode()
+        // PushUIMode()
         // solo deshabilita el mapa de Input GamePlay, pero NO detiene el movimiento/momentum ya
         // en curso del Invector Controller (root motion residual, CharacterController, etc.).
         // StartDialogueWithOptions() sí lo hacía porque DialogueManager.ActivateDialogueMode()
@@ -415,7 +415,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         }
     }
 
-    // FIX: el botón Sur/Enter confirmaba siempre, incluso con "No" resaltado (el jugador
+    // el botón Sur/Enter confirmaba siempre, incluso con "No" resaltado (el jugador
     // navegaba hasta "No" con el D-Pad y al pulsar Sur igualmente se ejecutaba Confirm()).
     // Ahora respeta cuál de los dos botones está seleccionado en ese momento.
     void ActivateSelected()

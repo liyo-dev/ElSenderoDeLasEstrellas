@@ -114,7 +114,7 @@ public sealed class WaitNpcInteractionNode : NarrativeNode, INarrativeStateEffec
             if (showMarker) s_tomadaConMarca[npcId] = Time.frameCount;
             Unsubscribe();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[WaitNpcInteractionNode:{guid}] ✅ El jugador habló con '{npcId}' → avanzando");
+            Debug.Log($"[WaitNpcInteractionNode:{guid}] El jugador habló con '{npcId}' → avanzando");
 #endif
             ready?.Invoke();
         };

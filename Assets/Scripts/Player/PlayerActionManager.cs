@@ -45,7 +45,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     //private bool _allowPhysical = true; // ataques físicos
     private bool _allowSwim = false;     // nadar
     private bool _allowJump = false;     // saltar
-    private bool _allowClimb = false;    // trepar
     private bool _allowMagic = false;   // lanzar magia
     private bool _allowFly = false;      // volar
     private bool _allowSprint = false;   // sprint
@@ -64,13 +63,12 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         // _allowPhysical = abilities.physical;
         _allowSwim = abilities.swim;
         _allowJump = abilities.jump;
-        _allowClimb = abilities.climb;
         _allowFly = abilities.fly;
         _allowMagic = abilities.magic;
         _allowSprint = abilities.sprint;
         _allowShield = abilities.shield;
 
-        //if (debugLogs) Debug.Log($"[PlayerActionManager] Abilities applied: Swim={_allowSwim} Jump={_allowJump} Climb={_allowClimb} Fly={_allowFly} Magic={_allowMagic}");
+        //if (debugLogs) Debug.Log($"[PlayerActionManager] Abilities applied: Swim={_allowSwim} Jump={_allowJump} Fly={_allowFly} Magic={_allowMagic}");
         //else Debug.Log($"[PlayerActionManager] Abilities applied: Fly={_allowFly}");
     }
 
@@ -78,7 +76,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     //public bool AllowPhysical => _allowPhysical;
     public bool AllowSwim => _allowSwim;
     public bool AllowJump => _allowJump;
-    public bool AllowClimb => _allowClimb;
     public bool AllowMagic => _allowMagic;
     public bool AllowFly => _allowFly;
     public bool AllowSprint => _allowSprint;
@@ -207,19 +204,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _blockedByMode[ActionMode.Flying].Add(PlayerAbility.Jump);
         _blockedByMode[ActionMode.Flying].Add(PlayerAbility.Roll);
 
-        // GARANTIZAR bloqueos básicos para Climbing (independiente del Inspector)
-        if (!_blockedByMode.ContainsKey(ActionMode.Climbing))
-            _blockedByMode[ActionMode.Climbing] = new HashSet<PlayerAbility>();
-
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Jump);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Sprint);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Roll);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Attack);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Magic);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Carry);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Interact);
-        _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Fly);
-
         // GARANTIZAR bloqueos básicos para Boating (independiente del Inspector)
         if (!_blockedByMode.ContainsKey(ActionMode.Boating))
             _blockedByMode[ActionMode.Boating] = new HashSet<PlayerAbility>();
@@ -232,7 +216,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Attack);
         _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Magic);
         _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Carry);
-        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Climb);
         _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Fly);
 
         // GARANTIZAR bloqueo de interacción durante combate
@@ -252,7 +235,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _blockedByMode[ActionMode.Minigame].Add(PlayerAbility.Carry);
         _blockedByMode[ActionMode.Minigame].Add(PlayerAbility.Aim);
         _blockedByMode[ActionMode.Minigame].Add(PlayerAbility.Fly);
-        _blockedByMode[ActionMode.Minigame].Add(PlayerAbility.Climb);
 
         // GARANTIZAR bloqueos para UsingWorldPoint (sentarse, comer, dormir, etc.)
         if (!_blockedByMode.ContainsKey(ActionMode.UsingWorldPoint))
@@ -277,7 +259,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
 
     public void PushMode(ActionMode mode)
     {
-        // FIX C2 (auditoría 2026-08-07): antes, "if (Top == mode) return;" descartaba el segundo
+        // antes, "if (Top == mode) return;" descartaba el segundo
         // Push del mismo modo cuando dos sistemas lo empujaban casi a la vez (p.ej. DialogueManager
         // y CinematicSequencerBase empujando Cinematic). El problema: el segundo sistema hace su
         // Pop igualmente, y ese Pop borraba la ÚNICA entrada que había en la pila — la del primer
@@ -316,7 +298,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     }
 
     /// <summary>
-    /// FIX A10 (auditoría 2026-08-07): vacía la pila de modos de golpe y vuelve a Default. Pensado
+    /// vacía la pila de modos de golpe y vuelve a Default. Pensado
     /// para puntos de reseteo "duros" de la sesión del jugador (muerte, revivir) donde cualquier
     /// modo que quedara apilado (Flying/Carrying/Cinematic/Stunned...) ya no es válido — antes,
     /// morir con un modo pushed lo dejaba vivo de cara al respawn, porque nada hacía los Pop
@@ -360,7 +342,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         return fuentes.Count > 0;
     }
 
-    // Permisos que dan otros sistemas mientras dura algo (una zona de escalada, una prueba): la
+    // Permisos que dan otros sistemas mientras dura algo (una zona, una prueba): la
     // habilidad se puede usar aunque el preset no la tenga. Los bloqueos externos siguen mandando.
     private readonly Dictionary<PlayerAbility, HashSet<UnityEngine.Object>> _permisosExternos =
         new Dictionary<PlayerAbility, HashSet<UnityEngine.Object>>();
@@ -397,7 +379,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 if (!_allowJump && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Jump deshabilitado por preset");
+                    if (debugLogs) Debug.Log("[PlayerActionManager] Jump deshabilitado por preset");
 #endif
                     return false;
                 }
@@ -406,16 +388,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 if (!_allowFly && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Fly deshabilitado por preset");
-#endif
-                    return false;
-                }
-                break;
-            case PlayerAbility.Climb:
-                if (!_allowClimb && !EstaPermitidaDesdeFuera(ability))
-                {
-#if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Climb deshabilitado por preset");
+                    if (debugLogs) Debug.Log("[PlayerActionManager] Fly deshabilitado por preset");
 #endif
                     return false;
                 }
@@ -424,7 +397,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 if (!_allowMagic && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Magic deshabilitado por preset");
+                    if (debugLogs) Debug.Log("[PlayerActionManager] Magic deshabilitado por preset");
 #endif
                     return false;
                 }
@@ -433,7 +406,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                 if (!_allowSprint && !EstaPermitidaDesdeFuera(ability))
                 {
 #if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Sprint deshabilitado por preset");
+                    if (debugLogs) Debug.Log("[PlayerActionManager] Sprint deshabilitado por preset");
 #endif
                     return false;
                 }
@@ -441,18 +414,18 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
             //case PlayerAbility.Attack:
             //    if (!_allowPhysical)
             //    {
-            //        if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Attack deshabilitado por preset");
+            // if (debugLogs) Debug.Log("[PlayerActionManager] Attack deshabilitado por preset");
             //        return false;
             //    }
             //    break;
-            // Otros mapeos pueden añadirse si se utiliza swim/climb en otras partes
+            // Otros mapeos pueden añadirse si se utiliza swim en otras partes
         }
 
         // Bloqueos externos (zonas, pruebas…): ver AnadirBloqueo.
         if (EstaBloqueadaDesdeFuera(ability))
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log($"[PlayerActionManager] ❌ {ability} bloqueado desde fuera");
+            if (debugLogs) Debug.Log($"[PlayerActionManager] {ability} bloqueado desde fuera");
 #endif
             return false;
         }
@@ -464,7 +437,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
             if (_blockedByMode.TryGetValue(m, out var set) && set.Contains(ability))
             {
 #if UNITY_EDITOR
-                if (debugLogs) Debug.Log($"[PlayerActionManager] ❌ {ability} bloqueado por modo {m}");
+                if (debugLogs) Debug.Log($"[PlayerActionManager] {ability} bloqueado por modo {m}");
 #endif
                 return false;
             }
@@ -588,7 +561,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
 
         OnTopModeChanged?.Invoke(top);
 #if UNITY_EDITOR
-        if (debugLogs) Debug.Log($"[PlayerActionManager] ✅ Modo activo: {top}");
+        if (debugLogs) Debug.Log($"[PlayerActionManager] Modo activo: {top}");
 #endif
 
         UpdatePlayerLock(top);
@@ -633,7 +606,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Jump bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Jump bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -647,7 +620,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Sprint bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Sprint bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -661,7 +634,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Attack bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Attack bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -675,7 +648,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Magic bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Magic bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -689,7 +662,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (Time.unscaledTime < _interactCooldownUntil)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Interact en cooldown");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Interact en cooldown");
 #endif
             return false;
         }
@@ -698,7 +671,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Interact bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Interact bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -731,7 +704,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         if (MenuManager.HasOpenMenus)
         {
 #if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Fly bloqueado - hay menús abiertos");
+            if (debugLogs) Debug.Log("[PlayerActionManager] Fly bloqueado - hay menús abiertos");
 #endif
             return false;
         }
@@ -739,20 +712,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         return CanUse(PlayerAbility.Fly);
     }
     
-    public bool CanClimb()
-    {
-        // Si hay menús abiertos, NO permitir trepar
-        if (MenuManager.HasOpenMenus)
-        {
-#if UNITY_EDITOR
-            if (debugLogs) Debug.Log("[PlayerActionManager] ❌ Climb bloqueado - hay menús abiertos");
-#endif
-            return false;
-        }
-        
-        return CanUse(PlayerAbility.Climb);
-    }
-
     void UpdatePlayerLock(ActionMode top)
     {
         bool shouldLock = ShouldLockMovement(top);

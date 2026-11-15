@@ -18,13 +18,13 @@ MonoBehaviour:
   - rid: 5623891252771815606
   - rid: 5623891259268006325
   - rid: 5623891481250759595
-  - rid: 5623891481250759596
+  - rid: 6540294618706084525
   - rid: 5623891500440224033
-  - rid: 5623891500440224034
+  - rid: 6540294618706084526
   - rid: 5623891572275806459
   - rid: 5623891572275806460
   - rid: 2337184645389222053
-  - rid: 648455780169416944
+  - rid: 6540294618706084527
   - rid: 7719302845561928001
   - rid: 7719302845561928002
   - rid: 7719302845561928003
@@ -32,7 +32,7 @@ MonoBehaviour:
   - rid: 1033424269097474018
   - rid: 1827795099163868709
   - rid: 1635490750706514273
-  - rid: 1328963130609840822
+  - rid: 6540294618706084528
   - rid: 1078245657900615900
   - rid: 1788894763175737732
   - rid: 1479465354230462173
@@ -54,11 +54,11 @@ MonoBehaviour:
   - rid: 5630202287041282394
   - rid: 5630202287041282395
   - rid: 5630202287041282396
-  - rid: 5630202287041282397
+  - rid: 6540294618706084529
   - rid: 5630202821400330240
   - rid: 5630202821400330241
   - rid: 5630202821400330242
-  - rid: 5630202821400330243
+  - rid: 6540294618706084530
   - rid: 6540294600349712509
   - rid: 6540294600349712510
   - rid: 6540294600349712511
@@ -79,22 +79,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 648455780169416944
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Recibo orejas de angel
-        chapter: 
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: e14cad4b-3e1f-4d63-aec7-b992b768fb01
-        position: {x: 1520, y: 0}
-        outputs: []
-        wardrobeItem: {fileID: 11400000, guid: e57680d74430c0041b9f24ed7e99989d, type: 2}
-        logWarnings: 1
     - rid: 1033424269097474018
       type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -129,22 +113,6 @@ MonoBehaviour:
         - b4502fed-c3e7-4fe9-a48a-d3151dd615da
         questId: Q_NORA_POCIONES
         debugLogs: 0
-    - rid: 1328963130609840822
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Recibo orejas de conejo
-        chapter: 
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 231b6f08-67fc-47a5-b544-7b88b4a36290
-        position: {x: 760, y: 1752}
-        outputs: []
-        wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
-        logWarnings: 1
     - rid: 1479465354230462173
       type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -251,6 +219,8 @@ MonoBehaviour:
         - a5b0ec64-4604-458f-baa2-4363bad5d765
         eventKey: ALGAS_INVENTORY
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5623891252771815606
       type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -312,28 +282,6 @@ MonoBehaviour:
         - f01dc9e7-de62-484e-8166-01c99735cb97
         questId: Q_RUDOLFO
         debugLogs: 0
-    - rid: 5623891481250759596
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Desbloqueo el Salto
-        chapter: 
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: f01dc9e7-de62-484e-8166-01c99735cb97
-        position: {x: 760, y: 905}
-        outputs: []
-        abilityKeysToUnlock: 01000000i
-        abilitiesToUnlock: 
-        spellsToUnlock: 
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 1
     - rid: 5623891500440224033
       type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -351,29 +299,6 @@ MonoBehaviour:
         - 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
         questId: "Q_NI\xD1OPEZ"
         debugLogs: 0
-    - rid: 5623891500440224034
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Desbloqueo la habilidad de nadar
-        chapter: 
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
-        position: {x: 760, y: 160}
-        outputs:
-        - 19e6376b-e48c-41d5-bf3a-aa9beef62892
-        abilityKeysToUnlock: 00000000i
-        abilitiesToUnlock: 
-        spellsToUnlock: 
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 1
     - rid: 5623891572275806459
       type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -747,22 +672,6 @@ MonoBehaviour:
         amount: 40
         logWarnings: 1
         onlyOnce: 1
-    - rid: 5630202287041282397
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: El parche de Renard
-        chapter: Renard
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 25b810b1-9ddd-48bd-9474-77338993c015
-        position: {x: 7220, y: 0}
-        outputs: []
-        wardrobeItem: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}
-        logWarnings: 1
     - rid: 5630202821400330240
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -780,6 +689,8 @@ MonoBehaviour:
         - sec-erika-revancha-1
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202821400330241
       type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -822,26 +733,6 @@ MonoBehaviour:
         optionBTextId: 
         optionBText: No
         rememberAsFlag: 
-    - rid: 5630202821400330243
-      type: {class: StartNpcCombatNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "Combate de pr\xE1ctica con Erika"
-        chapter: 
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: sec-erika-revancha-3
-        position: {x: 1520, y: 333}
-        outputs:
-        - sec-erika-revancha-1
-        npcId: NPC_Erika
-        combatConfig: {fileID: 0}
-        defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
-        waitForDefeat: 1
-        restorePeacefulOnDefeat: 1
     - rid: 6540294600349712509
       type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -1164,6 +1055,160 @@ MonoBehaviour:
         presence: 2
         markId: 
         lines: []
+    - rid: 6540294618706084525
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Desbloqueo el Salto
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: f01dc9e7-de62-484e-8166-01c99735cb97
+        position: {x: 760, y: 905}
+        outputs:
+        - 
+        request:
+          rid: 6540294618706084531
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084526
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Desbloqueo la habilidad de nadar
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
+        position: {x: 760, y: 160}
+        outputs:
+        - 19e6376b-e48c-41d5-bf3a-aa9beef62892
+        request:
+          rid: 6540294618706084532
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084527
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Recibo orejas de angel
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: e14cad4b-3e1f-4d63-aec7-b992b768fb01
+        position: {x: 1520, y: 0}
+        outputs:
+        - 
+        request:
+          rid: 6540294618706084533
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084528
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Recibo orejas de conejo
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 231b6f08-67fc-47a5-b544-7b88b4a36290
+        position: {x: 760, y: 1752}
+        outputs:
+        - 
+        request:
+          rid: 6540294618706084534
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084529
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: El parche de Renard
+        chapter: Renard
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c015
+        position: {x: 7220, y: 0}
+        outputs:
+        - 
+        request:
+          rid: 6540294618706084535
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084530
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Combate de pr\xE1ctica con Erika"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: sec-erika-revancha-3
+        position: {x: 1520, y: 333}
+        outputs:
+        - sec-erika-revancha-1
+        - 
+        request:
+          rid: 6540294618706084536
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084531
+      type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
+      data:
+        abilityKeysToUnlock: 01000000i
+        spellsToUnlock: 
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+    - rid: 6540294618706084532
+      type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
+      data:
+        abilityKeysToUnlock: 00000000i
+        spellsToUnlock: 
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+    - rid: 6540294618706084533
+      type: {class: PedirVestuario, ns: , asm: Assembly-CSharp}
+      data:
+        wardrobeItem: {fileID: 11400000, guid: e57680d74430c0041b9f24ed7e99989d, type: 2}
+    - rid: 6540294618706084534
+      type: {class: PedirVestuario, ns: , asm: Assembly-CSharp}
+      data:
+        wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
+    - rid: 6540294618706084535
+      type: {class: PedirVestuario, ns: , asm: Assembly-CSharp}
+      data:
+        wardrobeItem: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}
+    - rid: 6540294618706084536
+      type: {class: PedirCombateContraNpc, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Erika
+        otrosNpcs: []
+        combatConfig: {fileID: 0}
+        defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
+        waitForDefeat: 1
+        restorePeacefulOnDefeat: 1
     - rid: 7719302845561928001
       type: {class: WaitQuestCompleteNode, ns: , asm: Liyodev.NarrativeGraph}
       data:

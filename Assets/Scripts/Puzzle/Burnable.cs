@@ -94,7 +94,7 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[Burnable] 🔥 {gameObject.name} está siendo quemado con {element}!");
+        Debug.Log($"[Burnable] {gameObject.name} está siendo quemado con {element}!");
 #endif
         
         isBurned = true;
@@ -171,7 +171,7 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
                 }
                 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Burnable] 🔥 Destruyendo hijo con mesh: {meshRenderer.gameObject.name}");
+                Debug.Log($"[Burnable] Destruyendo hijo con mesh: {meshRenderer.gameObject.name}");
 #endif
             }
         }
@@ -194,7 +194,7 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
                     }
                     
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Burnable] 🔥 Destruyendo hijo con mesh filter: {meshFilter.gameObject.name}");
+                    Debug.Log($"[Burnable] Destruyendo hijo con mesh filter: {meshFilter.gameObject.name}");
 #endif
                 }
             }

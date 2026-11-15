@@ -635,3 +635,8 @@ MonoBehaviour:
     fadeIn: 0.3
     fadeOut: 2.5
     sinBucle: 1
+  - sequenceId: PROLOGO_AMANECER_VALLE
+    music: {fileID: 8300000, guid: 7f41fbd67928008459d098460d7e6627, type: 3}
+    fadeIn: 1.5
+    fadeOut: 3
+    sinBucle: 0

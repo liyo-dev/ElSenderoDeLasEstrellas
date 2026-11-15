@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 public class GuionBeat : SequenceBeat
 {
-    [Tooltip("El guion ya horneado. Se genera con «El Sendero → Guion → Hornear».")]
+    [Tooltip("El guion ya horneado. Se genera con «El Sendero → Cinemáticas → Guion».")]
     public GuionHorneado guion;
 
 #if UNITY_EDITOR
@@ -69,7 +69,7 @@ public class GuionBeat : SequenceBeat
         if (guion == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[GuionBeat] No hay guion horneado asignado. Usa «El Sendero → Guion → Hornear».");
+            Debug.LogError("[GuionBeat] No hay guion horneado asignado. Usa «El Sendero → Cinemáticas → Guion».");
 #endif
             yield break;
         }

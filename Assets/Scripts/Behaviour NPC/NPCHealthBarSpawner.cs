@@ -107,7 +107,7 @@ namespace Game.NPC
         /// <summary>
         /// Instancia el prefab de la barra de vida.
         /// 
-        /// INC-125 (30 ago 2026): Raúl reportó que, al matar NPCs, la barra de vida aparece
+        /// INC-125: Raúl reportó que, al matar NPCs, la barra de vida aparece
         /// duplicada (dos cajas superpuestas) justo durante el zoom/slowmo de
         /// DeathCameraEffect — momento en el que, al estar la cámara muy cerca del NPC, se hace
         /// evidente. No se pudo aislar un único punto del código que instancie dos veces de forma
@@ -144,7 +144,7 @@ namespace Game.NPC
             if (existingBars != null && existingBars.Length > 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCHealthBarSpawner] ⚠️ INC-125: {existingBars.Length} barra(s) de vida huérfana(s) encontradas en {name} antes de instanciar — destruyéndolas para evitar duplicado.");
+                Debug.LogWarning($"[NPCHealthBarSpawner] INC-125: {existingBars.Length} barra(s) de vida huérfana(s) encontradas en {name} antes de instanciar — destruyéndolas para evitar duplicado.");
 #endif
                 foreach (var stray in existingBars)
                 {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Configuración de un encuentro de batalla (jefe/enemigo) pensada para asignarse directamente
-/// en el campo <c>encounter</c> de <c>StartBattleNode</c> (INC-207).
+/// en el campo <c>encounter</c> de <c>PedirBatalla</c> (INC-207).
 ///
 /// Cuando el nodo lleva una de estas SO asignada, sus datos (prefab, nombre, radio de la arena,
 /// VFX de aparición) sustituyen a los campos configurados a mano en el <c>BossArenaController</c>

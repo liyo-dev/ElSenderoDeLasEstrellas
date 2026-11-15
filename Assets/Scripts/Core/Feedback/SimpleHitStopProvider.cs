@@ -17,7 +17,7 @@
 
         private IEnumerator Co_HitStop(float timeScale, float duration)
         {
-            // FIX C6 (auditoría 2026-08-07): antes capturaba "el timeScale de antes" y lo
+            // antes capturaba "el timeScale de antes" y lo
             // restauraba al acabar. Dos golpes solapados (trivial en combate, <0.2s entre
             // golpes) dejaban el juego en cámara lenta permanente: el segundo Co_HitStop
             // capturaba el valor ya ralentizado por el primero, y al restaurar pisaba la

@@ -560,7 +560,7 @@ public class MainMenuController : MonoBehaviour
                 }
             }
 
-            // FIX: una Nueva Partida real arranca MainWorld directamente en la cinemática del sueño
+            // una Nueva Partida real arranca MainWorld directamente en la cinemática del sueño
             // inicial (la del prólogo), que pone su propia música vía PlaySequenceMusic()
             // cuando el grafo narrativo lanza su señal de entrada. Ese lanzamiento ocurre en Start()/
             // más adelante, pero AudioService.OnSceneLoaded (suscrito a SceneManager.sceneLoaded) se

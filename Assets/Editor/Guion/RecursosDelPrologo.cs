@@ -84,7 +84,7 @@ public static class RecursosDelPrologo
     };
 
     /// Lo mismo que hace el horneado antes de hornear, suelto (p. ej. para crear un personaje nuevo antes de vestirlo).
-    [MenuItem("El Sendero/Guion/Prólogo: preparar recursos (sonidos, VFX, niños)", priority = 1)]
+    [MenuItem("El Sendero/Cinemáticas/Guion/Prólogo: preparar recursos (sonidos, VFX, niños)", priority = 1)]
     public static void Asegurar()
     {
         AsegurarSonidos();

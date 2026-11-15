@@ -29,7 +29,7 @@ public sealed class CombatLabMagicPanel : MonoBehaviour, ISeccionDelLab
 
         _caster = player.GetComponentInChildren<MagicCaster>(true);
         _actionManager = player.GetComponentInChildren<PlayerActionManager>(true);
-        _presetService = player.GetComponentInChildren<PlayerPresetService>(true);
+        PlayerService.TryGetComponent(out _presetService, allowSceneLookup: false);   // del grupo
         _manaPool = player.GetComponentInChildren<ManaPool>(true);
         PlayerService.TryGetComponent(out _specialCharge, allowSceneLookup: false);   // del grupo, INC-484
 
@@ -130,7 +130,6 @@ public sealed class CombatLabMagicPanel : MonoBehaviour, ISeccionDelLab
             DrawAbilityToggle("Nado", AbilityKey.Swim);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            DrawAbilityToggle("Trepar", AbilityKey.Climb);
             DrawAbilityToggle("Correr", AbilityKey.Sprint);
             DrawAbilityToggle("Escudo", AbilityKey.Shield);
             GUILayout.EndHorizontal();
@@ -167,7 +166,6 @@ public sealed class CombatLabMagicPanel : MonoBehaviour, ISeccionDelLab
     {
         swim = _actionManager.AllowSwim,
         jump = _actionManager.AllowJump,
-        climb = _actionManager.AllowClimb,
         fly = _actionManager.AllowFly,
         sprint = _actionManager.AllowSprint,
         magic = _actionManager.AllowMagic,

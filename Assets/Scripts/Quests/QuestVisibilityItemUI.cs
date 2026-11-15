@@ -28,7 +28,7 @@ public class QuestVisibilityItemUI : MonoBehaviour
     private Action<QuestManager.RuntimeQuest, QuestVisibility> _onChange;
     private QuestVisibility _currentVisibility;
     private ScrollRect _scrollRect;
-    // PERF (7 sept 2026): con el pool nuevo de QuestMainMenuUI.Rebuild() esta fila puede
+    // PERF: con el pool nuevo de QuestMainMenuUI.Rebuild() esta fila puede
     // reutilizarse entre misiones con distinto QuestState -- antes (Destroy+Instantiate
     // en cada apertura) cada fila arrancaba siempre con el sprite por defecto del prefab,
     // asi que un estado sin sprite propio (Inactive/Failed) nunca se notaba. Se guarda el

@@ -50,8 +50,7 @@ public sealed class CombatLabBootstrap : MonoBehaviour
 
         if (player == null) yield break;
 
-        var presetService = player.GetComponentInChildren<PlayerPresetService>(true);
-        if (presetService != null)
+        if (PlayerService.TryGetComponent(out PlayerPresetService presetService, allowSceneLookup: false))
         {
             PrepararPresetDeSesion(presetService.SpellLibrary);
             presetService.ApplyCurrentPreset(includeInventory: true, includeAbilities: true);
@@ -100,7 +99,6 @@ public sealed class CombatLabBootstrap : MonoBehaviour
         {
             swim = true,
             jump = true,
-            climb = true,
             fly = true,
             sprint = true,
             magic = true,

@@ -20,11 +20,10 @@ public static class ArmarioDeLosProtagonistas
     const string CarpetaDePrendas = "Assets/_WARDROBE ITEMS";
     const string Grupo = "Assets/Prefabs/GrupoDelJugador.prefab";
 
-    /// <summary>Los modelos de cada protagonista que se visten con el armario (su cuerpo, su NPC, su retrato).</summary>
+    /// <summary>Los modelos de cada protagonista que se visten con el armario (su cuerpo y su retrato).</summary>
     static readonly (string ruta, Slot quien)[] Modelos =
     {
         ("Assets/Prefabs/_WILL.prefab", Slot.Will),
-        ("Assets/Prefabs/_WILL_NPC.prefab", Slot.Will),
         ("Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Will.prefab", Slot.Will),
         ("Assets/Prefabs/_ESTELA.prefab", Slot.Estela),
         ("Assets/Prefabs/UI/RetratosVivos/RetratoVivo_Estela.prefab", Slot.Estela),

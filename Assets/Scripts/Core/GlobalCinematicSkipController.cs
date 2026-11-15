@@ -6,7 +6,7 @@ using UnityEngine;
 /// el hub como "tengo algo activo que se puede saltar" — Y TAMBIÉN según
 /// CinematicSequencerBase.AnySequenceActive (ver FIX 16/08/2026 más abajo).
 ///
-/// FIX (16/08/2026, segunda vuelta): la primera versión de este fix escuchaba
+/// la primera versión de este fix escuchaba
 /// PlayerActionManager.IsInMode(ActionMode.Cinematic) — mejor que el CinematicSequencerBase
 /// original (ver historial), pero seguía dejando fuera cualquier secuencia que NO bloquee el
 /// movimiento del jugador. Caso real que lo destapó: un bocadillo de villano (ShowSpeechBubbleNode
@@ -34,7 +34,7 @@ using UnityEngine;
 /// managers persistentes), con skipButtonRoot apuntando al GameObject raíz de una instancia del
 /// prefab HoldToSkipUI.prefab (hijo, con SkipAction = SkipNarrativeSequence en el Inspector).
 ///
-/// FIX (16/08/2026): el cambio a NarrativeSkipHub como única fuente de visibilidad (ver más
+/// el cambio a NarrativeSkipHub como única fuente de visibilidad (ver más
 /// arriba) dejó fuera, sin querer, a las cinemáticas del sistema VIEJO (CinematicSequencerBase —
 /// la secuencia del prólogo, la del Despertar, la de la bola de cristal,
 /// EstelaAppearsSequencer, LiamGolemSummonSequencer, TabernaSequencer...), que siguen en uso y
@@ -47,7 +47,7 @@ using UnityEngine;
 /// caso real de bocadillos sin LockPlayerNode), este controlador ahora escucha AMBAS fuentes y
 /// muestra el botón si cualquiera de las dos tiene algo activo.
 ///
-/// FIX (24/08/2026): el comentario de "Colocación" de arriba dice que este componente vive
+/// el comentario de "Colocación" de arriba dice que este componente vive
 /// "siempre activo... junto al resto de managers persistentes" — pero en la escena real vive en
 /// su propio GameObject raíz, hermano de CoreSystems (el único objeto de Start.unity que de
 /// verdad llama a DontDestroyOnLoad), sin heredar esa persistencia. BootLoader.Start() hace

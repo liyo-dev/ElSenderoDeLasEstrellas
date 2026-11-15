@@ -15812,7 +15812,6 @@ GameObject:
   - component: {fileID: 1301072731070886384}
   - component: {fileID: 5674452361685196030}
   - component: {fileID: 7707363998424899796}
-  - component: {fileID: 1687942726773230502}
   - component: {fileID: 5014074110871755233}
   - component: {fileID: 6938378013747625067}
   - component: {fileID: 3622547188665190604}
@@ -16057,8 +16056,6 @@ MonoBehaviour:
     behaviourType: 64
     ambientConfig: {fileID: 11400000, guid: 661d3e8eba9e1c149ae342e6c0c97a57, type: 2}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 11400000, guid: f6b5cb3e960bb514bab91b9e915b7b48, type: 2}
     socialConfig: {fileID: 11400000, guid: bb71621cccc8f2f41946688170f291dd, type: 2}
     walkSpeed: 1.5
@@ -16093,29 +16090,6 @@ MonoBehaviour:
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1687942726773230502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8894687061216898430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0f72e27664a453c91835a05834663c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.NPCItemDetector
-  npcManager: {fileID: 7707363998424899796}
-  detectionRadius: 3
-  detectionAngle: 90
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  dropAnimationDuration: 0.5
-  pauseAfterDrop: 0.3
-  pauseBeforeComplete: 0.2
-  debugMode: 0
-  drawGizmos: 0
 --- !u!114 &5014074110871755233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16242,10 +16216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!114 &2800408138201363408

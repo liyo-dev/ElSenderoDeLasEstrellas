@@ -163,7 +163,7 @@ public sealed class PasajeroNpc
         var contexto = Npc.NPCManager != null ? Npc.NPCManager.Context : null;
         contexto?.Soltar(_quien);
 
-        bool siguiendo = PartyControlManager.Instance == null || PartyControlManager.Instance.IsPartyFollowing;
+        bool siguiendo = PartyControlManager.DebeSeguirAlJugador(Npc);
         if (!siguiendo || (contexto != null && contexto.EstaAnclado))
         {
             Npc.NPCManager?.ForceIdle();

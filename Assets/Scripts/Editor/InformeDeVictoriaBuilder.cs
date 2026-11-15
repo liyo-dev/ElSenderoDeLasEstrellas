@@ -47,7 +47,7 @@ public static class InformeDeVictoriaBuilder
 
     private static TMP_FontAsset _gruesa, _normal;
 
-    [MenuItem("El Sendero/UI/Crear o regenerar el informe de victoria")]
+    [MenuItem("El Sendero/Interfaz/Crear o regenerar el informe de victoria")]
     public static void Montar()
     {
         var log = new StringBuilder("=== Informe de victoria (INC-543) ===\n");

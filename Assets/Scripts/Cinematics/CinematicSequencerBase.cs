@@ -67,7 +67,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
     private Action _signalInHandler;
 
-    // ── Señales por dato en vez de por Inspector (16 sep 2026) ────────────────
+    // ── Señales por dato en vez de por Inspector ────────────────
     //
     // _signalIn/_signalOut siguen siendo campos del Inspector y no cambia nada para los sequencers
     // existentes. Estas dos propiedades permiten que una subclase los saque de otro sitio — el caso
@@ -139,7 +139,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // BossIntroPresentation.PlayIntroduction() (try/finally que garantiza la restauración).
     private bool _cinematicLocked;
 
-    // FIX (Agosto 2026): guarda contra solapamiento. Si la señal de entrada se dispara dos veces
+    // guarda contra solapamiento. Si la señal de entrada se dispara dos veces
     // seguidas (p. ej. un bucle de reintento del grafo narrativo que reenvía la señal antes de que
     // el jugador termine el intento anterior — bug reproducido con AWAKEN_FAILED/AWAKEN_START en
     // la secuencia del Despertar), dos Co_Sequence() concurrentes llaman ambos a LockCinematic() pero
@@ -160,7 +160,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // si el jugador mantiene pulsado el botón más allá del primer frame en que se completa el hold).
     private bool _skipRequested;
 
-    // FIX A7 (auditoría 2026-08-07): handlers activos de Co_Transition, guardados a nivel de
+    // handlers activos de Co_Transition, guardados a nivel de
     // instancia para poder desuscribirlos desde OnDestroy. TransitionManager es persistente
     // (DontDestroyOnLoad); si este objeto se destruye/su corrutina se interrumpe a mitad de una
     // transición (StopAllCoroutines, cambio de escena), los handlers locales de Co_Transition
@@ -318,13 +318,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         else DefaultNarrativeSignals.Instance?.OffCustom(_resolvedSignalIn, _signalInHandler);
         _señalesSuscritas = null;
 
-        // FIX A7 (auditoría 2026-08-07): ver comentario de _activeTransitionCutHandler/_activeTransitionEndHandler.
+        // ver comentario de _activeTransitionCutHandler/_activeTransitionEndHandler.
         ClearTransitionHandlers();
     }
 
     /// Suelta los handlers que esta secuencia tenga enganchados al TransitionManager.
     ///
-    /// FIX (auditoría 17 sep 2026): esto solo se hacía en OnDestroy, y eso deja un agujero grave en
+    /// esto solo se hacía en OnDestroy, y eso deja un agujero grave en
     /// el camino de SKIP. Los handlers se enganchan al empezar una transición y solo se quitan
     /// solos al dispararse; si el jugador salta la secuencia mientras la transición está a medias,
     /// se quedan pegados a un TransitionManager que es DontDestroyOnLoad — es decir, para toda la
@@ -424,7 +424,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     private PlayerActionManager ResolveActionManager()
     {
         if (_actionManager == null)
-            _actionManager = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
+            PlayerService.TryGetComponent(out _actionManager, allowSceneLookup: false);
         return _actionManager;
     }
 
@@ -486,7 +486,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// en su primer plano. Al acabar no: la pantalla tapada es de quien venga después.
     private IEnumerator Co_Transition(TransitionSettings settings, bool recogerPantallaTapada, Action onCutPoint)
     {
-        // (21 sep) EL TELÓN. Si la pantalla ya está en negro y retenida (arranque de partida, una
+        // EL TELÓN. Si la pantalla ya está en negro y retenida (arranque de partida, una
         // carga de escena, otra escena cargándose en aditivo), esta cinemática NO hace su propia
         // transición: tapar desde lo que hay en pantalla es enseñar lo que hay en pantalla, y
         // destapar al acabar la transición es enseñar la escena antes de que los primeros beats
@@ -547,7 +547,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             done = true;
         };
 
-        // FIX A7 (auditoría 2026-08-07): guardar referencia a nivel de instancia (ver OnDestroy).
+        // guardar referencia a nivel de instancia (ver OnDestroy).
         _activeTransitionCutHandler = cutHandler;
         _activeTransitionEndHandler = endHandler;
         tm.onTransitionCutPointReached += cutHandler;
@@ -652,7 +652,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Perfil de audio efectivo: el del Inspector de este sequencer si lo tiene, y si no el que ya
     /// usa el propio AudioService.
     ///
-    /// FIX 16 sep 2026 (Raúl: "sigue sin sonar la música de la secuencia de Oliver"): _audioProfile
+    /// FIX 16 sep 2026: _audioProfile
     /// es un campo de Inspector que hay que arrastrar a mano en CADA sequencer, aunque siempre
     /// acabe siendo el mismo asset global — el que AudioService ya tiene puesto y expone como
     /// público. Olvidarlo (o, como aquí, que se copie vacío al montar un componente nuevo) deja la
@@ -741,13 +741,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // (no sobrescribe) este por ausencia de "new"/"override", y el warning del compilador (CS0114) lo
     // avisaría en cuanto se intente.
     //
-    // FIX (24 ago 2026): la primera versión usaba UnityEngine.Input.GetKeyDown(KeyCode) — el proyecto
+    // la primera versión usaba UnityEngine.Input.GetKeyDown(KeyCode) — el proyecto
     // tiene "Active Input Handling" puesto a "Input System Package" en Player Settings (todo el resto
     // del juego ya usa UnityEngine.InputSystem, ver PlayerInputManager/HoldToSkipUI), así que la clase
     // Input legacy está desactivada y cualquier lectura suya lanza InvalidOperationException en
     // tiempo real. Corregido leyendo el teclado del nuevo Input System directamente.
     //
-    // FIX (24 ago 2026, mismo día): el campo pasó de KeyCode a Key JUSTO DESPUÉS de que el builder de
+    // el campo pasó de KeyCode a Key JUSTO DESPUÉS de que el builder de
     // la escena de estudio ya lo hubiera rellenado con el KeyCode.F6 antiguo (entero 287) — Unity no
     // valida un enum al deserializarlo, así que ese 287 se quedó grabado en la escena tal cual, y no
     // es un miembro real de Key. Keyboard.current[key] con un Key fuera de rango lanza

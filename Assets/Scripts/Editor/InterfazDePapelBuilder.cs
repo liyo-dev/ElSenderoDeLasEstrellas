@@ -17,7 +17,7 @@ using UnityEngine.UI;
 /// </summary>
 public static class InterfazDePapelBuilder
 {
-    const string Menu = "El Sendero/UI/Pasar la interfaz al papel";
+    const string Menu = "El Sendero/Interfaz/Pasar la interfaz al papel";
     const string Informe = "Claude outputs/interfaz-de-papel.md";
 
     static readonly string[] Papeles =

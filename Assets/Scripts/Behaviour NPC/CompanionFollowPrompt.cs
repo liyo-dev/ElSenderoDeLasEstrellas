@@ -4,23 +4,22 @@ using Game.NPC.Common;
 namespace Game.NPC
 {
     /// <summary>
-    /// Gestiona los prompts "Sígueme" / "Dejar de seguir" sobre la cabeza del NPC compañero.
+    /// Las órdenes del modo Libre sobre un compañero del grupo: «Sígueme» y «Deja de seguir».
+    /// Enseña el cartel sobre su cabeza y, al pulsar A, se lo pide a <see cref="PartyControlManager"/>,
+    /// que es el dueño de la pareja (líder y seguidor) y del cambio de personaje con ella.
     ///
-    /// "Sígueme" aparece cuando:
-    ///   - El NPC está disponible (no siguiendo activamente) Y
-    ///   - Ningún otro compañero está siguiendo activamente al jugador.
-    ///
-    /// "Dejar de seguir" aparece cuando este NPC está siguiendo activamente.
-    ///
-    /// Presionar A ejecuta la acción correspondiente.
+    /// La orden solo existe con el grupo en Libre, fuera de combate y cinemáticas y con el compañero
+    /// de frente al jugador: el seguidor va detrás, así que no le quita la A al salto mientras
+    /// sigue; para despedirlo hay que darse la vuelta y mirarle. Entre personajes del grupo no hay
+    /// ninguna otra interacción (INC-754). <see cref="Interactable"/> le pregunta a
+    /// <see cref="CanShowFollowPrompt"/> si el compañero se puede enfocar. Ver INC-1200.
     /// </summary>
     [DisallowMultipleComponent]
     public class CompanionFollowPrompt : MonoBehaviour
     {
-        [Header("Proximidad")]
-        [Tooltip("Distancia máxima al jugador para mostrar el icono.")]
-        [SerializeField] private float proximityRadius = 3.5f;
-        [Tooltip("Intervalo de verificación de distancia (segundos).")]
+        [Tooltip("Ángulo máximo, desde donde mira el jugador, al que tiene que estar el compañero para darle una orden.")]
+        [SerializeField, Range(10f, 180f)] private float anguloDeFrente = 60f;
+        [Tooltip("Intervalo de comprobación del cartel (segundos).")]
         [SerializeField] private float checkInterval = 0.15f;
 
         private NPCPartyMember _partyMember;
@@ -30,6 +29,7 @@ namespace Game.NPC
         private GameObject _followIconPrefab;
         private GameObject _stopFollowIconPrefab;
         private bool _listenerAdded;
+        private float _cosDeFrente;
 
         private enum PromptMode { None, Follow, StopFollow }
         private PromptMode _currentMode;
@@ -38,14 +38,10 @@ namespace Game.NPC
         public bool IsShowingPrompt => _currentMode != PromptMode.None;
 
         /// <summary>
-        /// Devuelve true si este NPC está en un estado válido para mostrar "Sígueme" o "Dejar de seguir"
-        /// (sin depender del estado del icono visible, para evitar dependencia circular con Interactable.CanInteract).
+        /// Hay una orden que darle ahora a este compañero. No depende de que su icono esté visible:
+        /// lo pregunta <see cref="Interactable.CanInteract"/> para decidir si se puede enfocar.
         /// </summary>
-        public bool CanShowFollowPrompt()
-        {
-            // Entre los personajes del grupo no hay interacción con botón A ni prompts ordinarios (INC-754).
-            return false;
-        }
+        public bool CanShowFollowPrompt() => OrdenDisponible() != PromptMode.None;
 
         public void SetFollowIcon(GameObject iconPrefab)     => _followIconPrefab = iconPrefab;
         public void SetStopFollowIcon(GameObject iconPrefab) => _stopFollowIconPrefab = iconPrefab;
@@ -53,7 +49,8 @@ namespace Game.NPC
         private void Awake()
         {
             _npcManager   = GetComponent<NPCBehaviourManagerV2>();
-            _interactable = GetComponent<Interactable>();
+            _interactable = GetComponent<Interactable>() ?? GetComponentInParent<Interactable>();
+            _cosDeFrente  = Mathf.Cos(anguloDeFrente * Mathf.Deg2Rad);
 
             const string childName = "_FollowPromptIcon";
             var child = transform.Find(childName);
@@ -71,21 +68,13 @@ namespace Game.NPC
             _partyMember = GetComponent<NPCPartyMember>();
             if (_partyMember == null)
             {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[CompanionFollowPrompt:{name}] NPCPartyMember no encontrado — desactivando.");
-#endif
                 enabled = false;
                 return;
             }
 
-            _partyMember.OnLeft   += OnLeftParty;
-            _partyMember.OnJoined += OnJoinedParty;
-
-            // FIX INC-030: al disolver/reunir el equipo (D-Pad Down) hay que reevaluar el prompt
-            // en el mismo frame. Esperar al siguiente tick de checkInterval podía dejar el texto
-            // "Sígueme" mostrando el estado previo (estático) durante ese margen si además
-            // _playerParty quedaba con una referencia obsoleta tras un cambio de escena.
-            PartyControlManager.OnFollowModeChanged += OnFollowModeChanged;
+            PartyControlManager.OnFollowModeChanged      += AlCambiarElGrupo;
+            PartyControlManager.OnActiveCharacterChanged += AlCambiarElGrupo;
+            PartyControlManager.OnParejaChanged          += AlCambiarLaPareja;
 
             if (_interactable != null)
             {
@@ -94,44 +83,34 @@ namespace Game.NPC
             }
         }
 
+        private void OnDisable() => HidePrompt();
+
         private void OnDestroy()
         {
-            if (_partyMember != null)
-            {
-                _partyMember.OnLeft   -= OnLeftParty;
-                _partyMember.OnJoined -= OnJoinedParty;
-            }
-            PartyControlManager.OnFollowModeChanged -= OnFollowModeChanged;
+            PartyControlManager.OnFollowModeChanged      -= AlCambiarElGrupo;
+            PartyControlManager.OnActiveCharacterChanged -= AlCambiarElGrupo;
+            PartyControlManager.OnParejaChanged          -= AlCambiarLaPareja;
             if (_listenerAdded && _interactable != null)
                 _interactable.OnInteract.RemoveListener(OnPlayerInteracted);
         }
 
-        private void OnLeftParty()
-        {
-            HidePrompt();
-            _nextCheck = 0f;
-        }
-        private void OnJoinedParty() => HidePrompt();
-
-        // FIX INC-030: forzar reevaluación inmediata del prompt al alternar Siguiendo/Libre,
-        // en lugar de esperar hasta checkInterval (podía verse "estático" durante ese margen).
-        private void OnFollowModeChanged(bool _) => _nextCheck = 0f;
+        // Al cambiar el grupo se reevalúa en el mismo frame, sin esperar al siguiente intervalo.
+        private void AlCambiarElGrupo(bool _) => _nextCheck = 0f;
+        private void AlCambiarElGrupo(int _) => _nextCheck = 0f;
+        private void AlCambiarLaPareja() => _nextCheck = 0f;
 
         private void OnPlayerInteracted(GameObject _)
         {
-            if (_currentMode == PromptMode.Follow)
+            var pcm = PartyControlManager.Instance;
+            if (pcm != null && ControlDelJugador.PersonajeDelNpc(_partyMember, out var personaje))
             {
-                HidePrompt();
-                // «Sígueme» saca a este compañero del modo Libre del grupo.
-                _npcManager?.Context?.Soltar(PartyControlManager.AnclaDelModoLibre);
-                _partyMember?.StartFollowing();
+                // Se decide con el estado de ahora, no con el cartel que había: el cartel puede
+                // llevar hasta un intervalo de retraso.
+                if (pcm.PuedeDejarDeSeguir(personaje)) pcm.DejarDeSeguir();
+                else if (pcm.PuedePedirQueSiga(personaje)) pcm.PedirQueSiga(personaje);
             }
-            else if (_currentMode == PromptMode.StopFollow)
-            {
-                HidePrompt();
-                _partyMember?.StopFollowing();
-                _npcManager?.Context?.Anclar(PartyControlManager.AnclaDelModoLibre);
-            }
+            HidePrompt();
+            _nextCheck = 0f;
         }
 
         private void Update()
@@ -139,69 +118,46 @@ namespace Game.NPC
             if (Time.time < _nextCheck) return;
             _nextCheck = Time.time + checkInterval;
 
-            if (_partyMember == null) return;
+            PromptMode desired = OrdenDisponible();
 
-            // Suprimir durante cinemática o combate.
-            // FIX (mismo patrón que NPCQuestIconManager, INC-059): Context.IsInCinematic solo se
-            // activa vía CinematicState de la FSM. Los CinematicSequencerBase (ej: TabernaSequencer)
-            // sientan a los NPCs desactivando su NPCBehaviourManagerV2 directamente, sin pasar por
-            // esa FSM, por lo que Context.IsInCinematic nunca llega a true durante la secuencia y
-            // el icono "Sígueme"/"Dejar de seguir" podía quedar visible sobre la cabeza del NPC.
-            // Comprobar también CinematicSequencerBase.AnySequenceActive cubre ese caso.
-            if (CinematicSequencerBase.AnySequenceActive ||
-                (_npcManager?.Context != null &&
-                (_npcManager.Context.IsInCinematic || _npcManager.Context.IsInCombat)))
-            {
-                HidePrompt();
-                return;
-            }
-
-            var playerTransform = _npcManager?.Player;
-            if (playerTransform == null)
-            {
-                HidePrompt();
-                return;
-            }
-
-            bool inRange = (playerTransform.position - transform.position).sqrMagnitude
-                           <= proximityRadius * proximityRadius;
-
-            PromptMode desired = PromptMode.None;
-
-            if (inRange)
-            {
-                // "Dejar de seguir" solo en modo Libre (D-Pad Down), no cuando el equipo sigue junto.
-                bool partyInLibreMode = !(PartyControlManager.Instance?.IsPartyFollowing ?? true);
-                bool isActivelyFollowing = partyInLibreMode &&
-                                           _partyMember.IsInParty &&
-                                           _npcManager?.Context?.EstaAnclado == false;
-
-                if (isActivelyFollowing)
-                {
-                    desired = PromptMode.StopFollow;
-                }
-                else
-                {
-                    // "Sígueme" solo si: el equipo está completo (todos los compañeros unidos),
-                    // el jugador ha separado el equipo (modo Libre) y este miembro fue detenido.
-                    bool fullParty = (PlayerParty.Instance?.MemberCount ?? 0) >= 2;
-                    bool isAvailable = fullParty &&
-                                       partyInLibreMode &&
-                                       _partyMember.IsInParty &&
-                                       _npcManager?.Context?.EstaAnclado == true;
-
-                    if (isAvailable && !AnyOtherMemberActivelyFollowing())
-                        desired = PromptMode.Follow;
-                }
-            }
-
-            // Solo mostrar el icono si este NPC es el interactable enfocado (tiene la "A" visible).
-            // Así "Sígueme" nunca aparece en NPCs que no tienen el botón A activo.
+            // Solo con el compañero enfocado (con la A visible): así nunca hay dos carteles ni un
+            // cartel sin botón.
             if (desired != PromptMode.None && (_interactable == null || !_interactable.IsHintVisible))
                 desired = PromptMode.None;
 
             if (desired != _currentMode)
                 ApplyMode(desired);
+        }
+
+        private PromptMode OrdenDisponible()
+        {
+            var pcm = PartyControlManager.Instance;
+            if (pcm == null || pcm.IsPartyFollowing || _partyMember == null) return PromptMode.None;
+            if (!ControlDelJugador.PersonajeDelNpc(_partyMember, out var personaje)) return PromptMode.None;
+
+            // Los secuenciadores sientan a los NPCs sin pasar por la FSM (Context.IsInCinematic
+            // no llega a ponerse): se mira también CinematicSequencerBase. Ver INC-059.
+            if (CinematicSequencerBase.AnySequenceActive) return PromptMode.None;
+            var contexto = _npcManager != null ? _npcManager.Context : null;
+            if (contexto != null && (contexto.IsInCinematic || contexto.IsInCombat)) return PromptMode.None;
+
+            if (!DeFrenteAlJugador()) return PromptMode.None;
+
+            if (pcm.PuedeDejarDeSeguir(personaje)) return PromptMode.StopFollow;
+            if (pcm.PuedePedirQueSiga(personaje)) return PromptMode.Follow;
+            return PromptMode.None;
+        }
+
+        private bool DeFrenteAlJugador()
+        {
+            var jugador = ControlDelJugador.CuerpoDelJugador;
+            if (jugador == null) return false;
+            Vector3 hacia = transform.position - jugador.transform.position;
+            hacia.y = 0f;
+            if (hacia.sqrMagnitude < 0.0001f) return true;
+            Vector3 frente = jugador.transform.forward;
+            frente.y = 0f;
+            return Vector3.Dot(frente.normalized, hacia.normalized) >= _cosDeFrente;
         }
 
         private void ApplyMode(PromptMode mode)
@@ -210,9 +166,7 @@ namespace Game.NPC
             _iconController?.HideAlertIcon();
 
             if (mode == PromptMode.Follow && _followIconPrefab != null)
-            {
                 _iconController?.ShowPersistentIcon(_followIconPrefab);
-            }
             else if (mode == PromptMode.StopFollow && _stopFollowIconPrefab != null)
                 _iconController?.ShowPersistentIcon(_stopFollowIconPrefab);
         }
@@ -223,29 +177,5 @@ namespace Game.NPC
             _currentMode = PromptMode.None;
             _iconController?.HideAlertIcon();
         }
-
-        // Verifica si algún otro miembro del party está siguiendo activamente (IsInParty && !EstaAnclado)
-        private bool AnyOtherMemberActivelyFollowing()
-        {
-            var playerParty = PlayerParty.Instance;
-            if (playerParty == null) return false;
-            var members = playerParty.Members;
-            for (int i = 0; i < members.Count; i++)
-            {
-                var m = members[i];
-                if (m == null || m == _partyMember) continue;
-                if (m.IsInParty && m.NPCManager?.Context?.EstaAnclado == false)
-                    return true;
-            }
-            return false;
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = new Color(0f, 1f, 0.5f, 0.3f);
-            Gizmos.DrawWireSphere(transform.position, proximityRadius);
-        }
-#endif
     }
 }

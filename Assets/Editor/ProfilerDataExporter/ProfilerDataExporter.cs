@@ -111,7 +111,7 @@ namespace ProfilerDataExporter
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            // FIX (auditoría 15 ago 2026): si DrawStats() falla (ver el fix en SplitterState.cs —
+            // si DrawStats() falla (ver el fix en SplitterState.cs —
             // pasaba en Unity 6000.5.4f1), antes la excepción cortaba el resto de OnGUI() y
             // DrawExportButtons() nunca se dibujaba: no había forma de pulsar "Export" aunque el
             // problema fuera solo visual, en la tabla de estadísticas. Aislado para que un fallo
@@ -228,7 +228,7 @@ namespace ProfilerDataExporter
             GUILayout.Label(displayedFilePath, GUILayout.ExpandWidth(false));
             if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
             {
-                // FIX (auditoría 15 ago 2026): Process.Start(string) intenta ejecutar filePath
+                // Process.Start(string) intenta ejecutar filePath
                 // directamente como si fuera un .exe — con una ruta relativa a un .json esto
                 // siempre tira Win32Exception ("no se puede encontrar el archivo especificado").
                 // Con UseShellExecute=true (y la ruta absoluta) delega en el sistema operativo,

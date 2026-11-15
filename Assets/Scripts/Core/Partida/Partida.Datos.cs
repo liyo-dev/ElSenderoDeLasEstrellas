@@ -64,7 +64,7 @@ public static partial class Partida
         p.unlockedTeleportPoints = Copia(d.unlockedTeleportPoints);
         p.npcRelationships = Copia(d.npcRelationships);
         p.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(d.companionBasics);
-        p.companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(d.companionHealth);
+        p.companionHealth = PlayerPresetSO.EstadoDeCompanero.CopiarLista(d.companionHealth);
 
         p.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
         if (d.npcPositions != null)
@@ -103,7 +103,6 @@ public static partial class Partida
         p.abilities ??= new PlayerAbilities();
         p.abilities.swim = d.canSwim;
         p.abilities.jump = d.canJump;
-        p.abilities.climb = d.canClimb;
         p.abilities.fly = d.canFly;
         p.abilities.magic = d.canMagic;
     }
@@ -137,7 +136,7 @@ public static partial class Partida
             completedInteractiveNarratives = Copia(p.completedInteractiveNarratives),
             basicSpellIds = Copia(p.basicSpellIds),
             companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(p.companionBasics),
-            companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(p.companionHealth),
+            companionHealth = PlayerPresetSO.EstadoDeCompanero.CopiarLista(p.companionHealth),
             narrativeBlackboards = Copia(p.narrativeBlackboards),
             partyMemberIds = Copia(p.partyMemberIds),
             activeCharacterSlot = p.activeCharacterSlot,
@@ -149,7 +148,6 @@ public static partial class Partida
         {
             d.canSwim = p.abilities.swim;
             d.canJump = p.abilities.jump;
-            d.canClimb = p.abilities.climb;
             d.canFly = p.abilities.fly;
             d.canMagic = p.abilities.magic;
         }

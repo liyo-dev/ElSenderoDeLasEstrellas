@@ -61,7 +61,13 @@ namespace NarrativeGraphEditor.Story
         const string PrefDockOpen = "NarrativeGraph.Editor.DockOpen";
         bool _savePending;
         bool _wasPlaying;
+        Button _testPlayerButton;
+        string _testPlayerFull, _testPlayerShort;
         bool _editingField;
+        StoryBusy _rootBusy;
+        StoryBusy _sideBusy;
+        bool _refreshBusy;
+        bool _loadedOnce;
 
         sealed class Host : INarrativeNodeHost
         {
@@ -107,6 +113,34 @@ namespace NarrativeGraphEditor.Story
 
         void OnEnable()
         {
+            // Al dar a Play, Unity vuelve a montar todas las ventanas abiertas en mitad de la recarga
+            // del código. Montar esta pide el índice del proyecto (varios segundos) y se los quita al
+            // arranque de la partida, así que se monta cuando el juego ya está corriendo. Ver INC-1210.
+            if (EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
+            {
+                // Mientras espera, una línea para que la ventana no se vea vacía.
+                rootVisualElement.Add(new Label(StoryText.T("Esperando a que arranque la partida…", "Waiting for the game to start…")));
+                EditorApplication.update += ConstruirAlEmpezarLaPartida;
+                return;
+            }
+            Construir();
+        }
+
+        /// Segundos de partida que se deja pasar antes de montar la ventana: los primeros fotogramas
+        /// son los de la carga de la escena y no se le quitan.
+        const float EsperaEnPlay = 2f;
+
+        void ConstruirAlEmpezarLaPartida()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode
+                && (!EditorApplication.isPlaying || Time.unscaledTime < EsperaEnPlay)) return;
+            EditorApplication.update -= ConstruirAlEmpezarLaPartida;
+            Construir();
+        }
+
+        void Construir()
+        {
+            using var medida = StoryTiming.Measure(StoryText.T("Ventana: abrir", "Window: open"));
             var root = rootVisualElement;
             root.Clear();
             foreach (var path in new[] { FieldStylesPath, StylesPath })
@@ -116,7 +150,7 @@ namespace NarrativeGraphEditor.Story
             }
             root.AddToClassList("story-root");
 
-            BuildToolbar(root);
+            using (StoryTiming.Measure("barra")) BuildToolbar(root);
 
             var body = new VisualElement();
             body.AddToClassList("story-body");
@@ -129,7 +163,7 @@ namespace NarrativeGraphEditor.Story
             body.Add(_outline);
             body.Add(new StorySplitter(_outline, true, "NarrativeGraph.Editor.OutlineWidth", 240f, 180f, 480f));
 
-            // Centro: la historia (o el mapa en grande) y, debajo, el mapa pequeño y En vivo.
+            // Centro: la historia (o el mapa en grande) y, debajo, el mapa pequeño.
             var center = new VisualElement();
             center.AddToClassList("story-center");
             body.Add(center);
@@ -144,17 +178,27 @@ namespace NarrativeGraphEditor.Story
             _mapMain.style.display = DisplayStyle.None;
             center.Add(_mapMain);
 
-            BuildDock(center);
+            using (StoryTiming.Measure("mapa pequeño")) BuildDock(center);
 
-            BuildSide(body);
+            using (StoryTiming.Measure("panel lateral")) BuildSide(body);
             body.Insert(body.IndexOf(_side), new StorySplitter(_side, false, "NarrativeGraph.Editor.SideWidth", 360f, 280f, 760f));
 
             Undo.undoRedoPerformed += OnUndoRedo;
+            TestPlayers.SelectionChanged += RefreshTestPlayerLabel;
             root.schedule.Execute(Poll).Every(300);
 
+            _rootBusy = new StoryBusy(cover: true);
+            root.Add(_rootBusy);
+
+            // El grafo se abre con el aviso ya pintado: la ventana no se queda en blanco mientras tanto.
+            // Si antes alguien ha pedido otro grafo (abrir un asset, «Jugar desde aquí»), manda el suyo.
             var last = EditorPrefs.GetString(PrefLastGraph, string.Empty);
-            if (!string.IsNullOrEmpty(last)) Load(AssetDatabase.LoadAssetAtPath<NarrativeGraph>(last));
-            else Load(null);
+            _rootBusy.Run(() =>
+            {
+                if (_loadedOnce) return;
+                if (!string.IsNullOrEmpty(last)) Load(AssetDatabase.LoadAssetAtPath<NarrativeGraph>(last));
+                else Load(null);
+            }, StoryText.T("Abriendo la historia…", "Opening the story…"));
 
             if (!StoryTour.Seen) root.schedule.Execute(StartTour).StartingIn(400);
         }
@@ -239,9 +283,6 @@ namespace NarrativeGraphEditor.Story
             var popOut = new Button(() => { StoryMapWindow.Open(); RefreshDockMap(); }) { text = "⧉", tooltip = StoryText.T("Sacar el mapa a una ventana aparte", "Pop the map out to its own window") };
             popOut.AddToClassList("story-dock__pop");
             head.Add(popOut);
-            head.Add(new VisualElement { style = { flexGrow = 1 } });
-            head.Add(new Label(StoryText.T("En vivo", "Live")));
-            head.Add(new VisualElement { style = { flexGrow = 1 } });
 
             _dockBody = new VisualElement();
             _dockBody.AddToClassList("story-dock__body");
@@ -254,11 +295,6 @@ namespace NarrativeGraphEditor.Story
             _mapDock.ActorClicked += id => { ShowView(true); _mapMain.SelectActor(id); };
             _dockMap.Add(_mapDock);
 
-            var live = new StoryLiveLog(() => _graph);
-            live.AddToClassList("story-dock__live");
-            live.Navigate += (graph, guid) => { if (graph != _graph) Load(graph); Navigate(guid); };
-            _dockBody.Add(live);
-
             StoryMapWindow.OpenChanged -= OnMapWindow;
             StoryMapWindow.OpenChanged += OnMapWindow;
             SetDockOpen(EditorPrefs.GetBool(PrefDockOpen, true));
@@ -267,14 +303,13 @@ namespace NarrativeGraphEditor.Story
 
         void OnMapWindow(bool open) => rootVisualElement.schedule.Execute(RefreshDockMap).StartingIn(50);
 
-        /// El mapa pequeño no se ve si el mapa está en grande o en su propia ventana.
+        /// El mapa pequeño (el panel de abajo entero) no se ve si el mapa está en grande o en su
+        /// propia ventana: no se dibuja dos veces lo mismo.
         void RefreshDockMap()
         {
-            if (_dockMap == null) return;
+            if (_dock == null) return;
             bool hide = _mapMain.style.display == DisplayStyle.Flex || StoryMapWindow.IsOpen;
-            _dockMap.style.display = hide ? DisplayStyle.None : DisplayStyle.Flex;
-            var title = _dock.Q<Label>("dock-map-title");
-            if (title != null) title.style.display = _dockMap.style.display;
+            _dock.style.display = hide ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         void SetDockOpen(bool open)
@@ -290,7 +325,9 @@ namespace NarrativeGraphEditor.Story
 
         void OnDisable()
         {
+            EditorApplication.update -= ConstruirAlEmpezarLaPartida;
             Undo.undoRedoPerformed -= OnUndoRedo;
+            TestPlayers.SelectionChanged -= RefreshTestPlayerLabel;
             StoryBreakpoints.Hit -= OnBreakpointHit;
             StoryAssistantSettings.Changed -= OnAssistantSettings;
             StoryCardImages.Changed -= OnCardImages;
@@ -302,8 +339,9 @@ namespace NarrativeGraphEditor.Story
 
         void BuildToolbar(VisualElement root)
         {
-            var bar = new VisualElement();
+            var bar = _toolbar = new VisualElement();
             bar.AddToClassList("story-toolbar");
+            bar.RegisterCallback<GeometryChangedEvent>(e => SetToolbarLevel(e.newRect.width));
             root.Add(bar);
 
             _graphMenu = new ToolbarMenu();
@@ -343,14 +381,13 @@ namespace NarrativeGraphEditor.Story
             _saved.AddToClassList("story-toolbar__saved");
             bar.Add(_saved);
 
-            var layout = new Button(AutoLayout) { text = StoryText.T("Auto-ordenar", "Auto-arrange") };
+            var layout = _layoutButton = new Button(AutoLayout) { tooltip = StoryText.T("Ordena los pasos del capítulo", "Arranges the chapter's steps") };
             layout.AddToClassList("story-button");
             bar.Add(layout);
 
 
             _assistantButton = new Button(ToggleAssistant)
             {
-                text = "✦ " + StoryText.T("Asistente", "Assistant"),
                 tooltip = StoryText.T("Abre o cierra el asistente (se activa en ⚙ Ajustes).", "Opens or closes the assistant (turned on in ⚙ Settings)."),
             };
             _assistantButton.AddToClassList("story-button");
@@ -366,9 +403,9 @@ namespace NarrativeGraphEditor.Story
             settings.AddToClassList("story-toolbar__settings");
             bar.Add(settings);
 
-            var testPlayer = new Button(ShowTestPlayerMenu) { tooltip = StoryText.T("Con qué jugador se prueba: el que deja la historia o un jugador de prueba.", "Which player to test with: the one the story leaves or a test player.") };
+            var testPlayer = _testPlayerButton = new Button(ShowTestPlayerMenu) { tooltip = StoryText.T("Con qué jugador se prueba: el que deja la historia o un jugador de prueba.", "Which player to test with: the one the story leaves or a test player.") };
             testPlayer.AddToClassList("story-button");
-            testPlayer.schedule.Execute(() => testPlayer.text = StoryText.T("Probar con: ", "Test with: ") + (TestPlayers.Selected != null ? TestPlayers.Selected.name : StoryText.T("el de la historia", "the story's")) + " ▾").Every(500);
+            RefreshTestPlayerLabel();
             bar.Add(testPlayer);
 
             _play = new Button(() => PlayFrom(_canvas.Primary));
@@ -379,6 +416,52 @@ namespace NarrativeGraphEditor.Story
             _stop.tooltip = StoryText.T("Parar la prueba", "Stop the test");
             _stop.AddToClassList("story-button");
             bar.Add(_stop);
+            ApplyToolbarFit();
+        }
+
+        // ── Barra superior según el ancho ────────────────────────────────────
+        //
+        // Con la ventana estrecha la barra no recorta ni monta unos botones sobre otros: los
+        // textos largos pasan a su versión corta (o a su icono) por escalones. Los textos que
+        // dependen del estado (avisos, «Jugar desde…») se guardan y se pintan aquí.
+
+        const float ToolbarWide = 1350f, ToolbarNarrow = 1080f;
+        VisualElement _toolbar;
+        Button _layoutButton;
+        int _toolbarLevel = -1;
+        int _warningCount;
+
+        /// 0 = cabe todo; 1 = textos cortos; 2 = solo iconos y números.
+        void SetToolbarLevel(float width)
+        {
+            int level = width >= ToolbarWide ? 0 : width >= ToolbarNarrow ? 1 : 2;
+            if (level == _toolbarLevel) return;
+            _toolbarLevel = level;
+            ApplyToolbarFit();
+        }
+
+        void ApplyToolbarFit()
+        {
+            if (_toolbar == null || _play == null) return;
+            bool shortTexts = _toolbarLevel >= 1, iconsOnly = _toolbarLevel >= 2;
+            _toolbar.EnableInClassList("story-toolbar--short", shortTexts);
+            _toolbar.EnableInClassList("story-toolbar--icons", iconsOnly);
+
+            _layoutButton.text = shortTexts ? "⊞" : StoryText.T("Auto-ordenar", "Auto-arrange");
+            _assistantButton.text = shortTexts ? "✦" : "✦ " + StoryText.T("Asistente", "Assistant");
+            if (_testPlayerButton != null) _testPlayerButton.text = shortTexts ? _testPlayerShort : _testPlayerFull;
+            _saved.style.display = iconsOnly ? DisplayStyle.None : DisplayStyle.Flex;
+
+            _status.text = _warningCount == 0
+                ? (iconsOnly ? "✓" : "✓ " + StoryText.T("Todo correcto", "All good"))
+                : (iconsOnly ? "▲ " + _warningCount : "▲ " + StoryText.T(_warningCount == 1 ? "1 aviso" : $"{_warningCount} avisos", _warningCount == 1 ? "1 warning" : $"{_warningCount} warnings"));
+            _status.tooltip = _warningCount == 0 ? StoryText.T("Ningún paso con avisos", "No step has warnings") : StoryText.T("Ir al primer paso con avisos", "Go to the first step with warnings");
+
+            var node = _canvas?.Primary;
+            var number = node != null ? _canvas.Structure.Number(node) : null;
+            _play.text = node == null ? (iconsOnly ? "▶" : "▶ " + StoryText.T("Elige un paso para jugar", "Pick a step to play"))
+                       : iconsOnly ? "▶ " + number
+                       : "▶ " + StoryText.T($"Jugar desde {number}", $"Play from {number}");
         }
 
         void BuildSide(VisualElement body)
@@ -386,6 +469,7 @@ namespace NarrativeGraphEditor.Story
             _side = new VisualElement();
             _side.AddToClassList("story-side");
             body.Add(_side);
+            _sideBusy = new StoryBusy(cover: false);
 
             _tabsBar = new VisualElement();
             _tabsBar.AddToClassList("story-tabs");
@@ -455,6 +539,8 @@ namespace NarrativeGraphEditor.Story
             _tabsBar.Add(new VisualElement { style = { flexGrow = 1 } });
             _tabsBar.Add(help);
 
+            _side.Add(_sideBusy);
+
             var last = EditorPrefs.GetInt(PrefLastTab, 0);
             ShowTab(last >= 0 && last < _tabs.Count ? _tabs[last].content : _stepTab);
         }
@@ -493,6 +579,8 @@ namespace NarrativeGraphEditor.Story
 
         void ShowTab(VisualElement content)
         {
+            long start = StoryTiming.Now();
+            using var medida = StoryTiming.Measure(StoryText.T("Pestaña: cambiar a ", "Tab: switch to ") + TabName(content));
             _shownTab = content;
             _assistant.style.display = DisplayStyle.None;
             _assistantButton?.RemoveFromClassList("is-on");
@@ -510,6 +598,13 @@ namespace NarrativeGraphEditor.Story
                 tab.SetSelectedNode(_canvas.Primary);
                 tab.OnShown();
             }
+            StoryTiming.UntilPainted(rootVisualElement, StoryText.T("Pestaña ", "Tab ") + TabName(content), start);
+        }
+
+        string TabName(VisualElement content)
+        {
+            foreach (var (button, c) in _tabs) if (c == content) return button.text;
+            return "?";
         }
 
         /// Arranque y Depuración calculan la historia hasta el paso: solo se rehacen si se ven.
@@ -526,10 +621,6 @@ namespace NarrativeGraphEditor.Story
             foreach (var w in Resources.FindObjectsOfTypeAll<StoryGraphWindow>()) w.AnnounceStep();
         }
 
-        /// La edición del grafo en la ventana abierta que lo muestra (con deshacer), o null.
-        public static StoryGraphEditing EditingOf(NarrativeGraph graph)
-            => Resources.FindObjectsOfTypeAll<StoryGraphWindow>().FirstOrDefault(w => w._graph == graph)?._edit;
-
         /// Elige un paso en la ventana abierta sin quitarle el foco a quien lo pide.
         public static void SelectStep(NarrativeGraph graph, string guid)
         {
@@ -544,12 +635,28 @@ namespace NarrativeGraphEditor.Story
         void RefreshShown()
         {
             _refreshJob?.Pause();
+            // Arranque y En vivo rehacen la historia hasta el paso: el aviso se ve mientras tanto.
+            if ((_shownTab == _world || _shownTab == _start) && !_refreshBusy && _sideBusy != null)
+            {
+                _refreshBusy = true;
+                _sideBusy.Show();
+            }
             _refreshJob = rootVisualElement.schedule.Execute(() =>
             {
-                var node = _canvas?.Primary;
-                AnnounceStep();
-                if (_shownTab == _world) _world.Show(_graph, _canvas.Structure, node);
-                else if (_shownTab == _start) _start.Show(_graph, _canvas.Structure, node);
+                long start = StoryTiming.Now();
+                try
+                {
+                    using var medida = StoryTiming.Measure(StoryText.T("Rehacer ", "Rebuild ") + TabName(_shownTab));
+                    var node = _canvas?.Primary;
+                    using (StoryTiming.Measure(StoryText.T("mapa", "map"))) AnnounceStep();
+                    if (_shownTab == _world) _world.Show(_graph, _canvas.Structure, node);
+                    else if (_shownTab == _start) _start.Show(_graph, _canvas.Structure, node);
+                }
+                finally
+                {
+                    if (_refreshBusy) { _refreshBusy = false; _sideBusy.Hide(); }
+                }
+                StoryTiming.UntilPainted(rootVisualElement, StoryText.T("Rehacer ", "Rebuild ") + TabName(_shownTab), start);
             }).StartingIn(90);
         }
 
@@ -557,6 +664,8 @@ namespace NarrativeGraphEditor.Story
 
         public void Load(NarrativeGraph graph)
         {
+            _loadedOnce = true;
+            using var medida = StoryTiming.Measure(StoryText.T("Abrir grafo ", "Open graph ") + (graph != null ? graph.name : "-"));
             SaveNow();
             _graph = graph;
             _so = graph != null ? new SerializedObject(graph) : null;
@@ -565,11 +674,11 @@ namespace NarrativeGraphEditor.Story
             if (_edit != null) _edit.Changed += OnGraphChanged;
             if (graph != null) EditorPrefs.SetString(PrefLastGraph, AssetDatabase.GetAssetPath(graph));
 
-            _inspector.SetGraph(graph, _so);
+            using (StoryTiming.Measure("inspector")) _inspector.SetGraph(graph, _so);
             foreach (var tab in _gameTabs) tab.SetGraph(graph);
-            _canvas.SetEditing(_edit);
+            using (StoryTiming.Measure(StoryText.T("lienzo", "canvas"))) _canvas.SetEditing(_edit);
             _pathNodes.Clear();
-            RebuildGraphMenu();
+            using (StoryTiming.Measure(StoryText.T("lista de grafos", "graph list"))) RebuildGraphMenu();
             RefreshPanels();
             _saved.text = string.Empty;
             RestoreLastStep();
@@ -677,6 +786,9 @@ namespace NarrativeGraphEditor.Story
 
         void OnSelectionChanged(NarrativeNode node)
         {
+            long start = StoryTiming.Now();
+            using var medida = StoryTiming.Measure(StoryText.T("Elegir paso", "Select step"));
+            StoryTiming.UntilPainted(rootVisualElement, StoryText.T("Elegir paso", "Select step"), start);
             if (node != null && _graph != null)
             {
                 EditorPrefs.SetString(PrefLastStep + AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(_graph)), node.guid);
@@ -696,8 +808,9 @@ namespace NarrativeGraphEditor.Story
 
         void RefreshPanels()
         {
+            using var medida = StoryTiming.Measure(StoryText.T("paneles", "panels"));
             var node = _canvas.Primary;
-            _inspector.Show(node != null ? new Host { Model = node } : null);
+            using (StoryTiming.Measure(StoryText.T("campos del paso", "step fields"))) _inspector.Show(node != null ? new Host { Model = node } : null);
             _stepWarnings.Clear();
             foreach (var warning in StepSummary.Warnings(node))
             {
@@ -708,8 +821,8 @@ namespace NarrativeGraphEditor.Story
             }
             RefreshShown();
             foreach (var tab in _gameTabs) tab.SetSelectedNode(node);
-            _outline.Refresh(_graph, _canvas.Structure, node, n => _pathNodes.Contains(n.guid));
-            RefreshStatus();
+            using (StoryTiming.Measure(StoryText.T("índice", "outline"))) _outline.Refresh(_graph, _canvas.Structure, node, n => _pathNodes.Contains(n.guid));
+            using (StoryTiming.Measure(StoryText.T("avisos", "warnings"))) RefreshStatus();
             RefreshPlay();
         }
 
@@ -724,10 +837,9 @@ namespace NarrativeGraphEditor.Story
 
         void RefreshStatus()
         {
-            int count = NodesWithWarnings().Count;
-            _status.text = count == 0 ? "✓ " + StoryText.T("Todo correcto", "All good")
-                                      : "▲ " + StoryText.T(count == 1 ? "1 aviso" : $"{count} avisos", count == 1 ? "1 warning" : $"{count} warnings");
-            _status.EnableInClassList("is-warning", count > 0);
+            _warningCount = NodesWithWarnings().Count;
+            _status.EnableInClassList("is-warning", _warningCount > 0);
+            ApplyToolbarFit();
         }
 
         void GoToFirstWarning()
@@ -742,8 +854,7 @@ namespace NarrativeGraphEditor.Story
         {
             bool playing = EditorApplication.isPlaying;
             var node = _canvas.Primary;
-            _play.text = "▶ " + (node != null ? StoryText.T($"Jugar desde {_canvas.Structure.Number(node)}", $"Play from {_canvas.Structure.Number(node)}")
-                                             : StoryText.T("Elige un paso para jugar", "Pick a step to play"));
+            ApplyToolbarFit();
             _play.SetEnabled(!playing && node != null);
             _stop.SetEnabled(playing);
         }
@@ -774,6 +885,16 @@ namespace NarrativeGraphEditor.Story
             ShowTab(_world);
         }
 
+        /// «Probar con: …»: se pone al montar la barra y cuando cambia la elección, sin consultarla cada poco.
+        void RefreshTestPlayerLabel()
+        {
+            if (_testPlayerButton == null) return;
+            var selected = TestPlayers.Selected;
+            _testPlayerFull = StoryText.T("Probar con: ", "Test with: ") + (selected != null ? selected.name : StoryText.T("el de la historia", "the story's")) + " ▾";
+            _testPlayerShort = (selected != null ? selected.name : StoryText.T("Historia", "Story")) + " ▾";
+            ApplyToolbarFit();
+        }
+
         void Poll()
         {
             bool playing = EditorApplication.isPlaying;
@@ -787,10 +908,12 @@ namespace NarrativeGraphEditor.Story
             if (playing && _shownTab == _world && EditorApplication.timeSinceStartup - _lastLiveRefresh > 1.0)
             {
                 _lastLiveRefresh = EditorApplication.timeSinceStartup;
-                _world.Rebuild();
+                using (StoryTiming.Measure(StoryText.T("En vivo en Play (cada segundo)", "Live in Play (every second)"))) _world.Rebuild();
             }
             if (!playing || _graph == null || NarrativeGraphHub.Instance == null) { _canvas.SetCurrent(null); return; }
-            var runner = NarrativeGraphHub.Instance.GetAllRunners().FirstOrDefault(r => r != null && r.graph == _graph);
+            NarrativeRunner runner = null;
+            foreach (var r in NarrativeGraphHub.Instance.GetAllRunners())
+                if (r != null && r.graph == _graph) { runner = r; break; }
             _canvas.SetCurrent(runner?.CurrentNode?.guid ?? runner?.Blackboard?.Get<string>(NarrativeRunner.CurrentNodeKey, null));
         }
     }

@@ -222,7 +222,7 @@ public class TeleportSystem : MonoBehaviour
         SpawnManager.TeleportTo(destinationAnchorId, true);
 
         // Esperar a que la transición termine por completo (fade in incluido).
-        // FIX C3 (auditoría 2026-08-07): TeleportService.TeleportToAnchor ya emite siempre
+        // TeleportService.TeleportToAnchor ya emite siempre
         // OnTeleportEnded en sus paths de fallo (ver TeleportService.cs), pero se deja este
         // timeout como red de seguridad: sin él, cualquier otro camino de fallo futuro que se
         // cuele sin emitir el evento dejaría esta corrutina esperando para siempre, con el

@@ -15,7 +15,7 @@
 // carácter que solo funciona gracias al fallback dinámico puede desaparecer
 // en el juego compilado.
 //
-// Uso: El Sendero > Herramientas > Congelar Fuentes TMP (Dynamic -> Static)
+// Uso: El Sendero > Interfaz > Fuentes TMP: congelar las dinámicas
 // Vuelve a ejecutarlo cada vez que añadas diálogos/textos con caracteres
 // nuevos, y siempre antes de sacar una build.
 
@@ -54,7 +54,7 @@ public static class TMP_FreezeFallbackAtlas
         "0123456789" +
         ".,;:!¡?¿'\"«»“”‘’-–—_()[]{}/\\%&@#*+=<>°ºª…";
 
-    [MenuItem("El Sendero/Herramientas/Congelar Fuentes TMP (Dynamic -> Static)")]
+    [MenuItem("El Sendero/Interfaz/Fuentes TMP: congelar las dinámicas")]
     public static void CongelarFuentesDinamicas()
     {
         var caracteres = RecolectarCaracteresDelProyecto();

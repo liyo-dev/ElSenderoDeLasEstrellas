@@ -76,7 +76,7 @@ public class TeleportService : MonoBehaviour
     // Flag propio para no invocar Transition() cuando ya hay una en curso (el plugin usa el mismo mensaje de error)
     private static bool _sTransitionInProgress;
 
-    // FIX A7 (auditoría 2026-08-07): handlers activos de la transición en curso, guardados a nivel
+    // handlers activos de la transición en curso, guardados a nivel
     // de instancia para poder desuscribirlos desde OnDestroy si el GameObject se destruye a mitad
     // de una transición. TransitionManager es DontDestroyOnLoad/persistente: sin esto, un handler
     // local huérfano seguía suscrito y podía disparar más tarde para una transición de OTRO
@@ -109,7 +109,7 @@ public class TeleportService : MonoBehaviour
             _inst = null;
         }
 
-        // FIX A7 (auditoría 2026-08-07): ver comentario de _activeCutHandler/_activeEndHandler.
+        // ver comentario de _activeCutHandler/_activeEndHandler.
         var tm = FindTM();
         if (tm != null)
         {
@@ -135,7 +135,7 @@ public class TeleportService : MonoBehaviour
     /// <summary>Teleporta a un anchor por id.</summary>
     public static void TeleportToAnchor(GameObject player, string anchorId, bool? useTransition = null)
     {
-        // FIX C3 (auditoría 2026-08-07): los tres early-return de este método (y de
+        // los tres early-return de este método (y de
         // DoTeleportToAnchor, más abajo) retornaban sin emitir OnTeleportEnded. TeleportSystem.
         // TeleportSequence espera ese evento con WaitUntil antes de devolver el control al
         // jugador — si nunca llega, la corrutina se queda colgada para siempre: input bloqueado,
@@ -175,7 +175,7 @@ public class TeleportService : MonoBehaviour
     {
         if (!player || !anchor)
         {
-            // FIX C3: mismo motivo que arriba — no dejar colgado a quien espera OnTeleportEnded.
+            // mismo motivo que arriba — no dejar colgado a quien espera OnTeleportEnded.
             InvokeEvent(OnTeleportEnded, nameof(OnTeleportEnded));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportService] Parámetros nulos en TeleportToAnchor.");
@@ -301,7 +301,7 @@ public class TeleportService : MonoBehaviour
             _activeEndHandler = null;
         }
 
-        // FIX A7 (auditoría 2026-08-07): guardar referencia a nivel de instancia (ver OnDestroy).
+        // guardar referencia a nivel de instancia (ver OnDestroy).
         _activeCutHandler = OnCut;
         _activeEndHandler = OnEnd;
         tm.onTransitionCutPointReached += _activeCutHandler;
@@ -453,18 +453,15 @@ public class TeleportService : MonoBehaviour
     }
 
     /// <summary>
-    /// Teleporta a todos los compañeros (party members + Will NPC instanciado) cerca del jugador.
+    /// Teleporta a todos los compañeros (los miembros del grupo y Will si lo lleva la IA) cerca del jugador.
     /// Llamado automáticamente después de cada teleport del jugador.
     /// </summary>
     private static void TeleportCompanionsToPlayer()
     {
-        // 1. Teleportar party members registrados. Un viaje rápido mueve a todo el grupo aunque
-        // haya geometría entre medias, así que se omite la comprobación de alcance. Ver INC-819.
+        // Un viaje rápido mueve a todo el grupo aunque haya geometría entre medias, así que se
+        // omite la comprobación de alcance. Ver INC-819.
         if (Game.NPC.PlayerParty.HasInstance)
             Game.NPC.PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true);
-
-        // 2. Teleportar Will NPC instanciado (no está en el party formal)
-        ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer(forzar: true);
     }
 
     /// <summary>

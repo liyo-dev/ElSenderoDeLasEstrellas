@@ -30,7 +30,7 @@ namespace Game.NPC.Common
         }
 
         // =================================================================================
-        // 🔄 STATE MANAGEMENT
+        // STATE MANAGEMENT
         // =================================================================================
 
         public void ChangeState(INPCState newState)
@@ -51,7 +51,7 @@ namespace Game.NPC.Common
                 }
                 catch (Exception ex)
                 {
-                    _context.LogError($"[NPCBrain] ❌ Error en OnExit ({_currentState.StateName}): {ex.Message}");
+                    _context.LogError($"[NPCBrain] Error en OnExit ({_currentState.StateName}): {ex.Message}");
                 }
             }
 
@@ -68,7 +68,7 @@ namespace Game.NPC.Common
             }
             catch (Exception ex)
             {
-                _context.LogError($"[NPCBrain] ❌ Error en OnEnter ({_currentState.StateName}): {ex.Message}");
+                _context.LogError($"[NPCBrain] Error en OnEnter ({_currentState.StateName}): {ex.Message}");
                 // Fallback de seguridad: Si falla el Enter, volver a Idle para no romper la IA
                 if (!(_currentState is Game.NPC.States.IdleState))
                 {
@@ -96,7 +96,7 @@ namespace Game.NPC.Common
             }
             catch (Exception ex)
             {
-                _context.LogError($"[NPCBrain] ❌ Error Crítico en Update ({_currentState.StateName}): {ex.Message}");
+                _context.LogError($"[NPCBrain] Error Crítico en Update ({_currentState.StateName}): {ex.Message}");
             }
         }
 
@@ -113,7 +113,7 @@ namespace Game.NPC.Common
         }
 
         // =================================================================================
-        // 🤝 INTERACTION HANDLING
+        // INTERACTION HANDLING
         // =================================================================================
 
         /// <summary>
@@ -171,34 +171,6 @@ namespace Game.NPC.Common
             {
                 _context.IsInteracting = true;
                 return true;
-            }
-
-            // PRIORIDAD 2: NARRATIVA INTERACTIVA (Sistema Principal)
-            // Este es el flujo normal para hablar con NPCs
-            if (config.interactiveNarrativeConfig != null)
-            {
-                var executor = _context.Transform.GetComponent<NPCInteractiveNarrativeExecutor>();
-                if (executor != null)
-                {
-                    // Intentamos ejecutar. Si devuelve true, es que la narrativa arrancó.
-                    if (executor.TryExecuteNarrative())
-                    {
-                        // IMPORTANTE: No seteamos IsInteracting = true aquí manualmente.
-                        // El Executor iniciará una secuencia Cinemática que cambiará el estado del Brain a CinematicState.
-                        return true; 
-                    }
-                }
-            }
-
-            // PRIORIDAD 3: QUESTS (Sistema Legacy o Simple)
-            if (config.HasBehaviour(NPCBehaviourType.Quest) && config.questConfig != null)
-            {
-                // Para el sistema de Quest simple, sí marcamos el flag para pausar el movimiento
-                _context.IsInteracting = true;
-                bool questHandled = config.questConfig.ProcessInteraction(interactor, _context);
-                
-                if (questHandled) return true;
-                _context.IsInteracting = false; // Revertir si falló
             }
 
             return false;

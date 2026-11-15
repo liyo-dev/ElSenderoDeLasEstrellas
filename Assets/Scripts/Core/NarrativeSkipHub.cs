@@ -13,7 +13,7 @@ using System;
 /// terminar/salir), y HoldToSkipUI dispara RequestSkip() al completar el hold — sin necesitar
 /// saber qué sistema concreto está corriendo en ese momento.
 ///
-/// FIX (16/08/2026): además de la acción de saltar, este hub es también la fuente de verdad de
+/// además de la acción de saltar, este hub es también la fuente de verdad de
 /// VISIBILIDAD del botón (ver AnySkippable / OnAnySkippableChanged, que consume
 /// GlobalCinematicSkipController). Antes GlobalCinematicSkipController decidía mostrar/ocultar el
 /// botón mirando PlayerActionManager.IsInMode(ActionMode.Cinematic) — pero eso deja fuera
@@ -24,7 +24,7 @@ using System;
 /// que "el botón se ve" y "pulsarlo hace algo" sean SIEMPRE la misma condición — ya no pueden
 /// desincronizarse porque son literalmente el mismo contador.
 ///
-/// ⚠️ CONTRATO para quien implemente un handler (ver auditoría de skip del 16/08/2026 en
+/// CONTRATO para quien implemente un handler (ver auditoría de skip del 16/08/2026 en
 /// Assets/Scripts/Cinematics/*.cs — EstelaAppearsSequencer.OnSkipCleanup,
 /// LiamCrystalBallSequencer.OnSkipCleanup, etc. como referencia, y DialogueManager.
 /// HandleSkipRequested para un ejemplo ya implementado): saltar una secuencia normalmente

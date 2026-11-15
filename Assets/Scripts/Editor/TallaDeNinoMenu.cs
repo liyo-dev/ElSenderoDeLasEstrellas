@@ -7,14 +7,14 @@ using UnityEngine;
 /// </summary>
 public static class TallaDeNinoMenu
 {
-    [MenuItem("El Sendero/Personajes/Marcar como niño (lo seleccionado)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Marcar como niño (lo seleccionado)")]
     private static void Marcar() => Aplicar(true);
 
-    [MenuItem("El Sendero/Personajes/Quitar la marca de niño (lo seleccionado)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Quitar la marca de niño (lo seleccionado)")]
     private static void Quitar() => Aplicar(false);
 
-    [MenuItem("El Sendero/Personajes/Marcar como niño (lo seleccionado)", true)]
-    [MenuItem("El Sendero/Personajes/Quitar la marca de niño (lo seleccionado)", true)]
+    [MenuItem("El Sendero/Personajes/NPCs/Marcar como niño (lo seleccionado)", true)]
+    [MenuItem("El Sendero/Personajes/NPCs/Quitar la marca de niño (lo seleccionado)", true)]
     private static bool HaySeleccion() => Selection.gameObjects.Length > 0;
 
     private static void Aplicar(bool nino)

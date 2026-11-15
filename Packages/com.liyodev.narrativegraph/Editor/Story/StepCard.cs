@@ -113,11 +113,11 @@ namespace NarrativeGraphEditor.Story
 
         public void Refresh(StoryStructure structure)
         {
-            var entry = NarrativeNodeCatalog.Get(Model.GetType());
+            var entry = NarrativeNodeCatalog.Get(Model.KindType);
             _number.text = structure != null ? structure.Number(Model) : string.Empty;
             _number.style.display = string.IsNullOrEmpty(_number.text) ? DisplayStyle.None : DisplayStyle.Flex;
             // En la cabecera, el nombre corto del tipo; el completo, al pasar el ratón.
-            var typeName = entry?.title ?? Model.GetType().Name;
+            var typeName = entry?.title ?? Model.KindType.Name;
             int paren = typeName.IndexOf(" (", StringComparison.Ordinal);
             var shortName = paren > 0 ? typeName.Substring(0, paren) : typeName;
             _type.text = (string.IsNullOrEmpty(Model.Badge) ? string.Empty : Model.Badge + " ") + shortName.ToUpperInvariant();
@@ -137,7 +137,7 @@ namespace NarrativeGraphEditor.Story
             _face.image = face;
             _face.style.display = face != null ? DisplayStyle.Flex : DisplayStyle.None;
 
-            _title.text = string.IsNullOrWhiteSpace(Model.displayTitle) ? entry?.title ?? Model.GetType().Name : Model.displayTitle;
+            _title.text = string.IsNullOrWhiteSpace(Model.displayTitle) ? entry?.title ?? Model.KindType.Name : Model.displayTitle;
             _summary.text = StepSummary.For(Model);
             _summary.style.display = string.IsNullOrEmpty(_summary.text) ? DisplayStyle.None : DisplayStyle.Flex;
 
@@ -256,9 +256,9 @@ namespace NarrativeGraphEditor.Story
     /// selección y la acción principal; cada tipo de paso, su color en la cabecera.
     public static class StoryColors
     {
-        public static readonly Color Accent = new Color32(0xF2, 0xB5, 0x44, 0xFF);
-        public static readonly Color Line = new Color32(0x57, 0x52, 0x4B, 0xFF);
-        public static readonly Color LineNear = new Color32(0x9A, 0x93, 0x89, 0xFF);
+        public static readonly Color Accent = new Color32(0x3D, 0x8B, 0xFF, 0xFF);
+        public static readonly Color Line = new Color32(0x4A, 0x54, 0x68, 0xFF);
+        public static readonly Color LineNear = new Color32(0x8C, 0x9A, 0xB3, 0xFF);
         public static readonly Color Ok = new Color32(0xA8, 0xD8, 0xB0, 0xFF);
         public static readonly Color Warning = new Color32(0xF0, 0xB2, 0x4A, 0xFF);
 

@@ -80,9 +80,6 @@ public class DialogueManager : MonoBehaviour
     
     [Tooltip("Perfil cinematográfico para diálogos (define los planos y transiciones)")]
     [SerializeField] private DialogueCinematicProfile cinematicProfile;
-    
-    [Tooltip("(Legacy) Sistema de cámara simple - se usa si cinematicProfile no está asignado")]
-    [SerializeField] private bool useDialogueCameraLegacy = false;
 
     [Header("UI Hints")]
     [SerializeField] private GameObject submitHint;
@@ -92,12 +89,12 @@ public class DialogueManager : MonoBehaviour
     private int _index = -1;
     private Action _onEnd;
 
-    // FIX (16/08/2026): guard de reentrada para HandleSkipRequested (ver NarrativeSkipHub más
+    // guard de reentrada para HandleSkipRequested (ver NarrativeSkipHub más
     // abajo) — evita que una segunda invocación de RequestSkip() mientras ya estamos vaciando
     // _current con el bucle de Next() intente arrancar un segundo bucle sobre el mismo diálogo.
     private bool _skipping;
 
-    // FIX: al leer objetos sin cámara cinemática (cartas, save points, etc.) el HUD no se
+    // al leer objetos sin cámara cinemática (cartas, save points, etc.) el HUD no se
     // ocultaba porque ese hide/show solo estaba conectado a los controladores cinemáticos
     // (DialogueCinematicController / CinematicSequencerBase), y este
     // camino de diálogo "no-NPC" nunca pasa por ninguno de ellos. Se ocupa aquí, de forma
@@ -106,7 +103,7 @@ public class DialogueManager : MonoBehaviour
     private bool _hudHiddenForNonCinematicDialogue;
     public bool IsOpen => _current != null;
 
-    // FIX (24/08/2026): el botón global "mantener para saltar" (HoldToSkipUI, vía NarrativeSkipHub)
+    // el botón global "mantener para saltar" (HoldToSkipUI, vía NarrativeSkipHub)
     // se registraba en TODO diálogo que pasara por StartDialogue — conversaciones normales con un
     // NPC (Interactable.cs), diálogo de quest (NPCQuestConfig/NPCQuestActionExecutor/
     // NPCInteractiveNarrativeExecutor), líneas de pre-combate (NPCCombatLifecycleHandler) y
@@ -214,26 +211,26 @@ public class DialogueManager : MonoBehaviour
         if (!useTypewriter)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[DialogueManager] ⚠️ useTypewriter está DESACTIVADO en el Inspector. Forzando activación.");
+            Debug.LogWarning("[DialogueManager] useTypewriter está DESACTIVADO en el Inspector. Forzando activación.");
 #endif
             useTypewriter = true;
         }
         if (charsPerSecond <= 0f || charsPerSecond > 100f)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[DialogueManager] ⚠️ charsPerSecond tiene valor incorrecto ({charsPerSecond}). Ajustando a 35.");
+            Debug.LogWarning($"[DialogueManager] charsPerSecond tiene valor incorrecto ({charsPerSecond}). Ajustando a 35.");
 #endif
             charsPerSecond = 35f;
         }
         if (letterSoundFrequency < 1)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[DialogueManager] ⚠️ letterSoundFrequency tiene valor incorrecto ({letterSoundFrequency}). Ajustando a 1.");
+            Debug.LogWarning($"[DialogueManager] letterSoundFrequency tiene valor incorrecto ({letterSoundFrequency}). Ajustando a 1.");
 #endif
             letterSoundFrequency = 1;
         }
         
-        // Debug.Log($"[DialogueManager] ✅ Configuración validada - Typewriter: {useTypewriter}, Velocidad: {charsPerSecond} chars/s, Audio: {useLetterSound}, Frecuencia: {letterSoundFrequency}");
+        // Debug.Log($"[DialogueManager] Configuración validada - Typewriter: {useTypewriter}, Velocidad: {charsPerSecond} chars/s, Audio: {useLetterSound}, Frecuencia: {letterSoundFrequency}");
 
         if (group != null)
         {
@@ -375,7 +372,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] ⏸️ Input ignorado durante período de gracia inicial ({Time.unscaledTime - _dialogueOpenedAt:F3}s desde apertura)");
+                Debug.Log($"[DialogueManager] Input ignorado durante período de gracia inicial ({Time.unscaledTime - _dialogueOpenedAt:F3}s desde apertura)");
                 #endif
             }
             return;
@@ -387,7 +384,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] ⏸️ Input ignorado durante cooldown de línea completada ({Time.unscaledTime - _lastLineCompletedAt:F3}s desde completado)");
+                Debug.Log($"[DialogueManager] Input ignorado durante cooldown de línea completada ({Time.unscaledTime - _lastLineCompletedAt:F3}s desde completado)");
                 #endif
             }
             return;
@@ -460,7 +457,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     /// <param name="isSequenceDialogue">
-    /// FIX (24/08/2026): true SOLO cuando este diálogo forma parte de una secuencia/cinemática real
+    /// true SOLO cuando este diálogo forma parte de una secuencia/cinemática real
     /// (hoy en día, únicamente la cinemática lo pasa así) — es lo único que habilita el
     /// registro en NarrativeSkipHub y por tanto que HoldToSkipUI pueda aparecer. Las secuencias que
     /// derivan de CinematicSequencerBase (Prólogo, Taberna, etc.) no pasan por aquí en absoluto:
@@ -474,7 +471,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (asset == null || asset.lines == null || asset.lines.Length == 0) return;
 
-        // FIX C1 (auditoría 2026-08-07): StartDialogue pisaba _current/_onEnd sin avisar al
+        // StartDialogue pisaba _current/_onEnd sin avisar al
         // llamador anterior. PlayDialogueNode del grafo narrativo espera el callback con
         // `while (!completed) yield return null`; si otro sistema abría diálogo antes de que
         // terminara (típico: post-action de quest + siguiente nodo del grafo al completarla),
@@ -494,7 +491,7 @@ public class DialogueManager : MonoBehaviour
         // StartDialogue se llama de nuevo mientras ya había un diálogo abierto (rama FIX C1 justo
         // arriba, que NO pasa por Close()), ya estaríamos suscritos desde la apertura anterior —
         // sin este desregistro previo quedaríamos suscritos dos veces al mismo handler.
-        // FIX (24/08/2026): solo nos suscribimos si isSequenceDialogue es true — ver comentario del
+        // solo nos suscribimos si isSequenceDialogue es true — ver comentario del
         // parámetro arriba. Si el diálogo anterior sí era de secuencia y este nuevo no lo es (o
         // viceversa), el Unregister incondicional de abajo limpia cualquier suscripción previa
         // antes de decidir si hace falta una nueva.
@@ -517,7 +514,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 🕐 Diálogo abierto en t={_dialogueOpenedAt:F3} - período de gracia activo");
+            Debug.Log($"[DialogueManager] Diálogo abierto en t={_dialogueOpenedAt:F3} - período de gracia activo");
             #endif
         }
 
@@ -530,14 +527,14 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] ✅ UI activada - alpha={group.alpha}, blocksRaycasts={group.blocksRaycasts}, Canvas activo={group.gameObject.activeInHierarchy}");
+                Debug.Log($"[DialogueManager] UI activada - alpha={group.alpha}, blocksRaycasts={group.blocksRaycasts}, Canvas activo={group.gameObject.activeInHierarchy}");
                 #endif
             }
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DialogueManager] ❌ CanvasGroup es NULL - el diálogo no se mostrará");
+            Debug.LogError("[DialogueManager] CanvasGroup es NULL - el diálogo no se mostrará");
 #endif
         }
 
@@ -560,7 +557,7 @@ public class DialogueManager : MonoBehaviour
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueManager] 🎬 Activando sistema cinematográfico para NPC: {_currentNpc.name}");
+                    Debug.Log($"[DialogueManager] Activando sistema cinematográfico para NPC: {_currentNpc.name}");
                     #endif
                 }
                 DialogueCinematicController.Instance.StartCinematic(playerObj.transform, _currentNpc, cinematicProfile, _current?.isGroupConversation ?? false);
@@ -572,17 +569,6 @@ public class DialogueManager : MonoBehaviour
 #endif
             }
         }
-        else if (useDialogueCameraLegacy && !ConservarCamaraDeSecuencia && isActualNPC && DialogueCameraController.Instance != null)
-        {
-            // Fallback al sistema antiguo si no está el nuevo
-            if (verboseLogging)
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] 🎥 Activando cámara de diálogo legacy para NPC: {_currentNpc.name}");
-                #endif
-            }
-            DialogueCameraController.Instance.StartDialogueCamera(_currentNpc);
-        }
         else
         {
             if (_currentNpc != null && !isActualNPC)
@@ -590,11 +576,11 @@ public class DialogueManager : MonoBehaviour
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueManager] 💬 Diálogo con objeto interactivo '{_currentNpc.name}' (no NPC) - cámaras cinematográficas desactivadas");
+                    Debug.Log($"[DialogueManager] Diálogo con objeto interactivo '{_currentNpc.name}' (no NPC) - cámaras cinematográficas desactivadas");
                     #endif
                 }
 
-                // FIX: sin cámara cinemática ningún sistema oculta el HUD por su cuenta.
+                // sin cámara cinemática ningún sistema oculta el HUD por su cuenta.
                 // Ocultarlo aquí (cartas, save points, etc.) y recordar que fuimos nosotros
                 // quienes lo ocultamos, para restaurarlo en Close().
                 _hudHiddenForNonCinematicDialogue = true;
@@ -603,7 +589,7 @@ public class DialogueManager : MonoBehaviour
             else if (!ConservarCamaraDeSecuencia)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[DialogueManager] ⚠️ Sistema cinematográfico NO activado - useCinematic={useCinematicCamera}, NPC={_currentNpc?.name ?? "NULL"}, esNPC={isActualNPC}, Controller Instance={DialogueCinematicController.Instance != null}");
+                Debug.LogWarning($"[DialogueManager] Sistema cinematográfico NO activado - useCinematic={useCinematicCamera}, NPC={_currentNpc?.name ?? "NULL"}, esNPC={isActualNPC}, Controller Instance={DialogueCinematicController.Instance != null}");
 #endif
             }
         }
@@ -665,7 +651,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 📢 OnDialogueStarted emitido para '{_currentNpc?.name ?? "NULL"}'");
+            Debug.Log($"[DialogueManager] OnDialogueStarted emitido para '{_currentNpc?.name ?? "NULL"}'");
             #endif
         }
     }
@@ -674,7 +660,7 @@ public class DialogueManager : MonoBehaviour
     /// Inicia un diálogo de batalla pre-combate (el jugador mira al NPC y entra en stance de batalla)
     /// </summary>
     /// <param name="applyBattlePrep">
-    /// ✅ NUEVO (15 ago 2026): si es false, se salta PreparePlayerForBattleDialogue (giro del
+    /// NUEVO: si es false, se salta PreparePlayerForBattleDialogue (giro del
     /// jugador, camera shake, slowmo, flash rojo). Pensado para encadenar VARIAS líneas de
     /// batalla seguidas (p.ej. equipos de NPCs donde cada uno dice su propia frase de entrada en
     /// orden): la primera llamada de la secuencia usa true (efectos de impacto normales), y las
@@ -713,7 +699,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] ⚔️ Preparando jugador para diálogo de batalla con '{npc.name}'");
+            Debug.Log($"[DialogueManager] Preparando jugador para diálogo de batalla con '{npc.name}'");
             #endif
         }
         
@@ -728,7 +714,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] 👁️ Jugador girado hacia NPC '{npc.name}'");
+                Debug.Log($"[DialogueManager] Jugador girado hacia NPC '{npc.name}'");
                 #endif
             }
         }
@@ -743,14 +729,14 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] 🥋 Animación 'Idle_Battle_NoWeapon' activada");
+                Debug.Log($"[DialogueManager] Animación 'Idle_Battle_NoWeapon' activada");
                 #endif
             }
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[DialogueManager] ⚠️ No se encontró Animator en el jugador");
+            Debug.LogWarning($"[DialogueManager] No se encontró Animator en el jugador");
 #endif
         }
         
@@ -760,7 +746,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 📹 Camera shake aplicado");
+            Debug.Log($"[DialogueManager] Camera shake aplicado");
             #endif
         }
         
@@ -771,14 +757,14 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] ⏱️ Slowmo breve aplicado para dramatismo (pre-batalla)");
+                Debug.Log($"[DialogueManager] Slowmo breve aplicado para dramatismo (pre-batalla)");
                 #endif
             }
         }
         else if (verboseLogging)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] ⏭️ Slowmo omitido (diálogo de derrota)");
+            Debug.Log($"[DialogueManager] Slowmo omitido (diálogo de derrota)");
 #endif
         }
         
@@ -787,7 +773,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 🔴 Flash rojo sutil aplicado");
+            Debug.Log($"[DialogueManager] Flash rojo sutil aplicado");
             #endif
         }
     }
@@ -863,11 +849,6 @@ public class DialogueManager : MonoBehaviour
         {
             DialogueCinematicController.Instance.EndCinematic();
         }
-        else if (useDialogueCameraLegacy && DialogueCameraController.Instance != null)
-        {
-            // Fallback al sistema antiguo
-            DialogueCameraController.Instance.EndDialogueCamera();
-        }
 
         // Restaurar el HUD si lo ocultamos nosotros mismos (diálogo sin cámara cinemática)
         if (_hudHiddenForNonCinematicDialogue)
@@ -876,24 +857,24 @@ public class DialogueManager : MonoBehaviour
             Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
         }
 
-        // ✅ Liberar posicionamiento de party members
+        // Liberar posicionamiento de party members
         if (Game.NPC.PlayerParty.HasInstance)
         {
             Game.NPC.PlayerParty.Instance.ReleaseDialoguePositioning();
         }
 
-        // ✅ Finalizar visuales de todos los participantes (speaker y oyentes)
+        // Finalizar visuales de todos los participantes (speaker y oyentes)
         FinalizarInteraccionDeTodosLosParticipantes();
         _playerDialogueAnimator = null;
         _currentNpcDialogueCharacterId = null;
 
-        // ✅ Emitir evento - los NPCs que lo necesiten se suscriben
+        // Emitir evento - los NPCs que lo necesiten se suscriben
         // NPCSimpleAnimator maneja su propia rotación y animaciones
         OnDialogueClosed?.Invoke(_currentNpc);
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 📢 OnDialogueClosed emitido para '{_currentNpc?.name ?? "NULL"}'");
+            Debug.Log($"[DialogueManager] OnDialogueClosed emitido para '{_currentNpc?.name ?? "NULL"}'");
             #endif
         }
 
@@ -904,13 +885,13 @@ public class DialogueManager : MonoBehaviour
 
         SetSubmitHintActive(false);
 
-        // ✅ IMPORTANTE: Ignorar el botón de salto (A/Submit) después de cerrar el diálogo
+        // IMPORTANTE: Ignorar el botón de salto (A/Submit) después de cerrar el diálogo
         // para evitar que el mismo botón que cerró el diálogo se procese como salto
         GamepadInputReader.IgnoreJumpButton(0.3f);
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 🚫 Ignorando botón de salto por 0.3s después de cerrar diálogo");
+            Debug.Log($"[DialogueManager] Ignorando botón de salto por 0.3s después de cerrar diálogo");
             #endif
         }
 
@@ -1121,10 +1102,10 @@ public class DialogueManager : MonoBehaviour
         
         var line = _current.lines[_index];
         
-        // ✅ Activar animación de hablar para el speaker actual
+        // Activar animación de hablar para el speaker actual
         ActivateSpeakerTalkAnimation(line);
         
-        // ✅ Emitir evento de cambio de línea (para sistema de emociones y otros)
+        // Emitir evento de cambio de línea (para sistema de emociones y otros)
         OnDialogueLineChanged?.Invoke(line, _currentNpc);
         
         // Notificar al sistema cinematográfico del cambio de línea
@@ -1133,7 +1114,7 @@ public class DialogueManager : MonoBehaviour
             DialogueCinematicController.Instance.OnDialogueLineAdvanced(
                 _index, 
                 _current.lines.Length,
-                line  // ✅ Pasar la línea completa para detectar cambios de speaker
+                line  // Pasar la línea completa para detectar cambios de speaker
             );
         }
 
@@ -1345,7 +1326,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager TypeRoutine] ✅ Iniciando typewriter - Total: {total} chars, Velocidad: {charsPerSecond} chars/s ({timePerChar:F4}s por char)");
+            Debug.Log($"[DialogueManager TypeRoutine] Iniciando typewriter - Total: {total} chars, Velocidad: {charsPerSecond} chars/s ({timePerChar:F4}s por char)");
             #endif
         }
 
@@ -1389,7 +1370,7 @@ public class DialogueManager : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[DialogueManager TypeRoutine] ✅ Completado - {shown}/{total} caracteres mostrados");
+        Debug.Log($"[DialogueManager TypeRoutine] Completado - {shown}/{total} caracteres mostrados");
 #endif
 
         bodyText.maxVisibleCharacters = total;
@@ -1751,7 +1732,7 @@ public class DialogueManager : MonoBehaviour
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[DialogueManager] 🗣️ Speaker 'Will (NPC)' activado -- el controller físico es otro personaje");
+                    Debug.Log("[DialogueManager] Speaker 'Will (NPC)' activado -- el controller físico es otro personaje");
                     #endif
                 }
                 ActualizarReaccionesDeOyentes(line, false, willAnimator);
@@ -1777,7 +1758,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[DialogueManager] 🗣️ Player speaker activado");
+                Debug.Log("[DialogueManager] Player speaker activado");
                 #endif
             }
             ActualizarReaccionesDeOyentes(line, true, _playerDialogueAnimator);
@@ -1840,7 +1821,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[DialogueManager] ⚠️ No se encontró animator para speaker '{speakerId}'");
+                Debug.LogWarning($"[DialogueManager] No se encontró animator para speaker '{speakerId}'");
                 #endif
             }
             return;
@@ -1865,7 +1846,7 @@ public class DialogueManager : MonoBehaviour
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DialogueManager] 🗣️ Speaker '{speakerDebugName}' activado");
+            Debug.Log($"[DialogueManager] Speaker '{speakerDebugName}' activado");
             #endif
         }
         ActualizarReaccionesDeOyentes(line, false, speakerAnimator);
@@ -2078,7 +2059,7 @@ public class DialogueManager : MonoBehaviour
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[DialogueManager] ⚠️ ActivatePlayerInteractionAnimation: No se encontró el player");
+            Debug.LogWarning("[DialogueManager] ActivatePlayerInteractionAnimation: No se encontró el player");
 #endif
             return;
         }
@@ -2093,7 +2074,7 @@ public class DialogueManager : MonoBehaviour
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueManager] 🎭 Player '{playerGo.name}' animación InteractWithPeople ACTIVADA (NPCSimpleAnimator)");
+                    Debug.Log($"[DialogueManager] Player '{playerGo.name}' animación InteractWithPeople ACTIVADA (NPCSimpleAnimator)");
                     #endif
                 }
             }
@@ -2103,7 +2084,7 @@ public class DialogueManager : MonoBehaviour
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueManager] 🎭 Player '{playerGo.name}' animación InteractWithPeople DESACTIVADA (NPCSimpleAnimator)");
+                    Debug.Log($"[DialogueManager] Player '{playerGo.name}' animación InteractWithPeople DESACTIVADA (NPCSimpleAnimator)");
                     #endif
                 }
             }
@@ -2115,7 +2096,7 @@ public class DialogueManager : MonoBehaviour
         if (animator == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[DialogueManager] ⚠️ ActivatePlayerInteractionAnimation: Player '{playerGo.name}' no tiene Animator");
+            Debug.LogWarning($"[DialogueManager] ActivatePlayerInteractionAnimation: Player '{playerGo.name}' no tiene Animator");
 #endif
             return;
         }
@@ -2128,13 +2109,13 @@ public class DialogueManager : MonoBehaviour
                 if (played)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialogueManager] 🎭 Player '{playerGo.name}' animación diálogo ACTIVADA via Animator state '{playedState}'");
+                    Debug.Log($"[DialogueManager] Player '{playerGo.name}' animación diálogo ACTIVADA via Animator state '{playedState}'");
                     #endif
                 }
                 else
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[DialogueManager] ⚠️ Player '{playerGo.name}' no tiene un state de interacción compatible para diálogo");
+                    Debug.LogWarning($"[DialogueManager] Player '{playerGo.name}' no tiene un state de interacción compatible para diálogo");
                     #endif
                 }
             }
@@ -2147,7 +2128,7 @@ public class DialogueManager : MonoBehaviour
             if (verboseLogging && played)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialogueManager] 🎭 Player '{playerGo.name}' animación diálogo DESACTIVADA, retorno a '{playedState}'");
+                Debug.Log($"[DialogueManager] Player '{playerGo.name}' animación diálogo DESACTIVADA, retorno a '{playedState}'");
 #endif
             }
         }

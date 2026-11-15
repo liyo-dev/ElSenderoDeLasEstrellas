@@ -19,11 +19,11 @@ using UnityEngine;
 /// y en el Animator Controller seleccionados, y avisa si falta alguna entrada (p.ej. una emoción
 /// del enum sin fila en el asset).
 ///
-/// Menú: El Sendero > NPCs > Testeo de Emociones y Animación
+/// Menú: El Sendero > Personajes > Probar emociones y animaciones
 /// </summary>
 public class NPCEmotionTesterWindow : EditorWindow
 {
-    [MenuItem("El Sendero/NPCs/Testeo de Emociones y Animación")]
+    [MenuItem("El Sendero/Personajes/Probar emociones y animaciones")]
     private static void Open()
     {
         GetWindow<NPCEmotionTesterWindow>("Emociones NPC").Show();

@@ -74,10 +74,7 @@ public class LanzadorDeSalto : MonoBehaviour
     {
         if (Time.time < _listoEn) return;
 
-        var controller = other.GetComponentInParent<vThirdPersonController>();
-        if (controller == null || !controller.enabled) return;
-        var jugador = PlayerService.Player;
-        if (jugador == null || (controller.gameObject != jugador && !controller.transform.IsChildOf(jugador.transform))) return;
+        if (!ControlDelJugador.DelJugador(other, out vThirdPersonController controller) || !controller.enabled) return;
 
         if (soloDesdeArriba && !LlegaDesdeArriba(controller)) return;
 

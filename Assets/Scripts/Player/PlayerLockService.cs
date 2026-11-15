@@ -68,13 +68,13 @@ public class PlayerLockService : MonoBehaviour
         if (_owners.Count == 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[PlayerLockService] ⚠️ ForceUnlock() llamado pero no hay locks activos");
+            Debug.LogWarning("[PlayerLockService] ForceUnlock() llamado pero no hay locks activos");
 #endif
             return;
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[PlayerLockService] 🚨 FORCE UNLOCK - Limpiando {_owners.Count} locks forzadamente");
+        Debug.LogWarning($"[PlayerLockService] FORCE UNLOCK - Limpiando {_owners.Count} locks forzadamente");
 #endif
         _owners.Clear();
         _lockedMotor = null; // evitar restaurar lockMovement al estado bloqueado
@@ -87,19 +87,19 @@ public class PlayerLockService : MonoBehaviour
         if (_owners.Contains(owner))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PlayerLockService] ⚠️ Owner ya tenía un lock: {owner?.GetType().Name ?? "null"}");
+            Debug.LogWarning($"[PlayerLockService] Owner ya tenía un lock: {owner?.GetType().Name ?? "null"}");
 #endif
             return;
         }
 
         _owners.Add(owner);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerLockService] 🔒 Acquire de {owner?.GetType().Name ?? "null"}. Total locks: {_owners.Count}");
+        Debug.Log($"[PlayerLockService] Acquire de {owner?.GetType().Name ?? "null"}. Total locks: {_owners.Count}");
 #endif
         if (_owners.Count == 1)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerLockService] 🚫 Primer lock - Deshabilitando movimiento del jugador");
+            Debug.Log("[PlayerLockService] Primer lock - Deshabilitando movimiento del jugador");
 #endif
             ApplyHardLock();
         }
@@ -112,19 +112,19 @@ public class PlayerLockService : MonoBehaviour
         if (!_owners.Contains(owner))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PlayerLockService] ⚠️ Intento de Release de owner no registrado: {owner?.GetType().Name ?? "null"}");
+            Debug.LogWarning($"[PlayerLockService] Intento de Release de owner no registrado: {owner?.GetType().Name ?? "null"}");
 #endif
             return;
         }
 
         _owners.Remove(owner);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerLockService] 🔓 Release de {owner?.GetType().Name ?? "null"}. Locks restantes: {_owners.Count}");
+        Debug.Log($"[PlayerLockService] Release de {owner?.GetType().Name ?? "null"}. Locks restantes: {_owners.Count}");
 #endif
         if (_owners.Count == 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerLockService] ✅ Todos los locks liberados - Reactivando movimiento del jugador");
+            Debug.Log("[PlayerLockService] Todos los locks liberados - Reactivando movimiento del jugador");
 #endif
             ReleaseHardLock();
         }
@@ -154,7 +154,7 @@ public class PlayerLockService : MonoBehaviour
 
     IEnumerator Co_ReleaseWhenCinematicOrTimeout(object owner, int maxFramesSafety)
     {
-        var pam = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
+        PlayerService.TryGetComponent(out PlayerActionManager pam, allowSceneLookup: false);
         int frames = 0;
         yield return null; // como mínimo 1 frame, igual que el comportamiento anterior
         while (frames < maxFramesSafety && (pam == null || !pam.IsInMode(ActionMode.Cinematic)))
@@ -203,7 +203,7 @@ public class PlayerLockService : MonoBehaviour
             }
             
             // NO PONER EN KINEMATIC - dejar que los scripts de Invector se deshabiliten
-            // _rb.isKinematic = true; // ❌ ESTO CAUSA LOS WARNINGS
+            // _rb.isKinematic = true; // ESTO CAUSA LOS WARNINGS
         }
 
         // Bloquear movimiento sin deshabilitar el controller completo.
@@ -358,7 +358,7 @@ public class PlayerLockService : MonoBehaviour
         if (mode == UnityEngine.SceneManagement.LoadSceneMode.Single)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerLockService] 🔍 Escena cargada '{scene.name}' - Verificando locks...");
+            Debug.Log($"[PlayerLockService] Escena cargada '{scene.name}' - Verificando locks...");
 #endif
             var deadOwners = new List<object>();
             foreach (var owner in _owners)
@@ -370,7 +370,7 @@ public class PlayerLockService : MonoBehaviour
             if (deadOwners.Count > 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[PlayerLockService] 🧹 Limpiando {deadOwners.Count} locks huérfanos al cargar escena '{scene.name}'");
+                Debug.LogWarning($"[PlayerLockService] Limpiando {deadOwners.Count} locks huérfanos al cargar escena '{scene.name}'");
 #endif
                 foreach (var dead in deadOwners)
                     _owners.Remove(dead);
@@ -385,7 +385,7 @@ public class PlayerLockService : MonoBehaviour
             if (isTestingMode && _owners.Count > 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[PlayerLockService] 🧪 Modo testeo detectado - Limpiando {_owners.Count} locks al cargar escena '{scene.name}'");
+                Debug.LogWarning($"[PlayerLockService] Modo testeo detectado - Limpiando {_owners.Count} locks al cargar escena '{scene.name}'");
 #endif
                 _owners.Clear();
             }
@@ -393,14 +393,14 @@ public class PlayerLockService : MonoBehaviour
             if (_owners.Count == 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[PlayerLockService] ✅ Todos los locks limpiados - Reactivando movimiento del jugador");
+                Debug.Log("[PlayerLockService] Todos los locks limpiados - Reactivando movimiento del jugador");
 #endif
                 ReleaseHardLock();
             }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
             {
-                Debug.Log($"[PlayerLockService] ⚠️ {_owners.Count} locks aún activos tras limpieza");
+                Debug.Log($"[PlayerLockService] {_owners.Count} locks aún activos tras limpieza");
             }
 #endif
         }

@@ -130,14 +130,14 @@ public static class UmbralDelSendero
         Poner(g, "sendero-espera-conjuro", "Will acepta leer el conjuro ante la Piedra", new Vector2(1080, y),
             new WaitCustomEventNode { eventKey = SenalConjuroAceptado, acceptEarlierEvent = false }, "sendero-cinematica-conjuro");
         Poner(g, "sendero-cinematica-conjuro", "Cinemática: el conjuro abre el portal", new Vector2(1460, y),
-            new PlayCinematicNode
+            GameStepNode.For(new PedirCinematica
             {
                 cinematicName = "El conjuro de la Piedra Ancestral",
                 signalIn = SenalConjuroStart,
                 signalDone = SenalConjuroDone,
                 secuencia = secuencia,
                 plantillaDeAjustes = PlantillaDeSecuencia
-            }, "sendero-llegada");
+            }), "sendero-llegada");
         Poner(g, "sendero-llegada", "Llegada al Sendero", new Vector2(1840, y),
             new WaitCustomEventNode { eventKey = SenalLlegada });
         g.startNodeGuid = "sendero-inicio";

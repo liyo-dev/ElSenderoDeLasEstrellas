@@ -133,8 +133,8 @@
     padding: 2px 7px;
     border-width: 0;
     border-radius: 9px;
-    background-color: rgba(255, 122, 69, 0.16);
-    color: #FFD9C7;
+    background-color: rgba(61, 139, 255, 0.16);
+    color: #CFE1FF;
     font-size: 10px;
 }
 
@@ -168,5 +168,5 @@
 }
 
 .unlock-editor__add-button:hover {
-    background-color: #FF8F61;
+    background-color: #5B9DFF;
 }

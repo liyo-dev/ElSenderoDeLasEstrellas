@@ -97,7 +97,7 @@ namespace Game.UI
                         _npcDamageable.OnDamaged += OnNPCDamaged;
                         _npcDamageable.OnDied += OnNPCDied;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCHealthBarUI] ✅ Conectado a Damageable de {_npcTransform.name}");
+                        Debug.Log($"[NPCHealthBarUI] Conectado a Damageable de {_npcTransform.name}");
 #endif
                     }
                     else
@@ -116,7 +116,7 @@ namespace Game.UI
                         _npcDamageable.OnDamaged += OnNPCDamaged;
                         _npcDamageable.OnDied += OnNPCDied;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCHealthBarUI] ✅ Conectado a Damageable (fallback) de {_npcTransform.name}");
+                        Debug.Log($"[NPCHealthBarUI] Conectado a Damageable (fallback) de {_npcTransform.name}");
 #endif
                     }
                     else

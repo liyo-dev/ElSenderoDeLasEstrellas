@@ -101,7 +101,8 @@ namespace NarrativeGraphEditor.Story
         static NarrativeNode Clone(NarrativeNode source)
         {
             var copy = (NarrativeNode)Activator.CreateInstance(source.GetType());
-            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(source), copy);
+            // EditorJsonUtility copia también las referencias [SerializeReference] (la petición de «Pedir al juego»).
+            EditorJsonUtility.FromJsonOverwrite(EditorJsonUtility.ToJson(source), copy);
             copy.outputs = source.outputs != null ? new List<string>(source.outputs) : new List<string>();
             return copy;
         }

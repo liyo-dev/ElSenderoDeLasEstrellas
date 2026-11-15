@@ -75,7 +75,7 @@ public static class UnlockService
                 break;
         }
 
-        // ✅ CRÍTICO: Aplicar cambios al jugador inmediatamente
+        // CRÍTICO: Aplicar cambios al jugador inmediatamente
         if (changed)
         {
             ApplyPresetToPlayer();
@@ -84,93 +84,37 @@ public static class UnlockService
         return changed;
     }
 
-    /// Desbloquea una de las habilidades booleanas principales (Swim, Jump, Climb, Magic, Fly).
+    /// Desbloquea una de las habilidades booleanas principales (Swim, Jump, Magic, Fly, Sprint, Shield)
+    /// para los tres personajes: la historia la enseña al grupo. Cada uno parte de las suyas
+    /// (HabilidadesDelPersonaje), así que solo cambia quien aún no la tenía. La magia de Will,
+    /// además, le pone una reserva mínima de maná y se la rellena.
     public static bool UnlockAbility(AbilityKey key)
     {
         var preset = GetActivePreset();
         if (!preset) return false;
 
-        if (preset.abilities == null)
-            preset.abilities = new PlayerAbilities();
-
         bool changed = false;
-        switch (key)
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+            changed |= HabilidadesDelPersonaje.Aprender(preset, (PartyControlManager.CharacterSlot)i, key);
+
+        if (key == AbilityKey.Magic)
         {
-            case AbilityKey.Swim:
-                if (!preset.abilities.swim)
-                {
-                    preset.abilities.swim = true;
-                    changed = true;
-                }
-                break;
-            case AbilityKey.Jump:
-                if (!preset.abilities.jump)
-                {
-                    preset.abilities.jump = true;
-                    changed = true;
-                }
-                break;
-            case AbilityKey.Climb:
-                if (!preset.abilities.climb)
-                {
-                    preset.abilities.climb = true;
-                    changed = true;
-                }
-                break;
-            case AbilityKey.Magic:
-                if (!preset.abilities.magic)
-                {
-                    preset.abilities.magic = true;
-                    changed = true;
-                }
-                // Asegurar valores mínimos de maná y RELLENAR AL 100% al desbloquear magia
-                {
-                    const float minMagicMaxMp = 50f;
-                    float newMax = Mathf.Max(preset.maxMP, minMagicMaxMp);
-                    // Al desbloquear magia, SIEMPRE rellenar al máximo
-                    float newCurrent = newMax;
-                    
-                    if (!Mathf.Approximately(preset.maxMP, newMax) || !Mathf.Approximately(preset.currentMP, newCurrent))
-                    {
-                        preset.maxMP = newMax;
-                        preset.currentMP = newCurrent;
-                        changed = true;
+            const float minMagicMaxMp = 50f;
+            float newMax = Mathf.Max(preset.maxMP, minMagicMaxMp);
+            if (!Mathf.Approximately(preset.maxMP, newMax) || !Mathf.Approximately(preset.currentMP, newMax))
+            {
+                preset.maxMP = newMax;
+                preset.currentMP = newMax;
+                changed = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[UnlockService] Magic desbloqueada: Maná seteado a {newCurrent}/{newMax} (100%)");
+                Debug.Log($"[UnlockService] Magic desbloqueada: maná de Will a {newMax}/{newMax}");
 #endif
-                    }
-                }
-                break;
-            case AbilityKey.Fly:
-                if (!preset.abilities.fly)
-                {
-                    preset.abilities.fly = true;
-                    changed = true;
-                }
-                break;
-            case AbilityKey.Sprint:
-                if (!preset.abilities.sprint)
-                {
-                    preset.abilities.sprint = true;
-                    changed = true;
-                }
-                break;
-            case AbilityKey.Shield:
-                if (!preset.abilities.shield)
-                {
-                    preset.abilities.shield = true;
-                    changed = true;
-                }
-                break;
-            default:
-                break;
+            }
         }
 
         if (changed)
         {
             try { OnAbilityUnlockedKey?.Invoke(key); } catch { }
-            
-            // ✅ CRÍTICO: Aplicar cambios al jugador inmediatamente
             ApplyPresetToPlayer();
         }
 
@@ -228,7 +172,7 @@ public static class UnlockService
             }
         }
 
-        // ✅ CRÍTICO: Aplicar cambios al jugador inmediatamente (para que MagicCaster sincronice los slots)
+        // CRÍTICO: Aplicar cambios al jugador inmediatamente (para que MagicCaster sincronice los slots)
         if (changed)
         {
             ApplyPresetToPlayer();
@@ -264,11 +208,14 @@ public static class UnlockService
         return true;
     }
 
-    /// Verifica si una habilidad (Swim, Jump, Fly…) está desbloqueada en el preset activo.
-    public static bool HasAbility(AbilityKey key)
+    /// Si el personaje que va al mando tiene esa habilidad (Swim, Jump, Fly…).
+    public static bool HasAbility(AbilityKey key) => HasAbility(key, ControlDelJugador.Activo);
+
+    /// Si ese personaje tiene esa habilidad.
+    public static bool HasAbility(AbilityKey key, PartyControlManager.CharacterSlot personaje)
     {
         var preset = GetActivePreset();
-        return preset && preset.abilities != null && preset.abilities.Tiene(key);
+        return preset && HabilidadesDelPersonaje.De(preset, personaje).Tiene(key);
     }
 
     /// Verifica si un flag existe en el preset activo.
@@ -287,7 +234,7 @@ public static class UnlockService
         // Buscar PlayerPresetService en el jugador activo
         if (PlayerService.TryGetComponent<PlayerPresetService>(out var presetService, includeInactive: false, allowSceneLookup: true))
         {
-            // ✅ CORREGIDO: NO incluir inventario al aplicar preset tras desbloquear abilities
+            // CORREGIDO: NO incluir inventario al aplicar preset tras desbloquear abilities
             // El inventario debe conservarse con los items que el jugador ha recogido
             presetService.ApplyCurrentPreset(includeInventory: false, includeAbilities: true);
         }

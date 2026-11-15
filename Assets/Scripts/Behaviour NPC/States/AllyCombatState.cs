@@ -17,7 +17,8 @@ namespace Game.NPC.States
         private Transform _forcedTarget; // Target forzado desde OnPlayerEnteredCombat
         private string _forcedTargetName; // Nombre del target forzado para re-búsqueda
         private NPCPartyMember _partyMember;
-        private Transform _player;
+        // El cuerpo que lleva el jugador ahora (puede cambiar durante el combate).
+        private static Transform Jugador => PlayerService.Player != null ? PlayerService.Player.transform : null;
         
         // Cooldowns de hechizos
         private float _lastAttackTime;
@@ -25,7 +26,7 @@ namespace Game.NPC.States
         
         // Configuración
         private const float ATTACK_RANGE = 15f;
-        private const float DETECTION_RANGE = 30f; // ✅ OPTIMIZACIÓN: Reducido de 100m a 30m (más razonable)
+        private const float DETECTION_RANGE = 30f; // OPTIMIZACIÓN: Reducido de 100m a 30m (más razonable)
         private const float DEFAULT_ATTACK_COOLDOWN = 2f;
         private const float NO_ENEMY_TIMEOUT = 30f; // 30 segundos - suficiente tiempo para batallas de boss
         
@@ -57,15 +58,15 @@ namespace Game.NPC.States
         // Rotación de hechizos entre los 3 disponibles
         private int _currentSpellIndex = 0;
         
-        // ✅ OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries (evita allocations)
+        // OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries (evita allocations)
         private Collider[] _physicsBuffer = new Collider[32];
 
-        // ✅ FIX #17 (auditoría combate, 15 ago 2026): buffer reutilizable para
+        // FIX #17: buffer reutilizable para
         // ActiveCombatRegistry.GetAllInCombatNonAlloc (antes GetAllInCombat() alocaba una List
         // nueva en cada llamada, incluida desde OnUpdate/FindNearestEnemy con cooldown de 0.3s).
         private readonly List<GameObject> _combatNpcBuffer = new List<GameObject>(16);
 
-        // ✅ FIX #20 (auditoría combate, 15 ago 2026): LayerMask.GetMask cacheado como static readonly
+        // FIX #20: LayerMask.GetMask cacheado como static readonly
         // (antes se recalculaba en FindNearestEnemy y en cada lanzamiento de hechizo).
         private static readonly int EnemyBossMask = LayerMask.GetMask("Enemy", "Boss");
         private static readonly int EnemyBossDefaultMask = LayerMask.GetMask("Enemy", "Boss", "Default");
@@ -98,7 +99,7 @@ namespace Game.NPC.States
             if (context.DebugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[AllyCombatState:{context.Transform.name}] ⚔️ ENTRANDO EN COMBATE - ForcedTarget: {_forcedTarget?.name ?? "NULL"}, Registry.Count: {ActiveCombatRegistry.Count}");
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] ENTRANDO EN COMBATE - ForcedTarget: {_forcedTarget?.name ?? "NULL"}, Registry.Count: {ActiveCombatRegistry.Count}");
 #endif
                 ActiveCombatRegistry.GetAllInCombatNonAlloc(_combatNpcBuffer);
                 foreach (var npc in _combatNpcBuffer)
@@ -143,12 +144,7 @@ namespace Game.NPC.States
             _castTimer = 0f;
             _pendingSpell = null;
             
-            // Obtener jugador
-            if (PlayerService.Player != null)
-            {
-                _player = PlayerService.Player.transform;
-            }
-            
+
             // Si tenemos un target forzado, usarlo DIRECTAMENTE sin validaciones
             if (_forcedTarget != null && _forcedTarget.gameObject != null)
             {
@@ -156,7 +152,7 @@ namespace Game.NPC.States
                 if (context.DebugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target forzado: {_forcedTarget.name}");
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] Target forzado: {_forcedTarget.name}");
                     #endif
                 }
             }
@@ -202,7 +198,7 @@ namespace Game.NPC.States
             // PRIORIDAD 1: Si tenemos un target forzado que aún existe y está VIVO, mantenerlo
             if (_forcedTarget != null && _forcedTarget.gameObject != null && _forcedTarget.gameObject.activeInHierarchy)
             {
-                // ✅ FIX #9 (auditoría combate, 15 ago 2026): reutiliza el cache de Damageable en vez
+                // FIX #9: reutiliza el cache de Damageable en vez
                 // de GetComponent<Damageable>() cada frame (IsTargetAlive() lo hacía sin cachear, y
                 // este chequeo se ejecuta todos los frames mientras hay target forzado).
                 if (_damageableCachedFor != _forcedTarget)
@@ -235,7 +231,7 @@ namespace Game.NPC.States
             // PRIORIDAD 1.5: Si perdimos el target forzado pero tenemos su nombre, re-buscarlo en registry
             else if (_forcedTarget == null && !string.IsNullOrEmpty(_forcedTargetName))
             {
-                // ✅ FIX #8 (auditoría combate, 15 ago 2026): TryFindTargetByName cae a
+                // FIX #8: TryFindTargetByName cae a
                 // GameObject.Find(...) (recorre toda la escena) cuando no está en el registry. Sin
                 // cooldown esto se ejecutaba cada frame mientras el target forzado no reaparecía.
                 // Reutiliza _searchCooldown (se decrementa en la Prioridad 3 de más abajo, que se
@@ -302,7 +298,7 @@ namespace Game.NPC.States
                             if (context.DebugMode)
                             {
                                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                                Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target encontrado en Registry: {npc.name}");
+                                Debug.Log($"[AllyCombatState:{context.Transform.name}] Target encontrado en Registry: {npc.name}");
                                 #endif
                             }
                             break;
@@ -324,7 +320,7 @@ namespace Game.NPC.States
                     if (context.DebugMode && (int)_noEnemyTimer != (int)(_noEnemyTimer - Time.deltaTime) && _noEnemyTimer > 1f)
                         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏳ Sin enemigos por {_noEnemyTimer:F1}s (timeout: {NO_ENEMY_TIMEOUT}s)");
+                        Debug.Log($"[AllyCombatState:{context.Transform.name}] Sin enemigos por {_noEnemyTimer:F1}s (timeout: {NO_ENEMY_TIMEOUT}s)");
 #endif
                         }
                     
@@ -366,7 +362,7 @@ namespace Game.NPC.States
             
             // Calcular distancias
             float distanceToEnemy = Vector3.Distance(context.Transform.position, _currentTarget.position);
-            float distanceToPlayer = _player != null ? Vector3.Distance(context.Transform.position, _player.position) : 0f;
+            float distanceToPlayer = Jugador != null ? Vector3.Distance(context.Transform.position, Jugador.position) : 0f;
             
             // ===== MOVIMIENTO TÁCTICO MEJORADO =====
             _repositionTimer += Time.deltaTime;
@@ -425,7 +421,7 @@ namespace Game.NPC.States
         private void UpdateCombatBehavior(NPCStateContext context, float distanceToEnemy, float distanceToPlayer)
         {
             // PRIORIDAD 1: Si el player está muy lejos, seguirlo
-            if (_player != null && distanceToPlayer > MAX_PLAYER_DISTANCE)
+            if (Jugador != null && distanceToPlayer > MAX_PLAYER_DISTANCE)
             {
                 if (_currentBehavior != CombatBehavior.FollowingPlayer)
                 {
@@ -497,12 +493,12 @@ namespace Game.NPC.States
         /// </summary>
         private void MoveTowardsPlayer(NPCStateContext context)
         {
-            if (_player == null) return;
+            if (Jugador == null) return;
             if (context.Agent == null || !context.Agent.isOnNavMesh) return;
             
             context.Agent.isStopped = false;
             context.Agent.speed = context.Config?.runSpeed ?? 6f;
-            context.Agent.SetDestination(_player.position);
+            context.Agent.SetDestination(Jugador.position);
         }
 
         public override void OnExit(NPCStateContext context)
@@ -529,7 +525,7 @@ namespace Game.NPC.States
             if (context.DebugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[AllyCombatState:{context.Transform.name}] 🏳️ Saliendo de combate");
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] Saliendo de combate");
                 #endif
             }
             base.OnExit(context);
@@ -599,7 +595,7 @@ namespace Game.NPC.States
                 if (context.DebugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Registry: {_currentTarget.name}");
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] Enemigo via Registry: {_currentTarget.name}");
                     #endif
                 }
                 return;
@@ -626,13 +622,13 @@ namespace Game.NPC.States
                 if (_currentTarget != null)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Layer: {_currentTarget.name}");
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] Enemigo via Layer: {_currentTarget.name}");
                     #endif
                 }
                 else
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ❌ Sin enemigos (Registry:{_combatNpcBuffer.Count}, Layers:{hitCount})");
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] Sin enemigos (Registry:{_combatNpcBuffer.Count}, Layers:{hitCount})");
                     #endif
                 }
             }
@@ -689,7 +685,7 @@ namespace Game.NPC.States
             // Verificar que siga vivo
             if (!IsTargetAlive(target)) return false;
             
-            // ✅ REMOVIDO: Ya no verificamos distancia al jugador porque en batallas de boss
+            // REMOVIDO: Ya no verificamos distancia al jugador porque en batallas de boss
             // el jugador puede estar lejos y queremos que los compañeros sigan atacando
             
             return true;
@@ -740,7 +736,7 @@ namespace Game.NPC.States
             if (_partyMember == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay NPCPartyMember!");
+                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] No hay NPCPartyMember!");
 #endif
                 return;
             }
@@ -759,13 +755,13 @@ namespace Game.NPC.States
             if (spell == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay ningún hechizo configurado en PartyConfig!");
+                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] No hay ningún hechizo configurado en PartyConfig!");
 #endif
                 return;
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[AllyCombatState:{context.Transform.name}] 📝 Hechizo seleccionado: [{selectedIndex}] {spell.name}");
+            Debug.Log($"[AllyCombatState:{context.Transform.name}] Hechizo seleccionado: [{selectedIndex}] {spell.name}");
 #endif
             
             // Rotar al siguiente hechizo para el próximo ataque
@@ -817,7 +813,7 @@ namespace Game.NPC.States
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[AllyCombatState:{context.Transform.name}] 🔮 Iniciando cast de {spell.name} " +
+            Debug.Log($"[AllyCombatState:{context.Transform.name}] Iniciando cast de {spell.name} " +
                       $"(delay:{_castTimer:F2}s, cd:{_attackCooldown:F1}s, speed:{spell.initialSpeed}, dmg:{spell.damage})");
 #endif
         }
@@ -830,7 +826,7 @@ namespace Game.NPC.States
             if (spell == null || spell.prefab == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Spell o prefab es null!");
+                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] Spell o prefab es null!");
 #endif
                 return;
             }
@@ -839,7 +835,7 @@ namespace Game.NPC.States
             if (_currentTarget == null || !_currentTarget.gameObject.activeInHierarchy)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[AllyCombatState:{context.Transform.name}] ⚠️ Target perdido durante casting, cancelando...");
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] Target perdido durante casting, cancelando...");
 #endif
                 return;
             }
@@ -910,7 +906,7 @@ namespace Game.NPC.States
                     initialSpeed = spell.initialSpeed,
                     useGravity = spell.useGravity,
                     element = spell.element,
-                    // ✅ IMPORTANTE: Pasar los VFX del spell!
+                    // IMPORTANTE: Pasar los VFX del spell!
                     impactVFX = spell.impactVFX,
                     despawnVFX = spell.despawnVFX,
                     vfxLifetime = spell.vfxLifetime,
@@ -921,14 +917,14 @@ namespace Game.NPC.States
                 magicProj.Launch(direction, spell.initialSpeed, spell.useGravity);
                 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[AllyCombatState:{context.Transform.name}] 🔥 Lanzando {spell.name} hacia {_currentTarget.name} " +
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] Lanzando {spell.name} hacia {_currentTarget.name} " +
                           $"(dmg:{spell.damage}, speed:{spell.initialSpeed}, lifeTime:{spell.lifeTime}, maxRange:{spell.maxRange})");
 #endif
             }
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Proyectil no tiene MagicProjectile component!");
+                Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] Proyectil no tiene MagicProjectile component!");
 #endif
             }
             

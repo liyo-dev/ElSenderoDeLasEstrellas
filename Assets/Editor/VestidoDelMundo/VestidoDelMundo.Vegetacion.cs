@@ -461,6 +461,7 @@ public static partial class VestidoDelMundo
             var p = new Plan { L = l, Libres = new List<Zona>(ZonasLibres), Arboledas = Arboledas(), Reino = Reino() };
             ZonasDeLaCapital(p.Libres);
             ZonasDelAgua(p.Libres);
+            ZonasDelValle(p.Libres);
             p.MurallaCerrada = PoligonoCerrado(MurallaDelReino.TrazaMedia());
             foreach (Paraje pj in Parajes())
             {

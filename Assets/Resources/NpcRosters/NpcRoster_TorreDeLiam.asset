@@ -16,7 +16,7 @@ MonoBehaviour:
   entries:
   - enabled: 1
     spawnId: SPAWN_LIAM_TORRE
-    prefab: {fileID: 3335879819108417999, guid: de7b566c44b3b6949964c333227535b2, type: 3}
+    prefab: {fileID: 6240641739715126112, guid: 2db79d01abddae142bf5e9e098e00d53, type: 3}
     gameObjectName: Liam_Torre
     persistenceId: LIAM_TORRE
     vozDeReacciones: Vecino

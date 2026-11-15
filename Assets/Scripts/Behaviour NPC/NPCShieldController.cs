@@ -75,7 +75,7 @@ public class NPCShieldController : MonoBehaviour
         if (_isDefending && Time.time >= _defendStartTime + _targetDefendDuration)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldController] 🛡️ Duración de defensa completada ({_targetDefendDuration:F1}s)");
+            Debug.Log($"[NPCShieldController] Duración de defensa completada ({_targetDefendDuration:F1}s)");
 #endif
             StopDefending();
         }
@@ -97,7 +97,7 @@ public class NPCShieldController : MonoBehaviour
         if (_isDefending)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldController] ⚠️ Ya está defendiendo");
+            Debug.Log($"[NPCShieldController] Ya está defendiendo");
 #endif
             return;
         }
@@ -111,7 +111,7 @@ public class NPCShieldController : MonoBehaviour
         PlayUpperBodyAnimation(defendAnimation);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NPCShieldController] 🛡️ DEFENSA ACTIVADA - Duración: {_targetDefendDuration:F1}s");
+        Debug.Log($"[NPCShieldController] DEFENSA ACTIVADA - Duración: {_targetDefendDuration:F1}s");
 #endif
     }
 
@@ -128,7 +128,7 @@ public class NPCShieldController : MonoBehaviour
         ResetUpperBodyWeight();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NPCShieldController] 🛡️ DEFENSA DESACTIVADA");
+        Debug.Log($"[NPCShieldController] DEFENSA DESACTIVADA");
 #endif
     }
 
@@ -140,7 +140,7 @@ public class NPCShieldController : MonoBehaviour
             if (resolvedShieldPrefab == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[NPCShieldController] ⚠️ shieldPrefab no asignado, no se puede instanciar el escudo.");
+                Debug.LogWarning("[NPCShieldController] shieldPrefab no asignado, no se puede instanciar el escudo.");
 #endif
                 return;
             }
@@ -153,7 +153,7 @@ public class NPCShieldController : MonoBehaviour
             ConfigureShieldDetector(_shieldInstance);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldController] ✅ Escudo instanciado: '{resolvedShieldPrefab.name}' en {_shieldInstance.transform.position}");
+            Debug.Log($"[NPCShieldController] Escudo instanciado: '{resolvedShieldPrefab.name}' en {_shieldInstance.transform.position}");
 #endif
         }
     }
@@ -165,7 +165,7 @@ public class NPCShieldController : MonoBehaviour
             Destroy(_shieldInstance);
             _shieldInstance = null;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldController] ✅ Escudo destruido");
+            Debug.Log($"[NPCShieldController] Escudo destruido");
 #endif
         }
     }
@@ -221,13 +221,13 @@ public class NPCShieldController : MonoBehaviour
             {
                 _blockedLayers.Add(layer);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCShieldController] ✅ Bloqueando capa: {name} (layer {layer})");
+                Debug.Log($"[NPCShieldController] Bloqueando capa: {name} (layer {layer})");
 #endif
             }
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCShieldController] ℹ️ Capa '{name}' no existe en este proyecto, se omite.");
+                Debug.Log($"[NPCShieldController] Capa '{name}' no existe en este proyecto, se omite.");
 #endif
             }
         }
@@ -284,7 +284,7 @@ public class NPCShieldController : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NPCShieldController] 💥 Escudo impactado!");
+        Debug.Log($"[NPCShieldController] Escudo impactado!");
 #endif
     }
 
@@ -309,7 +309,7 @@ public class NPCShieldController : MonoBehaviour
             _owner = owner;
             _blockedLayers = blockedLayers;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldHitDetector] ✅ Inicializado - Bloqueando {_blockedLayers.Count} capas");
+            Debug.Log($"[NPCShieldHitDetector] Inicializado - Bloqueando {_blockedLayers.Count} capas");
 #endif
         }
 
@@ -334,7 +334,7 @@ public class NPCShieldController : MonoBehaviour
             if (_blockedLayers.Contains(layer))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCShieldHitDetector] 🛡️ Bloqueado proyectil: {go.name} (layer {layer})");
+                Debug.Log($"[NPCShieldHitDetector] Bloqueado proyectil: {go.name} (layer {layer})");
 #endif
                 _owner.OnShieldHit();
                 SafeDestroy(go);
@@ -350,7 +350,7 @@ public class NPCShieldController : MonoBehaviour
         {
             if (!go) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCShieldHitDetector] 💥 Destruyendo proyectil: {go.name}");
+            Debug.Log($"[NPCShieldHitDetector] Destruyendo proyectil: {go.name}");
 #endif
             Object.Destroy(go);
         }

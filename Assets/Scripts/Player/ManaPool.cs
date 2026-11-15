@@ -64,7 +64,7 @@ public class ManaPool : MonoBehaviour
             float before = current;
             current = Mathf.Min(max, current + Mathf.Max(0f, manaRegenPerSecond) * Time.deltaTime);
 
-            // FIX: el frame en que se alcanza el máximo tiene que notificar SIEMPRE, aunque el
+            // el frame en que se alcanza el máximo tiene que notificar SIEMPRE, aunque el
             // incremento sea menor que manaRegenNotifyEpsilon. Si no, la última notificación que
             // llega a la UI se queda justo por debajo de 1.0 y nunca se avisa del "lleno real":
             // PlayerHUDV2 interpola con Lerp hacia ese fillAmount < 1 (que jamás llega a 1

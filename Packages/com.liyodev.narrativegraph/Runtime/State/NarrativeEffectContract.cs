@@ -13,11 +13,12 @@ public static class NarrativeEffectContract
                || Attribute.IsDefined(nodeType, typeof(NarrativeNoWorldEffectAttribute), false);
     }
 
-    /// Node types that must declare their effect: concrete, top-level and not obsolete.
+    /// Types that must declare their effect: concrete, top-level and not obsolete node types and
+    /// game requests (what «Pedir al juego» asks for).
     public static bool AppliesTo(Type nodeType)
     {
         return nodeType != null
-               && typeof(NarrativeNode).IsAssignableFrom(nodeType)
+               && (typeof(NarrativeNode).IsAssignableFrom(nodeType) || typeof(NarrativeRequest).IsAssignableFrom(nodeType))
                && !nodeType.IsAbstract
                && !nodeType.IsNested
                && !Attribute.IsDefined(nodeType, typeof(ObsoleteAttribute), false);

@@ -8,7 +8,7 @@ namespace Game.NPC.States
 {
     /// <summary>
     /// Estado FSM para NPCs que siguen al jugador como compañeros de equipo.
-    /// Replica las animaciones del jugador en modos vuelo, nado, escalada y plataformas sin NavMesh.
+    /// Replica las animaciones del jugador en modos vuelo, nado y plataformas sin NavMesh.
     /// </summary>
     public class FollowPlayerState : NPCStateBase
     {
@@ -28,7 +28,7 @@ namespace Game.NPC.States
         private bool _isWanderingNearPlayer;
         private Vector3 _wanderTarget;
 
-        // FIX (25 ago 2026) — "el party va a trompicones/tembloroso cuando el jugador va lento"
+        // FIX — "el party va a trompicones/tembloroso cuando el jugador va lento"
         // (nadando, o siguiendo a un guardia con la velocidad reducida por un lore pop-up).
         // _isFollowingSticky reemplaza la decisión "moverse si playerIsMoving || distance >
         // stopDist*1.2" por una histéresis persistente (igual que ya usa _isMovingSpecial más
@@ -42,7 +42,7 @@ namespace Game.NPC.States
         // parada de más abajo); una vez parado, no arranca hasta superar stopDist*1.2 de verdad.
         private bool _isFollowingSticky;
 
-        // FIX (25 ago 2026) — "el party se queda atrás al esprintar y se teletransporta cerca,
+        // FIX — "el party se queda atrás al esprintar y se teletransporta cerca,
         // viéndose feo" + el mismo trompiqueo de arriba pero visto desde el otro lado (el
         // compañero corriendo a una velocidad fija muy por encima del jugador cuando este va
         // despacio, así que adelanta y frena en seco una y otra vez). Causa raíz común: la
@@ -68,7 +68,7 @@ namespace Game.NPC.States
         // que 30 deja margen de sobra sin colar teletransportes.
         private const float PLAYER_SPEED_TELEPORT_CUTOFF = 30f;
 
-        // FIX (1 sep 2026) — continuación de INC-096: aunque Agent.speed sube dinámicamente hasta
+        // FIX — continuación de INC-096: aunque Agent.speed sube dinámicamente hasta
         // runSpeed*2.5 para alcanzar al jugador en sprint, Agent.acceleration se quedaba en el
         // valor de fábrica del prefab (8 en Estela/Liam) sin relación con esa velocidad objetivo.
         // Con el destino recalculándose cada PATH_UPDATE_INTERVAL mientras el jugador sigue en
@@ -90,22 +90,21 @@ namespace Game.NPC.States
         private const float INITIAL_DELAY = 0.3f;
         private const float ROTATION_ANGLE_DEADZONE = 2.5f;
 
-        // --- Seguimiento especial (vuelo, nado, escalada, plataformas sin NavMesh) ---
+        // --- Seguimiento especial (vuelo, nado, plataformas sin NavMesh) ---
+        private Transform _jugadorCacheado;
         private PlayerActionManager _playerActionManager;
         private PlayerSwimmingController _playerSwimming;
         private Animator _playerAnimator;
         private bool _inSpecialFollow;
 
         // _lastSpecialMode: modo actual (puede ser Default durante transiciones)
-        // _exitMode: último modo SIGNIFICATIVO (Flying/Swimming/Climbing), usado para cleanup al salir
-        // Esto evita que una transición transitoria por Default borre el contexto de vuelo/nado/escalada
+        // _exitMode: último modo SIGNIFICATIVO (Flying/Swimming), usado para cleanup al salir
+        // Esto evita que una transición transitoria por Default borre el contexto de vuelo/nado
         private ActionMode _lastSpecialMode = ActionMode.Default;
         private ActionMode _exitMode        = ActionMode.Default;
 
         private bool _storedGravity;
         private bool _gravityStored;
-        private float _storedAnimSpeed = 1f;
-        private bool _animSpeedStored;
         private int _npcFlightLayerIndex = 0;
         private GameObject _footVfxInstance;
         private ParticleSystem _footVfxPs;
@@ -191,8 +190,6 @@ namespace Game.NPC.States
         private static readonly int HashFlyLanding = Animator.StringToHash("Landing");
         private static readonly int HashLocomotion = Animator.StringToHash("Free Locomotion");
         private static readonly int HashSwimFloat  = Animator.StringToHash("Swimming_Floating_NoWeapon");
-        private static readonly int HashClimbUp    = Animator.StringToHash("ClimbUp_RM_NoWeapon");
-        private static readonly int HashClimbDown  = Animator.StringToHash("ClimbDown_RM_NoWeapon");
         private static readonly int HashIsFlying   = Animator.StringToHash("isFlying");
         private static readonly int HashIsGrounded = Animator.StringToHash("IsGrounded");
         private static readonly int HashGroundDist = Animator.StringToHash("GroundDistance");
@@ -205,6 +202,14 @@ namespace Game.NPC.States
             _partyMember = partyMember;
             _skipPartyCheck = skipPartyCheck;
             _config = partyMember?.PartyConfig;
+        }
+
+        private void CachearJugador(Transform jugador)
+        {
+            _jugadorCacheado = jugador;
+            _playerActionManager = jugador.GetComponent<PlayerActionManager>();
+            _playerSwimming = jugador.GetComponent<PlayerSwimmingController>();
+            _playerAnimator = jugador.GetComponent<Animator>();
         }
 
         public override void OnEnter(NPCStateContext context)
@@ -230,7 +235,6 @@ namespace Game.NPC.States
             _lastSpecialMode   = ActionMode.Default;
             _exitMode          = ActionMode.Default;
             _gravityStored       = false;
-            _animSpeedStored     = false;
             _npcFlightLayerIndex = DetectFlightLayer(context.UnityAnimator);
             _animatorParams      = BuildAnimatorParamSet(context.UnityAnimator);
             _bobPhase            = (_partyMember?.PartyIndex ?? 0) * 0.7f;
@@ -251,14 +255,12 @@ namespace Game.NPC.States
             if (context.Player != null)
             {
                 _lastPlayerPosition = context.Player.position;
-                _playerActionManager = context.Player.GetComponent<PlayerActionManager>();
-                _playerSwimming = context.Player.GetComponent<PlayerSwimmingController>();
-                _playerAnimator = context.Player.GetComponent<Animator>();
+                CachearJugador(context.Player);
             }
 
             if (context.Agent != null)
             {
-                // FIX (16 ago 2026): isStopped/ResetPath sólo son válidos con el agente sobre el
+                // isStopped/ResetPath sólo son válidos con el agente sobre el
                 // NavMesh. PlayerParty.TeleportMemberToPlayer() puede mover el transform "a mano"
                 // (member.transform.position = targetPos) cuando el agente no estaba sobre malla,
                 // y llama a OnTeleportedToPlayer() -> StartFollowing() en el mismo frame: este
@@ -283,20 +285,18 @@ namespace Game.NPC.States
             base.OnUpdate(context);
 
             if (context.Player == null) return;
+            // El jugador puede pasar a otro personaje mientras se le sigue: se sigue al nuevo cuerpo.
+            if (context.Player != _jugadorCacheado) CachearJugador(context.Player);
 
             UpdatePlayerSpeedEstimate(context);
 
             _stateTimer += Time.deltaTime;
 
-            // --- MODO ESPECIAL: vuelo, nado, escalada, o jugador fuera del NavMesh ---
+            // --- MODO ESPECIAL: vuelo, nado o jugador fuera del NavMesh ---
             ActionMode playerMode     = _playerActionManager?.Top ?? ActionMode.Default;
-            // Nota: NO incluir Climbing aquí — los companions no entrarán en special follow
-            // durante la escalada del jugador; permanecerán en su lugar y serán teletransportados
-            // al terminar la escalada. Además, si el jugador está fuera del NavMesh pero está en
-            // modo Climbing, NO debemos entrar en special follow: el caso Climbing lo ignoramos.
             bool needsSpecialFollow = playerMode == ActionMode.Flying
                                    || playerMode == ActionMode.Swimming
-                                   || (IsPlayerOffNavMesh(context) && playerMode != ActionMode.Climbing);
+                                   || IsPlayerOffNavMesh(context);
 
             if (needsSpecialFollow)
             {
@@ -402,7 +402,7 @@ namespace Game.NPC.States
                 return;
             }
 
-            // FIX (25 ago 2026): decisión de moverse con histéresis persistente en vez de
+            // decisión de moverse con histéresis persistente en vez de
             // "playerIsMoving || distance > stopDist*1.2" evaluado fresco cada frame — ver
             // comentario de _isFollowingSticky en la cabecera de la clase.
             _isFollowingSticky = _isFollowingSticky
@@ -483,7 +483,7 @@ namespace Game.NPC.States
         /// <summary>
         /// Animación del seguimiento normal por NavMesh, con el criterio común de
         /// NavMeshAgentUtility.FactorDeLocomocion (INC-466). El seguimiento especial
-        /// (vuelo/nado/escalada/plataformas) tiene su propio cálculo en UpdateSpecialModeAnimation().
+        /// (vuelo/nado/plataformas) tiene su propio cálculo en UpdateSpecialModeAnimation().
         /// </summary>
         private void UpdateFollowGaitAnimation(NPCStateContext context)
         {
@@ -597,36 +597,11 @@ namespace Game.NPC.States
             }
 
             // Calcular posición objetivo y mover
-            // Si el party member está en preparación para trepar, usamos la Y de la base
-            // de escalada y fijamos la posición objetivo en la base hasta que esté listo.
             _formationYaw = Mathf.SmoothDampAngle(_formationYaw,
                 YawDe(context.Player.forward, _formationYaw), ref _formationYawVel,
                 FORMATION_YAW_SMOOTH_TIME, Mathf.Infinity, Mathf.Max(Time.deltaTime, 0.0001f));
 
-            Vector3 targetPos;
-            if (_partyMember != null && _partyMember.IsWaitingForClimb)
-            {
-                // Recalcular la posición de formación pero manteniendo la Y de la base
-                Vector3 formation = GetFormationTarget3D(context);
-                var baseY = _partyMember.ClimbBasePosition.y;
-                targetPos = new Vector3(formation.x, baseY, formation.z);
-
-                // Si estamos lo bastante cerca del slot horizontalmente, confirmar inicio de trepa
-                float horizDist = Vector3.Distance(new Vector3(context.Transform.position.x, 0f, context.Transform.position.z),
-                                                   new Vector3(targetPos.x, 0f, targetPos.z));
-                const float READY_TO_CLIMB_DISTANCE = 0.8f;
-                if (horizDist <= READY_TO_CLIMB_DISTANCE)
-                {
-                    // Liberar la preparación para que el NPC comience a seguir la Y del player
-                    try { _partyMember.CancelClimbPreparation(); } catch { }
-                    // Re-evaluar targetPos: ahora usar la posición normal (incluyendo Y del jugador)
-                    targetPos = GetFormationTarget3D(context);
-                }
-            }
-            else
-            {
-                targetPos  = GetFormationTarget3D(context);
-            }
+            Vector3 targetPos = GetFormationTarget3D(context);
             // _specialFollowPosition es la posición "lógica" (sin bobbing) usada para toda la
             // navegación/formación. El offset visual de vuelo se aplica solo al final, sobre
             // el Transform real, para no contaminar los cálculos de distancia/destino.
@@ -642,8 +617,7 @@ namespace Game.NPC.States
             // Sin volar ni nadar, la altura no va con Will (que puede estar saltando o en otro
             // peldaño): sale del suelo bajo el puesto, en mundo, para no subir y bajar con su salto.
             _pisandoSuelo = false;
-            bool vaPorElSuelo = playerMode != ActionMode.Flying && playerMode != ActionMode.Swimming
-                             && (_partyMember == null || !_partyMember.IsWaitingForClimb);
+            bool vaPorElSuelo = playerMode != ActionMode.Flying && playerMode != ActionMode.Swimming;
             if (vaPorElSuelo && BuscarSuelo(_specialFollowPosition, Mathf.Max(playerPos.y, prevPos.y), playerPos.y, out float ySuelo))
             {
                 float y = Mathf.SmoothDamp(prevPos.y, ySuelo, ref _velYSuelo, SUELO_SMOOTH_TIME, Mathf.Infinity, dt);
@@ -704,18 +678,13 @@ namespace Game.NPC.States
 
         /// <summary>
         /// Animación de entrada al activar un modo especial.
-        /// Solo Flying/Swimming/Climbing actualizan _exitMode (modo "significativo").
+        /// Solo Flying/Swimming actualizan _exitMode (modo "significativo").
         /// Las transiciones transitorias por Default no sobreescriben _exitMode,
         /// así ExitSpecialFollow sabe siempre de qué modo real salimos.
         /// </summary>
         private void OnSpecialModeEnter(NPCStateContext context, ActionMode mode)
         {
             Animator anim = context.UnityAnimator;
-
-            // Seguridad adicional: ignorar explícitamente Climbing para evitar que
-            // NPCs repliquen la animación de trepa aunque llegue aquí por algún camino raro.
-            if (mode == ActionMode.Climbing)
-                return;
 
             // Si salimos del modo vuelo hacia cualquier otro, limpiar isFlying inmediatamente
             // para que no quede el personaje en fly_idle durante la transición transitoria
@@ -742,24 +711,6 @@ namespace Game.NPC.States
                     TrySetFloat(anim, HashGroundDist, 0f);
                     break;
 
-                case ActionMode.Climbing:
-                    _exitMode = mode;
-                    if (!_animSpeedStored && anim != null)
-                    {
-                        _storedAnimSpeed = anim.speed;
-                        _animSpeedStored = true;
-                    }
-                    // Antes esto reproducía `ClimbIdle_RM_NoWeapon`, que NO EXISTE: ni en el
-                    // controller de los NPCs, ni en el del jugador, ni hay clip suyo en el
-                    // proyecto (20 sep 2026, comparando los dos controllers estado por estado).
-                    // O sea que este Play no ha hecho nada nunca y el NPC se congelaba en la pose
-                    // que llevara puesta, normalmente la de andar. Se usa `ClimbUp` congelado, que
-                    // es la misma idea y el mismo resultado que se buscaba: la línea de abajo lo
-                    // deja a velocidad 0, y el bucle de seguimiento ya alterna entre ClimbUp y
-                    // ClimbDown en cuanto hay movimiento vertical.
-                    TryPlay(anim, HashClimbUp, 0);
-                    if (anim != null) anim.speed = 0f;
-                    break;
 
                 // Default (plataforma sin NavMesh / salto): espejamos el estado aéreo inmediatamente
                 default:
@@ -779,9 +730,6 @@ namespace Game.NPC.States
             Animator anim = context.UnityAnimator;
             if (anim == null) return;
 
-            // Seguridad adicional: no ejecutar la rama de Climbing — el party no debe trepar.
-            if (mode == ActionMode.Climbing) return;
-
             switch (mode)
             {
                 case ActionMode.Flying:
@@ -798,19 +746,6 @@ namespace Game.NPC.States
                     float targetInputMag = isMoving ? 0.5f : 0f;
                     _swimInputMag = Mathf.MoveTowards(_swimInputMag, targetInputMag, SWIM_INPUT_MAG_LERP_SPEED * Time.deltaTime);
                     TrySetFloat(anim, HashInputMag, _swimInputMag);
-                    break;
-
-                case ActionMode.Climbing:
-                    if (Mathf.Abs(velocity.y) > 0.05f)
-                    {
-                        anim.speed = 1f;
-                        TryCrossFade(anim, velocity.y > 0f ? HashClimbUp : HashClimbDown, 0.05f, 0);
-                    }
-                    else
-                    {
-                        anim.speed = 0f;
-                    }
-                    TrySetBool(anim, HashIsGrounded, true);
                     break;
 
                 default:
@@ -841,7 +776,7 @@ namespace Game.NPC.States
         private void ExitSpecialFollow(NPCStateContext context)
         {
             Animator anim         = context.UnityAnimator;
-            ActionMode exitingMode = _exitMode;   // último modo significativo (Flying/Swimming/Climbing/Default)
+            ActionMode exitingMode = _exitMode;   // último modo significativo (Flying/Swimming/Default)
 
             // Quitar cualquier offset visual de bobbing residual antes de restaurar física/navmesh
             context.Transform.position = _specialFollowPosition;
@@ -850,13 +785,6 @@ namespace Game.NPC.States
             _lastSpecialMode = ActionMode.Default;
             _exitMode        = ActionMode.Default;
             _flightStateRequested = 0;
-
-            // Restaurar velocidad del animator (escalada la pausa)
-            if (_animSpeedStored && anim != null)
-            {
-                anim.speed = _storedAnimSpeed;
-                _animSpeedStored = false;
-            }
 
             // Siempre limpiar isFlying al salir para que no quede el personaje en fly_idle
             TrySetBool(anim, HashIsFlying, false);
@@ -875,7 +803,6 @@ namespace Game.NPC.States
                         break;
 
                     case ActionMode.Swimming:
-                    case ActionMode.Climbing:
                         TryCrossFade(anim, HashLocomotion, 0.1f, 0);
                         break;
 
@@ -1248,12 +1175,6 @@ namespace Game.NPC.States
 
                 // Quitar cualquier offset visual de bobbing residual
                 context.Transform.position = _specialFollowPosition;
-
-                if (_animSpeedStored && context.UnityAnimator != null)
-                {
-                    context.UnityAnimator.speed = _storedAnimSpeed;
-                    _animSpeedStored = false;
-                }
 
                 // Siempre limpiar isFlying al salir del estado
                 TrySetBool(context.UnityAnimator, HashIsFlying, false);

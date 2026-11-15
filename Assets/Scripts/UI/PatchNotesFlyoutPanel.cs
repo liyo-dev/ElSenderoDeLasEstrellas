@@ -43,7 +43,7 @@ using DG.Tweening;
 /// vuelva a salir una build con notas de parche en blanco o con texto de marcador de posición
 /// visible para los jugadores.
 ///
-/// Localización (24 ago 2026): el título ("NOTAS DEL PARCHE") sí usa <see cref="LocalizedText"/>
+/// Localización: el título ("NOTAS DEL PARCHE") sí usa <see cref="LocalizedText"/>
 /// (clave PatchNotes_Title, ui_es.json/ui_en.json) y se traduce solo. El CONTENIDO (los archivos de
 /// Resources/PatchNotes/) NO — sigue en un solo idioma, igual que antes.
 /// </summary>

@@ -58,10 +58,10 @@ FBX: los de los protagonistas en `Assets/Art/Characters/Protagonistas/Caras/`; l
 
 ## En Unity
 - *El Sendero ▸ Personajes ▸ Caras de los protagonistas* (`CarasDeLosProtagonistas`).
-- *El Sendero ▸ Personajes ▸ Caras de los NPCs* (`CarasDeLosNPCs`): la tabla de qué juego lleva cada NPC; quita las cejas que traen los pelos y
+- *El Sendero ▸ Personajes ▸ NPCs ▸ Caras de los NPCs* (`CarasDeLosNPCs`): la tabla de qué juego lleva cada NPC; quita las cejas que traen los pelos y
   sombreros del pack (mallas sin cejas en `Assets/Art/Characters/NPCs/SinCejas/`) y pinta las cejas nuevas de su color. Pasar después del de los protagonistas.
-- *El Sendero ▸ Personajes ▸ Hoja de caras de los NPCs y los niños (prueba)*: la cara neutra de cerca de unos 20 NPCs, Tobías y Nina, en `Guiones/_fotos_caras/NPCs/`.
-- *El Sendero ▸ Personajes ▸ Fotos de caras de Will (prueba)* (`FotosDeCaras`): Will sin scripts en la plaza de MainWorld (si está cargada), cada emoción de su perfil, fotos de URP (cerca, medio y distancia de juego) en `Guiones/_fotos_caras/Will/`. Funciona desde el buzón. Busca un sitio al sol (o el de `Guiones/_fotos_caras/sitio.txt`, «x z»). *… de Will con Liam y Estela*, *… de Estela con Will y Liam* y *… de Liam con Will y Estela (prueba)*: el personaje con los otros dos a los lados; salen todas las emociones de su perfil y los ojos del juego que no usa ninguna (p. ej. conjuro y vergüenza de Estela), en `Guiones/_fotos_caras/<personaje>/`.
+- *El Sendero ▸ Personajes ▸ Fotos de prueba ▸ Hoja de caras de los NPCs y los niños*: la cara neutra de cerca de unos 20 NPCs, Tobías y Nina, en `Guiones/_fotos_caras/NPCs/`.
+- *El Sendero ▸ Personajes ▸ Fotos de prueba ▸ Caras de Will* (`FotosDeCaras`): Will sin scripts en la plaza de MainWorld (si está cargada), cada emoción de su perfil, fotos de URP (cerca, medio y distancia de juego) en `Guiones/_fotos_caras/Will/`. Funciona desde el buzón. Busca un sitio al sol (o el de `Guiones/_fotos_caras/sitio.txt`, «x z»). *… de Will con Liam y Estela*, *… de Estela con Will y Liam* y *… de Liam con Will y Estela (prueba)*: el personaje con los otros dos a los lados; salen todas las emociones de su perfil y los ojos del juego que no usa ninguna (p. ej. conjuro y vergüenza de Estela), en `Guiones/_fotos_caras/<personaje>/`.
 - Otro juego: una fila en `kit_npcs.py` y otra en el `Kit` de `CarasDeLosNPCs.cs` con la misma clave, en una numeración libre.
 
 ## Pelos hechos con las caras de la cabeza (13 nov 2026)

@@ -219,17 +219,18 @@ namespace NarrativeGraphEditor
         static void BuildGeneric(VisualElement root, NarrativeNode node)
         {
             int shown = 0;
-            foreach (var f in node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (f.DeclaringType == typeof(NarrativeNode)) continue;
-                if (f.GetCustomAttribute<HideInInspector>() != null) continue;
-                object v;
-                try { v = f.GetValue(node); } catch { continue; }
-                string text = DescribeValue(v);
-                if (string.IsNullOrEmpty(text)) continue;
-                KeyValue(root, ObjectNames.NicifyVariableName(f.Name), text);
-                if (++shown >= 5) break;
-            }
+            foreach (var owner in node.FieldOwners())
+                foreach (var f in owner.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (f.DeclaringType == typeof(NarrativeNode) || typeof(NarrativeRequest).IsAssignableFrom(f.FieldType)) continue;
+                    if (f.GetCustomAttribute<HideInInspector>() != null) continue;
+                    object v;
+                    try { v = f.GetValue(owner); } catch { continue; }
+                    string text = DescribeValue(v);
+                    if (string.IsNullOrEmpty(text)) continue;
+                    KeyValue(root, ObjectNames.NicifyVariableName(f.Name), text);
+                    if (++shown >= 5) return;
+                }
         }
 
         static string DescribeValue(object v)
@@ -297,15 +298,16 @@ namespace NarrativeGraphEditor
             var issues = new List<string>();
             if (node == null) return issues;
 
-            foreach (var f in node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var owner in node.FieldOwners())
+            foreach (var f in owner.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 var key = f.GetCustomAttribute<NarrativeKeyAttribute>();
                 if (key == null) continue;
                 string questId = null;
                 if (key.Kind == NarrativeKeyKind.QuestStep && !string.IsNullOrEmpty(key.QuestIdField))
-                    questId = node.GetType().GetField(key.QuestIdField)?.GetValue(node) as string;
+                    questId = owner.GetType().GetField(key.QuestIdField)?.GetValue(owner) as string;
 
-                object val = f.GetValue(node);
+                object val = f.GetValue(owner);
                 if (val is string s)
                 {
                     if (!string.IsNullOrEmpty(s) && !NarrativeProjectIndex.Resolves(key.Kind, s, questId))
@@ -350,6 +352,7 @@ namespace NarrativeGraphEditor
             NarrativeKeyKind.Actor => "NPC",
             NarrativeKeyKind.LocKey => "clave de texto",
             NarrativeKeyKind.Anchor => "anchor",
+            NarrativeKeyKind.GameStep => "petición al juego: nadie la atiende en escenas ni en código",
             _ => k.ToString()
         };
     }

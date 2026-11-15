@@ -30,3 +30,4 @@ MonoBehaviour:
   - appearance
   - unlockedWardrobeIds
   positionField: spawnAnchorId
+  isExample: 0

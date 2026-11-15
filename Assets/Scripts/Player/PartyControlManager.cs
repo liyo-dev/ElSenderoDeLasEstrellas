@@ -14,8 +14,14 @@ using Game.NPC;
 /// DPad Left  → cambia al personaje disponible a la izquierda
 /// DPad Right → cambia al personaje disponible a la derecha
 ///
-/// El cambio de personaje se delega a ActiveCharacterSwapper, que gestiona
-/// el teleport del controller, el swap de apariencia y los hechizos.
+/// En Libre, el que va al mando puede pedir «Sígueme» a un compañero anclado y forman una pareja
+/// (líder y seguidor; una sola a la vez). Con pareja, el cambio de personaje va por grupos: del
+/// líder al que está solo, y del que está solo otra vez al líder; el seguidor no se elige con la
+/// cruceta y se queda quieto junto al líder mientras el jugador lleva a otro. «Deja de seguir»
+/// (al seguidor, de frente) o volver a Siguiendo deshacen la pareja. Ver INC-1200.
+///
+/// Cada personaje tiene su cuerpo: cambiar de personaje es pasar el mando de un cuerpo a otro
+/// (<see cref="ControlDelJugador.CambiarElMando"/>).
 /// </summary>
 [DefaultExecutionOrder(-200)]
 public class PartyControlManager : MonoBehaviour
@@ -30,6 +36,7 @@ public class PartyControlManager : MonoBehaviour
         Instance = null;
         OnActiveCharacterChanged = null;
         OnFollowModeChanged = null;
+        OnParejaChanged = null;
     }
 #endif
     #endregion
@@ -48,10 +55,11 @@ public class PartyControlManager : MonoBehaviour
     private int _activeIndex = (int)CharacterSlot.Will;
     private bool _isPartyFollowing = true;
     private bool _switchingLocked;
-    // Se resuelve perezosamente por ServiceLocator para decidir por ActionMode si se puede cambiar
-    // el grupo (ver IsPartyChangeAllowedByCurrentMode).
-    private PlayerActionManager _actionManager;
+
     private readonly List<NPCPartyMember> _companeros = new List<NPCPartyMember>(4);
+    // Pareja del modo Libre: el personaje que pidió «Sígueme» y el que le sigue (-1 si no hay).
+    private int _lider = -1;
+    private int _seguidor = -1;
     #endregion
 
     #region Anclas
@@ -69,6 +77,9 @@ public class PartyControlManager : MonoBehaviour
 
     /// <summary>Se dispara cuando cambia el modo del equipo (true=Siguiendo, false=Libre)</summary>
     public static event Action<bool> OnFollowModeChanged;
+
+    /// <summary>Se dispara al formarse o deshacerse la pareja del modo Libre («Sígueme»).</summary>
+    public static event Action OnParejaChanged;
     #endregion
 
     #region Properties
@@ -86,7 +97,7 @@ public class PartyControlManager : MonoBehaviour
             int i = desde + direccion * paso;
             if (cambioCircular) i = (i % 3 + 3) % 3;
             else if (i < 0 || i > 2) return -1;
-            if (i != desde && IsSlotAvailable(i)) return i;
+            if (i != desde && IsSlotAvailable(i) && !EsSeguidorDeLaPareja(i)) return i;
         }
         return -1;
     }
@@ -108,6 +119,7 @@ public class PartyControlManager : MonoBehaviour
     {
         GamepadInputReader.OnInput += HandleInput;
         GameBootService.OnProfileReady += HandleProfileReady;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += AlCargarEscena;
         WillOnlyMomentManager.OnSwitchLockChanged += SetSwitchingLocked;
         // Sincronizar estado inicial por si EnterMoment fue llamado antes de Start
         if (WillOnlyMomentManager.Instance != null)
@@ -118,6 +130,7 @@ public class PartyControlManager : MonoBehaviour
     {
         GamepadInputReader.OnInput -= HandleInput;
         GameBootService.OnProfileReady -= HandleProfileReady;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= AlCargarEscena;
         WillOnlyMomentManager.OnSwitchLockChanged -= SetSwitchingLocked;
         if (Instance == this) Instance = null;
     }
@@ -157,11 +170,11 @@ public class PartyControlManager : MonoBehaviour
     /// </summary>
     private bool IsPartyChangeAllowedByCurrentMode()
     {
-        if (_actionManager == null)
-            _actionManager = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
-        if (_actionManager == null) return true; // sin manager resuelto, no bloquear por esto
+        // El del cuerpo que lleva el jugador ahora.
+        if (!PlayerService.TryGetComponent(out PlayerActionManager acciones, allowSceneLookup: false) || acciones == null)
+            return true; // sin manager resuelto, no bloquear por esto
 
-        var top = _actionManager.Top;
+        var top = acciones.Top;
         return top == ActionMode.Default || top == ActionMode.Combat;
     }
 
@@ -177,7 +190,7 @@ public class PartyControlManager : MonoBehaviour
         if (!IsPartyChangeAllowedByCurrentMode())
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite cambiar de personaje ({_actionManager?.Top}).");
+            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite cambiar de personaje.");
             #endif
             return;
         }
@@ -208,7 +221,7 @@ public class PartyControlManager : MonoBehaviour
         if (!IsPartyChangeAllowedByCurrentMode())
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite cambiar de personaje ({_actionManager?.Top}).");
+            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite cambiar de personaje.");
             #endif
             return;
         }
@@ -246,24 +259,28 @@ public class PartyControlManager : MonoBehaviour
         var from = (CharacterSlot)_activeIndex;
         var to   = (CharacterSlot)newIndex;
 
-        var swapper = ActiveCharacterSwapper.Instance;
-        if (swapper == null)
+        if (!ControlDelJugador.TieneCuerpo(to))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.Instance es null. _activeIndex NO modificado.");
-#endif
-            return;
-        }
-        if (!swapper.IsReady)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.IsReady=false. _activeIndex NO modificado.");
+            Debug.LogWarning($"[PartyControlManager] SwitchToCharacter({from}→{to}): {to} no tiene cuerpo en escena.");
 #endif
             return;
         }
 
+        // Con pareja, el seguidor va con su líder: se queda quieto junto a él mientras el jugador
+        // lleva a otro y vuelve a seguirle al regresar. Si el mando pasa al propio seguidor (relevo
+        // al caer, momento «solo Will»), la pareja se deshace.
+        bool volverAlLider = false;
+        if (HayParejaValida())
+        {
+            if (newIndex == _seguidor) DeshacerPareja(anclarAlSeguidor: false);
+            else if (_activeIndex == _lider) AnclarAlSeguidor();
+            else if (newIndex == _lider) volverAlLider = true;
+        }
+
         _activeIndex = newIndex;
-        swapper.SwitchCharacter(from, to);
+        ControlDelJugador.CambiarElMando(from, to);
+        if (volverAlLider) SoltarAlSeguidor();
         OnActiveCharacterChanged?.Invoke(_activeIndex);
     }
     #endregion
@@ -276,6 +293,8 @@ public class PartyControlManager : MonoBehaviour
         if (!IsPartyChangeAllowedByCurrentMode()) return;
 
         _isPartyFollowing = !_isPartyFollowing;
+        // Al cambiar de modo no queda pareja: reagrupados todos siguen, y en Libre todos se anclan.
+        if (_seguidor >= 0) DeshacerPareja(anclarAlSeguidor: false);
         ApplyFollowModeToParty();
         OnFollowModeChanged?.Invoke(_isPartyFollowing);
     }
@@ -295,7 +314,6 @@ public class PartyControlManager : MonoBehaviour
                 companeros[i].NPCManager?.Context?.Soltar(AnclaDelModoLibre);
 
             if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(avisar: true);
-            ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer(avisar: true);
 
             for (int i = 0; i < companeros.Count; i++)
                 if (!companeros[i].EstaSiguiendo) Seguir(companeros[i]);
@@ -318,7 +336,7 @@ public class PartyControlManager : MonoBehaviour
     {
         if (npc == null) return;
         var contexto = npc.NPCManager != null ? npc.NPCManager.Context : null;
-        if (Instance == null || Instance._isPartyFollowing)
+        if (DebeSeguirAlJugador(npc))
         {
             contexto?.Soltar(AnclaDelModoLibre);
             Seguir(npc);
@@ -330,7 +348,7 @@ public class PartyControlManager : MonoBehaviour
         }
     }
 
-    // Un miembro del grupo sigue como tal; el NPC de Will no es miembro y sigue sin esa comprobación.
+    // Un miembro del grupo sigue como tal; Will no es miembro de PlayerParty y sigue sin esa comprobación.
     private static void Seguir(NPCPartyMember npc)
     {
         if (npc.IsInParty) npc.StartFollowing();
@@ -362,6 +380,96 @@ public class PartyControlManager : MonoBehaviour
     }
     #endregion
 
+    #region Pareja del modo Libre («Sígueme»)
+    /// Hay pareja: en Libre, un compañero sigue al personaje que se lo pidió.
+    public bool HayPareja => HayParejaValida();
+
+    /// Se le puede pedir «Sígueme» a ese personaje: grupo en Libre, sin otra pareja, lo lleva la IA,
+    /// no está caído y el modo de acción permite cambios en el grupo.
+    public bool PuedePedirQueSiga(CharacterSlot quien)
+    {
+        if (_isPartyFollowing || HayParejaValida()) return false;
+        if ((int)quien == _activeIndex || !IsSlotAvailable((int)quien)) return false;
+        if (ControlDelJugador.NpcDe(quien) == null) return false;
+        return IsPartyChangeAllowedByCurrentMode();
+    }
+
+    /// Se le puede decir «Deja de seguir» a ese personaje: es el seguidor y va al mando su líder.
+    public bool PuedeDejarDeSeguir(CharacterSlot quien) =>
+        HayParejaValida() && (int)quien == _seguidor && _activeIndex == _lider;
+
+    /// El personaje al mando pide a otro que le siga. Devuelve false si no se puede.
+    public bool PedirQueSiga(CharacterSlot quien)
+    {
+        if (!PuedePedirQueSiga(quien)) return false;
+        var npc = ControlDelJugador.NpcDe(quien);
+        _lider = _activeIndex;
+        _seguidor = (int)quien;
+        npc.NPCManager?.Context?.Soltar(AnclaDelModoLibre);
+        Seguir(npc);
+        OnParejaChanged?.Invoke();
+        return true;
+    }
+
+    /// El seguidor se queda donde está y la pareja se deshace.
+    public void DejarDeSeguir()
+    {
+        if (HayParejaValida()) DeshacerPareja(anclarAlSeguidor: true);
+    }
+
+    /// Ese compañero tiene que ir detrás del jugador: con el grupo reagrupado, todos; en Libre,
+    /// solo el seguidor de la pareja y solo mientras va al mando su líder. Es la pregunta única
+    /// para cualquier sistema que vaya a poner a seguir a un compañero.
+    public static bool DebeSeguirAlJugador(NPCPartyMember npc)
+    {
+        var pcm = Instance;
+        if (pcm == null || pcm._isPartyFollowing) return true;
+        if (!pcm.HayParejaValida() || pcm._activeIndex != pcm._lider) return false;
+        return ControlDelJugador.PersonajeDelNpc(npc, out var slot) && (int)slot == pcm._seguidor;
+    }
+
+    private bool EsSeguidorDeLaPareja(int slot) => slot == _seguidor && HayParejaValida();
+
+    // La pareja deja de valer si el grupo se reagrupa, si uno de los dos sale del grupo o si el
+    // seguidor pasa a ir al mando; entonces se deshace aquí, la pregunte quien la pregunte.
+    private bool HayParejaValida()
+    {
+        if (_seguidor < 0) return false;
+        bool valida = !_isPartyFollowing
+                      && _seguidor != _activeIndex
+                      && ControlDelJugador.EnElGrupo((CharacterSlot)_lider)
+                      && ControlDelJugador.EnElGrupo((CharacterSlot)_seguidor);
+        if (!valida) DeshacerPareja(anclarAlSeguidor: !_isPartyFollowing);
+        return valida;
+    }
+
+    private void DeshacerPareja(bool anclarAlSeguidor)
+    {
+        int seguidor = _seguidor;
+        _lider = -1;
+        _seguidor = -1;
+        if (anclarAlSeguidor && seguidor >= 0) AnclarDondeEsta(ControlDelJugador.NpcDe((CharacterSlot)seguidor));
+        OnParejaChanged?.Invoke();
+    }
+
+    private void AnclarAlSeguidor() => AnclarDondeEsta(ControlDelJugador.NpcDe((CharacterSlot)_seguidor));
+
+    private void SoltarAlSeguidor()
+    {
+        var npc = ControlDelJugador.NpcDe((CharacterSlot)_seguidor);
+        if (npc == null) return;
+        npc.NPCManager?.Context?.Soltar(AnclaDelModoLibre);
+        Seguir(npc);
+    }
+
+    private static void AnclarDondeEsta(NPCPartyMember npc)
+    {
+        if (npc == null) return;
+        npc.StopFollowing();
+        npc.NPCManager?.Context?.Anclar(AnclaDelModoLibre);
+    }
+    #endregion
+
     #region Public API
     /// <summary>Fuerza el refresco de eventos al cargar una escena o inicializar la UI.</summary>
     public void ForceRefreshFollowMode()
@@ -387,10 +495,15 @@ public class PartyControlManager : MonoBehaviour
     }
     #endregion
 
+    // Los cuerpos de una escena nueva aparecen con el piloto de su prefab: el del personaje que va
+    // al mando lo toma el jugador y los demás pasan a la IA.
+    private void AlCargarEscena(UnityEngine.SceneManagement.Scene _, UnityEngine.SceneManagement.LoadSceneMode __)
+        => ControlDelJugador.RepartirPilotos();
+
     private void HandleProfileReady()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PartyControlManager] 🔄 GameBootService.OnProfileReady recibido. _activeIndex={_activeIndex} ({(CharacterSlot)_activeIndex}). Reinicializando estado del party.");
+        Debug.Log($"[PartyControlManager] GameBootService.OnProfileReady recibido. _activeIndex={_activeIndex} ({(CharacterSlot)_activeIndex}). Reinicializando estado del party.");
 #endif
 
         // WillOnlyMomentManager es DontDestroyOnLoad: un momento «solo Will» interrumpido sin
@@ -400,9 +513,12 @@ public class PartyControlManager : MonoBehaviour
 
         // Al cargar partida siempre se arranca como Will
         _activeIndex = (int)CharacterSlot.Will;
-        ActiveCharacterSwapper.Instance?.ResetState();
+        ControlDelJugador.RepartirPilotos();
 
         _isPartyFollowing = true;
+        _lider = -1;
+        _seguidor = -1;
+        OnParejaChanged?.Invoke();
         ForceRefreshFollowMode();
     }
 }

@@ -2134,7 +2134,7 @@
         },
         {
             "key": "DLG_CAP3_SARGENTO_DESPUES_01",
-            "value": "Gracias a ti esos pájaros vuelan. Si pasas por el cruce, aquí estamos."
+            "value": "¿Contrabandistas por el camino del bosque? Lo que nos faltaba. Si los vuelves a ver, avísanos."
         },
         {
             "key": "DLG_CAP3_GUARDIA_01",
@@ -2210,7 +2210,7 @@
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_05",
-            "value": "Y no te olvides de mi colección de cosas raras: en el pueblo aún me faltan una canica, una piedra con agujero y una moneda antigua. Cuando vuelvas, ¡tráemelas!"
+            "value": "Y si por ahí ves algo raro, tráemelo. Para la colección."
         },
         {
             "key": "DLG_CAP2_ELDRAN_ESPERA_01",
@@ -2234,7 +2234,7 @@
         },
         {
             "key": "DLG_CAP2_ADIOS_ERIKA_01",
-            "value": "Guardia alta y no te lances el primero. Y vuelve entero, que aún me debes una revancha."
+            "value": "Guardia alta y no te lances el primero. Y vuelve con ese pañuelo, que es mío."
         },
         {
             "key": "DLG_CAP2_ADIOS_BOTICARIA_01",
@@ -2430,19 +2430,19 @@
         },
         {
             "key": "DLG_CAP3_PILLADO_01",
-            "value": "¿Me venías siguiendo, crío? Mala idea."
+            "value": "¿Nos venías siguiendo, crío? Mala idea."
         },
         {
             "key": "DLG_CAP3_PILLADO_02",
-            "value": "Esa luz que llevas no es un farol. ¿Qué escondes?"
+            "value": "Esa luz de la paja no es un farol. ¿Qué lleváis ahí?"
         },
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_01",
-            "value": "Ay… mi cabeza… Vale, vale, me quedo aquí quieto."
+            "value": "Ay… mi cabeza… ¡Vámonos, al campamento!"
         },
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
-            "value": "Venía del bosque. Los demás tienen que estar por ahí."
+            "value": "Van hacia el bosque. Ahí tienen que tener algo más."
         },
         {
             "key": "DLG_CAP3_HOJA_09",
@@ -2451,6 +2451,10 @@
         {
             "key": "DLG_CAP3_HOJA_10",
             "value": "Si esos carros llevan animales con aro, a Estela le llevaré algo más que un trozo de hierro."
+        },
+        {
+            "key": "CAP3_BOC_PRUEBA",
+            "value": "Una pluma de pájaro de luz. Con esto, Estela tendrá que escucharme."
         }
     ]
 }

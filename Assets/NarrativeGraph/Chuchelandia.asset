@@ -18,21 +18,21 @@ MonoBehaviour:
   - rid: 6540294316048253033
   - rid: 6540294316048253034
   - rid: 6540294316048253035
-  - rid: 6540294316048253036
+  - rid: 6540294618706084475
   - rid: 6540294316048253037
-  - rid: 6540294316048253038
-  - rid: 6540294316048253039
+  - rid: 6540294618706084476
+  - rid: 6540294618706084477
   - rid: 6540294316048253040
   - rid: 6540294316048253041
-  - rid: 6540294316048253042
-  - rid: 6540294316048253043
-  - rid: 6540294316048253044
+  - rid: 6540294618706084478
+  - rid: 6540294618706084479
+  - rid: 6540294618706084480
   - rid: 6540294316048253045
   - rid: 6540294316048253046
   - rid: 6540294316048253047
-  - rid: 6540294316048253048
-  - rid: 6540294316048253049
-  - rid: 6540294316048253050
+  - rid: 6540294618706084481
+  - rid: 6540294618706084482
+  - rid: 6540294618706084483
   - rid: 6540294316048253051
   - rid: 6540294316048253052
   - rid: 6540294316048253053
@@ -49,14 +49,14 @@ MonoBehaviour:
   - rid: 6540294316048253064
   - rid: 6540294316048253065
   - rid: 6540294316048253066
-  - rid: 6540294316048253067
-  - rid: 6540294316048253068
+  - rid: 6540294618706084484
+  - rid: 6540294618706084485
   - rid: 6540294316048253069
   - rid: 6540294316048253070
   - rid: 6540294316048253071
-  - rid: 6540294316048253072
+  - rid: 6540294618706084486
   - rid: 6540294316048253073
-  - rid: 6540294316048253074
+  - rid: 6540294618706084487
   - rid: 6540294316048253075
   - rid: 6540294316048253076
   - rid: 6540294316048253077
@@ -141,6 +141,8 @@ MonoBehaviour:
         - chuche-cine-llegada
         eventKey: CHUCHE_LLEGADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253035
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -160,30 +162,6 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294316048253036
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "1 \xB7 Cinem\xE1tica: la puerta rosa, la purpurina y \xABOh, no\xBB"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-llegada
-        position: {x: 1140, y: 0}
-        outputs:
-        - chuche-bienvenida
-        cinematicName: 'Chuchelandia: la llegada'
-        signalIn: CHUCHE_CINE_LLEGADA_START
-        signalDone: CHUCHE_CINE_LLEGADA_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 998e7d3e61468154e8ff4cfea0f1e367, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
     - rid: 6540294316048253037
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -200,48 +178,6 @@ MonoBehaviour:
         outputs:
         - chuche-heraldo-hablar
         eventKey: CHUCHE_PUERTA_EMPIEZA
-    - rid: 6540294316048253038
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-mando-will-pergamino
-        position: {x: 2660, y: 0}
-        outputs:
-        - chuche-cine-heraldo
-        accion: 2
-        personaje: Will
-        retirarDeLaEscena: 1
-    - rid: 6540294316048253039
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "2 \xB7 Cinem\xE1tica: el heraldo lee el pergamino"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-heraldo
-        position: {x: 3040, y: 0}
-        outputs:
-        - chuche-paso-investigar
-        cinematicName: 'Chuchelandia: el pergamino del heraldo'
-        signalIn: CHUCHE_CINE_PERGAMINO_START
-        signalDone: CHUCHE_CINE_PERGAMINO_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: acb41d5ea6769be44992297c10d29ae8, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
     - rid: 6540294316048253040
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -259,6 +195,8 @@ MonoBehaviour:
         - chuche-paso-puerta
         eventKey: CHUCHE_PUERTA_INTENTOS
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253041
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -282,66 +220,6 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294316048253042
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-mando-will-ejercito
-        position: {x: 4940, y: 0}
-        outputs:
-        - chuche-cine-ejercito
-        accion: 2
-        personaje: Will
-        retirarDeLaEscena: 1
-    - rid: 6540294316048253043
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Cinem\xE1tica: \xA1una candidata! El ej\xE9rcito se lleva a Estela y viste a Will y a Liam"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-ejercito
-        position: {x: 5320, y: 0}
-        outputs:
-        - chuche-estela-sale
-        cinematicName: "Chuchelandia: \xA1una candidata!"
-        signalIn: CHUCHE_CINE_CANDIDATA_START
-        signalDone: CHUCHE_CINE_CANDIDATA_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 0c7cfb520a76fc2489d3977d52101878, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
-    - rid: 6540294316048253044
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Estela sale del grupo y de la escena: se la ha llevado el ej\xE9rcito"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-estela-sale
-        position: {x: 5700, y: 0}
-        outputs:
-        - chuche-atuendo-candidata
-        accion: 0
-        personaje: Estela
-        retirarDeLaEscena: 1
     - rid: 6540294316048253045
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -391,66 +269,8 @@ MonoBehaviour:
         - chuche-estela-vuelve
         eventKey: CHUCHE_VESTIDOR_LLEGADA
         acceptEarlierEvent: 1
-    - rid: 6540294316048253048
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Estela vuelve al grupo (sale del vestidor en la cinem\xE1tica)"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-estela-vuelve
-        position: {x: 7220, y: 0}
-        outputs:
-        - chuche-mando-will-vestidor
-        accion: 1
-        personaje: Estela
-        retirarDeLaEscena: 1
-    - rid: 6540294316048253049
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-mando-will-vestidor
-        position: {x: 7600, y: 0}
-        outputs:
-        - chuche-cine-vestidor
-        accion: 2
-        personaje: Will
-        retirarDeLaEscena: 1
-    - rid: 6540294316048253050
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "3 \xB7 Cinem\xE1tica: el vestidor, el lazo y \xABcon mucha rabia\xBB"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-vestidor
-        position: {x: 7980, y: 0}
-        outputs:
-        - chuche-carrera-empieza
-        cinematicName: 'Chuchelandia: el vestidor real'
-        signalIn: CHUCHE_CINE_VESTIDOR_START
-        signalDone: CHUCHE_CINE_VESTIDOR_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 5f7087e10faae96458146d07c269965a, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253051
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -484,6 +304,8 @@ MonoBehaviour:
         - chuche-paso-carrera
         eventKey: CHUCHE_CARRERA_GANADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253053
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -540,6 +362,8 @@ MonoBehaviour:
         - chuche-paso-escalada
         eventKey: CHUCHE_ESCALADA_GANADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253056
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -596,6 +420,8 @@ MonoBehaviour:
         - chuche-paso-punteria
         eventKey: CHUCHE_PUNTERIA_GANADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253059
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -652,6 +478,8 @@ MonoBehaviour:
         - chuche-clases
         eventKey: CHUCHE_CLASES_LLEGADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253062
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -669,6 +497,8 @@ MonoBehaviour:
         - chuche-paso-clases
         eventKey: CHUCHE_CLASES_HECHAS
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253063
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -741,48 +571,8 @@ MonoBehaviour:
         - pieza-actor_chuchereino1-backtousual-chuchelandia-el-reino-libre-chuche-salon-llegar
         eventKey: CHUCHE_SALON_LLEGADA
         acceptEarlierEvent: 1
-    - rid: 6540294316048253067
-      type: {class: GrupoNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "7 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-mando-will-pompon
-        position: {x: 14440, y: 0}
-        outputs:
-        - chuche-cine-pompon
-        accion: 2
-        personaje: Will
-        retirarDeLaEscena: 1
-    - rid: 6540294316048253068
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "7 \xB7 Cinem\xE1tica: Su Alteza Pomp\xF3n, \xABes un oso\xBB y el heraldo que explota"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-pompon
-        position: {x: 14820, y: 0}
-        outputs:
-        - chuche-duelo-empieza
-        cinematicName: "Chuchelandia: Su Alteza Pomp\xF3n"
-        signalIn: CHUCHE_CINE_POMPON_START
-        signalDone: CHUCHE_CINE_POMPON_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 62c433931f3a3c842b79ea60defa1721, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253069
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -816,6 +606,8 @@ MonoBehaviour:
         - chuche-te-quiero
         eventKey: CHUCHE_DUELO_TERMINADO
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253071
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -833,30 +625,8 @@ MonoBehaviour:
         - chuche-cine-te-quiero
         eventKey: CHUCHE_TE_QUIERO_HECHO
         acceptEarlierEvent: 1
-    - rid: 6540294316048253072
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "9 \xB7 Cinem\xE1tica: la ca\xEDda en la fuente, la pancarta y la risa de Estela"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-te-quiero
-        position: {x: 16340, y: 0}
-        outputs:
-        - chuche-paso-duelo
-        cinematicName: "Chuchelandia: \xA1TE QUIERO!"
-        signalIn: CHUCHE_CINE_TEQUIERO_START
-        signalDone: CHUCHE_CINE_TEQUIERO_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 107bd03dc01a7544fbad33bc033df0c1, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253073
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -880,30 +650,6 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294316048253074
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "10 \xB7 Cinem\xE1tica: la tiara, \xABUno\xBB, la Puerta hace clic y las collejas pegadas"
-        chapter: Chuchelandia
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: chuche-cine-victoria
-        position: {x: 17100, y: 0}
-        outputs:
-        - chuche-atuendo-victoria
-        cinematicName: 'Chuchelandia: victoria'
-        signalIn: CHUCHE_CINE_VICTORIA_START
-        signalDone: CHUCHE_CINE_VICTORIA_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 0f822c4b9b02e864ea8b69bfbc550fe0, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
     - rid: 6540294316048253075
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -953,6 +699,8 @@ MonoBehaviour:
         - chuche-cierre
         eventKey: CHUCHE_SALIDA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6540294316048253078
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -1526,3 +1274,356 @@ MonoBehaviour:
         presence: 0
         markId: 
         lines: []
+    - rid: 6540294618706084475
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "1 \xB7 Cinem\xE1tica: la puerta rosa, la purpurina y \xABOh, no\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-llegada
+        position: {x: 1140, y: 0}
+        outputs:
+        - chuche-bienvenida
+        - 
+        request:
+          rid: 6540294618706084488
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084476
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "2 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-pergamino
+        position: {x: 2660, y: 0}
+        outputs:
+        - chuche-cine-heraldo
+        request:
+          rid: 6540294618706084489
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084477
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "2 \xB7 Cinem\xE1tica: el heraldo lee el pergamino"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-heraldo
+        position: {x: 3040, y: 0}
+        outputs:
+        - chuche-paso-investigar
+        - 
+        request:
+          rid: 6540294618706084490
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084478
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-ejercito
+        position: {x: 4940, y: 0}
+        outputs:
+        - chuche-cine-ejercito
+        request:
+          rid: 6540294618706084491
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084479
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Cinem\xE1tica: \xA1una candidata! El ej\xE9rcito se lleva a Estela y viste a Will y a Liam"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-ejercito
+        position: {x: 5320, y: 0}
+        outputs:
+        - chuche-estela-sale
+        - 
+        request:
+          rid: 6540294618706084492
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084480
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Estela sale del grupo y de la escena: se la ha llevado el ej\xE9rcito"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-estela-sale
+        position: {x: 5700, y: 0}
+        outputs:
+        - chuche-atuendo-candidata
+        request:
+          rid: 6540294618706084493
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084481
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Estela vuelve al grupo (sale del vestidor en la cinem\xE1tica)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-estela-vuelve
+        position: {x: 7220, y: 0}
+        outputs:
+        - chuche-mando-will-vestidor
+        request:
+          rid: 6540294618706084494
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084482
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-vestidor
+        position: {x: 7600, y: 0}
+        outputs:
+        - chuche-cine-vestidor
+        request:
+          rid: 6540294618706084495
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084483
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3 \xB7 Cinem\xE1tica: el vestidor, el lazo y \xABcon mucha rabia\xBB"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-vestidor
+        position: {x: 7980, y: 0}
+        outputs:
+        - chuche-carrera-empieza
+        - 
+        request:
+          rid: 6540294618706084496
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084484
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "7 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-mando-will-pompon
+        position: {x: 14440, y: 0}
+        outputs:
+        - chuche-cine-pompon
+        request:
+          rid: 6540294618706084497
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084485
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "7 \xB7 Cinem\xE1tica: Su Alteza Pomp\xF3n, \xABes un oso\xBB y el heraldo que explota"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-pompon
+        position: {x: 14820, y: 0}
+        outputs:
+        - chuche-duelo-empieza
+        - 
+        request:
+          rid: 6540294618706084498
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084486
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "9 \xB7 Cinem\xE1tica: la ca\xEDda en la fuente, la pancarta y la risa de Estela"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-te-quiero
+        position: {x: 16340, y: 0}
+        outputs:
+        - chuche-paso-duelo
+        - 
+        request:
+          rid: 6540294618706084499
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084487
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "10 \xB7 Cinem\xE1tica: la tiara, \xABUno\xBB, la Puerta hace clic y las collejas pegadas"
+        chapter: Chuchelandia
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: chuche-cine-victoria
+        position: {x: 17100, y: 0}
+        outputs:
+        - chuche-atuendo-victoria
+        - 
+        request:
+          rid: 6540294618706084500
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084488
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: 'Chuchelandia: la llegada'
+        signalIn: CHUCHE_CINE_LLEGADA_START
+        signalDone: CHUCHE_CINE_LLEGADA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 998e7d3e61468154e8ff4cfea0f1e367, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084489
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084490
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: 'Chuchelandia: el pergamino del heraldo'
+        signalIn: CHUCHE_CINE_PERGAMINO_START
+        signalDone: CHUCHE_CINE_PERGAMINO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: acb41d5ea6769be44992297c10d29ae8, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084491
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084492
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: "Chuchelandia: \xA1una candidata!"
+        signalIn: CHUCHE_CINE_CANDIDATA_START
+        signalDone: CHUCHE_CINE_CANDIDATA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0c7cfb520a76fc2489d3977d52101878, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084493
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 0
+        personaje: Estela
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084494
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 1
+        personaje: Estela
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084495
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084496
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: 'Chuchelandia: el vestidor real'
+        signalIn: CHUCHE_CINE_VESTIDOR_START
+        signalDone: CHUCHE_CINE_VESTIDOR_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 5f7087e10faae96458146d07c269965a, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084497
+      type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
+      data:
+        accion: 2
+        personaje: Will
+        retirarDeLaEscena: 1
+    - rid: 6540294618706084498
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: "Chuchelandia: Su Alteza Pomp\xF3n"
+        signalIn: CHUCHE_CINE_POMPON_START
+        signalDone: CHUCHE_CINE_POMPON_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 62c433931f3a3c842b79ea60defa1721, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084499
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: "Chuchelandia: \xA1TE QUIERO!"
+        signalIn: CHUCHE_CINE_TEQUIERO_START
+        signalDone: CHUCHE_CINE_TEQUIERO_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 107bd03dc01a7544fbad33bc033df0c1, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084500
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: 'Chuchelandia: victoria'
+        signalIn: CHUCHE_CINE_VICTORIA_START
+        signalDone: CHUCHE_CINE_VICTORIA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 0f822c4b9b02e864ea8b69bfbc550fe0, type: 2}
+        plantillaDeAjustes: 

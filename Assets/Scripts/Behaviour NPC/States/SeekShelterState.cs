@@ -49,7 +49,7 @@ namespace Game.NPC.States
         // lluvia (moverse en el sitio, encogerse), el resto son variaciones sueltas para que no
         // todos los NPCs hagan lo mismo.
         //
-        // CAMBIO (17 sep 2026): el principal era "Fear01", retirado de todo el juego. Ese clip es
+        // CAMBIO: el principal era "Fear01", retirado de todo el juego. Ese clip es
         // del pack de animaciones humanas, con proporciones realistas, y al retargetearlo sobre
         // estos cuerpos —cabeza de media altura— el retroceso de cabeza queda roto: parece que al
         // personaje se le parte el cuello. Ver INC-223.
@@ -230,7 +230,7 @@ namespace Game.NPC.States
             context.CurrentShelter = _shelterPoint;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Diagnóstico (14 ago 2026): Arrive() no dejaba ningún rastro en consola al llegar,
+            // Diagnóstico: Arrive() no dejaba ningún rastro en consola al llegar,
             // así que "entra en SeekShelter y sale enseguida sin refugiarse" (p.ej. porque dejó de
             // llover a mitad de camino, ShouldSeekShelter pasa a false y CheckTransitions manda
             // directo a ReturnFromShelterState) era indistinguible de "llegó bien y se quedó poco
@@ -240,7 +240,7 @@ namespace Game.NPC.States
 
             if (_manualApproachActive)
             {
-                // FIX INC-NPCS-EN-ARBOLES (14 ago 2026): NO llamar EndManualApproach aquí. El
+                // FIX INC-NPCS-EN-ARBOLES: NO llamar EndManualApproach aquí. El
                 // punto real está fuera del NavMesh a propósito (bajo la copa del árbol, ver
                 // cabecera de BeginManualApproach en NPCStateBase). EndManualApproach pone
                 // agent.updatePosition = true, y NavMeshAgentUtility.HardStop (llamado justo
@@ -283,7 +283,7 @@ namespace Game.NPC.States
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Diagnóstico añadido tras el aviso de Raúl (14 ago 2026) de que ningún NPC del pueblo
+        // Diagnóstico añadido tras el aviso de Raúl de que ningún NPC del pueblo
         // llegaba a los NPCShelterPoint recién recolocados bajo GO con techo: antes de este log,
         // "no hay refugio libre en rango" era un fallo silencioso (se volvía a IdleState sin
         // ningún rastro en consola), indistinguible de "no estaba lloviendo" o cualquier otro

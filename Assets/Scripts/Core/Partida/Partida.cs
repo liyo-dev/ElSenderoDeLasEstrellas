@@ -85,7 +85,6 @@ public static partial class Partida
             hub.ClearAllBlackboards();
         }
         DefaultNarrativeSignals.Instance?.OlvidarSenalesDePartida();
-        Game.NPC.Modules.NPCInteractiveNarrativeRegistry.Clear(fullClear: true);
     }
 
     private static void VaciarPreset(PlayerPresetSO p)
@@ -100,7 +99,7 @@ public static partial class Partida
         p.unlockedSpells = new List<SpellId>();
         p.basicSpellIds = new List<SpellId>();
         p.companionBasics = new List<PlayerPresetSO.BasicosDeCompanero>();
-        p.companionHealth = new List<PlayerPresetSO.SaludDeCompanero>();
+        p.companionHealth = new List<PlayerPresetSO.EstadoDeCompanero>();
         p.flags = new List<string>();
         p.appearance = new List<AppearanceEntry>();
         p.unlockedWardrobeIds = new List<string>();

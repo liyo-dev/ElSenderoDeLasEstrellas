@@ -309,7 +309,7 @@ public static class BatallaFinalLabBuilder
 
         var estelaPrefab = Cargar<GameObject>("Assets/Prefabs/_ESTELA.prefab", avisos);
         var liamPrefab = Cargar<GameObject>("Assets/Prefabs/_LIAM.prefab", avisos);
-        var archimagoPrefab = Cargar<GameObject>("Assets/Prefabs/_WILL_ORIGINAL.prefab", avisos);
+        var archimagoPrefab = Cargar<GameObject>("Assets/Prefabs/_ARCHIMAGO_NPC.prefab", avisos);
 
         GameObject estela = null;
         if (estelaPrefab != null)

@@ -61,7 +61,7 @@ public class Damageable : MonoBehaviour, IDamageable
         if (!IsAlive)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Damageable:{name}] ⚠️ Ignorando daño - ya está muerto (Current: {Current})");
+            Debug.Log($"[Damageable:{name}] Ignorando daño - ya está muerto (Current: {Current})");
 #endif
             return;
         }
@@ -70,7 +70,7 @@ public class Damageable : MonoBehaviour, IDamageable
         if (Time.time < _invulnerableUntil)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Damageable:{name}] 🛡️ Ignorando daño - invulnerable hasta {_invulnerableUntil - Time.time:F2}s");
+            Debug.Log($"[Damageable:{name}] Ignorando daño - invulnerable hasta {_invulnerableUntil - Time.time:F2}s");
 #endif
             return;
         }
@@ -104,7 +104,7 @@ public class Damageable : MonoBehaviour, IDamageable
         {
             Current = 0f;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Damageable:{name}] 💀 VIDA AGOTADA - Llamando a Die() (vida anterior: {oldHealth:F1})");
+            Debug.Log($"[Damageable:{name}] VIDA AGOTADA - Llamando a Die() (vida anterior: {oldHealth:F1})");
 #endif
             Die();
         }
@@ -176,7 +176,7 @@ public class Damageable : MonoBehaviour, IDamageable
     void Die()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[Damageable:{name}] 💀💀💀 Die() llamado - Invocando OnDied (suscriptores: {OnDied?.GetInvocationList().Length ?? 0})");
+        Debug.Log($"[Damageable:{name}] Die() llamado - Invocando OnDied (suscriptores: {OnDied?.GetInvocationList().Length ?? 0})");
 #endif
         OnDied?.Invoke();
 
@@ -186,7 +186,7 @@ public class Damageable : MonoBehaviour, IDamageable
 
         if (deathVFX)
         {
-            // ✅ FIX #3 (auditoría combate, 15 ago 2026): antes Instantiate+Destroy directo, el
+            // FIX #3: antes Instantiate+Destroy directo, el
             // mismo patrón que ya causó un bug real y arreglado en NPCCombatLifecycleHandler.cs
             // ("el prefab no se autodestruía y quedaba flotando en el suelo indefinidamente").
             // Damageable es más genérico que ese handler (lo usa más que solo NPCs de combate),

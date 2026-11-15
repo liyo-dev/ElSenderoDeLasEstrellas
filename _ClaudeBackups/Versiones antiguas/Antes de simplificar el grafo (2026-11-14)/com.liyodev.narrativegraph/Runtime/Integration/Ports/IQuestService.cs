@@ -1,0 +1,14 @@
+public interface IQuestService
+{
+    void Offer(string questId, object npcCtx);
+    bool IsCompleted(string questId);
+    void OnCompleted(string questId, System.Action cb);
+    void OffCompleted(string questId, System.Action cb);
+    void Complete(string questId);
+    void StartQuest(string questId);
+    void CompleteStep(string questId, int stepIndex);
+    void CompleteStepByConditionId(string questId, string stepConditionId);
+
+    /// <summary>Estado detallado (NotStarted / Active / StepsReady / Completed).</summary>
+    NarrativeQuestState GetState(string questId);
+}

@@ -258,7 +258,7 @@ public class GameOverManager : MonoBehaviour
     {
         _isGameOverActive = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[GameOverManager] 💀 Iniciando secuencia de Game Over cinematográfica");
+        Debug.Log("[GameOverManager] Iniciando secuencia de Game Over cinematográfica");
 #endif
         
         // DialogueManager.Close() hace Pop de UIMode y de ActionMode.Cinematic si estaban activos.
@@ -274,13 +274,6 @@ public class GameOverManager : MonoBehaviour
 
         // 1. Fuera todo lo que hay en pantalla: el momento es del caído.
         OcultablesDeCinematica.OcultarTodos(this);
-
-        // 1b. Limpiar el estado de cambio de personaje (destruye el NPC instanciado de Will si
-        // lo hubiera). Sin esto, si el jugador moría mientras controlaba a Liam/Estela, el NPC de
-        // Will quedaba instanciado y sobrevivía al Game Over; al recargar la partida y volver a
-        // cambiar de personaje, ActiveCharacterSwapper podía terminar creando un segundo Will
-        // (INC: "de pronto hay dos Will" tras un Game Over).
-        ActiveCharacterSwapper.Instance?.ResetState();
 
         // 1c. Limpiar estado de combate huérfano: si el jugador murió en batalla, nunca se
         // llega a EndBattleById/RestoreAfterBattle/OnBattleWonRestoreMusic (esas rutas son solo
@@ -382,7 +375,7 @@ public class GameOverManager : MonoBehaviour
             {
                 AudioService.Instance.PlaySFX(gameOverAudioEvent);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[GameOverManager] 🔊 Audio '{gameOverAudioEvent}' reproducido");
+                Debug.Log($"[GameOverManager] Audio '{gameOverAudioEvent}' reproducido");
 #endif
             }
         }
@@ -397,13 +390,13 @@ public class GameOverManager : MonoBehaviour
             _originalFOV = _mainCamera.fieldOfView;
             _thirdPersonCamera = _mainCamera.GetComponent<vThirdPersonCamera>();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GameOverManager] 📷 Cámara configurada - FOV original: {_originalFOV}");
+            Debug.Log($"[GameOverManager] Cámara configurada - FOV original: {_originalFOV}");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[GameOverManager] ⚠️ No se encontró Camera.main");
+            Debug.LogWarning("[GameOverManager] No se encontró Camera.main");
 #endif
         }
     }
@@ -446,7 +439,7 @@ public class GameOverManager : MonoBehaviour
         _thirdPersonCamera.SetAngles(playerYaw + deathShotYawOffset, deathShotPitch);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GameOverManager] 🎥 Cámara enfocada en el jugador (yaw={playerYaw + deathShotYawOffset:F0}°, pitch={deathShotPitch:F0}°)");
+        Debug.Log($"[GameOverManager] Cámara enfocada en el jugador (yaw={playerYaw + deathShotYawOffset:F0}°, pitch={deathShotPitch:F0}°)");
 #endif
     }
 
@@ -484,7 +477,7 @@ public class GameOverManager : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GameOverManager] 🧍 Jugador en el suelo (esperado {safety:F2}s tras el ramp) -> transición de pantalla");
+        Debug.Log($"[GameOverManager] Jugador en el suelo (esperado {safety:F2}s tras el ramp) -> transición de pantalla");
 #endif
 
         // Pequeño respiro tras aterrizar antes de cortar a la transición.
@@ -530,7 +523,7 @@ public class GameOverManager : MonoBehaviour
     private void StartSlowMotion()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GameOverManager] 🐌 Iniciando slow-mo: {Time.timeScale} -> {slowMotionScale} en {slowMotionRampDuration}s");
+        Debug.Log($"[GameOverManager] Iniciando slow-mo: {Time.timeScale} -> {slowMotionScale} en {slowMotionRampDuration}s");
 #endif
         
         // La rampa pide cada paso al árbitro con esta misma clave: convive con las demás
@@ -551,7 +544,7 @@ public class GameOverManager : MonoBehaviour
 
         float targetFOV = _originalFOV * zoomFactor;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GameOverManager] 🔍 Iniciando zoom FOV: {_originalFOV} -> {targetFOV} en {zoomDuration}s");
+        Debug.Log($"[GameOverManager] Iniciando zoom FOV: {_originalFOV} -> {targetFOV} en {zoomDuration}s");
 #endif
 
         _zoomTween?.Kill();
@@ -566,7 +559,7 @@ public class GameOverManager : MonoBehaviour
     private void TransitionToMainMenu()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[GameOverManager] 🚪 Transición al menú principal: '{mainMenuScene}'");
+        Debug.Log($"[GameOverManager] Transición al menú principal: '{mainMenuScene}'");
 #endif
 
         MainMenuController.RequestInputDebounce();
@@ -628,7 +621,7 @@ public class GameOverManager : MonoBehaviour
     public static void NotifyGameOver(PlayerHealthSystem deadPlayer = null)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[GameOverManager] 💀 NotifyGameOver() llamado");
+        Debug.Log("[GameOverManager] NotifyGameOver() llamado");
 #endif
         
         if (Instance == null)
@@ -641,31 +634,27 @@ public class GameOverManager : MonoBehaviour
             else
             {
                 // Buscar directamente incluyendo objetos inactivos
-                #if UNITY_2022_3_OR_NEWER
                 found = UnityEngine.Object.FindAnyObjectByType<GameOverManager>(FindObjectsInactive.Include);
-                #else
-                found = UnityEngine.Object.FindObjectOfType<GameOverManager>(true);
-                #endif
                 
                 if (found != null)
                 {
                     Instance = found;
                     ServiceLocator.Register(found);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[GameOverManager] ✅ Instancia encontrada (estaba inactiva o no registrada)");
+                    Debug.Log("[GameOverManager] Instancia encontrada (estaba inactiva o no registrada)");
 #endif
                 }
                 else
                 {
                     // Crear instancia de emergencia
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning("[GameOverManager] ⚠️ No se encontró instancia, creando una de emergencia...");
+                    Debug.LogWarning("[GameOverManager] No se encontró instancia, creando una de emergencia...");
 #endif
                     var emergencyGO = new GameObject("[GameOverManager_Emergency]");
                     Instance = emergencyGO.AddComponent<GameOverManager>();
                     DontDestroyOnLoad(emergencyGO);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log("[GameOverManager] ✅ Instancia de emergencia creada");
+                    Debug.Log("[GameOverManager] Instancia de emergencia creada");
 #endif
                 }
             }
@@ -674,7 +663,7 @@ public class GameOverManager : MonoBehaviour
         if (Instance == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[GameOverManager] ❌ No se pudo crear/encontrar ninguna instancia.");
+            Debug.LogError("[GameOverManager] No se pudo crear/encontrar ninguna instancia.");
 #endif
             // Fallback: cargar menú principal directamente
             SceneManager.LoadScene("MainMenu");

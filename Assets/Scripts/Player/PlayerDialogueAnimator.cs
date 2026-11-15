@@ -22,13 +22,13 @@ public class PlayerDialogueAnimator : MonoBehaviour
 
     // Índice de la layer "UpperBody" (Avatar Mask sin piernas) del Animator del jugador — mismo
     // índice que NPCSimpleAnimator.upperBodyLayer. La mayoría de los gestos de diálogo (Talk01-03,
-    // Angry01-02, etc.) viven aquí desde la migración fuera del Base Layer (30 ago 2026).
+    // Angry01-02, etc.) viven aquí desde la migración fuera del Base Layer.
     private const int CapaUpperBody = 1;
 
     // Estado
     private Coroutine _gestureCoroutine;
     private int _lastTalkIndex = -1;
-    // ✅ FIX: si el jugador está sentado/tumbado en un NPCWorldPoint, un gesto de diálogo
+    // si el jugador está sentado/tumbado en un NPCWorldPoint, un gesto de diálogo
     // sobreescribe el layer 0 con su propio clip y no vuelve solo al loop de la actividad al
     // terminar. Referencia cacheada para poder restaurarlo (ver PlayGestureCoroutine).
     private PlayerAmbientActivityHandler _ambientActivity;
@@ -104,7 +104,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // Avisa si el perfil pide un estado corporal que el Animator no contiene.
-            Debug.LogWarning($"[PlayerDialogueAnimator] ⚠️ PlayGesture('{stateName}'): ese estado no " +
+            Debug.LogWarning($"[PlayerDialogueAnimator] PlayGesture('{stateName}'): ese estado no " +
                 $"existe en ningún layer del Animator Controller " +
                 $"'{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +
                 "El jugador se quedará quieto en este gesto.");
@@ -258,7 +258,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // Avisa si el perfil pide un estado corporal que el Animator no contiene.
-            Debug.LogWarning($"[PlayerDialogueAnimator] ⚠️ PlayBodyEmotion('{stateName}'): ese estado no " +
+            Debug.LogWarning($"[PlayerDialogueAnimator] PlayBodyEmotion('{stateName}'): ese estado no " +
                 $"existe en ningún layer del Animator Controller " +
                 $"'{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +
                 "La cara cambia pero el cuerpo se queda quieto.");
@@ -323,7 +323,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
 
         _gestureCoroutine = null;
 
-        // ✅ FIX: si el jugador sigue sentado/tumbado (actividad ambiental activa), el gesto
+        // si el jugador sigue sentado/tumbado (actividad ambiental activa), el gesto
         // acaba de sobreescribir el layer 0 con su propio clip — volver al loop de la actividad
         // para no dejarlo de pie/flotando tras terminar el gesto.
         if (_ambientActivity != null && _ambientActivity.IsSeated)

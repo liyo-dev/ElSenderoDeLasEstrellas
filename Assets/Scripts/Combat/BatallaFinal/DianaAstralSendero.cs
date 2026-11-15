@@ -74,7 +74,7 @@ public class DianaAstralSendero : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (_activado) return;
-        if (other.CompareTag("Player") || other.GetComponentInParent<Invector.vCharacterController.vThirdPersonController>() != null)
+        if (ControlDelJugador.EsElJugador(other))
         {
             Activar();
         }

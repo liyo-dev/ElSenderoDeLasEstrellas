@@ -103,7 +103,7 @@ namespace EasyTransition
             SceneManager.sceneLoaded += OnSceneLoad;
         }
 
-        // FIX A7 (auditoría 2026-08-07): sin este OnDestroy, la suscripción a sceneLoaded era
+        // sin este OnDestroy, la suscripción a sceneLoaded era
         // permanente — el objeto se destruye con Destroy(gameObject, destroyTime) pero nunca se
         // desuscribía, con lo que instancias viejas de Transition seguían vivas como listeners
         // (aunque su propio hasTransitionTriggeredOnce ya estuviera en true, cada carga de escena
@@ -118,7 +118,7 @@ namespace EasyTransition
             //Checking if this transition instance has allready played
             if (hasTransitionTriggeredOnce) return;
 
-            // FIX A7 (auditoría 2026-08-07): el proyecto usa carga aditiva multi-escena (ver
+            // el proyecto usa carga aditiva multi-escena (ver
             // CLAUDE.md). Sin este filtro, cualquier escena cargada en modo Additive mientras esta
             // transición espera su propia carga (Single, normalmente) disparaba OnSceneLoad de
             // forma prematura — la transición "salía" (Fase OUT) antes de que la escena de destino

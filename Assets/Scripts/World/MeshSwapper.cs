@@ -88,7 +88,7 @@ namespace Game.World
             if (debugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[MeshSwapper:{name}] 💥 Ejecutando swap...");
+                Debug.Log($"[MeshSwapper:{name}] Ejecutando swap...");
                 #endif
             }
 
@@ -119,7 +119,7 @@ namespace Game.World
             if (debugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[MeshSwapper:{name}] ✅ Swap completado");
+                Debug.Log($"[MeshSwapper:{name}] Swap completado");
                 #endif
             }
         }
@@ -132,7 +132,7 @@ namespace Game.World
             if (targetMeshFilter == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError($"[MeshSwapper:{name}] ❌ No hay MeshFilter asignado");
+                Debug.LogError($"[MeshSwapper:{name}] No hay MeshFilter asignado");
 #endif
                 return;
             }
@@ -140,7 +140,7 @@ namespace Game.World
             if (newMesh == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError($"[MeshSwapper:{name}] ❌ No hay nuevo mesh asignado");
+                Debug.LogError($"[MeshSwapper:{name}] No hay nuevo mesh asignado");
 #endif
                 return;
             }
@@ -247,7 +247,7 @@ namespace Game.World
                 if (debugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[MeshSwapper:{name}] 💨 Instanciando {effectsOnSwap.Length} efectos en posición {targetPosition}");
+                    Debug.Log($"[MeshSwapper:{name}] Instanciando {effectsOnSwap.Length} efectos en posición {targetPosition}");
                     #endif
                 }
                 
@@ -258,7 +258,7 @@ namespace Game.World
                     if (debugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[MeshSwapper:{name}] ✅ Efecto '{effect.name}' instanciado en {targetPosition}");
+                        Debug.Log($"[MeshSwapper:{name}] Efecto '{effect.name}' instanciado en {targetPosition}");
                         #endif
                     }
                 }
@@ -366,7 +366,7 @@ namespace Game.World
             if (debugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[MeshSwapper:{name}] 📡 Signal recibido de Timeline: {notification}");
+                Debug.Log($"[MeshSwapper:{name}] Signal recibido de Timeline: {notification}");
                 #endif
             }
             Swap();

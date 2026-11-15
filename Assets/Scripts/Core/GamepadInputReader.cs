@@ -67,7 +67,7 @@ namespace Core
         _navPrevious = Vector2.zero;
         _navFrame = -1;
         _boundControls = null;
-        // FIX Bajos (auditoría 2026-08-07): antes solo se ponía _pollingRegistered = false, pero
+        // FIX Bajos: antes solo se ponía _pollingRegistered = false, pero
         // eso es un flag NUESTRO — no desuscribe de verdad InputSystem.onAfterUpdate (evento
         // estático del paquete Input System, sobrevive a sesiones de PlayMode sin domain reload).
         // Con solo el flag reseteado, la siguiente EnsurePollingRegistered() añadía OTRA
@@ -627,7 +627,7 @@ namespace Core
             if (gp != null && gp.buttonEast.wasPressedThisFrame)
                 return true;
 
-            // FIX (16 ago 2026): faltaba el fallback de teclado — mismo motivo que
+            // faltaba el fallback de teclado — mismo motivo que
             // YButtonPressedUI/YButtonPressed más abajo en este archivo. "Cancel" (Escape en
             // teclado) solo vive en el mapa UI de PlayerControls.inputactions; sistemas que
             // necesitan leer este botón mientras el mapa GamePlay sigue activo a propósito
@@ -708,7 +708,7 @@ namespace Core
                     return true;
             }
 
-            // FIX: faltaba el fallback de teclado que sí tiene YButtonPressed (gameplay). Sin esto,
+            // faltaba el fallback de teclado que sí tiene YButtonPressed (gameplay). Sin esto,
             // la Q nunca cerraba/activaba "Salir al menú principal" en teclado — el hint en pantalla
             // (InputGlyphNames.North → "Q" en InputGlyphLabels) prometía algo que el código no leía.
             var kb = Keyboard.current;

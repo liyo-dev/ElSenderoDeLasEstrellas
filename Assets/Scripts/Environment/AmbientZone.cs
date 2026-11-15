@@ -582,7 +582,7 @@ public class AmbientZone : MonoBehaviour
         // sonando. RestorePreviousMusic() tiene el mismo guard para el camino de salida.
         if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0) return;
 
-        // FIX 16 sep 2026 (Raúl: "sigue sin sonar la música de la secuencia de Oliver"). Mismo
+        // FIX 16 sep 2026. Mismo
         // criterio que el guard de combate de aquí al lado: durante una cinemática manda SU música.
         //
         // Este era el sistema que pisaba la música de la secuencia de Oliver, confirmado con el log
@@ -608,7 +608,7 @@ public class AmbientZone : MonoBehaviour
             return;
         }
 
-        // (21 sep) Con la pantalla en negro retenida (arranque, carga) la música de zona espera a
+        // Con la pantalla en negro retenida (arranque, carga) la música de zona espera a
         // que se vea la escena. Ver Telon y AudioService.HandleTelonAbierto.
         if (Telon.Cerrado)
         {

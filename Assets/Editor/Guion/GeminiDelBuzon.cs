@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-/// Orden «gemini» del buzón (INC-603, 6 oct 2026): manda un vídeo a la API de Gemini y deja lo
+/// Orden «gemini» del buzón (INC-603): manda un vídeo a la API de Gemini y deja lo
 /// que diga en Logs/Gemini/. Va por el Editor porque el PC de Raúl sí llega a Google; desde las
 /// sesiones de Claude esa dirección está cortada.
 ///

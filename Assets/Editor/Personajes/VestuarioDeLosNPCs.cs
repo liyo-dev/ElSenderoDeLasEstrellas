@@ -21,10 +21,10 @@ public static class VestuarioDeLosNPCs
         {
             Nombre = "Eldran",
             Carpeta = Carpeta + "/Eldran",
-            PrefabPropio = "Assets/_NPCs/Eldran.prefab",
+            PrefabPropio = "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab",
             CuerpoDeAntes = "Body12",
-            Modelos = new[] { "Assets/_NPCs/Eldran.prefab", "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab" },
-            Propios = new[] { "Assets/_NPCs/Eldran.prefab", "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab" },
+            Modelos = new[] { "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab" },
+            Propios = new[] { "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab" },
             Piezas = new[]
             {
             new AspectoDeProtagonista.Pieza { Nombre = "Body26_AbrigoDeMago", Categoria = PartCategory.Body, Vecina = "Body12" },
@@ -67,10 +67,10 @@ public static class VestuarioDeLosNPCs
         {
             Nombre = "Oliver",
             Carpeta = Carpeta + "/Oliver",
-            PrefabPropio = "Assets/_NPCs/Oliver.prefab",
+            PrefabPropio = "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab",
             CuerpoDeAntes = "Body20",
-            Modelos = new[] { "Assets/_NPCs/Oliver.prefab", "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab" },
-            Propios = new[] { "Assets/_NPCs/Oliver.prefab", "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab" },
+            Modelos = new[] { "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab" },
+            Propios = new[] { "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab" },
             Piezas = new[]
             {
             new AspectoDeProtagonista.Pieza { Nombre = "Body29_Aprendiz", Categoria = PartCategory.Body, Vecina = "Body20" },
@@ -129,10 +129,10 @@ public static class VestuarioDeLosNPCs
         {
             Nombre = "El Archimago",
             Carpeta = Carpeta + "/Archimago",
-            PrefabPropio = "Assets/Prefabs/_WILL_ORIGINAL.prefab",
+            PrefabPropio = "Assets/Prefabs/_ARCHIMAGO_NPC.prefab",
             CuerpoDeAntes = "Body17",
-            Modelos = new[] { "Assets/Prefabs/_WILL_ORIGINAL.prefab" },
-            Propios = new[] { "Assets/Prefabs/_WILL_ORIGINAL.prefab" },
+            Modelos = new[] { "Assets/Prefabs/_ARCHIMAGO_NPC.prefab" },
+            Propios = new[] { "Assets/Prefabs/_ARCHIMAGO_NPC.prefab" },
             Piezas = new[]
             {
             new AspectoDeProtagonista.Pieza { Nombre = "Body34_Archimago", Categoria = PartCategory.Body, Vecina = "Body17" },
@@ -177,7 +177,7 @@ public static class VestuarioDeLosNPCs
         },
     };
 
-    [MenuItem("El Sendero/Personajes/Vestuario propio de los NPCs", priority = 60)]
+    [MenuItem("El Sendero/Personajes/NPCs/Vestuario propio de los NPCs", priority = 60)]
     public static void Poner()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Vestuario de los NPCs", "Hazlo fuera de Play."); return; }

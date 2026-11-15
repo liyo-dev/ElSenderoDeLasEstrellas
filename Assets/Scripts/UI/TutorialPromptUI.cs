@@ -63,14 +63,14 @@ public class TutorialPromptUI : MonoBehaviour
     // Petición de Raúl (15 sept 2026): los avisos de tutorial se cerraban con el mismo botón que
     // avanza diálogo (Confirmar/A/Espacio) — si el aviso aparecía justo después de una conversación,
     // el jugador lo cerraba sin querer, por inercia, sin llegar a leerlo. Solución de dos partes:
-    // TutorialPromptNode puede pedir cerrar con Cancelar (mando) en vez de Confirmar — ver
+    // PedirAvisoDeTutorial puede pedir cerrar con Cancelar (mando) en vez de Confirmar — ver
     // dismissWithCancel ahí — y, para PC/ratón, este botón "X" que aparece en la esquina superior
     // derecha del aviso, como el cierre de un popup normal.
     //
     // Se construye por código en Awake, igual que el patrón ya usado para el botón "X" de
     // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs — no hace falta editar
     // TutorialPromptUI.prefab a mano en el Editor para añadirlo.
-    [Header("Botón de cerrar (X) — solo clic de ratón, ver TutorialPromptNode.dismissWithCancel")]
+    [Header("Botón de cerrar (X) — solo clic de ratón, ver PedirAvisoDeTutorial.dismissWithCancel")]
     [SerializeField] float _closeButtonSize = 28f;
     [SerializeField] float _closeButtonMargin = 6f;
 
@@ -87,7 +87,7 @@ public class TutorialPromptUI : MonoBehaviour
     RectTransform _canvasRect;
     float _baseAnchoredY = 70f;
 
-    /// <summary>Se dispara al hacer clic en la X. TutorialPromptNode se suscribe solo cuando el
+    /// <summary>Se dispara al hacer clic en la X. PedirAvisoDeTutorial se suscribe solo cuando el
     /// aviso activo usa dismissWithCancel — el resto de avisos no muestran la X (ver Show()).</summary>
     public event Action CloseButtonClicked;
 
@@ -474,7 +474,7 @@ public class TutorialPromptUI : MonoBehaviour
     // el icono real del botón que SÍ cierra el aviso en mando: Cancelar, que en las 3 familias es
     // físicamente el mismo botón que East/Ataque mágico derecho (B Xbox, Círculo PS, A Switch —
     // ver PlayerControls.inputactions → UI/Cancel y el comentario de dismissWithCancel en
-    // TutorialPromptNode). Así el jugador siempre ve QUÉ pulsar, en vez de un hueco vacío sin
+    // PedirAvisoDeTutorial). Así el jugador siempre ve QUÉ pulsar, en vez de un hueco vacío sin
     // ninguna pista (reporte de Raúl, 15 sept 2026: "no aparece el boton de cerrar el pop up"
     // jugando con mando).
     void RefreshCloseButton()

@@ -24,9 +24,7 @@ public abstract class ZonaDelJugador : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(GameTags.Player)) return;
-        var jugador = other.GetComponentInParent<PlayerActionManager>();
-        if (jugador == null) return;
+        if (!ControlDelJugador.DelJugador(other, out PlayerActionManager jugador)) return;
 
         _dentro.TryGetValue(jugador, out int n);
         _dentro[jugador] = n + 1;
@@ -35,7 +33,7 @@ public abstract class ZonaDelJugador : MonoBehaviour
 
     protected void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag(GameTags.Player)) return;
+        // Sale quien entró, aunque entretanto el jugador haya pasado a otro personaje.
         var jugador = other.GetComponentInParent<PlayerActionManager>();
         if (jugador == null || !_dentro.TryGetValue(jugador, out int n)) return;
         if (n > 1) { _dentro[jugador] = n - 1; return; }

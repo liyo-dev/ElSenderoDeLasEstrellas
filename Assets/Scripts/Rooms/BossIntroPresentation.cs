@@ -74,8 +74,8 @@ public class BossIntroPresentation : MonoBehaviour
 
         // Reclamar el candado de cámara (ver CameraDirectorService): evita que vThirdPersonCamera
         // retome el control de gameplay durante los SetActive() de cámara de esta presentación, y
-        // deja la puerta abierta a que el siguiente sistema de cámara (p.ej. DialogueCameraController
-        // al enfocar a Eldran) coalesca el handoff en vez de dejar un hueco de gameplay visible.
+        // deja la puerta abierta a que el siguiente sistema de cámara coalesca el handoff en vez de
+        // dejar un hueco de gameplay visible.
         CameraDirectorService.Claim(this);
 
         // Se esconde lo mismo que en una cinemática, con esta presentación como clave.

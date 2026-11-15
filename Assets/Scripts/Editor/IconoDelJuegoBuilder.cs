@@ -7,7 +7,7 @@ public static class IconoDelJuegoBuilder
 {
     private const string Ruta = "Assets/Art/UI/Iconos/IconoDelJuego.png";
 
-    [MenuItem("El Sendero/Build/Aplicar icono del juego")]
+    [MenuItem("El Sendero/Proyecto/Build: aplicar el icono del juego")]
     public static void Aplicar()
     {
         AssetDatabase.ImportAsset(Ruta, ImportAssetOptions.ForceSynchronousImport);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// Quién es un personaje del grupo: con qué estadísticas y hechizos empieza. Es la identidad del
+/// Quién es un personaje del grupo: con qué estadísticas, habilidades y hechizos empieza. Es la identidad del
 /// personaje, independiente de quién lo mueva (el jugador o la IA). Una por personaje
 /// (`Assets/_PERSONAJES/`), referenciada desde su cuerpo con el componente `Personaje`.
 ///
@@ -20,6 +20,10 @@ public sealed class FichaDePersonaje : ScriptableObject
 
     [Tooltip("Vida y magia máximas, ataque y defensa con los que empieza.")]
     [SerializeField] private Estadisticas estadisticasIniciales = new Estadisticas(100f, 50f, EstadisticasDelPersonaje.AtaqueInicial, EstadisticasDelPersonaje.DefensaInicial);
+
+    [Tooltip("Estela y Liam: habilidades con las que empiezan (la partida les suma las que aprenden). " +
+             "Las de Will las pone la partida nueva y la historia (abilities del preset).")]
+    [SerializeField] private PlayerAbilities habilidadesIniciales = HabilidadesPorDefecto();
 
     [Tooltip("Hechizo del botón izquierdo con el que empieza.")]
     [SerializeField] private MagicSpellSO hechizoIzquierdo;
@@ -73,6 +77,21 @@ public sealed class FichaDePersonaje : ScriptableObject
         return null;
     }
     public Estadisticas EstadisticasIniciales => estadisticasIniciales;
+
+    /// Copia de las habilidades con las que empieza (Estela y Liam).
+    public PlayerAbilities HabilidadesIniciales => (habilidadesIniciales ?? HabilidadesPorDefecto()).Copia();
+
+    /// Las de un compañero sin ficha: nadar, saltar, magia y esprintar; sin volar ni escudo.
+    public static PlayerAbilities HabilidadesPorDefecto() =>
+        new PlayerAbilities { swim = true, jump = true, magic = true, sprint = true };
+
+    /// La ficha de ese personaje: la de su cuerpo si está en escena, si no la cargada del proyecto.
+    public static FichaDePersonaje De(PartyControlManager.CharacterSlot slot)
+    {
+        var cuerpo = ControlDelJugador.PilotoDe(slot);
+        var propia = cuerpo != null ? cuerpo.GetComponent<Personaje>() : null;
+        return propia != null && propia.Ficha != null ? propia.Ficha : Buscar(slot);
+    }
 
     /// 0 = izquierdo, 1 = derecho, 2 = especial.
     public MagicSpellSO Hechizo(int indice) => indice switch

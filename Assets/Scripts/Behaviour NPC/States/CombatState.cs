@@ -22,39 +22,39 @@ namespace Game.NPC.States
         {
             base.OnEnter(context);
             
-            // 🚫 1. Verificación de Seguridad: Si ya está muerto o derrotado
+            // 1. Verificación de Seguridad: Si ya está muerto o derrotado
             if (context.WasDefeatedInCombat)
             {
-                context.Log("[CombatState] ⛔ NPC derrotado previamente. Cancelando combate.");
+                context.Log("[CombatState] NPC derrotado previamente. Cancelando combate.");
                 context.IsInCombat = false;
                 return;
             }
             
-            context.Log("[CombatState] ⚔️ INICIANDO COMBATE");
+            context.Log("[CombatState] INICIANDO COMBATE");
             context.IsInCombat = true;
             
-            // ✅ Registrar NPC en el registro de combate activo
+            // Registrar NPC en el registro de combate activo
             if (context.Transform != null)
             {
                 ActiveCombatRegistry.RegisterNPC(context.Transform.gameObject);
-                context.Log("[CombatState] ✅ NPC registrado en ActiveCombatRegistry");
+                context.Log("[CombatState] NPC registrado en ActiveCombatRegistry");
                 
-                // ✅ FIX: Si soy líder de un equipo, forzar a todos los miembros a entrar en combate
+                // Si soy líder de un equipo, forzar a todos los miembros a entrar en combate
                 var teamMember = context.Transform.GetComponent<NPCTeamMember>();
                 if (teamMember != null && teamMember.IsLeader && teamMember.Team != null)
                 {
-                    context.Log("[CombatState] 👥 Soy líder - forzando equipo a combate");
+                    context.Log("[CombatState] Soy líder - forzando equipo a combate");
                     teamMember.Team.ForceTeamCombat(context.Player);
                 }
             }
             
-            // 🎵 2. Audio
+            // 2. Audio
             TriggerBattleMusic(context);
             
-            // 🛠️ 3. Configuración de Componentes (Targetable, Damageable, UI)
+            // 3. Configuración de Componentes (Targetable, Damageable, UI)
             InitializeCombatComponents(context);
             
-            // 🧠 4. Inicializar el Cerebro de Combate
+            // 4. Inicializar el Cerebro de Combate
             _combatBrain = context.Transform.GetComponent<NPCCombatBrain>();
             if (_combatBrain == null) 
                 _combatBrain = context.Transform.gameObject.AddComponent<NPCCombatBrain>();
@@ -63,7 +63,7 @@ namespace Game.NPC.States
             var manager = context.Transform.GetComponent<NPCBehaviourManagerV2>();
             if (manager != null) _combatBrain.Initialize(manager);
 
-            // ⚙️ 5. Configurar y Arrancar el Brain
+            // 5. Configurar y Arrancar el Brain
             if (context.Config?.combatConfig != null)
             {
                 var cc = context.Config.combatConfig;
@@ -104,7 +104,7 @@ namespace Game.NPC.States
                     lowManaRetreatThreshold = cc.lowManaRetreatThreshold,
                     
                     // Tácticas & Defensa
-                    difficultyLevel = cc.difficultyLevel, // ✅ FIX #13: configurable por NPC (antes hardcodeado a 0.7f para todos)
+                    difficultyLevel = cc.difficultyLevel, // FIX #13: configurable por NPC (antes hardcodeado a 0.7f para todos)
                     useShield = cc.useShield,
                     shieldDuration = cc.shieldMaxDuration,
                     shieldCooldown = cc.shieldCooldown,
@@ -112,26 +112,26 @@ namespace Game.NPC.States
                     coverSearchRadius = cc.coverSearchRadius,
                     dodgeDistance = 3f,
 
-                    // 🎭 FIX #5: completar el mapeo de la estrategia de engaño/emboscada — antes
+                    // FIX #5: completar el mapeo de la estrategia de engaño/emboscada — antes
                     // estos dos campos ni existían en el struct-initializer, así que quedaban en
                     // 0f/0 por defecto y la mecánica de fingir quedarse sin maná para emboscar
                     // (~150 líneas ya implementadas en NPCCombatBrain) nunca se activaba.
                     deceptionChance = cc.deceptionChance,
                     minAttacksToKeepForAmbush = cc.minAttacksToKeepForAmbush,
                     
-                    // 🔍 Búsqueda del Jugador
+                    // Búsqueda del Jugador
                     activelySearchForPlayer = cc.activelySearchForPlayer,
                     searchDuration = cc.searchDuration,
                     passiveSearchDuration = cc.passiveSearchDuration,
                     searchMovementRadius = cc.searchMovementRadius,
                     returnToOriginAfterSearch = cc.returnToOriginAfterSearch,
 
-                    // 👥 PROPUESTA (4 sep 2026): coordinación de equipo (ver NPCAttackCoordinator) —
+                    // PROPUESTA: coordinación de equipo (ver NPCAttackCoordinator) —
                     // antes faltaba en este mapeo, así que aunque se configurara en el
                     // NPCCombatConfig se quedaba siempre en 0 (desactivado) al llegar al Brain.
                     maxConcurrentAttackersOnTarget = cc.maxConcurrentAttackersOnTarget,
 
-                    // 🏃 PROPUESTA (4 sep 2026): retirada táctica (ver State_TacticalRetreat) — mismo
+                    // PROPUESTA: retirada táctica (ver State_TacticalRetreat) — mismo
                     // caso que arriba: useTacticalRetreat/retreatHealthThreshold/retreatCooldown ya
                     // existían en el NPCCombatConfig pero no llegaban al Brain, así que la retirada
                     // (con el componente NPCTacticalRetreat.cs ya implementado) nunca se disparaba.
@@ -142,11 +142,11 @@ namespace Game.NPC.States
 
                 // ¡ARRANCAR LA FSM DE COMBATE!
                 _combatBrain.BeginCombat(brainSettings, cc);
-                context.Log("[CombatState] ✅ Brain activado con configuración exitosa.");
+                context.Log("[CombatState] Brain activado con configuración exitosa.");
             }
             else
             {
-                context.LogError("[CombatState] ❌ Falta CombatConfig en el NPC. El combate no funcionará bien.");
+                context.LogError("[CombatState] Falta CombatConfig en el NPC. El combate no funcionará bien.");
             }
         }
 
@@ -171,7 +171,7 @@ namespace Game.NPC.States
         }
 
         /// <summary>
-        /// Petición de Raúl (1 sep 2026): "huir" de un combate de equipo (p.ej. Lety+Vicky)
+        /// Petición de Raúl: "huir" de un combate de equipo (p.ej. Lety+Vicky)
         /// alejándose lo suficiente. El corte por distancia (MAX_COMBAT_DISTANCE) ya existía y ya
         /// dejaba al NPC "no derrotado" (WasDefeatedInCombat sigue en false, la vida con la que se
         /// quedó se conserva para el próximo reenganche — ver InitializeCombatComponents más abajo,
@@ -208,7 +208,7 @@ namespace Game.NPC.States
                 team.ResetTeamState();
                 RestoreMusicAfterFlee(battleMusicId);
                 HudToastService.Instance?.Show("COMBAT_FLED_TEAM", 3f);
-                context.Log("[CombatState] 🏃 Equipo completo fuera de rango — combate de equipo reseteado (no derrotados).");
+                context.Log("[CombatState] Equipo completo fuera de rango — combate de equipo reseteado (no derrotados).");
             }
             else
             {
@@ -232,11 +232,11 @@ namespace Game.NPC.States
             base.OnExit(context);
             context.IsInCombat = false;
             
-            // ✅ Desregistrar NPC del registro de combate activo
+            // Desregistrar NPC del registro de combate activo
             if (context.Transform != null)
             {
                 ActiveCombatRegistry.UnregisterNPC(context.Transform.gameObject);
-                context.Log("[CombatState] ✅ NPC desregistrado de ActiveCombatRegistry");
+                context.Log("[CombatState] NPC desregistrado de ActiveCombatRegistry");
             }
 
             // Detener el cerebro de combate limpiamente
@@ -245,7 +245,7 @@ namespace Game.NPC.States
                 _combatBrain.StopCombat();
             }
             
-            // ⭐ Desactivar targeting para que el marker desaparezca
+            // Desactivar targeting para que el marker desaparezca
             var targetable = context.Transform.GetComponent<Targetable>();
             if (targetable != null)
             {
@@ -289,19 +289,19 @@ namespace Game.NPC.States
             var targetable = context.Transform.GetComponent<Targetable>();
             if (targetable == null) targetable = context.Transform.gameObject.AddComponent<Targetable>();
             targetable.enabled = true;
-            targetable.isInActiveCombat = true; // ⭐ Activar para que el marker aparezca
+            targetable.isInActiveCombat = true; // Activar para que el marker aparezca
             
             // EnemyMarker (Para sistemas de puertas/gates que esperan muerte de enemigos)
             var enemyMarker = context.Transform.GetComponent<EnemyMarker>();
             if (enemyMarker == null)
             {
                 enemyMarker = context.Transform.gameObject.AddComponent<EnemyMarker>();
-                context.Log("[CombatState] 🎯 EnemyMarker añadido al NPC");
+                context.Log("[CombatState] EnemyMarker añadido al NPC");
             }
 
             // Damageable (Salud)
             var damageable = context.Transform.GetComponent<Damageable>();
-            // FIX: si el NPC ya tenía este componente (re-enganche tras alejarse del combate sin
+            // si el NPC ya tenía este componente (re-enganche tras alejarse del combate sin
             // llegar a morir), NO se debe curar a tope más abajo — solo un combate nuevo de
             // verdad (primer Damageable de este NPC) debe arrancar con vida llena. Antes, cada
             // OnEnter volvía a poner damageable.SetMaxAndCurrent(cc.health, cc.health)
@@ -311,7 +311,7 @@ namespace Game.NPC.States
             if (damageable == null)
             {
                 damageable = context.Transform.gameObject.AddComponent<Damageable>();
-                // ✅ CRÍTICO: Establecer destroyOnDeath=false para que LifecycleHandler controle la muerte
+                // CRÍTICO: Establecer destroyOnDeath=false para que LifecycleHandler controle la muerte
                 damageable.SetDestroyOnDeath(false);
             }
             

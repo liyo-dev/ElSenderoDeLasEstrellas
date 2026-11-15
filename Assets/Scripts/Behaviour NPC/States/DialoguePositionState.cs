@@ -147,16 +147,16 @@ namespace Game.NPC.States
                 // Detener movimiento
                 context.Agent.isStopped = true;
                 context.Agent.updatePosition = false;
-                context.Agent.updateRotation = false; // ✅ Desactivar rotación automática del agent
+                context.Agent.updateRotation = false; // Desactivar rotación automática del agent
                 context.Agent.ResetPath();
                 context.Animator?.SetMovementSpeed(0f);
                 context.Animator?.DisableAutoRotation();
 
-                // ✅ Girar hacia el NPC con quien el player está hablando (rotación inicial)
+                // Girar hacia el NPC con quien el player está hablando (rotación inicial)
                 RotateTowardsTarget(context);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialoguePositionState:{context.Transform.name}] ✅ Llegó a posición de diálogo");
+                Debug.Log($"[DialoguePositionState:{context.Transform.name}] Llegó a posición de diálogo");
 #endif
             }
             // Si tarda demasiado, teletransportar
@@ -177,18 +177,18 @@ namespace Game.NPC.States
                 // Detener movimiento
                 context.Agent.isStopped = true;
                 context.Agent.updatePosition = false;
-                context.Agent.updateRotation = false; // ✅ Desactivar rotación automática del agent
+                context.Agent.updateRotation = false; // Desactivar rotación automática del agent
                 context.Agent.ResetPath();
                 context.Animator?.SetMovementSpeed(0f);
                 context.Animator?.DisableAutoRotation();
 
                 _hasReachedPosition = true;
 
-                // ✅ Girar hacia el NPC (rotación inicial)
+                // Girar hacia el NPC (rotación inicial)
                 RotateTowardsTarget(context);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DialoguePositionState:{context.Transform.name}] ⚡ Teletransportado a posición de diálogo (tardó {_elapsedTime:F1}s)");
+                Debug.Log($"[DialoguePositionState:{context.Transform.name}] Teletransportado a posición de diálogo (tardó {_elapsedTime:F1}s)");
 #endif
             }
             // Actualizar animación mientras se mueve
@@ -196,7 +196,7 @@ namespace Game.NPC.States
             {
                 UpdateMovementAnimation(context);
             }
-            // ✅ NUEVO: Mantener rotación hacia el NPC mientras está en posición de diálogo
+            // NUEVO: Mantener rotación hacia el NPC mientras está en posición de diálogo
             else if (_hasReachedPosition)
             {
                 // Mantener rotación suave hacia el NPC target durante todo el diálogo
@@ -218,7 +218,7 @@ namespace Game.NPC.States
                 {
                     context.Transform.rotation = Quaternion.LookRotation(dirToNpc);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DialoguePositionState:{context.Transform.name}] 👁️ Mirando hacia {_npcTarget.name}");
+                    Debug.Log($"[DialoguePositionState:{context.Transform.name}] Mirando hacia {_npcTarget.name}");
 #endif
                 }
             }

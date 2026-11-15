@@ -30,7 +30,6 @@ namespace NarrativeGraphEditor
 
         static StoryBridge()
         {
-            EditorApplication.update += Pump;
             AssemblyReloadEvents.beforeAssemblyReload += Stop;
             EditorApplication.quitting += Stop;
             if (EditorPrefs.GetBool(EnabledKey, false)) Start();
@@ -69,6 +68,9 @@ namespace NarrativeGraphEditor
                 s_listener.Start();
                 s_thread = new Thread(Listen) { IsBackground = true, Name = "NarrativeGraph bridge" };
                 s_thread.Start();
+                // Solo se atiende la cola mientras se escucha: apagado no cuesta nada por fotograma.
+                EditorApplication.update -= Pump;
+                EditorApplication.update += Pump;
                 Debug.Log($"[Narrative Graph] Herramientas externas: escuchando en http://127.0.0.1:{Port}/");
             }
             catch (Exception e)
@@ -82,6 +84,7 @@ namespace NarrativeGraphEditor
         {
             try { s_listener?.Stop(); s_listener?.Close(); } catch (Exception) { }
             s_listener = null;
+            EditorApplication.update -= Pump;
         }
 
         static void Listen()

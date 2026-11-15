@@ -69,12 +69,7 @@ public sealed class PozoGravitatorio : MonoBehaviour
 
     private IEnumerator Vivir()
     {
-        if (PlayerService.TryGetPlayer(out var jugador) && jugador != null)
-        {
-            _jugador = jugador.transform;
-            _rb = jugador.GetComponent<Rigidbody>();
-            _salud = jugador.GetComponent<PlayerHealthSystem>();
-        }
+        ResolverJugador();
 
         Vector3 puntoVfx = transform.position + Vector3.up * Mathf.Max(0.04f, _c.alturaVfx);
         if (_c.vfxPozo != null)
@@ -145,9 +140,22 @@ public sealed class PozoGravitatorio : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // Atrae al personaje que lleva el jugador: si pasa el mando a otro, al nuevo.
+    private void ResolverJugador()
+    {
+        var jugador = PlayerService.Player;
+        if (jugador == null || (_jugador != null && _jugador == jugador.transform)) return;
+        _jugador = jugador.transform;
+        _rb = jugador.GetComponent<Rigidbody>();
+        _salud = jugador.GetComponent<PlayerHealthSystem>();
+    }
+
     private void FixedUpdate()
     {
-        if (!_atrayendo || _jugador == null) return;
+        if (!_atrayendo) return;
+        ResolverJugador();
+        if (_jugador == null) return;
+
         if (_salud != null && !_salud.IsAlive) return;
 
         Vector3 haciaElCentro = transform.position - _jugador.position;

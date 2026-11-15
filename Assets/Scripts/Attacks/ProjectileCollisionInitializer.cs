@@ -91,13 +91,13 @@ public class ProjectileCollisionInitializer : MonoBehaviour
             ProjectileCollisionHandler.Initialize(settings.ToConfig());
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (settings.collisionVFX == null)
-                Debug.LogWarning("[ProjectileCollisionInitializer] ⚠️ No hay VFX de colisión asignado");
+                Debug.LogWarning("[ProjectileCollisionInitializer] No hay VFX de colisión asignado");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[ProjectileCollisionInitializer] ⚠️ No hay settings asignado - usando configuración por defecto");
+            Debug.LogWarning("[ProjectileCollisionInitializer] No hay settings asignado - usando configuración por defecto");
 #endif
             // El handler usará configuración por defecto automáticamente
         }

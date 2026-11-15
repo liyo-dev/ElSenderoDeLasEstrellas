@@ -28,7 +28,7 @@ public class NpcRosterSO : ScriptableObject
         [Tooltip("Prefab del NPC a instanciar.")]
         public GameObject prefab;
 
-        [Tooltip("⚠️ OBLIGATORIO. Nombre EXACTO que tendrá el GameObject en la jerarquía.\n\n" +
+        [Tooltip("OBLIGATORIO. Nombre EXACTO que tendrá el GameObject en la jerarquía.\n\n" +
                  "No es cosmético: el sistema de guardado identifica a cada NPC por el nombre de " +
                  "su GameObject (GameBootProfile.CaptureNpcPositionsFromScene usa " +
                  "npc.gameObject.name), NO por el persistenceId. Si esto no coincide con el " +

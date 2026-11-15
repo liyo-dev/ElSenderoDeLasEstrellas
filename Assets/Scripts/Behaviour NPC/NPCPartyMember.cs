@@ -40,9 +40,6 @@ namespace Game.NPC
         private bool _isJoining; // Flag para evitar joins simultáneos
         private float _nextIdleCheck;
         private Damageable _damageable;
-        // --- Preparación para escalada ---
-        private bool _waitingForClimb = false;
-        private Vector3 _climbBasePosition = Vector3.zero;
         // Slot activo cuando este NPC se unió al party; null = unión mientras Will era activo (miembro compartido)
         internal PartyControlManager.CharacterSlot? _joinedForSlot;
         #endregion
@@ -66,7 +63,7 @@ namespace Game.NPC
 
         /// <summary>
         /// Sobreescribe los hechizos en runtime sin modificar la ficha.
-        /// Usado por ActiveCharacterSwapper para que el Will de la IA lleve los básicos del jugador.
+        /// Los básicos los pone en la IA quien aplica los hechizos del personaje (PlayerPresetService, GrimorioDelPersonaje).
         /// </summary>
         public void SetRuntimeSpells(MagicSpellSO left, MagicSpellSO right, MagicSpellSO special)
         {
@@ -176,16 +173,6 @@ namespace Game.NPC
                 return -1;
             }
         }
-
-        /// <summary>
-        /// Indica si este miembro está en modo "preparado para trepar" (esperando espacio en la base).
-        /// </summary>
-        public bool IsWaitingForClimb => _waitingForClimb;
-
-        /// <summary>
-        /// Posición base donde se espera que el miembro comience la escalada.
-        /// </summary>
-        public Vector3 ClimbBasePosition => _climbBasePosition;
         #endregion
 
         #region Unity Lifecycle
@@ -267,7 +254,7 @@ namespace Game.NPC
                 if (currentState != null && currentState.StateName == "Idle"
                     && !_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                     && !CinematicSequencerBase.AnySequenceActive
-                    && (PartyControlManager.Instance?.IsPartyFollowing ?? true)
+                    && PartyControlManager.DebeSeguirAlJugador(this)
                     // Un NPC anclado (barco, modo Libre) no vuelve a seguir aunque su cerebro
                     // esté en Idle: el ancla manda.
                     && !(_npcManager.Context?.EstaAnclado ?? false)
@@ -322,14 +309,14 @@ namespace Game.NPC
                 return false;
             }
             
-            // ✅ FIX: Evitar joins simultáneos durante la carga de partida
+            // Evitar joins simultáneos durante la carga de partida
             if (_isJoining)
             {
                 LogWarning("Ya hay un proceso de unión en curso, ignorando llamada duplicada");
                 return false;
             }
             
-            // ✅ FIX: Verificar que el NPC esté completamente inicializado
+            // Verificar que el NPC esté completamente inicializado
             if (_npcManager == null || _agent == null)
             {
                 LogWarning("NPC no está completamente inicializado, esperando...");
@@ -345,10 +332,12 @@ namespace Game.NPC
                 return false;
             }
             
-            // ✅ FIX: Verificar que el NavMeshAgent esté en un NavMesh
-            if (!_agent.isOnNavMesh)
+            // Verificar que el NavMeshAgent esté en un NavMesh (el cuerpo que lleva el jugador no
+            // usa su agente: lo mueve su controlador)
+            bool loLlevaElJugador = ControlDelJugador.RepresentadoPorElJugador(this);
+            if (!loLlevaElJugador && !_agent.isOnNavMesh)
             {
-                // FIX (17 ago 2026) — CAUSA RAÍZ REAL confirmada por consola + inspector del bug
+                // FIX — CAUSA RAÍZ REAL confirmada por consola + inspector del bug
                 // crítico "Estela/Liam no vuelven al party tras cerrar y reabrir el juego":
                 // NPCBehaviourManagerV2.UpdateDistanceLOD() "duerme" a cualquier NPC lejos del
                 // jugador (EnterFarState() → agent.enabled = false, optimización de rendimiento
@@ -370,6 +359,7 @@ namespace Game.NPC
                 if (_agent.enabled == false)
                 {
                     _agent.enabled = true;
+
                     LogWarning("NavMeshAgent estaba deshabilitado (NPC 'dormido' por estar lejos del jugador — UpdateDistanceLOD/EnterFarState) — reactivado para poder unirse al party");
                 }
 
@@ -510,7 +500,7 @@ namespace Game.NPC
             _npcManager.Brain.ChangeState(new Game.NPC.States.DialoguePositionState(
                 this, targetPosition, maxTime, npcTarget, mantenerFueraDelParty));
             
-            Log($"📍 Moviéndose a posición de diálogo: {targetPosition}");
+            Log($"Moviéndose a posición de diálogo: {targetPosition}");
         }
         
         /// <summary>
@@ -541,7 +531,7 @@ namespace Game.NPC
             if (currentState is Game.NPC.States.DialoguePositionState)
             {
                 _npcManager.Brain.ChangeState(new Game.NPC.States.FollowPlayerState(this));
-                Log("🔓 Liberado de posición de diálogo, volviendo a seguir");
+                Log("Liberado de posición de diálogo, volviendo a seguir");
             }
         }
         
@@ -562,8 +552,8 @@ namespace Game.NPC
         /// anterior (p.ej. si el jugador murió controlando a Estela, _activeIndex seguía en Estela
         /// en el momento del restore) y quedar mal etiquetado con _joinedForSlot=Estela aunque la
         /// partida recién cargada arranca en Will. Ese etiquetado erróneo podía provocar que
-        /// ActiveCharacterSwapper.SwitchCharacter desvinculara compañeros del equipo al cambiar de
-        /// personaje sin motivo (ver comentario "5b. Desvincular compañeros..." en ese archivo).
+        /// ControlDelJugador.CambiarElMando desvinculara compañeros del equipo al cambiar de
+        /// personaje sin motivo.
         /// </param>
         internal void OnJoinedParty(PlayerParty party, bool isRestore = false)
         {
@@ -598,7 +588,7 @@ namespace Game.NPC
                 _interactable = GetComponent<Interactable>() ?? GetComponentInChildren<Interactable>(true);
             _interactable?.SetHintVisible(false);
             
-            Log($"✨ Unido al equipo (índice {PartyIndex})");
+            Log($"Unido al equipo (índice {PartyIndex})");
 
             // Sistema robusto: verificar estado inmediatamente
             if (_npcManager?.Brain != null)
@@ -625,7 +615,7 @@ namespace Game.NPC
             _isJoining = false;
             _joinedForSlot = null;
 
-            Log("👋 Abandonó el equipo");
+            Log("Abandonó el equipo");
 
             // Fuera del grupo se queda donde está, sin vagar, hasta que vuelva a unirse.
             _npcManager?.Context?.Anclar(this);
@@ -644,13 +634,13 @@ namespace Game.NPC
         internal void OnPlayerEnteredCombat(Transform enemy)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCPartyMember:{name}] 🔔 OnPlayerEnteredCombat - Enemigo: {enemy?.name}");
+            Debug.Log($"[NPCPartyMember:{name}] OnPlayerEnteredCombat - Enemigo: {enemy?.name}");
 #endif
 
             if (_npcManager?.Brain == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError($"[NPCPartyMember:{name}] ⚠️ _npcManager.Brain es NULL!");
+                Debug.LogError($"[NPCPartyMember:{name}] _npcManager.Brain es NULL!");
 #endif
                 return;
             }
@@ -673,7 +663,7 @@ namespace Game.NPC
             if (ControlDelJugador.RepresentadoPorElJugador(this))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCPartyMember:{name}] ℹ️ Ignorando combate: personaje bajo control del jugador");
+                Debug.Log($"[NPCPartyMember:{name}] Ignorando combate: personaje bajo control del jugador");
 #endif
                 return;
             }
@@ -689,7 +679,7 @@ namespace Game.NPC
                 // Pasar el enemigo al constructor para que lo ataque directamente
                 _npcManager.Brain.ChangeState(new States.AllyCombatState(enemy));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCPartyMember:{name}] ⚔️ CAMBIADO A AllyCombatState con target: {enemy?.name}");
+                Debug.Log($"[NPCPartyMember:{name}] CAMBIADO A AllyCombatState con target: {enemy?.name}");
 #endif
             }
         }
@@ -718,7 +708,7 @@ namespace Game.NPC
             }
             if (enemigo != null) { OnPlayerEnteredCombat(enemigo); return; }
             _npcManager.Context.IsInCombat = false;
-            if (PartyControlManager.Instance?.IsPartyFollowing ?? true) StartFollowingIgnorePartyCheck();
+            if (PartyControlManager.DebeSeguirAlJugador(this)) StartFollowingIgnorePartyCheck();
             else _npcManager.ForceIdle();
         }
 
@@ -740,9 +730,9 @@ namespace Game.NPC
             // Si estaba en party antes del combate, volver a seguir
             if (_wasInPartyBeforeCombat && _isInParty)
             {
-                Log("🏳️ Combate terminado, volviendo a seguir al jugador");
+                Log("Combate terminado, volviendo a seguir al jugador");
                 _npcManager.ExitCombat();
-                if (PartyControlManager.Instance?.IsPartyFollowing ?? true)
+                if (PartyControlManager.DebeSeguirAlJugador(this))
                     StartFollowing();
                 else
                     _npcManager.ForceIdle();
@@ -754,51 +744,15 @@ namespace Game.NPC
         /// </summary>
         internal void OnTeleportedToPlayer()
         {
-            Log("⚡ Teletransportado cerca del jugador");
+            Log("Teletransportado cerca del jugador");
 
             if (_isInParty && _npcManager?.Brain?.CurrentState is not FollowPlayerState
-                && (PartyControlManager.Instance?.IsPartyFollowing ?? true))
+                && PartyControlManager.DebeSeguirAlJugador(this))
             {
                 StartFollowing();
             }
         }
 
-        /// <summary>
-        /// Marca a este NPC como "preparado para trepar". Se llama desde PlayerParty
-        /// cuando el player inicia una escalada. El NPC se moverá a la posición base
-        /// y esperará hasta que haya espacio para empezar a subir.
-        /// </summary>
-        public void PrepareForClimb(Vector3 basePosition)
-        {
-            _climbBasePosition = basePosition;
-            _waitingForClimb = true;
-            Log($"Preparado para trepar (base: {_climbBasePosition})");
-            // Si estamos ya siguiendo, cambiamos a FollowPlayerState para que el state
-            // especial de Follow maneje el movimiento 3D hacia la formación en la base.
-            if (_npcManager?.Brain != null)
-            {
-                _npcManager.Brain.ChangeState(new Game.NPC.States.FollowPlayerState(this));
-            }
-        }
-
-        /// <summary>
-        /// Cancela la preparación para la escalada (p.ej. player abandonó la escalada).
-        /// </summary>
-        public void CancelClimbPreparation()
-        {
-            if (!_waitingForClimb) return;
-            _waitingForClimb = false;
-            _climbBasePosition = Vector3.zero;
-            Log("Cancelada preparación de escalada");
-            // Volver a seguir normalmente si corresponde
-            if (_isInParty && _npcManager?.Brain != null)
-            {
-                if (PartyControlManager.Instance?.IsPartyFollowing ?? true)
-                    StartFollowing();
-                else
-                    _npcManager.ForceIdle();
-            }
-        }
         #endregion
 
         #region Helpers
@@ -819,8 +773,8 @@ namespace Game.NPC
             if (_party != null) return _party.GetFormationPosition(PartyIndex);
 
             // FIX (25 ago 2026, INC-095) — cuando este NPC sigue al jugador SIN estar registrado
-            // en PlayerParty (p.ej. el NPC de Will, ver NPCStateContext.IsActivelyFollowingPlayer
-            // / ActiveCharacterSwapper), _party es siempre null y PartyIndex siempre -1. El
+            // en PlayerParty (p.ej. Will con la IA, ver NPCStateContext.IsActivelyFollowingPlayer),
+            // _party es siempre null y PartyIndex siempre -1. El
             // fallback anterior devolvía transform.position — la propia posición ACTUAL de este
             // mismo NPC — como "posición de formación": FollowPlayerState.UpdateDestination() la
             // usaba tal cual como destino del NavMeshAgent, así que el agente pathfindeaba hacia
@@ -851,7 +805,7 @@ namespace Game.NPC
         private void LogWarning(string message)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[NPCPartyMember:{name}] ⚠️ {message}");
+            Debug.LogWarning($"[NPCPartyMember:{name}] {message}");
 #endif
         }
         #endregion

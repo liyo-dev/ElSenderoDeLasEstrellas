@@ -176,7 +176,7 @@ public static class PersonajesConAspectoFijo
         };
     }
 
-    [MenuItem("El Sendero/NPCs/Montar el reparto con aspecto fijo (Aldona, Will niño…)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Reparto con aspecto fijo (Aldona, Will niño…)")]
     public static void Montar()
     {
         var hechos = new List<string>();
@@ -222,8 +222,6 @@ public static class PersonajesConAspectoFijo
             so.FindProperty("dialogueCharacterId").stringValue = p.IdPersonaje;
             so.FindProperty("disableWander").boolValue = !p.Pasea;
             // Nada de encargos heredados de la base: misiones y narrativa van por el grafo.
-            so.FindProperty("configuration.questConfig").objectReferenceValue = null;
-            so.FindProperty("configuration.interactiveNarrativeConfig").objectReferenceValue = null;
             so.FindProperty("configuration.ambientConfig").objectReferenceValue = ambiente;
             so.FindProperty("configuration.behaviourType").intValue = ambiente != null ? (int)Game.NPC.Common.NPCBehaviourType.Ambient : 0;
             so.ApplyModifiedPropertiesWithoutUndo();

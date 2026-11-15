@@ -17,7 +17,6 @@ public static class AbilityPresentationKeyLookup
     {
         { AbilityKey.Swim,  new AbilityPresentationForKey { abilityKey = AbilityKey.Swim,  title = "Nadar",  description = "Permite moverse por el agua." } },
         { AbilityKey.Jump,  new AbilityPresentationForKey { abilityKey = AbilityKey.Jump,  title = "Saltar", description = "Habilidad básica para superar obstáculos." } },
-        { AbilityKey.Climb, new AbilityPresentationForKey { abilityKey = AbilityKey.Climb, title = "Trepar", description = "Accede a superficies verticales." } },
         { AbilityKey.Magic, new AbilityPresentationForKey { abilityKey = AbilityKey.Magic, title = "Magia", description = "Activa el uso de hechizos." } },
         { AbilityKey.Fly,   new AbilityPresentationForKey { abilityKey = AbilityKey.Fly,   title = "Volar",  description = "Permite desplazarse por el aire." } },
         { AbilityKey.Sprint, new AbilityPresentationForKey { abilityKey = AbilityKey.Sprint, title = "Esprintar", description = "Corre más rápido durante un tiempo limitado." } },

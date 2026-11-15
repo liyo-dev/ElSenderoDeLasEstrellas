@@ -832,7 +832,7 @@ public class ModuloBatallaFinal : SequenceModule
         CameraDirectorService.Release(this);
 
         var cam = Camera.main;
-        var tpCam = cam != null ? cam.GetComponent<vThirdPersonCamera>() : Object.FindFirstObjectByType<vThirdPersonCamera>();
+        var tpCam = cam != null ? cam.GetComponent<vThirdPersonCamera>() : Object.FindAnyObjectByType<vThirdPersonCamera>();
         if (tpCam != null)
             tpCam.Init();
 

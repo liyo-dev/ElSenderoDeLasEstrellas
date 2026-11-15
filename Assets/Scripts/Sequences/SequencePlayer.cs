@@ -501,7 +501,7 @@ public class SequencePlayer : CinematicSequencerBase
                 var beat = phase.beats[b];
                 if (beat == null) continue;
 
-                // EL TELÓN (21 sep). Si esta secuencia empezó con la pantalla en negro, se queda en
+                // EL TELÓN. Si esta secuencia empezó con la pantalla en negro, se queda en
                 // negro mientras los beats solo COLOCAN cosas (poner a alguien en su marca, volcar
                 // la carreta, la hora del día...), y se destapa con lo primero que se VE: su primer
                 // plano, o el primer beat que tarde algo. Antes se destapaba al acabar la transición
@@ -683,6 +683,7 @@ public class SequencePlayer : CinematicSequencerBase
             actor.ReturnToNormalPose();
             actor.Release();
         }
+        _context.SoltarReparto();
     }
 
     /// Ver CinematicSequencerBase.OnSkipCleanup: StopCoroutine no garantiza que se ejecute el

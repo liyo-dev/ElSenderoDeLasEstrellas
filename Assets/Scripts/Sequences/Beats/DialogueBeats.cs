@@ -302,7 +302,7 @@ public class SayBeat : SequenceBeat
             }
             pageIndex++;
 
-            // Tope de seguridad (auditoría 17 sep 2026). SpeechBubbleUI.Show() y Hide() matan el
+            // Tope de seguridad. SpeechBubbleUI.Show() y Hide() matan el
             // temporizador del bocadillo anterior SIN llamar a su callback, así que dos bocadillos
             // solapados dejan al primero esperando un aviso que no va a llegar nunca — y esta
             // espera no tenía salida. El resultado sería la secuencia colgada para siempre, con el

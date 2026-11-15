@@ -174,7 +174,7 @@ public sealed class ImpLadron : EnemigoDelMundo
     {
         _robado = null;
         _cantidad = 0;
-        if (Objetivo != null && Objetivo.GetComponentInParent<PlayerHealthSystem>() != null &&
+        if (Objetivo != null && ControlDelJugador.EsElJugador(Objetivo) &&
             PlayerService.TryGetComponent(out Inventory inventario, allowSceneLookup: false) && inventario != null)
         {
             foreach (var item in botin)

@@ -129,7 +129,6 @@ public class InteriorPortalTrigger : MonoBehaviour
         }
         finally
         {
-            // FIX (12 sep 2026, reporte de Raúl — "no se mueve el player al salir de la casa"):
             // antes, el unload de sceneToUnload ocurría DENTRO de este try, antes de llegar aquí.
             // Cuando este trigger es el de SALIDA de un interior, sceneToUnload es la propia
             // escena donde vive este GameObject (p. ej. WillHouse.unity descargándose a sí misma
@@ -170,7 +169,7 @@ public class InteriorPortalTrigger : MonoBehaviour
 #endif
     }
 
-    // ---- Freeze/Restore de locomoción del Animator (12 sep 2026) ----
+    // ---- Freeze/Restore de locomoción del Animator ----
     // No toca CharacterController/input — eso ya lo gestiona PlayerLockService.Acquire/Release,
     // esto SOLO cubre lo que ese servicio no cubre: los parámetros de locomoción del Animator (si
     // no se ponen a 0, el ciclo de "andar" se queda pegado en pantalla aunque el CC esté

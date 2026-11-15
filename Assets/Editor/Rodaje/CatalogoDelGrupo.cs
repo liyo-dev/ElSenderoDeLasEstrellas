@@ -8,7 +8,7 @@ using UnityEngine;
 /// en «Guiones/_ordenes/catalogo_grupo.txt», para elegir poses de escaparate.
 public static class CatalogoDelGrupo
 {
-    [MenuItem("El Sendero/Rodaje/Listar animaciones del grupo")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Listar animaciones del grupo")]
     public static void Listar()
     {
         var sb = new StringBuilder();

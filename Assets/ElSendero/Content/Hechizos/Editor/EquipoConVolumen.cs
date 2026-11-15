@@ -9,7 +9,6 @@ using R = Kits.StylizedVfx.Editor.EnergyRecipes;
 /// Se rehacen en su sitio los prefabs de Assets/Art/VFX/Equipo (mismo GUID: los SpecialAttackSO y
 /// DuoSpecialAttackSystem siguen enganchados). Remates: Estela = sísmico, Liam = supernova,
 /// Trío = cataclismo (SpecialAttackSO.CoreografiaDeEquipo). Ver INC-1154
-/// Ojo: VfxDelJuegoADibujo también rehace estos prefabs; si se pasa después, los deja como antes.
 public static class EquipoConVolumen
 {
     private const string Carpeta = "Assets/Art/VFX/Equipo";

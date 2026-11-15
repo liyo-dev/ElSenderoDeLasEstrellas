@@ -163,6 +163,10 @@ namespace Invector.vCharacterController
         public float MagnitudDeEntrada => input.magnitude;
         /// <summary>True si el personaje está apoyado en el suelo y no saltando.</summary>
         public bool PisandoSuelo => isGrounded && !isJumping;
+        /// <summary>Bloquea o suelta a la vez el movimiento y el giro del controlador (no la animación).</summary>
+        public void BloquearMovimientoYGiro(bool bloquear) { lockMovement = bloquear; lockRotation = bloquear; }
+        /// <summary>Da por terminado el salto en curso (para formas de moverse que toman el relevo en el aire).</summary>
+        public void CortarSalto() { isJumping = false; jumpCounter = 0f; }
         private float _airHoldUntil;                       // fin de la ventana de HoldAirborne()
         private float _planeoHasta;                        // fin del planeo pedido con SostenerPlaneo()
         private float _planeoCaida;                        // velocidad máxima de caída del planeo (m/s)

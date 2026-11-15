@@ -115,7 +115,7 @@ public class VfxPoolService : MonoBehaviour
             ActiveVfx entry = _active[i];
             if (entry.instance == null)
             {
-                // FIX A3 (auditoría 2026-08-07): si el VFX murió con su "parent" externo (ver
+                // si el VFX murió con su "parent" externo (ver
                 // Play(..., parent:)) en vez de expirar por lifetime, antes solo se quitaba de
                 // _active — el ObjectPool<Transform> de origen seguía contando esta instancia
                 // como "en uso" para siempre (nunca pasa por Return/ReturnInternal). Tras

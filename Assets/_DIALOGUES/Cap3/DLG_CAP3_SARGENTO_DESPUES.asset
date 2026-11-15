@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_SARGENTO
     textId: DLG_CAP3_SARGENTO_DESPUES_01
-    text: "Gracias a ti esos p\xE1jaros vuelan. Si pasas por el cruce, aqu\xED estamos."
+    text: "\xBFContrabandistas por el camino del bosque? Lo que nos faltaba. Si los vuelves a ver, av\xEDsanos."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

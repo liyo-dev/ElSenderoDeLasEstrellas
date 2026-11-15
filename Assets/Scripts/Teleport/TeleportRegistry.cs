@@ -53,7 +53,7 @@ public static class TeleportRegistry
         
         _unlockedPoints[point.anchorId] = point;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[TeleportRegistry] ✨ Nuevo punto de teletransporte desbloqueado: {point.displayName} ({point.anchorId})");
+        Debug.Log($"[TeleportRegistry] Nuevo punto de teletransporte desbloqueado: {point.displayName} ({point.anchorId})");
 #endif
         
         // Sincronizar con el preset para persistencia durante gameplay
@@ -223,7 +223,7 @@ public static class TeleportRegistry
             {
                 preset.unlockedTeleportPoints = ToSaveData();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[TeleportRegistry] 🔄 Sincronizado con preset: {preset.unlockedTeleportPoints.Count} puntos");
+                Debug.Log($"[TeleportRegistry] Sincronizado con preset: {preset.unlockedTeleportPoints.Count} puntos");
 #endif
             }
         }

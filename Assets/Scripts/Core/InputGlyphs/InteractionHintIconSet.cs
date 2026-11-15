@@ -8,7 +8,7 @@ namespace Core.InputGlyphs
     /// los suyos con <see cref="Resources.Load"/> desde Assets/Resources/InputGlyphs/...), este set
     /// se referencia de forma directa (serializada) desde <c>Interactable</c> — sin carga dinámica.
     ///
-    /// Motivo (2026-08-11): la carga dinámica por Resources.Load rompió el hint de interacción en
+    /// Motivo: la carga dinámica por Resources.Load rompió el hint de interacción en
     /// cuanto la carpeta Resources/InputGlyphs dejó de existir/estar completa. Con un asset como este,
     /// arrastrado una única vez a un campo del Inspector, el icono siempre está ahí — no depende de
     /// que exista un PNG con el nombre y la ruta exactos en Resources.

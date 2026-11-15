@@ -416,7 +416,7 @@ public class BossArenaController : MonoBehaviour
     /// Igual que <see cref="TriggerStartBattle()"/>, pero con un BattleEncounterSO (INC-207): sus
     /// datos (prefab, nombre, radio, VFX) sustituyen a los campos configurados a mano en esta
     /// arena para esta batalla concreta, y fuerza el modo radio aunque useRadiusMode esté en
-    /// false. Pensado para llamarse desde StartBattleNode cuando el nodo lleva un encounter
+    /// false. Pensado para llamarse desde PedirBatalla cuando el nodo lleva un encounter
     /// asignado.
     /// </summary>
     public void TriggerStartBattle(BattleEncounterSO encounter, int spawnProfileIndex = 0)
@@ -1603,7 +1603,7 @@ public class BossArenaController : MonoBehaviour
     /// se ejecutan con battleId/bossId ya puestos y con useDoorMode/areaBarrierCollider ya
     /// limpiados.
     /// </summary>
-    /// <param name="battleId">Id de la batalla (el mismo que usa StartBattleNode para suscribirse a OnBattleWon).</param>
+    /// <param name="battleId">Id de la batalla (el mismo que usa PedirBatalla para suscribirse a OnBattleWon).</param>
     /// <param name="encounter">Configuración del encuentro (prefab del enemigo, nombre, radio, VFX).</param>
     /// <returns>La arena creada, o null si faltan datos imprescindibles.</returns>
     public static BossArenaController CreateRuntimeArena(string battleId, BattleEncounterSO encounter)

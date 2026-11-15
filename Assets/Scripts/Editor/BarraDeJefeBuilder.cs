@@ -31,7 +31,7 @@ public static class BarraDeJefeBuilder
 
     private static readonly Color Crema = new Color32(0xFF, 0xF4, 0xDC, 0xFF);
 
-    [MenuItem("El Sendero/UI/Crear o regenerar la barra de jefe (INC-645)")]
+    [MenuItem("El Sendero/Interfaz/Crear o regenerar la barra de jefe")]
     public static void Montar()
     {
         ConstruirYGuardar(silencioso: false);

@@ -72,6 +72,7 @@ namespace NarrativeGraphEditor
         static readonly Dictionary<string, string> _locEn = new(StringComparer.Ordinal);
         static readonly HashSet<string> _flags = new(StringComparer.Ordinal);
         static readonly HashSet<string> _anchors = new(StringComparer.Ordinal);
+        static readonly HashSet<string> _gameSteps = new(StringComparer.Ordinal);
         static readonly List<NarrativeGraph> _graphs = new();
         static readonly Dictionary<UnityEngine.Object, List<string>> _assetUsers = new();
         static readonly Dictionary<string, List<NodeUse>> _questUsers = new(StringComparer.Ordinal);
@@ -94,18 +95,33 @@ namespace NarrativeGraphEditor
 
         public static void ForceRebuild() { Invalidate(); EnsureBuilt(); }
 
-        /// Clasifica los cambios del proyecto: si solo han cambiado grafos, la capa cara no se toca.
+        /// Clasifica los cambios del proyecto: si solo han cambiado grafos, la capa cara no se toca, y
+        /// lo que el índice no lee (texturas, materiales, modelos, sonidos…) no lo toca nada.
         sealed class ChangeWatcher : AssetPostprocessor
         {
             static void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom)
             {
                 foreach (var path in imported.Concat(deleted).Concat(moved).Concat(movedFrom))
                 {
-                    if (AssetDatabase.GetMainAssetTypeAtPath(path) == typeof(NarrativeGraph)) { _graphsDirty = true; Story.StoryCache.Invalidate(); }
-                    else if (!path.EndsWith(".meta", StringComparison.Ordinal)) { Invalidate(); Story.StoryCache.Invalidate(); return; }
+                    var ext = Path.GetExtension(path);
+                    // Entra, sale o se mueve una escena o un prefab: la lista de archivos que se leen
+                    // ya no vale (que cambie su contenido lo resuelve la caché por archivo).
+                    if (ext.Equals(".unity", StringComparison.OrdinalIgnoreCase) || ext.Equals(".prefab", StringComparison.OrdinalIgnoreCase))
+                        _assetListDirty = true;
+                    if (!s_projectExtensions.Contains(ext)) continue;
+                    var type = ext.Equals(".asset", StringComparison.OrdinalIgnoreCase) ? AssetDatabase.GetMainAssetTypeAtPath(path) : null;
+                    if (type == typeof(NarrativeGraph)) { _graphsDirty = true; Story.StoryCache.Invalidate(); continue; }
+                    // De los .asset solo cuentan los datos (ScriptableObject): mallas, terrenos o luces
+                    // horneadas no aportan nada. Uno borrado ya no tiene tipo: cuenta, por si acaso.
+                    if (type != null && !typeof(ScriptableObject).IsAssignableFrom(type)) continue;
+                    Invalidate(); Story.StoryCache.Invalidate(); return;
                 }
             }
         }
+
+        /// Archivos que lee la capa del proyecto: escenas, prefabs, código y assets de datos. Los
+        /// catálogos del juego añaden los suyos con <see cref="Contributions.WatchFiles"/>.
+        static readonly HashSet<string> s_projectExtensions = new(StringComparer.OrdinalIgnoreCase) { ".unity", ".prefab", ".cs", ".asset" };
 
         // ─── Acceso público ────────────────────────────────────────────────
 
@@ -216,6 +232,7 @@ namespace NarrativeGraphEditor
                 case NarrativeKeyKind.LocKey: return _locEs.Keys.OrderBy(k => k).ToList();
                 case NarrativeKeyKind.Flag: return _flags.OrderBy(k => k).ToList();
                 case NarrativeKeyKind.Anchor: return _anchors.OrderBy(k => k).ToList();
+                case NarrativeKeyKind.GameStep: return _gameSteps.OrderBy(k => k).ToList();
                 default: return new List<string>();
             }
         }
@@ -238,6 +255,7 @@ namespace NarrativeGraphEditor
                 case NarrativeKeyKind.LocKey: return _locEs.ContainsKey(value);
                 case NarrativeKeyKind.Flag: return true; // los flags se crean al usarlos
                 case NarrativeKeyKind.Anchor: return _anchors.Count == 0 || _anchors.Contains(value);
+                case NarrativeKeyKind.GameStep: return _gameSteps.Contains(value);
                 default: return true;
             }
         }
@@ -247,12 +265,13 @@ namespace NarrativeGraphEditor
         static void EnsureBuilt()
         {
             if (!_projectDirty && !_graphsDirty) return;
+            using var medida = Story.StoryTiming.Measure(_projectDirty ? "Índice del proyecto: rehacer todo" : "Índice del proyecto: rehacer grafos");
             var sw = System.Diagnostics.Stopwatch.StartNew();
             _scannedFiles = 0; _cachedFiles = 0;
             try
             {
-                if (_projectDirty) RebuildProject();
-                RebuildGraphs();
+                if (_projectDirty) using (Story.StoryTiming.Measure("proyecto")) RebuildProject();
+                using (Story.StoryTiming.Measure("grafos")) RebuildGraphs();
                 _projectDirty = false;
                 _graphsDirty = false;
             }
@@ -270,25 +289,28 @@ namespace NarrativeGraphEditor
         static void RebuildProject()
         {
             _quests.Clear(); _signals.Clear(); _actors.Clear();
-            _locEs.Clear(); _locEn.Clear(); _anchors.Clear();
+            _locEs.Clear(); _locEn.Clear(); _anchors.Clear(); _gameSteps.Clear();
             _primaryLanguage = "Principal"; _secondaryLanguage = "Secundario";
 
-            LoadCache();
+            using (Story.StoryTiming.Measure("caché")) LoadCache();
 
             // Lo que solo el juego sabe leer: textos, misiones, actores, convenciones de sus escenas.
             var contributions = new Contributions();
+            // Lo del propio kit: el id de los pasos del juego puestos en escenas y prefabs.
+            contributions.SceneField(NarrativeGameStepHook.IdFieldName, NarrativeKeyKind.GameStep, who: "«Pedir al juego» atendido en");
             foreach (var catalog in NarrativeEditorExtensions.CreateAll<INarrativeProjectCatalog>())
             {
+                using var parte = Story.StoryTiming.Measure("catálogo " + catalog.GetType().Name);
                 try { catalog.Contribute(contributions); }
                 catch (Exception ex) { Debug.LogWarning($"[NarrativeProjectIndex] El catálogo {catalog.GetType().Name} falló: {ex.Message}"); }
             }
-            ValidateSceneCache(contributions.SceneRulesSignature);
+            using (Story.StoryTiming.Measure("campos con rol")) ValidateSceneCache(contributions.SceneRulesSignature);
 
             // Escenas y prefabs (YAML): campos con rol declarado y campos que el juego reconoce por su nombre.
-            ScanYamlAssets(contributions);
+            using (Story.StoryTiming.Measure("escenas y prefabs")) ScanYamlAssets(contributions);
 
             // Código C#: RaiseCustom("LITERAL") / OnCustom("LITERAL").
-            ScanScriptsForSignals(contributions);
+            using (Story.StoryTiming.Measure("código")) ScanScriptsForSignals(contributions);
 
             SaveCacheIfChanged();
 
@@ -323,7 +345,7 @@ namespace NarrativeGraphEditor
                 foreach (var n in g.nodes)
                 {
                     if (n == null) continue;
-                    string where = $"Grafo {g.name} › {NarrativeNodeCatalog.TitleOf(n.GetType())}{(string.IsNullOrEmpty(n.displayTitle) ? "" : " '" + n.displayTitle + "'")}";
+                    string where = $"Grafo {g.name} › {NarrativeNodeCatalog.TitleOf(n)}{(string.IsNullOrEmpty(n.displayTitle) ? "" : " '" + n.displayTitle + "'")}";
                     refs.Collect(n);
                     foreach (var sig in refs.Signals)
                     {
@@ -377,6 +399,13 @@ namespace NarrativeGraphEditor
             {
                 foreach (var f in fragments)
                     if (!string.IsNullOrEmpty(f) && !_skipFragments.Contains(f)) _skipFragments.Add(f);
+            }
+
+            /// <summary>Extensiones de archivo que lee el catálogo («.json»): si cambia uno, el índice se rehace.</summary>
+            public void WatchFiles(params string[] extensions)
+            {
+                foreach (var e in extensions)
+                    if (!string.IsNullOrEmpty(e)) s_projectExtensions.Add(e.StartsWith(".") ? e : "." + e);
             }
 
             /// <summary>Carpetas donde buscar señales en el código. Sin ninguna, se busca en todo Assets.</summary>
@@ -450,14 +479,16 @@ namespace NarrativeGraphEditor
         // fecha de modificación; si no han cambiado, no se vuelve a abrir el archivo.
 
         const string CachePath = "Library/NarrativeProjectIndex.cache.json";
-        const int CacheVersion = 3;
+        const int CacheVersion = 5;
 
         [Serializable] class YamlCacheEntry { public string path; public long size; public long mtime; public string[] campos = Array.Empty<string>(); public string[] escucha = Array.Empty<string>(); public string[] emite = Array.Empty<string>(); }
         [Serializable] class FileCacheEntry { public string path; public long size; public long mtime; public string[] values = Array.Empty<string>(); }
-        [Serializable] class CacheFile { public int version; public string campos; public List<YamlCacheEntry> yaml = new(); public List<FileCacheEntry> files = new(); }
+        [Serializable] class CacheFile { public int version; public string campos; public string[] paths = Array.Empty<string>(); public List<YamlCacheEntry> yaml = new(); public List<FileCacheEntry> files = new(); }
 
         static Dictionary<string, YamlCacheEntry> _yamlCache;
         static Dictionary<string, FileCacheEntry> _fileCache;
+        static string[] _yamlPaths;      // escenas y prefabs de la última vez que se listaron
+        static bool _assetListDirty = true;
         static string _yamlCacheFirma;   // reglas con las que se leyeron las entradas de _yamlCache
         static bool _cacheChanged;
         static int _scannedFiles, _cachedFiles;
@@ -489,6 +520,8 @@ namespace NarrativeGraphEditor
                 var data = JsonUtility.FromJson<CacheFile>(File.ReadAllText(CachePath));
                 if (data == null || data.version != CacheVersion) return;
                 _yamlCacheFirma = data.campos;
+                _yamlPaths = data.paths ?? Array.Empty<string>();
+                _assetListDirty = _yamlPaths.Length == 0;
                 foreach (var e in data.yaml) if (e != null && !string.IsNullOrEmpty(e.path)) _yamlCache[e.path] = e;
                 foreach (var e in data.files) if (e != null && !string.IsNullOrEmpty(e.path)) _fileCache[e.path] = e;
             }
@@ -518,7 +551,7 @@ namespace NarrativeGraphEditor
             _cacheChanged = false;
             try
             {
-                var data = new CacheFile { version = CacheVersion, campos = _yamlCacheFirma, yaml = _yamlCache.Values.ToList(), files = _fileCache.Values.ToList() };
+                var data = new CacheFile { version = CacheVersion, campos = _yamlCacheFirma, paths = _yamlPaths ?? Array.Empty<string>(), yaml = _yamlCache.Values.ToList(), files = _fileCache.Values.ToList() };
                 Directory.CreateDirectory(Path.GetDirectoryName(CachePath));
                 File.WriteAllText(CachePath, JsonUtility.ToJson(data));
             }
@@ -567,12 +600,8 @@ namespace NarrativeGraphEditor
 
         static void ScanYamlAssets(Contributions rules)
         {
-            var guids = AssetDatabase.FindAssets("t:Scene", new[] { "Assets" })
-                .Concat(AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }));
-            foreach (var guid in guids)
+            foreach (var path in YamlAssetPaths())
             {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (!path.EndsWith(".unity") && !path.EndsWith(".prefab")) continue;
                 if (ShouldSkipPath(path)) continue;
                 var entry = GetYamlEntry(path, rules);
                 if (entry == null) continue;
@@ -587,10 +616,30 @@ namespace NarrativeGraphEditor
                     var valor = campo.Substring(tab + 1);
                     if (!rules.SceneFields.TryGetValue(nombre, out var regla)) continue;
                     if (regla.kind == NarrativeKeyKind.Anchor) _anchors.Add(valor);
+                    else if (regla.kind == NarrativeKeyKind.GameStep) _gameSteps.Add(valor);
                     else if (regla.kind == NarrativeKeyKind.Signal && regla.role == SignalRole.Escucha) GetSignal(valor).listeners.Add($"{regla.who} {label}");
                     else if (regla.kind == NarrativeKeyKind.Signal) GetSignal(valor).emitters.Add($"{regla.who} {label}");
                 }
             }
+        }
+
+        /// Escenas y prefabs que hay que leer. La lista se guarda con la caché: pedírsela a la base de
+        /// assets (dos consultas y una ruta por cada guid, con miles de prefabs) se llevaba más tiempo
+        /// que leer los que habían cambiado. Solo se vuelve a pedir cuando entra, sale o se mueve alguna.
+        static string[] YamlAssetPaths()
+        {
+            if (!_assetListDirty && _yamlPaths != null && _yamlPaths.Length > 0) return _yamlPaths;
+            using (Story.StoryTiming.Measure("listar escenas y prefabs"))
+            {
+                _yamlPaths = AssetDatabase.FindAssets("t:Scene", new[] { "Assets" })
+                    .Concat(AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }))
+                    .Select(AssetDatabase.GUIDToAssetPath)
+                    .Where(p => p.EndsWith(".unity", StringComparison.Ordinal) || p.EndsWith(".prefab", StringComparison.Ordinal))
+                    .ToArray();
+            }
+            _assetListDirty = false;
+            _cacheChanged = true;
+            return _yamlPaths;
         }
 
         static YamlCacheEntry GetYamlEntry(string path, Contributions rules)
@@ -712,14 +761,43 @@ namespace NarrativeGraphEditor
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 if (!path.EndsWith(".cs") || ShouldSkipPath(path)) continue;
-                string text;
-                try { text = File.ReadAllText(path); } catch { continue; }
-                if (text.IndexOf("Custom(", StringComparison.Ordinal) < 0) continue;
+                // Cada script se lee solo si ha cambiado desde la última vez (caché por tamaño y fecha).
+                var found = GetFileValues(path, () => ReadScriptKeys(path));
+                if (found.Length == 0) continue;
                 string label = Path.GetFileNameWithoutExtension(path);
-                foreach (Match m in CsRaise.Matches(text)) GetSignal(m.Groups[1].Value).emitters.Add($"Código {label}.cs");
-                foreach (Match m in CsOn.Matches(text)) GetSignal(m.Groups[1].Value).listeners.Add($"Código {label}.cs");
+                foreach (var entry in found)
+                {
+                    if (entry.Length < 3 || entry[1] != '\t') continue;
+                    var key = entry.Substring(2);
+                    switch (entry[0])
+                    {
+                        case 'E': GetSignal(key).emitters.Add($"Código {label}.cs"); break;
+                        case 'L': GetSignal(key).listeners.Add($"Código {label}.cs"); break;
+                        case 'G': _gameSteps.Add(key); break;
+                    }
+                }
             }
         }
+
+        /// Claves literales de un script: «E\tSEÑAL» (la emite), «L\tSEÑAL» (la escucha) y
+        /// «G\tid» (registra algo que atiende «Pedir al juego»).
+        static string[] ReadScriptKeys(string path)
+        {
+            var text = File.ReadAllText(path);
+            bool signals = text.IndexOf("Custom(", StringComparison.Ordinal) >= 0;
+            bool steps = text.IndexOf("NarrativeGameSteps.Register", StringComparison.Ordinal) >= 0;
+            if (!signals && !steps) return Array.Empty<string>();
+            var keys = new List<string>();
+            if (signals)
+            {
+                foreach (Match m in CsRaise.Matches(text)) keys.Add("E\t" + m.Groups[1].Value);
+                foreach (Match m in CsOn.Matches(text)) keys.Add("L\t" + m.Groups[1].Value);
+            }
+            if (steps) foreach (Match m in CsGameStep.Matches(text)) keys.Add("G\t" + m.Groups[1].Value);
+            return keys.ToArray();
+        }
+
+        static readonly Regex CsGameStep = new(@"NarrativeGameSteps\.Register\(\s*""([^""]+)""", RegexOptions.Compiled);
 
         static string Clean(string v)
         {

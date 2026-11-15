@@ -2330,15 +2330,15 @@
         },
         {
             "id": "CAP3_CARRO_01",
-            "text": "Ahí viene. Un carro de noche, con la carga tapada… lo que contó el posadero."
+            "text": "Ruedas… a estas horas."
         },
         {
             "id": "CAP3_CARRO_02",
-            "text": "Esa luz que sale de la paja… sube y baja despacio, como si respirara. Son las luces del camino."
+            "text": "La carga tapada y esa luz bajo la paja… lo que contó el posadero."
         },
         {
             "id": "CAP3_CARRO_03",
-            "text": "Ahí dentro van los animales de los aros. Voy a ver adónde los lleva. De lejos, sin que me vea."
+            "text": "Voy a seguirles. Sin que me vean."
         },
         {
             "id": "CAP3_CLARO_01",
@@ -2362,7 +2362,7 @@
         },
         {
             "id": "CAP3_CLARO_06",
-            "text": "Pero son tres. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro."
+            "text": "Pero son dos. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro."
         },
         {
             "id": "CAP3_CLARO_07",
@@ -2719,6 +2719,26 @@
         {
             "id": "CAP3_POSADA_13",
             "text": "¿De verdad? ¡Pues mañana llego al pulgar!"
+        },
+        {
+            "id": "CAP3_CARRO_04",
+            "text": "Brasas recientes. Aquí ha estado alguien."
+        },
+        {
+            "id": "CAP3_CARRO_05",
+            "text": "Algún pastor. Vamos, que nos esperan antes del alba."
+        },
+        {
+            "id": "PROLOGO_DESEO",
+            "text": "Que ningún poder pueda destruirme."
+        },
+        {
+            "id": "PROLOGO_DESEO_PODER",
+            "text": "…¿Y ese poder? ¿De dónde sale?"
+        },
+        {
+            "id": "PROLOGO_DESEO_PORFIN",
+            "text": "¡Por fin!"
         }
     ]
 }

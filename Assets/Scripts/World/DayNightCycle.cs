@@ -879,9 +879,42 @@ public class DayNightCycle : MonoBehaviour
                 * Mathf.Lerp(1f, mistFogDensityMultiplier, _mistAmount)
                 * Mathf.Lerp(1f, snowFogDensityMultiplier, precipitacion * nieve);
             RenderSettings.fogColor = Color.Lerp(_baseFogColor, _colorDeClima, precipitacion);
+            if (_nieblaPrestada.Count > 0) AplicarNieblaPrestada();
         }
         if (_activeSnowInstance != null || _activeWindInstance != null)
             VfxDeClima.Iluminar(Color.Lerp(RenderSettings.fogColor, Color.white, 0.55f));
+    }
+
+    // Niebla prestada: un sistema la cambia un rato con su clave (PrestarNiebla / SoltarNiebla).
+    readonly System.Collections.Generic.Dictionary<string, (float factor, Color color, float mezcla)> _nieblaPrestada = new();
+    string _ultimaNieblaPrestada;
+
+    /// Cambia la niebla del ciclo mientras alguien la necesita (p. ej. el vuelo de apertura, que sube a cientos
+    /// de metros y con la niebla del ciclo lo vería todo gris): multiplica la densidad por `factor` y mezcla el
+    /// color con `color` (`mezcla` 0 = el del ciclo, 1 = el pedido). Se puede llamar cada fotograma; manda la
+    /// última petición. El ciclo sigue calculando su niebla debajo y vuelve a ella al soltarla.
+    public void PrestarNiebla(string quien, float factor, Color color, float mezcla)
+    {
+        if (string.IsNullOrEmpty(quien)) return;
+        _nieblaPrestada[quien] = (Mathf.Max(0f, factor), color, Mathf.Clamp01(mezcla));
+        _ultimaNieblaPrestada = quien;
+    }
+
+    public void SoltarNiebla(string quien)
+    {
+        if (string.IsNullOrEmpty(quien) || !_nieblaPrestada.Remove(quien)) return;
+        if (_ultimaNieblaPrestada == quien) _ultimaNieblaPrestada = null;
+    }
+
+    void AplicarNieblaPrestada()
+    {
+        (float factor, Color color, float mezcla) p = (1f, Color.white, 0f);
+        if (_ultimaNieblaPrestada == null || !_nieblaPrestada.TryGetValue(_ultimaNieblaPrestada, out p))
+        {
+            foreach (var kv in _nieblaPrestada) { _ultimaNieblaPrestada = kv.Key; p = kv.Value; break; }
+        }
+        RenderSettings.fogDensity *= p.factor;
+        RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, p.color, p.mezcla);
     }
 
     void HandleInteriorEntered()

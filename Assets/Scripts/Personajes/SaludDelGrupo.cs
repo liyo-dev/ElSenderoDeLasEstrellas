@@ -188,7 +188,15 @@ public sealed class SaludDelGrupo : MonoBehaviour
         _relevoEnCurso = false;
     }
 
-    private void AlRegistrarJugador(GameObject _) { if (_iniciado) Enlazar(); }
+    // Al cambiar de personaje el cuerpo nuevo se registra antes de que cambie el activo: lo enlaza
+    // AlCambiarActivo, después de leer los valores del cuerpo que deja el mando.
+    private void AlRegistrarJugador(GameObject cuerpo)
+    {
+        if (!_iniciado) return;
+        if (ControlDelJugador.PersonajeDe(cuerpo, out var p) && p != _activo) return;
+        Enlazar();
+    }
+
     private void AlCambiarGrupo(IReadOnlyList<NPCPartyMember> _) { if (_iniciado) Enlazar(); }
 
     private void Inicializar()
@@ -577,17 +585,8 @@ public sealed class SaludDelGrupo : MonoBehaviour
 
     private static PlayerPresetSO Preset() => Partida.Preset;
 
-    private static PlayerPresetSO.SaludDeCompanero BuscarEntrada(PlayerPresetSO preset, Slot p, bool crear)
-    {
-        if (preset == null) return null;
-        preset.companionHealth ??= new List<PlayerPresetSO.SaludDeCompanero>();
-        foreach (var e in preset.companionHealth)
-            if (e != null && e.personaje == p) return e;
-        if (!crear) return null;
-        var nueva = new PlayerPresetSO.SaludDeCompanero { personaje = p };
-        preset.companionHealth.Add(nueva);
-        return nueva;
-    }
+    private static PlayerPresetSO.EstadoDeCompanero BuscarEntrada(PlayerPresetSO preset, Slot p, bool crear)
+        => preset != null ? preset.EstadoDe(p, crear) : null;
 
     private void EscribirEnPreset(Slot p) => EscribirEnPreset(p, Preset());
 

@@ -69,14 +69,14 @@ public class WorldBootstrap : MonoBehaviour
         }
         else
         {
-            // ✅ En editor, Start puede cargarse aditivamente - Esperar un momento antes de asumir que no existe
+            // En editor, Start puede cargarse aditivamente - Esperar un momento antes de asumir que no existe
             #if UNITY_EDITOR
-            Debug.Log("[WorldBootstrap] ⏳ GameBootService no disponible aún - Esperando por si Start se carga aditivamente...");
+            Debug.Log("[WorldBootstrap] GameBootService no disponible aún - Esperando por si Start se carga aditivamente...");
             StartCoroutine(WaitForGameBootServiceOrFallback());
             #else
             // En build, si no hay GameBootService es un error grave - no se puede continuar
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[WorldBootstrap] ❌ FATAL: GameBootService no disponible en build. La escena 'Start' debe cargarse primero.");
+            Debug.LogError("[WorldBootstrap] FATAL: GameBootService no disponible en build. La escena 'Start' debe cargarse primero.");
             #endif
             #endif
         }
@@ -101,14 +101,14 @@ public class WorldBootstrap : MonoBehaviour
             // Timeout de seguridad: 1800 frames = 30 segundos a 60 FPS
             if (framesWaited > 1800)
             {
-                Debug.LogError($"[WorldBootstrap] ❌ FATAL: GameBootService no disponible después de 30 segundos ({framesWaited} frames)");
-                Debug.LogError($"[WorldBootstrap] ❌ Verifica que la escena 'Start' esté en Build Settings y se haya cargado correctamente");
-                Debug.LogError($"[WorldBootstrap] ❌ AutoBootstrapOnPlay debe haber cargado 'Start' aditivamente antes de PlayMode");
+                Debug.LogError($"[WorldBootstrap] FATAL: GameBootService no disponible después de 30 segundos ({framesWaited} frames)");
+                Debug.LogError($"[WorldBootstrap] Verifica que la escena 'Start' esté en Build Settings y se haya cargado correctamente");
+                Debug.LogError($"[WorldBootstrap] AutoBootstrapOnPlay debe haber cargado 'Start' aditivamente antes de PlayMode");
                 yield break;
             }
         }
         
-        Debug.Log($"[WorldBootstrap] ✅ GameBootService disponible después de {framesWaited} frame(s) - Inicializando normalmente");
+        Debug.Log($"[WorldBootstrap] GameBootService disponible después de {framesWaited} frame(s) - Inicializando normalmente");
         HandleProfileReady();
     }
     #endif
@@ -138,7 +138,7 @@ public class WorldBootstrap : MonoBehaviour
     private void InitializeWorld()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WorldBootstrap] 🌍 InitializeWorld() - Iniciando configuración del mundo");
+        Debug.Log($"[WorldBootstrap] InitializeWorld() - Iniciando configuración del mundo");
 #endif
 
         // Punto seguro para tirar de golpe cualquier flag de sesión estático que pudiera haber
@@ -174,7 +174,7 @@ public class WorldBootstrap : MonoBehaviour
 
         // Spawn de NPCs por datos (NpcRosterSO + NpcSpawnPoint).
         //
-        // ⚠️ ORDEN CRÍTICO: tiene que ir ANTES de las llamadas a ApplyNpcPositionsToScene() que
+        // ORDEN CRÍTICO: tiene que ir ANTES de las llamadas a ApplyNpcPositionsToScene() que
         // hay más abajo en las dos ramas (modo preset y modo normal). Esa función resuelve los
         // NPCs con un FindObjectsByType EN VIVO, así que un NPC instanciado aquí ya entra en la
         // consulta y recibe su posición guardada. Ese es todo el enganche con el guardado: el
@@ -193,10 +193,10 @@ public class WorldBootstrap : MonoBehaviour
         {
             Partida.CargarDesdePlantilla(bootProfile.bootPreset);
 
-            // ✅ El anchor ya fue establecido por SpawnManager.HandleProfileReady()
+            // El anchor ya fue establecido por SpawnManager.HandleProfileReady()
             var anchor = Partida.AnclaDeInicio;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[WorldBootstrap] 📍 Modo PRESET - Anchor desde profile: '{anchor}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
+            Debug.Log($"[WorldBootstrap] Modo PRESET - Anchor desde profile: '{anchor}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
 
             var testPreset = Partida.Preset;
@@ -209,12 +209,12 @@ public class WorldBootstrap : MonoBehaviour
                     qm.RestoreFromProfileFlags(testPreset.flags);
                 }
 
-                // ✅ CRÍTICO: Aplicar posiciones de NPCs AQUÍ (cuando MainWorld ya está cargada)
+                // CRÍTICO: Aplicar posiciones de NPCs AQUÍ (cuando MainWorld ya está cargada)
                 // GameBootService.ApplyPresetAsLoadedGame() se ejecuta ANTES de que MainWorld cargue
                 // En ese momento los NPCs no existen, por lo que NO se pueden posicionar
                 // AHORA es el momento correcto porque MainWorld está cargada y los NPCs existen
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[WorldBootstrap] 🎯 Aplicando posiciones de {testPreset.npcPositions?.Count ?? 0} NPCs desde preset (modo testeo)");
+                Debug.Log($"[WorldBootstrap] Aplicando posiciones de {testPreset.npcPositions?.Count ?? 0} NPCs desde preset (modo testeo)");
 #endif
                 Partida.AplicarPosicionesDeNpcs(testPreset);
             }
@@ -233,7 +233,7 @@ public class WorldBootstrap : MonoBehaviour
         anchorId = AnclaDeEstaEscenaSiLaPartidaEsDeOtroMundo(anchorId);
 #endif
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WorldBootstrap] 📍 Modo NORMAL - Anchor desde profile: '{anchorId}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
+        Debug.Log($"[WorldBootstrap] Modo NORMAL - Anchor desde profile: '{anchorId}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
         
         var runtimePreset = Partida.Preset;
@@ -292,14 +292,14 @@ public class WorldBootstrap : MonoBehaviour
                 // propia capa de transición. Lo revelamos igualmente — no pisa nada de la
                 // cinemática, solo destapa la cámara del jugador.
                 //
-                // (21 sep) Ya NO se destapa aquí: eso es lo que enseñaba la habitación de Will y
+                // Ya NO se destapa aquí: eso es lo que enseñaba la habitación de Will y
                 // el valle a medio montar. Se suelta, y como la cinemática ya retiene el telón
                 // (lo recoge al empezar si estaba cerrado), se destapa en su primer plano.
                 Telon.Soltar(ClaveTelon);
                 yield break;
             }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[WorldBootstrap] ⚠️ Se esperaba una cinemática de arranque para el anchor '{anchorId}' pero no arrancó en {bootCinematicTimeout}s — revelando la pantalla igualmente (red de seguridad).");
+            Debug.LogWarning($"[WorldBootstrap] Se esperaba una cinemática de arranque para el anchor '{anchorId}' pero no arrancó en {bootCinematicTimeout}s — revelando la pantalla igualmente (red de seguridad).");
 #endif
         }
 
@@ -364,7 +364,7 @@ public class WorldBootstrap : MonoBehaviour
         if (!existing.IsValid() || !existing.isLoaded)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[WorldBootstrap] 🚪 Anchor '{anchorId}' vive en '{sceneName}' y no está cargada — cargándola en aditivo antes de teletransportar...");
+            Debug.Log($"[WorldBootstrap] Anchor '{anchorId}' vive en '{sceneName}' y no está cargada — cargándola en aditivo antes de teletransportar...");
 #endif
             var op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             if (op != null)
@@ -374,7 +374,7 @@ public class WorldBootstrap : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
             {
-                Debug.LogError($"[WorldBootstrap] ❌ No se pudo iniciar la carga aditiva de '{sceneName}' (¿está en Build Settings?).");
+                Debug.LogError($"[WorldBootstrap] No se pudo iniciar la carga aditiva de '{sceneName}' (¿está en Build Settings?).");
             }
 #endif
         }
@@ -433,7 +433,7 @@ public class WorldBootstrap : MonoBehaviour
             yield break;
         }
 
-        // Debug.Log($"[WorldBootstrap] 🎮 Jugador encontrado: {player.name}, teletransportando a '{anchorId}'");
+        // Debug.Log($"[WorldBootstrap] Jugador encontrado: {player.name}, teletransportando a '{anchorId}'");
 
         // Esperar a que el jugador esté activo
         attempts = 0;
@@ -446,7 +446,7 @@ public class WorldBootstrap : MonoBehaviour
         // Teleportar al jugador
         if (player.activeInHierarchy)
         {
-            // Debug.Log($"[WorldBootstrap] ✅ Ejecutando TeleportTo('{anchorId}')");
+            // Debug.Log($"[WorldBootstrap] Ejecutando TeleportTo('{anchorId}')");
             SpawnManager.TeleportTo(anchorId, false);
 #if UNITY_EDITOR
             StartCoroutine(DiagnosticoDeCaida(player, anchorId)); // Ver INC-890: quitar al cerrarla.
@@ -455,7 +455,7 @@ public class WorldBootstrap : MonoBehaviour
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[WorldBootstrap] ⚠️ Jugador no activo, programando teleport diferido a '{anchorId}'");
+            Debug.LogWarning($"[WorldBootstrap] Jugador no activo, programando teleport diferido a '{anchorId}'");
 #endif
             SpawnManager.SetCurrentAnchor(anchorId);
             yield return TeleportWhenActive(player, anchorId);

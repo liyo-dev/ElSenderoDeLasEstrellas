@@ -67,6 +67,14 @@ public static partial class VestidoDelMundo
     static partial void PonerAgua(Obra o);
     /// Pone la vegetación (lo último: se adapta a todo lo demás).
     static partial void PonerVegetacion(Obra o);
+    /// Esculpe el relieve (desde la copia de las alturas originales) antes de pintar ni colocar nada.
+    static partial void DarFormaAlRelieve(Terrain terreno, List<string> informe);
+    /// Repone las alturas originales (al quitar el vestido).
+    static partial void ReponerElRelieve(TerrainData datos, List<string> informe);
+    /// Añade las zonas que deja libres la montaña de Risco (antes de colocar nada).
+    static partial void ZonasDeLaMontana(List<Zona> libres);
+    /// Pinta los caminos, plazas y playas de la montaña de Risco (antes de normalizar los pesos).
+    static partial void PintarSueloDeLaMontana(Lienzo l, List<string> informe);
 
     [MenuItem("El Sendero/Escenario/MainWorld: vestir (suelos, castillo y parajes)", priority = 30)]
     private static void MenuVestirTodo() => Ejecutar(suelo: true, detalles: true);
@@ -95,6 +103,7 @@ public static partial class VestidoDelMundo
             ReponerRetirados(escena, informe);
             ReponerCasas(escena, informe);
             CerrarElTerreno(terreno.terrainData);
+            ReponerElRelieve(terreno.terrainData, informe);
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
             if (HayCopia())
@@ -139,6 +148,8 @@ public static partial class VestidoDelMundo
         try
         {
             EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Preparando el suelo…", 0.05f);
+            DarFormaAlRelieve(terreno, informe);
+            DarFormaAlValle(terreno, informe);
             if (suelo)
             {
                 if (!PrepararSuelo(terreno, informe)) { Terminar("Vestido de MainWorld", informe); return; }
@@ -175,6 +186,8 @@ public static partial class VestidoDelMundo
                 obra.Libres.AddRange(ZonasLibres);
                 ZonasDeLaCapital(obra.Libres);
                 ZonasDelAgua(obra.Libres);
+                ZonasDeLaMontana(obra.Libres);
+                ZonasDelValle(obra.Libres);
                 IndexarEjemplares(escena, obra);
                 RetirarMurallaVieja(escena, obra);
                 RetirarParaLaCapital(escena, obra);
@@ -191,6 +204,9 @@ public static partial class VestidoDelMundo
                 PintarZonas(lienzo, escena, informe);
                 PintarSueloDePavimento(lienzo, informe);
                 PintarSueloDeAgua(lienzo, informe);
+                PintarSueloDeLaMontana(lienzo, informe);
+                PintarElValle(lienzo, informe);
+                lienzo.FundirCapas();
                 lienzo.Normalizar();
                 terreno.terrainData.SetAlphamaps(0, 0, lienzo.Pesos);
                 int quitadas = QuitarHierbaDeSueloDuro(lienzo);
@@ -211,6 +227,7 @@ public static partial class VestidoDelMundo
                 PonerPavimento(obra);
                 PonerAgua(obra);
                 EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Plantando la vegetación…", 0.8f);
+                ValleDelPrologo(obra);
                 PonerVegetacion(obra);
                 int obstaculos = NavMeshAutoSetup.ClasificarBajo(obra.Raiz, 1f, c => SinObstaculo(obra, c));
                 GuardarHuellaRaiz(obra.Raiz);

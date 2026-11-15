@@ -20,12 +20,6 @@ namespace Game.NPC.Common
         [Tooltip("Config de combate (stats, ataques, rangos)")]
         public NPCCombatConfig combatConfig;
         
-        [Tooltip("Config de misiones (quest chain)")]
-        public NPCQuestConfig questConfig;
-        
-        [Tooltip("Config de narrativa interactiva (cadena de acciones al interactuar)")]
-        public NPCInteractiveNarrativeConfig interactiveNarrativeConfig;
-        
         [Tooltip("Config de compañero (seguir al jugador, formar equipo)")]
         public NPCPartyConfig partyConfig;
 
@@ -75,23 +69,6 @@ namespace Game.NPC.Common
                 isValid = false;
             }
             
-            // Validar Quest
-            if (HasBehaviour(NPCBehaviourType.Quest) && questConfig == null)
-            {
-                errors += "Behaviour Quest activado pero no hay questConfig asignado.\n";
-                isValid = false;
-            }
-            
-            // Validar Narrative (sistema de grafo - DEPRECADO, ahora usa InteractiveNarrative)
-            // Ya no validamos Narrative porque está obsoleto
-            
-            // Validar Interactive Narrative
-            if (HasBehaviour(NPCBehaviourType.InteractiveNarrative) && interactiveNarrativeConfig == null)
-            {
-                errors += "Behaviour InteractiveNarrative activado pero no hay interactiveNarrativeConfig asignado.\n";
-                isValid = false;
-            }
-            
             // Validar Companion (Party)
             if (HasBehaviour(NPCBehaviourType.Companion) && partyConfig == null)
             {
@@ -109,18 +86,6 @@ namespace Game.NPC.Common
             if (combatConfig != null && !combatConfig.ValidateConfig(out string combatError))
             {
                 errors += $"Combat Config: {combatError}\n";
-                isValid = false;
-            }
-            
-            if (questConfig != null && !questConfig.ValidateConfig(out string questError))
-            {
-                errors += $"Quest Config: {questError}\n";
-                isValid = false;
-            }
-            
-            if (interactiveNarrativeConfig != null && !interactiveNarrativeConfig.ValidateConfig(out string interactiveError))
-            {
-                errors += $"Interactive Narrative Config: {interactiveError}\n";
                 isValid = false;
             }
             

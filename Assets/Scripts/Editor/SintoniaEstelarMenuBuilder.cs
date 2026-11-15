@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public static class SintoniaEstelarMenuBuilder
 {
-    [MenuItem("El Sendero/Progresión/Sintonía Estelar: sumar +50 puntos", priority = 10)]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Sintonía Estelar: sumar 50 puntos (en Play)", priority = 10)]
     public static void Sumar50Puntos()
     {
         if (!Application.isPlaying)
@@ -26,7 +26,7 @@ public static class SintoniaEstelarMenuBuilder
         Debug.Log($"[Sintonía Estelar] ✨ +50 puntos sumados. Progreso: {SintoniaEstelarService.Instance.PuntosActuales}/{SintoniaEstelarService.Instance.PuntosParaSiguienteHito} ({SintoniaEstelarService.Instance.FraccionProgreso:P0}) — Hitos: {SintoniaEstelarService.Instance.HitosAlcanzados} (Pendientes: {SintoniaEstelarService.Instance.HitosPendientes})");
     }
 
-    [MenuItem("El Sendero/Progresión/Sintonía Estelar: forzar hito (abrir elección)", priority = 11)]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Sintonía Estelar: forzar un hito (en Play)", priority = 11)]
     public static void ForzarHito()
     {
         if (!Application.isPlaying)
@@ -45,7 +45,7 @@ public static class SintoniaEstelarMenuBuilder
         Debug.Log($"[Sintonía Estelar] 🌟 Hito forzado. Abriendo ventana de elección (Hitos alcanzados: {SintoniaEstelarService.Instance.HitosAlcanzados}).");
     }
 
-    [MenuItem("El Sendero/Progresión/Sintonía Estelar: consultar estado", priority = 12)]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Sintonía Estelar: consultar el estado (en Play)", priority = 12)]
     public static void ConsultarEstado()
     {
         if (Application.isPlaying)

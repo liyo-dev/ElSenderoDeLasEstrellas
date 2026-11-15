@@ -23,13 +23,13 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
     public string summary;
 
     [Header("Enganche con el grafo narrativo")]
-    [Tooltip("Señal que ARRANCA la secuencia. Es la que levanta el PlayCinematicNode del grafo " +
+    [Tooltip("Señal que ARRANCA la secuencia. Es la que levanta el PedirCinematica del grafo " +
              "(su campo 'signalIn'). Si se deja vacío, el SequencePlayer usa la señal que tenga " +
              "puesta en su propio Inspector.")]
     public string signalIn;
 
     [Tooltip("Señal que se levanta al TERMINAR la secuencia — la que espera el grafo para seguir " +
-             "(el 'signalDone' del PlayCinematicNode). Si se deja vacío, se usa la del Inspector " +
+             "(el 'signalDone' del PedirCinematica). Si se deja vacío, se usa la del Inspector " +
              "del SequencePlayer. OJO: sin esto el grafo se queda esperando para siempre.")]
     public string signalOut;
 
@@ -56,7 +56,7 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
 
     [Tooltip("Prefab con los SequenceModule que necesita esta secuencia (mecánicas en C#, p. ej. el " +
              "panic input del Despertar). Solo se usa cuando la secuencia se monta en vivo desde " +
-             "PlayCinematicNode: se instancia dentro del SequencePlayer y sus módulos se añaden al " +
+             "PedirCinematica: se instancia dentro del SequencePlayer y sus módulos se añaden al " +
              "escenario. Vacío = la secuencia no usa módulos.")]
     public UnityEngine.GameObject modulos;
 

@@ -183,7 +183,7 @@ public class NarrativeRunner : MonoBehaviour
             if (savedNode != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NarrativeRunner] ✅ Continuando desde nodo guardado: {savedNode.GetType().Name} (guid={savedNodeGuid})");
+                Debug.Log($"[NarrativeRunner] Continuando desde nodo guardado: {savedNode.GetType().Name} (guid={savedNodeGuid})");
 #endif
                 GoTo(savedNode);
                 return;
@@ -196,7 +196,7 @@ public class NarrativeRunner : MonoBehaviour
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NarrativeRunner] ⚠️ No hay nodo guardado - iniciando desde StartNode");
+            Debug.Log($"[NarrativeRunner] No hay nodo guardado - iniciando desde StartNode");
 #endif
         }
 
@@ -269,7 +269,7 @@ public class NarrativeRunner : MonoBehaviour
         _current.Enter(_ctx, () =>
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NarrativeRunner] ✅ Advance desde {_current?.GetType().Name ?? "null"} '{_current?.displayTitle}'");
+            Debug.Log($"[NarrativeRunner] Advance desde {_current?.GetType().Name ?? "null"} '{_current?.displayTitle}'");
 #endif
             Advance();
         });
@@ -513,7 +513,7 @@ public class NarrativeRunner : MonoBehaviour
                 node.Enter(_ctx, () =>
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NarrativeRunner] ✅ SubGraph[{branchIndex}] completó {node.GetType().Name} '{node.displayTitle}'");
+                    Debug.Log($"[NarrativeRunner] SubGraph[{branchIndex}] completó {node.GetType().Name} '{node.displayTitle}'");
 #endif
                     ready = true;
                 });

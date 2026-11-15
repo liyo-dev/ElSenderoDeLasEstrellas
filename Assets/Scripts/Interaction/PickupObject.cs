@@ -37,7 +37,7 @@ public class PickupObject : MonoBehaviour
     private void OnPickup(GameObject whoCalled)
     {
         // Intentar obtener del objeto que llamó, sino usar PlayerService
-        var carry = whoCalled?.GetComponentInParent<PlayerCarrySystem>();
+        ControlDelJugador.DelJugador(whoCalled, out PlayerCarrySystem carry);
         
         if (carry == null)
         {

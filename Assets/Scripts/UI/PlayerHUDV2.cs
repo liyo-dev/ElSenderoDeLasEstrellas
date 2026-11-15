@@ -110,7 +110,7 @@ namespace Sendero.UI
             if (player == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[PlayerHUDV2] ❌ No se pudo obtener el jugador desde PlayerService");
+                Debug.LogError("[PlayerHUDV2] No se pudo obtener el jugador desde PlayerService");
 #endif
                 return;
             }
@@ -123,13 +123,13 @@ namespace Sendero.UI
             if (_healthSystem == null)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró PlayerHealthSystem en el jugador");
+                Debug.LogWarning("[PlayerHUDV2] No se encontró PlayerHealthSystem en el jugador");
                 #endif
             }
             if (_manaPool == null)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró ManaPool en el jugador");
+                Debug.LogWarning("[PlayerHUDV2] No se encontró ManaPool en el jugador");
                 #endif
             }
             // Suscribirse a eventos
@@ -137,6 +137,8 @@ namespace Sendero.UI
 
             // Suscribirse al evento OnPresetApplied para refrescar cuando se carga partida
             PlayerPresetService.OnPresetApplied += OnPresetApplied;
+            // Y al cambiar de personaje: las barras son las del cuerpo que lleva el jugador.
+            PlayerService.OnPlayerRegistered += AlRegistrarJugador;
             
             // Marcar como inicializado
             _hasStarted = true;
@@ -145,7 +147,7 @@ namespace Sendero.UI
             RefreshHealthBar();
             RefreshManaBar();
             
-            // Debug.Log($"[PlayerHUDV2] ✅ Start completado - Mana: {_manaPool?.Current ?? 0}/{_manaPool?.Max ?? 0}, HP: {_healthSystem?.CurrentHealth ?? 0}");
+            // Debug.Log($"[PlayerHUDV2] Start completado - Mana: {_manaPool?.Current ?? 0}/{_manaPool?.Max ?? 0}, HP: {_healthSystem?.CurrentHealth ?? 0}");
         }
         
         private void OnDestroy()
@@ -161,8 +163,9 @@ namespace Sendero.UI
             
             UnsubscribeFromEvents();
             
-            // ✅ Desuscribirse del evento de preset
+            // Desuscribirse del evento de preset
             PlayerPresetService.OnPresetApplied -= OnPresetApplied;
+            PlayerService.OnPlayerRegistered -= AlRegistrarJugador;
             
             // Limpiar todos los tweens (incluido el punch de escala del daño, que corre sobre el Transform, no sobre la Image)
             if (healthFillImage != null)
@@ -210,7 +213,7 @@ namespace Sendero.UI
             if (healthFillImage == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[PlayerHUDV2] ❌ healthFillImage no está asignado en el Inspector!");
+                Debug.LogError("[PlayerHUDV2] healthFillImage no está asignado en el Inspector!");
 #endif
                 hasErrors = true;
             }
@@ -218,7 +221,7 @@ namespace Sendero.UI
             if (manaFillImage == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[PlayerHUDV2] ❌ manaFillImage no está asignado en el Inspector!");
+                Debug.LogError("[PlayerHUDV2] manaFillImage no está asignado en el Inspector!");
 #endif
                 hasErrors = true;
             }
@@ -226,7 +229,7 @@ namespace Sendero.UI
             if (hasErrors)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[PlayerHUDV2] ⚠️ El HUD no funcionará correctamente sin las referencias necesarias.");
+                Debug.LogError("[PlayerHUDV2] El HUD no funcionará correctamente sin las referencias necesarias.");
 #endif
             }
         }
@@ -240,18 +243,18 @@ namespace Sendero.UI
             if (_healthSystem != null)
             {
                 _healthSystem.OnHealthChanged.AddListener(OnHealthChanged);
-                // Debug.Log("[PlayerHUDV2] ✅ Suscrito a OnHealthChanged");
+                // Debug.Log("[PlayerHUDV2] Suscrito a OnHealthChanged");
             }
             
             if (_manaPool != null)
             {
                 _manaPool.OnManaChanged.AddListener(OnManaChanged);
-                // Debug.Log($"[PlayerHUDV2] ✅ Suscrito a OnManaChanged de ManaPool en '{_manaPool.gameObject.name}'");
+                // Debug.Log($"[PlayerHUDV2] Suscrito a OnManaChanged de ManaPool en '{_manaPool.gameObject.name}'");
             }
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerHUDV2] ⚠️ No hay ManaPool para suscribirse a OnManaChanged");
+                Debug.LogWarning("[PlayerHUDV2] No hay ManaPool para suscribirse a OnManaChanged");
 #endif
             }
         }
@@ -274,6 +277,8 @@ namespace Sendero.UI
         /// </summary>
         private bool _hasStarted = false;
 
+        private void AlRegistrarJugador(GameObject _) => OnPresetApplied();
+
         /// <summary>
         /// Callback cuando se aplica el preset (al cargar partida o cambiar preset)
         /// </summary>
@@ -283,13 +288,13 @@ namespace Sendero.UI
             if (!_hasStarted)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[PlayerHUDV2] ⏭️ OnPresetApplied llamado antes de Start() - Se refrescará en Start()");
+                Debug.Log("[PlayerHUDV2] OnPresetApplied llamado antes de Start() - Se refrescará en Start()");
 #endif
                 return;
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerHUDV2] 🔄 OnPresetApplied - Refrescando HUD completo tras cargar partida");
+            Debug.Log("[PlayerHUDV2] OnPresetApplied - Refrescando HUD completo tras cargar partida");
 #endif
             
             // RE-OBTENER referencias del player actual (pueden haber cambiado)
@@ -311,7 +316,7 @@ namespace Sendero.UI
             if (_healthSystem == null || _manaPool == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerHUDV2] ⚠️ OnPresetApplied - Faltan referencias de componentes del player");
+                Debug.LogWarning("[PlayerHUDV2] OnPresetApplied - Faltan referencias de componentes del player");
 #endif
                 return;
             }
@@ -320,7 +325,7 @@ namespace Sendero.UI
             RefreshHealthBar();
             RefreshManaBar();
 
-            // Debug.Log($"[PlayerHUDV2] ✅ HUD refrescado completamente tras aplicar preset (Mana: {_manaPool.Current}/{_manaPool.Max})");
+            // Debug.Log($"[PlayerHUDV2] HUD refrescado completamente tras aplicar preset (Mana: {_manaPool.Current}/{_manaPool.Max})");
         }
 
         #endregion
@@ -451,7 +456,7 @@ namespace Sendero.UI
                 // REGENERACIÓN: solo activamos la bandera aquí. La interpolación cuadro a cuadro
                 // ocurre en TickManaRegen() (llamado desde Update()), NO en este método.
                 //
-                // FIX: antes el propio Lerp vivía aquí dentro, así que solo avanzaba un paso cada
+                // antes el propio Lerp vivía aquí dentro, así que solo avanzaba un paso cada
                 // vez que ManaPool disparaba OnManaChanged. En cuanto el maná llegaba al máximo,
                 // ManaPool.Update() dejaba de notificar (early-return con "current >= max") y ese
                 // último paso de Lerp casi nunca aterrizaba exactamente en 1 (un Lerp es asintótico:
@@ -689,7 +694,7 @@ namespace Sendero.UI
             }
             
             ForceRefresh();
-            // Debug.Log("[PlayerHUDV2] ✅ HUD actualizado manualmente");
+            // Debug.Log("[PlayerHUDV2] HUD actualizado manualmente");
         }
         
         [ContextMenu("Validate Setup")]

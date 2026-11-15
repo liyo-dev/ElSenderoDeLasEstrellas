@@ -1,10 +1,14 @@
-# Cap. 3 · De noche, junto al fuego, pasa el carro del que habló el posadero: un contrabandista tira de él, con la
-# carga tapada con paja, y de ella sale una luz que sube y baja despacio, como si respirara (INC-1036).
-# El carro (PROP_Carro) va detrás del contrabandista solo (CargaArrastrada): no hay que moverlo en el guion,
-# y los planos encuadran al contrabandista (el carro solo existe en juego, no en el horneado).
+# Cap. 3 · Llegan los contrabandistas. De noche, junto al fuego, Will oye ruedas y se esconde tras el
+# matorral de antes del puente. Por el camino llegan los dos: el grandote tirando del carro (la carga
+# tapada con paja y una luz debajo) y el vigía delante. El vigía ve las brasas y mira alrededor; el
+# grandote le mete prisa y siguen hacia el puente. Will, agachado, decide seguirlos.
+# Lo que hace el vigía junto al fuego (pararse, mirar alrededor) es lo que hará en el seguimiento:
+# así se ve antes de jugarlo.
+# El carro (PROP_Carro) va detrás del grandote solo (CargaArrastrada): no se mueve en el guion y en el
+# horneado no existe; en juego se coloca tras él al empezar.
 GUION Cap3_03_ElCarro
 ESCENA MainWorld
-ZONA Cap3Carro -104 -214 28
+ZONA Cap3Carro -100 -212 30
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_03_ElCarro.asset
 TEXTO subtitulo
 RITMO entre_frases=0.4 mismo_hablante=0.25
@@ -12,46 +16,73 @@ RITMO entre_frases=0.4 mismo_hablante=0.25
 REPARTO
 will  Player               nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
 c1    NPC_Contrabandista1  nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
+c2    NPC_Contrabandista2  nombre=CHAR_CONTRABANDISTA color=A89C8A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
 
 PUNTOS
-# Acampada en la orilla este, junto al camino que cruza el puente del camino 5 (el cauce queda al oeste).
-# El contrabandista baja por el camino desde el noreste y cruza el puente; ahí lo recoge el seguimiento.
-fuego    -99.5 -206.5
-p_will   -101 -208.5
-c1_a     -86 -204.6
-c1_b     -104.5 -218.5
-c1_c     -116 -226
-# Al oeste de Will, junto al talud: Will de espaldas a un lado y el camino por donde baja el contrabandista al fondo.
-cam_camino -107 -211.5
-# Al este de Will, donde las flores no le tapan la cara.
-cam_will   -96.8 -208.4
+# El camino baja del noreste, pasa al sur del fuego y del matorral y sigue hacia el puente (suroeste).
+fuego       -99.5 -206.5
+p_will      -101 -208.5
+# Detrás del matorral de antes del puente (-108, -215), del lado contrario al camino.
+esc_will    -109.5 -212.5
+# Entran por el camino desde fuera del plano: el vigía, por delante del grandote.
+c1_a        -84 -203.5
+c2_a        -89 -205.5
+# El vigía se acerca al fuego por el sur; el grandote se queda en el camino, detrás.
+c2_fuego    -98.5 -209.4
+c1_para     -92 -208.9
+# Siguen hacia el puente: aquí empieza el seguimiento (marcas Cap3_Sigilo_SalidaNpc / _SalidaVigia).
+# El vigía vuelve al camino por el sur del fuego, lejos del matorral.
+c2_camino   -100.5 -215.6
+c1_fin      -110 -222.3
+c2_fin      -112.5 -224.1
 
 HILO
 @inicio
 will en p_will mirando fuego
-& c1 en c1_a mirando c1_c
-plano medio will desde=cam_will altura=1.6
+& c1 en c1_a mirando c1_para
+& c2 en c2_a mirando c2_fuego
+plano medio will
 & will bucle BrazosCruzados
 espera 1.0
+# Ruedas a lo lejos, antes de ver nada.
+sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Wood_Scratching-009.wav" volume=0.35
+& will reposo
 will mira c1_a
 & will cara sorpresa
-& will reposo
-espera 0.6
-will dice CAP3_CARRO_01 cara=decidido
-
-@llega
-# El carro entra en plano por el camino: se ve quién tira de él y la carga tapada.
-c1 anda a c1_b, c1_c ritmo=paseo sin_esperar
-plano conjunto c1 desde=cam_camino altura=2.4
-espera 3.5
-will mira c1
-# El carro va detrás de él (CargaArrastrada): encuadrando al que tira, entra la carga con su luz.
-plano medio c1 altura=1.5 lente=30
-espera 1.2
-will dice CAP3_CARRO_02 cara=pensativo
-espera 1.0
-
-@decide
-plano primer will
-will dice CAP3_CARRO_03 cara=decidido
 espera 0.5
+will dice CAP3_CARRO_01 cara=preocupado
+
+@esconde
+# Se esconde de pie tras el matorral (es más alto que él) y espía el camino.
+will anda a esc_will ritmo=prisa
+will mira c2_fuego
+
+@llegan
+plano conjunto will c1 c2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Wood_Scratching-009.wav" volume=0.5
+& c1 anda a c1_para sin_esperar
+c2 anda a c2_fuego
+espera 0.4
+
+@vigia
+# El vigía ve las brasas y mira alrededor, hacia el matorral.
+plano medio c2
+c2 dice CAP3_CARRO_04 cara=molesto mira=fuego
+c2 gesto SenseSomethingStart_NoWeapon
+c2 mira esc_will
+& c2 gesto SenseSomethingSearching_NoWeapon
+plano primer will
+will cara miedo
+espera 1.4
+plano medio c1
+c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2
+
+@sevan
+c1 anda a c1_fin sin_esperar
+& c2 anda a c2_camino c2_fin sin_esperar
+plano conjunto will c1 c2
+espera 3.5
+plano primer will
+will dice CAP3_CARRO_02 cara=pensativo
+will dice CAP3_CARRO_03 cara=decidido
+espera 0.4

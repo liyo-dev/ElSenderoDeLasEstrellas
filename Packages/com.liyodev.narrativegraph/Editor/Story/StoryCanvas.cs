@@ -50,6 +50,8 @@ namespace NarrativeGraphEditor.Story
         string _currentGuid;
         readonly HashSet<string> _visited = new();
         string _search = string.Empty;
+        readonly HashSet<NarrativeNode> _matches = new();
+        bool _dragRefreshQueued;
 
         public StoryStructure Structure => _structure;
         public NarrativeNode Primary => _selection.Count == 1 ? _selection.First() : null;
@@ -146,6 +148,7 @@ namespace NarrativeGraphEditor.Story
 
         public void Rebuild()
         {
+            using var medida = StoryTiming.Measure(StoryText.T("lienzo: rehacer", "canvas: rebuild"));
             _popup.Close();
             _cards.Clear();
             _cardOf.Clear();
@@ -171,6 +174,7 @@ namespace NarrativeGraphEditor.Story
             }
             RebuildFrames();
             RefreshEdges();
+            UpdateMatches();
             ApplyHighlights();
         }
 
@@ -278,16 +282,24 @@ namespace NarrativeGraphEditor.Story
         public void SetSearch(string text)
         {
             _search = text?.Trim() ?? string.Empty;
+            UpdateMatches();
             ApplyHighlights();
         }
 
-        public int CountMatches() => _cardOf.Keys.Count(Matches);
+        public int CountMatches() => _search.Length == 0 ? _cardOf.Count : _matches.Count;
 
-        bool Matches(NarrativeNode n)
+        bool Matches(NarrativeNode n) => _search.Length == 0 || _matches.Contains(n);
+
+        /// La búsqueda mira el resumen de cada paso (caro de montar): se resuelve una vez al
+        /// escribir o al rehacer el lienzo, no en cada resaltado (selección, arrastre, Play).
+        void UpdateMatches()
         {
-            if (_search.Length == 0) return true;
+            _matches.Clear();
+            if (_search.Length == 0) return;
             bool Has(string s) => !string.IsNullOrEmpty(s) && s.IndexOf(_search, StringComparison.OrdinalIgnoreCase) >= 0;
-            return Has(n.displayTitle) || Has(NarrativeNodeCatalog.TitleOf(n.GetType())) || Has(StepSummary.For(n, 400)) || Has(_structure.Number(n));
+            foreach (var n in _cardOf.Keys)
+                if (Has(n.displayTitle) || Has(NarrativeNodeCatalog.TitleOf(n)) || Has(_structure.Number(n)) || Has(StepSummary.For(n, 400)))
+                    _matches.Add(n);
         }
 
         void ApplyHighlights()
@@ -369,7 +381,8 @@ namespace NarrativeGraphEditor.Story
         {
             _content.style.translate = new Translate(_pan.x, _pan.y);
             _content.style.scale = new Scale(new Vector2(_zoom, _zoom));
-            _zoomLabel.text = Mathf.RoundToInt(_zoom * 100f) + " %";
+            var zoomText = Mathf.RoundToInt(_zoom * 100f) + " %";
+            if (_zoomLabel.text != zoomText) _zoomLabel.text = zoomText;
             EnableInClassList("story-canvas--mid", _zoom < 0.7f && _zoom >= 0.45f);
             EnableInClassList("story-canvas--far", _zoom < 0.45f);
             MarkDirtyRepaint();
@@ -390,7 +403,7 @@ namespace NarrativeGraphEditor.Story
             float step = 40f * _zoom;
             if (step < 8f) return;
             var p = ctx.painter2D;
-            p.strokeColor = new Color(1f, 0.94f, 0.86f, 0.035f);
+            p.strokeColor = new Color(0.85f, 0.9f, 1f, 0.04f);
             p.lineWidth = 1f;
             p.BeginPath();
             for (float x = Mod(_pan.x, step); x < size.x; x += step) { p.MoveTo(new Vector2(x, 0)); p.LineTo(new Vector2(x, size.y)); }
@@ -480,8 +493,7 @@ namespace NarrativeGraphEditor.Story
                         pair.Key.position = pair.Value + delta;
                         if (_cardOf.TryGetValue(pair.Key, out var c)) c.SetPosition(pair.Key.position);
                     }
-                    RefreshEdges();
-                    RebuildFrames();
+                    QueueDragRefresh();
                     break;
                 case Mode.Box:
                     UpdateBox(local);
@@ -493,6 +505,20 @@ namespace NarrativeGraphEditor.Story
                     _edges.SetDrag(_linkStart, hit != null ? StoryLayout.RectOf(hit.Model).center : world);
                     break;
             }
+        }
+
+        /// Las flechas y las cabeceras de sección se rehacen como mucho una vez por fotograma
+        /// mientras se arrastra (el ratón manda varios movimientos por fotograma).
+        void QueueDragRefresh()
+        {
+            if (_dragRefreshQueued) return;
+            _dragRefreshQueued = true;
+            schedule.Execute(() =>
+            {
+                _dragRefreshQueued = false;
+                RefreshEdges();
+                RebuildFrames();
+            });
         }
 
         void OnPointerUp(PointerUpEvent e)
@@ -701,7 +727,7 @@ namespace NarrativeGraphEditor.Story
             return best;
         }
 
-        static string Title(NarrativeNode n) => string.IsNullOrWhiteSpace(n.displayTitle) ? NarrativeNodeCatalog.TitleOf(n.GetType()) : n.displayTitle;
+        static string Title(NarrativeNode n) => string.IsNullOrWhiteSpace(n.displayTitle) ? NarrativeNodeCatalog.TitleOf(n) : n.displayTitle;
 
         // ── Menus ────────────────────────────────────────────────────────────
 

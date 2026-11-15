@@ -43,6 +43,54 @@ namespace Sendero.Narrative.Editor
             UnityEngine.Debug.Log("[Grafo] Rendimiento medido: " + ruta);
         }
 
+        /// Pasa por todos los pasos de todos los grafos lo que hace el editor con ellos (resumen,
+        /// avisos, referencias, rehacer la historia hasta el paso y el plan de arranque) y apunta
+        /// lo que falla, los avisos de contenido y los tipos que no declaran lo que dejan hecho.
+        /// Resultado en Logs/claude/comprobacion_grafos.txt.
+        [MenuItem("El Sendero/Kits/Grafo narrativo: comprobar los grafos")]
+        public static void Comprobar()
+        {
+            var sb = new StringBuilder($"Comprobación de los grafos · {DateTime.Now:yyyy-MM-dd HH:mm}\n");
+            var sinDeclarar = NarrativeEffectContract.FindUndeclared(TypeCache.GetTypesDerivedFrom<NarrativeNode>()
+                .Concat(TypeCache.GetTypesDerivedFrom<NarrativeRequest>()));
+            sb.AppendLine(sinDeclarar.Count == 0 ? "Todos los tipos declaran lo que dejan hecho." : "Sin declarar lo que dejan hecho: " + string.Join(", ", sinDeclarar.Select(t => t.Name)));
+            int fallos = 0;
+            foreach (var g in AssetDatabase.FindAssets("t:NarrativeGraph").Select(x => AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(x))).Where(x => x != null))
+            {
+                var nodos = g.nodes.Where(n => n != null).ToList();
+                sb.AppendLine($"\n## {g.name}: {nodos.Count} pasos ({nodos.OfType<GameStepNode>().Count()} «Pedir al juego»), {g.nodes.Count(n => n == null)} nulos");
+                StoryFlowCheck.Run(g, StoryStructure.Build(g));
+                var v = NarrativeGraphValidator.ValidateGraph(g);
+                foreach (var e in v.Errors) sb.AppendLine("  ERROR " + e);
+                foreach (var n in nodos)
+                {
+                    string quien = $"{NarrativeNodeCatalog.TitleOf(n)} «{n.displayTitle}» ({n.guid})";
+                    try
+                    {
+                        StepSummary.For(n);
+                        foreach (var w in StepSummary.Warnings(n)) sb.AppendLine($"  aviso {quien}: {w}");
+                        NarrativeNodeReferences.Of(n);
+                        if (!n.IsAnnotation)
+                        {
+                            NarrativeStateProjector.Project(g, n.guid, new RecordingStateWriter());
+                            NarrativeStartPlanner.Plan(g, n.guid, new Dictionary<string, int>());
+                        }
+                        if (n is GameStepNode paso && paso.HasNamedOutputs && paso.outputs.Count != paso.GetOutputPorts().Length)
+                            sb.AppendLine($"  aviso {quien}: {paso.outputs.Count} conexiones para {paso.GetOutputPorts().Length} salidas");
+                    }
+                    catch (Exception ex)
+                    {
+                        fallos++;
+                        sb.AppendLine($"  FALLA {quien}: {ex.GetType().Name}: {ex.Message}");
+                    }
+                }
+            }
+            sb.AppendLine($"\nFallos: {fallos}");
+            var ruta = Path.GetFullPath("Logs/claude/comprobacion_grafos.txt");
+            File.WriteAllText(ruta, sb.ToString());
+            UnityEngine.Debug.Log("[Grafo] Comprobación: " + ruta);
+        }
+
         static double Tiempo(Action a, int veces)
         {
             a();

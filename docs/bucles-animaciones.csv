@@ -1,0 +1,101 @@
+﻿Clip;Ajustes;Salto_cm;Hueso_salto;Paso_normal_cm;Ultimo_paso_cm;Hueso_ultimo;Salta
+Attack01_SwordAndShiled;[fotogramas 0-16, loopPose=False];0.11;hand_r;10.219;7.22;hand_r;no
+Attack02_SwordAndShiled;[fotogramas 0-16, loopPose=False];0.09;hand_r;7.670;5.60;hand_r;no
+Attack03_SwordAndShiled;[fotogramas 0-16, loopPose=False];0.08;hand_r;11.871;5.28;hand_r;no
+Attack04_SwordAndShiled;[fotogramas 0-16, loopPose=False];0.03;hand_r;4.721;2.18;hand_r;no
+BrazosCruzados_Idle;;0.00;lowerarm_l;0.126;0.08;calf_r;no
+CarryMoveIdle_NoWeapon;[fotogramas 0-28, loopPose=False];0.00;foot_l;0.207;0.09;head;no
+Challenging_NoWeapon;[fotogramas 0-90, loopPose=False];0.01;calf_r;1.506;0.83;foot_r;no
+ClimbDown_RM_NoWeapon;[fotogramas 0-40, loopPose=False];0.00;head;1.836;0.11;head;no
+ClimbUp_RM_NoWeapon;[fotogramas 0-40, loopPose=False];0.01;foot_l;1.827;0.63;foot_l;no
+Dance_NoWeapon;[fotogramas 0-80, loopPose=False];0.02;head;3.036;1.24;head;no
+Die01Stay_NoWeapon;[fotogramas 0-20, loopPose=False];0.00;head;0.000;0.00;head;no
+Dizzy_NoWeapon;[fotogramas 0-40, loopPose=False];0.03;head;1.247;2.19;head;no
+DrinkPotion_NoWeapon;[fotogramas 0-70, loopPose=False];0.00;hand_l;1.200;0.16;hand_l;no
+fly_idle;;0.03;foot_l;0.004;0.00;hand_l;no
+Frio_Abrazarse;;0.00;hand_l;0.126;0.08;calf_r;no
+Gesto_Alto01;;7.38;hand_l;0.199;0.16;hand_l;si
+Gesto_Aviso01;;7.57;hand_r;0.227;0.31;hand_r;si
+Gesto_Cheer01;;4.45;lowerarm_r;1.751;0.10;hand_l;no
+Gesto_Cheer02;;6.78;hand_r;4.476;1.26;hand_l;no
+Gesto_Conjuro_Abrirse;;0.92;head;0.191;0.12;head;no
+Gesto_Conjuro_Esfuerzo;;6.00;hand_l;2.505;2.60;hand_l;no
+Gesto_Conjuro_Invocar;;2.26;hand_l;0.135;0.19;hand_l;si
+Gesto_Conjuro_Lanzar;;43.49;hand_l;0.107;0.11;head;si
+Gesto_Conjuro_Recogerse;;0.92;head;0.107;0.12;head;no
+Gesto_Conjuro_Unir_D;;3.85;head;1.646;1.80;hand_r;no
+Gesto_Conjuro_Unir_I;;4.90;hand_l;1.853;2.05;hand_l;no
+Gesto_Decidido01;;3.86;head;0.325;0.26;hand_r;si
+Gesto_Dudar01;;0.25;calf_l;0.127;0.09;calf_l;no
+Gesto_Fear01;;18.42;head;1.425;0.30;hand_l;si
+Gesto_Grito01;;7.29;head;0.754;0.28;head;si
+Gesto_Laugh_Carcajada;;1.69;head;1.354;0.65;head;no
+Gesto_Laugh_Risita;;3.34;head;0.312;0.13;head;si
+Gesto_Laugh01;;0.77;calf_l;0.798;0.11;head;no
+Gesto_NegarConManos01;;3.76;head;1.247;0.22;hand_l;si
+Gesto_Shrug01;;4.60;hand_l;0.277;0.12;head;si
+Gesto_Sobresalto01;;8.55;hand_r;0.392;0.11;head;si
+Gesto_Suspiro01;;3.14;hand_l;0.294;0.17;head;si
+Greeting01_NoWeapon;[fotogramas 0-50, loopPose=False];0.00;hand_r;1.953;0.25;hand_r;no
+HumanM@Beg01 - Loop;;0.01;head;0.247;0.37;head;no
+HumanM@CastingIdle01;[fotogramas 0-50, loopPose=False];0.03;lowerarm_l;0.577;0.42;lowerarm_l;no
+HumanM@Crouch01_Idle;[fotogramas 0-81, loopPose=False];0.00;hand_l;0.140;0.15;hand_l;no
+HumanM@Crouch01_Walk_Forward;[fotogramas 0-24, loopPose=False];0.03;hand_r;4.255;2.11;hand_r;no
+HumanM@Cry01 - Loop;[fotogramas 0-60, loopPose=False];0.01;hand_r;0.868;0.65;hand_r;no
+HumanM@Eat01_R - Loop;[fotogramas 0-84, loopPose=False];0.06;hand_l;0.067;0.06;hand_l;no
+HumanM@Fall01;[fotogramas 0-30, loopPose=False];0.01;foot_r;0.601;0.53;foot_r;no
+HumanM@Fear01;[fotogramas 0-40, loopPose=False];0.02;hand_r;1.173;1.22;hand_r;no
+HumanM@Idle01;[fotogramas 0-81, loopPose=False];0.00;hand_l;0.126;0.09;hand_l;no
+HumanM@Idle02;[fotogramas 0-81, loopPose=False];0.00;hand_l;0.131;0.10;hand_l;no
+HumanM@IdleWounded01;[fotogramas 0-81, loopPose=False];0.00;foot_l;0.113;0.08;foot_l;no
+HumanM@Knockdown01 - Ground;[fotogramas 0-52, loopPose=False];0.00;hand_r;0.037;0.00;calf_l;no
+HumanM@Laugh01 - Loop;[fotogramas 0-43, loopPose=False];0.77;head;0.870;0.43;foot_r;no
+HumanM@Loot01 - Loop;[fotogramas 0-42, loopPose=False];0.00;head;0.079;0.08;head;no
+HumanM@MagicAttackCall1H01_L - Load;[fotogramas 0-50, loopPose=False];0.01;hand_l;0.665;0.64;hand_l;no
+HumanM@MagicAttackDirect2H01 - Load;;0.02;hand_l;0.910;1.00;hand_r;no
+HumanM@Opening01 - Loop;[fotogramas 0-43, loopPose=False];0.00;head;0.329;0.29;head;no
+HumanM@Pain01;;0.04;head;1.487;2.37;head;no
+HumanM@Reverence01 - Loop;[fotogramas -5-45, loopPose=False];0.00;head;0.104;0.12;head;no
+HumanM@SitGround01 - Loop;[fotogramas 0-60, loopPose=False];0.00;head;0.074;0.10;head;no
+HumanM@SitHigh01 - Loop;[fotogramas 0-60, loopPose=False];0.00;head;0.055;0.08;head;no
+HumanM@SitLow01 - Loop;[fotogramas 0-60, loopPose=False];0.00;head;0.058;0.08;head;no
+HumanM@SitMedium01 - Loop;[fotogramas 0-60, loopPose=False];0.00;head;0.055;0.08;head;no
+HumanM@Sprint01_Forward;[fotogramas 0-16, loopPose=False];0.11;hand_r;15.332;7.18;hand_r;no
+Idle;[fotogramas 0-40, loopPose=False];0.00;head;0.090;0.08;head;no
+Idle_Battle_NoWeapon;[fotogramas 0-20, loopPose=False];0.00;calf_l;0.570;0.22;calf_l;no
+Idle_Normal_NoWeapon;[fotogramas 0-140, loopPose=False];0.00;hand_r;0.119;0.05;hand_r;no
+InteractWithGateObject_NoWeapon;[fotogramas 0-60, loopPose=False];0.01;hand_r;1.777;0.51;hand_r;no
+InteractWithPeople_NoWeapon;[fotogramas 0-210, loopPose=False];0.00;lowerarm_r;0.144;0.20;lowerarm_r;no
+JumpAir_InPlace_NoWeapon;[fotogramas 0-15, loopPose=False];0.00;hand_l;0.541;0.25;hand_l;no
+JumpFull_InPlace_NoWeapon;[fotogramas 0-24, loopPose=False];0.02;hand_l;2.661;1.42;hand_l;no
+JumpFullSpin_InPlace_NoWeapon;[fotogramas 0-24, loopPose=False];0.02;hand_l;4.349;1.43;hand_l;no
+LevelUp_NoWeapon;[fotogramas 0-70, loopPose=False];0.01;lowerarm_l;2.866;0.92;lowerarm_l;no
+MoveFWD_Normal_RM_NoWeapon;[fotogramas 0-16, loopPose=False];0.06;calf_r;6.950;3.72;calf_r;no
+Pose_BrazosEnJarras;;0.00;lowerarm_l;0.126;0.08;calf_r;no
+Pose_Cabizbajo;;0.02;hand_l;0.117;0.12;hand_r;no
+Pose_ManoAlPecho;;0.00;hand_l;0.126;0.09;hand_l;no
+Pose_ManosALaEspalda;;0.10;hand_r;0.126;0.08;calf_r;no
+Pose_Ofrecer;;0.00;lowerarm_l;0.130;0.10;hand_r;no
+Postura_SitSwing_Loop;;0.43;head;0.197;0.06;head;no
+Push_InPlace_NoWeapon;[fotogramas 0-50, loopPose=False];0.01;foot_r;1.582;0.50;foot_r;no
+RecogerHierbas;;2.46;head;0.877;0.14;head;no
+RollBWD_Battle_RM_NoWeapon;[fotogramas 0-25, loopPose=False];0.06;calf_r;4.702;3.67;calf_r;no
+RollFWD_Battle_RM_NoWeapon;[fotogramas 0-25, loopPose=False];0.02;calf_r;5.671;1.57;calf_r;no
+RollLFT_Battle_RM_NoWeapon;[fotogramas 0-25, loopPose=False];0.03;hand_l;5.820;2.04;hand_l;no
+Run;[fotogramas 0-20, loopPose=False];0.85;hand_r;4.803;3.82;hand_r;no
+RunBack;[fotogramas 0-24, loopPose=False];0.04;hand_l;2.255;2.82;hand_l;no
+RunBackRight;[fotogramas 0-24, loopPose=False];0.04;hand_l;2.255;2.80;hand_l;no
+RunForwardRight;;0.04;hand_r;4.641;2.35;hand_r;no
+RunRight;[fotogramas 0-21, loopPose=False];0.06;foot_l;2.965;3.78;foot_l;no
+SenseSomethingSearching_NoWeapon;[fotogramas 0-120, loopPose=False];0.01;hand_l;0.315;0.39;hand_l;no
+Sleeping_NoWeapon;[fotogramas 0-40, loopPose=False];0.00;head;0.046;0.01;lowerarm_l;no
+Sprint;[fotogramas 0-16, loopPose=False];2.05;hand_l;8.580;7.39;hand_l;no
+sprint_fwd;;2.99;lowerarm_r;10.610;13.15;hand_l;no
+Swimming_Floating_NoWeapon;[fotogramas 0-25, loopPose=False];0.01;foot_l;3.711;0.60;foot_l;no
+Victory_NoWeapon;[fotogramas 0-50, loopPose=False];0.01;hand_r;0.498;0.97;hand_r;no
+Walk;[fotogramas 0-30, loopPose=False];0.04;hand_l;3.223;2.69;hand_l;no
+WalkBack;[fotogramas 0-34, loopPose=False];0.04;foot_r;1.264;2.73;foot_r;no
+WalkBackRight;[fotogramas 0-34, loopPose=False];0.04;foot_r;1.213;2.73;foot_r;no
+WalkForwardRight;[fotogramas 0-30, loopPose=False];0.04;hand_l;3.221;2.53;hand_l;no
+WalkFWD_RM_NoWeapon;[fotogramas 0-28, loopPose=False];0.02;calf_r;3.145;1.20;calf_r;no
+WalkRight;[fotogramas 0-34, loopPose=False];0.04;hand_l;2.111;2.92;hand_l;no

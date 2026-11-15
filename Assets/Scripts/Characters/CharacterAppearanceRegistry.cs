@@ -1,15 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Slot = PartyControlManager.CharacterSlot;
 
 /// <summary>
-/// Almacena y gestiona la apariencia visual de cada personaje del equipo.
-/// Actúa como puente entre el ModularAutoBuilder (único, en Will) y las
-/// apariencias individuales de Liam, Will y Estela, incluyendo cambios
-/// de vestuario durante la aventura. Los atuendos de escena (ropa encima que no se guarda) viven
-/// en CharacterAppearanceRegistry.Atuendos.cs.
+/// Apariencia de cada personaje del grupo: qué piezas lleva puestas (la ropa de debajo, la que se
+/// guarda) y lo que se ve con los atuendos de escena encima (CharacterAppearanceRegistry.Atuendos.cs).
 ///
-/// El ModularAutoBuilder se resuelve en tiempo de ejecución vía PlayerService,
-/// por lo que este componente no necesita referencias de escena al prefab de Will.
+/// Cada personaje tiene su cuerpo con su <see cref="ModularAutoBuilder"/>
+/// (<see cref="ControlDelJugador.PilotoDe"/>): la apariencia de un personaje se pone siempre en su
+/// cuerpo, lo lleve el jugador o la IA. Al aparecer un cuerpo en escena se viste con la suya.
 ///
 /// Uso típico:
 ///   CharacterAppearanceRegistry.Instance.ApplyAppearance(CharacterSlot.Liam);
@@ -28,201 +27,125 @@ public partial class CharacterAppearanceRegistry : MonoBehaviour
     #endregion
 
     [Header("Apariencia inicial de Liam")]
-    [Tooltip("Partes activas de Liam. Deben coincidir con los nombres en la jerarquía de Will.")]
+    [Tooltip("Partes activas de Liam. Deben coincidir con los nombres de las piezas de su cuerpo.")]
     [SerializeField] private List<AppearanceEntry> liamDefault = new();
 
     [Header("Apariencia inicial de Estela")]
-    [Tooltip("Partes activas de Estela. Deben coincidir con los nombres en la jerarquía de Will.")]
+    [Tooltip("Partes activas de Estela. Deben coincidir con los nombres de las piezas de su cuerpo.")]
     [SerializeField] private List<AppearanceEntry> estelaDefault = new();
 
     [Tooltip("Juego de caras (perfil de emociones) de cada personaje, por su número de slot (Liam, Will, Estela). " +
-             "Al ponerle la apariencia a un cuerpo que se viste de varios personajes (el del jugador), se le pone también su cara. Vacío: no se cambia.")]
+             "Se le pone a su cuerpo al vestirlo. Vacío: el que traiga el cuerpo.")]
     [SerializeField] private EmotionProfile[] perfilesDeCara = new EmotionProfile[3];
 
     /// <summary>El juego de caras del personaje; null si no tiene uno propio.</summary>
-    public EmotionProfile PerfilDeCara(PartyControlManager.CharacterSlot slot)
+    public EmotionProfile PerfilDeCara(Slot slot)
         => perfilesDeCara != null && (int)slot < perfilesDeCara.Length ? perfilesDeCara[(int)slot] : null;
 
-    // Una entrada por slot (indexado por CharacterSlot int)
-    private readonly Dictionary<PartCategory, string>[] _appearances = new Dictionary<PartCategory, string>[3];
+    // La ropa de debajo de cada personaje, por su número de slot. La de Will sale del preset; si no
+    // hay, de lo que lleva su cuerpo.
+    private readonly Dictionary<PartCategory, string>[] _appearances = new Dictionary<PartCategory, string>[ControlDelJugador.Personajes];
 
-    // Builder resuelto lazily desde PlayerService cuando el jugador ya está en escena
-    private ModularAutoBuilder _builder;
-    private bool _willSnapshotTaken;
+    // Este registro ya ha vestido ese cuerpo: lo que enseña es suyo y se puede leer de vuelta.
+    private readonly bool[] _aplicada = new bool[ControlDelJugador.Personajes];
 
-    // Qué personaje está actualmente aplicado en el builder. null = no sabemos (estado inicial).
-    // Usado para rechazar CaptureCurrentAppearance(Will) cuando el builder muestra a Estela/Liam.
-    private PartyControlManager.CharacterSlot? _currentBuilderSlot;
-
-    public bool HasWillSnapshot => _willSnapshotTaken;
-
-    private ModularAutoBuilder Builder
+    // Materiales originales de cada cuerpo que han cambiado los tintes de los atuendos.
+    private readonly Dictionary<Renderer, Material[]>[] _materiales =
     {
-        get
-        {
-            // Unity destroyed-object check: a cached component whose GO was destroyed is != null in C# but == null via Unity operator
-            if (_builder != null && _builder.gameObject != null) return _builder;
-            if (_builder != null)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ _builder cacheado fue destruido — re-buscando.");
-#endif
-                }
-            _builder = null;
-            PlayerService.TryGetComponent(out _builder);
-            if (_builder == null)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ Builder es null — PlayerService no encontró ModularAutoBuilder en el player.");
-#endif
-                }
-            return _builder;
-        }
-    }
+        new Dictionary<Renderer, Material[]>(), new Dictionary<Renderer, Material[]>(), new Dictionary<Renderer, Material[]>()
+    };
 
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(this); return; }
         Instance = this;
 
-        _appearances[(int)PartyControlManager.CharacterSlot.Liam]   = ToDict(liamDefault);
-        _appearances[(int)PartyControlManager.CharacterSlot.Estela] = ToDict(estelaDefault);
+        _appearances[(int)Slot.Liam]   = ToDict(liamDefault);
+        _appearances[(int)Slot.Estela] = ToDict(estelaDefault);
     }
 
     // ─── API ──────────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Aplica la apariencia almacenada del personaje al builder (cambia el modelo visual de Will),
-    /// con los atuendos de escena que lleve encima. Llama a DeactivateAllCategories() antes para
-    /// limpiar el estado anterior.
-    /// </summary>
-    public void ApplyAppearance(PartyControlManager.CharacterSlot slot)
+    /// <summary>El vestidor del cuerpo de ese personaje. Null si no está en escena.</summary>
+    public static ModularAutoBuilder RopaDe(Slot slot)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance ENTER — slot={slot}, _builder={(object)_builder ?? "null"}, Instance={(object)Instance ?? "null"}");
-#endif
-        var b = Builder;
-        if (b == null)
-        {
-            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) abortado — Builder null.");
-            #endif
-            return;
-        }
+        var piloto = ControlDelJugador.PilotoDe(slot);
+        return piloto != null ? piloto.GetComponentInChildren<ModularAutoBuilder>(true) : null;
+    }
 
-        EnsureWillSnapshot(b);
+    /// <summary>
+    /// Viste el cuerpo del personaje con su apariencia y los atuendos de escena que lleve encima.
+    /// </summary>
+    public void ApplyAppearance(Slot slot)
+    {
+        var b = RopaDe(slot);
+        if (b == null) return;
+
         var app = AparienciaVisible(slot);
-
-        // Guardia crítica: no dejar al jugador invisible por datos vacíos/nulos.
-        // Si la apariencia de Will está vacía, el switch aborta SIN deactivar nada.
-        if ((app == null || app.Count == 0) && slot == PartyControlManager.CharacterSlot.Will)
+        // Sin apariencia guardada (Will antes de leer el preset) no se desviste a nadie: la suya es
+        // la que trae su cuerpo.
+        if (app == null || app.Count == 0)
         {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[CharacterAppearanceRegistry] ❌ _appearances[Will] vacío — ApplyAppearance abortado para evitar invisibilidad.");
-#endif
-            return;
+            var actual = b.GetSelection();
+            if (actual.Count == 0) return;
+            _appearances[(int)slot] = actual;
+            app = AparienciaVisible(slot);
         }
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) — partes: [{(app != null ? string.Join(", ", System.Linq.Enumerable.Select(app, kv => $"{kv.Key}:{kv.Value}")) : "NULL")}]");
-#endif
         b.DeactivateAllCategories();
-        b.ApplySelection(app ?? new System.Collections.Generic.Dictionary<PartCategory, string>());
-        _currentBuilderSlot = slot;
+        b.ApplySelection(app);
 
-        var postSelection = b.GetSelection();
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) COMPLETO — {postSelection.Count} partes activas: [{string.Join(", ", System.Linq.Enumerable.Select(postSelection, kv => $"{kv.Key}:{kv.Value}"))}]");
-#endif
-
-        // Guardia defensiva: si después de aplicar la selección de Will no quedó ninguna
-        // parte activa (nombres que no existen en el builder), restaurar apariencia inicial.
-        if (slot == PartyControlManager.CharacterSlot.Will && postSelection.Count == 0)
+        // Si los nombres no existen en este cuerpo, mejor lo que traía el prefab que un cuerpo vacío.
+        if (b.GetSelection().Count == 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ ApplySelection de Will resultó vacío — restaurando apariencia inicial del prefab.");
+            Debug.LogWarning($"[CharacterAppearanceRegistry] La apariencia de {slot} no tiene piezas de su cuerpo: se deja la del prefab.");
 #endif
             b.RestoreInitialSelection();
             _appearances[(int)slot] = b.GetSelection();
         }
 
+        _aplicada[(int)slot] = true;
         RecordarLoMostrado(slot, b);
-        TenirCuerpoDelJugador(b, slot);
+        Tenir(b, slot, _materiales[(int)slot]);
+        PonerPrendasSueltas(b, slot);
         PonerSuCara(b, slot);
-
-        // FIX AABB de culling atascado (ver ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange
-        // para el detalle completo): toda aplicación de apariencia pasa por aquí, así que este es el
-        // punto central para cubrir el bug "personaje flotando/desencajado tras cambiar de apariencia"
-        // de una vez para todos los llamadores, en vez de parchear cada sitio nuevo que lo dispare.
         b.RefreshRendererBoundsAfterAppearanceChange();
     }
 
     /// <summary>
-    /// Lee la selección actual del builder y la guarda como apariencia de este slot.
-    /// Útil para capturar cambios de vestuario hechos desde el menú de inventario. Con un atuendo
-    /// de escena puesto solo se guarda lo que haya cambiado el jugador, nunca el atuendo.
+    /// Lee lo que lleva el cuerpo del personaje y lo guarda como su apariencia (cambios del menú de
+    /// equipo). Con un atuendo de escena puesto solo se guarda lo que haya cambiado el jugador,
+    /// nunca el atuendo.
     /// </summary>
-    public void CaptureCurrentAppearance(PartyControlManager.CharacterSlot slot)
+    public void CaptureCurrentAppearance(Slot slot)
     {
-        var b = Builder;
+        var b = RopaDe(slot);
         if (b == null) return;
-
-        // Guardia: el builder está mostrando a otro personaje. Capturar ahora
-        // sobreescribiría _appearances[slot] con la apariencia equivocada.
-        if (_currentBuilderSlot.HasValue && _currentBuilderSlot.Value != slot)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CharacterAppearanceRegistry] ⚠️ CaptureCurrentAppearance({slot}) rechazada — builder muestra {_currentBuilderSlot.Value}. Posible switch duplicado.");
-#endif
-            return;
-        }
-
-        EnsureWillSnapshot(b);
         var selection = b.GetSelection();
-
-        // No sobreescribir la apariencia de Will con un estado vacío.
-        if (slot == PartyControlManager.CharacterSlot.Will && selection.Count == 0)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ Ignorando captura vacía para Will — el builder no tiene partes activas.");
-#endif
-            return;
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CharacterAppearanceRegistry] CaptureCurrentAppearance({slot}) — capturando: [{string.Join(", ", System.Linq.Enumerable.Select(selection, kv => $"{kv.Key}:{kv.Value}"))}]");
-#endif
+        if (selection.Count == 0) return;
         _appearances[(int)slot] = QuitarLoDelAtuendo(slot, selection);
+        _aplicada[(int)slot] = true;
     }
 
     /// <summary>
     /// Actualiza una pieza individual para un personaje.
     /// Pasar partName vacío o null elimina la categoría (la desactiva).
     /// </summary>
-    public void UpdatePart(PartyControlManager.CharacterSlot slot, PartCategory category, string partName)
+    public void UpdatePart(Slot slot, PartCategory category, string partName)
     {
-        var dict = _appearances[(int)slot];
-        if (dict == null) return;
-
+        var dict = _appearances[(int)slot] ??= new Dictionary<PartCategory, string>();
         if (string.IsNullOrEmpty(partName))
             dict.Remove(category);
         else
             dict[category] = partName;
     }
 
-    /// <summary>
-    /// Captura la apariencia actual del builder para el personaje activo.
-    /// Llamar después de cualquier cambio de vestuario (menú de equipamiento, etc.)
-    /// para que al hacer switch de personaje se mantenga la apariencia correcta.
-    /// </summary>
-    public void CaptureActiveCharacterAppearance()
-    {
-        var slot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-        CaptureCurrentAppearance(slot);
-    }
+    /// <summary>Guarda lo que lleva puesto el personaje al mando (tras cambiarse en el menú).</summary>
+    public void CaptureActiveCharacterAppearance() => CaptureCurrentAppearance(ControlDelJugador.Activo);
 
     /// <summary>Devuelve una copia de la apariencia del slot: la ropa de debajo, sin atuendos de escena.</summary>
-    public Dictionary<PartCategory, string> GetAppearance(PartyControlManager.CharacterSlot slot)
+    public Dictionary<PartCategory, string> GetAppearance(Slot slot)
     {
         var src = _appearances[(int)slot];
         return src != null
@@ -233,7 +156,7 @@ public partial class CharacterAppearanceRegistry : MonoBehaviour
     /// <summary>
     /// Devuelve la apariencia como List&lt;AppearanceEntry&gt; para serialización en save data.
     /// </summary>
-    public List<AppearanceEntry> GetAppearanceAsList(PartyControlManager.CharacterSlot slot)
+    public List<AppearanceEntry> GetAppearanceAsList(Slot slot)
     {
         var list = new List<AppearanceEntry>();
         var dict = _appearances[(int)slot];
@@ -244,57 +167,18 @@ public partial class CharacterAppearanceRegistry : MonoBehaviour
     }
 
     /// <summary>
-    /// Carga una apariencia desde datos guardados (p.ej. al continuar una partida).
-    /// No aplica el cambio al builder — llama a ApplyAppearance() después si es necesario.
-    /// Si slot es Will, marca el snapshot como tomado para que EnsureWillSnapshot
-    /// no sobreescriba estos datos con el estado actual del builder.
+    /// Carga una apariencia desde datos guardados (p.ej. al continuar una partida). No viste el
+    /// cuerpo: llama a ApplyAppearance() después si hace falta.
     /// </summary>
-    public void SetAppearanceFromList(PartyControlManager.CharacterSlot slot, List<AppearanceEntry> entries)
+    public void SetAppearanceFromList(Slot slot, List<AppearanceEntry> entries)
     {
         _appearances[(int)slot] = ToDict(entries);
-        if (slot == PartyControlManager.CharacterSlot.Will)
-            _willSnapshotTaken = true;
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Captura el snapshot de Will desde el builder ANTES de que se aplique cualquier preset.
-    /// Usar el builder proporcionado directamente evita dependencias de timing con PlayerService.
-    /// </summary>
-    public void SnapshotWillFromBuilderIfNeeded(ModularAutoBuilder b)
-    {
-        if (_willSnapshotTaken) return;
-        if (b == null) return;
-        var sel = b.GetSelection();
-        // No marcar como tomado si la selección está vacía: el builder aún no está listo.
-        // La siguiente llamada (desde EnsureWillSnapshot o ApplyAppearance) podrá reintentar.
-        if (sel.Count == 0)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ SnapshotWillFromBuilderIfNeeded: builder devolvió selección vacía — snapshot diferido.");
-#endif
-            return;
-        }
-        _appearances[(int)PartyControlManager.CharacterSlot.Will] = sel;
-        _willSnapshotTaken = true;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CharacterAppearanceRegistry] 📸 Pre-snapshot Will tomado: [{string.Join(", ", System.Linq.Enumerable.Select(_appearances[(int)PartyControlManager.CharacterSlot.Will], kv => $"{kv.Key}:{kv.Value}"))}]");
-#endif
-    }
-
-    // Captura el snapshot de Will la primera vez que el builder está disponible.
-    private void EnsureWillSnapshot(ModularAutoBuilder b)
-    {
-        if (_willSnapshotTaken) return;
-        var sel = b.GetSelection();
-        if (sel.Count == 0) return; // builder no listo aún; no marcar como tomado
-        _appearances[(int)PartyControlManager.CharacterSlot.Will] = sel;
-        _willSnapshotTaken = true;
-    }
-
     /// <summary>El cuerpo que se acaba de vestir pone las caras del personaje (sus ojos y bocas por emoción).</summary>
-    private void PonerSuCara(ModularAutoBuilder cuerpo, PartyControlManager.CharacterSlot slot)
+    private void PonerSuCara(ModularAutoBuilder cuerpo, Slot slot)
     {
         var perfil = PerfilDeCara(slot);
         if (perfil == null || cuerpo == null) return;

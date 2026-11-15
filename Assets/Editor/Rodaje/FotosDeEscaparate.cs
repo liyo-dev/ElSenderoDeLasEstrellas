@@ -10,10 +10,10 @@ public static class FotosDeEscaparate
 {
     private const string Carpeta = "Assets/_SEQUENCES/Guiones/Escaparate/";
 
-    [MenuItem("El Sendero/Rodaje/Fotos de escaparate: hero (4K)")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Fotos de escaparate: hero (4K)")]
     public static void Hero() => Hacer("Escaparate_Hero", "MainWorld_Escaparate");
 
-    [MenuItem("El Sendero/Rodaje/Fotos de escaparate: hero (prueba rápida)")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Fotos de escaparate: hero (prueba rápida)")]
     public static void HeroPrueba() => Hacer("Escaparate_Hero", "MainWorld_Escaparate", rapido: true);
 
     /// Caras y retoques de pose de las fotos de escaparate: Estela guiñando, Liam apoyado en la

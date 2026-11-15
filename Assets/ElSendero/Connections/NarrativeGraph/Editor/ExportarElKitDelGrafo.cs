@@ -21,7 +21,7 @@ namespace Sendero.Narrative.Editor
         public static string Exportar()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Paquete));
-            AssetDatabase.ExportPackage(new[] { Raiz }, Paquete, ExportPackageOptions.Recurse);
+            UnityEditor.AssetPackage.Package.Export(new UnityEditor.AssetPackage.ExportPackageParameters(new[] { Raiz }, Paquete, null, ExportPackageOptions.Recurse));
             var ruta = Path.GetFullPath(Paquete);
             Debug.Log("[Kit del grafo] Exportado: " + ruta);
             return ruta;

@@ -2330,15 +2330,15 @@
         },
         {
             "id": "CAP3_CARRO_01",
-            "text": "Here it comes. A cart at night, with its load covered… just like the innkeeper said."
+            "text": "Wheels… at this hour."
         },
         {
             "id": "CAP3_CARRO_02",
-            "text": "That light coming from the straw… it rises and falls slowly, as if it were breathing. Those are the lights on the road."
+            "text": "A covered load and that light under the straw… just what the innkeeper said."
         },
         {
             "id": "CAP3_CARRO_03",
-            "text": "The collared animals are in there. I'm going to see where he takes them. From a distance, without being seen."
+            "text": "I'm going to follow them. Without being seen."
         },
         {
             "id": "CAP3_CLARO_01",
@@ -2362,7 +2362,7 @@
         },
         {
             "id": "CAP3_CLARO_06",
-            "text": "But there are three of them. And if the fire gets away from me, the cages burn with the birds inside."
+            "text": "But there are two of them. And if the fire gets away from me, the cages burn with the birds inside."
         },
         {
             "id": "CAP3_CLARO_07",
@@ -2719,6 +2719,26 @@
         {
             "id": "CAP3_POSADA_13",
             "text": "Really? Then tomorrow I'll reach my thumb!"
+        },
+        {
+            "id": "CAP3_CARRO_04",
+            "text": "Fresh embers. Someone's been here."
+        },
+        {
+            "id": "CAP3_CARRO_05",
+            "text": "Some shepherd. Come on, they're expecting us before dawn."
+        },
+        {
+            "id": "PROLOGO_DESEO",
+            "text": "Let no power ever destroy me."
+        },
+        {
+            "id": "PROLOGO_DESEO_PODER",
+            "text": "…And that power? Where does it come from?"
+        },
+        {
+            "id": "PROLOGO_DESEO_PORFIN",
+            "text": "At last!"
         }
     ]
 }

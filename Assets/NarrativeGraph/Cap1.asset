@@ -16,25 +16,25 @@ MonoBehaviour:
   nodes:
   - rid: 6000000000000000001
   - rid: 7428272656548102303
-  - rid: 6000000000000000003
+  - rid: 6540294618706084501
   - rid: 6000000000000000004
-  - rid: 6000000000000000005
+  - rid: 6540294618706084502
   - rid: 6000000000000000013
   - rid: 6000000000000000014
   - rid: 6000000000000000015
   - rid: 6000000000000000016
   - rid: 6000000000000000017
   - rid: 6000000000000000018
-  - rid: 7428272542014767948
-  - rid: 6000000000000000022
+  - rid: 6540294618706084503
+  - rid: 6540294618706084504
   - rid: 6000000000000000023
-  - rid: 6000000000000000024
+  - rid: 6540294618706084505
   - rid: 6000000000000000027
   - rid: 6000000000000000028
   - rid: 6000000000000000029
   - rid: 6000000000000000030
-  - rid: 6000000000000000032
-  - rid: 6000000000000000033
+  - rid: 6540294618706084506
+  - rid: 6540294618706084507
   - rid: 6000000000000000034
   - rid: 6000000000000000035
   - rid: 6000000000000000036
@@ -45,20 +45,20 @@ MonoBehaviour:
   - rid: 6000000000000000042
   - rid: 6000000000000000043
   - rid: 5983492470211221218
-  - rid: 526820858001539260
+  - rid: 6540294618706084508
   - rid: 7428272359979352335
   - rid: 7428272359979352336
   - rid: 6000000000000000044
   - rid: 6000000000000000045
-  - rid: 6000000000000000046
+  - rid: 6540294618706084509
   - rid: 6000000000000000047
   - rid: 6000000000000000048
   - rid: 6000000000000000049
-  - rid: 7428272542014767947
+  - rid: 6540294618706084510
   - rid: 7428272610038513845
-  - rid: 7428272564026736784
+  - rid: 6540294618706084511
   - rid: 7428272564026736785
-  - rid: 7428272564026736786
+  - rid: 6540294618706084512
   - rid: 7428272564026736787
   - rid: 7428272610038513846
   - rid: 7428272656548102304
@@ -68,30 +68,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 526820858001539260
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 14.- Oliver saluda a Will (SEQ_OliverSaludo)
-        chapter: Cap. 1
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 32febd1e-bce7-478d-aab9-792eddddd73d
-        position: {x: 0, y: 440}
-        outputs:
-        - aaccfcd4-a7bc-4732-b4b6-86e6c183db03
-        cinematicName: Oliver saluda a Will
-        signalIn: OLIVER_GREETING_START
-        signalDone: OLIVER_GREETING_DONE
-        signalFailed: 
-        secuencia: {fileID: 0}
-        plantillaDeAjustes: SEQ_PerasEldran
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
     - rid: 5983492470211221218
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -109,6 +85,8 @@ MonoBehaviour:
         - 32febd1e-bce7-478d-aab9-792eddddd73d
         eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000001
       type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -124,30 +102,6 @@ MonoBehaviour:
         position: {x: 0, y: 44}
         outputs:
         - 28e514c7-46f5-45ec-bd9b-3aa29d2317b5
-    - rid: 6000000000000000003
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 5.- Pulsar A para despertar
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: d206615e-7e83-4d62-bd5a-d6e04d6b237b
-        position: {x: 1680, y: 44}
-        outputs:
-        - 3f6b2c1e-8a47-4d59-b0c3-5e7a9d1f2b64
-        action: 0
-        text: Pulsa {BOTON} para despertar a Will
-        textId: TUTORIAL_WAKE_UP
-        icon: {fileID: 21300000, guid: 2cbc9eb9e96b499bb24695fdc2c2f515, type: 3}
-        buttonName: interactable_confirm
-        dismissWithCancel: 0
-        cerrarConSenal: 
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000004
       type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -171,30 +125,6 @@ MonoBehaviour:
         animTrigger: HeadShake01
         emphasis: 0
         speakerName: 
-    - rid: 6000000000000000005
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: '7.- Mueve el Joystick '
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 05d8c990-c631-4ddd-8aff-4092490214c8
-        position: {x: 1120, y: 242}
-        outputs:
-        - 81686a85-c370-4681-974b-777faf8b089b
-        action: 0
-        text: "Usa {BOTON} para mover a Will. Inspecciona la habitaci\xF3n."
-        textId: TUTORIAL_MOVE_INSPECT
-        icon: {fileID: 21300000, guid: 7ee57509d79a49b0adec369729ca33c2, type: 3}
-        buttonName: interactable_Joystick
-        dismissWithCancel: 1
-        cerrarConSenal: WILL_EXITS_HOUSE
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000013
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -231,6 +161,8 @@ MonoBehaviour:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000015
       type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -309,29 +241,6 @@ MonoBehaviour:
         amount: 1
         logWarnings: 0
         onlyOnce: 1
-    - rid: 6000000000000000022
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "30.- SE DESBLOQUEA EL ATAQUE M\xC1GICO Y LLAMA ASTRAL"
-        chapter: Cap. 1
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 840, y: 1090}
-        outputs:
-        - d1785c09-9503-4d7b-a24e-682424ca83a7
-        abilityKeysToUnlock: 03000000i
-        abilitiesToUnlock: 01000000i
-        spellsToUnlock: 01000000i
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 0
     - rid: 6000000000000000023
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -351,30 +260,6 @@ MonoBehaviour:
         giverId: NPC_Eldran
         inProgressDialogue: {fileID: 11400000, guid: d1c8c8eadd79b824dbe89bc62809106b, type: 2}
         noGiver: 0
-    - rid: 6000000000000000024
-      type: {class: StartBattleNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: '32.- ARENA DE BATALLA: DEMONIO'
-        chapter: Cap. 1
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 1400, y: 1090}
-        outputs:
-        - dedc7fec-da78-4587-82a4-341ca93c8eaa
-        battleId: Demon_1
-        bossArena: {fileID: 0}
-        useBattleById: 1
-        encounter: {fileID: 11400000, guid: 1e1446cf72914a07a5046fab09197876, type: 2}
-        spawnProfileIndex: 0
-        completeMission: 0
-        missionStringId: 
-        missionId: 0
-        arenaContext: 
     - rid: 6000000000000000027
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -446,53 +331,8 @@ MonoBehaviour:
         - 72854966-4210-4108-aa56-b1f0cb33d3bb
         eventKey: PROLOGUE_DONE
         acceptEarlierEvent: 1
-    - rid: 6000000000000000032
-      type: {class: WaitItemDeliveryNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 24.- Entrega la caja a Eldran
-        chapter: Cap. 1
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 1400, y: 892}
-        outputs:
-        - da4a9b32-670c-4724-ab44-6743e2c728d1
-        npcId: NPC_Eldran
-        expectedItemType: 0
-        detectionRadius: 3
-        deliveryVfxPrefab: {fileID: 3387911861816237646, guid: 2e0d2ff02c860fd41abf4a1533c23ee7, type: 3}
-        vfxLifetime: 2
-        deliverySfxKey: Chest
-        deliveryGesture: HandClap01
-        questIcon: {fileID: 0}
-    - rid: 6000000000000000033
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 25.- Tutorial icono 'habla conmigo' (caja de Eldran)
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 1680, y: 892}
-        outputs:
-        - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        action: 0
-        text: "Cuando veas este icono sobre un personaje, significa que quiere algo. Habla con \xE9l."
-        textId: TUTORIAL_NPC_TALK_ICON
-        icon: {fileID: 21300000, guid: 7193393970ac6314784af948391ee381, type: 3}
-        buttonName: 
-        dismissWithCancel: 1
-        cerrarConSenal: NPC_INTERACT_NPC_Eldran
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000034
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -526,6 +366,8 @@ MonoBehaviour:
         - c748956c-7df0-4031-8789-65aab639f278
         eventKey: HOOK_DISCUSION_DONE
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000036
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -562,6 +404,8 @@ MonoBehaviour:
         - f1f3bb59-d765-41ae-a849-2b3035f2b905
         eventKey: WILL_EXITS_HOUSE
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000038
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -617,6 +461,8 @@ MonoBehaviour:
         - 041162d9-cc08-4d17-ae7c-6067257e952b
         eventKey: PERAS_DONE
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000042
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -653,6 +499,8 @@ MonoBehaviour:
         - f393b1c0-87f6-4793-a705-a151a01af989
         eventKey: ESTRELLA_COMPRADA
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 11400000, guid: d7d39bcf17d24508a0988d79165e9643, type: 2}
+        impliedItemAmount: 1
     - rid: 6000000000000000044
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -688,30 +536,6 @@ MonoBehaviour:
         outputs:
         - 36c16794-69b8-4e90-bb85-dc80d58b76ae
         eventKey: OLIVER_JOIN_PARTY
-    - rid: 6000000000000000046
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 14d.- Tutorial minimapa (busca a Eldran)
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 36c16794-69b8-4e90-bb85-dc80d58b76ae
-        position: {x: 840, y: 440}
-        outputs:
-        - aede8111-3544-4dfc-a11e-bd1189819797
-        action: 0
-        text: Sigue el marcador del minimapa para encontrar a Eldran. Pulsa {BOTON} para ver el mapa completo.
-        textId: TUTORIAL_MINIMAP_ELDRAN
-        icon: {fileID: 0}
-        buttonName: interactable_select
-        dismissWithCancel: 1
-        cerrarConSenal: WILL_REACHED_ELDRAN
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000047
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -729,6 +553,8 @@ MonoBehaviour:
         - ce67dfa7-968b-420d-87e6-f46ad317d154
         eventKey: WILL_REACHED_ELDRAN
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 6000000000000000048
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -818,6 +644,368 @@ MonoBehaviour:
         - {fileID: 11400000, guid: c51f775b69b84263afb700937be9f475, type: 2}
         - {fileID: 11400000, guid: 61105504cb7c47a69c7035fca3a4287d, type: 2}
         - {fileID: 11400000, guid: 2c621a06b999487d980e2d5e1e729c6c, type: 2}
+    - rid: 6540294618706084501
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 5.- Pulsar A para despertar
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: d206615e-7e83-4d62-bd5a-d6e04d6b237b
+        position: {x: 1680, y: 44}
+        outputs:
+        - 3f6b2c1e-8a47-4d59-b0c3-5e7a9d1f2b64
+        request:
+          rid: 6540294618706084513
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084502
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: '7.- Mueve el Joystick '
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 05d8c990-c631-4ddd-8aff-4092490214c8
+        position: {x: 1120, y: 242}
+        outputs:
+        - 81686a85-c370-4681-974b-777faf8b089b
+        request:
+          rid: 6540294618706084514
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084503
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 29.- DESPERTAR MAGICO (SEQ_StarAwakening)
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 0a923444-f2e4-42d4-be51-49d30c40e362
+        position: {x: 560, y: 1090}
+        outputs:
+        - e7e8e2f2-6e54-4490-97b1-fd48323945a4
+        - 
+        request:
+          rid: 6540294618706084515
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084504
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "30.- SE DESBLOQUEA EL ATAQUE M\xC1GICO Y LLAMA ASTRAL"
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
+        position: {x: 840, y: 1090}
+        outputs:
+        - d1785c09-9503-4d7b-a24e-682424ca83a7
+        request:
+          rid: 6540294618706084516
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084505
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: '32.- ARENA DE BATALLA: DEMONIO'
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
+        position: {x: 1400, y: 1090}
+        outputs:
+        - dedc7fec-da78-4587-82a4-341ca93c8eaa
+        request:
+          rid: 6540294618706084517
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084506
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 24.- Entrega la caja a Eldran
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 71cf01b8-b417-47c7-8688-648106590000
+        position: {x: 1400, y: 892}
+        outputs:
+        - da4a9b32-670c-4724-ab44-6743e2c728d1
+        request:
+          rid: 6540294618706084518
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084507
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 25.- Tutorial icono 'habla conmigo' (caja de Eldran)
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: da4a9b32-670c-4724-ab44-6743e2c728d1
+        position: {x: 1680, y: 892}
+        outputs:
+        - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
+        request:
+          rid: 6540294618706084519
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084508
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 14.- Oliver saluda a Will (SEQ_OliverSaludo)
+        chapter: Cap. 1
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 32febd1e-bce7-478d-aab9-792eddddd73d
+        position: {x: 0, y: 440}
+        outputs:
+        - aaccfcd4-a7bc-4732-b4b6-86e6c183db03
+        - 
+        request:
+          rid: 6540294618706084520
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084509
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 14d.- Tutorial minimapa (busca a Eldran)
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 36c16794-69b8-4e90-bb85-dc80d58b76ae
+        position: {x: 840, y: 440}
+        outputs:
+        - aede8111-3544-4dfc-a11e-bd1189819797
+        request:
+          rid: 6540294618706084521
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084510
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "20c.- Eldran le llama: \xABVen, s\xEDgueme\xBB (SEQ_EldranCaja)"
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
+        position: {x: 1120, y: 666}
+        outputs:
+        - 004d01ec-565b-4943-8661-88335a7b0057
+        - 
+        request:
+          rid: 6540294618706084522
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084511
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 20d.- Sigue a Eldran hasta el punto de guardado de la entrada
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
+        position: {x: 1680, y: 666}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
+        request:
+          rid: 6540294618706084523
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084512
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 20d3.- Sigue a Eldran hasta el bosque
+        chapter: Cap. 1
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
+        position: {x: 0, y: 892}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
+        request:
+          rid: 6540294618706084524
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084513
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: Pulsa {BOTON} para despertar a Will
+        textId: TUTORIAL_WAKE_UP
+        icon: {fileID: 21300000, guid: 2cbc9eb9e96b499bb24695fdc2c2f515, type: 3}
+        buttonName: interactable_confirm
+        dismissWithCancel: 0
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
+    - rid: 6540294618706084514
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: "Usa {BOTON} para mover a Will. Inspecciona la habitaci\xF3n."
+        textId: TUTORIAL_MOVE_INSPECT
+        icon: {fileID: 21300000, guid: 7ee57509d79a49b0adec369729ca33c2, type: 3}
+        buttonName: interactable_Joystick
+        dismissWithCancel: 1
+        cerrarConSenal: WILL_EXITS_HOUSE
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
+    - rid: 6540294618706084515
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: El Despertar de la Estrella
+        signalIn: AWAKEN_START
+        signalDone: AWAKEN_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 6ac34a156a67474d888221efb090025e, type: 2}
+        plantillaDeAjustes: SEQ_PerasEldran
+    - rid: 6540294618706084516
+      type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
+      data:
+        abilityKeysToUnlock: 03000000i
+        spellsToUnlock: 01000000i
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+    - rid: 6540294618706084517
+      type: {class: PedirBatalla, ns: , asm: Assembly-CSharp}
+      data:
+        battleId: Demon_1
+        encounter: {fileID: 11400000, guid: 1e1446cf72914a07a5046fab09197876, type: 2}
+        spawnProfileIndex: 0
+    - rid: 6540294618706084518
+      type: {class: PedirEntregaDeObjeto, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Eldran
+        expectedItemType: 0
+        detectionRadius: 3
+        deliveryVfxPrefab: {fileID: 3387911861816237646, guid: 2e0d2ff02c860fd41abf4a1533c23ee7, type: 3}
+        vfxLifetime: 2
+        deliverySfxKey: Chest
+        deliveryGesture: HandClap01
+        questIcon: {fileID: 0}
+    - rid: 6540294618706084519
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: "Cuando veas este icono sobre un personaje, significa que quiere algo. Habla con \xE9l."
+        textId: TUTORIAL_NPC_TALK_ICON
+        icon: {fileID: 21300000, guid: 7193393970ac6314784af948391ee381, type: 3}
+        buttonName: 
+        dismissWithCancel: 1
+        cerrarConSenal: NPC_INTERACT_NPC_Eldran
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 6540294618706084520
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: Oliver saluda a Will
+        signalIn: OLIVER_GREETING_START
+        signalDone: OLIVER_GREETING_DONE
+        signalFailed: 
+        secuencia: {fileID: 0}
+        plantillaDeAjustes: SEQ_PerasEldran
+    - rid: 6540294618706084521
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: Sigue el marcador del minimapa para encontrar a Eldran. Pulsa {BOTON} para ver el mapa completo.
+        textId: TUTORIAL_MINIMAP_ELDRAN
+        icon: {fileID: 0}
+        buttonName: interactable_select
+        dismissWithCancel: 1
+        cerrarConSenal: WILL_REACHED_ELDRAN
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
+    - rid: 6540294618706084522
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: Eldran viene a pedir la caja
+        signalIn: ELDRAN_CAJA_START
+        signalDone: ELDRAN_CAJA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 3930047f776a498089eb0e8945f40aa3, type: 2}
+        plantillaDeAjustes: SEQ_PerasEldran
+    - rid: 6540294618706084523
+      type: {class: PedirGuiarAlJugador, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Eldran
+        anchorId: Eldran_PuntoGuardado
+        puntosDePaso: []
+        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
+        duracionLlamada: 2.2
+        distanciaMaxima: 9
+        distanciaReanudar: 3
+        separacionDelGuia: 1.2
+        radioLlegada: 4
+        velocidad: 3
+        duracionMaxima: 240
+        charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
+    - rid: 6540294618706084524
+      type: {class: PedirGuiarAlJugador, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Eldran
+        anchorId: Eldran_Bosque
+        puntosDePaso: []
+        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
+        duracionLlamada: 2.2
+        distanciaMaxima: 9
+        distanciaReanudar: 3
+        separacionDelGuia: 1.2
+        radioLlegada: 4
+        velocidad: 3
+        duracionMaxima: 240
+        charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272359979352335
       type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -854,81 +1042,6 @@ MonoBehaviour:
         operacion: 1
         sceneName: Prologo_Valle
         waitForCompletion: 1
-    - rid: 7428272542014767947
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "20c.- Eldran le llama: \xABVen, s\xEDgueme\xBB (SEQ_EldranCaja)"
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
-        position: {x: 1120, y: 666}
-        outputs:
-        - 004d01ec-565b-4943-8661-88335a7b0057
-        cinematicName: Eldran viene a pedir la caja
-        signalIn: ELDRAN_CAJA_START
-        signalDone: ELDRAN_CAJA_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 3930047f776a498089eb0e8945f40aa3, type: 2}
-        plantillaDeAjustes: SEQ_PerasEldran
-        acercarActor: NPC_Eldran
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
-    - rid: 7428272542014767948
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 29.- DESPERTAR MAGICO (SEQ_StarAwakening)
-        chapter: Cap. 1
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 560, y: 1090}
-        outputs:
-        - e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        cinematicName: El Despertar de la Estrella
-        signalIn: AWAKEN_START
-        signalDone: AWAKEN_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 6ac34a156a67474d888221efb090025e, type: 2}
-        plantillaDeAjustes: SEQ_PerasEldran
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
-    - rid: 7428272564026736784
-      type: {class: GuiarJugadorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 20d.- Sigue a Eldran hasta el punto de guardado de la entrada
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
-        position: {x: 1680, y: 666}
-        outputs:
-        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
-        npcId: NPC_Eldran
-        anchorId: Eldran_PuntoGuardado
-        puntosDePaso: []
-        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
-        duracionLlamada: 2.2
-        distanciaMaxima: 9
-        distanciaReanudar: 3
-        separacionDelGuia: 1.2
-        radioLlegada: 4
-        velocidad: 3
-        duracionMaxima: 240
-        charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
       type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -947,33 +1060,6 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 0666c4491bbda38479c192cdef5bb094, type: 2}
         npcId: NPC_Eldran
         oneShotFlag: 
-    - rid: 7428272564026736786
-      type: {class: GuiarJugadorNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 20d3.- Sigue a Eldran hasta el bosque
-        chapter: Cap. 1
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
-        position: {x: 0, y: 892}
-        outputs:
-        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
-        npcId: NPC_Eldran
-        anchorId: Eldran_Bosque
-        puntosDePaso: []
-        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
-        duracionLlamada: 2.2
-        distanciaMaxima: 9
-        distanciaReanudar: 3
-        separacionDelGuia: 1.2
-        radioLlegada: 4
-        velocidad: 3
-        duracionMaxima: 240
-        charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787
       type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -1071,3 +1157,5 @@ MonoBehaviour:
         - 95228e84-0a1a-4e3b-9ef9-e36ad502e222
         eventKey: will_wake_up
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1

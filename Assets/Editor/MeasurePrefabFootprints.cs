@@ -8,7 +8,7 @@ public class MeasurePrefabFootprints : EditorWindow
     Object[] prefabs;
     float padding = 1.1f; // 10% margen de seguridad
 
-    [MenuItem("El Sendero/Mundo/Medir Footprints (XZ)")]
+    [MenuItem("El Sendero/Mundo/Medir lo que ocupan los prefabs (XZ)")]
     static void Open() => GetWindow<MeasurePrefabFootprints>("Medir Footprints");
 
     void OnGUI()

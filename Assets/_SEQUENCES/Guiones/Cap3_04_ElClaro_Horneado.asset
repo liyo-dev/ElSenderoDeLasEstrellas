@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap3_04_ElClaro_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_04_ElClaro
-  duracion: 29.18
+  duracion: 29.115
   presentacion: 1
-  huella: "2026-11-12 07:30 \xB7 a3d34be1744c689c4af162b1fe6fd01b"
+  huella: "2026-11-14 14:25 \xB7 4c4b85e5b5a4c31f537eec864d588f14"
   actores:
   - id: Player
     alias: will
@@ -39,7 +39,7 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     cabezas:
     - t: 5.465
       tipo: 2
@@ -50,7 +50,7 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 14.495
       tipo: 2
       rumbo: 0
@@ -112,14 +112,14 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 23.15
+      t: 23.085
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.6
-      t: 23.5
+      t: 23.435
       tipo: 1
       estado: ManoAlPecho
       congelar: 0
@@ -137,8 +137,8 @@ MonoBehaviour:
       dura: 0
     - t: 17.705
       emocion: preocupado
-      dura: 5.795
-    - t: 23.5
+      dura: 5.73
+    - t: 23.435
       emocion: decidido
       dura: 5.08
     visible: []
@@ -160,17 +160,17 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 8.570001
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 11.04
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 14.594999
       tipo: 2
       rumbo: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.65
+    - t: 23.585
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -191,22 +191,22 @@ MonoBehaviour:
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 5.4150004
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 8.52
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 11.04
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
-      actor: NPC_ContrabandistaJefe
+      actor: NPC_Contrabandista1
     - t: 14.544999
       tipo: 2
       rumbo: 0
@@ -217,7 +217,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.6
+    - t: 23.535
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -280,7 +280,7 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 24.2
+      t: 24.135
       tipo: 2
       estado: HeadShake01
       congelar: 0
@@ -292,9 +292,9 @@ MonoBehaviour:
       dura: 2.935
     visible: []
     deslizando: []
-  - id: NPC_ContrabandistaJefe
-    alias: jefe
-    colorDelNombre: {r: 0.7882353, g: 0.63529414, b: 0.47843137, a: 1}
+  - id: NPC_Contrabandista1
+    alias: c1
+    colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
     claveDelNombre: CHAR_CONTRABANDISTA
     posiciones:
     - t: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.77
+    - t: 23.705
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -366,7 +366,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.720001
+    - t: 23.655
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -401,7 +401,7 @@ MonoBehaviour:
     skipIfFlag: 
     t0: 1
     t1: 4.965
-    actor: NPC_ContrabandistaJefe
+    actor: NPC_Contrabandista1
     clave: CAP3_CLARO_01
     gesto: 
     sinPose: 1
@@ -419,7 +419,7 @@ MonoBehaviour:
     skipIfFlag: 
     t0: 8.3
     t1: 10.64
-    actor: NPC_ContrabandistaJefe
+    actor: NPC_Contrabandista1
     clave: CAP3_CLARO_03
     gesto: HeadShake01
     sinPose: 1
@@ -445,7 +445,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 17.705
-    t1: 23.1
+    t1: 23.035
     actor: Player
     clave: CAP3_CLARO_06
     gesto: Talk02
@@ -453,8 +453,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 23.5
-    t1: 28.18
+    t0: 23.435
+    t1: 28.115
     actor: Player
     clave: CAP3_CLARO_07
     gesto: 
@@ -465,28 +465,28 @@ MonoBehaviour:
     t0: 0
     t1: 13.445
     tipo: 0
-    descripcion: general de jefe y c2
+    descripcion: general de c1 y c2
     posiciones:
     - t: 0
       p: {x: -217.56796, y: 24.901585, z: -119.13713}
     lente: 42
     lenteFinal: 0
     sujetos:
-    - NPC_ContrabandistaJefe
+    - NPC_Contrabandista1
     - NPC_Contrabandista2
     pesos:
     - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.7186191
+    alturaDelFoco: 0.71611065
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 13.445
-    t1: 29.18
+    t1: 29.115
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -500,7 +500,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1038897
+    alturaDelFoco: 1.1038896
     encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -510,19 +510,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294555676705384
+      rid: 6540294600349713158
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 13.445
     beat:
-      rid: 6540294555676705385
+      rid: 6540294600349713159
     linea: 42
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 29.18
+    t: 29.115
     beat:
-      rid: 6540294555676705386
+      rid: 6540294600349713160
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -538,13 +538,13 @@ MonoBehaviour:
     posicion: {x: -209.3, y: 21.870655, z: -132.4}
   - nombre: p_c2
     posicion: {x: -216.5, y: 21.747822, z: -129.5}
-  - nombre: p_jefe
+  - nombre: p_c1
     posicion: {x: -213, y: 21.600903, z: -128.5}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294555676705384
+    - rid: 6540294600349713158
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -552,7 +552,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294555676705385
+    - rid: 6540294600349713159
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -565,7 +565,7 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 0.25
-    - rid: 6540294555676705386
+    - rid: 6540294600349713160
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

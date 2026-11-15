@@ -26,7 +26,8 @@ public static partial class VestidoDelPrologo
     /// Grupo de las puertas que se abren (aparte: la tormenta cierra las contraventanas, no las puertas).
     public const string GrupoPuertas = "Pueblo del prólogo · puertas";
     const string Pack = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/";
-    static readonly Vector3 Plaza = new(6001.5f, 100f, 6000.5f);
+    /// En el valle de MainWorld desde INC-1200 (antes, alrededor de (6000, 100, 6000) en Prologo_Valle).
+    static readonly Vector3 Plaza = new Vector3(6001.5f, 100f, 6000.5f) + VestidoDelMundo.DesplazamientoDelPrologo;
 
     // ── Tablas ──────────────────────────────────────────────────────────────────────────────
 
@@ -116,9 +117,9 @@ public static partial class VestidoDelPrologo
     /// Con mirador: sale en la marca de ese mirador (la pone el vestido).
     static readonly (string spawnId, Vector3 pos, float rumbo, string mirador)[] Sitios =
     {
-        ("SPAWN_PanaderaDelValle", new Vector3(5986.8f, 100f, 5996.4f), 0f, null),
-        ("SPAWN_MadreDelValle", new Vector3(5983.0f, 100f, 6000.8f), 90f, null),
-        ("SPAWN_LucasDelValle", new Vector3(5983.0f, 100f, 6000.2f), 90f, null),
+        ("SPAWN_PanaderaDelValle", new Vector3(5986.8f, 100f, 5996.4f) + VestidoDelMundo.DesplazamientoDelPrologo, 0f, null),
+        ("SPAWN_MadreDelValle", new Vector3(5983.0f, 100f, 6000.8f) + VestidoDelMundo.DesplazamientoDelPrologo, 90f, null),
+        ("SPAWN_LucasDelValle", new Vector3(5983.0f, 100f, 6000.2f) + VestidoDelMundo.DesplazamientoDelPrologo, 90f, null),
         ("SPAWN_VecinoDelMirador", Vector3.zero, 0f, "Vecino"),
         ("SPAWN_AbuelaDelMirador", Vector3.zero, 0f, "Abuela"),
         ("SPAWN_VecinaDelMirador", Vector3.zero, 0f, "Vecina"),
@@ -146,8 +147,8 @@ public static partial class VestidoDelPrologo
             piezas += PonerPuestoDelPan(raiz.transform, informe);
             foreach (var go in raiz.GetComponentsInChildren<Transform>(true)) GameObjectUtility.SetStaticEditorFlags(go.gameObject, 0);
             piezas += PonerTablon(raiz.transform, informe);
-            piezas += PonerCampo(raiz.transform, informe);
-            piezas += PintarSuelo(escena, raiz.transform, informe);
+            // Desde INC-1200 el suelo y el campo son los del valle de MainWorld (VestidoDelMundo.Valle).
+            informe.AppendLine("Campo y suelo: los pone el vestido de MainWorld (valle del prólogo).");
             informe.Insert(0, $"{piezas} piezas.\n");
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
@@ -524,7 +525,7 @@ public static partial class VestidoDelPrologo
 
     /// El puesto del pan: un mostrador del pack con hogazas encima, en la calle de la entrada oeste,
     /// delante de la casa de la madre. Detrás, la panadera (SPAWN_PanaderaDelValle).
-    static readonly Vector3 PuestoDelPan = new(5986.8f, 100f, 5997.4f);
+    static readonly Vector3 PuestoDelPan = new Vector3(5986.8f, 100f, 5997.4f) + VestidoDelMundo.DesplazamientoDelPrologo;
     const float PuestoRumbo = 0f;   // el mostrador da a la calle (al norte)
     static readonly string Mostrador = Pack + "Props/Goods/Counter01_a01.prefab";
     static readonly string[] Panes = { Pack + "Props/Food/Bread01_a01.prefab", Pack + "Props/Food/Bread02_a01.prefab" };

@@ -10,7 +10,7 @@ public static class ActiveCombatRegistry
 {
     private static readonly HashSet<GameObject> _npcsInCombat = new HashSet<GameObject>();
 
-    // Petición de Raúl (1 sep 2026): enemigos "menores" (arañas, de momento) que sí deben contar
+    // Petición de Raúl: enemigos "menores" (arañas, de momento) que sí deben contar
     // como combate activo (Battle Mode, ciclo manual L1/R1, etc.) pero NO deben hacer que la
     // cámara/objetivo se enganchen solos al caminar cerca de ellos — ver
     // CombatCameraTargeting.TryAutoLock/OnEnterCombat/OnNPCEnteredCombat, que usan
@@ -58,7 +58,7 @@ public static class ActiveCombatRegistry
         if (_npcsInCombat.Add(npc))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ActiveCombatRegistry] ⚔️ NPC '{npc.name}' registrado en combate{(allowsCameraLock ? "" : " (sin auto-lock de cámara)")}");
+            Debug.Log($"[ActiveCombatRegistry] NPC '{npc.name}' registrado en combate{(allowsCameraLock ? "" : " (sin auto-lock de cámara)")}");
 #endif
             Kits.Core.GameContext.Enter(Situaciones.Combate, npc);
             OnNPCEnteredCombat?.Invoke(npc);
@@ -80,7 +80,7 @@ public static class ActiveCombatRegistry
         if (_npcsInCombat.Remove(npc))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ActiveCombatRegistry] 🏳️ NPC '{npc.name}' removido del combate");
+            Debug.Log($"[ActiveCombatRegistry] NPC '{npc.name}' removido del combate");
 #endif
             Kits.Core.GameContext.Exit(Situaciones.Combate, npc);
             OnNPCExitedCombat?.Invoke(npc);
@@ -129,7 +129,7 @@ public static class ActiveCombatRegistry
     /// </summary>
     public static GameObject GetClosestCombatNPC(Vector3 position, float maxDistance = 50f)
     {
-        // ✅ FIX #16 (auditoría combate, 15 ago 2026): antes había ~5 Debug.Log por NPC evaluado,
+        // FIX #16: antes había ~5 Debug.Log por NPC evaluado,
         // sin gatear, en un método pensado para poder llamarse con cierta frecuencia.
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCombatRegistry] GetClosestCombatNPC: Buscando entre {_npcsInCombat.Count} NPCs (pos={position}, maxDist={maxDistance}m)");
@@ -157,7 +157,7 @@ public static class ActiveCombatRegistry
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (nullCount > 0)
-            Debug.LogWarning($"[ActiveCombatRegistry] ⚠️ {nullCount} NPCs null en el registro (destruidos)");
+            Debug.LogWarning($"[ActiveCombatRegistry] {nullCount} NPCs null en el registro (destruidos)");
         Debug.Log($"[ActiveCombatRegistry] Resultado: {(closest != null ? $"'{closest.name}' a {closestDist:F1}m" : "NINGUNO")}");
 #endif
 
@@ -204,7 +204,7 @@ public static class ActiveCombatRegistry
     }
 
     /// <summary>
-    /// ✅ FIX #17 (auditoría combate, 15 ago 2026): variante sin allocation de GetAllInCombat,
+    /// FIX #17: variante sin allocation de GetAllInCombat,
     /// para llamadores guiados por Update/cooldown periódico (p.ej. AllyCombatState.FindNearestEnemy)
     /// que antes copiaban el HashSet completo a una List nueva cada vez. El buffer lo mantiene y
     /// reutiliza el llamador.
@@ -231,7 +231,7 @@ public static class ActiveCombatRegistry
     public static void ClearAll()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ActiveCombatRegistry] 🧹 Limpiando {_npcsInCombat.Count} NPCs del registro");
+        Debug.Log($"[ActiveCombatRegistry] Limpiando {_npcsInCombat.Count} NPCs del registro");
 #endif
         foreach (var npc in _npcsInCombat) Kits.Core.GameContext.Exit(Situaciones.Combate, npc);
         _npcsInCombat.Clear();
@@ -239,7 +239,7 @@ public static class ActiveCombatRegistry
     
     /// <summary>
     /// Debug: Cantidad de NPCs en combate.
-    /// FIX A1 (auditoría 2026-08-07): antes devolvía el tamaño crudo del HashSet, que puede
+    /// antes devolvía el tamaño crudo del HashSet, que puede
     /// contener referencias "fake-null" a NPCs destruidos sin pasar por UnregisterNPC (Destroy
     /// directo, descarga de escena aditiva — ClearAll solo se llama en GameOver). Consumidores
     /// como PlayerBattleModeController.DetectEnemiesNearby() y PlayerActionManager leían

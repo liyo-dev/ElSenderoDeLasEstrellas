@@ -70,7 +70,7 @@ public static class ValidarGestosDeSecuencias
 
     private static readonly string[] CarpetasDePersonajes = { "Assets/_NPCs", "Assets/Prefabs" };
 
-    [MenuItem("El Sendero/Animación/Validar gestos de todas las secuencias")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Validar los gestos de todas las secuencias")]
     public static void Ejecutar()
     {
         var porDefecto = Cargar(ControllerNpcs);
@@ -208,7 +208,7 @@ public static class ValidarGestosDeSecuencias
     //      mueve el torso mientras camina y al jugador le congela las piernas. Mismo dato, dos
     //      resultados, y ningún error por ninguna parte.
 
-    [MenuItem("El Sendero/Animación/Validar el vocabulario de emociones")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Validar el vocabulario de emociones")]
     public static void ValidarEmociones()
     {
         var npcs = Cargar(ControllerNpcs);
@@ -333,7 +333,7 @@ public static class ValidarGestosDeSecuencias
         "Swimming", "Falling", "Landing", "Roll", "StepUp", "QuickClimb", "Type_Equip",
     };
 
-    [MenuItem("El Sendero/Animación/Validar nombres de estado escritos en C#")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Validar los nombres de estado escritos en C#")]
     public static void ValidarCodigo()
     {
         var npcs = Cargar(ControllerNpcs);

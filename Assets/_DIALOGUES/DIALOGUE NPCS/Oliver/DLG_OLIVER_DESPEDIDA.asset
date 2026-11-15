@@ -40,7 +40,7 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 13
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_DESPEDIDA_04
     text: 

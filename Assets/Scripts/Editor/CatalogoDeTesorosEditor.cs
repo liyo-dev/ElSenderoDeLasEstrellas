@@ -22,7 +22,7 @@ public static class CatalogoDeTesorosEditor
         EditorSceneManager.sceneSaved += AlGuardarEscena;
     }
 
-    [MenuItem("El Sendero/Tesoros/Actualizar el catálogo de tesoros (todas las escenas)")]
+    [MenuItem("El Sendero/Mundo/Tesoros: actualizar el catálogo (todas las escenas)")]
     public static void ActualizarTodo()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

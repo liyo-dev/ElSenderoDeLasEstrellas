@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Si la build es la demo: dónde se corta la historia lo dice el grafo (<see cref="FinDeLaDemoNode"/>),
+/// Si la build es la demo: dónde se corta la historia lo dice el grafo (<see cref="PedirFinDeLaDemo"/>),
 /// y este asset dice si se corta. Vive en Resources/Demo; sin asset, no es la demo.
 /// </summary>
 [CreateAssetMenu(menuName = "El Sendero/Configuración de la demo", fileName = "ConfiguracionDeLaDemo")]

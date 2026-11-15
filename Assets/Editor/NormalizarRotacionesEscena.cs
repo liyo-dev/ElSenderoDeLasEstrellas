@@ -31,7 +31,7 @@ public static class NormalizarRotacionesEscena
     // de Unity acumulado tras guardar la escena unas cuantas veces, y merece la pena limpiarlo.
     private const float ToleranciaMagnitud = 1e-6f;
 
-    [MenuItem("El Sendero/Navegación/Normalizar rotaciones de la escena")]
+    [MenuItem("El Sendero/Mundo/Normalizar las rotaciones de la escena")]
     public static void Normalizar()
     {
         var scene = SceneManager.GetActiveScene();

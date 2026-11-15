@@ -114,7 +114,7 @@ public static partial class ChuchelandiaBuilder
     /// </summary>
     private static QuestData AsegurarReino(StringBuilder informe)
     {
-        AsegurarCarpeta(CarpetaDialogosDelReino);
+        Kits.EditorTools.AssetFolders.Ensure(CarpetaDialogosDelReino);
         foreach (var (asset, lineas) in DialogosDelReino)
         {
             string ruta = $"{CarpetaDialogosDelReino}/{asset}.asset";
@@ -184,7 +184,7 @@ public static partial class ChuchelandiaBuilder
         var mision = AssetDatabase.LoadAssetAtPath<QuestData>(RutaMisionTrompetillas);
         if (mision == null)
         {
-            AsegurarCarpeta(System.IO.Path.GetDirectoryName(RutaMisionTrompetillas).Replace('\\', '/'));
+            Kits.EditorTools.AssetFolders.Ensure(System.IO.Path.GetDirectoryName(RutaMisionTrompetillas).Replace('\\', '/'));
             mision = ScriptableObject.CreateInstance<QuestData>();
             AssetDatabase.CreateAsset(mision, RutaMisionTrompetillas);
         }

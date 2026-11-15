@@ -9,14 +9,14 @@ using UnityEngine;
 /// NO es necesario agregarlo manualmente a ninguna escena.
 ///
 /// Apagado por defecto (INC-448): llenaba el log de cada Play con ~224 líneas. Se enciende y se
-/// apaga con El Sendero ▸ Debug ▸ Diagnóstico de arranque (ProfileReady).
+/// apaga con El Sendero ▸ Pruebas y comprobaciones ▸ Diagnóstico de arranque (ProfileReady).
 /// </summary>
 public static class ProfileReadyDiagnosticsInstaller
 {
     private const string Clave = "Diagnostico.ProfileReady";
 
 #if UNITY_EDITOR
-    [UnityEditor.MenuItem("El Sendero/Debug/Diagnóstico de arranque (ProfileReady)")]
+    [UnityEditor.MenuItem("El Sendero/Pruebas y comprobaciones/Diagnóstico de arranque (ProfileReady)")]
     private static void Alternar()
     {
         bool activo = PlayerPrefs.GetInt(Clave, 0) == 1;
@@ -24,10 +24,10 @@ public static class ProfileReadyDiagnosticsInstaller
         Debug.Log($"[ProfileReadyDiagnostics] Diagnóstico de arranque {(activo ? "APAGADO" : "ENCENDIDO")} para los próximos Play.");
     }
 
-    [UnityEditor.MenuItem("El Sendero/Debug/Diagnóstico de arranque (ProfileReady)", true)]
+    [UnityEditor.MenuItem("El Sendero/Pruebas y comprobaciones/Diagnóstico de arranque (ProfileReady)", true)]
     private static bool AlternarValidar()
     {
-        UnityEditor.Menu.SetChecked("El Sendero/Debug/Diagnóstico de arranque (ProfileReady)", PlayerPrefs.GetInt(Clave, 0) == 1);
+        UnityEditor.Menu.SetChecked("El Sendero/Pruebas y comprobaciones/Diagnóstico de arranque (ProfileReady)", PlayerPrefs.GetInt(Clave, 0) == 1);
         return true;
     }
 #endif

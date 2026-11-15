@@ -28,7 +28,7 @@ public sealed class AyudaDelLab : MonoBehaviour, ISeccionDelLab
             "Ataque de equipo: LT+RT / Ctrl con un compañero cerca · Menú de Start: equipar hechizos, ropa y objetos.");
         Seccion("Zonas (pestaña Zonas para ir directo)",
             "<b>Combate</b> (centro): escenarios F1–F4: blanco quieto, un enemigo, un grupo y el Gólem. R reinicia el LAB.\n" +
-            "<b>Plataformeo</b> (oeste): escalones, saltos cortos y largos, doble salto, viga estrecha, rampa y muro de escalada.\n" +
+            "<b>Plataformeo</b> (oeste): escalones, saltos cortos y largos, doble salto, viga estrecha y rampa.\n" +
             "<b>Puzles</b> (este): puerta con dos placas, placa que eleva, objeto que se quema con fuego y runas que hay que repetir en orden.\n" +
             "<b>Kit de puzles</b> (más al este, por el hueco del muro de Puzles): cristal de luz, molinete de viento, brasero de fuego, cristal que solo enciende una bola devuelta, zona sin vuelo y barrera que pide volar.\n" +
             "<b>Pruebas</b> (lejos al este): luz y saltos, viento y levitación, Liam y cambio de personaje. Zona sin vuelo; cada una acaba en un cofre y enciende su estrella.\n" +

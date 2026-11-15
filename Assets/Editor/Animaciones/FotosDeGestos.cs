@@ -10,15 +10,15 @@ using UnityEngine;
 /// Tira de fotos de un gesto: el estado del Animator muestreado en varios momentos, de frente y de
 /// lado, para revisar una animación sin entrar en Play. Los gestos se piden en
 /// «Guiones/_fotos/gestos.txt», uno por línea: el nombre del estado y, si se quiere, la ruta del
-/// prefab con el que se hace la foto (por defecto, Will de NPC). Las fotos van a «Guiones/_fotos/»
+/// prefab con el que se hace la foto (por defecto, Will). Las fotos van a «Guiones/_fotos/»
 /// como gesto_&lt;Estado&gt;_&lt;n&gt;_frente.png y _lado.png.
 /// </summary>
 public static class FotosDeGestos
 {
-    private const string ModeloPorDefecto = "Assets/Prefabs/_WILL_NPC.prefab";
+    private const string ModeloPorDefecto = "Assets/Prefabs/_WILL.prefab";
     private const int Momentos = 6;
 
-    [MenuItem("El Sendero/Personajes/Animaciones/Tira de fotos de los gestos de gestos.txt (prueba)", priority = 140)]
+    [MenuItem("El Sendero/Personajes/Fotos de prueba/Gestos pedidos en gestos.txt", priority = 140)]
     public static void Fotografiar()
     {
         string lista = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_fotos", "gestos.txt");

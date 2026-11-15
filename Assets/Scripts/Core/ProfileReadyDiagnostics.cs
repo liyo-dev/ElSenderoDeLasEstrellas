@@ -12,16 +12,16 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     private static ProfileReadyDiagnostics _instance;
     private static readonly HashSet<string> _expectedSubscribers = new HashSet<string>
     {
-        // ✅ Sistemas de persistencia
+        // Sistemas de persistencia
         "BossProgressPersistenceBridge",
         
-        // ✅ Sistemas del jugador
+        // Sistemas del jugador
         "PlayerPresetService",
         "PlayerHealthSystem",
         "WardrobeInventory",
         "PlayerEquipmentMenuController",
         
-        // ✅ Managers de mundo
+        // Managers de mundo
         "BossArenaController",
         "WorldPickup",
         "SavePoint",
@@ -29,12 +29,11 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         "SpawnManager",
         "WorldBootstrap",
         
-        // ✅ UI y feedback
+        // UI y feedback
         "AbilityUnlockPopupUI",
         
-        // ✅ Sistemas de NPC
+        // Sistemas de NPC
         "PlayerParty",
-        "NPCInteractiveNarrativeExecutor",
         
         // Añadir aquí cualquier otro sistema que DEBA suscribirse
     };
@@ -44,7 +43,6 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     /// </summary>
     private static readonly HashSet<string> _exemptSystems = new HashSet<string>
     {
-        "NPCNarrativeStateManager", // Estático, acceso bajo demanda
         "UnlockService",             // Acceso estático
         "TeleportRegistry",          // Singleton con acceso bajo demanda
         "TeleportService",           // Singleton con acceso bajo demanda
@@ -54,17 +52,17 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         "ProfileReadyDiagnostics",   // Sistema de diagnóstico
         "NarrativeGraphStarter",     // Acceso condicional para restaurar blackboards
         "PlayerHUDV2",               // No accede al Profile, usa ServiceLocator
-        "SpawnManager",              // ✅ Tiene métodos estáticos que acceden al Profile, pero está correctamente suscrito
+        "SpawnManager",              // Tiene métodos estáticos que acceden al Profile, pero está correctamente suscrito
         "MainMenuController",        // Acceso bajo demanda desde menú principal
     };
 
     private static readonly HashSet<string> _actualSubscribers = new HashSet<string>();
-    private static readonly HashSet<string> _profileAccessors = new HashSet<string>(); // ✅ Nuevo: rastrear quién accede al Profile
+    private static readonly HashSet<string> _profileAccessors = new HashSet<string>(); // Nuevo: rastrear quién accede al Profile
     private static bool _profileReadyFired = false;
     private static float _profileReadyTime = -1f;
-    private static bool _trackingEnabled = true; // ✅ Nuevo: habilitar/deshabilitar tracking
+    private static bool _trackingEnabled = true; // Nuevo: habilitar/deshabilitar tracking
 
-    // FIX M9 (auditoría 2026-08-07): este singleton no tenía el ResetStatics obligatorio (regla
+    // este singleton no tenía el ResetStatics obligatorio (regla
     // §3 del proyecto). Sin domain reload entre sesiones de PlayMode en el editor, _instance y
     // todo el estado de tracking (_actualSubscribers, _profileAccessors, _profileReadyFired...)
     // sobrevivía de una sesión a la siguiente, produciendo diagnósticos falsos (sistemas
@@ -105,13 +103,13 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         if (_actualSubscribers.Add(systemName))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProfileReadyDiagnostics] ✅ Sistema suscrito: {systemName} (Total: {_actualSubscribers.Count}/{_expectedSubscribers.Count}) - Time: {Time.time:F3}s");
+            Debug.Log($"[ProfileReadyDiagnostics] Sistema suscrito: {systemName} (Total: {_actualSubscribers.Count}/{_expectedSubscribers.Count}) - Time: {Time.time:F3}s");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProfileReadyDiagnostics] ℹ️ Sistema ya estaba suscrito: {systemName} - Time: {Time.time:F3}s");
+            Debug.Log($"[ProfileReadyDiagnostics] Sistema ya estaba suscrito: {systemName} - Time: {Time.time:F3}s");
 #endif
         }
 
@@ -120,7 +118,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         {
             float delay = Time.time - _profileReadyTime;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ TARDE: {systemName} se suscribió {delay:F3}s DESPUÉS de OnProfileReady - Puede perder el evento!");
+            Debug.LogWarning($"[ProfileReadyDiagnostics] TARDE: {systemName} se suscribió {delay:F3}s DESPUÉS de OnProfileReady - Puede perder el evento!");
 #endif
         }
     }
@@ -139,7 +137,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             if (!_profileReadyFired && !_actualSubscribers.Contains(systemName) && !_exemptSystems.Contains(systemName))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {systemName} está accediendo al Profile ANTES de OnProfileReady sin estar suscrito!");
+                Debug.LogWarning($"[ProfileReadyDiagnostics] {systemName} está accediendo al Profile ANTES de OnProfileReady sin estar suscrito!");
 #endif
             }
             
@@ -148,7 +146,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             {
                 float delay = Time.time - _profileReadyTime;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {systemName} accede al Profile {delay:F3}s después de OnProfileReady sin suscribirse - Puede tener datos obsoletos!");
+                Debug.LogWarning($"[ProfileReadyDiagnostics] {systemName} accede al Profile {delay:F3}s después de OnProfileReady sin suscribirse - Puede tener datos obsoletos!");
 #endif
             }
         }
@@ -160,10 +158,10 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         _profileReadyTime = Time.time;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProfileReadyDiagnostics] 🔔 OnProfileReady disparado en t={Time.time:F3}s - Analizando suscripciones...");
+        Debug.Log($"[ProfileReadyDiagnostics] OnProfileReady disparado en t={Time.time:F3}s - Analizando suscripciones...");
 #endif
 
-        // ✅ MEJORADO: Detectar qué sistemas están realmente presentes en las escenas cargadas
+        // MEJORADO: Detectar qué sistemas están realmente presentes en las escenas cargadas
         var presentSystems = FindPresentExpectedSystems();
         var presentExpectedCount = presentSystems.Count;
         
@@ -173,7 +171,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         // Sistemas que se suscribieron pero no están en la lista de esperados
         var extra = _actualSubscribers.Except(_expectedSubscribers).ToList();
         
-        // ✅ NUEVO: Detectar sistemas que accedieron al Profile sin suscribirse
+        // NUEVO: Detectar sistemas que accedieron al Profile sin suscribirse
         var unsafeAccessors = _profileAccessors.Except(_actualSubscribers).Except(_exemptSystems).ToList();
 
         // REPORTE CONSOLIDADO
@@ -195,7 +193,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             report.AppendLine($"  ℹ️  Sistemas adicionales ({extra.Count}): {string.Join(", ", extra.OrderBy(x => x))}");
         }
         
-        // ✅ NUEVO: Reportar accesos inseguros
+        // NUEVO: Reportar accesos inseguros
         if (unsafeAccessors.Count > 0)
         {
             report.AppendLine($"  ⚠️  ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}): {string.Join(", ", unsafeAccessors.OrderBy(x => x))}");
@@ -249,19 +247,19 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             {
                 bool isActive = mb.gameObject.activeInHierarchy;
                 
-                // ✅ CLAVE: Solo considerar "presente" si el GameObject está ACTIVO
+                // CLAVE: Solo considerar "presente" si el GameObject está ACTIVO
                 // Los GameObjects inactivos no habrán ejecutado OnEnable() todavía
                 if (isActive)
                 {
                     presentSystems.Add(typeName);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[ProfileReadyDiagnostics] ✅ Presente y activo: {typeName}");
+                    Debug.Log($"[ProfileReadyDiagnostics] Presente y activo: {typeName}");
 #endif
                 }
                 else
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[ProfileReadyDiagnostics] 💤 Encontrado pero INACTIVO: {typeName} - No se esperará su registro");
+                    Debug.Log($"[ProfileReadyDiagnostics] Encontrado pero INACTIVO: {typeName} - No se esperará su registro");
 #endif
                 }
             }
@@ -285,7 +283,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         if (countAfter > countBefore)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {countAfter - countBefore} sistema(s) se suscribieron DESPUÉS de OnProfileReady");
+            Debug.LogWarning($"[ProfileReadyDiagnostics] {countAfter - countBefore} sistema(s) se suscribieron DESPUÉS de OnProfileReady");
 #endif
         }
     }
@@ -297,7 +295,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     public void AnalyzeSubscriptions()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProfileReadyDiagnostics] 📊 Análisis Manual:");
+        Debug.Log($"[ProfileReadyDiagnostics] Análisis Manual:");
         Debug.Log($"  - OnProfileReady disparado: {_profileReadyFired}");
         Debug.Log($"  - Sistemas esperados: {_expectedSubscribers.Count}");
         Debug.Log($"  - Sistemas suscritos: {_actualSubscribers.Count}");
@@ -308,7 +306,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         if (missing.Count > 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"  - ❌ Faltantes: {string.Join(", ", missing)}");
+            Debug.LogError($"  - Faltantes: {string.Join(", ", missing)}");
 #endif
         }
     }
@@ -321,7 +319,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     public void ScanScene()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProfileReadyDiagnostics] 🔍 Escaneando escena en busca de sistemas problemáticos...");
+        Debug.Log($"[ProfileReadyDiagnostics] Escaneando escena en busca de sistemas problemáticos...");
 #endif
 
         var allMonoBehaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
@@ -351,18 +349,18 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         if (potentialIssues.Count > 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ Sistemas esperados pero NO suscritos en escena:\n  - {string.Join("\n  - ", potentialIssues)}");
+            Debug.LogWarning($"[ProfileReadyDiagnostics] Sistemas esperados pero NO suscritos en escena:\n  - {string.Join("\n  - ", potentialIssues)}");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProfileReadyDiagnostics] ✅ No se detectaron sistemas problemáticos en la escena");
+            Debug.Log($"[ProfileReadyDiagnostics] No se detectaron sistemas problemáticos en la escena");
 #endif
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProfileReadyDiagnostics] 📋 Total MonoBehaviours escaneados: {allMonoBehaviours.Length}");
+        Debug.Log($"[ProfileReadyDiagnostics] Total MonoBehaviours escaneados: {allMonoBehaviours.Length}");
 #endif
     }
 
@@ -407,7 +405,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             report.AppendLine();
         }
         
-        // ✅ NUEVO: Reportar accesos sin suscripción
+        // NUEVO: Reportar accesos sin suscripción
         if (unsafeAccessors.Count > 0)
         {
             report.AppendLine($"🔥 ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}):");
@@ -476,7 +474,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         _profileReadyFired = false;
         _profileReadyTime = -1f;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[ProfileReadyDiagnostics] 🔄 Estado reseteado");
+        Debug.Log("[ProfileReadyDiagnostics] Estado reseteado");
 #endif
     }
 }

@@ -16,15 +16,15 @@ public static class PortadaDelJuego
     private const string Escena = "Sendero";
     private static readonly string[] GrupoDeLaEscena = { "_WILL", "_ESTELA", "_LIAM" };
 
-    [MenuItem("El Sendero/Rodaje/Portada del juego en el Sendero (4K)")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Portada del juego en el Sendero (4K)")]
     public static void Portada() => Hacer(rapido: false);
 
-    [MenuItem("El Sendero/Rodaje/Portada del juego en el Sendero (prueba rápida)")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Portada del juego en el Sendero (prueba rápida)")]
     public static void Prueba() => Hacer(rapido: true);
 
     /// Muestrario de poses: varias fotos pequeñas seguidas de cada animación candidata, para elegir
     /// la pose y el momento antes de pasarlos al guion de la portada.
-    [MenuItem("El Sendero/Rodaje/Portada del juego: muestrario de poses")]
+    [MenuItem("El Sendero/Cinemáticas/Rodaje/Portada del juego: muestrario de poses")]
     public static void Poses() => Hacer(rapido: true, guion: MuestrarioDePoses);
 
     private const string MuestrarioDePoses = "Assets/_SEQUENCES/Guiones/Escaparate/Portada_Poses.guion.txt";

@@ -31,7 +31,7 @@ public sealed class PostprocesoDeEscena : MonoBehaviour
     // Uno que espera a que su escena sea la activa está encendido pero no manda: no cuenta.
     private static PostprocesoDeEscena BuscarElQueManda()
     {
-        foreach (var p in Object.FindObjectsByType<PostprocesoDeEscena>(FindObjectsSortMode.None))
+        foreach (var p in Object.FindObjectsByType<PostprocesoDeEscena>())
             if (p._mandando) return p;
         return null;
     }

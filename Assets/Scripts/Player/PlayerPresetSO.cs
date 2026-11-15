@@ -55,31 +55,54 @@ public class PlayerPresetSO : ScriptableObject
     [Tooltip("Básicos equipados de Estela y Liam (hasta cuatro cada uno). Vacío = los de su ficha.")]
     public List<BasicosDeCompanero> companionBasics = new();
 
-    /// Vida y maná de Estela o Liam (INC-717). Los de Will son maxHP/currentHP/maxMP/currentMP.
+    /// Estado de Estela o Liam (INC-717): vida, maná, base de ataque y defensa y las habilidades que
+    /// ha aprendido en la partida. Los de Will son maxHP/currentHP/maxMP/currentMP, ataque/defensa y
+    /// abilities. Un valor a 0 (sin guardar) es el de su ficha; sus habilidades son las de su ficha
+    /// más las aprendidas.
     [Serializable]
-    public class SaludDeCompanero
+    public class EstadoDeCompanero
     {
         public PartyControlManager.CharacterSlot personaje;
         public float maxHP, currentHP, maxMP, currentMP;
+        public float ataque, defensa;
+        public PlayerAbilities habilidadesAprendidas = new PlayerAbilities();
 
-        public SaludDeCompanero Copia() => (SaludDeCompanero)MemberwiseClone();
-
-        public static List<SaludDeCompanero> CopiarLista(List<SaludDeCompanero> src)
+        public EstadoDeCompanero Copia()
         {
-            var dst = new List<SaludDeCompanero>();
+            var copia = (EstadoDeCompanero)MemberwiseClone();
+            copia.habilidadesAprendidas = habilidadesAprendidas != null ? habilidadesAprendidas.Copia() : new PlayerAbilities();
+            return copia;
+        }
+
+        public static List<EstadoDeCompanero> CopiarLista(List<EstadoDeCompanero> src)
+        {
+            var dst = new List<EstadoDeCompanero>();
             if (src != null) foreach (var e in src) if (e != null) dst.Add(e.Copia());
             return dst;
         }
     }
 
-    [Tooltip("Vida y maná de Estela y Liam. Sin entrada = los máximos de su ficha.")]
-    public List<SaludDeCompanero> companionHealth = new();
+    [Tooltip("Vida, maná, ataque, defensa y habilidades aprendidas de Estela y Liam. Sin entrada (o a 0) = los de su ficha.")]
+    public List<EstadoDeCompanero> companionHealth = new();
+
+    /// La entrada de Estela o de Liam en <see cref="companionHealth"/>; con <paramref name="crear"/>,
+    /// se crea vacía si no estaba. Null para Will (sus valores van sueltos en el preset).
+    public EstadoDeCompanero EstadoDe(PartyControlManager.CharacterSlot p, bool crear)
+    {
+        if (p == PartyControlManager.CharacterSlot.Will) return null;
+        companionHealth ??= new List<EstadoDeCompanero>();
+        foreach (var e in companionHealth)
+            if (e != null && e.personaje == p) return e;
+        if (!crear) return null;
+        var nueva = new EstadoDeCompanero { personaje = p };
+        companionHealth.Add(nueva);
+        return nueva;
+    }
 
     [Header("Flags (misiones/estados simples)")]
     public List<string> flags = new();
 
-    // Usar la clase separada PlayerAbilities para evitar problemas de resolución entre archivos
-    [Header("Abilities (Swim, Jump, Climb, Fly)")]
+    [Header("Habilidades de Will (las de Estela y Liam: su ficha y companionHealth)")]
     public PlayerAbilities abilities = new PlayerAbilities();
 
     [Header("Apariencia")]

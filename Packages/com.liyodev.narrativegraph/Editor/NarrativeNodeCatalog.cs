@@ -7,10 +7,10 @@ using UnityEngine;
 namespace NarrativeGraphEditor
 {
     /// <summary>
-    /// Catálogo de tipos de nodo para el editor: descubre por reflection (solo editor) todas las
-    /// clases NarrativeNode no abstractas ni obsoletas, y expone categoría / título / descripción
-    /// / color a partir de [NarrativeNodeInfo], que declara cada nodo. Es la única fuente de
-    /// colores del editor.
+    /// Catálogo de tipos de paso para el editor: descubre por reflection (solo editor) todas las
+    /// clases NarrativeNode y las peticiones al juego (NarrativeRequest, que se ponen con «Pedir al
+    /// juego») no abstractas ni obsoletas, y expone categoría / título / descripción / color a
+    /// partir de [NarrativeNodeInfo], que declara cada una. Es la única fuente de colores del editor.
     /// </summary>
     public static class NarrativeNodeCatalog
     {
@@ -61,6 +61,9 @@ namespace NarrativeGraphEditor
         }
 
         public static string TitleOf(Type t) => Get(t)?.title ?? t?.Name ?? "?";
+
+        /// <summary>Título del tipo con el que se presenta el paso (el de su petición en «Pedir al juego»).</summary>
+        public static string TitleOf(NarrativeNode node) => node == null ? "?" : TitleOf(node.KindType);
         public static string CategoryOf(Type t) => Get(t)?.category ?? "Otros";
 
         public static Color ColorOf(string category)
@@ -84,7 +87,8 @@ namespace NarrativeGraphEditor
             if (_entries != null) return;
             _entries = new List<Entry>();
             var types = UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeNode>()
-                .Where(t => !t.IsAbstract && t.IsClass);
+                .Concat(UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeRequest>().Where(t => t != typeof(NarrativeRequestValues)))
+                .Where(t => !t.IsAbstract && t.IsClass && !t.IsNested);
             foreach (var t in types)
             {
                 var e = Build(t);

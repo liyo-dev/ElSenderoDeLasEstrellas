@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 namespace NarrativeGraphEditor.Story
 {
     /// Recorrido guiado por el editor: una burbuja por zona, con la zona resaltada. Sale solo la
-    /// primera vez que se abre el editor y se puede repetir desde ⚙ Ajustes.
+    /// primera vez que se abre el editor y se puede repetir desde Ajustes.
     public sealed class StoryTour : VisualElement
     {
         public sealed class Stop

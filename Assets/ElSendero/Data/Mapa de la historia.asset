@@ -16,128 +16,140 @@ MonoBehaviour:
   hasWorldRect: 1
   worldRect:
     serializedVersion: 2
-    x: -640
-    y: -700
-    width: 1280
-    height: 1280
+    x: -650
+    y: -650
+    width: 1300
+    height: 1300
   markSpots:
+  - id: Cap2_OliverCharla
+    position: {x: -0.6, y: 26.281815, z: -143.2}
+  - id: Cap2_VictoriaCharla
+    position: {x: -0.9968583, y: 26.301186, z: -144.06384}
   - id: Cap3_Acampada
-    position: {x: -101, y: 20.246, z: -208.5}
+    position: {x: -101, y: 20.245785, z: -208.5}
   - id: Cap3_AcampadaCamino
-    position: {x: 150, y: 17.753, z: -266.5}
+    position: {x: 150, y: 17.752636, z: -266.5}
   - id: Cap3_Aldea
-    position: {x: 262, y: 5.177, z: -414}
+    position: {x: 262, y: 5.1774845, z: -414}
   - id: Cap3_Amanecer
-    position: {x: -96, y: 24.661, z: -126}
+    position: {x: -96, y: 24.661263, z: -126}
   - id: Cap3_Caserio
-    position: {x: -171, y: 19.956, z: -200}
+    position: {x: -171, y: 19.956203, z: -200}
   - id: Cap3_Claro
-    position: {x: -215, y: 21.454, z: -125}
+    position: {x: -215, y: 21.453735, z: -125}
   - id: Cap3_Despedida_Camino
-    position: {x: 58.2, y: 23.326, z: -190.1}
+    position: {x: 58.2, y: 23.32639, z: -190.1}
+  - id: Cap3_Escondite_Hoguera
+    position: {x: -109.5, y: 19.852337, z: -212.5}
   - id: Cap3_Linde
-    position: {x: -193, y: 20.939, z: -168}
+    position: {x: -193, y: 20.939491, z: -168}
   - id: Cap3_Matorral
-    position: {x: -208, y: 21.927, z: -134}
+    position: {x: -208, y: 21.92691, z: -134}
   - id: Cap3_Posada
-    position: {x: 279, y: 5.004, z: -425.4}
+    position: {x: 279, y: 5.003662, z: -425.4}
   - id: Cap3_Puente
-    position: {x: -129, y: 18.573, z: -235}
+    position: {x: -129, y: 18.573421, z: -235}
   - id: Cap3_Puesto
-    position: {x: -90, y: 25.06, z: -124}
+    position: {x: -90, y: 25.059666, z: -124}
+  - id: Cap3_Ronda_Caserio1
+    position: {x: -159.5, y: 18.643204, z: -200.5}
+  - id: Cap3_Ronda_Caserio2
+    position: {x: -159.5, y: 18.285267, z: -187}
+  - id: Cap3_Ronda_Caserio3
+    position: {x: -172.5, y: 19.504585, z: -186.5}
+  - id: Cap3_Ronda_Linde1
+    position: {x: -185, y: 20.023457, z: -177.5}
   - id: Cap3_Ruta1
-    position: {x: -150, y: 17.9, z: -222}
+    position: {x: -150, y: 17.899864, z: -222}
   - id: Cap3_Ruta2
-    position: {x: -186, y: 21.065, z: -186}
+    position: {x: -186, y: 21.065163, z: -186}
   - id: Cap3_Ruta3
-    position: {x: -203, y: 22.231, z: -150}
-  - id: Cap3_Seguir_Vuelta
-    position: {x: -98, y: 20.286, z: -210}
+    position: {x: -203, y: 22.230545, z: -150}
   - id: Cap3_Sigilo_Fin
-    position: {x: -217, y: 21.982, z: -143}
+    position: {x: -217, y: 21.982067, z: -143}
   - id: Cap3_Sigilo_SalidaNpc
-    position: {x: -104.5, y: 19.937, z: -218.5}
+    position: {x: -110, y: 16.401028, z: -222.3}
+  - id: Cap3_Sigilo_SalidaVigia
+    position: {x: -112.5, y: 12.905048, z: -224.1}
   - id: Cap4_Bifurcacion
-    position: {x: -180, y: 30.504, z: 40}
+    position: {x: -180, y: 30.504345, z: 40}
   - id: Cap4_Bosque_Entrada
-    position: {x: -140, y: 22.295, z: -110}
+    position: {x: -140, y: 22.294804, z: -110}
   - id: Cap4_Bota
-    position: {x: -184, y: 26.619, z: -24}
+    position: {x: -184, y: 26.61937, z: -24}
   - id: Cap4_Campana
-    position: {x: -330, y: 36.892, z: 86}
+    position: {x: -330, y: 36.89159, z: 86}
   - id: Cap4_Campana_Salida
-    position: {x: -330, y: 35.996, z: 60}
+    position: {x: -330, y: 35.996155, z: 60}
   - id: Cap4_Casa
-    position: {x: -346, y: 36.028, z: 62}
+    position: {x: -346, y: 36.02838, z: 62}
   - id: Cap4_Claro_Estela
-    position: {x: -322, y: 36.309, z: 66}
+    position: {x: -322, y: 36.309227, z: 66}
   - id: Cap4_Claro_Will
-    position: {x: -313, y: 36.03, z: 62}
+    position: {x: -313, y: 36.030186, z: 62}
   - id: Cap4_Golem_Entrada
-    position: {x: -125, y: 31.827, z: 60}
+    position: {x: -125, y: 31.827293, z: 60}
   - id: Cap4_LiamBifurcacion
-    position: {x: -176.5, y: 29.934, z: 49.5}
+    position: {x: -176.5, y: 29.933556, z: 49.5}
   - id: Cap4_LiamLoma
-    position: {x: -300, y: 39.072, z: 98}
+    position: {x: -300, y: 39.071976, z: 98}
   - id: Cap4_LiamSaliente
-    position: {x: -110, y: 38.166, z: 86}
+    position: {x: -110, y: 38.166344, z: 86}
   - id: Cap4_Manzana
-    position: {x: -104, y: 32.476, z: 52}
+    position: {x: -104, y: 32.47592, z: 52}
+  - id: Eldran_JuntoACasaDeWill
+    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
   - id: Eldran_SalidaDelPueblo
-    position: {x: 55.5, y: 23.356, z: -187}
+    position: {x: 55.5, y: 23.35646, z: -187}
+  - id: House_FrontDoor
+    position: {x: -0.18, y: 26.96, z: -132.51}
   - id: Will_SalidaDelPueblo
-    position: {x: 53.4, y: 23.381, z: -185}
+    position: {x: 53.4, y: 23.381378, z: -185}
   actorSpots:
-  - id: _ESTELA
-    position: {x: -322, y: 36.309, z: 66}
-  - id: _LIAM
-    position: {x: -300, y: 39.072, z: 98}
-  - id: npc_aldona
-    position: {x: 6.69, y: 29.433, z: -122.13}
-  - id: NPC_Anselmo
-    position: {x: 270, y: 3.76, z: -459.5}
-  - id: NPC_Benito
-    position: {x: 282.875, y: 5.249, z: -430.799}
-  - id: NPC_Boticaria
-    position: {x: 22.5, y: 26.301, z: -134.8}
-  - id: NPC_Contrabandista1
-    position: {x: -86, y: 20.659, z: -204.6}
-  - id: NPC_Contrabandista2
-    position: {x: -216.5, y: 21.748, z: -129.5}
-  - id: NPC_ContrabandistaJefe
-    position: {x: -213, y: 21.586, z: -128}
   - id: NPC_Eldran
-    position: {x: -1.91, y: 26.36, z: -142.75}
-  - id: NPC_Engracia
-    position: {x: 256, y: 5.008, z: -440.8}
+    position: {x: -1.9099731, y: 26.281815, z: -142.75}
+  - id: _LIAM
+    position: {x: -300, y: 39.071976, z: 98}
   - id: NPC_Erika
-    position: {x: -14.5, y: 26.282, z: -125.5}
-  - id: NPC_Eusebio
-    position: {x: 255.525, y: 6.009, z: -425.799}
-  - id: NPC_Fermin
-    position: {x: 270, y: 5.259, z: -432}
-  - id: NPC_GuardiaCruce1
-    position: {x: -92, y: 24.889, z: -118}
-  - id: NPC_GuardiaCruce2
-    position: {x: -93, y: 24.661, z: -129}
-  - id: NPC_Lucia
-    position: {x: 277.2, y: 5.004, z: -425}
+    position: {x: -14.5, y: 26.281815, z: -125.5}
   - id: NPC_Oliver
-    position: {x: 5.99, y: 26.364, z: -143.19}
-  - id: NPC_Posadero
-    position: {x: 281.2, y: 5.004, z: -424.6}
-  - id: NPC_Remedios
-    position: {x: 268.5, y: 5.004, z: -446}
-  - id: NPC_Renard
-    position: {x: -236.4, y: 26.283, z: 2.5}
-  - id: NPC_Rosario
-    position: {x: 285.103, y: 5.209, z: -430.801}
-  - id: NPC_Sargento
-    position: {x: -87, y: 25.041, z: -121}
-  - id: NPC_Tomasa
-    position: {x: 16.69, y: 26.36, z: -136.84}
+    position: {x: 5.98999, y: 26.281815, z: -143.19}
   - id: NPC_Victoria
-    position: {x: -0.997, y: 26.36, z: -144.064}
+    position: {x: -0.9968872, y: 26.281815, z: -144.06381}
+  - id: NPC_Boticaria
+    position: {x: 22.5, y: 26.301186, z: -134.8}
+  - id: NPC_Tomasa
+    position: {x: 16.959509, y: 26.281815, z: -136.99562}
+  - id: NPC_Lucia
+    position: {x: 277.2, y: 25.02, z: -425}
+  - id: NPC_Posadero
+    position: {x: 281.2, y: 25.02, z: -424.6}
+  - id: NPC_Anselmo
+    position: {x: 270, y: 25.02, z: -459.5}
+  - id: NPC_Benito
+    position: {x: 282.87454, y: 25.02, z: -430.799}
+  - id: NPC_Eusebio
+    position: {x: 255.52452, y: 25.02, z: -425.799}
+  - id: NPC_Fermin
+    position: {x: 270, y: 25.02, z: -432}
+  - id: NPC_Remedios
+    position: {x: 268.5, y: 25.02, z: -446}
+  - id: NPC_Rosario
+    position: {x: 285.1026, y: 25.02, z: -430.80096}
+  - id: NPC_Engracia
+    position: {x: 256, y: 25.02, z: -440.8}
+  - id: NPC_Sargento
+    position: {x: -87, y: 25.040737, z: -121}
+  - id: NPC_GuardiaCruce1
+    position: {x: -92, y: 24.888748, z: -118}
+  - id: NPC_GuardiaCruce2
+    position: {x: -93, y: 33.29329, z: -129.00002}
+  - id: NPC_Contrabandista1
+    position: {x: -213, y: 21.58648, z: -128}
+  - id: NPC_Contrabandista2
+    position: {x: -216.5, y: 21.747822, z: -129.5}
+  - id: NPC_Renard
+    position: {x: -236.4, y: 28.815102, z: 2.5}
   zones:
   - id: casa
     name: Casa de Will

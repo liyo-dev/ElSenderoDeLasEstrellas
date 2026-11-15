@@ -41,7 +41,7 @@ namespace Core.InputGlyphs
         // nombre de sprite aquí e incluirlo en `All` igual que el resto.
         public const string Sprint = "Sprint";
 
-        // Botón de "Confirmar" para prompts que esperan UI/Submit (TutorialPromptNode, SleepTrigger
+        // Botón de "Confirmar" para prompts que esperan UI/Submit (PedirAvisoDeTutorial, SleepTrigger
         // despertando a Will, cualquier "pulsa para continuar" que aparezca con el mapa GamePlay
         // deshabilitado — p.ej. en ActionMode.Cinematic, ver PlayerLockService.ApplyHardLock). En
         // CUALQUIER mando real es físicamente el mismo botón que South (UI.Submit y GamePlay.Interact

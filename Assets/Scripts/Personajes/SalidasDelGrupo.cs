@@ -8,7 +8,7 @@ using Slot = PartyControlManager.CharacterSlot;
 /// sitio) y devolverlo después. Sale del equipo (<see cref="NPCPartyMember.LeaveParty"/>: no se le
 /// puede llevar, no sigue al jugador) y, si se pide, se retira de la escena hasta que vuelva; al
 /// volver se reactiva y se une otra vez. Si iba al mando, el mando pasa antes a Will. Will no sale
-/// nunca del grupo. Lo usa el nodo del grafo <c>GrupoNode</c>.
+/// nunca del grupo. Lo usa el nodo del grafo <c>PedirGrupo</c>.
 /// </summary>
 public static class SalidasDelGrupo
 {

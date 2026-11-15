@@ -80,7 +80,7 @@ public static partial class ChuchelandiaBuilder
 
     private static void MontarAtrezoDeTeQuiero(Transform salon, Dictionary<string, Transform> marcas, Dictionary<string, GameObject> atrezo, StringBuilder informe)
     {
-        AsegurarCarpeta(CarpetaAtrezoCine);
+        Kits.EditorTools.AssetFolders.Ensure(CarpetaAtrezoCine);
         var mantel = MaterialLiso(RutaMatMantel, ColorMantel, 0.15f);
         var gotas = MaterialLiso(RutaMatGotas, ColorSirope, 0.85f);
         if (atrezo.TryGetValue("Fuente de sirope", out var fuente)) PonerElSirope(fuente);

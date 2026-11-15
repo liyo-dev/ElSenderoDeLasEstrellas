@@ -31,6 +31,12 @@ public class SleepTrigger : MonoBehaviour
     public Transform wakeUpPosition;
     [Tooltip("Rotación de referencia para la cámara al despertar (solo se usa euler.y → horizontal, euler.x → vertical). Evita que la cámara aparezca detrás de una pared.")]
     public Transform wakeUpCameraAnchor;
+    [Tooltip("Segundos que tarda la pantalla en ir a negro al levantarse (el parpadeo que tapa el paso de tumbado a de pie).")]
+    [Min(0.05f)] public float segundosCerrandoLosOjos = 0.35f;
+    [Tooltip("Segundos en negro, con Will ya de pie, para que la cámara de juego se coloque antes de destapar.")]
+    [Min(0f)] public float segundosEnNegro = 0.3f;
+    [Tooltip("Segundos que tarda la pantalla en destaparse.")]
+    [Min(0.05f)] public float segundosAbriendoLosOjos = 0.6f;
 
     [Header("Narrativa")]
     [Tooltip("Si true, Will empieza dormido en esta cama al arrancar la escena sin necesidad de entrar al trigger.")]
@@ -92,7 +98,7 @@ public class SleepTrigger : MonoBehaviour
             player.transform.rotation = bedPosition.rotation;
         }
 
-        // FIX (18 sep 2026): mientras Will duerme (sleepOnStart, p. ej. el anchor 'Bedroom'), este
+        // mientras Will duerme (sleepOnStart, p. ej. el anchor 'Bedroom'), este
         // LateUpdate clavaba la cámara en sleepCameraAnchor CADA FRAME sin saber si algún sistema
         // cinemático (CinematicCameraDriver vía CameraDirectorService, p. ej. SEQ_Prologo_UltimaNoche)
         // tenía la cámara reclamada para sus propios planos — el mismo tipo de choque entre dos
@@ -127,7 +133,7 @@ public class SleepTrigger : MonoBehaviour
             try { playerAnimator.SetBool(vAnimatorParameters.IsGrounded, true); } catch { }
             try { playerAnimator.SetFloat(vAnimatorParameters.GroundDistance, 0f); } catch { }
 
-            // FIX (12 sep 2026): "Will sigue de pie en la cama" — reportado con sleepOnStart (Will
+            // "Will sigue de pie en la cama" — reportado con sleepOnStart (Will
             // ya duerme al cargar la escena, antes de que arranque el sueño del prólogo) y, a
             // diferencia del bug del 15 ago (Animator sin el estado — eso ya deja su propio
             // Debug.LogError si vuelve a pasar), esta vez SetupSleep() sí consigue reproducir
@@ -154,7 +160,7 @@ public class SleepTrigger : MonoBehaviour
 
     IEnumerator ForceSleepNextFrame()
     {
-        // FIX (11 sep 2026): "Will sigue sin salir acostado" — antes esto esperaba UN solo frame e
+        // "Will sigue sin salir acostado" — antes esto esperaba UN solo frame e
         // intentaba resolver al jugador UNA sola vez ('player' o PlayerService.Player); si en ese
         // frame el jugador todavía no estaba listo (p. ej. WorldBootstrap sigue cargando la escena
         // aditiva de esta habitación y/o esperando a que el jugador exista antes de teletransportarlo
@@ -201,7 +207,7 @@ public class SleepTrigger : MonoBehaviour
         if (!other.CompareTag(GameTags.Player)) return;
         if (playOnlyOnce && AlreadyPlayed()) return;
 
-        // FIX (15 ago 2026, prioridad demo): "Will cayendo/de pie en vez de dormido" — causa real
+        // "Will cayendo/de pie en vez de dormido" — causa real
         // confirmada con el diagnóstico de esta misma sesión (log: "CC[sin CharacterController]").
         // El fallback a other.gameObject cuando GetComponentInParent<CharacterController>() no
         // encontraba nada operaba sobre el GameObject del propio collider del trigger — casi nunca
@@ -231,7 +237,7 @@ public class SleepTrigger : MonoBehaviour
 
     void SetupSleep(GameObject playerGO)
     {
-        // FIX: en el rig del jugador (Invector) el Animator vive en un hijo ("model"), no en la
+        // en el rig del jugador (Invector) el Animator vive en un hijo ("model"), no en la
         // raíz — igual que _playerEmotion ya resolvía con GetComponentInChildren. Con
         // GetComponent() (solo raíz) esto devolvía null en el rig real, así que
         // `playerAnimator.Play(sleepAnimationState)` de abajo nunca llegaba a ejecutarse (el guard
@@ -249,7 +255,7 @@ public class SleepTrigger : MonoBehaviour
         // ya bloqueado y al despertar los "restauraría" en estado bloqueado.
         playerActionManager?.PushMode(ActionMode.Cinematic);
 
-        // FIX (15 ago 2026): "se acuesta y enseguida se pone con la animación de caer" — causa real,
+        // "se acuesta y enseguida se pone con la animación de caer" — causa real,
         // no la del intento anterior (el LateUpdate de más abajo forzando IsGrounded=true, que se
         // quedó corto). vThirdPersonInput.Update() llama cada frame a cc.UpdateMotor()/UpdateAnimator(),
         // que reescribe el parámetro IsGrounded del Animator con el resultado del ground-check propio
@@ -269,7 +275,7 @@ public class SleepTrigger : MonoBehaviour
             playerGO.transform.rotation = bedPosition.rotation;
         }
 
-        // FIX (15 ago 2026, prioridad demo): "Will sale de pie en vez de dormido" — Play() con un
+        // "Will sale de pie en vez de dormido" — Play() con un
         // string NO avisa si ese estado no existe en el controller actualmente activo, se queda
         // callado y sin hacer nada (por eso no salía ninguna excepción en los logs). Encontrado por
         // datos, no adivinado: el clip "Sleeping_NoWeapon" solo existe en
@@ -318,8 +324,7 @@ public class SleepTrigger : MonoBehaviour
 
     /// <summary>
     /// Fuerza el recálculo del AABB de culling de cada SkinnedMeshRenderer del rig del jugador —
-    /// mismo patrón que ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange() y los otros
-    /// call sites documentados en ActiveCharacterSwapper. Se llama tras cualquier teleport+cambio
+    /// mismo patrón que ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange(). Se llama tras cualquier teleport+cambio
     /// de pose brusco de este trigger (SetupSleep/WakeUp) para evitar que el personaje se vea
     /// "flotando" un instante hasta que algo más refresque sus bounds.
     /// </summary>
@@ -402,7 +407,7 @@ public class SleepTrigger : MonoBehaviour
                         || input.Type == GamepadInputReader.InputEventType.Submit;
         if (!isWakeInput) return;
 
-        // FIX (24 ago 2026, INC-084): "Will se levanta de la cama al saltar una secuencia del
+        // "Will se levanta de la cama al saltar una secuencia del
         // Prólogo" — Submit se diseñó a propósito para llegar siempre aquí, incluso en modo
         // Cinematic (ver comentario de arriba), precisamente para poder despertar a Will con un
         // botón. Pero HoldToSkipUI (el botón global de "mantener para saltar") usa ese MISMO
@@ -432,13 +437,13 @@ public class SleepTrigger : MonoBehaviour
     /// Un parpadeo en negro tapa el salto de tumbado (plano cenital) a de pie (cámara de juego).
     private IEnumerator Co_Levantarse()
     {
-        yield return FeedbackService.ScreenFadeAsync(Color.black, 0.15f, true);
+        yield return FeedbackService.ScreenFadeAsync(Color.black, segundosCerrandoLosOjos, true);
         WakeUp();
         // La cámara de juego necesita unos fotogramas para colocarse detrás de él.
         yield return null;
         yield return null;
-        yield return new WaitForSecondsRealtime(0.25f);
-        yield return FeedbackService.ScreenFadeAsync(Color.black, 0.6f, false);
+        yield return new WaitForSecondsRealtime(segundosEnNegro);
+        yield return FeedbackService.ScreenFadeAsync(Color.black, segundosAbriendoLosOjos, false);
         AvisarDeQueEstaDePie();
     }
 
@@ -505,7 +510,7 @@ public class SleepTrigger : MonoBehaviour
 
         if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
 
-        // FIX INC-397 (24 sep 2026): el mismo choque que el del LateUpdate (18 sep), pero por la
+        // FIX INC-397: el mismo choque que el del LateUpdate, pero por la
         // otra puerta. Con el prólogo, WillHouse se carga DESPUÉS de que la cinemática haya
         // empezado y puesto su primer plano: este viaje de medio segundo cogía la cámara desde
         // el cielo del valle y la dejaba clavada en el plano cenital de la cama. Mientras la

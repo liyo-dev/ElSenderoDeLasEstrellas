@@ -106,7 +106,7 @@ public static class NinosHechosEnBlender
         },
     };
 
-    [MenuItem("El Sendero/Personajes/Niños hechos en Blender (Tobías, Nina, Lucas, Lucía)")]
+    [MenuItem("El Sendero/Personajes/NPCs/Niños hechos en Blender (Tobías, Nina, Lucas, Lucía)")]
     public static void Aplicar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Niños", "Hazlo fuera de Play."); return; }
@@ -144,8 +144,6 @@ public static class NinosHechosEnBlender
             try
             {
                 ok = CuerpoDeNino.Poner(raiz, n.Esqueleto, $"{f.Carpeta}/Avatar_{f.Nombre}.asset", informe, n.BrazosAbiertos);
-                // Las cejas van en las caras nuevas: fuera las del pelo del pack, que movía CejasPorEmocion
-                foreach (var c in raiz.GetComponentsInChildren<CejasPorEmocion>(true)) Object.DestroyImmediate(c, true);
                 if (ok) PrefabUtility.SaveAsPrefabAsset(raiz, prefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(raiz); }

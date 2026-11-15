@@ -356,7 +356,7 @@ public class NPCEmotionController : MonoBehaviour
                     faltantes = string.IsNullOrEmpty(emotionProfile.bocaHablandoEntreabierta) ? "(entreabierta sin configurar)" : emotionProfile.bocaHablandoEntreabierta;
                 if (!ExisteBoca(emotionProfile.bocaHablandoAbierta))
                     faltantes += (faltantes.Length > 0 ? ", " : "") + (string.IsNullOrEmpty(emotionProfile.bocaHablandoAbierta) ? "(abierta sin configurar)" : emotionProfile.bocaHablandoAbierta);
-                Debug.LogWarning($"[NPCEmotionController:{name}] Faltan mallas de hablar: {faltantes}. Usa El Sendero/Diálogos/Completar caras de todos los personajes.", this);
+                Debug.LogWarning($"[NPCEmotionController:{name}] Faltan mallas de hablar: {faltantes}. Pasa El Sendero/Personajes/Caras de los protagonistas o El Sendero/Personajes/NPCs/Caras de los NPCs.", this);
             }
 #endif
             return;

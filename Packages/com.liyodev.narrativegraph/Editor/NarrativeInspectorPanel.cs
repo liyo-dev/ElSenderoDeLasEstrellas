@@ -65,9 +65,9 @@ namespace NarrativeGraphEditor
             }
 
             var model = view.Model;
-            var entry = NarrativeNodeCatalog.Get(model.GetType());
-            _header.text = entry?.title ?? model.GetType().Name;
-            _header.style.borderLeftColor = new StyleColor(NarrativeNodeCatalog.ColorOf(model.GetType()));
+            var entry = NarrativeNodeCatalog.Get(model.KindType);
+            _header.text = entry?.title ?? model.KindType.Name;
+            _header.style.borderLeftColor = new StyleColor(NarrativeNodeCatalog.ColorOf(model.KindType));
 
             if (!string.IsNullOrEmpty(entry?.description))
             {
@@ -89,28 +89,15 @@ namespace NarrativeGraphEditor
                 if (name == "guid" || name == "position" || name == "outputs") continue;
                 if (name == "inputAnchor" || name == "outputAnchor" || name == "overrideNodeColor" || name == "nodeColor") continue;
 
-                var chipField = ChipListField(model.GetType(), name, out var chipAttr);
-                if (chipField != null)
+                // La petición de «Pedir al juego»: sus campos se enseñan como del propio paso.
+                if (child.propertyType == SerializedPropertyType.ManagedReference)
                 {
-                    BuildChipList(fields, model, chipField, chipAttr, view);
+                    var request = child.managedReferenceValue;
+                    if (request == null) continue;
+                    foreach (var sub in EnumerateDirectChildren(child)) AddField(fields, request, sub, view);
                     continue;
                 }
-
-                var pf = new PropertyField(child.Copy());
-                if (name == "displayTitle") pf.label = "Etiqueta";
-                else if (name == "chapter") pf.label = "Capítulo";
-                else if (name == "blockSaving") pf.label = "Bloquea guardado";
-                pf.Bind(_so);
-                var captured = view;
-                pf.RegisterValueChangeCallback(_ =>
-                {
-                    if (_suppressChangeEvents) return; // el bind inicial también dispara el evento
-                    EditorUtility.SetDirty(_graph);
-                    NodeFieldChanged?.Invoke(captured);
-                    // El contenido resuelto depende de los campos: refrescar sin reconstruir todo el panel
-                    RefreshContent();
-                });
-                fields.Add(pf);
+                AddField(fields, model, child, view);
             }
 
             _suppressChangeEvents = true;
@@ -136,6 +123,34 @@ namespace NarrativeGraphEditor
 
         VisualElement _contentSection;
         bool _suppressChangeEvents;
+
+        /// Un campo de <paramref name="owner"/> (el nodo o su petición): etiquetas para las listas
+        /// marcadas con [NarrativeChipList] y, si no, el PropertyField de siempre.
+        void AddField(VisualElement fields, object owner, SerializedProperty prop, INarrativeNodeHost view)
+        {
+            var name = prop.name;
+            var chipField = ChipListField(owner.GetType(), name, out var chipAttr);
+            if (chipField != null)
+            {
+                BuildChipList(fields, owner, chipField, chipAttr, view);
+                return;
+            }
+
+            var pf = new PropertyField(prop.Copy());
+            if (name == "displayTitle") pf.label = "Etiqueta";
+            else if (name == "chapter") pf.label = "Capítulo";
+            else if (name == "blockSaving") pf.label = "Bloquea guardado";
+            pf.Bind(_so);
+            pf.RegisterValueChangeCallback(_ =>
+            {
+                if (_suppressChangeEvents) return; // el bind inicial también dispara el evento
+                EditorUtility.SetDirty(_graph);
+                NodeFieldChanged?.Invoke(view);
+                // El contenido resuelto depende de los campos: refrescar sin reconstruir todo el panel
+                RefreshContent();
+            });
+            fields.Add(pf);
+        }
 
         void RefreshContent()
         {
@@ -172,7 +187,7 @@ namespace NarrativeGraphEditor
         static FieldInfo ChipListField(Type type, string fieldName, out NarrativeChipListAttribute attr)
         {
             attr = null;
-            for (var t = type; t != null && t != typeof(NarrativeNode); t = t.BaseType)
+            for (var t = type; t != null && t != typeof(NarrativeNode) && t != typeof(NarrativeRequest) && t != typeof(object); t = t.BaseType)
             {
                 var f = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
                 if (f == null) continue;
@@ -189,7 +204,7 @@ namespace NarrativeGraphEditor
         /// Sustituye una lista de enum en crudo por etiquetas con botón de quitar y un desplegable
         /// para añadir (sin repetir valores ni ofrecer «None»).
         /// </summary>
-        void BuildChipList(VisualElement root, NarrativeNode node, FieldInfo field, NarrativeChipListAttribute attr, INarrativeNodeHost view)
+        void BuildChipList(VisualElement root, object node, FieldInfo field, NarrativeChipListAttribute attr, INarrativeNodeHost view)
         {
             var enumType = field.FieldType.GetGenericArguments()[0];
             var box = new VisualElement();
@@ -487,7 +502,7 @@ namespace NarrativeGraphEditor
 
         static string Describe(NarrativeNode n)
         {
-            var t = NarrativeNodeCatalog.TitleOf(n.GetType());
+            var t = NarrativeNodeCatalog.TitleOf(n);
             return string.IsNullOrEmpty(n.displayTitle) ? t : $"{t} '{NodeSummary.Truncate(n.displayTitle, 40)}'";
         }
 

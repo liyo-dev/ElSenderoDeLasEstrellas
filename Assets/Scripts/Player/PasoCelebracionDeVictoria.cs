@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    /// Paso del cierre de batalla: la celebración de Will (cámara, salto, pose, música). La hace
-    /// PlayerBattleModeController, que registra este paso mientras está activo. Ver INC-470.
+    /// Paso del cierre de batalla: la celebración de la victoria (cámara, salto, pose, música). La
+    /// hace CelebracionDeVictoria, que registra este paso mientras está activa. Ver INC-470.
     public sealed class PasoCelebracionDeVictoria : IPasoDeCierre
     {
-        private readonly PlayerBattleModeController _jugador;
+        private readonly CelebracionDeVictoria _jugador;
         private readonly float _esperaTrasDerrota;
 
-        public PasoCelebracionDeVictoria(PlayerBattleModeController jugador, float esperaTrasDerrota)
+        public PasoCelebracionDeVictoria(CelebracionDeVictoria jugador, float esperaTrasDerrota)
         {
             _jugador = jugador;
             _esperaTrasDerrota = esperaTrasDerrota;

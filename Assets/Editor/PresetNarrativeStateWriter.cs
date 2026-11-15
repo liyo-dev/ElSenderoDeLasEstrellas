@@ -206,18 +206,11 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
 
     // ── IPlayerLoadoutState ─────────────────────────────────────────────────
 
+    // Como UnlockService.UnlockAbility: la aprenden los tres.
     public void UnlockAbility(AbilityKey ability)
     {
-        switch (ability)
-        {
-            case AbilityKey.Swim: _dst.abilities.swim = true; break;
-            case AbilityKey.Jump: _dst.abilities.jump = true; break;
-            case AbilityKey.Climb: _dst.abilities.climb = true; break;
-            case AbilityKey.Magic: _dst.abilities.magic = true; break;
-            case AbilityKey.Fly: _dst.abilities.fly = true; break;
-            case AbilityKey.Sprint: _dst.abilities.sprint = true; break;
-            case AbilityKey.Shield: _dst.abilities.shield = true; break;
-        }
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+            HabilidadesDelPersonaje.Aprender(_dst, (PartyControlManager.CharacterSlot)i, ability);
     }
 
     public void UnlockSpell(SpellId spell, bool equipInEmptySlot)

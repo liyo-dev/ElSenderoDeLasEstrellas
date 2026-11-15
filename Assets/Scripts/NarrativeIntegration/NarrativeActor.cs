@@ -22,24 +22,6 @@ using Game.NPC.Common;
 [DisallowMultipleComponent]
 public class NarrativeActor : MonoBehaviour
 {
-    [Header("Detección narrativa (sistema Interactive, congelado)")]
-    [Tooltip("Rango de detección del jugador para narrativas Interactive con autoStartOnDetection=true. " +
-             "Solo lo usan NPCInteractiveNarrativeExecutor y su icono de alerta (sistema congelado, TDD § 10); " +
-             "el grafo no lo lee.")]
-    [Min(1f)]
-    [SerializeField] private float narrativeDetectionRange = 10f;
-
-    [Tooltip("¿El NPC camina hacia el jugador durante la alerta narrativa? (sistema Interactive)")]
-    [SerializeField] private bool walkTowardsPlayerOnAlert = true;
-
-    [Tooltip("Distancia mínima para detenerse al acercarse al jugador (sistema Interactive)")]
-    [Min(0.5f)]
-    [SerializeField] private float stopDistanceFromPlayer = 2f;
-
-    [Tooltip("Icono que aparece sobre el NPC al detectar al jugador, solo para el sistema Interactive. " +
-             "El icono que pide el grafo es el de abajo.")]
-    [SerializeField] private GameObject narrativeAlertIconPrefab;
-
     [Header("Icono de quest (grafo)")]
     [Tooltip("Icono que se muestra sobre la cabeza de este NPC y en el minimapa cuando el grafo espera " +
              "que el jugador hable con él, si el nodo no trae uno propio. Se pone una sola vez aquí y " +
@@ -60,10 +42,6 @@ public class NarrativeActor : MonoBehaviour
     private static void ResetStatics() => s_sinIA.Clear();
 #endif
 
-    public float NarrativeDetectionRange => narrativeDetectionRange;
-    public bool WalkTowardsPlayerOnAlert => walkTowardsPlayerOnAlert;
-    public float StopDistanceFromPlayer => stopDistanceFromPlayer;
-    public GameObject NarrativeAlertIconPrefab => narrativeAlertIconPrefab;
     public GameObject DefaultQuestIconPrefab => defaultQuestIconPrefab;
 
     private NPCBehaviourManagerV2 _manager;

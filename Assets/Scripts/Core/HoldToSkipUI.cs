@@ -48,7 +48,7 @@ public class HoldToSkipUI : MonoBehaviour
     private InputAction fallback;   // por si no asignas nada
     private bool _pushedUIMode;     // rastrea si nosotros activamos el modo UI
 
-    // FIX (24/08/2026): antes buttonIcon era un sprite fijo asignado a mano en el Inspector — salía
+    // antes buttonIcon era un sprite fijo asignado a mano en el Inspector — salía
     // siempre el icono de "A" aunque se jugara con teclado/ratón (donde el botón real es
     // Espacio/Enter, ver holdActionRef/TryConfigureInput más abajo, que usa Controls.UI.Submit) o con
     // mando de PlayStation/Switch (donde el dibujo de "A" tampoco es el botón físico correcto).
@@ -89,13 +89,13 @@ public class HoldToSkipUI : MonoBehaviour
             }
         }
 
-        // FIX (15/09/2026): antes era un aro Radial360 pensado para envolver un icono circular
+        // antes era un aro Radial360 pensado para envolver un icono circular
         // (botón de mando, A/Cross). Con teclado el icono es la tecla Espacio (sprite rectangular)
         // y el aro circular alrededor de un rectángulo quedaba descuadrado (ver incidencia). Se
         // sustituyó por una barra de progreso horizontal simple, válida para cualquier forma de
         // icono (rectangular o circular) sin depender de la familia de input activa.
         //
-        // FIX (15/09/2026, 2ª pasada): esa barra era un rectángulo plano sin sprite (Image.sprite
+        // esa barra era un rectángulo plano sin sprite (Image.sprite
         // vacío) flotando desconectado del icono — y en Start.unity el ProgressBar tenía además un
         // override de posición roto que lo dejaba pegado a la esquina, por ENCIMA del icono. Se
         // probó a sustituirla por una pastilla (hp_bar_bg.png + hp_bar_fill.png, la misma pareja que
@@ -103,7 +103,7 @@ public class HoldToSkipUI : MonoBehaviour
         // todo con el conjunto — una barra aparte, aunque esté bien hecha, sigue siendo un segundo
         // elemento que hay que alinear a mano contra el primero.
         //
-        // FIX (15/09/2026, 3ª pasada — diseño final): se elimina la barra por completo. Ahora hay
+        // se elimina la barra por completo. Ahora hay
         // dos copias superpuestas del MISMO sprite de botón: `buttonIcon` de fondo, atenuada a
         // `idleIconAlpha`, y `fillOverlayIcon` encima, en Type=Filled/Horizontal, tapando el icono de
         // fondo con opacidad completa de izquierda a derecha según se mantiene pulsado. Al ser el
@@ -143,7 +143,7 @@ public class HoldToSkipUI : MonoBehaviour
         StartCoroutine(InitializeInputWithRetry());
         ResetHold();
 
-        // FIX (24/08/2026): ver comentario de _fallbackButtonIcon arriba — refrescar ya con la
+        // ver comentario de _fallbackButtonIcon arriba — refrescar ya con la
         // familia actual (por si cambió mientras el objeto estaba desactivado) y suscribirse para
         // que, si el jugador cambia de mando/teclado con el icono ya visible, se actualice solo.
         InputGlyphService.FamilyChanged += HandleFamilyChanged;
@@ -181,7 +181,7 @@ public class HoldToSkipUI : MonoBehaviour
             if (success)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[HoldToSkipUI] ✅ Input configurado exitosamente (intento {attempts + 1}/{maxAttempts})");
+                Debug.Log($"[HoldToSkipUI] Input configurado exitosamente (intento {attempts + 1}/{maxAttempts})");
 #endif
                 yield break;
             }
@@ -191,14 +191,14 @@ public class HoldToSkipUI : MonoBehaviour
             if (attempts < maxAttempts)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[HoldToSkipUI] ⏳ Input no disponible, reintentando... ({attempts}/{maxAttempts})");
+                Debug.Log($"[HoldToSkipUI] Input no disponible, reintentando... ({attempts}/{maxAttempts})");
 #endif
                 yield return new WaitForSecondsRealtime(0.2f);
             }
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogError($"[HoldToSkipUI] ❌ No se pudo configurar input tras {maxAttempts} intentos");
+        Debug.LogError($"[HoldToSkipUI] No se pudo configurar input tras {maxAttempts} intentos");
 #endif
     }
 
@@ -222,7 +222,7 @@ public class HoldToSkipUI : MonoBehaviour
                 holdAction.canceled += OnHoldCanceled;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[HoldToSkipUI] ✅ Usando UI/Submit desde PlayerInputManager - Enabled: {holdAction.enabled}");
+                Debug.Log($"[HoldToSkipUI] Usando UI/Submit desde PlayerInputManager - Enabled: {holdAction.enabled}");
 #endif
                 return true;
             }
@@ -242,7 +242,7 @@ public class HoldToSkipUI : MonoBehaviour
             holdAction.canceled += OnHoldCanceled;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[HoldToSkipUI] ✅ Usando InputActionReference: {actionName}");
+            Debug.Log($"[HoldToSkipUI] Usando InputActionReference: {actionName}");
 #endif
             return true;
         }
@@ -261,7 +261,7 @@ public class HoldToSkipUI : MonoBehaviour
             holdAction.canceled += OnHoldCanceled;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[HoldToSkipUI] ⚠️ Usando fallback multi-input (Gamepad/Teclado)");
+            Debug.LogWarning("[HoldToSkipUI] Usando fallback multi-input (Gamepad/Teclado)");
 #endif
             return true;
         }
@@ -322,7 +322,7 @@ public class HoldToSkipUI : MonoBehaviour
             if (Mathf.FloorToInt(heldTime * 4f) != Mathf.FloorToInt((heldTime - Time.unscaledDeltaTime) * 4f))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[HoldToSkipUI] 📊 Progreso: {t:P0} ({heldTime:F2}s / {holdSeconds:F2}s)");
+                Debug.Log($"[HoldToSkipUI] Progreso: {t:P0} ({heldTime:F2}s / {holdSeconds:F2}s)");
 #endif
             }
 
@@ -330,7 +330,7 @@ public class HoldToSkipUI : MonoBehaviour
             {
                 completed = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[HoldToSkipUI] ✅ COMPLETADO - Ejecutando skip action");
+                Debug.Log("[HoldToSkipUI] COMPLETADO - Ejecutando skip action");
 #endif
                 // Desactiva primero para conservar la reactivación del siguiente contenido saltable. Ver INC-607
                 if (disableSelfOnSkip) gameObject.SetActive(false);
@@ -351,7 +351,7 @@ public class HoldToSkipUI : MonoBehaviour
             // Assets/Scripts/Cinematics/ — normalmente no habrá ninguna, no-op seguro).
             CinematicSequencerBase.RequestSkipAll();
 
-            // FIX (16/08/2026): las secuencias reales de hoy las llevan DialogueCinematicController
+            // las secuencias reales de hoy las llevan DialogueCinematicController
             // y DialogueManager, que no son CinematicSequencerBase. NarrativeSkipHub es el punto de
             // enganche genérico que cualquiera de los dos puede implementar (ver su documentación
             // sobre el contrato de "reproducir el estado final" al saltar). No-op seguro si nadie
@@ -401,7 +401,7 @@ public class HoldToSkipUI : MonoBehaviour
         if (showOnlyWhileHolding) FijarAlfaObjetivo(1f);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[HoldToSkipUI] 🎮 Input STARTED - Botón presionado");
+        Debug.Log("[HoldToSkipUI] Input STARTED - Botón presionado");
 #endif
     }
 
@@ -416,7 +416,7 @@ public class HoldToSkipUI : MonoBehaviour
         if (showOnlyWhileHolding) FijarAlfaObjetivo(0f);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[HoldToSkipUI] 🎮 Input CANCELED - Botón soltado (completed={completed})");
+        Debug.Log($"[HoldToSkipUI] Input CANCELED - Botón soltado (completed={completed})");
 #endif
     }
 

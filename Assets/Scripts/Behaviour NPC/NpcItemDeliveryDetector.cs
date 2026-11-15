@@ -5,13 +5,13 @@ namespace Game.NPC
 {
     /// <summary>
     /// Detector de entrega de objetos por proximidad, de uso exclusivo de
-    /// <see cref="WaitItemDeliveryNode"/> (grafo narrativo).
+    /// <see cref="PedirEntregaDeObjeto"/> (grafo narrativo).
     ///
     /// A diferencia del sistema legacy (<see cref="NPCItemDetector"/>, atado a
     /// <c>NPCQuestConfig.enableItemDetection</c> y configurado a mano en el Inspector de cada
     /// NPC), este componente no se asigna nunca en un prefab: el propio nodo del grafo lo añade
     /// dinámicamente al NPC en tiempo de ejecución vía <see cref="Setup"/>, con los datos de la
-    /// misión concreta, y lo destruye al salir del nodo (ver <c>WaitItemDeliveryNode.Exit</c>).
+    /// misión concreta, y lo destruye al salir del nodo (ver <c>PedirEntregaDeObjeto.Exit</c>).
     /// Así "cualquier misión del mismo tipo" reutiliza la misma pieza de código sin tener que
     /// tocar ningún prefab de NPC ni volver a montar el sistema de detección para cada uno.
     ///

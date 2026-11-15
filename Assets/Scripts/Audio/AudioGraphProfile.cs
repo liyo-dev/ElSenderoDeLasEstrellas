@@ -12,7 +12,7 @@ public class AudioGraphProfile : ScriptableObject
     [Serializable]
     public class BattleRule
     {
-        [Tooltip("ID o subcadena del arena/batalla. Debe coincidir con el battleId que usa tu StartBattleNode o el nombre del GO/arena.")]
+        [Tooltip("ID o subcadena del arena/batalla. Debe coincidir con el battleId que usa tu PedirBatalla o el nombre del GO/arena.")]
         public string battleId;
         public AudioClip music;
         [Min(0f)] public float fade = 0.5f;

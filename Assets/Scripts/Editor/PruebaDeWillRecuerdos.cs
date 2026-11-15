@@ -152,7 +152,7 @@ public static class PruebaDeWillRecuerdos
         actores.Add(("Actor_WillNino", nino));
         Marca("M_Discurso_Nino", silla + Vector3.up * AlturaDelAsiento, -adelante);
 
-        var eldran = Personaje(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_NPCs/Eldran.prefab"), "Eldran", decorado,
+        var eldran = Personaje(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_NPCs/_GrafoNarrativo/Eldran.prefab"), "Eldran", decorado,
             silla + Girar(-adelante, 30f) * 2.2f, Vector3.zero, silla);
         actores.Add(("Actor_EldranRecuerdo", eldran));
         Marca("M_Discurso_Eldran", eldran.transform.position, silla - eldran.transform.position);

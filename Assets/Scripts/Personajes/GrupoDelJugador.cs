@@ -1,7 +1,9 @@
 using UnityEngine;
 
 /// Lo que es del grupo y no de un personaje: el inventario, la ropa que se tiene, las cargas del
-/// ataque doble de Estela y Liam. Uno por escena, al lado de los cuerpos
+/// ataque doble de Estela y Liam, quien pone la partida en los cuerpos (PlayerPresetService) y la
+/// celebración de victoria (CelebracionDeVictoria).
+/// Uno por escena, al lado de los cuerpos
 /// (`Assets/Prefabs/GrupoDelJugador.prefab`). PlayerService busca aquí lo que no encuentra en el
 /// cuerpo del jugador (`PlayerService.TryGetComponent`). Ver INC-484.
 [DisallowMultipleComponent]
@@ -18,6 +20,8 @@ public sealed class GrupoDelJugador : MonoBehaviour
         // Vida, maná y caídas de cada personaje (INC-717): si el prefab aún no lo trae, se pone aquí.
         if (GetComponent<SaludDelGrupo>() == null) gameObject.AddComponent<SaludDelGrupo>();
         if (GetComponent<ReanimarManteniendoA>() == null) gameObject.AddComponent<ReanimarManteniendoA>();
+        // La celebración de victoria (cámara, música, foto del grupo) es de la escena, no de un cuerpo.
+        if (GetComponent<Game.Player.CelebracionDeVictoria>() == null) gameObject.AddComponent<Game.Player.CelebracionDeVictoria>();
     }
 
     private void OnDestroy() => PlayerService.QuitarGrupo(gameObject);

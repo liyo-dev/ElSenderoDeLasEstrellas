@@ -29,6 +29,16 @@ public static partial class VestidoDelMundo
     private const string CapaArena = "Capa0";               // arena de playa
     private const string CapaRoca = "Capa2";                // roca de talud
 
+    /// Capas que se funden en otra: quien pinte la de la izquierda pinta la de la derecha, y lo que ya tuviera
+    /// pintado pasa a ella al volcar el lienzo (Lienzo.FundirCapas).
+    private static readonly (string de, string en)[] CapasFundidas =
+    {
+        ("Capa1", CapaHierba),              // un solo verde en el campo abierto: el de los pueblos (Raúl, 14 nov 2026)
+        ("SueloUrbano1", CapaTierraPiedras), // misma textura que la otra
+        ("SueloUrbano2", CapaTierra),        // misma textura que la otra
+        ("SueloUrbano4", CapaHierba),        // misma textura que la otra
+    };
+
     /// Pesos del Terrain en memoria; se pinta aquí y se vuelca al final con SetAlphamaps.
     private sealed class Lienzo
     {
@@ -46,6 +56,7 @@ public static partial class VestidoDelMundo
         private readonly Vector3 origen;
         private readonly Vector3 tamano;
         private readonly Dictionary<string, int> indices = new();
+        private readonly List<(int de, int en)> fundidas = new();
 
         public Lienzo(Terrain terreno)
         {
@@ -60,6 +71,25 @@ public static partial class VestidoDelMundo
             TerrainLayer[] capas = Datos.terrainLayers;
             for (int i = 0; i < capas.Length; i++)
                 if (capas[i] != null && !indices.ContainsKey(capas[i].name)) indices[capas[i].name] = i;
+            foreach (var (de, en) in CapasFundidas)
+                if (indices.TryGetValue(de, out int iDe) && indices.TryGetValue(en, out int iEn) && iDe != iEn)
+                {
+                    fundidas.Add((iDe, iEn));
+                    indices[de] = iEn;
+                }
+        }
+
+        /// Pasa el peso de cada capa fundida a la suya (ver CapasFundidas). Antes de volcar el lienzo.
+        public void FundirCapas()
+        {
+            if (fundidas.Count == 0) return;
+            for (int k = 0; k < Res; k++)
+                for (int i = 0; i < Res; i++)
+                    foreach (var (de, en) in fundidas)
+                    {
+                        Pesos[k, i, en] += Pesos[k, i, de];
+                        Pesos[k, i, de] = 0f;
+                    }
         }
 
         public int Capa(string nombre) => indices.TryGetValue(nombre, out int i) ? i : -1;

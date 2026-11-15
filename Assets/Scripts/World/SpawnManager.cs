@@ -40,7 +40,7 @@ public class SpawnManager : MonoBehaviour
         if (_initialized) return;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[SpawnManager] 🔍 HandleProfileReady() llamado - GameBootService.IsAvailable: {GameBootService.IsAvailable}");
+        Debug.Log($"[SpawnManager] HandleProfileReady() llamado - GameBootService.IsAvailable: {GameBootService.IsAvailable}");
 #endif
 
         // Inicializar con el anchor del preset activo
@@ -51,31 +51,31 @@ public class SpawnManager : MonoBehaviour
             var startAnchor = Partida.AnclaDeInicio;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[SpawnManager] 🔍 Profile: {bootProfile.name}");
-            Debug.Log($"[SpawnManager] 🔍 ActivePreset: {(activePreset != null ? activePreset.name : "NULL")}");
-            Debug.Log($"[SpawnManager] 🔍 StartAnchor obtenido: '{startAnchor}'");
-            Debug.Log($"[SpawnManager] 🔍 ShouldBootFromPreset: {bootProfile.ShouldBootFromPreset()}");
-            Debug.Log($"[SpawnManager] 🔍 HasLoadedSaveData: {(Partida.Preset?.name.Contains("Runtime") ?? false)}");
+            Debug.Log($"[SpawnManager] Profile: {bootProfile.name}");
+            Debug.Log($"[SpawnManager] ActivePreset: {(activePreset != null ? activePreset.name : "NULL")}");
+            Debug.Log($"[SpawnManager] StartAnchor obtenido: '{startAnchor}'");
+            Debug.Log($"[SpawnManager] ShouldBootFromPreset: {bootProfile.ShouldBootFromPreset()}");
+            Debug.Log($"[SpawnManager] HasLoadedSaveData: {(Partida.Preset?.name.Contains("Runtime") ?? false)}");
 #endif
             
             if (!string.IsNullOrEmpty(startAnchor))
             {
                 SetCurrentAnchor(startAnchor);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[SpawnManager] ✅ Anchor establecido desde profile: '{startAnchor}'");
+                Debug.Log($"[SpawnManager] Anchor establecido desde profile: '{startAnchor}'");
 #endif
             }
             else
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[SpawnManager] ⚠️ Profile no tiene anchor definido - usando fallback");
+                Debug.LogWarning($"[SpawnManager] Profile no tiene anchor definido - usando fallback");
 #endif
             }
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[SpawnManager] ❌ Profile es NULL - no se pudo establecer anchor inicial");
+            Debug.LogError($"[SpawnManager] Profile es NULL - no se pudo establecer anchor inicial");
 #endif
         }
 

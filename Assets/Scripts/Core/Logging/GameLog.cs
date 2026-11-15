@@ -9,7 +9,7 @@ using UnityEditor;
 /// <summary>
 /// Sistema de filtrado de logs por tag. Intercepta todos los Debug.Log que usan
 /// el formato "[Tag] mensaje" y permite activarlos/desactivarlos individualmente
-/// desde la ventana El Sendero > GameLog > Ventana de Logs.
+/// desde la ventana El Sendero > Proyecto > Registro de logs > Ventana.
 ///
 /// También reconoce ciertos mensajes internos de Unity/paquetes que no siguen
 /// ese formato (no empiezan por "[Tag]") y les asigna un tag sintético para

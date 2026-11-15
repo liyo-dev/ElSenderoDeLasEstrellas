@@ -740,6 +740,9 @@ public static partial class VestidoDelMundo
                 : $"  ! falta {RutaAguaDeLago}: la lámina queda sin material.";
         }
 
+        /// El agua de la laguna, para otras aguas quietas del vestido (pozas del valle de las cascaditas).
+        public static Material MaterialDelAguaDeLaLaguna() => MaterialDelAgua();
+
         /// AguaLaguna.mat: copia de Water_Lake.mat (con el agua de dibujo, que el minimapa reconoce como agua); los colores
         /// de ribera solo se ponen si la copia tiene los campos del agua del pack (_ShallowWaterColor, _DeepWaterColor). Se crea una vez; lo que se retoque después en el Editor se conserva.
         private static Material MaterialDelAgua() => RecursoPersistente(ArchivoAguaDeLaLaguna, () =>

@@ -21,7 +21,7 @@ public class LoadingCharacterStage : MonoBehaviour
     bool _revealed;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-    // DIAGNÓSTICO TEMPORAL (20 ago 2026): investigando el bug "solo aparece Will en la pantalla
+    // DIAGNÓSTICO TEMPORAL: investigando el bug "solo aparece Will en la pantalla
     // de carga al abortar el minijuego de Estela". Todo el cableado estático de la escena
     // (array 'characters', capas, Avatar/Controller, materiales) se revisó y está correcto, así
     // que el fallo tiene que ser en tiempo de ejecución. Estos logs confirman, la próxima vez que

@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
-#  Guion de rodaje. Se hornea con «El Sendero → Guion → 2. Hornear el guion del prólogo».
+#  Guion de rodaje. Se hornea con «El Sendero → Cinemáticas → Guion → 2. Hornear el guion del prólogo».
 #  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
 #  en Guiones/Prologo_Valle/Prologo_UltimaNoche/ (informe.md, recorridos/, storyboard/).
 #
@@ -39,156 +39,156 @@ vc        VecinaDelMirador nombre=Vecina
 
 # ── Puntos (x z del mundo; ver Guiones/Prologo_Valle/escenario/planta_detalle.svg) ─────────
 PUNTOS
-plaza_archimago  6003.2 6002.3
-cart_maestro     6006.4 6000.6
+plaza_archimago  -166.8 -362.7
+cart_maestro     -163.6 -364.4
 # El vecino de la carreta, al otro lado del carro y en campo abierto: dentro de la huella
 # de la carreta (x 6006,5-6010,1 · z 5995,3-5999,4) no había ni un ángulo de cámara limpio.
-v06_carro        6010.0 6000.4
+v06_carro        -160.0 -364.6
 # Donde el carretero arregla la carreta durante el río, pegado a ella (desde v06_carro, 3 m más
 # allá, parecía arreglar algo en el aire al fondo del paseo de Liora). Ver INC-933.
-v06_arregla      6010.6 5997.4
-carreta          6008.4 5997.4 99.97
-nina_iglesia     5990.9 6001.0
-nina_carro       6004.9 5998.8
-globo            5987.4 6005.1 105.9
-cielo_globo      5989.5 6015.0 118.0
-bajo_iglesia     5991.8 5999.6
-v10_lena         5994.0 6002.8
-v02_horno        5996.1 6001.9
-junto_v02        5996.9 6001.0
-junto_v02_b      5995.2 6001.0
-horno            5995.6 6004.2
-k1               5995.5 5998.6
-k2               5997.0 5998.4
-k3               5996.6 6001.0
-k4               5994.8 6001.3
-k5               5997.3 5997.6
-v01_saluda       6002.3 6000.6
-v02_saluda       6004.3 6000.6
-v04_a            5997.8 5995.8
-v04_b            5999.9 5995.8
-v03_charla       6000.3 6004.9
-v09_charla       5998.9 6005.6
-liora_mesa       6012.5 6003.7
-v08_mesa         6011.4 6002.4
-mira_v03         6001.3 6000.9
-mira_v08         6002.3 6000.5
-centro_plaza     6001.5 6000.5
+v06_arregla      -159.4 -367.6
+carreta          -161.6 -367.6 33.97
+nina_iglesia     -179.1 -364.0
+nina_carro       -165.1 -366.2
+globo            -182.6 -359.9 39.9
+cielo_globo      -180.5 -350.0 52.0
+bajo_iglesia     -178.2 -365.4
+v10_lena         -176.0 -362.2
+v02_horno        -173.9 -363.1
+junto_v02        -173.1 -364.0
+junto_v02_b      -174.8 -364.0
+horno            -174.4 -360.8
+k1               -174.5 -366.4
+k2               -173.0 -366.6
+k3               -173.4 -364.0
+k4               -175.2 -363.7
+k5               -172.7 -367.4
+v01_saluda       -167.7 -364.4
+v02_saluda       -165.7 -364.4
+v04_a            -172.2 -369.2
+v04_b            -170.1 -369.2
+v03_charla       -169.7 -360.1
+v09_charla       -171.1 -359.4
+liora_mesa       -157.5 -361.3
+v08_mesa         -158.6 -362.6
+mira_v03         -168.7 -364.1
+mira_v08         -167.7 -364.5
+centro_plaza     -168.5 -364.5
 # Grúa de apertura: baja del cielo (cam_cielo, a 10 m) hasta delante del maestro (cam_baja).
-cam_cielo        5999.6 5998.5
-cam_baja         6001.4 6000.4
+cam_cielo        -170.4 -366.5
+cam_baja         -168.6 -364.6
 # Cámara del conjuro: al oeste del maestro, de perfil mientras lanza el conjuro, con la carreta
 # delante de él y algo apartada, sin taparle.
-cam_magia        6003.0 5998.6
+cam_magia        -167.0 -366.4
 # Al suroeste, entre el farol y el mirador de la vecina: el maestro de tres cuartos y la carreta entera.
-cam_carreta      6003.6 5995.7
+cam_carreta      -166.4 -369.3
 # Liora y Nina en el puente, desde el sur (al norte pasa la gente que huye).
-cam_lioranina    6016.4 5995.0
+cam_lioranina    -153.6 -370.0
 # Liora en el puente, de frente: al nordeste de ella, con el Archimago fuera de cuadro a la izquierda.
-cam_liora_puente 6016.3 6000.2
+cam_liora_puente -153.7 -364.8
 # La despedida, desde la plaza (noroeste de Liora): a ella de tres cuartos, al Archimago de perfil
 # y el puente con la gente que huye al fondo.
-cam_despedida    6012.6 5999.6
-cam_general      6012.0 6001.0
+cam_despedida    -157.4 -365.4
+cam_general      -158.0 -364.0
 # El río
-rio_a_ini        6016.9 6002.7
-rio_l_ini        6015.8 6002.3
-rio_a_fin        6017.4 5998.3
-rio_l_fin        6016.1 5997.9
-rio_agua         6021.5 5996.0
+rio_a_ini        -153.1 -362.3
+rio_l_ini        -154.2 -362.7
+rio_a_fin        -152.6 -366.7
+rio_l_fin        -153.9 -367.1
+rio_agua         -148.5 -369.0
 # La amenaza
-oeste            5925.0 6000.0
-cielo_oeste      5960.0 6000.0 135.0
+oeste            -245.0 -365.0
+cielo_oeste      -210.0 -365.0 69.0
 # La cima de la montaña del oeste (Montana_Prologo). Con altura a mano: debajo de la montaña sigue
 # el terreno de la costa con su NavMesh, y sin ella el punto caía ahí abajo, dentro de la montaña.
-colina           5957.7 5996.9 116.75
+colina           -212.3 -368.1 50.75
 # El Mago aparece en el cielo, 6 m sobre la cima, y baja despacio (INC-935).
-colina_cielo     5957.7 5996.9 122.75
-ladera           5968.0 6000.0 107.57
-entrada          5988.0 6000.5
+colina_cielo     -212.3 -368.1 56.75
+ladera           -202.0 -365.0 41.57
+entrada          -182.0 -364.5
 # La huida (tres carriles en el puente)
-arch_grita       6014.4 6000.3
-puente_n         6016.8 6001.3
-puente_c         6016.8 6000.4
-puente_s         6016.8 5999.5
-otro_lado_n      6030.0 6001.3
-otro_lado_c      6030.0 6000.4
-otro_lado_s      6030.0 5999.5
-liora_puente     6015.0 5997.8
+arch_grita       -155.6 -364.7
+puente_n         -153.2 -363.7
+puente_c         -153.2 -364.6
+puente_s         -153.2 -365.5
+otro_lado_n      -140.0 -363.7
+otro_lado_c      -140.0 -364.6
+otro_lado_s      -140.0 -365.5
+liora_puente     -155.0 -367.2
 # Nina, al lado de Liora y del lado de la cámara del puente: detrás de ella no se la veía.
-nina_puente      6016.0 5998.2
-mira_k1          5993.4 5999.2
-mira_k2          5994.9 5998.4
+nina_puente      -154.0 -366.8
+mira_k1          -176.6 -365.8
+mira_k2          -175.1 -366.6
 # Cámara de la Vecina: al oeste de ella, de tres cuartos (ella mira al maestro, al noroeste).
-cam_v02         6001.2 6001.0
-k6               5998.0 6000.2
+cam_v02          -168.8 -364.0
+k6               -172.0 -364.8
 # El duelo
-duelo_a          6004.4 5999.8
-duelo_m          6000.8 5999.8
-choque           6002.6 5999.8
-arch_caida       6007.4 6000.2
-mago_retrocede   5998.7 5999.8
+duelo_a          -165.6 -365.2
+duelo_m          -169.2 -365.2
+choque           -167.4 -365.2
+arch_caida       -162.6 -364.8
+mago_retrocede   -171.3 -365.2
 # La bola del hechizo final sube desde el Archimago hasta aquí (4 m sobre el suelo).
-cielo_conjuro    6007.4 6000.2 104.0
+cielo_conjuro    -162.6 -364.8 38.0
 # El agujero negro: justo encima del Mago, que levita 3 m sobre mago_retrocede y lo sostiene con
 # los brazos en alto, con su círculo mágico bajo los pies (INC-941). A 8 m del suelo (el valle
 # está a 100 m), el núcleo crecido queda por encima de su cabeza.
-agujero          5998.7 5999.8 108.0
+agujero          -171.3 -365.2 42.0
 # Donde chocan el orbe del Archimago y el agujero del Mago: a medio camino entre los dos, en el aire.
-encuentro_hechizos 6003.0 6000.0 105.0
+encuentro_hechizos -167.0 -365.0 39.0
 # Salen despedidos cada uno hacia su lado: el Archimago hacia el este (pasa por el aire y cae),
 # el Mago hacia el oeste, por el aire.
-arch_despedido_aire 6010.0 6000.3 101.2
-arch_despedido   6011.4 6000.3
-mago_despedido   5995.0 5999.8 104.8
+arch_despedido_aire -160.0 -364.7 35.2
+arch_despedido   -158.6 -364.7
+mago_despedido   -175.0 -365.2 38.8
 # Aérea del acercamiento: alta, al norte de la plaza (el Archimago a la izquierda y el Mago a la
 # derecha, como en todo el duelo).
-cam_aerea        6003.0 6012.0
+cam_aerea        -167.0 -353.0
 # El choque, a lo largo de la calle desde el puente (al norte y al sur las casas tapan): el
 # Archimago delante, de espaldas, y el Mago al fondo, arriba.
-cam_choque       6016.0 6001.0
+cam_choque       -154.0 -364.0
 # La aérea que gira mientras los dos sostienen su hechizo: sobre el río, para que quepan los dos.
-cam_aerea_choque 6020.0 6001.0
+cam_aerea_choque -150.0 -364.0
 # Adónde miran esas dos cámaras para que quepan el Archimago, su orbe, el choque, el Mago y el
 # agujero: a ras de calle (foco_choque) y desde lo alto (foco_aereo).
-foco_choque      6004.0 6000.0 102.7
-foco_aereo       6004.0 6000.0 104.2
+foco_choque      -166.0 -365.0 36.7
+foco_aereo       -166.0 -365.0 38.2
 # Cámara del final: al este, detrás del Archimago y algo al norte (él a la izquierda), baja; el Mago
 # y el agujero al fondo, arriba.
-cam_final        6012.8 6001.2
+cam_final        -157.2 -363.8
 # ── Cámaras bajas, a la altura de los chibis, y puntos de la vida de fondo ──
 # La Vecina pasea por su esquina (k6-k7), lejos del centro de la plaza, donde va la cámara del saludo.
-k7               5998.6 5998.2
+k7               -171.4 -366.8
 # El niño (v01) se acerca a saludar al maestro.
-v01_mira         5998.6 6001.6
+v01_mira         -171.4 -363.4
 # Cámara de los vecinos que ven llegar al maestro: desde su lado de la plaza, para verles la cara.
 # El carretero se acerca al maestro para darle las gracias; la cámara, al norte, con la carreta detrás.
-v06_gracias      6007.7 6000.9
-cam_gracias      6008.8 6004.2
+v06_gracias      -162.3 -364.1
+cam_gracias      -161.2 -360.8
 # El río: los dos de perfil desde la orilla sur, con el agua a un lado.
-cam_rio          6016.6 5994.6
+cam_rio          -153.4 -370.4
 # El duelo de perfil, desde el norte (al sur hay un farol que se metía en el cuadro).
-cam_duelo_norte  6002.6 6004.6
+cam_duelo_norte  -167.4 -360.4
 # La grieta: desde el norte, como todo el duelo (el maestro a la izquierda de la pantalla).
-cam_grieta       6003.4 6003.4
+cam_grieta       -166.6 -361.6
 # Vida de fondo: mariposas en las flores y en la ribera.
-mariposas_a      6014.4 5993.9 100.8
-mariposas_b      6016.4 6003.0 100.9
-mariposas_c      6011.0 6004.2 100.9
+mariposas_a      -155.6 -371.1 34.8
+mariposas_b      -153.6 -362.0 34.9
+mariposas_c      -159.0 -360.8 34.9
 # La madre y su hijo vienen por la entrada oeste del pueblo a comprar pan al puesto de la
 # panadera (vestido del pueblo: «Puesto del pan», delante de su casa, Casa_Sur_01; marcas
 # M_Puerta_Madre_*). Lucas va a la derecha de su madre.
-madre_ini        5978.5 6000.3
-lucas_ini        5978.5 5999.75
-madre_pan        5986.9 5998.75
-panadera_mostrador 5986.8 5996.5
-lejos_madre      6049.5 6008.5
-lejos_panadera   6052.0 5993.5
+madre_ini        -191.5 -364.7
+lucas_ini        -191.5 -365.25
+madre_pan        -183.1 -366.25
+panadera_mostrador -183.2 -368.5
+lejos_madre      -120.5 -356.5
+lejos_panadera   -118.0 -371.5
 # Golpes de las contraventanas con la tormenta, repartidos por las casas.
-golpe_norte      6007.0 6005.4 102.5
-golpe_sur        6003.5 5995.3 102.2
-golpe_oeste      5993.0 5995.6 102.0
-golpe_este       6013.0 6005.2 103.0
+golpe_norte      -163.0 -359.6 36.5
+golpe_sur        -166.5 -369.7 36.2
+golpe_oeste      -177.0 -369.4 36.0
+golpe_este       -157.0 -359.8 37.0
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PISTAS: lo que hace cada vecino mientras pasa la historia
@@ -423,6 +423,13 @@ HILO
 @inicio
 bandas muestra
 efecto EfectoDeVozBeat preset=ExteriorDia
+# ── 0. LA APERTURA (INC-1200) ─────────────────────────────────────────────────────────────
+# El Sendero, siglos antes: el Mago Oscuro pide su deseo, nota un poder lejano y la estrella llena la
+# pantalla; el mapa del mundo; el vuelo hasta el valle con el logo. Cada beat lleva su propia cámara.
+silencio 0.5
+efecto DeseoEnElSenderoBeat escenario=Assets/Art/Cinematic/Apertura/SenderoDeLaApertura.prefab mago=Assets/Prefabs/_MAGO_OSCURO.prefab segundos=31.5 dura=31.5
+musica PROLOGO_AMANECER_VALLE
+# (INC-1200: el «mapa» es el propio mundo desde el aire, lo abre el vuelo) efecto MapaDeAperturaBeat mapa=Assets/Art/Cinematic/Apertura/MapaDeLaApertura.png segundos=7 dura=7
 ambiente AMBIENTE eventKey=Ambience_Prologo_Pueblo volumen=0.5
 # El mismo look de cine que el resto de cinemáticas (PostprocesoDeCinematica va encima).
 postproceso Assets/Resources/Postproceso/PerfilDeCinematica.asset
@@ -431,7 +438,7 @@ hora Morning immediate=true
 efecto PropMoveBeat propId=PROP_Carreta deltaRotacion=0,0,62 segundos=0 desdeDondeEstaba=true apoyarEnElSuelo=true
 efecto SetPropActiveBeat propId=PROP_Nube_Oeste active=false
 efecto SetPropActiveBeat propId=PROP_Nube_Este active=false
-efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
+# (INC-1200: las nubes de apertura las sustituye el vuelo) efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
 archimago en plaza_archimago mirando cam_baja
 # Vida de fondo: mariposas en las flores y en la ribera; se recogen cuando llega la tormenta.
 vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly01_P.prefab en=mariposas_a lifetime=110 registrarComo=MARIPOSAS_A
@@ -440,6 +447,8 @@ vfx Assets/Art/World/Fantasy_Kingdom_Pack/Particle/Butterfly03_P.prefab en=marip
 
 # Apertura: las nubes se abren y la cámara baja del cielo directa al maestro, que ya está en la
 # plaza. Los vecinos se vuelven a saludarle mientras llega la cámara (pistas con @entra).
+# El vuelo acaba donde empieza la grúa (cam_cielo), así que el corte no se nota.
+efecto VueloDeAperturaBeat logo=Assets/Art/Cinematic/Apertura/liyodev-logo-transparente.png nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab segundos=35 dura=34.6
 @entra
 # El vecino del mirador abre las contraventanas para saludar al maestro (de fondo).
 desde @entra+3.2 efecto HojasConBisagraBeat nombre="Mirador · Vecino" abrir=true segundos=0.8
@@ -548,6 +557,9 @@ espera 1.2
 @rio
 # Del pueblo al río, fundido corto a negro: la mezcla de cámara cruzaba volando el pueblo (INC-1083).
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=0.4 waitForEnd=true
+# En el río, la mañana del valle (la melodía principal, tierna): Liora y el maestro hablan de la carta
+# de la academia. Releva a «Amanecer en el Valle» durante el fundido; la tormenta la para con su silencio.
+musica PROLOGUE_DREAM fadeIn=2.0 continuarDondeIba=false
 ambiente AMBIENTE sonar=false fundido=3
 ambiente AMBIENTE_RIO eventKey=Ambience_Prologo_Rio volumen=0.55
 hora Sunset transitionSeconds=6

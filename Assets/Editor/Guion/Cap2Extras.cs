@@ -31,11 +31,12 @@ public static class Cap2Extras
         if (Application.isPlaying) throw new InvalidOperationException("El montaje necesita el Editor fuera de Play.");
         AsegurarObjetos();
         var cap1 = Cargar<NarrativeGraph>(GrafoCap1);
-        var desbloqueo = cap1.FindNode(NodoDesbloqueoCap1) as UnlockAbilitiesNode
+        var paso = cap1.FindNode(NodoDesbloqueoCap1) as GameStepNode;
+        var desbloqueo = paso?.request as PedirDesbloqueo
             ?? throw new InvalidOperationException("Cap1: falta el nodo de desbloqueo de la magia.");
         if (!desbloqueo.spellsToUnlock.Contains(SpellId.Fireball))
             throw new InvalidOperationException("Cap1: el nodo de desbloqueo ya no da Llama Astral; revisar antes de renombrarlo.");
-        desbloqueo.displayTitle = TituloDesbloqueoCap1;
+        paso.displayTitle = TituloDesbloqueoCap1;
         EditorUtility.SetDirty(cap1);
         AssetDatabase.SaveAssets();
         Verificar();

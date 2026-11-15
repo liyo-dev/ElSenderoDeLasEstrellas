@@ -12,7 +12,7 @@ using UnityEngine;
 ///   refrescar                               reimporta y recompila lo que haya cambiado
 ///   capturar Prologo_Valle                  captura del escenario
 ///   hornear Assets/.../X.guion.txt [storyboard]
-///   menu El Sendero/Secuencias/...          ejecuta un menú del Editor
+///   menu El Sendero/Cinemáticas/...         ejecuta un menú del Editor
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
 ///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)

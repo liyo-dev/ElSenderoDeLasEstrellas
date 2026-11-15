@@ -34,7 +34,7 @@ public static class PiedraAncestralGuardianBuilder
     private const string HuracanVfxSearchName = "Huracan"; // Huracan.asset es el MagicSpellSO, no el prefab de proyectil — ver nota abajo.
     private const string SelloDelPactoPath = "Assets/_SPELLS/Prefabs/SelloDelPacto.prefab";
 
-    [MenuItem("El Sendero/Escena/Crear Guardián de la Piedra Ancestral")]
+    [MenuItem("El Sendero/Escenario/Piedra Ancestral: montar el guardián (provisional)")]
     public static void CreateGuardian()
     {
         var scene = EditorSceneManager.GetActiveScene();

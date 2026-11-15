@@ -301,8 +301,8 @@ public class Inventory : MonoBehaviour
 
         // Fallback: crear un ItemData temporal en runtime para no quedar sin referencia
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[Inventory] ⚠️ Creando placeholder temporal para item '{itemId}'. El item no se encontró en knownItems, ItemRegistry ni Resources.");
-        Debug.LogWarning($"[Inventory] 💡 Para solucionar: Añade el ItemData al ItemRegistry (Resources/ItemRegistry) o a la lista knownItems del componente Inventory.");
+        Debug.LogWarning($"[Inventory] Creando placeholder temporal para item '{itemId}'. El item no se encontró en knownItems, ItemRegistry ni Resources.");
+        Debug.LogWarning($"[Inventory] Para solucionar: Añade el ItemData al ItemRegistry (Resources/ItemRegistry) o a la lista knownItems del componente Inventory.");
 #endif
         var runtimeItem = ScriptableObject.CreateInstance<ItemData>();
         runtimeItem.itemId = itemId;
@@ -374,7 +374,7 @@ public class Inventory : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[Inventory] ⚠️ No se pudo resolver el item '{itemId}' desde ninguna fuente. Verifica que el itemId coincida con el asset o que esté en el ItemRegistry.");
+        Debug.LogWarning($"[Inventory] No se pudo resolver el item '{itemId}' desde ninguna fuente. Verifica que el itemId coincida con el asset o que esté en el ItemRegistry.");
 #endif
         return null;
     }

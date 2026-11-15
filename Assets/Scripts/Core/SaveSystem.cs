@@ -36,7 +36,7 @@ public class SaveSystem : MonoBehaviour
             // Si el proceso se interrumpe durante la escritura el save existente queda intacto.
             var tmpPath = SavePath + ".tmp";
             File.WriteAllText(tmpPath, json);
-            // FIX A4/medio (auditoría 2026-08-07): Delete()+Move() deja una ventana real sin
+            // FIX A4/medio: Delete()+Move() deja una ventana real sin
             // ningún save.json en disco entre ambas llamadas — un crash justo ahí deja al
             // jugador sin partida guardada en absoluto. File.Replace es una operación atómica a
             // nivel de sistema de archivos: nunca hay un instante sin save.json válido.
@@ -67,7 +67,7 @@ public class SaveSystem : MonoBehaviour
         if (HasSave() && LoadFromPath(SavePath, out data))
             return true;
 
-        // FIX A4/medio (auditoría 2026-08-07): fallback de última instancia. Si save.json no
+        // FIX A4/medio: fallback de última instancia. Si save.json no
         // existe o está corrupto pero queda un save.json.tmp de un guardado interrumpido a mitad
         // de escritura (crash entre WriteAllText y Replace/Move), ese .tmp es la única copia
         // reciente que puede existir — probarlo antes de rendirse.

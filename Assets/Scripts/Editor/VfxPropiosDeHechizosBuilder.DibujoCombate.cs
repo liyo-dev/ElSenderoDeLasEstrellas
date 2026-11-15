@@ -2,7 +2,7 @@ using UnityEngine;
 using static VfxProcedural;
 
 /// Efectos de dibujo de Amanecer, de los escudos y de lo que lanzan los enemigos (demonio, beholder,
-/// golem y Mago Oscuro), con las mismas piezas de Texturas/Dibujo. Los asigna VfxDeCombateDeDibujo.
+/// golem y Mago Oscuro), con las mismas piezas de Texturas/Dibujo.
 /// Ver INC-1127
 public static partial class VfxPropiosDeHechizosBuilder
 {

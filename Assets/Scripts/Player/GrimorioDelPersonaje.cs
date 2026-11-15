@@ -174,25 +174,26 @@ public static class GrimorioDelPersonaje
         return result;
     }
 
-    /// Pone en juego los básicos equipados de ese personaje: en el MagicCaster si va al mando, en
-    /// su IA si no.
+    /// Pone en el cuerpo de ese personaje los básicos que lleva equipados: en su MagicCaster (para
+    /// cuando lo lleve el jugador) y en su IA.
     public static void Aplicar(Slot slot)
     {
         if (slot == Slot.Will) return; // Will: PlayerPresetService.ApplyCurrentPreset
+        var cuerpo = ControlDelJugador.PilotoDe(slot);
+        if (cuerpo == null) return;
         var basicos = BasicosEquipados(slot);
-        if (ControlDelJugador.Activo == slot)
-        {
-            if (PlayerService.TryGetComponent<MagicCaster>(out var caster, includeInactive: true, allowSceneLookup: true) && caster != null)
-                caster.SetBasicSpells(basicos);
-        }
 
-        var member = ControlDelJugador.MiembroDe(slot);
-        if (member != null)
+        var caster = cuerpo.GetComponent<MagicCaster>();
+        if (caster != null) caster.SetBasicSpells(basicos);
+
+        var ia = cuerpo.GetComponent<Game.NPC.NPCPartyMember>();
+        if (ia != null)
         {
             var ficha = Ficha(slot);
-            member.SetRuntimeBasics(basicos, ficha != null ? ficha.Hechizo(2) : null);
+            ia.SetRuntimeBasics(basicos, ficha != null ? ficha.Hechizo(2) : null);
         }
     }
+
 
     /// Al aprender un básico de Estela o Liam, se equipa solo si le queda hueco.
     public static void EquiparSiHayHueco(MagicSpellSO spell)

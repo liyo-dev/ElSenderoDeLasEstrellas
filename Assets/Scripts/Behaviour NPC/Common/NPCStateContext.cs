@@ -54,9 +54,9 @@ namespace Game.NPC.Common
         /// como compañero), lo ponga o no FollowPlayerState.OnEnter/OnExit. A diferencia de
         /// NPCBehaviourManagerV2.IsAlly (que depende de NPCPartyMember.IsInParty, es decir, de
         /// haber pasado por PlayerParty.AddMember), esta bandera cubre también a compañeros
-        /// temporales que siguen al jugador SIN estar registrados en el party — el caso real hoy
-        /// es el NPC instanciado de Will (ActiveCharacterSwapper.WillNpcInstance), que a propósito
-        /// nunca pasa por JoinParty() y usa FollowPlayerState(skipPartyCheck: true) — pero sirve
+        /// que siguen al jugador SIN estar registrados en el party — el caso real hoy es Will
+        /// cuando lo lleva la IA (ControlDelJugador.NpcDe(Will)), que no es miembro de PlayerParty
+        /// y usa FollowPlayerState(skipPartyCheck: true) — pero sirve
         /// igual para cualquier NPC futuro que siga al jugador por el mismo camino. Se usa en
         /// NPCBehaviourManagerV2.HasActiveAiExemption() para que el LOD de IA por distancia nunca
         /// "duerma" (EnterFarState desactiva el NavMeshAgent y detiene el Brain.Update) a un NPC

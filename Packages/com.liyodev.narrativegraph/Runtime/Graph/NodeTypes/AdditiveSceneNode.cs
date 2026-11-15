@@ -52,7 +52,7 @@ public sealed class AdditiveSceneNode : NarrativeNode, INarrativeStateEffect
     {
         if (string.IsNullOrWhiteSpace(sceneName))
         {
-            Debug.LogWarning($"[AdditiveSceneNode:{guid}] ⚠️ 'sceneName' está vacío — no se hace nada y se avanza.");
+            Debug.LogWarning($"[AdditiveSceneNode:{guid}] 'sceneName' está vacío — no se hace nada y se avanza.");
             onReadyToAdvance?.Invoke();
             return;
         }
@@ -114,7 +114,7 @@ public sealed class AdditiveSceneNode : NarrativeNode, INarrativeStateEffect
         yield return op;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AdditiveSceneNode:{guid}] ✅ '{sceneName}' cargada en aditivo.");
+        Debug.Log($"[AdditiveSceneNode:{guid}] '{sceneName}' cargada en aditivo.");
 #endif
 
         // Lo que la escena necesite del juego al llegar (p. ej. instanciar sus personajes) se hace
@@ -144,7 +144,7 @@ public sealed class AdditiveSceneNode : NarrativeNode, INarrativeStateEffect
         // la activa por un nombre mal escrito deja el juego en negro sin decir por qué.
         if (SceneManager.sceneCount <= 1 || scene == SceneManager.GetActiveScene())
         {
-            Debug.LogWarning($"[AdditiveSceneNode:{guid}] ⚠️ No se descarga '{sceneName}': es la escena activa " +
+            Debug.LogWarning($"[AdditiveSceneNode:{guid}] No se descarga '{sceneName}': es la escena activa " +
                 "o la única cargada. Se avanza sin tocar nada.");
             onReadyToAdvance?.Invoke();
             yield break;
@@ -163,7 +163,7 @@ public sealed class AdditiveSceneNode : NarrativeNode, INarrativeStateEffect
         yield return op;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AdditiveSceneNode:{guid}] ✅ '{sceneName}' descargada.");
+        Debug.Log($"[AdditiveSceneNode:{guid}] '{sceneName}' descargada.");
 #endif
 
         if (waitForCompletion) onReadyToAdvance?.Invoke();

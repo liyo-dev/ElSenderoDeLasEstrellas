@@ -203,7 +203,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         if (_instigator != null && !AmenazasAlJugador.EsDelGrupoDelJugador(_instigator)) AmenazasAlJugador.Registrar(this);
         else AmenazasAlJugador.Quitar(this);
 
-        // ✅ IMPORTANTE: Aplicar el lifeTime de la configuración del SO
+        // IMPORTANTE: Aplicar el lifeTime de la configuración del SO
         // Esto sobrescribe el lifeTimeSeconds del prefab si el SO define un valor
         if (_cfg.lifeTime > 0f)
         {
@@ -495,8 +495,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         // Damageable, sino PlayerHealthSystem (con su defensa y su escudo). Ver INC-509.
         if (_cfg.hitLayers.value != 0 && ((1 << otherLayer) & _cfg.hitLayers.value) != 0)
         {
-            var saludJugador = other.GetComponentInParent<PlayerHealthSystem>();
-            if (saludJugador != null)
+            if (ControlDelJugador.DelJugador(other, out PlayerHealthSystem saludJugador))
             {
                 if (_instigator != null && saludJugador.gameObject == _instigator) return;
                 if (IsAlreadyHit(other)) return;
@@ -507,22 +506,22 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             }
         }
 
-        // 🔍 DEBUG: Log de cada colisión (solo si no se ignora)
+        // DEBUG: Log de cada colisión (solo si no se ignora)
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MagicProjectile] OnHit: {other.gameObject.name} (Layer: {layerName}, Tag: {other.tag})");
 #endif
 
-        // ✅ PRIORIDAD 1: Detectar colisión con proyectiles enemigos (layer "ProjectileEnemy" o "EnemyProjectile")
+        // PRIORIDAD 1: Detectar colisión con proyectiles enemigos (layer "ProjectileEnemy" o "EnemyProjectile")
         if (layerName == "ProjectileEnemy" || layerName == "EnemyProjectile")
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[MagicProjectile] 💥 Colisión con proyectil enemigo detectada!");
+            Debug.Log($"[MagicProjectile] Colisión con proyectil enemigo detectada!");
 #endif
             ProjectileCollisionHandler.HandleCollision(gameObject, other.gameObject, hitPoint);
             return;
         }
 
-        // ✅ PRIORIDAD 2: Detectar colisión con layer Enemy o Boss directamente
+        // PRIORIDAD 2: Detectar colisión con layer Enemy o Boss directamente
         // Detectamos por layer (Enemy o Boss) y opcionalmente por tag "Enemy"
         bool isEnemy = layerName == "Enemy" || 
                        layerName == "Boss" ||
@@ -533,7 +532,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             if (!TryMarkHit(other)) return;
             if (IsAlreadyHit(other)) return; // al atravesar o rebotar no se daña dos veces al mismo (INC-497)
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[MagicProjectile] 🎯 IMPACTO CONTRA ENEMIGO: {other.gameObject.name}!");
+            Debug.Log($"[MagicProjectile] IMPACTO CONTRA ENEMIGO: {other.gameObject.name}!");
 #endif
             ApplyDamageAndKnockback(other, hitPoint);
             SpawnImpactEffects(hitPoint);
@@ -550,7 +549,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             return;
         }
 
-        // ✅ PRIORIDAD 3: piezas del mundo que reaccionan a la magia (lo que arde, cristales,
+        // PRIORIDAD 3: piezas del mundo que reaccionan a la magia (lo que arde, cristales,
         // molinetes…). Ver ReaccionesAMagia.
         if (ReaccionesAMagia.Notificar(other, new ImpactoDeMagia(_cfg.element, hitPoint, _instigator, false)))
         {
@@ -559,7 +558,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             return;
         }
 
-        // ✅ PRIORIDAD 4: Intentar aplicar daño si el objeto tiene Damageable (independiente del layer)
+        // PRIORIDAD 4: Intentar aplicar daño si el objeto tiene Damageable (independiente del layer)
         // Esto permite dañar enemigos/bosses aunque estén en layer Default
         var targetDamageable = other.GetComponent<Damageable>();
         if (targetDamageable == null)
@@ -587,13 +586,13 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[MagicProjectile] 🎯 Impacto contra {other.gameObject.name} - Aplicando {_cfg.damage} de daño via Damageable");
+            Debug.Log($"[MagicProjectile] Impacto contra {other.gameObject.name} - Aplicando {_cfg.damage} de daño via Damageable");
 #endif
 
             if (_cfg.aoeRadius > 0f)
             {
                 // Para AOE, buscar todos los Damageable en el radio
-                int aoeCount = Physics.OverlapSphereNonAlloc(hitPoint, _cfg.aoeRadius, _aoeHitBuffer); // ✅ OPTIMIZACIÓN FASE 2: NonAlloc
+                int aoeCount = Physics.OverlapSphereNonAlloc(hitPoint, _cfg.aoeRadius, _aoeHitBuffer); // OPTIMIZACIÓN FASE 2: NonAlloc
                 _aoeTargets.Clear();
                 for (int i = 0; i < aoeCount; i++)
                 {
@@ -736,7 +735,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
             {
-                Debug.LogWarning($"[MagicProjectile] ⚠️ Impacto en '{col.gameObject.name}' pero no se encontró Damageable en su jerarquía - no se aplicó daño.");
+                Debug.LogWarning($"[MagicProjectile] Impacto en '{col.gameObject.name}' pero no se encontró Damageable en su jerarquía - no se aplicó daño.");
             }
 #endif
         }
@@ -788,7 +787,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         SpawnImpactEffects(hitPoint);
         End(true);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[MagicProjectile] 🛡️ Bloqueado por escudo NPC: {shieldController.gameObject.name}");
+        Debug.Log($"[MagicProjectile] Bloqueado por escudo NPC: {shieldController.gameObject.name}");
 #endif
         return true;
     }

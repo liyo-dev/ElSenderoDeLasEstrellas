@@ -52,6 +52,15 @@ public sealed class AspectoDeDibujo : ScriptableObject
     [Tooltip("Cuánto se ve el dibujo de las texturas del terreno. 0 = cada capa de un color plano (su color medio); 1 = la textura entera.")]
     [Range(0f, 1f)] public float texturaDelSuelo = 0.2f;
 
+    [Tooltip("Altura (m) desde la que el terreno se cubre de nieve. El borde es una curva suave que sube y baja por la sierra.")]
+    public float cotaDeLaNieve = 205f;
+
+    [Tooltip("Cuánto sube y baja el borde de la nieve (m).")]
+    [Range(0f, 40f)] public float ondasDeLaNieve = 16f;
+
+    [Tooltip("Color de la nieve.")]
+    public Color colorDeLaNieve = new Color(0.88f, 0.91f, 0.92f);
+
     [Header("Pinceladas")]
     [Tooltip("Cuánto se notan las pinceladas en los modelos propios de color liso (los que llevan «Pinceladas» en el material). 0 = color liso.")]
     [Range(0f, 0.4f)] public float pinceladas = 0.12f;
@@ -73,6 +82,8 @@ public sealed class AspectoDeDibujo : ScriptableObject
     private static readonly int IdLucesExtra = Shader.PropertyToID("_DibujoLucesExtra");
     private static readonly int IdTopeDeLuz = Shader.PropertyToID("_DibujoTopeDeLuz");
     private static readonly int IdTexturaDelSuelo = Shader.PropertyToID("_DibujoTexturaDelSuelo");
+    private static readonly int IdNieve = Shader.PropertyToID("_DibujoNieve");
+    private static readonly int IdColorDeLaNieve = Shader.PropertyToID("_DibujoColorDeLaNieve");
     private static readonly int IdPincel = Shader.PropertyToID("_DibujoPincel");
     private static readonly int IdPincelEscala = Shader.PropertyToID("_DibujoPincelEscala");
 
@@ -96,6 +107,8 @@ public sealed class AspectoDeDibujo : ScriptableObject
         Shader.SetGlobalFloat(IdLucesExtra, lucesPuntuales);
         Shader.SetGlobalFloat(IdTopeDeLuz, topeDeLuz);
         Shader.SetGlobalFloat(IdTexturaDelSuelo, texturaDelSuelo);
+        Shader.SetGlobalVector(IdNieve, new Vector4(cotaDeLaNieve, ondasDeLaNieve, 0f, 0f));
+        Shader.SetGlobalVector(IdColorDeLaNieve, new Vector4(colorDeLaNieve.r, colorDeLaNieve.g, colorDeLaNieve.b, 1f));
         Shader.SetGlobalFloat(IdPincel, pinceladas);
         Shader.SetGlobalFloat(IdPincelEscala, tamanoDeLasPinceladas);
         Shader.SetGlobalFloat(IdActivo, 1f);

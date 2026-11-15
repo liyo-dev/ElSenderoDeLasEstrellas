@@ -28,7 +28,7 @@ using UnityEngine;
 /// </summary>
 public static class QuestCatalogAudit
 {
-    [MenuItem("El Sendero/Quests/Comprobar y completar catálogo de misiones (QuestManager)")]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Catálogo de misiones del QuestManager: comprobar y completar")]
     public static void AuditAndFix()
     {
         var log = new StringBuilder();

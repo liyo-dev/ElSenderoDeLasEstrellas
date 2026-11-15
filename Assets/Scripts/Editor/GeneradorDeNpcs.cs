@@ -70,7 +70,7 @@ public class GeneradorDeNpcs : EditorWindow
     bool _sustituirEnRoster = true;
     Vector2 _scroll;
 
-    [MenuItem("El Sendero/NPCs/Generador de NPCs")]
+    [MenuItem("El Sendero/Personajes/NPCs/Generador de NPCs")]
     static void Abrir() => GetWindow<GeneradorDeNpcs>("Generador de NPCs");
 
     void OnEnable()

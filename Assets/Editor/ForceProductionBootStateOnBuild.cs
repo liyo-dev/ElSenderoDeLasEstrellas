@@ -39,7 +39,7 @@ public class ForceProductionBootStateOnBuild : IPreprocessBuildWithReport
         ApplyProductionBootState();
     }
 
-    [MenuItem("El Sendero/Build/Aplicar estado de Build (BootLoader ON)")]
+    [MenuItem("El Sendero/Proyecto/Build: aplicar el estado de arranque de la build")]
     public static void ApplyProductionBootStateMenuItem()
     {
         ApplyProductionBootState();

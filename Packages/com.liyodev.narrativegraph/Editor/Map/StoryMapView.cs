@@ -9,14 +9,16 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor
 {
-    /// Mapa de la historia: el mundo en esquema (zonas) con un muñeco por personaje, colocado
-    /// según el paso elegido en el editor de la historia. Al pulsar un muñeco se ve lo suyo en ese
-    /// paso: dónde está y por qué, si la historia le espera, qué dice si le hablas, sus próximos
-    /// diálogos (con emociones) y las misiones que da. Arrastrar un muñeco a otra zona escribe en
-    /// el grafo que desde ese paso está allí (pieza «Personaje desde aquí»; el jugador, con un punto
-    /// de arranque). La barra de abajo recorre los pasos del capítulo (▶ los reproduce) y una
-    /// flecha enseña quién se ha movido respecto al paso anterior. «Editar mapa» deja mover y
-    /// crear zonas, asignarles marcas y colocar a cada personaje en su zona de siempre.
+    /// Mapa de la historia: el mundo en esquema con un muñeco por personaje, colocado según el
+    /// paso elegido en el editor de la historia. Solo enseña lo que el grafo sabe: al pulsar un
+    /// muñeco se ve dónde está y qué paso lo dejó así, si la historia le espera, qué dice si le
+    /// hablas, lo que le espera más adelante (sus próximas piezas «Personaje desde aquí»), sus
+    /// próximos diálogos y las misiones que da. Para cambiar algo se abre su paso: el mapa no
+    /// escribe en el grafo. La barra de abajo recorre los pasos del capítulo (▶ los reproduce) y
+    /// una flecha enseña quién se ha movido respecto al paso anterior.
+    ///
+    /// Navegación: rueda del ratón = zoom hacia el cursor; botón central (o el izquierdo sobre el
+    /// fondo) = desplazar; F o «Encuadrar» = ver el mapa entero.
     ///
     /// Es una vista: vive dentro del editor de la historia (en grande o, compacta, en el panel
     /// de abajo) y en una ventana aparte (StoryMapWindow) cuando se saca.
@@ -36,16 +38,14 @@ namespace NarrativeGraphEditor
         string _stepGuid;
         NarrativeNode _step;
         StoryStructure _structure;
-        bool _edit;
         bool _onlyMain;
         string _selectedActor;
-        string _selectedZone;
         NarrativeDialogueAsset _dialogue;
 
+        VisualElement _viewport;
         VisualElement _canvas;
         VisualElement _card;
         Label _stepLabel;
-        ToolbarToggle _editToggle;
         Dictionary<string, Placement> _placements = new();
         Dictionary<string, Placement> _previous = new();
         readonly Dictionary<string, Vector2> _positions = new();
@@ -55,6 +55,21 @@ namespace NarrativeGraphEditor
         Label _sliderLabel;
         Button _playButton;
         IVisualElementScheduledItem _playing;
+
+        // Vista: desplazamiento y zoom del lienzo dentro del hueco.
+        const float MinZoom = 0.05f, MaxZoom = 4f, PanThreshold = 4f;
+        float _zoom = 1f;
+        Vector2 _pan;
+        bool _viewTouched;
+        int _panPointer = -1;
+        bool _panByBackground;
+        bool _panMoved;
+        Vector2 _panFrom, _panStartPan;
+        Label _zoomLabel;
+
+        // Reconstrucción: se agrupan las peticiones en una por fotograma y solo se dibuja si se ve.
+        bool _dirty;
+        bool _rebuildQueued;
 
         sealed class Placement
         {
@@ -91,14 +106,6 @@ namespace NarrativeGraphEditor
             return new Vector2(pic.x + u * pic.width, pic.y + v * pic.height);
         }
 
-        List<string> MarksNear(Vector2 at, float radius)
-        {
-            var list = new List<(string mark, float d)>();
-            foreach (var m in NarrativeProjectIndex.Anchors)
-                if (NarrativeWorldPositions.Mark(m, out var w)) { float d = Vector2.Distance(ToCanvas(w), at); if (d <= radius) list.Add((m, d)); }
-            return list.OrderBy(x => x.d).Take(8).Select(x => x.mark).ToList();
-        }
-
         /// El nombre del sitio de una marca: la zona (si hay) donde cae, o la marca.
         string PlaceName(string mark)
         {
@@ -130,7 +137,6 @@ namespace NarrativeGraphEditor
                 StoryCardImages.Changed -= Rebuild;
                 Undo.undoRedoPerformed -= Rebuild;
                 StopPlaying();
-                if (_map != null) AssetDatabase.SaveAssetIfDirty(_map);
             });
         }
 
@@ -138,7 +144,6 @@ namespace NarrativeGraphEditor
         public void SelectActor(string actorId)
         {
             _selectedActor = actorId;
-            _selectedZone = null;
             _dialogue = null;
             Rebuild();
         }
@@ -180,20 +185,12 @@ namespace NarrativeGraphEditor
             _status = new Label { style = { alignSelf = Align.Center, color = new Color(1f, 0.8f, 0.5f), marginLeft = 8 } };
             bar.Add(_status);
             bar.Add(new ToolbarSpacer { flex = true });
-            _editToggle = new ToolbarToggle { text = StoryText.T("Editar mapa", "Edit map") };
-            _editToggle.RegisterValueChangedCallback(e => { _edit = e.newValue; _selectedZone = null; Rebuild(); });
-            bar.Add(_editToggle);
-            bar.Add(new ToolbarButton(AddZone) { text = "+ " + StoryText.T("Zona", "Zone") });
             bar.Add(new ToolbarButton(BakeBackground) { text = StoryText.T("Hacer vista desde arriba", "Make top-down view"), tooltip = StoryText.T("Fotografía desde arriba la escena abierta y la pone de fondo del mapa.", "Photographs the open scene from above and uses it as the map background.") });
-            bar.Add(new ToolbarButton(ShowCharacterMenu) { text = "+ " + StoryText.T("Personaje", "Character") });
             root.Add(bar);
 
             var body = new VisualElement { style = { flexDirection = FlexDirection.Row, flexGrow = 1 } };
-            var scroll = new ScrollView(ScrollViewMode.VerticalAndHorizontal) { style = { flexGrow = 1 } };
-            _canvas = new VisualElement { style = { width = CanvasW, height = CanvasH, backgroundColor = new Color(0.11f, 0.12f, 0.14f) } };
-            _canvas.RegisterCallback<PointerDownEvent>(e => { if (e.target == _canvas) { _selectedActor = null; _selectedZone = null; _dialogue = null; Rebuild(); } });
-            scroll.Add(_canvas);
-            body.Add(scroll);
+            BuildViewport();
+            body.Add(_viewport);
             _card = new ScrollView { style = { width = 320, paddingLeft = 12, paddingRight = 12, paddingTop = 10, borderLeftWidth = 1, borderLeftColor = new Color(0, 0, 0, 0.4f) } };
             body.Add(_card);
             root.Add(body);
@@ -209,7 +206,6 @@ namespace NarrativeGraphEditor
             _sliderLabel = new Label { style = { minWidth = 60, alignSelf = Align.Center } };
             steps.Add(_sliderLabel);
             root.Add(steps);
-            _canvas.generateVisualContent += DrawMoves;
 
             if (Compact)
             {
@@ -217,14 +213,6 @@ namespace NarrativeGraphEditor
                 bar.style.display = DisplayStyle.None;
                 steps.style.display = DisplayStyle.None;
                 _card.style.display = DisplayStyle.None;
-                scroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
-                scroll.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-                _canvas.style.transformOrigin = new TransformOrigin(0, 0);
-                scroll.RegisterCallback<GeometryChangedEvent>(e =>
-                {
-                    float k = Mathf.Max(0.05f, Mathf.Min(e.newRect.width / CanvasW, e.newRect.height / CanvasH));
-                    _canvas.style.scale = new Scale(new Vector3(k, k, 1));
-                });
             }
 
             _map = NarrativeWorldMap.Find();
@@ -234,28 +222,155 @@ namespace NarrativeGraphEditor
             Rebuild();
         }
 
+        // ── Vista: desplazar y hacer zoom ───────────────────────────────────
+
+        void BuildViewport()
+        {
+            _viewport = new VisualElement { focusable = true, style = { flexGrow = 1, overflow = Overflow.Hidden } };
+            _canvas = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute, left = 0, top = 0, width = CanvasW, height = CanvasH,
+                    transformOrigin = new TransformOrigin(0, 0),
+                    backgroundColor = new Color(0.11f, 0.12f, 0.14f),
+                },
+            };
+            _canvas.generateVisualContent += DrawMoves;
+            _viewport.Add(_canvas);
+
+            // El botón central se coge antes que nadie (TrickleDown): sobre un muñeco o una zona
+            // también desplaza. El izquierdo solo llega aquí si se pulsa el fondo.
+            _viewport.RegisterCallback<PointerDownEvent>(OnMiddleDown, TrickleDown.TrickleDown);
+            _viewport.RegisterCallback<PointerDownEvent>(OnBackgroundDown);
+            _viewport.RegisterCallback<PointerMoveEvent>(OnPanMove);
+            _viewport.RegisterCallback<PointerUpEvent>(OnPanUp);
+            _viewport.RegisterCallback<PointerCaptureOutEvent>(_ => _panPointer = -1);
+            _viewport.RegisterCallback<WheelEvent>(OnWheel);
+            _viewport.RegisterCallback<KeyDownEvent>(e => { if (e.keyCode == KeyCode.F) { FitView(); e.StopPropagation(); } });
+            _viewport.RegisterCallback<GeometryChangedEvent>(_ => { if (!_viewTouched) FitView(); });
+            RegisterCallback<GeometryChangedEvent>(_ => { if (_dirty && IsShown()) RebuildNow(); });
+
+            var bar = new VisualElement { style = { position = Position.Absolute, right = 6, bottom = 6, flexDirection = FlexDirection.Row, alignItems = Align.Center, backgroundColor = new Color(0.07f, 0.09f, 0.12f, 0.85f), paddingLeft = 2, paddingRight = 2 } };
+            Round(bar, 5);
+            bar.Add(ViewButton("−", StoryText.T("Alejar", "Zoom out"), () => ZoomAround(ViewCenter(), _zoom / 1.25f)));
+            _zoomLabel = new Label { style = { minWidth = 38, unityTextAlign = TextAnchor.MiddleCenter, fontSize = 10, color = new Color(0.73f, 0.77f, 0.83f) } };
+            bar.Add(_zoomLabel);
+            bar.Add(ViewButton("+", StoryText.T("Acercar", "Zoom in"), () => ZoomAround(ViewCenter(), _zoom * 1.25f)));
+            bar.Add(ViewButton("⤢", StoryText.T("Ver todo el mapa (F)", "Show the whole map (F)"), FitView));
+            _viewport.Add(bar);
+            ApplyView();
+        }
+
+        static Button ViewButton(string text, string tooltip, Action action)
+            => new(action) { text = text, tooltip = tooltip, style = { width = 22, height = 20, marginLeft = 0, marginRight = 0, paddingLeft = 0, paddingRight = 0, backgroundColor = Color.clear, borderLeftWidth = 0, borderRightWidth = 0, borderTopWidth = 0, borderBottomWidth = 0 } };
+
+        Vector2 ViewCenter() => _viewport.contentRect.size * 0.5f;
+
+        void OnMiddleDown(PointerDownEvent e)
+        {
+            if (e.button != 2) return;
+            BeginPan(e, background: false);
+            e.StopPropagation();
+        }
+
+        /// Izquierdo sobre el fondo: arrastrar desplaza; un clic sin mover quita la selección.
+        void OnBackgroundDown(PointerDownEvent e)
+        {
+            if (e.button != 0 || _panPointer >= 0) return;
+            BeginPan(e, background: true);
+        }
+
+        void BeginPan(PointerDownEvent e, bool background)
+        {
+            _viewport.Focus();
+            _panPointer = e.pointerId;
+            _panByBackground = background;
+            _panMoved = false;
+            _panFrom = _viewport.WorldToLocal(e.position);
+            _panStartPan = _pan;
+            _viewport.CapturePointer(e.pointerId);
+        }
+
+        void OnPanMove(PointerMoveEvent e)
+        {
+            if (e.pointerId != _panPointer) return;
+            var delta = (Vector2)_viewport.WorldToLocal(e.position) - _panFrom;
+            if (!_panMoved && delta.sqrMagnitude < PanThreshold * PanThreshold) return;
+            _panMoved = true;
+            _viewTouched = true;
+            _pan = _panStartPan + delta;
+            ApplyView();
+            e.StopPropagation();
+        }
+
+        void OnPanUp(PointerUpEvent e)
+        {
+            if (e.pointerId != _panPointer) return;
+            _panPointer = -1;
+            if (_viewport.HasPointerCapture(e.pointerId)) _viewport.ReleasePointer(e.pointerId);
+            if (_panByBackground && !_panMoved && (_selectedActor != null || _dialogue != null))
+            {
+                _selectedActor = null;
+                _dialogue = null;
+                Rebuild();
+            }
+            e.StopPropagation();
+        }
+
+        void OnWheel(WheelEvent e)
+        {
+            ZoomAround(_viewport.WorldToLocal(e.mousePosition), _zoom * (e.delta.y > 0 ? 1f / 1.15f : 1.15f));
+            e.StopPropagation();
+        }
+
+        /// Cambia el zoom dejando quieto el punto del lienzo que hay bajo <paramref name="local"/>.
+        void ZoomAround(Vector2 local, float zoom)
+        {
+            zoom = Mathf.Clamp(zoom, MinZoom, MaxZoom);
+            var onCanvas = (local - _pan) / _zoom;
+            _zoom = zoom;
+            _pan = local - onCanvas * _zoom;
+            _viewTouched = true;
+            ApplyView();
+        }
+
+        /// Encuadra lo que importa: la foto del mundo si la hay; si no, el lienzo entero.
+        void FitView()
+        {
+            if (_viewport == null) return;
+            var size = _viewport.contentRect.size;
+            if (size.x < 2f || size.y < 2f) return;
+            var target = WorldMode ? PictureRect() : new Rect(0, 0, CanvasW, CanvasH);
+            _zoom = Mathf.Clamp(Mathf.Min(size.x / target.width, size.y / target.height) * 0.98f, MinZoom, MaxZoom);
+            _pan = size * 0.5f - target.center * _zoom;
+            _viewTouched = false;
+            ApplyView();
+        }
+
+        void ApplyView()
+        {
+            _canvas.style.translate = new Translate(_pan.x, _pan.y);
+            _canvas.style.scale = new Scale(new Vector2(_zoom, _zoom));
+            var text = Mathf.RoundToInt(_zoom * 100f) + " %";
+            if (_zoomLabel.text != text) _zoomLabel.text = text;
+        }
+
         // ── Dónde está cada uno ─────────────────────────────────────────────
 
         Dictionary<string, Placement> Compute(NarrativeNode step)
         {
             var placements = new Dictionary<string, Placement>();
             if (_map == null) return placements;
-            RecordingStateWriter story = null;
-            var pieces = new Dictionary<string, ActorStateFacts.Entry>();
-            string playerMark = null;
-            if (_graph != null && step != null)
-            {
-                var plan = NarrativeStartPlanner.Plan(_graph, step.guid);
-                story = plan.Story;
-                foreach (var e in ActorStateFacts.From(story)) pieces[e.Actor] = e;
-                var sheet = plan.Sheet;
-                if (sheet != null && sheet.IsReady && !string.IsNullOrEmpty(sheet.positionField))
-                    using (var preview = plan.Build(story: true, points: true, testPlayer: true))
-                        if (preview.Data != null) playerMark = new SerializedObject(preview.Data).FindProperty(sheet.positionField)?.stringValue;
-            }
+            var facts = _graph != null && step != null
+                ? StoryCache.Get($"map:{_graph.GetEntityId()}:{step.guid}", () => StepFacts.Of(_graph, step))
+                : StepFacts.Empty;
+            var story = facts.Story;
+            var pieces = facts.Pieces;
+            var playerMark = facts.PlayerMark;
             string offStage = StoryText.T("fuera de escena", "off stage");
 
-            foreach (var c in _map.characters)
+            foreach (var c in Cast())
             {
                 var p = new Placement();
                 string mark = null;
@@ -303,6 +418,30 @@ namespace NarrativeGraphEditor
             return placements;
         }
 
+        /// Lo que la historia deja hecho hasta un paso (caro: rehace la historia y prepara el
+        /// arranque). Se guarda en StoryCache hasta que cambie un grafo; el mapa (zonas,
+        /// personajes) se aplica encima en cada dibujo, así que editarlo no lo invalida.
+        sealed class StepFacts
+        {
+            public static readonly StepFacts Empty = new();
+            public RecordingStateWriter Story;
+            public readonly Dictionary<string, ActorStateFacts.Entry> Pieces = new();
+            public string PlayerMark;
+
+            public static StepFacts Of(NarrativeGraph graph, NarrativeNode step)
+            {
+                var facts = new StepFacts();
+                var plan = NarrativeStartPlanner.Plan(graph, step.guid);
+                facts.Story = plan.Story;
+                foreach (var e in ActorStateFacts.From(plan.Story)) facts.Pieces[e.Actor] = e;
+                var sheet = plan.Sheet;
+                if (sheet != null && sheet.IsReady && !string.IsNullOrEmpty(sheet.positionField))
+                    using (var preview = plan.Build(story: true, points: true, testPlayer: true))
+                        if (preview.Data != null) facts.PlayerMark = new SerializedObject(preview.Data).FindProperty(sheet.positionField)?.stringValue;
+                return facts;
+            }
+        }
+
         void SetWhy(Placement p, NarrativeGraph graph, string guid)
         {
             var node = graph != null && !string.IsNullOrEmpty(guid) ? graph.FindNode(guid) : null;
@@ -314,8 +453,32 @@ namespace NarrativeGraphEditor
 
         // ── Dibujo ──────────────────────────────────────────────────────────
 
+        /// Pide redibujar. Varias peticiones seguidas (cambio de paso, deshacer, retratos) se juntan
+        /// en una sola al siguiente fotograma, y si el mapa está oculto espera a que se vea.
         void Rebuild()
         {
+            _dirty = true;
+            if (_rebuildQueued || panel == null) return;
+            _rebuildQueued = true;
+            schedule.Execute(() =>
+            {
+                _rebuildQueued = false;
+                if (_dirty && IsShown()) RebuildNow();
+            });
+        }
+
+        /// true si el mapa se ve: ni él ni ningún contenedor suyo está oculto.
+        bool IsShown()
+        {
+            for (VisualElement e = this; e != null; e = e.parent)
+                if (e.resolvedStyle.display == DisplayStyle.None) return false;
+            return panel != null;
+        }
+
+        void RebuildNow()
+        {
+            using var medida = StoryTiming.Measure(StoryText.T("Mapa: dibujar", "Map: draw"));
+            _dirty = false;
             var guid = _step != null ? _step.guid : null;
             if (guid != _stepGuid) { _stepGuid = guid; StepChanged?.Invoke(_graph, guid); }
             if (_canvas == null) return;
@@ -327,7 +490,7 @@ namespace NarrativeGraphEditor
             if (_map == null)
             {
                 _card.Add(new Label(StoryText.T("Aún no hay mapa de la historia.", "There is no story map yet.")) { style = { whiteSpace = WhiteSpace.Normal } });
-                var create = new Button(() => { _map = NarrativeWorldMap.Create(); _editToggle.value = true; }) { text = StoryText.T("Crear el mapa", "Create the map") };
+                var create = new Button(() => { _map = NarrativeWorldMap.Create(); Rebuild(); }) { text = StoryText.T("Crear el mapa", "Create the map") };
                 _card.Add(create);
                 return;
             }
@@ -344,17 +507,18 @@ namespace NarrativeGraphEditor
             _canvas.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Contain);
             _canvas.style.backgroundColor = picture ? new Color(0.04f, 0.13f, 0.24f) : new Color(0.11f, 0.12f, 0.14f);
             foreach (var zone in _map.zones) _canvas.Add(ZoneElement(zone));
-            _canvas.Add(Tray(StoryText.T("No están en escena (suelta aquí a quien se va)", "Not on stage (drop here whoever leaves)"), 800));
-            if (homeless > 0) _canvas.Add(Tray(StoryText.T("Sin zona: ponles su zona de siempre (Editar mapa, arrástralos)", "No zone: set their usual zone (Edit map, drag them)"), 720));
-            foreach (var c in _map.characters)
+            _canvas.Add(Tray(StoryText.T("No están en escena", "Not on stage"), 800));
+            if (homeless > 0) _canvas.Add(Tray(StoryText.T("Sin sitio en el mapa (la historia no dice dónde están)", "No place on the map (the story does not say where they are)"), 720));
+            foreach (var c in Cast())
                 if (_positions.TryGetValue(c.actorId, out var pos)) _canvas.Add(Token(c, _placements[c.actorId], pos));
             _canvas.MarkDirtyRepaint();
+            if (!_viewTouched) FitView();
 
-            if (_edit && _selectedZone != null && _map.ZoneById(_selectedZone) is { } z) ZoneCard(z);
-            else if (_selectedActor != null && _map.CharacterOf(_selectedActor) is { } ch)
+            // La compacta no enseña la ficha: no se monta.
+            if (Compact) return;
+            if (_selectedActor != null && Cast().FirstOrDefault(x => x.actorId == _selectedActor) is { } ch)
             {
-                if (_edit) CharacterEditCard(ch);
-                else if (_dialogue != null) DialogueCard(ch);
+                if (_dialogue != null) DialogueCard(ch);
                 else CharacterCard(ch);
             }
             else HelpCard();
@@ -367,7 +531,7 @@ namespace NarrativeGraphEditor
             positions.Clear();
             var byZone = new Dictionary<string, int>();
             away = homeless = 0;
-            foreach (var c in _map.characters)
+            foreach (var c in Cast())
             {
                 if (_onlyMain && !c.main && c.actorId != _selectedActor) continue;
                 if (!placements.TryGetValue(c.actorId, out var p)) continue;
@@ -396,9 +560,9 @@ namespace NarrativeGraphEditor
         /// Flechas de quien ha cambiado de sitio respecto al paso anterior.
         void DrawMoves(MeshGenerationContext ctx)
         {
-            if (_edit || _map == null) return;
+            if (_map == null) return;
             var p2 = ctx.painter2D;
-            foreach (var c in _map.characters)
+            foreach (var c in Cast())
             {
                 if (!_positions.TryGetValue(c.actorId, out var now) || !_previousPositions.TryGetValue(c.actorId, out var before)) continue;
                 if (!_placements.TryGetValue(c.actorId, out var a) || !_previous.TryGetValue(c.actorId, out var b)) continue;
@@ -428,7 +592,7 @@ namespace NarrativeGraphEditor
             var el = new VisualElement();
             var r = zone.rect;
             // Sobre la vista del mundo, el nombre de la zona va en medio de sus marcas: sin colocarla a mano.
-            if (WorldMode && !_edit)
+            if (WorldMode)
             {
                 var pts = zone.marks.Select(m => NarrativeWorldPositions.Mark(m, out var w) ? (Vector2?)ToCanvas(w) : null).Where(v => v.HasValue).Select(v => v.Value).ToList();
                 if (pts.Count > 0)
@@ -439,12 +603,11 @@ namespace NarrativeGraphEditor
             }
             el.style.position = Position.Absolute;
             el.style.left = r.x; el.style.top = r.y; el.style.width = r.width; el.style.height = r.height;
-            // Sobre una vista del mundo, la zona es solo su nombre (como en un mapa de juego); su
-            // contorno se ve al editar el mapa.
-            bool picture = _map.background != null && !_edit;
+            // Sobre una vista del mundo, la zona es solo su nombre (como en un mapa de juego).
+            bool picture = _map.background != null;
             var fill = zone.color; fill.a = picture ? 0f : 0.16f;
             el.style.backgroundColor = fill;
-            SetBorder(el, picture ? Color.clear : zone.color, _edit && _selectedZone == zone.id ? 3 : picture ? 0 : 2);
+            SetBorder(el, picture ? Color.clear : zone.color, picture ? 0 : 2);
             float radius = zone.round ? Mathf.Min(r.width, r.height) * 0.5f : 12f;
             el.style.borderTopLeftRadius = el.style.borderTopRightRadius = el.style.borderBottomLeftRadius = el.style.borderBottomRightRadius = radius;
             var name = new Label(zone.name) { pickingMode = PickingMode.Ignore };
@@ -458,20 +621,7 @@ namespace NarrativeGraphEditor
                 name.style.textShadow = new TextShadow { offset = new Vector2(1, 1), blurRadius = 3, color = new Color(0, 0, 0, 0.9f) };
             }
             el.Add(name);
-            if (_edit)
-            {
-                foreach (var m in zone.marks)
-                {
-                    var chip = new Label(m) { pickingMode = PickingMode.Ignore };
-                    chip.style.fontSize = 9; chip.style.color = new Color(1, 1, 1, 0.5f); chip.style.unityTextAlign = TextAnchor.MiddleCenter;
-                    el.Add(chip);
-                }
-                var handle = new VisualElement { style = { position = Position.Absolute, right = 2, bottom = 2, width = 12, height = 12, backgroundColor = zone.color } };
-                el.Add(handle);
-                void Apply() { el.style.left = zone.rect.x; el.style.top = zone.rect.y; el.style.width = zone.rect.width; el.style.height = zone.rect.height; }
-                Draggable(handle, d => { zone.rect.width = Mathf.Max(80, zone.rect.width + d.x); zone.rect.height = Mathf.Max(60, zone.rect.height + d.y); Apply(); }, null);
-                Draggable(el, d => { zone.rect.x = Mathf.Max(0, zone.rect.x + d.x); zone.rect.y = Mathf.Max(0, zone.rect.y + d.y); Apply(); }, () => { _selectedZone = zone.id; _selectedActor = null; });
-            }
+            el.pickingMode = PickingMode.Ignore;
             return el;
         }
 
@@ -504,64 +654,14 @@ namespace NarrativeGraphEditor
             Round(label, 4);
             el.Add(label);
 
-            if (Compact)
-                el.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) { ActorClicked?.Invoke(c.actorId); e.StopPropagation(); } });
-            else if (_edit)
-                Draggable(el, d => { el.style.left = el.resolvedStyle.left + d.x; el.style.top = el.resolvedStyle.top + d.y; },
-                          () => { _selectedActor = c.actorId; _selectedZone = null; },
-                          end => DropCharacter(c, end));
-            else
-                Draggable(el, d => { el.style.left = el.resolvedStyle.left + d.x; el.style.top = el.resolvedStyle.top + d.y; },
-                          () => { _selectedActor = c.actorId; _dialogue = null; },
-                          end => MoveInStory(c, p, end));
-            return el;
-        }
-
-        void DropCharacter(NarrativeWorldMap.Character c, Vector2 at)
-        {
-            var zone = _map.zones.LastOrDefault(z => z.rect.Contains(at));
-            if (zone == null) return;
-            Undo.RecordObject(_map, StoryText.T("Zona de siempre", "Usual zone"));
-            c.homeZone = zone.id;
-            EditorUtility.SetDirty(_map);
-        }
-
-        /// Arrastrar con el ratón: <paramref name="move"/> recibe cuánto se ha movido; al soltar
-        /// se guarda el mapa. <paramref name="click"/> se llama al pulsar.
-        void Draggable(VisualElement el, Action<Vector2> move, Action click, Action<Vector2> drop = null)
-        {
-            bool dragging = false;
-            Vector2 last = default, start = default;
             el.RegisterCallback<PointerDownEvent>(e =>
             {
                 if (e.button != 0) return;
-                Undo.RecordObject(_map, StoryText.T("Mover en el mapa", "Move on the map"));
-                dragging = true;
-                last = start = e.position;
-                el.CapturePointer(e.pointerId);
-                click?.Invoke();
+                if (Compact) ActorClicked?.Invoke(c.actorId);
+                else { _selectedActor = c.actorId; _dialogue = null; Rebuild(); }
                 e.StopPropagation();
             });
-            el.RegisterCallback<PointerMoveEvent>(e =>
-            {
-                if (!dragging) return;
-                var d = (Vector2)e.position - last;
-                last = e.position;
-                move(d);
-                e.StopPropagation();
-            });
-            el.RegisterCallback<PointerUpEvent>(e =>
-            {
-                if (!dragging) return;
-                dragging = false;
-                el.ReleasePointer(e.pointerId);
-                // Un clic sin mover no suelta nada (solo elige).
-                if (((Vector2)e.position - start).sqrMagnitude > 36f) drop?.Invoke(_canvas.WorldToLocal(e.position));
-                EditorUtility.SetDirty(_map);
-                AssetDatabase.SaveAssetIfDirty(_map);
-                Rebuild();
-                e.StopPropagation();
-            });
+            return el;
         }
 
         // ── Fichas ──────────────────────────────────────────────────────────
@@ -569,11 +669,8 @@ namespace NarrativeGraphEditor
         void HelpCard()
         {
             Title(StoryText.T("Mapa de la historia", "Story map"), null);
-            Muted(_edit
-                ? StoryText.T("Arrastra las zonas para colocarlas (la esquina cambia el tamaño) y pulsa una para ponerle nombre, color y marcas. Arrastra un muñeco a una zona para que sea su sitio de siempre.",
-                              "Drag zones to place them (the corner resizes) and click one to set its name, colour and marks. Drag a character onto a zone to make it their usual place.")
-                : StoryText.T("Elige un paso en el editor de la historia: los muñecos se colocan donde están en ese momento. Pulsa uno para ver lo suyo. «…» = tiene algo que decir.",
-                              "Pick a step in the story editor: characters move to where they are at that moment. Click one to see their things. “…” = has something to say."));
+            Muted(StoryText.T("Elige un paso en el editor de la historia: los muñecos se colocan donde los deja la historia en ese momento. Pulsa uno para ver lo suyo. «…» = tiene algo que decir. El mapa solo enseña lo que dice el grafo: para cambiarlo, abre el paso.",
+                              "Pick a step in the story editor: characters move to where the story leaves them at that moment. Click one to see their things. “…” = has something to say. The map only shows what the graph says: to change it, open the step."));
         }
 
         void CharacterCard(NarrativeWorldMap.Character c)
@@ -583,6 +680,7 @@ namespace NarrativeGraphEditor
             Section(StoryText.T("Dónde está", "Where"));
             Muted(p.Where);
             if (p.Why != null) Link(StoryText.T("Lo dejó ", "Set by ") + p.Why, p.WhyGraph, p.WhyGuid);
+            else Muted(StoryText.T("Ningún paso lo dice: está en su sitio de siempre.", "No step says so: they are in their usual place."));
 
             var waits = Ahead<WaitNpcInteractionNode>(n => n.npcId == c.actorId, 1).FirstOrDefault();
             if (waits != null)
@@ -598,6 +696,13 @@ namespace NarrativeGraphEditor
             {
                 Muted(StoryText.T($"«{NarrativeStartPlanner.Title(p.Piece)}» (una por charla, en orden)", $"“{NarrativeStartPlanner.Title(p.Piece)}” (one per chat, in order)"));
                 foreach (var l in lines) DialogueButton(l);
+            }
+
+            var agenda = Ahead<ActorStateNode>(n => n.actorId == c.actorId && n != _step, 4).ToList();
+            if (agenda.Count > 0)
+            {
+                Section(StoryText.T("Lo que le espera", "What lies ahead"));
+                foreach (var n in agenda) Link(Num(n) + AgendaLine(n), _graph, n.guid);
             }
 
             var next = Ahead<PlayDialogueNode>(n => n.npcId == c.actorId && n.dialogue != null, 3).ToList();
@@ -647,174 +752,6 @@ namespace NarrativeGraphEditor
             var select = new Button(() => { Selection.activeObject = _dialogue; EditorGUIUtility.PingObject(_dialogue); }) { text = StoryText.T("Abrir el diálogo", "Open the dialogue") };
             select.style.marginTop = 10;
             _card.Add(select);
-        }
-
-        void ZoneCard(NarrativeWorldMap.Zone z)
-        {
-            Title(StoryText.T("Zona", "Zone"), z.color);
-            var so = new SerializedObject(_map);
-            int i = _map.zones.IndexOf(z);
-            var prop = so.FindProperty("zones").GetArrayElementAtIndex(i);
-            foreach (var f in new[] { "name", "color", "round" })
-            {
-                var pf = new PropertyField(prop.FindPropertyRelative(f));
-                pf.Bind(so);
-                pf.RegisterValueChangeCallback(_ => { EditorUtility.SetDirty(_map); RebuildCanvasOnly(); });
-                _card.Add(pf);
-            }
-            Section(StoryText.T("Marcas del mundo en esta zona", "World marks in this zone"));
-            foreach (var m in z.marks.ToList())
-            {
-                var row = new VisualElement { style = { flexDirection = FlexDirection.Row, justifyContent = Justify.SpaceBetween } };
-                row.Add(new Label(m));
-                row.Add(new Button(() => { Undo.RecordObject(_map, "Marca"); z.marks.Remove(m); EditorUtility.SetDirty(_map); Rebuild(); }) { text = "×" });
-                _card.Add(row);
-            }
-            var used = new HashSet<string>(_map.zones.SelectMany(x => x.marks));
-            var free = UsedMarks().Concat(NarrativeProjectIndex.Anchors).Where(a => !used.Contains(a)).Distinct().ToList();
-            _card.Add(new Button(() =>
-            {
-                var menu = new GenericMenu();
-                foreach (var mark in free.Take(400)) { var a = mark; menu.AddItem(new GUIContent(a.Replace('/', '∕')), false, () => { Undo.RecordObject(_map, "Marca"); z.marks.Add(a); EditorUtility.SetDirty(_map); Rebuild(); }); }
-                menu.ShowAsContext();
-            }) { text = "+ " + StoryText.T("Marca", "Mark") });
-            var del = new Button(() => { Undo.RecordObject(_map, "Quitar zona"); _map.zones.Remove(z); _selectedZone = null; EditorUtility.SetDirty(_map); Rebuild(); }) { text = StoryText.T("Quitar la zona", "Remove the zone") };
-            del.style.marginTop = 14;
-            _card.Add(del);
-        }
-
-        void CharacterEditCard(NarrativeWorldMap.Character c)
-        {
-            Title(c.name, c.color);
-            var so = new SerializedObject(_map);
-            var prop = so.FindProperty("characters").GetArrayElementAtIndex(_map.characters.IndexOf(c));
-            foreach (var f in new[] { "name", "color", "main" })
-            {
-                var pf = new PropertyField(prop.FindPropertyRelative(f));
-                pf.Bind(so);
-                pf.RegisterValueChangeCallback(_ => { EditorUtility.SetDirty(_map); RebuildCanvasOnly(); });
-                _card.Add(pf);
-            }
-            Muted(StoryText.T($"Id: {c.actorId}. Arrástralo a una zona para que sea su sitio de siempre.", $"Id: {c.actorId}. Drag it onto a zone to make it their usual place."));
-            var del = new Button(() => { Undo.RecordObject(_map, "Quitar personaje"); _map.characters.Remove(c); _selectedActor = null; EditorUtility.SetDirty(_map); Rebuild(); }) { text = StoryText.T("Quitar del mapa", "Remove from the map") };
-            del.style.marginTop = 14;
-            _card.Add(del);
-        }
-
-        // ── Mover en la historia ────────────────────────────────────────────
-
-        /// Suelta un muñeco en el paso elegido: escribe en el grafo que desde aquí está en esa zona
-        /// (o que no está, si se suelta en la bandeja de abajo).
-        void MoveInStory(NarrativeWorldMap.Character c, Placement from, Vector2 at)
-        {
-            if (_graph == null || _step == null) { Status(StoryText.T("Elige antes un paso en el editor de la historia.", "Pick a step in the story editor first.")); return; }
-            bool toAway = at.y >= 780;
-            if (!toAway && WorldMode)
-            {
-                // Sobre la vista del mundo: las marcas que hay cerca de donde se suelta.
-                var near = MarksNear(at, 90f);
-                if (near.Count == 0) { Status(StoryText.T("No hay ninguna marca del mundo cerca de ahí.", "There is no world mark near there.")); return; }
-                if (near.Count == 1) { WriteMove(c, PlaceName(near[0]), near[0]); return; }
-                var marks = new GenericMenu();
-                foreach (var m in near) { var mark = m; marks.AddItem(new GUIContent(mark), false, () => WriteMove(c, PlaceName(mark), mark)); }
-                marks.ShowAsContext();
-                return;
-            }
-            var zone = toAway ? null : _map.zones.LastOrDefault(z => z.rect.Contains(at));
-            if (!toAway && (zone == null || zone == from.Zone && !from.Away)) return;
-            if (toAway && from.Away) return;
-            if (toAway && c.actorId == "Player") { Status(StoryText.T("El jugador siempre está en escena.", "The player is always on stage.")); return; }
-            if (zone != null && zone.marks.Count == 0)
-            {
-                Status(StoryText.T($"«{zone.name}» no tiene marcas del mundo: añádele una con «Editar mapa».", $"“{zone.name}” has no world marks: add one with “Edit map”."));
-                return;
-            }
-            if (zone == null || zone.marks.Count == 1) { WriteMove(c, zone?.name, zone?.marks[0]); return; }
-            var menu = new GenericMenu();
-            foreach (var m in zone.marks) { var mark = m; menu.AddItem(new GUIContent(mark), false, () => WriteMove(c, zone.name, mark)); }
-            menu.ShowAsContext();
-        }
-
-        void WriteMove(NarrativeWorldMap.Character c, string place, string mark)
-        {
-            var edit = StoryGraphWindow.EditingOf(_graph);
-            if (edit == null) { Status(StoryText.T("Abre este grafo en el editor de la historia para poder cambiarlo.", "Open this graph in the story editor to change it.")); return; }
-            string where = mark != null ? place : StoryText.T("fuera de escena", "off stage");
-            // Crear, enganchar y rellenar la pieza es un solo paso de deshacer.
-            Undo.IncrementCurrentGroup();
-            int group = Undo.GetCurrentGroup();
-            if (c.actorId == "Player") MovePlayer(edit, c, place, mark);
-            else MoveCharacter(edit, c, place, mark);
-            Undo.CollapseUndoOperations(group);
-            Undo.SetCurrentGroupName(StoryText.T($"Mover a {c.name}", $"Move {c.name}"));
-            Status(StoryText.T($"Desde {Num(_step)}: {c.name} → {where}. Se puede deshacer.", $"From {Num(_step)}: {c.name} → {where}. Can be undone."));
-            StoryGraphWindow.SelectStep(_graph, _step.guid);
-            Rebuild();
-        }
-
-        /// El paso justo antes del elegido, si es una pieza que se puede reutilizar.
-        T PieceRightBefore<T>(Func<T, bool> match) where T : NarrativeNode
-        {
-            if (_step is T own && match(own)) return own;
-            return _graph.nodes.OfType<T>().FirstOrDefault(n => match(n) && n.outputs != null && n.outputs.Count == 1 && n.outputs[0] == _step.guid);
-        }
-
-        void MoveCharacter(StoryGraphEditing edit, NarrativeWorldMap.Character c, string place, string mark)
-        {
-            var piece = PieceRightBefore<ActorStateNode>(n => n.actorId == c.actorId && n.layer != ActorStateNode.Layer.BackToUsual);
-            string title = mark != null ? StoryText.T($"{c.name} pasa a {place}", $"{c.name} goes to {place}") : StoryText.T($"{c.name} se va", $"{c.name} leaves");
-            if (piece == null)
-            {
-                piece = (ActorStateNode)edit.CreateStep(typeof(ActorStateNode), _step.position - new Vector2(StoryLayout.CardWidth + 60f, -40f), _step.section);
-                if (piece == null) return;
-                // Lo que ya decía si le hablabas, se mantiene.
-                if (_placements.TryGetValue(c.actorId, out var p) && p.Piece?.lines != null) piece.lines = new List<NarrativeDialogueAsset>(p.Piece.lines);
-                InsertAt(edit, piece);
-            }
-            var target = piece;
-            edit.Modify(StoryText.T("Mover personaje", "Move character"), () =>
-            {
-                target.actorId = c.actorId;
-                target.layer = ActorStateNode.Layer.FromHere;
-                target.presence = mark != null ? ActorPresence.AtMark : ActorPresence.Away;
-                target.markId = mark ?? string.Empty;
-                target.displayTitle = title;
-            });
-        }
-
-        void MovePlayer(StoryGraphEditing edit, NarrativeWorldMap.Character c, string place, string mark)
-        {
-            var sheet = NarrativePlayerSheet.Find();
-            if (sheet == null || sheet.DataType == null || string.IsNullOrEmpty(sheet.positionField))
-            {
-                Status(StoryText.T("Falta la ficha del jugador o su campo de posición (⚙ Ajustes).", "The player sheet or its position field is missing (⚙ Settings)."));
-                return;
-            }
-            var point = PieceRightBefore<CheckpointNode>(_ => true);
-            if (point == null)
-            {
-                point = (CheckpointNode)edit.CreateStep(typeof(CheckpointNode), _step.position - new Vector2(StoryLayout.CardWidth + 60f, -40f), _step.section);
-                if (point == null) return;
-                point.checkpointId = "PUNTO_" + point.guid.Substring(0, 6).ToUpperInvariant();
-                InsertAt(edit, point);
-            }
-            var target = point;
-            edit.Modify(StoryText.T("Mover al jugador", "Move the player"), () =>
-            {
-                target.player ??= new NarrativePlayerValues();
-                NarrativePlayerValuesEditor.SetValue(target.player, sheet.DataType, sheet.positionField, prop => prop.stringValue = mark);
-                if (string.IsNullOrEmpty(target.displayTitle) || target.displayTitle.StartsWith(c.name + " aparece"))
-                    target.displayTitle = StoryText.T($"{c.name} aparece en {place}", $"{c.name} appears at {place}");
-            });
-        }
-
-        /// La pieza nueva va justo antes del paso elegido («al llegar aquí, ya está así»); si el
-        /// paso es la entrada del grafo, justo después.
-        void InsertAt(StoryGraphEditing edit, NarrativeNode piece)
-        {
-            if (_step.IsGraphEntry && _step.outputs != null && _step.outputs.Count == 1 && !_step.HasNamedOutputs)
-                edit.InsertBetween(_step, 0, piece);
-            else edit.InsertBefore(_step, piece);
         }
 
         void Status(string text)
@@ -894,63 +831,48 @@ namespace NarrativeGraphEditor
         {
             if (_map == null) _map = NarrativeWorldMap.Create();
             var tex = NarrativeWorldMapBaker.TopDown(_map);
-            Status(tex != null ? StoryText.T("Vista desde arriba hecha: coloca las zonas encima con «Editar mapa».", "Top-down view done: place the zones over it with “Edit map”.")
+            Status(tex != null ? StoryText.T("Vista desde arriba hecha.", "Top-down view done.")
                                : StoryText.T("No hay nada en la escena abierta que fotografiar.", "There is nothing in the open scene to photograph."));
-            _editToggle.value = true;
             Rebuild();
         }
-
-        void RebuildCanvasOnly() => schedule.Execute(Rebuild).StartingIn(150);
 
         // ── Acciones ────────────────────────────────────────────────────────
 
-        void AddZone()
-        {
-            if (_map == null) _map = NarrativeWorldMap.Create();
-            Undo.RecordObject(_map, StoryText.T("Nueva zona", "New zone"));
-            var z = new NarrativeWorldMap.Zone { name = StoryText.T("Zona nueva", "New zone"), rect = new Rect(60 + _map.zones.Count * 20, 60 + _map.zones.Count * 20, 220, 140) };
-            _map.zones.Add(z);
-            EditorUtility.SetDirty(_map);
-            _editToggle.value = true;
-            _selectedZone = z.id;
-            Rebuild();
-        }
-
-        void ShowCharacterMenu()
-        {
-            if (_map == null) _map = NarrativeWorldMap.Create();
-            var have = new HashSet<string>(_map.characters.Select(c => c.actorId));
-            var ids = NarrativeProjectIndex.Actors.Keys.Concat(UsedActors()).Where(id => !string.IsNullOrEmpty(id) && !have.Contains(id)).Distinct().OrderBy(x => x).ToList();
-            var menu = new GenericMenu();
-            foreach (var actor in ids)
+        /// Quién sale en el mapa: los personajes del mapa (con su color y su zona de siempre) y,
+        /// detrás, cualquier otro al que la historia diga dónde está o qué dice, con un color fijo
+        /// sacado de su id. Así nadie tiene que darlos de alta a mano.
+        List<NarrativeWorldMap.Character> Cast()
+            => StoryCache.Get("map:cast", () =>
             {
-                var id = actor;
-                menu.AddItem(new GUIContent(id), false, () =>
+                var list = new List<NarrativeWorldMap.Character>(_map != null ? _map.characters : new List<NarrativeWorldMap.Character>());
+                var have = new HashSet<string>(list.Select(c => c.actorId));
+                var ids = NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null).SelectMany(g => g.nodes)
+                    .Select(n => n switch { ActorStateNode a => a.actorId, PlaceActorNode pl => pl.actorId, _ => null })
+                    .Where(id => !string.IsNullOrEmpty(id) && have.Add(id)).OrderBy(id => id);
+                foreach (var id in ids)
                 {
-                    Undo.RecordObject(_map, StoryText.T("Nuevo personaje", "New character"));
                     var name = NarrativeProjectIndex.FindActor(id)?.displayName;
-                    _map.characters.Add(new NarrativeWorldMap.Character
+                    float hue = (id.GetHashCode() & 0x7fffffff) % 1000 / 1000f;
+                    list.Add(new NarrativeWorldMap.Character
                     {
                         actorId = id,
                         name = string.IsNullOrEmpty(name) ? (id.StartsWith("NPC_") ? id.Substring(4) : id) : name,
-                        color = Color.HSVToRGB(UnityEngine.Random.value, 0.55f, 0.85f),
+                        color = Color.HSVToRGB(hue, 0.55f, 0.85f),
                     });
-                    EditorUtility.SetDirty(_map);
-                    _selectedActor = id;
-                    Rebuild();
-                });
-            }
-            menu.ShowAsContext();
+                }
+                return list;
+            });
+
+        /// Una pieza «Personaje desde aquí» en una línea: dónde pasa a estar y si dice algo.
+        static string AgendaLine(ActorStateNode n)
+        {
+            string where = n.layer == ActorStateNode.Layer.BackToUsual ? StoryText.T("vuelve a lo de siempre", "back to usual")
+                : n.presence == ActorPresence.Away ? StoryText.T("se va", "leaves")
+                : n.presence == ActorPresence.AtMark ? StoryText.T($"pasa a {n.markId}", $"moves to {n.markId}")
+                : StoryText.T("sigue donde está", "stays where they are");
+            int lines = n.lines?.Count(l => l != null) ?? 0;
+            return lines > 0 ? StoryText.T($"{where} · {lines} frase(s)", $"{where} · {lines} line(s)") : where;
         }
-
-        IEnumerable<string> UsedActors()
-            => NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null).SelectMany(g => g.nodes)
-                .Select(n => n switch { ActorStateNode a => a.actorId, PlaceActorNode p => p.actorId, WaitNpcInteractionNode w => w.npcId, PlayDialogueNode d => d.npcId, _ => null });
-
-        IEnumerable<string> UsedMarks()
-            => NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null).SelectMany(g => g.nodes)
-                .Select(n => n switch { ActorStateNode a => a.markId, PlaceActorNode p => p.markId, _ => null })
-                .Where(m => !string.IsNullOrEmpty(m));
 
         /// Pasos de este capítulo que vienen después del elegido y cumplen la condición, por orden de cercanía.
         IEnumerable<T> Ahead<T>(Func<T, bool> match, int max) where T : NarrativeNode

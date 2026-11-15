@@ -49,7 +49,7 @@ public static class ExportarAlMinijuego
 
     static string Destino => Path.GetFullPath(Path.Combine(Application.dataPath, "../../SenderoMinijuego/Paquetes/DelJuego.unitypackage"));
 
-    [MenuItem("El Sendero/Minijuego web/Exportar personajes y Sendero")]
+    [MenuItem("El Sendero/Proyecto/Minijuego web: exportar personajes y Sendero")]
     static void Exportar()
     {
         var informe = new StringBuilder();

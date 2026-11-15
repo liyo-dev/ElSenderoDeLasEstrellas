@@ -185,7 +185,7 @@ public class PlayerPickupCollector : MonoBehaviour
         // así que este pickup funciona igual sin importar el tipo de item configurado.
         inventory.Add(effect.item, quantity);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PlayerPickupCollector] ✅ Pickup procesado: {effect.item.displayName} x{quantity}");
+        Debug.Log($"[PlayerPickupCollector] Pickup procesado: {effect.item.displayName} x{quantity}");
 #endif
 
         return true;
@@ -218,7 +218,7 @@ public class PlayerPickupCollector : MonoBehaviour
         if (unlocked)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PlayerPickupCollector] ✅ Item de equipo '{effect.item.displayName}' desbloqueado y añadido al wardrobe.");
+            Debug.Log($"[PlayerPickupCollector] Item de equipo '{effect.item.displayName}' desbloqueado y añadido al wardrobe.");
             #endif
         }
         else if (logWarnings)

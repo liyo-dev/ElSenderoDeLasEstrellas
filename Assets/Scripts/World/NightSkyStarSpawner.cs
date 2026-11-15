@@ -285,7 +285,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     private readonly List<float> _twinklePhase = new List<float>();
     private readonly List<float> _twinkleSpeed = new List<float>();
     private readonly List<Color> _starTint = new List<Color>();
-    // Parpadeo POR ESTRELLA (30 ago 2026) — antes twinkleIntensity era un único valor global aplicado
+    // Parpadeo POR ESTRELLA — antes twinkleIntensity era un único valor global aplicado
     // a todas las estrellas por igual; la estrella protagonista (ver SpawnHeroStar) necesita su propio
     // heroStarTwinkleIntensity, mucho más bajo, para leerse como un punto estable. El polvo normal
     // sigue usando el twinkleIntensity global de siempre (ver SpawnStar).
@@ -294,7 +294,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     private Material _starMaterial;
     // Malla de "estrella" compartida por TODAS las instancias vía MeshFilter.sharedMesh — generada
     // UNA sola vez en Awake (ver GenerateStarMesh) y nunca duplicada por estrella, igual que
-    // _starMaterial. Ver comentario de clase (25 ago 2026).
+    // _starMaterial. Ver comentario de clase.
     private Mesh _starMesh;
     private Coroutine _fadeCoroutine;
     private float _currentAlpha;
@@ -489,7 +489,7 @@ public class NightSkyStarSpawner : MonoBehaviour
             _root.position = _followTransform.position;
 
         // Radio real de esta construcción — anclado al farClipPlane de la cámara activa, ver
-        // ComputeActiveDomeRadius y el comentario de clase (24 ago 2026).
+        // ComputeActiveDomeRadius y el comentario de clase.
         _activeDomeRadius = ComputeActiveDomeRadius();
 
         // Reparto en la mitad superior de una esfera (espiral de Fibonacci, ángulo dorado) con un
@@ -545,7 +545,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     /// <summary>
     /// Radio real del domo: SIEMPRE anclado al <c>farClipPlane</c> de la cámara activa (con
     /// <see cref="FarClipMarginFactor"/> como único margen, mínimo, solo por precisión numérica) —
-    /// ver comentario de clase (24 ago 2026) para el razonamiento completo de por qué esto garantiza
+    /// ver comentario de clase para el razonamiento completo de por qué esto garantiza
     /// la oclusión correcta contra montañas/terreno sin adivinar ninguna distancia ni depender de que
     /// el fondo tenga collider. Solo si no hay ninguna cámara activa (caso raro) se usa
     /// <see cref="domeRadius"/> como último recurso.
@@ -616,7 +616,7 @@ public class NightSkyStarSpawner : MonoBehaviour
 
         // Sorteo sesgado hacia el extremo pequeño (ver sizeBiasExponent): la mayoría de estrellas
         // quedan como puntos discretos y solo unas pocas llegan cerca del máximo del rango.
-        // pixelSizeOverride (30 ago 2026) permite a SpawnHeroStar pedir un tamaño fijo muy por encima
+        // pixelSizeOverride permite a SpawnHeroStar pedir un tamaño fijo muy por encima
         // de este rango, en vez de participar en el sorteo del polvo normal.
         float t = Mathf.Pow(UnityEngine.Random.value, Mathf.Max(0.01f, sizeBiasExponent));
         float pixelSize = pixelSizeOverride ?? Mathf.Lerp(starScreenSizePixelsRange.x, starScreenSizePixelsRange.y, t);
@@ -632,7 +632,7 @@ public class NightSkyStarSpawner : MonoBehaviour
         renderer.sharedMaterial = _starMaterial;
 
         _renderers.Add(renderer);
-        // brightnessOverride (30 ago 2026): -1 = comportamiento de siempre (polvo normal, brillo
+        // brightnessOverride: -1 = comportamiento de siempre (polvo normal, brillo
         // sorteado con variación); >= 0 = valor fijo (la estrella protagonista siempre a brillo
         // máximo, sin la variación aleatoria del polvo).
         _rendererBrightness.Add(brightnessOverride >= 0f ? brightnessOverride : 1f - UnityEngine.Random.value * brightnessVariance);

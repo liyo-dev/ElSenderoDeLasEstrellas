@@ -41,6 +41,7 @@ public static partial class VestidoDelMundo
         foreach (var (nombre, centro, radio) in TemplosDeLasPruebas)
             Templo(o, Grupo(grupo, "Templos"), nombre, centro, radio);
         MiradorEnLaCumbre(o, Grupo(grupo, "Mirador de la cumbre"));
+        MontanaDeRisco(o);
     }
 
     // ── Piezas a cota exacta ─────────────────────────────────────────────────────────────────

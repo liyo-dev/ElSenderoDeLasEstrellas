@@ -108,7 +108,7 @@ public static partial class ChuchelandiaBuilder
             return atuendo;
         }
 
-        AsegurarCarpeta(CarpetaAtuendos);
+        Kits.EditorTools.AssetFolders.Ensure(CarpetaAtuendos);
         atuendo = ScriptableObject.CreateInstance<AtuendoDeEscena>();
         AssetDatabase.CreateAsset(atuendo, ruta);
 
@@ -190,7 +190,7 @@ public static partial class ChuchelandiaBuilder
     {
         var t = AssetDatabase.LoadAssetAtPath<TransformacionDeMagia>(RutaTransformacion);
         if (t != null) return t;
-        AsegurarCarpeta(System.IO.Path.GetDirectoryName(RutaTransformacion).Replace('\\', '/'));
+        Kits.EditorTools.AssetFolders.Ensure(System.IO.Path.GetDirectoryName(RutaTransformacion).Replace('\\', '/'));
         t = ScriptableObject.CreateInstance<TransformacionDeMagia>();
         // Los valores de partida (destellos, corazones y confeti) son los de crearlo desde el menú Create.
         Unsupported.SmartReset(t);

@@ -58,7 +58,7 @@ public class Spider1AI : MonoBehaviour
     private bool isDead = false;
     private float originalSpeed;
     private float _targetRefreshTimer;
-    // FIX A11 (auditoría 2026-08-07): referencia real a la corrutina de ataque activa, para poder
+    // referencia real a la corrutina de ataque activa, para poder
     // cancelarla de verdad desde OnDamageTaken. Antes había un método StopCoroutineSafe() que era
     // un no-op vacío: el daño se aplicaba igual aunque la araña estuviera en stun.
     private Coroutine _attackCoroutine;
@@ -154,7 +154,7 @@ public class Spider1AI : MonoBehaviour
     {
         if (isDead) return;
 
-        // FIX (petición Raúl, 1 sep 2026): mientras hay un diálogo abierto en cualquier parte del
+        // mientras hay un diálogo abierto en cualquier parte del
         // mundo, el jugador está bloqueado (ActionMode.Cinematic) y no puede reaccionar ni recibir
         // daño real (PlayerHealthSystem.TakeDamage ya lo bloquea en ese modo) — pero sin este gate
         // la araña seguía persiguiendo/atacando con normalidad delante del jugador congelado, lo
@@ -191,7 +191,7 @@ public class Spider1AI : MonoBehaviour
             // Decidir si atacar o perseguir
             if (distanceToPlayer <= attackRange && !isAttacking)
             {
-                _attackCoroutine = StartCoroutine(AttackPlayer()); // FIX A11 (auditoría 2026-08-07): guardar referencia real
+                _attackCoroutine = StartCoroutine(AttackPlayer()); // guardar referencia real
             }
             else if (distanceToPlayer > attackRange && currentState == SpiderState.Chasing)
             {
@@ -304,7 +304,7 @@ public class Spider1AI : MonoBehaviour
         if (agent)
         {
             agent.speed = originalSpeed * chaseSpeedMultiplier;
-            // FIX (Raúl, 4 sep 2026): faltaba comprobar agent.isOnNavMesh antes de tocar isStopped.
+            // faltaba comprobar agent.isOnNavMesh antes de tocar isStopped.
             // Si EnterChaseMode() se disparaba en el mismo frame en que el agente aún no se había
             // registrado en el NavMesh (recién instanciado/reactivado), Unity lanzaba el error
             // "'Resume' can only be called on an active agent that has been placed on a NavMesh."
@@ -316,7 +316,7 @@ public class Spider1AI : MonoBehaviour
         // Activar el marker de objetivo del jugador (ver PlayerTargeting.Scan)
         if (_targetable != null) _targetable.isInActiveCombat = true;
 
-        // FIX (petición Raúl, 1 sep 2026): Spider1AI no pasaba por ActiveCombatRegistry (a
+        // Spider1AI no pasaba por ActiveCombatRegistry (a
         // diferencia de CombatState/ImpDemonAI/GolemBossAI), así que si se unía a una pelea ya en
         // marcha (p.ej. contra Lety+Vicky) L1/R1 (CombatCameraTargeting.GetOrderedTargets) nunca
         // la incluía en el ciclo de objetivos — quedaba imposible de seleccionar aunque estuviera
@@ -485,7 +485,7 @@ public class Spider1AI : MonoBehaviour
     {
         if (isDead) return;
 
-        // FIX A11 (auditoría 2026-08-07): "Cancelar ataque en curso" antes llamaba a
+        // "Cancelar ataque en curso" antes llamaba a
         // StopCoroutineSafe(AttackPlayer()) — AttackPlayer() construye un IEnumerator NUEVO (no
         // ejecuta nada por sí solo) y StopCoroutineSafe era un no-op vacío: la corrutina de
         // ataque real (iniciada más arriba con StartCoroutine) seguía viva y aplicaba el daño de

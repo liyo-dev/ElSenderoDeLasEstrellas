@@ -3,13 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// FIX: antes exigía TextMeshProUGUI (RequireComponent) y solo escribía en _tmp.text, por lo que
+// antes exigía TextMeshProUGUI (RequireComponent) y solo escribía en _tmp.text, por lo que
 // no podía usarse en ningún GameObject con el componente legacy UnityEngine.UI.Text (Text (Legacy)).
 // Varios menús (ej: SettingsMenu.prefab) usan Text legacy para sus etiquetas estáticas, así que
 // esas etiquetas nunca podían localizarse pese a tener este script disponible. Ahora detecta cuál
 // de los dos componentes de texto tiene el GameObject y escribe en el que corresponda.
 //
-// FIX: si este componente ejecutaba su Awake() antes de que LocalizationManager.Instance existiera
+// si este componente ejecutaba su Awake() antes de que LocalizationManager.Instance existiera
 // (objetos instanciados en tiempo de ejecución, orden de Awake entre escenas, etc.), Refresh() salía
 // sin hacer nada Y, además, el "if (LocalizationManager.Instance != null)" que seguía tampoco se
 // cumplía — así que el texto se quedaba PARA SIEMPRE con el placeholder tecleado en el editor
@@ -18,7 +18,7 @@ using UnityEngine.UI;
 // textos sí estaba traducido. Ahora, si el manager todavía no existe, esperamos con una corrutina
 // hasta que aparezca y entonces sí refrescamos y nos suscribimos.
 //
-// FIX (24 ago 2026 — botones del Main Menu saliendo en mayúsculas): `_key` no llevaba
+// `_key` no llevaba
 // [SerializeField], así que cuando un builder de Editor (MainMenuCreditsExitButtonsBuilder,
 // MainMenuPatchNotesBugReportBuilder) hacía `loc.key = "MainMenu_Credits"` sobre un objeto YA
 // GUARDADO EN LA ESCENA y luego EditorSceneManager.SaveScene(), esa asignación vivía solo en el
@@ -37,7 +37,7 @@ using UnityEngine.UI;
 // a funcionar para todos los textos localizados de la escena, no solo para los creados en runtime.
 public class LocalizedText : MonoBehaviour
 {
-    // FIX: antes `key` era un campo público simple. Como AddComponent<T>() ejecuta Awake() de forma
+    // antes `key` era un campo público simple. Como AddComponent<T>() ejecuta Awake() de forma
     // SÍNCRONA antes de que el código llamante pueda asignar `.key = "..."` (el patrón
     // `go.AddComponent<LocalizedText>().key = "Mi_Clave"`, usado en varios paneles de UI —
     // PatchNotesFlyoutPanel, BugReportFlyoutPanel), Awake() siempre veía key == null. Eso hacía que

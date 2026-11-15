@@ -43,7 +43,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
         }
         else
         {
-            // ✅ CRÍTICO: Si no hay GameBootService (inicio directo desde MainWorld en editor),
+            // CRÍTICO: Si no hay GameBootService (inicio directo desde MainWorld en editor),
             // inicializar de todas formas para permitir testing
             // Cambiado a Log normal para evitar spam de warnings en modo testing
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -65,7 +65,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
         yield return null;
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[BossProgressPersistenceBridge] ✅ BossProgressTracker listo - Inicializando estado vacío para testing");
+        Debug.Log("[BossProgressPersistenceBridge] BossProgressTracker listo - Inicializando estado vacío para testing");
 #endif
     }
 
@@ -83,7 +83,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
 
     private void HandleProfileReady()
     {
-        // FIX M6 (auditoría 2026-08-07): antes, tras la primera vez, este handler se desuscribía
+        // antes, tras la primera vez, este handler se desuscribía
         // de OnProfileReady y no volvía a aplicar el preset al tracker. ReloadTestPreset() (el
         // flujo de testeo que se usa a diario) vuelve a invocar OnProfileReady confiando en que
         // todo se reaplique — pero este bridge, al haberse desuscrito, dejaba el

@@ -127,7 +127,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
     void Awake()
     {
-        // ✅ Configurar el collider - NO forzamos isTrigger para permitir OnCollisionEnter con el player
+        // Configurar el collider - NO forzamos isTrigger para permitir OnCollisionEnter con el player
         var col = GetComponent<SphereCollider>();
         if (col) col.radius = 0.5f;
 
@@ -180,13 +180,13 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         Debug.Log($"[EnemyProjectile] Inicializado — daño: {damage}, velocidad: {EffectiveSpeed}");
 #endif
 
-        // 🔊 Reproducir SFX de spawn
+        // Reproducir SFX de spawn
         if (!string.IsNullOrEmpty(spawnSFXKey))
         {
             AudioService.Instance?.PlaySFX(spawnSFXKey, worldPosition: transform.position);
         }
 
-        // ✅ Aplicar velocidad inicial usando física
+        // Aplicar velocidad inicial usando física
         // FIX INC-082: usar EffectiveSpeed (respeta SetSpeed(), si se llamó antes) en vez de `speed`
         // a secas — ver comentario en la declaración de _speedOverride.
         if (rb)
@@ -342,7 +342,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
     void FixedUpdate()
     {
-        // ✅ Usar SOLO física para movimiento (detección de colisiones garantizada)
+        // Usar SOLO física para movimiento (detección de colisiones garantizada)
         if (!initialized || hasHit) return;
 
         // Mantener la velocidad constante
@@ -352,7 +352,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             rb.linearVelocity = direction * EffectiveSpeed;
         }
 
-        // ✅ Detección activa del player throttleada a 20/seg para reducir OverlapSphere por proyectil.
+        // Detección activa del player throttleada a 20/seg para reducir OverlapSphere por proyectil.
         // CharacterController no dispara OnTriggerEnter de forma confiable, de ahí el fallback.
         if (Time.time >= _nextProximityCheck)
         {
@@ -428,12 +428,11 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
         // El golpe pasa por PlayerHealthSystem: su defensa (FiltroDeDefensa) decide si la B lo
         // anula o el escudo lo reduce.
-        var playerHealth = hit.GetComponent<PlayerHealthSystem>() ?? hit.GetComponentInParent<PlayerHealthSystem>();
-        if (playerHealth != null)
+        if (ControlDelJugador.DelJugador(hit, out PlayerHealthSystem playerHealth))
         {
             hasHit = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[EnemyProjectile] 🎯 Impacto JUGADOR por proximidad: {damage} daño");
+            Debug.Log($"[EnemyProjectile] Impacto JUGADOR por proximidad: {damage} daño");
 #endif
             playerHealth.TakeDamage(damage, _bypassInvulnerabilityOnHit);
             DestroyProjectile();
@@ -456,7 +455,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         return false;
     }
 
-    // ✅ OnTriggerEnter: PRINCIPAL - Para colisiones con triggers (jugador, obstáculos)
+    // OnTriggerEnter: PRINCIPAL - Para colisiones con triggers (jugador, obstáculos)
     void OnTriggerEnter(Collider other)
     {
         if (!initialized || hasHit) return;
@@ -469,7 +468,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
         if (_groundChargeDuration > 0f &&
             (otherLayer == _playerLayer || other.CompareTag(GameTags.Player) ||
-             other.GetComponentInParent<PlayerHealthSystem>() != null))
+             ControlDelJugador.EsElJugador(other)))
             return;
 
         // FIX INC-082 (diagnóstico): log de cada impacto real para poder ver en Console, sin abrir el
@@ -494,7 +493,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             return;
         }
         
-        // ✅ PRIORIDAD 1: Si impacta contra el escudo del jugador
+        // PRIORIDAD 1: Si impacta contra el escudo del jugador
         if (other.GetComponent<PlayerShieldController.ShieldMarker>() != null)
         {
             hasHit = true;
@@ -527,8 +526,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
                 break;
         }
 
-        var playerHealth = other.GetComponentInParent<PlayerHealthSystem>();
-        if (playerHealth != null)
+        if (ControlDelJugador.DelJugador(other, out PlayerHealthSystem playerHealth))
         {
             hasHit = true;
             playerHealth.TakeDamage(damage);
@@ -552,7 +550,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         if (partyMember != null && partyMember.IsInParty)
             return;
 
-        // ✅ Colisión con proyectiles del jugador (layer "Projectile")
+        // Colisión con proyectiles del jugador (layer "Projectile")
         if (otherLayer == _projectileLayer)
         {
             hasHit = true;
@@ -609,10 +607,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
     private void ApplyDamage(GameObject target)
     {
-        // GetComponentInParent como fallback por si el collider que recibió el hit es un hijo del root
-        var playerHealth = target.GetComponent<PlayerHealthSystem>()
-                           ?? target.GetComponentInParent<PlayerHealthSystem>();
-        if (playerHealth != null)
+        if (ControlDelJugador.DelJugador(target, out PlayerHealthSystem playerHealth))
         {
             playerHealth.TakeDamage(damage, _bypassInvulnerabilityOnHit);
             return;
@@ -655,7 +650,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         // Efecto visual de impacto (pooled para evitar GC spikes con múltiples proyectiles)
         SpawnHitEffect();
         
-        // 🔊 Reproducir SFX de impacto/explosión
+        // Reproducir SFX de impacto/explosión
         if (!string.IsNullOrEmpty(impactSFXKey))
         {
             AudioService.Instance?.PlaySFX(impactSFXKey, worldPosition: transform.position);

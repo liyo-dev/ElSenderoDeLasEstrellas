@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971f3ef067c0f4d4da2fd49caf2adf79, type: 3}
+  m_Name: Todo desbloqueado
+  m_EditorClassIdentifier: Liyodev.NarrativeGraph.Editor::NarrativeGraphEditor.NarrativeTestPlayer
+  notes: 
+  values:
+    fields:
+    - abilities
+    - unlockedSpells
+    - unlockedWardrobeIds
+    data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Bedroom","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[1,2,4,26],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":true,"jump":true,"magic":true,"fly":true,"sprint":true,"shield":true},"appearance":[],"unlockedWardrobeIds":["AC01_Heart","AC02_Leaf","AC03_BlackGlass","AC03_HeavyMetalGlass","AC03_NerdGlass","AC03_NightVision","AC04_AngelEars","AC04_AnthenaEars","AC04_BunnyEars","AC04_ShortEars","AC05_Horn01","AC05_Horn02","AC05_Horn03","AC05_Horn04","AC06_Crown01","AC06_Crown02","AC06_Crown03","AC07_PiratePatch","AC08_NinjaMask01","AC08_NinjaMask02","AC08_NinjaMask03","AC08_NinjaMask04","AC08_NinjaMask05","AC08_NinjaMask06","AC08_NinjaMask07","AC08_NinjaMask08","AC09_Ribbon","AC10_Mustache01","AC10_Mustache02","AC10_Mustache03","AC10_Mustache04","AC10_Mustache05","AC10_Mustache06","AC11_Mustache01","AC11_Mustache02","AC11_Mustache03","AC11_Mustache04","AC11_Mustache05","AC11_Mustache06","Body01","Body02","Body03","Body04","Body05","Body06","Body07","Body08","Body09","Body10","Body11","Body12","Body13","Body14","Body15","Body16","Body17","Body18","Body19","Body20","Body23_Aventurero","Body24_AventureroChaqueta","Cloak01","Cloak02","Cloak03"],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'

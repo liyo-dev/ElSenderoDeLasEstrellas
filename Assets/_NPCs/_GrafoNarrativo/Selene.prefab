@@ -8329,7 +8329,6 @@ GameObject:
   - component: {fileID: 1632168295260802274}
   - component: {fileID: 2614765188523458751}
   - component: {fileID: 8897369287911065195}
-  - component: {fileID: 5283206665255990165}
   - component: {fileID: 6391214802723596003}
   - component: {fileID: 8923894837596363879}
   m_Layer: 8
@@ -8583,8 +8582,6 @@ MonoBehaviour:
     behaviourType: 0
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 11400000, guid: b54f3041f65a9eb44b9fd6d038dc206f, type: 2}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 0}
     socialConfig: {fileID: 0}
     walkSpeed: 1.5
@@ -8687,20 +8684,6 @@ MonoBehaviour:
   deathVFXLifetime: 3
   invulnerabilitySeconds: 0
   debugLogs: 0
---- !u!114 &5283206665255990165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4776655081445343591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce318277cf260af419af8c1f246b0a5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCInteractiveNarrativeExecutor
-  verboseLogging: 0
-  persistentIconMaxDistance: 30
 --- !u!114 &6391214802723596003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8731,10 +8714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!1 &4789912660277081243

@@ -39,7 +39,7 @@ public static class KitDeLaberintoDeEspejos
     /// <summary>Crea (o recupera) los materiales del palacio luminoso en la carpeta dada.</summary>
     public static Materiales MaterialesDePalacio(string carpeta)
     {
-        AsegurarCarpeta(carpeta);
+        Kits.EditorTools.AssetFolders.Ensure(carpeta);
         var shaderEspejo = Shader.Find("Sendero/Espejo");
         var lit = Shader.Find("Universal Render Pipeline/Lit");
         var defectos = TexturaDeDefectos(carpeta + "/Tex_DefectosDeEspejo.png");
@@ -547,11 +547,4 @@ public static class KitDeLaberintoDeEspejos
         return mat;
     }
 
-    private static void AsegurarCarpeta(string carpeta)
-    {
-        if (AssetDatabase.IsValidFolder(carpeta)) return;
-        string padre = Path.GetDirectoryName(carpeta).Replace('\\', '/');
-        AsegurarCarpeta(padre);
-        AssetDatabase.CreateFolder(padre, Path.GetFileName(carpeta));
-    }
 }

@@ -11,7 +11,7 @@ using Sendero.UI;
 ///
 /// Mientras está activo, el nivel prohíbe volar (bloqueo de PlayerActionManager, sin tocar las
 /// habilidades de la partida) y oculta el HUD y el minimapa con su clave; todo se libera en
-/// OnDisable. Las habilidades que pide (saltar, trepar, magia) vienen de la partida. Los textos
+/// OnDisable. Las habilidades que pide (saltar, magia) vienen de la partida. Los textos
 /// son claves de localización (ESCAPE_SENDERO_*): los bocadillos pasan por Bocadillos.Decir, que
 /// traduce y busca la voz.
 /// </summary>

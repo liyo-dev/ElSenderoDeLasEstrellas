@@ -51,6 +51,7 @@ namespace NarrativeGraphEditor.Story
                 if (!r.Playing)
                     _scroll.Add(StoryUI.Muted(StoryText.T("Elige un paso para ver cómo debería estar todo al llegar a él. En Play, aquí ves por dónde va la historia y qué no cuadra.",
                                                   "Pick a step to see how everything should be when reaching it. In Play, this shows where the story is and what does not match.")));
+                BuildLog();
                 return;
             }
 
@@ -98,6 +99,8 @@ namespace NarrativeGraphEditor.Story
             }
             foreach (var i in r.Info) expected.Add(StoryUI.Muted(i));
 
+            BuildLog();
+
             var tools = new VisualElement();
             tools.AddToClassList("story-start__actions");
             var copy = new Button(() => { EditorGUIUtility.systemCopyBuffer = r.ToText(); })
@@ -137,6 +140,25 @@ namespace NarrativeGraphEditor.Story
                 var wait = new Label(StoryText.T("Esperando: ", "Waiting for: ") + run.Waiting);
                 wait.AddToClassList("story-muted");
                 row.Add(wait);
+                box.Add(row);
+            }
+        }
+
+        /// Los últimos pasos por los que ha pasado la partida; clic = ir al paso.
+        void BuildLog()
+        {
+            var entries = StoryLiveLog.Entries;
+            if (entries.Count == 0) return;
+            var box = Section(StoryText.T("PASOS POR LOS QUE HA PASADO", "STEPS IT HAS GONE THROUGH"));
+            for (int i = 0; i < entries.Count && i < 15; i++)
+            {
+                var e = entries[i];
+                var row = new Button(() =>
+                {
+                    if (e.Graph == _graph) NavigateTo?.Invoke(e.Guid);
+                    else if (e.Graph != null) OpenInGraph?.Invoke(e.Graph, e.Guid);
+                }) { text = $"{e.Time}  {e.Text}", tooltip = StoryText.T("Ir a este paso", "Go to this step") };
+                row.AddToClassList("story-live__log");
                 box.Add(row);
             }
         }

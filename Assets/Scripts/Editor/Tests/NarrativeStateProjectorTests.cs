@@ -169,11 +169,13 @@ public class NarrativeStateProjectorTests
     }
 
     [Test]
-    public void TodosLosTiposDeNodo_DeclaranLoQueCambian()
+    public void TodosLosTiposDeNodoYDePeticion_DeclaranLoQueCambian()
     {
-        var sinDeclarar = NarrativeEffectContract.FindUndeclared(UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeNode>());
+        var tipos = new List<System.Type>(UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeNode>());
+        tipos.AddRange(UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeRequest>());
+        var sinDeclarar = NarrativeEffectContract.FindUndeclared(tipos);
         Assert.IsEmpty(sinDeclarar,
-            "Estos nodos no dicen qué dejan cambiado (INarrativeStateEffect, INarrativeRouteEffect o [NarrativeNoWorldEffect]): "
+            "Estos pasos o peticiones no dicen qué dejan cambiado (INarrativeStateEffect, INarrativeRouteEffect o [NarrativeNoWorldEffect]): "
             + string.Join(", ", sinDeclarar.ConvertAll(t => t.Name)));
     }
 

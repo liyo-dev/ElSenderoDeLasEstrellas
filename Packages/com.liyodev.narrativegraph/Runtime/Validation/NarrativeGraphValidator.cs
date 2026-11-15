@@ -17,13 +17,13 @@ public static class NarrativeGraphValidator
         {
             if (IsValid && Warnings.Count == 0)
             {
-                NarrativeLog.Info($"[NarrativeGraphValidator] ✅ Grafo '{graphName}' es válido");
+                NarrativeLog.Info($"[NarrativeGraphValidator] Grafo '{graphName}' es válido");
                 return;
             }
             
             if (Errors.Count > 0)
             {
-                Debug.LogError($"[NarrativeGraphValidator] ❌ Grafo '{graphName}' tiene {Errors.Count} error(es):");
+                Debug.LogError($"[NarrativeGraphValidator] Grafo '{graphName}' tiene {Errors.Count} error(es):");
                 foreach (var error in Errors)
                 {
                     Debug.LogError($"  • {error}");
@@ -34,7 +34,7 @@ public static class NarrativeGraphValidator
             if (Warnings.Count > 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NarrativeGraphValidator] ℹ️ Grafo '{graphName}' tiene {Warnings.Count} advertencia(s):");
+                Debug.Log($"[NarrativeGraphValidator] Grafo '{graphName}' tiene {Warnings.Count} advertencia(s):");
                 foreach (var warning in Warnings)
                 {
                     Debug.Log($"[NarrativeGraphValidator]   • {warning}");

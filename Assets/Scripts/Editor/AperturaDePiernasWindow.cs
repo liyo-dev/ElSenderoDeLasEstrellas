@@ -39,7 +39,7 @@ public class AperturaDePiernasWindow : EditorWindow
     private float _aplicada = float.NaN;   // apertura que llevan las copias; se recalcula al abrir y al aplicar
     private Vector2 _scroll;
 
-    [MenuItem("El Sendero/Personajes/Apertura de piernas en animaciones")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Apertura de piernas")]
     public static void Abrir()
     {
         var w = GetWindow<AperturaDePiernasWindow>("Apertura de piernas");

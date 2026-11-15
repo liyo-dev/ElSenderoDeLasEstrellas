@@ -54,7 +54,7 @@ public class CombatCameraTargeting : MonoBehaviour
     private float _lastShoulderSwitchAt = -999f;
     private bool _isInDialogue;
     private bool _suppressedByLevitation;
-    // Petición de Raúl (1 sep 2026): permite al jugador apagar el lock-on de cámara/objetivo a
+    // Petición de Raúl: permite al jugador apagar el lock-on de cámara/objetivo a
     // voluntad (p.ej. para correr hacia un cofre sin que la cámara se empeñe en enfocar a un
     // enemigo cercano). Ver ToggleTargetingSuppressed().
     private bool _targetingSuppressedByPlayer;
@@ -192,7 +192,7 @@ public class CombatCameraTargeting : MonoBehaviour
         
         if (closestEnemy != null)
         {
-            Log($"🎯 Auto-lock: {closestEnemy.name}");
+            Log($"Auto-lock: {closestEnemy.name}");
             SetTarget(closestEnemy);
         }
     }
@@ -229,7 +229,7 @@ public class CombatCameraTargeting : MonoBehaviour
     }
 
     /// <summary>
-    /// Petición de Raúl (1 sep 2026): alterna si el jugador quiere que la cámara/objetivo se
+    /// Petición de Raúl: alterna si el jugador quiere que la cámara/objetivo se
     /// enganchen solos. Al activar la supresión: libera cualquier lock en marcha y apaga también
     /// el auto-scan de PlayerTargeting (el marcador de apuntado libre), para que "desactivar
     /// targets" sea de verdad completo — ni cámara ni marcador — mientras el jugador quiera, por
@@ -248,7 +248,7 @@ public class CombatCameraTargeting : MonoBehaviour
                 playerTargeting.SetAutoScanSuppressed(true);
 
             HudToastService.Instance?.Show("COMBAT_TARGET_LOCK_OFF", 2f);
-            Log("🚫 Lock-on de objetivo DESACTIVADO por el jugador");
+            Log("Lock-on de objetivo DESACTIVADO por el jugador");
         }
         else
         {
@@ -257,7 +257,7 @@ public class CombatCameraTargeting : MonoBehaviour
             _lastAutoLockAttempt = 0f; // permitir re-lock inmediato en el siguiente Update si procede
 
             HudToastService.Instance?.Show("COMBAT_TARGET_LOCK_ON", 2f);
-            Log("🎯 Lock-on de objetivo REACTIVADO por el jugador");
+            Log("Lock-on de objetivo REACTIVADO por el jugador");
         }
     }
 
@@ -431,12 +431,12 @@ public class CombatCameraTargeting : MonoBehaviour
         // apagó el autoapuntado o está levitando.
         if (isLockActive || _targetingSuppressedByPlayer || _suppressedByLevitation) return;
 
-        Log($"🎯 Entrando en combate. Buscando objetivo...");
+        Log($"Entrando en combate. Buscando objetivo...");
         GameObject closestEnemy = ActiveCombatRegistry.GetClosestCameraLockableCombatNPC(playerTransform.position, maxLockDistance);
         
         if (closestEnemy != null)
         {
-            Log($"✅ Lock inicial en: {closestEnemy.name}");
+            Log($"Lock inicial en: {closestEnemy.name}");
             SetTarget(closestEnemy);
         }
     }
@@ -449,7 +449,7 @@ public class CombatCameraTargeting : MonoBehaviour
                             targetable.esMarcableSiempre && targetable.isActiveAndEnabled;
         if (!objetoFijado)
         {
-            Log("🏳️ Saliendo de combate - Liberando lock");
+            Log("Saliendo de combate - Liberando lock");
             ReleaseLock();
         }
 
@@ -467,7 +467,7 @@ public class CombatCameraTargeting : MonoBehaviour
     {
         if (DebeSuprimirMarcador() || _targetingSuppressedByPlayer || _suppressedByLevitation) return;
 
-        // Petición de Raúl (1 sep 2026): enemigos menores (arañas) no deben enganchar la cámara
+        // Petición de Raúl: enemigos menores (arañas) no deben enganchar la cámara
         // solos al entrar en combate — ver ActiveCombatRegistry.IsCameraLockExempt. Siguen
         // registrados en ActiveCombatRegistry (Battle Mode, ciclo manual L1/R1), y el marcador de
         // apuntado para hechizos lo sigue dando el auto-scan normal de PlayerTargeting.
@@ -475,7 +475,7 @@ public class CombatCameraTargeting : MonoBehaviour
         {
             if (Vector3.Distance(npc.transform.position, playerTransform.position) <= maxLockDistance)
             {
-                Log($"🎯 Nuevo enemigo '{npc.name}' entró en combate - Haciendo lock");
+                Log($"Nuevo enemigo '{npc.name}' entró en combate - Haciendo lock");
                 SetTarget(npc);
             }
         }
@@ -485,7 +485,7 @@ public class CombatCameraTargeting : MonoBehaviour
     {
         if (currentTarget == npc)
         {
-            Log($"⚠️ Target actual '{npc.name}' salió de combate - Buscando nuevo objetivo");
+            Log($"Target actual '{npc.name}' salió de combate - Buscando nuevo objetivo");
             SwitchToNextTarget(incluirObjetos: false);
         }
     }
@@ -541,7 +541,7 @@ public class CombatCameraTargeting : MonoBehaviour
         }
 
         _lastVisualResync = 0f; // Forzar resync en el siguiente Update.
-        Log($"🎯 Lock establecido en: {newTarget.name}");
+        Log($"Lock establecido en: {newTarget.name}");
 
         // Petición de Raúl (1 sep 2026, revertido el mismo día): aquí se disparaba un popup
         // explicativo ("MechanicId.TargetLockToggle", "pulsa F...") la primera vez que había 2+
@@ -609,7 +609,7 @@ public class CombatCameraTargeting : MonoBehaviour
         int currentIndex = targets.IndexOf(currentTarget);
         int nextIndex = (currentIndex + 1) % targets.Count;
         
-        Log($"🔄 RB: Cambiando target → {targets[nextIndex].name}");
+        Log($"RB: Cambiando target → {targets[nextIndex].name}");
         SetTarget(targets[nextIndex]);
     }
     
@@ -631,7 +631,7 @@ public class CombatCameraTargeting : MonoBehaviour
             playerTargeting.ClearManualTarget();
             playerTargeting.SetAutoScanSuppressed(false);
         }
-        Log("🔓 Lock de cámara liberado");
+        Log("Lock de cámara liberado");
     }
 
     private void EnsureVisualLockSync()
@@ -639,7 +639,7 @@ public class CombatCameraTargeting : MonoBehaviour
         if (currentTarget == null || !currentTarget.activeInHierarchy ||
             (currentTarget.TryGetComponent<Targetable>(out var targetable) && !targetable.isActiveAndEnabled))
         {
-            Log("⚠️ Target lock inválido, liberando lock.");
+            Log("Target lock inválido, liberando lock.");
             ReleaseLock();
             return;
         }
@@ -647,7 +647,7 @@ public class CombatCameraTargeting : MonoBehaviour
         var damageable = currentTarget.GetComponentInParent<Damageable>();
         if (damageable != null && !damageable.IsAlive)
         {
-            Log("⚠️ Target lock sin vida, liberando lock.");
+            Log("Target lock sin vida, liberando lock.");
             ReleaseLock();
             return;
         }
@@ -658,7 +658,7 @@ public class CombatCameraTargeting : MonoBehaviour
         if (thirdPersonCamera != null && thirdPersonCamera.LockTarget != currentTarget.transform)
         {
             thirdPersonCamera.SetLockTarget(currentTarget.transform);
-            Log($"🔁 Resync cámara -> {currentTarget.name}");
+            Log($"Resync cámara -> {currentTarget.name}");
         }
 
         // No sincronizar el marcador durante diálogos ni cinemáticas para evitar que aparezca
@@ -669,7 +669,7 @@ public class CombatCameraTargeting : MonoBehaviour
             if (!playerTargeting.IsManualTargetActive || playerTargeting.CurrentTarget != currentTarget.transform)
             {
                 playerTargeting.SetManualTarget(currentTarget.transform);
-                Log($"🔁 Resync marcador -> {currentTarget.name}");
+                Log($"Resync marcador -> {currentTarget.name}");
             }
             else if (Time.frameCount % 30 == 0)
             {
@@ -683,7 +683,7 @@ public class CombatCameraTargeting : MonoBehaviour
         _suppressedByLevitation = true;
         if (isLockActive)
         {
-            Log("🪄 Levitación activa → liberando lock de cámara temporalmente");
+            Log("Levitación activa → liberando lock de cámara temporalmente");
             ReleaseLock();
         }
     }
@@ -693,7 +693,7 @@ public class CombatCameraTargeting : MonoBehaviour
         _suppressedByLevitation = false;
         // Forzar re-lock inmediato en el siguiente Update si seguimos en combate
         _lastAutoLockAttempt = 0f;
-        Log("🪄 Levitación terminada → restaurando lock de cámara");
+        Log("Levitación terminada → restaurando lock de cámara");
     }
 
     private void Log(string message)

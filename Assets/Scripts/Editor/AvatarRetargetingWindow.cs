@@ -46,7 +46,7 @@ public class AvatarRetargetingWindow : EditorWindow
     private Vector2 _scroll;
 
     // ── Probador ─────────────────────────────────────────────────────────────────────────────
-    private const string PersonajePruebaPath = "Assets/_NPCs/Eldran.prefab";
+    private const string PersonajePruebaPath = "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab";
     private const string NombreObjetoPrueba  = "~PRUEBA DE RETARGETING (temporal)";
 
     /// Las animaciones que dan problemas, que son las que hay que mirar. Se pueden cambiar a mano
@@ -65,7 +65,7 @@ public class AvatarRetargetingWindow : EditorWindow
     private double        _ultimoTick;
     private bool          _reproduciendo;
 
-    [MenuItem("El Sendero/Personajes/Retargeting del avatar (cuello y brazos)")]
+    [MenuItem("El Sendero/Personajes/Animaciones/Retargeting del avatar (cuello y brazos)")]
     public static void Open()
     {
         var w = GetWindow<AvatarRetargetingWindow>("Retargeting del avatar");

@@ -420,7 +420,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         SyncCombatRegistryState();
         if (!hasSpawned || isDead || !canStartCombat) return;
 
-        // FIX (petición Raúl, 1 sep 2026): congelar IA hostil mientras hay un diálogo abierto en
+        // congelar IA hostil mientras hay un diálogo abierto en
         // cualquier parte del mundo (ver mismo fix en Spider1AI.Update). No corta un ataque que ya
         // esté a mitad de ejecución (eso vive en corrutinas propias de UpdateBehavior), solo evita
         // encadenar movimiento/decisiones nuevas mientras el jugador está bloqueado por el diálogo.
@@ -531,7 +531,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         AlCambiarDeFase?.Invoke(Fase);
     }
 
-    // Propuesta identidad de fase (30 ago 2026): la Fase 3 ('enrage') se notaba solo en el shake
+    // Propuesta identidad de fase: la Fase 3 ('enrage') se notaba solo en el shake
     // de camara, el flash y el multiplicador de velocidad — nada distinto en el propio demonio.
     // Guard con _enrageAuraInstance: OnPhaseChanged() solo llama aqui al ENTRAR en Fase 3 (la vida
     // no sube, no debería reentrar), pero el guard evita duplicar el VFX si algún día lo hiciera.
@@ -915,7 +915,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         PlayAnimation(AnimProjectileAttack);
 
-        // Propuesta identidad de fase (30 ago 2026): este ataque solo se usa en Fase 2+ (ver
+        // Propuesta identidad de fase: este ataque solo se usa en Fase 2+ (ver
         // DecideRangedAttack/UpdateBehavior, currentPhase != Phase1) — antes el unico aviso era el
         // giro hacia el jugador, sin telegrafia real. Ahora reutiliza el mismo patron visual que
         // RainAttack (sombra que crece antes del impacto), aplicado a un unico punto de aviso.
@@ -1104,7 +1104,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         yield return Agotarse();
     }
 
-    // Propuesta identidad de fase (30 ago 2026): aviso de un unico proyectil normal (Fase 2+),
+    // Propuesta identidad de fase: aviso de un unico proyectil normal (Fase 2+),
     // mismo patron visual que SpawnRainWave (sombra que crece antes del impacto) pero para un solo
     // punto. Usa VfxPoolService (regla no negociable de VFX de un solo uso) en vez de
     // Instantiate/Destroy manual — el propio Play() gestiona el despawn al pasar rangedTelegraphDuration.
@@ -1365,7 +1365,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         }
     }
 
-    // FIX A11 (auditoría 2026-08-07): último (hash, capa) reproducido, para no reiniciar la misma
+    // último (hash, capa) reproducido, para no reiniciar la misma
     // animación en la misma capa en cada llamada. Antes PlayAnimation() llamaba a animator.Play()
     // sin ningún guard — como varios estados llaman a PlayAnimation(AnimIdle) (u otras) en cada
     // frame que se re-evalúan (ver p. ej. el bucle de vuelo), la animación se reiniciaba al frame 0

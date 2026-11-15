@@ -18,7 +18,7 @@ using UnityEngine;
 /// personajes ocupa casi la mitad del cuerpo, asÃ­ que una pose que en el pack original es
 /// correcta aquÃ­ puede meter la mano dentro de la cara. Ese es el problema que buscamos.
 /// </summary>
-public static class AuditorDeAnimaciones
+public static partial class AuditorDeAnimaciones
 {
     private const string Menu = "El Sendero/Personajes/Animaciones/";
     private const string InformeMd = "docs/auditoria-animaciones.md";
@@ -43,13 +43,13 @@ public static class AuditorDeAnimaciones
 
     private static readonly string[] PrefabsUsados =
     {
-        "Assets/_NPCs/Eldran.prefab",
+        "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab",
         "Assets/Prefabs/_WILL.prefab",
         "Assets/Prefabs/_LIAM.prefab",
         "Assets/Prefabs/_ESTELA.prefab",
     };
 
-    private const string PrefabSinUsar = "Assets/_NPCs/Eldran.prefab";
+    private const string PrefabDePrueba = "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab";
 
     [MenuItem(Menu + "Auditar todas (humanoide)", priority = 100)]
     public static void AuditarTodas()
@@ -104,14 +104,14 @@ public static class AuditorDeAnimaciones
             {
                 try
                 {
-                    using (RigDePrueba rig = new RigDePrueba(PrefabSinUsar))
+                    using (RigDePrueba rig = new RigDePrueba(PrefabDePrueba))
                     {
                         MedirConRig(rig, resultados, r => !r.Usado);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"[Auditor] No se pudo medir el catÃ¡logo con {PrefabSinUsar}: {ex.Message}");
+                    Debug.LogWarning($"[Auditor] No se pudo medir el catÃ¡logo con {PrefabDePrueba}: {ex.Message}");
                 }
             }
 

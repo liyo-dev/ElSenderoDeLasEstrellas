@@ -36,6 +36,32 @@ public abstract class NarrativeNode
     [HideInInspector] public Vector2 position;
     [HideInInspector] public List<string> outputs = new();
 
+    /// <summary>
+    /// Tipo con el que el editor presenta el paso (nombre, categoría, color). Es el propio tipo del
+    /// nodo, salvo en «Pedir al juego», que enseña el tipo de su petición.
+    /// </summary>
+    public virtual Type KindType => GetType();
+
+    /// <summary>
+    /// Objetos cuyos campos públicos forman el paso para las herramientas (resúmenes, validación,
+    /// edición por lotes): el propio nodo y, en «Pedir al juego», su petición.
+    /// </summary>
+    public virtual IEnumerable<object> FieldOwners()
+    {
+        yield return this;
+    }
+
+    /// <summary>
+    /// Un paso nuevo del tipo <paramref name="kind"/>: un nodo, o «Pedir al juego» con una petición
+    /// nueva de ese tipo si <paramref name="kind"/> es una <see cref="NarrativeRequest"/>.
+    /// </summary>
+    public static NarrativeNode Create(Type kind)
+    {
+        if (kind == null) return null;
+        if (typeof(NarrativeRequest).IsAssignableFrom(kind)) return GameStepNode.For((NarrativeRequest)Activator.CreateInstance(kind));
+        return (NarrativeNode)Activator.CreateInstance(kind);
+    }
+
     public abstract void Enter(NarrativeContext ctx, Action onReadyToAdvance);
     public virtual void Exit(NarrativeContext ctx) {}
 

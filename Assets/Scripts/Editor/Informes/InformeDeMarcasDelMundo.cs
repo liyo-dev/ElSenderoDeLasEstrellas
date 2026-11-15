@@ -16,7 +16,7 @@ public static class InformeDeMarcasDelMundo
     private const string RutaPorDefecto = "Assets/Scenes/Worlds/MainWorld.unity";
     private const string FiltroPorDefecto = "salida|exit|puerta|gate|camino|road|path|puente|bridge|pesquer|fisher|savepoint|village|pueblo|zona";
 
-    [MenuItem("El Sendero/Informes/Marcas del mundo (MainWorld)")]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Marcas del mundo (MainWorld)")]
     public static void Menu() => OrdenesDelEditor.Avisar("Marcas del mundo", Generar(RutaPorDefecto, FiltroPorDefecto));
 
     /// <summary>Escena por ruta y filtro opcional de nombres (separados por «|», sin distinguir mayúsculas).</summary>

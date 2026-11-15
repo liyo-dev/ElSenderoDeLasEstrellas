@@ -79,7 +79,7 @@ public class LocalizationTableEditor : EditorWindow
     private static readonly Dictionary<string, LocalizationFileDefinition> FileDefinitionLookup =
         FileDefinitions.ToDictionary(f => f.fileName.ToLowerInvariant());
 
-    [MenuItem("Tools/Localization Table Editor")]
+    [MenuItem("El Sendero/Interfaz/Tabla de traducciones")]
     public static void ShowWindow()
     {
         var window = GetWindow<LocalizationTableEditor>("Localization Table");

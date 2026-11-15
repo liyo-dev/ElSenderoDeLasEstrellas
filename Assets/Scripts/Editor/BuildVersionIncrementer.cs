@@ -25,8 +25,8 @@ using UnityEngine;
 /// silencio.
 ///
 /// Para saltarte el autoincremento en un build puntual (por ejemplo una build de pruebas que no vas
-/// a subir a ningún sitio), usa el menú "El Sendero → Build → Saltar autoincremento de versión (solo
-/// el próximo build)" antes de compilar — se desactiva una sola vez y vuelve a activarse solo después,
+/// a subir a ningún sitio), usa el menú "El Sendero → Proyecto → Build: no subir la versión
+/// en la próxima build" antes de compilar — se desactiva una sola vez y vuelve a activarse solo después,
 /// sin tocar nada en el Inspector.
 /// </summary>
 public class BuildVersionIncrementer : IPreprocessBuildWithReport
@@ -76,7 +76,7 @@ public class BuildVersionIncrementer : IPreprocessBuildWithReport
         Debug.Log($"[BuildVersionIncrementer] Versión subida automáticamente: {current} → {next}.");
     }
 
-    [MenuItem("El Sendero/Build/Saltar autoincremento de versión (solo el próximo build)")]
+    [MenuItem("El Sendero/Proyecto/Build: no subir la versión en la próxima build")]
     static void SkipNextBuild()
     {
         SessionState.SetBool(SkipNextBuildKey, true);

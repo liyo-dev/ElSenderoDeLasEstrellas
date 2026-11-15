@@ -2,7 +2,6 @@ using Core;
 using Invector.vCharacterController;
 using System;
 using System.Collections;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -22,7 +21,7 @@ public class PlayerFlyingController : MonoBehaviour
 {
     private const float GroundCheckBuffer = 0.2f;
 
-    // FIX (1 sep 2026) — "la animación de vuelo se quita y se pone": IsGrounded() usa un
+    // FIX — "la animación de vuelo se quita y se pone": IsGrounded() usa un
     // Physics.CheckCapsule con un buffer pequeño (GroundCheckBuffer) contra el propio collider
     // del jugador. Volar a baja altura o rozar el terreno es parte normal del mecanismo (picados,
     // vuelo rasante) — bastaba un único frame de solape para que Update() llamara a ExitFlight()
@@ -87,10 +86,6 @@ public class PlayerFlyingController : MonoBehaviour
     private vThirdPersonController _controller;
     private Coroutine _entrada;
     private Invector.vCharacterController.vThirdPersonInput _inputController;
-    private FieldInfo _lockMovementField;
-    private FieldInfo _lockRotationField;
-    private FieldInfo _isJumpingField;
-    private FieldInfo _jumpCounterField;
     private PlayerActionManager _actionManager;
     private Core.PlayerInputManager _inputManager;
     private CapsuleCollider _capsule;
@@ -193,7 +188,6 @@ public class PlayerFlyingController : MonoBehaviour
         _magicCaster = GetComponentInChildren<MagicCaster>(true) ?? GetComponentInParent<MagicCaster>();
         _inputManager = ServiceLocator.Get<Core.PlayerInputManager>(logIfMissing: false);
         _capsule = GetComponent<CapsuleCollider>() ?? GetComponentInChildren<CapsuleCollider>();
-        CacheControllerLockFields();
         CacheCameraTransform();
 
         if (_inputManager != null && _inputManager.Controls != null)
@@ -547,8 +541,7 @@ public class PlayerFlyingController : MonoBehaviour
                 _extraGravitySuspended = false;
             }
             _controller.suppressAirMovement = false;
-            _isJumpingField?.SetValue(_controller, false);
-            _jumpCounterField?.SetValue(_controller, 0f);
+            _controller.CortarSalto();
             _controller.enabled = _controllerWasEnabled;
         }
 
@@ -599,6 +592,9 @@ public class PlayerFlyingController : MonoBehaviour
         // Altura con los gatillos (RT sube, LT baja), también quieto en el aire.
         float altura = LeerAltura();
         float verticalInput = altura >= 0f ? altura * verticalSpeed : altura * descendSpeed;
+        // Techo de vuelo de la escena (Kits.WorldWrap): frena al subir cerca de él y baja si se pasa.
+        var techo = Kits.WorldWrap.AltitudeCeiling.Current;
+        if (techo != null) verticalInput = techo.Limit(transform.position.y, verticalInput);
 
         bool isIdleHover = planar.sqrMagnitude < 0.01f && Mathf.Abs(verticalInput) < 0.1f;
 
@@ -823,26 +819,9 @@ public class PlayerFlyingController : MonoBehaviour
         VfxPoolService.Instance.Play(landingVfxPrefab, parent.position, parent.rotation, duracionVfxDeAterrizaje);
     }
 
-    private void CacheControllerLockFields()
-    {
-        if (_controller == null) return;
-
-        var type = _controller.GetType();
-        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-        _lockMovementField = type.GetField("lockMovement", flags);
-        _lockRotationField = type.GetField("lockRotation", flags);
-        _isJumpingField = type.GetField("isJumping", flags);
-        _jumpCounterField = type.GetField("jumpCounter", flags);
-    }
-
     private void SetControllerLocks(bool value)
     {
-        if (_controller == null) return;
-        if (_lockMovementField == null || _lockRotationField == null)
-            CacheControllerLockFields();
-
-        _lockMovementField?.SetValue(_controller, value);
-        _lockRotationField?.SetValue(_controller, value);
+        if (_controller != null) _controller.BloquearMovimientoYGiro(value);
     }
 
     private Vector3 GetCameraForwardOnPlane()

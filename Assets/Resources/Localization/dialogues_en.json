@@ -2134,7 +2134,7 @@
         },
         {
             "key": "DLG_CAP3_SARGENTO_DESPUES_01",
-            "value": "Thanks to you those birds are flying. If you pass the crossroads, we're here."
+            "value": "Smugglers on the forest road? That's all we needed. If you see them again, let us know."
         },
         {
             "key": "DLG_CAP3_GUARDIA_01",
@@ -2210,7 +2210,7 @@
         },
         {
             "key": "DLG_OLIVER_DESPEDIDA_05",
-            "value": "And don't forget my collection of odd things: I'm still missing three from the village, a marble, a stone with a hole and an old coin. Bring them to me when you come back!"
+            "value": "And if you see anything odd out there, bring it to me. For the collection."
         },
         {
             "key": "DLG_CAP2_ELDRAN_ESPERA_01",
@@ -2234,7 +2234,7 @@
         },
         {
             "key": "DLG_CAP2_ADIOS_ERIKA_01",
-            "value": "Keep your guard up and don't strike first. And come back in one piece, you still owe me a rematch."
+            "value": "Keep your guard up and don't strike first. And bring that scarf back, it's mine."
         },
         {
             "key": "DLG_CAP2_ADIOS_BOTICARIA_01",
@@ -2430,19 +2430,19 @@
         },
         {
             "key": "DLG_CAP3_PILLADO_01",
-            "value": "Were you following me, kid? Bad idea."
+            "value": "Were you following us, kid? Bad idea."
         },
         {
             "key": "DLG_CAP3_PILLADO_02",
-            "value": "That light you're carrying is no lantern. What are you hiding?"
+            "value": "That light in the straw is no lantern. What are you carrying?"
         },
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_01",
-            "value": "Ow… my head… Fine, fine, I'll stay right here."
+            "value": "Ow… my head… Let's go, back to camp!"
         },
         {
             "key": "DLG_CAP3_CARRETERO_VENCIDO_02",
-            "value": "He came from the forest. The others must be out there."
+            "value": "They're heading into the forest. They must have something more there."
         },
         {
             "key": "DLG_CAP3_HOJA_09",
@@ -2451,6 +2451,10 @@
         {
             "key": "DLG_CAP3_HOJA_10",
             "value": "If those carts carry collared animals, I'll bring Estela more than a piece of iron."
+        },
+        {
+            "key": "CAP3_BOC_PRUEBA",
+            "value": "A lightbird feather. With this, Estela will have to listen to me."
         }
     ]
 }

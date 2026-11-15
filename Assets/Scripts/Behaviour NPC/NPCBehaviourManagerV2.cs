@@ -17,7 +17,7 @@ namespace Game.NPC
     [DisallowMultipleComponent]
     public class NPCBehaviourManagerV2 : MonoBehaviour
     {
-        #region ⚙️ Configuration
+        #region Configuration
         [Header("FSM Configuration")]
         [SerializeField] private NPCConfiguration configuration = new NPCConfiguration();
         [SerializeField] private bool debugMode = false;
@@ -72,14 +72,9 @@ namespace Game.NPC
         [Tooltip("¿Cambiar automáticamente a la capa 'Enemy' cuando se inicie un combate (acción StartCombat)?")]
         [SerializeField] private bool switchToEnemyLayerOnCombat = true;
 
-        // Los campos de "Detección Narrativa" (narrativeDetectionRange, walkTowardsPlayerOnAlert,
-        // stopDistanceFromPlayer, narrativeAlertIconPrefab) vivían aquí y se movieron a
-        // NarrativeActor.cs el 12 sept 2026 — solo los usa NPCInteractiveNarrativeExecutor
-        // (sistema Interactive, congelado). EnsureRequiredComponents() más abajo garantiza que
-        // cualquier NPC que active ese módulo tenga también NarrativeActor.
         #endregion
 
-        #region 🔌 Core Components
+        #region Core Components
         private NavMeshAgent _agent;
         private NPCSimpleAnimator _animator;
         private Animator _unityAnimator;
@@ -101,7 +96,7 @@ namespace Game.NPC
         private NPCCombatLifecycleHandler _cachedLifecycle;
         #endregion
 
-        #region 📢 Public API
+        #region Public API
         public NPCBrain Brain => _brain;
         public NPCStateContext Context => _context;
         public NPCConfiguration Configuration => configuration;
@@ -183,7 +178,7 @@ namespace Game.NPC
             if (!configuration.Validate(out string errors))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError($"[NPCBehaviourV2:{name}] ❌ ERROR DE CONFIG:\n{errors}");
+                Debug.LogError($"[NPCBehaviourV2:{name}] ERROR DE CONFIG:\n{errors}");
 #endif
             }
             
@@ -193,15 +188,17 @@ namespace Game.NPC
             _unityAnimator = GetComponent<Animator>();
             _rigidbody = GetComponent<Rigidbody>();
             
-            // ✅ FIX: Configurar NavMeshAgent para que NO controle la rotación
+            // Configurar NavMeshAgent para que NO controle la rotación
             // NPCSimpleAnimator se encarga de la rotación para evitar conflictos
             if (_agent != null)
             {
                 _agent.updateRotation = false;
             }
             
-            // 3. Configurar Físicas
-            if (forceKinematicRigidbody && _rigidbody != null)
+            // 3. Configurar Físicas. Un cuerpo del grupo que lleva el jugador tiene la física de su
+            // controlador: la pone su PilotoDelCuerpo al pasarlo a la IA.
+            var piloto = GetComponent<PilotoDelCuerpo>();
+            if (forceKinematicRigidbody && _rigidbody != null && (piloto == null || !piloto.LoLlevaElJugador))
             {
                 // IMPORTANTE: Resetear velocidades ANTES de hacer el rigidbody kinematic
                 // Unity no permite modificar velocidades de rigidbodies kinematic
@@ -257,7 +254,7 @@ namespace Game.NPC
             // NPCWeatherAwareness.RainStopped += HandleRainStopped;
             // _context.ShouldSeekShelter = NPCWeatherAwareness.IsRaining;
 
-            // 🌍 LOD de IA: offset aleatorio para no acumular las comprobaciones de distancia de
+            // LOD de IA: offset aleatorio para no acumular las comprobaciones de distancia de
             // todos los NPCs de la escena en el mismo frame (ver aiDistanceCheckInterval).
             _distanceCheckTimer = UnityEngine.Random.Range(0f, Mathf.Max(0.05f, aiDistanceCheckInterval));
         }
@@ -325,7 +322,7 @@ namespace Game.NPC
             }
 
             // Solo inicializar a Idle si ningún sistema externo ya asignó un estado
-            // (ej: ActiveCharacterSwapper puede poner al Will NPC en AllyCombatState antes de que Start() corra)
+            // (ej: al pasar un cuerpo a la IA en pleno combate entra en AllyCombatState antes de su Start)
             if (startInIdleState && _brain.CurrentState == null)
             {
                 _brain.ChangeState(new States.IdleState());
@@ -579,7 +576,7 @@ namespace Game.NPC
 
             if (_agent != null && !_agent.enabled && !SentadoFijo)
             {
-                // ✅ FIX (04 sep 2026): antes se hacía "_agent.enabled = true" a secas y solo
+                // antes se hacía "_agent.enabled = true" a secas y solo
                 // DESPUÉS se comprobaba isOnNavMesh para recolocar con Warp. Unity valida
                 // transform.position en el instante mismo de poner enabled = true — si el NPC
                 // llevaba dormido un rato (agent deshabilitado) y su transform quedó fuera del
@@ -608,9 +605,9 @@ namespace Game.NPC
             if (IsExternalMovementOverrideActive)
                 return;
 
-            // ✅ SAFETY CHECK: Si está en IdleState pero el agente no está detenido, forzar detención
+            // SAFETY CHECK: Si está en IdleState pero el agente no está detenido, forzar detención
             // Esto captura casos donde algo externo está activando el agente
-            // FIX M12 (auditoría 2026-08-07, parcial): comparación por tipo en vez de por string
+            // comparación por tipo en vez de por string
             // (evita comparar StateName == "Idle" cada NPC/frame). No se ha unificado con la
             // vigilancia equivalente de IdleState.OnUpdate — ambas llevan el comentario "FIX
             // CRÍTICO" propio, señal de que cada una se añadió para tapar un caso real distinto;
@@ -624,7 +621,7 @@ namespace Game.NPC
                     if (debugMode)
                         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.LogWarning($"[NPCManager:{name}] ⚠️ LateUpdate Safety: Agent no detenido en IdleState (isStopped={_agent.isStopped}, vel={_agent.velocity.magnitude:F1})");
+                        Debug.LogWarning($"[NPCManager:{name}] LateUpdate Safety: Agent no detenido en IdleState (isStopped={_agent.isStopped}, vel={_agent.velocity.magnitude:F1})");
 #endif
                         }
                     
@@ -650,7 +647,7 @@ namespace Game.NPC
         }
 
         // =================================================================================
-        // 🧩 AUTO-COMPONENT MANAGEMENT (MEJORADO)
+        // AUTO-COMPONENT MANAGEMENT (MEJORADO)
         // =================================================================================
         
         private void EnsureRequiredComponents()
@@ -658,46 +655,16 @@ namespace Game.NPC
             if (debugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCManager] 🔧 Verificando módulos...");
+                Debug.Log($"[NPCManager] Verificando módulos...");
                 #endif
             }
             
-            // 1. QUEST MODULE
-            if (configuration.HasBehaviour(NPCBehaviourType.Quest) && configuration.questConfig != null)
-            {
-                // NarrativeActor antes que nada: NPCQuestConfig.autoStartOnDetection y el propio
-                // NPCQuestActionExecutor pueden necesitar los campos de detección/icono que ahora
-                // vive ahí (movidos desde este archivo el 12 sept 2026).
-                if (!GetComponent<NarrativeActor>())
-                    gameObject.AddComponent<NarrativeActor>();
+            // Los NPCs a los que se dirige la historia llevan NarrativeActor (icono y charlas del grafo).
+            if ((configuration.HasBehaviour(NPCBehaviourType.Quest) || configuration.HasBehaviour(NPCBehaviourType.InteractiveNarrative))
+                && !GetComponent<NarrativeActor>())
+                gameObject.AddComponent<NarrativeActor>();
 
-                if (!GetComponent<NPCQuestActionExecutor>())
-                    gameObject.AddComponent<NPCQuestActionExecutor>();
-                
-                // Añadir gestor de iconos de quest
-                if (!GetComponent<NPCQuestIconManager>())
-                {
-                    gameObject.AddComponent<NPCQuestIconManager>();
-                    if (debugMode)
-                    {
-                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCManager] 🎯 NPCQuestIconManager añadido para {name}");
-                        #endif
-                    }
-                }
-            }
-            
-            // 2. INTERACTIVE NARRATIVE
-            if (configuration.HasBehaviour(NPCBehaviourType.InteractiveNarrative) && configuration.interactiveNarrativeConfig != null)
-            {
-                if (!GetComponent<NarrativeActor>())
-                    gameObject.AddComponent<NarrativeActor>();
-
-                if (!GetComponent<NPCInteractiveNarrativeExecutor>())
-                    gameObject.AddComponent<NPCInteractiveNarrativeExecutor>();
-            }
-
-            // 3. COMBAT MODULE - 🔥 MEJORA CRÍTICA 🔥
+            // COMBAT MODULE - MEJORA CRÍTICA
             // Inicializamos los componentes "físicos" (Salud, Targetable) AHORA.
             // La "IA" (CombatBrain) se añade luego en CombatState.
             if (configuration.HasBehaviour(NPCBehaviourType.Combat) && configuration.combatConfig != null)
@@ -708,14 +675,14 @@ namespace Game.NPC
                     var dmg = gameObject.AddComponent<Damageable>();
                     dmg.SetMaxAndCurrent(configuration.combatConfig.health, configuration.combatConfig.health);
                     
-                    // ✅ CRÍTICO: Establecer destroyOnDeath=false INMEDIATAMENTE
+                    // CRÍTICO: Establecer destroyOnDeath=false INMEDIATAMENTE
                     // El LifecycleHandler controlará la muerte manualmente
                     dmg.SetDestroyOnDeath(false);
                     
                     if (debugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCManager] 🛡️ Damageable añadido (Pre-Combate) - destroyOnDeath=false");
+                        Debug.Log($"[NPCManager] Damageable añadido (Pre-Combate) - destroyOnDeath=false");
                         #endif
                     }
                 }
@@ -728,7 +695,7 @@ namespace Game.NPC
                 }
                 else
                 {
-                    //if (debugMode) Debug.Log($"[NPCManager] ℹ️ NPCCombatLifecycleHandler ya existe en {name}");
+                    //if (debugMode) Debug.Log($"[NPCManager] NPCCombatLifecycleHandler ya existe en {name}");
                 }
 
                 // C. Targetable (Para que el jugador pueda apuntarle antes de pelear)
@@ -738,7 +705,7 @@ namespace Game.NPC
                     if (debugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCManager] 🎯 Targetable añadido (Pre-Combate)");
+                        Debug.Log($"[NPCManager] Targetable añadido (Pre-Combate)");
                         #endif
                     }
                 }
@@ -763,7 +730,7 @@ namespace Game.NPC
                     if (debugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCManager] 🤝 NPCPartyMember añadido para {name}");
+                        Debug.Log($"[NPCManager] NPCPartyMember añadido para {name}");
                         #endif
                     }
                 }
@@ -784,7 +751,7 @@ namespace Game.NPC
         }
 
         // =================================================================================
-        // 🎮 STATE CONTROL API
+        // STATE CONTROL API
         // =================================================================================
 
         public void EnterCombat()
@@ -794,19 +761,19 @@ namespace Game.NPC
 
             _context.IsInCombat = true;
 
-            // ✅ Verificar si es un aliado (miembro del party)
+            // Verificar si es un aliado (miembro del party)
             bool isAlly = _cachedPartyMember != null && _cachedPartyMember.IsInParty;
             
             if (isAlly)
             {
-                // 🤝 ALIADO: Usar AllyCombatState (ataca enemigos, no al jugador)
+                // ALIADO: Usar AllyCombatState (ataca enemigos, no al jugador)
                 // NO registrar en ActiveCombatRegistry (eso es para enemigos)
                 if (!(_brain.CurrentState is States.AllyCombatState))
                 {
                     if (debugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[NPCManager] 🤝 {name} entrando en AllyCombatState (es aliado)");
+                        Debug.Log($"[NPCManager] {name} entrando en AllyCombatState (es aliado)");
                         #endif
                     }
                     _brain.ChangeState(new States.AllyCombatState());
@@ -814,7 +781,7 @@ namespace Game.NPC
                 return; // No continuar con lógica de enemigos
             }
             
-            // ⚔️ ENEMIGO: Lógica normal
+            // ENEMIGO: Lógica normal
             // Registrar NPC en el registro de combate activo
             ActiveCombatRegistry.RegisterNPC(gameObject);
             
@@ -846,7 +813,7 @@ namespace Game.NPC
         {
             _context.IsInCombat = false;
             
-            // ✅ Desregistrar NPC del registro de combate activo
+            // Desregistrar NPC del registro de combate activo
             ActiveCombatRegistry.UnregisterNPC(gameObject);
             
             // El CombatState detectará el flag en su Update y saldrá solo
@@ -861,7 +828,7 @@ namespace Game.NPC
             // Evitar entrar en combate si ya estamos muertos
             if (_cachedLifecycle != null && _cachedLifecycle.IsDefeatedAndInactive) return;
 
-            // FIX C5 (auditoría 2026-08-07): NPCCombatLifecycleHandler.OnDamaged llama a este
+            // NPCCombatLifecycleHandler.OnDamaged llama a este
             // método sin comprobar si el NPC está en mitad de una cinemática. Golpear a un NPC
             // durante una cinemática forzaba la salida de CinematicState (vía ForceState del
             // brain, más abajo) a mitad de secuencia, dejando colgados los secuenciadores que
@@ -883,7 +850,7 @@ namespace Game.NPC
                 if (debugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCManager] ⚔️ {name} forzado a entrar en combate contra {target.name}");
+                    Debug.Log($"[NPCManager] {name} forzado a entrar en combate contra {target.name}");
                     #endif
                 }
                 _brain.ForceState(new States.CombatState());
@@ -907,7 +874,7 @@ namespace Game.NPC
         }
 
         // =================================================================================
-        // 🤝 PARTY SYSTEM API
+        // PARTY SYSTEM API
         // =================================================================================
         
         #region Party Events
@@ -959,7 +926,7 @@ namespace Game.NPC
                 if (debugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCManager:{name}] ✅ Se unió al party - Eventos disparados");
+                    Debug.Log($"[NPCManager:{name}] Se unió al party - Eventos disparados");
                     #endif
                 }
             }
@@ -985,7 +952,7 @@ namespace Game.NPC
                 if (debugMode)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCManager:{name}] 👋 Abandonó el party - Eventos disparados");
+                    Debug.Log($"[NPCManager:{name}] Abandonó el party - Eventos disparados");
                     #endif
                 }
             }
@@ -1009,13 +976,13 @@ namespace Game.NPC
             if (success)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCManager:{name}] ✅ AddToParty exitoso");
+                Debug.Log($"[NPCManager:{name}] AddToParty exitoso");
 #endif
             }
             else if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCManager:{name}] ⚠️ AddToParty falló - ¿Tiene Companion behaviour configurado?");
+                Debug.LogWarning($"[NPCManager:{name}] AddToParty falló - ¿Tiene Companion behaviour configurado?");
 #endif
             }
         }
@@ -1030,13 +997,13 @@ namespace Game.NPC
             if (!success && debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCManager:{name}] ⚠️ RemoveFromParty falló");
+                Debug.LogWarning($"[NPCManager:{name}] RemoveFromParty falló");
 #endif
             }
         }
 
         // =================================================================================
-        // 🗣️ SOCIAL ENCOUNTER API
+        // SOCIAL ENCOUNTER API
         // =================================================================================
 
         /// <summary>
@@ -1060,7 +1027,7 @@ namespace Game.NPC
         }
 
         // =================================================================================
-        // 🎬 CINEMATICS & MOVEMENT API
+        // CINEMATICS & MOVEMENT API
         // =================================================================================
 
         public void MoveToPosition(Vector3 targetPosition, float walkDuration = 2f, float maxDuration = 15f, bool turn = false, Action onComplete = null)
@@ -1114,7 +1081,7 @@ namespace Game.NPC
         }
 
         // =================================================================================
-        // 💾 PERSISTENCE & UTILS
+        // PERSISTENCE & UTILS
         // =================================================================================
 
         public void ApplyLastPositionIfNeeded()
@@ -1136,7 +1103,7 @@ namespace Game.NPC
                     bool wasEnabled = _agent.enabled;
                     if (!wasEnabled)
                     {
-                        // FIX: Unity valida transform.position en el instante de poner
+                        // Unity valida transform.position en el instante de poner
                         // enabled = true (antes de que el Warp de abajo pueda corregirlo). Si el
                         // transform seguía en su posición vieja (fuera del NavMesh rebakeado),
                         // ese "enabled = true" a secas loggeaba "Failed to create agent because
@@ -1165,7 +1132,7 @@ namespace Game.NPC
             if(debugMode)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCManager] 📍 Posición restaurada: {lastPosition}");
+                Debug.Log($"[NPCManager] Posición restaurada: {lastPosition}");
                 #endif
             }
         }
@@ -1272,7 +1239,7 @@ namespace Game.NPC
         private void ResolvePlayerReferences() {
             if (ServiceLocator.TryGet(out PlayerService ps) && PlayerService.Player != null) {
                 _player = PlayerService.Player.transform;
-                // ✅ OPTIMIZACIÓN: Cachear Camera.main solo si no la tenemos ya
+                // OPTIMIZACIÓN: Cachear Camera.main solo si no la tenemos ya
                 if (_playerCamera == null)
                 {
                     _playerCamera = Camera.main?.transform;

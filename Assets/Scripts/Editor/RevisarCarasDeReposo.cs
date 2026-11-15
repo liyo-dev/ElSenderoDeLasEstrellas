@@ -8,7 +8,7 @@ using UnityEngine;
 /// Informa de la configuración de reposo de cada controlador sin guardar prefabs.
 public static class RevisarCarasDeReposo
 {
-    [MenuItem("El Sendero/Diálogos/Revisar caras de reposo")]
+    [MenuItem("El Sendero/Pruebas y comprobaciones/Caras de reposo de los personajes")]
     public static void Revisar()
     {
         var informe = new StringBuilder("# Caras de reposo\n\n");
@@ -67,7 +67,7 @@ public static class RevisarCarasDeReposo
                             .Append(!tieneEntreabierta ? entreabierta : "")
                             .Append(!tieneEntreabierta && !tieneAbierta ? ", " : "")
                             .Append(!tieneAbierta ? abierta : "")
-                            .Append(". Usa El Sendero/Diálogos/Completar caras de todos los personajes; ");
+                            .Append(". Pasa El Sendero/Personajes/Caras de los protagonistas o El Sendero/Personajes/NPCs/Caras de los NPCs; ");
                     if (activosOjos.Length == 0) aviso.Append("Sin ojos activos; ");
                     if (activasBocas.Length == 0) aviso.Append("Sin boca activa; ");
                     if (aviso.Length > 0) avisos++;

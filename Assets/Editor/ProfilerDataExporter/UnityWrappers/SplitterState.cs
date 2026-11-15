@@ -82,7 +82,7 @@ namespace ProfilerDataExporter
             return result.ToArray();
         }
 
-        // FIX (auditoría 15 ago 2026, confirmado contra Editor.log/Editor-prev.log): en Unity
+        // en Unity
         // 6000.5.4f1 la lectura de "splitSize" via reflection dispara InvalidCastException aquí
         // (Convert.ToInt32 no puede convertir el valor real del campo interno de Unity en esta
         // versión — la propia clase ya avisa en su docstring de que Unity cambia esta forma sin

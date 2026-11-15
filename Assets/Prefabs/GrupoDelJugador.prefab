@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 1759466094439441556}
   - component: {fileID: 4396209073108528636}
   - component: {fileID: 9050542513031802828}
+  - component: {fileID: 2570711246914128176}
   m_Layer: 0
   m_Name: GrupoDelJugador
   m_TagString: Untagged
@@ -260,3 +261,17 @@ MonoBehaviour:
   vfxAlReanimar: {fileID: 1260526242777962756, guid: 0979ea3a7af4cbf42bacf5c3928596fc, type: 3}
   duracionDelVfx: 2
   sfxAlReanimar: Hechizo_BrisaSanadora
+--- !u!114 &2570711246914128176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7613925751593065874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b85420ab86876748b8547006db9c997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetService
+  spellLibrary: {fileID: 11400000, guid: 9d5569118d64eb440b0790aba9ad461d, type: 2}
+  autoFillEmptySlotsFromUnlocked: 0

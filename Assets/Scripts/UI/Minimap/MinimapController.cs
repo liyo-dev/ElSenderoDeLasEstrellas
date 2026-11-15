@@ -297,9 +297,11 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
 
     void ResolvePlayer()
     {
-        if (_playerTransform != null) return;
+        // Sigue al personaje que lleva el jugador (cambia al pasar el mando a otro).
+        var jugador = PlayerService.Player;
+        if (_playerTransform != null && (jugador == null || _playerTransform == jugador.transform)) return;
 
-        _playerTransform = PlayerService.PlayerTransform;
+        _playerTransform = jugador != null ? jugador.transform : null;
 
         if (_playerTransform == null)
         {

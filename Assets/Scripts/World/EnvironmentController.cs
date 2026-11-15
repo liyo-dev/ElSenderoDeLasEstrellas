@@ -58,7 +58,7 @@ public class EnvironmentController : MonoBehaviour
 
     // Gestión de zonas visibles
     GameObject[] _hiddenZones;       // zonas que ocultamos al entrar
-    // FIX (12 sep 2026, pedido de Raúl): el mundo exterior de MainWorld está repartido en más de un
+    // el mundo exterior de MainWorld está repartido en más de un
     // GameObject de nivel superior (p. ej. "WORLD" para terreno/edificios y "AI" para los NPCs) en
     // vez de uno solo. Antes solo se podía ocultar UN root (exteriorWorldRootName, string). Ahora se
     // oculta la unión de exteriorWorldRootName (compatibilidad con anchors ya configurados, p. ej.
@@ -115,7 +115,7 @@ public class EnvironmentController : MonoBehaviour
         enabled = true;
         DontDestroyOnLoad(gameObject);
 
-        // FIX M11 (auditoría 2026-08-07): antes se suscribía con lambdas anónimas, imposibles de
+        // antes se suscribía con lambdas anónimas, imposibles de
         // desuscribir. Este objeto es DontDestroyOnLoad y normalmente vive toda la sesión, así que
         // en juego real esto no fuga — pero en el editor, al parar Play sin domain reload, Unity
         // destruye los DontDestroyOnLoad y dispara OnDestroy: sin poder desuscribir la lambda, la
@@ -149,7 +149,7 @@ public class EnvironmentController : MonoBehaviour
         _cam = null; _appliedCam = null;
         _cinematicReapplyPending = false;
 
-        // FIX (iluminación del MainMenu inconsistente tras Game Over): este objeto es
+        // este objeto es
         // DontDestroyOnLoad y, antes de este fix, _mode nunca se reseteaba entre escenas —
         // solo el _needReapply de abajo decidía si tocar RenderSettings o no. Al volver al
         // MainMenu (p.ej. tras morir e ir a GameOverManager.TransitionToMainMenu()), _mode
@@ -210,7 +210,7 @@ public class EnvironmentController : MonoBehaviour
         // Capturamos el “exterior” una sola vez, antes de forzar interior
         if (!_hasSnapshot) CaptureExteriorSnapshot();
 
-        // ── EL CIELO NEGRO DEL PRÓLOGO (20 sep 2026) ──────────────────────────────────────────
+        // ── EL CIELO NEGRO DEL PRÓLOGO ──────────────────────────────────────────
         //
         // Si una cinemática tiene el control del entorno, aquí se ANOTA a dónde ha entrado el
         // jugador, pero no se pinta nada. Esto es lo que llevaba cinco grabaciones tapando el
@@ -299,7 +299,7 @@ public class EnvironmentController : MonoBehaviour
             CaptureExteriorSnapshot();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[EnvironmentController] 🎬 Cinematic Override INICIADO - Modo guardado: {_preCinematicMode}");
+        Debug.Log($"[EnvironmentController] Cinematic Override INICIADO - Modo guardado: {_preCinematicMode}");
 #endif
     }
     
@@ -319,7 +319,7 @@ public class EnvironmentController : MonoBehaviour
         
         // IMPORTANTE: Desactivar el flag DESPUÉS de aplicar, para que la protección cinemática no bloquee
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[EnvironmentController] 🎬 Cinematic Override FINALIZADO - Restaurando modo: {_preCinematicMode}");
+        Debug.Log($"[EnvironmentController] Cinematic Override FINALIZADO - Restaurando modo: {_preCinematicMode}");
 #endif
         
         // Restaurar el estado del entorno según el modo pre-cinemático
@@ -433,7 +433,7 @@ public class EnvironmentController : MonoBehaviour
             RenderSettings.skybox = env.interiorSkyboxOverride;
         }
 
-        // FIX: al igual que en ApplyInteriorTo/ForceApplyInteriorTo, gestionar la visibilidad
+        // al igual que en ApplyInteriorTo/ForceApplyInteriorTo, gestionar la visibilidad
         // de zonas también en el flujo cinemático. Antes de este fix, entrar en un interior
         // "por secuencia" (ej: TabernaSequencer, que nunca pasa por TeleportService/ApplyInterior)
         // dejaba el skybox/color de cámara correctos pero NO ocultaba zonesToHideOnEnter ni el
@@ -496,7 +496,7 @@ public class EnvironmentController : MonoBehaviour
             }
         }
 
-        // FIX (11 sep 2026): antes usaba GameObject.Find(...)/GameObject.FindWithTag(...) aquí —
+        // antes usaba GameObject.Find(...)/GameObject.FindWithTag(...) aquí —
         // un recorrido completo de la escena en CADA cruce de anchor, prohibido por AGENTS.md § 2 /
         // TDD.md § 12 ("usar registros" en vez de Find). Además FindWithTag lanza excepción si el
         // string no es un Tag registrado, y con "ExteriorWorld" como nombre normal esa llamada
@@ -504,7 +504,7 @@ public class EnvironmentController : MonoBehaviour
         // rompiendo también la restauración al salir (RestoreZoneVisibility depende de esta misma
         // referencia). Se resuelve por registro (ExteriorWorldRoot, O(1), sin recorrer la escena).
         //
-        // FIX (14 sep 2026, pedido de Raúl): entre el 11 y el 12 sept esto pasó a resolverse por
+        // entre el 11 y el 12 sept esto pasó a resolverse por
         // NOMBRE — cada AnchorEnvironment tenía que listar a mano, en exteriorWorldRootName/
         // exteriorWorldRootNames, cada GameObject raíz que quisiera ocultar. Frágil: un
         // ExteriorWorldRoot nuevo en la escena (con el componente puesto y todo) se quedaba fuera
@@ -518,7 +518,7 @@ public class EnvironmentController : MonoBehaviour
         // ninguna lista de nombres en ningún sitio más. exteriorWorldRootName/exteriorWorldRootNames
         // en AnchorEnvironment.cs quedan sin uso (no se han borrado para no perder los valores ya
         // serializados en anchors existentes, pero pueden vaciarse con tranquilidad).
-        // FIX (15 sep 2026, pedido de Raúl): antes se ocultaba cada root con SetActive(false),
+        // antes se ocultaba cada root con SetActive(false),
         // lo que además de dejar de renderizarlo paraba TODA su simulación (Update, NavMeshAgent,
         // coroutines) — causaba p. ej. que una coroutine de cinemática en curso sobre un NPC del
         // root "AI" (Oliver) no pudiera pararse ni relanzarse limpiamente al saltarla
@@ -574,7 +574,7 @@ public class EnvironmentController : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[EnvironmentController] 🔧 ForceApplyInteriorTo - Aplicando configuración completa de interior");
+        Debug.Log($"[EnvironmentController] ForceApplyInteriorTo - Aplicando configuración completa de interior");
 #endif
 
         // Aplicar configuración de cámara (clearFlags, backgroundColor, skybox)
@@ -640,7 +640,7 @@ public class EnvironmentController : MonoBehaviour
     void ForceApplyExteriorTo(Camera cam)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[EnvironmentController] 🔧 ForceApplyExteriorTo - Aplicando configuración completa de exterior");
+        Debug.Log("[EnvironmentController] ForceApplyExteriorTo - Aplicando configuración completa de exterior");
 #endif
         
         if (cam) cam.clearFlags = _hasSnapshot ? _savedClearFlags : CameraClearFlags.Skybox;

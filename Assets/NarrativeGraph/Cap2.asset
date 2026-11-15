@@ -21,11 +21,11 @@ MonoBehaviour:
   - rid: 5630202263296278917
   - rid: 5630202263296278918
   - rid: 5630202263296278919
-  - rid: 6540294589977723076
+  - rid: 6540294618706084385
   - rid: 6540294589977723077
   - rid: 6540294589977723078
   - rid: 6540294589977723079
-  - rid: 6540294589977723080
+  - rid: 6540294618706084386
   - rid: 6540294589977723081
   - rid: 6540294589977723082
   - rid: 6540294589977723083
@@ -34,13 +34,13 @@ MonoBehaviour:
   - rid: 5630202263296279079
   - rid: 5630202263296279102
   - rid: 5630202263296279103
-  - rid: 5630202263296279104
-  - rid: 5630202263296279105
+  - rid: 6540294618706084387
+  - rid: 6540294618706084388
   - rid: 5630202263296279106
   - rid: 5630202263296279107
   - rid: 5630202263296279108
   - rid: 5630202263296279109
-  - rid: 5630202263296279110
+  - rid: 6540294618706084389
   - rid: 5630202263296279111
   - rid: 5630202568397029506
   - rid: 5630202568397029508
@@ -53,13 +53,13 @@ MonoBehaviour:
   - rid: 5630202655468159110
   - rid: 5630202655468159111
   - rid: 5630202718439342302
-  - rid: 5630202718439342303
+  - rid: 6540294618706084390
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294538172825745
-  - rid: 6540294538172825746
-  - rid: 6540294538172825747
+  - rid: 6540294600349713183
+  - rid: 6540294600349713184
+  - rid: 6540294600349713185
   - rid: 6540294600349712458
   - rid: 6540294600349712459
   - rid: 6540294600349712460
@@ -104,6 +104,8 @@ MonoBehaviour:
         - cap2-iniciado-flag
         eventKey: CH_Cap1_BACK_1
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202263296278870
       type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -175,6 +177,8 @@ MonoBehaviour:
         - 5d1d3c34-cd28-464d-8039-73856cd7338e
         eventKey: LIAM_CRYSTAL_DONE
         acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202263296278919
       type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -265,47 +269,6 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: fa547693d02e99e449e4b2ed340b54a9, type: 2}
         npcId: NPC_Victoria
         oneShotFlag: 
-    - rid: 5630202263296279104
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 19.- Desbloquear capa de principiante
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-victoria-2
-        position: {x: 1120, y: 874}
-        outputs:
-        - cap2-prepara-viaje-victoria-3
-        wardrobeItem: {fileID: 11400000, guid: 7367f9d40af192b45aac491cf7b33acf, type: 2}
-        logWarnings: 0
-    - rid: 5630202263296279105
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "20.- Tutorial \xB7 equipar la capa"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-victoria-3
-        position: {x: 1400, y: 874}
-        outputs:
-        - cap2-prepara-viaje-victoria-4
-        action: 0
-        text: "Pulsa {BOTON} y equ\xEDpate la capa en Equipo, apartado Capas."
-        textId: TUTORIAL_PREPARA_VIAJE_CAPA
-        icon: {fileID: 0}
-        buttonName: start
-        dismissWithCancel: 1
-        cerrarConSenal: 
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 1
     - rid: 5630202263296279106
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -385,30 +348,6 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 5630202263296279110
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "25.- Tutorial \xB7 usar consumibles"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 1400, y: 1022}
-        outputs:
-        - cap2-prepara-viaje-boticaria-4
-        action: 0
-        text: "En Inventario, selecciona la poci\xF3n y confirma {BOTON}; confirma otra vez en Usar."
-        textId: TUTORIAL_PREPARA_VIAJE_POCION
-        icon: {fileID: 0}
-        buttonName: interactable_confirm
-        dismissWithCancel: 1
-        cerrarConSenal: 
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 1
     - rid: 5630202263296279111
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -639,29 +578,8 @@ MonoBehaviour:
         - cap2-prepara-viaje-erika-2
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         acceptEarlierEvent: 1
-    - rid: 5630202718439342303
-      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "22b-1.- Aprender Protecci\xF3n y Bola Prisma"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-erika-desbloqueo
-        position: {x: 1120, y: 1170}
-        outputs:
-        - cap2-prepara-viaje-erika-combate
-        abilityKeysToUnlock: 06000000i
-        abilitiesToUnlock: 
-        spellsToUnlock: 02000000i
-        assignSpellsToEmptySlot: 1
-        forceWillBeforeSpellUnlock: 1
-        oneShotFlag: 
-        applyPresetAfterUnlock: 1
-        saveAfterUnlock: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
     - rid: 5630202816662077838
       type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -714,81 +632,6 @@ MonoBehaviour:
         - cap2-prepara-viaje-erika-desbloqueo
         flagKey: GRIMORIO_RECIBIDO
         value: 1
-    - rid: 6540294538172825745
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-adios-senal
-        position: {x: 1680, y: 1318}
-        outputs:
-        - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-        eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294538172825746
-      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "26e.- Misi\xF3n: hora de partir"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-adios-mision
-        position: {x: 1960, y: 1022}
-        outputs:
-        - cap2-despedida-oliver-talk
-        questId: CAP2_HORA_DE_PARTIR
-        giverId: 
-        inProgressDialogue: {fileID: 0}
-        noGiver: 1
-    - rid: 6540294538172825747
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: '29.- Paso: despedirse de Oliver'
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-adios-paso-oliver
-        position: {x: 560, y: 1516}
-        outputs:
-        - cap2-despedida-join
-        standingActorId: 
-        standingDialogue: {fileID: 0}
-        questId: CAP2_HORA_DE_PARTIR
-        stepConditionIds:
-        - CAP2_ADIOS_OLIVER
-        steps: 
-        completeQuest: 0
-        logWarnings: 1
-    - rid: 6540294589977723076
-      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 7.- Amanece tras la noche
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
-        position: {x: 1400, y: 346}
-        outputs:
-        - cap2-manana-despues-8
-        targetTime: 6
-        immediate: 1
     - rid: 6540294589977723077
       type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -845,30 +688,6 @@ MonoBehaviour:
         markId: M_Manana_EldranPuerta
         applyPlayerEnvironment: 0
         showActor: 1
-    - rid: 6540294589977723080
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
-        chapter: Cap. 2
-        section: 
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-manana-despues-11
-        position: {x: 280, y: 544}
-        outputs:
-        - cap2-manana-despues-12
-        cinematicName: "La ma\xF1ana despu\xE9s"
-        signalIn: MANANA_DESPUES_START
-        signalDone: MANANA_DESPUES_DONE
-        signalFailed: 
-        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
-        plantillaDeAjustes: 
-        acercarActor: 
-        distanciaMaxima: 24
-        distanciaDeAparicion: 12
     - rid: 6540294589977723081
       type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -1111,3 +930,227 @@ MonoBehaviour:
           fields:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Eldran_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294600349713183
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-adios-senal
+        position: {x: 1400, y: 1518}
+        outputs:
+        - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
+        eventKey: CAP2_A_DESPEDIRSE
+    - rid: 6540294600349713184
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "26e.- Misi\xF3n: hora de partir"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-adios-mision
+        position: {x: 1780, y: 1518}
+        outputs:
+        - cap2-despedida-oliver-talk
+        questId: CAP2_HORA_DE_PARTIR
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294600349713185
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: '29.- Paso: despedirse de Oliver'
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-adios-paso-oliver
+        position: {x: 540, y: 1516}
+        outputs:
+        - cap2-despedida-join
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP2_HORA_DE_PARTIR
+        stepConditionIds:
+        - CAP2_ADIOS_OLIVER
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294618706084385
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 7.- Amanece tras la noche
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
+        position: {x: 1400, y: 346}
+        outputs:
+        - cap2-manana-despues-8
+        request:
+          rid: 6540294618706084391
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084386
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-11
+        position: {x: 280, y: 544}
+        outputs:
+        - cap2-manana-despues-12
+        - 
+        request:
+          rid: 6540294618706084392
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084387
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 19.- Desbloquear capa de principiante
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-2
+        position: {x: 1120, y: 874}
+        outputs:
+        - cap2-prepara-viaje-victoria-3
+        request:
+          rid: 6540294618706084393
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084388
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "20.- Tutorial \xB7 equipar la capa"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-3
+        position: {x: 1400, y: 874}
+        outputs:
+        - cap2-prepara-viaje-victoria-4
+        request:
+          rid: 6540294618706084394
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084389
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "25.- Tutorial \xB7 usar consumibles"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-3
+        position: {x: 1400, y: 1022}
+        outputs:
+        - cap2-prepara-viaje-boticaria-4
+        request:
+          rid: 6540294618706084395
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084390
+      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-1.- Aprender Protecci\xF3n y Bola Prisma"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-erika-desbloqueo
+        position: {x: 1120, y: 1170}
+        outputs:
+        - cap2-prepara-viaje-erika-combate
+        request:
+          rid: 6540294618706084396
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294618706084391
+      type: {class: PedirHoraDelDia, ns: , asm: Assembly-CSharp}
+      data:
+        targetTime: 6
+        immediate: 1
+    - rid: 6540294618706084392
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: "La ma\xF1ana despu\xE9s"
+        signalIn: MANANA_DESPUES_START
+        signalDone: MANANA_DESPUES_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
+        plantillaDeAjustes: 
+    - rid: 6540294618706084393
+      type: {class: PedirVestuario, ns: , asm: Assembly-CSharp}
+      data:
+        wardrobeItem: {fileID: 11400000, guid: 7367f9d40af192b45aac491cf7b33acf, type: 2}
+    - rid: 6540294618706084394
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: "Pulsa {BOTON} y equ\xEDpate la capa en Equipo, apartado Capas."
+        textId: TUTORIAL_PREPARA_VIAJE_CAPA
+        icon: {fileID: 0}
+        buttonName: start
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 6540294618706084395
+      type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
+      data:
+        action: 0
+        text: "En Inventario, selecciona la poci\xF3n y confirma {BOTON}; confirma otra vez en Usar."
+        textId: TUTORIAL_PREPARA_VIAJE_POCION
+        icon: {fileID: 0}
+        buttonName: interactable_confirm
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 6540294618706084396
+      type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
+      data:
+        abilityKeysToUnlock: 06000000i
+        spellsToUnlock: 02000000i
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1

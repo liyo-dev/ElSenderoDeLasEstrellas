@@ -60,7 +60,7 @@ public static class TonosDePiel
         ("NonInteractable/Guerrero#1", "morena"), ("AldeaDelMar/Engracia", "morena"),
     };
 
-    [MenuItem("El Sendero/Personajes/Tonos de piel de los NPCs")]
+    [MenuItem("El Sendero/Personajes/NPCs/Tonos de piel de los NPCs")]
     public static void Aplicar()
     {
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Tonos de piel", "Hazlo fuera de Play."); return; }

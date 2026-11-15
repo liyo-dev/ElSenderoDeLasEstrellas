@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Las cinemáticas de Chuchelandia: siete guiones horneados (Assets/_SEQUENCES/Guiones/Chuche_*.guion.txt,
 /// TDD § 22), cada uno con su <see cref="SequenceDefinition"/>, su <see cref="SequencePlayer"/> en la
-/// escena y su <see cref="PlayCinematicNode"/> en el grafo (guid «chuche-cine-*», con las señales y la
+/// escena y su <see cref="PedirCinematica"/> en el grafo (guid «chuche-cine-*», con las señales y la
 /// secuencia de la tabla). Seis van dentro del juego, con bocadillos; «¡TE QUIERO!» es de cine (bandas
 /// y subtítulos) y lleva su atrezo (<see cref="AtrezoDeLasCinematicas"/>). Al montar la prueba se colocan también las marcas que solo usan los guiones
 /// (M_Cine_*) y cuatro gominolas figurantes (el ejército que se lleva a Estela y el público del salón),
@@ -172,14 +172,14 @@ public static partial class ChuchelandiaBuilder
     private static NarrativeNode Cinematica(string nodo)
     {
         var c = System.Array.Find(TablaDeCinematicas, x => x.Nodo == nodo);
-        if (c == null) return new PlayCinematicNode { cinematicName = nodo + " (sin cinemática en la tabla)" };
-        return new PlayCinematicNode
+        if (c == null) return GameStepNode.For(new PedirCinematica { cinematicName = nodo + " (sin cinemática en la tabla)" });
+        return GameStepNode.For(new PedirCinematica
         {
             cinematicName = c.Nombre,
             signalIn = c.Entrada,
             signalDone = c.Salida,
             secuencia = AssetDatabase.LoadAssetAtPath<SequenceDefinition>(c.RutaSecuencia),
-        };
+        });
     }
 
     // ── La escena ───────────────────────────────────────────────────────────────────────────

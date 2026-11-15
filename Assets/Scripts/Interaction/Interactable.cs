@@ -73,7 +73,7 @@ public class Interactable : MonoBehaviour
              "asignado (ver SightPoint). Sin efecto si hint sí está asignado.")]
     [SerializeField] private float defaultSightHeight = 1.4f;
 
-    // FIX (2026-08-12): InteractionDetector.FindNearest() comprobaba línea de visión contra
+    // InteractionDetector.FindNearest() comprobaba línea de visión contra
     // transform.position (la base/los pies del NPC). Cualquier mueble de altura media entre el
     // player y el NPC (mostrador de tienda, mesa...) queda justo a esa altura y se detectaba
     // como obstrucción real aunque el jugador viera al NPC perfectamente por encima — el hint
@@ -83,7 +83,7 @@ public class Interactable : MonoBehaviour
     // propio hint, que ya está a la altura de la cabeza/por encima del NPC por diseño (es un
     // icono flotante). Si el jugador puede ver ese punto, un mostrador bajo deja de bloquear.
     //
-    // FIX (2026-08-12b): la asunción de arriba ("el hint ya está a la altura de la cabeza") no
+    // la asunción de arriba ("el hint ya está a la altura de la cabeza") no
     // se cumple para todos los prefabs de NPC — p.ej. Patricia tiene el Canvas del hint colgando
     // directamente de la raíz del prefab con offset local (0,0,0), así que hint.transform.position
     // queda prácticamente a la misma altura que transform.position (por eso el mostrador de su
@@ -167,6 +167,14 @@ public class Interactable : MonoBehaviour
     }
 
     public bool EsPersonaje { get; private set; }
+
+    // Hay una orden del modo Libre que dar a este personaje del grupo (ver CompanionFollowPrompt).
+    bool HayOrdenDelGrupo()
+    {
+        if (_followPrompt == null)
+            _followPrompt = GetComponent<Game.NPC.CompanionFollowPrompt>() ?? GetComponentInParent<Game.NPC.CompanionFollowPrompt>();
+        return _followPrompt != null && _followPrompt.isActiveAndEnabled && _followPrompt.CanShowFollowPrompt();
+    }
 
     void OnEnable()
     {
@@ -276,20 +284,23 @@ public class Interactable : MonoBehaviour
     {
         if (hint == null && (!visible || !CrearIconoPorDefecto())) return;
         
-        // Los personajes del grupo nunca muestran el icono de interactuar
-        if (EsPersonajeDelGrupo())
+        // Los personajes del grupo solo muestran el icono cuando hay una orden del modo Libre
+        // («Sígueme» / «Deja de seguir»); su uso no depende de enabledForUse ni de single-use.
+        bool delGrupo = EsPersonajeDelGrupo();
+        if (delGrupo && !HayOrdenDelGrupo())
         {
             if (_hintVisible)
             {
                 _hintVisible = false;
                 _hintTween?.Kill();
                 hint.SetActive(false);
+                if (_hintEncendido == this) _hintEncendido = null;
             }
             return;
         }
 
         // Solo mostrar hint si puede interactuar
-        bool canShow = visible && !used && enabledForUse && CanInteract(interactor);
+        bool canShow = visible && (delGrupo || (!used && enabledForUse)) && CanInteract(interactor);
         
         // Si el estado no cambia, no hacer nada
         if (canShow == _hintVisible) return;
@@ -355,6 +366,12 @@ public class Interactable : MonoBehaviour
             return false;
         if (Time.unscaledTime < s_globalCooldownUntil)
             return false;
+
+        // Los personajes del grupo (Will, Liam, Estela) no son interactuables entre sí: solo
+        // reciben las órdenes del modo Libre de CompanionFollowPrompt. Ver INC-754 e INC-1200.
+        if (EsPersonajeDelGrupo())
+            return HayOrdenDelGrupo() && !IsInteractionBlockedByCurrentState(interactor);
+
         if (!enabledForUse)
             return false;
         if (singleUse && used)
@@ -365,24 +382,14 @@ public class Interactable : MonoBehaviour
         if (_npcManager != null && _npcManager.Context != null && _npcManager.Context.IsInCinematic)
             return false;
 
-        // Los personajes del grupo (Will, Liam, Estela) no son interactuables entre sí
-        // ni muestran iconos de interacción ordinaria (botón A).
-        if (EsPersonajeDelGrupo())
-            return false;
-
         // Bloqueo central: durante combate/diálogo/cinemática no permitir nuevas interacciones
         if (IsInteractionBlockedByCurrentState(interactor))
             return false;
         
-        // Bloquear interacción si el NPC está ejecutando una narrativa
-        var narrativeExecutor = GetComponent<Game.NPC.Modules.NPCInteractiveNarrativeExecutor>();
-        if (narrativeExecutor != null && narrativeExecutor.IsExecuting)
-            return false;
-
         // No mostrar el hint si el NPCWorldPoint ya está ocupado por OTRO ocupante. Si el ocupante
         // es el propio interactor (p.ej. el jugador ya está tumbado/sentado aquí), SÍ dejamos pasar:
         // así el mismo botón A que se usó para tumbarse sirve para despertarse/levantarse (ver
-        // StartWorldPointActivity). FIX (15 ago 2026): antes esto bloqueaba siempre que estaba
+        // StartWorldPointActivity). antes esto bloqueaba siempre que estaba
         // ocupado, así que "A" no hacía nada mientras el jugador dormía — la única forma de
         // levantarse era el botón de cancelar (B/Circle), que no coincide con el icono "A" que
         // se sigue mostrando en pantalla.
@@ -431,9 +438,10 @@ public class Interactable : MonoBehaviour
 
         OnInteract?.Invoke(interactor);
 
-        // Si el NPC es miembro del equipo, la interacción fue manejada por CompanionFollowPrompt.
-        // No continuar (sin diálogo ni narrativa).
-        if (_partyMember != null && _partyMember.IsInParty)
+        // Con un personaje o miembro del grupo, la interacción es la orden de CompanionFollowPrompt
+        // (ya atendida en OnInteract): sin diálogo ni narrativa. El Will de la IA no es miembro
+        // del grupo, pero sí personaje.
+        if (EsPersonajeDelGrupo() || (_partyMember != null && _partyMember.IsInParty))
             return;
 
         // El Brain reserva las charlas esperadas por el grafo antes del diálogo o servicio local.
@@ -460,42 +468,6 @@ public class Interactable : MonoBehaviour
             }
         }
         
-        // ✅ PRIORIDAD: Si hay un NPCInteractiveNarrativeExecutor con narrativas condicionales,
-        // delegar a él en lugar de ejecutar el diálogo por defecto
-        var narrativeExecutor = GetComponent<Game.NPC.Modules.NPCInteractiveNarrativeExecutor>();
-        if (narrativeExecutor != null)
-        {
-            var config = narrativeExecutor.GetConfiguration();
-            if (config != null && config.HasAvailableNarrative())
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Interactable:{name}] 🎭 Delegando a NPCInteractiveNarrativeExecutor (tiene narrativas condicionales disponibles)");
-#endif
-                bool success = narrativeExecutor.TryExecuteNarrative();
-                if (success)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[Interactable:{name}] ✅ Narrativa condicional ejecutada exitosamente");
-#endif
-                    return; // ✅ Salir - no ejecutar el diálogo por defecto
-                }
-                else
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[Interactable:{name}] ⚠️ TryExecuteNarrative() falló, usando diálogo por defecto");
-#endif
-                }
-            }
-            else
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Interactable:{name}] ℹ️ NPCInteractiveNarrativeExecutor existe pero no hay narrativas disponibles, usando diálogo por defecto");
-#endif
-            }
-        }
-        
-        // Si no hay NPCInteractiveNarrativeExecutor o no tiene narrativas disponibles,
-        // ejecutar el comportamiento por defecto del Interactable
         switch (mode)
         {
             case InteractableMode.OpenDialogue:
@@ -578,10 +550,10 @@ public class Interactable : MonoBehaviour
     void StartDialogue(DialogueAsset asset)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[Interactable:{name}] 📖 StartDialogue - dialogue={asset?.name}");
+        Debug.Log($"[Interactable:{name}] StartDialogue - dialogue={asset?.name}");
 #endif
         
-        // ✅ REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
+        // REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
         var npcAnimator = GetComponent<NPCSimpleAnimator>();
         if (npcAnimator != null && _npcManager != null)
         {
@@ -590,7 +562,7 @@ public class Interactable : MonoBehaviour
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción");
+                Debug.Log($"[Interactable:{name}] Reproduciendo animación de interacción");
 #endif
             }
         }
@@ -599,22 +571,22 @@ public class Interactable : MonoBehaviour
         if (asset && dm != null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Interactable:{name}] ✅ Iniciando diálogo: {asset.name}");
+            Debug.Log($"[Interactable:{name}] Iniciando diálogo: {asset.name}");
 #endif
             OnStarted?.Invoke();
             GameState.Push(GamePhase.Dialogue);
 
-            // ✅ FIX: bloquear Wander/Idle mientras dura el diálogo por defecto.
+            // bloquear Wander/Idle mientras dura el diálogo por defecto.
             // Sin esto, un NPC con enableWander sigue caminando durante todo el diálogo
             // porque este flujo (a diferencia de NPCInteractiveNarrativeExecutor) nunca
             // pasaba por el Brain ni tocaba Context.IsInteracting.
             SetNpcInteracting(true);
 
-            // ✅ NPCSimpleAnimator maneja la rotación del NPC (suscrito a eventos de DialogueManager)
+            // NPCSimpleAnimator maneja la rotación del NPC (suscrito a eventos de DialogueManager)
             dm.StartDialogue(asset, transform, () =>
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Interactable:{name}] 🔚 Diálogo terminado");
+                Debug.Log($"[Interactable:{name}] Diálogo terminado");
 #endif
                 SetNpcInteracting(false);
                 OnFinished?.Invoke();
@@ -645,7 +617,7 @@ public class Interactable : MonoBehaviour
 
     void StartDialogueWithOptions()
     {
-        // ✅ REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
+        // REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
         var npcAnimator = GetComponent<NPCSimpleAnimator>();
         if (npcAnimator != null && _npcManager != null)
         {
@@ -654,7 +626,7 @@ public class Interactable : MonoBehaviour
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción (con opciones)");
+                Debug.Log($"[Interactable:{name}] Reproduciendo animación de interacción (con opciones)");
 #endif
             }
         }
@@ -679,7 +651,7 @@ public class Interactable : MonoBehaviour
         // Bloquear otros menús mientras se muestran las opciones
         GameState.Push(GamePhase.SavePrompt);
 
-        // ✅ FIX: mismo motivo que StartDialogue() - evitar que el NPC siga vagando
+        // mismo motivo que StartDialogue() - evitar que el NPC siga vagando
         // mientras se muestra el diálogo con opciones. Se libera en HandleChoiceResult().
         SetNpcInteracting(true);
 
@@ -743,7 +715,7 @@ public class Interactable : MonoBehaviour
         SetHintVisible(false);
         GameState.Push(GamePhase.SavePrompt);
 
-        // ✅ FIX: mismo motivo que StartDialogue() - ver comentario allí.
+        // mismo motivo que StartDialogue() - ver comentario allí.
         SetNpcInteracting(true);
 
         popup.Show(prompt,
@@ -874,7 +846,7 @@ public class Interactable : MonoBehaviour
             return;
         }
 
-        // FIX (15 ago 2026): si el propio interactor ya está ocupando este punto (durmiendo/sentado
+        // si el propio interactor ya está ocupando este punto (durmiendo/sentado
         // aquí), pulsar Interactuar otra vez debe despertarlo/levantarlo, no intentar TryOccupy() de
         // nuevo — eso siempre devuelve false porque ya está ocupado, y antes de este fix el botón A
         // simplemente no hacía nada mientras el jugador dormía (ver CanInteract más arriba).

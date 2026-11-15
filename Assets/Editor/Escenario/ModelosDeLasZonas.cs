@@ -28,6 +28,9 @@ public static class ModelosDeLasZonas
         "GraneroDelPueblo", "PozoDelPueblo", "ArcoDelPueblo", "ArcoDeLaAldea",
         "RepisaDeRoca_Grande", "RepisaDeRoca_Mediana", "RepisaDeRoca_Pequena", "EscalonesDePiedra", "PuenteColgante", "PuenteColgante_Largo",
         "MiradorDeCumbre", "TunelDeRoca", "TunelEscalonado", "BocaDeCueva", "SalaDeLaCueva", "CortinaDeHiedra", "GrietaSecreta", "EntradaDeTemplo",
+        "CasaDeRisco_A", "CasaDeRisco_B", "CasaDeRisco_C", "CasaDeRisco_D", "BancalDeRisco_Ancho", "BancalDeRisco_Estrecho", "CapillaDeRisco",
+        "PresaDeRisco", "RefugioDelPastor", "HitoDelCamino", "MojonDePiedras", "NoriaDeVega", "CharcoDeCueva", "ArenaDeCueva",
+        "GrietaDelManantial", "PiedrasDelDerrumbe", "TramoDeCastillete", "CabriaDelMontacargas", "JaulaDelMontacargas", "PosteDeLlamada",
     };
 
     private static readonly (string material, Color color)[] Colores =
@@ -48,6 +51,8 @@ public static class ModelosDeLasZonas
         ("ContraRoja", Hex("c9553f")), ("ContraVerde", Hex("3f8f5c")), ("RojoGranero", Hex("b8483a")), ("Hierba", Hex("5fb85f")),
         ("RocaOscura", Hex("4a4658")), ("SueloDeCueva", Hex("6b6470")), ("Hiedra", Hex("2f8f4e")), ("PiedraTemplo", Hex("d9d2c0")),
         ("Musgo", Hex("6f9f5a")), ("Bronce", Hex("b8763a")), ("Portal", Hex("7fe0d8")),
+        ("PiedraRisco", Hex("b3a79c")), ("PiedraRiscoOscura", Hex("86797a")), ("PizarraRisco", Hex("555169")), ("PizarraRiscoSombra", Hex("454158")),
+        ("MaderaRisco", Hex("6e4b33")), ("Geranio", Hex("e8473f")), ("Nieve", Hex("eef2f6")), ("Arena", Hex("ecd9a0")),
     };
 
     /// Fondo (m) de las casas y edificios de ciudad; null en lo demás.
@@ -175,23 +180,23 @@ public static class ModelosDeLasZonas
         asiento.requiredProximity = 2.2f;
         asiento.soloJugador = true;
         var interactuable = uso.AddComponent<Interactable>();
-        CopiarIconoDeInteractuar(interactuable, uso.transform, informe);
+        IconoDeInteractuar(interactuable, uso.transform, InteractableMode.UseWorldPoint, informe);
 
         arbol.AddComponent<Columpio>().Configurar(asiento, balanceo);
         informe.AppendLine($"Columpio: cuerdas de {largo:0.00} m, se balancea {AmplitudDelColumpio:0}° sobre {(eje == Vector3.right ? "X" : "Z")}.");
     }
 
-    /// Modo «usar punto» con el icono de interactuar y el juego de iconos de la silla de muestra.
-    private static void CopiarIconoDeInteractuar(Interactable destino, Transform padre, StringBuilder informe)
+    /// El modo dado, con el icono de interactuar y el juego de iconos de la silla de muestra.
+    public static void IconoDeInteractuar(Interactable destino, Transform padre, InteractableMode modo, StringBuilder informe)
     {
         var so = new SerializedObject(destino);
-        so.FindProperty("mode").enumValueIndex = (int)InteractableMode.UseWorldPoint;
+        so.FindProperty("mode").enumValueIndex = (int)modo;
         var silla = AssetDatabase.LoadAssetAtPath<GameObject>(SillaUsable);
         Interactable muestra = silla != null ? silla.GetComponentInChildren<Interactable>(true) : null;
         if (muestra == null)
         {
             so.ApplyModifiedPropertiesWithoutUndo();
-            informe.AppendLine("Columpio: no encuentro la silla de muestra; queda sin icono de interactuar.");
+            informe.AppendLine("No encuentro la silla de muestra: el interactuable queda sin icono.");
             return;
         }
         var soMuestra = new SerializedObject(muestra);

@@ -342,6 +342,19 @@ public class PlatformElevator : MonoBehaviour
     public bool IsMoving => _isMoving;
     public bool IsRaised => isRaised;
 
+    /// <summary>Sube la plataforma (para eventos sin parámetros, p. ej. un interactuable).</summary>
+    public void MoveUp() => Raise();
+
+    /// <summary>Baja la plataforma (para eventos sin parámetros).</summary>
+    public void MoveDown() => Lower();
+
+    /// <summary>Si está arriba (o subiendo) la baja; si no, la sube.</summary>
+    public void Toggle()
+    {
+        if (isRaised) Lower();
+        else Raise();
+    }
+
     #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {

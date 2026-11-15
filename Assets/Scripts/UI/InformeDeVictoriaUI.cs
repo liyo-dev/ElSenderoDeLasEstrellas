@@ -17,7 +17,7 @@ using Slot = PartyControlManager.CharacterSlot;
 /// PasoInformeDeBatalla. Ver INC-543 e INC-950.
 ///
 /// El prefab (Resources/UI/InformeDeVictoria) lo construye el menú
-/// «El Sendero/UI/Crear o regenerar el informe de victoria»; este componente solo lo rellena y
+/// «El Sendero/Interfaz/Crear o regenerar el informe de victoria»; este componente solo lo rellena y
 /// lo anima.
 public sealed class InformeDeVictoriaUI : MonoBehaviour
 {

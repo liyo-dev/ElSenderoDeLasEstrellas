@@ -3,61 +3,17 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 
-/// Crea los perfiles propios del prólogo y monta el controlador oficial de escena.
+/// Crea los perfiles de post-procesado propios del prólogo (día, amenaza y clímax).
 public static class PrologoPostprocesoSueno
 {
     public const string Carpeta = "Assets/Art/World/Prologo_Valle";
     public const string Dia = Carpeta + "/Prologo_Dia.asset";
     public const string Amenaza = Carpeta + "/Prologo_Amenaza.asset";
     public const string Climax = Carpeta + "/Prologo_Climax.asset";
-    private const string Viejo = Carpeta + "/Prologo_Sueno_Volume.asset";
-
-    [MenuItem("El Sendero/Archivo/Prólogo: post-procesado propio", priority = 34)]
-    public static void Menu()
-    {
-        var escena = SceneManager.GetSceneByName("Prologo_Valle");
-        if (!escena.IsValid() || !escena.isLoaded)
-        {
-            EditorUtility.DisplayDialog("Post-procesado", "Abre Prologo_Valle primero.", "Vale");
-            return;
-        }
-        Ejecutar(escena);
-    }
-
-    public static void Ejecutar(Scene escena)
-    {
-        if (!escena.IsValid() || !escena.isLoaded) return;
-        CrearPerfiles();
-        var go = escena.GetRootGameObjects().FirstOrDefault(g => g.name == "POSTPROCESO_SUENO");
-        if (go == null)
-        {
-            go = new GameObject("POSTPROCESO_SUENO");
-            SceneManager.MoveGameObjectToScene(go, escena);
-        }
-        // El script archivado deja una referencia ausente que se retira mediante la API de editor.
-        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(go);
-        var volume = go.GetComponent<Volume>() ?? go.AddComponent<Volume>();
-        volume.isGlobal = true;
-        volume.priority = 10;
-        volume.weight = 1;
-        volume.sharedProfile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(Dia);
-        var control = go.GetComponent<PostprocesoDeEscena>() ?? go.AddComponent<PostprocesoDeEscena>();
-        control.perfilInicial = volume.sharedProfile;
-        control.exclusivo = true;
-        control.entrada = 1.5f;
-        EditorUtility.SetDirty(volume);
-        EditorUtility.SetDirty(control);
-        EditorSceneManager.MarkSceneDirty(escena);
-        EditorSceneManager.SaveScene(escena);
-        AssetDatabase.SaveAssets();
-        ArchivarPerfilSinUso();
-    }
 
     /// Crea los perfiles de día, amenaza y clímax solo si faltan: una vez creados, se ajustan en el
     /// propio asset y la preparación del prólogo no los vuelve a tocar.
@@ -188,23 +144,6 @@ public static class PrologoPostprocesoSueno
         if (c == null) return;
         if (c.GetType().GetField(campo, BindingFlags.Public | BindingFlags.Instance)?.GetValue(c) is VolumeParameter<float> parametro)
             parametro.Override(valor);
-    }
-
-    private static void ArchivarPerfilSinUso()
-    {
-        if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(Viejo) == null) return;
-        foreach (string ruta in AssetDatabase.GetAllAssetPaths())
-        {
-            if (!ruta.StartsWith("Assets/", StringComparison.Ordinal) || ruta == Viejo || AssetDatabase.IsValidFolder(ruta)) continue;
-            if (AssetDatabase.GetDependencies(ruta, false).Contains(Viejo)) return;
-        }
-        string destino = System.IO.Path.GetFullPath("Versiones antiguas/Postproceso del prologo");
-        System.IO.Directory.CreateDirectory(destino);
-        string archivo = System.IO.Path.Combine(destino, System.IO.Path.GetFileName(Viejo));
-        if (System.IO.File.Exists(archivo)) throw new InvalidOperationException("El perfil archivado ya existe; se conserva para evitar sobrescribirlo.");
-        System.IO.File.Move(Viejo, archivo);
-        if (System.IO.File.Exists(Viejo + ".meta")) System.IO.File.Move(Viejo + ".meta", archivo + ".meta");
-        AssetDatabase.Refresh();
     }
 }
 #endif

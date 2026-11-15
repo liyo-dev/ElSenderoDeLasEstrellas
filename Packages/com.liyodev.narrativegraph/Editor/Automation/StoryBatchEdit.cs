@@ -89,7 +89,7 @@ namespace NarrativeGraphEditor
             string where = $"#{n} {op.op}";
             bool Known(string reference) => !string.IsNullOrEmpty(reference) && (planned.ContainsKey(reference) || Find(graph, s, reference, null) != null);
             Type TypeOf(string reference)
-                => planned.TryGetValue(reference ?? string.Empty, out var t) ? t : Find(graph, s, reference, null)?.GetType();
+                => planned.TryGetValue(reference ?? string.Empty, out var t) ? t : Find(graph, s, reference, null)?.KindType;
 
             switch (op.op)
             {
@@ -132,7 +132,7 @@ namespace NarrativeGraphEditor
             {
                 case "add":
                 {
-                    var node = (NarrativeNode)Activator.CreateInstance(StepType(op.type));
+                    var node = NarrativeNode.Create(StepType(op.type));
                     node.displayTitle = op.title ?? string.Empty;
                     node.outputs = new List<string>();
                     var ports = node.GetOutputPorts();
@@ -144,7 +144,7 @@ namespace NarrativeGraphEditor
                     if (!string.IsNullOrEmpty(op.id)) created[op.id] = node;
                     if (previous != null) Connect(previous, node, op.port);
                     if (string.IsNullOrEmpty(graph.startNodeGuid)) graph.startNodeGuid = node.guid;
-                    done.Add($"added {node.GetType().Name} '{node.displayTitle}' ({node.guid})");
+                    done.Add($"added {node.KindType.Name} '{node.displayTitle}' ({node.guid})");
                     break;
                 }
                 case "set":
@@ -237,7 +237,7 @@ namespace NarrativeGraphEditor
         {
             if (type == null || string.IsNullOrEmpty(port)) return;
             NarrativeNode sample;
-            try { sample = (NarrativeNode)Activator.CreateInstance(type); } catch (Exception) { return; }
+            try { sample = NarrativeNode.Create(type); } catch (Exception) { return; }
             var names = sample.GetOutputPorts();
             if (names != null && !names.Any(n => string.Equals(n, port, StringComparison.OrdinalIgnoreCase)))
                 errors.Add($"{where}: '{type.Name}' has no way out called '{port}' (it has {string.Join(", ", names)}).");
@@ -248,10 +248,18 @@ namespace NarrativeGraphEditor
             if (type == null || fields == null) return;
             foreach (var f in fields)
             {
-                var info = type.GetField(f.name ?? string.Empty, BindingFlags.Instance | BindingFlags.Public);
+                var info = OwnerTypes(type).Select(t => t.GetField(f.name ?? string.Empty, BindingFlags.Instance | BindingFlags.Public)).FirstOrDefault(i => i != null);
                 if (info == null) { errors.Add($"{where}: '{type.Name}' has no field '{f.name}'."); continue; }
                 if (!TryConvert(info.FieldType, f.value, out _, out var why)) errors.Add($"{where}: field '{f.name}': {why}");
             }
+        }
+
+        /// Los tipos cuyos campos forman un paso de este tipo (el nodo y, si es una petición, ella).
+        static IEnumerable<Type> OwnerTypes(Type kind)
+        {
+            NarrativeNode sample;
+            try { sample = NarrativeNode.Create(kind); } catch (Exception) { return new[] { kind }; }
+            return sample != null ? sample.FieldOwners().Select(o => o.GetType()).ToList() : new List<Type> { kind };
         }
 
         static void SetFields(NarrativeNode node, List<Field> fields)
@@ -259,9 +267,14 @@ namespace NarrativeGraphEditor
             if (fields == null) return;
             foreach (var f in fields)
             {
-                var info = node.GetType().GetField(f.name, BindingFlags.Instance | BindingFlags.Public);
-                TryConvert(info.FieldType, f.value, out var value, out _);
-                info.SetValue(node, value);
+                foreach (var owner in node.FieldOwners())
+                {
+                    var info = owner.GetType().GetField(f.name, BindingFlags.Instance | BindingFlags.Public);
+                    if (info == null) continue;
+                    TryConvert(info.FieldType, f.value, out var value, out _);
+                    info.SetValue(owner, value);
+                    break;
+                }
             }
         }
 

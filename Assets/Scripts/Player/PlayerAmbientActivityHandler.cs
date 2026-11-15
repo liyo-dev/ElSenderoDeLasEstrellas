@@ -74,7 +74,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
             ForceRelease();
     }
 
-    // FIX (16 ago 2026): "Will se queda dormido/sentado para siempre, sin poder levantarse ni
+    // "Will se queda dormido/sentado para siempre, sin poder levantarse ni
     // salir de la casa" — cancelAction (suscrito en OnEnable) apunta a PlayerControls.UI.Cancel,
     // pero SnapToSeat() deja el mapa GamePlay activo A PROPÓSITO durante toda la actividad (para
     // que la cámara siga respondiendo mientras el jugador está sentado/dormido — ver comentario
@@ -203,7 +203,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         leaving.Release(transform);
         leaving.DetachProp();
         RestoreCC();
-        // FIX: sin esto el Animator se queda congelado en el Sit*_Loop del WorldPoint, porque
+        // sin esto el Animator se queda congelado en el Sit*_Loop del WorldPoint, porque
         // este método (a diferencia de StopActivity) nunca hace CrossFade al estado de salida.
         // Se usa al saltar de cinemáticas (ej. TabernaSequencer) que restauran la posición a mano.
         ReturnAnimatorToLocomotion();
@@ -382,7 +382,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         }
         transform.position = posicionDePie;
         RestoreCC();
-        // FIX (16 ago 2026): "Will se levanta de la cama pero se queda con la animación de
+        // "Will se levanta de la cama pero se queda con la animación de
         // dormir puesta" — este es el camino normal de StopActivity() para actividades SIN
         // exit state propio (Sleep/Drink/Eat, ver GetActivityExitState: "sin animación de
         // salida, vuelven directo a idle"), pero "directo a idle" nunca se implementó aquí: a

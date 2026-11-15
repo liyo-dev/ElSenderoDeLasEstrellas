@@ -3,6 +3,11 @@ Shader "Hidden/El Sendero/Terreno de dibujo (de lejos)"
     // El terreno de dibujo a partir de la distancia del mapa base.
     Properties
     {
+        [HideInInspector] _ParedActiva("Paredes de roca (lo pone SueloYAguaDeDibujo)", Float) = 0
+        [HideInInspector] _InclinacionDePared("Inclinación desde la que es pared (grados)", Float) = 50
+        [HideInInspector] _TexturaDePared("Textura de la pared", 2D) = "grey" {}
+        [HideInInspector] _TamanoDePared("Tamaño de la textura de la pared (m)", Float) = 8
+        [HideInInspector] _ColorDePared("Tono de la pared", Color) = (1,1,1,1)
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
         _MainTex("Albedo(RGB), Smoothness(A)", 2D) = "white" {}
         _MetallicTex ("Metallic (R)", 2D) = "black" {}

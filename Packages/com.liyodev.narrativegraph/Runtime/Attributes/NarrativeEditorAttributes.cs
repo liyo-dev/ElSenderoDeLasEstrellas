@@ -46,7 +46,9 @@ public enum NarrativeKeyKind
     /// <summary>Marca con nombre del mundo (punto de aparición).</summary>
     Anchor,
     /// <summary>Clave libre (solo texto), sin resolución.</summary>
-    None
+    None,
+    /// <summary>Id que atiende el juego en «Pedir al juego» (NarrativeGameSteps): un NarrativeGameStepHook en escena o un registro por código.</summary>
+    GameStep
 }
 
 /// <summary>

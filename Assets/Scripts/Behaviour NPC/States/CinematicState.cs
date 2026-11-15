@@ -108,7 +108,7 @@ namespace Game.NPC.States
         
         public override Common.INPCState CheckTransitions(Common.NPCStateContext context)
         {
-            // FIX C5 (auditoría 2026-08-07): todos los demás estados de la FSM (Idle, Combat,
+            // todos los demás estados de la FSM (Idle, Combat,
             // Alert, Wander, SeekShelter, WalkToActivity, ReturnFromShelter, SocialEncounter...)
             // comprueban WasDefeatedInCombat primero y van a DeadState; CinematicState era la
             // única excepción. Un NPC que muere durante una cinemática (p.ej. golpeado por un AoE
@@ -180,8 +180,8 @@ namespace Game.NPC.States
         private readonly bool _turnAroundOnArrival;
         private readonly float _walkDisplayDuration;
         private readonly MonoBehaviour _owner;
-        private readonly SpawnAnchor _targetAnchor; // ✅ Anchor de destino explícito (opcional)
-        private readonly bool _lockPlayer; // ✅ false para movimientos ambientales sin interacción real con el jugador
+        private readonly SpawnAnchor _targetAnchor; // Anchor de destino explícito (opcional)
+        private readonly bool _lockPlayer; // false para movimientos ambientales sin interacción real con el jugador
         
         private float _timer;
         private bool _hasSetDestination;
@@ -190,7 +190,7 @@ namespace Game.NPC.States
         private bool _playerLocked;
         private Coroutine _activeCoroutine;
         
-        // ✅ NUEVO: Guardar estado original de obstacle avoidance para restaurarlo
+        // NUEVO: Guardar estado original de obstacle avoidance para restaurarlo
         private UnityEngine.AI.ObstacleAvoidanceType _originalObstacleAvoidanceType;
         private bool _hasDisabledObstacleAvoidance;
         
@@ -354,7 +354,7 @@ namespace Game.NPC.States
             float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
             context.Animator.SetMovementSpeed(speedFactor);
             
-            // ✅ FIX: Rotar hacia la dirección del movimiento para evitar caminar de espaldas
+            // Rotar hacia la dirección del movimiento para evitar caminar de espaldas
             if (context.Agent.velocity.sqrMagnitude > 0.01f)
             {
                 Vector3 moveDirection = context.Agent.velocity.normalized;
@@ -427,7 +427,7 @@ namespace Game.NPC.States
             if (context.Agent != null)
             {
                 Common.NavMeshAgentUtility.HardStop(context.Agent);
-                context.Log("[CinematicSequence] ✅ NavMeshAgent detenido completamente");
+                context.Log("[CinematicSequence] NavMeshAgent detenido completamente");
             }
 
             if (context.Animator != null)
@@ -450,11 +450,11 @@ namespace Game.NPC.States
                 }
                 else
                 {
-                    // ✅ Diagnóstico: si esto aparece, el NPC llegó sin encontrar ningún SpawnAnchor
+                    // Diagnóstico: si esto aparece, el NPC llegó sin encontrar ningún SpawnAnchor
                     // (ni el explícito por nombre ni uno cercano), así que mantiene la rotación que
                     // tenía al terminar de caminar. Revisar: anchorId, si el anchor está activo/registrado
                     // en AnchorRegistry, y si _targetPosition coincide con la posición real del anchor.
-                    context.LogWarning($"[CinematicSequence] ⚠️ No se encontró SpawnAnchor en destino {_targetPosition} " +
+                    context.LogWarning($"[CinematicSequence] No se encontró SpawnAnchor en destino {_targetPosition} " +
                         $"(targetAnchor explícito: {(_targetAnchor != null ? _targetAnchor.anchorId : "null")}). " +
                         "El NPC mantiene su rotación de movimiento actual.");
                 }
@@ -466,7 +466,7 @@ namespace Game.NPC.States
         /// </summary>
         private void ApplySpawnAnchorOrientation(Common.NPCStateContext context, SpawnAnchor anchor)
         {
-            // ✅ Única fuente de verdad para la rotación de un SpawnAnchor: SpawnAnchor.GetCharacterRotation().
+            // Única fuente de verdad para la rotación de un SpawnAnchor: SpawnAnchor.GetCharacterRotation().
             // Antes este método recalculaba la rotación a mano (Quaternion.LookRotation(anchor.transform.forward, ...)),
             // duplicando la lógica y además ignorando el flag 'faceDoor' del anchor.
             Quaternion targetRotation = anchor.GetCharacterRotation();
@@ -474,7 +474,7 @@ namespace Game.NPC.States
             context.Log($"[CinematicSequence] SpawnAnchor '{anchor.anchorId}': forward={anchor.transform.forward}, faceDoor={anchor.faceDoor}");
             context.Log($"[CinematicSequence] Target rotation (euler): {targetRotation.eulerAngles}");
             
-            // ✅ NUEVO: Aplicar POSICIÓN exacta del anchor (el NavMesh puede no permitir llegar exactamente)
+            // NUEVO: Aplicar POSICIÓN exacta del anchor (el NavMesh puede no permitir llegar exactamente)
             Vector3 targetPosition = anchor.transform.position;
             float distanceBefore = Vector3.Distance(context.Transform.position, targetPosition);
             context.Log($"[CinematicSequence] NPC position antes: {context.Transform.position} (distancia al anchor: {distanceBefore:F2}m)");
@@ -483,10 +483,10 @@ namespace Game.NPC.States
             context.Transform.position = targetPosition;
             context.Log($"[CinematicSequence] NPC position después: {context.Transform.position}");
             
-            // ✅ Aplicar rotación directamente
+            // Aplicar rotación directamente
             context.Transform.rotation = targetRotation;
             
-            // ✅ Sincronizar rotación objetivo del NPCSimpleAnimator
+            // Sincronizar rotación objetivo del NPCSimpleAnimator
             // Desactivar temporalmente la rotación automática para evitar que LateUpdate la sobrescriba
             if (context.Animator != null)
             {
@@ -501,7 +501,7 @@ namespace Game.NPC.States
                     _owner.StartCoroutine(ReenableAutoRotationNextFrame(context.Animator));
                 }
                 
-                context.Log($"[CinematicSequence] ✅ Rotación objetivo del animator sincronizada");
+                context.Log($"[CinematicSequence] Rotación objetivo del animator sincronizada");
             }
         }
         
@@ -612,7 +612,7 @@ namespace Game.NPC.States
                 context.Animator.ResetMovement();
             }
 
-            // FIX C5 (auditoría 2026-08-07): esta limpieza FORZADA (salida del estado a mitad de
+            // esta limpieza FORZADA (salida del estado a mitad de
             // secuencia: el NPC entra en combate, muere, cambia de escena...) no marcaba
             // IsCompleted — solo lo hacía CleanupAndComplete(), la salida NATURAL. Cualquier
             // secuenciador esperando con `while (!seq.IsCompleted) yield return null;`
@@ -1114,7 +1114,7 @@ namespace Game.NPC.States
             if (agent == null || _player == null)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Requisito nulo: agent={agent != null}, player={_player != null}. Abortando.");
+                UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] Requisito nulo: agent={agent != null}, player={_player != null}. Abortando.");
                 #endif
                 IsCompleted = true; return;
             }
@@ -1124,7 +1124,7 @@ namespace Game.NPC.States
             if (!agent.enabled)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ NavMeshAgent desactivado, reactivando...");
+                UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] NavMeshAgent desactivado, reactivando...");
                 #endif
                 agent.enabled = true;
                 return;
@@ -1133,7 +1133,7 @@ namespace Game.NPC.States
             if (!agent.isOnNavMesh)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Agente fuera del NavMesh (enabled={agent.enabled}). Abortando.");
+                UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] Agente fuera del NavMesh (enabled={agent.enabled}). Abortando.");
                 #endif
                 IsCompleted = true; return;
             }
@@ -1177,7 +1177,7 @@ namespace Game.NPC.States
                     if (!agent.SetDestination(_anchorPos))
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ SetDestination falló para {_anchorPos}. El anchor puede estar fuera del NavMesh o en una superficie no conectada.");
+                        UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] SetDestination falló para {_anchorPos}. El anchor puede estar fuera del NavMesh o en una superficie no conectada.");
                         #endif
                     }
                     context.Log($"[LeadPlayerToAnchorSequence] Startup completado, iniciando marcha al anchor.");
@@ -1192,7 +1192,7 @@ namespace Game.NPC.States
                 if (!agent.hasPath)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ No hay ruta válida al anchor {_anchorPos}. Comprueba que el anchor esté en el NavMesh y conectado con la posición actual del guardia.");
+                    UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] No hay ruta válida al anchor {_anchorPos}. Comprueba que el anchor esté en el NavMesh y conectado con la posición actual del guardia.");
                     #endif
                 }
                 else
@@ -1203,7 +1203,7 @@ namespace Game.NPC.States
             if (_timer >= _maxDuration)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⏱️ Tiempo agotado ({_maxDuration}s).");
+                UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] Tiempo agotado ({_maxDuration}s).");
                 #endif
                 IsCompleted = true; return;
             }

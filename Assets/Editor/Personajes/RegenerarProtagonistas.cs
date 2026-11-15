@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public static class RegenerarProtagonistas
 {
-    [MenuItem("El Sendero/Personajes/REGENERAR TODOS LOS PROTAGONISTAS", priority = 0)]
+    [MenuItem("El Sendero/Personajes/Regenerar los tres protagonistas", priority = 0)]
     public static void Todo()
     {
         if (Application.isPlaying) { EditorUtility.DisplayDialog("Protagonistas", "Hazlo fuera de Play.", "Vale"); return; }

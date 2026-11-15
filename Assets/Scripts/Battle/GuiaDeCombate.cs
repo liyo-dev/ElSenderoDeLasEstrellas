@@ -101,15 +101,21 @@ public sealed class GuiaDeCombate : MonoBehaviour
         _hablandoHasta = 0f;
         _siguienteBusquedaHablante = 0f;
 
-        if (PlayerService.TryGetPlayer(out var jugador) && jugador != null)
-        {
-            _jugador = jugador.transform;
-            _saludJugador = jugador.GetComponent<PlayerHealthSystem>();
-            if (_saludJugador != null) _saludJugador.OnDamageReceived += AlHerirAlJugador;
-        }
+        if (PlayerService.TryGetPlayer(out var jugador) && jugador != null) EscucharAlJugador(jugador);
+        PlayerService.OnPlayerRegistered -= EscucharAlJugador;
+        PlayerService.OnPlayerRegistered += EscucharAlJugador;
 
         VincularJefe(jefe);
         _introCoroutine = StartCoroutine(Co_EsperarIntervencion());
+    }
+
+    // El personaje que lleva el jugador (al cambiar de personaje en el combate, el nuevo).
+    private void EscucharAlJugador(GameObject jugador)
+    {
+        if (_saludJugador != null) _saludJugador.OnDamageReceived -= AlHerirAlJugador;
+        _jugador = jugador != null ? jugador.transform : null;
+        _saludJugador = jugador != null ? jugador.GetComponent<PlayerHealthSystem>() : null;
+        if (_saludJugador != null) _saludJugador.OnDamageReceived += AlHerirAlJugador;
     }
 
     /// Se calla y suelta todo. Se puede llamar las veces que haga falta.
@@ -118,7 +124,9 @@ public sealed class GuiaDeCombate : MonoBehaviour
         if (_introCoroutine != null) { StopCoroutine(_introCoroutine); _introCoroutine = null; }
         _cola.Clear();
         DesvincularJefe();
+        PlayerService.OnPlayerRegistered -= EscucharAlJugador;
         if (_saludJugador != null) { _saludJugador.OnDamageReceived -= AlHerirAlJugador; _saludJugador = null; }
+        _jugador = null;
         SoltarRotacion();
         Callar();
         _activo = false;

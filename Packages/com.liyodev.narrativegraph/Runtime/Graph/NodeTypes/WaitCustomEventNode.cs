@@ -14,10 +14,25 @@ public sealed class WaitCustomEventNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("Si está marcado (por defecto), una señal ocurrida ANTES de llegar a este nodo también cuenta (comportamiento sticky). Si se desmarca, se descarta cualquier emisión previa y solo avanza si la señal ocurre mientras este nodo está esperando.")]
     public bool acceptEarlierEvent = true;
 
-    public override void Describe(INarrativeNodeDescriber d) => d.Signal(eventKey, SignalRole.Escucha);
+    [Tooltip("Objeto que el jugador ya tiene cuando llega la señal (la señal avisa, por ejemplo, de una compra o de una recogida). No lo da: sirve para que el arranque de pruebas y «En vivo» sepan que, pasado este paso, el jugador lo lleva.")]
+    public NarrativeItemAsset impliedItem;
 
-    /// Haber pasado de este nodo quiere decir que la señal llegó.
-    public void Project(INarrativeStateWriter state) => state.MarkSignalRaised(eventKey);
+    [Tooltip("Cuántas unidades del objeto lleva el jugador al llegar la señal.")]
+    [Min(1)] public int impliedItemAmount = 1;
+
+    public override void Describe(INarrativeNodeDescriber d)
+    {
+        d.Signal(eventKey, SignalRole.Escucha);
+        if (impliedItem != null) d.Item(impliedItem, impliedItemAmount, "ya tiene");
+    }
+
+    /// Haber pasado de este nodo quiere decir que la señal llegó y, si la señal lo implica, que el
+    /// jugador ya tiene el objeto.
+    public void Project(INarrativeStateWriter state)
+    {
+        state.MarkSignalRaised(eventKey);
+        if (impliedItem != null) state.EnsureItem(impliedItem.ItemId, Mathf.Max(1, impliedItemAmount));
+    }
 
     public override void CollectWarnings(List<string> warnings)
     {
@@ -54,7 +69,7 @@ public sealed class WaitCustomEventNode : NarrativeNode, INarrativeStateEffect
             // Marcar el evento como recibido en el blackboard (específico a este nodo)
             ctx.Blackboard.Set(eventReceivedKey, true);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[WaitCustom:{guid}] ✅ Recibido '{eventKey}' → avanzando");
+            Debug.Log($"[WaitCustom:{guid}] Recibido '{eventKey}' → avanzando");
 #endif
             ready?.Invoke();
         }

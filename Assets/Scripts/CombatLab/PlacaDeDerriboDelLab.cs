@@ -22,8 +22,7 @@ public sealed class PlacaDeDerriboDelLab : MonoBehaviour
     {
         if (Time.time < _siguiente || !other.CompareTag(GameTags.Player)) return;
         // El golpe viene de delante de la placa: el jugador sale despedido hacia atrás.
-        var cuerpo = other.GetComponentInParent<Invector.vCharacterController.vThirdPersonController>();
-        if (cuerpo == null) return;
+        if (!ControlDelJugador.DelJugador(other, out Invector.vCharacterController.vThirdPersonController cuerpo)) return;
         Vector3 origen = cuerpo.transform.position + Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
         if (derribo.Aplicar(other.gameObject, origen))
             _siguiente = Time.time + pausa;

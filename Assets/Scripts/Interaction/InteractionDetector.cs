@@ -24,7 +24,7 @@ public class InteractionDetector : MonoBehaviour
     [Tooltip("Retardo antes de volver a mostrar iconos tras terminar un estado bloqueante (diálogo/combate/cinemática).")]
     [SerializeField] private float hintReappearDelay = 0.12f;
 
-    // FIX M7 (auditoría 2026-08-07): FindNearest() corría cada frame sin throttle (OverlapSphereNonAlloc
+    // FindNearest() corría cada frame sin throttle (OverlapSphereNonAlloc
     // + un SphereCast por candidato). PlayerTargeting ya usa 10 Hz para su propio escaneo; mismo criterio aquí.
     [Header("Rendimiento")]
     [SerializeField] private float updatesPerSecond = 10f;
@@ -38,8 +38,8 @@ public class InteractionDetector : MonoBehaviour
     private bool _wasBlockedLastFrame;
     private float _resumeAfterBlockAt;
 
-    // ✅ OPTIMIZACIÓN FASE 2: Buffer reutilizable para Physics queries
-    // FIX (2026-08-13): con buffer de 16, OverlapSphereNonAlloc() puede saturarse en zonas
+    // OPTIMIZACIÓN FASE 2: Buffer reutilizable para Physics queries
+    // con buffer de 16, OverlapSphereNonAlloc() puede saturarse en zonas
     // con muchos colliders en la capa "Interactable" cerca (tiendas con varios NPCs/objetos
     // agrupados) y descarta candidatos en silencio sin avisar — el mismo patrón de bug ya
     // catalogado para GolemBossAI (TDD.md §19, onda expansiva con buffer de 32). Si el NPC
@@ -50,7 +50,7 @@ public class InteractionDetector : MonoBehaviour
     // (ver comprobación en FindNearest()).
     private Collider[] _interactableBuffer = new Collider[32];
 
-    // FIX (2026-08-11): la máscara de obstrucción del SphereCast de FindNearest() usaba
+    // la máscara de obstrucción del SphereCast de FindNearest() usaba
     // ~interactableMask, que solo excluye la capa "Interactable". Eso hace que el propio
     // collider del jugador (capa "Player"/"Default", según el rig) y el suelo (capa "Floor")
     // cuenten como obstrucción, bloqueando el hint en casi cualquier punto de guardado/NPC.
@@ -81,9 +81,8 @@ public class InteractionDetector : MonoBehaviour
 
     private void OnDisable()
     {
-        // FIX (2026-09-05, INC iconos "A" acumulados en la plaza / rendimiento sesion larga):
-        // si este detector se desactiva (p.ej. ActiveCharacterSwapper desactivando a Will al
-        // cambiar de personaje) mientras habia un hint visible, nadie mas lo apagaba nunca -
+        // si este detector se desactiva (p.ej. el cuerpo pasa a la IA al cambiar de personaje)
+        // mientras habia un hint visible, nadie mas lo apagaba nunca -
         // quedaba huerfano y visible para siempre, acumulandose uno por cada cambio de
         // personaje con un hint en pantalla. SetCurrent(null) reutiliza la misma ruta ya
         // probada que apaga el hint y libera Interact/Jump correctamente.
@@ -109,7 +108,7 @@ public class InteractionDetector : MonoBehaviour
             if (current != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[InteractionDetector] 🚫 {blockedReason}, desenfocando interactable");
+                Debug.Log($"[InteractionDetector] {blockedReason}, desenfocando interactable");
 #endif
             }
             
@@ -147,7 +146,7 @@ public class InteractionDetector : MonoBehaviour
             return;
         }
 
-        // FIX M7 (auditoría 2026-08-07): throttle a updatesPerSecond en vez de escanear cada
+        // throttle a updatesPerSecond en vez de escanear cada
         // frame. SetCurrent() se sigue llamando cada frame con el último resultado conocido —
         // sigue sincronizando el hint aunque no toque re-escanear este frame (ver comentario en
         // SetCurrent).
@@ -161,7 +160,7 @@ public class InteractionDetector : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext _context)
     {
-        // FIX (2026-08-13): 'current' puede quedar como referencia "fake null" de Unity
+        // 'current' puede quedar como referencia "fake null" de Unity
         // (el GameObject fue destruido -p.ej. transición de escena, cofre/objeto consumido,
         // NPC despawneado- pero el wrapper C# de Interactable en sí no es null todavía). El
         // operador ?. NO usa el operator== sobrecargado de UnityEngine.Object, así que trata
@@ -172,7 +171,7 @@ public class InteractionDetector : MonoBehaviour
         bool isCarrying = _carrySystem != null && _carrySystem.IsCarrying;
         string currentName = current != null ? current.name : "null";
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[InteractionDetector] 🔘 OnInteract llamado - IsCarrying={isCarrying}, current={currentName}");
+        Debug.Log($"[InteractionDetector] OnInteract llamado - IsCarrying={isCarrying}, current={currentName}");
 #endif
         
         // Si está cargando algo, soltar
@@ -180,7 +179,7 @@ public class InteractionDetector : MonoBehaviour
         {
             _carrySystem.DropObject();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[InteractionDetector] 📦 Objeto soltado - bloqueando interacciones por cooldown");
+            Debug.Log($"[InteractionDetector] Objeto soltado - bloqueando interacciones por cooldown");
 #endif
             return;
         }
@@ -188,14 +187,14 @@ public class InteractionDetector : MonoBehaviour
         if (IsInteractionBlocked(out string blockedReason, out bool _ignored))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[InteractionDetector] 🚫 Interacción ignorada: {blockedReason}");
+            Debug.Log($"[InteractionDetector] Interacción ignorada: {blockedReason}");
 #endif
             return;
         }
         if (Time.unscaledTime < _resumeAfterBlockAt)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[InteractionDetector] ⏳ Esperando retardo de reactivación del hint/interacción");
+            Debug.Log("[InteractionDetector] Esperando retardo de reactivación del hint/interacción");
 #endif
             return;
         }
@@ -204,7 +203,7 @@ public class InteractionDetector : MonoBehaviour
         if (_carrySystem != null && _carrySystem.JustDroppedObject)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[InteractionDetector] ⏳ Cooldown activo después de soltar objeto - ignorando interacción");
+            Debug.Log($"[InteractionDetector] Cooldown activo después de soltar objeto - ignorando interacción");
 #endif
             return;
         }
@@ -213,20 +212,20 @@ public class InteractionDetector : MonoBehaviour
         if (current != null && current.CanInteract(gameObject))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[InteractionDetector] ✅ Interactuando con: {current.name}");
+            Debug.Log($"[InteractionDetector] Interactuando con: {current.name}");
 #endif
             current.Interact(gameObject);
         }
         else if (current != null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[InteractionDetector] ⚠️ {current.name} NO puede interactuar (CanInteract=false)");
+            Debug.LogWarning($"[InteractionDetector] {current.name} NO puede interactuar (CanInteract=false)");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[InteractionDetector] ⚠️ No hay objeto enfocado (current=null)");
+            Debug.LogWarning($"[InteractionDetector] No hay objeto enfocado (current=null)");
 #endif
         }
     }
@@ -381,11 +380,11 @@ public class InteractionDetector : MonoBehaviour
         if (hitCount == 0) return null;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // FIX (2026-08-13): si el buffer se satura, la query puede estar descartando
+        // si el buffer se satura, la query puede estar descartando
         // candidatos sin avisar (ver comentario junto a _interactableBuffer). Avisar en vez
         // de fallar en silencio para poder diagnosticarlo si vuelve a pasar.
         if (hitCount >= _interactableBuffer.Length)
-            Debug.LogWarning($"[InteractionDetector] ⚠️ Buffer de interactuables saturado ({hitCount}/{_interactableBuffer.Length}) cerca de {origin} — puede haber candidatos descartados. Considera subir el tamaño del buffer.");
+            Debug.LogWarning($"[InteractionDetector] Buffer de interactuables saturado ({hitCount}/{_interactableBuffer.Length}) cerca de {origin} — puede haber candidatos descartados. Considera subir el tamaño del buffer.");
 #endif
 
         float best = float.MaxValue;
@@ -406,7 +405,7 @@ public class InteractionDetector : MonoBehaviour
             // Un mostrador bajo no tapa una conversación a la altura de la cara.
             Vector3 sightOrigin = it.EsPersonaje ? t.position + Vector3.up * 1.5f : origin;
 
-            // FIX (2026-08-12): la línea de visión se comprobaba contra it.transform.position,
+            // la línea de visión se comprobaba contra it.transform.position,
             // que en un NPC es la base/los pies. Cualquier mueble de altura media entre el player
             // y el NPC (mostrador de tienda, mesa, valla baja...) queda literalmente a esa altura
             // y se detecta como obstrucción real, aunque el jugador vea perfectamente la cabeza y
@@ -422,14 +421,14 @@ public class InteractionDetector : MonoBehaviour
             float sightDistance = Vector3.Distance(sightOrigin, sightPoint);
             if (d < best)
             {
-                // FIX M7 (auditoría 2026-08-07): la comprobación estaba invertida. Antes se
+                // la comprobación estaba invertida. Antes se
                 // ACEPTABA el candidato cuando el SphereCast SÍ golpeaba algo (incluida una pared
                 // de por medio → "interactuar a través de muros") y se RECHAZABA cuando no golpeaba
                 // nada (p.ej. un interactuable solo-trigger en espacio abierto, que
                 // QueryTriggerInteraction.Ignore nunca detecta → nunca seleccionable). Ahora un
                 // impacto sólido se trata como obstrucción real (se descarta el candidato) y la
                 // ausencia de impacto significa línea de visión libre (se acepta).
-                // FIX (2026-08-11): se usaba ~interactableMask, que solo excluye la propia capa
+                // se usaba ~interactableMask, que solo excluye la propia capa
                 // "Interactable" — el SphereCast se autogolpeaba con el collider del jugador y con
                 // el suelo ("Floor"), marcando el interactuable como obstruido siempre. Se usa
                 // _obstructionMask (cacheado en Awake), que además excluye la capa del propio
@@ -466,12 +465,12 @@ public class InteractionDetector : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // FIX (2026-08-13): diagnóstico para el bug "el hint no aparece hasta buscar la
+        // diagnóstico para el bug "el hint no aparece hasta buscar la
         // posición/entrar-salir del rango varias veces". Si hay un candidato en rango pero
         // el resultado es null, esto dice exactamente por qué (línea de visión bloqueada y
         // por qué objeto) en vez de tener que adivinarlo la próxima vez que se reproduzca.
         if (winner == null && nearestObstructed != null)
-            Debug.Log($"[InteractionDetector] 👁️ {nearestObstructed.name} en rango pero línea de visión bloqueada por '{_lastObstructionHitName}' (dist={nearestObstructedDist:F2})");
+            Debug.Log($"[InteractionDetector] {nearestObstructed.name} en rango pero línea de visión bloqueada por '{_lastObstructionHitName}' (dist={nearestObstructedDist:F2})");
 #endif
         return winner;
     }

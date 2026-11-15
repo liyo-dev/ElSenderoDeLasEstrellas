@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEditor;
@@ -77,13 +77,13 @@ public static partial class MontajeDeLosCapitulos
     private static NarrativeNode Cinematica(string clave)
     {
         var c = s_cines.Find(x => x.Clave == clave);
-        if (c == null) return new PlayCinematicNode { cinematicName = clave + " (no está en la tabla)" };
-        return new PlayCinematicNode
+        if (c == null) return GameStepNode.For(new PedirCinematica { cinematicName = clave + " (no está en la tabla)" });
+        return GameStepNode.For(new PedirCinematica
         {
             cinematicName = c.Nombre, signalIn = c.Entrada, signalDone = c.Salida,
             secuencia = AssetDatabase.LoadAssetAtPath<SequenceDefinition>(c.RutaSecuencia),
             plantillaDeAjustes = c.Plantilla ?? "",
-        };
+        });
     }
 
     // ── Secuencias ──────────────────────────────────────────────────────────────────────────

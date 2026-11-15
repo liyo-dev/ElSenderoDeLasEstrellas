@@ -130,7 +130,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     // Animator parameters
     private static readonly int InputMagnitudeHash = Animator.StringToHash("InputMagnitude");
 
-    // ✅ FIX: parámetros de suelo/vuelo del controller compartido de personajes jugables
+    // parámetros de suelo/vuelo del controller compartido de personajes jugables
     // (Will/Liam/Estela usan el Animator Controller de Invector, que trae un Any State →
     // "Falling" condicionado a IsGrounded=false / GroundDistance>0.25 / isFlying=false).
     // El controller genérico de NPCs (Eldran) no tiene ese Any State, así que esto es
@@ -168,19 +168,19 @@ public class NPCSimpleAnimator : MonoBehaviour
     private Quaternion _targetRotation;
     private float _rotationVelocity;
 
-    // ✅ Anti-spam para animaciones de idle
+    // Anti-spam para animaciones de idle
     private float _lastBattleIdleTime = -999f;
     private const float BattleIdleCooldown = 0.5f; // Mínimo 0.5s entre llamadas (antes 0.3s)
     private bool _disableAutoRotation; // Flag para desactivar rotación automática (usado durante diálogos)
 
-    // ✅ FIX: recuerda si el NPC está sentado (PlayAmbientActivity con un Sit*) para que un
+    // recuerda si el NPC está sentado (PlayAmbientActivity con un Sit*) para que un
     // PlaySocialGesture/PlayOneShot lanzado durante un diálogo (p.ej. TabernaSequencer) no lo
     // deje de pie al terminar. Antes TransitionToIdle() siempre iba a idleNormalState, ignorando
     // que el NPC seguía sentado en la silla.
     private bool _isSeated;
     private NPCAmbientActivity _seatedActivity;
     
-    // ✅ Corrutina para seguimiento de rotación durante diálogos
+    // Corrutina para seguimiento de rotación durante diálogos
     private Coroutine _dialogueLookAtCoroutine;
     
     #endregion
@@ -328,7 +328,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             _stateCache = new AnimatorStateCache(animator);
             CacheAnimationClips();
 
-            // ✅ FIX: cachear qué parámetros existen realmente en ESTE Animator Controller.
+            // cachear qué parámetros existen realmente en ESTE Animator Controller.
             // Eldran (NPC_NoWeapon.controller) no tiene IsGrounded/GroundDistance/isFlying;
             // Will/Liam/Estela sí (Invector@BasicLocomotion.controller). Sin esta guarda,
             // SetBool/SetFloat sobre un parámetro inexistente sería un no-op silencioso pero
@@ -342,7 +342,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 animator.SetFloat(VariacionIdleHash, UnityEngine.Random.Range(1f - variacionVelocidadIdle, 1f + variacionVelocidadIdle));
         }
         
-        // ✅ FIX CRÍTICO: Configurar NavMeshAgent para control de rotación correcto
+        // FIX CRÍTICO: Configurar NavMeshAgent para control de rotación correcto
         if (navAgent != null)
         {
             // Desactivar rotación automática del NavMeshAgent
@@ -381,7 +381,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         ResolvePlayerReferences();
         
-        // ✅ Suscribirse a eventos del DialogueManager
+        // Suscribirse a eventos del DialogueManager
         DialogueManager.OnDialogueStarted += OnDialogueStarted;
         DialogueManager.OnDialogueClosed += OnDialogueClosed;
     }
@@ -398,7 +398,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     void OnDestroy()
     {
-        // ✅ Desuscribirse de eventos del DialogueManager
+        // Desuscribirse de eventos del DialogueManager
         DialogueManager.OnDialogueStarted -= OnDialogueStarted;
         DialogueManager.OnDialogueClosed -= OnDialogueClosed;
         
@@ -421,14 +421,14 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (animator == null)
             return;
         
-        // ✅ No procesar nada si el NPC está muerto
+        // No procesar nada si el NPC está muerto
         if (_currentState == AnimationState.Dead)
             return;
         
         // Update actual speed based on position
         UpdateActualSpeed();
         
-        // ✅ Sincronizar automáticamente con NavMeshAgent si existe y está activo
+        // Sincronizar automáticamente con NavMeshAgent si existe y está activo
         // No necesita configuración manual - es siempre automático
         if (navAgent != null && navAgent.enabled && navAgent.isOnNavMesh)
         {
@@ -438,7 +438,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     void LateUpdate()
     {
-        // ✅ No procesar rotación si el NPC está muerto
+        // No procesar rotación si el NPC está muerto
         if (_currentState == AnimationState.Dead)
             return;
             
@@ -463,7 +463,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             return;
         }
         
-        // ✅ No procesar movimiento si el NPC está muerto
+        // No procesar movimiento si el NPC está muerto
         if (_currentState == AnimationState.Dead)
             return;
         
@@ -475,11 +475,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Set animator parameter
         animator.SetFloat(InputMagnitudeHash, _currentMovementSpeed, damp, Time.deltaTime);
         
-        // ✅ FIX CRÍTICO: SIEMPRE asegurar que animator.speed sea 1.0 cuando está quieto
+        // FIX CRÍTICO: SIEMPRE asegurar que animator.speed sea 1.0 cuando está quieto
         // Esto previene el temblor en Battle Idle cuando _currentMovementSpeed es muy bajo
         if (_currentMovementSpeed <= movementThreshold)
         {
-            // ✅ IMPERATIVO: Velocidad normal cuando está quieto (evita temblor)
+            // IMPERATIVO: Velocidad normal cuando está quieto (evita temblor)
             animator.speed = 1f;
             if ((_currentState == AnimationState.Walking || _currentState == AnimationState.Running) && _poseSostenida != null)
             {
@@ -511,11 +511,11 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void ResetMovement()
     {
-        // ✅ No hacer nada si el NPC está muerto
+        // No hacer nada si el NPC está muerto
         if (_currentState == AnimationState.Dead)
             return;
         
-        // ✅ Forzar a 0 INMEDIATAMENTE sin dampening para evitar bugs de "andando en el sitio"
+        // Forzar a 0 INMEDIATAMENTE sin dampening para evitar bugs de "andando en el sitio"
         _currentMovementSpeed = 0f;
         if (animator != null)
         {
@@ -543,7 +543,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void SetBattleMode(bool enable)
     {
-        // ✅ No hacer nada si el NPC está muerto
+        // No hacer nada si el NPC está muerto
         if (_currentState == AnimationState.Dead)
         {
             if (debugMode)
@@ -574,7 +574,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             _currentState = AnimationState.Battle;
 
-            // ✅ FIX (5 sep 2026, petición de Raúl): Idle_Battle_NoWeapon vive en la UpperBody
+            // Idle_Battle_NoWeapon vive en la UpperBody
             // layer (torso/brazos, AvatarMask sin piernas) -- antes se reproducía en la Base
             // Layer (capa 0), que es la misma capa que controla el blend tree de locomoción
             // ("Free Locomotion"). Mientras la Base Layer se quedaba parada en esta pose de
@@ -616,7 +616,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         if (_isInBattle && !string.IsNullOrEmpty(idleBattleState))
         {
-            // ✅ CRÍTICO: Cooldown para evitar spam de CrossFade
+            // CRÍTICO: Cooldown para evitar spam de CrossFade
             // Si se llama demasiado frecuentemente, se reinicia la animación constantemente
             // causando temblor en el modelo y el Enemy Marker
             float timeSinceLastCall = Time.time - _lastBattleIdleTime;
@@ -626,7 +626,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 return;
             }
             
-            // ✅ FIX (5 sep 2026): Idle_Battle_NoWeapon vive en UpperBody layer (ver
+            // Idle_Battle_NoWeapon vive en UpperBody layer (ver
             // SetBattleMode) -- se comprueba y se reproduce en upperBodyLayer, no en la capa 0,
             // para no depender de la Base Layer (blend tree de locomoción) ni congelar piernas.
             // Guard _oneShotCoroutine == null: no cortar un ataque/hechizo en curso en esa misma capa.
@@ -950,7 +950,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Callback
         onComplete?.Invoke();
         
-        // ✅ NO hacer transición a Idle si el NPC está muerto
+        // NO hacer transición a Idle si el NPC está muerto
         // Esto previene que se cancele la animación de muerte
         if (_currentState == AnimationState.Dead)
         {
@@ -961,7 +961,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 #endif
                 }
             _oneShotCoroutine = null;
-            yield break; // ✅ Usar yield break en lugar de return en coroutines
+            yield break; // Usar yield break en lugar de return en coroutines
         }
         
         // Return to idle if not interacting (let the callback handle battle state)
@@ -1176,7 +1176,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// cada NPC puede tener su propio gesto: Greeting01_NoWeapon, HandWave02, Reverence01...).
     /// </summary>
     /// <param name="onComplete">
-    /// ✅ NUEVO (1 sep 2026, petición de Raúl): callback opcional invocado cuando el gesto termina
+    /// NUEVO (1 sep 2026, petición de Raúl): callback opcional invocado cuando el gesto termina
     /// de verdad (mismo mecanismo que PlayOneShot). Si el guard de abajo impide reproducirlo
     /// (_isInteracting activo o greetingState vacío), se invoca igualmente al momento para no
     /// dejar colgado a quien esté esperando el callback — ver
@@ -1251,7 +1251,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 _isInBattle = true;
                 _currentState = AnimationState.Battle;
                 
-                // ✅ FIX (5 sep 2026): Idle_Battle_NoWeapon también vive en UpperBody layer
+                // Idle_Battle_NoWeapon también vive en UpperBody layer
                 // (ver comentario detallado en SetBattleMode) -- antes esto reproducía la pose
                 // en la Base Layer y dejaba las piernas congeladas si el NPC tenía que caminar.
                 if (!string.IsNullOrEmpty(idleBattleState))
@@ -1277,7 +1277,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// en el Inspector).
     /// </summary>
     /// <param name="onComplete">
-    /// ✅ NUEVO (1 sep 2026): callback opcional invocado cuando la animación termina de verdad
+    /// NUEVO: callback opcional invocado cuando la animación termina de verdad
     /// (mismo mecanismo que PlayGreeting/PlayOneShot). Si senseSomethingState está vacío se
     /// invoca igualmente al momento.
     /// </param>
@@ -1303,7 +1303,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (!string.IsNullOrEmpty(searchingState))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] 🔍 PlaySearching() - Buscando al jugador");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] PlaySearching() - Buscando al jugador");
 #endif
             // SenseSomethingSearching_NoWeapon vive en UpperBody layer (no debe congelar las piernas)
             PlayOneShot(searchingState, upperBodyLayer);
@@ -1330,7 +1330,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (getHitStates == null || getHitStates.Length == 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ No hay animaciones de daño configuradas");
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] No hay animaciones de daño configuradas");
 #endif
             return;
         }
@@ -1341,7 +1341,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (!string.IsNullOrEmpty(selectedHitAnim))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] 💥 PlayGetHit() - Animación seleccionada: '{selectedHitAnim}' ({getHitStates.Length} variantes disponibles)");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] PlayGetHit() - Animación seleccionada: '{selectedHitAnim}' ({getHitStates.Length} variantes disponibles)");
 #endif
             PlayOneShot(selectedHitAnim);
         }
@@ -1364,7 +1364,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     public void PlayDeath()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NPCAnimator:{gameObject.name}] 💀 PlayDeath() llamado - dieState: '{dieState}'");
+        Debug.Log($"[NPCAnimator:{gameObject.name}] PlayDeath() llamado - dieState: '{dieState}'");
 #endif
         
         if (!string.IsNullOrEmpty(dieState))
@@ -1373,7 +1373,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             StopIdleVariations();
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] 🎬 Reproduciendo animación de muerte: {dieState}");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] Reproduciendo animación de muerte: {dieState}");
 #endif
             
             // Usar Play directamente para reproducir la animación de muerte inmediatamente
@@ -1384,7 +1384,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 animator.SetFloat(InputMagnitudeHash, 0f);
                 animator.Play(dieState, 0); // Layer 0, reproducción inmediata
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ animator.Play('{dieState}', 0) ejecutado");
+                Debug.Log($"[NPCAnimator:{gameObject.name}] animator.Play('{dieState}', 0) ejecutado");
 #endif
             }
             
@@ -1401,16 +1401,16 @@ public class NPCSimpleAnimator : MonoBehaviour
             }
             
             // NO desactivar el componente inmediatamente - dejar que la animación se reproduzca
-            // enabled = false;  // ❌ COMENTADO - Esto evitaba que la animación se reprodujera
+            // enabled = false;  // COMENTADO - Esto evitaba que la animación se reprodujera
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ Animación de muerte iniciada");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] Animación de muerte iniciada");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ dieState está vacío - no se puede reproducir animación de muerte");
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] dieState está vacío - no se puede reproducir animación de muerte");
 #endif
         }
     }
@@ -1459,7 +1459,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     public void PlayDizzy()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NPCAnimator:{gameObject.name}] 😵 PlayDizzy() llamado - dizzyState: '{dizzyState}'");
+        Debug.Log($"[NPCAnimator:{gameObject.name}] PlayDizzy() llamado - dizzyState: '{dizzyState}'");
 #endif
         
         if (!string.IsNullOrEmpty(dizzyState))
@@ -1468,7 +1468,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             _currentState = AnimationState.Idle;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] 🎬 Reproduciendo animación de mareo: {dizzyState}");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] Reproduciendo animación de mareo: {dizzyState}");
 #endif
             
             if (animator != null)
@@ -1477,18 +1477,18 @@ public class NPCSimpleAnimator : MonoBehaviour
                 animator.Play(dizzyState, 0);
                 animator.speed = 1f; // Asegurar velocidad normal
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ animator.Play('{dizzyState}', 0) ejecutado");
+                Debug.Log($"[NPCAnimator:{gameObject.name}] animator.Play('{dizzyState}', 0) ejecutado");
 #endif
             }
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ Animación de mareo iniciada");
+            Debug.Log($"[NPCAnimator:{gameObject.name}] Animación de mareo iniciada");
 #endif
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ dizzyState está vacío - no se puede reproducir animación de mareo");
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] dizzyState está vacío - no se puede reproducir animación de mareo");
 #endif
         }
     }
@@ -1654,7 +1654,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         _disableAutoRotation = false;
         
-        // ✅ FIX: Sincronizar _targetRotation con la rotación actual del transform
+        // Sincronizar _targetRotation con la rotación actual del transform
         // Esto evita que al reactivar, el NPC gire hacia una dirección antigua
         _targetRotation = transform.rotation;
     }
@@ -1689,7 +1689,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{name}] 📢 OnDialogueStarted recibido");
+            Debug.Log($"[NPCAnimator:{name}] OnDialogueStarted recibido");
 #endif
             }
         
@@ -1739,7 +1739,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{name}] 📢 OnDialogueClosed recibido");
+            Debug.Log($"[NPCAnimator:{name}] OnDialogueClosed recibido");
 #endif
             }
         
@@ -1766,7 +1766,8 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Obtener referencia al DialogueManager para verificar si el diálogo está abierto
         var dialogueManager = DialogueManager.Instance;
         
-        if (_player == null)
+        // El cuerpo que lleva el jugador ahora (cambia al pasar el mando a otro personaje).
+        if (_player == null || _player.gameObject != PlayerService.Player)
         {
             if (PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) && playerGo != null)
             {
@@ -1788,7 +1789,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{name}] 👁️ Seguimiento de rotación iniciado durante diálogo");
+            Debug.Log($"[NPCAnimator:{name}] Seguimiento de rotación iniciado durante diálogo");
 #endif
             }
         
@@ -1820,7 +1821,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{name}] 🔚 Seguimiento de rotación durante diálogo finalizado");
+            Debug.Log($"[NPCAnimator:{name}] Seguimiento de rotación durante diálogo finalizado");
 #endif
             }
     }
@@ -1838,7 +1839,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (debugMode)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCAnimator:{name}] ✅ Rotación automática reactivada");
+            Debug.Log($"[NPCAnimator:{name}] Rotación automática reactivada");
 #endif
             }
     }
@@ -1853,7 +1854,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     public bool FacePlayerInstantly()
     {
         // Buscar el jugador si no tenemos referencia
-        if (_player == null)
+        // El cuerpo que lleva el jugador ahora (cambia al pasar el mando a otro personaje).
+        if (_player == null || _player.gameObject != PlayerService.Player)
         {
             if (PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) && playerGo != null)
             {
@@ -1888,7 +1890,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             if (debugMode) 
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCAnimator:{name}] 👁️ Rotado INSTANTÁNEAMENTE hacia el jugador (ángulo: {targetRotation.eulerAngles.y:F1}°)");
+                Debug.Log($"[NPCAnimator:{name}] Rotado INSTANTÁNEAMENTE hacia el jugador (ángulo: {targetRotation.eulerAngles.y:F1}°)");
 #endif
                 }
             
@@ -1949,7 +1951,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     // ── La cara, no solo el cuerpo (FIX 16 sep 2026) ─────────────────────────
     //
-    // Raúl: "no veo que se cambie la cara de Will... cuando Oliver durante la explicación del menú
+    // "no veo que se cambie la cara de Will... cuando Oliver durante la explicación del menú
     // tampoco las cambia". Causa raíz: PlayBodyEmotion() solo tocaba el CUERPO. La cara
     // (NPCEmotionController.SetEmotion, que intercambia los meshes de ojos y boca) no la llamaba
     // NADIE en el camino de diálogo -- solo la llamaban a mano los sequencers escritos uno a uno
@@ -2082,7 +2084,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // en ESTE controller) y no de la lógica del encuentro.
         if (animator != null && resolvedLayer < 0)
         {
-            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ PlaySocialGesture('{stateName}'): " +
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] PlaySocialGesture('{stateName}'): " +
                 $"ese estado no existe en ningún layer del Animator Controller " +
                 $"'{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +
                 "El NPC se quedará callado en este gesto.");
@@ -2150,7 +2152,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (activity == NPCAmbientActivity.None || _currentState == AnimationState.Dead)
             return;
 
-        // FIX INC-130 (5 sept 2026): SitGround/SitLow/SitMedium/SitHigh tienen sus estados de
+        // FIX INC-130: SitGround/SitLow/SitMedium/SitHigh tienen sus estados de
         // Begin/Loop en el Animator Controller compartido, pero el Motion de esos 8 estados apunta
         // a un GUID que no corresponde a ningún asset del proyecto (clips "reservados" que nunca se
         // importaron, ver HasWorkingAnimation() más abajo). Como el estado SÍ existe, el diagnóstico
@@ -2175,7 +2177,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         _isSeated       = IsSitActivity(activity);
         _seatedActivity = activity;
 
-        // ✅ FIX: si el NPC viene de un modo especial (vuelo/salto/plataforma replicado del
+        // si el NPC viene de un modo especial (vuelo/salto/plataforma replicado del
         // jugador vía FollowPlayerState) puede quedar con IsGrounded=false, GroundDistance
         // alto o isFlying=true en el Animator. En el controller compartido de personajes
         // jugables (Will/Liam/Estela) eso dispara un Any State → "Falling" que interrumpe
@@ -2249,7 +2251,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     /// <summary>
     /// True si la actividad tiene clips de animación reales asignados en el Animator Controller
-    /// compartido de NPCs. FIX INC-130 (5 sept 2026): los 4 pares Begin/Loop de Sit* (SitGround,
+    /// compartido de NPCs. FIX INC-130: los 4 pares Begin/Loop de Sit* (SitGround,
     /// SitLow, SitMedium, SitHigh) existen como ESTADOS en 'NPC_NoWeapon.controller' pero su Motion
     /// apunta a un GUID que no corresponde a ningún asset del proyecto — nombres reservados para
     /// clips que nunca se llegaron a importar (ver
@@ -2259,7 +2261,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// controller, basta con quitar la actividad del switch de abajo para reactivarla en los tres
     /// caminos que sientan a un NPC (actividad fija, refugio de lluvia y NPCWorldPoint/bancos).
     ///
-    /// (7 oct 2026) Los clips ya están: los 12 estados Sit* del controller apuntan a las animaciones
+    /// Los clips ya están: los 12 estados Sit* del controller apuntan a las animaciones
     /// de Kevin Iglesias (HumanM@Sit*01 Begin/Loop/Stop), comprobado GUID a GUID. Sentarse vuelve a
     /// estar activo en todos los caminos. Se deja el interruptor por si falta alguna actividad nueva.
     /// </summary>
@@ -2334,7 +2336,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         int layer = GetActivityLayer(activity);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Diagnóstico (15 ago 2026): a diferencia de PlaySocialGesture (que sí avisa si el estado
+        // Diagnóstico: a diferencia de PlaySocialGesture (que sí avisa si el estado
         // no existe), este método no dejaba ningún rastro en consola cuando el Animator Controller
         // no tenía el estado begin/loop (p.ej. los clips de SitGround están "pendientes de
         // importar", ver comentario en GetActivityBeginState más abajo) — el NPC simplemente se
@@ -2347,7 +2349,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         bool hasLoopState  = !string.IsNullOrEmpty(loopState)  && animator != null && animator.HasState(layer, Animator.StringToHash(loopState));
         if (!hasBeginState && !hasLoopState && (!string.IsNullOrEmpty(beginState) || !string.IsNullOrEmpty(loopState)))
         {
-            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ PlayAmbientActivity({activity}): ni '{beginState}' ni '{loopState}' " +
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] PlayAmbientActivity({activity}): ni '{beginState}' ni '{loopState}' " +
                 $"existen en la layer {layer} del Animator Controller " +
                 $"'{(animator != null && animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +
                 "El NPC se quedará de pie en vez de sentarse — revisar si los clips están importados y wireados en ESE controller.");
@@ -2580,7 +2582,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (!navAgent.enabled || !navAgent.isOnNavMesh)
             return;
         
-        // ✅ FIX CRÍTICO: Solo sincronizar si el agente tiene un path activo y no está detenido
+        // FIX CRÍTICO: Solo sincronizar si el agente tiene un path activo y no está detenido
         // Esto previene que velocidad residual cause movimiento constante
         if (navAgent.isStopped || !navAgent.hasPath)
         {
@@ -2595,7 +2597,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Get agent velocity
         float agentSpeed = navAgent.velocity.magnitude;
 
-        // ✅ Threshold más estricto: Si la velocidad es muy baja, considerarlo como parado
+        // Threshold más estricto: Si la velocidad es muy baja, considerarlo como parado
         if (agentSpeed < movementThreshold * 0.5f)
         {
             if (!AllowManualMovement)
@@ -2622,7 +2624,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // de "otra animación"/"patinando sobre hielo" pese a que el Animator seguía correctamente
         // en el estado "Free Locomotion".
         
-        // ✅ FIX: No actualizar rotación si está deshabilitada (ej: durante/después de cinemáticas)
+        // No actualizar rotación si está deshabilitada (ej: durante/después de cinemáticas)
         if (_disableAutoRotation || AllowManualRotation)
             return;
         
@@ -2631,7 +2633,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             Vector3 direction = navAgent.velocity.normalized;
             
-            // ✅ DEBUG: Log rotación
+            // DEBUG: Log rotación
             if (debugMode && Time.frameCount % 30 == 0) // Cada 30 frames
             {
                 Vector3 forward = transform.forward;
@@ -2663,7 +2665,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (angle < minRotationAngle)
             return;
         
-        // ✅ DEBUG: Log aplicación de rotación
+        // DEBUG: Log aplicación de rotación
         if (debugMode && Time.frameCount % 60 == 0) // Cada 60 frames
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -2695,13 +2697,13 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         _currentState = AnimationState.Idle;
 
-        // ✅ FIX: Desactivar root motion en Idle también
+        // Desactivar root motion en Idle también
         if (animator != null)
         {
             animator.applyRootMotion = false;
         }
 
-        // ✅ FIX: si el NPC sigue sentado (p.ej. este TransitionToIdle llega desde el callback
+        // si el NPC sigue sentado (p.ej. este TransitionToIdle llega desde el callback
         // de PlayOneShot al terminar un PlaySocialGesture lanzado mientras estaba en la mesa),
         // volver al loop de sentado en vez de ponerlo de pie con idleNormalState.
         if (_isSeated && !_isInBattle)
@@ -2747,7 +2749,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             _currentState = AnimationState.Walking;
         }
         
-        // ✅ FIX CRÍTICO: Desactivar root motion durante locomotion
+        // FIX CRÍTICO: Desactivar root motion durante locomotion
         // para que el NPCSimpleAnimator controle la rotación, no la animación
         if (animator != null)
         {
@@ -2832,11 +2834,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
         else
         {
-            // ✅ Cambiado a Warning para no ensuciar la consola si un NPC específico no tiene una animación opcional
+            // Cambiado a Warning para no ensuciar la consola si un NPC específico no tiene una animación opcional
             if (debugMode)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCAnimator] ⚠️ Estado '{stateName}' no encontrado en layer {layer} para {gameObject.name}.");
+                Debug.LogWarning($"[NPCAnimator] Estado '{stateName}' no encontrado en layer {layer} para {gameObject.name}.");
 #endif
                 }
         }

@@ -16,7 +16,6 @@ public class GameBootProfileDebugger : MonoBehaviour
     [Tooltip("Tecla para mostrar/ocultar el panel")]
     public Key toggleKey = Key.F4;
 
-    // FIX (5 sept 2026, AGENTS.md; mismo patron que CinematicSequencerBase._simulateHotkey):
     // UnityEngine.Input.GetKeyDown lanza InvalidOperationException con el nuevo Input System
     // activo en exclusiva. Cambiado de KeyCode a Key - si este componente ya tenia un valor
     // serializado del KeyCode antiguo, Unity lo conserva como int invalido; el guard de abajo
@@ -212,7 +211,6 @@ public class GameBootProfileDebugger : MonoBehaviour
                 {
                     DrawKeyValue("Can Swim", p.abilities.swim ? "✅" : "❌");
                     DrawKeyValue("Can Jump", p.abilities.jump ? "✅" : "❌");
-                    DrawKeyValue("Can Climb", p.abilities.climb ? "✅" : "❌");
                     DrawKeyValue("Can Fly", p.abilities.fly ? "✅" : "❌");
                 }
                 else
@@ -272,7 +270,6 @@ public class GameBootProfileDebugger : MonoBehaviour
                 GUILayout.Label("PlayerActionManager (vivo):", labelStyle);
                 DrawKeyValue("  Swim", actionManager.AllowSwim ? "✅" : "❌");
                 DrawKeyValue("  Jump", actionManager.AllowJump ? "✅" : "❌");
-                DrawKeyValue("  Climb", actionManager.AllowClimb ? "✅" : "❌");
             }
 
             var spawnManager = SpawnManager.CurrentAnchorId;
