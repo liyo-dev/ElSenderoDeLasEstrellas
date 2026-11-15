@@ -2138,13 +2138,22 @@ public sealed class AudioService : MonoBehaviour
         SetExposedVolume(param, VolumenDelJugador(bus) * fraccion);
     }
 
-    public void PlayVoice(AudioClip clip, float volume = 1f)
+    public void PlayVoice(AudioClip clip, float volume = 1f, float desdeSegundo = 0f)
     {
         if (_voiceSource == null || clip == null) return;
+
+        // Entrar en una frase por la mitad (un salto del guion): la voz arranca donde estaría.
+        if (desdeSegundo >= clip.length)
+        {
+            StopVoice();
+            return;
+        }
+
         CancelVoiceMonitor();
         _voiceSource.Stop();
         _voiceSource.clip = clip;
         _voiceSource.volume = Mathf.Clamp01(volume);
+        _voiceSource.time = Mathf.Clamp(desdeSegundo, 0f, Mathf.Max(0f, clip.length - 0.01f));
         _voiceSource.Play();
         _ajustesDeVozActiva = AjustesDeAtenuacionParaLaVoz();
         _voiceDuckActive = _ajustesDeVozActiva != null && _ajustesDeVozActiva.enabled;
@@ -2152,6 +2161,24 @@ public sealed class AudioService : MonoBehaviour
         ActualizarGananciaDeDialogo();
         RefreshDuck(AtaqueDeAtenuacion);
         _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken));
+    }
+
+    /// Para o reanuda la música, la voz y el ambiente de una cinemática sin tocar los volúmenes del
+    /// jugador. Lo usa el reproductor de guiones al pausar y reanudar. Ver INC-1234.
+    public void PausarSonidoDeCine(bool pausar)
+    {
+        PausarFuente(_voiceSource, pausar);
+        PausarFuente(_musicA, pausar);
+        PausarFuente(_musicB, pausar);
+        foreach (var fuente in _ambienceSources)
+            PausarFuente(fuente, pausar);
+    }
+
+    private static void PausarFuente(AudioSource fuente, bool pausar)
+    {
+        if (fuente == null) return;
+        if (pausar) fuente.Pause();
+        else fuente.UnPause();
     }
 
     // Elige del perfil la atenuación según el efecto de voz y si hay una cinemática en marcha.

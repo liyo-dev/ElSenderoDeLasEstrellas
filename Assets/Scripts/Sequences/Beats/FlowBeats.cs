@@ -406,9 +406,24 @@ public class MusicBeat : SequenceBeat
         var player = ctx?.Player;
         if (player == null) yield break;
 
-        if (string.IsNullOrWhiteSpace(musicId)) player.StopMusicNow(fadeOut);
-        else player.PlayMusic(musicId, continuarDondeIba, fadeIn, desdeSegundo);
+        if (string.IsNullOrWhiteSpace(musicId))
+        {
+            player.StopMusicNow(fadeOut);
+            yield break;
+        }
 
+        float desde = desdeSegundo;
+        bool continuar = continuarDondeIba;
+        float fundido = fadeIn;
+        if (ctx.Saltando)
+        {
+            // Al entrar por la mitad, la pista no empieza: sigue donde estaría en ese segundo.
+            desde = TiempoDeGuion.DesplazamientoDeMusica(desdeSegundo, ctx.SegundoActual, ctx.TiempoDelEfecto);
+            continuar = false;
+            fundido = 0f;
+        }
+
+        player.PlayMusic(musicId, continuar, fundido, desde);
         yield break;
     }
 }

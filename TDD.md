@@ -41,6 +41,7 @@
 31. [Kits genéricos: separación de los sistemas](#31-kits-genéricos-separación-de-los-sistemas-inc-1049)
 32. [Quién cede ante quién: árbitros, contexto de juego y puentes con los kits](#32-quién-cede-ante-quién-árbitros-contexto-de-juego-y-puentes-con-los-kits-inc-1130)
 33. [Taller de rodaje: una sola puerta para las cinemáticas](#33-taller-de-rodaje-una-sola-puerta-para-las-cinemáticas-inc-1230)
+34. [Runtime determinista de las cinemáticas](#34-runtime-determinista-de-las-cinemáticas-inc-1235)
 
 ---
 
@@ -5030,7 +5031,7 @@ EditMode en `Assets/Editor/Guion/Tests/TallerDeRodajeTests.cs` (9 tests):
 
 ### 33.10 Fuera de alcance
 
-- **Runtime determinista**: contrato estado/evento con `t`, `PlayVoice(clip, desdeSegundo)`, VFX atados al reloj y pausa real. Es la otra mitad del problema y va en su propia incidencia; sin ella, el taller mejora la autoría pero el seek sigue sin ser fiable.
+- **Runtime determinista**: hecho en § 34 (INC-1235): la voz y la música arrancan donde estarían al saltar, la pausa congela el juego y el sonido, y los VFX se recogen al saltar.
 - Timeline editable tipo DAW.
 - Editor de texto con resaltado (Raúl no lo marcó como fricción).
 - Gestos y poses de medio cuerpo en el previz (la pose base ya se muestrea).
@@ -5046,6 +5047,71 @@ El taller es la **capa de autoría** del producto que describe § 25.6. No hace 
 |---|---|
 | Fases 1–4 | Hechas (15 nov 2026) |
 | Compilación | 0 errores CS, 0 avisos (Editor) |
-| Tests | 60/60 EditMode; 9 del taller |
+| Tests | 67/67 EditMode; 9 del taller y 7 del reloj |
 | Prueba de humo | `Cap3_01_ElEspejo`: horneado en seco (28,8 s, 6 planos, 2 actores), 6 fotogramas de previz y diff de `lente 65 → 28` |
-| Pendiente | Probarlo en el editor con un guion real: abrir el taller, previsualizar y aplicar un encuadre |
+| Runtime | Hecho en § 34 (INC-1235): voz y música con desplazamiento, pausa real y VFX atados al reloj |
+| Pendiente | Probarlo en el editor con un guion real: abrir el taller, previsualizar, aplicar un encuadre y probar la pausa y el salto en Play |
+
+---
+
+## 34. Runtime determinista de las cinemáticas (INC-1235)
+
+**Origen (15 nov 2026).** Raúl: «no avanza ni rebobina la música ni las voces, a veces es solo el movimiento, los VFX tampoco». § 33 arregló la autoría; esta sección arregla lo que pasa al pausar o saltar dentro de una cinemática.
+
+**La idea.** Un solo reloj manda. Al saltar a un segundo, lo que es **estado** se vuelve a colocar en ese instante —incluidas la música y la voz, que arrancan donde estarían—; lo que es **evento** no se rebobina: se recoge y, si el nuevo segundo lo pide, se vuelve a lanzar.
+
+### 34.1 Voz
+
+- `AudioService.PlayVoice(clip, volumen, desdeSegundo)` coloca `AudioSource.time` antes de `Play()`. Si el segundo pedido ya pasa del final del clip, no suena.
+- `PresentadorDeLinea.SonarLaVoz(clave, desdeSegundo)` es el camino único; las sobrecargas antiguas siguen valiendo con 0.
+- `ReproductorDeGuion.AbrirLinea(linea, t)` calcula con `TiempoDeGuion.DesplazamientoDeLinea` cuánto lleva dicha la frase y con `DuracionRestanteDeLinea` lo que le queda de subtítulo. Al entrar por la mitad, la voz arranca donde estaría, no desde el principio.
+- `CerrarLinea` calla la voz (`AudioService.StopVoice`) además de esconder el bocadillo: antes, al saltar, la voz anterior seguía sonando encima de la nueva.
+
+### 34.2 Música
+
+- `MusicBeat` ya era un beat de estado (`CambiaElEscenario`), así que el horneado lo vuelve a aplicar al saltar. Lo que faltaba era el segundo: usa `SequenceContext.Saltando`, `SegundoActual` y `TiempoDelEfecto` para calcular con `TiempoDeGuion.DesplazamientoDeMusica` dónde estaría la pista, y llama a `PlayMusic(..., desdeSegundo)` con fundido 0. Si el guion pidió la pista con un segundo concreto, se suma ese segundo; si no, se usa lo transcurrido desde el efecto.
+- `EfectoDeVozBeat` pasa a ser de estado: al entrar por la mitad de una frase, la voz suena con el preset que le tocaba y no con el de la escena.
+
+### 34.3 Pausa
+
+`ReproductorDeGuion.Pausar()` hace cuatro cosas a la vez y `Reanudar()` las deshace:
+
+| Qué | Cómo |
+|---|---|
+| El reloj del guion | `SequenceContext.RetenerReloj()` (lo que ya había) |
+| El juego | `TimeScaleArbiterService.Request(this, 0f)`; al reanudar, `Release(this)` |
+| La música, la voz y el ambiente | `AudioService.PausarSonidoDeCine(true/false)` (`Pause`/`UnPause` de las fuentes) |
+| Los VFX | `VfxPoolService.PausarActivos(true/false)` (partículas, también las de tiempo sin escalar) |
+
+- Si se salta a otro segundo **con el guion en pausa**, la frase que cubre ese segundo no suena todavía: se guarda y arranca al reanudar, en el segundo que toca (`_lineaPendienteDeVoz`).
+- `Terminar()` reanuda antes de cerrar, así que una cinemática pausada que termina o se salta no deja el juego congelado.
+
+### 34.4 VFX
+
+- `VfxPoolService.LimpiarActivos()` devuelve al pool todo lo que esté vivo. `SaltarA` lo llama antes de recomponer el estado: un VFX es un evento, no se rebobina; si el nuevo segundo lo pide, se vuelve a lanzar.
+- `PausarActivos(bool)` para y reanuda las partículas de los VFX activos.
+- `Time.timeScale = 0` (el árbitro) ya detiene los lifetimes de `VfxPoolService` y las partículas que usan tiempo escalado; lo anterior cubre las que no.
+
+### 34.5 Archivos
+
+| Pieza | Archivo |
+|---|---|
+| Cuentas del reloj | `Assets/Scripts/Sequences/Guion/TiempoDeGuion.cs` |
+| Contexto de estado | `Assets/Scripts/Sequences/SequenceBeat.cs` (`SegundoActual`, `TiempoDelEfecto`, `Saltando`) |
+| Reproductor | `Assets/Scripts/Sequences/Guion/ReproductorDeGuion.cs` |
+| Música y voz | `Assets/Scripts/Sequences/Beats/FlowBeats.cs`, `Assets/Scripts/Sequences/Beats/AudioBeats.cs` |
+| Audio | `Assets/Scripts/Audio/AudioService.cs` (`PlayVoice` con desplazamiento, `PausarSonidoDeCine`) |
+| Texto | `Assets/Scripts/Dialogue/PresentadorDeLinea.cs` (`SonarLaVoz` con desplazamiento) |
+| VFX | `Assets/Scripts/Core/Pooling/VfxPoolService.cs` (`LimpiarActivos`, `PausarActivos`) |
+
+### 34.6 Pruebas
+
+`TiempoDeGuionTests` (7 tests EditMode): música sin segundo concreto, con segundo concreto, antes del efecto; voz que entra por la mitad, antes de empezar; duración restante con la frase en curso y ya acabada. **Suite entera: 67/67.** Compila con 0 errores y 0 avisos.
+
+### 34.7 Límites
+
+- Un VFX de un solo uso **no se rebobina**: al saltar se recoge y solo vuelve si el segundo nuevo lo pide.
+- Los efectos que esperan con `WaitForSecondsRealtime` siguen corriendo durante la pausa; el reloj del guion y lo que suena sí se paran.
+- El subtítulo (`SpeechBubbleUI`) lleva su propio contador; la pausa del guion no lo detiene. La voz sí.
+- El desplazamiento de audio es exacto en muestras para música (`timeSamples`) y aproximado para voces comprimidas o en streaming (`AudioSource.time`).
+- La pausa usa `Time.timeScale` a través del árbitro: cualquier sistema que escriba `Time.timeScale` por su cuenta se la salta (no debe haber ninguno; ver § 32).

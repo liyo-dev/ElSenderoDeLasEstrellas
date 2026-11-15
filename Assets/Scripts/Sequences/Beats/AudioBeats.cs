@@ -13,6 +13,11 @@ public class EfectoDeVozBeat : SequenceBeat
 
     public override string Describe() => $"Voz: {preset}, +{gananciaDb:F1} dB";
 
+    /// El efecto de voz se queda puesto: al saltar a un segundo hay que volver a aplicarlo, igual
+    /// que la música o la hora del día. Si no, una frase a la que se entra por la mitad suena con la
+    /// voz de la escena y no con la que le tocaba.
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var audio = AudioService.Instance;

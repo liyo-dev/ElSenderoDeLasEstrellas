@@ -29,6 +29,10 @@ public sealed class ReproductorDeGuion
     private float _t;
     private float _saltoPedido = -1f;
     private LineaHorneada _lineaEnCurso;
+
+    /// Frase que se ha abierto con el guion en pausa: la voz no arranca hasta reanudar, y entonces
+    /// lo hace en el segundo que toca (no desde el principio).
+    private LineaHorneada _lineaPendienteDeVoz;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private float _tFoto = float.MaxValue;
 #endif
@@ -128,6 +132,7 @@ public sealed class ReproductorDeGuion
         t = Mathf.Clamp(t, 0f, _g.duracion);
 
         CerrarLinea();
+        VfxPoolService.Instance?.LimpiarActivos();
 
         _iLinea = 0;
         _iPlano = 0;
@@ -136,23 +141,45 @@ public sealed class ReproductorDeGuion
 
         _t = t;
         SaltarHasta(t);
+        // Deja el estado exacto del segundo al que se salta (incluida la frase que lo cubre), no el
+        // del fotograma anterior. La siguiente vuelta del bucle lo repite sin duplicar nada.
+        Avanzar(t);
+        if (_pausado) VfxPoolService.Instance?.PausarActivos(true);
     }
 
-    /// Detiene el reloj del guion: la escena se queda quieta en el segundo actual.
+    /// Detiene el reloj del guion y todo lo que suena con él: el juego (timeScale), la música, las
+    /// voces y los VFX. Al reanudar cada cosa vuelve donde estaba.
     public void Pausar()
     {
         if (_pausado || _terminado) return;
         _pausado = true;
         _ctx?.RetenerReloj();
+        TimeScaleArbiterService.Request(ClaveDePausa, 0f);
+        AudioService.Instance?.PausarSonidoDeCine(true);
+        VfxPoolService.Instance?.PausarActivos(true);
     }
 
-    /// Vuelve a dejar avanzar el reloj del guion.
+    /// Vuelve a dejar avanzar el reloj y lo que se paró con él.
     public void Reanudar()
     {
         if (!_pausado) return;
         _pausado = false;
         _ctx?.SoltarReloj();
+        TimeScaleArbiterService.Release(ClaveDePausa);
+        AudioService.Instance?.PausarSonidoDeCine(false);
+        VfxPoolService.Instance?.PausarActivos(false);
+
+        if (_lineaPendienteDeVoz == null) return;
+        LineaHorneada linea = _lineaPendienteDeVoz;
+        _lineaPendienteDeVoz = null;
+        if (_t >= linea.t0 && _t < linea.t1)
+            PresentadorDeLinea.SonarLaVoz(linea.clave, TiempoDeGuion.DesplazamientoDeLinea(_t, linea.t0));
     }
+
+    /// La clave del árbitro de tiempo: el reproductor de la secuencia, que es un UnityEngine.Object
+    /// y el árbitro descarta solo si la escena se va con la pausa puesta. Si no hay player (una
+    /// prueba suelta), el propio reproductor.
+    private object ClaveDePausa => (object)_ctx?.Player ?? this;
 
     // ── Preparación y cierre ────────────────────────────────────────────────────────────────
 
@@ -265,11 +292,17 @@ public sealed class ReproductorDeGuion
         }
 
         while (_iEfecto < _g.efectos.Count && _g.efectos[_iEfecto].t <= t)
-            Lanzar(_g.efectos[_iEfecto++]);
+        {
+            EfectoHorneado efecto = _g.efectos[_iEfecto++];
+            _ctx.SegundoActual = t;
+            _ctx.TiempoDelEfecto = efecto.t;
+            _ctx.Saltando = false;
+            Lanzar(efecto);
+        }
 
         if (_lineaEnCurso != null && t >= _lineaEnCurso.t1) CerrarLinea();
         while (_iLinea < _g.lineas.Count && _g.lineas[_iLinea].t0 <= t)
-            AbrirLinea(_g.lineas[_iLinea++]);
+            AbrirLinea(_g.lineas[_iLinea++], t);
 
         foreach (var i in _interpretes) i.Actualizar(t, _porId);
         _camaras.Actualizar(t);
@@ -300,7 +333,13 @@ public sealed class ReproductorDeGuion
         while (_iEfecto < _g.efectos.Count && _g.efectos[_iEfecto].t < t)
         {
             var e = _g.efectos[_iEfecto++];
-            if (e.beat != null && EsDeEstado(e.beat)) Lanzar(e);
+            if (e.beat == null || !EsDeEstado(e.beat)) continue;
+
+            _ctx.SegundoActual = t;
+            _ctx.TiempoDelEfecto = e.t;
+            _ctx.Saltando = true;
+            Lanzar(e);
+            _ctx.Saltando = false;
         }
         while (_iLinea < _g.lineas.Count && _g.lineas[_iLinea].t1 <= t) _iLinea++;
         while (_iPlano + 1 < _g.planos.Count && _g.planos[_iPlano + 1].t0 <= t) _iPlano++;
@@ -372,11 +411,13 @@ public sealed class ReproductorDeGuion
 
     // ── Frases ──────────────────────────────────────────────────────────────────────────────
 
-    private void AbrirLinea(LineaHorneada linea)
+    private void AbrirLinea(LineaHorneada linea, float t)
     {
         if (!CumpleCondicion(linea.onlyIfFlag, linea.skipIfFlag)) return;
         CerrarLinea();
         _lineaEnCurso = linea;
+        float desde = TiempoDeGuion.DesplazamientoDeLinea(t, linea.t0);
+        float duracion = TiempoDeGuion.DuracionRestanteDeLinea(t, linea.t0, linea.t1);
         _porId.TryGetValue(linea.actor, out var quien);
         var datos = quien?.Datos;
         var actor = quien?.Actor;
@@ -392,7 +433,7 @@ public sealed class ReproductorDeGuion
         var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
         if (actor?.Transform != null)
         {
-            PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
+            PresentadorDeLinea.Mostrar(actor.Transform, texto, duracion,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
                 new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));
         }
@@ -401,16 +442,21 @@ public sealed class ReproductorDeGuion
             // Sin actor resuelto (no está en esta escena, o es un personaje sin FSM que todavía no
             // se ha dado de alta) la frase no puede desaparecer en silencio: un subtítulo no
             // necesita a quién señalar. Ver INC-1233.
-            PresentadorDeLinea.Mostrar(null, texto, (linea.t1 - linea.t0) + 0.35f,
+            PresentadorDeLinea.Mostrar(null, texto, duracion,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
                 null, fijoEnPantalla: presentacion == PresentacionDeTexto.Bocadillo);
         }
 
-        PresentadorDeLinea.SonarLaVoz(linea.clave);
+        // Con el guion en pausa no se suelta la voz: se guarda y arranca al reanudar, en el segundo
+        // que toca. Sin esto, un salto con el reloj parado sonaría desde el principio.
+        if (_pausado) _lineaPendienteDeVoz = linea;
+        else PresentadorDeLinea.SonarLaVoz(linea.clave, desde);
     }
 
     private void CerrarLinea()
     {
+        AudioService.Instance?.StopVoice();
+        _lineaPendienteDeVoz = null;
         if (_lineaEnCurso == null) return;
         if (_porId.TryGetValue(_lineaEnCurso.actor, out var quien) && quien.Actor != null)
             _ctx.MarcarHabla(quien.Actor, false);

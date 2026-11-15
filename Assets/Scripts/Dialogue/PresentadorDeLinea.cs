@@ -54,14 +54,20 @@ public static class PresentadorDeLinea
     }
 
     /// Suelta la voz de la frase, si la hay.
-    public static void SonarLaVoz(string clave) => SonarLaVoz(clave, out _);
+    public static void SonarLaVoz(string clave) => SonarLaVoz(clave, 0f, out _);
+
+    /// Suelta la voz de la frase desde un segundo (para entrar en una frase por la mitad).
+    public static void SonarLaVoz(string clave, float desdeSegundo) => SonarLaVoz(clave, desdeSegundo, out _);
 
     /// Suelta la voz de la frase, si la hay, y dice cuál ha sonado (para poder callarla).
     public static bool SonarLaVoz(string clave, out AudioClip clip)
+        => SonarLaVoz(clave, 0f, out clip);
+
+    public static bool SonarLaVoz(string clave, float desdeSegundo, out AudioClip clip)
     {
         var audio = AudioService.Instance;
         if (audio == null || !Voz(clave, out clip)) { clip = null; return false; }
-        audio.PlayVoice(clip);
+        audio.PlayVoice(clip, 1f, desdeSegundo);
         return true;
     }
 

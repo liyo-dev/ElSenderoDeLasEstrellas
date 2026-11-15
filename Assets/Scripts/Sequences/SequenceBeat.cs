@@ -111,6 +111,19 @@ public sealed class SequenceContext
     public void AcompasarRelojAlTiempo() => _relojAlCompas++;
     public void SoltarRelojAlCompas() => _relojAlCompas = Math.Max(0, _relojAlCompas - 1);
 
+    /// El segundo del guion que se está aplicando. Lo pone el reproductor antes de lanzar un efecto;
+    /// los beats de estado que tienen que colocarse dentro de sí mismos al saltar lo leen (la música:
+    /// ver MusicBeat).
+    public float SegundoActual { get; set; }
+
+    /// El segundo del guion en el que está programado el efecto que se está aplicando. Con
+    /// <see cref="SegundoActual"/> da cuánto lleva corriendo ese efecto al entrar por la mitad.
+    public float TiempoDelEfecto { get; set; }
+
+    /// True mientras el reproductor vuelve a aplicar el estado al saltar a un segundo. Un beat de
+    /// estado usa esto para arrancar en el punto que le toca en vez de desde su principio.
+    public bool Saltando { get; set; }
+
     /// ¿Se ha saltado la secuencia? Lo marca el reproductor al saltar, antes de soltarlo todo,
     /// para que lo que se cierre a partir de ahí cumpla lo pendiente (SequenceBeat.CumplirAlSaltar).
     public bool SeHaSaltado { get; private set; }

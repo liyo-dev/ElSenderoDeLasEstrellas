@@ -106,6 +106,36 @@ public class VfxPoolService : MonoBehaviour
         return 0;
     }
 
+    /// Devuelve al pool todos los VFX que estén vivos ahora mismo. Lo usa el reproductor de guiones
+    /// al saltar a otro segundo: un VFX es un evento, no se rebobina; se recoge y se vuelve a lanzar
+    /// si el nuevo segundo lo pide. Ver INC-1234.
+    public void LimpiarActivos()
+    {
+        for (int i = _active.Count - 1; i >= 0; i--)
+            if (_active[i].instance != null)
+                ReturnInternal(_active[i].instance);
+        _active.Clear();
+    }
+
+    /// Para o reanuda las partículas de los VFX activos. Con `Time.timeScale` a 0 la mayoría ya se
+    /// paran solas; esto cubre las que usan tiempo sin escalar. No toca los lifetimes: al reanudar,
+    /// `Time.time` sigue donde estaba y caducan cuando tocaba.
+    public void PausarActivos(bool pausar)
+    {
+        for (int i = 0; i < _active.Count; i++)
+        {
+            Transform instancia = _active[i].instance;
+            if (instancia == null) continue;
+
+            var sistemas = instancia.GetComponentsInChildren<ParticleSystem>(true);
+            for (int s = 0; s < sistemas.Length; s++)
+            {
+                if (pausar) sistemas[s].Pause(true);
+                else sistemas[s].Play(true);
+            }
+        }
+    }
+
     private void Update()
     {
         float now = Time.time;
