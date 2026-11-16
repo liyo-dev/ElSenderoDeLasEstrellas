@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,7 +6,7 @@ namespace Kits.Puzzles
 {
     /// <summary>
     /// Cuenta atrás en compases que se ve en el escenario: una vela por compás y cada fuerte apaga
-    /// una. Se usa en las salas donde el jugador tiene que pensar mientras la música corre; al
+    /// una. Se usa en las salas donde el jugador tiene que pensar mientras el reloj corre; al
     /// apagarse la última, avisa al mecanismo que corresponda.
     /// </summary>
     [DisallowMultipleComponent]
@@ -15,8 +15,8 @@ namespace Kits.Puzzles
         [Serializable] public sealed class CompasesEvent : UnityEvent<int> { }
 
         [Header("Ritmo")]
-        [Tooltip("Pulso de la música. Si se deja vacío, se usa el de la escena.")]
-        [SerializeField] private MusicPulse pulse;
+        [Tooltip("Reloj del tramo. Si se deja vacío, se usa el de la escena.")]
+        [SerializeField] private TempoClock pulse;
         [Tooltip("Compases que dura la cuenta.")]
         [SerializeField, Min(1)] private int totalMeasures = 24;
 
@@ -35,7 +35,7 @@ namespace Kits.Puzzles
         public int RemainingMeasures { get; private set; }
         public bool IsCounting { get; private set; }
 
-        private MusicPulse _pulse;
+        private TempoClock _pulse;
         private bool[] _llamasEncendidas;
         private float _siguienteEnganche;
 
@@ -47,7 +47,7 @@ namespace Kits.Puzzles
 
         private void OnEnable()
         {
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
+            _pulse = pulse != null ? pulse : TempoClock.Current;
             if (_pulse == null) return;
             _pulse.Downbeat += AlLlegarElFuerte;
             if (startOnEnable) BeginCountdown();
@@ -86,7 +86,7 @@ namespace Kits.Puzzles
             // Se engancha al pulso en cuanto esté: al cargar la escena puede activarse antes.
             if (_pulse != null || Time.time < _siguienteEnganche) return;
             _siguienteEnganche = Time.time + 0.5f;
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
+            _pulse = pulse != null ? pulse : TempoClock.Current;
             if (_pulse != null) _pulse.Downbeat += AlLlegarElFuerte;
         }
 

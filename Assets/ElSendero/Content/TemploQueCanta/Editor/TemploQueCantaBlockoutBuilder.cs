@@ -26,8 +26,6 @@ public static partial class TemploQueCantaBlockoutBuilder
     private const string CarpetaDatos = "Assets/Scenes/Worlds/TemploQueCanta_data";
     private const string RutaStart = "Assets/Scenes/Systems/Start.unity";
     private const string NombreDeLaEscena = "TemploQueCanta";
-    /// <summary>La canción elegida por Raúl (16 nov): organillo, una sola voz, 120 BPM.</summary>
-    private const string RutaDeLaCancion = "Assets/Audio/Music/Zonas/El guardian canta.mp3";
 
     // â”€â”€ El sitio â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private const float AltoDeLosMuros = 7f;
@@ -65,6 +63,8 @@ public static partial class TemploQueCantaBlockoutBuilder
         SceneManager.MoveGameObjectToScene(raiz.gameObject, escena);
 
         var pulso = CrearPulso(raiz);
+        MarcaDeAterrizaje(raiz, escena);
+        CompasEnPantalla(raiz, pulso);
         CrearAntesala(raiz, escena, pulso);
         CrearHuida(raiz, escena, pulso);
         var balanza = CrearBalanza(raiz, escena, pulso);
@@ -104,53 +104,46 @@ public static partial class TemploQueCantaBlockoutBuilder
 
     // â”€â”€ Lo que se monta â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-    private static MusicPulse CrearPulso(Transform raiz)
+    private static TempoClock CrearPulso(Transform raiz)
     {
-        var go = new GameObject("Pulso de la música");
+        var go = new GameObject("Reloj del templo");
         go.transform.SetParent(raiz, false);
-        var pulso = go.AddComponent<MusicPulse>();
-        // Tempo medido de la canción elegida (16 nov): 77,1 BPM contado doble y 0,288 s de desfase.
-        Poner(pulso, "bpm", 154.2f);
-        Poner(pulso, "desfaseEnSegundos", 0.288f);
+        var pulso = go.AddComponent<TempoClock>();
+        // 120 BPM en 4/4: un tiempo cada 0,5 s y un compás cada 2 s, que es la medida del nivel.
+        Poner(pulso, "bpm", 120f);
         Poner(pulso, "beatsPerMeasure", 4);
-
-        var cancion = PrepararLaCancion();
-        if (cancion != null)
-        {
-            var fuente = go.AddComponent<AudioSource>();
-            fuente.clip = cancion;
-            fuente.loop = true;
-            fuente.playOnAwake = false;
-            fuente.spatialBlend = 0f;
-            PonerRef(pulso, "musicSource", fuente);
-            Poner(pulso, "clickInBlockout", false);
-        }
-        else
-        {
-            Poner(pulso, "clickInBlockout", true);
-        }
+        Poner(pulso, "startOnEnable", true);
         return pulso;
     }
 
-    /// <summary>Deja la canción importada como Streaming (sin precargar) y devuelve el clip.</summary>
-    private static AudioClip PrepararLaCancion()
+    /// <summary>
+    /// Una losa del templo: el bloque que se quita y vuelve cada cuatro tiempos (2 s puesto, 2 s
+    /// quitado) y el marco fijo que queda en el hueco y avisa medio segundo antes de cada cambio.
+    /// </summary>
+    private static GameObject LosaQueLate(string nombre, Transform padre, Scene escena, TempoClock pulso,
+                                          Vector3 centro, Vector3 tam, bool empiezaQuitada)
     {
-        var importador = AssetImporter.GetAtPath(RutaDeLaCancion) as AudioImporter;
-        if (importador != null)
-        {
-            var ajustes = importador.defaultSampleSettings;
-            ajustes.loadType = AudioClipLoadType.Streaming;
-            ajustes.compressionFormat = AudioCompressionFormat.Vorbis;
-            ajustes.quality = 1f;
-            ajustes.preloadAudioData = false;
-            importador.defaultSampleSettings = ajustes;
-            importador.SaveAndReimport();
-        }
-        return AssetDatabase.LoadAssetAtPath<AudioClip>(RutaDeLaCancion);
+        var losa = Caja(nombre, padre, escena, centro, tam, _gris, suelo: true);
+        var tile = losa.AddComponent<PulseTile>();
+        PonerRef(tile, "pulse", pulso);
+        Poner(tile, "beatsUp", 4);
+        Poner(tile, "beatsDown", 4);
+        Poner(tile, "startDown", empiezaQuitada);
+        Poner(tile, "warningSeconds", 0.5f);
+        Poner(tile, "sinkDepth", 0.5f);
+        Poner(tile, "warnSquash", 0.14f);
+        Poner(tile, "warnShake", 0.06f);
+
+        var marco = Caja(nombre + " (marco)", padre, escena,
+                         centro + Vector3.down * (tam.y * 0.5f - 0.02f),
+                         new Vector3(tam.x + 0.5f, 0.04f, tam.z + 0.5f), _grisOscuro, suelo: false);
+        Object.DestroyImmediate(marco.GetComponent<Collider>());
+        PonerRefs(tile, "marco", new Object[] { marco.GetComponent<Renderer>() });
+        return losa;
     }
 
     /// <summary>Antesala: foso de lava con losas que laten y una rejilla que abre un cristal de luz.</summary>
-    private static void CrearAntesala(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearAntesala(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("0. Antesala").transform;
         sala.SetParent(raiz, false);
@@ -181,20 +174,15 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(dano, "danoPorSegundo", 40f);
 
         // Losas del centro: cuatro, con un metro entre ellas. El foso (10 m) no se cruza de un salto.
+        // Aquí se aprende el ciclo: se turnan, así que siempre hay una puesta al lado de una quitada.
         var centroDeLasLosas = new[] { -2f, 0.3f, 2.6f, 4.9f };
         for (int i = 0; i < centroDeLasLosas.Length; i++)
-        {
-            var losa = Caja($"Losa {i + 1}", sala.transform, escena,
-                            new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.2f), _gris, suelo: true);
-            var tile = losa.AddComponent<PulseTile>();
-            PonerRef(tile, "pulse", pulso);
-            Poner(tile, "cycleMeasures", 2);
-            Poner(tile, "sinkOnMeasureInCycle", i % 2);
-            Poner(tile, "sunkBeats", 2);
-            Poner(tile, "sinkDepth", 0.5f);
-            Poner(tile, "warnSquash", 0.14f);
-            Poner(tile, "warnShake", 0.06f);
-        }
+            LosaQueLate($"Losa {i + 1}", sala.transform, escena, pulso,
+                        new Vector3(0f, 0.05f, centroDeLasLosas[i]), new Vector3(4.6f, 0.3f, 1.2f),
+                        empiezaQuitada: i % 2 == 1);
+
+        // La base del compás, a la vista desde el primer paso: cuatro piedras que se encenden 1-2-3-4.
+        MetronomoDePiedras(sala.transform, escena, pulso, new Vector3(0f, 0f, -2.2f), 1.6f);
 
         // Muros de la sala y pared con el paso a la balanza.
         Muro("Muro oeste", sala.transform, escena, new Vector3(-9.2f, AltoDeLosMuros * 0.5f, 0f), new Vector3(0.4f, AltoDeLosMuros, 15f));
@@ -232,7 +220,7 @@ public static partial class TemploQueCantaBlockoutBuilder
     }
 
     /// <summary>Balanza: el plato que pesa, el ascensor que sube, el brasero y la salida.</summary>
-    private static DatosDeLaBalanza CrearBalanza(Transform raiz, Scene escena, MusicPulse pulso)
+    private static DatosDeLaBalanza CrearBalanza(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("2. La balanza").transform;
         sala.SetParent(raiz, false);
@@ -240,7 +228,8 @@ public static partial class TemploQueCantaBlockoutBuilder
         Suelo("Suelo de la balanza", sala.transform, escena, new Vector3(0f, -0.5f, 23f), new Vector3(24f, 1f, 24f));
         Muro("Muro oeste", sala.transform, escena, new Vector3(-12.2f, AltoDeLosMuros * 0.5f, 23f), new Vector3(0.4f, AltoDeLosMuros, 24f));
         Muro("Muro este", sala.transform, escena, new Vector3(12.2f, AltoDeLosMuros * 0.5f, 23f), new Vector3(0.4f, AltoDeLosMuros, 24f));
-        Muro("Muro norte oeste", sala.transform, escena, new Vector3(-8.2f, AltoDeLosMuros * 0.5f, 35.2f), new Vector3(8.4f, AltoDeLosMuros, 0.4f));
+        // El muro del norte deja el hueco de la puerta de la salida (x -8 a -4) y el paso central.
+        Muro("Muro norte oeste", sala.transform, escena, new Vector3(-10.2f, AltoDeLosMuros * 0.5f, 35.2f), new Vector3(4.4f, AltoDeLosMuros, 0.4f));
         Muro("Muro norte este", sala.transform, escena, new Vector3(8.2f, AltoDeLosMuros * 0.5f, 35.2f), new Vector3(8.4f, AltoDeLosMuros, 0.4f));
 
         // El plato: la zona que cuenta (trigger) y la chapa que baja con el peso.
@@ -270,6 +259,13 @@ public static partial class TemploQueCantaBlockoutBuilder
 
         // La repisa de arriba, el brasero y la salida.
         Suelo("Repisa de arriba", sala.transform, escena, new Vector3(-6f, 4.7f, 30f), new Vector3(4.6f, 0.4f, 9f));
+
+        // Placa al pisar la repisa: baja el ascensor para que pueda subir el siguiente.
+        var placaDeBajada = Caja("Placa de bajada del ascensor", sala.transform, escena,
+                                 new Vector3(-6f, 4.95f, 26.5f), new Vector3(2.4f, 0.2f, 2.4f), _grisOscuro, suelo: false);
+        var bajada = placaDeBajada.AddComponent<PressurePlate>();
+        bajada.onActivated ??= new UnityEvent();
+        UnityEventTools.AddVoidPersistentListener(bajada.onActivated, elevador.MoveDown);
         var brasero = Caja("Brasero (lo enciende el fuego)", sala.transform, escena, new Vector3(-3.2f, 5.3f, 32f), new Vector3(0.9f, 0.9f, 0.9f), _brasa, suelo: false);
         var receptor = brasero.AddComponent<ReceptorDeMagia>();
         Poner(receptor, "modo", (int)ReceptorDeMagia.Modo.Permanente);
@@ -286,6 +282,16 @@ public static partial class TemploQueCantaBlockoutBuilder
         // El fuego de la salida se lee en su marco: es magia de fuego, la de Estela.
         Caja("Fuego en el marco de la salida", sala.transform, escena,
              new Vector3(-6f, 8.25f, 34.6f), new Vector3(4.2f, 0.18f, 0.3f), _brasa, suelo: false);
+
+        // El balcón: se cruza la puerta, se anda hasta el borde y se salta al pasillo de abajo (el
+        // tramo lateral, que empieza ya dentro). Los pretiles no dejan salir por los lados, así que
+        // la única salida es el salto y no se puede acabar en el pasillo sin querer.
+        Suelo("Balcón de la salida", sala.transform, escena,
+              new Vector3(-6f, 4.5f, 36.65f), new Vector3(4.4f, 0.4f, 4.3f));
+        Muro("Pretil oeste del balcón", sala.transform, escena,
+             new Vector3(-8.5f, 5.3f, 36.65f), new Vector3(0.4f, 1.2f, 4.3f));
+        Muro("Pretil este del balcón", sala.transform, escena,
+             new Vector3(-3.5f, 5.3f, 36.65f), new Vector3(0.4f, 1.2f, 4.3f));
 
         // Las velas de la cuenta atrás: una por compás, en una repisa del muro oeste.
         var velas = new GameObject[VelasDeLaBalanza];
@@ -327,7 +333,7 @@ public static partial class TemploQueCantaBlockoutBuilder
             Marea = mareaComp,
         };
     }
-    private static TramoDelTemploQueCanta CrearTramo(Transform raiz, Scene escena, MusicPulse pulso, DatosDeLaBalanza balanza)
+    private static TramoDelTemploQueCanta CrearTramo(Transform raiz, Scene escena, TempoClock pulso, DatosDeLaBalanza balanza)
     {
         var go = new GameObject("Tramo 2: la balanza");
         go.transform.SetParent(raiz, false);
@@ -358,7 +364,6 @@ public static partial class TemploQueCantaBlockoutBuilder
         PonerRef(tramo, "marea", balanza.Marea);
         PonerRef(tramo, "meta", meta);
         Poner(tramo, "radioDeLaMeta", 1.6f);
-        Poner(tramo, "segundoDeEntrada", 40f);
         PonerRefs(tramo, "rejas", new Object[] { balanza.Salida });
         return tramo;
     }
@@ -375,7 +380,7 @@ public static partial class TemploQueCantaBlockoutBuilder
     /// la marea entrando por detrás. Los compañeros van por una cornisa paralela, sin saltos: la IA
     /// no salta al compás. Se entra desde la antesala y se sale en el rellano de la balanza.
     /// </summary>
-    private static void CrearHuida(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearHuida(Transform raiz, Scene escena, TempoClock pulso)
     {
         var huida = new GameObject("1. La huida").transform;
         huida.SetParent(raiz, false);
@@ -410,18 +415,11 @@ public static partial class TemploQueCantaBlockoutBuilder
         var losas = new GameObject[FilasDeLaHuida];
         for (int i = 0; i < FilasDeLaHuida; i++)
         {
-            var fila = Caja($"Losa de la huida {i + 1}", huida, escena,
-                            new Vector3(0f, 0.05f, 13.2f + i * 6.1f), new Vector3(5f, 0.3f, 3.5f), _gris, suelo: true);
-            var tile = fila.AddComponent<PulseTile>();
-            PonerRef(tile, "pulse", pulso);
-            Poner(tile, "cycleMeasures", 2);
-            // Las ocho primeras se hunden todas a la vez; las últimas, alternando (zigzag).
-            Poner(tile, "sinkOnMeasureInCycle", i < 8 ? 0 : i % 2);
-            Poner(tile, "sunkBeats", 2);
-            Poner(tile, "sinkDepth", 0.5f);
-            Poner(tile, "warnSquash", 0.14f);
-            Poner(tile, "warnShake", 0.06f);
-            losas[i] = fila;
+            // Las ocho primeras se quitan todas a la vez, para coger el ritmo; las últimas, en
+            // zigzag (una sí y otra no), que es donde el tramo aprieta.
+            losas[i] = LosaQueLate($"Losa de la huida {i + 1}", huida, escena, pulso,
+                                   new Vector3(0f, 0.05f, 13.2f + i * 6.1f), new Vector3(5f, 0.3f, 3.5f),
+                                   empiezaQuitada: i >= 8 && i % 2 == 1);
         }
 
         // La marea, entrando por detrás al empezar el tramo.
@@ -459,7 +457,6 @@ public static partial class TemploQueCantaBlockoutBuilder
         PonerRef(tramo, "meta", meta);
         PonerRef(tramo, "puestoDeLosCompaneros", puesto);
         Poner(tramo, "radioDeLaMeta", 3f);
-        Poner(tramo, "segundoDeEntrada", 12f);
         PonerRefs(tramo, "losas", losas);
     }
 
@@ -478,6 +475,70 @@ public static partial class TemploQueCantaBlockoutBuilder
     }
 
     /// <summary>Por dónde entra el jugador al probar la escena desde Arranque (Â«Probar esta escenaÂ»).</summary>
+    /// <summary>La base visible del compás: cuatro piedras que se encienden por turno, 1-2-3-4.</summary>
+    private static void MetronomoDePiedras(Transform padre, Scene escena, TempoClock pulso, Vector3 centro, float separacion)
+    {
+        var marcas = new Object[4];
+        for (int i = 0; i < 4; i++)
+        {
+            var piedra = Caja($"Piedra del compás {i + 1}", padre, escena,
+                              centro + new Vector3((i - 1.5f) * separacion, 0.35f, 0f),
+                              new Vector3(0.55f, 0.7f, 0.55f), _gris, suelo: false);
+            marcas[i] = piedra.GetComponent<Renderer>();
+        }
+
+        var go = new GameObject("Base del compás (1-2-3-4)");
+        go.transform.SetParent(padre, false);
+        var indicador = go.AddComponent<BeatIndicator>();
+        PonerRef(indicador, "pulse", pulso);
+        PonerRefs(indicador, "marcas", marcas);
+    }
+
+    /// <summary>La sombra de aterrizaje: un disco que se pega al suelo donde vas a caer.</summary>
+    private static void MarcaDeAterrizaje(Transform raiz, Scene escena)
+    {
+        var disco = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        disco.name = "Disco de la sombra de aterrizaje";
+        disco.transform.SetParent(raiz, false);
+        disco.transform.localScale = new Vector3(0.6f, 0.02f, 0.6f);
+        Object.DestroyImmediate(disco.GetComponent<Collider>());
+        disco.GetComponent<MeshRenderer>().sharedMaterial =
+            MaterialTransparente("SombraDeAterrizaje", new Color(0.04f, 0.04f, 0.06f, 0.75f));
+        disco.SetActive(false);
+
+        var go = new GameObject("Sombra de aterrizaje");
+        go.transform.SetParent(raiz, false);
+        var marca = go.AddComponent<MarcaDeAterrizaje>();
+        PonerRef(marca, "disco", disco.transform);
+    }
+
+    /// <summary>Material transparente (para sombras y velos).</summary>
+    private static Material MaterialTransparente(string nombre, Color color)
+    {
+        var material = MaterialLiso(nombre, color);
+        material.SetFloat("_Surface", 1f);
+        material.SetFloat("_Blend", 0f);
+        material.SetOverrideTag("RenderType", "Transparent");
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetInt("_ZWrite", 0);
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        EditorUtility.SetDirty(material);
+        return material;
+    }
+
+    /// <summary>El compás en pantalla: cuatro puntos, el fuerte en naranja y más grande.</summary>
+    private static void CompasEnPantalla(Transform raiz, TempoClock pulso)
+    {
+        var go = new GameObject("Compás en pantalla");
+        go.transform.SetParent(raiz, false);
+        var indicador = go.AddComponent<IndicadorDeCompas>();
+        PonerRef(indicador, "pulse", pulso);
+        Poner(indicador, "fuerteCada", 2);
+    }
+
     private const string IdDelAncla = "InicioTemploQueCanta";
 
     private static void AnclaDeEntrada(Transform padre, Scene escena, Vector3 sitio)

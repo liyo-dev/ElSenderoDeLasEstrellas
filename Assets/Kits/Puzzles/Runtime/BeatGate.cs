@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Kits.Puzzles
 {
     /// <summary>
-    /// Rejilla o plataforma que dura un número de compases de la música: se abre o aparece al
+    /// Rejilla o plataforma que dura un número de compases del reloj: se abre o aparece al
     /// pedírselo y vuelve a su sitio cuando se cumplen. Sirve para la rejilla que abre un
-    /// interruptor durante dos compases y para las plataformas que enciende un faro mientras suenan.
+    /// interruptor durante dos compases y para las plataformas que enciende un faro un rato.
     ///
     /// Quien la dispara la llama desde un evento (un receptor de magia, un plato de peso, un
     /// interruptor) y ella sola lleva la cuenta con el pulso.
@@ -26,8 +26,8 @@ namespace Kits.Puzzles
         }
 
         [Header("Ritmo")]
-        [Tooltip("Pulso de la música. Si se deja vacío, se usa el de la escena.")]
-        [SerializeField] private MusicPulse pulse;
+        [Tooltip("Reloj del tramo. Si se deja vacío, se usa el de la escena.")]
+        [SerializeField] private TempoClock pulse;
         [Tooltip("Compases que dura abierta o presente.")]
         [SerializeField, Min(1)] private int durationMeasures = 2;
         [Tooltip("Cómo se comporta: se aparta al abrirse o aparece al activarse.")]
@@ -67,7 +67,7 @@ namespace Kits.Puzzles
         public bool IsActive { get; private set; }
         public int RemainingBeats { get; private set; }
 
-        private MusicPulse _pulse;
+        private TempoClock _pulse;
         private Transform _visual;
         private Vector3 _visualLocalBase;
         private bool _permanente;
@@ -90,7 +90,7 @@ namespace Kits.Puzzles
 
         private void OnEnable()
         {
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
+            _pulse = pulse != null ? pulse : TempoClock.Current;
             if (_pulse == null) return;
             _pulse.Beat += AlPasarUnTiempo;
             _pulse.Downbeat += AlCambiarCompas;
@@ -185,7 +185,7 @@ namespace Kits.Puzzles
         private void AsegurarPulso()
         {
             if (_pulse != null) return;
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
+            _pulse = pulse != null ? pulse : TempoClock.Current;
             if (_pulse == null) return;
             _pulse.Beat += AlPasarUnTiempo;
             _pulse.Downbeat += AlCambiarCompas;

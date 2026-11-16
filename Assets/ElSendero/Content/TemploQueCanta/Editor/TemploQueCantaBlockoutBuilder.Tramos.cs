@@ -17,12 +17,12 @@ public static partial class TemploQueCantaBlockoutBuilder
     /// al plano y el jugador solo se mueve de izquierda a derecha. Faros de luz que encienden las
     /// plataformas dos compases, y la marea entrando por la izquierda.
     /// </summary>
-    private static void CrearLateral(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearLateral(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("3. La estrofa lateral").transform;
         sala.SetParent(raiz, false);
 
-        Suelo("Entrada del lateral", sala, escena, new Vector3(-8f, -0.5f, 123f), new Vector3(16f, 1f, 12f));
+        Suelo("Entrada del lateral", sala, escena, new Vector3(-6f, -0.5f, 123f), new Vector3(20f, 1f, 12f));
         Suelo("Salida del lateral", sala, escena, new Vector3(62f, -0.5f, 123f), new Vector3(20f, 1f, 12f));
         Suelo("Fondo del lateral", sala, escena, new Vector3(29f, -0.5f - Foso, 123f), new Vector3(50f, 1f, 12f));
         var lava = Caja("Lava del lateral", sala, escena, new Vector3(29f, NivelDeLaLava, 123f),
@@ -41,12 +41,12 @@ public static partial class TemploQueCantaBlockoutBuilder
         for (int i = 0; i < plataformas.Length; i++)
         {
             float x = 4f + i * 8f;
-            var faro = Caja($"Faro de luz {i + 1}", sala, escena, new Vector3(x, 2.6f, 117.6f),
+            var faro = Caja($"Faro de luz {i + 1}", sala, escena, new Vector3(x + 4f, 1.5f, 120.4f),
                             new Vector3(0.8f, 0.8f, 0.8f), _cristalLuz, suelo: false);
             var receptor = faro.AddComponent<ReceptorDeMagia>();
             Poner(receptor, "modo", (int)ReceptorDeMagia.Modo.Pulso);
             PonerEnumArray(receptor, "elementosAceptados", new[] { (int)MagicElement.Light });
-            Brillo($"Luz del faro {i + 1}", sala, new Vector3(x, 2.8f, 118.4f), new Color(0.72f, 0.88f, 1f), 0.7f, 2.5f);
+            Brillo($"Luz del faro {i + 1}", sala, new Vector3(x + 4f, 1.7f, 120.4f), new Color(0.72f, 0.88f, 1f), 0.7f, 2.5f);
 
             var plataforma = Caja($"Plataforma del faro {i + 1}", sala, escena, new Vector3(x + 4f, 0.05f, 123f),
                                   new Vector3(3.6f, 0.3f, 3.6f), _cristalLuz, suelo: true);
@@ -59,13 +59,14 @@ public static partial class TemploQueCantaBlockoutBuilder
             plataformas[i] = plataforma;
         }
 
-        // La zona que pone la cámara de lado y sujeta al jugador al plano.
+        // La zona que pone la cámara de lado y sujeta al jugador al plano. Empieza ya dentro del
+        // pasillo: en el balcón de la salida de la balanza todavía se juega con la cámara normal.
         var zona = new GameObject("Tramo lateral (cámara de lado)");
         zona.transform.SetParent(sala, false);
-        zona.transform.position = new Vector3(22f, 3f, 123f);
+        zona.transform.position = new Vector3(22f, 3f, 125.85f);
         var caja = zona.AddComponent<BoxCollider>();
         caja.isTrigger = true;
-        caja.size = new Vector3(72f, 10f, 12f);
+        caja.size = new Vector3(72f, 10f, 6.3f);
         var lateral = zona.AddComponent<SidePlaneZone>();
         PonerVector(lateral, "planeNormal", Vector3.forward);
 
@@ -79,7 +80,8 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(mareaComp, "advanceAtStart", false);
 
         var tramo = NuevoTramo("Tramo 3: la estrofa lateral", sala, pulso,
-                               new Vector3(-6f, 0.2f, 123f), new Vector3(66f, 0.2f, 123f), companerosEnLaSalida: true, segundoDeEntrada: 70f);
+                               new Vector3(-6f, 0.2f, 123f), new Vector3(66f, 0.2f, 123f),
+                               companerosEnLaSalida: true, radioDeLaSalida: 4f, rumboDeSalida: 90f);
         PonerRef(tramo, "marea", mareaComp);
         PonerRefs(tramo, "rejas", plataformas);
     }
@@ -90,7 +92,7 @@ public static partial class TemploQueCantaBlockoutBuilder
     /// Tramo 4: el interruptor. Se salta a golpearlo, baja un puente y abre una rejilla dos compases;
     /// detrás, el brasero que abre la salida. La marea llega al quinto compás.
     /// </summary>
-    private static void CrearInterruptor(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearInterruptor(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("4. El interruptor").transform;
         sala.SetParent(raiz, false);
@@ -154,7 +156,7 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(mareaComp, "advanceAtStart", false);
 
         var tramo = NuevoTramo("Tramo 4: el interruptor", sala, pulso,
-                               new Vector3(66f, 0.2f, 130f), new Vector3(66f, 0.2f, 153f), segundoDeEntrada: 100f);
+                               new Vector3(66f, 0.2f, 130f), new Vector3(66f, 0.2f, 153f));
         PonerRef(tramo, "marea", mareaComp);
         PonerRefs(tramo, "rejas", new Object[] { compuerta, puerta, compuertaPuente });
     }
@@ -165,7 +167,7 @@ public static partial class TemploQueCantaBlockoutBuilder
     /// Tramo 5: los tres a la vez. El sello de mente para la marea, el molinete de viento mueve el
     /// ascensor y el cristal de arriba abre la salida. Treinta y dos velas para pensarlo.
     /// </summary>
-    private static void CrearTresSeparados(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearTresSeparados(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("5. Los tres separados").transform;
         sala.SetParent(raiz, false);
@@ -199,6 +201,13 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(elevador, "moveSpeed", 1.4f);
         ConectarVoid(viento.alActivarse, elevador.MoveUp);
         ConectarVoid(viento.alApagarse, elevador.MoveDown);
+
+        // Placa arriba: en cuanto llega alguien, el ascensor baja (si no, se queda arriba para siempre).
+        var placaArriba = Caja("Placa de bajada (arriba del ascensor)", sala, escena,
+                               new Vector3(70f, 4.85f, 168f), new Vector3(2.4f, 0.2f, 2.4f), _grisOscuro, suelo: false);
+        var bajada = placaArriba.AddComponent<PressurePlate>();
+        bajada.onActivated ??= new UnityEvent();
+        UnityEventTools.AddVoidPersistentListener(bajada.onActivated, elevador.MoveDown);
 
         // La repisa de arriba y el cristal de la salida.
         Suelo("Repisa de arriba", sala, escena, new Vector3(70f, 4.7f, 170f), new Vector3(5f, 0.4f, 10f));
@@ -245,7 +254,7 @@ public static partial class TemploQueCantaBlockoutBuilder
         ConectarVoid(mente.alActivarse, mareaComp.Pause);
 
         var tramo = NuevoTramo("Tramo 5: los tres separados", sala, pulso,
-                               new Vector3(66f, 0.2f, 154f), new Vector3(70f, 4.7f, 179f), segundoDeEntrada: 115f);
+                               new Vector3(66f, 0.2f, 154f), new Vector3(70f, 4.7f, 179f));
         PonerRef(tramo, "marea", mareaComp);
         PonerRef(tramo, "velas", cuenta);
         PonerRefs(tramo, "rejas", new Object[] { puerta });
@@ -257,7 +266,7 @@ public static partial class TemploQueCantaBlockoutBuilder
     /// Tramo 6: el estribillo, a 132. Losas desfasadas, un tramo de lado con dos faros y la carrera
     /// final hacia el guardián, que calla y deja enfriar la lava.
     /// </summary>
-    private static void CrearEstribillo(Transform raiz, Scene escena, MusicPulse pulso)
+    private static void CrearEstribillo(Transform raiz, Scene escena, TempoClock pulso)
     {
         var sala = new GameObject("6. El último estribillo").transform;
         sala.SetParent(raiz, false);
@@ -275,22 +284,12 @@ public static partial class TemploQueCantaBlockoutBuilder
         zonaQuema.size = new Vector3(15.8f, 1.1f, 45.8f);
         Poner(quema.AddComponent<ZonaDeDano>(), "danoPorSegundo", 40f);
 
-        // Las losas desfasadas del principio (3D).
+        // Las losas del principio (3D): se turnan, así que hay que ir pisando la que toca.
         var losas = new GameObject[5];
         for (int i = 0; i < losas.Length; i++)
-        {
-            var fila = Caja($"Losa del estribillo {i + 1}", sala, escena, new Vector3(70f, 0.05f, 196f + i * 6f),
-                            new Vector3(6f, 0.3f, 3.2f), _gris, suelo: true);
-            var tile = fila.AddComponent<PulseTile>();
-            PonerRef(tile, "pulse", pulso);
-            Poner(tile, "cycleMeasures", 2);
-            Poner(tile, "sinkOnMeasureInCycle", i % 2);
-            Poner(tile, "sunkBeats", 2);
-            Poner(tile, "sinkDepth", 0.5f);
-            Poner(tile, "warnSquash", 0.14f);
-            Poner(tile, "warnShake", 0.06f);
-            losas[i] = fila;
-        }
+            losas[i] = LosaQueLate($"Losa del estribillo {i + 1}", sala, escena, pulso,
+                                   new Vector3(70f, 0.05f, 196f + i * 6f), new Vector3(6f, 0.3f, 3.2f),
+                                   empiezaQuitada: i % 2 == 1);
 
         // Un tramo de lado, con dos faros, en mitad del estribillo.
         var zona = new GameObject("Estribillo de lado (cámara)");
@@ -306,7 +305,7 @@ public static partial class TemploQueCantaBlockoutBuilder
         for (int i = 0; i < plataformas.Length; i++)
         {
             float z = 220f + i * 8f;
-            var faro = Caja($"Faro del estribillo {i + 1}", sala, escena, new Vector3(63.4f, 2.6f, z),
+            var faro = Caja($"Faro del estribillo {i + 1}", sala, escena, new Vector3(68f, 1.5f, z),
                             new Vector3(0.8f, 0.8f, 0.8f), _cristalLuz, suelo: false);
             var receptor = faro.AddComponent<ReceptorDeMagia>();
             Poner(receptor, "modo", (int)ReceptorDeMagia.Modo.Pulso);
@@ -320,7 +319,7 @@ public static partial class TemploQueCantaBlockoutBuilder
             PonerVector(compuerta, "activeOffset", Vector3.zero);
             ConectarVoid(receptor.alActivarse, compuerta.TriggerForMeasures);
             plataformas[i] = plataforma;
-            Brillo($"Luz del faro del estribillo {i + 1}", sala, new Vector3(63.6f, 2.8f, z), new Color(0.72f, 0.88f, 1f), 0.7f, 2.5f);
+            Brillo($"Luz del faro del estribillo {i + 1}", sala, new Vector3(68f, 1.7f, z), new Color(0.72f, 0.88f, 1f), 0.7f, 2.5f);
         }
 
         // La meta: el guardián.
@@ -337,23 +336,23 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(mareaComp, "advanceAtStart", false);
 
         var tramo = NuevoTramo("Tramo 6: el estribillo", sala, pulso,
-                               new Vector3(70f, 0.2f, 186f), new Vector3(70f, 0.2f, 243f), -0.9f, 132f, companerosEnLaSalida: true, segundoDeEntrada: 140f);
+                               new Vector3(70f, 0.2f, 186f), new Vector3(70f, 0.2f, 243f), -0.9f, 132f, companerosEnLaSalida: true);
         PonerRef(tramo, "marea", mareaComp);
         PonerRefs(tramo, "losas", losas);
         PonerRefs(tramo, "rejas", plataformas);
     }
 
     /// <summary>Un tramo nuevo, con lo común ya puesto: se arranca al acercarse y se reintenta solo.</summary>
-    private static TramoDelTemploQueCanta NuevoTramo(string nombre, Transform padre, MusicPulse pulso,
+    private static TramoDelTemploQueCanta NuevoTramo(string nombre, Transform padre, TempoClock pulso,
         Vector3 salida, Vector3 meta, float alturaDelFoso = -0.9f, float bpm = 120f, bool companerosEnLaSalida = false,
-        float segundoDeEntrada = 0f)
+        float radioDeLaSalida = 5f, float rumboDeSalida = 0f)
     {
         var go = new GameObject(nombre);
         go.transform.SetParent(padre, false);
 
         var puntoSalida = new GameObject("Salida del tramo").transform;
         puntoSalida.SetParent(go.transform, false);
-        puntoSalida.position = salida;
+        puntoSalida.SetPositionAndRotation(salida, Quaternion.Euler(0f, rumboDeSalida, 0f));
         var puntoMeta = new GameObject("Meta del tramo").transform;
         puntoMeta.SetParent(go.transform, false);
         puntoMeta.position = meta;
@@ -363,7 +362,7 @@ public static partial class TemploQueCantaBlockoutBuilder
         PonerRef(tramo, "meta", puntoMeta);
         PonerRef(tramo, "pulso", pulso);
         Poner(tramo, "empezarAlActivarse", false);
-        Poner(tramo, "radioDeLaSalida", 5f);
+        Poner(tramo, "radioDeLaSalida", radioDeLaSalida);
         Poner(tramo, "segundosDeCuentaAtras", 0);
         Poner(tramo, "claveDeSalida", "");
         Poner(tramo, "textoDeSalida", "");
@@ -373,7 +372,6 @@ public static partial class TemploQueCantaBlockoutBuilder
         Poner(tramo, "alturaDelFoso", alturaDelFoso);
         Poner(tramo, "bpm", bpm);
         Poner(tramo, "radioDeLaMeta", 3f);
-        Poner(tramo, "segundoDeEntrada", segundoDeEntrada);
         // En los tramos sin suelo para ellos (los laterales), se quedan esperando en la salida.
         if (companerosEnLaSalida) PonerRef(tramo, "puestoDeLosCompaneros", puntoSalida);
         return tramo;

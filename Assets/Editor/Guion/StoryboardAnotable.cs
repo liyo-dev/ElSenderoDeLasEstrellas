@@ -43,13 +43,23 @@ public static class StoryboardAnotable
             OrdenesDelEditor.Avisar("Storyboard anotable", "Selecciona un guion horneado en el Project.");
             return;
         }
+        Generar(guion);
+    }
+
+    /// <summary>
+    /// La página de un guion concreto, sin depender de lo que haya seleccionado en el Project: así la
+    /// puede pedir el buzón de órdenes. Devuelve lo que dejó escrito, o el motivo de no haberlo hecho.
+    /// </summary>
+    public static string Generar(GuionHorneado guion)
+    {
+        if (guion == null) return "no hay guion horneado";
 
         string storyboard = CarpetaDelStoryboard(guion);
         if (storyboard == null)
         {
-            OrdenesDelEditor.Avisar("Storyboard anotable",
-                $"No encuentro las fotos horneadas de «{guion.nombre}». Hornea antes con storyboard.");
-            return;
+            string aviso = $"No encuentro las fotos horneadas de «{guion.nombre}». Hornea antes con storyboard.";
+            OrdenesDelEditor.Avisar("Storyboard anotable", aviso);
+            return aviso;
         }
 
         string rutaDelTexto = GuionTextoEditable.RutaDelTexto(guion);
@@ -114,16 +124,18 @@ public static class StoryboardAnotable
         string plantilla = Path.Combine(carpetaPagina, Plantilla);
         if (!File.Exists(plantilla))
         {
-            OrdenesDelEditor.Avisar("Storyboard anotable", $"Falta {CarpetaDeLaPagina}/{Plantilla}.");
-            return;
+            string aviso = $"Falta {CarpetaDeLaPagina}/{Plantilla}.";
+            OrdenesDelEditor.Avisar("Storyboard anotable", aviso);
+            return aviso;
         }
 
         string html = File.ReadAllText(plantilla)
             .Replace($"<script src=\"{DatosDeLaPlantilla}\"></script>", $"<script src=\"{archivoDatos}\"></script>");
         File.WriteAllText(Path.Combine(carpetaPagina, archivoPagina), html, new UTF8Encoding(false));
 
-        OrdenesDelEditor.Avisar("Storyboard anotable",
-            $"{guion.planos.Count} planos → {CarpetaDeLaPagina}/{archivoPagina} (datos en {archivoDatos}).");
+        string hecho = $"{guion.planos.Count} planos → {CarpetaDeLaPagina}/{archivoPagina} (datos en {archivoDatos}).";
+        OrdenesDelEditor.Avisar("Storyboard anotable", hecho);
+        return hecho;
     }
 
     /// <summary>
@@ -180,9 +192,13 @@ public static class StoryboardAnotable
     private static string Limpio(string nombre)
         => Regex.Replace(nombre ?? "guion", "[^\\w\\-]+", "_").Trim('_');
 
-    /// <summary>El título del guion: la primera línea de cabecera en mayúsculas; si no, su nombre.</summary>
+    /// <summary>
+    /// El título del guion: la primera línea de cabecera en mayúsculas; si el guion no tiene ninguna
+    /// (los hay que empiezan con la sinopsis), la primera frase de su primer comentario. Si no, su nombre.
+    /// </summary>
     private static string Titulo(GuionHorneado guion, string[] lineas)
     {
+        string primera = null;
         foreach (string cruda in lineas.Take(10))
         {
             string l = cruda.Trim();
@@ -199,6 +215,14 @@ public static class StoryboardAnotable
                 if (char.IsUpper(c)) mayusculas++;
             }
             if (letras >= 6 && mayusculas >= letras * 0.8f) return texto;
+            if (primera == null) primera = texto;
+        }
+
+        if (primera != null)
+        {
+            int punto = primera.IndexOf('.', 8);
+            string frase = punto > 10 ? primera.Substring(0, punto) : primera;
+            return frase.Length > 90 ? frase.Substring(0, 90).TrimEnd() + "…" : frase;
         }
         return (guion.nombre ?? "Guion").Replace('_', ' ');
     }

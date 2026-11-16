@@ -13,6 +13,8 @@ using UnityEngine;
 ///   capturar Prologo_Valle                  captura del escenario
 ///   hornear Assets/.../X.guion.txt [storyboard]
 ///   menu El Sendero/Cinemáticas/...         ejecuta un menú del Editor
+///   storyboard Assets/.../X_Horneado.asset  página anotable (Tools/Storyboard) de ese guion horneado, sin
+///                                           depender de lo que esté seleccionado en el Project
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
 ///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)
@@ -309,6 +311,16 @@ public static class OrdenesDelEditor
             }
             case "menu":
                 return EditorApplication.ExecuteMenuItem(resto) ? "menú ejecutado" : "no existe ese menú";
+            case "storyboard":
+            {
+                if (resto.Length == 0) return "falta la ruta del guion horneado";
+                var guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(resto);
+                if (guion == null)
+                    guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(
+                        "Assets/_SEQUENCES/Guiones/" + resto + "_Horneado.asset");
+                if (guion == null) return "no encuentro ese guion horneado: " + resto;
+                return StoryboardAnotable.Generar(guion);
+            }
             case "play":
                 EditorApplication.EnterPlaymode();
                 return "entrando en Play";

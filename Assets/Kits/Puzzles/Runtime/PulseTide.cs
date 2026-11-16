@@ -1,16 +1,16 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Kits.Puzzles
 {
     /// <summary>
-    /// Marea que persigue al compás: avanza con la música, se puede parar (en una sala donde hay que
+    /// Marea que persigue al compás: avanza con el reloj, se puede parar (en una sala donde hay que
     /// pensar, o con un sello) y avisa cuando alcanza a quien no debía. Quién cuenta como alcanzado
     /// lo decide el juego con <see cref="IsTarget"/>.
     ///
-    /// Va siempre al mismo ritmo que la canción: si la música acelera, la marea acelera con ella,
-    /// porque lo que está medido es cuántos metros por compás, no por segundo.
+    /// Lo que está medido es cuántos metros por compás, no por segundo: si el tramo acelera, la
+    /// marea acelera con él.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Collider))]
@@ -20,8 +20,8 @@ namespace Kits.Puzzles
         public static Func<Collider, bool> IsTarget;
 
         [Header("Ritmo")]
-        [Tooltip("Pulso de la música. Si se deja vacío, se usa el de la escena.")]
-        [SerializeField] private MusicPulse pulse;
+        [Tooltip("Reloj del tramo. Si se deja vacío, se usa el de la escena.")]
+        [SerializeField] private TempoClock pulse;
         [Tooltip("Hacia dónde avanza (se usa su dirección; se normaliza).")]
         [SerializeField] private Vector3 advanceDirection = Vector3.forward;
         [Tooltip("Metros que avanza en cada compás.")]
@@ -39,7 +39,7 @@ namespace Kits.Puzzles
         public bool IsAdvancing { get; private set; }
         public int PausedMeasuresRemaining { get; private set; }
 
-        private MusicPulse _pulse;
+        private TempoClock _pulse;
         private Vector3 _inicio;
         private bool _enfriada;
         private float _siguienteEnganche;
@@ -53,7 +53,7 @@ namespace Kits.Puzzles
 
         private void OnEnable()
         {
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
+            _pulse = pulse != null ? pulse : TempoClock.Current;
             if (_pulse != null) _pulse.Downbeat += AlPasarCompas;
             if (advanceAtStart) Resume();
         }
@@ -109,7 +109,7 @@ namespace Kits.Puzzles
             if (_pulse == null && Time.time >= _siguienteEnganche)
             {
                 _siguienteEnganche = Time.time + 0.5f;
-                _pulse = pulse != null ? pulse : MusicPulse.Current;
+                _pulse = pulse != null ? pulse : TempoClock.Current;
                 if (_pulse != null) _pulse.Downbeat += AlPasarCompas;
             }
 

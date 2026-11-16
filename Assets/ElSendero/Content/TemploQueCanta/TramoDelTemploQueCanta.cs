@@ -1,18 +1,18 @@
-using Game.NPC;
+﻿using Game.NPC;
 using Kits.Puzzles;
 using UnityEngine;
 
 /// <summary>
 /// Un tramo del templo que canta: se juega con un pulso que no perdona y se reintenta en el acto,
 /// sin pantalla de derrota. Cada tramo es su propio punto de vuelta: al fallar (caerse al foso, que
-/// se apaguen las velas o que la marea alcance) se vuelve a empezar con la música en ese punto y el
-/// grupo colocado como estaba al entrar.
+/// se apaguen las velas o que la marea alcance) se vuelve a empezar con el reloj desde el principio
+/// y el grupo colocado como estaba al entrar.
 /// </summary>
 public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 {
     [Header("El tramo")]
-    [Tooltip("Pulso de la música del tramo.")]
-    [SerializeField] private MusicPulse pulso;
+    [Tooltip("Reloj del tramo.")]
+    [SerializeField] private TempoClock pulso;
     [Tooltip("Velas de la cuenta atrás (en las salas donde se para a pensar). Puede ir vacío.")]
     [SerializeField] private MeasureCandles velas;
     [Tooltip("Marea que persigue (en las huidas). Puede ir vacío.")]
@@ -27,9 +27,6 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 
     [Tooltip("Compases de gracia antes de que la marea empiece a avanzar: los primeros metros se hacen sin ella encima.")]
     [SerializeField, Min(0)] private int compasesDeGracia = 4;
-
-    [Tooltip("Con la canción puesta, segundo de la pista por el que entra este tramo.")]
-    [SerializeField, Min(0f)] private float segundoDeEntrada;
 
     [Header("Caída")]
     [Tooltip("Por debajo de esta altura se da el tramo por perdido (foso del templo).")]
@@ -73,8 +70,7 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 
         if (pulso != null)
         {
-            if (pulso.ConPista) pulso.StartPulseEnSegundo(segundoDeEntrada);
-            else pulso.StartPulse();
+            pulso.StartPulse();
         }
         if (velas != null) velas.Refill();
         if (marea != null) marea.ResetTide();

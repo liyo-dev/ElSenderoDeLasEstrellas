@@ -3,35 +3,39 @@ using UnityEngine;
 namespace Kits.Puzzles
 {
     /// <summary>
-    /// Losa que late al ritmo y se hunde en el tiempo fuerte, para cruzar saltando de oído. Avisa en
-    /// el tiempo débil anterior (se aplasta y tiembla, sin pintura ni marcas) y al llegar el fuerte
-    /// quita su colisión y baja el visual. Vuelve sola a los pocos tiempos.
+    /// Losa que se quita y se pone con un ciclo constante de tiempos, y avisa antes de cada cambio:
+    /// se aplasta, tiembla y se enciende su marco, para que se pueda cruzar de oído y de vista sin
+    /// adivinar cuándo va a caer el suelo.
     ///
-    /// El patrón se reparte por losas con <see cref="cycleMeasures"/> y
-    /// <see cref="sinkOnMeasureInCycle"/>: con 2 compases, las pares se hunden en el 0 y las impares
-    /// en el 1, y así se cruzan en zigzag.
+    /// El ciclo es «tiempos puesta + tiempos quitada»; con <see cref="startDown"/> se arranca en la
+    /// mitad quitada, que es lo que hace que dos losas seguidas se turnen. El estado se lee del reloj
+    /// en cada fotograma, así que no se desfasa aunque se reinicie el tramo o cambie el tempo.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PulseTile : MonoBehaviour
     {
-        [Header("Ritmo")]
-        [Tooltip("Pulso de la música. Si se deja vacío, se usa el de la escena.")]
-        [SerializeField] private MusicPulse pulse;
-        [Tooltip("Cada cuántos compases se repite su hundimiento.")]
-        [SerializeField, Min(1)] private int cycleMeasures = 2;
-        [Tooltip("En qué compás del ciclo se hunde (0 = el primero).")]
-        [SerializeField, Min(0)] private int sinkOnMeasureInCycle;
-        [Tooltip("Tiempos que dura hundida desde el fuerte.")]
-        [SerializeField, Min(1)] private int sunkBeats = 2;
+        [Header("Ciclo")]
+        [Tooltip("Pulso de la escena. Si se deja vacío, se usa el de la escena.")]
+        [SerializeField] private TempoClock pulse;
+        [Tooltip("Tiempos que está puesta antes de quitarse.")]
+        [SerializeField, Min(1)] private int beatsUp = 4;
+        [Tooltip("Tiempos que está quitada antes de volver.")]
+        [SerializeField, Min(1)] private int beatsDown = 4;
+        [Tooltip("Empieza quitada: dos losas seguidas con esto alterno se turnan.")]
+        [SerializeField] private bool startDown;
+        [Tooltip("Segundos de aviso antes de cada cambio (antes de quitarse y antes de volver).")]
+        [SerializeField, Min(0f)] private float warningSeconds = 0.5f;
 
         [Header("Aspecto")]
-        [Tooltip("Lo que baja al hundirse. Si se deja vacío, baja este mismo objeto.")]
+        [Tooltip("Lo que baja al quitarse. Si se deja vacío, baja este mismo objeto.")]
         [SerializeField] private Transform visualRoot;
-        [Tooltip("Lo que se ve de la losa: se apaga al hundirse y se enciende al volver.")]
+        [Tooltip("Lo que se ve de la losa: se apaga al quitarse y se enciende al volver.")]
         [SerializeField] private Renderer[] visuales;
-        [Tooltip("Color con el que parpadea en el tiempo débil, antes de hundirse.")]
+        [Tooltip("El marco del hueco: no se va nunca y es el que avisa cuando la losa está quitada. Puede ir vacío.")]
+        [SerializeField] private Renderer[] marco;
+        [Tooltip("Color con el que se enciende en el aviso.")]
         [SerializeField] private Color colorDeAviso = new Color(1f, 0.55f, 0.18f);
-        [Tooltip("Cuánto baja el visual al hundirse (m).")]
+        [Tooltip("Cuánto baja el visual al quitarse (m).")]
         [SerializeField, Min(0f)] private float sinkDepth = 0.55f;
         [Tooltip("Cuánto se aplasta en el aviso (fracción: 0,08 = un 8 %).")]
         [SerializeField, Range(0f, 0.5f)] private float warnSquash = 0.08f;
@@ -41,23 +45,22 @@ namespace Kits.Puzzles
         [SerializeField, Min(0.1f)] private float moveSpeed = 9f;
 
         [Header("Colisión")]
-        [Tooltip("Lo que deja de sujetar al hundirse. Si se deja vacío, se cogen los colisionadores de este objeto y sus hijos.")]
+        [Tooltip("Lo que deja de sujetar al quitarse. Si se deja vacío, se cogen los colisionadores de este objeto y sus hijos.")]
         [SerializeField] private Collider[] solidColliders;
 
-        /// <summary>Está hundida ahora mismo (no se puede pisar).</summary>
+        /// <summary>Está quitada ahora mismo (no se puede pisar).</summary>
         public bool IsSunk { get; private set; }
-        /// <summary>Está avisando de que se va a hundir en el siguiente fuerte.</summary>
+        /// <summary>Está avisando de que cambia en el siguiente tiempo.</summary>
         public bool IsWarning { get; private set; }
 
-        private MusicPulse _pulse;
+        private TempoClock _clock;
         private Transform _visual;
         private Vector3 _visualLocalBase;
         private Vector3 _visualLocalScale;
-        private int _beatsLeft;
         private float _shakeTime;
         private MaterialPropertyBlock _bloque;
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private bool _avisando;
+        private bool _avisandoLos, _avisandoElMarco;
 
         private void Awake()
         {
@@ -70,100 +73,78 @@ namespace Kits.Puzzles
                 visuales = GetComponentsInChildren<Renderer>(true);
         }
 
-        private void OnEnable()
-        {
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
-            if (_pulse == null) return;
-            _pulse.Downbeat += AlLlegarElFuerte;
-            _pulse.Upbeat += AlAvisarElDebil;
-            _pulse.Beat += AlPasarUnTiempo;
-        }
-
-        private void OnDisable()
-        {
-            if (_pulse == null) return;
-            _pulse.Downbeat -= AlLlegarElFuerte;
-            _pulse.Upbeat -= AlAvisarElDebil;
-            _pulse.Beat -= AlPasarUnTiempo;
-            _pulse = null;
-        }
-
         /// <summary>La deja como estaba, para volver a empezar el tramo.</summary>
         public void ResetTile()
         {
-            IsSunk = false;
             IsWarning = false;
-            _beatsLeft = 0;
             _shakeTime = 0f;
-            PonerColision(true);
-            PonerVisible(true);
-            PintarAviso(false);
+            PonerEstado(false);
+            QuitarAviso();
             _visual.localPosition = _visualLocalBase;
             _visual.localScale = _visualLocalScale;
         }
 
-        /// <summary>Se engancha al pulso en cuanto esté: al cargar la escena puede activarse antes.</summary>
-        private void AsegurarPulso()
+        private void Update()
         {
-            if (_pulse != null) return;
-            _pulse = pulse != null ? pulse : MusicPulse.Current;
-            if (_pulse == null) return;
-            _pulse.Downbeat += AlLlegarElFuerte;
-            _pulse.Upbeat += AlAvisarElDebil;
-            _pulse.Beat += AlPasarUnTiempo;
-        }
-
-        private void AlLlegarElFuerte(int compas)
-        {
-            IsWarning = false;
-            if (compas % Mathf.Max(1, cycleMeasures) != sinkOnMeasureInCycle) return;
-            IsSunk = true;
-            _beatsLeft = Mathf.Max(1, sunkBeats);
-            PonerColision(false);
-            // En el blockout la losa hundida desaparece: si se quedara a la vista, engaña.
-            PonerVisible(false);
-        }
-
-        private void AlAvisarElDebil(int compas)
-        {
-            // El fuerte que viene es el compás siguiente.
-            IsWarning = !IsSunk &&
-                        (compas + 1) % Mathf.Max(1, cycleMeasures) == sinkOnMeasureInCycle;
-        }
-
-        private void AlPasarUnTiempo(int compas, int tiempo)
-        {
-            if (!IsSunk) return;
-            _beatsLeft--;
-            if (_beatsLeft > 0) return;
-            IsSunk = false;
-            PonerColision(true);
-            PonerVisible(true);
-        }
-
-        private void PonerColision(bool activa)
-        {
-            if (solidColliders == null) return;
-            for (int i = 0; i < solidColliders.Length; i++)
-                if (solidColliders[i] != null) solidColliders[i].enabled = activa;
-        }
-
-        private void PonerVisible(bool visible)
-        {
-            if (visuales == null) return;
-            for (int i = 0; i < visuales.Length; i++)
-                if (visuales[i] != null) visuales[i].enabled = visible;
-        }
-
-        /// <summary>En el aviso parpadea en naranja; fuera de él, su color de siempre.</summary>
-        private void PintarAviso(bool aviso)
-        {
-            if (visuales == null || aviso == _avisando) return;
-            _avisando = aviso;
-            _bloque ??= new MaterialPropertyBlock();
-            for (int i = 0; i < visuales.Length; i++)
+            if (_clock == null)
             {
-                var r = visuales[i];
+                _clock = pulse != null ? pulse : TempoClock.Current;
+                if (_clock == null) return;
+            }
+
+            int ciclo = Mathf.Max(2, beatsUp + beatsDown);
+            int posicion = _clock.TotalBeats + (startDown ? beatsUp : 0);
+            posicion = ((posicion % ciclo) + ciclo) % ciclo;
+
+            bool quitada = posicion >= beatsUp;
+            bool cambiaAlSiguiente = (((posicion + 1) % ciclo) >= beatsUp) != quitada;
+            PonerEstado(quitada);
+
+            // El aviso se enciende en los últimos segundos de cada estado, mire por donde mire el reloj.
+            IsWarning = _clock.IsRunning && cambiaAlSiguiente && _clock.SecondsToNextBeat <= warningSeconds;
+
+            Vector3 objetivo = quitada ? _visualLocalBase + Vector3.down * sinkDepth : _visualLocalBase;
+            if (IsWarning)
+            {
+                _shakeTime += Time.deltaTime;
+                float temblor = Mathf.Sin(_shakeTime * 42f) * warnShake;
+                objetivo += new Vector3(temblor, 0f, temblor * 0.5f);
+            }
+            _visual.localPosition = Vector3.MoveTowards(_visual.localPosition, objetivo, moveSpeed * Time.deltaTime);
+
+            // La escala se multiplica sobre la suya: si se pusiera a 1, la losa volvería a ser un cubo.
+            Vector3 aviso = IsWarning
+                ? new Vector3(1f + warnSquash, 1f - warnSquash, 1f + warnSquash)
+                : Vector3.one;
+            _visual.localScale = Vector3.Scale(_visualLocalScale, aviso);
+
+            // El marco se ve siempre, así que es el único que puede avisar de que la losa vuelve.
+            Pintar(visuales, IsWarning && !quitada, ref _avisandoLos);
+            Pintar(marco, IsWarning, ref _avisandoElMarco);
+        }
+
+        /// <summary>Se va o vuelve: quita o pone la colisión y enseña u oculta la losa.</summary>
+        private void PonerEstado(bool quitada)
+        {
+            if (IsSunk == quitada) return;
+            IsSunk = quitada;
+            if (solidColliders != null)
+                for (int i = 0; i < solidColliders.Length; i++)
+                    if (solidColliders[i] != null) solidColliders[i].enabled = !quitada;
+            if (visuales != null)
+                for (int i = 0; i < visuales.Length; i++)
+                    if (visuales[i] != null) visuales[i].enabled = !quitada;
+        }
+
+        /// <summary>Enciende o apaga el color del aviso en lo que se le diga.</summary>
+        private void Pintar(Renderer[] cuales, bool aviso, ref bool yaPintado)
+        {
+            if (cuales == null || aviso == yaPintado) return;
+            yaPintado = aviso;
+            _bloque ??= new MaterialPropertyBlock();
+            for (int i = 0; i < cuales.Length; i++)
+            {
+                var r = cuales[i];
                 if (r == null) continue;
                 if (!aviso) { r.SetPropertyBlock(null); continue; }
                 r.GetPropertyBlock(_bloque);
@@ -172,24 +153,20 @@ namespace Kits.Puzzles
             }
         }
 
-        private void Update()
+        /// <summary>Deja los dos sin el color del aviso (al reiniciar el tramo).</summary>
+        private void QuitarAviso()
         {
-            AsegurarPulso();
-            // Baja y sube el visual sin tocar el transform raíz (el collider va con él).
-            Vector3 objetivo = IsSunk ? _visualLocalBase + Vector3.down * sinkDepth : _visualLocalBase;
-            if (IsWarning)
-            {
-                _shakeTime += Time.deltaTime;
-                float temblor = Mathf.Sin(_shakeTime * 42f) * warnShake;
-                objetivo += new Vector3(temblor, 0f, temblor * 0.5f);
-            }
-            _visual.localPosition = Vector3.MoveTowards(_visual.localPosition, objetivo, moveSpeed * Time.deltaTime);
-            // La escala se multiplica sobre la suya: si se pusiera a 1, la losa volvería a ser un cubo.
-            Vector3 aviso = IsWarning
-                ? new Vector3(1f + warnSquash, 1f - warnSquash, 1f + warnSquash)
-                : Vector3.one;
-            _visual.localScale = Vector3.Scale(_visualLocalScale, aviso);
-            PintarAviso(IsWarning);
+            _avisandoLos = false;
+            _avisandoElMarco = false;
+            Quitar(visuales);
+            Quitar(marco);
+        }
+
+        private static void Quitar(Renderer[] cuales)
+        {
+            if (cuales == null) return;
+            for (int i = 0; i < cuales.Length; i++)
+                if (cuales[i] != null) cuales[i].SetPropertyBlock(null);
         }
     }
 }

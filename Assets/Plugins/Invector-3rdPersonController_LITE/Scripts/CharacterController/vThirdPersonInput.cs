@@ -17,6 +17,9 @@ namespace Invector.vCharacterController
 
         [SerializeField, Min(0f), Tooltip("Segundos que se guarda una pulsación de salto que llega justo antes de tocar suelo. Pasado este tiempo se descarta: una pulsación en el aire no puede saltar sola al aterrizar.")]
         private float jumpBufferSeconds = 0.15f;
+        [Tooltip("Margen para saltar justo despues de salir de un borde (tiempo de coyote).")]
+        private float coyoteSeconds = 0.12f;
+        private float ultimoSuelo;
 
         [HideInInspector] public vThirdPersonController cc;
         [HideInInspector] public vThirdPersonCamera tpCamera;
@@ -135,6 +138,7 @@ namespace Invector.vCharacterController
             MoveInput();
             CameraInput();
             SprintInput();
+            if (cc != null && cc.isGrounded) ultimoSuelo = Time.time;
             JumpInput();
         }
 
@@ -172,7 +176,13 @@ namespace Invector.vCharacterController
 
         protected virtual bool JumpConditions()
         {
-            return cc.isGrounded && cc.GroundAngle() < cc.slopeLimit && !cc.isJumping && !cc.stopMove;
+            if (cc == null || cc.stopMove || cc.isJumping) return false;
+
+            // En el suelo, como siempre.
+            if (cc.isGrounded) return cc.GroundAngle() < cc.slopeLimit;
+
+            // Recién salido de un borde: se perdona el salto (tiempo de coyote).
+            return Time.time - ultimoSuelo <= coyoteSeconds;
         }
 
         protected virtual void JumpInput()

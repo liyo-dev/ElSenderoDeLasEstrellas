@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Cap3_03_ElCarro_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap3_03_ElCarro
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt
   duracion: 40.19617
   presentacion: 1
-  huella: "2026-11-15 08:58 \xB7 d9d2dec2a82ea785e0af7967f61e8911"
+  huella: "2026-11-16 10:25 \xB7 d9d2dec2a82ea785e0af7967f61e8911"
   actores:
   - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
     alias: will
     colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
     claveDelNombre: Will
@@ -227,6 +230,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Contrabandista1
+    prefab: Assets/_NPCs/Pueblo/Jorge.prefab
     alias: c1
     colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
     claveDelNombre: CHAR_CONTRABANDISTA
@@ -518,6 +522,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Contrabandista2
+    prefab: Assets/_NPCs/Combat/Boy_Pirate.prefab
     alias: c2
     colorDelNombre: {r: 0.65882355, g: 0.6117647, b: 0.5411765, a: 1}
     claveDelNombre: CHAR_CONTRABANDISTA
@@ -878,6 +883,7 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 10.00631
+    linea: 44
     tipo: 2
     descripcion: medio de will
     posiciones:
@@ -979,6 +985,7 @@ MonoBehaviour:
   - focos: []
     t0: 10.00631
     t1: 19.639751
+    linea: 61
     tipo: 1
     descripcion: conjunto de will y c1 y c2
     posiciones:
@@ -1004,6 +1011,7 @@ MonoBehaviour:
   - focos: []
     t0: 19.639751
     t1: 22.642086
+    linea: 69
     tipo: 2
     descripcion: medio de c2
     posiciones:
@@ -1025,6 +1033,7 @@ MonoBehaviour:
   - focos: []
     t0: 22.642086
     t1: 24.042086
+    linea: 74
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1046,6 +1055,7 @@ MonoBehaviour:
   - focos: []
     t0: 24.042086
     t1: 27.422085
+    linea: 77
     tipo: 2
     descripcion: medio de c1
     posiciones:
@@ -1067,6 +1077,7 @@ MonoBehaviour:
   - focos: []
     t0: 27.422085
     t1: 30.922085
+    linea: 83
     tipo: 1
     descripcion: conjunto de will y c1 y c2
     posiciones:
@@ -1092,6 +1103,7 @@ MonoBehaviour:
   - focos: []
     t0: 30.922085
     t1: 40.19617
+    linea: 85
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1115,25 +1127,25 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294631505527631
+      rid: 6540294635039228763
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 6540294631505527632
+      rid: 6540294635039228764
     linea: 48
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.00631
     beat:
-      rid: 6540294631505527633
+      rid: 6540294635039228765
     linea: 62
   - onlyIfFlag: 
     skipIfFlag: 
     t: 40.19617
     beat:
-      rid: 6540294631505527634
+      rid: 6540294635039228766
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -1171,7 +1183,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294631505527631
+    - rid: 6540294635039228763
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1179,7 +1191,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294631505527632
+    - rid: 6540294635039228764
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1189,7 +1201,7 @@ MonoBehaviour:
         markName: 
         volume: 0.35
         tono: 1
-    - rid: 6540294631505527633
+    - rid: 6540294635039228765
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1199,7 +1211,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294631505527634
+    - rid: 6540294635039228766
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

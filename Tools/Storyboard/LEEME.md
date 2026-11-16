@@ -48,6 +48,9 @@ anotable: generar la página del guion*. Deja en esta carpeta:
 
 Se vuelve a pasar el menú después de cada horneado y la página queda al día. No se editan a mano.
 
+Sin tocar el ratón, por el buzón de órdenes (`Guiones/_ordenes/`): `storyboard Assets/_SEQUENCES/Guiones/<Guion>_Horneado.asset`
+(también vale el nombre del guion). El menú usa lo que haya seleccionado en el Project; la orden no.
+
 Si hace falta otro storyboard sin horneado, se copia `datos.js` a otro archivo, se cambian `id`,
 `titulo`, `subtitulo` y `paneles`, y se cambia el `<script src="datos.js">` de una copia de
 `index.html`. Cada panel necesita `id`, `titulo`, `tiempo`, `descripcion`, `guion`, `imagen` y

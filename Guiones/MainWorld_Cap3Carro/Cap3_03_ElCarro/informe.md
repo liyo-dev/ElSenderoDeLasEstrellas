@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-15 08:58 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-16 10:26 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
 **0:40,2** de secuencia · 5 frases · 7 planos · 4 efectos · 3 personajes
 

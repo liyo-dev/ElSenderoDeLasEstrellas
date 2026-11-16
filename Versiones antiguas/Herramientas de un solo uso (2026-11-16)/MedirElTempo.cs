@@ -44,6 +44,16 @@ public static class MedirElTempo
         var ataque = new float[tramas];
         for (int i = 1; i < tramas; i++) ataque[i] = Mathf.Max(0f, energia[i] - energia[i - 1]);
 
+        // ¿Dónde empieza a sonar de verdad la toma? (el MIDI empieza en 0, el MP3 puede traer entrada)
+        float umbral = 0f;
+        for (int i = 0; i < tramas; i++) umbral = Mathf.Max(umbral, energia[i]);
+        umbral *= 0.02f;
+        int primera = 0;
+        while (primera < tramas && energia[primera] < umbral) primera++;
+        int ultima = tramas - 1;
+        while (ultima > 0 && energia[ultima] < umbral) ultima--;
+        float inicio = primera * hopDur, fin = ultima * hopDur;
+
         // Lags posibles: de 200 a 60 BPM.
         int lagMin = Mathf.Max(2, Mathf.RoundToInt(0.30f / hopDur));
         int lagMax = Mathf.RoundToInt(1.00f / hopDur);
@@ -79,7 +89,7 @@ public static class MedirElTempo
         importador.defaultSampleSettings = ajustes;
         importador.SaveAndReimport();
 
-        string informe = $"BPM={bpm:0.0} · compás={60f / bpm * 4f:0.00} s · desfase={desfase:0.000} s · tramas={tramas}";
+        string informe = $"BPM={bpm:0.0} · compás={60f / bpm * 4f:0.00} s · desfase={desfase:0.000} s · suena de {inicio:0.000} a {fin:0.000} s · duración={clip.length:0.00} s · tramas={tramas}";
         Debug.Log("[MedirTempo] " + informe);
         OrdenesDelEditor.Avisar("Tempo de la canción", informe);
     }
