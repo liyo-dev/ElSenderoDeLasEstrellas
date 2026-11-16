@@ -1083,7 +1083,11 @@ public class SequenceActor
     /// Devuelve al NPC el control de su comportamiento ambiental. Idempotente.
     public void Release()
     {
-        SetRenderingVisible(true);
+        // Quien se ha ido en una cinemática, se ha ido: manda la visibilidad con la que la deja el
+        // guion (`ReproductorDeGuion.Soltar`). Mostrarlo aquí a la fuerza devolvía a Eldran a la
+        // salida del pueblo al acabar la despedida (INC-1251). El jugador es la excepción: no puede
+        // volver al juego invisible.
+        if (IsPlayer) SetRenderingVisible(true);
         _hold?.Finish();
         _hold = null;
 

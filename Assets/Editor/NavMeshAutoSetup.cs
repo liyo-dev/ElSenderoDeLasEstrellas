@@ -43,7 +43,7 @@ using Unity.AI.Navigation;
 ///    de terreno) — no cada vez que se coloca un objeto. El NavMeshSurface se limita por LayerMask
 ///    al layer "Floor", así que solo necesita re-bakearse si ese layer cambia de forma.
 ///
-/// Menú: "El Sendero/Navegación/...".
+/// Menú: "El Sendero/Escenario/Navegación/...".
 /// </summary>
 [InitializeOnLoad]
 public static class NavMeshAutoSetup
@@ -70,7 +70,7 @@ public static class NavMeshAutoSetup
     // NavMesh). Desde INC-448 está APAGADA por defecto: se usa el menú «Clasificar obstáculos
     // ahora», o se enciende aquí a propósito.
     private const string ClaveAutomatico = "NavMeshAutoSetup.Automatico";
-    private const string MenuAutomatico = "El Sendero/Navegación/Clasificar obstáculos automáticamente (al cambiar la jerarquía)";
+    private const string MenuAutomatico = "El Sendero/Escenario/Navegación/Clasificar obstáculos automáticamente (al cambiar la jerarquía)";
 
     [MenuItem(MenuAutomatico)]
     private static void AlternarAutomatico() =>
@@ -106,10 +106,10 @@ public static class NavMeshAutoSetup
         ClassifyObstacles(logSummary: false);
     }
 
-    [MenuItem("El Sendero/Navegación/Clasificar obstáculos ahora")]
+    [MenuItem("El Sendero/Escenario/Navegación/Clasificar obstáculos ahora")]
     public static void ClassifyObstaclesMenu() => ClassifyObstacles(logSummary: true);
 
-    [MenuItem("El Sendero/Navegación/Clasificar + Bakear NavMesh")]
+    [MenuItem("El Sendero/Escenario/Navegación/Clasificar + Bakear NavMesh")]
     public static void ClassifyAndBake()
     {
         ClassifyObstacles(logSummary: true);
@@ -220,7 +220,7 @@ public static class NavMeshAutoSetup
         }
     }
 
-    [MenuItem("El Sendero/Navegación/Ajustar obstáculos a lo que ocupan en el suelo")]
+    [MenuItem("El Sendero/Escenario/Navegación/Ajustar obstáculos a lo que ocupan en el suelo")]
     public static void AjustarObstaculosMenu()
     {
         int ajustados = 0, sinCollider = 0;
@@ -527,7 +527,7 @@ public static class NavMeshAutoSetup
     /// Crea (si no existe) un NavMeshSurface limitado por LayerMask al layer "Floor" y lo bakea.
     /// Solo hace falta repetir esto cuando cambia la forma del propio suelo, no al añadir props.
     /// </summary>
-    [MenuItem("El Sendero/Navegación/Bakear solo la superficie caminable")]
+    [MenuItem("El Sendero/Escenario/Navegación/Bakear solo la superficie caminable")]
     public static void BakeWalkableSurface()
     {
         int floorLayer = LayerMask.NameToLayer(WalkableLayerName);

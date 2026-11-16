@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// Niebla baja y azulada que se arrastra entre los árboles de noche: nubecillas grandes, lentas y
 /// casi transparentes pegadas al suelo. Va en las mismas zonas del bosque que las luciérnagas
-/// (las coloca «El Sendero/Mundo/Noche: luces de casas, faroles y luciérnagas»). Ver INC-657.
+/// (las coloca «El Sendero/Escenario/Mundo/Noche: luces de casas, faroles y luciérnagas»). Ver INC-657.
 [DisallowMultipleComponent]
 public sealed class NieblaNocturna : ParticulasDeAmbiente
 {

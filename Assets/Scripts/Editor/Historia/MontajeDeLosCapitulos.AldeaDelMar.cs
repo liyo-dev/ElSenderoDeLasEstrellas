@@ -312,29 +312,6 @@ public static partial class MontajeDeLosCapitulos
         finally { Object.DestroyImmediate(pose); }
     }
 
-    /// Quita la ruta de servir del posadero de las escenas abiertas y le pone su oficio sin bandeja,
-    /// sin tener que montar el capítulo entero. Ver INC-1155.
-    [MenuItem("El Sendero/Historia/Aldea del mar: posadero sin bandeja (INC-1155)")]
-    private static void PosaderoSinBandeja()
-    {
-        var informe = new StringBuilder();
-        for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++)
-        {
-            var escena = UnityEngine.SceneManagement.SceneManager.GetSceneAt(i);
-            if (!escena.isLoaded) continue;
-            foreach (var raiz in escena.GetRootGameObjects())
-                foreach (var ruta in raiz.GetComponentsInChildren<NPCWorkRoute>(true))
-                {
-                    if (ruta == null || ruta.puestoId != PuestoDelPosadero) continue;
-                    informe.AppendLine($"Quitada «{ruta.name}» de {escena.name}.");
-                    UnityEngine.Object.DestroyImmediate(ruta.gameObject);
-                    UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(escena);
-                }
-        }
-        AsegurarOficiosDeLaAldea(informe);
-        Debug.Log("[Montaje] " + informe);
-    }
-
     private static Transform PuntoDeRuta(Transform padre, string nombre, Vector3 pos, float rumbo)
     {
         var go = new GameObject(nombre);

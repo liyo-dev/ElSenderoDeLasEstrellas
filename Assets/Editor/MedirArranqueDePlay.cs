@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 [InitializeOnLoad]
 public static class MedirArranqueDePlay
 {
-    const string MenuPath = "El Sendero/Rendimiento/Medir el arranque al dar a Play";
+    const string MenuPath = "El Sendero/Pruebas/Medir el arranque al dar a Play";
     const string ClaveActivo = "Sendero.MedirArranqueDePlay";
     const string ClaveInicio = "MedirArranqueDePlay.Inicio";
     const string ClaveLog = "MedirArranqueDePlay.Log";

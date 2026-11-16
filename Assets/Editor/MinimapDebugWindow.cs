@@ -44,7 +44,7 @@ public class MinimapDebugWindow : EditorWindow
 
     // ── Apertura ─────────────────────────────────────────────────────────────
 
-    [MenuItem("El Sendero/Pruebas y comprobaciones/Minimapa: iconos activos (en Play)")]
+    [MenuItem("El Sendero/Pruebas/Minimapa: iconos activos (en Play)")]
     static void Open() => GetWindow<MinimapDebugWindow>("Minimapa Debug");
 
     // ── Ciclo ────────────────────────────────────────────────────────────────

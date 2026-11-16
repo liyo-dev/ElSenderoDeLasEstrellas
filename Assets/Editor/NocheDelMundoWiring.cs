@@ -40,7 +40,7 @@ public static class NocheDelMundoWiring
     private static readonly Color Vela = new Color(1f, 0.72f, 0.42f);
     private static readonly Color Fuego = new Color(1f, 0.55f, 0.22f);
 
-    [MenuItem("El Sendero/Mundo/Noche: luces de casas, faroles y luciérnagas")]
+    [MenuItem("El Sendero/Escenario/Mundo/Noche: luces de casas, faroles y luciérnagas")]
     public static void Menu()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

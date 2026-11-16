@@ -8,7 +8,7 @@ using UnityEngine;
 /// Informa de la configuración de reposo de cada controlador sin guardar prefabs.
 public static class RevisarCarasDeReposo
 {
-    [MenuItem("El Sendero/Pruebas y comprobaciones/Caras de reposo de los personajes")]
+    [MenuItem("El Sendero/Pruebas/Caras de reposo de los personajes")]
     public static void Revisar()
     {
         var informe = new StringBuilder("# Caras de reposo\n\n");

@@ -67,14 +67,13 @@ namespace NarrativeGraphEditor.Story
         StoryBusy _rootBusy;
         StoryBusy _sideBusy;
         bool _refreshBusy;
-        bool _loadedOnce;
 
         sealed class Host : INarrativeNodeHost
         {
             public NarrativeNode Model { get; set; }
         }
 
-        [MenuItem("Liyodev/Grafo narrativo/Abrir editor")]
+        [MenuItem("Liyodev/Grafo narrativo/Abrir editor", priority = 0)]
         public static StoryGraphWindow Open()
         {
             // Opens as a tab next to the Scene view, where there is room for the canvas.
@@ -192,12 +191,14 @@ namespace NarrativeGraphEditor.Story
 
             // El grafo se abre con el aviso ya pintado: la ventana no se queda en blanco mientras tanto.
             // Si antes alguien ha pedido otro grafo (abrir un asset, «Jugar desde aquí»), manda el suyo.
-            var last = EditorPrefs.GetString(PrefLastGraph, string.Empty);
+            // Al rehacer la ventana (recarga de código, volver de Play) se vuelve a cargar en el lienzo
+            // nuevo: antes se saltaba por `_loadedOnce` y la ventana quedaba vacía hasta cerrarla.
+            var graphPath = _graph != null ? AssetDatabase.GetAssetPath(_graph) : string.Empty;
+            var last = !string.IsNullOrEmpty(graphPath) ? graphPath : EditorPrefs.GetString(PrefLastGraph, string.Empty);
             _rootBusy.Run(() =>
             {
-                if (_loadedOnce) return;
-                if (!string.IsNullOrEmpty(last)) Load(AssetDatabase.LoadAssetAtPath<NarrativeGraph>(last));
-                else Load(null);
+                var graph = !string.IsNullOrEmpty(last) ? AssetDatabase.LoadAssetAtPath<NarrativeGraph>(last) : null;
+                Load(graph);
             }, StoryText.T("Abriendo la historia…", "Opening the story…"));
 
             if (!StoryTour.Seen) root.schedule.Execute(StartTour).StartingIn(400);
@@ -664,7 +665,6 @@ namespace NarrativeGraphEditor.Story
 
         public void Load(NarrativeGraph graph)
         {
-            _loadedOnce = true;
             using var medida = StoryTiming.Measure(StoryText.T("Abrir grafo ", "Open graph ") + (graph != null ? graph.name : "-"));
             SaveNow();
             _graph = graph;

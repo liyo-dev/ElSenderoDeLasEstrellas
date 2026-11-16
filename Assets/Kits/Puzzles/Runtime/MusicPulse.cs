@@ -18,8 +18,10 @@ namespace Kits.Puzzles
         public static MusicPulse Current { get; private set; }
 
         [Header("Ritmo")]
-        [Tooltip("Pulsos por minuto de la música.")]
+        [Tooltip("Pulsos por minuto de la pista. Se mide con *Medir el tempo* y se pone aquí; el nivel cuenta a lo que cuente la canción.")]
         [SerializeField, Min(20f)] private float bpm = 120f;
+        [Tooltip("Segundo de la pista en el que cae el primer tiempo (desfase medido).")]
+        [SerializeField] private float desfaseEnSegundos;
         [Tooltip("Tiempos por compás (4 en un 4/4). El tiempo 0 de cada compás es el fuerte.")]
         [SerializeField, Min(1)] private int beatsPerMeasure = 4;
 
@@ -111,6 +113,36 @@ namespace Kits.Puzzles
             BeatPhase01 = 0f;
             TotalBeats = 0;
             IsRunning = true;
+            if (ConPista) { _compasDeSalida = 0; ColocarLaPista(startMeasure * SecondsPerMeasure); }
+        }
+
+        /// <summary>Con una pista, el tramo arranca en el segundo que le toque de la canción.</summary>
+        public void StartPulseEnSegundo(float segundo)
+        {
+            _compasDeSalida = 0;
+            _inicio = Ahora();
+            _segundos = 0;
+            _ultimoTiempoContado = -1;
+            CurrentMeasure = 0;
+            CurrentBeatInMeasure = 0;
+            BeatPhase01 = 0f;
+            TotalBeats = 0;
+            IsRunning = true;
+            if (ConPista) ColocarLaPista(Mathf.Max(0f, segundo));
+        }
+
+        /// <summary>¿Manda una pista de verdad (no el clic de maqueta)?</summary>
+        public bool ConPista => musicSource != null && musicSource.clip != null;
+
+        private void ColocarLaPista(float segundo)
+        {
+            // Se coloca en el tiempo justo de la canción (no en el segundo que sea).
+            float beat = SecondsPerBeat;
+            float tiempos = Mathf.Round((segundo - desfaseEnSegundos) / beat);
+            float destino = desfaseEnSegundos + tiempos * beat;
+            int muestras = Mathf.RoundToInt(Mathf.Clamp(destino, 0f, musicSource.clip.length - 0.05f) * musicSource.clip.frequency);
+            musicSource.timeSamples = muestras;
+            if (!musicSource.isPlaying) musicSource.Play();
         }
 
         /// <summary>Para el reloj sin perder en qué compás iba.</summary>
@@ -132,8 +164,15 @@ namespace Kits.Puzzles
         {
             if (!IsRunning) return;
 
-            _segundos = Ahora() - _inicio;
-            double tiempos = _segundos / SecondsPerBeat;
+            // Con pista manda el tiempo de la canción (así el compás es el de la grabación, no un reloj aparte).
+            double tiempo;
+            if (ConPista) tiempo = Ahora();
+            else
+            {
+                _segundos = Ahora() - _inicio;
+                tiempo = _segundos;
+            }
+            double tiempos = (tiempo - (ConPista ? desfaseEnSegundos : 0.0)) / SecondsPerBeat;
             int total = Mathf.FloorToInt((float)tiempos);
             BeatPhase01 = (float)(tiempos - total);
 
@@ -141,14 +180,14 @@ namespace Kits.Puzzles
             {
                 _ultimoTiempoContado = total;
                 TotalBeats = total;
-                int tiempo = total % Mathf.Max(1, beatsPerMeasure);
+                int tiempoDelCompas = total % Mathf.Max(1, beatsPerMeasure);
                 CurrentMeasure = _compasDeSalida + total / Mathf.Max(1, beatsPerMeasure);
-                CurrentBeatInMeasure = tiempo;
+                CurrentBeatInMeasure = tiempoDelCompas;
 
-                if (tiempo == 0) Downbeat?.Invoke(CurrentMeasure);
-                if (tiempo == beatsPerMeasure - 1) Upbeat?.Invoke(CurrentMeasure);
-                Beat?.Invoke(CurrentMeasure, tiempo);
-                if (clickInBlockout) SonarClic(tiempo == 0);
+                if (tiempoDelCompas == 0) Downbeat?.Invoke(CurrentMeasure);
+                if (tiempoDelCompas == beatsPerMeasure - 1) Upbeat?.Invoke(CurrentMeasure);
+                Beat?.Invoke(CurrentMeasure, tiempoDelCompas);
+                if (clickInBlockout) SonarClic(tiempoDelCompas == 0);
             }
         }
 

@@ -110,7 +110,7 @@ namespace NarrativeGraphEditor.Story
             };
             copy.AddToClassList("story-button");
             tools.Add(copy);
-            var signals = new Button(() => EditorApplication.ExecuteMenuItem("Liyodev/Grafo narrativo/Monitor de señales"))
+            var signals = new Button(() => EditorApplication.ExecuteMenuItem("Liyodev/Grafo narrativo/Herramientas/Monitor de señales"))
             {
                 text = StoryText.T("Monitor de señales", "Signal monitor"),
             };

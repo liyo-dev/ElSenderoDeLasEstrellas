@@ -29,13 +29,6 @@ public static class OrbeDelArchimago
     private const float GrosorDelAnillo = 0.011f;
     private const float TamDeLaCuenta = 0.035f;
 
-    [MenuItem("El Sendero/Magia/Piloto del prólogo/Orbe del Archimago (INC-1136)")]
-    public static void Menu()
-    {
-        Construir();
-        Debug.Log("[VFX] Orbe del Archimago rehecho en " + RutaPrefab);
-    }
-
     public static void Construir()
     {
         var matOrbe = StylizedVfxAssets.EnergyMaterial($"{CarpetaMateriales}/OrbeDelArchimago_Orbe.mat",

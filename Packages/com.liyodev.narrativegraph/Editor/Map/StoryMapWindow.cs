@@ -18,7 +18,7 @@ namespace NarrativeGraphEditor
         public static event Action<bool> OpenChanged;
         public static bool IsOpen => Resources.FindObjectsOfTypeAll<StoryMapWindow>().Length > 0;
 
-        [MenuItem("Liyodev/Grafo narrativo/Mapa de la historia")]
+        [MenuItem("Liyodev/Grafo narrativo/Herramientas/Mapa en ventana aparte", priority = 102)]
         public static StoryMapWindow Open()
         {
             var w = Resources.FindObjectsOfTypeAll<StoryMapWindow>();

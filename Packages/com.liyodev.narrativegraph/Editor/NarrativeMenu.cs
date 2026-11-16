@@ -6,7 +6,7 @@ namespace NarrativeGraphEditor
 {
     public static class NarrativeMenu
     {
-        [MenuItem("Liyodev/Grafo narrativo/Nuevo grafo")]
+        [MenuItem("Liyodev/Grafo narrativo/Nuevo grafo", priority = 1)]
         public static void CreateGraph()
         {
             var g = ScriptableObject.CreateInstance<GraphAsset>();

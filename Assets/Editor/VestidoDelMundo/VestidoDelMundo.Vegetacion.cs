@@ -1741,7 +1741,7 @@ public static partial class VestidoDelMundo
             lineas.Clear();
             foreach (KeyValuePair<string, int> m in alPoner) lineas.Add($"{m.Value} × {m.Key}");
             if (lineas.Count > 0) o.Informe.Add($"  Al plantar no han cabido {o.Descartadas - descartadasAntes}: " + string.Join("; ", lineas) + ".");
-            o.Informe.Add("  Hornea de nuevo la navegación (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable) y pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).");
+            o.Informe.Add("  Hornea de nuevo la navegación (El Sendero ▸ Escenario ▸ Navegación ▸ Bakear solo la superficie caminable) y pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).");
         }
 
         /// Coloca una pieza del plan. Antes de Poner comprueba lo que Poner no mira: que una pieza de la ciudad no

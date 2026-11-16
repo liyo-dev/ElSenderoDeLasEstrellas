@@ -8,7 +8,7 @@ using UnityEngine;
 /// esos materiales se encienden a la vez sin tocar cada objeto. Fuera de Play y al apagarse deja
 /// la emisión en negro: el asset del material queda como estaba.
 ///
-/// Los materiales y las máscaras los prepara «El Sendero/Mundo/Noche: luces de casas, faroles y
+/// Los materiales y las máscaras los prepara «El Sendero/Escenario/Mundo/Noche: luces de casas, faroles y
 /// luciérnagas». Ver TDD § 16 (Parte D) e INC-657.
 [DisallowMultipleComponent]
 public sealed class VentanasIluminadas : MonoBehaviour

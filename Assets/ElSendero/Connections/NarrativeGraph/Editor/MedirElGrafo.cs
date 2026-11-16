@@ -14,7 +14,7 @@ namespace Sendero.Narrative.Editor
     /// resultado en Logs/claude/rendimiento_grafo.txt. Herramienta de desarrollo del kit.
     public static class MedirElGrafo
     {
-        [MenuItem("El Sendero/Kits/Grafo narrativo: medir rendimiento")]
+        [MenuItem("El Sendero/Proyecto/Kits/Grafo narrativo: medir rendimiento")]
         public static void Medir()
         {
             var sb = new StringBuilder($"Rendimiento del grafo · {DateTime.Now:yyyy-MM-dd HH:mm}\n(ms; media de varias pasadas)\n\n");
@@ -47,7 +47,7 @@ namespace Sendero.Narrative.Editor
         /// avisos, referencias, rehacer la historia hasta el paso y el plan de arranque) y apunta
         /// lo que falla, los avisos de contenido y los tipos que no declaran lo que dejan hecho.
         /// Resultado en Logs/claude/comprobacion_grafos.txt.
-        [MenuItem("El Sendero/Kits/Grafo narrativo: comprobar los grafos")]
+        [MenuItem("El Sendero/Proyecto/Kits/Grafo narrativo: comprobar los grafos")]
         public static void Comprobar()
         {
             var sb = new StringBuilder($"Comprobación de los grafos · {DateTime.Now:yyyy-MM-dd HH:mm}\n");

@@ -22,6 +22,15 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     [Tooltip("Rejillas y plataformas que duran compases.")]
     [SerializeField] private BeatGate[] rejas;
 
+    [Tooltip("Pulsos por minuto de este tramo (el estribillo va más deprisa).")]
+    [SerializeField, Min(40f)] private float bpm = 120f;
+
+    [Tooltip("Compases de gracia antes de que la marea empiece a avanzar: los primeros metros se hacen sin ella encima.")]
+    [SerializeField, Min(0)] private int compasesDeGracia = 4;
+
+    [Tooltip("Con la canción puesta, segundo de la pista por el que entra este tramo.")]
+    [SerializeField, Min(0f)] private float segundoDeEntrada;
+
     [Header("Caída")]
     [Tooltip("Por debajo de esta altura se da el tramo por perdido (foso del templo).")]
     [SerializeField] private float alturaDelFoso = -8f;
@@ -37,6 +46,8 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     [SerializeField] private Transform puestoDeLosCompaneros;
 
     private bool _empezadaLaCuenta;
+    private float _siguienteRecogida;
+    private readonly object _anclaDeLosCompaneros = new object();
 
     protected override void OnEnable()
     {
@@ -58,8 +69,13 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     protected override void PrepararIntento()
     {
         _empezadaLaCuenta = false;
+        SoltarElSitio();
 
-        if (pulso != null) pulso.StartPulse();
+        if (pulso != null)
+        {
+            if (pulso.ConPista) pulso.StartPulseEnSegundo(segundoDeEntrada);
+            else pulso.StartPulse();
+        }
         if (velas != null) velas.Refill();
         if (marea != null) marea.ResetTide();
 
@@ -83,8 +99,14 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 
     protected override void Arrancar()
     {
+        if (pulso != null) pulso.SetBpm(bpm);
         // En las salas de pensar la marea se queda parada en la entrada: el reloj es de las velas.
-        if (marea != null && velas == null) marea.Resume();
+        // En las huidas arranca con unos compases de gracia, cuando ya llevas recorrido.
+        if (marea != null && velas == null)
+        {
+            if (compasesDeGracia > 0) marea.PauseForMeasures(compasesDeGracia);
+            else marea.Resume();
+        }
         if (velas != null)
         {
             velas.BeginCountdown();
@@ -108,21 +130,30 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
             var agente = cuerpo.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (agente != null && agente.enabled) agente.Warp(sitio);
             cuerpo.transform.SetPositionAndRotation(sitio, puestoDeLosCompaneros.rotation);
+            // Se quedan ahí: no saben saltar las losas, así que no se les deja intentarlo.
+            cuerpo.GetComponent<NPCPartyMember>()?.NPCManager?.Context?.Anclar(_anclaDeLosCompaneros);
             cuantos++;
         }
     }
 
+    /// <summary>Suelta a los compañeros del sitio del tramo para poder traerlos al reagrupar.</summary>
+    private void SoltarElSitio()
+    {
+        var cuerpos = PilotoDelCuerpo.Cuerpos;
+        for (int i = 0; i < cuerpos.Count; i++)
+            cuerpos[i]?.GetComponent<NPCPartyMember>()?.NPCManager?.Context?.Soltar(_anclaDeLosCompaneros);
+    }
+
     protected override void Actualizar(float dt)
     {
-        // Vale cualquiera de los tres: si uno se queda en la lava, el tramo se pierde. Así no se
-        // pasa al siguiente sin hacerlo bien (morir en la lava releva el mando, no regala el tramo).
-        if (AlguienEnElFoso())
+        var jugador = Jugador;
+        // Solo pierde el que lleva el mando: si un compañero se queda atrás o se cae, se le trae.
+        if (jugador != null && jugador.position.y < alturaDelFoso)
         {
             Fallar();
             return;
         }
 
-        var jugador = Jugador;
         if (meta != null && jugador != null &&
             (jugador.position - meta.position).sqrMagnitude <= radioDeLaMeta * radioDeLaMeta)
         {
@@ -132,18 +163,39 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 
         if (_empezadaLaCuenta && velas != null && velas.RemainingMeasures <= 0)
             Fallar();
+
+        RecogerCompaneros(dt);
     }
 
-    /// <summary>¿Hay algún cuerpo del grupo por debajo del foso? (el que lleva el jugador o un compañero).</summary>
-    private bool AlguienEnElFoso()
+    /// <summary>
+    /// A los compañeros que se quedan atrás o se caen no se les deja perder el tramo: se les trae al
+    /// lado del jugador. No saben saltar plataformas (INC-1213), así que esto es lo que hay.
+    /// </summary>
+    private void RecogerCompaneros(float dt)
     {
+        _siguienteRecogida -= dt;
+        if (_siguienteRecogida > 0f) return;
+        _siguienteRecogida = 0.4f;
+
         var jugador = Jugador;
-        if (jugador != null && jugador.position.y < alturaDelFoso) return true;
+        if (jugador == null) return;
 
         var cuerpos = PilotoDelCuerpo.Cuerpos;
         for (int i = 0; i < cuerpos.Count; i++)
-            if (cuerpos[i] != null && cuerpos[i].transform.position.y < alturaDelFoso) return true;
-        return false;
+        {
+            var cuerpo = cuerpos[i];
+            if (cuerpo == null || cuerpo.LoLlevaElJugador) continue;
+
+            Vector3 suyo = cuerpo.transform.position;
+            bool seCae = suyo.y < alturaDelFoso + 0.2f;
+            bool seQueda = (suyo - jugador.position).sqrMagnitude > 22f * 22f;
+            if (!seCae && !seQueda) continue;
+
+            Vector3 sitio = jugador.position - jugador.forward * 2.2f + jugador.right * (i % 2 == 0 ? 1.3f : -1.3f);
+            var agente = cuerpo.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agente != null && agente.enabled) agente.Warp(sitio);
+            cuerpo.transform.position = sitio;
+        }
     }
 
     protected override void Detener()
@@ -152,6 +204,7 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
         if (velas != null) velas.StopCountdown();
         // Al acabar el tramo (ganado o fallado) los compañeros vuelven con el jugador: en este
         // templo puede haber una rejilla o el ascensor de por medio, y andando no llegarían.
+        SoltarElSitio();
         if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true, avisar: false);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// pitch y paneo, y puede llevar varios clips para que no suene igual cada vez.
 /// Sirve para los hechizos y los impactos: un solo clip suena plano; por capas, con el
 /// transitorio delante, el cuerpo después y la cola al final, suena a golpe.
-[CreateAssetMenu(menuName = "El Sendero/Audio/Evento de audio", fileName = "NuevoEventoDeAudio")]
+[CreateAssetMenu(menuName = "El Sendero/Proyecto/Audio/Evento de audio", fileName = "NuevoEventoDeAudio")]
 public class AudioEventSO : ScriptableObject
 {
     [Serializable]

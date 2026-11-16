@@ -23,6 +23,16 @@ public static class StoryboardAnotable
     private const string DatosDeLaPlantilla = "datos.js";
     private const string Prologo = "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche_Horneado.asset";
 
+    /// <summary>Nombre de pantalla de los efectos que interesa poder anotar; los que no están, no salen.</summary>
+    private static readonly Dictionary<string, string> NombresDeEfecto = new()
+    {
+        ["BOLA_PROTECTORA"] = "Orbe",
+        ["CIRCULO_PLEGARIA"] = "Círculo mágico",
+        ["CARGA_ESFERA"] = "Agujero negro",
+        ["CARGA_CRECE"] = "Círculo oscuro",
+        ["FORCEJEO"] = "Forcejeo",
+    };
+
     [MenuItem("El Sendero/Cinemáticas/Guion/Storyboard anotable: generar la página del guion", false, 21)]
     public static void Generar()
     {
@@ -85,6 +95,10 @@ public static class StoryboardAnotable
             foreach (var linea in guion.lineas)
                 if (linea.t1 > plano.t0 && linea.t0 < plano.t1)
                     AnadirElemento(elementos, linea.actor, NombreDe(linea.actor, actoresPorId));
+            foreach (var efecto in EfectosConNombre(guion))
+                if (efecto.hasta > plano.t0 && efecto.desde < plano.t1 &&
+                    NombresDeEfecto.TryGetValue(efecto.id, out string etiqueta))
+                    AnadirElemento(elementos, efecto.id, etiqueta);
             AnadirElemento(elementos, "camara", "Cámara");
 
             js.Append("      elementos: [");
@@ -110,6 +124,32 @@ public static class StoryboardAnotable
 
         OrdenesDelEditor.Avisar("Storyboard anotable",
             $"{guion.planos.Count} planos → {CarpetaDeLaPagina}/{archivoPagina} (datos en {archivoDatos}).");
+    }
+
+    /// <summary>
+    /// Los efectos que se registran con un nombre, y lo que duran: así un plano puede anotar «el orbe» o
+    /// «el círculo» aunque no sean personajes. Los que no declaran duración valen hasta el final.
+    /// </summary>
+    private static IEnumerable<(float desde, float hasta, string id)> EfectosConNombre(GuionHorneado guion)
+    {
+        foreach (var efecto in guion.efectos)
+        {
+            string id = null;
+            float duracion = 0f;
+            switch (efecto.beat)
+            {
+                case ConjuroEnLasManosBeat conjuro when !string.IsNullOrEmpty(conjuro.registrarComo):
+                    id = conjuro.registrarComo;
+                    duracion = conjuro.duracion > 0f ? conjuro.duracion : conjuro.vidaEnPool;
+                    break;
+                case VfxBeat vfx when !string.IsNullOrEmpty(vfx.registrarComo):
+                    id = vfx.registrarComo;
+                    duracion = vfx.lifetime;
+                    break;
+            }
+            if (id == null) continue;
+            yield return (efecto.t, duracion > 0f ? efecto.t + duracion : float.MaxValue, id);
+        }
     }
 
     /// <summary>La carpeta de las fotos: Guiones/&lt;escena&gt;/&lt;guion&gt;/storyboard, o se busca por el nombre.</summary>

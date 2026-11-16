@@ -44,10 +44,10 @@ public static class PegarMarcasAlSuelo
     /// arreglando a propósito, no sorteando un fallo.
     private const float RadioDeNavMesh = 6f;
 
-    [MenuItem("El Sendero/Mundo/Marcas y marcadores: diagnóstico", priority = 30)]
+    [MenuItem("El Sendero/Escenario/Mundo/Marcas y marcadores: diagnóstico", priority = 30)]
     public static void Diagnostico() => Ejecutar(arreglar: false);
 
-    [MenuItem("El Sendero/Mundo/Marcas y marcadores: pegarlos al suelo", priority = 31)]
+    [MenuItem("El Sendero/Escenario/Mundo/Marcas y marcadores: pegarlos al suelo", priority = 31)]
     public static void Arreglar() => Ejecutar(arreglar: true);
 
     private static void Ejecutar(bool arreglar)

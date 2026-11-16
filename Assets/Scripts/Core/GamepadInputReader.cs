@@ -56,6 +56,7 @@ namespace Core
     private static int _uiNavigationScopeCount;
     private static float _ignoreCancelUntil = 0f; // Tiempo hasta el cual ignorar el botón Cancel/B
     private static float _ignoreJumpUntil = 0f; // Tiempo hasta el cual ignorar el botón Jump/A (después de interactuar)
+    private static bool _bPulsadaFueraDelJuego; // B pulsada con el juego en UI: no cuenta hasta soltarla
     
     #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -84,6 +85,7 @@ namespace Core
         _uiNavigationScopeCount = 0;
         _ignoreCancelUntil = 0f;
         _ignoreJumpUntil = 0f;
+        _bPulsadaFueraDelJuego = false;
         enableUIAudio = true;
     }
     #endif
@@ -445,6 +447,11 @@ namespace Core
 #if ENABLE_INPUT_SYSTEM
     private static void PollHardwareFallback()
     {
+        // Cualquier B que llegue con el juego en modo UI (cerrar un menú, un diálogo) queda
+        // marcada hasta que se suelte, aunque el cuerpo del jugador esté desactivado.
+        if (IsGameplaySuppressed() && BotonBFisicoPulsado())
+            _bPulsadaFueraDelJuego = true;
+
         // Equivalente en teclado del toggle de lock-on de objetivo — tecla F ("Fijar objetivo"),
         // libre en PlayerControls.inputactions (no confundir con la T de teletransporte en punto
         // de guardado, que es un sistema aparte: ver InputGlyphNames.Teleport /
@@ -973,6 +980,11 @@ namespace Core
     {
         get
         {
+#if ENABLE_INPUT_SYSTEM
+            // La B que cierra un menú o un diálogo no dispara magia al volver al juego.
+            if (BEsperandoSoltar())
+                return false;
+#endif
             if (IsGameplaySuppressed())
                 return false;
 
@@ -1081,6 +1093,55 @@ namespace Core
     }
 
     /// <summary>
+    /// B física (mando, teclado o clic derecho), sin mirar si el juego está en modo UI.
+    /// </summary>
+#if ENABLE_INPUT_SYSTEM
+    private static bool BotonBFisicoPulsado()
+    {
+        var gp = GetGamepad();
+        if (gp != null && gp.buttonEast.isPressed)
+            return true;
+
+        var js = GetJoystick();
+        if (js != null)
+        {
+            var b = GetJoystickButton(js, "buttonEast", "circle", "button1");
+            if (b != null && b.isPressed)
+                return true;
+        }
+
+        var mouse = Mouse.current;
+        if (mouse != null && mouse.rightButton.isPressed)
+            return true;
+
+        var kb = Keyboard.current;
+        return kb != null && kb.bKey.isPressed;
+    }
+
+    /// <summary>
+    /// La B que llega pulsada desde la UI (cerrar un menú, un diálogo, un popup) no es una
+    /// pulsación de juego hasta que se suelta. Ignorarla un tiempo fijo no basta: quien cierra
+    /// con B la suele dejar apretada y el escudo se levantaba solo al volver al juego.
+    /// Devuelve true mientras haya que esperar a que se suelte.
+    /// </summary>
+    private static bool BEsperandoSoltar()
+    {
+        if (!BotonBFisicoPulsado())
+        {
+            _bPulsadaFueraDelJuego = false;
+            return false;
+        }
+
+        // Se pulsa (o se sigue pulsando) con el juego suprimido o en el margen de cierre:
+        // esa pulsación no vuelve a contar como pulsación de juego.
+        if (IsGameplaySuppressed() || Time.unscaledTime < _ignoreCancelUntil)
+            _bPulsadaFueraDelJuego = true;
+
+        return _bPulsadaFueraDelJuego;
+    }
+#endif
+
+    /// <summary>
     /// Botón B (East/Circle) - Mantenido presionado (para levitación derecha).
     /// Respeta supresión de gameplay.
     /// </summary>
@@ -1088,6 +1149,11 @@ namespace Core
     {
         get
         {
+#if ENABLE_INPUT_SYSTEM
+            // La B que cerró un menú o un diálogo no empieza a defender al volver al juego.
+            if (BEsperandoSoltar())
+                return false;
+#endif
             if (IsGameplaySuppressed())
                 return false;
 

@@ -9,7 +9,7 @@ namespace NarrativeGraphEditor
     {
         const string ManualPath = "Packages/com.liyodev.narrativegraph/Documentation/Manual de usuario.pdf";
 
-        [MenuItem("Liyodev/Grafo narrativo/Abrir el manual", priority = 200)]
+        [MenuItem("Liyodev/Grafo narrativo/Ayuda/Abrir el manual", priority = 200)]
         public static void OpenManual()
         {
             var full = Path.GetFullPath(ManualPath);

@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class NarrativeSignalsDebugWindow : EditorWindow
 {
-    [MenuItem("Liyodev/Grafo narrativo/Monitor de señales")]
+    [MenuItem("Liyodev/Grafo narrativo/Herramientas/Monitor de señales", priority = 100)]
     static void Open() => GetWindow<NarrativeSignalsDebugWindow>("Signal Monitor");
 
     // ── Colores por estado ────────────────────────────────────────

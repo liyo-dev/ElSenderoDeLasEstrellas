@@ -18,7 +18,7 @@ public static class DiagnosticoCaminoNavMesh
     private const string AnchorOrigen = "House_FrontDoor";
     private const string AnchorDestino = "Eldran_PuntoGuardado";
 
-    [MenuItem("El Sendero/Navegación/Diagnóstico: ¿dónde se corta el camino?")]
+    [MenuItem("El Sendero/Escenario/Navegación/Diagnóstico: ¿dónde se corta el camino?")]
     public static void Diagnosticar()
     {
         if (!Resolver(out Vector3 desde, out Vector3 hasta, out string nombres)) return;

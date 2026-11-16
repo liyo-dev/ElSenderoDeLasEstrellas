@@ -17,7 +17,7 @@ namespace NarrativeGraphEditor
     {
         const string PackageRoot = "Packages/com.liyodev.narrativegraph";
 
-        [MenuItem("Liyodev/Grafo narrativo/Comprobar el kit", priority = 201)]
+        [MenuItem("Liyodev/Grafo narrativo/Herramientas/Comprobar el kit", priority = 105)]
         public static void Check()
         {
             var report = new StringBuilder();

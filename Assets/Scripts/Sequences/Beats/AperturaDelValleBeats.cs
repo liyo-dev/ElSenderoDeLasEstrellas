@@ -76,7 +76,7 @@ public static class VeloDeApertura
 [Serializable]
 public class DeseoEnElSenderoBeat : SequenceBeat
 {
-    [Tooltip("Plaza del altar del Sendero (prefab hecho por «Valle del prólogo: preparar la apertura»).")]
+    [Tooltip("Plaza del altar del Sendero (prefab Assets/Art/Cinematic/Apertura/SenderoDeLaApertura.prefab).")]
     public GameObject escenario;
     [Tooltip("Modelo del Mago Oscuro (solo se usa su malla y su Animator).")]
     public GameObject mago;

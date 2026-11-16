@@ -239,8 +239,8 @@ public static partial class VestidoDelMundo
                     informe.Add($"  {m.Value,4} × {m.Key}");
                 EditorSceneManager.MarkSceneDirty(escena);
                 EditorSceneManager.SaveScene(escena);
-                informe.Add("Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?");
-                informe.Add("Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).");
+                informe.Add("Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Escenario ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?");
+                informe.Add("Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Escenario ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).");
             }
         }
         catch (Exception e)

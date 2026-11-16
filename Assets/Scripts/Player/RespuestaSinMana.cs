@@ -4,11 +4,12 @@ using Invector.vCharacterController;
 using Sendero.UI;
 
 /// <summary>
-/// Lo que se ve y se oye al pedir un hechizo sin maná suficiente (<see cref="MagicCaster.OnFaltaDeMana"/>):
-/// amago de la mano sin bloquear el movimiento, unas chispas apagadas que caen y se deshacen en
-/// humo junto a la mano, un sonido seco, la barra de maná del HUD que tiembla y un momento de
-/// cara. No gasta nada ni frena al jugador: solo explica por qué no ha salido el hechizo.
-/// Va junto al <see cref="MagicCaster"/>. Ver INC-1190.
+/// Lo que se ve y se oye al pedir un hechizo o el escudo sin maná suficiente
+/// (<see cref="MagicCaster.OnFaltaDeMana"/>): amago de la mano sin bloquear el movimiento (solo con
+/// hechizo; el escudo no lanza nada), unas chispas apagadas que caen y se deshacen en humo junto a
+/// la mano, un sonido seco, la barra de maná del HUD que tiembla y un momento de cara. No gasta
+/// nada ni frena al jugador: solo explica por qué no ha salido. Va junto al <see cref="MagicCaster"/>.
+/// Ver INC-1190.
 /// </summary>
 [DisallowMultipleComponent]
 public class RespuestaSinMana : MonoBehaviour
@@ -76,9 +77,10 @@ public class RespuestaSinMana : MonoBehaviour
         if (_co != null) { StopCoroutine(_co); _co = null; }
     }
 
-    private void AlFaltarMana(MagicSpellSO _)
+    private void AlFaltarMana(MagicSpellSO hechizo)
     {
-        if (_controller != null && !string.IsNullOrEmpty(gesto))
+        // Con hechizo: amago de lanzamiento. Null: lo pidió el escudo (B), que no lanza nada.
+        if (hechizo != null && _controller != null && !string.IsNullOrEmpty(gesto))
             _controller.PlayUpperBodyActionFor(gesto, duracionDelGesto);
 
         if (!string.IsNullOrEmpty(sfx) && AudioService.Instance != null)

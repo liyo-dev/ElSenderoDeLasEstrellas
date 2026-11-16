@@ -37,19 +37,29 @@ Para conservarlas entre máquinas o mandármelas, usa el resumen o el JSON.
 
 ## Cómo se crea otro storyboard
 
-1. Copia `datos.js` a otro archivo, o edita este.
-2. Cambia `id`, `titulo`, `subtitulo` y la lista `paneles`.
-3. Cada panel necesita:
-   - `id`, `titulo`, `tiempo`, `descripcion`, `guion` (texto de contexto).
-   - `imagen`: ruta relativa a la página.
-   - `elementos`: lista de `{ id, etiqueta }` con **todo** lo que sale en el plano.
-4. Cambia el `<script src="datos.js">` de `index.html` si usas otro archivo.
+**Con un guion horneado, se genera solo:** selecciona su `GuionHorneado` en el Project (si no hay
+ninguno seleccionado, coge el del prólogo) y pasa *El Sendero ▸ Cinemáticas ▸ Guion ▸ Storyboard
+anotable: generar la página del guion*. Deja en esta carpeta:
+
+- `datos_<Guion>.js` con un panel por plano: la foto, su tiempo, lo que se dice, la línea del guion
+  que lo pide (con su número) y un elemento por personaje que sale o habla, más los efectos con
+  nombre (orbe, círculos, agujero negro, forcejeo) y la cámara.
+- `<Guion>.html`, la misma página apuntando a esos datos. Se abre con doble clic.
+
+Se vuelve a pasar el menú después de cada horneado y la página queda al día. No se editan a mano.
+
+Si hace falta otro storyboard sin horneado, se copia `datos.js` a otro archivo, se cambian `id`,
+`titulo`, `subtitulo` y `paneles`, y se cambia el `<script src="datos.js">` de una copia de
+`index.html`. Cada panel necesita `id`, `titulo`, `tiempo`, `descripcion`, `guion`, `imagen` y
+`elementos` (`{ id, etiqueta }`).
 
 ## El storyboard de prueba
 
 `datos.js` trae los seis planos del previz real de **Cap. 3 · El espejo** (`TorreDeLiam`), sacados
 del horneado con `PrevizDeGuion`. Los elementos de cada plano son los que salen en cuadro; la
 cámara y el plano también se pueden anotar.
+
+`Prologo_UltimaNoche.html` es el del prólogo, generado del horneado real (58 planos).
 
 Cuando el encargo sea una cinemática nueva, el storyboard se dibuja antes de escribir el guion: la
 página es la misma, cambian los paneles y las imágenes.

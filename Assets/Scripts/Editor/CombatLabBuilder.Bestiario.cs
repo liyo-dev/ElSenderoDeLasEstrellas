@@ -26,34 +26,6 @@ public static partial class CombatLabBuilder
     private const float FondoBestiario = 60f;
     private static readonly Vector3 EntradaBestiario = new Vector3(90f, 0.1f, -70f);
 
-    [MenuItem("El Sendero/Combate/CombatLab: montar enemigos del mundo")]
-    public static void MontarBestiario()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-        {
-            EditorUtility.DisplayDialog("CombatLab", "Sal de Play para montar la zona.", "Aceptar");
-            return;
-        }
-        if (!File.Exists(ScenePath))
-        {
-            EditorUtility.DisplayDialog("CombatLab", "No existe el LAB. Créalo antes con «Crear o regenerar el LAB».", "Aceptar");
-            return;
-        }
-
-        var escena = SceneManager.GetSceneByPath(ScenePath);
-        bool abiertaAqui = !escena.isLoaded;
-        if (abiertaAqui) escena = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
-
-        var avisos = CrearZonaBestiario(escena);
-        EditorSceneManager.MarkSceneDirty(escena);
-        EditorSceneManager.SaveScene(escena);
-        if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
-
-        EditorUtility.DisplayDialog("CombatLab", avisos.Count == 0
-            ? "Zona de enemigos del mundo montada (viaje rápido: «" + NombreDestinoBestiario + "»)."
-            : "Zona montada con avisos:\n- " + string.Join("\n- ", avisos), "Aceptar");
-    }
-
     /// Crea (o rehace) la zona dentro de la escena indicada. Crea los prefabs si aún no existen.
     private static List<string> CrearZonaBestiario(Scene escena)
     {

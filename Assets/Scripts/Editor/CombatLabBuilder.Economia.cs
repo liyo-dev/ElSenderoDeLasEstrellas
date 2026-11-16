@@ -15,35 +15,6 @@ public static partial class CombatLabBuilder
     private const string RaizEconomia = "LAB_ECONOMIA (tiendas, Esencia y contratos)";
     private const string GrafoSecundario = "Misiones Secundarias";
 
-    [MenuItem("El Sendero/Combate/CombatLab: montar tiendas, Esencia y contratos")]
-    public static void MontarEconomia()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-        {
-            EditorUtility.DisplayDialog("CombatLab", "Sal de Play para montar la zona.", "Aceptar");
-            return;
-        }
-        if (!File.Exists(ScenePath))
-        {
-            EditorUtility.DisplayDialog("CombatLab", "No existe el LAB. Créalo antes con «Crear o regenerar el LAB».", "Aceptar");
-            return;
-        }
-
-        var escena = SceneManager.GetSceneByPath(ScenePath);
-        bool abiertaAqui = !escena.isLoaded;
-        if (abiertaAqui) escena = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
-
-        var avisos = CrearZonaEconomia(escena);
-        EditorSceneManager.MarkSceneDirty(escena);
-        EditorSceneManager.SaveScene(escena);
-        if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
-
-        string texto = avisos.Count == 0
-            ? "Zona de economía montada en el campo sur del CombatLab."
-            : "Zona montada con avisos:\n- " + string.Join("\n- ", avisos);
-        EditorUtility.DisplayDialog("CombatLab", texto, "Aceptar");
-    }
-
     /// Crea (o rehace) la zona dentro de la escena indicada. Lo que falte se avisa y se salta.
     private static List<string> CrearZonaEconomia(Scene escena)
     {

@@ -64,7 +64,6 @@ public static class PruebaDeLaHistoria
             {
                 var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>($"Assets/NarrativeGraph/{p[1]}.asset");
                 var cfg = NarrativeTestConfig.Load();
-                cfg.graphLabel = p[1];
                 cfg.fastForward = true;
                 string ancla = p.Length > 3 ? p[3] : null;
                 bool grupo = p.Length > 4 && p[4] == "grupo";

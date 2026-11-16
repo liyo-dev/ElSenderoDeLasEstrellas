@@ -25,7 +25,7 @@ public static class FotosDelSendero
         ("08_desde_arriba", new(30, 60f, 120), new(0, 0f, 250)),
     };
 
-    [MenuItem("El Sendero/Sendero/3. Fotos del Sendero")]
+    [MenuItem("El Sendero/Escenario/Sendero/3. Fotos del Sendero")]
     public static void Fotografiar()
     {
         if (Application.isPlaying) return;

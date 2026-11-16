@@ -41,7 +41,7 @@ public static class VistaDelPortal
         public Aspecto(Forma forma, Color borde, Color luz) { this.forma = forma; this.borde = borde; this.luz = luz; }
     }
 
-    [MenuItem("El Sendero/Sendero/Vistas de los portales (fotografiar)")]
+    [MenuItem("El Sendero/Escenario/Sendero/Vistas de los portales (fotografiar)")]
     public static void FotografiarLasVistas()
     {
         if (Application.isPlaying) throw new InvalidOperationException("Las vistas se fotografían fuera de Play.");

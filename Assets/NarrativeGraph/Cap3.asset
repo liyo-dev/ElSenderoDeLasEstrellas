@@ -1062,7 +1062,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-hoja
-        position: {x: 1120, y: 2094}
+        position: {x: -1510, y: 2790}
         outputs:
         - cap3-noche
         standingActorId: 

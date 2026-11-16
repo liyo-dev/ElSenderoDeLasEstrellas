@@ -89,6 +89,7 @@ public class PlayerShieldController : MonoBehaviour
     private PlayerActionManager _playerActionManager;
 
     private bool _bWasDown;
+    private bool _sinManaHastaSoltar; // ya avisó de que no queda maná: no reintenta hasta soltar B
     private float _parryUntil = -1f;
     private bool _parryOpen;
     private bool _parried;
@@ -178,6 +179,7 @@ public class PlayerShieldController : MonoBehaviour
         SalirDePreparacion();
         CancelInvoke();
         _bWasDown = false;
+        _sinManaHastaSoltar = false;
         _fundidoHasta = 0f;
         ResetUpperBodyWeight();
         if (_controls != null && _ownsControls) _controls.Disable();
@@ -191,6 +193,7 @@ public class PlayerShieldController : MonoBehaviour
         bool bDown = GamepadInputReader.AttackMagicRightHeld;
         bool bPressed = bDown && !_bWasDown;
         _bWasDown = bDown;
+        if (!bDown) _sinManaHastaSoltar = false;
 
         if (!GameState.CanProcessGameplayInput)
         {
@@ -232,7 +235,7 @@ public class PlayerShieldController : MonoBehaviour
         {
             if (!_manaPool.TrySpend(manaPerSecond * Time.deltaTime))
             {
-                StopDefending();
+                AvisarSinMana();
                 return;
             }
         }
@@ -369,10 +372,34 @@ public class PlayerShieldController : MonoBehaviour
 
         bool hasMana = _manaPool == null || manaPerSecond <= 0f || _manaPool.Current > 0f;
         bool isAllowed = _playerActionManager == null || _playerActionManager.AllowShield;
-        if (wantsDefense && hasMana && isAllowed)
+
+        if (wantsDefense && !hasMana)
+        {
+            AvisarSinMana();
+            return;
+        }
+
+        if (wantsDefense && isAllowed && !_sinManaHastaSoltar)
             StartDefending();
         else
             StopDefending();
+    }
+
+    /// <summary>
+    /// El escudo se apaga porque no queda maná: se suelta la pose una sola vez y se avisa con la
+    /// misma respuesta que la magia sin maná (chispas, sonido, cara y barra que tiembla). No se
+    /// reintenta mientras no se suelte B: si no, al empezar a regenerar volvía a subir y bajar la
+    /// guardia cada fotograma y la animación se quedaba a medias.
+    /// </summary>
+    private void AvisarSinMana()
+    {
+        if (_sinManaHastaSoltar) return;
+        _sinManaHastaSoltar = true;
+        StopDefending();
+        if (_magicCaster != null)
+            _magicCaster.AvisarFaltaDeManaDeEscudo();
+        else if (Sendero.UI.PlayerHUDV2.Instance != null)
+            Sendero.UI.PlayerHUDV2.Instance.AvisarFaltaDeMana();
     }
 
     private void StartDefending()

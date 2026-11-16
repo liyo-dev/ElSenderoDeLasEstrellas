@@ -30,14 +30,15 @@ Combate, movimiento del jugador, física, cinemáticas, minijuegos, economía, U
 
 - **Abrir editor** (Ctrl+Mayús+N)
 - **Nuevo grafo**
-- **Mapa de la historia**
-- **Monitor de señales**
-- **Dividir por capítulo...**
-- **Guardar el manual de pasos**
-- **Abrir el manual**
-- **Comprobar el kit**
+- **Herramientas**
+  - Monitor de señales
+  - Dividir por capítulo...
+  - Mapa en ventana aparte
+  - Guardar el manual de pasos
+  - Comprobar el kit
+  - Permitir herramientas externas (puerto local)
+- **Ayuda ▸ Abrir el manual**
 - **Ejemplos ▸ Montar / Quitar «El faro»**
-- **Permitir herramientas externas (puerto local)**
 
 ## Conexiones con tu juego
 

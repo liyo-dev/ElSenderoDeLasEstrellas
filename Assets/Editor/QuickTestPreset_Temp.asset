@@ -115,7 +115,7 @@ MonoBehaviour:
   inventoryItems: []
   defeatedBossIds: []
   narrativeBlackboards:
-  - graphLabel: Cap3
+  - graphLabel: Cap1
     blackboardData:
     - key: __currentNodeGuid
       type: string

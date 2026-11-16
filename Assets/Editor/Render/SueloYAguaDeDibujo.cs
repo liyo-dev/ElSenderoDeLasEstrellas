@@ -73,24 +73,6 @@ public static class SueloYAguaDeDibujo
     /// Mapas de capas que lee el borde de pincel del terreno (4 capas por mapa).
     private const int MapasDeCapasDelShader = 6;
 
-    [MenuItem("El Sendero/Aspecto de dibujo/Terreno: poner los mapas de capas y las paredes de roca en el material")]
-    public static void PonerMapasDeCapasEnLosTerrenos()
-    {
-        int puestos = 0;
-        foreach (var (ruta, rutaDeDatos) in Terrenos)
-        {
-            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            var datos = AssetDatabase.LoadAssetAtPath<TerrainData>(rutaDeDatos);
-            if (mat == null || datos == null) continue;
-            PonerMapasDeCapas(mat, datos);
-            PonerParedes(mat, datos);
-            EditorUtility.SetDirty(mat);
-            puestos++;
-        }
-        AssetDatabase.SaveAssets();
-        Debug.Log($"[SueloYAguaDeDibujo] Mapas de capas y paredes de roca puestos en {puestos} materiales de terreno.");
-    }
-
     /// Pone en el material la capa con la que se pintan las paredes (textura, tamaño y tono).
     private static void PonerParedes(Material mat, TerrainData datos)
     {

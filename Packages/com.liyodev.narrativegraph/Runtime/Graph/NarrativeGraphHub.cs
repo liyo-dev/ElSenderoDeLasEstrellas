@@ -262,6 +262,8 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             var currentNodeGuid = runner.Blackboard.Get<string>(NarrativeRunner.CurrentNodeKey, null);
             var node = string.IsNullOrEmpty(currentNodeGuid) ? null : runner.graph?.FindNode(currentNodeGuid);
             Debug.Log($"[NarrativeGraphHub] Blackboard restaurado para grafo '{record.GraphLabel}' | Nodo guardado: {(node != null ? node.GetType().Name : "N/A")} ({ShortGuid(currentNodeGuid)}...)");
+            if (!string.IsNullOrEmpty(currentNodeGuid) && node == null)
+                Debug.LogWarning($"[NarrativeGraphHub] El blackboard de '{record.GraphLabel}' guarda el paso '{currentNodeGuid}', que no existe en ese grafo: empezará desde el principio.");
 #endif
         }
 

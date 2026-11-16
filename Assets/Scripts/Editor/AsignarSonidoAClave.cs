@@ -16,7 +16,7 @@ public class AsignarSonidoAClave : EditorWindow
     private string mensaje;
     private MessageType tipoMensaje;
 
-    [MenuItem("El Sendero/Audio/Asignar sonido a una clave")]
+    [MenuItem("El Sendero/Proyecto/Audio/Asignar sonido a una clave")]
     public static void Abrir()
     {
         var ventana = GetWindow<AsignarSonidoAClave>("Asignar sonido");

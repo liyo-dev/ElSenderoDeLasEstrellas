@@ -51,7 +51,7 @@ public static class UmbralDelSendero
     static readonly Vector2 PuntoPortal = new(565f, -508.6f);
     static readonly Vector2 PuntoAncla = new(565f, -519.5f);
 
-    [MenuItem("El Sendero/Sendero/1. Montar el umbral de la Piedra Ancestral")]
+    [MenuItem("El Sendero/Escenario/Sendero/1. Montar el umbral de la Piedra Ancestral")]
     public static void Montar()
     {
         if (Application.isPlaying) throw new InvalidOperationException("El montaje necesita el Editor fuera de Play.");

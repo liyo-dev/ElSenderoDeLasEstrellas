@@ -3,7 +3,7 @@ using UnityEngine;
 /// Humo que sale de una chimenea: sube despacio, se ensancha y se deshace. Echa algo más de humo
 /// de noche (hay fuego encendido dentro) y se oscurece con ella para no brillar en la oscuridad,
 /// porque las partículas no reciben luz. Lo coloca en lo alto de cada chimenea del pack
-/// «El Sendero/Mundo/Noche: luces de casas, faroles y luciérnagas». Ver INC-657.
+/// «El Sendero/Escenario/Mundo/Noche: luces de casas, faroles y luciérnagas». Ver INC-657.
 [DisallowMultipleComponent]
 public sealed class HumoDeChimenea : ParticulasDeAmbiente
 {

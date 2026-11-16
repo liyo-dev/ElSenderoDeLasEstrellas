@@ -22,7 +22,7 @@ namespace NarrativeGraphEditor
     {
         public const int Port = 47821;
         const string EnabledKey = "NarrativeGraph.Bridge.Enabled";
-        const string MenuPath = "Liyodev/Grafo narrativo/Permitir herramientas externas (puerto local)";
+        const string MenuPath = "Liyodev/Grafo narrativo/Herramientas/Permitir herramientas externas (puerto local)";
 
         static HttpListener s_listener;
         static Thread s_thread;
@@ -48,10 +48,10 @@ namespace NarrativeGraphEditor
 
         public static bool Listening => s_listener != null && s_listener.IsListening;
 
-        [MenuItem(MenuPath)]
+        [MenuItem(MenuPath, false, 106)]
         static void ToggleMenu() => Enabled = !Enabled;
 
-        [MenuItem(MenuPath, true)]
+        [MenuItem(MenuPath, true, 106)]
         static bool ToggleMenuCheck()
         {
             Menu.SetChecked(MenuPath, EditorPrefs.GetBool(EnabledKey, false));

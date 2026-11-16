@@ -157,7 +157,7 @@ QuestManager.OnQuestCompleted += HandleQuestComplete;
 ## 🔧 Herramientas de desarrollo
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
-- `Liyodev/Grafo narrativo/Abrir editor` (Ctrl+Mayús+N) - editor del grafo narrativo
+- `Liyodev/Grafo narrativo/Abrir editor` (Ctrl+Mayús+N) - editor del grafo narrativo; las herramientas del kit, en `Herramientas/`, y el manual, en `Ayuda/`
 - `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` — valida que quests/eventos no estén referenciados a la vez por el grafo y por el sistema legacy (política completa en `TDD.md` § 10)
 
 ## 🚢 Publicación

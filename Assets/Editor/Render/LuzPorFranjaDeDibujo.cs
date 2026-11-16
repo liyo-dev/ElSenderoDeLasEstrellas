@@ -45,7 +45,7 @@ public static class LuzPorFranjaDeDibujo
     [Serializable] private sealed class Antes { public string escena; public string json; }
     [Serializable] private sealed class Registro { public List<Antes> ciclos = new List<Antes>(); }
 
-    [MenuItem("El Sendero/Mundo/Luz por franja: paleta de dibujo")]
+    [MenuItem("El Sendero/Escenario/Mundo/Luz por franja: paleta de dibujo")]
     public static void Aplicar()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) { Debug.LogWarning("Sal de Play antes de cambiar la luz."); return; }
@@ -94,7 +94,7 @@ public static class LuzPorFranjaDeDibujo
         Debug.Log($"[LuzPorFranjaDeDibujo] Paleta de dibujo puesta en {cambiadas} escenas.");
     }
 
-    [MenuItem("El Sendero/Mundo/Luz por franja: volver a la de antes")]
+    [MenuItem("El Sendero/Escenario/Mundo/Luz por franja: volver a la de antes")]
     public static void Volver()
     {
         if (!File.Exists(RutaDelRegistro) || !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

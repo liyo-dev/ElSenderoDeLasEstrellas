@@ -30,15 +30,6 @@ public static class VfxDelPrologo
 
     private static Mesh _estrella, _bolita, _esfera, _aro, _aroDeOrbe, _pincho;
 
-    [MenuItem("El Sendero/Magia/Piloto del prólogo/Todos los efectos del prólogo (INC-1136)")]
-    public static void Menu()
-    {
-        var log = new System.Text.StringBuilder();
-        Construir(log);
-        OrbeDelArchimago.Construir();
-        Debug.Log("[VFX] Efectos del prólogo: " + log);
-    }
-
     public static void Construir(System.Text.StringBuilder log)
     {
         StylizedVfxAssets.EnsureFolder(Carpeta);

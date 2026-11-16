@@ -34,7 +34,6 @@ public static class Cap2ExtrasPrefabs
     public const float AnchoPuente = 2.4f;
     public const float Hueco = 1.2f;
 
-    [MenuItem("El Sendero/Capítulo 2/Extras INC-725: crear prefabs")]
     public static void Asegurar()
     {
         if (Application.isPlaying) throw new InvalidOperationException("Sal de Play para crear los prefabs.");

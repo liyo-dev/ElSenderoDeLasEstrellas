@@ -21,7 +21,7 @@ public static class PropsQueFlotan
         "crate|box|caja|goods|fruit|fruta|basket|cesta|barrel|barril|sack|saco|bucket|cubo|pumpkin|calabaza",
         RegexOptions.IgnoreCase);
 
-    [MenuItem("El Sendero/Mundo/Apoyar en el suelo los props que flotan")]
+    [MenuItem("El Sendero/Escenario/Mundo/Apoyar en el suelo los props que flotan")]
     private static void Apoyar()
     {
         var apoyados = new List<string>();

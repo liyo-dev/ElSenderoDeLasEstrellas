@@ -28,7 +28,7 @@ public static class HumoEnLasChimeneas
     private const float AnchoMaximo = 1.8f;       // una chimenea no pasa de esto; un caballete, sí (m)
     private const float AlcanceParaLlevar = 7f;   // hasta dónde se busca chimenea nueva para un humo suelto (m)
 
-    [MenuItem("El Sendero/Mundo/Humo: ponerlo en las chimeneas (INC-1164)")]
+    [MenuItem("El Sendero/Escenario/Mundo/Humo: ponerlo en las chimeneas (INC-1164)")]
     public static void Menu()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

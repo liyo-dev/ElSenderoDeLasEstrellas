@@ -7,11 +7,11 @@ using System.Text;
 /// Utilidad de diagnóstico: localiza GameObjects con componentes de script perdido
 /// ("The referenced script (Unknown) on this Behaviour is missing!").
 /// Escanea tanto las escenas actualmente abiertas como todos los prefabs del proyecto.
-/// Uso: menú El Sendero/Pruebas y comprobaciones/Scripts perdidos.
+/// Uso: menú El Sendero/Pruebas/Scripts perdidos.
 /// </summary>
 public static class FindMissingScripts
 {
-    [MenuItem("El Sendero/Pruebas y comprobaciones/Scripts perdidos: escenas abiertas")]
+    [MenuItem("El Sendero/Pruebas/Scripts perdidos: escenas abiertas")]
     public static void FindInOpenScenes()
     {
         var sb = new StringBuilder();
@@ -31,7 +31,7 @@ public static class FindMissingScripts
         Report(sb, total, "escenas abiertas");
     }
 
-    [MenuItem("El Sendero/Pruebas y comprobaciones/Scripts perdidos: todos los prefabs")]
+    [MenuItem("El Sendero/Pruebas/Scripts perdidos: todos los prefabs")]
     public static void FindInAllPrefabs()
     {
         var sb = new StringBuilder();

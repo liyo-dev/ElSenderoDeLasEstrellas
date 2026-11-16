@@ -14,7 +14,7 @@ public static class TemasDeCinematicaSinClave
     private const string RutaPerfil = "Assets/_AUDIOPROFILE/AudioGraphProfile.asset";
     private const string Carpeta = "Assets/Audio/Music/Cinematicas";
 
-    [MenuItem("El Sendero/Audio/Dar clave a los temas de cinemática que no la tienen")]
+    [MenuItem("El Sendero/Proyecto/Audio/Dar clave a los temas de cinemática que no la tienen")]
     public static void Registrar()
     {
         var perfil = AssetDatabase.LoadAssetAtPath<AudioGraphProfile>(RutaPerfil);

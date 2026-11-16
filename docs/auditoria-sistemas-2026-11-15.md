@@ -4,6 +4,7 @@ Auditoría completa del proyecto **El Sendero de las Estrellas** (Unity 6 + URP)
 
 > **Alcance medido:** 1.247 ficheros `.cs`, **264.922 líneas** (juego + editores + kits + paquete del grafo).
 > **Método:** conteo por fichero, agregados por subsistema, lectura de los 40 ficheros más grandes, análisis de la FSM de NPCs, de los cuatro cerebros de combate y de los sistemas de UI/cinemáticas, y búsqueda dirigida de patrones de riesgo (`Find*`, `Camera.main`, `GetComponent`, LINQ, físicas, logs, reflection, `Update`, `OnGUI`, `timeScale`, singletons).
+> **Plan de ejecución:** vive en **`TDD.md` § 19.10** (fuente de verdad). Este anexo guarda el análisis detallado y el resumen del plan.
 
 ---
 
@@ -309,7 +310,7 @@ Es el **28% del código total** y el origen de varios incidentes (menús de un s
 
 ---
 
-## 14. Plan por fases
+## 14. Plan por fases (resumen; el documento de ejecución es `TDD.md` § 19.10)
 
 ### Fase 0 — Blindaje (1 día) · impacto alto, riesgo bajo
 1. Prueba de humo del arranque/prólogo (menú de editor + log).

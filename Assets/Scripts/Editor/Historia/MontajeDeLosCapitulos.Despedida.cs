@@ -30,6 +30,9 @@ public static partial class MontajeDeLosCapitulos
         public const string Acampada = "CAP3_ACAMPADA_CAMINO";
     }
 
+    // La cinemática de la despedida: su señal de fin es cuando el grafo vuelve a colocar el reparto.
+    private const string SenalFinDespedida = "CAP3_DESPEDIDA_DONE";
+
     // Marcas: la salida del pueblo es el arranque del camino del puerto (VestidoDelMundo.CaminoDelPuerto).
     private const string MarcaEldranSalida = "Eldran_SalidaDelPueblo";
     private const string MarcaWillSalida = "Will_SalidaDelPueblo";
@@ -70,7 +73,10 @@ public static partial class MontajeDeLosCapitulos
             L("CHAR_TOMASA", "¿Te vas de viaje? Si encuentras por ahí algo que no sirva para nada, ya sabes dónde venderlo.", "Off on a trip? If you find anything useless out there, you know where to sell it.", NPCEmotion.Happy));
 
         var despedida = Tramo(SenalADespedirse, SD.Camino);
-        s_personajes.Add(new SituacionesDe { Actor = Eldran, Entradas = { ("Cap. 2–3 · espera en la salida del pueblo", despedida, ActorPresence.AtMark, MarcaEldranSalida, fEldran) } });
+        // Eldran se va en la cinemática: su «espera en la salida» acaba con la película, y es ahí
+        // donde el grafo lo vuelve a colocar (su «lo de siempre» del Cap. 2: en la capital).
+        var despedidaDeEldran = Tramo(SenalADespedirse, SenalFinDespedida);
+        s_personajes.Add(new SituacionesDe { Actor = Eldran, Entradas = { ("Cap. 2–3 · espera en la salida del pueblo", despedidaDeEldran, ActorPresence.AtMark, MarcaEldranSalida, fEldran) } });
         s_personajes.Add(new SituacionesDe { Actor = Oliver, Entradas = { ("Cap. 2 · tras despedirse de Will", despedida, ActorPresence.Unchanged, null, fOliver) } });
         foreach (var (actor, frase) in new[] { ("NPC_Victoria", fVictoria), ("NPC_Erika", fErika), ("NPC_Boticaria", fBoticaria), ("NPC_Tomasa", fTomasa) })
             s_personajes.Add(new SituacionesDe { Actor = actor, Entradas = { ("Cap. 2 · despedida de Will", despedida, ActorPresence.Unchanged, null, frase) } });
@@ -101,7 +107,31 @@ public static partial class MontajeDeLosCapitulos
         // A mitad del camino del puerto salta el interludio de Tobías; radio ancho para que no se escape quien vaya campo a través.
         s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "A mitad del camino del puerto", Senal = SD.Acampada, Mision = MisionCap3,
             Pos = new Vector3(130f, float.NaN, -253f), Radio = 22f, Tramo = Tramo(SD.Camino, SD.Acampada) });
+        QuitarPiezaViejaDeEldran(informe);
         informe.AppendLine("Despedida: misión «Hora de partir», frases de despedida, cinemática e interludio de Tobías a mitad del camino.");
+    }
+
+    /// <summary>
+    /// La pieza de Eldran colgaba del inicio de 3.1; desde INC-1251 cuelga del fin de su cinemática,
+    /// que es cuando el grafo vuelve a colocar el reparto. Se retira la vieja (y se empalma su
+    /// cadena) para que no queden dos «vuelve a lo de siempre» del mismo personaje.
+    /// </summary>
+    private static void QuitarPiezaViejaDeEldran(StringBuilder informe)
+    {
+        const string ruta = "Assets/NarrativeGraph/Cap3.asset";
+        const string vieja = "pieza-npc_eldran-backtousual-cap-23-espera-en-la-salida-del-pueblo-cap3-camino";
+        var g = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(ruta);
+        if (g == null || g.FindNode(vieja) is not ActorStateNode pieza) return;
+        string siguiente = pieza.outputs != null && pieza.outputs.Count > 0 ? pieza.outputs[0] : string.Empty;
+        foreach (var n in g.nodes)
+        {
+            if (n?.outputs == null) continue;
+            for (int i = 0; i < n.outputs.Count; i++)
+                if (n.outputs[i] == vieja) n.outputs[i] = siguiente;
+        }
+        g.nodes.Remove(pieza);
+        EditorUtility.SetDirty(g);
+        informe.AppendLine("Cap. 3: la pieza de Eldran pasa del inicio de 3.1 al fin de la despedida.");
     }
 
     /// <summary>Los pasos del Cap. 3 desde la salida del pueblo hasta que Will sigue hacia la aldea.</summary>

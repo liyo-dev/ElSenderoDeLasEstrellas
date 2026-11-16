@@ -15,9 +15,6 @@ namespace Sendero.Narrative.Editor
     [Serializable]
     public sealed class NarrativeTestConfig
     {
-        /// Etiqueta del grafo en el NarrativeGraphHub. Vacía = se detecta al lanzar.
-        public string graphLabel = "";
-
         public bool fastForward = true;
 
         /// Rama elegida en las decisiones del camino cuando varias llevan al nodo de la prueba.
@@ -200,9 +197,11 @@ namespace Sendero.Narrative.Editor
             retocar?.Invoke(tempPreset);
             AprenderLoEquipado(tempPreset);
 
-            var graphLabel = string.IsNullOrEmpty(cfg.graphLabel)
-                ? DetectGraphLabel(graph) ?? graph.name
-                : cfg.graphLabel;
+            // La etiqueta con la que el Hub registra este grafo la manda el propio grafo. Una
+            // etiqueta guardada de otra prueba (p. ej. «Cap3» al probar Cap1) dejaba el
+            // __currentNodeGuid apuntado en el grafo equivocado: el capítulo que se probaba
+            // arrancaba desde su principio y volvía a salir el prólogo (INC-1250).
+            var graphLabel = DetectGraphLabel(graph) ?? graph.name;
 
             var objetivo = nodeGuid;
             var previos = CapitulosPrevios(graph, ref objetivo);

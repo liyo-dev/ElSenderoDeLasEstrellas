@@ -17,7 +17,7 @@ namespace Sendero.Narrative.Editor
         const string Paquete = "Builds/Kits/NarrativeGraph.unitypackage";
         const string ProyectoDePrueba = "../NarrativeGraphPrueba";
 
-        [MenuItem("El Sendero/Kits/Grafo narrativo: exportar el .unitypackage")]
+        [MenuItem("El Sendero/Proyecto/Kits/Grafo narrativo: exportar el .unitypackage")]
         public static string Exportar()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Paquete));
@@ -27,7 +27,7 @@ namespace Sendero.Narrative.Editor
             return ruta;
         }
 
-        [MenuItem("El Sendero/Kits/Grafo narrativo: probar en el proyecto de prueba")]
+        [MenuItem("El Sendero/Proyecto/Kits/Grafo narrativo: probar en el proyecto de prueba")]
         public static void Probar()
         {
             var proyecto = Path.GetFullPath(ProyectoDePrueba);

@@ -89,11 +89,12 @@ namespace Sendero.Narrative.Editor
                     foreach (var g in grafos)
                         foreach (var n in g.nodes)
                             if (n != null && Usa(n, par.Key, SignalRole.Emite)) sitios.Add((g, n));
-                    // La levanta el mundo (una zona, un objeto): tras el paso que la espera.
+                    // La levanta el mundo (una zona, un objeto, una cinemática): tras el paso que
+                    // la espera, por su salida buena.
                     if (sitios.Count == 0)
                         foreach (var g in grafos)
                             foreach (var n in g.nodes)
-                                if (n != null && Usa(n, par.Key, SignalRole.Escucha) && !n.HasNamedOutputs) sitios.Add((g, n));
+                                if (n != null && Usa(n, par.Key, SignalRole.Escucha)) sitios.Add((g, n));
                     if (sitios.Count == 0) { informe.AppendLine($"  ⚠ Ningún paso emite «{par.Key}»: quedan sin poner {string.Join(", ", piezas.Select(p => p.displayTitle))}."); continue; }
                 }
 
@@ -212,13 +213,16 @@ namespace Sendero.Narrative.Editor
         }
 
         /// Encadena las piezas detrás de <paramref name="tras"/>. Con una salida (o ninguna) van en
-        /// medio; si el paso abre varias ramas en paralelo, las piezas son una rama más al final
-        /// (las que ya había conservan su número, que guardan las partidas).
+        /// medio; si el paso tiene salidas con nombre —los pasos «Pedir al juego»: hecho, fallo…—
+        /// van en la primera, que es la buena, y los demás puertos se quedan como estaban. Con
+        /// varias ramas sueltas, las piezas son una rama más al final (las que ya había conservan
+        /// su número, que guardan las partidas).
         static void Insertar(NarrativeGraph grafo, NarrativeNode tras, List<ActorStateNode> piezas, StringBuilder informe)
         {
             tras.outputs ??= new List<string>();
-            if (tras.HasNamedOutputs) { informe.AppendLine($"  ⚠ «{tras.displayTitle}» tiene salidas con nombre: las piezas van como rama aparte."); }
-            bool enMedio = !tras.HasNamedOutputs && tras.outputs.Count <= 1;
+            bool salidasConNombre = tras.HasNamedOutputs;
+            if (!salidasConNombre && tras.outputs.Count > 1)
+                informe.AppendLine($"  ⚠ «{tras.displayTitle}» abre varias ramas: las piezas van como rama aparte.");
             for (int i = 0; i < piezas.Count; i++)
             {
                 var p = piezas[i];
@@ -226,9 +230,20 @@ namespace Sendero.Narrative.Editor
                 if (i + 1 < piezas.Count) p.outputs = new List<string> { piezas[i + 1].guid };
                 grafo.nodes.Add(p);
             }
-            if (enMedio)
+            var ultima = piezas[piezas.Count - 1];
+            if (salidasConNombre)
             {
-                piezas[piezas.Count - 1].outputs = new List<string>(tras.outputs);
+                // La salida buena es la primera; por las demás (fallo, sin respuesta) no ha pasado
+                // nada que cambie el reparto.
+                string buena = tras.outputs.Count > 0 ? tras.outputs[0] : null;
+                ultima.outputs = string.IsNullOrEmpty(buena) ? new List<string>() : new List<string> { buena };
+                if (tras.outputs.Count > 0) tras.outputs[0] = piezas[0].guid;
+                else tras.outputs.Add(piezas[0].guid);
+                return;
+            }
+            if (tras.outputs.Count <= 1)
+            {
+                ultima.outputs = new List<string>(tras.outputs);
                 tras.outputs = new List<string> { piezas[0].guid };
             }
             else tras.outputs.Add(piezas[0].guid);

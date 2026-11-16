@@ -19,7 +19,7 @@ public static class AjustarImportsDeAudio
     const string CARPETA_MUSICA = "Assets/Audio/Music";
     const string CARPETA_SFX = "Assets/Audio/SFX_Hechizos";
 
-    [MenuItem("El Sendero/Audio/Ajustar imports de audio (voces, música y SFX)")]
+    [MenuItem("El Sendero/Proyecto/Audio/Ajustar imports de audio (voces, música y SFX)")]
     public static void Aplicar()
     {
         int voces = AjustarVoces();
@@ -29,7 +29,7 @@ public static class AjustarImportsDeAudio
         Debug.Log($"[Audio] Imports ajustados: {voces} voces (sin Normalize), {musica} pistas de música (Streaming), {sfx} SFX de hechizos (DecompressOnLoad).");
     }
 
-    [MenuItem("El Sendero/Audio/Informar de los imports de audio")]
+    [MenuItem("El Sendero/Proyecto/Audio/Informar de los imports de audio")]
     public static void Informar()
     {
         int voces = 0, vocesNormalizadas = 0, musica = 0, musicaEnMemoria = 0, sfx = 0;

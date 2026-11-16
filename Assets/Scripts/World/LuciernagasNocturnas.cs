@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// Zona de luciérnagas: puntos de luz que vagan y parpadean entre los árboles cuando es de noche.
 /// La cantidad sube con la noche a partir de `desde`. Las zonas del bosque las coloca
-/// «El Sendero/Mundo/Noche: luces de casas, faroles y luciérnagas»; se pueden mover, copiar o
+/// «El Sendero/Escenario/Mundo/Noche: luces de casas, faroles y luciérnagas»; se pueden mover, copiar o
 /// redimensionar a mano. Ver INC-657.
 [DisallowMultipleComponent]
 public sealed class LuciernagasNocturnas : ParticulasDeAmbiente

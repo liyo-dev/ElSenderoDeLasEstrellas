@@ -27,31 +27,6 @@ public static class PaginaDelGrimorioBuilder
     private static readonly Vector3 AlturaDelVisual = new Vector3(0f, 1f, 0f);
     private static readonly Color DoradoPalido = new Color(1f, 0.88f, 0.60f);
 
-    [MenuItem("El Sendero/Magia/Página del grimorio: hoja y polvo dorado (INC-646)")]
-    public static void MontarMenu()
-    {
-        var log = new StringBuilder("=== Página del grimorio (INC-646) ===\n");
-        var warnings = new List<string>();
-        if (AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath) == null)
-            warnings.Add($"No encuentro {PrefabPath}. Pasa antes el montaje del grimorio.");
-        else
-        {
-            var root = PrefabUtility.LoadPrefabContents(PrefabPath);
-            try
-            {
-                Montar(root, warnings);
-                PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
-                log.AppendLine("   Hoja suelta, polvo dorado propio y destello al recogerla.");
-            }
-            finally { PrefabUtility.UnloadPrefabContents(root); }
-            AssetDatabase.SaveAssets();
-        }
-
-        if (warnings.Count == 0) { log.AppendLine("Sin avisos."); Debug.Log(log.ToString()); return; }
-        foreach (var w in warnings) log.AppendLine("  • " + w);
-        Debug.LogWarning(log.ToString());
-    }
-
     /// Monta el visual (hoja), el brillo y el efecto al recoger en la raíz de una página.
     public static void Montar(GameObject root, List<string> warnings)
     {

@@ -14,7 +14,7 @@ namespace Core.InputGlyphs
     /// que exista un PNG con el nombre y la ruta exactos en Resources.
     ///
     /// Un único asset se comparte entre TODOS los Interactable del proyecto (ver herramienta de Editor
-    /// "El Sendero/Input Glyphs/Asignar Interaction Icon Set a todos los Interactable"), porque el
+    /// "El Sendero/Interfaz/Iconos de botones: asignarlos en todo el proyecto"), porque el
     /// icono de interactuar es siempre el mismo botón (South) en cualquier punto de guardado, NPC u
     /// objeto — no hace falta un set distinto por instancia.
     /// </summary>

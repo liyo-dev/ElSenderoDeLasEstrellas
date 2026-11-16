@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -30,14 +30,14 @@ public class GameBootService : MonoBehaviour
     public static bool IsPresetOverrideActive => _profile != null && _profile.ShouldBootFromPreset();
 
 #if UNITY_EDITOR
-    [UnityEditor.MenuItem("El Sendero/Pruebas y comprobaciones/Arranque: recargar el preset de prueba (en Play)")]
+    [UnityEditor.MenuItem("El Sendero/Pruebas/Arranque: recargar el preset de prueba (en Play)")]
     public static void ForceReloadTestPreset()
     {
         if (Application.isPlaying && _instance != null) ReloadTestPreset();
         else Debug.LogWarning("Esta opción solo funciona en Play.");
     }
 
-    [UnityEditor.MenuItem("El Sendero/Pruebas y comprobaciones/Arranque: partida nueva desde cero (en Play)")]
+    [UnityEditor.MenuItem("El Sendero/Pruebas/Arranque: partida nueva desde cero (en Play)")]
     public static void ForceNewGameReset()
     {
         if (Application.isPlaying && _instance != null) NewGameReset();

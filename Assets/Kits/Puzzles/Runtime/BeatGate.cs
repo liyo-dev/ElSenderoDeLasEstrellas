@@ -37,6 +37,10 @@ namespace Kits.Puzzles
         [Tooltip("No se cierra mientras quede alguien del grupo del lado de donde se viene: se cierra cuando han pasado todos.")]
         [SerializeField] private bool esperarAlGrupo = true;
 
+        [Header("Aspecto")]
+        [Tooltip("Lo que se ve de la pieza: en el modo «Aparece» se enseña solo mientras está activa.")]
+        [SerializeField] private Renderer[] visuales;
+
         /// <summary>
         /// ¿Queda alguien del grupo del lado de atrás de la puerta? Lo dice el juego: (punto de la
         /// puerta, hacia donde se sale). El kit no sabe quién es el grupo.
@@ -79,6 +83,8 @@ namespace Kits.Puzzles
             _visualLocalBase = _visual.localPosition;
             if (colliders == null || colliders.Length == 0)
                 colliders = GetComponentsInChildren<Collider>(true);
+            if (visuales == null || visuales.Length == 0)
+                visuales = GetComponentsInChildren<Renderer>(true);
             Colocar(activeAtStart);
         }
 
@@ -159,9 +165,13 @@ namespace Kits.Puzzles
         {
             IsActive = activa;
             bool sujetan = modo == Modo.SeAbre ? !activa : activa;
-            if (colliders == null) return;
-            for (int i = 0; i < colliders.Length; i++)
-                if (colliders[i] != null) colliders[i].enabled = sujetan;
+            if (colliders != null)
+                for (int i = 0; i < colliders.Length; i++)
+                    if (colliders[i] != null) colliders[i].enabled = sujetan;
+            // Lo que aparece se ve cuando está: si no, se queda una plataforma fantasma a la vista.
+            if (modo == Modo.Aparece && visuales != null)
+                for (int i = 0; i < visuales.Length; i++)
+                    if (visuales[i] != null) visuales[i].enabled = activa;
         }
 
         private void Update()

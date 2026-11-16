@@ -60,7 +60,7 @@ public static class SubirAGitHub
         });
     }
 
-    [MenuItem("El Sendero/Git/Estado")]
+    [MenuItem("El Sendero/Proyecto/Git/Estado")]
     public static void Estado() => EnSegundoPlano("estado", () =>
     {
         Escribir("lfs: " + Git("lfs version").salida);
@@ -88,7 +88,7 @@ public static class SubirAGitHub
         Escribir("carpetas con archivos nuevos: " + string.Join(" | ", raicesNuevas));
     });
 
-    [MenuItem("El Sendero/Git/Guardar escenas abiertas")]
+    [MenuItem("El Sendero/Proyecto/Git/Guardar escenas abiertas")]
     public static void GuardarEscenas()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) { Escribir("guardar: el Editor está en Play; no guardo"); return; }
@@ -103,7 +103,7 @@ public static class SubirAGitHub
         Escribir($"guardar: escenas abiertas ({sb}) → {(ok ? "guardadas" : "FALLÓ")}");
     }
 
-    [MenuItem("El Sendero/Git/Subir todo")]
+    [MenuItem("El Sendero/Proyecto/Git/Subir todo")]
     public static void SubirTodo() => EnSegundoPlano("subir", () =>
     {
         if (!File.Exists(Mensaje)) { Escribir("subir: falta git_mensaje.txt"); return; }

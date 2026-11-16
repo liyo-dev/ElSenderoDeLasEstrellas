@@ -96,7 +96,7 @@ public static class SonidosDeHechizos
         "Impacto_Amanecer",
     };
 
-    [MenuItem("El Sendero/Audio/Sonidos de los hechizos (claves y eventos por capas)")]
+    [MenuItem("El Sendero/Proyecto/Audio/Sonidos de los hechizos (claves y eventos por capas)")]
     public static void Aplicar()
     {
         var log = new StringBuilder("[SFX de hechizos] ");

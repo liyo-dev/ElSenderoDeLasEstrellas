@@ -24,7 +24,7 @@ namespace ElSendero.EditorTools
     /// </summary>
     public static class UnusedAssetsAuditor
     {
-        [MenuItem("El Sendero/Pruebas y comprobaciones/Assets sin usar (informe)")]
+        [MenuItem("El Sendero/Pruebas/Assets sin usar (informe)")]
         public static void RunAudit()
         {
             try

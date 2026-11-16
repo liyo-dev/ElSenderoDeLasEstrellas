@@ -536,7 +536,7 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <p><b>Copiar el capítulo como texto</b> lo deja en el portapapeles para leerlo, revisarlo o pegarlo en otra herramienta. <b>Guardar el manual de pasos</b> escribe todos los tipos de paso con sus campos en <code>STEP_TYPES.md</code>.</p>
 
   <h2>Herramientas externas</h2>
-  <p><b>Permitir herramientas externas</b> deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto. Incluye un servidor MCP (en <code>Assets/NarrativeGraph/Tools/mcp</code>, con su README) que escucha solo en tu ordenador, en el puerto <code>47821</code>. Viene apagado.</p>
+  <p><b>Permitir herramientas externas</b> (<span class="menu">Liyodev › Grafo narrativo › Herramientas</span>) deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto. Incluye un servidor MCP (en <code>Assets/NarrativeGraph/Tools/mcp</code>, con su README) que escucha solo en tu ordenador, en el puerto <code>47821</code>. Viene apagado.</p>
   <table class="c">
     <tr><th>Herramienta MCP</th><th>Qué hace</th></tr>
     <tr><td>list_graphs</td><td>Lista los capítulos del proyecto</td></tr>
@@ -577,7 +577,10 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
         <tr><td>Ficha del jugador</td><td>⚙ › Ficha del jugador</td></tr>
         <tr><td>Escena de arranque</td><td>⚙ › Probar desde un paso</td></tr>
         <tr><td>Conexiones</td><td>⚙ › Conexiones del juego</td></tr>
-        <tr><td>Monitor de señales</td><td>En vivo, o Liyodev › Grafo narrativo</td></tr>
+        <tr><td>Monitor de señales</td><td>En vivo, o Herramientas › Monitor de señales</td></tr>
+        <tr><td>Mapa en ventana aparte</td><td>Herramientas › Mapa en ventana aparte</td></tr>
+        <tr><td>Comprobar el kit</td><td>Herramientas › Comprobar el kit</td></tr>
+        <tr><td>Este manual</td><td>Ayuda › Abrir el manual</td></tr>
         <tr><td>Plantillas</td><td>Assets/NarrativeTemplates</td></tr>
       </table>
     </div>
@@ -601,7 +604,8 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <p class="lead">Lo último del paquete. Si vienes de una versión anterior, esto es lo que cambia.</p>
 
   <h2>Menú con marca</h2>
-  <p>Todo el paquete vive en <span class="menu">Liyodev › Grafo narrativo</span>: Abrir editor, Nuevo grafo, Mapa de la historia, Monitor de señales, Dividir por capítulo, Guardar el manual de pasos, Abrir el manual y Comprobar el kit. Los ejemplos, en <span class="menu">Liyodev › Grafo narrativo › Ejemplos</span>.</p>
+  <p>Todo el paquete vive en <span class="menu">Liyodev › Grafo narrativo</span>: arriba <b>Abrir editor</b> y <b>Nuevo grafo</b>; en <span class="menu">Herramientas</span>, Monitor de señales, Dividir por capítulo, Mapa en ventana aparte, Guardar el manual de pasos, Comprobar el kit y Permitir herramientas externas; el manual, en <span class="menu">Ayuda › Abrir el manual</span>; y los ejemplos, en <span class="menu">Ejemplos</span>.</p>
+  <p>La ventana <b>Historia</b> vuelve a cargar el capítulo al recargar el editor: antes se quedaba en blanco hasta cerrar y abrir la pestaña.</p>
 
   <h2>Dos bloques en «Nuevo paso»</h2>
   <p>El buscador separa <b>Historia</b> (lo que el grafo sabe contar: flujo, misiones, diálogos, personajes, señales, objetos, puesta en escena) y <b>Del juego</b> (las peticiones que añade tu juego). El bloque del juego está plegado: escribe para buscarlo y se abre. Así el vocabulario de la historia no se mezcla con las mecánicas de un juego concreto.</p>
@@ -616,7 +620,7 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <p>El mapa ya no es una foto: cada escena es una banda y cada sitio un rectángulo. Los personajes caen en el sitio que les da el paso; los que no están, en «No están en escena», y los que no tienen sitio, en «Sin sitio». Sin botón «Hacer vista desde arriba» y sin islas que no eran.</p>
 
   <h2>Comprobar el kit</h2>
-  <p><span class="menu">Liyodev › Grafo narrativo › Comprobar el kit</span> revisa que todos los pasos tengan su ficha, que las peticiones se presenten, qué puertos no tienen implementación en tu proyecto y qué retrato usa cada personaje del mapa. Deja el informe en <code>Logs/NarrativeGraph/qa.txt</code>.</p>
+  <p><span class="menu">Liyodev › Grafo narrativo › Herramientas › Comprobar el kit</span> revisa que todos los pasos tengan su ficha, que las peticiones se presenten, qué puertos no tienen implementación en tu proyecto y qué retrato usa cada personaje del mapa. Deja el informe en <code>Logs/NarrativeGraph/qa.txt</code>.</p>
 
   <div class="tip"><b>El manual completo sigue siendo esta guía.</b> La lista exacta de campos de cada paso se genera en <span class="menu">⚙ › Guardar el manual de pasos</span>.</div>
   <div class="folio"><span>Narrative Graph · Manual de usuario</span><span><b>18</b></span></div>

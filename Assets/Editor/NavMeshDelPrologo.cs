@@ -212,7 +212,7 @@ public static class NavMeshDelPrologo
         return arreglados;
     }
 
-    [MenuItem("El Sendero/Navegación/Rehornear el NavMesh de las escenas abiertas")]
+    [MenuItem("El Sendero/Escenario/Navegación/Rehornear el NavMesh de las escenas abiertas")]
     public static void Menu()
     {
         var superficies = new List<NavMeshSurface>();

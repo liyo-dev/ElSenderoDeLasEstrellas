@@ -69,7 +69,7 @@ public static class VestidoDelSendero
 
     static readonly Vector3 Altar = new(0, 6, 656);
 
-    [MenuItem("El Sendero/Sendero/2. Vestir el Sendero (arte)")]
+    [MenuItem("El Sendero/Escenario/Sendero/2. Vestir el Sendero (arte)")]
     public static void Vestir()
     {
         if (Application.isPlaying) throw new InvalidOperationException("Hace falta el Editor fuera de Play.");

@@ -12,7 +12,7 @@ using UnityEngine;
 /// en la ventana del Audio Mixer.
 public static class InformarMezclaDeAudio
 {
-    [MenuItem("El Sendero/Audio/Informar de la mezcla (AudioMixer)")]
+    [MenuItem("El Sendero/Proyecto/Audio/Informar de la mezcla (AudioMixer)")]
     public static void Informar()
     {
         var informe = new StringBuilder();

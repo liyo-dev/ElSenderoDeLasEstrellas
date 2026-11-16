@@ -110,8 +110,9 @@ public class MagicCaster : MonoBehaviour
     public enum MotivoSinLanzar { Ninguno, SinHechizo, Bloqueado, Defendiendo, ContraLaPared, SinMana }
 
     /// <summary>
-    /// Se pidió el básico (X) y no salió por falta de maná. Como mucho uno cada
-    /// <see cref="avisoSinManaCada"/> segundos. Lo escucha <see cref="RespuestaSinMana"/>. Ver INC-1190.
+    /// Se pidió un hechizo (X) o el escudo (B) y no salió por falta de maná. Como mucho uno cada
+    /// <see cref="avisoSinManaCada"/> segundos. Con hechizo <c>null</c>, el aviso viene del escudo,
+    /// que no tiene gesto de lanzamiento. Lo escucha <see cref="RespuestaSinMana"/>. Ver INC-1190.
     /// </summary>
     public event Action<MagicSpellSO> OnFaltaDeMana;
 
@@ -625,6 +626,19 @@ public class MagicCaster : MonoBehaviour
         if (Time.time - _ultimoAvisoSinMana < avisoSinManaCada) return;
         _ultimoAvisoSinMana = Time.time;
         OnFaltaDeMana(spell);
+    }
+
+    /// <summary>
+    /// Aviso de «sin maná» por el escudo: se apagó porque ya no podía pagarlo. Mismo freno que el
+    /// de la X y sin hechizo, así que <see cref="RespuestaSinMana"/> solo hace las chispas, el
+    /// sonido, la cara y el temblor de la barra (no hay gesto de lanzamiento que hacer).
+    /// </summary>
+    public void AvisarFaltaDeManaDeEscudo()
+    {
+        if (OnFaltaDeMana == null) return;
+        if (Time.time - _ultimoAvisoSinMana < avisoSinManaCada) return;
+        _ultimoAvisoSinMana = Time.time;
+        OnFaltaDeMana(null);
     }
 
     public bool CanCast(MagicSpellSO spell) => CanCast(spell, out _);
