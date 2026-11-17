@@ -321,7 +321,7 @@ namespace NarrativeGraphEditor.Story
             if (toggle != null) toggle.text = open ? "▾" : "▸";
         }
 
-        /// Una foto nueva, un retrato que ha llegado o el ajuste de imágenes: se repintan las tarjetas.
+        /// Un retrato que ha llegado o el ajuste de imágenes: se repintan las tarjetas.
         void OnCardImages() => rootVisualElement.schedule.Execute(() => _canvas?.Rebuild()).StartingIn(50);
 
         void OnDisable()

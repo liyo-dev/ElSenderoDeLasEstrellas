@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b39283c50f606429a7c52c7b7c5bdd, type: 3}
+  m_Name: Dibujos del grafo
+  m_EditorClassIdentifier: Liyodev.NarrativeGraph.Editor::NarrativeGraphEditor.Story.NarrativeIconSet
+  categories:
+  - category: Flujo
+    image: {fileID: 0}
+  - category: Quests
+    image: {fileID: 0}
+  - category: "Di\xE1logo"
+    image: {fileID: 0}
+  - category: NPCs
+    image: {fileID: 0}
+  - category: "Se\xF1ales"
+    image: {fileID: 0}
+  - category: "Cinem\xE1ticas"
+    image: {fileID: 0}
+  - category: Objetos
+    image: {fileID: 0}
+  - category: Jugador
+    image: {fileID: 0}
+  - category: Mundo
+    image: {fileID: 0}
+  - category: Audio y cine
+    image: {fileID: 0}
+  - category: Notas
+    image: {fileID: 0}
+  - category: Otros
+    image: {fileID: 0}
+  - category: Grupo
+    image: {fileID: 0}
+  - category: Combate
+    image: {fileID: 0}
+  actors:
+  - actorId: AbuelaDelMirador
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino1
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino2
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino3
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino4
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino5
+    image: {fileID: 0}
+  - actorId: Actor_ChucheReino6
+    image: {fileID: 0}
+  - actorId: Actor_Estela
+    image: {fileID: 0}
+  - actorId: Actor_Heraldo
+    image: {fileID: 0}
+  - actorId: Actor_HeraldoSuplente
+    image: {fileID: 0}
+  - actorId: Actor_Liam
+    image: {fileID: 0}
+  - actorId: Actor_Will
+    image: {fileID: 0}
+  - actorId: actor_will_nino
+    image: {fileID: 0}
+  - actorId: MadreDelValle
+    image: {fileID: 0}
+  - actorId: npc_aldona
+    image: {fileID: 0}
+  - actorId: NPC_Anselmo
+    image: {fileID: 0}
+  - actorId: NPC_Benito
+    image: {fileID: 0}
+  - actorId: NPC_Boticaria
+    image: {fileID: 0}
+  - actorId: NPC_Contrabandista1
+    image: {fileID: 0}
+  - actorId: NPC_Contrabandista2
+    image: {fileID: 0}
+  - actorId: NPC_ContrabandistaJefe
+    image: {fileID: 0}
+  - actorId: NPC_Eldran
+    image: {fileID: 0}
+  - actorId: NPC_Engracia
+    image: {fileID: 0}
+  - actorId: NPC_Erika
+    image: {fileID: 0}
+  - actorId: NPC_Eusebio
+    image: {fileID: 0}
+  - actorId: NPC_Fermin
+    image: {fileID: 0}
+  - actorId: NPC_GuardiaCruce1
+    image: {fileID: 0}
+  - actorId: NPC_GuardiaCruce2
+    image: {fileID: 0}
+  - actorId: NPC_Lucia
+    image: {fileID: 0}
+  - actorId: NPC_Oliver
+    image: {fileID: 0}
+  - actorId: NPC_Posadero
+    image: {fileID: 0}
+  - actorId: NPC_Remedios
+    image: {fileID: 0}
+  - actorId: NPC_Renard
+    image: {fileID: 0}
+  - actorId: NPC_Rosario
+    image: {fileID: 0}
+  - actorId: NPC_Sargento
+    image: {fileID: 0}
+  - actorId: NPC_Tomasa
+    image: {fileID: 0}
+  - actorId: NPC_Victoria
+    image: {fileID: 0}
+  - actorId: PanaderaDelValle
+    image: {fileID: 0}
+  - actorId: Player
+    image: {fileID: 0}
+  - actorId: Selene
+    image: {fileID: 0}
+  - actorId: VecinaDelMirador
+    image: {fileID: 0}
+  - actorId: VecinoDelMirador
+    image: {fileID: 0}
+  - actorId: _LIAM
+    image: {fileID: 0}

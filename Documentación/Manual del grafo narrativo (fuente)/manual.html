@@ -431,7 +431,7 @@
   <ul>
     <li>El paso en el que va el juego se marca en verde en el lienzo; los ya recorridos se atenúan.</li>
     <li><b>Puntos de pausa:</b> clic derecho › <span class="menu">Pausar aquí al jugar</span>. La tarjeta lleva un punto rojo; al llegar ahí, el juego se pausa y el editor te lleva al paso. Se guardan en tu ordenador, no en el grafo.</li>
-    <li><b>Monitor de señales:</b> las señales según se emiten y quién las espera, en directo.</li>
+    <li><b>Señales:</b> al final de la pestaña, las últimas señales con su estado (emitida, en cola, consumida o reinicio) y quién las disparó.</li>
   </ul>
 
   <h2>Avisos y comprobación del flujo</h2>
@@ -577,14 +577,17 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
         <tr><td>Ficha del jugador</td><td>⚙ › Ficha del jugador</td></tr>
         <tr><td>Escena de arranque</td><td>⚙ › Probar desde un paso</td></tr>
         <tr><td>Conexiones</td><td>⚙ › Conexiones del juego</td></tr>
-        <tr><td>Monitor de señales</td><td>En vivo, o Herramientas › Monitor de señales</td></tr>
+        <tr><td>Señales recientes</td><td>En vivo › Últimas señales</td></tr>
         <tr><td>Mapa en ventana aparte</td><td>Herramientas › Mapa en ventana aparte</td></tr>
+        <tr><td>Dibujos del grafo</td><td>Herramientas › Dibujos del grafo…</td></tr>
         <tr><td>Comprobar el kit</td><td>Herramientas › Comprobar el kit</td></tr>
         <tr><td>Este manual</td><td>Ayuda › Abrir el manual</td></tr>
         <tr><td>Plantillas</td><td>Assets/NarrativeTemplates</td></tr>
       </table>
     </div>
   </div>
+
+  <div class="tip"><b>La ventana Historia</b> vuelve a cargar el capítulo al recargar el editor. <b>Dibujos:</b> las tarjetas enseñan un dibujo de su categoría en el hueco de la antigua foto; en Ajustes eliges «Dibujos y retratos / Solo retratos / Sin imágenes» y en Herramientas › Dibujos del grafo les pones tus PNGs.</div>
 
   <h2>Preguntas frecuentes</h2>
   <h3>Pruebo desde un paso y el jugador aparece en otro sitio.</h3>
@@ -604,8 +607,7 @@ NarrativeServices.Register&lt;INarrativeFlagStore&gt;(new MisDatosDePartida());<
   <p class="lead">Lo último del paquete. Si vienes de una versión anterior, esto es lo que cambia.</p>
 
   <h2>Menú con marca</h2>
-  <p>Todo el paquete vive en <span class="menu">Liyodev › Grafo narrativo</span>: arriba <b>Abrir editor</b> y <b>Nuevo grafo</b>; en <span class="menu">Herramientas</span>, Monitor de señales, Dividir por capítulo, Mapa en ventana aparte, Guardar el manual de pasos, Comprobar el kit y Permitir herramientas externas; el manual, en <span class="menu">Ayuda › Abrir el manual</span>; y los ejemplos, en <span class="menu">Ejemplos</span>.</p>
-  <p>La ventana <b>Historia</b> vuelve a cargar el capítulo al recargar el editor: antes se quedaba en blanco hasta cerrar y abrir la pestaña.</p>
+  <p>Todo el paquete vive en <span class="menu">Liyodev › Grafo narrativo</span>: arriba <b>Abrir editor</b> y <b>Nuevo grafo</b>; en <span class="menu">Herramientas</span>, Dividir por capítulo, Mapa en ventana aparte, Dibujos del grafo, Guardar el manual de pasos y Comprobar el kit; el manual, en <span class="menu">Ayuda › Abrir el manual</span>; y los ejemplos, en <span class="menu">Ejemplos</span>. El historial de señales vive en la pestaña <b>En vivo</b>.</p>
 
   <h2>Dos bloques en «Nuevo paso»</h2>
   <p>El buscador separa <b>Historia</b> (lo que el grafo sabe contar: flujo, misiones, diálogos, personajes, señales, objetos, puesta en escena) y <b>Del juego</b> (las peticiones que añade tu juego). El bloque del juego está plegado: escribe para buscarlo y se abre. Así el vocabulario de la historia no se mezcla con las mecánicas de un juego concreto.</p>

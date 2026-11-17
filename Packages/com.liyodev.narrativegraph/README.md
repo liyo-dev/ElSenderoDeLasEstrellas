@@ -10,7 +10,8 @@ No es un framework de juego. Es la capa de historia: el flujo, las misiones, los
 - **Misiones:** iniciar, completar pasos, completar, esperar, consultar estado y diario.
 - **Diálogos:** líneas, elecciones y actor, con una presentación básica que puedes sustituir por la tuya.
 - **NPCs:** quién está, dónde, qué dice si le hablas cuando la historia no le espera, esperar interacción e iconos.
-- **Depuración:** mapa por escenas (esquema de sitios y personajes, sin fotos), pestaña «En vivo», breakpoints y **probar desde cualquier paso** con la historia hasta ahí.
+- **Tarjetas:** un dibujo vectorial por categoría en el hueco de la antigua foto y retratos de los personajes; se cambian por PNGs propios desde **Herramientas ▸ Dibujos del grafo**.
+- **Depuración:** mapa por escenas (esquema de sitios y personajes, sin fotos), pestaña «En vivo» con historial de señales, breakpoints y **probar desde cualquier paso** con la historia hasta ahí.
 
 ## Qué no hace (y no debe)
 
@@ -31,9 +32,9 @@ Combate, movimiento del jugador, física, cinemáticas, minijuegos, economía, U
 - **Abrir editor** (Ctrl+Mayús+N)
 - **Nuevo grafo**
 - **Herramientas**
-  - Monitor de señales
   - Dividir por capítulo...
   - Mapa en ventana aparte
+  - Dibujos del grafo...
   - Guardar el manual de pasos
   - Comprobar el kit
   - Permitir herramientas externas (puerto local)

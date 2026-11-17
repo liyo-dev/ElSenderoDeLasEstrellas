@@ -11,7 +11,7 @@ namespace NarrativeGraphEditor.Story
         public const float CardWidth = 220f;
         public const float CardHeight = 112f;
         public const float CardHeightWithOutputs = 142f;
-        public const float PhotoHeight = 112f;
+        public const float CardArtHeight = 112f;
         public const float ColumnGap = 60f;
         public const float RowGap = 50f;
         public const float SectionGap = 110f;
@@ -20,7 +20,7 @@ namespace NarrativeGraphEditor.Story
 
         public static float HeightOf(NarrativeNode node)
             => (node != null && node.HasNamedOutputs ? CardHeightWithOutputs : CardHeight)
-               + (node != null && !node.IsAnnotation && StoryCardImages.ShowPhotos && StoryCardImages.HasPhoto(node) ? PhotoHeight : 0f);
+               + (node != null && !node.IsAnnotation && StoryCardImages.ShowCardArt ? CardArtHeight : 0f);
 
         public static Rect RectOf(NarrativeNode node) => new Rect(node.position, new Vector2(CardWidth, HeightOf(node)));
 

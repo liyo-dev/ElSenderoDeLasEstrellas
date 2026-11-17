@@ -168,6 +168,15 @@ namespace Game.NPC
         private NPCPartyMember _willNpcCache;
         private bool _willSigueCache;
         private float _willNpcCacheHasta;
+
+        // Turno para cruzar un salto del rastro: solo un compañero a la vez, y solo cuando el
+        // jugador ya se ha apartado del punto de caída.
+        private NPCPartyMember _miembroTurnoSalto;
+        private float _turnoLibreDesde;
+        private float _turnoSaltoTomadoEn;
+        private const float EsperaEntreSaltos = 0.35f;
+        private const float RadioLibreEnAterrizaje = 0.5f;
+        private const float TiempoMaximoTurno = 3f;
         #endregion
 
         #region Events
@@ -435,7 +444,9 @@ namespace Game.NPC
 
             _jugadorEstabaEnAire = enAire;
 
-            float paso = enAire ? pasoMuestreoRastroAire : pasoMuestreoRastro;
+            float paso = enAire
+                ? (pasoMuestreoRastroAire > 0.01f ? pasoMuestreoRastroAire : 0.15f)
+                : (pasoMuestreoRastro > 0.01f ? pasoMuestreoRastro : 0.25f);
             float distancia = Vector3.Distance(posicion, ultima.posicion);
             if (enAire && !_saltoActualConfirmado)
             {
@@ -667,12 +678,19 @@ namespace Game.NPC
         private Vector3 CalcularPosicionFormacion(int puesto, int total)
         {
             // Abanico simétrico DETRÁS del jugador: dos por fila, alternando derecha e izquierda.
+            // Si un asset/escena antiguo trae los campos nuevos a cero, se usan los valores de
+            // diseño: una formación a cero metería a los compañeros dentro del jugador.
+            float detrasBase = distanciaFormacionDetras > 0.01f ? distanciaFormacionDetras : 2.6f;
+            float lateralBase = separacionLateralFormacion > 0.01f ? separacionLateralFormacion : 1.35f;
+            float entreFilas = distanciaEntreFilasFormacion > 0.01f ? distanciaEntreFilasFormacion : 1.4f;
+            float escalon = escalonImparFormacion > 0f ? escalonImparFormacion : 0.35f;
+
             int fila = puesto / 2;
             float lado = puesto % 2 == 0 ? 1f : -1f;
-            float lateral = total <= 1 ? 0f : lado * separacionLateralFormacion * (1f + fila * 0.35f);
-            float detras = distanciaFormacionDetras
-                           + fila * distanciaEntreFilasFormacion
-                           + (puesto % 2 == 1 ? escalonImparFormacion : 0f);
+            float lateral = total <= 1 ? 0f : lado * lateralBase * (1f + fila * 0.35f);
+            float detras = detrasBase
+                           + fila * entreFilas
+                           + (puesto % 2 == 1 ? escalon : 0f);
 
             Vector3 adelante = _playerTransform.forward;
             adelante.y = 0f;
@@ -689,7 +707,7 @@ namespace Game.NPC
                 && EstaDetrasDe(hit.position, adelante))
                 return hit.position;
 
-            Vector3 respaldo = _playerTransform.position - adelante * (distanciaFormacionDetras * 0.8f);
+            Vector3 respaldo = _playerTransform.position - adelante * (detrasBase * 0.8f);
             if (NavMesh.SamplePosition(respaldo, out NavMeshHit hitRespaldo, 2f, NavMesh.AllAreas)
                 && Mathf.Abs(hitRespaldo.position.y - _playerTransform.position.y) <= 2.2f
                 && EstaDetrasDe(hitRespaldo.position, adelante))
@@ -737,7 +755,74 @@ namespace Game.NPC
             _saltoActualConfirmado = false;
             _muestrasDesdeInicioSalto = 0;
             _hayPuntoAterrizaje = false;
+            _miembroTurnoSalto = null;
+            _turnoLibreDesde = 0f;
+            _turnoSaltoTomadoEn = 0f;
         }
+
+        /// <summary>
+        /// Pide permiso para cruzar un salto del rastro. Solo hay un turno: mientras un compañero
+        /// cruza, los demás esperan. Se concede cuando el jugador ya no está en el aire ni cerca
+        /// del punto de caída y no hay otro compañero ocupando ese sitio.
+        /// </summary>
+        public bool IntentarTomarTurnoDeSalto(NPCPartyMember miembro, Vector3 puntoAterrizaje)
+        {
+            if (miembro == null) return false;
+            if (_miembroTurnoSalto != null && _miembroTurnoSalto != miembro)
+            {
+                // Si el dueño del turno se quedó colgado (salió del seguimiento sin soltarlo),
+                // no puede bloquear a los demás para siempre.
+                if (!_miembroTurnoSalto.EnSaltoDeRastro
+                    && Time.time - _turnoSaltoTomadoEn > TiempoMaximoTurno)
+                {
+                    _miembroTurnoSalto = null;
+                    _turnoLibreDesde = Time.time;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            if (Time.time < _turnoLibreDesde) return false;
+            if (_playerTransform == null || JugadorEnElAire) return false;
+
+            float radioJugador = RadioLibreEnAterrizaje + 0.25f;
+            if (Vector3.Distance(_playerTransform.position, puntoAterrizaje) < radioJugador)
+                return false;
+
+            for (int i = 0; i < _members.Count; i++)
+            {
+                var m = _members[i];
+                if (m == null || m == miembro || ControlDelJugador.EsElJugador(m)) continue;
+                if (Vector3.Distance(m.transform.position, puntoAterrizaje) < RadioLibreEnAterrizaje)
+                    return false;
+            }
+
+            var will = _willNpcCache;
+            if (will == null)
+                will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
+            if (will != null && will != miembro && will.isActiveAndEnabled
+                && !ControlDelJugador.EsElJugador(will)
+                && Vector3.Distance(will.transform.position, puntoAterrizaje) < RadioLibreEnAterrizaje)
+                return false;
+
+            _miembroTurnoSalto = miembro;
+            _turnoSaltoTomadoEn = Time.time;
+            return true;
+        }
+
+        /// <summary>Suelta el turno cuando el compañero ya ha aterrizado.</summary>
+        public void LiberarTurnoDeSalto(NPCPartyMember miembro)
+        {
+            if (miembro == null || _miembroTurnoSalto != miembro) return;
+            _miembroTurnoSalto = null;
+            _turnoLibreDesde = Time.time + EsperaEntreSaltos;
+            _turnoSaltoTomadoEn = 0f;
+        }
+
+        /// <summary>¿Este compañero tiene ahora el turno de cruzar?</summary>
+        public bool TieneTurnoDeSalto(NPCPartyMember miembro)
+            => miembro != null && _miembroTurnoSalto == miembro;
 
         /// <summary>
         /// Punto del rastro a una distancia acumulada concreta. Interpola entre las dos muestras

@@ -52,6 +52,7 @@ namespace NarrativeGraphEditor.Story
                     _scroll.Add(StoryUI.Muted(StoryText.T("Elige un paso para ver cómo debería estar todo al llegar a él. En Play, aquí ves por dónde va la historia y qué no cuadra.",
                                                   "Pick a step to see how everything should be when reaching it. In Play, this shows where the story is and what does not match.")));
                 BuildLog();
+                BuildSignals();
                 return;
             }
 
@@ -100,6 +101,7 @@ namespace NarrativeGraphEditor.Story
             foreach (var i in r.Info) expected.Add(StoryUI.Muted(i));
 
             BuildLog();
+            BuildSignals();
 
             var tools = new VisualElement();
             tools.AddToClassList("story-start__actions");
@@ -110,12 +112,6 @@ namespace NarrativeGraphEditor.Story
             };
             copy.AddToClassList("story-button");
             tools.Add(copy);
-            var signals = new Button(() => EditorApplication.ExecuteMenuItem("Liyodev/Grafo narrativo/Herramientas/Monitor de señales"))
-            {
-                text = StoryText.T("Monitor de señales", "Signal monitor"),
-            };
-            signals.AddToClassList("story-button");
-            tools.Add(signals);
             _scroll.Add(tools);
 
             if (EditorApplication.isPlaying) _scroll.schedule.Execute(() => _scroll.scrollOffset = offset);
@@ -162,6 +158,80 @@ namespace NarrativeGraphEditor.Story
                 box.Add(row);
             }
         }
+
+        /// Las últimas señales de la partida, con su estado y quién las disparó. Vive aquí y no en
+        /// una ventana aparte: «En vivo» es el sitio donde se mira cómo va la historia.
+        void BuildSignals()
+        {
+            if (!EditorApplication.isPlaying) return;
+            var history = DefaultNarrativeSignals.History;
+            if (history.Count == 0) return;
+
+            var box = Section(StoryText.T("ÚLTIMAS SEÑALES", "LATEST SIGNALS"));
+            int shown = 0;
+            for (int i = history.Count - 1; i >= 0 && shown < 12; i--, shown++)
+                box.Add(SignalRow(history[i]));
+
+            var clear = new Button(() => { DefaultNarrativeSignals.ClearHistory(); Rebuild(); })
+            {
+                text = StoryText.T("Limpiar el historial", "Clear history"),
+                tooltip = StoryText.T("Borra la lista; la partida sigue igual.", "Clears the list; the game keeps running."),
+            };
+            clear.AddToClassList("story-panel__row-source");
+            box.Add(clear);
+        }
+
+        VisualElement SignalRow(in DefaultNarrativeSignals.SignalRecord rec)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("story-live__check");
+
+            var mark = new Label(rec.status switch
+            {
+                DefaultNarrativeSignals.SignalStatus.Fired => "●",
+                DefaultNarrativeSignals.SignalStatus.Queued => "○",
+                DefaultNarrativeSignals.SignalStatus.Consumed => "✓",
+                _ => "↺",
+            });
+            mark.AddToClassList("story-live__mark");
+            row.Add(mark);
+
+            var text = new VisualElement { style = { flexGrow = 1, flexShrink = 1 } };
+            var name = rec.key == "__RESET__" ? StoryText.T("Reinicio de la partida", "Game reset") : rec.key;
+            var main = new Label($"{name}  ·  {SignalState(rec.status)}") { tooltip = rec.detail };
+            main.AddToClassList("story-live__text");
+            main.style.color = rec.status switch
+            {
+                DefaultNarrativeSignals.SignalStatus.Fired => new Color(0.49f, 0.85f, 0.54f),
+                DefaultNarrativeSignals.SignalStatus.Queued => new Color(0.95f, 0.78f, 0.49f),
+                DefaultNarrativeSignals.SignalStatus.Consumed => new Color(0.47f, 0.66f, 1f),
+                _ => new Color(1f, 0.48f, 0.48f),
+            };
+            text.Add(main);
+            if (!string.IsNullOrEmpty(rec.caller))
+            {
+                var caller = new Label(rec.caller) { tooltip = rec.caller };
+                caller.AddToClassList("story-muted");
+                text.Add(caller);
+            }
+            row.Add(text);
+
+            var time = new Label(TimeSpan.FromSeconds(rec.time).ToString(@"mm\:ss"));
+            time.AddToClassList("story-muted");
+            time.style.marginLeft = 6;
+            time.style.flexShrink = 0;
+            time.style.unityTextAlign = TextAnchor.MiddleRight;
+            row.Add(time);
+            return row;
+        }
+
+        static string SignalState(DefaultNarrativeSignals.SignalStatus status) => status switch
+        {
+            DefaultNarrativeSignals.SignalStatus.Fired => StoryText.T("emitida", "raised"),
+            DefaultNarrativeSignals.SignalStatus.Queued => StoryText.T("en cola", "queued"),
+            DefaultNarrativeSignals.SignalStatus.Consumed => StoryText.T("consumida", "consumed"),
+            _ => StoryText.T("reinicio", "reset"),
+        };
 
         VisualElement CheckRow(StoryLiveReport r, StoryLiveReport.Check c)
         {

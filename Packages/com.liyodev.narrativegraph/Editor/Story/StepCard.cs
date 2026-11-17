@@ -4,10 +4,9 @@ using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// Un paso en el lienzo: cabecera del color de su tipo (icono, número, tipo), la foto del paso
-    /// si la hay y se quieren fotos (StoryCardImages), el título y una línea de lo que hace, con
-    /// el retrato de su personaje. Las salidas con nombre se arrastran; al pasar el ratón, un
-    /// asa por lado para empezar una conexión desde el lado más cercano a su destino.
+    /// Un paso en el lienzo: cabecera del color de su tipo (icono, número, tipo), el título y una
+    /// línea de lo que hace, con el retrato de su personaje. Las salidas con nombre se arrastran; al
+    /// pasar el ratón, un asa por lado para empezar una conexión desde el lado más cercano a su destino.
     public sealed class StepCard : VisualElement, INarrativeNodeHost
     {
         public NarrativeNode Model { get; }
@@ -23,7 +22,7 @@ namespace NarrativeGraphEditor.Story
         readonly VisualElement _outputs;
         readonly VisualElement _header;
         readonly VisualElement _icon;
-        readonly Image _photo;
+        readonly VisualElement _art;
         readonly Image _face;
         Color _color;
 
@@ -59,9 +58,10 @@ namespace NarrativeGraphEditor.Story
             _warning.AddToClassList("story-card__warning");
             header.Add(_warning);
 
-            _photo = new Image { scaleMode = ScaleMode.ScaleAndCrop, pickingMode = PickingMode.Ignore };
-            _photo.AddToClassList("story-card__photo");
-            Add(_photo);
+            _art = new VisualElement { pickingMode = PickingMode.Ignore };
+            _art.AddToClassList("story-card__art");
+            _art.generateVisualContent += DrawCardArt;
+            Add(_art);
 
             var body = new VisualElement();
             body.AddToClassList("story-card__body");
@@ -130,10 +130,19 @@ namespace NarrativeGraphEditor.Story
             _icon.userData = entry?.category;
             _icon.MarkDirtyRepaint();
 
-            bool photo = !Model.IsAnnotation && StoryCardImages.ShowPhotos && StoryCardImages.HasPhoto(Model);
-            _photo.image = photo ? StoryCardImages.PhotoOf(Model) : null;
-            _photo.style.display = photo ? DisplayStyle.Flex : DisplayStyle.None;
+            bool art = StoryCardImages.ShowCardArt && !Model.IsAnnotation;
+            _art.style.display = art ? DisplayStyle.Flex : DisplayStyle.None;
+            if (art)
+            {
+                var custom = StoryCardImages.CardArtOf(Model);
+                _art.style.backgroundImage = custom != null ? new StyleBackground(custom) : new StyleBackground(StyleKeyword.None);
+                _art.style.backgroundColor = custom != null ? Color.clear : new Color(_color.r, _color.g, _color.b, 0.10f);
+                _art.MarkDirtyRepaint();
+            }
+
             var face = StoryCardImages.ShowPortraits && !Model.IsAnnotation ? StoryCardImages.PortraitOf(StoryCardImages.ActorOf(Model)) : null;
+            var customFace = StoryCardImages.ShowPortraits && !Model.IsAnnotation ? StoryCardImages.ActorArtOf(StoryCardImages.ActorOf(Model)) : null;
+            if (customFace != null) face = customFace;
             _face.image = face;
             _face.style.display = face != null ? DisplayStyle.Flex : DisplayStyle.None;
 
@@ -240,6 +249,15 @@ namespace NarrativeGraphEditor.Story
                     p.BeginPath(); p.Arc(P(.5f, .5f), w * .16f, 0, 360); p.Fill();
                     break;
             }
+        }
+
+        /// El dibujo de la categoría en el hueco de la antigua foto; si hay una textura propia,
+        /// la pinta el fondo y aquí no se dibuja nada.
+        void DrawCardArt(MeshGenerationContext ctx)
+        {
+            if (!StoryCardImages.ShowCardArt || Model.IsAnnotation) return;
+            if (StoryCardImages.CardArtOf(Model) != null) return;
+            StoryCardArt.Draw(ctx.painter2D, _art.contentRect, NarrativeNodeCatalog.CategoryOf(Model.KindType), _color);
         }
 
         public void SetPosition(Vector2 position)

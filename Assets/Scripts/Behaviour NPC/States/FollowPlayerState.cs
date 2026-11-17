@@ -150,11 +150,14 @@ namespace Game.NPC.States
         private float _tiempoEstudioSalto;
         private int _puestoRastro;
         private int _totalPuestosRastro = 1;
+        private float _tiempoSiguientePuestoRastro;
         private float _cursorDistanciaRastro;
         private bool _rastroInicializado;
         private bool _usandoRastro;
         private bool _enSaltoDeRastro;
         private bool _estabaEnAireRastro;
+        private bool _tieneTurnoSalto;
+        private bool _saltoConEspacio;
         private float _tiempoFinEstudioSalto;
         private float _ultimoSaltoEstudiado = -1f;
         private Vector3 _direccionRastro;
@@ -287,12 +290,15 @@ namespace Game.NPC.States
             _rastroInicializado  = false;
             _enSaltoDeRastro     = false;
             _estabaEnAireRastro  = false;
+            _tieneTurnoSalto     = false;
+            _saltoConEspacio     = false;
             _cursorDistanciaRastro = 0f;
             _ultimoSaltoEstudiado = -1f;
             _tiempoFinEstudioSalto = 0f;
             _timerComprobarIslaNavMesh = 0f;
             _caminoNavMeshCortado = false;
             _tieneDestinoFormacion = false;
+            _tiempoSiguientePuestoRastro = 0f;
             _party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
             ActualizarDatosDelRastro();
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
@@ -364,6 +370,20 @@ namespace Game.NPC.States
             // --- SEGUIMIENTO NORMAL POR NAVMESH ---
             if (context.Agent == null || !context.Agent.isOnNavMesh) return;
 
+            // Si el jugador está en el aire y el modo especial no llegó a activarse, no se le
+            // persigue: el agente apuntaría a su posición en el aire y se le metería dentro.
+            if (_party != null && _party.JugadorEnElAire)
+            {
+                if (!context.Agent.isStopped)
+                {
+                    context.Agent.isStopped = true;
+                    context.Agent.updatePosition = false;
+                    context.Agent.ResetPath();
+                }
+                context.Animator?.SetMovementSpeed(0f);
+                return;
+            }
+
             if (_stateTimer < INITIAL_DELAY)
             {
                 context.Agent.isStopped = true;
@@ -406,7 +426,9 @@ namespace Game.NPC.States
             {
                 // La formación manda: no vale con pararse a 2 m del jugador si el puesto está a
                 // 2,6-3 m. Se deja una banda de carrera por encima de la parada.
-                stopDist = Mathf.Max(stopDist, _config?.distanciaMinimaFormacionDetras ?? 2.5f);
+                float minimoDetras = _config != null && _config.distanciaMinimaFormacionDetras > 0.01f
+                    ? _config.distanciaMinimaFormacionDetras : 2.5f;
+                stopDist = Mathf.Max(stopDist, minimoDetras);
                 runDist  = Mathf.Max(runDist, stopDist + 1.4f);
             }
 
@@ -650,6 +672,11 @@ namespace Game.NPC.States
             // devuelve al suelo; no se le abandona a medio camino.
             if (_inSpecialFollow && context.Agent != null && !context.Agent.isOnNavMesh) return true;
 
+            // En cuanto el jugador deja el suelo, el seguimiento normal deja de perseguirle: si
+            // no, el NavMeshAgent apunta a su posición en el aire y el compañero se le mete
+            // dentro. El rastro decide después si hay salto que copiar o solo esperar detrás.
+            if (_party != null && _party.JugadorEnElAire) return true;
+
             if (IsPlayerOffNavMesh(context)) return true;
 
             if (_config != null && !_config.seguirRastroEnPlataformas) return false;
@@ -664,7 +691,12 @@ namespace Game.NPC.States
                 _timerComprobarIslaNavMesh = 0f;
                 bool caminoCortado = context.Agent != null && context.Agent.isOnNavMesh
                     && !PlayerParty.PuedeLlegarHasta(context.Transform, context.Player.position);
-                float desde = Mathf.Max(0f, _party.DistanciaTotalRastro - 12f);
+
+                // Ya dentro del rastro, el salto que importa es el que tiene delante el cursor
+                // (aunque el jugador se haya alejado mucho); al entrar, solo uno reciente.
+                float desde = _inSpecialFollow
+                    ? Mathf.Max(0f, _cursorDistanciaRastro - 1f)
+                    : Mathf.Max(0f, _party.DistanciaTotalRastro - 12f);
                 bool saltoCerca = _party.HaySaltoEnTramoDeRastro(
                     desde, _party.DistanciaTotalRastro, out _, out _);
                 _caminoNavMeshCortado = caminoCortado && saltoCerca;
@@ -675,10 +707,16 @@ namespace Game.NPC.States
 
         private void ActualizarDatosDelRastro()
         {
-            _distanciaBaseRastro = _config != null ? _config.distanciaBaseEnRastro : 2.2f;
-            _separacionPorPuestoRastro = _config != null ? _config.separacionPorPuestoEnRastro : 1.6f;
-            _separacionLateralRastro = _config != null ? _config.separacionLateralEnRastro : 0.45f;
-            _tiempoEstudioSalto = _config != null ? _config.tiempoEstudioSalto : 0.2f;
+            // Si un asset antiguo trae los campos nuevos a cero, se usan los valores de diseño:
+            // cero haría que el compañero siguiera el punto exacto del jugador.
+            _distanciaBaseRastro = _config != null && _config.distanciaBaseEnRastro > 0.01f
+                ? _config.distanciaBaseEnRastro : 2.2f;
+            _separacionPorPuestoRastro = _config != null && _config.separacionPorPuestoEnRastro > 0.01f
+                ? _config.separacionPorPuestoEnRastro : 1.6f;
+            _separacionLateralRastro = _config != null && _config.separacionLateralEnRastro > 0.001f
+                ? _config.separacionLateralEnRastro : 0.45f;
+            _tiempoEstudioSalto = _config != null && _config.tiempoEstudioSalto > 0.001f
+                ? _config.tiempoEstudioSalto : 0.2f;
 
             if (_party != null)
                 _puestoRastro = _party.ObtenerPuestoDeFormacion(_partyMember, out _totalPuestosRastro);
@@ -691,6 +729,11 @@ namespace Game.NPC.States
 
         private void InicializarCursorRastro(NPCStateContext context)
         {
+            if (_tieneTurnoSalto && _party != null)
+                _party.LiberarTurnoDeSalto(_partyMember);
+            _tieneTurnoSalto = false;
+            _saltoConEspacio = false;
+
             _rastroInicializado = false;
             if (_party == null || _party.TotalMuestrasRastro < 2) return;
 
@@ -790,6 +833,28 @@ namespace Game.NPC.States
                     InicializarCursorRastro(context);
                 }
 
+                // El reparto de puestos puede cambiar si el grupo se recompone (un miembro entra,
+                // sale o pasa el mando). Si cambia, se vuelve a enganchar al rastro con su nuevo
+                // hueco; si no, dos compañeros podrían apuntar al mismo sitio y montarse.
+                if (Time.time >= _tiempoSiguientePuestoRastro)
+                {
+                    int puestoAnterior = _puestoRastro;
+                    int totalAnterior = _totalPuestosRastro;
+                    ActualizarDatosDelRastro();
+
+                    if (puestoAnterior != _puestoRastro || totalAnterior != _totalPuestosRastro)
+                    {
+                        _rastroInicializado = false;
+                        if (_tieneTurnoSalto)
+                        {
+                            _party.LiberarTurnoDeSalto(_partyMember);
+                            _tieneTurnoSalto = false;
+                        }
+                    }
+
+                    _tiempoSiguientePuestoRastro = Time.time + 0.5f;
+                }
+
                 float total = _party.DistanciaTotalRastro;
                 float detras = Mathf.Max(0.5f, _distanciaBaseRastro + _puestoRastro * _separacionPorPuestoRastro);
                 float objetivo = Mathf.Max(0f, total - detras);
@@ -798,26 +863,83 @@ namespace Game.NPC.States
                     _cursorDistanciaRastro - 0.05f, total,
                     out float distanciaDespegue, out float distanciaAterrizaje);
 
+                float espacioTrasAterrizaje = _config != null && _config.espacioTrasAterrizaje > 0.01f
+                    ? _config.espacioTrasAterrizaje : 2.5f;
+                bool saltoCompleto = haySalto && !_party.JugadorEnSaltoConfirmado
+                                     && distanciaAterrizaje < total - 0.05f;
+
+                // Además del hueco que pida el diseño, el jugador tiene que haberse alejado lo
+                // suficiente para que el puesto de este compañero caiga YA en la plataforma de
+                // destino. Si no, cruzaría y volvería a caminar hacia atrás, hacia el hueco.
+                float distanciaMinima = Mathf.Max(espacioTrasAterrizaje, detras + 0.3f);
+                bool espacioLibre = saltoCompleto
+                                    && (total - distanciaAterrizaje) >= distanciaMinima;
+
+                // El turno puede haberse soltado por seguridad o al vaciar el rastro.
+                if (_tieneTurnoSalto && !_enSaltoDeRastro
+                    && !_party.TieneTurnoDeSalto(_partyMember))
+                    _tieneTurnoSalto = false;
+
                 if (haySalto)
                 {
                     if (distanciaDespegue > _ultimoSaltoEstudiado + 0.3f)
                     {
                         _ultimoSaltoEstudiado = distanciaDespegue;
+                        _saltoConEspacio = false;
+                        _tiempoFinEstudioSalto = 0f;
+                    }
+
+                    if (espacioLibre && !_saltoConEspacio)
+                    {
+                        _saltoConEspacio = true;
                         _tiempoFinEstudioSalto = Time.time + _tiempoEstudioSalto + _puestoRastro * 0.16f;
                     }
 
-                    if (!_enSaltoDeRastro
-                        && _cursorDistanciaRastro <= distanciaDespegue + 0.05f
-                        && Time.time < _tiempoFinEstudioSalto)
+                    // El primer puesto espera en el mismo borde; el segundo, un metro atrás.
+                    float esperaDetras = Mathf.Max(0f, distanciaDespegue - _puestoRastro * 1f);
+
+                    if (!_enSaltoDeRastro)
                     {
-                        // Se acerca al borde y observa el salto antes de imitarlo.
-                        objetivo = Mathf.Min(objetivo, distanciaDespegue);
+                        bool enElBorde = _cursorDistanciaRastro >= esperaDetras - 0.1f;
+                        if (!enElBorde || !espacioLibre || Time.time < _tiempoFinEstudioSalto)
+                        {
+                            // Se acerca al borde y espera, mirando el salto del jugador.
+                            objetivo = Mathf.Min(objetivo, esperaDetras);
+                        }
+                        else
+                        {
+                            if (_tieneTurnoSalto && !_party.TieneTurnoDeSalto(_partyMember))
+                                _tieneTurnoSalto = false;
+
+                            if (!_tieneTurnoSalto)
+                            {
+                                Vector3 puntoAterrizaje = context.Player.position;
+                                if (_party.IntentarMuestrearRastroEnDistancia(
+                                        Mathf.Min(total, distanciaAterrizaje + 0.15f),
+                                        out PlayerParty.PuntoDeRastro muestraAterrizaje))
+                                    puntoAterrizaje = muestraAterrizaje.posicion;
+
+                                if (_party.IntentarTomarTurnoDeSalto(_partyMember, puntoAterrizaje))
+                                    _tieneTurnoSalto = true;
+                            }
+
+                            if (_tieneTurnoSalto)
+                            {
+                                // Turno concedido: cruza el arco entero, aunque el jugador se pare.
+                                objetivo = Mathf.Max(objetivo,
+                                    Mathf.Min(total, distanciaAterrizaje + 0.25f));
+                            }
+                            else
+                            {
+                                // Otro compañero está cruzando: se queda en la cola.
+                                objetivo = Mathf.Min(objetivo, esperaDetras);
+                            }
+                        }
                     }
-                    else if (Time.time >= _tiempoFinEstudioSalto)
+                    else
                     {
-                        // Una vez decidido, termina el arco aunque el jugador se pare al aterrizar.
-                        objetivo = Mathf.Max(objetivo,
-                            Mathf.Min(total, distanciaAterrizaje + 0.25f));
+                        // Ya está cruzando: conserva el turno hasta aterrizar.
+                        _tieneTurnoSalto = true;
                     }
                 }
 
@@ -871,6 +993,7 @@ namespace Game.NPC.States
             // Sin volar ni nadar, la altura sale del rastro (o del suelo bajo el puesto en el
             // respaldo en V). Así no se sube y baja con el salto del jugador, pero sí se cruza
             // el arco cuando el rastro lo marca.
+            bool estabaEnSaltoDeRastro = _enSaltoDeRastro;
             _pisandoSuelo = false;
             bool vaPorElSuelo = playerMode != ActionMode.Flying && playerMode != ActionMode.Swimming;
             if (usaAlturaDelRastro)
@@ -926,6 +1049,13 @@ namespace Game.NPC.States
                     _avisoSinSuelo = Time.time + 3f;
                     Debug.LogWarning($"[Seguir] {context.Transform.name} no encuentra suelo bajo su puesto {_specialFollowPosition} (modo {playerMode}): va a la altura de {context.Player.name}.");
                 }
+            }
+
+            // Al aterrizar se suelta el turno para que cruce el siguiente compañero.
+            if (_tieneTurnoSalto && estabaEnSaltoDeRastro && !_enSaltoDeRastro)
+            {
+                if (_party != null) _party.LiberarTurnoDeSalto(_partyMember);
+                _tieneTurnoSalto = false;
             }
 
             Vector3 instantVel = (_specialFollowPosition - prevPos) / dt;
@@ -1022,6 +1152,9 @@ namespace Game.NPC.States
             {
                 case ActionMode.Flying:
                     _exitMode = mode;
+                    if (_tieneTurnoSalto && _party != null) _party.LiberarTurnoDeSalto(_partyMember);
+                    _tieneTurnoSalto = false;
+                    _saltoConEspacio = false;
                     _enSaltoDeRastro = false;
                     _estabaEnAireRastro = false;
                     if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
@@ -1033,6 +1166,9 @@ namespace Game.NPC.States
 
                 case ActionMode.Swimming:
                     _exitMode = mode;
+                    if (_tieneTurnoSalto && _party != null) _party.LiberarTurnoDeSalto(_partyMember);
+                    _tieneTurnoSalto = false;
+                    _saltoConEspacio = false;
                     _enSaltoDeRastro = false;
                     _estabaEnAireRastro = false;
                     if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
@@ -1049,6 +1185,8 @@ namespace Game.NPC.States
                     TrySetFloat(anim, HashGroundDist, 0f);
                     _estabaEnAireRastro = false;
                     _enSaltoDeRastro = false;
+                    _saltoConEspacio = false;
+                    _ultimoSaltoEstudiado = -1f;
                     break;
             }
         }
@@ -1139,6 +1277,9 @@ namespace Game.NPC.States
             _rastroInicializado = false;
             _enSaltoDeRastro = false;
             _estabaEnAireRastro = false;
+            if (_tieneTurnoSalto && _party != null) _party.LiberarTurnoDeSalto(_partyMember);
+            _tieneTurnoSalto = false;
+            _saltoConEspacio = false;
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
 
             // Siempre limpiar isFlying al salir para que no quede el personaje en fly_idle
@@ -1224,12 +1365,16 @@ namespace Game.NPC.States
                 puesto = _partyMember.PartyIndex;
 
             bool aPie = mode == ActionMode.Default;
-            float spread = aPie
-                ? (_config?.plataformaFormationSpread ?? 1.35f)
-                : (_config?.flightFormationSpread ?? 1.5f);
-            float detras = aPie
-                ? (_config?.plataformaFormationBack ?? 2.4f)
-                : (_config?.flightFormationBack ?? 1.8f);
+            float spreadAire = _config != null && _config.flightFormationSpread > 0.01f
+                ? _config.flightFormationSpread : 1.5f;
+            float detrasAire = _config != null && _config.flightFormationBack > 0.01f
+                ? _config.flightFormationBack : 1.8f;
+            float spreadPie = _config != null && _config.plataformaFormationSpread > 0.01f
+                ? _config.plataformaFormationSpread : 1.35f;
+            float detrasPie = _config != null && _config.plataformaFormationBack > 0.01f
+                ? _config.plataformaFormationBack : 2.4f;
+            float spread = aPie ? spreadPie : spreadAire;
+            float detras = aPie ? detrasPie : detrasAire;
             int   fila    = puesto / 2 + 1;
             float lado    = puesto % 2 == 0 ? 1f : -1f;
             Vector3 local = new Vector3(lado * spread * fila, 0f, -detras * fila);
@@ -1559,6 +1704,9 @@ namespace Game.NPC.States
             _rastroInicializado = false;
             _enSaltoDeRastro = false;
             _estabaEnAireRastro = false;
+            if (_tieneTurnoSalto && _party != null) _party.LiberarTurnoDeSalto(_partyMember);
+            _tieneTurnoSalto = false;
+            _saltoConEspacio = false;
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
 
             if (_inSpecialFollow)

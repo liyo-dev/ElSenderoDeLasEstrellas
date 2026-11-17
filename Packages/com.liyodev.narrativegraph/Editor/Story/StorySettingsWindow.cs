@@ -96,12 +96,23 @@ namespace NarrativeGraphEditor.Story
 
             // Imágenes de las tarjetas
             var images = Section(scroll, StoryText.T("Imágenes en las tarjetas", "Images on the cards"));
-            var modes = new[] { StoryText.T("Fotos y retratos", "Photos and portraits"), StoryText.T("Solo retratos", "Portraits only"), StoryText.T("Sin imágenes", "No images") }.ToList();
+            var modes = new[]
+            {
+                StoryText.T("Dibujos y retratos", "Drawings and portraits"),
+                StoryText.T("Solo retratos", "Portraits only"),
+                StoryText.T("Sin imágenes", "No images"),
+            }.ToList();
             var mode = new DropdownField(modes, (int)StoryCardImages.Current);
             mode.RegisterValueChangedCallback(_ => StoryCardImages.Current = (StoryCardImages.Mode)mode.index);
             images.Add(mode);
-            images.Add(new Label(StoryText.T("Las fotos se hacen solas al jugar (una por paso, en Library). Los retratos salen del juego o del prefab de cada personaje.",
-                                             "Photos are taken by themselves while playing (one per step, in Library). Portraits come from the game or from each character's prefab.")) { style = { whiteSpace = WhiteSpace.Normal, opacity = 0.7f, marginTop = 4 } });
+            images.Add(new Label(StoryText.T("Los dibujos son de la categoría de cada paso. Los retratos salen del juego o de la miniatura del prefab de cada personaje.",
+                                             "Drawings come from each step's category. Portraits come from the game or from each character's prefab.")) { style = { whiteSpace = WhiteSpace.Normal, opacity = 0.7f, marginTop = 4 } });
+            var drawings = new Button(() => EditorApplication.ExecuteMenuItem("Liyodev/Grafo narrativo/Herramientas/Dibujos del grafo..."))
+            {
+                text = StoryText.T("Cambiar los dibujos del grafo…", "Change the graph drawings…"),
+            };
+            drawings.style.marginTop = 6;
+            images.Add(drawings);
 
             // Assistant
             var assistant = Section(scroll, StoryText.T("Asistente", "Assistant"));

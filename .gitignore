@@ -167,3 +167,10 @@ Guiones/_ordenes/*.orden
 # Clave de la API de ElevenLabs (Tools/Audio/clave_elevenlabs.py)
 Tools/Audio/elevenlabs.key
 tools/Audio/elevenlabs.key
+
+# Copias y volcados de trabajo (no versionar; el codigo escribe en ellas)
+/Claude outputs/
+/_ClaudeBackups/*
+!/_ClaudeBackups/VestidoDelMundo/
+# Informes generados por la herramienta de comprobaciones
+/Reports/

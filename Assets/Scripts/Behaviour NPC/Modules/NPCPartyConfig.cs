@@ -186,6 +186,11 @@ namespace Game.NPC.Modules
         [Range(0f, 0.8f)]
         public float tiempoEstudioSalto = 0.2f;
 
+        [Tooltip("Metros que el jugador debe alejarse del punto de caída antes de que los compañeros " +
+                 "empiecen a cruzar. Así salta primero él y ellos no le estorban.")]
+        [Range(1f, 6f)]
+        public float espacioTrasAterrizaje = 2.5f;
+
         [Tooltip("Separación lateral de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
         [Range(0.5f, 3f)]
         public float plataformaFormationSpread = 1.35f;

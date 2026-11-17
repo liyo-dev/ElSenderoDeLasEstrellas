@@ -308,7 +308,7 @@ namespace NarrativeGraphEditor
             ApplyView();
         }
 
-        /// Encuadra lo que importa: la foto del mundo si la hay; si no, el lienzo entero.
+        /// Encuadra el contenido del mapa.
         void FitView()
         {
             if (_viewport == null) return;
@@ -658,7 +658,7 @@ namespace NarrativeGraphEditor
             var ring = new VisualElement { pickingMode = PickingMode.Ignore, style = { width = 40, height = 40, backgroundColor = col, overflow = Overflow.Hidden } };
             Round(ring, 20);
             SetBorder(ring, sel ? Color.white : col, 3);
-            var face = StoryCardImages.PortraitOf(c.actorId, prefabFallback: false);
+            var face = NarrativeIconImages.ActorArt(c.actorId) ?? StoryCardImages.PortraitOf(c.actorId, prefabFallback: false);
             if (face != null) ring.Add(new Image { image = face, scaleMode = ScaleMode.ScaleAndCrop, pickingMode = PickingMode.Ignore, style = { flexGrow = 1 } });
             else ring.Add(new Label(string.IsNullOrEmpty(c.name) ? "?" : c.name.Substring(0, 1)) { pickingMode = PickingMode.Ignore, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleCenter, fontSize = 17, unityFontStyleAndWeight = FontStyle.Bold, color = Color.white } });
             el.Add(ring);
