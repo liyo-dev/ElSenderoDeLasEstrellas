@@ -30,6 +30,19 @@ public class GuionBeat : SequenceBeat
         }
     }
 
+    /// Segundo por el que empieza el guion. En el juego, 0; en el editor, lo que diga el campo de
+    /// pruebas o lo que pida la herramienta que lo lanza (el Director, al probar desde el timeline).
+    private float InicioEn(SequencePlayer player)
+    {
+        if (guion == null) return 0f;
+#if UNITY_EDITOR
+        if (player != null && player.EmpezarEnOverride.HasValue &&
+            (string.IsNullOrEmpty(player.EmpezarEnGuion) || player.EmpezarEnGuion == guion.nombre))
+            return Mathf.Clamp(player.EmpezarEnOverride.Value, 0f, guion.duracion);
+#endif
+        return Inicio;
+    }
+
     public override string Describe()
         => guion == null ? "Guion (sin asignar)" : $"Guion «{guion.nombre}» ({guion.duracion:0.0} s)";
 
@@ -39,7 +52,7 @@ public class GuionBeat : SequenceBeat
     {
         var driver = player != null ? player.ActiveCamera : null;
         if (driver == null || guion == null) return false;
-        if (!guion.PoseDeCamara(Inicio, out var pos, out var rot, out var fov)) return false;
+        if (!guion.PoseDeCamara(InicioEn(player), out var pos, out var rot, out var fov)) return false;
         driver.Cut(pos, rot, fov);
         return true;
     }
@@ -52,7 +65,7 @@ public class GuionBeat : SequenceBeat
     public override void Preparar(SequenceContext ctx)
     {
         if (guion == null || ctx == null || _preparado != null) return;
-        _preparado = new ReproductorDeGuion(guion, ctx, Inicio);
+        _preparado = new ReproductorDeGuion(guion, ctx, InicioEn(ctx != null ? ctx.Player : null));
         _preparado.Preparar();
         ctx.Player?.RegisterCleanup(_preparado.Terminar);
     }
@@ -78,7 +91,7 @@ public class GuionBeat : SequenceBeat
         _preparado = null;
         if (reproductor == null)
         {
-            reproductor = new ReproductorDeGuion(guion, ctx, Inicio);
+            reproductor = new ReproductorDeGuion(guion, ctx, InicioEn(ctx != null ? ctx.Player : null));
             ctx.Player?.RegisterCleanup(reproductor.Terminar);
         }
 

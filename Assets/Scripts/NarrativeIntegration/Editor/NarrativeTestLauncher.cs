@@ -263,10 +263,12 @@ namespace Sendero.Narrative.Editor
         /// <summary>
         /// Prepara una prueba de la escena que está abierta, sin historia: ese jugador y nada más
         /// (para maquetas y niveles que aún no están en el grafo). La escena tiene que tener un
-        /// <see cref="SpawnAnchor"/>, que es por donde entra el jugador. Al salir de Play se deja el
-        /// arranque como estaba.
+        /// <see cref="SpawnAnchor"/>, que es por donde entra el jugador, salvo que se pida lo
+        /// contrario con <paramref name="exigirAncla"/> (una escena de cinemática puede no tener
+        /// ninguno: la secuencia ya coloca a su reparto). Al salir de Play se deja el arranque
+        /// como estaba.
         /// </summary>
-        public static bool PrepararEscenaAbierta(PlayerPresetSO jugador, out string status)
+        public static bool PrepararEscenaAbierta(PlayerPresetSO jugador, out string status, bool exigirAncla = true)
         {
             status = null;
             if (EditorApplication.isPlaying)
@@ -283,7 +285,7 @@ namespace Sendero.Narrative.Editor
             }
 
             var ancla = PrimeraAnclaDeLaEscena(escena);
-            if (string.IsNullOrEmpty(ancla))
+            if (string.IsNullOrEmpty(ancla) && exigirAncla)
             {
                 status = $"La escena «{escena.name}» no tiene ningún ancla de entrada (SpawnAnchor): pon una por donde entrar.";
                 return false;
@@ -316,8 +318,23 @@ namespace Sendero.Narrative.Editor
             EditorUtility.SetDirty(profile);
             AssetDatabase.SaveAssets();
 
-            status = $"Probando «{escena.name}» con el jugador de prueba (entra por el ancla «{ancla}»).";
+            status = string.IsNullOrEmpty(ancla)
+                ? $"Probando «{escena.name}» con el jugador de prueba (sin ancla: el jugador se queda donde aparezca)."
+                : $"Probando «{escena.name}» con el jugador de prueba (entra por el ancla «{ancla}»).";
             return true;
+        }
+
+        /// <summary>
+        /// La misma prueba de escena, con el jugador por defecto del proyecto. La usan las
+        /// herramientas que enseñan una escena y no tienen una ficha de jugador a mano (el
+        /// Director de cinemáticas, al probar una secuencia en su escena). No exige ancla: una
+        /// escena de cinemática puede no tener ninguna y la secuencia ya coloca a su reparto.
+        /// </summary>
+        public static bool PrepararEscenaAbierta(out string status)
+        {
+            var profile = FindProfile();
+            return PrepararEscenaAbierta(profile != null ? profile.defaultPlayerPreset : null, out status,
+                exigirAncla: false);
         }
 
         /// El primer ancla de la escena abierta: por donde entra el jugador.

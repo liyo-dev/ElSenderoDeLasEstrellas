@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
-  m_Name: 
+  m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: InicioTemplo
+  spawnAnchorId: Bedroom
   level: 1
   maxHP: 100
   currentHP: 100
@@ -24,18 +24,19 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 0100000002000000040000001a000000i
+  unlockedSpells: 
   basicSpellIds: 
   companionBasics: []
   companionHealth: []
-  flags: []
+  flags:
+  - QUEST_ACTIVE:WILL_MISSION0
   abilities:
-    swim: 1
-    jump: 1
-    magic: 1
-    fly: 1
-    sprint: 1
-    shield: 1
+    swim: 0
+    jump: 0
+    magic: 0
+    fly: 0
+    sprint: 0
+    shield: 0
   appearance:
   - category: 2
     partName: Head01_Male
@@ -48,74 +49,21 @@ MonoBehaviour:
   - category: 0
     partName: Body23_Aventurero
   unlockedWardrobeIds:
-  - AC01_Heart
-  - AC02_Leaf
-  - AC03_BlackGlass
-  - AC03_HeavyMetalGlass
-  - AC03_NerdGlass
-  - AC03_NightVision
-  - AC04_AngelEars
-  - AC04_AnthenaEars
-  - AC04_BunnyEars
-  - AC04_ShortEars
-  - AC05_Horn01
-  - AC05_Horn02
-  - AC05_Horn03
-  - AC05_Horn04
-  - AC06_Crown01
-  - AC06_Crown02
-  - AC06_Crown03
-  - AC07_PiratePatch
-  - AC08_NinjaMask01
-  - AC08_NinjaMask02
-  - AC08_NinjaMask03
-  - AC08_NinjaMask04
-  - AC08_NinjaMask05
-  - AC08_NinjaMask06
-  - AC08_NinjaMask07
-  - AC08_NinjaMask08
-  - AC09_Ribbon
-  - AC10_Mustache01
-  - AC10_Mustache02
-  - AC10_Mustache03
-  - AC10_Mustache04
-  - AC10_Mustache05
-  - AC10_Mustache06
-  - AC11_Mustache01
-  - AC11_Mustache02
-  - AC11_Mustache03
-  - AC11_Mustache04
-  - AC11_Mustache05
-  - AC11_Mustache06
-  - Body01
-  - Body02
-  - Body03
-  - Body04
   - Body05
-  - Body06
-  - Body07
-  - Body08
-  - Body09
-  - Body10
-  - Body11
-  - Body12
-  - Body13
-  - Body14
-  - Body15
-  - Body16
-  - Body17
-  - Body18
-  - Body19
-  - Body20
-  - Body23_Aventurero
-  - Body24_AventureroChaqueta
-  - Cloak01
-  - Cloak02
-  - Cloak03
   inventoryItems: []
   defeatedBossIds: []
-  narrativeBlackboards: []
-  senalesEmitidas: []
+  narrativeBlackboards:
+  - graphLabel: Cap1
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: 05d8c990-c631-4ddd-8aff-4092490214c8
+  senalesEmitidas:
+  - PROLOGUE_START
+  - PROLOGUE_DONE
+  - will_wake_up
+  - HOOK_DISCUSION_START
+  - HOOK_DISCUSION_DONE
   npcPositions: []
   npcRelationships: []
   objetosDelMundo: []

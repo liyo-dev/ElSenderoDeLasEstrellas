@@ -5247,9 +5247,12 @@ escena, o la cámara), se escribe una nota y se **dibuja** con el lápiz. Todo s
 manda esas notas por el mismo camino que el JSON de la página anotable.
 
 **Ver en Unity:** busca la `SequenceDefinition` que monta ese guion (la que lleva un `GuionBeat` que lo
-apunta), abre **su escena**, entra en Play y `ArranqueEnPlayDelDirector` (solo Editor) emite la señal de
-entrada de la secuencia, igual que haría el grafo, cuando el mundo ya está montado. Si falta la secuencia
-o la escena, lo dice.
+apunta), abre **su escena** y la prueba **como escena, no como partida**: deja el arranque apuntando a un
+preset de prueba con un ancla de esa misma escena (y sin historia, `NarrativeQuickStart.SuppressAutoStart`),
+así que no sale el prólogo encima; al salir de Play se restaura el arranque. `ArranqueEnPlayDelDirector`
+(solo Editor) espera a `WorldBootstrap.MundoListo` y emite la señal de entrada de la secuencia, igual que
+haría el grafo; si ya hay una cinemática en marcha no lanza otra, y si falta la secuencia o la escena, lo
+dice. Empieza por el segundo del timeline (`desde`, vía `SequencePlayer.EmpezarEnOverride` en `GuionBeat`).
 
 **Las puertas:** en la fila de usuario, **Ver en Unity**, Ver el guion, Página anotable, Storyboard y
 Aplicar correcciones; hornear y el taller de rodaje quedan en el desplegable **Herramientas** (son

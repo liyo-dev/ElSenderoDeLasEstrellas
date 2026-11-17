@@ -36,6 +36,14 @@ public static class NarrativeQuickStart
     /// automáticos de la escena (NarrativeGraphStarter) no deben empezar el grafo por el inicio.
     public static bool Active { get; private set; }
 
+    /// <summary>
+    /// Una herramienta del editor va a montar la escena a mano y no quiere que la historia
+    /// arranque por su cuenta en esta sesión de Play (el Director de cinemáticas: si MainWorld
+    /// arranca Cap1, sale el prólogo encima de la secuencia que se prueba). Se olvida al salir
+    /// de Play.
+    /// </summary>
+    public static void SuppressAutoStart() => Active = true;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() => Active = false;
 

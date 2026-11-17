@@ -109,6 +109,30 @@ public class SequencePlayer : CinematicSequencerBase
     /// La secuencia que reproduce este player. De solo lectura, para las herramientas de Editor.
     public SequenceDefinition Definition => _definition;
 
+    /// La señal que escucha este reproductor: la de la definición o, si no, la del Inspector.
+    public string SenalDeEntrada => ResolvedSignalIn;
+
+#if UNITY_EDITOR
+    private float? _empezarEnOverride;
+    private string _empezarEnGuion;
+
+    /// Segundo del guion por el que empieza la secuencia, para probarla desde un punto del
+    /// timeline. Lo pone la herramienta que lanza la prueba (el Director) y no se serializa:
+    /// en la build siempre se empieza por el principio.
+    public float? EmpezarEnOverride
+    {
+        get => _empezarEnOverride;
+        set => _empezarEnOverride = value;
+    }
+
+    /// Nombre del guion al que se refiere ese segundo (una secuencia puede encadenar varios).
+    public string EmpezarEnGuion
+    {
+        get => _empezarEnGuion;
+        set => _empezarEnGuion = value;
+    }
+#endif
+
     /// Monta en tiempo de ejecución un SequencePlayer para 'definicion' con los mismos ajustes que
     /// 'plantilla' (cámara, perfil de audio, transiciones, escenario…), sin tener que añadirlo a
     /// mano a la escena (INC-445: MainWorld está en binario y cada secuencia nueva obligaba a

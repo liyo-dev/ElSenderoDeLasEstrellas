@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Liyodev.Cinematics;
+using Sendero.Narrative.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -369,10 +370,22 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return false;
         EditorSceneManager.OpenScene(escena, OpenSceneMode.Single);
 
+        // La escena se prueba como escena, no como partida: el jugador entra por una de sus anclas
+        // y la historia no arranca por su cuenta (la apaga ArranqueEnPlayDelDirector con
+        // NarrativeQuickStart.SuppressAutoStart). Sin esto, Play en MainWorld carga el guardado
+        // (la habitación de Will) y Cap1 levanta el prólogo justo encima de la secuencia que se
+        // está probando.
+        if (!NarrativeTestLauncher.PrepararEscenaAbierta(out string motivo))
+        {
+            Avisar("Director", motivo ?? "No pude preparar la prueba de la escena.");
+            return false;
+        }
+
         // El arranque lo hace un runner de Play (ArranqueEnPlayDelDirector): emite la señal de
         // entrada de la secuencia, igual que haría el grafo.
         SessionState.SetString("Director.Play.Senal", definicion.signalIn);
         SessionState.SetString("Director.Play.Nombre", guion.nombre);
+        SessionState.SetFloat("Director.Play.Desde", Mathf.Max(0f, desde));
         EditorApplication.EnterPlaymode();
         return true;
     }
