@@ -10,15 +10,14 @@ public static class VfxDeClima
     private static Material _material;
     private static Material _materialLluvia;
     private static Material _materialSalpicadura;
-    private static Material _materialViento;
+    private static Material _materialRizo;
     private static Texture2D _punto;
     private static Texture2D _trazo;
     private static Texture2D _aro;
-    private static Texture2D _onda;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { _material = null; _materialLluvia = null; _materialSalpicadura = null; _materialViento = null; _punto = null; _trazo = null; _aro = null; _onda = null; }
+    static void ResetStatics() { _material = null; _materialLluvia = null; _materialSalpicadura = null; _materialRizo = null; _punto = null; _trazo = null; _aro = null; }
 #endif
 
     /// Lluvia de dibujo: trazos que caen en una caja alrededor del ancla y aros de salpicadura
@@ -123,36 +122,19 @@ public static class VfxDeClima
         return go;
     }
 
-    /// Rachas (trazos estirados que cruzan rápido) y hojas revoloteando, en la dirección del viento.
+    /// Ricitos de viento (líneas con lazadas que se dibujan) y hojas revoloteando.
     public static GameObject CrearViento(Transform padre, Vector3 direccion)
     {
         direccion.y = 0f;
         direccion = direccion.sqrMagnitude > 0.0001f ? direccion.normalized : Vector3.forward;
         var go = CrearRaiz("[Viento]", padre);
 
-        // Rachas: líneas onduladas, largas y tenues. Distintas de la lluvia a propósito: la lluvia
-        // cae en trazos rectos y verticales; el viento cruza en ondas horizontales.
-        var rachas = CrearSistema(go, "Rachas");
-        var m1 = rachas.main;
-        m1.startLifetime = new ParticleSystem.MinMaxCurve(1.5f, 2.6f);
-        m1.startSpeed = 0f;
-        m1.startSize = new ParticleSystem.MinMaxCurve(0.08f, 0.13f);
-        m1.startColor = new Color(1f, 0.98f, 0.9f, 0.6f);
-        m1.maxParticles = 320;
-        var s1 = rachas.shape;
-        s1.shapeType = ParticleSystemShapeType.Box;
-        s1.scale = new Vector3(40f, 6f, 40f);
-        s1.position = new Vector3(0f, 2.5f, 0f);
-        var e1 = rachas.emission;
-        e1.rateOverTime = 60f;
-        Velocidad(rachas, direccion * 9f, 1.0f);
-        var r1 = rachas.GetComponent<ParticleSystemRenderer>();
-        r1.renderMode = ParticleSystemRenderMode.Stretch;
-        r1.velocityScale = 0.10f;
-        r1.lengthScale = 6f;
-        r1.sharedMaterial = MaterialDelViento();
-        AparecerYDesvanecer(rachas, 0.25f, 0.6f);
-        rachas.Play();
+        // Ricitos: cada uno es una cicloide que se dibuja y se desvanece, como el trazo de una
+        // racha de aire. Nada de rayas rectas: eso se confundía con la lluvia.
+        var rizos = new GameObject("Rizos");
+        rizos.transform.SetParent(go.transform, false);
+        var viento = rizos.AddComponent<VientoDeRizos>();
+        viento.Configurar(direccion);
 
         // Hojas: motas pequeñas de tonos otoñales y verdes, girando y con turbulencia.
         var hojas = CrearSistema(go, "Hojas");
@@ -191,7 +173,7 @@ public static class VfxDeClima
         if (_material != null) _material.color = luz;
         if (_materialLluvia != null) _materialLluvia.color = Color.Lerp(luz, Color.white, 0.3f);
         if (_materialSalpicadura != null) _materialSalpicadura.color = Color.Lerp(luz, Color.white, 0.3f);
-        if (_materialViento != null) _materialViento.color = Color.Lerp(luz, Color.white, 0.45f);
+        if (_materialRizo != null) _materialRizo.color = Color.Lerp(luz, Color.white, 0.45f);
     }
 
     private static GameObject CrearRaiz(string nombre, Transform padre)
@@ -273,12 +255,11 @@ public static class VfxDeClima
         return _materialSalpicadura;
     }
 
-    private static Material MaterialDelViento()
+    public static Material MaterialDeRizo()
     {
-        if (_materialViento != null) return _materialViento;
-        _materialViento = new Material(Shader.Find("Sprites/Default")) { name = "[VfxDeClima] Viento" };
-        _materialViento.mainTexture = Onda();
-        return _materialViento;
+        if (_materialRizo != null) return _materialRizo;
+        _materialRizo = new Material(Shader.Find("Sprites/Default")) { name = "[VfxDeClima] Rizo" };
+        return _materialRizo;
     }
 
     private static Texture2D Punto()
@@ -357,35 +338,5 @@ public static class VfxDeClima
         _aro.SetPixels32(px);
         _aro.Apply(false, true);
         return _aro;
-    }
-
-    /// Trazo ondulado del viento: una línea que serpentea a lo largo de la textura. Al estirarla
-    /// con la velocidad, sale una racha curva; la lluvia, en cambio, es un trazo recto y vertical.
-    private static Texture2D Onda()
-    {
-        if (_onda != null) return _onda;
-        const int ancho = 16, alto = 64;
-        _onda = new Texture2D(ancho, alto, TextureFormat.RGBA32, false)
-        {
-            name = "[VfxDeClima] Onda",
-            wrapMode = TextureWrapMode.Clamp,
-            filterMode = FilterMode.Bilinear,
-        };
-        var px = new Color32[ancho * alto];
-        for (int y = 0; y < alto; y++)
-        {
-            float t = y / (alto - 1f);
-            float centro = 0.5f + Mathf.Sin(t * Mathf.PI * 3f) * 0.30f;
-            for (int x = 0; x < ancho; x++)
-            {
-                float d = Mathf.Abs((x + 0.5f) / ancho - centro);
-                float a = Mathf.Clamp01((0.11f - d) * ancho * 1.3f);
-                a *= Mathf.Clamp01(t * 10f) * Mathf.Clamp01((1f - t) * 10f);
-                px[y * ancho + x] = new Color32(255, 255, 255, (byte)(a * 255f));
-            }
-        }
-        _onda.SetPixels32(px);
-        _onda.Apply(false, true);
-        return _onda;
     }
 }

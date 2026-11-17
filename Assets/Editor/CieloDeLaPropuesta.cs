@@ -68,6 +68,51 @@ public static class CieloDeLaPropuesta
         DayNightCycle.Instance?.StopRain();
     }
 
+    [MenuItem("El Sendero/Cielo/Taller/Probar viento (Play)", priority = 33)]
+    static void ProbarViento()
+    {
+        if (!Application.isPlaying) return;
+        var jugador = PlayerService.Player;
+        Vector3 direccion = DayNightCycle.Instance != null ? DayNightCycle.Instance.DireccionDelViento : Vector3.right;
+        VfxDeClima.CrearViento(jugador != null ? jugador.transform : null, direccion);
+    }
+
+    [MenuItem("El Sendero/Cielo/Volver al cielo de antes", priority = 1)]
+    static void VolverAlCieloDeAntes()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            EditorUtility.DisplayDialog("Cielo", "Sal de Play antes de cambiar el cielo.", "Vale");
+            return;
+        }
+
+        // Solo los valores de nubes; el suelo del cielo (mar al volar) se queda como está.
+        Restaurar(CarpetaCielo + "Cielo_Dia.mat", 0.30f, new Color(1f, 1f, 1f), new Color(0.68f, 0.74f, 0.86f), 1.8f, 0.025f);
+        Restaurar(CarpetaCielo + "Cielo_Amanecer.mat", 0.25f, new Color(1f, 0.86f, 0.78f), new Color(0.55f, 0.50f, 0.62f), 1.8f, 0.025f);
+        Restaurar(CarpetaCielo + "Cielo_Atardecer.mat", 0.30f, new Color(1f, 0.70f, 0.50f), new Color(0.45f, 0.32f, 0.45f), 1.8f, 0.025f);
+        Restaurar(CarpetaCielo + "Cielo_Noche.mat", 0.15f, new Color(0.22f, 0.25f, 0.36f), new Color(0.06f, 0.07f, 0.12f), 1.8f, 0.025f);
+        Restaurar(CarpetaCielo + "Cielo_Chuchelandia.mat", 0.38f, new Color(1.05f, 0.98f, 1f), new Color(0.96f, 0.74f, 0.88f), 1.4f, 0.020f);
+        Restaurar(CarpetaCielo + "Cielo_Prologo.mat", 0.30f, new Color(1f, 1f, 1f), new Color(0.68f, 0.74f, 0.86f), 1.8f, 0.025f);
+        Restaurar(CarpetaMenu + "CieloDiaMenu.mat", 0.30f, new Color(1f, 1f, 1f), new Color(0.68f, 0.74f, 0.86f), 1.8f, 0.025f);
+        Restaurar(CarpetaMenu + "CieloNocheMenu.mat", 0.15f, new Color(0.22f, 0.25f, 0.36f), new Color(0.06f, 0.07f, 0.12f), 1.8f, 0.025f);
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("[Cielo] Nubes devueltas a los valores de antes.");
+    }
+
+    static void Restaurar(string ruta, float cobertura, Color luz, Color sombra, float escala, float velocidad)
+    {
+        var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+        if (mat == null) return;
+        mat.SetFloat("_NubosidadBase", cobertura);
+        mat.SetColor("_ColorDeNubes", luz);
+        mat.SetColor("_ColorDeNubesEnSombra", sombra);
+        mat.SetFloat("_EscalaDeNubes", escala);
+        mat.SetFloat("_VelocidadDeNubes", velocidad);
+        EditorUtility.SetDirty(mat);
+    }
+
     static int AplicarMateriales()
     {
         int n = 0;
@@ -172,3 +217,4 @@ public static class CieloDeLaPropuesta
         return 1;
     }
 }
+

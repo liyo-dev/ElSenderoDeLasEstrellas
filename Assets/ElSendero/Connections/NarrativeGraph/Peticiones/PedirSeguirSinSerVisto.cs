@@ -202,6 +202,9 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
     private const float SegundosMinimosDeSospecha = 1.2f;
     private const float SegundosAlDescubrirle = 0.8f;
     private const float Fundido = 0.5f;
+    // Si el que va delante no se mueve en este tiempo y no está en una parada, se le vuelve a
+    // mandar andar. Es la red que evita que el tramo se quede parado con los NPCs en la marca.
+    private const float SegundosSinAvanzar = 3f;
     // Un acompañante va algo más rápido que el NPC para recuperar su sitio tras una ronda.
     private const float VentajaDelAcompanante = 1.2f;
     // Por debajo de esto, en metros, el acompañante ya está en su sitio y se queda quieto.
@@ -218,6 +221,7 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         public ControlDelNodo Control;
         public float VelocidadOriginal;
         public bool UpdatePositionOriginal;
+        public UnityEngine.AI.ObstacleAvoidanceType EvitacionOriginal;
         public bool RotacionManualPrevia;
         public bool Preparado;
         public Acompanante Datos;
@@ -259,9 +263,28 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
 
     private IEnumerator Co_Seguir(NPCBehaviourManagerV2 npc, Vector3 destino, Transform jugador)
     {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[Sigilo:{StepGuid}] arranca: '{R.npcId}' en {npc.transform.position:F1}, destino '{R.anchorId}' {destino:F1}, jugador {jugador.position:F1}.");
+#endif
         var otros = BuscarAcompanantes();
+
+        // El grupo se agacha ya al empezar: así el jugador ve que el tramo ha tomado el control
+        // aunque la colocación en la salida tarde un fundido. Se suelta en Soltar().
+        SigiloDelGrupo.Empezar(this, Mathf.Min(R.velocidadDelJugador, R.velocidad * 0.85f));
+        _enSigilo = true;
+
+        // La presencia de los contrabandistas la decide la historia: puede activarlos un frame
+        // después de entrar al paso. Sin esperar a que estén activos, su agente no existe y el
+        // seguimiento se quedaría quieto con ellos en la marca (o saldría por «Llega»).
+        float finDeEspera = Time.time + 2f;
+        while (npc != null && !npc.gameObject.activeInHierarchy && Time.time < finDeEspera)
+            yield return null;
+
         yield return Co_PonerEnLaSalida(npc, otros, jugador);
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[Sigilo:{StepGuid}] en la salida; tomo el NPC (agente={(npc.Agent != null ? (npc.Agent.enabled ? (npc.Agent.isOnNavMesh ? "en malla" : "fuera de malla") : "apagado") : "sin agente")}).");
+#endif
         _lider = Tomar(npc, null);
         _acompanantes = new List<Movido>(otros.Count);
         foreach (var (datos, m) in otros) _acompanantes.Add(Tomar(m, datos));
@@ -273,10 +296,11 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
             _conMusica = true;
         }
 
-        SigiloDelGrupo.Empezar(this, Mathf.Min(R.velocidadDelJugador, R.velocidad * 0.85f));
-        _enSigilo = true;
         yield return null;
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[Sigilo:{StepGuid}] sigilo activo (agachado). En malla: {EnLaMalla(_lider.Agente)}.");
+#endif
         if (!EnLaMalla(_lider.Agente))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -293,6 +317,9 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         int tramo = 0;
         bool[] paradaHecha = new bool[ruta.Count];
         Andar(_lider, ruta[tramo]);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[Sigilo:{StepGuid}] ruta de {ruta.Count} puntos; primer destino {ruta[0]:F1}.");
+#endif
 
         var anim = npc.SimpleAnimator;
         var fase = Fase.Andando;
@@ -306,6 +333,9 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         bool ve = false, oye = false;
         Movido quienNota = _lider;
         Vector3 haciaAtras = -npc.transform.forward;
+        Vector3 ultimaPosicion = npc.transform.position;
+        float siguienteControlDeAvance = Time.time + SegundosSinAvanzar;
+        int reintentosDeAndar = 0;
 
         while (Time.time < limite)
         {
@@ -371,6 +401,30 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
                         Parar(_lider);
                         fase = Fase.Esperando;
                     }
+                    else if (Time.time >= siguienteControlDeAvance)
+                    {
+                        siguienteControlDeAvance = Time.time + SegundosSinAvanzar;
+                        if (Plano(npc.transform.position, ultimaPosicion) < 0.05f)
+                        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                            Debug.LogWarning($"[Sigilo:{StepGuid}] '{R.npcId}' lleva {SegundosSinAvanzar:0} s parado sin estar en una parada; se le vuelve a mandar andar (intento {reintentosDeAndar + 1}).");
+#endif
+                            if (reintentosDeAndar++ >= 2)
+                            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                                Debug.LogWarning($"[Sigilo:{StepGuid}] '{R.npcId}' no consigue andar hacia {ruta[tramo]:F1}. Sigue por «Llega» para no bloquear la historia.");
+#endif
+                                Terminar(PuertoLlega);
+                                yield break;
+                            }
+                            Andar(_lider, ruta[tramo]);
+                        }
+                        else
+                        {
+                            reintentosDeAndar = 0;
+                        }
+                        ultimaPosicion = npc.transform.position;
+                    }
                     break;
                 }
                 case Fase.Esperando:
@@ -388,6 +442,15 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
                     {
                         Andar(_lider, ruta[tramo]);
                         fase = Fase.Andando;
+                        ultimaPosicion = npc.transform.position;
+                        siguienteControlDeAvance = Time.time + SegundosSinAvanzar;
+                        reintentosDeAndar = 0;
+                    }
+                    else
+                    {
+                        // Se ha parado a esperar: que se le note. Se gira hacia el jugador, sin
+                        // llamarle (el diseño no quiere voces), para que no parezca congelado.
+                        _lider.Npc.SimpleAnimator?.FaceTarget(jugador.position);
                     }
                     break;
                 }
@@ -406,6 +469,9 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
                         tramo++;
                         Andar(_lider, ruta[tramo]);
                         fase = Fase.Andando;
+                        ultimaPosicion = npc.transform.position;
+                        siguienteControlDeAvance = Time.time + SegundosSinAvanzar;
+                        reintentosDeAndar = 0;
                     }
                     break;
                 }
@@ -425,7 +491,14 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
                         quienNota.Npc.SimpleAnimator?.PlaySearching();
                         bool enLaMarca = tramo == ruta.Count - 1 && Plano(npc.transform.position, ruta[tramo]) < RadioDeMarca;
                         if (enLaMarca) fase = Fase.Esperando;
-                        else { Andar(_lider, ruta[tramo]); fase = Fase.Andando; }
+                        else
+                        {
+                            Andar(_lider, ruta[tramo]);
+                            fase = Fase.Andando;
+                            ultimaPosicion = npc.transform.position;
+                            siguienteControlDeAvance = Time.time + SegundosSinAvanzar;
+                            reintentosDeAndar = 0;
+                        }
                     }
                     break;
                 }
@@ -537,14 +610,13 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
     {
         var m = new Movido { Npc = npc, Agente = npc.Agent, Datos = datos };
         // El NPC puede llegar aquí con el agente apagado o fuera de la malla (una cinemática lo deja
-        // donde acaba su camino, o apareció lejos de la malla): se le busca suelo caminable cerca
-        // antes de empezar, en vez de dar el tramo por hecho sin jugarlo (INC-1037).
+        // donde acaba su camino, o apareció lejos de la malla). Si está encendido pero fuera de la
+        // malla, Warp no basta: hay que apagarlo, mover el transform y volver a encenderlo para que
+        // Unity lo enganche sobre el NavMesh (INC-1037).
         if (m.Agente != null && !EnLaMalla(m.Agente))
         {
-            if (!m.Agente.enabled)
-                Game.NPC.Common.NavMeshAgentUtility.SafeEnable(m.Agente, npc.transform, npc.transform.position, RadioParaBuscarMalla);
-            else if (NavMesh.SamplePosition(npc.transform.position, out var suelo, RadioParaBuscarMalla, NavMesh.AllAreas))
-                m.Agente.Warp(suelo.position);
+            if (m.Agente.enabled) m.Agente.enabled = false;
+            Game.NPC.Common.NavMeshAgentUtility.SafeEnable(m.Agente, npc.transform, npc.transform.position, RadioParaBuscarMalla);
         }
 
         var anim = npc.SimpleAnimator;
@@ -565,6 +637,11 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         if (!EnLaMalla(m.Agente)) return;
         m.VelocidadOriginal = m.Agente.speed;
         m.UpdatePositionOriginal = m.Agente.updatePosition;
+        // El que va delante y sus acompañantes no deben esquivarse entre sí: en un puente o un
+        // camino estrecho, el vigía se planta en la marca y el de atrás se queda bloqueado sin
+        // llegar nunca (los dos acaban parados uno junto al otro). Ver INC-1037.
+        m.EvitacionOriginal = m.Agente.obstacleAvoidanceType;
+        m.Agente.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.NoObstacleAvoidance;
         m.Agente.nextPosition = m.Npc.transform.position;
         m.Agente.updatePosition = true;
         m.Agente.speed = rapidez;
@@ -589,20 +666,37 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         if (mover.Count == 0 && !moverJugador) yield break;
 
         bool tapada = FeedbackService.IsScreenFaded;
-        if (!tapada) yield return FeedbackService.ScreenFadeAsync(Color.black, Fundido, fadeIn: true);
+        if (!tapada)
+        {
+            Fundir(fadeIn: true);
+            yield return new WaitForSecondsRealtime(Fundido);
+        }
 
         foreach (var (m, t) in mover)
         {
+            // La marca puede estar bajo un puente o sobre una rampa: se coloca en el NavMesh que
+            // hay cerca, no en la altura del terreno que hubiera debajo (INC-1037).
+            Vector3 destino = SobreElNavMesh(t.position, RadioParaBuscarMalla);
             var agente = m.Agent;
-            if (agente != null && agente.enabled && agente.isOnNavMesh) agente.Warp(t.position);
-            m.transform.SetPositionAndRotation(t.position, t.rotation);
+            if (agente != null && agente.enabled && agente.isOnNavMesh) agente.Warp(destino);
+            m.transform.SetPositionAndRotation(destino, t.rotation);
             m.SimpleAnimator?.SyncTargetRotation();
         }
         if (moverJugador)
             TeleportService.TeleportToAnchor(jugador.gameObject, R.salidaDelJugador, useTransition: false);
 
         yield return null;
-        yield return FeedbackService.ScreenFadeAsync(Color.black, Fundido, fadeIn: false);
+        Fundir(fadeIn: false);
+        yield return new WaitForSecondsRealtime(Fundido);
+    }
+
+    // Lanza el fundido sin esperarlo: si el fundido se quedara colgado (otra cinemática, un menú),
+    // el seguimiento no puede quedarse parado con los NPCs en la marca.
+    private void Fundir(bool fadeIn)
+    {
+        if (Runner == null) return;
+        var rutina = FeedbackService.ScreenFadeAsync(Color.black, Fundido, fadeIn);
+        if (rutina != null) Runner.StartCoroutine(rutina);
     }
 
     private static void Andar(Movido m, Vector3 hacia)
@@ -610,7 +704,10 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         if (m == null || !EnLaMalla(m.Agente)) return;
         bool estabaQuieto = m.Agente.isStopped || !m.Agente.hasPath;
         m.Agente.isStopped = false;
-        m.Agente.SetDestination(hacia);
+        bool ok = m.Agente.SetDestination(hacia);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (!ok) Debug.LogWarning($"[Sigilo] SetDestination falló hacia {hacia:F1}; el NPC no puede llegar.");
+#endif
         if (estabaQuieto) m.Npc.SimpleAnimator?.TransitionToLocomotion();
     }
 
@@ -663,6 +760,7 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         {
             m.Agente.speed = m.VelocidadOriginal;
             m.Agente.updatePosition = m.UpdatePositionOriginal;
+            m.Agente.obstacleAvoidanceType = m.EvitacionOriginal;
         }
         m.Agente = null;
         if (m.Npc != null)
@@ -705,8 +803,8 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         return ruta;
     }
 
-    private static Vector3 SobreElNavMesh(Vector3 p)
-        => NavMesh.SamplePosition(p, out var hit, 4f, NavMesh.AllAreas) ? hit.position : p;
+    private static Vector3 SobreElNavMesh(Vector3 p, float radio = 4f)
+        => NavMesh.SamplePosition(p, out var hit, radio, NavMesh.AllAreas) ? hit.position : p;
 
     private static float Plano(Vector3 a, Vector3 b)
     {

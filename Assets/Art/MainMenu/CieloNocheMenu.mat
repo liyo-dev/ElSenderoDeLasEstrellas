@@ -40,24 +40,24 @@ Material:
     - _AvanceDelFrente: 0
     - _CaidaDelHorizonte: 0.65
     - _ContrasteDeNubes: 0.72
-    - _EscalaDeNubes: 2.6
+    - _EscalaDeNubes: 1.8
     - _FuerzaDelResplandor: 0.06
     - _GrosorDeLaBruma: 0.08
     - _NubesDeDibujo: 1
     - _Nubosidad: 0
-    - _NubosidadBase: 0.32
+    - _NubosidadBase: 0.15
     - _SuavidadDeNubes: 0.18
     - _TamanoDelResplandor: 0.45
     - _TintaDeNubes: 0.45
-    - _VelocidadDeNubes: 0.018
+    - _VelocidadDeNubes: 0.025
     m_Colors:
     - _CeldasDeNubes: {r: 3, g: 2, b: 0, a: 0}
     - _ColorCenit: {r: 0.02, g: 0.03, b: 0.09, a: 1}
     - _ColorDeBrumaDelHorizonte: {r: 0.08, g: 0.1, b: 0.22, a: 1}
-    - _ColorDeNubes: {r: 0.3, g: 0.34, b: 0.5, a: 1}
+    - _ColorDeNubes: {r: 0.22, g: 0.25, b: 0.36, a: 1}
     - _ColorDeNubesDeClima: {r: 0.52, g: 0.58, b: 0.66, a: 1}
     - _ColorDeNubesDeClimaEnSombra: {r: 0.34, g: 0.38, b: 0.43, a: 1}
-    - _ColorDeNubesEnSombra: {r: 0.12, g: 0.14, b: 0.26, a: 1}
+    - _ColorDeNubesEnSombra: {r: 0.06, g: 0.07, b: 0.12, a: 1}
     - _ColorDelResplandor: {r: 0.5, g: 0.6, b: 0.9, a: 1}
     - _ColorHorizonte: {r: 0.08, g: 0.1, b: 0.22, a: 1}
     - _ColorSuelo: {r: 0.1, g: 0.12, b: 0.22, a: 1}

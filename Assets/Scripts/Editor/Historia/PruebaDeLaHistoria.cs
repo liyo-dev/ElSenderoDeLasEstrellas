@@ -354,7 +354,12 @@ public static class PruebaDeLaHistoria
                     var agente = npc.GetComponent<UnityEngine.AI.NavMeshAgent>();
                     string grupo = miembro == null ? "" : miembro.IsInParty ? " · en el grupo" : " · fuera del grupo";
                     string nav = agente == null ? "" : !agente.enabled ? " · agente apagado" : agente.isOnNavMesh ? "" : " · fuera del NavMesh";
-                    sb.AppendLine($"- {id}: {npc.transform.position.ToString("F1")}{(npc.gameObject.activeInHierarchy ? "" : " (inactivo)")}{grupo}{nav}");
+                    // Estado del agente y de la cinemática: para ver por qué un NPC se queda parado.
+                    string andar = agente == null || !agente.enabled
+                        ? ""
+                        : $" · parado={agente.isStopped} ruta={agente.hasPath} vel={agente.velocity.magnitude:F2} queda={agente.remainingDistance:F1} update={agente.updatePosition}";
+                    string cine = npc.IsInCinematic ? " · cinemática" : "";
+                    sb.AppendLine($"- {id}: {npc.transform.position.ToString("F1")}{(npc.gameObject.activeInHierarchy ? "" : " (inactivo)")}{grupo}{nav}{andar}{cine}");
                 }
             }
         }
