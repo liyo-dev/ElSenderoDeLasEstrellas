@@ -174,9 +174,10 @@ namespace Game.NPC.Modules
         [Range(1.2f, 5f)]
         public float distanciaBaseEnRastro = 2.2f;
 
-        [Tooltip("Distancia adicional en el rastro por cada puesto de compañero (metros).")]
-        [Range(0.8f, 4f)]
-        public float separacionPorPuestoEnRastro = 1.6f;
+        [Tooltip("Distancia adicional en el rastro por cada puesto de compañero (metros). " +
+                 "A 0 van en caja, uno al lado del otro; súbelo si quieres que vayan en fila.")]
+        [Range(0f, 4f)]
+        public float separacionPorPuestoEnRastro = 0f;
 
         [Tooltip("Desplazamiento lateral respecto al centro del rastro para que dos compañeros no se pisen (metros).")]
         [Range(0f, 1.5f)]
@@ -193,7 +194,7 @@ namespace Game.NPC.Modules
 
         [Tooltip("Separación lateral de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
         [Range(0.5f, 3f)]
-        public float plataformaFormationSpread = 1.35f;
+        public float plataformaFormationSpread = 0.8f;
 
         [Tooltip("Distancia hacia atrás de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
         [Range(1.2f, 4f)]

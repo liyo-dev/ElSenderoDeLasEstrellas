@@ -80,7 +80,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a468c3fc-72f5-4541-b174-81017ba71bc2
-        position: {x: 1960, y: 286}
+        position: {x: 1960, y: 398}
         outputs:
         - 32febd1e-bce7-478d-aab9-792eddddd73d
         eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
@@ -114,7 +114,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 95228e84-0a1a-4e3b-9ef9-e36ad502e222
-        position: {x: 0, y: 286}
+        position: {x: 0, y: 398}
         outputs:
         - 80e2bd55-eb2e-4c36-b5cf-a789104718aa
         targetTag: Player
@@ -137,7 +137,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        position: {x: 840, y: 1012}
+        position: {x: 840, y: 1460}
         outputs:
         - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
         questId: ELDRAN_MISSION2
@@ -156,7 +156,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        position: {x: 1120, y: 1012}
+        position: {x: 1120, y: 1460}
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
@@ -175,7 +175,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        position: {x: 1960, y: 1012}
+        position: {x: 1960, y: 1460}
         outputs:
         - e10bdcbf-059f-40f6-bfcf-7799abe09913
         npcId: NPC_Eldran
@@ -194,7 +194,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e10bdcbf-059f-40f6-bfcf-7799abe09913
-        position: {x: 0, y: 1254}
+        position: {x: 0, y: 1814}
         outputs:
         - bfb7330e-0489-4388-bcab-d6305b68a97a
         dialogue: {fileID: 11400000, guid: ccf34efc36cfcf24caa59ea5fe1817a5, type: 2}
@@ -212,7 +212,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bfb7330e-0489-4388-bcab-d6305b68a97a
-        position: {x: 280, y: 1254}
+        position: {x: 280, y: 1814}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
         standingActorId: 
@@ -234,7 +234,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 041162d9-cc08-4d17-ae7c-6067257e952b
-        position: {x: 0, y: 770}
+        position: {x: 0, y: 1106}
         outputs:
         - a856e804-7ab5-4aaf-a241-774bce56c27f
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
@@ -253,7 +253,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d1785c09-9503-4d7b-a24e-682424ca83a7
-        position: {x: 1120, y: 1254}
+        position: {x: 1120, y: 1814}
         outputs:
         - 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
         questId: ELDRAN_MISSION3
@@ -272,7 +272,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: dedc7fec-da78-4587-82a4-341ca93c8eaa
-        position: {x: 1680, y: 1254}
+        position: {x: 1680, y: 1814}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
         standingActorId: 
@@ -294,7 +294,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 1960, y: 1254}
+        position: {x: 1960, y: 1814}
         outputs:
         - pieza-npc_oliver-usual-desde-el-cap-2-charla-con-victoria-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
         eventKey: CH_Cap1_BACK_1
@@ -345,7 +345,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 80e2bd55-eb2e-4c36-b5cf-a789104718aa
-        position: {x: 280, y: 286}
+        position: {x: 280, y: 398}
         outputs:
         - bab7b6d6-bc6c-4021-890e-2617155a6862
         eventKey: HOOK_DISCUSION_START
@@ -361,7 +361,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bab7b6d6-bc6c-4021-890e-2617155a6862
-        position: {x: 560, y: 286}
+        position: {x: 560, y: 398}
         outputs:
         - c748956c-7df0-4031-8789-65aab639f278
         eventKey: HOOK_DISCUSION_DONE
@@ -380,7 +380,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c748956c-7df0-4031-8789-65aab639f278
-        position: {x: 840, y: 286}
+        position: {x: 840, y: 398}
         outputs:
         - 05d8c990-c631-4ddd-8aff-4092490214c8
         questId: WILL_MISSION0
@@ -399,7 +399,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 81686a85-c370-4681-974b-777faf8b089b
-        position: {x: 1400, y: 286}
+        position: {x: 1400, y: 398}
         outputs:
         - f1f3bb59-d765-41ae-a849-2b3035f2b905
         eventKey: WILL_EXITS_HOUSE
@@ -418,7 +418,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f1f3bb59-d765-41ae-a849-2b3035f2b905
-        position: {x: 1680, y: 286}
+        position: {x: 1680, y: 398}
         outputs:
         - a468c3fc-72f5-4541-b174-81017ba71bc2
         standingActorId: 
@@ -440,7 +440,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d8370db5-0930-49a6-b96c-70e9f05977bd
-        position: {x: 1680, y: 528}
+        position: {x: 1680, y: 752}
         outputs:
         - 18a57f1d-20e3-4539-b920-ac49b3750703
         eventKey: PERAS_START
@@ -456,7 +456,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18a57f1d-20e3-4539-b920-ac49b3750703
-        position: {x: 1960, y: 528}
+        position: {x: 1960, y: 752}
         outputs:
         - 041162d9-cc08-4d17-ae7c-6067257e952b
         eventKey: PERAS_DONE
@@ -475,7 +475,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a856e804-7ab5-4aaf-a241-774bce56c27f
-        position: {x: 280, y: 770}
+        position: {x: 280, y: 1106}
         outputs:
         - 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
         questId: WILL_MISSION1
@@ -494,7 +494,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
-        position: {x: 560, y: 770}
+        position: {x: 560, y: 1106}
         outputs:
         - f393b1c0-87f6-4793-a705-a151a01af989
         eventKey: ESTRELLA_COMPRADA
@@ -513,7 +513,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: aaccfcd4-a7bc-4732-b4b6-86e6c183db03
-        position: {x: 280, y: 528}
+        position: {x: 280, y: 752}
         outputs:
         - 486dfd45-dc63-438c-ae05-f2f8a045b36a
         questId: ELDRAN_MISSION1
@@ -532,7 +532,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 486dfd45-dc63-438c-ae05-f2f8a045b36a
-        position: {x: 560, y: 528}
+        position: {x: 560, y: 752}
         outputs:
         - 36c16794-69b8-4e90-bb85-dc80d58b76ae
         eventKey: OLIVER_JOIN_PARTY
@@ -548,7 +548,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: aede8111-3544-4dfc-a11e-bd1189819797
-        position: {x: 1120, y: 528}
+        position: {x: 1120, y: 752}
         outputs:
         - ce67dfa7-968b-420d-87e6-f46ad317d154
         eventKey: WILL_REACHED_ELDRAN
@@ -567,7 +567,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: ce67dfa7-968b-420d-87e6-f46ad317d154
-        position: {x: 1400, y: 528}
+        position: {x: 1400, y: 752}
         outputs:
         - d8370db5-0930-49a6-b96c-70e9f05977bd
         standingActorId: 
@@ -589,7 +589,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f393b1c0-87f6-4793-a705-a151a01af989
-        position: {x: 840, y: 770}
+        position: {x: 840, y: 1106}
         outputs:
         - 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
         standingActorId: 
@@ -611,7 +611,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_oliver-usual-desde-el-cap-2-charla-con-victoria-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 0, y: 1496}
+        position: {x: 0, y: 2168}
         outputs:
         - pieza-npc_victoria-usual-desde-el-cap-2-charla-con-oliver-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
         actorId: NPC_Oliver
@@ -634,7 +634,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_victoria-usual-desde-el-cap-2-charla-con-oliver-en-su-puesto-036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 280, y: 1496}
+        position: {x: 280, y: 2168}
         outputs: []
         actorId: NPC_Victoria
         layer: 1
@@ -675,7 +675,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 05d8c990-c631-4ddd-8aff-4092490214c8
-        position: {x: 1120, y: 286}
+        position: {x: 1120, y: 398}
         outputs:
         - 81686a85-c370-4681-974b-777faf8b089b
         request:
@@ -694,7 +694,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 560, y: 1254}
+        position: {x: 560, y: 1814}
         outputs:
         - e7e8e2f2-6e54-4490-97b1-fd48323945a4
         - 
@@ -714,7 +714,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 840, y: 1254}
+        position: {x: 840, y: 1814}
         outputs:
         - d1785c09-9503-4d7b-a24e-682424ca83a7
         request:
@@ -733,7 +733,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 1400, y: 1254}
+        position: {x: 1400, y: 1814}
         outputs:
         - dedc7fec-da78-4587-82a4-341ca93c8eaa
         request:
@@ -752,7 +752,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 1400, y: 1012}
+        position: {x: 1400, y: 1460}
         outputs:
         - da4a9b32-670c-4724-ab44-6743e2c728d1
         request:
@@ -771,7 +771,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 1680, y: 1012}
+        position: {x: 1680, y: 1460}
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         request:
@@ -790,7 +790,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 32febd1e-bce7-478d-aab9-792eddddd73d
-        position: {x: 0, y: 528}
+        position: {x: 0, y: 752}
         outputs:
         - aaccfcd4-a7bc-4732-b4b6-86e6c183db03
         - 
@@ -810,7 +810,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 36c16794-69b8-4e90-bb85-dc80d58b76ae
-        position: {x: 840, y: 528}
+        position: {x: 840, y: 752}
         outputs:
         - aede8111-3544-4dfc-a11e-bd1189819797
         request:
@@ -829,7 +829,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
-        position: {x: 1120, y: 770}
+        position: {x: 1120, y: 1106}
         outputs:
         - 004d01ec-565b-4943-8661-88335a7b0057
         - 
@@ -849,7 +849,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
-        position: {x: 1680, y: 770}
+        position: {x: 1680, y: 1106}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
         request:
@@ -868,7 +868,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
-        position: {x: 0, y: 1012}
+        position: {x: 0, y: 1460}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
         request:
@@ -1057,7 +1057,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
-        position: {x: 1960, y: 770}
+        position: {x: 1960, y: 1106}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
         dialogue: {fileID: 11400000, guid: 0666c4491bbda38479c192cdef5bb094, type: 2}
@@ -1075,7 +1075,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
-        position: {x: 280, y: 1012}
+        position: {x: 280, y: 1460}
         outputs:
         - 474b5be0-7a90-4148-8790-6f8fad1783a8
         dialogue: {fileID: 11400000, guid: aa47a70e31624274ab9b052905b3fc79, type: 2}
@@ -1093,7 +1093,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 004d01ec-565b-4943-8661-88335a7b0057
-        position: {x: 1400, y: 770}
+        position: {x: 1400, y: 1106}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
         questId: ELDRAN_SIGUEME
@@ -1112,7 +1112,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 474b5be0-7a90-4148-8790-6f8fad1783a8
-        position: {x: 560, y: 1012}
+        position: {x: 560, y: 1460}
         outputs:
         - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
         standingActorId: 

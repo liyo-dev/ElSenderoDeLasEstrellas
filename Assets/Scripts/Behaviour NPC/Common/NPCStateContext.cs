@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 namespace Game.NPC.Common
 {
@@ -24,15 +24,31 @@ namespace Game.NPC.Common
 
         // Quién tiene anclado al NPC. Cada sistema ancla y suelta solo con su clave, así ninguno
         // deshace el ancla de otro (p. ej. bajar del barco no suelta el modo Libre del grupo).
+        // El seguimiento del grupo solo respeta las anclas de transporte (barco, atracción) y las
+        // de una prueba con puestos (GrupoEnLaPrueba). Las demás (un parche de escena, modo Libre)
+        // no le impiden seguir si le toca; el modo Libre ya lo decide DebeSeguirAlJugador.
         private readonly System.Collections.Generic.HashSet<object> _anclas =
+            new System.Collections.Generic.HashSet<object>();
+        private readonly System.Collections.Generic.HashSet<object> _anclasDeTransporte =
+            new System.Collections.Generic.HashSet<object>();
+        private readonly System.Collections.Generic.HashSet<object> _anclasDePrueba =
             new System.Collections.Generic.HashSet<object>();
 
         /// <summary>
-        /// El NPC está anclado: se queda donde está, sin vagar, sin seguir al jugador, sin entrar
-        /// en combate y sin teletransportarse con el grupo. Lo anclan, cada uno con su clave, el
-        /// modo Libre del grupo, salir del grupo y el puesto en el barco.
+        /// El NPC está anclado: se queda donde está, sin vagar, sin entrar en combate y sin
+        /// teletransportarse con el grupo. Lo anclan, cada uno con su clave, el modo Libre del
+        /// grupo, salir del grupo y el puesto en el barco.
         /// </summary>
         public bool EstaAnclado => _anclas.Count > 0;
+
+        /// <summary>Va en un transporte (barco, atracción): no se le mueve ni se le hace seguir.</summary>
+        public bool EstaAncladoPorTransporte => _anclasDeTransporte.Count > 0;
+
+        /// <summary>Está en un puesto de una prueba con acompañantes (GrupoEnLaPrueba).</summary>
+        public bool EstaAncladoPorPrueba => _anclasDePrueba.Count > 0;
+
+        /// <summary>Lo que debe respetar el seguimiento del grupo. El resto de anclas no lo paran.</summary>
+        public bool EstaAncladoParaSeguir => EstaAncladoPorTransporte || EstaAncladoPorPrueba;
 
         /// <summary>Ancla al NPC en nombre de <paramref name="quien"/> (repetirlo no suma).</summary>
         public void Anclar(object quien)
@@ -40,10 +56,29 @@ namespace Game.NPC.Common
             if (quien != null) _anclas.Add(quien);
         }
 
+        /// <summary>Ancla de transporte: barco, atracción o cualquier cosa que lo lleva encima.</summary>
+        public void AnclarTransporte(object quien)
+        {
+            if (quien == null) return;
+            _anclas.Add(quien);
+            _anclasDeTransporte.Add(quien);
+        }
+
+        /// <summary>Ancla de una prueba que coloca a los acompañantes en puestos.</summary>
+        public void AnclarPrueba(object quien)
+        {
+            if (quien == null) return;
+            _anclas.Add(quien);
+            _anclasDePrueba.Add(quien);
+        }
+
         /// <summary>Quita el ancla de <paramref name="quien"/>; las de los demás siguen.</summary>
         public void Soltar(object quien)
         {
-            if (quien != null) _anclas.Remove(quien);
+            if (quien == null) return;
+            _anclas.Remove(quien);
+            _anclasDeTransporte.Remove(quien);
+            _anclasDePrueba.Remove(quien);
         }
 
         /// <summary>El NPC lleva el ancla de <paramref name="quien"/>.</summary>

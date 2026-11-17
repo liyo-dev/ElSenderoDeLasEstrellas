@@ -91,7 +91,7 @@ namespace Game.NPC
         [Tooltip("Distancia base detrás del jugador para la primera fila de compañeros (metros).")]
         [SerializeField, Range(1.5f, 5f)] private float distanciaFormacionDetras = 2.6f;
         [Tooltip("Separación lateral respecto al eje del jugador para repartir a los compañeros (metros).")]
-        [SerializeField, Range(0.5f, 3f)] private float separacionLateralFormacion = 1.35f;
+        [SerializeField, Range(0.5f, 3f)] private float separacionLateralFormacion = 0.8f;
         [Tooltip("Retraso longitudinal adicional del segundo compañero de cada fila (metros).")]
         [SerializeField, Range(0f, 1.5f)] private float escalonImparFormacion = 0.35f;
         [Tooltip("Distancia adicional hacia atrás por cada fila extra de compañeros (metros).")]
@@ -168,15 +168,6 @@ namespace Game.NPC
         private NPCPartyMember _willNpcCache;
         private bool _willSigueCache;
         private float _willNpcCacheHasta;
-
-        // Turno para cruzar un salto del rastro: solo un compañero a la vez, y solo cuando el
-        // jugador ya se ha apartado del punto de caída.
-        private NPCPartyMember _miembroTurnoSalto;
-        private float _turnoLibreDesde;
-        private float _turnoSaltoTomadoEn;
-        private const float EsperaEntreSaltos = 0.35f;
-        private const float RadioLibreEnAterrizaje = 0.5f;
-        private const float TiempoMaximoTurno = 3f;
         #endregion
 
         #region Events
@@ -437,6 +428,16 @@ namespace Game.NPC
                     float cierre = _distanciaTotalRastro + Vector3.Distance(posicion, ultima.posicion);
                     AgregarMuestra(posicion, false, _playerTransform.forward, cierre);
                 }
+                else
+                {
+                    // Salto en el sitio o escalón pequeño: las muestras se marcaron en el aire
+                    // para que los compañeros esperasen, pero no son un salto que copiar.
+                    for (int i = 0; i < _muestrasDesdeInicioSalto && i < _totalMuestrasRastro; i++)
+                    {
+                        int idx = (_cabezaRastro - i + CapacidadRastro) % CapacidadRastro;
+                        _rastro[idx].enAire = false;
+                    }
+                }
                 _saltoActualConfirmado = false;
                 _muestrasDesdeInicioSalto = 0;
                 _hayPuntoAterrizaje = false;
@@ -464,7 +465,9 @@ namespace Game.NPC
 
             float distanciaAcumulada = _distanciaTotalRastro
                 + Vector3.Distance(posicion, ultima.posicion);
-            AgregarMuestra(posicion, enAire && _saltoActualConfirmado, direccion, distanciaAcumulada);
+            // El tramo se marca aéreo desde el primer fotograma del salto, no cuando se confirma:
+            // así los compañeros ven el salto y esperan, en vez de seguirlo a la vez que el jugador.
+            AgregarMuestra(posicion, enAire, direccion, distanciaAcumulada);
 
             if (enAire && !_saltoActualConfirmado) _muestrasDesdeInicioSalto++;
         }
@@ -630,7 +633,8 @@ namespace Game.NPC
             {
                 var m = _members[i];
                 if (m == null || !m.IsActiveInParty || ControlDelJugador.EsElJugador(m)) continue;
-                if (m.NPCManager?.Context?.EstaAnclado == true) continue;
+                if (!PartyControlManager.DebeSeguirAlJugador(m)) continue;
+                if (m.NPCManager?.Context?.EstaAncladoParaSeguir == true) continue;
                 if (m == miembro) puesto = indice;
                 indice++;
             }
@@ -646,7 +650,7 @@ namespace Game.NPC
             var will = _willNpcCache;
             bool willSigue = _willSigueCache && will != null && !will.IsInParty
                              && will.isActiveAndEnabled && !ControlDelJugador.EsElJugador(will)
-                             && will.NPCManager?.Context?.EstaAnclado != true;
+                             && will.NPCManager?.Context?.EstaAncladoParaSeguir != true;
             if (willSigue)
             {
                 if (will == miembro) puesto = indice;
@@ -681,7 +685,7 @@ namespace Game.NPC
             // Si un asset/escena antiguo trae los campos nuevos a cero, se usan los valores de
             // diseño: una formación a cero metería a los compañeros dentro del jugador.
             float detrasBase = distanciaFormacionDetras > 0.01f ? distanciaFormacionDetras : 2.6f;
-            float lateralBase = separacionLateralFormacion > 0.01f ? separacionLateralFormacion : 1.35f;
+            float lateralBase = separacionLateralFormacion > 0.01f ? separacionLateralFormacion : 0.8f;
             float entreFilas = distanciaEntreFilasFormacion > 0.01f ? distanciaEntreFilasFormacion : 1.4f;
             float escalon = escalonImparFormacion > 0f ? escalonImparFormacion : 0.35f;
 
@@ -755,74 +759,7 @@ namespace Game.NPC
             _saltoActualConfirmado = false;
             _muestrasDesdeInicioSalto = 0;
             _hayPuntoAterrizaje = false;
-            _miembroTurnoSalto = null;
-            _turnoLibreDesde = 0f;
-            _turnoSaltoTomadoEn = 0f;
         }
-
-        /// <summary>
-        /// Pide permiso para cruzar un salto del rastro. Solo hay un turno: mientras un compañero
-        /// cruza, los demás esperan. Se concede cuando el jugador ya no está en el aire ni cerca
-        /// del punto de caída y no hay otro compañero ocupando ese sitio.
-        /// </summary>
-        public bool IntentarTomarTurnoDeSalto(NPCPartyMember miembro, Vector3 puntoAterrizaje)
-        {
-            if (miembro == null) return false;
-            if (_miembroTurnoSalto != null && _miembroTurnoSalto != miembro)
-            {
-                // Si el dueño del turno se quedó colgado (salió del seguimiento sin soltarlo),
-                // no puede bloquear a los demás para siempre.
-                if (!_miembroTurnoSalto.EnSaltoDeRastro
-                    && Time.time - _turnoSaltoTomadoEn > TiempoMaximoTurno)
-                {
-                    _miembroTurnoSalto = null;
-                    _turnoLibreDesde = Time.time;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            if (Time.time < _turnoLibreDesde) return false;
-            if (_playerTransform == null || JugadorEnElAire) return false;
-
-            float radioJugador = RadioLibreEnAterrizaje + 0.25f;
-            if (Vector3.Distance(_playerTransform.position, puntoAterrizaje) < radioJugador)
-                return false;
-
-            for (int i = 0; i < _members.Count; i++)
-            {
-                var m = _members[i];
-                if (m == null || m == miembro || ControlDelJugador.EsElJugador(m)) continue;
-                if (Vector3.Distance(m.transform.position, puntoAterrizaje) < RadioLibreEnAterrizaje)
-                    return false;
-            }
-
-            var will = _willNpcCache;
-            if (will == null)
-                will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
-            if (will != null && will != miembro && will.isActiveAndEnabled
-                && !ControlDelJugador.EsElJugador(will)
-                && Vector3.Distance(will.transform.position, puntoAterrizaje) < RadioLibreEnAterrizaje)
-                return false;
-
-            _miembroTurnoSalto = miembro;
-            _turnoSaltoTomadoEn = Time.time;
-            return true;
-        }
-
-        /// <summary>Suelta el turno cuando el compañero ya ha aterrizado.</summary>
-        public void LiberarTurnoDeSalto(NPCPartyMember miembro)
-        {
-            if (miembro == null || _miembroTurnoSalto != miembro) return;
-            _miembroTurnoSalto = null;
-            _turnoLibreDesde = Time.time + EsperaEntreSaltos;
-            _turnoSaltoTomadoEn = 0f;
-        }
-
-        /// <summary>¿Este compañero tiene ahora el turno de cruzar?</summary>
-        public bool TieneTurnoDeSalto(NPCPartyMember miembro)
-            => miembro != null && _miembroTurnoSalto == miembro;
 
         /// <summary>
         /// Punto del rastro a una distancia acumulada concreta. Interpola entre las dos muestras
@@ -960,7 +897,7 @@ namespace Game.NPC
                 var member = _members[i];
                 if (member == null || ControlDelJugador.RepresentadoPorElJugador(member)) continue;
                 // En modo libre, solo se teletransportan los que están siguiendo activamente
-                if (member.NPCManager?.Context?.EstaAnclado == true) continue;
+                if (member.NPCManager?.Context?.EstaAncladoParaSeguir == true) continue;
                 TeleportMemberToPlayer(member, forzar, avisar);
             }
             ReunirAWill(forzar, avisar);
@@ -974,7 +911,7 @@ namespace Game.NPC
         public void ReunirAWill(bool forzar = false, bool avisar = false)
         {
             var will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
-            if (will == null || will.NPCManager?.Context?.EstaAnclado == true || (will.NPCManager?.IsInCinematic ?? false)) return;
+            if (will == null || will.NPCManager?.Context?.EstaAncladoParaSeguir == true || (will.NPCManager?.IsInCinematic ?? false)) return;
             if (TeleportMemberToPlayer(will, forzar, avisar) && PartyControlManager.DebeSeguirAlJugador(will))
                 will.StartFollowingIgnorePartyCheck();
         }
@@ -1155,7 +1092,7 @@ namespace Game.NPC
                 // Un miembro anclado (modo Libre, barco) no se teletransporta para un diálogo:
                 // un simple mensaje de «bloqueado» (p. ej. RoomExitBlocker en el agua) no debe
                 // reagrupar al equipo que el jugador ha dejado repartido.
-                if (member.NPCManager?.Context?.EstaAnclado == true)
+                if (member.NPCManager?.Context?.EstaAncladoParaSeguir == true)
                 {
                     Log($"  ↳ {member.DisplayName}: anclado (modo Libre), no se reposiciona para diálogo");
                     continue;
@@ -1889,7 +1826,7 @@ namespace Game.NPC
 
                 // Un miembro anclado (barco, asiento, modo Libre) no se teletransporta al
                 // combate: si no, se lo lleva de su puesto y empieza a pelear allí (INC-808).
-                if (member.NPCManager?.Context?.EstaAnclado ?? false) continue;
+                if (member.NPCManager?.Context?.EstaAncladoParaSeguir ?? false) continue;
 
                 // No operar sobre el NPC oculto (controlado por el jugador vía character swap)
                 if (ControlDelJugador.RepresentadoPorElJugador(member)) continue;
@@ -2016,8 +1953,10 @@ namespace Game.NPC
                 // No teletransportar miembros en cinemática (escoltas, secuencias, etc.)
                 if (member.NPCManager != null && member.NPCManager.IsInCinematic) continue;
 
-                // Anclado (modo Libre, barco): se queda donde está, sin teletransporte automático
-                if (member.NPCManager?.Context?.EstaAnclado == true) continue;
+                // En modo Libre, el que no sigue se queda donde está. Transporte o puesto de
+                // prueba tampoco se teletransportan; las anclas de escena no lo impiden.
+                if (!PartyControlManager.DebeSeguirAlJugador(member)) continue;
+                if (member.NPCManager?.Context?.EstaAncladoParaSeguir == true) continue;
 
                 // El compañero está cruzando un salto del rastro: no se le corta a mitad.
                 if (member.EnSaltoDeRastro) continue;
@@ -2039,7 +1978,7 @@ namespace Game.NPC
             if (willNpc != null && !(willNpc.NPCManager?.IsInCinematic ?? false))
             {
                 // En modo Libre, Will NPC tampoco se teletransporta
-                if (willNpc.NPCManager?.Context?.EstaAnclado == true) return;
+                if (willNpc.NPCManager?.Context?.EstaAncladoParaSeguir == true) return;
                 if (willNpc.EnSaltoDeRastro) return;
 
                 float willDist = Vector3.Distance(willNpc.transform.position, _playerTransform.position);

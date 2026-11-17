@@ -41,6 +41,14 @@ namespace Game.NPC
         private float _nextIdleCheck;
         private Damageable _damageable;
         private bool _reiniciarRastro;
+
+        // Mientras es del grupo no debe empujar ni bloquear al jugador: se ignora la colisión
+        // entre los dos cuerpos. Es del grupo, no de un estado concreto: vale también anclado,
+        // en diálogo o en combate. Se restaura al salir del grupo.
+        private Collider _colliderCuerpo;
+        private Collider _colliderJugador;
+        private bool _colisionJugadorIgnorada;
+
         // Slot activo cuando este NPC se unió al party; null = unión mientras Will era activo (miembro compartido)
         internal PartyControlManager.CharacterSlot? _joinedForSlot;
         #endregion
@@ -200,6 +208,10 @@ namespace Game.NPC
             _agent = GetComponent<NavMeshAgent>();
             _interactable = GetComponent<Interactable>() ?? GetComponentInChildren<Interactable>(true);
             _damageable = GetComponent<Damageable>();
+            _colliderCuerpo = ObtenerColliderDelCuerpo(gameObject);
+
+            PlayerService.OnPlayerRegistered += OnJugadorRegistrado;
+            PlayerService.OnPlayerUnregistered += OnJugadorDadoDeBaja;
             
             if (_npcManager == null)
             {
@@ -275,7 +287,7 @@ namespace Game.NPC
                     && PartyControlManager.DebeSeguirAlJugador(this)
                     // Un NPC anclado (barco, modo Libre) no vuelve a seguir aunque su cerebro
                     // esté en Idle: el ancla manda.
-                    && !(_npcManager.Context?.EstaAnclado ?? false)
+                    && !(_npcManager.Context?.EstaAncladoParaSeguir ?? false)
                     && GetDistanceToPlayer() <= 40f)
                 {
                     StartFollowing();
@@ -285,6 +297,10 @@ namespace Game.NPC
 
         void OnDestroy()
         {
+            PlayerService.OnPlayerRegistered -= OnJugadorRegistrado;
+            PlayerService.OnPlayerUnregistered -= OnJugadorDadoDeBaja;
+            RestaurarColisionConJugador();
+
             if (_isInParty)
             {
                 // No llamar LeaveParty() al destruirse por cambio de escena:
@@ -448,9 +464,10 @@ namespace Game.NPC
         {
             if (_npcManager?.Brain == null || EstaCaido) return;
 
-            // Un NPC anclado (barco, modo Libre) no vuelve a seguir aunque otro sistema llame
-            // aquí directamente: el ancla manda y la suelta quien la puso.
-            if (_npcManager.Context?.EstaAnclado ?? false) return;
+            // Un NPC llevado por un transporte o colocado en una prueba no vuelve a seguir aunque
+            // otro sistema llame aquí directamente. Las anclas de escena no lo impiden: la regla
+            // del grupo manda y el modo Libre ya se decide con DebeSeguirAlJugador.
+            if (_npcManager.Context?.EstaAncladoParaSeguir ?? false) return;
 
             EnSaltoDeRastro = false;
 
@@ -470,8 +487,8 @@ namespace Game.NPC
         {
             if (_npcManager?.Brain == null || EstaCaido) return;
 
-            // Mismo invariante que StartFollowing: el ancla manda.
-            if (_npcManager.Context?.EstaAnclado ?? false) return;
+            // Mismo invariante que StartFollowing: transporte o puesto de prueba mandan.
+            if (_npcManager.Context?.EstaAncladoParaSeguir ?? false) return;
 
             EnSaltoDeRastro = false;
 
@@ -608,6 +625,9 @@ namespace Game.NPC
             _party = party;
             _isInParty = true;
             _isJoining = false;
+            RestaurarColisionConJugador();
+            _colliderJugador = ObtenerColliderDelCuerpo(ControlDelJugador.CuerpoDelJugador);
+            IgnorarColisionConJugador();
             if (_interactable == null)
                 _interactable = GetComponent<Interactable>() ?? GetComponentInChildren<Interactable>(true);
             _interactable?.SetHintVisible(false);
@@ -638,6 +658,8 @@ namespace Game.NPC
             _isInParty = false;
             _isJoining = false;
             _joinedForSlot = null;
+            RestaurarColisionConJugador();
+            _colliderJugador = null;
 
             Log("Abandonó el equipo");
 
@@ -807,6 +829,52 @@ namespace Game.NPC
 
             float followDist = partyConfig != null ? partyConfig.distanciaParaPararse : 2.5f;
             return player.position - player.forward * Mathf.Max(followDist, 2.5f);
+        }
+
+        private void OnJugadorRegistrado(GameObject jugador)
+        {
+            RestaurarColisionConJugador();
+            _colliderJugador = _isInParty ? ObtenerColliderDelCuerpo(jugador) : null;
+            IgnorarColisionConJugador();
+        }
+
+        private void OnJugadorDadoDeBaja()
+        {
+            RestaurarColisionConJugador();
+            _colliderJugador = null;
+        }
+
+        private static Collider ObtenerColliderDelCuerpo(GameObject cuerpo)
+        {
+            if (cuerpo == null) return null;
+
+            var capsula = cuerpo.GetComponent<CapsuleCollider>();
+            if (capsula != null) return capsula;
+
+            var collider = cuerpo.GetComponent<Collider>();
+            if (collider != null) return collider;
+
+            return cuerpo.GetComponentInChildren<Collider>(true);
+        }
+
+        private void IgnorarColisionConJugador()
+        {
+            if (_colisionJugadorIgnorada || _colliderCuerpo == null || _colliderJugador == null
+                || _colliderCuerpo == _colliderJugador)
+                return;
+
+            Physics.IgnoreCollision(_colliderCuerpo, _colliderJugador, true);
+            _colisionJugadorIgnorada = true;
+        }
+
+        private void RestaurarColisionConJugador()
+        {
+            if (!_colisionJugadorIgnorada) return;
+
+            if (_colliderCuerpo != null && _colliderJugador != null)
+                Physics.IgnoreCollision(_colliderCuerpo, _colliderJugador, false);
+
+            _colisionJugadorIgnorada = false;
         }
 
         private void Log(string message)

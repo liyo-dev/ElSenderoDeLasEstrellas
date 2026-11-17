@@ -41,7 +41,7 @@ public sealed class PasajeroNpc
     {
         var contexto = Npc != null && Npc.NPCManager != null ? Npc.NPCManager.Context : null;
         if (contexto == null) return;
-        contexto.Anclar(_quien);
+        contexto.AnclarTransporte(_quien);
         contexto.IsInCombat = false;
     }
 

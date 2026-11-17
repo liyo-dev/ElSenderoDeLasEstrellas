@@ -177,7 +177,7 @@ public sealed class GrupoEnLaPrueba : MonoBehaviour, IEtapasDePrueba, IHablantes
         var actor = SequenceActor.ForTransform("GrupoEnLaPrueba_" + puesto.personaje, npc.transform);
         var o = new Ocupado { puesto = puesto, npc = npc, actor = actor, agenteEncendido = actor.Agent != null && actor.Agent.enabled };
         actor.Hold();
-        npc.NPCManager?.Context?.Anclar(this);
+        npc.NPCManager?.Context?.AnclarPrueba(this);
         SequenceMovement.PlaceAt(actor, puesto.sitio.position, puesto.sitio.rotation);
 
         if (puesto.numerito == Numerito.Botar)
