@@ -301,6 +301,21 @@ public class PartyControlManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Deja el grupo en «Siguiendo» aunque estuviera en Libre. Lo piden las pruebas del jugador al
+    /// empezar cada intento: la prueba se juega con el grupo y no con los compañeros anclados de
+    /// una sala anterior. La pantalla está tapada cuando se llama.
+    /// </summary>
+    public void PonerEnModoSiguiendo()
+    {
+        if (_isPartyFollowing) return;
+
+        _isPartyFollowing = true;
+        if (_seguidor >= 0) DeshacerPareja(anclarAlSeguidor: false);
+        ApplyFollowModeToParty();
+        OnFollowModeChanged?.Invoke(true);
+    }
+
+    /// <summary>
     /// Aplica el modo del grupo a los compañeros que lleva la IA (el personaje al mando no). En
     /// Libre cada uno se queda anclado donde está; siguiendo, se sueltan y se reagrupan con el
     /// jugador (quien no pueda llegar por una pared o una reja va andando, con aviso; INC-819).

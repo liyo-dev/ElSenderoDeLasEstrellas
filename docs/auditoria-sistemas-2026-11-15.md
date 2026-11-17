@@ -237,6 +237,8 @@ No hay tabla única ni dueño; cualquiera añade un canvas con un número distin
 
 **Propuesta:** partir en `RelojDelMundo` (hora), `CieloYDios` (skybox, sol/luna), `ClimaDelMundo` (lluvia/nieve/viento) y `LucesDelMundo`. `DayNightCycle` queda como fachada. Ya existe `ClimaDelCicloWiring` y `ClimaSobreElJugador`; es cuestión de mover responsabilidades, no de inventar.
 
+**Mundo abierto (medido en MainWorld):** 9.673 GameObjects, **1.887 MeshRenderers**, 111 sistemas de partículas, 64 luces, 2.161 colisionadores y **1 solo LODGroup**; la **oclusión no está horneada** (`m_OcclusionCullingData: {fileID: 0}`) y el mundo generado por `VestidoDelMundo` no se marca como estático. Es la mayor oportunidad de rendimiento del proyecto; el LOD de NPCs y `ParticulasDeAmbiente` son el modelo a generalizar. Se recoge como **Fase 2.5** del plan (TDD § 19.10).
+
 ---
 
 ## 9. Jugador
@@ -329,6 +331,14 @@ Es el **28% del código total** y el origen de varios incidentes (menús de un s
 1. `CombatBrainBase` + `AttackDefinition`.
 2. Migrar `NPCCombatBrain` primero; después los tres jefes.
 3. Tests de cooldowns, LOS y retirada.
+
+### Fase 2.5 — Mundo abierto: visibilidad y presupuesto (1–2 semanas) · impacto alto, riesgo medio
+1. **Medir por zonas** (pueblo, capital, muralla, bosque, laguna): frame time, draw calls, SetPass, memoria y carga.
+2. **Hornear la oclusión** de MainWorld (hoy `m_OcclusionCullingData` está vacío) y rehornear tras `VestidoDelMundo`.
+3. **`LodPorDistancia` genérico** (CullingGroup) para props, decoración, luces pequeñas y partículas; `ParticulasDeAmbiente` es el precedente.
+4. **Estáticos y batching**: marcar el mundo generado que no se mueve (hoy no se hace); comprobar SRP batcher, GPU instancing y materiales compartidos.
+5. **Luces y sombras por zona**, audio/NavMesh/física y presupuesto de actualizaciones solo donde la medición lo pida.
+6. **Streaming por zonas solo si M1 lo justifica** (sub-escenas aditivas por zona), no por adelantado.
 
 ### Fase 3 — Ensamblados y kits (2–3 semanas) · impacto alto, riesgo medio-alto
 1. `ElSendero.Runtime`/`ElSendero.Editor` y asmdefs por capa (UI, Mundo, Secuencias…).

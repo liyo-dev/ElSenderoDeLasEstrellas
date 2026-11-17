@@ -99,7 +99,9 @@ public abstract class PruebaDelJugador : MonoBehaviour
     {
         _ciclo = null;
         if (EstadoActual == Estado.EnCurso) Detener();
-        SoltarTodo();
+        // Al cerrar la escena / salir de Play no se arranca un fundido: el lienzo de FeedbackService
+        // ya puede estar apagándose y GameObject.Find falla dentro de él. Solo se sueltan las cosas.
+        SoltarTodo(conFundido: false);
         if (EstadoActual != Estado.Terminada) EstadoActual = Estado.Esperando;
     }
 
@@ -196,6 +198,9 @@ public abstract class PruebaDelJugador : MonoBehaviour
 
         yield return Tapar(fundido);
         ColocarAlJugador(salidaDelJugador);
+        // Una prueba se juega con el grupo siguiendo, aunque la sala anterior se resolviera en
+        // Libre (la balanza del Templo, por ejemplo). Con la pantalla tapada no se ve el reagrupe.
+        PartyControlManager.Instance?.PonerEnModoSiguiendo();
         PrepararIntento();
         alPrepararse.Invoke();
         for (int i = 0; i < _etapas.Count; i++) yield return _etapas[i].Colocar(this);
@@ -299,13 +304,13 @@ public abstract class PruebaDelJugador : MonoBehaviour
         else servicio.Release(this);
     }
 
-    private void SoltarTodo()
+    private void SoltarTodo(bool conFundido = true)
     {
         BloquearControl(false);
         if (_pantallaTapada)
         {
             _pantallaTapada = false;
-            FeedbackService.ScreenFade(Color.black, 0.25f, false);
+            if (conFundido) FeedbackService.ScreenFade(Color.black, 0.25f, false);
         }
         for (int i = 0; i < _etapas.Count; i++) _etapas[i]?.Soltar(this);
     }

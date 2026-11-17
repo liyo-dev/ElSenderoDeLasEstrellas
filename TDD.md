@@ -3713,6 +3713,19 @@ La esfera de la lluvia termina el descenso con el límite inferior de su malla s
 | F2.4 | Migrar los tres jefes con hooks (`OnCharge`, `OnPhaseChange`) | Mismo comportamiento; −2.500 líneas aprox. |
 | F2.5 | Tests de cooldowns, LOS, retirada y cambio de fase | EditMode en verde |
 
+**Fase 2.5 — Mundo abierto: visibilidad y presupuesto (1–2 semanas).** El LOD de NPCs (`aiUpdateDistance`) es el modelo a generalizar; `ParticulasDeAmbiente` (distancia + revisión cada 0,5 s) es el precedente. Hoy MainWorld tiene **9.673 GameObjects, 1.887 MeshRenderers, 111 partículas, 64 luces, 2.161 colisionadores y 1 solo LODGroup**, y la **oclusión no está horneada** (`m_OcclusionCullingData: {fileID: 0}`). El mundo generado por `VestidoDelMundo` tampoco se marca como estático.
+
+| ID | Tarea | Criterio de aceptación |
+|---|---|---|
+| M1 | Medir por zonas (pueblo, capital, muralla, bosque, laguna): frame time, draw calls, SetPass, memoria, carga | Baseline documentado y presupuesto por zona (60 fps / 16,6 ms) |
+| M2 | Hornear oclusión de MainWorld y **rehornear tras vestir el mundo** (menú/validación) | `m_OcclusionCullingData` válido; el rehorno es parte del proceso de vestido |
+| M3 | `LodPorDistancia` genérico (CullingGroup) para props, decoración, luces pequeñas y partículas; unificar con `ParticulasDeAmbiente` | Objetos fuera de radio apagados; sin pop visual; medido con M1 |
+| M4 | Marcar como estático lo que no se mueve en el mundo generado; comprobar SRP batcher, GPU instancing y materiales compartidos | Draw calls y SetPass dentro del presupuesto en las cinco zonas |
+| M5 | Luces y sombras por zona: distancia de sombras, límite de luces adicionales, horneado de las fijas | Sin cambio visible; coste medido con M1 |
+| M6 | Streaming por zonas **solo si M1 lo pide**: sub-escenas aditivas por zona con `AdditiveSceneNode`/`PortalTrigger` y precarga por adyacencia | Carga de zona dentro del presupuesto; sin pops ni huecos |
+| M7 | Audio, NavMesh y física: culling de emisores ambientales, NavMesh por zona, colisionadores estáticos, `autoSyncTransforms` off | Sin allocaciones ni búsquedas por frame; medido |
+| M8 | Presupuesto central de actualizaciones **solo para los sistemas periódicos que M1 señale** (no un `UpdateManager` universal) | Cada sistema caro tiene su intervalo y su dueño |
+
 **Fase 3 — Ensamblados y kits (2–3 semanas).**
 
 | ID | Tarea | Criterio de aceptación |
@@ -3729,9 +3742,9 @@ La esfera de la lluvia termina el descenso con el límite inferior de su malla s
 | F4.2 | Revisar los 234 menús y archivar los de un solo uso | Menos ruido en el menú |
 | F4.3 | Tests de `HorneadorDeGuion` y `HornoCamaras` | EditMode en verde |
 
-**Reglas de ejecución:** cada fase termina con la prueba de humo de F0.1 en verde y sin errores en `Logs/Editor.log`; las fases 1–3 no se mezclan en la misma tanda; `PlayerControls.cs` (generado por el Input System) no se toca; los números de partida (líneas, allocaciones, tiempos de compilación) se anotan antes y después para medir la ganancia.
+**Reglas de ejecución:** cada fase termina con la prueba de humo de F0.1 en verde y sin errores en `Logs/Editor.log`; las fases 1, 2, 2.5 y 3 no se mezclan en la misma tanda; `PlayerControls.cs` (generado por el Input System) no se toca; los números de partida (líneas, allocaciones, draw calls, tiempos de compilación y de carga) se anotan antes y después para medir la ganancia. En la fase 2.5, **primero se mide y después se toca**: si el baseline de las cinco zonas ya entra en presupuesto, M4–M8 se recortan; el streaming (M6) no se hace por moda, solo si la medición lo pide.
 
-**Riesgos:** la FSM toca el comportamiento de todos los NPCs (mitigación: F1.1 y F1.2 sin cambio funcional, prueba de humo y un recorrido de plaza/pueblo); los asmdefs pueden destapar dependencias ocultas (mitigación: introducirlos por capas, empezando por Editor); los jefes tienen matices de diseño (mitigación: migrar uno, validarlo y seguir).
+**Riesgos:** la FSM toca el comportamiento de todos los NPCs (mitigación: F1.1 y F1.2 sin cambio funcional, prueba de humo y un recorrido de plaza/pueblo); los asmdefs pueden destapar dependencias ocultas (mitigación: introducirlos por capas, empezando por Editor); los jefes tienen matices de diseño (mitigación: migrar uno, validarlo y seguir); el streaming por zonas (M6) cambia la estructura de MainWorld y el guardado (mitigación: solo si M1 lo justifica, y con las zonas actuales como unidad, no trocear el pueblo).
 
 ---
 
