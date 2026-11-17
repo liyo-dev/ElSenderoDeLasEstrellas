@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Liyodev.Cinematics;
 using Sendero.Narrative.Editor;
@@ -424,7 +426,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
     /// <summary>
     /// Las correcciones que la página del storyboard ya sabe decir en palabras («alejamos un poco
     /// la cámara») se traducen a lo único que el guion entiende: el `lente=` de la línea del plano.
-    /// Lo que no se sabe traducir no se toca: se cuenta y se queda como anotación para leerlo a mano.
+    /// Lo que no se sabe traducir no se tira: queda como encargo para una sesión de IA, con el plano,
+    /// la línea del guion y el fotograma, hasta que se cierra con `revisiones-hechas`.
     /// </summary>
     public CinemaAplicado AplicarRevisiones(string id, List<CinemaNota> notas)
     {
@@ -444,8 +447,11 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
             return respuesta;
         }
 
+        string[] lineasDelGuion = File.Exists(ruta) ? File.ReadAllLines(ruta) : Array.Empty<string>();
+
         // Cada nota se aplica una sola vez: la página puede volver a mandar el mismo fichero.
         var yaAplicadas = LeerAplicadas(guion.nombre);
+        var cola = LeerColaDeEncargos(guion.nombre);
         var hechasAhora = new List<string>();
         var hechos = new List<string>();
         int aplicados = 0;
@@ -453,22 +459,22 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
 
         foreach (var nota in notas ?? new List<CinemaNota>())
         {
-            string clave = ClaveDeNota(nota);
-            if (!string.IsNullOrEmpty(clave) && yaAplicadas.Contains(clave)) { repetidas++; continue; }
-
-            int numero = NumeroDePanel(nota.panel);
-            if (numero < 1 || numero > guion.planos.Count)
+            if (nota == null) continue;
+            string clave = nota.Clave();
+            if (!string.IsNullOrEmpty(clave) && yaAplicadas.Contains(clave))
             {
-                hechos.Add($"{nota.panel}: no existe ese plano");
+                repetidas++;
+                cola.encargos.RemoveAll(e => e.clave == clave);
                 continue;
             }
 
-            var plano = guion.planos[numero - 1];
-            string dicho = (nota.texto ?? string.Empty).ToLowerInvariant();
+            int numero = NumeroDePanel(nota.panel);
+            var plano = numero >= 1 && numero <= guion.planos.Count ? guion.planos[numero - 1] : null;
+            string dicho = (string.IsNullOrEmpty(nota.texto) ? nota.TextoEfectivo() : nota.texto).ToLowerInvariant();
             bool esCamara = string.Equals(nota.elemento, "camara", StringComparison.OrdinalIgnoreCase);
 
             float? lente = null;
-            if (esCamara)
+            if (esCamara && plano != null)
             {
                 if (TieneAlguna(dicho, "alejar", "aleja", "abrir", "abre", "atras", "atrás", "mas plano", "más plano"))
                     lente = Mathf.Max(12f, plano.lente - 6f);
@@ -478,57 +484,578 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
 
             if (lente == null)
             {
-                hechos.Add($"{nota.panel}: anotada, sin cambio automático");
+                if (string.IsNullOrEmpty(clave))
+                {
+                    hechos.Add($"{nota.panel}: sin texto ni dibujo, no hay nada que encargar");
+                    continue;
+                }
+
+                Encolar(cola, guion, ruta, lineasDelGuion, numero, plano, nota);
+                hechos.Add($"{nota.panel}: para la IA");
                 continue;
             }
+
             if (plano.linea <= 0)
             {
                 hechos.Add($"{nota.panel}: horneado viejo, sin línea (rehornea primero)");
                 continue;
             }
 
-            string valor = lente.Value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+            string valor = lente.Value.ToString("0.#", CultureInfo.InvariantCulture);
             var cambios = new Dictionary<string, string> { ["lente"] = valor };
             if (GuionTextoEditable.ReescribirOpciones(ruta, plano.linea, cambios, out _))
             {
                 aplicados++;
                 hechos.Add($"{nota.panel} L{plano.linea}: lente {plano.lente:0.#} → {valor}");
                 if (!string.IsNullOrEmpty(clave)) { hechasAhora.Add(clave); respuesta.claves.Add(clave); }
+                cola.encargos.RemoveAll(e => e.clave == clave);
+            }
+            else
+            {
+                Encolar(cola, guion, ruta, lineasDelGuion, numero, plano, nota);
+                hechos.Add($"{nota.panel}: no pude escribir la línea; para la IA");
             }
         }
 
-        if (hechasAhora.Count > 0) GuardarAplicadas(guion.nombre, yaAplicadas, hechasAhora);
-        if (aplicados == 0)
+        if (hechasAhora.Count > 0)
         {
-            respuesta.resumen = repetidas > 0
-                ? $"Nada nuevo: {repetidas} nota(s) ya estaban aplicadas."
-                : (hechos.Count == 0 ? "No había nada que aplicar." : string.Join(" · ", hechos));
-            return respuesta;
+            GuardarAplicadas(guion.nombre, yaAplicadas, hechasAhora);
+            QuitarDeLaPizarra(guion.nombre, hechasAhora);
         }
 
-        Hornear(guion.nombre, true);
-        var recien = HorneadoDe(guion.nombre);
-        if (recien != null)
+        if (aplicados > 0)
         {
-            StoryboardAnotable.Generar(recien);
+            Hornear(guion.nombre, true);
+            var recien = HorneadoDe(guion.nombre);
+            if (recien != null)
+            {
+                StoryboardAnotable.Generar(recien);
 
-            // La página vieja del navegador ya no vale: se abre la recién hecha para seguir ahí.
-            string pagina = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
-                "Tools/Storyboard", recien.nombre + ".html");
-            if (File.Exists(pagina)) Application.OpenURL("file:///" + pagina.Replace('\\', '/'));
+                // La página vieja del navegador ya no vale: se abre la recién hecha para seguir ahí.
+                string pagina = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+                    "Tools/Storyboard", recien.nombre + ".html");
+                if (File.Exists(pagina)) Application.OpenURL("file:///" + pagina.Replace('\\', '/'));
+            }
         }
 
-        string repetido = repetidas > 0 ? $" ({repetidas} ya aplicada(s) antes)" : string.Empty;
-        respuesta.resumen = $"{aplicados} corrección(es) aplicadas y rehorneado{repetido} · " + string.Join(" · ", hechos);
+        cola.guion = guion.nombre;
+        cola.escena = guion.escena;
+        cola.rutaGuion = ruta;
+        GuardarColaDeEncargos(cola);
+
+        respuesta.pendientes = cola.encargos.Count;
+        respuesta.rutaEncargos = cola.encargos.Count > 0 ? RutaEncargosMd(guion.nombre) : string.Empty;
+
+        string resumen = aplicados > 0 ? $"{aplicados} corrección(es) aplicadas y rehorneado" : string.Empty;
+        if (repetidas > 0)
+            resumen += (resumen.Length > 0 ? " · " : string.Empty) + $"{repetidas} ya aplicada(s) antes";
+        if (cola.encargos.Count > 0)
+        {
+            string donde = "Guiones/_revisiones/encargos-" + Slug(guion.nombre) + ".md";
+            resumen += (resumen.Length > 0 ? " · " : string.Empty) +
+                       $"{cola.encargos.Count} para la IA en {donde} (buzón: «encargos {guion.nombre}» · cerrar: «revisiones-hechas {guion.nombre}»)";
+        }
+        if (hechos.Count > 0)
+            resumen += (resumen.Length > 0 ? " · " : string.Empty) + string.Join(" · ", hechos);
+
+        respuesta.resumen = resumen.Length > 0 ? resumen : "No había nada que aplicar.";
         return respuesta;
     }
 
-    /// La huella de una nota: plano + elemento + texto (el id de la página se repite entre sesiones).
-    private static string ClaveDeNota(CinemaNota nota)
+    // ── Lectura para el asistente de IA ───────────────────────────────────────────────────────
+
+    public string ManualDeGuion() => s_manualDeGuion ??= GuionManual.Generar();
+
+    private static string s_manualDeGuion;
+
+    public string EstadoParaAsistente(string id, int plano = -1, float segundo = -1f)
     {
-        if (string.IsNullOrEmpty(nota.texto)) return null;
-        return Slug(nota.panel + "-" + nota.elemento + "-" + nota.texto);
+        var guion = HorneadoDe(id);
+        if (guion == null) return $"No encuentro la cinemática «{id}».";
+
+        var detalle = Leer(id);
+        var sb = new StringBuilder();
+        sb.AppendLine($"# Cinemática «{guion.nombre}»");
+        sb.AppendLine();
+        sb.AppendLine($"- Escena: {guion.escena}");
+        string rutaGuion = GuionTextoEditable.RutaDelTexto(guion);
+        if (!string.IsNullOrEmpty(rutaGuion)) sb.AppendLine($"- Guion: {rutaGuion}");
+        string estado = detalle?.entrada?.estado;
+        if (!string.IsNullOrEmpty(estado)) sb.AppendLine($"- Estado: {estado}");
+        sb.AppendLine($"- Duración: {guion.duracion:0.0} s · {guion.planos.Count} planos");
+        if (plano >= 0 && plano < guion.planos.Count)
+        {
+            var p = guion.planos[plano];
+            sb.AppendLine($"- Foco actual en el Director: P{plano + 1:00} ({p.t0:0.0}–{p.t1:0.0} s, línea L{p.linea})");
+        }
+        if (segundo >= 0f) sb.AppendLine($"- Cabezal del Director: {segundo:0.0} s");
+
+        var cola = LeerColaDeEncargos(id);
+        if (cola.encargos.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine($"## Encargos pendientes de la IA ({cola.encargos.Count})");
+            foreach (var encargo in cola.encargos)
+            {
+                string cuando = encargo.t >= 0f
+                    ? $" t={encargo.t:0.0}"
+                    : $" {encargo.t0:0.0}–{encargo.t1:0.0}";
+                sb.AppendLine($"- {encargo.panel} · {encargo.etiquetaElemento} · «{encargo.texto}»{cuando} · L{encargo.linea}");
+                if (!string.IsNullOrEmpty(encargo.ordenGuion))
+                    sb.AppendLine($"  - orden: {encargo.ordenGuion.Trim()}");
+            }
+        }
+
+        var pizarra = LeerPizarra(id);
+        var notas = pizarra?.notas;
+        if (notas != null && notas.Count > 0)
+        {
+            var pendientes = notas.Where(n => !string.IsNullOrWhiteSpace(n.TextoEfectivo())).ToList();
+            if (pendientes.Count > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine($"## Notas de la pizarra sin aplicar ({pendientes.Count})");
+                foreach (var nota in pendientes)
+                {
+                    string cuando = nota.t >= 0f ? $" t={nota.t:0.0}" : string.Empty;
+                    sb.AppendLine($"- {nota.panel} · {nota.elemento} · «{nota.TextoEfectivo()}»{cuando}");
+                }
+            }
+        }
+
+        string carpeta = CarpetaDeDatos(id);
+        if (!string.IsNullOrEmpty(carpeta))
+        {
+            string informe = Path.Combine(carpeta, "informe.md");
+            if (File.Exists(informe))
+            {
+                string texto = File.ReadAllText(informe);
+                int corte = texto.IndexOf("## Qué hace cada personaje", StringComparison.Ordinal);
+                if (corte > 0) texto = texto.Substring(0, corte);
+                sb.AppendLine();
+                sb.AppendLine("## Último horneado");
+                sb.AppendLine(texto.Trim());
+            }
+        }
+
+        if (guion.actores != null && guion.actores.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("## Estados de animación disponibles");
+            foreach (var actor in guion.actores)
+            {
+                var estados = EstadosDe(actor.prefab);
+                if (estados.Count == 0) continue;
+                sb.AppendLine($"- {actor.alias ?? actor.id}: {string.Join(", ", estados)}");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(rutaGuion))
+        {
+            string fisica = RutaFisica(rutaGuion);
+            if (File.Exists(fisica))
+            {
+                sb.AppendLine();
+                sb.AppendLine("## Guion (números de línea)");
+                string[] lineas = File.ReadAllLines(fisica);
+                for (int i = 0; i < lineas.Length; i++)
+                    sb.AppendLine($"L{i + 1}: {lineas[i]}");
+            }
+        }
+
+        return sb.ToString().TrimEnd();
     }
+
+    public CinemaEdicionResultado AplicarEdicionDeGuion(string id, string jsonOps)
+    {
+        var respuesta = new CinemaEdicionResultado();
+        var guion = HorneadoDe(id);
+        if (guion == null)
+        {
+            respuesta.errores.Add($"No encuentro «{id}».");
+            respuesta.resumen = "No se aplicó nada.";
+            return respuesta;
+        }
+
+        var resultado = GuionBatchEdit.Aplicar(guion, jsonOps);
+        respuesta.aplicado = resultado.Applied;
+        respuesta.resumen = resultado.Resumen;
+        respuesta.hechos.AddRange(resultado.Done);
+        respuesta.diff.AddRange(resultado.Diff);
+        respuesta.avisos.AddRange(resultado.Warnings);
+        respuesta.errores.AddRange(resultado.Errors);
+        return respuesta;
+    }
+
+    private static readonly Dictionary<string, List<string>> s_estadosDePrefab = new();
+
+    private static List<string> EstadosDe(string ruta)
+    {
+        if (string.IsNullOrEmpty(ruta)) return new List<string>();
+        if (s_estadosDePrefab.TryGetValue(ruta, out var estados)) return estados;
+
+        estados = new List<string>();
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+        if (prefab != null)
+        {
+            foreach (var estado in CapturaDeEscenario.Catalogo(prefab))
+            {
+                if (estado.capa != 0 || estado.mezcla || string.IsNullOrEmpty(estado.estado)) continue;
+                if (!estados.Contains(estado.estado)) estados.Add(estado.estado);
+                if (estados.Count >= 60) break;
+            }
+        }
+        s_estadosDePrefab[ruta] = estados;
+        return estados;
+    }
+
+    // ── Encargos para la IA ──────────────────────────────────────────────────────────────────
+
+    /// <summary>Lo que no se aplica solo no se pierde: se queda aquí, con el plano y la línea.</summary>
+    private static void Encolar(CinemaColaDeEncargos cola, GuionHorneado guion, string ruta,
+        string[] lineas, int numero, PlanoHorneado plano, CinemaNota nota)
+    {
+        string clave = nota.Clave();
+        if (string.IsNullOrEmpty(clave)) return;
+
+        var encargo = cola.encargos.Find(e => e.clave == clave);
+        if (encargo == null)
+        {
+            encargo = new CinemaEncargo { clave = clave, fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm") };
+            cola.encargos.Add(encargo);
+        }
+
+        encargo.panel = plano != null ? $"P{numero:00}" : (string.IsNullOrEmpty(nota.panel) ? "P00" : nota.panel);
+        encargo.elemento = string.IsNullOrEmpty(nota.elemento) ? "general" : nota.elemento;
+        encargo.etiquetaElemento = EtiquetaDeElemento(guion, plano, encargo.elemento);
+        encargo.tipo = string.IsNullOrEmpty(nota.tipo) ? "nota" : nota.tipo;
+        encargo.texto = nota.TextoEfectivo();
+        encargo.t = nota.t;
+        encargo.t0 = plano?.t0 ?? 0f;
+        encargo.t1 = plano?.t1 ?? 0f;
+        encargo.linea = plano?.linea ?? 0;
+        encargo.ordenGuion = LineaDeTexto(lineas, encargo.linea);
+        encargo.rutaGuion = ruta;
+        encargo.imagen = FotoDelPlano(guion.nombre, numero);
+    }
+
+    private static string EtiquetaDeElemento(GuionHorneado guion, PlanoHorneado plano, string elemento)
+    {
+        if (string.IsNullOrEmpty(elemento) || string.Equals(elemento, "general", StringComparison.OrdinalIgnoreCase))
+            return "Plano / general";
+        if (plano != null)
+        {
+            var encontrado = ElementosDe(guion, plano).Find(e => e.id == elemento);
+            if (encontrado != null) return encontrado.etiqueta;
+        }
+        return elemento;
+    }
+
+    private static string LineaDeTexto(string[] lineas, int numero)
+        => numero > 0 && lineas != null && numero <= lineas.Length
+            ? $"L{numero}: {lineas[numero - 1].Trim()}"
+            : string.Empty;
+
+    private static string FotoDelPlano(string guion, int numero)
+    {
+        if (numero < 1) return string.Empty;
+        string carpeta = CarpetaDelStoryboard(guion);
+        if (string.IsNullOrEmpty(carpeta)) return string.Empty;
+
+        string archivo = $"{numero:000}.png";
+        try
+        {
+            string[] fotos = Directory.GetFiles(carpeta, $"{numero:000}*.png");
+            Array.Sort(fotos, StringComparer.Ordinal);
+            if (fotos.Length > 0) archivo = Path.GetFileName(fotos[fotos.Length - 1]);
+        }
+        catch
+        {
+            // Sin permiso o carpeta rara: se queda el póster de siempre.
+        }
+
+        string ruta = Path.Combine(carpeta, archivo);
+        if (!File.Exists(ruta)) return string.Empty;
+
+        string raiz = Directory.GetParent(Application.dataPath).FullName;
+        return Path.GetRelativePath(raiz, ruta).Replace('\\', '/');
+    }
+
+    private static string CarpetaRevisiones
+        => Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_revisiones");
+
+    private static string RutaEncargosJson(string guion)
+        => Path.Combine(CarpetaRevisiones, "encargos-" + Slug(guion) + ".json");
+
+    private static string RutaEncargosMd(string guion)
+        => Path.Combine(CarpetaRevisiones, "encargos-" + Slug(guion) + ".md");
+
+    public int EncargosPendientes(string id) => LeerColaDeEncargos(id).encargos.Count;
+
+    public void AbrirEncargos(string id)
+    {
+        var cola = LeerColaDeEncargos(id);
+        if (cola.encargos.Count == 0)
+        {
+            Avisar("Director · encargos", $"«{id}» no tiene correcciones pendientes para la IA.");
+            return;
+        }
+
+        GuardarColaDeEncargos(cola);
+        string ruta = RutaEncargosMd(cola.guion);
+        if (File.Exists(ruta)) EditorUtility.RevealInFinder(ruta);
+    }
+
+    public string TextoDeEncargos(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            var listado = new StringBuilder();
+            if (Directory.Exists(CarpetaRevisiones))
+                foreach (string archivo in Directory.GetFiles(CarpetaRevisiones, "encargos-*.json"))
+                {
+                    var cola = LeerColaDeUnArchivo(archivo);
+                    if (cola == null || cola.encargos.Count == 0) continue;
+                    listado.Append("«").Append(cola.guion).Append("»: ")
+                           .Append(cola.encargos.Count).Append(" pendiente(s)\n");
+                }
+            return listado.Length > 0 ? listado.ToString().TrimEnd() : "No hay encargos pendientes para la IA.";
+        }
+
+        var pedida = LeerColaDeEncargos(id);
+        if (pedida.encargos.Count == 0) return $"«{id}»: 0 encargos pendientes.";
+
+        GuardarColaDeEncargos(pedida);
+        string ruta = RutaEncargosMd(pedida.guion);
+        return File.Exists(ruta) ? File.ReadAllText(ruta) : TextoDeLaCola(pedida);
+    }
+
+    private static CinemaColaDeEncargos LeerColaDeEncargos(string id)
+    {
+        string ruta = RutaEncargosJson(id);
+        var cola = File.Exists(ruta) ? LeerColaDeUnArchivo(ruta) : null;
+        if (cola == null) return new CinemaColaDeEncargos { guion = id };
+        if (string.IsNullOrEmpty(cola.guion)) cola.guion = id;
+        return cola;
+    }
+
+    private static CinemaColaDeEncargos LeerColaDeUnArchivo(string ruta)
+    {
+        try
+        {
+            var cola = JsonUtility.FromJson<CinemaColaDeEncargos>(File.ReadAllText(ruta));
+            if (cola == null) return null;
+
+            cola.encargos ??= new List<CinemaEncargo>();
+            if (string.IsNullOrEmpty(cola.guion))
+                cola.guion = Path.GetFileNameWithoutExtension(ruta).Replace("encargos-", string.Empty);
+
+            var aplicadas = LeerAplicadas(cola.guion);
+            cola.encargos.RemoveAll(e => e == null || string.IsNullOrEmpty(e.clave) || aplicadas.Contains(e.clave));
+            return cola;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void GuardarColaDeEncargos(CinemaColaDeEncargos cola)
+    {
+        if (cola == null) return;
+
+        string guion = string.IsNullOrEmpty(cola.guion) ? "guion" : cola.guion;
+        string json = RutaEncargosJson(guion);
+        string md = RutaEncargosMd(guion);
+
+        var aplicadas = LeerAplicadas(guion);
+        var vistas = new HashSet<string>();
+        cola.encargos ??= new List<CinemaEncargo>();
+        cola.encargos.RemoveAll(e => e == null || string.IsNullOrEmpty(e.clave) ||
+                                     aplicadas.Contains(e.clave) || !vistas.Add(e.clave));
+
+        try
+        {
+            if (cola.encargos.Count == 0)
+            {
+                if (File.Exists(json)) File.Delete(json);
+                if (File.Exists(md)) File.Delete(md);
+                return;
+            }
+
+            cola.actualizado = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            Directory.CreateDirectory(CarpetaRevisiones);
+            File.WriteAllText(json, JsonUtility.ToJson(cola, true), new UTF8Encoding(false));
+            File.WriteAllText(md, TextoDeLaCola(cola), new UTF8Encoding(false));
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("[Director] No pude guardar los encargos de " + guion + ": " + e.Message);
+        }
+    }
+
+    private static string TextoDeLaCola(CinemaColaDeEncargos cola)
+    {
+        var sb = new StringBuilder();
+        sb.Append("# Encargos para la IA · ").Append(cola.guion ?? "cinemática").Append("\n\n");
+        if (!string.IsNullOrEmpty(cola.rutaGuion)) sb.Append("- **Guion:** `").Append(cola.rutaGuion).Append("`\n");
+        if (!string.IsNullOrEmpty(cola.escena)) sb.Append("- **Escena:** `").Append(cola.escena).Append("`\n");
+        sb.Append("- **Pendientes:** ").Append(cola.encargos.Count).Append('\n');
+        sb.Append("- **Actualizado:** ").Append(cola.actualizado ?? DateTime.Now.ToString("yyyy-MM-dd HH:mm")).Append("\n\n");
+        sb.Append("> Vista generada desde `encargos-").Append(Slug(cola.guion ?? "guion"))
+          .Append(".json` (no se edita a mano).\n");
+        sb.Append("> Al terminar, se cierran por el buzón: `revisiones-hechas ")
+          .Append(cola.guion).Append("`\n");
+        sb.Append("> (o `revisiones-hechas ").Append(cola.guion)
+          .Append(" P06 P02` para cerrar solo esos planos).\n\n");
+
+        for (int i = 0; i < cola.encargos.Count; i++)
+        {
+            var e = cola.encargos[i];
+            sb.Append("## ").Append(i + 1).Append(". ").Append(e.panel).Append(" · ").Append(e.etiquetaElemento);
+            if (e.t0 > 0f || e.t1 > 0f)
+                sb.Append(" · ").Append(Reloj(e.t0)).Append(" – ").Append(Reloj(e.t1));
+            sb.Append('\n');
+
+            if (e.t >= 0f) sb.Append("- **Segundo en el timeline:** ").Append(Reloj(e.t)).Append('\n');
+            sb.Append("- **Pedido:** ").Append(e.texto).Append('\n');
+            if (!string.IsNullOrEmpty(e.ordenGuion)) sb.Append("- **Línea del guion:** `").Append(e.ordenGuion).Append("`\n");
+            if (!string.IsNullOrEmpty(e.imagen)) sb.Append("- **Fotograma:** `").Append(e.imagen).Append("`\n");
+            sb.Append("- **Clave:** `").Append(e.clave).Append("`\n");
+            if (!string.IsNullOrEmpty(e.fecha)) sb.Append("- **Fecha:** ").Append(e.fecha).Append('\n');
+            sb.Append('\n');
+        }
+
+        return sb.ToString().TrimEnd() + "\n";
+    }
+
+    private static string Reloj(float segundos)
+    {
+        int minutos = (int)(segundos / 60f);
+        float resto = segundos - minutos * 60f;
+        return $"{minutos}:{resto.ToString("00.0", CultureInfo.GetCultureInfo("es-ES"))}";
+    }
+
+    /// <summary>Cierra encargos sin aplicar nada: los apunta para que no vuelvan a salir.</summary>
+    private static void QuitarDeLaPizarra(string guion, List<string> claves)
+    {
+        if (claves == null || claves.Count == 0) return;
+
+        try
+        {
+            string ruta = RutaPizarra(guion);
+            if (!File.Exists(ruta)) return;
+
+            var pizarra = JsonUtility.FromJson<CinemaPizarra>(File.ReadAllText(ruta));
+            if (pizarra?.notas == null || pizarra.notas.Count == 0) return;
+
+            int antes = pizarra.notas.Count;
+            var conjunto = new HashSet<string>(claves);
+            pizarra.notas.RemoveAll(n => conjunto.Contains(CinemaNota.CalcularClave(n.panel, n.elemento, n.TextoEfectivo())));
+            if (pizarra.notas.Count == antes) return;
+
+            if (pizarra.notas.Count == 0) File.Delete(ruta);
+            else File.WriteAllText(ruta, JsonUtility.ToJson(pizarra, true), new UTF8Encoding(false));
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("[Director] No pude limpiar la pizarra de " + guion + ": " + e.Message);
+        }
+    }
+
+    [Serializable]
+    private class LoteDeRevisiones
+    {
+        public string storyboard;
+        public string guion;
+        public List<CinemaNota> anotaciones;
+        public List<CinemaEncargo> encargos;
+    }
+
+    /// <summary>
+    /// Cierra encargos ya hechos: los apunta en el libro de aplicadas para que no vuelvan a salir ni
+    /// en la cola ni en la pizarra. Lo usa el buzón al terminar una tanda de la IA. Acepta un guion,
+    /// o un .json de correcciones/encargos, y claves o números de plano sueltos.
+    /// </summary>
+    public static string MarcarRevisionesHechas(string argumento)
+    {
+        if (string.IsNullOrWhiteSpace(argumento))
+            return "uso: revisiones-hechas <guion|ruta.json> [clave|P01…]";
+
+        var partes = new List<string>(argumento.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+        for (int i = 0; i < partes.Count; i++) partes[i] = partes[i].Trim('"');
+
+        string primero = partes[0];
+        partes.RemoveAt(0);
+
+        string guion = primero;
+        var delFichero = new List<(string clave, string panel)>();
+        if (primero.EndsWith(".json", StringComparison.OrdinalIgnoreCase) && File.Exists(primero))
+        {
+            try
+            {
+                var lote = JsonUtility.FromJson<LoteDeRevisiones>(File.ReadAllText(primero));
+                if (lote != null)
+                {
+                    if (lote.anotaciones != null)
+                        foreach (var nota in lote.anotaciones)
+                        {
+                            string clave = nota?.Clave();
+                            if (!string.IsNullOrEmpty(clave)) delFichero.Add((clave, nota.panel));
+                        }
+                    if (lote.encargos != null)
+                        foreach (var encargo in lote.encargos)
+                            if (encargo != null && !string.IsNullOrEmpty(encargo.clave))
+                                delFichero.Add((encargo.clave, encargo.panel));
+
+                    guion = !string.IsNullOrEmpty(lote.storyboard) ? lote.storyboard : lote.guion;
+                }
+            }
+            catch (Exception e)
+            {
+                return "No puedo leer ese fichero: " + e.Message;
+            }
+        }
+
+        if (string.IsNullOrEmpty(guion)) return "No sé de qué cinemática es ese fichero.";
+
+        var cola = LeerColaDeEncargos(guion);
+        var marcadas = new List<string>();
+
+        bool Coincide(string clave, string panel, string filtro)
+            => string.Equals(clave, filtro, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(panel, filtro, StringComparison.OrdinalIgnoreCase);
+
+        if (partes.Count == 0)
+        {
+            foreach (var encargo in cola.encargos) marcadas.Add(encargo.clave);
+            foreach (var (clave, _) in delFichero) marcadas.Add(clave);
+        }
+        else
+        {
+            foreach (var encargo in cola.encargos)
+                if (partes.Any(p => Coincide(encargo.clave, encargo.panel, p))) marcadas.Add(encargo.clave);
+
+            foreach (var (clave, panel) in delFichero)
+                if (partes.Any(p => Coincide(clave, panel, p))) marcadas.Add(clave);
+        }
+
+        marcadas = marcadas.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
+        if (marcadas.Count == 0)
+            return $"«{guion}»: no había encargos que coincidan con eso.";
+
+        GuardarAplicadas(guion, LeerAplicadas(guion), marcadas);
+        QuitarDeLaPizarra(guion, marcadas);
+
+        cola.encargos.RemoveAll(e => marcadas.Contains(e.clave));
+        if (string.IsNullOrEmpty(cola.guion)) cola.guion = guion;
+        GuardarColaDeEncargos(cola);
+
+        CinematicsEditorServices.AvisarCambio();
+        return $"«{guion}»: {marcadas.Count} revisión(es) marcada(s) como hecha(s) · " +
+               $"{cola.encargos.Count} pendiente(s).";
+    }
+
 
     [Serializable]
     private class NotasAplicadas
@@ -643,6 +1170,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         var (errores, avisos) = ParteDelInforme(CarpetaDeDatos(entrada.id));
         entrada.errores = errores.Count;
         entrada.avisos = avisos.Count;
+        entrada.encargos = EncargosPendientes(entrada.id);
     }
 
     private static string Estado(string rutaGuion, string rutaHorneado)

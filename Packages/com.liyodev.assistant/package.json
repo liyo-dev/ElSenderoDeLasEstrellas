@@ -1,0 +1,11 @@
+{
+  "name": "com.liyodev.assistant",
+  "version": "0.1.0",
+  "displayName": "Liyodev Assistant",
+  "description": "Chat de IA compartido para las herramientas de editor de Liyodev: un solo servicio, una sola clave y un contexto por herramienta.",
+  "unity": "6000.0",
+  "author": { "name": "liyodev" },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}

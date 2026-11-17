@@ -110,6 +110,9 @@ public sealed class GuionTexto
 
     public static bool EsVerboDeActor(string v) => VerbosDeActor.Contains(v);
 
+    /// Todos los verbos que puede llevar una orden de personaje, para manuales y herramientas.
+    public static IEnumerable<string> VerbosDeActorLista => VerbosDeActor;
+
     public static GuionTexto Leer(string fuente)
     {
         var g = new GuionTexto();

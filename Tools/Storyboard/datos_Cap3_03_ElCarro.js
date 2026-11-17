@@ -3,7 +3,7 @@
 window.STORYBOARD = {
   id: "cap3-03-elcarro",
   titulo: "Cap. 3 · Llegan los contrabandistas",
-  sello: "Horneado el 16 nov. 2026 · 10:26",
+  sello: "Horneado el 17 nov. 2026 · 12:02",
   subtitulo: "Planos del horneado real. Elige un plano, selecciona un elemento de su leyenda y escribe o dibuja: la anotación queda pegada a ese elemento.",
   paneles: [
     {
@@ -12,7 +12,7 @@ window.STORYBOARD = {
       tiempo: "0:00,0 – 0:10,0",
       descripcion: "Will: «Ruedas… a estas horas.»",
       guion: "L44: plano medio will",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/001.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/001_05.png",
       elementos: [{ id: "Player", etiqueta: "Will" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
@@ -21,7 +21,7 @@ window.STORYBOARD = {
       tiempo: "0:10,0 – 0:19,6",
       descripcion: "",
       guion: "L61: plano conjunto will c1 c2",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/002.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/002_05.png",
       elementos: [{ id: "Player", etiqueta: "Will" }, { id: "NPC_Contrabandista1", etiqueta: "C1" }, { id: "NPC_Contrabandista2", etiqueta: "C2" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
@@ -30,7 +30,7 @@ window.STORYBOARD = {
       tiempo: "0:19,6 – 0:22,6",
       descripcion: "C2: «Brasas recientes. Aquí ha estado alguien.»",
       guion: "L69: plano medio c2",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/003.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/003_05.png",
       elementos: [{ id: "NPC_Contrabandista2", etiqueta: "C2" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
@@ -39,7 +39,7 @@ window.STORYBOARD = {
       tiempo: "0:22,6 – 0:24,0",
       descripcion: "",
       guion: "L74: plano primer will",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/004.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/004_03.png",
       elementos: [{ id: "Player", etiqueta: "Will" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
@@ -48,17 +48,17 @@ window.STORYBOARD = {
       tiempo: "0:24,0 – 0:27,4",
       descripcion: "C1: «Algún pastor. Vamos, que nos esperan antes del alba.»",
       guion: "L77: plano medio c1",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/005.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/005_05.png",
       elementos: [{ id: "NPC_Contrabandista1", etiqueta: "C1" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
       id: "P06",
-      titulo: "conjunto de will y c1 y c2",
+      titulo: "dos: c1 y c2",
       tiempo: "0:27,4 – 0:30,9",
       descripcion: "",
-      guion: "L83: plano conjunto will c1 c2",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/006.png",
-      elementos: [{ id: "Player", etiqueta: "Will" }, { id: "NPC_Contrabandista1", etiqueta: "C1" }, { id: "NPC_Contrabandista2", etiqueta: "C2" }, { id: "camara", etiqueta: "Cámara" }]
+      guion: "L83: plano dos c1 c2",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/006_05.png",
+      elementos: [{ id: "NPC_Contrabandista1", etiqueta: "C1" }, { id: "NPC_Contrabandista2", etiqueta: "C2" }, { id: "camara", etiqueta: "Cámara" }]
     },
     {
       id: "P07",
@@ -66,7 +66,7 @@ window.STORYBOARD = {
       tiempo: "0:30,9 – 0:40,2",
       descripcion: "Will: «La carga tapada y esa luz bajo la paja… lo que contó el posadero.» · Will: «Voy a seguirles. Sin que me vean.»",
       guion: "L85: plano primer will",
-      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/007.png",
+      imagen: "../../Guiones/MainWorld_Cap3Carro/Cap3_03_ElCarro/storyboard/007_05.png",
       elementos: [{ id: "Player", etiqueta: "Will" }, { id: "camara", etiqueta: "Cámara" }]
     }
   ]

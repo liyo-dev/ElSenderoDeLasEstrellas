@@ -14,6 +14,7 @@ namespace Sendero.Narrative.Editor
     public static class ExportarElKitDelGrafo
     {
         const string Raiz = "Packages/com.liyodev.narrativegraph";
+        const string RaizAsistente = "Packages/com.liyodev.assistant";
         const string Paquete = "Builds/Kits/NarrativeGraph.unitypackage";
         const string ProyectoDePrueba = "../NarrativeGraphPrueba";
 
@@ -21,7 +22,8 @@ namespace Sendero.Narrative.Editor
         public static string Exportar()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Paquete));
-            UnityEditor.AssetPackage.Package.Export(new UnityEditor.AssetPackage.ExportPackageParameters(new[] { Raiz }, Paquete, null, ExportPackageOptions.Recurse));
+            UnityEditor.AssetPackage.Package.Export(new UnityEditor.AssetPackage.ExportPackageParameters(
+                new[] { Raiz, RaizAsistente }, Paquete, null, ExportPackageOptions.Recurse));
             var ruta = Path.GetFullPath(Paquete);
             Debug.Log("[Kit del grafo] Exportado: " + ruta);
             return ruta;
@@ -66,6 +68,9 @@ namespace Sendero.Narrative.Editor
                 .Select(l => l.Trim().TrimEnd(','))
                 .ToList();
             lineas.Insert(0, $"\"com.liyodev.narrativegraph\": \"file:{paquete.Replace('\\', '/')}\"");
+            string asistente = Path.Combine(Path.GetDirectoryName(paquete) ?? string.Empty, "com.liyodev.assistant");
+            if (Directory.Exists(asistente))
+                lineas.Insert(1, $"\"com.liyodev.assistant\": \"file:{asistente.Replace('\\', '/')}\"");
             return "{\n  \"dependencies\": {\n    " + string.Join(",\n    ", lineas) + "\n  }\n}\n";
         }
     }

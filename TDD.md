@@ -2274,6 +2274,26 @@ Todo lee `DayNightCycle.NocheActual` (el `PesoDeNoche` del ciclo cargado, 0 si n
 - **Sorteo y LAB (INC-691):** `SorteoAutomatico` (`sortearClima`) apaga el sorteo propio sin tocar `SorteoDeClimaEnPausa`, que es de las cinemáticas; `LluviaPedida`/`NievePedida` cuentan también el cielo que aún se está cubriendo. El LAB lleva una copia del objeto del ciclo de MainWorld (`CombatLabBuilder.Clima.cs`, raíz `LAB_CLIMA`) y la pestaña «Clima» de su panel (`ClimaDelLab`) pone y quita hora y climas sobre `DayNightCycle.Instance`.
 - **Escenas con hora fija y sin clima (INC-891):** un `DayNightCycle` con una sola franja, `autoAdvance` apagado y `sortearClima` apagado; `progresoInicialDeLaFranja` dice en qué punto de la franja arranca (con el ciclo parado, la hora fija; 0,4 en «Noche» deja la luna alta). Cada escena así puede llevar su propio cielo en el `skybox` de esa franja (el Parque usa `Sendero/CieloDeLaFeria`, que dibuja la luna con las mismas globales de `SolYLunaEnElCielo`). La forma común de dejarlo así es `ClimaDelCicloWiring.FijarHoraSinClima(ciclo, franja, progreso)` (Editor): escribe la franja única (`TimeOfDaySettings`: cielo, luz, ambiente y niebla de distancia), apaga `autoAdvance` y `sortearClima`, fija `progresoInicialDeLaFranja` y copia cielo, sol, ambiente y niebla a `RenderSettings` para la vista del Editor; cada constructor solo aporta sus datos. `ClimaDelCicloWiring.CieloDeEscena(nombre, colores)` crea una vez `Assets/Art/Cielo/Cielo_<nombre>.mat` con `El Sendero/Cielo` y luego lo respeta (se retoca en el Inspector). *Completar el clima de las escenas abiertas* no cambia el cielo de los ciclos de hora fija (`EsHoraFija`: una franja y parado). Chuchelandia: día fijo con `Cielo_Chuchelandia` (§ 29). Los constructores de escenas jugables comparten `EscenaJugable` (Editor): suelo en Floor por prefijo de prefab, grupo con su cámara y `GrupoDelJugador`, sitio libre y NavMesh guardado como asset junto a la escena.
 
+**Actualización (17 nov 2026, INC-1277) — el cielo es de dibujo y el clima no grisea:** las nubes del cielo ya no se pintan con fbm ni con alfa: `El Sendero/Cielo` coloca un **atlas propio** (`Assets/Art/Cielo/NubesDeDibujo.png`, 3×2 nubes, máscaras R luz / G sombra / B tinta / A silueta) en coordenadas esféricas, en dos capas (lejos y cerca) con jitter por celda, y compone los tres tonos con la paleta de la franja; el sol y la luna se ocultan con el alfa resultante. Sustituye a «nubes de cuatro octavas» y al color de sombra fijo de los puntos anteriores; el **frente** (`_AvanceDelFrente`) mueve la cobertura del atlas. Los materiales de `Assets/Art/Cielo` llevan más cobertura, sombra violeta, `_ColorSuelo` de mar y `_EscalaDeNubes` 2.6 (menú *El Sendero ▸ Cielo ▸ Aplicar la propuesta de cielo y clima*; el atlas se importa como máscara lineal, sin sRGB). La lluvia ya no es el pack OptiFX: `VfxDeClima.CrearLluvia` genera trazos con textura afilada y aros de salpicadura planos, y las escenas tienen `rainPrefab` vacío. El clima oscurece la paleta de nubes **de la escena** (no un gris fijo), la sombra se multiplica por `tinteDeSombraDeNubes`, la niebla se tiñe del horizonte del cielo (×1.6) y la luz se enfría en vez de apagarse (0.75, suelo 0.5). Al volar, `PlayerFlyingController` pide prestada la niebla a `DayNightCycle` según la altura (hasta 0.22) y la suelta al aterrizar. Pendiente: probar en Play, afinar el atlas y el tamaño de las nubes, el frente, las estrellas (INC-1188) y los puntos blancos del mar.
+
+### Reloj, constancia y clima como sistema de juego (17 nov 2026; ciclo de 30 min implementado)
+
+**Decisión de Raúl (implementada):** el ciclo de día completo pasa a **30 min**. **Hecho:** `DayNightCycle.duracionTotalDelDia` vale 1800 s por defecto y, al arrancar, reparte las franjas en proporción a la duración que ya tuviera cada escena; las de hora fija no cambian. MainWorld (120/120/45/90) pasa a 576/576/216/432 s (9 min 36 s / 9 min 36 s / 3 min 36 s / 7 min 12 s). Las transiciones (10 s en MainWorld) van aparte: el día real ronda 30 min 40 s. Antes, los valores por defecto del código sumaban 525 s (8 min 45 s) y MainWorld 375 s. El reajuste del sorteo de clima para ese día sigue pendiente: hoy comprueba cada 45–110 s y los eventos duran 40–140 s; el objetivo es 3–5 eventos por día, no 15. Compila con Roslyn (0 errores).
+
+**Huecos técnicos detectados:**
+
+- No hay reloj ni icono del tiempo en el HUD; `TimeOfDayIndicator` se retiró. `DayNightCycle` expone booleanos (`IsRaining`, `IsSnowing`…) pero no `TiempoRestanteDeClima` ni `ProximoCambioDeClima`, así que un aro de cuenta atrás no se puede dibujar.
+- El clima no se guarda en `Partida`; al cargar vuelve el de la escena. No hay previsión ni petición narrativa de clima (solo `PedirHoraDelDia`, `PedirSegunHoraDelDia`, `PedirEsperarHoraDelDia`).
+- `WeatherBeat` pide viento con `StartWind()` y niebla con `StartMist()` sin duración (rangos aleatorios de 30–90 s y 20–45 s) y no aplica `immediate` a esos dos; en secuencias largas se caen solos.
+- `NPCWeatherAwareness` existe, pero la suscripción de `NPCBehaviourManagerV2` está comentada desde el 31 ago 2026; `SeekShelterState`, `ReturnFromShelterState` y `NPCShelterPoint` siguen intactos.
+- `DayNightCycle.Instance` es «el último que despierta»; en cargas aditivas puede no coincidir con el `FindAnyObjectByType` que usa `NPCWeatherAwareness`.
+- `Damageable.TakeDamage(float)` solo recibe cantidad: el elemento se pierde antes de llegar. El punto natural para un modificador por clima es `FormulasDeCombate.DanoDe` o el impacto del hechizo, no `Damageable`.
+- El GDD vigente dice que no hay debilidades ni resistencias elementales en combate; los elementos son identidad y puzle. No hay elemento Agua (los cinco son Fuego, Viento/Tormenta, Luz, Mente y Oscuro) y «soleado» no es un estado de clima: es la ausencia de evento.
+
+**Propuesta (documentada; pendiente):** HUD con hora, icono y aro de tiempo restante; pestaña «Mundo» en `MenuDeStart` con previsión y tabla de efectos; `EstadoDelClima` de solo lectura (tipo, intensidad, restante, origen y próximo cambio); `ForzarClima`/`Despejar` con prioridad, separados de `SorteoDeClimaEnPausa` y `SorteoAutomatico`; persistencia en `Partida`; petición `PedirClima` y `PedirEsperarClima`; `WeatherBeat` con duración explícita; refugio de NPCs y barks con `NPCWeatherAwareness`. Para el daño, una tabla de afinidades en ScriptableObject aplicada en un solo punto (`FormulasDeCombate.DanoDe(instigador, dano, elemento)` o un `ModificadorDeDanoPorClima`), sin `if` por hechizo o enemigo. Multiplicadores recomendados: x1,5–x2 por factor y tope total; el x4 solo como combo deliberado, nunca por sorteo. Los jefes-puzle conservan sus mecánicas.
+
+**Canon:** la matriz clima-elemento es una propuesta para otro scope. No se aplica hasta que se apruebe y se actualice `GDD.md`; la regla «sin debilidades ni resistencias elementales» sigue vigente. Detalle, matriz, etapas y decisiones pendientes: `docs/clima-reloj-y-efectos-2026-11-17.md` (INC-1276).
+
 ## 17. Diseño: Refugio de NPCs bajo la lluvia + Relaciones sociales dinámicas
 
 **Proyecto:** El Sendero de las Estrellas
@@ -5270,10 +5290,24 @@ correcciones del storyboard…** (o la orden `revisiones <fichero>` del buzón) 
 nota, hace lo que sabe traducir: si la nota es de la **cámara** y dice `alejar/abrir/atrás` baja el
 `lente` 6 (abre el plano) y si dice `acercar/cerrar/primer plano` lo sube 8; escribe ese `lente=` en **la
 línea exacta del plano** (`GuionTextoEditable`, conservando el resto de la línea), rehornea con
-storyboard, regenera la página y avisa a la mesa para que repinte lista y timeline. Lo que no sabe
-traducir no se toca: se cuenta en el resumen («anotada, sin cambio automático») y se lee a mano.
-Probado el 16 nov 2026 con la nota real de Raúl en `Cap1_PerasEldran` P01: `L38: lente 24 → 18`, un solo
-cambio en el `.guion.txt`, horneado de 34,8 s sin errores y página regenerada.
+storyboard, regenera la página y avisa a la mesa para que repinte lista y timeline. Probado el 16 nov
+2026 con la nota real de Raúl en `Cap1_PerasEldran` P01: `L38: lente 24 → 18`, un solo cambio en el
+`.guion.txt`, horneado de 34,8 s sin errores y página regenerada.
+
+**Lo que no se sabe traducir no se tira: va de encargo a la IA.** Cada nota que no es un ajuste de
+`lente` (una cámara mal colocada, un carro que no sale, un gesto que falta) se guarda con su contexto en
+`Guiones/_revisiones/encargos-<slug>.json`, y en su vista para leerla entera —panel, elemento, pedido,
+línea del guion y fotograma— `encargos-<slug>.md`. La mesa lo enseña en la lista (`IA · N`) y en el
+botón **Encargos de la IA (N)** de la botonera. Una sesión de IA los lee por el buzón
+(`encargos <guion>`), hace el cambio donde toque —el guion, el previz o el código que lo pida—,
+rehornea y los cierra con `revisiones-hechas <guion>` (o solo algunos planos:
+`revisiones-hechas <guion> P06`): eso los apunta en `aplicadas-<slug>.json`, los borra de la cola y de
+la pizarra, y una nota no se puede aplicar dos veces. Si la cola queda a cero, sus dos ficheros
+desaparecen. La foto de la página es el **último fotograma** del animatic: enseña cómo acaba el plano,
+no cómo empieza. Probado el 17 nov 2026 con las dos notas reales de Raúl en `Cap3_03_ElCarro`: la P06
+(`conjunto will c1 c2`, que salía dentro de un tronco) pasa a `dos c1 c2`; la P02 pide el carro y el
+storyboard lo pone detrás de quien tira (`CargaArrastrada.PoseDetrasDe`); las dos se cierran y volver a
+mandar el mismo fichero responde «2 ya aplicada(s) antes».
 
 **El timeline (de momento solo lectura):** una fila por *cosa*, no por detalle — **Cámara** (un clip por
 plano), **Voz · \<personaje\>** (frases y voces fuera de escena), **Movimiento · \<personaje\>** (tramos de
@@ -5288,9 +5322,35 @@ hará que arrastrar un clip sea reescribir el `desde @marca+X` del `.guion.txt` 
 formato. Las voces fuera de escena (`SayBeat` con marca) cuentan como frases: subtítulo con su nombre, voz
 en el play y elemento propio en la página anotable.
 
-**Lo que aún no hace:** rodar en PlayMode desde la ventana (el `cinematica.reproducir` del contrato) y el
-Studio web con flipbook exportable (F1–F5). El motor de guiones sigue viviendo en `Assets/Editor/Guion`:
-moverlo al paquete, con sus `[MovedFrom]`, es la siguiente tanda de F0.
+**Lo que aún no hace:** el Studio web con flipbook exportable (F1–F5). El motor de guiones sigue viviendo
+en `Assets/Editor/Guion`: moverlo al paquete, con sus `[MovedFrom]`, es la siguiente tanda de F0.
 
 **Comprobado el 16 nov 2026:** compila con 0 `error CS`; *Comprobar el kit* da el paquete por
 independiente con 40 cinemáticas a la vista; la ventana abre desde los dos menús sin excepciones.
+
+**El chat de IA es compartido (F0–F4, INC-1275).** `Packages/com.liyodev.assistant` (solo Editor y gratis)
+guarda el cliente de proveedores, los ajustes y la clave —una sola vez—, la vista de chat y el contrato
+`IAssistantContext` (`Name`, `Manual`, `State`, `Apply`). Proveedores: Anthropic, OpenAI, Gemini, OpenCode
+(API de inferencia `https://opencode.ai/inference/openai/v1`, con `User-Agent` propio y `x-opencode-session`
+por conversación), Ollama local (sin clave, con lista de modelos instalados) y cualquier compatible con
+OpenAI. Cada herramienta se apunta con un contexto: el grafo,
+con `StoryAssistantContext` (`NarrativeGraphText`, capítulo e informe en vivo, `StoryBatchEdit`); el
+Director, con `CinematicsAssistantContext`, que lee la cinemática abierta, la cola de encargos, la pizarra,
+el último informe sin la parte de caminatas, los estados de animación de cada prefab y el guion numerado
+`L1:`. El manual del guion lo genera `GuionManual` de las tablas reales (`GuionTexto`, `HornoCamaras`,
+`FabricaDeEfectos`, `CarasDelGuion`) y lo sirve `ICinematicsEditorBridge.ManualDeGuion()`;
+`EstadoParaAsistente(id, plano, segundo)` compone el estado. `DirectorWindow` expone `CinematicaActivaId`,
+`PlanoActivo`, `SegundoActivo` y `SeleccionCambiada`. Aplicar cambios (F2): `GuionBatchEdit` acepta
+`set_options`, `replace_line`, `insert_after`, `insert_before`, `delete_line` y `resolve_task`; valida la
+gramática y los efectos, hornea en memoria, calcula el diff, guarda copia del texto anterior y solo entonces
+escribe el `.guion.txt`, guarda el horneado, escribe el informe y cierra los encargos. En el Director,
+«Asistente» (barra) abre ese contexto y «Encargos de la IA (N)» lanza la acción rápida que pide resolver
+la cola; el `.md` sigue en Herramientas. `AssistantWindow`
+(*Liyodev ▸ Asistente*) elige el contexto y comparte la configuración; el panel del grafo es una fachada del
+mismo chat. El puente local `AssistantBridge` (47822, apagado por defecto) y `Tools/mcp` exponen esos
+mismos contextos por MCP: `list_contexts`, `context_targets`, `context_select`, `context_manual`,
+`context_state` y `apply_ops`; el contexto del Director implementa `IAssistantContextSelection`. Las
+claves nuevas son `Liyodev.Assistant.*` y se leen las antiguas `NarrativeGraph.Assistant.*`
+como respaldo. Se vende como núcleo gratis: los dos productos de pago lo declaran como requisito y
+ninguno depende del otro. **Pendiente:** migrar el MCP del grafo a este servidor si se quiere uno solo;
+el del grafo sigue en su paquete.

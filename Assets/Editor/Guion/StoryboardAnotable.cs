@@ -98,7 +98,7 @@ public static class StoryboardAnotable
             js.Append("      tiempo: \"").Append(Reloj(plano.t0)).Append(" – ").Append(Reloj(plano.t1)).Append("\",\n");
             js.Append("      descripcion: \"").Append(Js(LoQueSeDice(guion, plano, textos, actoresPorId))).Append("\",\n");
             js.Append("      guion: \"").Append(Js(OrdenDelGuion(plano, lineasDelGuion))).Append("\",\n");
-            js.Append("      imagen: \"").Append(relativa).Append('/').Append($"{i + 1:000}.png").Append("\",\n");
+            js.Append("      imagen: \"").Append(relativa).Append('/').Append(ImagenDelPlano(storyboard, i + 1)).Append("\",\n");
 
             var elementos = new List<(string id, string etiqueta)>();
             foreach (string sujeto in plano.sujetos)
@@ -168,6 +168,23 @@ public static class StoryboardAnotable
             if (id == null) continue;
             yield return (efecto.t, duracion > 0f ? efecto.t + duracion : float.MaxValue, id);
         }
+    }
+
+    /// La foto del plano para la página: la última del animatic, que es la que enseña cómo acaba el
+    /// plano (el carro ya dentro del cuadro, el gesto hecho). Con una sola, esa.
+    private static string ImagenDelPlano(string carpeta, int numero)
+    {
+        try
+        {
+            string[] fotos = Directory.GetFiles(carpeta, $"{numero:000}*.png");
+            Array.Sort(fotos, StringComparer.Ordinal);
+            if (fotos.Length > 0) return Path.GetFileName(fotos[fotos.Length - 1]);
+        }
+        catch
+        {
+            // Sin permiso o carpeta rara: se queda el nombre de siempre.
+        }
+        return $"{numero:000}.png";
     }
 
     /// <summary>La carpeta de las fotos: Guiones/&lt;escena&gt;/&lt;guion&gt;/storyboard, o se busca por el nombre.</summary>

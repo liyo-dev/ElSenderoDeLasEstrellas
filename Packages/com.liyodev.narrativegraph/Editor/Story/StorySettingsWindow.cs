@@ -132,10 +132,20 @@ namespace NarrativeGraphEditor.Story
             var addressHint = new Label(StoryText.T("Cualquier servicio con el formato de OpenAI. Ollama en tu ordenador: http://localhost:11434/v1 (sin clave).",
                                                     "Any service with the OpenAI format. Ollama on your computer: http://localhost:11434/v1 (no key)."));
             addressHint.AddToClassList("story-muted");
+            var openCodeHint = new Label(StoryText.T(
+                "OpenCode: usa la clave del Console (Go o saldo) y el id exacto del modelo de https://opencode.ai/inference/v1/models (p. ej. deepseek-v4.1-flash).",
+                "OpenCode: use your Console key (Go or balance) and the exact model id from https://opencode.ai/inference/v1/models (e.g. deepseek-v4.1-flash)."));
+            openCodeHint.AddToClassList("story-muted");
+            var ollamaHint = new Label(StoryText.T(
+                "Ollama: instala Ollama (ollama.com) y ejecuta «ollama pull qwen3:8b». Sin clave; el servidor tiene que estar en marcha. El botón para ver los modelos instalados está en Liyodev ▸ Asistente.",
+                "Ollama: install Ollama (ollama.com) and run “ollama pull qwen3:8b”. No key; the server must be running. The button to list installed models is in Liyodev ▸ Assistant."));
+            ollamaHint.AddToClassList("story-muted");
             assistant.Add(key);
             assistant.Add(model);
             assistant.Add(address);
             assistant.Add(addressHint);
+            assistant.Add(openCodeHint);
+            assistant.Add(ollamaHint);
 
             void Fill()
             {
@@ -144,8 +154,13 @@ namespace NarrativeGraphEditor.Story
                 model.SetValueWithoutNotify(StoryAssistantSettings.Model(p));
                 address.SetValueWithoutNotify(StoryAssistantSettings.Address);
                 bool compatible = p == StoryAssistantSettings.Provider.Compatible;
+                bool openCode = p == StoryAssistantSettings.Provider.OpenCode;
+                bool ollama = p == StoryAssistantSettings.Provider.Ollama;
+                key.style.display = ollama ? DisplayStyle.None : DisplayStyle.Flex;
                 address.style.display = compatible ? DisplayStyle.Flex : DisplayStyle.None;
                 addressHint.style.display = compatible ? DisplayStyle.Flex : DisplayStyle.None;
+                openCodeHint.style.display = openCode ? DisplayStyle.Flex : DisplayStyle.None;
+                ollamaHint.style.display = ollama ? DisplayStyle.Flex : DisplayStyle.None;
             }
             Fill();
             provider.RegisterValueChangedCallback(_ => { StoryAssistantSettings.Current = providers[provider.index]; Fill(); });

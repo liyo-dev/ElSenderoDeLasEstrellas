@@ -11,5 +11,9 @@
     "cinematics",
     "storyboard",
     "editor"
-  ]
+  ],
+  "dependencies": {
+    "com.liyodev.assistant": "0.1.0",
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
 }

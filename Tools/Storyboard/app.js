@@ -649,7 +649,11 @@
       storyboard: SB.id,
       titulo: SB.titulo,
       fecha: new Date().toISOString(),
-      anotaciones: estado.anotaciones
+      // Los trazos van como {x, y} para que Unity los lea con JsonUtility y pueda cerrar la nota
+      // por su dibujo cuando no lleva texto.
+      anotaciones: estado.anotaciones.map((a) =>
+        a && a.puntos ? { ...a, puntos: a.puntos.map(([x, y]) => ({ x, y })) } : a
+      )
     };
   }
 

@@ -518,6 +518,15 @@ internal sealed partial class Horno
 
     // ── Storyboard: una foto por plano, con los personajes de verdad en su sitio ────────────
 
+    /// Una carga que arrastra un actor (el carro de los contrabandistas): su copia para la foto y
+    /// a quién sigue.
+    private sealed class CargaDelStoryboard
+    {
+        public CargaArrastrada config;
+        public ActorH actor;
+        public GameObject copia;
+    }
+
     private void Storyboard(GuionHorneado asset)
     {
         string carpeta = Path.Combine(_carpetaSalida, "storyboard");
@@ -527,6 +536,7 @@ internal sealed partial class Horno
         var proxies = new Dictionary<ActorH, (GameObject go, GameObject inst, AnimationClip clip)>();
         var materiales = new List<Material>();
         var props = new Dictionary<string, (Transform original, GameObject copia, Vector3 pos, Quaternion giro, bool activo)>();
+        var cargas = new List<CargaDelStoryboard>();
         var go = new GameObject("Storyboard · cámara") { hideFlags = HideFlags.HideAndDontSave };
         int W = TamanoDelStoryboard.x, H = TamanoDelStoryboard.y;
         var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
@@ -596,6 +606,25 @@ internal sealed partial class Horno
                     idle = anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle_Normal"))
                         ?? anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle"));
                 proxies[a] = (soporte, inst, idle);
+            }
+
+            // El carro (y cualquier carga arrastrada) no es un prop de la escena ni un plano del
+            // guion: se copia y se pone detrás de su actor en cada foto, como haría en juego.
+            foreach (CargaArrastrada carga in UnityEngine.Object.FindObjectsByType<CargaArrastrada>(FindObjectsInactive.Include))
+            {
+                if (carga == null || string.IsNullOrEmpty(carga.ActorId)) continue;
+                if (carga.gameObject.scene != _escena) continue;
+                ActorH tirador = _actores.Values.FirstOrDefault(x => x != null && x.id == carga.ActorId && x.prefab != null);
+                if (tirador == null) continue;
+
+                var copia = UnityEngine.Object.Instantiate(carga.gameObject);
+                copia.name = "Storyboard · " + carga.name;
+                copia.hideFlags = HideFlags.DontSave;
+                copia.transform.SetParent(null, true);
+                SceneManager.MoveGameObjectToScene(copia, _escena);
+                foreach (var mb in copia.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+                copia.SetActive(false);
+                cargas.Add(new CargaDelStoryboard { config = carga, actor = tirador, copia = copia });
             }
 
             var cam = go.AddComponent<Camera>();
@@ -758,6 +787,18 @@ internal sealed partial class Horno
                     AplicarApuntesDelStoryboard(proxies[a].inst, soporte.transform, a.alias);
                 }
 
+                foreach (var carga in cargas)
+                {
+                    if (!proxies.TryGetValue(carga.actor, out var proxy) || proxy.go == null) continue;
+                    bool seVe = proxy.go.activeSelf;
+                    if (carga.copia.activeSelf != seVe) carga.copia.SetActive(seVe);
+                    if (!seVe) continue;
+
+                    carga.config.PoseDetrasDe(proxy.go.transform, carga.actor.VelEn(t),
+                        out Vector3 posCarga, out Quaternion giroCarga);
+                    carga.copia.transform.SetPositionAndRotation(posCarga, giroCarga);
+                }
+
                 foreach (var kv in props)
                 {
                     var objeto = kv.Value.copia;
@@ -847,6 +888,8 @@ internal sealed partial class Horno
                 if (prop.copia != null) UnityEngine.Object.DestroyImmediate(prop.copia);
                 if (prop.original != null && prop.original.gameObject.activeSelf != prop.activo) prop.original.gameObject.SetActive(prop.activo);
             }
+            foreach (var carga in cargas)
+                if (carga.copia != null) UnityEngine.Object.DestroyImmediate(carga.copia);
             foreach (var kv in proxies) if (kv.Value.go != null) UnityEngine.Object.DestroyImmediate(kv.Value.go);
             foreach (var m in materiales) if (m != null) UnityEngine.Object.DestroyImmediate(m);
             UnityEngine.Object.DestroyImmediate(go);

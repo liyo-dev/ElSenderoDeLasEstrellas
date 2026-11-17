@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-16 10:26 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-17 12:02 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
 **0:40,2** de secuencia · 5 frases · 7 planos · 4 efectos · 3 personajes
 
@@ -43,8 +43,8 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97 · c2 1,31/ojos 0,9
 | 0:24,0 | plano 5 | medio de c1 · 3,4 s · lente 30° · coste 2: ángulo 2 |
 | 0:24,0 | c1 | «Algún pastor. Vamos, que nos esperan antes del alba.» (3,4 s) · pose |
 | 0:27,4 | **@sevan** |  |
-| 0:27,4 | plano 6 | conjunto de will y c1 y c2 · 3,5 s · lente 34° · coste 242: cara 159, ángulo 77 |
-| 0:30,9 | plano 7 | primer plano de will · 9,3 s · lente 24° · coste 15: ángulo 15 |
+| 0:27,4 | plano 6 | dos: c1 y c2 · 3,5 s · lente 32° · coste 298: cara 227, ángulo 63 |
+| 0:30,9 | plano 7 | primer plano de will · 9,3 s · lente 24° · coste 9: ángulo 3 |
 | 0:30,9 | will | «La carga tapada y esa luz bajo la paja… lo que contó el posadero.» (4,2 s) · pose |
 | 0:35,4 | will | «Voy a seguirles. Sin que me vean.» (3,9 s) · pose |
 | 0:40,2 | efecto | Bandas de cine: retirar (0,5s) |

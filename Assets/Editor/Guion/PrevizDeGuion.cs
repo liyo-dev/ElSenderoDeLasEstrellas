@@ -55,8 +55,10 @@ internal static class PrevizDeGuion
 
         var originales = new Dictionary<Transform, Estado>();
         var instanciados = new List<GameObject>();
+        var activados = new List<GameObject>();
         var uiOculta = new List<GameObject>();
         var actores = ResolverActores(guion, instanciados);
+        var cargas = ResolverCargas(guion, actores, escena);
         OcultarUiDeEscena(escena, uiOculta);
         bool modoAnimacion = false;
         if (instanciados.Count > 0 && !AnimationMode.InAnimationMode())
@@ -88,6 +90,7 @@ internal static class PrevizDeGuion
                     $"Plano {i + 1}/{guion.planos.Count}", (float)i / guion.planos.Count);
 
                 ColocarActores(guion, actores, t, originales);
+                ColocarCargas(cargas, t, originales, activados);
                 Physics.SyncTransforms();
 
                 if (!guion.PoseDeCamara(t, out Vector3 posicion, out Quaternion rotacion, out float fov))
@@ -137,6 +140,9 @@ internal static class PrevizDeGuion
             }
             Physics.SyncTransforms();
 
+            for (int i = activados.Count - 1; i >= 0; i--)
+                if (activados[i] != null) activados[i].SetActive(false);
+
             foreach (GameObject go in uiOculta)
                 if (go != null) go.SetActive(true);
             foreach (GameObject go in instanciados)
@@ -179,6 +185,89 @@ internal static class PrevizDeGuion
             if (actor?.Transform != null) actores[datos.id] = actor;
         }
         return actores;
+    }
+
+    private sealed class CargaEnEscena
+    {
+        public CargaArrastrada carga;
+        public ActorHorneado datos;
+        public SequenceActor actor;
+    }
+
+    /// Las cargas que arrastra alguien del reparto (el carro de los contrabandistas): se colocan
+    /// detrás de su actor en cada foto, con la distancia y el giro que llevan configurados. Fuera de
+    /// Play sus componentes no se mueven solos, así que sin esto el carro no sale en el previz.
+    private static List<CargaEnEscena> ResolverCargas(GuionHorneado guion, Dictionary<string, SequenceActor> actores, Scene escena)
+    {
+        var cargas = new List<CargaEnEscena>();
+        if (guion.actores == null) return cargas;
+
+        foreach (CargaArrastrada carga in UnityEngine.Object.FindObjectsByType<CargaArrastrada>(FindObjectsInactive.Include))
+        {
+            if (carga == null || string.IsNullOrEmpty(carga.ActorId)) continue;
+            if (carga.gameObject.scene != escena) continue;
+
+            ActorHorneado datos = null;
+            foreach (ActorHorneado actor in guion.actores)
+                if (actor != null && actor.id == carga.ActorId) { datos = actor; break; }
+            if (datos == null) continue;
+            if (!actores.TryGetValue(datos.id, out SequenceActor deGuion) || deGuion?.Transform == null) continue;
+
+            cargas.Add(new CargaEnEscena { carga = carga, datos = datos, actor = deGuion });
+        }
+        return cargas;
+    }
+
+    private static void ColocarCargas(List<CargaEnEscena> cargas, float t,
+        Dictionary<Transform, Estado> originales, List<GameObject> activados)
+    {
+        foreach (CargaEnEscena enEscena in cargas)
+        {
+            Transform tr = enEscena.carga.transform;
+            if (!originales.ContainsKey(tr))
+                originales[tr] = new Estado
+                {
+                    posicion = tr.position,
+                    rotacion = tr.rotation,
+                    activo = tr.gameObject.activeSelf
+                };
+
+            ActivarCadena(tr, activados);
+            enEscena.carga.PoseDetrasDe(enEscena.actor.Transform, DireccionDe(enEscena.datos, t),
+                out Vector3 posicion, out Quaternion rotacion);
+            tr.SetPositionAndRotation(posicion, rotacion);
+        }
+    }
+
+    /// La carga vive dentro de un grupo que solo se enciende en su tramo (p. ej. «… (tramo)»). Para
+    /// la foto hay que encender la cadena entera y devolverla como estaba al acabar.
+    private static void ActivarCadena(Transform tr, List<GameObject> activados)
+    {
+        var cadena = new List<Transform>();
+        for (Transform t = tr; t != null; t = t.parent) cadena.Add(t);
+
+        for (int i = cadena.Count - 1; i >= 0; i--)
+        {
+            GameObject go = cadena[i].gameObject;
+            if (go.activeSelf) continue;
+            go.SetActive(true);
+            if (!activados.Contains(go)) activados.Add(go);
+        }
+    }
+
+    /// La dirección en la que va el personaje en ese segundo: la de su camino, no la de su mirada
+    /// (mira a otro y el carro seguiría detrás de él, donde iba).
+    private static Vector3 DireccionDe(ActorHorneado datos, float t)
+    {
+        if (datos?.posiciones == null || datos.posiciones.Count == 0) return Vector3.forward;
+
+        Vector3 ahora = Interpolar.Posicion(datos.posiciones, t);
+        Vector3 antes = Interpolar.Posicion(datos.posiciones, Mathf.Max(0f, t - 0.25f));
+        Vector3 direccion = ahora - antes;
+        if (direccion.sqrMagnitude > 0.0001f) return direccion.normalized;
+
+        direccion = ahora - Interpolar.Posicion(datos.posiciones, 0f);
+        return direccion.sqrMagnitude > 0.0001f ? direccion.normalized : Vector3.forward;
     }
 
     private static SequenceActor ResolverEnEscena(string id)

@@ -50,7 +50,12 @@ namespace Liyodev.Cinematics
             if (lote == null || lote.anotaciones == null || lote.anotaciones.Length == 0)
                 return "Ese fichero no trae anotaciones.";
 
-            try { return puente.AplicarRevisiones(lote.storyboard, new List<CinemaNota>(lote.anotaciones)).resumen; }
+            try
+            {
+                var resultado = puente.AplicarRevisiones(lote.storyboard, new List<CinemaNota>(lote.anotaciones));
+                CinematicsEditorServices.AvisarCambio();
+                return resultado.resumen;
+            }
             catch (Exception e) { return "Falla al aplicar: " + e.Message; }
         }
     }

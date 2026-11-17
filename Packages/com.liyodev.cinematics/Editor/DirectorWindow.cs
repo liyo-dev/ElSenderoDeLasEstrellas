@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Liyodev.Assistant;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,6 +16,13 @@ namespace Liyodev.Cinematics
     /// (<see cref="ICinematicsEditorBridge"/>). Ver `docs/plan-director-2026-11-16.md`.
     public class DirectorWindow : EditorWindow
     {
+        /// La cinemática que el Director tiene abierta y el punto del timeline que se mira. Lo lee
+        /// el asistente de IA desde fuera; la ventana no necesita saber quién lo escucha.
+        public static string CinematicaActivaId { get; private set; }
+        public static int PlanoActivo { get; private set; } = -1;
+        public static float SegundoActivo { get; private set; } = -1f;
+        public static event Action SeleccionCambiada;
+
         private const float AnchoLista = 350f;
         private const float AltoTira = 96f;
 
@@ -72,6 +81,22 @@ namespace Liyodev.Cinematics
             ventana.Show();
         }
 
+        /// Abre la mesa si hace falta y elige una cinemática por id. Lo usa el puente del asistente.
+        public static bool SeleccionarPorId(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+
+            var ventana = GetWindow<DirectorWindow>("Director");
+            ventana.minSize = new Vector2(1120, 860);
+            ventana.RefrescarLista();
+            var entrada = ventana._entradas.Find(e => e.id == id);
+            if (entrada == null) return false;
+
+            ventana.Seleccionar(entrada, true);
+            ventana.Repaint();
+            return true;
+        }
+
         private void OnEnable()
         {
             EditorApplication.update += Tick;
@@ -85,6 +110,10 @@ namespace Liyodev.Cinematics
             CinematicsEditorServices.Cambiaron -= RefrescarLista;
             Parar();
             DestruirTexturas();
+            CinematicaActivaId = null;
+            PlanoActivo = -1;
+            SegundoActivo = -1f;
+            SeleccionCambiada?.Invoke();
         }
 
         // ── Datos ────────────────────────────────────────────────────────────────────────────
@@ -134,6 +163,10 @@ namespace Liyodev.Cinematics
             if (entrada == null) return;
             if (_elegida != null && _elegida.id != entrada.id) Parar();
             _elegida = entrada;
+            CinematicaActivaId = entrada.id;
+            PlanoActivo = -1;
+            SegundoActivo = 0f;
+            SeleccionCambiada?.Invoke();
             if (cargar) CargarDetalle();
         }
 
@@ -141,6 +174,8 @@ namespace Liyodev.Cinematics
         {
             _detalle = null;
             _plano = -1;
+            PlanoActivo = -1;
+            SegundoActivo = 0f;
             _verAvisos = false;
             DescartarTexturas();
 
@@ -226,11 +261,25 @@ namespace Liyodev.Cinematics
 
         private void SincronizarPlano()
         {
-            if (_detalle == null || _detalle.planos.Count == 0) { _plano = -1; return; }
+            if (_detalle == null || _detalle.planos.Count == 0)
+            {
+                _plano = -1;
+                SegundoActivo = _t;
+                if (PlanoActivo != -1)
+                {
+                    PlanoActivo = -1;
+                    SeleccionCambiada?.Invoke();
+                }
+                return;
+            }
             int indice = 0;
             for (int i = 0; i < _detalle.planos.Count; i++)
                 if (_detalle.planos[i].t0 <= _t + 0.0001f) indice = i;
+            bool cambio = PlanoActivo != indice;
             _plano = indice;
+            PlanoActivo = indice;
+            SegundoActivo = _t;
+            if (cambio) SeleccionCambiada?.Invoke();
         }
 
         private CinemaLine FraseActiva()
@@ -315,6 +364,9 @@ namespace Liyodev.Cinematics
             if (EditorGUI.EndChangeCheck()) Filtrar();
 
             if (GUILayout.Button("Refrescar", EditorStyles.toolbarButton, GUILayout.Width(70))) RefrescarLista();
+
+            if (GUILayout.Button("Asistente", EditorStyles.toolbarButton, GUILayout.Width(80)))
+                AssistantWindow.Open("cinematics");
 
             GUILayout.FlexibleSpace();
 
@@ -579,9 +631,16 @@ namespace Liyodev.Cinematics
             var notas = new List<CinemaNota>();
             foreach (var nota in _pizarra.notas)
             {
-                string texto = nota.texto;
+                string texto = nota.TextoEfectivo();
                 if (string.IsNullOrEmpty(texto)) continue;
-                notas.Add(new CinemaNota { panel = nota.panel, elemento = nota.elemento, tipo = "nota", texto = texto });
+                notas.Add(new CinemaNota
+                {
+                    panel = nota.panel,
+                    elemento = nota.elemento,
+                    tipo = string.IsNullOrEmpty(nota.texto) ? "trazo" : "nota",
+                    texto = texto,
+                    t = nota.t,
+                });
             }
 
             if (notas.Count == 0) { _mensaje = "La pizarra no tiene notas con texto que aplicar."; return; }
@@ -610,14 +669,7 @@ namespace Liyodev.Cinematics
 
         /// La misma huella que usa el proyecto para saber si una nota ya se aplicó.
         private static string ClaveDeNota(string panel, string elemento, string texto)
-        {
-            if (string.IsNullOrEmpty(texto)) return string.Empty;
-
-            var limpio = new System.Text.StringBuilder();
-            foreach (char c in (panel + "-" + elemento + "-" + texto).ToLowerInvariant())
-                limpio.Append(char.IsLetterOrDigit(c) ? c : '-');
-            return System.Text.RegularExpressions.Regex.Replace(limpio.ToString(), "-+", "-").Trim('-');
-        }
+            => CinemaNota.CalcularClave(panel, elemento, texto);
 
         /// Pinta lo dibujado sobre el fotograma y recoge el trazo nuevo cuando está el lápiz.
         private void DibujarPizarraSobre(Rect imagen, CinemaShot plano)
@@ -968,7 +1020,15 @@ namespace Liyodev.Cinematics
                 Accion(() => Puente().AbrirStoryboard(_elegida.id));
 
             if (GUILayout.Button("Aplicar correcciones…", EditorStyles.miniButton, GUILayout.Height(28f)))
-                AplicarCorrecciones.Abrir();
+                Accion(() => AplicarCorrecciones.Abrir());
+
+            int encargos = _detalle?.entrada?.encargos ?? 0;
+            using (new EditorGUI.DisabledScope(encargos <= 0))
+            {
+                string texto = encargos > 0 ? $"Encargos de la IA ({encargos})" : "Encargos de la IA";
+                if (GUILayout.Button(texto, EditorStyles.miniButton, GUILayout.Height(28f)))
+                    Accion(() => AssistantWindow.Open("cinematics", runQuickAction: true));
+            }
 
             if (GUILayout.Button("Nueva cinemática…", EditorStyles.miniButton, GUILayout.Height(28f)))
                 NuevaCinematicaWindow.Abrir();
@@ -985,6 +1045,14 @@ namespace Liyodev.Cinematics
                 if (GUILayout.Button("Hornear + storyboard", EditorStyles.miniButton)) Accion(() => Puente().Hornear(_elegida.id, true));
             }
             if (GUILayout.Button("Abrir el taller", EditorStyles.miniButton)) Accion(() => Puente().AbrirTaller(_elegida.id));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUI.DisabledScope(encargos <= 0))
+            {
+                if (GUILayout.Button("Ver archivo de encargos (.md)", EditorStyles.miniButton))
+                    Accion(() => Puente().AbrirEncargos(_elegida.id));
+            }
             EditorGUILayout.EndHorizontal();
         }
 
@@ -1087,15 +1155,17 @@ namespace Liyodev.Cinematics
         private static string Insignia(CinemaEntry e)
         {
             if (e.errores > 0) return $"✗ {e.errores}";
+            if (e.encargos > 0) return $"IA · {e.encargos}";
             if (!string.IsNullOrEmpty(e.estado)) return e.estado;
             return "sin horneado";
         }
 
         /// El color de aviso de una cinemática: nada si está al día, ámbar si hay que rehornear,
-        /// rojo suave si el último horneado dio errores.
+        /// rojo suave si el último horneado dio errores y azul si espera correcciones de la IA.
         private static Color ColorDeAviso(CinemaEntry e)
         {
             if (e.errores > 0) return new Color(0.86f, 0.47f, 0.47f);
+            if (e.encargos > 0) return new Color(0.45f, 0.74f, 0.95f);
             if (e.estado == "Al día" || string.IsNullOrEmpty(e.estado)) return new Color(0f, 0f, 0f, 0f);
             return new Color(0.86f, 0.72f, 0.4f);
         }

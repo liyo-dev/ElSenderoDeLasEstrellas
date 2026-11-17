@@ -23,6 +23,8 @@ namespace Liyodev.Cinematics
         public int avisos;
         [Tooltip("«Al día», «Texto cambiado» o «Sin hornear».")]
         public string estado;
+        [Tooltip("Correcciones que no se pueden aplicar solas y esperan a una sesión de IA.")]
+        public int encargos;
     }
 
     /// Un plano del horneado, con su foto si la hay.
@@ -124,6 +126,105 @@ namespace Liyodev.Cinematics
         public string elemento;
         public string tipo;
         public string texto;
+        [Tooltip("Segundo clavado en el timeline (-1 = nota de todo el plano).")]
+        public float t = -1f;
+        public float[] p1;
+        public float[] p2;
+        public CinemaCaja caja;
+        public List<CinemaPunto> puntos;
+
+        /// El texto que se lee en el encargo: el escrito o, si es un dibujo, lo que dibuja.
+        public string TextoEfectivo()
+        {
+            if (!string.IsNullOrEmpty(texto)) return texto;
+
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            if (tipo == "flecha" && p1 != null && p1.Length >= 2 && p2 != null && p2.Length >= 2)
+                return string.Format(ci, "flecha de ({0:0.###}, {1:0.###}) a ({2:0.###}, {3:0.###})",
+                    p1[0], p1[1], p2[0], p2[1]);
+            if (tipo == "caja" && caja != null && (caja.w > 0f || caja.h > 0f))
+                return string.Format(ci, "caja en ({0:0.###}, {1:0.###}) de {2:0.###} x {3:0.###}",
+                    caja.x, caja.y, caja.w, caja.h);
+            if (tipo == "trazo" && puntos != null && puntos.Count > 0)
+            {
+                CinemaPunto a = puntos[0];
+                CinemaPunto b = puntos[puntos.Count - 1];
+                return string.Format(ci, "trazo de {0} puntos de ({1:0.###}, {2:0.###}) a ({3:0.###}, {4:0.###})",
+                    puntos.Count, a.x, a.y, b.x, b.y);
+            }
+            return string.IsNullOrEmpty(tipo) ? string.Empty : $"({tipo})";
+        }
+
+        /// La huella de una nota: plano + elemento + lo que dice. Es la misma que guarda el libro de
+        /// aplicadas, para que una nota no se aplique ni se encargue dos veces.
+        public string Clave() => CalcularClave(panel, elemento, string.IsNullOrEmpty(texto) ? TextoEfectivo() : texto);
+
+        public static string CalcularClave(string panel, string elemento, string texto)
+        {
+            if (string.IsNullOrEmpty(texto)) return string.Empty;
+            return Slug(panel + "-" + elemento + "-" + texto);
+        }
+
+        public static string Slug(string texto)
+        {
+            if (string.IsNullOrEmpty(texto)) return string.Empty;
+            var limpio = new System.Text.StringBuilder(texto.Length);
+            foreach (char c in texto.ToLowerInvariant())
+                limpio.Append(char.IsLetterOrDigit(c) ? c : '-');
+            return System.Text.RegularExpressions.Regex.Replace(limpio.ToString(), "-+", "-").Trim('-');
+        }
+    }
+
+    /// Un punto de un trazo sobre el fotograma, en coordenadas de la imagen (0..1).
+    [Serializable]
+    public class CinemaPunto
+    {
+        public float x;
+        public float y;
+    }
+
+    /// Caja dibujada sobre un fotograma, en coordenadas de la imagen (0..1).
+    [Serializable]
+    public class CinemaCaja
+    {
+        public float x;
+        public float y;
+        public float w;
+        public float h;
+    }
+
+    /// Una corrección que no se puede aplicar sola: espera a una sesión de IA, que la hace sobre el
+    /// guion (o sobre lo que pida) y la cierra. Lleva todo el contexto del plano para no tener que
+    /// volver a buscarlo.
+    [Serializable]
+    public class CinemaEncargo
+    {
+        public string clave;
+        public string panel;
+        public string elemento;
+        public string etiquetaElemento;
+        public string tipo;
+        public string texto;
+        [Tooltip("Segundo clavado en el timeline (-1 = todo el plano).")]
+        public float t = -1f;
+        public float t0;
+        public float t1;
+        public int linea;
+        public string ordenGuion;
+        public string rutaGuion;
+        public string imagen;
+        public string fecha;
+    }
+
+    /// La cola de encargos de una cinemática, tal como se guarda en el proyecto.
+    [Serializable]
+    public class CinemaColaDeEncargos
+    {
+        public string guion;
+        public string rutaGuion;
+        public string escena;
+        public string actualizado;
+        public List<CinemaEncargo> encargos = new();
     }
 
     /// Un elemento del plano sobre el que se puede anotar (un personaje, la cámara, una marca).
@@ -151,6 +252,23 @@ namespace Liyodev.Cinematics
         public string texto;
         public float t = -1f;
         public List<CinemaTrazo> trazos = new();
+
+        /// Lo que dice la nota: el texto o, si es solo un dibujo, lo que dibuja. Así una nota de la
+        /// pizarra se puede encargar y cerrar con la misma huella que las de la página.
+        public string TextoEfectivo()
+        {
+            if (!string.IsNullOrEmpty(texto)) return texto;
+            if (trazos == null || trazos.Count == 0) return string.Empty;
+
+            var puntos = trazos[0]?.puntos;
+            if (puntos == null || puntos.Count == 0) return $"({trazos.Count} trazo(s))";
+
+            Vector2 a = puntos[0];
+            Vector2 b = puntos[puntos.Count - 1];
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            return string.Format(ci, "trazo de {0} puntos de ({1:0.###}, {2:0.###}) a ({3:0.###}, {4:0.###})",
+                puntos.Count, a.x, a.y, b.x, b.y);
+        }
     }
 
     /// La pizarra de un guion, guardada en el proyecto (no en el navegador).
@@ -168,6 +286,22 @@ namespace Liyodev.Cinematics
     {
         public string resumen;
         public List<string> claves = new();
+        [Tooltip("Correcciones que no se aplicaron solas y quedaron en la cola de la IA.")]
+        public int pendientes;
+        [Tooltip("La vista legible de esa cola, si quedó algo pendiente.")]
+        public string rutaEncargos;
+    }
+
+    /// Lo que quedó de aplicar un lote de operaciones al guion desde la IA.
+    [Serializable]
+    public class CinemaEdicionResultado
+    {
+        public bool aplicado;
+        public string resumen;
+        public List<string> hechos = new();
+        public List<string> diff = new();
+        public List<string> avisos = new();
+        public List<string> errores = new();
     }
 
     /// Lo que el Director necesita saber del proyecto sin depender de ningún ensamblado suyo:
@@ -191,8 +325,29 @@ namespace Liyodev.Cinematics
         void Avisar(string titulo, string mensaje);
 
         /// Aplica un lote de anotaciones de la página del storyboard (las que sabe traducir a un
-        /// cambio del guion) y rehornea. Devuelve el resumen y la huella de las aplicadas.
+        /// cambio del guion) y rehornea. Devuelve el resumen y la huella de las aplicadas. Lo que no
+        /// sabe aplicar solo queda en la cola de encargos de la IA (ver <see cref="EncargosPendientes"/>).
         CinemaAplicado AplicarRevisiones(string id, List<CinemaNota> notas);
+
+        /// El manual del lenguaje de guiones, para que la IA sepa qué puede escribir.
+        string ManualDeGuion();
+
+        /// El estado de una cinemática para el asistente: ficha, encargos, informe y guion numerado.
+        /// `plano` es el índice que tiene abierto el Director (-1 = ninguno).
+        string EstadoParaAsistente(string id, int plano = -1, float segundo = -1f);
+
+        /// Aplica un lote de operaciones al .guion.txt: valida, hornea en memoria, calcula el diff y
+        /// solo entonces escribe y rehornea. Cierra los encargos que pida el lote.
+        CinemaEdicionResultado AplicarEdicionDeGuion(string id, string jsonOps);
+
+        /// Cuántas correcciones de esa cinemática esperan a que una sesión de IA las haga.
+        int EncargosPendientes(string id);
+
+        /// Abre (o enseña en el explorador) la vista legible de esa cola de encargos.
+        void AbrirEncargos(string id);
+
+        /// El texto de la cola de encargos, para leerla desde fuera (p. ej. el buzón de órdenes).
+        string TextoDeEncargos(string id);
 
         /// Abre la escena de la cinemática y la rueda en PlayMode de verdad, desde `desde` segundos.
         /// Devuelve false (y avisa) si no hay secuencia montada para ese guion.

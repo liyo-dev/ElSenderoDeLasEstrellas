@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Bedroom
+  spawnAnchorId: Cap3_Acampada
   level: 1
   maxHP: 100
   currentHP: 100
@@ -24,19 +24,91 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 
-  basicSpellIds: 
+  unlockedSpells: 0100000002000000040000001a000000i
+  basicSpellIds: 0100000002000000i
   companionBasics: []
-  companionHealth: []
+  companionHealth:
+  - personaje: 0
+    maxHP: 0
+    currentHP: 0
+    maxMP: 0
+    currentMP: 0
+    ataque: 0
+    defensa: 0
+    habilidadesAprendidas:
+      swim: 0
+      jump: 0
+      magic: 1
+      fly: 0
+      sprint: 0
+      shield: 1
+  - personaje: 2
+    maxHP: 0
+    currentHP: 0
+    maxMP: 0
+    currentMP: 0
+    ataque: 0
+    defensa: 0
+    habilidadesAprendidas:
+      swim: 0
+      jump: 0
+      magic: 1
+      fly: 0
+      sprint: 0
+      shield: 1
   flags:
   - QUEST_ACTIVE:WILL_MISSION0
+  - QUEST_COMPLETED:WILL_MISSION0
+  - QUEST_ACTIVE:ELDRAN_MISSION1
+  - QUEST_COMPLETED:ELDRAN_MISSION1
+  - QUEST_ACTIVE:WILL_MISSION1
+  - QUEST_COMPLETED:WILL_MISSION1
+  - QUEST_ACTIVE:ELDRAN_SIGUEME
+  - QUEST_COMPLETED:ELDRAN_SIGUEME
+  - QUEST_ACTIVE:ELDRAN_MISSION2
+  - QUEST_COMPLETED:ELDRAN_MISSION2
+  - QUEST_ACTIVE:ELDRAN_MISSION3
+  - QUEST_COMPLETED:ELDRAN_MISSION3
+  - NARRATIVE_FLAG:CAP2_INICIADO
+  - QUEST_ACTIVE:PREPARA_VIAJE
+  - NARRATIVE_FLAG:GRIMORIO_RECIBIDO
+  - QUEST_COMPLETED:PREPARA_VIAJE
+  - QUEST_STEP_DONE:PREPARA_VIAJE:0
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-victoria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:1
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-boticaria-4
+  - QUEST_STEP_DONE:PREPARA_VIAJE:2
+  - NARRATIVE_FLAG:STEPS_COMPLETED_cap2-prepara-viaje-erika-2
+  - QUEST_ACTIVE:CAP2_HORA_DE_PARTIR
+  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:0
+  - NARRATIVE_FLAG:CAP2_COMPLETADO
+  - NARRATIVE_FLAG:CAP3_INICIADO
+  - QUEST_STEP_DONE:CAP2_HORA_DE_PARTIR:1
+  - QUEST_COMPLETED:CAP2_HORA_DE_PARTIR
+  - QUEST_ACTIVE:CAP3_MARCAS_DE_HIERRO
+  - NARRATIVE_FLAG:@actor:NPC_Anselmo=pieza-npc_anselmo-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - NARRATIVE_FLAG:@actor:NPC_Benito=pieza-npc_benito-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - NARRATIVE_FLAG:@actor:NPC_Eusebio=pieza-npc_eusebio-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - NARRATIVE_FLAG:@actor:NPC_Fermin=pieza-npc_fermin-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - NARRATIVE_FLAG:@actor:NPC_Remedios=pieza-npc_remedios-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - NARRATIVE_FLAG:@actor:NPC_Rosario=pieza-npc_rosario-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:0
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:1
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:3
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:4
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:2
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:5
+  - NARRATIVE_FLAG:@usual:NPC_Lucia=pieza-npc_lucia-usual-cap-3-despues-cap3-noche
+  - NARRATIVE_FLAG:@usual:NPC_Posadero=pieza-npc_posadero-usual-cap-3-tras-la-hoja-cap3-noche
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:6
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:7
   abilities:
-    swim: 0
-    jump: 0
-    magic: 0
-    fly: 0
-    sprint: 0
-    shield: 0
+    swim: 1
+    jump: 1
+    magic: 1
+    fly: 1
+    sprint: 1
+    shield: 1
   appearance:
   - category: 2
     partName: Head01_Male
@@ -49,22 +121,166 @@ MonoBehaviour:
   - category: 0
     partName: Body23_Aventurero
   unlockedWardrobeIds:
+  - AC01_Heart
+  - AC02_Leaf
+  - AC03_BlackGlass
+  - AC03_HeavyMetalGlass
+  - AC03_NerdGlass
+  - AC03_NightVision
+  - AC04_AngelEars
+  - AC04_AnthenaEars
+  - AC04_BunnyEars
+  - AC04_ShortEars
+  - AC05_Horn01
+  - AC05_Horn02
+  - AC05_Horn03
+  - AC05_Horn04
+  - AC06_Crown01
+  - AC06_Crown02
+  - AC06_Crown03
+  - AC07_PiratePatch
+  - AC08_NinjaMask01
+  - AC08_NinjaMask02
+  - AC08_NinjaMask03
+  - AC08_NinjaMask04
+  - AC08_NinjaMask05
+  - AC08_NinjaMask06
+  - AC08_NinjaMask07
+  - AC08_NinjaMask08
+  - AC09_Ribbon
+  - AC10_Mustache01
+  - AC10_Mustache02
+  - AC10_Mustache03
+  - AC10_Mustache04
+  - AC10_Mustache05
+  - AC10_Mustache06
+  - AC11_Mustache01
+  - AC11_Mustache02
+  - AC11_Mustache03
+  - AC11_Mustache04
+  - AC11_Mustache05
+  - AC11_Mustache06
+  - Body01
+  - Body02
+  - Body03
+  - Body04
   - Body05
-  inventoryItems: []
-  defeatedBossIds: []
+  - Body06
+  - Body07
+  - Body08
+  - Body09
+  - Body10
+  - Body11
+  - Body12
+  - Body13
+  - Body14
+  - Body15
+  - Body16
+  - Body17
+  - Body18
+  - Body19
+  - Body20
+  - Body23_Aventurero
+  - Body24_AventureroChaqueta
+  - Cloak01
+  - Cloak02
+  - Cloak03
+  inventoryItems:
+  - itemId: coin
+    count: 1
+  - itemId: estrella_torcida
+    count: 1
+  - itemId: trozo_del_aro
+    count: 1
+  - itemId: pocionHP
+    count: 1
+  - itemId: hoja_avistamientos
+    count: 1
+  defeatedBossIds:
+  - Demon_1
   narrativeBlackboards:
   - graphLabel: Cap1
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: 05d8c990-c631-4ddd-8aff-4092490214c8
+      value: 
+    - key: __flowEnded
+      type: bool
+      value: 1
+  - graphLabel: Cap2
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: 
+    - key: __flowEnded
+      type: bool
+      value: 1
+  - graphLabel: Cap3
+    blackboardData:
+    - key: __currentNodeGuid
+      type: string
+      value: cap3-seguir
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
   - will_wake_up
   - HOOK_DISCUSION_START
   - HOOK_DISCUSION_DONE
-  npcPositions: []
+  - WILL_EXITS_HOUSE
+  - WILL_EXITS_HOUSE_OLIVER_GREETING
+  - OLIVER_GREETING_START
+  - OLIVER_GREETING_DONE
+  - OLIVER_JOIN_PARTY
+  - WILL_REACHED_ELDRAN
+  - PERAS_START
+  - PERAS_DONE
+  - ESTRELLA_COMPRADA
+  - ELDRAN_CAJA_START
+  - ELDRAN_CAJA_DONE
+  - CAP1_CAJA_ELDRAN
+  - NPC_INTERACT_NPC_Eldran
+  - AWAKEN_START
+  - AWAKEN_DONE
+  - CH_Cap1_BACK_1
+  - LIAM_CRYSTAL_START
+  - LIAM_CRYSTAL_DONE
+  - MANANA_DESPUES_START
+  - MANANA_DESPUES_DONE
+  - NPC_INTERACT_NPC_Victoria
+  - NPC_INTERACT_NPC_Boticaria
+  - NPC_INTERACT_NPC_Erika
+  - CAP2_PREPARA_VIAJE_ENCARGO_HECHO
+  - ERIKA_ENTRENAMIENTO_DERROTADA
+  - CAP2_A_DESPEDIRSE
+  - NPC_INTERACT_NPC_Oliver
+  - CH_Cap2_BACK_1
+  - CAP3_DESPEDIDA_START
+  - CAP3_DESPEDIDA_DONE
+  - CAP3_CAMINO_EMPIEZA
+  - CAP3_ACAMPADA_CAMINO
+  - CAP3_ESPEJO_START
+  - CAP3_ESPEJO_DONE
+  - CAP3_ALDEA_EMPIEZA
+  - CAP3_LLEGADA_ALDEA
+  - NPC_INTERACT_NPC_Posadero
+  - CAP3_POSADA_START
+  - CAP3_POSADA_DONE
+  - CAP3_PISTAS_EMPIEZA
+  - CAP3_PISTA_HUERTO
+  - CAP3_PISTA_COBERTIZO
+  - CAP3_PISTA_HECHA
+  - CAP3_NOCHE_EMPIEZA
+  - CAP3_LLEGADA_BOSQUE
+  - CAP3_CAE_LA_NOCHE
+  - CAP3_CARRO_START
+  - CAP3_CARRO_DONE
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
+    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

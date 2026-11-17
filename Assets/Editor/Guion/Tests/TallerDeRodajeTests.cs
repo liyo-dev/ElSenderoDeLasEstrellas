@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using Liyodev.Cinematics;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -118,6 +119,44 @@ public class TallerDeRodajeTests
         List<string> cambios = GuionDiff.Comparar(antes, despues);
 
         Assert.IsTrue(cambios.Exists(c => c.Contains("cámara")), string.Join("\n", cambios));
+    }
+
+    [Test]
+    public void LaHuellaDeUnaNotaNoDependeDelIdDeLaPagina()
+    {
+        var nota = new CinemaNota
+        {
+            id = "1",
+            panel = "P02",
+            elemento = "general",
+            texto = "los contrabandistas deben llegar con el carro",
+        };
+
+        string clave = nota.Clave();
+        nota.id = "9";
+
+        Assert.AreEqual(clave, nota.Clave(), "El id de la página se repite entre sesiones: no puede entrar en la huella.");
+        Assert.AreEqual(CinemaNota.CalcularClave("P02", "general", nota.texto), clave);
+        StringAssert.DoesNotContain(" ", clave);
+    }
+
+    [Test]
+    public void UnDibujoSinTextoSePuedeEncargar()
+    {
+        var trazo = new CinemaNota
+        {
+            panel = "P06",
+            elemento = "camara",
+            tipo = "trazo",
+            puntos = new List<CinemaPunto>
+            {
+                new() { x = 0.1f, y = 0.2f },
+                new() { x = 0.4f, y = 0.5f },
+            },
+        };
+
+        StringAssert.Contains("trazo de 2 puntos", trazo.TextoEfectivo());
+        Assert.IsNotEmpty(trazo.Clave());
     }
 
     private GuionHorneado CrearGuion(float lente, Vector3 posicionCamara)

@@ -8,6 +8,12 @@ puertas al taller / guion / storyboard / horneado), y el enchufe del juego en
 `Assets/Editor/Guion`** detrás del puerto (no se ha movido ningún tipo serializado, para no tocar los 36
 horneados ni las 34 secuencias); moverlo con sus `[MovedFrom]` es la siguiente tanda. Ver TDD § 35.
 
+**Segunda entrega (17 nov 2026, INC-1274):** el circuito de revisión ya no tira lo que no sabe aplicar.
+Las notas que no son un cambio de `lente` quedan como **encargos para la IA** en
+`Guiones/_revisiones/encargos-<guion>.json` y `.md`, la mesa las cuenta (`IA · N`) y una sesión de IA las
+lee y las cierra por el buzón (`encargos`, `revisiones-hechas`). Es el camino que usarán el Studio y el
+MCP de F2/F4: el `.guion.txt` sigue siendo la verdad y la IA propone/hace el cambio, no el botón.
+
 **Decisiones ya tomadas**
 
 1. La mesa de trabajo es **web** (no una ventana de Unity).

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><title>frames</title></head>
+<body style="margin:0;background:#111">
+<video id="v" src="/video" muted preload="auto" style="width:640px"></video>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+  const v = document.getElementById('v');
+  const c = document.getElementById('c');
+  const ctx = c.getContext('2d');
+  const veces = [];
+  for (let t = 20; t <= 600; t += 40) veces.push(t);
+
+  v.addEventListener('loadedmetadata', async () => {
+    for (const t of veces) {
+      v.currentTime = Math.min(t, Math.max(0, v.duration - 1));
+      await new Promise((ok) => v.addEventListener('seeked', ok, { once: true }));
+      ctx.drawImage(v, 0, 0, c.width, c.height);
+      await fetch('/save?name=f' + String(t).padStart(3, '0') + '.png', {
+        method: 'POST',
+        body: c.toDataURL('image/png'),
+      });
+    }
+    document.title = 'hecho';
+  });
+  v.addEventListener('error', () => { document.title = 'error'; });
+  v.load();
+</script>
+</body>
+</html>

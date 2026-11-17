@@ -30,15 +30,20 @@ y entra en `http://localhost:8765/Tools/Storyboard/index.html`.
    enseña; la × las borra.
 6. Al terminar, **Guardar correcciones** deja `correcciones-<guion>.json` (en Descargas o donde elijas).
    En Unity: **Liyodev ▸ Director ▸ Aplicar correcciones del storyboard…**, eliges ese fichero y el
-   Editor escribe el cambio en el `.guion.txt`, rehornea y regenera esta página. Lo que la nota pide
-   en palabras y el guion sabe hacer hoy: solo la cámara (`alejar/abrir` → `lente` −6, `acercar/cerrar`
-   → `lente` +8); lo demás se queda anotado y se lee a mano. También vale por el buzón:
+   Editor hace lo que el guion sabe solo: si la nota es de la cámara y dice `alejar/abrir` baja el
+   `lente` 6, y si dice `acercar/cerrar` lo sube 8; escribe ese `lente=` en la línea del plano,
+   rehornea y regenera esta página. **Lo demás no se pierde**: queda como **encargo para la IA** en
+   `Guiones/_revisiones/encargos-<guion>.json` (y su vista `.md`), con el plano, la línea del guion y el
+   fotograma. La mesa lo enseña con el botón **Encargos de la IA (N)**; una sesión de IA los lee por el
+   buzón (`encargos <guion>`), hace el cambio (guion, previz o lo que pida), rehornea y los cierra con
+   `revisiones-hechas <guion>` (o `revisiones-hechas <guion> P06`). También vale por el buzón:
    `revisiones Guiones/_revisiones/<fichero>.json`.
    **Copiar resumen** sigue sirviendo para pegarlo en el chat y hablarlo.
 
    Las notas guardadas **desaparecen de la página** (ya van en el fichero) y Unity lleva su propio
    libro de aplicadas (`Guiones/_revisiones/aplicadas-<guion>.json`): mandar dos veces el mismo fichero
-   no aplica dos veces el cambio. En la mesa, las notas de la pizarra **se borran al aplicarse**.
+   no aplica dos veces el cambio. Los encargos pendientes se quedan hasta que se cierran. En la mesa,
+   las notas de la pizarra **se borran al aplicarse o al cerrarse su encargo**.
 
 Las anotaciones se guardan en el navegador (`localStorage`) mientras no borres los datos del sitio.
 Para conservarlas entre máquinas o mandármelas, usa el resumen o el JSON.

@@ -135,6 +135,11 @@ public class DialogueManager : MonoBehaviour
     Action _onYes;
     Action _onNo;
     bool _choicesUIModePushed;
+    // Una sola entrada de Cinematic por diálogo abierto, aunque otro diálogo lo sustituya sin
+    // cerrarse (dos NPCs de alerta a la vez, o una charla de combate encima de una del grafo).
+    // Sin esto, cada apertura empujaba Cinematic y la sustituida nunca lo devolvía: el jugador
+    // se quedaba sin control ni ataques hasta morir (INC-1279).
+    bool _dialogueModePushed;
 
     // Typewriter estado
     Coroutine _typeRoutine;
@@ -302,6 +307,9 @@ public class DialogueManager : MonoBehaviour
         StopLineVoice();
         StopTypewriter();
         GamepadInputReader.OnInput -= HandleGamepadInput;
+        // Si el objeto se desactiva a mitad de un diálogo, devuelve el control que tomó: al
+        // reactivarse, el siguiente diálogo vuelve a empujar su Cinematic (INC-1279).
+        if (_dialogueModePushed) ActivateDialogueMode(false);
         // Defensivo: si el objeto se desactiva/destruye a mitad de un diálogo (cierre de sesión,
         // teardown de escena) evita dejar el handler colgado suscrito a un componente inerte.
         NarrativeSkipHub.UnregisterSkipHandler(HandleSkipRequested);
@@ -479,7 +487,13 @@ public class DialogueManager : MonoBehaviour
         // nunca — la rama del grafo quedaba bloqueada para siempre. El diálogo nuevo sigue
         // ganando (mismo comportamiento de antes); la diferencia es que ya no deja a nadie
         // esperando un callback que no iba a llegar.
-        if (IsOpen && _onEnd != null)
+        // Un diálogo que sustituye a otro tiene que devolver el modo del anterior antes de abrir
+        // el suyo: si no, cada sustitución dejaba un Cinematic de más y el jugador se quedaba sin
+        // movimiento ni ataques (INC-1279).
+        bool habiaDialogo = IsOpen;
+        if (habiaDialogo) ActivateDialogueMode(false);
+
+        if (habiaDialogo && _onEnd != null)
         {
             var previousOnEnd = _onEnd;
             _onEnd = null;
@@ -825,6 +839,9 @@ public class DialogueManager : MonoBehaviour
         }
 
         _current = null;
+        // Devolver el control antes de avisar al que esperaba el cierre: si su callback abre otro
+        // diálogo, ese empuja su propio Cinematic y no se lo lleva por delante este cierre.
+        ActivateDialogueMode(false);
         _onEnd?.Invoke();
         _onEnd = null;
 
@@ -880,8 +897,7 @@ public class DialogueManager : MonoBehaviour
 
         _currentNpc = null;
 
-        // Fuera el modo DialogueActive en PlayerActionManager.
-        ActivateDialogueMode(false);
+        // (El modo Cinematic se devolvió arriba, antes de avisar del cierre.)
 
         SetSubmitHintActive(false);
 
@@ -1611,12 +1627,16 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     private void ActivateDialogueMode(bool activate)
     {
+        if (activate && _dialogueModePushed) return;
+        if (!activate && !_dialogueModePushed) return;
+
         // Buscar el jugador usando PlayerService
         if (!PlayerService.TryGetPlayer(out var player, allowSceneLookup: true) || player == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DialogueManager] No se encontró el jugador para activar modo diálogo");
 #endif
+            _dialogueModePushed = false;
             return;
         }
 
@@ -1627,6 +1647,7 @@ public class DialogueManager : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DialogueManager] El jugador no tiene PlayerActionManager, no se puede bloquear el movimiento");
 #endif
+            _dialogueModePushed = false;
             return;
         }
 
@@ -1634,6 +1655,7 @@ public class DialogueManager : MonoBehaviour
         if (activate)
         {
             actionManager.PushMode(ActionMode.Cinematic);
+            _dialogueModePushed = true;
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1643,6 +1665,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+            _dialogueModePushed = false;
             actionManager.PopMode(ActionMode.Cinematic);
             if (verboseLogging)
             {

@@ -33,6 +33,28 @@ public class CargaArrastrada : MonoBehaviour
         giroDelModelo = giro;
     }
 
+    /// El personaje que tira de la carga (su id de NPC).
+    public string ActorId => actorId;
+
+    /// Dónde va la carga cuando la tira `actor`, con esta distancia y este giro. Vale fuera de Play,
+    /// donde `LateUpdate` no corre: lo usa el previz de guion para que el carro salga en las fotos.
+    public void PoseDetrasDe(Transform actor, out Vector3 posicion, out Quaternion rotacion)
+        => PoseDetrasDe(actor, actor.forward, out posicion, out rotacion);
+
+    /// Igual, pero con la dirección en la que va el personaje (la de su camino, no la de su mirada).
+    public void PoseDetrasDe(Transform actor, Vector3 direccion, out Vector3 posicion, out Quaternion rotacion)
+    {
+        direccion.y = 0f;
+        if (direccion.sqrMagnitude < 0.01f) direccion = actor.forward;
+        direccion.y = 0f;
+        if (direccion.sqrMagnitude < 0.01f) direccion = Vector3.forward;
+        direccion.Normalize();
+
+        posicion = actor.position - direccion * distancia;
+        posicion.y = actor.position.y;
+        rotacion = Quaternion.LookRotation(direccion) * Quaternion.Euler(0f, giroDelModelo, 0f);
+    }
+
     private void Awake()
     {
         _capaSuelo = LayerMask.GetMask("Floor");

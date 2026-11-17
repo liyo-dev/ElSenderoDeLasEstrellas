@@ -120055,6 +120055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1967935259c043208720a8517c97c2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
+  duracionTotalDelDia: 1800
   timeSettings:
   - timeOfDay: 0
     skybox: {fileID: 2100000, guid: bc1989eec0cc5164780eaa58c298dcf6, type: 2}
@@ -120070,12 +120071,19 @@ MonoBehaviour:
   useSmoothTransitions: 1
   controlAmbientLight: 1
   controlFog: 1
-  rainPrefab: {fileID: 936991006463809773, guid: 78aedcd96e22f1a4bba20ba87617c81f, type: 3}
+  rainPrefab: {fileID: 0}
   rainDurationRange: {x: 40, y: 100}
   rainFadeOutTime: 3
-  rainLightIntensityMultiplier: 0.55
-  rainFogDensityMultiplier: 2.5
-  rainMinLightIntensity: 0.28
+  rainLightIntensityMultiplier: 0.75
+  rainFogDensityMultiplier: 1.6
+  rainMinLightIntensity: 0.5
+  climaRelativoAlCielo: 1
+  oscurecerNubesDeLluvia: 0.85
+  oscurecerNubesDeTormenta: 0.62
+  tinteDeSombraDeNubes: {r: 0.62, g: 0.66, b: 0.9, a: 1}
+  nieblaDelHorizonte: 0.7
+  tinteDeLuzDeLluvia: {r: 0.78, g: 0.84, b: 0.96, a: 1}
+  fuerzaDelTinteDeLluvia: 0.5
   mistPrefab: {fileID: 0}
   mistDurationRange: {x: 20, y: 45}
   mistFadeOutTime: 4
@@ -120105,8 +120113,8 @@ MonoBehaviour:
   - SFX_Prologo_Trueno_3
   volumenDelTrueno: 1
   thunderstormThunderDelayRange: {x: 0.3, y: 1.8}
-  thunderstormBoltHeight: 220
-  thunderstormBoltDistanceRange: {x: 18, y: 55}
+  thunderstormBoltHeight: 140
+  thunderstormBoltDistanceRange: {x: 35, y: 90}
   thunderstormBoltColor: {r: 2.2, g: 2.3, b: 2.7, a: 1}
   prefabDelRayo: {fileID: 0}
   dangerLightningTelegraphPrefab: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}

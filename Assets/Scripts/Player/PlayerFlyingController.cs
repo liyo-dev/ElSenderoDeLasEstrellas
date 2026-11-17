@@ -265,6 +265,7 @@ public class PlayerFlyingController : MonoBehaviour
         if (_entrada != null) { StopCoroutine(_entrada); _entrada = null; }
         if (_isFlying)
             ExitFlight(force: true);
+        DayNightCycle.Instance?.SoltarNiebla(NieblaDeVuelo);
 
         if (_jumpAction != null)
             _jumpAction.performed -= OnJumpPerformed;
@@ -310,6 +311,9 @@ public class PlayerFlyingController : MonoBehaviour
 
      void LateUpdate()
      {
+         // Volando se abre la niebla: si no, a 200 m del suelo todo el paisaje queda gris.
+         if (_isFlying) ActualizarNieblaDeVuelo();
+
          // Aplicar bobbing visual si visualRoot existe y estamos volando
          if (visualRoot == null || !_isFlying)
              return;
@@ -393,11 +397,21 @@ public class PlayerFlyingController : MonoBehaviour
         return true;
     }
 
+     private const string NieblaDeVuelo = "vuelo";
+
+     /// Abre la niebla según la altura: a ras de suelo se queda como está y a 140 m deja ver el paisaje.
+     private void ActualizarNieblaDeVuelo()
+     {
+         var ciclo = DayNightCycle.Instance;
+         if (ciclo == null) return;
+         float factor = Mathf.Lerp(1f, 0.22f, Mathf.InverseLerp(20f, 140f, transform.position.y));
+         ciclo.PrestarNiebla(NieblaDeVuelo, factor, Color.clear, 0f);
+     }
+
      private void EnterFlight()
      {
          if (_isFlying)
              return;
-
          _isFlying = true;
          _groundedWhileFlyingTimer = 0f;
          _inCastPose = false;
@@ -486,6 +500,7 @@ public class PlayerFlyingController : MonoBehaviour
 
         bool wasFlying = _isFlying;
         _isFlying = false;
+        DayNightCycle.Instance?.SoltarNiebla(NieblaDeVuelo);
         _inCastPose = false;
         _castPoseBlendUntil = 0f;
         _estadoDeVueloPedido = null;

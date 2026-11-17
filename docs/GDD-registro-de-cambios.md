@@ -1,5 +1,9 @@
 ## Registro de Cambios
 
+**17 de noviembre de 2026 — Propuesta de clima, reloj y efectos elementales (INC-1276), sin aprobar.**
+
+Se añade a «Pendiente de decidir» una propuesta para que el clima modifique hechizos y enemigos, con reloj e icono en el HUD y pestaña «Mundo». No cambia el canon: sigue sin haber debilidades ni resistencias elementales en combate. Decidido e implementado por Raúl: el ciclo de día completo pasa a 30 min de franjas (`DayNightCycle.duracionTotalDelDia`; las transiciones van aparte). Detalle: `docs/clima-reloj-y-efectos-2026-11-17.md`.
+
 **12 de noviembre de 2026 — El aro de runas sin llave (INC-1126), por decisión de Raúl.**
 
 Como adaptación del juego («esto no es la novela»), el lore del aro se simplifica: Liam le puso el aro al Demonio con una invocación para que hiciera lo que él quería, y no hay ninguna llave del aro que se caliente o se apague. En el § 5.5 la escena del cristal ya no apaga ninguna llave y se añade la adaptación. Cambian los textos ES/EN de CAP4_ESTELA_06 («Runas de sometimiento. Se lo pusieron con una invocación: el demonio hacía lo que le mandaban.») y, en inglés, CAP3_ESPEJO_10 dice «collar» en lugar de «ring». En «Los planes de Liam» Liam ya no mira una llave: dice «Lo ha vencido» mirando la nube de la bola. La novela no cambia.

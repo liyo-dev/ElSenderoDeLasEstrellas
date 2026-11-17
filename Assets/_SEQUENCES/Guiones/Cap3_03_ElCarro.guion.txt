@@ -5,7 +5,7 @@
 # Lo que hace el vigía junto al fuego (pararse, mirar alrededor) es lo que hará en el seguimiento:
 # así se ve antes de jugarlo.
 # El carro (PROP_Carro) va detrás del grandote solo (CargaArrastrada): no se mueve en el guion y en el
-# horneado no existe; en juego se coloca tras él al empezar.
+# horneado no existe; en juego se coloca tras él al empezar y el previz lo pone para las fotos.
 GUION Cap3_03_ElCarro
 ESCENA MainWorld
 ZONA Cap3Carro -100 -212 30
@@ -80,7 +80,7 @@ c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2
 @sevan
 c1 anda a c1_fin sin_esperar
 & c2 anda a c2_camino c2_fin sin_esperar
-plano conjunto will c1 c2
+plano dos c1 c2
 espera 3.5
 plano primer will
 will dice CAP3_CARRO_02 cara=pensativo

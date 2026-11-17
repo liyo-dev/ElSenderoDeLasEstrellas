@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>El cielo — maqueta</title>
+<style>
+  :root{
+    --paper:#F3EADA; --line:#D9CBB4; --ink:#2B2433; --soft:#4A4056; --mute:#8A7E6C;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink)}
+  body{width:1400px;margin:0 auto;padding:54px 60px 60px;box-sizing:border-box;
+       font-family:'Segoe UI',Arial,sans-serif}
+  header{display:flex;justify-content:space-between;align-items:flex-start;
+         border-bottom:2px solid var(--line);padding-bottom:26px;margin-bottom:44px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-size:47px;letter-spacing:1.4px;margin:0 0 10px;font-weight:400}
+  .sub{font-size:20px;color:var(--soft);margin:0}
+  .nota{text-align:right;font-size:15px;color:var(--mute);line-height:1.55}
+  section{margin-bottom:54px}
+  body.solo{width:1280px;padding:0}
+  body.solo header,body.solo footer{display:none}
+  body.solo section{display:none;margin:0}
+  body.solo section.ver{display:block}
+  body.solo h2,body.solo .desc{display:none}
+  h2{font-family:Georgia,serif;font-size:30px;letter-spacing:1.1px;margin:0 0 6px;font-weight:400}
+  .desc{font-size:17px;color:var(--soft);margin:0 0 14px}
+  canvas{display:block;width:1280px;height:720px;box-shadow:0 10px 0 rgba(43,36,51,.10);border-radius:3px}
+  footer{border-top:2px solid var(--line);padding-top:26px;margin-top:8px}
+  .paleta{display:flex;gap:14px;margin:6px 0 32px}
+  .chip{width:132px}
+  .chip i{display:block;height:74px;border-radius:3px;border:1px solid rgba(43,36,51,.18)}
+  .chip b{display:block;font-size:15px;font-weight:400;color:var(--soft);margin-top:10px}
+  .chip s{display:block;text-decoration:none;font-family:Consolas,monospace;font-size:13px;color:var(--mute);margin-top:3px}
+  .reglas{font-size:16px;color:var(--soft);line-height:1.7}
+  .reglas b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>EL CIELO — MAQUETA DE ARTE</h1>
+    <p class="sub">Dos tonos y borde de tinta. El clima cambia la paleta, no el dibujo.</p>
+  </div>
+  <div class="nota">
+    sin packs · nubes por lóbulos · lluvia por trazos<br>
+    El Sendero de las Estrellas · propuesta
+  </div>
+</header>
+
+<section>
+  <h2>01 · DÍA, A RAS DE SUELO</h2>
+  <p class="desc">Las nubes se leen: dos tonos, borde de tinta, base plana. La bruma se queda en el horizonte y el paisaje no se lava.</p>
+  <canvas id="p1" width="1280" height="720"></canvas>
+</section>
+
+<section>
+  <h2>02 · VOLANDO ALTO</h2>
+  <p class="desc">Se ve dónde estás: la isla, la capital, el río, la costa. El cielo deja de ser una banda gris y el horizonte vuelve a ser una línea de aire, no un muro.</p>
+  <canvas id="p2" width="1280" height="720"></canvas>
+</section>
+
+<section>
+  <h2>03 · TORMENTA</h2>
+  <p class="desc">Mismo dibujo, paleta fría. Lluvia de trazos, salpicaduras y rayo plano. El paisaje conserva su verde, su tierra y sus tejados.</p>
+  <canvas id="p3" width="1280" height="720"></canvas>
+</section>
+
+<footer>
+  <div style="font-family:Georgia,serif;font-size:24px;margin-bottom:4px">LA PALETA</div>
+  <div style="font-size:16px;color:var(--soft);margin-bottom:20px">Los mismos valores, listos para el material: el shader solo mezcla estos dos tonos.</div>
+  <div class="paleta" id="paleta"></div>
+  <div class="reglas">
+    <b>1</b> Dos tonos y un borde. &nbsp;&nbsp;
+    <b>2</b> Tres capas con parallax: cielo, banco lejano, nubes cercanas. &nbsp;&nbsp;
+    <b>3</b> El clima cambia la paleta, no la forma. &nbsp;&nbsp;
+    <b>4</b> Lo que cae se dibuja con líneas.
+    <br><br>
+    El paisaje es un fotograma real del juego; el cielo, la lluvia y el rayo son la propuesta montada encima. Ningún asset de terceros.
+  </div>
+</footer>
+
+<script>
+const P = {
+  skyTop:'#3E7BD0', skyMid:'#7FB4EA', skyLow:'#BFE0FA', haze:'#F7E4C8',
+  cloudLit:'#FFF9EC', cloudShadow:'#A3ACE0', ink:'#2B2433',
+  stormTop:'#33374C', stormMid:'#565B75', stormLow:'#8A8FA8',
+  stormLit:'#8E93AB', stormShadow:'#4A4F6B', rain:'#DCE9FF'
+};
+
+function rng(seed){
+  let a = seed>>>0;
+  return () => { a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a);
+    t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; };
+}
+const n1 = v => Math.round(v*10)/10;
+
+function smoothContour(pts, x0, x1, baseY){
+  const all=[{x:x0,y:baseY},...pts,{x:x1,y:baseY}];
+  let d=`M${n1(all[0].x)},${n1(all[0].y)}`;
+  for(let i=0;i<all.length-1;i++){
+    const p0=all[i-1]||all[i], p1=all[i], p2=all[i+1], p3=all[i+2]||all[i+1];
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    d+=`C${n1(c1x)},${n1(c1y)} ${n1(c2x)},${n1(c2y)} ${n1(p2.x)},${n1(p2.y)}`;
+  }
+  return d+'Z';
+}
+
+// Nube de dibujo: base redondeada con lóbulos encima (silueta de cúmulo), tinta
+// fina en el borde y una banda de sombra recta en la panza. Sin degradados.
+function cloudBlobPath({cx, baseY, w, h, seed=1}){
+  const rand=rng(seed);
+  const p=new Path2D();
+  const baseH=h*0.50;
+  const bw=w*0.94, bx=cx-bw/2, by=baseY-baseH;
+  p.roundRect(bx,by,bw,baseH,baseH*0.5);
+  const n=5;
+  for(let i=0;i<n;i++){
+    const t=(i+0.5)/n;
+    const env=0.70+0.30*Math.sin(Math.PI*t);
+    const centro=1+0.34*Math.exp(-Math.pow((t-0.52)/0.24,2));
+    const r=h*(0.23+0.05*rand())*env*centro;
+    const x=cx-w*0.36+w*0.72*t+(rand()-0.5)*w*0.03;
+    const y=baseY-baseH*0.55-r*0.62-rand()*h*0.05;
+    p.moveTo(x+r,y); p.arc(x,y,r,0,Math.PI*2);
+  }
+  return p;
+}
+
+function paintCloud(ctx, o){
+  const path=cloudBlobPath(o);
+  const inkW=o.inkW??3;
+  const lit=o.lit??P.cloudLit, shadow=o.shadow??P.cloudShadow;
+  ctx.save();
+  ctx.lineJoin='round';
+  ctx.strokeStyle=P.ink; ctx.lineWidth=inkW*2;
+  ctx.stroke(path);
+  ctx.fillStyle=lit; ctx.fill(path);
+  ctx.clip(path);
+  ctx.fillStyle=shadow;
+  // La misma silueta bajada: el borde de la sombra sigue los lóbulos, no una raya recta.
+  ctx.translate(0, o.h*0.20);
+  ctx.fill(path);
+  ctx.restore();
+}
+
+// Quita el cielo de un fotograma: relleno desde el borde superior con tolerancia.
+function keySky(img, tol){
+  const w=img.width,h=img.height;
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const x=c.getContext('2d',{willReadFrequently:true});
+  x.drawImage(img,0,0);
+  const id=x.getImageData(0,0,w,h), d=id.data;
+  const ref=[d[0],d[1],d[2]];
+  const m=new Uint8Array(w*h);
+  const st=new Int32Array(w*h*2); let sp=0;
+  for(let i=0;i<w;i++) st[sp++]=i;
+  while(sp>0){
+    const p=st[--sp];
+    if(m[p]) continue;
+    const o=p*4;
+    const r=d[o], g=d[o+1], b=d[o+2];
+    const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
+    const skyish = mx<228 && mx>60 && (mx-mn)<46;
+    if(!skyish || Math.abs(r-ref[0])+Math.abs(g-ref[1])+Math.abs(b-ref[2])>tol){ m[p]=2; continue; }
+    m[p]=1;
+    const px=p%w, py=(p-px)/w;
+    if(px>0&&!m[p-1]) st[sp++]=p-1;
+    if(px<w-1&&!m[p+1]) st[sp++]=p+1;
+    if(py>0&&!m[p-w]) st[sp++]=p-w;
+    if(py<h-1&&!m[p+w]) st[sp++]=p+w;
+  }
+  for(let k=0;k<2;k++){
+    const add=[];
+    for(let p=0;p<w*h;p++){
+      if(m[p]!==1) continue;
+      const px=p%w, py=(p-px)/w;
+      if(px>0&&m[p-1]===0) add.push(p-1);
+      if(px<w-1&&m[p+1]===0) add.push(p+1);
+      if(py>0&&m[p-w]===0) add.push(p-w);
+      if(py<h-1&&m[p+w]===0) add.push(p+w);
+    }
+    for(const p of add) m[p]=1;
+  }
+  for(let p=0;p<w*h;p++) if(m[p]===1) d[p*4+3]=0;
+  x.putImageData(id,0,0);
+  return c;
+}
+
+function gradient(ctx,w,h,top,mid,low){
+  const g=ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,top); g.addColorStop(0.74,mid); g.addColorStop(1,low);
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+}
+function hazeBand(ctx,w,y,color,alpha,h=70){
+  const n=parseInt(color.slice(1),16);
+  const rgb=`${(n>>16)&255},${(n>>8)&255},${n&255}`;
+  const g=ctx.createLinearGradient(0,y-h,0,y+h*0.25);
+  g.addColorStop(0,`rgba(${rgb},0)`);
+  g.addColorStop(0.72,`rgba(${rgb},1)`);
+  g.addColorStop(1,`rgba(${rgb},0)`);
+  ctx.save(); ctx.globalAlpha=alpha; ctx.fillStyle=g;
+  ctx.fillRect(0,y-h,w,h*1.25); ctx.restore();
+}
+
+function drawP1(ctx, keyed){
+  ctx.clearRect(0,0,1280,720);
+  const horizon=286;
+  gradient(ctx,1280,horizon,P.skyTop,P.skyMid,P.skyLow);
+  paintCloud(ctx,{cx:320,baseY:232,w:430,h:162,seed:11});
+  paintCloud(ctx,{cx:1010,baseY:224,w:276,h:104,seed:29});
+  paintCloud(ctx,{cx:700,baseY:256,w:132,h:48,seed:41,inkW:2.4});
+  ctx.drawImage(keyed,0,150);
+  hazeBand(ctx,1280,290,P.haze,.15,16);
+  hazeBand(ctx,1280,288,'#FFF3E0',.12,12);
+}
+
+function drawP2(ctx, keyed){
+  ctx.clearRect(0,0,1280,720);
+  gradient(ctx,1280,118,P.skyTop,P.skyMid,P.skyLow);
+  paintCloud(ctx,{cx:170,baseY:112,w:124,h:44,seed:7,inkW:2.4});
+  paintCloud(ctx,{cx:1140,baseY:104,w:98,h:36,seed:19,inkW:2.2});
+  ctx.drawImage(keyed,0,0);
+  hazeBand(ctx,1280,110,P.haze,.22,18);
+  hazeBand(ctx,1280,108,'#FFF3E0',.14,12);
+}
+
+function drawP3(ctx, keyed){
+  ctx.clearRect(0,0,1280,720);
+  const horizon=286;
+  gradient(ctx,1280,horizon,P.stormTop,P.stormMid,P.stormLow);
+  // dos masas: la estantería de la tormenta detrás y la torre delante
+  paintCloud(ctx,{cx:700,baseY:298,w:980,h:170,seed:103,lit:'#868BA4',shadow:'#454A66',inkW:5});
+  paintCloud(ctx,{cx:400,baseY:298,w:520,h:258,seed:101,lit:'#9AA0B8',shadow:'#4A4F6B',inkW:5});
+  paintCloud(ctx,{cx:1170,baseY:272,w:320,h:128,seed:113,lit:P.stormLit,shadow:P.stormShadow,inkW:4});
+  // rayo
+  const bolt=[[946,96],[982,176],[956,192],[1000,262],[982,272],[1014,286]];
+  const drawBolt=(w,col,a)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();ctx.moveTo(...bolt[0]);for(const p of bolt.slice(1))ctx.lineTo(...p);ctx.stroke();ctx.restore();};
+  drawBolt(26,'#C3B4FF',.22); drawBolt(13,'#C3B4FF',.4); drawBolt(6,'#FFFFFF',1);
+  ctx.save();ctx.strokeStyle='#FFFFFF';ctx.lineWidth=3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(972,184);ctx.lineTo(930,224);ctx.lineTo(952,234);ctx.stroke();ctx.restore();
+  // paisaje con paleta fría
+  ctx.save(); ctx.filter='brightness(.93) saturate(.95) contrast(1.02)';
+  ctx.drawImage(keyed,0,150); ctx.restore();
+  hazeBand(ctx,1280,292,'#8E93AB',.24,22);
+  // lluvia en tres profundidades
+  const r=rng(3131);
+  const capas=[{n:150,w:1.2,a:.2,len:26,y0:120},{n:110,w:1.9,a:.32,len:48,y0:80},{n:64,w:2.8,a:.46,len:80,y0:0}];
+  for(const c of capas){
+    ctx.save(); ctx.strokeStyle=P.rain; ctx.globalAlpha=c.a; ctx.lineWidth=c.w; ctx.lineCap='round';
+    ctx.beginPath();
+    for(let i=0;i<c.n;i++){
+      const x=r()*1340-30, y=c.y0+r()*(740-c.y0), L=c.len*(.65+r()*.7);
+      ctx.moveTo(x,y); ctx.lineTo(x+L*.24,y+L);
+    }
+    ctx.stroke(); ctx.restore();
+  }
+  // salpicaduras
+  ctx.save(); ctx.strokeStyle=P.rain; ctx.globalAlpha=.55; ctx.lineWidth=1.8; ctx.lineCap='round';
+  for(let i=0;i<42;i++){
+    const x=r()*1280,y=430+r()*280,k=3.4+r()*3.4;
+    ctx.beginPath();ctx.moveTo(x-k,y);ctx.quadraticCurveTo(x,y-k*1.5,x+k,y);ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function load(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src;});}
+
+(async function(){
+  const solo=new URLSearchParams(location.search).get('solo');
+  if(solo){
+    document.body.classList.add('solo');
+    const i=solo==='p2'?1:solo==='p3'?2:0;
+    document.querySelectorAll('section')[i].classList.add('ver');
+  }
+  const [valle,vuelo]=await Promise.all([load('/fuentes/valle.png'),load('/fuentes/vuelo.png')]);
+  const kValle=keySky(valle,95);
+  const kVuelo=keySky(vuelo,95);
+  if(solo==='key'){
+    const c=document.getElementById('p1'), x=c.getContext('2d');
+    x.fillStyle='#FF00FF'; x.fillRect(0,0,1280,720); x.drawImage(kValle,0,0);
+    return;
+  }
+  if(solo==='key2'){
+    const c=document.getElementById('p1'), x=c.getContext('2d');
+    x.fillStyle='#FF00FF'; x.fillRect(0,0,1280,720); x.drawImage(kVuelo,0,0);
+    return;
+  }
+  if(solo==='sky2'){
+    const c=document.getElementById('p1'), x=c.getContext('2d');
+    x.clearRect(0,0,1280,720);
+    gradient(x,1280,118,P.skyTop,P.skyMid,P.skyLow);
+    x.fillStyle='#FF00FF'; x.fillRect(0,200,1280,40);
+    return;
+  }
+  if(solo==='shift'){
+    const c=document.getElementById('p1'), x=c.getContext('2d');
+    x.fillStyle='#F3EADA'; x.fillRect(0,0,1280,720); x.drawImage(kValle,0,150);
+    return;
+  }
+  drawP1(document.getElementById('p1').getContext('2d'),kValle);
+  drawP2(document.getElementById('p2').getContext('2d'),kVuelo);
+  drawP3(document.getElementById('p3').getContext('2d'),kValle);
+
+  const chips=[['Cielo cénit',P.skyTop],['Horizonte',P.skyLow],['Bruma cálida',P.haze],
+    ['Nube luz',P.cloudLit],['Nube sombra',P.cloudShadow],['Tinta',P.ink],
+    ['Verde',"#7FB65C"],['Tierra',"#D8B176"],['Sombra tormenta',P.stormShadow],['Lluvia',P.rain]];
+  document.getElementById('paleta').innerHTML=chips.map(([k,v])=>
+    `<div class="chip"><i style="background:${v}"></i><b>${k}</b><s>${v}</s></div>`).join('');
+  document.body.classList.add('listo');
+})();
+</script>
+</body>
+</html>

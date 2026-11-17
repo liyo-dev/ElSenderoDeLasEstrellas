@@ -108,6 +108,8 @@ public class DayNightCycle : MonoBehaviour
     }
 
     [Header("Periodos del día")]
+    [Tooltip("Duración total objetivo de las franjas del día, en segundos. 0 = respetar las duraciones configuradas tal cual. Si es mayor que 0, al arrancar se reparten las franjas en proporción a su duración actual para que el día completo dure esto. Las transiciones entre franjas van aparte.")]
+    [SerializeField, Min(0f)] private float duracionTotalDelDia = 1800f;
     [SerializeField] private TimeOfDaySettings[] timeSettings = new TimeOfDaySettings[]
     {
         new TimeOfDaySettings {
@@ -165,11 +167,27 @@ public class DayNightCycle : MonoBehaviour
 
     [Header("Clima - Oscurecimiento por lluvia")]
     [Tooltip("Multiplicador de la intensidad de la luz direccional mientras llueve a tope (1 = sin cambio).")]
-    [SerializeField, Range(0f, 1f)] private float rainLightIntensityMultiplier = 0.55f;
+    [SerializeField, Range(0f, 1f)] private float rainLightIntensityMultiplier = 0.75f;
     [Tooltip("Multiplicador de la densidad de niebla mientras llueve a tope (1 = sin cambio, más alto = más densa).")]
-    [SerializeField, Range(1f, 6f)] private float rainFogDensityMultiplier = 2.5f;
+    [SerializeField, Range(1f, 6f)] private float rainFogDensityMultiplier = 1.6f;
     [Tooltip("Suelo ABSOLUTO de intensidad de la luz direccional mientras llueve a tope. Sin esto, rainLightIntensityMultiplier se aplica sobre la intensidad que ya tenga el periodo actual, así que un periodo ya oscuro (Night) puede quedarse en negro casi total. Con este suelo, la luz nunca baja de este valor por mucho que se multiplique.")]
-    [SerializeField, Range(0f, 1f)] private float rainMinLightIntensity = 0.28f;
+    [SerializeField, Range(0f, 1f)] private float rainMinLightIntensity = 0.5f;
+
+    [Header("Clima - Paleta relativa al cielo")]
+    [Tooltip("Las nubes de lluvia y tormenta se calculan oscureciendo las nubes del cielo de la escena (Chuchelandia sigue rosa, el prólogo dorado) en vez de usar un gris fijo.")]
+    [SerializeField] private bool climaRelativoAlCielo = true;
+    [Tooltip("Cuánto se oscurecen las nubes con la lluvia a tope (1 = nada).")]
+    [SerializeField, Range(0.4f, 1f)] private float oscurecerNubesDeLluvia = 0.85f;
+    [Tooltip("Cuánto se oscurecen las nubes con la tormenta a tope (1 = nada).")]
+    [SerializeField, Range(0.2f, 1f)] private float oscurecerNubesDeTormenta = 0.62f;
+    [Tooltip("Color por el que se multiplica la nube para dar su tono en sombra. Violeta, como la sombra del mundo.")]
+    [SerializeField] private Color tinteDeSombraDeNubes = new Color(0.62f, 0.66f, 0.90f, 1f);
+    [Tooltip("Cuánto se mezcla el color de la niebla con el horizonte del cielo (0 = color base de la franja, 1 = horizonte). Sirve para que la niebla sea aire del sitio y no una sábana gris.")]
+    [SerializeField, Range(0f, 1f)] private float nieblaDelHorizonte = 0.7f;
+    [Tooltip("Color al que se lleva la luz del sol mientras llueve, para que el mundo se enfríe sin apagarse.")]
+    [SerializeField] private Color tinteDeLuzDeLluvia = new Color(0.78f, 0.84f, 0.96f, 1f);
+    [Tooltip("Cuánto tiñe ese color la luz mientras llueve (0 = nada, 1 = del todo).")]
+    [SerializeField, Range(0f, 1f)] private float fuerzaDelTinteDeLluvia = 0.5f;
 
     [Header("Clima - Niebla ocasional")]
     [Tooltip("Prefab opcional de niebla volumétrica (partículas) para el evento de niebla ocasional. Si es null, solo se espesa la niebla global (RenderSettings.fog), sin partículas.")]
@@ -455,6 +473,7 @@ public class DayNightCycle : MonoBehaviour
     private float _inicioDeNubosidad, _tiempoDeNubosidad;
     private Color _colorDeClima;
     private static readonly int NubosidadId = Shader.PropertyToID("_Nubosidad");
+    private static readonly int NubesBaseId = Shader.PropertyToID("_ColorDeNubes");
     private static readonly int NubesClimaId = Shader.PropertyToID("_ColorDeNubesDeClima");
     private static readonly int SombraClimaId = Shader.PropertyToID("_ColorDeNubesDeClimaEnSombra");
     private static readonly int FrenteId = Shader.PropertyToID("_AvanceDelFrente");
@@ -597,16 +616,32 @@ public class DayNightCycle : MonoBehaviour
         }
         Color horizonte = _runtimeSkybox.HasProperty(HorizonteId) ? _runtimeSkybox.GetColor(HorizonteId) : Color.white;
         float brillo = Mathf.Max(0.18f, horizonte.r * 0.2126f + horizonte.g * 0.7152f + horizonte.b * 0.0722f);
-        _colorDeClima = Color.Lerp(Color.Lerp(colorDeNubesDeLluvia, colorDeNubesDeTormenta, PesoDeTormenta),
-            colorDeNubesDeNieve, PesoDeNieve) * brillo * Mathf.Lerp(1f, 0.75f, PesoDeNoche);
+        // El clima oscurece la paleta de nubes de la escena, no la sustituye por un gris: así
+        // Chuchelandia sigue rosa y el prólogo dorado cuando llueve en ellos.
+        Color nubeDelCielo = _runtimeSkybox.HasProperty(NubesBaseId) ? _runtimeSkybox.GetColor(NubesBaseId) : colorDeNubesDeLluvia;
+        Color clima;
+        if (climaRelativoAlCielo)
+        {
+            float k = Mathf.Lerp(1f, oscurecerNubesDeLluvia, PesoDePrecipitacion)
+                    * Mathf.Lerp(1f, oscurecerNubesDeTormenta, PesoDeTormenta);
+            clima = nubeDelCielo * k;
+            clima = Color.Lerp(clima, colorDeNubesDeNieve, PesoDeNieve);
+        }
+        else
+        {
+            clima = Color.Lerp(Color.Lerp(colorDeNubesDeLluvia, colorDeNubesDeTormenta, PesoDeTormenta),
+                colorDeNubesDeNieve, PesoDeNieve);
+        }
+        _colorDeClima = clima * brillo * Mathf.Lerp(1f, 0.75f, PesoDeNoche);
         _colorDeClima.a = 1f;
         float frente = objetivo > _inicioDeNubosidad && objetivo == 1f ? Mathf.Sin(progreso * Mathf.PI) : 0f;
         // Las propiedades meteorológicas se escriben después del Lerp incluso con cielo bloqueado.
         _runtimeSkybox.SetFloat(NubosidadId, Nublado);
         _runtimeSkybox.SetColor(NubesClimaId, _colorDeClima);
-        Color sombra = _colorDeClima * 0.65f;
+        Color sombra = _colorDeClima * tinteDeSombraDeNubes;
         sombra.a = 1f;
         _runtimeSkybox.SetColor(SombraClimaId, sombra);
+        _horizonteDelCielo = horizonte;
         _runtimeSkybox.SetFloat(FrenteId, frente);
         float velocidad = 0.1f + FuerzaDelViento * 0.7f + PesoDeTormenta * 0.5f;
         Shader.SetGlobalVector(VientoCieloId, new Vector4(DireccionDelViento.x * velocidad, DireccionDelViento.z * velocidad, 0f, 0f));
@@ -624,6 +659,8 @@ public class DayNightCycle : MonoBehaviour
     private Coroutine _rainFadeCoroutine;
 
     private float _baseLightIntensity = -1f;
+    private Color _baseLightColor = Color.white;
+    private Color _horizonteDelCielo = new Color(0.72f, 0.86f, 0.98f);
 
     public float Nublado { get; private set; }
     /// Cuánto se ven las estrellas (0-1) según lo cubierto que está el cielo. Las estrellas son objetos
@@ -686,6 +723,28 @@ public class DayNightCycle : MonoBehaviour
 
     public Material SkyboxEnUso => _runtimeSkybox;
 
+    /// Reparte las franjas en proporción a su duración actual para que el día completo
+    /// dure `duracionTotalDelDia`. No toca las escenas de hora fija (una sola franja).
+    void AjustarDuracionTotalDelDia()
+    {
+        if (duracionTotalDelDia <= 0f || timeSettings == null || timeSettings.Length < 2) return;
+
+        float suma = 0f;
+        for (int i = 0; i < timeSettings.Length; i++)
+        {
+            if (timeSettings[i] == null) continue;
+            suma += Mathf.Max(1f, timeSettings[i].duration);
+        }
+        if (suma <= 0f) return;
+
+        float escala = duracionTotalDelDia / suma;
+        for (int i = 0; i < timeSettings.Length; i++)
+        {
+            if (timeSettings[i] == null) continue;
+            timeSettings[i].duration = Mathf.Max(1f, timeSettings[i].duration * escala);
+        }
+    }
+
     void Awake()
     {
         if (timeSettings == null || timeSettings.Length == 0)
@@ -698,6 +757,8 @@ public class DayNightCycle : MonoBehaviour
         }
 
         _currentIndex = Mathf.Clamp(startingTimeIndex, 0, timeSettings.Length - 1);
+
+        AjustarDuracionTotalDelDia();
 
         Instance = this;
 
@@ -869,16 +930,21 @@ public class DayNightCycle : MonoBehaviour
             float atenuada = Mathf.Min(_baseLightIntensity, Mathf.Max(_baseLightIntensity * multiplicador, rainMinLightIntensity));
             directionalLight.intensity = Mathf.Lerp(_baseLightIntensity, atenuada, precipitacion)
                 * Mathf.Lerp(1f, 0.9f, cobertura) * AtenuacionDelRelevo;
+            // Enfriar en vez de apagar: con dos tonos, bajar la luz manda medio mundo a la sombra.
+            if (!_isTransitioning)
+                directionalLight.color = Color.Lerp(_baseLightColor, tinteDeLuzDeLluvia, lluvia * fuerzaDelTinteDeLluvia);
         }
         if (controlFog && visible)
         {
             RenderSettings.fogDensity = _baseFogDensity * Mathf.Lerp(1f, rainFogDensityMultiplier, lluvia)
                 * Mathf.Lerp(1f, mistFogDensityMultiplier, _mistAmount)
                 * Mathf.Lerp(1f, snowFogDensityMultiplier, precipitacion * nieve);
-            RenderSettings.fogColor = Color.Lerp(_baseFogColor, _colorDeClima, precipitacion);
+            // La niebla es aire del sitio: se tiñe del horizonte del cielo, no del gris de la nube.
+            Color nieblaDelCielo = Color.Lerp(_colorDeClima, _horizonteDelCielo, nieblaDelHorizonte);
+            RenderSettings.fogColor = Color.Lerp(_baseFogColor, nieblaDelCielo, precipitacion * 0.85f);
             if (_nieblaPrestada.Count > 0) AplicarNieblaPrestada();
         }
-        if (_activeSnowInstance != null || _activeWindInstance != null)
+        if (_activeSnowInstance != null || _activeWindInstance != null || _activeRainInstance != null)
             VfxDeClima.Iluminar(Color.Lerp(RenderSettings.fogColor, Color.white, 0.55f));
     }
 
@@ -1103,13 +1169,6 @@ public class DayNightCycle : MonoBehaviour
 
     public void StartRain(float? duration = null, bool immediate = false)
     {
-        if (rainPrefab == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[DayNightCycle] StartRain() no ha hecho nada: rainPrefab no está asignado en este GameObject/escena.");
-#endif
-            return;
-        }
         if (IsRaining || (_isCloudBuildingUp && !_nieveSolicitada))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1293,6 +1352,7 @@ public class DayNightCycle : MonoBehaviour
             directionalLight.color = settings.lightColor;
             directionalLight.intensity = settings.lightIntensity;
             _baseLightIntensity = settings.lightIntensity;
+            _baseLightColor = settings.lightColor;
         }
         PesoDeNoche = settings.timeOfDay == TimeOfDay.Night ? 1f : 0f;
 
@@ -1399,7 +1459,7 @@ public class DayNightCycle : MonoBehaviour
 
     void ActivateRain()
     {
-        if (IsRaining || rainPrefab == null) return;
+        if (IsRaining) return;
 
         if (_rainFadeCoroutine != null)
         {
@@ -1416,7 +1476,13 @@ public class DayNightCycle : MonoBehaviour
                            PlayerService.Player != null ? PlayerService.Player.transform :
                            Camera.main != null ? Camera.main.transform : null;
 
-        if (parent != null)
+        if (rainPrefab == null)
+        {
+            // Lluvia de dibujo generada en código (trazos y salpicaduras), como la nieve y el viento.
+            _activeRainInstance = VfxDeClima.CrearLluvia(parent);
+            if (parent == null) _activeRainInstance.transform.position = transform.position;
+        }
+        else if (parent != null)
         {
             _activeRainInstance = Instantiate(rainPrefab, parent);
             _activeRainInstance.transform.localPosition = Vector3.zero;

@@ -1,10 +1,21 @@
 {
   "dependencies": {
+    "com.liyodev.assistant": {
+      "version": "file:com.liyodev.assistant",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      }
+    },
     "com.liyodev.cinematics": {
       "version": "file:com.liyodev.cinematics",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.liyodev.assistant": "0.1.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      }
     },
     "com.liyodev.narrativegraph": {
       "version": "file:com.liyodev.narrativegraph",
@@ -13,7 +24,8 @@
       "dependencies": {
         "com.unity.ugui": "2.0.0",
         "com.unity.timeline": "1.8.7",
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.liyodev.assistant": "0.1.0"
       }
     },
     "com.unity.2d.sprite": {

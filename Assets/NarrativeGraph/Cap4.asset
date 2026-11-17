@@ -103,7 +103,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
-        position: {x: 40, y: 1350}
+        position: {x: 1120, y: 1638}
         outputs:
         - cap4-figura
         actorId: _LIAM
@@ -123,7 +123,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
-        position: {x: 40, y: 1590}
+        position: {x: 840, y: 2236}
         outputs:
         - pieza-_liam-fromhere-cap-4-en-el-saliente-del-golem-cap4-golem
         actorId: _LIAM
@@ -143,7 +143,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-fromhere-cap-4-en-el-saliente-del-golem-cap4-golem
-        position: {x: 40, y: 1700}
+        position: {x: 1120, y: 2236}
         outputs:
         - cap4-punto-golem
         actorId: _LIAM
@@ -163,7 +163,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
-        position: {x: 1940, y: 1830}
+        position: {x: 560, y: 3506}
         outputs:
         - pieza-_liam-fromhere-cap-4-en-la-bifurcacion-cap4-bifurcacion
         actorId: _LIAM
@@ -183,7 +183,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-fromhere-cap-4-en-la-bifurcacion-cap4-bifurcacion
-        position: {x: 1940, y: 1940}
+        position: {x: 840, y: 3506}
         outputs:
         - cap4-llegada-bifurcacion
         actorId: _LIAM
@@ -203,7 +203,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
-        position: {x: 1560, y: 2070}
+        position: {x: 280, y: 3860}
         outputs:
         - cap4-bota-boc
         actorId: _LIAM
@@ -223,7 +223,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-inicio
-        position: {x: 0, y: 0}
+        position: {x: 0, y: 44}
         outputs:
         - cap4-tras-cap3
     - rid: 6540294600349713260
@@ -238,7 +238,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-tras-cap3
-        position: {x: 380, y: 0}
+        position: {x: 280, y: 44}
         outputs:
         - cap4-flag
         eventKey: CH_Cap3_BACK_1
@@ -257,7 +257,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-fin
-        position: {x: 1900, y: 2160}
+        position: {x: 280, y: 4318}
         outputs:
         - cap4-demo-rotulo
         eventKey: CH_Cap4_BACK_1
@@ -273,7 +273,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-demo-rotulo
-        position: {x: 0, y: 2400}
+        position: {x: 560, y: 4318}
         outputs:
         - cap4-demo-fin
         text: Fin de la Primera Parte. Gracias por jugar a la demo.
@@ -297,7 +297,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-flag
-        position: {x: 760, y: 0}
+        position: {x: 560, y: 44}
         outputs:
         - cap4-estela-aparece
         flagKey: CAP4_INICIADO
@@ -314,7 +314,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-estela-aparece
-        position: {x: 1140, y: 0}
+        position: {x: 840, y: 44}
         outputs:
         - cap4-bosque
         flagKey: ESTELA_APARECE
@@ -331,7 +331,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bosque
-        position: {x: 1520, y: 0}
+        position: {x: 1120, y: 44}
         outputs:
         - cap4-mision-estela
         eventKey: CAP4_BOSQUE_EMPIEZA
@@ -347,7 +347,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mision-estela
-        position: {x: 1900, y: 0}
+        position: {x: 1400, y: 44}
         outputs:
         - cap4-punto-bosque
         questId: CAP4_ENCUENTRA_A_ESTELA
@@ -366,7 +366,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-punto-bosque
-        position: {x: 0, y: 240}
+        position: {x: 0, y: 472}
         outputs:
         - cap4-llegada-claro
         checkpointId: CAP4_INICIO
@@ -386,7 +386,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-llegada-claro
-        position: {x: 380, y: 240}
+        position: {x: 280, y: 472}
         outputs:
         - cap4-mando-estela
         eventKey: CAP4_LLEGADA_CLARO
@@ -405,7 +405,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-paso-estela
-        position: {x: 1900, y: 240}
+        position: {x: 1400, y: 472}
         outputs:
         - cap4-casa
         standingActorId: 
@@ -428,7 +428,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-casa
-        position: {x: 0, y: 480}
+        position: {x: 1680, y: 472}
         outputs:
         - cap4-casa-noche
         eventKey: CAP4_CASA_EMPIEZA
@@ -444,7 +444,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-casa-boc
-        position: {x: 760, y: 480}
+        position: {x: 0, y: 826}
         outputs:
         - cap4-dormir
         targetTag: Player
@@ -467,7 +467,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-dormir
-        position: {x: 1140, y: 480}
+        position: {x: 280, y: 826}
         outputs:
         - cap4-rotulo-manana
         eventKey: CAP4_DORMIR
@@ -486,7 +486,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-rotulo-manana
-        position: {x: 1520, y: 480}
+        position: {x: 560, y: 826}
         outputs:
         - cap4-manana-hora
         text: "A la ma\xF1ana siguiente\u2026"
@@ -510,7 +510,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manana-will
-        position: {x: 0, y: 720}
+        position: {x: 1120, y: 826}
         outputs:
         - cap4-punto-casa
         actorId: Player
@@ -529,7 +529,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-punto-casa
-        position: {x: 380, y: 720}
+        position: {x: 0, y: 1284}
         outputs:
         - cap4-mision-reino
         checkpointId: CAP4_CASA
@@ -549,7 +549,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mision-reino
-        position: {x: 760, y: 720}
+        position: {x: 280, y: 1284}
         outputs:
         - cap4-campana
         questId: CAP4_RUMBO_AL_REINO
@@ -568,7 +568,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-campana
-        position: {x: 1140, y: 720}
+        position: {x: 560, y: 1284}
         outputs:
         - cap4-mando-manana
         eventKey: CAP4_CAMPANA_EMPIEZA
@@ -584,7 +584,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-campana-fork
-        position: {x: 1140, y: 960}
+        position: {x: 0, y: 1638}
         outputs:
         - cap4-figura-0
         - cap4-tocada
@@ -600,7 +600,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-tocada
-        position: {x: 1520, y: 960}
+        position: {x: 280, y: 1912}
         outputs:
         - cap4-liam-aparece
         eventKey: CAP4_CAMPANA_TOCADA
@@ -619,7 +619,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-liam-aparece
-        position: {x: 1900, y: 960}
+        position: {x: 560, y: 1912}
         outputs:
         - cap4-campana-fin
         flagKey: LIAM_APARECE
@@ -636,7 +636,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-campana-fin
-        position: {x: 0, y: 1200}
+        position: {x: 840, y: 1912}
         outputs:
         - pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
         eventKey: CAP4_CAMPANA_FIN
@@ -652,7 +652,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-paso-campana
-        position: {x: 1900, y: 1200}
+        position: {x: 280, y: 2236}
         outputs:
         - cap4-golem
         standingActorId: 
@@ -675,7 +675,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-golem
-        position: {x: 0, y: 1440}
+        position: {x: 560, y: 2236}
         outputs:
         - pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
         eventKey: CAP4_GOLEM_EMPIEZA
@@ -691,7 +691,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-punto-golem
-        position: {x: 380, y: 1440}
+        position: {x: 0, y: 2694}
         outputs:
         - cap4-llegada-arena
         checkpointId: CAP4_CAMINO
@@ -711,7 +711,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-llegada-arena
-        position: {x: 760, y: 1440}
+        position: {x: 280, y: 2694}
         outputs:
         - cap4-mando-golem
         eventKey: CAP4_LLEGADA_ARENA
@@ -730,7 +730,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-esquirla
-        position: {x: 380, y: 1680}
+        position: {x: 1680, y: 2694}
         outputs:
         - cap4-paso-golem
         item: {fileID: 11400000, guid: 41b82b5e4530fb74aadb0af71d1b1162, type: 2}
@@ -749,7 +749,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-paso-golem
-        position: {x: 760, y: 1680}
+        position: {x: 1960, y: 2694}
         outputs:
         - cap4-manzana
         standingActorId: 
@@ -772,7 +772,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-punto-manzana
-        position: {x: 1520, y: 1680}
+        position: {x: 0, y: 3506}
         outputs:
         - cap4-bifurcacion
         checkpointId: CAP4_MANZANA
@@ -792,7 +792,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bifurcacion
-        position: {x: 1900, y: 1680}
+        position: {x: 280, y: 3506}
         outputs:
         - pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
         eventKey: CAP4_BIFURCACION_EMPIEZA
@@ -808,7 +808,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-llegada-bifurcacion
-        position: {x: 0, y: 1920}
+        position: {x: 1120, y: 3506}
         outputs:
         - cap4-mando-bifurcacion
         eventKey: CAP4_LLEGADA_BIFURCACION
@@ -827,7 +827,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-liam-grupo-senal
-        position: {x: 1520, y: 1920}
+        position: {x: 0, y: 3860}
         outputs:
         - pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
         eventKey: CAP4_LIAM_EN_EL_GRUPO
@@ -843,7 +843,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bota-boc
-        position: {x: 1900, y: 1920}
+        position: {x: 560, y: 3860}
         outputs:
         - cap4-bota
         targetTag: Player
@@ -866,7 +866,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bota
-        position: {x: 0, y: 2160}
+        position: {x: 840, y: 3860}
         outputs:
         - cap4-mando-bota
         eventKey: CAP4_BOTA_RECOGIDA
@@ -885,7 +885,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-paso-vado
-        position: {x: 1140, y: 2160}
+        position: {x: 1680, y: 3860}
         outputs:
         - cap4-fin-punto
         standingActorId: 
@@ -908,7 +908,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-fin-punto
-        position: {x: 1520, y: 2160}
+        position: {x: 0, y: 4318}
         outputs:
         - cap4-fin
         checkpointId: CAP4_FIN
@@ -928,7 +928,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura-0
-        position: {x: 0, y: 2880}
+        position: {x: 280, y: 1638}
         outputs:
         - cap4-figura-1
         eventKey: CAP4_FIGURA_CHAMUSCADA
@@ -947,7 +947,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura-1
-        position: {x: 380, y: 2880}
+        position: {x: 560, y: 1638}
         outputs:
         - cap4-figura-2
         flagKey: CAP4_FIGURAS_CHAMUSCADAS
@@ -964,7 +964,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura-2
-        position: {x: 760, y: 2880}
+        position: {x: 840, y: 1638}
         outputs:
         - cap4-figura-0
         targetTag: Player
@@ -987,7 +987,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-nota
-        position: {x: 0, y: -240}
+        position: {x: 0, y: 4732}
         outputs: []
         note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
@@ -1003,7 +1003,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura-destapa
-        position: {x: 760, y: 1200}
+        position: {x: 1680, y: 1638}
         outputs:
         - cap4-levitacion
         color: {r: 0, g: 0, b: 0, a: 1}
@@ -1024,7 +1024,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-demo-destapa
-        position: {x: 760, y: 2400}
+        position: {x: 1120, y: 4318}
         outputs: []
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1
@@ -1044,7 +1044,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-demo-fin
-        position: {x: 380, y: 2400}
+        position: {x: 840, y: 4318}
         outputs:
         - cap4-demo-destapa
         request:
@@ -1063,7 +1063,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-estela
-        position: {x: 760, y: 240}
+        position: {x: 560, y: 472}
         outputs:
         - cap4-estela
         request:
@@ -1082,7 +1082,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-estela
-        position: {x: 1140, y: 240}
+        position: {x: 840, y: 472}
         outputs:
         - cap4-estela-grupo
         - 
@@ -1102,7 +1102,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-estela-grupo
-        position: {x: 1520, y: 240}
+        position: {x: 1120, y: 472}
         outputs:
         - cap4-paso-estela
         request:
@@ -1121,7 +1121,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-casa-noche
-        position: {x: 380, y: 480}
+        position: {x: 1960, y: 472}
         outputs:
         - cap4-casa-boc
         request:
@@ -1140,7 +1140,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manana-hora
-        position: {x: 1900, y: 480}
+        position: {x: 840, y: 826}
         outputs:
         - cap4-manana-will
         request:
@@ -1159,7 +1159,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-manana
-        position: {x: 1520, y: 720}
+        position: {x: 840, y: 1284}
         outputs:
         - cap4-manana
         request:
@@ -1178,7 +1178,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manana
-        position: {x: 1900, y: 720}
+        position: {x: 1120, y: 1284}
         outputs:
         - cap4-cupula
         - 
@@ -1198,7 +1198,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-cupula
-        position: {x: 0, y: 960}
+        position: {x: 1400, y: 1284}
         outputs:
         - cap4-cupula-tuto
         request:
@@ -1217,7 +1217,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-cupula-tuto
-        position: {x: 380, y: 960}
+        position: {x: 1680, y: 1284}
         outputs:
         - cap4-reglas
         request:
@@ -1236,7 +1236,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-reglas
-        position: {x: 760, y: 960}
+        position: {x: 1960, y: 1284}
         outputs:
         - cap4-campana-fork
         - 
@@ -1256,7 +1256,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura
-        position: {x: 380, y: 1200}
+        position: {x: 1400, y: 1638}
         outputs:
         - cap4-figura-destapa
         - 
@@ -1276,7 +1276,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-levitacion
-        position: {x: 1140, y: 1200}
+        position: {x: 1960, y: 1638}
         outputs:
         - cap4-levitacion-tuto
         request:
@@ -1295,7 +1295,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-golem
-        position: {x: 1140, y: 1440}
+        position: {x: 560, y: 2694}
         outputs:
         - cap4-golem-cine
         request:
@@ -1314,7 +1314,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-golem-cine
-        position: {x: 1520, y: 1440}
+        position: {x: 840, y: 2694}
         outputs:
         - cap4-golem-batalla
         - 
@@ -1334,7 +1334,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-golem-batalla
-        position: {x: 1900, y: 1440}
+        position: {x: 1120, y: 2694}
         outputs:
         - cap4-tras-golem
         request:
@@ -1353,7 +1353,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-tras-golem
-        position: {x: 0, y: 1680}
+        position: {x: 1400, y: 2694}
         outputs:
         - cap4-esquirla
         - 
@@ -1373,7 +1373,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manzana
-        position: {x: 1140, y: 1680}
+        position: {x: 0, y: 3048}
         outputs:
         - cap4-punto-manzana
         - 
@@ -1393,7 +1393,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-bifurcacion
-        position: {x: 380, y: 1920}
+        position: {x: 1400, y: 3506}
         outputs:
         - cap4-bifurcacion-cine
         request:
@@ -1412,7 +1412,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bifurcacion-cine
-        position: {x: 760, y: 1920}
+        position: {x: 1680, y: 3506}
         outputs:
         - cap4-liam-grupo
         - 
@@ -1432,7 +1432,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-liam-grupo
-        position: {x: 1140, y: 1920}
+        position: {x: 1960, y: 3506}
         outputs:
         - cap4-liam-grupo-senal
         request:
@@ -1451,7 +1451,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-bota
-        position: {x: 380, y: 2160}
+        position: {x: 1120, y: 3860}
         outputs:
         - cap4-bota-cine
         request:
@@ -1470,7 +1470,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bota-cine
-        position: {x: 760, y: 2160}
+        position: {x: 1400, y: 3860}
         outputs:
         - cap4-paso-vado
         - 
@@ -1490,7 +1490,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-levitacion-tuto
-        position: {x: 1520, y: 1200}
+        position: {x: 0, y: 2236}
         outputs:
         - cap4-paso-campana
         request:

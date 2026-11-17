@@ -1,9 +1,37 @@
-# Estado de la prueba (20:49:32)
+# Estado de la prueba (17:32:42)
 
 ## Órdenes
-· lanzar Cap1 09fd7f9e-17a4-4ece-9b76-bbd3c4def441 Eldran_Bosque → OK Lanzando Play desde StartBattleNode "32.- ARENA DE BATALLA: DEMONIO" en Cap1 (anchor: Eldran_Bosque)...
+· estado → ok
+· foto sigilo_02 → C:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas\Guiones\Historia\fotos\sigilo_02.png
 
-Fotograma 5 · t=4283,6 s · segundo plano False
-Play: False · escenas: MainWorld, Start
+Fotograma 2309 · t=138,0 s · segundo plano True
+Play: True · escenas: MainWorld, Start
+
+## Grafos
+- Cap1: (nada)
+- Secundary: (nada) · ramas: Recibo Algas | El mareo de Roberto | Misión buscar botas Rudolfo | Espero a completar la misión | La plaga de arañas (Guardia del Bosque) | El remedio de Bárbara (Tendera) | El remedio contra la resaca (Tabernera) | Pociones para la abuela (Manuel) | Suministros para el hechizo (Nora) | Hablar con Renard | Erika ya te ha entrenado
+- Cap2: (nada)
+- Sendero: (nada)
+- Chuchelandia: (nada)
+- Cap3: 3.3 · Seguir a los contrabandistas a escondidas hasta el claro (probar desde aquí)
+- Cap4: Tras el Cap. 3 (CH_Cap3_BACK_1)
+
+Jugador: (-101.2, 20.2, -208.6)
+Diálogo abierto: False
+Cinemáticas en curso: 
+Grupo: 
+
+## Actores
+- _ESTELA: no está
+- _LIAM: no está
+- NPC_Posadero: (281.3, 5.7, -420.2) · agente apagado
+- NPC_Lucia: (273.7, 5.3, -429.3) · agente apagado
+- NPC_Sargento: (-87.0, 25.0, -121.0) · agente apagado
+- NPC_GuardiaCruce1: (-92.0, 24.9, -118.0) · agente apagado
+- NPC_GuardiaCruce2: (-93.0, 24.7, -129.0) · agente apagado
+- NPC_Contrabandista1: (-118.8, 19.3, -228.0) (inactivo) · fuera del NavMesh
+- NPC_Contrabandista2: (-118.6, 19.3, -227.7) (inactivo) · fuera del NavMesh
+- NPC_Eldran: (0.6, 26.3, -130.9) · fuera del grupo · agente apagado
+- NPC_Oliver: (6.0, 26.3, -143.2) · fuera del grupo · agente apagado
 
 ## Consola (avisos, errores y pasos del grafo)

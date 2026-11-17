@@ -652,3 +652,12 @@ Cerrado el 8 oct 2026: contrabandistas, extras del capítulo 2, Gólem, Demonio 
 - **Valores** (vida y maná de cada personaje, daño y maná de Amanecer, objeto para revivir): se ajustan probando en el LAB.
 - **Secundarias:** qué variante de cada una se construye, al llegar a ella.
 - **No entran por ahora:** los dones activables (vida infinita…) y el simulacro antes del altar. Se pueden recuperar más adelante.
+
+### Clima, reloj y efectos elementales (propuesta, 17 nov 2026 — sin aprobar)
+
+- **Decidido e implementado (17 nov 2026):** el ciclo de día completo pasa a **30 min** (`DayNightCycle.duracionTotalDelDia`; las transiciones van aparte). El resto de la propuesta no está implementado.
+- **Propuesta:** reloj e icono del tiempo en el HUD, pestaña «Mundo» en el menú y, a futuro, que el clima modifique hechizos y enemigos (sol, lluvia, tormenta, niebla y nieve) para que un mago del clima pueda preparar combos.
+- **Canon vigente:** no hay debilidades ni resistencias elementales en combate (§ 6.1); los elementos son identidad y puzle. Esta propuesta no cambia esa regla hasta que se apruebe y se actualice este GDD.
+- **Sin Agua:** los cinco elementos son Fuego, Viento/Tormenta, Luz, Mente y Oscuro. Lluvia y tormenta se asocian a Viento/Tormenta; «soleado» sería un estado Despejado, no un elemento.
+- **Pendiente de decidir:** multiplicadores (x1,5–x2 con tope frente a x4), si las debilidades son generales o rasgos concretos, y qué pasa con los jefes-puzle.
+- Detalle, matriz propuesta y etapas: `docs/clima-reloj-y-efectos-2026-11-17.md` (INC-1276).

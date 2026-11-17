@@ -1,0 +1,78 @@
+/* Chat compartido de Liyodev. Las clases «story-*» son las mismas que usa el editor del grafo
+   para que el panel embebido se vea igual; «assistant-*» son las piezas propias de la ventana. */
+
+.assistant-root {
+    --accent: #3D8BFF;
+    --accent-ink: #FFFFFF;
+    --bg: #12151B;
+    --panel: #161A21;
+    --raised: #1B2029;
+    --card: #1E2430;
+    --line: #2A3140;
+    --line-strong: #353D4E;
+    --text: #E3E8F0;
+    --text-strong: #F1F4F9;
+    --muted: #98A3B5;
+    --faint: #7F8A9C;
+    --ok: #A8D8B0;
+    flex-grow: 1;
+    background-color: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+}
+
+.assistant-bar {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--line);
+}
+
+.assistant-bar > DropdownField { flex-grow: 1; margin: 0 8px 0 0; }
+
+.assistant-settings {
+    padding: 10px 12px 14px 12px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--line);
+    background-color: var(--panel);
+}
+
+.assistant-settings > TextField { margin-bottom: 6px; }
+
+.story-panel { flex-grow: 1; }
+.story-panel__scroll { flex-grow: 1; }
+.story-panel__scroll .unity-scroll-view__content-container { padding: 20px 16px 28px 16px; }
+.story-panel__pad { padding: 20px 16px; }
+.story-muted { color: var(--faint); white-space: normal; font-size: 11px; margin-top: 2px; }
+
+.story-notice { white-space: normal; padding: 8px 10px; margin-bottom: 12px; border-width: 1px; border-radius: 6px; }
+.story-notice.is-warning { color: #F3C77E; border-color: rgba(240, 178, 74, 0.35); background-color: rgba(240, 178, 74, 0.08); }
+
+.story-button {
+    height: 26px;
+    margin: 0 0 0 4px;
+    padding: 0 10px;
+    border-radius: 6px;
+    background-color: var(--raised);
+    border-color: var(--line-strong);
+    color: var(--text);
+}
+.story-button:hover { background-color: #262D3A; }
+.story-button.is-primary { background-color: var(--accent); color: var(--accent-ink); border-width: 0; -unity-font-style: bold; }
+.story-button.is-primary:disabled { background-color: #2A3140; color: var(--muted); }
+
+.story-assistant__input {
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 8px 10px;
+    border-top-width: 1px;
+    border-top-color: var(--line);
+    flex-shrink: 0;
+}
+.story-assistant__input > TextField { flex-grow: 1; flex-shrink: 1; min-height: 40px; margin: 0 6px 0 0; }
+.story-assistant__bubble { white-space: normal; padding: 8px 10px; margin: 0 0 8px 0; border-radius: 8px; background-color: var(--raised); color: var(--text); }
+.story-assistant__bubble.is-mine { background-color: rgba(61, 139, 255, 0.12); margin-left: 24px; }
+.story-assistant__proposal { padding: 10px; margin-bottom: 8px; border-width: 1px; border-color: var(--accent); border-radius: 8px; }
+.story-assistant__proposal > #title { -unity-font-style: bold; margin-bottom: 4px; color: var(--text-strong); }
+.story-assistant__service { color: var(--faint); font-size: 11px; padding: 14px 16px 0 16px; flex-shrink: 0; }

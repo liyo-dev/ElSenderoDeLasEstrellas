@@ -387,9 +387,9 @@ public static partial class MontajeDeLosCapitulos
         c3.Ramas.Add(new List<Paso>
         {
             P("pillado", "3.3 · Le han visto: «¿Nos venías siguiendo?»", Dialogo(dlgPillado, Contra1)),
-            P("pillado-aviso", "3.3 · Aviso: son dos y cómo pasar de uno a otro", Tutorial("CAP3_TUTO_DOS",
-                "Son dos. Pulsa {BOTON} para pasar de uno a otro.",
-                "There are two of them. Press {BOTON} to switch between them.",
+            P("pillado-aviso", "3.3 · Aviso: varios enemigos y cómo cambiar de objetivo", Tutorial("CAP3_TUTO_DOS",
+                "Varios enemigos. Pulsa {BOTON} para cambiar de objetivo.",
+                "Several enemies. Press {BOTON} to switch targets.",
                 Core.InputGlyphs.InputGlyphNames.ShoulderRight)),
             P("pillado-combate", "3.3 · Combate contra los dos contrabandistas", GameStepNode.For(new PedirCombateContraNpc
             {

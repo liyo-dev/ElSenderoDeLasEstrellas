@@ -422,7 +422,11 @@ namespace Game.NPC.States
             var ciclo = context.Transform.GetComponent<NPCCombatLifecycleHandler>();
             bool revancha = ciclo != null && ciclo.YaDerrotadoEnLaPartida;
             var dialogo = config == null ? null : (revancha ? config.dialogueOnAlertRepeat : config.dialogueOnAlert);
-            if (dialogo == null || DialogueManager.Instance == null)
+            // Si ya hay una charla en pantalla (otro NPC de alerta, o la del grafo), este NPC no
+            // abre otra encima: el diálogo nuevo sustituiría al anterior y, hasta INC-1279, dejaba
+            // un modo Cinematic sin devolver (jugador sin control ni ataques). La alerta sigue su
+            // curso (icono, música, acercarse) y el grafo se entera igual.
+            if (dialogo == null || DialogueManager.Instance == null || DialogueManager.Instance.IsOpen)
             {
                 AvisarAlGrafo(context);
                 return;

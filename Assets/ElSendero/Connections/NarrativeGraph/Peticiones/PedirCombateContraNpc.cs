@@ -104,6 +104,12 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
             return;
         }
 
+        // El combate no puede empezar detrás de una charla abierta: si un NPC soltó su diálogo
+        // de alerta mientras el grafo decía otra cosa, se cierra antes de forzar la pelea (si no,
+        // el jugador se queda mirando la caja sin poder moverse ni atacar).
+        if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
+            DialogueManager.Instance.Close();
+
         string clave = R.ClaveDeDerrota;
         _caidos = 0;
         foreach (var m in _npcs) PrepararParaPelear(m, clave);
@@ -194,7 +200,19 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
     // Configuración de combate, vida, ciclo de caída y capa Enemy de un NPC del combate.
     void PrepararParaPelear(NPCBehaviourManagerV2 npc, string clave)
     {
-        if (R.combatConfig != null) npc.Configuration.combatConfig = R.combatConfig;
+        // Copia propia de la configuración: el asset es compartido (los contrabandistas usan el
+        // del pirata) y no puede quedarse con la clave de derrota de este combate ni soltar la
+        // charla de alerta del pirata encima de la conversación que ya lleva el grafo.
+        var original = R.combatConfig != null ? R.combatConfig : npc.Configuration?.combatConfig;
+        if (original != null)
+        {
+            var configDelCombate = UnityEngine.Object.Instantiate(original);
+            configDelCombate.dialogueOnAlert = null;
+            configDelCombate.dialogueOnAlertRepeat = null;
+            configDelCombate.waitForAlertDialogue = false;
+            configDelCombate.freezePlayerOnAlert = false;
+            npc.Configuration.combatConfig = configDelCombate;
+        }
 
         var config = npc.Configuration?.combatConfig;
         if (config != null)

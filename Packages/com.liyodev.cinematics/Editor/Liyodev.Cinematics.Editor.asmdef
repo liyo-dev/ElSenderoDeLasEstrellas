@@ -1,14 +1,18 @@
 {
     "name": "Liyodev.Cinematics.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "Liyodev.Assistant.Editor"
+    ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

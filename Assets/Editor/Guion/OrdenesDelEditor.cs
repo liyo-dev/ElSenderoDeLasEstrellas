@@ -16,7 +16,12 @@ using UnityEngine;
 ///   storyboard Assets/.../X_Horneado.asset  página anotable (Tools/Storyboard) de ese guion horneado, sin
 ///                                           depender de lo que esté seleccionado en el Project
 ///   revisiones RUTA.json                    aplica las correcciones que guardó la página del storyboard
-///                                           (escribe el guion, rehornea y regenera la página)
+///                                           (escribe el guion, rehornea y regenera la página); lo que no
+///                                           se aplica solo queda de encargo para la IA
+///   encargos [Guion]                        la cola de correcciones que esperan a una sesión de IA
+///                                           (sin guion, las de todas las cinemáticas)
+///   revisiones-hechas <Guion|RUTA.json> [P01…|clave…]
+///                                           cierra encargos ya hechos (los apunta en el libro de aplicadas)
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
 ///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)
@@ -314,10 +319,24 @@ public static class OrdenesDelEditor
             case "menu":
                 return EditorApplication.ExecuteMenuItem(resto) ? "menú ejecutado" : "no existe ese menú";
             case "revisiones":
-                return resto.Length == 0
-                    ? "falta la ruta del .json de correcciones"
-                    : Liyodev.Cinematics.AplicarCorrecciones.AplicarRuta(File.Exists(resto) ? resto
-                        : Path.Combine(Path.GetDirectoryName(CapturaDeEscenario.CarpetaDeGuiones), resto));
+            {
+                if (resto.Length == 0) return "falta la ruta del .json de correcciones";
+                string rutaRevisiones = resto.Trim().Trim('"');
+                return Liyodev.Cinematics.AplicarCorrecciones.AplicarRuta(
+                    File.Exists(rutaRevisiones) ? rutaRevisiones
+                        : Path.Combine(Path.GetDirectoryName(CapturaDeEscenario.CarpetaDeGuiones), rutaRevisiones));
+            }
+            case "encargos":
+            {
+                var puente = Liyodev.Cinematics.CinematicsEditorServices.Bridge;
+                if (puente == null) return "no hay puente de cinemáticas";
+                return puente.TextoDeEncargos(resto.Trim().Trim('"'));
+            }
+            case "revisiones-hechas":
+            {
+                if (resto.Length == 0) return "uso: revisiones-hechas <guion|ruta.json> [P01…|clave…]";
+                return SenderoCinematicsBridge.MarcarRevisionesHechas(resto.Trim().Trim('"'));
+            }
             case "storyboard":            {
                 if (resto.Length == 0) return "falta la ruta del guion horneado";
                 var guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(resto);

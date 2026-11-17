@@ -22,28 +22,44 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _AtlasDeNubes:
+        m_Texture: {fileID: 2800000, guid: 9766907278530574dbcbbeec107727ea, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MapaDeNubes:
+        m_Texture: {fileID: 2800000, guid: 9074cf27a5ffa0e4787f8ea72a573100, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MapaDeTormenta:
+        m_Texture: {fileID: 2800000, guid: a28d2d261830a1444a65bb12f1f7d351, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AvanceDelFrente: 0
     - _CaidaDelHorizonte: 0.65
-    - _EscalaDeNubes: 1.8
+    - _ContrasteDeNubes: 0.72
+    - _EscalaDeNubes: 2.8
     - _FuerzaDelResplandor: 0.8
     - _GrosorDeLaBruma: 0.08
+    - _NubesDeDibujo: 1
     - _Nubosidad: 0
-    - _NubosidadBase: 0.25
+    - _NubosidadBase: 0.4
     - _SuavidadDeNubes: 0.18
     - _TamanoDelResplandor: 0.45
-    - _VelocidadDeNubes: 0.025
+    - _TintaDeNubes: 0.45
+    - _VelocidadDeNubes: 0.02
     m_Colors:
+    - _CeldasDeNubes: {r: 3, g: 2, b: 0, a: 0}
     - _ColorCenit: {r: 0.36, g: 0.5, b: 0.78, a: 1}
     - _ColorDeBrumaDelHorizonte: {r: 1, g: 0.72, b: 0.55, a: 1}
-    - _ColorDeNubes: {r: 1, g: 0.86, b: 0.78, a: 1}
+    - _ColorDeNubes: {r: 1, g: 0.92, b: 0.84, a: 1}
     - _ColorDeNubesDeClima: {r: 0.52, g: 0.58, b: 0.66, a: 1}
-    - _ColorDeNubesDeClimaEnSombra: {r: 0.33999997, g: 0.37999994, b: 0.42999998, a: 1}
-    - _ColorDeNubesEnSombra: {r: 0.55, g: 0.5, b: 0.62, a: 1}
+    - _ColorDeNubesDeClimaEnSombra: {r: 0.34, g: 0.38, b: 0.43, a: 1}
+    - _ColorDeNubesEnSombra: {r: 0.7, g: 0.58, b: 0.74, a: 1}
     - _ColorDelResplandor: {r: 1, g: 0.6, b: 0.35, a: 1}
     - _ColorHorizonte: {r: 1, g: 0.72, b: 0.55, a: 1}
-    - _ColorSuelo: {r: 0.55, g: 0.5, b: 0.55, a: 1}
+    - _ColorSuelo: {r: 0.66, g: 0.6, b: 0.68, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
