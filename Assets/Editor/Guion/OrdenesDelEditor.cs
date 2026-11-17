@@ -15,6 +15,8 @@ using UnityEngine;
 ///   menu El Sendero/Cinemáticas/...         ejecuta un menú del Editor
 ///   storyboard Assets/.../X_Horneado.asset  página anotable (Tools/Storyboard) de ese guion horneado, sin
 ///                                           depender de lo que esté seleccionado en el Project
+///   revisiones RUTA.json                    aplica las correcciones que guardó la página del storyboard
+///                                           (escribe el guion, rehornea y regenera la página)
 ///   play / stop                             entra o sale del modo Play
 ///   cerca X Z [radio]                       lista lo que hay alrededor de un punto (todas las escenas)
 ///   donde texto                             lista dónde está cada objeto cuyo nombre contiene ese texto (todas las escenas)
@@ -311,8 +313,12 @@ public static class OrdenesDelEditor
             }
             case "menu":
                 return EditorApplication.ExecuteMenuItem(resto) ? "menú ejecutado" : "no existe ese menú";
-            case "storyboard":
-            {
+            case "revisiones":
+                return resto.Length == 0
+                    ? "falta la ruta del .json de correcciones"
+                    : Liyodev.Cinematics.AplicarCorrecciones.AplicarRuta(File.Exists(resto) ? resto
+                        : Path.Combine(Path.GetDirectoryName(CapturaDeEscenario.CarpetaDeGuiones), resto));
+            case "storyboard":            {
                 if (resto.Length == 0) return "falta la ruta del guion horneado";
                 var guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(resto);
                 if (guion == null)

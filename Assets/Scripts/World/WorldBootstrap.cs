@@ -50,6 +50,17 @@ public class WorldBootstrap : MonoBehaviour
 
     private bool _initialized;
 
+    /// <summary>
+    /// El mundo está montado: el reparto está instanciado y el jugador ya está en su ancla. La
+    /// historia no arranca antes (ver <c>NarrativeGraphStarter.IsWorldReady</c>): un paso que lanza
+    /// una cinemática nada más empezar llegaría con el reparto a medio crear y se vería distinta
+    /// que lanzada a mano. Empieza en true para las escenas que no llevan WorldBootstrap.
+    /// </summary>
+    public static bool MundoListo { get; private set; } = true;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ReiniciarMundoListo() => MundoListo = true;
+
     private string ClaveTelon => "mundo:" + gameObject.scene.name;
 
     void OnEnable()
@@ -59,6 +70,9 @@ public class WorldBootstrap : MonoBehaviour
         // telón: ya lo hace el mundo que manda.
         if (SceneManager.GetActiveScene() != gameObject.scene)
             return;
+
+        // Mientras este mundo se monta, la historia espera (ver MundoListo).
+        MundoListo = false;
 
         // Cierra el Telón antes de procesar nada más este frame y lo retiene hasta que el jugador
         // está colocado (se suelta al terminar, también en los early-return de InitializeWorld()).
@@ -167,6 +181,7 @@ public class WorldBootstrap : MonoBehaviour
             // fade de OnEnable) — restaurar la visibilidad aquí para no dejar la pantalla en negro
             // para siempre ante este error.
             Telon.Soltar(ClaveTelon);
+            MundoListo = true;   // sin perfil no hay nada más que montar: que no espere la historia
             return;
         }
 
@@ -286,6 +301,12 @@ public class WorldBootstrap : MonoBehaviour
         // yield return (no StartCoroutine suelta) — necesitamos saber cuándo termina de verdad,
         // incluida su rama de fallback (TeleportWhenActive), antes de deshacer el fade de OnEnable.
         yield return WaitForPlayerAndTeleport(anchorId);
+
+        // El mundo ya está montado: el reparto se instanció en InitializeWorld() y el jugador está
+        // en su ancla. A partir de aquí la historia puede correr: si el paso por el que se empieza
+        // lanza una cinemática, la encuentra igual que si se lanzara a mano. Se marca ANTES de la
+        // espera de la cinemática de arranque, que es justo la que dispara el grafo.
+        MundoListo = true;
 
         if (AnchorAwaitsBootCinematic.Contains(anchorId))
         {

@@ -42,6 +42,7 @@
 32. [Quién cede ante quién: árbitros, contexto de juego y puentes con los kits](#32-quién-cede-ante-quién-árbitros-contexto-de-juego-y-puentes-con-los-kits-inc-1130)
 33. [Taller de rodaje: una sola puerta para las cinemáticas](#33-taller-de-rodaje-una-sola-puerta-para-las-cinemáticas-inc-1230)
 34. [Runtime determinista de las cinemáticas](#34-runtime-determinista-de-las-cinemáticas-inc-1235)
+35. [Director: la mesa de las cinemáticas](#35-director-la-mesa-de-las-cinemáticas-inc-1255)
 
 ---
 
@@ -217,6 +218,13 @@ NPCBehaviourManagerV2          ← orquestador principal
 | Dialogue | `States/DialogueState.cs` | Durante conversación |
 | Work | `States/WorkState.cs` | Oficio ambiental: recorre una `NPCWorkRoute` |
 | PostDefeat | (gestionado por `NPCCombatLifecycleHandler`) | Tras derrota |
+
+### Seguimiento del grupo: formación detrás y rastro de plataformas (INC-1213, INC-1265)
+
+- **Formación** (`PlayerParty.GetFormationPosition`): puestos simétricos detrás del jugador a `distanciaFormacionDetras` (2,6 m), `separacionLateralFormacion` (±1,35 m), segunda fila a `distanciaEntreFilasFormacion` (1,4 m) y `escalonImparFormacion` (0,35 m); cuenta los miembros reales (sin el que lleva el jugador) más el Will de la IA. La llegada se mide al puesto (`_formationTarget`), no al jugador; `distanciaMinimaFormacionDetras` (2,5 m) impide pararse pegado. Los muestreos de NavMesh se rechazan si caen más de 2,2 m por debajo del jugador (fondos de foso).
+- **Rastro** (`PlayerParty`): anillo de 160 `PuntoDeRastro` (posición, dirección, distancia acumulada, tiempo y `enAire`) muestreado por distancia (`pasoMuestreoRastro` 0,25 m en suelo, `pasoMuestreoRastroAire` 0,15 m en el aire). Un salto se confirma al desplazarse 0,55 m en horizontal o 0,4 m en vertical desde el despegue; se marcan las muestras del arco y se guarda el punto de caída con un rayo (sin aceptar el fondo de un foso a más de 2 m). Se limpia en teletransportes (más de 4,5 m en un frame), cambios de escena o de cuerpo al mando, y no graba vuelo ni nado.
+- **Seguimiento** (`FollowPlayerState`): con `seguirRastroEnPlataformas`, cada compañero avanza un cursor por el rastro a `distanciaBaseEnRastro` (2,2 m) + `separacionPorPuestoEnRastro` (1,6 m) por puesto, con `separacionLateralEnRastro` (0,45 m). Antes de un salto se acerca al borde y mira al punto de caída durante `tiempoEstudioSalto` (0,2 s + 0,16 s por puesto); después cruza el arco completo aunque el jugador se pare. La altura sale del tramo del rastro; en suelo se apoya en `BuscarSuelo` con una caída máxima de 1,2 m; en el aire anima `JumpMove`/`JumpStart` → `Landing`. No copia el `IsGrounded` del jugador. Respaldo en V a pie: `plataformaFormationSpread` (1,35 m) y `plataformaFormationBack` (2,4 m); vuelo y nado siguen con `flightFormationSpread`/`Back`. El modo especial se activa con el jugador fuera del NavMesh, con un salto confirmado, con el compañero fuera de la malla o cuando el NavMesh está cortado en islas y hay un salto reciente (`PlayerParty.PuedeLlegarHasta`).
+- **Teletransportes:** `PlayerParty.CheckMemberDistances` no mueve a nadie mientras el jugador está en el aire ni a un compañero con `EnSaltoDeRastro`; el warp de salida no baja más de 1,5 m ni el de `TeleportMemberToPlayer` más de 2,2 m (salvo `forzar`, que cae al sitio del jugador).
 
 ### Oficios ambientales (INC-837)
 
@@ -5188,3 +5196,83 @@ El taller es la **capa de autoría** del producto que describe § 25.6. No hace 
 - El subtítulo (`SpeechBubbleUI`) lleva su propio contador; la pausa del guion no lo detiene. La voz sí.
 - El desplazamiento de audio es exacto en muestras para música (`timeSamples`) y aproximado para voces comprimidas o en streaming (`AudioSource.time`).
 - La pausa usa `Time.timeScale` a través del árbitro: cualquier sistema que escriba `Time.timeScale` por su cuenta se la salta (no debe haber ninguno; ver § 32).
+
+## 35. Director: la mesa de las cinemáticas (INC-1255)
+
+Una sola ventana para ver y tocar lo que ya está rodado. Menú **Liyodev ▸ Director ▸ Mesa del Director**
+(y el atajo de casa **El Sendero ▸ Cinemáticas ▸ Director**). Vive en el paquete embebido
+`Packages/com.liyodev.cinematics` (solo Editor de momento) y es el primer trozo del Director que describe
+`docs/plan-director-2026-11-16.md`.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| `DirectorWindow` | `Packages/com.liyodev.cinematics/Editor/DirectorWindow.cs` | Lista de cinemáticas, visor con play, tira de planos y la botonera |
+| Puerto | `Editor/ICinematicsEditorBridge.cs` (`CinematicsEditorServices`) | Lo único que la mesa sabe del proyecto: lista, detalle, voces y acciones. Se auto-descubre |
+| Enchufe del juego | `Assets/ElSendero/Connections/Cinematics/Editor/SenderoCinematicsBridge.cs` | Contesta con los `GuionHorneado`, el `informe.md`, los textos y las voces, y hace hornear / taller / página anotable |
+| Voces del flipbook | `Editor/EditorAudioPreview.cs` | Suena un clip en el Editor con `UnityEditor.AudioUtil` (API interna: si falta, silencio y nada roto) |
+| Comprobador | `Editor/CinematicsKitQa.cs` · *Liyodev ▸ Director ▸ Herramientas ▸ Comprobar el kit* | Que el paquete no nombre al grafo ni a El Sendero, y cuántas cinemáticas ve |
+
+**Independencia:** el paquete no referencia `Liyodev.NarrativeGraph` ni un solo tipo del juego; todo
+entra por el puerto. Es la regla 1 del plan, y la comprueba el comprobador.
+
+**La lista:** todos los `GuionHorneado` más los `.guion.txt` que aún no se han horneado. Estado por fecha
+del archivo (Al día / Texto cambiado / Sin hornear) y los errores y avisos del último horneado, leídos de
+`informe.md`.
+
+**La película:** los fotogramas del **animatic** (el horneado deja varios por plano, uno cada ~0,6 s y
+como mucho cinco: `001.png`, `001_02.png`…) a su duración real, con las bandas de cine y el subtítulo de
+la frase que toca. Las **voces** suenan por el canal de previz del Editor y la **música y los SFX** por el
+segundo canal (`AudioUtil.PlayClip`), resolviendo el clip de cada `SfxBeat` y la música de
+`AudioGraphProfile`; si el Editor no tiene ese segundo canal, el animatic va solo con voces. La barra de
+tiempo lleva los planos y las frases, y se arrastra.
+
+**La pizarra:** sobre el fotograma se elige el elemento (quien sale, quien habla aunque sea fuera de
+escena, o la cámara), se escribe una nota y se **dibuja** con el lápiz. Todo se guarda en el proyecto, en
+`Guiones/_revisiones/pizarra-<guion>.json` (`CinemaPizarra`), no en el navegador. «Aplicar correcciones»
+manda esas notas por el mismo camino que el JSON de la página anotable.
+
+**Ver en Unity:** busca la `SequenceDefinition` que monta ese guion (la que lleva un `GuionBeat` que lo
+apunta), abre **su escena**, entra en Play y `ArranqueEnPlayDelDirector` (solo Editor) emite la señal de
+entrada de la secuencia, igual que haría el grafo, cuando el mundo ya está montado. Si falta la secuencia
+o la escena, lo dice.
+
+**Las puertas:** en la fila de usuario, **Ver en Unity**, Ver el guion, Página anotable, Storyboard y
+Aplicar correcciones; hornear y el taller de rodaje quedan en el desplegable **Herramientas** (son
+herramientas de autor, no del que dirige). **Nueva cinemática…** abre una ventanita (nombre y escena,
+sacadas del proyecto) y escribe el esqueleto del `.guion.txt` listo para escribir y hornear.
+
+**Notas en el timeline:** pinchar un clip y escribir una nota la clava a **su segundo** y a su elemento
+(actor, marca o cámara). Se guarda en la misma pizarra del proyecto, sale como marca blanca en la pista y
+en la lista de notas del plano, y «Aplicar correcciones» la manda por el mismo circuito. Así el timeline
+no es un editor de curvas: es una pizarra por instante que se complementa con la del fotograma.
+
+**De la nota al horno (el circuito cerrado):** la página del storyboard **no edita**: anota. Su botón
+**Guardar correcciones** deja `correcciones-<guion>.json`. En Unity, **Liyodev ▸ Director ▸ Aplicar
+correcciones del storyboard…** (o la orden `revisiones <fichero>` del buzón) lee ese fichero y, nota por
+nota, hace lo que sabe traducir: si la nota es de la **cámara** y dice `alejar/abrir/atrás` baja el
+`lente` 6 (abre el plano) y si dice `acercar/cerrar/primer plano` lo sube 8; escribe ese `lente=` en **la
+línea exacta del plano** (`GuionTextoEditable`, conservando el resto de la línea), rehornea con
+storyboard, regenera la página y avisa a la mesa para que repinte lista y timeline. Lo que no sabe
+traducir no se toca: se cuenta en el resumen («anotada, sin cambio automático») y se lee a mano.
+Probado el 16 nov 2026 con la nota real de Raúl en `Cap1_PerasEldran` P01: `L38: lente 24 → 18`, un solo
+cambio en el `.guion.txt`, horneado de 34,8 s sin errores y página regenerada.
+
+**El timeline (de momento solo lectura):** una fila por *cosa*, no por detalle — **Cámara** (un clip por
+plano), **Voz · \<personaje\>** (frases y voces fuera de escena), **Movimiento · \<personaje\>** (tramos de
+`posiciones` y deslizamientos), **Animación · \<personaje\>** (`animacion`: el estado que hace, p. ej.
+`BrazosCruzados`, o `habla`/`calla`/`reposo`), **Cara · \<personaje\>** (cambios de emoción, en clips
+finos), **En escena · \<personaje\>** (`visible`), **Música / SFX / Efectos / Props / Bandas y esperas**
+(los `efectos` clasificados por su tipo) y **Marcas** (`@etiqueta`). Las filas sin nada no se pintan. Cada
+clip se dibuja a su duración real; pinchar uno lleva el cabezal a su segundo y enseña la línea del guion
+que lo pide (`PlanoHorneado.linea`, `EfectoHorneado.linea` y, desde
+INC-1256, `LineaHorneada.linea`; los horneados viejos la tienen a 0 hasta rehornear). Esa línea es la que
+hará que arrastrar un clip sea reescribir el `desde @marca+X` del `.guion.txt` y hornear, nunca un segundo
+formato. Las voces fuera de escena (`SayBeat` con marca) cuentan como frases: subtítulo con su nombre, voz
+en el play y elemento propio en la página anotable.
+
+**Lo que aún no hace:** rodar en PlayMode desde la ventana (el `cinematica.reproducir` del contrato) y el
+Studio web con flipbook exportable (F1–F5). El motor de guiones sigue viviendo en `Assets/Editor/Guion`:
+moverlo al paquete, con sus `[MovedFrom]`, es la siguiente tanda de F0.
+
+**Comprobado el 16 nov 2026:** compila con 0 `error CS`; *Comprobar el kit* da el paquete por
+independiente con 40 cinemáticas a la vista; la ventana abre desde los dos menús sin excepciones.

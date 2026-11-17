@@ -1,10 +1,10 @@
-# ═══════════════════════════════════════════════════════════════════════════════════════════
-#  CAP. 1 · LA DISCUSIÓN SE RESUELVE (LAS PERAS)  (INC-867, fase 6)
+﻿# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+#  CAP. 1 Â· LA DISCUSIÃ“N SE RESUELVE (LAS PERAS)  (INC-867, fase 6)
 #  Will llega con Oliver hasta Eldran y Victoria, que discuten en broma por la caja que falta.
-#  Eldran cae en la cuenta, se ríen, ve a Will; Oliver quiere ir con él y Victoria le pide que
-#  se quede. Al final Eldran se acerca a Will para lo del regalo (caja de diálogo, la escena
+#  Eldran cae en la cuenta, se rÃ­en, ve a Will; Oliver quiere ir con Ã©l y Victoria le pide que
+#  se quede. Al final Eldran se acerca a Will para lo del regalo (caja de diÃ¡logo, la escena
 #  espera a que el jugador la cierre).
-# ═══════════════════════════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 GUION Cap1_PerasEldran
 ESCENA MainWorld
@@ -35,8 +35,8 @@ eldran en p_eldran mirando victoria
 & victoria en p_victoria mirando eldran
 & will en p_will mirando eldran
 & oliver en p_oliver mirando eldran
-& plano medio eldran
-# Victoria regaña en jarras; Will espera de brazos cruzados y Oliver con las manos a la espalda.
+& plano medio eldran lente=18
+# Victoria regaÃ±a en jarras; Will espera de brazos cruzados y Oliver con las manos a la espalda.
 & victoria bucle BrazosEnJarras
 & will bucle BrazosCruzados
 & oliver bucle ManosALaEspalda
@@ -62,7 +62,7 @@ oliver dice PERAS_OLIVER_VOY gesto=Cheer01 cara=ilusionado
 plano medio victoria
 victoria dice PERAS_VICTORIA_QUEDATE gesto=HeadNod01 mira=oliver
 
-# El regalo: Eldran se acerca a Will; los dos en plano y la caja de diálogo.
+# El regalo: Eldran se acerca a Will; los dos en plano y la caja de diÃ¡logo.
 @regalo
 eldran anda a p_eldran_will llega_mirando=will
 & will mira eldran

@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Cap4_01_Estela_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_01_Estela
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap4_01_Estela.guion.txt
   duracion: 63.547066
   presentacion: 1
-  huella: "2026-11-15 08:58 \xB7 f08e88a7c9f507d8a014a6fd46d72622"
+  huella: "2026-11-16 12:17 \xB7 f08e88a7c9f507d8a014a6fd46d72622"
   actores:
   - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
     alias: will
     colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
     claveDelNombre: Will
@@ -242,6 +245,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: _ESTELA
+    prefab: Assets/Prefabs/_ESTELA.prefab
     alias: estela
     colorDelNombre: {r: 1, g: 0.62352943, b: 0.41960785, a: 1}
     claveDelNombre: CHAR_ESTELA
@@ -605,6 +609,7 @@ MonoBehaviour:
     t1: 5.6534696
     actor: _ESTELA
     clave: CAP4_ESTELA_01
+    linea: 32
     gesto: Challenging_NoWeapon
     sinPose: 0
     presentacion: -1
@@ -614,6 +619,7 @@ MonoBehaviour:
     t1: 8.840408
     actor: Player
     clave: CAP4_ESTELA_02
+    linea: 34
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -623,6 +629,7 @@ MonoBehaviour:
     t1: 21.404623
     actor: _ESTELA
     clave: CAP4_ESTELA_03
+    linea: 38
     gesto: 
     sinPose: 1
     presentacion: -1
@@ -632,6 +639,7 @@ MonoBehaviour:
     t1: 23.52646
     actor: Player
     clave: CAP4_ESTELA_04
+    linea: 39
     gesto: HandClap01
     sinPose: 0
     presentacion: -1
@@ -641,6 +649,7 @@ MonoBehaviour:
     t1: 25.733398
     actor: Player
     clave: CAP4_ESTELA_05
+    linea: 43
     gesto: 
     sinPose: 1
     presentacion: -1
@@ -650,6 +659,7 @@ MonoBehaviour:
     t1: 34.6485
     actor: _ESTELA
     clave: CAP4_ESTELA_06
+    linea: 49
     gesto: Dudar01
     sinPose: 0
     presentacion: -1
@@ -659,6 +669,7 @@ MonoBehaviour:
     t1: 38.840744
     actor: _ESTELA
     clave: CAP4_ESTELA_07
+    linea: 50
     gesto: Angry01
     sinPose: 0
     presentacion: -1
@@ -668,6 +679,7 @@ MonoBehaviour:
     t1: 45.93258
     actor: _ESTELA
     clave: CAP4_ESTELA_08
+    linea: 51
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -677,6 +689,7 @@ MonoBehaviour:
     t1: 47.76115
     actor: _ESTELA
     clave: CAP4_ESTELA_09
+    linea: 55
     gesto: HeadShake01
     sinPose: 1
     presentacion: -1
@@ -686,6 +699,7 @@ MonoBehaviour:
     t1: 55.081356
     actor: Player
     clave: CAP4_ESTELA_10
+    linea: 56
     gesto: 
     sinPose: 1
     presentacion: -1
@@ -695,6 +709,7 @@ MonoBehaviour:
     t1: 57.38013
     actor: _ESTELA
     clave: CAP4_ESTELA_11
+    linea: 60
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -704,6 +719,7 @@ MonoBehaviour:
     t1: 62.447067
     actor: _ESTELA
     clave: CAP4_ESTELA_12
+    linea: 62
     gesto: 
     sinPose: 1
     presentacion: -1
@@ -711,6 +727,7 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 1.5
+    linea: 27
     tipo: 0
     descripcion: general de will y estela
     posiciones:
@@ -726,7 +743,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.89049673
+    alturaDelFoco: 0.8648522
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -734,11 +751,12 @@ MonoBehaviour:
   - focos: []
     t0: 1.5
     t1: 5.6534696
+    linea: 31
     tipo: 2
     descripcion: medio de estela
     posiciones:
     - t: 1.5
-      p: {x: -316.39636, y: 36.899784, z: 63.39119}
+      p: {x: -316.5874, y: 36.899784, z: 63.449974}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -747,7 +765,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1124943
+    alturaDelFoco: 1.0891812
     encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -755,6 +773,7 @@ MonoBehaviour:
   - focos: []
     t0: 5.6534696
     t1: 14.534419
+    linea: 33
     tipo: 2
     descripcion: medio de will
     posiciones:
@@ -776,6 +795,7 @@ MonoBehaviour:
   - focos: []
     t0: 14.534419
     t1: 25.733398
+    linea: 36
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
@@ -799,11 +819,12 @@ MonoBehaviour:
   - focos: []
     t0: 25.733398
     t1: 45.93258
+    linea: 45
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
     - t: 25.733398
-      p: {x: -314.21353, y: 36.917965, z: 60.606834}
+      p: {x: -314.18246, y: 36.91886, z: 60.539734}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -812,7 +833,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1124943
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -820,6 +841,7 @@ MonoBehaviour:
   - focos: []
     t0: 45.93258
     t1: 55.081356
+    linea: 52
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
@@ -843,11 +865,12 @@ MonoBehaviour:
   - focos: []
     t0: 55.081356
     t1: 63.547066
+    linea: 58
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
     - t: 55.081356
-      p: {x: -314.21353, y: 36.917965, z: 60.606834}
+      p: {x: -314.18246, y: 36.91886, z: 60.539734}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -856,7 +879,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1124943
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -866,25 +889,25 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294631505527640
+      rid: 6540294656893649002
     linea: 24
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294631505527641
+      rid: 6540294656893649003
     linea: 25
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294631505527642
+      rid: 6540294656893649004
     linea: 26
   - onlyIfFlag: 
     skipIfFlag: 
     t: 63.047066
     beat:
-      rid: 6540294631505527643
+      rid: 6540294656893649005
     linea: 65
   etiquetas:
   - nombre: inicio
@@ -906,7 +929,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294631505527640
+    - rid: 6540294656893649002
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -914,7 +937,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294631505527641
+    - rid: 6540294656893649003
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -927,14 +950,14 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294631505527642
+    - rid: 6540294656893649004
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.6
         duration: 0.5
         waitForEnd: 0
-    - rid: 6540294631505527643
+    - rid: 6540294656893649005
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

@@ -24,6 +24,14 @@ public class NarrativeGraphStarter : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool logDebug = true;
 
+    /// <summary>
+    /// Un juego puede decir aquí cuándo su mundo está montado (reparto instanciado, jugador
+    /// colocado...). La historia no arranca antes: un paso que lanza una cinemática nada más
+    /// empezar llegaría con el reparto a medio crear y se vería distinta que lanzada a mano.
+    /// Null = arrancar en cuanto la escena y el hub estén listos.
+    /// </summary>
+    public static System.Func<bool> IsWorldReady;
+
     // Los blackboards guardados se restauran como mucho una vez por partida cargada (arranque,
     // continuar o recarga de pruebas). Si se restauraran en cada escena con este componente, el
     // estado vivo retrocedería al último guardado al cambiar de escena sin guardar: un nodo que ya
@@ -31,7 +39,11 @@ public class NarrativeGraphStarter : MonoBehaviour
     private static int s_restoredLoadCount = -1;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => s_restoredLoadCount = -1;
+    private static void ResetStatics()
+    {
+        s_restoredLoadCount = -1;
+        IsWorldReady = null;
+    }
 
     void Start()
     {
@@ -79,6 +91,24 @@ public class NarrativeGraphStarter : MonoBehaviour
                     Debug.LogWarning("[NarrativeGraphStarter] Escena no válida o destruida antes de iniciar grafos.");
                 yield break;
             }
+        }
+
+        // El mundo tiene que estar montado antes de que la historia empiece a mover nada: si el
+        // juego sabe decir cuándo lo está, se espera (con tope, para no dejar el capítulo parado
+        // para siempre si el juego no contesta).
+        if (IsWorldReady != null)
+        {
+            const float tope = 20f;
+            float esperado = 0f;
+            while (!IsWorldReady() && esperado < tope)
+            {
+                esperado += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            if (esperado >= tope)
+                Debug.LogWarning($"[NarrativeGraphStarter] El mundo no ha dicho que está listo en {tope:0} s: " +
+                                 "la historia arranca igualmente (los pasos que muevan gente o lancen " +
+                                 "cinemáticas pueden encontrarse el reparto a medias).");
         }
 
         StartGraphs();

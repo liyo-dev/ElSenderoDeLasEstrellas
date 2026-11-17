@@ -1139,7 +1139,7 @@ internal sealed partial class Horno
         string clave = o.args.Count > 1 ? string.Join(" ", o.args) : o.args.FirstOrDefault();
         if (string.IsNullOrEmpty(clave)) { Error($"{o}: ¿qué frase?"); return 0f; }
         float dura = DuracionDeVoz(clave, o);
-        var linea = new LineaHorneada { t0 = t, t1 = t + dura, actor = a.id, clave = clave, sinPose = o.Tiene("sin_pose"),
+        var linea = new LineaHorneada { t0 = t, t1 = t + dura, actor = a.id, clave = clave, linea = o.linea, sinPose = o.Tiene("sin_pose"),
             onlyIfFlag = o.Op("onlyIfFlag"), skipIfFlag = o.Op("skipIfFlag") };
         if (o.opciones.TryGetValue("texto", out var pres))
             linea.presentacion = pres == "bocadillo" ? 0 : pres == "subtitulo_grande" ? 2 : 1;

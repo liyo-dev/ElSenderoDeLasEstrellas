@@ -62,7 +62,9 @@ public sealed class CamaraLateral : MonoBehaviour
         }
         if (!_tieneLaCamara)
         {
-            CameraDirectorService.Claim(this);
+            // Es una cámara de juego, no de cine: el marcador de apuntado (y los hechizos que
+            // guía) siguen funcionando mientras se juega de lado.
+            CameraDirectorService.Claim(this, esCinematica: false);
             _tieneLaCamara = true;
         }
 

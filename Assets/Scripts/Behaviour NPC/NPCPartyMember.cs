@@ -40,6 +40,7 @@ namespace Game.NPC
         private bool _isJoining; // Flag para evitar joins simultáneos
         private float _nextIdleCheck;
         private Damageable _damageable;
+        private bool _reiniciarRastro;
         // Slot activo cuando este NPC se unió al party; null = unión mientras Will era activo (miembro compartido)
         internal PartyControlManager.CharacterSlot? _joinedForSlot;
         #endregion
@@ -150,7 +151,24 @@ namespace Game.NPC
             !_npcManager.Context.IsInCombat &&
             !_npcManager.Context.IsInCinematic &&
             !CinematicSequencerBase.AnySequenceActive;
-        
+
+        /// <summary>
+        /// El compañero está cruzando un salto del rastro. Mientras dura, no se le teletransporta
+        /// ni se le recoloca: el salto se termina de una pieza. Lo pone y lo quita FollowPlayerState.
+        /// </summary>
+        public bool EnSaltoDeRastro { get; internal set; }
+
+        /// <summary>Pide a FollowPlayerState que vuelva a engancharse al rastro desde donde está.</summary>
+        public void ReiniciarRastro() => _reiniciarRastro = true;
+
+        /// <summary>Lo consume FollowPlayerState una vez por reinicio.</summary>
+        public bool ConsumirReinicioDeRastro()
+        {
+            bool reiniciar = _reiniciarRastro;
+            _reiniciarRastro = false;
+            return reiniciar;
+        }
+
         /// <summary>
         /// Nombre para mostrar en UI
         /// </summary>
@@ -434,6 +452,8 @@ namespace Game.NPC
             // aquí directamente: el ancla manda y la suelta quien la puso.
             if (_npcManager.Context?.EstaAnclado ?? false) return;
 
+            EnSaltoDeRastro = false;
+
             // Solo cambiar a FollowState si no estamos en combate/cinemática (ver Update()).
             if (!_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                 && !CinematicSequencerBase.AnySequenceActive)
@@ -453,6 +473,8 @@ namespace Game.NPC
             // Mismo invariante que StartFollowing: el ancla manda.
             if (_npcManager.Context?.EstaAnclado ?? false) return;
 
+            EnSaltoDeRastro = false;
+
             if (!_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                 && !CinematicSequencerBase.AnySequenceActive)
                 _npcManager.Brain.ChangeState(new FollowPlayerState(this, skipPartyCheck: true));
@@ -464,7 +486,9 @@ namespace Game.NPC
         public void StopFollowing()
         {
             if (_npcManager?.Brain == null) return;
-            
+
+            EnSaltoDeRastro = false;
+
             if (_stateBeforeJoining != null && !(_stateBeforeJoining is FollowPlayerState))
             {
                 _npcManager.Brain.ChangeState(_stateBeforeJoining);
@@ -770,26 +794,19 @@ namespace Game.NPC
         /// </summary>
         public Vector3 GetFormationPosition()
         {
-            if (_party != null) return _party.GetFormationPosition(PartyIndex);
+            // Con party, el reparto lo decide PlayerParty (miembros reales + Will de la IA).
+            if (_party != null) return _party.GetFormationPosition(this);
 
-            // FIX (25 ago 2026, INC-095) — cuando este NPC sigue al jugador SIN estar registrado
-            // en PlayerParty (p.ej. Will con la IA, ver NPCStateContext.IsActivelyFollowingPlayer),
-            // _party es siempre null y PartyIndex siempre -1. El
-            // fallback anterior devolvía transform.position — la propia posición ACTUAL de este
-            // mismo NPC — como "posición de formación": FollowPlayerState.UpdateDestination() la
-            // usaba tal cual como destino del NavMeshAgent, así que el agente pathfindeaba hacia
-            // sí mismo y no se movía ni un metro, aunque el resto de la FSM (Agent.speed,
-            // isStopped=false, animación) funcionara con normalidad — de ahí que Will se quedara
-            // quieto sin caminar ni animar pese a estar activamente en FollowPlayerState. En su
-            // lugar, sin registro de party, se calcula un punto justo detrás del jugador (mismo
-            // criterio que el seguimiento especial en FollowPlayerState.GetFormationTarget3D, sin
-            // spread lateral por índice porque aquí no hay un PartyIndex válido) — nunca la propia
-            // posición del NPC, que nunca es un destino de seguimiento válido.
+            // Un compañero temporal (Will de la IA) sigue sin estar en _members, pero PlayerParty
+            // ya existe y sabe contar su puesto. Nunca se devuelve la propia posición: el agente
+            // pathfindearía hacia sí mismo y se quedaría clavado (INC-095).
+            if (PlayerParty.HasInstance) return PlayerParty.Instance.GetFormationPosition(this);
+
             Transform player = _npcManager != null ? _npcManager.Context?.Player : null;
             if (player == null) return transform.position; // sin jugador todavía: no hay nada mejor
 
-            float followDist = partyConfig != null ? partyConfig.distanciaParaPararse : 1.2f;
-            return player.position - player.forward * (followDist * 0.8f);
+            float followDist = partyConfig != null ? partyConfig.distanciaParaPararse : 2.5f;
+            return player.position - player.forward * Mathf.Max(followDist, 2.5f);
         }
 
         private void Log(string message)

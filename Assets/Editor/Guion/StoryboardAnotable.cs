@@ -85,6 +85,7 @@ public static class StoryboardAnotable
         js.Append("window.STORYBOARD = {\n");
         js.Append("  id: \"").Append(Js(Id(guion))).Append("\",\n");
         js.Append("  titulo: \"").Append(Js(Titulo(guion, lineasDelGuion))).Append("\",\n");
+        js.Append("  sello: \"").Append(Js(SelloDelHorneado(guion))).Append("\",\n");
         js.Append("  subtitulo: \"").Append(Js("Planos del horneado real. Elige un plano, selecciona un elemento de su leyenda y escribe o dibuja: la anotación queda pegada a ese elemento.")).Append("\",\n");
         js.Append("  paneles: [\n");
 
@@ -105,6 +106,12 @@ public static class StoryboardAnotable
             foreach (var linea in guion.lineas)
                 if (linea.t1 > plano.t0 && linea.t0 < plano.t1)
                     AnadirElemento(elementos, linea.actor, NombreDe(linea.actor, actoresPorId));
+            foreach (var efecto in guion.efectos)
+                if (efecto.beat is SayBeat dice && !string.IsNullOrEmpty(dice.textKey) &&
+                    efecto.t >= plano.t0 && efecto.t < plano.t1)
+                    AnadirElemento(elementos,
+                        string.IsNullOrEmpty(dice.markName) ? dice.speakerNameKey : dice.markName,
+                        string.IsNullOrEmpty(dice.speakerNameKey) ? "Voz" : dice.speakerNameKey);
             foreach (var efecto in EfectosConNombre(guion))
                 if (efecto.hasta > plano.t0 && efecto.desde < plano.t1 &&
                     NombresDeEfecto.TryGetValue(efecto.id, out string etiqueta))
@@ -135,8 +142,7 @@ public static class StoryboardAnotable
 
         string hecho = $"{guion.planos.Count} planos → {CarpetaDeLaPagina}/{archivoPagina} (datos en {archivoDatos}).";
         OrdenesDelEditor.Avisar("Storyboard anotable", hecho);
-        return hecho;
-    }
+        return hecho;    }
 
     /// <summary>
     /// Los efectos que se registran con un nombre, y lo que duran: así un plano puede anotar «el orbe» o
@@ -227,8 +233,23 @@ public static class StoryboardAnotable
         return (guion.nombre ?? "Guion").Replace('_', ' ');
     }
 
-    private static string Reloj(float t)
+    /// La fecha del horneado, para que una pestaña vieja se note a simple vista.
+    private static string SelloDelHorneado(GuionHorneado guion)
     {
+        try
+        {
+            string ruta = AssetDatabase.GetAssetPath(guion);
+            if (!string.IsNullOrEmpty(ruta) && File.Exists(ruta))
+                return "Horneado el " + File.GetLastWriteTime(ruta).ToString("dd MMM yyyy · HH:mm");
+        }
+        catch
+        {
+            // Sin fecha: la página sale igual, solo se queda sin sello.
+        }
+        return string.Empty;
+    }
+
+    private static string Reloj(float t)    {
         int minutos = (int)(t / 60f);
         float segundos = t - minutos * 60f;
         return $"{minutos}:{segundos.ToString("00.0", CultureInfo.GetCultureInfo("es-ES"))}";
@@ -245,6 +266,18 @@ public static class StoryboardAnotable
             string quien = NombreDe(linea.actor, actoresPorId);
             string que = textos.TryGetValue(linea.clave ?? string.Empty, out string texto) ? texto : (linea.clave ?? string.Empty);
             partes.Add($"{quien}: «{que}»");
+        }
+
+        // Las voces fuera de escena (SayBeat con marca) no son líneas: si no se leen aquí, el plano
+        // con la discusión de la ventana sale mudo aunque tenga tres frases.
+        foreach (var efecto in guion.efectos)
+        {
+            if (!(efecto.beat is SayBeat dice) || string.IsNullOrEmpty(dice.textKey)) continue;
+            if (efecto.t < plano.t0 || efecto.t >= plano.t1) continue;
+            string quien = !string.IsNullOrEmpty(dice.speakerNameKey) ? dice.speakerNameKey
+                         : string.IsNullOrEmpty(dice.markName) ? "Voz" : dice.markName;
+            string que = textos.TryGetValue(dice.textKey, out string dicho) ? dicho : dice.textKey;
+            partes.Add($"{quien} (fuera de escena): «{que}»");
         }
         return string.Join(" · ", partes);
     }

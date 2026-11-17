@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Invector.vCharacterController;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -85,10 +86,22 @@ namespace Game.NPC
         [Header("Configuración del Equipo")]
         [SerializeField] private int maxPartySize = 4;
         [SerializeField] private bool debugMode = true;
-        
-        [Header("Teleport Settings")]
-        [Tooltip("Radio alrededor del jugador donde reaparecerán los compañeros")]
-        [SerializeField] private float teleportRadius = 2f; // CAMBIADO: Más cerca (era 3f)
+
+        [Header("Formación detrás del jugador")]
+        [Tooltip("Distancia base detrás del jugador para la primera fila de compañeros (metros).")]
+        [SerializeField, Range(1.5f, 5f)] private float distanciaFormacionDetras = 2.6f;
+        [Tooltip("Separación lateral respecto al eje del jugador para repartir a los compañeros (metros).")]
+        [SerializeField, Range(0.5f, 3f)] private float separacionLateralFormacion = 1.35f;
+        [Tooltip("Retraso longitudinal adicional del segundo compañero de cada fila (metros).")]
+        [SerializeField, Range(0f, 1.5f)] private float escalonImparFormacion = 0.35f;
+        [Tooltip("Distancia adicional hacia atrás por cada fila extra de compañeros (metros).")]
+        [SerializeField, Range(0.8f, 3f)] private float distanciaEntreFilasFormacion = 1.4f;
+
+        [Header("Rastro de plataformas")]
+        [Tooltip("Distancia recorrida por el jugador entre muestras del rastro en suelo (metros).")]
+        [SerializeField, Range(0.1f, 0.5f)] private float pasoMuestreoRastro = 0.25f;
+        [Tooltip("Distancia recorrida por el jugador entre muestras del rastro en el aire (metros).")]
+        [SerializeField, Range(0.08f, 0.3f)] private float pasoMuestreoRastroAire = 0.15f;
         #endregion
 
         #region State
@@ -118,6 +131,43 @@ namespace Game.NPC
         
         // IDs de miembros pendientes de restaurar (si no se encontraron en la escena actual)
         private List<string> _pendingMemberIds = new();
+
+        // ── Rastro del jugador para plataformas ──────────────────────────────────────────────
+        // Anillo de muestras del recorrido real del jugador. Los compañeros lo leen para seguir
+        // su misma ruta (incluidos los saltos) sin marcar plataformas a mano en cada nivel.
+        public struct PuntoDeRastro
+        {
+            public Vector3 posicion;
+            public Vector3 direccion;
+            public float distanciaAcumulada;
+            public float tiempo;
+            public bool enAire;
+        }
+
+        private const int CapacidadRastro = 160;
+        private const float UmbralTeletransporteRastro = 4.5f;
+        private const float DesplazamientoMinimoSaltoHorizontal = 0.55f;
+        private const float DesplazamientoMinimoSaltoVertical = 0.4f;
+        private const float CaidaMaximaPuntoDeAterrizaje = 2f;
+
+        private readonly PuntoDeRastro[] _rastro = new PuntoDeRastro[CapacidadRastro];
+        private int _cabezaRastro;
+        private int _totalMuestrasRastro;
+        private float _distanciaTotalRastro;
+        private vThirdPersonMotor _playerMotor;
+        private bool _jugadorEstabaEnAire;
+        private bool _saltoActualConfirmado;
+        private Vector3 _inicioSaltoActual;
+        private int _muestrasDesdeInicioSalto;
+        private Vector3 _puntoAterrizajeJugador;
+        private bool _hayPuntoAterrizaje;
+        private int _mascaraSueloRastro = -1;
+
+        // Caché del Will de la IA para no repetir GetComponent/listas en cada consulta de
+        // formación (UpdateDestination la pide cada 0,1 s). Se refresca cada 0,5 s.
+        private NPCPartyMember _willNpcCache;
+        private bool _willSigueCache;
+        private float _willNpcCacheHasta;
         #endregion
 
         #region Events
@@ -258,7 +308,9 @@ namespace Game.NPC
         void Update()
         {
             if (!_isInitialized || _playerTransform == null) return;
-            
+
+            ActualizarRastroDelJugador();
+
             // OPTIMIZACIÓN MEJORADA: Verificar distancias cada 0.3 segundos (era 0.5)
             // Más frecuente para respuesta más rápida sin ser demasiado intensivo
             _distanceCheckTimer += Time.deltaTime;
@@ -278,6 +330,155 @@ namespace Game.NPC
                     RetryPendingMembers();
                 }
             }
+        }
+
+        /// <summary>
+        /// Graba el recorrido del jugador en el anillo del rastro. Marca los tramos aéreos de los
+        /// saltos reales (no de un salto en el sitio) y calcula el punto de caída mientras vuela.
+        /// Vuelo y nado no dejan rastro: sus compañeros siguen la formación en V de siempre.
+        /// </summary>
+        private void ActualizarRastroDelJugador()
+        {
+            if (_playerTransform == null) return;
+
+            bool enVueloONado = _playerActionManager != null
+                && (_playerActionManager.Top == ActionMode.Flying
+                    || _playerActionManager.Top == ActionMode.Swimming);
+            if (enVueloONado)
+            {
+                if (_totalMuestrasRastro > 0 || _jugadorEstabaEnAire) LimpiarRastro();
+                return;
+            }
+
+            // Las cinemáticas mueven al jugador por su cuenta; ese recorrido no es una ruta que
+            // deban imitar los compañeros al volver al juego.
+            if (CinematicSequencerBase.AnySequenceActive)
+            {
+                if (_totalMuestrasRastro > 0) LimpiarRastro();
+                return;
+            }
+
+            if (_playerMotor == null) return;
+
+            Vector3 posicion = _playerTransform.position;
+            bool enAire = _playerMotor.IsAirborne;
+
+            if (_totalMuestrasRastro == 0)
+            {
+                AgregarMuestra(posicion, false, _playerTransform.forward, 0f);
+                _inicioSaltoActual = posicion;
+                _saltoActualConfirmado = false;
+                _jugadorEstabaEnAire = enAire;
+                return;
+            }
+
+            PuntoDeRastro ultima = _rastro[_cabezaRastro];
+            if ((posicion - ultima.posicion).sqrMagnitude > UmbralTeletransporteRastro * UmbralTeletransporteRastro)
+            {
+                LimpiarRastro();
+                AgregarMuestra(posicion, false, _playerTransform.forward, 0f);
+                _inicioSaltoActual = posicion;
+                _saltoActualConfirmado = false;
+                _jugadorEstabaEnAire = enAire;
+                return;
+            }
+
+            if (enAire && !_jugadorEstabaEnAire)
+            {
+                _inicioSaltoActual = ultima.posicion;
+                _saltoActualConfirmado = false;
+                _muestrasDesdeInicioSalto = 0;
+            }
+
+            if (enAire)
+            {
+                Vector3 delta = posicion - _inicioSaltoActual;
+                float horizontal = new Vector2(delta.x, delta.z).magnitude;
+                if (!_saltoActualConfirmado
+                    && (horizontal >= DesplazamientoMinimoSaltoHorizontal
+                        || Mathf.Abs(delta.y) >= DesplazamientoMinimoSaltoVertical))
+                {
+                    _saltoActualConfirmado = true;
+                    // Las muestras que ya se tomaron desde el despegue eran de este salto.
+                    for (int i = 0; i < _muestrasDesdeInicioSalto && i < _totalMuestrasRastro; i++)
+                    {
+                        int idx = (_cabezaRastro - i + CapacidadRastro) % CapacidadRastro;
+                        _rastro[idx].enAire = true;
+                    }
+                }
+
+                // Mismo criterio que MarcaDeAterrizaje, pero sin aceptar el fondo de un foso.
+                Vector3 origen = posicion + Vector3.up * 0.4f;
+                if (Physics.Raycast(origen, Vector3.down, out RaycastHit caida, 25f,
+                                    ObtenerMascaraSueloRastro(), QueryTriggerInteraction.Ignore)
+                    && caida.point.y >= _inicioSaltoActual.y - CaidaMaximaPuntoDeAterrizaje)
+                {
+                    _puntoAterrizajeJugador = caida.point;
+                    _hayPuntoAterrizaje = true;
+                }
+                else
+                {
+                    _hayPuntoAterrizaje = false;
+                }
+            }
+            else if (_jugadorEstabaEnAire)
+            {
+                if (_saltoActualConfirmado)
+                {
+                    float cierre = _distanciaTotalRastro + Vector3.Distance(posicion, ultima.posicion);
+                    AgregarMuestra(posicion, false, _playerTransform.forward, cierre);
+                }
+                _saltoActualConfirmado = false;
+                _muestrasDesdeInicioSalto = 0;
+                _hayPuntoAterrizaje = false;
+            }
+
+            _jugadorEstabaEnAire = enAire;
+
+            float paso = enAire ? pasoMuestreoRastroAire : pasoMuestreoRastro;
+            float distancia = Vector3.Distance(posicion, ultima.posicion);
+            if (enAire && !_saltoActualConfirmado)
+            {
+                // Un salto en el sitio no debe dejar un rastro vertical: solo cuenta si avanza.
+                distancia = new Vector2(posicion.x - ultima.posicion.x,
+                                        posicion.z - ultima.posicion.z).magnitude;
+            }
+
+            if (distancia < paso) return;
+
+            Vector3 direccion = posicion - ultima.posicion;
+            direccion.y = 0f;
+            if (direccion.sqrMagnitude < 0.0001f) direccion = ultima.direccion;
+            else direccion.Normalize();
+
+            float distanciaAcumulada = _distanciaTotalRastro
+                + Vector3.Distance(posicion, ultima.posicion);
+            AgregarMuestra(posicion, enAire && _saltoActualConfirmado, direccion, distanciaAcumulada);
+
+            if (enAire && !_saltoActualConfirmado) _muestrasDesdeInicioSalto++;
+        }
+
+        private void AgregarMuestra(Vector3 posicion, bool enAire, Vector3 direccion, float distanciaAcumulada)
+        {
+            _cabezaRastro = (_cabezaRastro + 1) % CapacidadRastro;
+            _rastro[_cabezaRastro] = new PuntoDeRastro
+            {
+                posicion = posicion,
+                direccion = direccion,
+                distanciaAcumulada = distanciaAcumulada,
+                tiempo = Time.time,
+                enAire = enAire
+            };
+            if (_totalMuestrasRastro < CapacidadRastro) _totalMuestrasRastro++;
+            _distanciaTotalRastro = distanciaAcumulada;
+        }
+
+        private int ObtenerMascaraSueloRastro()
+        {
+            // El punto de caída es una referencia de mirada, no una decisión de movimiento: vale
+            // cualquier superficie sólida, como en MarcaDeAterrizaje.
+            if (_mascaraSueloRastro < 0) _mascaraSueloRastro = ~0;
+            return _mascaraSueloRastro;
         }
         #endregion
 
@@ -406,33 +607,256 @@ namespace Game.NPC
         }
 
         /// <summary>
+        /// Puesto del compañero dentro del grupo que va detrás del jugador. Cuenta a los miembros
+        /// reales (sin el que lleva el jugador) y añade al Will de la IA, que no está en _members.
+        /// </summary>
+        public int ObtenerPuestoDeFormacion(NPCPartyMember miembro, out int totalCompaneros)
+        {
+            int indice = 0;
+            int puesto = -1;
+
+            for (int i = 0; i < _members.Count; i++)
+            {
+                var m = _members[i];
+                if (m == null || !m.IsActiveInParty || ControlDelJugador.EsElJugador(m)) continue;
+                if (m.NPCManager?.Context?.EstaAnclado == true) continue;
+                if (m == miembro) puesto = indice;
+                indice++;
+            }
+
+            if (Time.time >= _willNpcCacheHasta)
+            {
+                _willNpcCache = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
+                _willSigueCache = _willNpcCache != null && !_willNpcCache.IsInParty
+                                  && PartyControlManager.DebeSeguirAlJugador(_willNpcCache);
+                _willNpcCacheHasta = Time.time + 0.5f;
+            }
+
+            var will = _willNpcCache;
+            bool willSigue = _willSigueCache && will != null && !will.IsInParty
+                             && will.isActiveAndEnabled && !ControlDelJugador.EsElJugador(will)
+                             && will.NPCManager?.Context?.EstaAnclado != true;
+            if (willSigue)
+            {
+                if (will == miembro) puesto = indice;
+                indice++;
+            }
+
+            // Compañero temporal fuera de _members, o el propio Will cuando no cuenta: ocupa el
+            // último hueco para no devolver un puesto negativo.
+            if (puesto < 0)
+            {
+                puesto = indice;
+                indice++;
+            }
+
+            totalCompaneros = Mathf.Max(1, indice);
+            return Mathf.Clamp(puesto, 0, totalCompaneros - 1);
+        }
+
+        /// <summary>
         /// Obtiene una posición válida cerca del jugador para un compañero.
         /// </summary>
-        public Vector3 GetFormationPosition(int memberIndex)
+        public Vector3 GetFormationPosition(NPCPartyMember miembro)
         {
             if (_playerTransform == null) return Vector3.zero;
-            
-            // Calcular posición en formación (semicírculo detrás del jugador, MÁS CERCA)
-            float angle = CalculateFormationAngle(memberIndex);
-            float distance = CalculateFormationDistance(memberIndex);
-            
-            Vector3 offset = Quaternion.Euler(0, angle, 0) * (-_playerTransform.forward * distance);
-            Vector3 targetPos = _playerTransform.position + offset;
-            
-            // Validar en NavMesh con mayor radio de búsqueda
-            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-            {
+            int puesto = ObtenerPuestoDeFormacion(miembro, out int total);
+            return CalcularPosicionFormacion(puesto, total);
+        }
+
+        private Vector3 CalcularPosicionFormacion(int puesto, int total)
+        {
+            // Abanico simétrico DETRÁS del jugador: dos por fila, alternando derecha e izquierda.
+            int fila = puesto / 2;
+            float lado = puesto % 2 == 0 ? 1f : -1f;
+            float lateral = total <= 1 ? 0f : lado * separacionLateralFormacion * (1f + fila * 0.35f);
+            float detras = distanciaFormacionDetras
+                           + fila * distanciaEntreFilasFormacion
+                           + (puesto % 2 == 1 ? escalonImparFormacion : 0f);
+
+            Vector3 adelante = _playerTransform.forward;
+            adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.0001f) adelante = Vector3.forward;
+            adelante.Normalize();
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante);
+
+            Vector3 objetivo = _playerTransform.position - adelante * detras + derecha * lateral;
+
+            // El muestreo de NavMesh puede caer en el fondo de un foso o delante del jugador.
+            // Se rechaza lo que esté a más de 2,2 m por debajo o que no quede detrás.
+            if (NavMesh.SamplePosition(objetivo, out NavMeshHit hit, 2f, NavMesh.AllAreas)
+                && Mathf.Abs(hit.position.y - _playerTransform.position.y) <= 2.2f
+                && EstaDetrasDe(hit.position, adelante))
                 return hit.position;
-            }
-            
-            // Fallback más agresivo: posición detrás del jugador
-            Vector3 fallbackPos = _playerTransform.position - _playerTransform.forward * (distance * 0.8f);
-            if (NavMesh.SamplePosition(fallbackPos, out NavMeshHit fallbackHit, 5f, NavMesh.AllAreas))
+
+            Vector3 respaldo = _playerTransform.position - adelante * (distanciaFormacionDetras * 0.8f);
+            if (NavMesh.SamplePosition(respaldo, out NavMeshHit hitRespaldo, 2f, NavMesh.AllAreas)
+                && Mathf.Abs(hitRespaldo.position.y - _playerTransform.position.y) <= 2.2f
+                && EstaDetrasDe(hitRespaldo.position, adelante))
+                return hitRespaldo.position;
+
+            return respaldo;
+        }
+
+        private bool EstaDetrasDe(Vector3 punto, Vector3 adelante)
+        {
+            Vector3 delta = punto - _playerTransform.position;
+            delta.y = 0f;
+            return Vector3.Dot(delta, adelante) <= 0.25f;
+        }
+
+        /// <summary>Longitud recorrida por el jugador que guarda el rastro (metros).</summary>
+        public float DistanciaTotalRastro => _distanciaTotalRastro;
+
+        /// <summary>Muestras válidas que hay ahora mismo en el anillo del rastro.</summary>
+        public int TotalMuestrasRastro => _totalMuestrasRastro;
+
+        /// <summary>El jugador está saltando o cayendo (ni volando ni nadando).</summary>
+        public bool JugadorEnElAire =>
+            _playerMotor != null && _playerMotor.IsAirborne
+            && (_playerActionManager == null
+                || (_playerActionManager.Top != ActionMode.Flying
+                    && _playerActionManager.Top != ActionMode.Swimming));
+
+        /// <summary>El salto actual del jugador se ha confirmado como desplazamiento real.</summary>
+        public bool JugadorEnSaltoConfirmado => JugadorEnElAire && _saltoActualConfirmado;
+
+        /// <summary>Punto del suelo donde va a caer el jugador mientras está en el aire.</summary>
+        public Vector3 PuntoDeAterrizajeDelJugador => _puntoAterrizajeJugador;
+
+        /// <summary>Hay un punto de caída calculado en este momento.</summary>
+        public bool HayPuntoDeAterrizaje => _hayPuntoAterrizaje;
+
+        /// <summary>Vacía el rastro (teletransporte, cambio de escena o de cuerpo al mando).</summary>
+        public void LimpiarRastro()
+        {
+            _cabezaRastro = 0;
+            _totalMuestrasRastro = 0;
+            _distanciaTotalRastro = 0f;
+            _jugadorEstabaEnAire = false;
+            _saltoActualConfirmado = false;
+            _muestrasDesdeInicioSalto = 0;
+            _hayPuntoAterrizaje = false;
+        }
+
+        /// <summary>
+        /// Punto del rastro a una distancia acumulada concreta. Interpola entre las dos muestras
+        /// que lo rodean; el tramo es aéreo si cualquiera de las dos lo es.
+        /// </summary>
+        public bool IntentarMuestrearRastroEnDistancia(float distanciaObjetivo, out PuntoDeRastro resultado)
+        {
+            resultado = default;
+            if (_totalMuestrasRastro == 0) return false;
+
+            int edadMaxima = _totalMuestrasRastro - 1;
+            int indiceMasNuevo = _cabezaRastro;
+            if (distanciaObjetivo >= _rastro[indiceMasNuevo].distanciaAcumulada)
             {
-                return fallbackHit.position;
+                resultado = _rastro[indiceMasNuevo];
+                return true;
             }
-            
-            return _playerTransform.position + (-_playerTransform.forward * distance);
+
+            for (int edad = 0; edad < edadMaxima; edad++)
+            {
+                int idxNuevo = (_cabezaRastro - edad + CapacidadRastro) % CapacidadRastro;
+                int idxViejo = (_cabezaRastro - edad - 1 + CapacidadRastro) % CapacidadRastro;
+                PuntoDeRastro nuevo = _rastro[idxNuevo];
+                PuntoDeRastro viejo = _rastro[idxViejo];
+                if (distanciaObjetivo > nuevo.distanciaAcumulada) continue;
+
+                float tramo = nuevo.distanciaAcumulada - viejo.distanciaAcumulada;
+                if (tramo < 0.0001f)
+                {
+                    resultado = viejo;
+                    return true;
+                }
+
+                float t = Mathf.Clamp01((distanciaObjetivo - viejo.distanciaAcumulada) / tramo);
+                resultado.posicion = Vector3.Lerp(viejo.posicion, nuevo.posicion, t);
+                resultado.direccion = Vector3.Slerp(viejo.direccion, nuevo.direccion, t);
+                if (resultado.direccion.sqrMagnitude < 0.0001f) resultado.direccion = viejo.direccion;
+                resultado.distanciaAcumulada = distanciaObjetivo;
+                resultado.tiempo = Mathf.Lerp(viejo.tiempo, nuevo.tiempo, t);
+                resultado.enAire = viejo.enAire || nuevo.enAire;
+                return true;
+            }
+
+            // La distancia pedida cae por delante de la muestra más vieja que queda en el anillo.
+            int idxMasViejo = (_cabezaRastro - edadMaxima + CapacidadRastro) % CapacidadRastro;
+            if (distanciaObjetivo < _rastro[idxMasViejo].distanciaAcumulada - 0.5f)
+                return false;
+
+            resultado = _rastro[idxMasViejo];
+            return true;
+        }
+
+        /// <summary>
+        /// ¿Hay un tramo aéreo en el rastro entre dos distancias? Devuelve dónde despega y dónde
+        /// aterriza el primer salto encontrado.
+        /// </summary>
+        public bool HaySaltoEnTramoDeRastro(float desdeDistancia, float hastaDistancia,
+                                            out float distanciaDespegue, out float distanciaAterrizaje)
+        {
+            distanciaDespegue = 0f;
+            distanciaAterrizaje = hastaDistancia;
+            if (_totalMuestrasRastro < 2) return false;
+
+            bool dentro = false;
+            bool despegueEncontrado = false;
+            bool aterrizajeEncontrado = false;
+            float anterior = desdeDistancia;
+
+            for (int edad = _totalMuestrasRastro - 1; edad >= 0; edad--)
+            {
+                PuntoDeRastro muestra = _rastro[(_cabezaRastro - edad + CapacidadRastro) % CapacidadRastro];
+                if (muestra.distanciaAcumulada < desdeDistancia) { anterior = muestra.distanciaAcumulada; continue; }
+                if (muestra.distanciaAcumulada > hastaDistancia) break;
+
+                if (muestra.enAire)
+                {
+                    if (!despegueEncontrado)
+                    {
+                        distanciaDespegue = anterior;
+                        despegueEncontrado = true;
+                    }
+                    dentro = true;
+                }
+                else if (dentro)
+                {
+                    distanciaAterrizaje = muestra.distanciaAcumulada;
+                    aterrizajeEncontrado = true;
+                    break;
+                }
+
+                anterior = muestra.distanciaAcumulada;
+            }
+
+            if (despegueEncontrado && !aterrizajeEncontrado)
+                distanciaAterrizaje = hastaDistancia;
+
+            return despegueEncontrado;
+        }
+
+        /// <summary>Distancia del rastro más cercana a una posición del mundo, dentro de un radio.</summary>
+        public bool BuscarDistanciaMasCercanaEnRastro(Vector3 posicion, float radio, out float distancia)
+        {
+            distancia = 0f;
+            if (_totalMuestrasRastro == 0) return false;
+
+            float radioCuadrado = radio * radio;
+            float mejor = float.MaxValue;
+            for (int edad = 0; edad < _totalMuestrasRastro; edad++)
+            {
+                PuntoDeRastro muestra = _rastro[(_cabezaRastro - edad + CapacidadRastro) % CapacidadRastro];
+                float d = (muestra.posicion - posicion).sqrMagnitude;
+                if (d <= radioCuadrado && d < mejor)
+                {
+                    mejor = d;
+                    distancia = muestra.distanciaAcumulada;
+                }
+            }
+
+            return mejor < float.MaxValue;
         }
 
         /// <summary>
@@ -452,7 +876,7 @@ namespace Game.NPC
                 if (member == null || ControlDelJugador.RepresentadoPorElJugador(member)) continue;
                 // En modo libre, solo se teletransportan los que están siguiendo activamente
                 if (member.NPCManager?.Context?.EstaAnclado == true) continue;
-                TeleportMemberToPlayer(member, i, forzar, avisar);
+                TeleportMemberToPlayer(member, forzar, avisar);
             }
             ReunirAWill(forzar, avisar);
         }
@@ -466,7 +890,7 @@ namespace Game.NPC
         {
             var will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
             if (will == null || will.NPCManager?.Context?.EstaAnclado == true || (will.NPCManager?.IsInCinematic ?? false)) return;
-            if (TeleportMemberToPlayer(will, _members.Count, forzar, avisar) && PartyControlManager.DebeSeguirAlJugador(will))
+            if (TeleportMemberToPlayer(will, forzar, avisar) && PartyControlManager.DebeSeguirAlJugador(will))
                 will.StartFollowingIgnorePartyCheck();
         }
 
@@ -965,13 +1389,26 @@ namespace Game.NPC
             _playerTransform = null;
             _isInitialized = false;
             _playerActionManager = null;
+            _playerMotor = null;
+            _willNpcCache = null;
+            _willNpcCacheHasta = 0f;
+            LimpiarRastro();
         }
 
         private void ResolvePlayerReference()
         {
             if (PlayerService.TryGetPlayer(out var player))
             {
+                var nuevoMotor = player.GetComponent<vThirdPersonMotor>();
+                if (_playerTransform != player.transform || _playerMotor != nuevoMotor)
+                {
+                    LimpiarRastro();
+                    _willNpcCache = null;
+                    _willNpcCacheHasta = 0f;
+                }
+
                 _playerTransform = player.transform;
+                _playerMotor = nuevoMotor;
                 _isInitialized = true;
                 Log("Referencia al jugador establecida");
                 // El del cuerpo que lleva el jugador (cambia al pasar el mando a otro).
@@ -1245,6 +1682,9 @@ namespace Game.NPC
         /// </summary>
         private void OnSceneLoadedHandler(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
         {
+            // El rastro es del recorrido de esta escena; al cambiar de escena no vale.
+            LimpiarRastro();
+
             // al volver al MainMenu, PlayerParty (DontDestroyOnLoad) conservaba
             // o repoblaba _pendingMemberIds desde el preset activo (ver bloque de abajo en
             // OnSceneLoaded) y Update() los reintentaba cada 2s para siempre, porque el MainMenu
@@ -1383,7 +1823,7 @@ namespace Game.NPC
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[PlayerParty] Teletransportando a {member.DisplayName} para combate (estaba a {distance:F1}m)");
 #endif
-                    TeleportMemberToPlayer(member, i);
+                    TeleportMemberToPlayer(member);
                 }
             }
         }
@@ -1477,6 +1917,9 @@ namespace Game.NPC
             // No teletransportar mientras el jugador vuela: el destino estará fuera del NavMesh
             if (_playerActionManager != null && _playerActionManager.Top == ActionMode.Flying) return;
 
+            // Un salto en curso no se corta con un warp: primero se termina de cruzar.
+            if (JugadorEnElAire) return;
+
             for (int i = 0; i < _members.Count; i++)
             {
                 var member = _members[i];
@@ -1491,6 +1934,9 @@ namespace Game.NPC
                 // Anclado (modo Libre, barco): se queda donde está, sin teletransporte automático
                 if (member.NPCManager?.Context?.EstaAnclado == true) continue;
 
+                // El compañero está cruzando un salto del rastro: no se le corta a mitad.
+                if (member.EnSaltoDeRastro) continue;
+
                 float distance = Vector3.Distance(member.transform.position, _playerTransform.position);
 
                 // Usar distancia del config del miembro (o 15f por defecto, más agresivo que antes)
@@ -1499,7 +1945,7 @@ namespace Game.NPC
                 if (distance > teleportThreshold)
                 {
                     Log($"{member.DisplayName} demasiado lejos ({distance:F1}m > {teleportThreshold:F1}m), teletransportando...");
-                    TeleportMemberToPlayer(member, i);
+                    TeleportMemberToPlayer(member);
                 }
             }
 
@@ -1509,6 +1955,7 @@ namespace Game.NPC
             {
                 // En modo Libre, Will NPC tampoco se teletransporta
                 if (willNpc.NPCManager?.Context?.EstaAnclado == true) return;
+                if (willNpc.EnSaltoDeRastro) return;
 
                 float willDist = Vector3.Distance(willNpc.transform.position, _playerTransform.position);
                 float willThreshold = willNpc.PartyConfig?.distanciaParaTeletransporte ?? 15f;
@@ -1521,18 +1968,31 @@ namespace Game.NPC
             }
         }
 
-        private bool TeleportMemberToPlayer(NPCPartyMember member, int index, bool forzar = false, bool avisar = false)
+        private bool TeleportMemberToPlayer(NPCPartyMember member, bool forzar = false, bool avisar = false)
         {
             if (_playerTransform == null || member == null) return false;
 
-            Vector3 targetPos = GetFormationPosition(index);
+            Vector3 targetPos = GetFormationPosition(member);
 
             // Sin NavMesh cerca del destino (jugador aún cargando o en una zona sin malla) no se
             // teletransporta: el agente quedaría fuera de malla. Se reintenta en la siguiente
             // comprobación de distancias. Ver INC-454.
-            if (!NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            if (!NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 2f, NavMesh.AllAreas))
                 return false;
             targetPos = hit.position;
+
+            // No meter al compañero en el fondo de un foso que está más de 2,2 m por debajo del
+            // jugador: la malla de la lava no es un sitio al que seguir. Si el viaje es forzado,
+            // se cae al sitio del jugador.
+            if (Mathf.Abs(targetPos.y - _playerTransform.position.y) > 2.2f)
+            {
+                if (!forzar) return false;
+
+                targetPos = _playerTransform.position;
+                if (NavMesh.SamplePosition(targetPos, out NavMeshHit hitJugador, 5f, NavMesh.AllAreas)
+                    && Mathf.Abs(hitJugador.position.y - _playerTransform.position.y) <= 2.2f)
+                    targetPos = hitJugador.position;
+            }
 
             if (!forzar)
             {
@@ -1562,28 +2022,9 @@ namespace Game.NPC
                 member.transform.position = targetPos;
             }
 
+            member.ReiniciarRastro();
             member.OnTeleportedToPlayer();
             return true;
-        }
-
-        private float CalculateFormationAngle(int index)
-        {
-            // Distribuir en abanico detrás del jugador: -60°, 0°, 60°, etc.
-            int totalSlots = maxPartySize;
-            float angleSpread = 120f; // Ángulo total del abanico
-            float baseAngle = 180f; // Detrás del jugador
-            
-            if (totalSlots <= 1) return baseAngle;
-            
-            float step = angleSpread / (totalSlots - 1);
-            return baseAngle - (angleSpread / 2f) + (step * index);
-        }
-
-        private float CalculateFormationDistance(int index)
-        {
-            // Más cerca que antes (era teleportRadius que podía ser 3f)
-            float baseDistance = Mathf.Min(teleportRadius, 2f); // Máximo 2 metros
-            return baseDistance + (index % 2 == 0 ? 0 : 0.3f); // Menor variación
         }
 
         private void Log(string message)

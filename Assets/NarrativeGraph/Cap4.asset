@@ -1517,6 +1517,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 80f759b73245ec145a401ca469e2b77f, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084426
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1548,6 +1549,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 69f80acd9fc3c2a43bf8dd1125bdb5d2, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084431
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
@@ -1578,6 +1580,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 58c2ea6a5f5dce14c9190aec94965a46, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084434
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
@@ -1587,6 +1590,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 3fded739f8d058142b863900ef160039, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084435
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
@@ -1611,6 +1615,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: afcdc25aacfd9c049bdfa63a7eea8d59, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084438
       type: {class: PedirBatalla, ns: , asm: Assembly-CSharp}
       data:
@@ -1626,6 +1631,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 38e62ec7231aa214f94952658d5928f5, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084440
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
@@ -1635,6 +1641,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 89835ad1150c13e4093e35147966cbb9, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084441
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1650,6 +1657,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 4c90c8fb063278542b688f57d358503a, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084443
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
@@ -1671,6 +1679,7 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: f3c76db8407a8bc4698f3c388b25289a, type: 2}
         plantillaDeAjustes: 
+        alMandoElProtagonista: 1
     - rid: 6540294618706084446
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:

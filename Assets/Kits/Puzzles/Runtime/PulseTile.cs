@@ -7,22 +7,23 @@ namespace Kits.Puzzles
     /// se aplasta, tiembla y se enciende su marco, para que se pueda cruzar de oído y de vista sin
     /// adivinar cuándo va a caer el suelo.
     ///
-    /// El ciclo es «tiempos puesta + tiempos quitada»; con <see cref="startDown"/> se arranca en la
-    /// mitad quitada, que es lo que hace que dos losas seguidas se turnen. El estado se lee del reloj
-    /// en cada fotograma, así que no se desfasa aunque se reinicie el tramo o cambie el tempo.
+    /// El ciclo es «tiempos puesta + tiempos quitada», y <see cref="desfaseEnTiempos"/> retrasa el
+    /// ciclo de cada losa: con una losa un tiempo por detrás de la siguiente, el hueco va recorriendo
+    /// la fila como una ola y siempre hay por dónde pasar. El estado se lee del reloj en cada
+    /// fotograma, así que no se desfasa aunque se reinicie el tramo o cambie el tempo.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PulseTile : MonoBehaviour
     {
         [Header("Ciclo")]
-        [Tooltip("Pulso de la escena. Si se deja vacío, se usa el de la escena.")]
+        [Tooltip("Reloj de la escena. Si se deja vacío, se usa el de la escena.")]
         [SerializeField] private TempoClock pulse;
         [Tooltip("Tiempos que está puesta antes de quitarse.")]
         [SerializeField, Min(1)] private int beatsUp = 4;
         [Tooltip("Tiempos que está quitada antes de volver.")]
         [SerializeField, Min(1)] private int beatsDown = 4;
-        [Tooltip("Empieza quitada: dos losas seguidas con esto alterno se turnan.")]
-        [SerializeField] private bool startDown;
+        [Tooltip("Tiempos de retraso en el ciclo. Con una menos que la siguiente, el hueco va recorriendo la fila como una ola: es lo que deja pasar de una en una.")]
+        [SerializeField] private int desfaseEnTiempos;
         [Tooltip("Segundos de aviso antes de cada cambio (antes de quitarse y antes de volver).")]
         [SerializeField, Min(0f)] private float warningSeconds = 0.5f;
 
@@ -93,7 +94,7 @@ namespace Kits.Puzzles
             }
 
             int ciclo = Mathf.Max(2, beatsUp + beatsDown);
-            int posicion = _clock.TotalBeats + (startDown ? beatsUp : 0);
+            int posicion = _clock.TotalBeats + desfaseEnTiempos;
             posicion = ((posicion % ciclo) + ciclo) % ciclo;
 
             bool quitada = posicion >= beatsUp;

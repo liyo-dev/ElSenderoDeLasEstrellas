@@ -28,9 +28,17 @@ y entra en `http://localhost:8765/Tools/Storyboard/index.html`.
    cámara naranja…); un círculo lo fija para la siguiente nota o trazo.
 5. Cada anotación queda con su elemento, su plano y su color. La lista de debajo del plano las
    enseña; la × las borra.
-6. Al terminar, **Copiar resumen** y pégalo en el chat. Si el navegador no deja copiar, abre una
-   ventana con el texto para copiarlo a mano. **Descargar JSON** guarda la geometría exacta de los
-   trazos.
+6. Al terminar, **Guardar correcciones** deja `correcciones-<guion>.json` (en Descargas o donde elijas).
+   En Unity: **Liyodev ▸ Director ▸ Aplicar correcciones del storyboard…**, eliges ese fichero y el
+   Editor escribe el cambio en el `.guion.txt`, rehornea y regenera esta página. Lo que la nota pide
+   en palabras y el guion sabe hacer hoy: solo la cámara (`alejar/abrir` → `lente` −6, `acercar/cerrar`
+   → `lente` +8); lo demás se queda anotado y se lee a mano. También vale por el buzón:
+   `revisiones Guiones/_revisiones/<fichero>.json`.
+   **Copiar resumen** sigue sirviendo para pegarlo en el chat y hablarlo.
+
+   Las notas guardadas **desaparecen de la página** (ya van en el fichero) y Unity lleva su propio
+   libro de aplicadas (`Guiones/_revisiones/aplicadas-<guion>.json`): mandar dos veces el mismo fichero
+   no aplica dos veces el cambio. En la mesa, las notas de la pizarra **se borran al aplicarse**.
 
 Las anotaciones se guardan en el navegador (`localStorage`) mientras no borres los datos del sitio.
 Para conservarlas entre máquinas o mandármelas, usa el resumen o el JSON.

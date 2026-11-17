@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
-  m_Name: QuickTest_Temp
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Bedroom
+  spawnAnchorId: InicioTemplo
   level: 1
   maxHP: 100
   currentHP: 100
@@ -24,60 +24,18 @@ MonoBehaviour:
   sintoniaHitos: 0
   sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 01000000i
-  basicSpellIds: 01000000i
+  unlockedSpells: 0100000002000000040000001a000000i
+  basicSpellIds: 
   companionBasics: []
-  companionHealth:
-  - personaje: 0
-    maxHP: 0
-    currentHP: 0
-    maxMP: 0
-    currentMP: 0
-    ataque: 0
-    defensa: 0
-    habilidadesAprendidas:
-      swim: 0
-      jump: 0
-      magic: 1
-      fly: 0
-      sprint: 0
-      shield: 0
-  - personaje: 2
-    maxHP: 0
-    currentHP: 0
-    maxMP: 0
-    currentMP: 0
-    ataque: 0
-    defensa: 0
-    habilidadesAprendidas:
-      swim: 0
-      jump: 0
-      magic: 1
-      fly: 0
-      sprint: 0
-      shield: 0
-  flags:
-  - QUEST_ACTIVE:WILL_MISSION0
-  - QUEST_COMPLETED:WILL_MISSION0
-  - QUEST_ACTIVE:ELDRAN_MISSION1
-  - QUEST_COMPLETED:ELDRAN_MISSION1
-  - QUEST_ACTIVE:WILL_MISSION1
-  - QUEST_COMPLETED:WILL_MISSION1
-  - QUEST_ACTIVE:ELDRAN_SIGUEME
-  - QUEST_COMPLETED:ELDRAN_SIGUEME
-  - QUEST_ACTIVE:ELDRAN_MISSION2
-  - QUEST_COMPLETED:ELDRAN_MISSION2
-  - QUEST_ACTIVE:ELDRAN_MISSION3
-  - QUEST_COMPLETED:ELDRAN_MISSION3
-  - NARRATIVE_FLAG:CAP2_INICIADO
-  - QUEST_ACTIVE:PREPARA_VIAJE
+  companionHealth: []
+  flags: []
   abilities:
-    swim: 0
-    jump: 0
+    swim: 1
+    jump: 1
     magic: 1
-    fly: 0
-    sprint: 0
-    shield: 0
+    fly: 1
+    sprint: 1
+    shield: 1
   appearance:
   - category: 2
     partName: Head01_Male
@@ -90,56 +48,74 @@ MonoBehaviour:
   - category: 0
     partName: Body23_Aventurero
   unlockedWardrobeIds:
+  - AC01_Heart
+  - AC02_Leaf
+  - AC03_BlackGlass
+  - AC03_HeavyMetalGlass
+  - AC03_NerdGlass
+  - AC03_NightVision
+  - AC04_AngelEars
+  - AC04_AnthenaEars
+  - AC04_BunnyEars
+  - AC04_ShortEars
+  - AC05_Horn01
+  - AC05_Horn02
+  - AC05_Horn03
+  - AC05_Horn04
+  - AC06_Crown01
+  - AC06_Crown02
+  - AC06_Crown03
+  - AC07_PiratePatch
+  - AC08_NinjaMask01
+  - AC08_NinjaMask02
+  - AC08_NinjaMask03
+  - AC08_NinjaMask04
+  - AC08_NinjaMask05
+  - AC08_NinjaMask06
+  - AC08_NinjaMask07
+  - AC08_NinjaMask08
+  - AC09_Ribbon
+  - AC10_Mustache01
+  - AC10_Mustache02
+  - AC10_Mustache03
+  - AC10_Mustache04
+  - AC10_Mustache05
+  - AC10_Mustache06
+  - AC11_Mustache01
+  - AC11_Mustache02
+  - AC11_Mustache03
+  - AC11_Mustache04
+  - AC11_Mustache05
+  - AC11_Mustache06
+  - Body01
+  - Body02
+  - Body03
+  - Body04
   - Body05
-  inventoryItems:
-  - itemId: coin
-    count: 1
-  - itemId: estrella_torcida
-    count: 1
-  - itemId: trozo_del_aro
-    count: 1
-  defeatedBossIds:
-  - Demon_1
-  narrativeBlackboards:
-  - graphLabel: Cap1
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Cap2
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: cap2-prepara-viaje-fork
-  senalesEmitidas:
-  - PROLOGUE_START
-  - PROLOGUE_DONE
-  - will_wake_up
-  - HOOK_DISCUSION_START
-  - HOOK_DISCUSION_DONE
-  - WILL_EXITS_HOUSE
-  - WILL_EXITS_HOUSE_OLIVER_GREETING
-  - OLIVER_GREETING_START
-  - OLIVER_GREETING_DONE
-  - OLIVER_JOIN_PARTY
-  - WILL_REACHED_ELDRAN
-  - PERAS_START
-  - PERAS_DONE
-  - ESTRELLA_COMPRADA
-  - ELDRAN_CAJA_START
-  - ELDRAN_CAJA_DONE
-  - CAP1_CAJA_ELDRAN
-  - NPC_INTERACT_NPC_Eldran
-  - AWAKEN_START
-  - AWAKEN_DONE
-  - CH_Cap1_BACK_1
-  - LIAM_CRYSTAL_START
-  - LIAM_CRYSTAL_DONE
-  - MANANA_DESPUES_START
-  - MANANA_DESPUES_DONE
+  - Body06
+  - Body07
+  - Body08
+  - Body09
+  - Body10
+  - Body11
+  - Body12
+  - Body13
+  - Body14
+  - Body15
+  - Body16
+  - Body17
+  - Body18
+  - Body19
+  - Body20
+  - Body23_Aventurero
+  - Body24_AventureroChaqueta
+  - Cloak01
+  - Cloak02
+  - Cloak03
+  inventoryItems: []
+  defeatedBossIds: []
+  narrativeBlackboards: []
+  senalesEmitidas: []
   npcPositions: []
   npcRelationships: []
   objetosDelMundo: []

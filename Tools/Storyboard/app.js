@@ -42,6 +42,8 @@
 
   nodos.titulo.textContent = "Storyboard · " + SB.titulo;
   nodos.subtitulo.textContent = SB.subtitulo || "";
+  const sello = document.getElementById("sello");
+  if (sello) sello.textContent = SB.sello || "";
   document.title = "Storyboard · " + SB.titulo;
 
   const avisoNodo = document.createElement("div");
@@ -652,16 +654,31 @@
   }
 
   function descargarJSON() {
+    if (estado.anotaciones.length === 0) {
+      aviso("No hay anotaciones pendientes: ya se guardaron las anteriores.");
+      return;
+    }
+
+    const cuantas = estado.anotaciones.length;
     const blob = new Blob([JSON.stringify(construirJSON(), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const enlace = document.createElement("a");
     enlace.href = url;
-    enlace.download = `anotaciones-${SB.id}.json`;
+    enlace.download = `correcciones-${SB.id}.json`;
     document.body.appendChild(enlace);
     enlace.click();
     enlace.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    aviso("JSON descargado.");
+
+    // Lo guardado sale de la página: ya vive en el fichero, y así no se manda dos veces lo mismo.
+    estado.anotaciones = [];
+    estado.siguienteId = 1;
+    guardar();
+    for (const panel of SB.paneles) renderLista(panel.id);
+    actualizarChips();
+    for (const panel of SB.paneles) redibujar(panel.id);
+
+    aviso(`Correcciones guardadas (${cuantas}) y vaciadas de la página. En Unity: Liyodev ▸ Director ▸ Aplicar correcciones del storyboard…`);
   }
 
   function construirResumen() {

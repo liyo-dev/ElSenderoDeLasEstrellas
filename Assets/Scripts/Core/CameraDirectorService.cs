@@ -41,6 +41,7 @@ public static class CameraDirectorService
     private const float ReleaseGraceSeconds = 0.15f;
 
     private static object s_currentOwner;
+    private static bool s_ownerEsCinematica;
     private static bool s_saliendo;
     private static Coroutine s_pendingRelease;
     private static Runner s_runner;
@@ -64,6 +65,7 @@ public static class CameraDirectorService
     private static void ResetStatics()
     {
         s_currentOwner = null;
+        s_ownerEsCinematica = false;
         s_pendingRelease = null;
         s_runner = null;
         s_saliendo = false;
@@ -98,6 +100,13 @@ public static class CameraDirectorService
     /// True si hay algún owner con el control reclamado en este momento (incluida la ventana de gracia).
     public static bool HasOwner => s_currentOwner != null;
 
+    /// True si la cámara la tiene una cinemática. Una cámara de juego reclamada (la lateral del
+    /// templo que canta) no oculta el marcador de apuntado ni el HUD de combate.
+    public static bool HayCine => s_currentOwner != null && s_ownerEsCinematica;
+
+    /// True si la cámara la tiene una cámara de juego que no es la de tercera persona.
+    public static bool EsCamaraDeJuego => s_currentOwner != null && !s_ownerEsCinematica;
+
     /// True si <paramref name="owner"/> tiene ahora el control (incluida su ventana de gracia).
     public static bool EsDueno(object owner) => owner != null && s_currentOwner != null && Equals(s_currentOwner, owner);
 
@@ -113,6 +122,7 @@ public static class CameraDirectorService
     {
         CancelPendingRelease();
         s_currentOwner = null;
+        s_ownerEsCinematica = false;
         vThirdPersonCamera.lockCameraForCinematic = false;
         DevolverFovAlInstante();
     }
@@ -120,7 +130,9 @@ public static class CameraDirectorService
     /// Reclama el control de la cámara cinemática para <paramref name="owner"/>. Cancela
     /// cualquier liberación pendiente (propia o de otro owner) antes de que llegue a aplicarse,
     /// de forma que el flag nunca baja entre un handoff y el siguiente.
-    public static void Claim(object owner)
+    /// <paramref name="esCinematica"/> distingue las cinemáticas de las cámaras de juego que
+    /// también reclaman el mando (la lateral del templo): solo las primeras ocultan el marcador.
+    public static void Claim(object owner, bool esCinematica = true)
     {
         if (owner == null) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -134,6 +146,7 @@ public static class CameraDirectorService
         if (s_currentOwner == null) GuardarFovDeJuego();
         CancelPendingRelease();
         s_currentOwner = owner;
+        s_ownerEsCinematica = esCinematica;
         vThirdPersonCamera.lockCameraForCinematic = true;
     }
 
@@ -171,6 +184,7 @@ public static class CameraDirectorService
         if (s_runner == null)
         {
             s_currentOwner = null;
+            s_ownerEsCinematica = false;
             vThirdPersonCamera.lockCameraForCinematic = false;
             DevolverFovAlInstante();
             return;
@@ -186,6 +200,7 @@ public static class CameraDirectorService
         if (Equals(s_currentOwner, owner))
         {
             s_currentOwner = null;
+            s_ownerEsCinematica = false;
             vThirdPersonCamera.lockCameraForCinematic = false;
             DevolverFov();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

@@ -3,6 +3,7 @@
 window.STORYBOARD = {
   id: "cap3-03-elcarro",
   titulo: "Cap. 3 · Llegan los contrabandistas",
+  sello: "Horneado el 16 nov. 2026 · 10:26",
   subtitulo: "Planos del horneado real. Elige un plano, selecciona un elemento de su leyenda y escribe o dibuja: la anotación queda pegada a ese elemento.",
   paneles: [
     {

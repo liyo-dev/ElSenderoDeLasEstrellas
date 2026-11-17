@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Storyboard · El Sendero</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div>
+      <p class="kicker">El Sendero de las Estrellas · revisión</p>
+      <h1 id="titulo">Storyboard</h1>
+      <p class="subtitulo" id="subtitulo"></p>
+      <p class="sello" id="sello"></p>
+    </div>
+    <div class="acciones">
+      <button id="btn-resumen" class="boton" type="button">Copiar resumen</button>
+      <button id="btn-json" class="boton" type="button">Guardar correcciones</button>
+      <button id="btn-borrar" class="boton peligro" type="button">Borrar todo</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="instrucciones">
+      <p>
+        Elige un plano, selecciona un elemento de su leyenda y escribe o dibuja. Todo lo que
+        añadas queda asociado a ese elemento: <strong>Liam, la bola, la cámara, el plano…</strong>
+        Así la corrección no es «esto no me gusta», sino «esto, en este elemento, así».
+      </p>
+      <div class="barra-herramientas" id="barra">
+        <button type="button" class="herramienta activa" data-modo="nota">Nota</button>
+        <button type="button" class="herramienta" data-modo="flecha">Flecha</button>
+        <button type="button" class="herramienta" data-modo="trazo">Trazo libre</button>
+        <button type="button" class="herramienta" data-modo="caja">Caja</button>
+        <span class="separador"></span>
+        <span class="color-etiqueta">Color</span>
+        <button type="button" class="color activo" data-color="" title="Color del elemento">Auto</button>
+        <button type="button" class="color" data-color="#f2c94c" style="--color:#f2c94c" title="Amarillo" aria-label="Amarillo"></button>
+        <button type="button" class="color" data-color="#6ec6f0" style="--color:#6ec6f0" title="Cian" aria-label="Cian"></button>
+        <button type="button" class="color" data-color="#f28bd4" style="--color:#f28bd4" title="Rosa" aria-label="Rosa"></button>
+        <button type="button" class="color" data-color="#7bd88f" style="--color:#7bd88f" title="Verde" aria-label="Verde"></button>
+        <button type="button" class="color" data-color="#f2994a" style="--color:#f2994a" title="Naranja" aria-label="Naranja"></button>
+        <button type="button" class="color" data-color="#bb86fc" style="--color:#bb86fc" title="Violeta" aria-label="Violeta"></button>
+        <button type="button" class="color" data-color="#e57373" style="--color:#e57373" title="Rojo" aria-label="Rojo"></button>
+        <button type="button" class="color" data-color="#ffffff" style="--color:#ffffff" title="Blanco" aria-label="Blanco"></button>
+        <span class="separador"></span>
+        <span class="leyenda-modo" id="leyenda-modo">Selecciona un plano y un elemento.</span>
+      </div>
+    </section>
+
+    <section id="paneles" class="paneles"></section>
+  </main>
+
+  <div id="modal" class="modal oculto">
+    <div class="modal-caja">
+      <h2>Resumen para pegar en el chat</h2>
+      <textarea id="modal-texto" readonly></textarea>
+      <div class="modal-acciones">
+        <button id="modal-copiar" class="boton" type="button">Copiar</button>
+        <button id="modal-cerrar" class="boton" type="button">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="datos_Cap1_DiscusionVentana.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

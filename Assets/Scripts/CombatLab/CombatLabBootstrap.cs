@@ -1,4 +1,5 @@
 using System.Collections;
+using Invector.vCharacterController;
 using UnityEngine;
 
 /// <summary>
@@ -17,11 +18,24 @@ public sealed class CombatLabBootstrap : MonoBehaviour
 
     private void Awake()
     {
+        // Si la escena regenerada perdió la referencia del bootstrap, el cuerpo sigue estando:
+        // se busca una vez aquí para que el LAB no se quede sin jugador y sin panel. Ver INC-1264.
+        if (player == null)
+        {
+            var cuerpo = FindAnyObjectByType<vThirdPersonController>(FindObjectsInactive.Include);
+            if (cuerpo != null) player = cuerpo.gameObject;
+        }
+
         if (player != null)
         {
             PlayerService.RegisterPlayer(player);
             ConservarEscuchaDelJugador();
+            return;
         }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.LogError("[CombatLabBootstrap] La escena no tiene jugador. Usa El Sendero ▸ Combate ▸ LAB: reponer el jugador si falta.");
+#endif
     }
 
     private void ConservarEscuchaDelJugador()

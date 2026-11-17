@@ -67,6 +67,15 @@ h1 {
   font-size: 13.5px;
 }
 
+.sello {
+  margin: 4px 0 0;
+  color: var(--tenue);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
 .acciones { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .boton {

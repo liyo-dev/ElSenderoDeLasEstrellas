@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.liyodev.cinematics": {
+      "version": "file:com.liyodev.cinematics",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.liyodev.narrativegraph": {
       "version": "file:com.liyodev.narrativegraph",
       "depth": 0,

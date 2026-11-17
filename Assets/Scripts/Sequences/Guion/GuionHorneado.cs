@@ -226,6 +226,8 @@ public class LineaHorneada
     public float t1;
     public string actor;
     public string clave;
+    [Tooltip("Línea del guion de texto que pidió esta frase (0 = horneado anterior a INC-1256).")]
+    public int linea;
     [Tooltip("Gesto concreto para esta frase (opcional).")]
     public string gesto;
     [Tooltip("Hablar sin pose de conversación (andando, corriendo, peleando).")]

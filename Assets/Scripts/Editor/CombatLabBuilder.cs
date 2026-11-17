@@ -21,16 +21,16 @@ public static partial class CombatLabBuilder
     [MenuItem("El Sendero/Combate/Crear o regenerar el LAB")]
     public static void CrearEscena()
     {
-        if (File.Exists(ScenePath) && !EditorUtility.DisplayDialog(
+        if (File.Exists(ScenePath) && !OrdenesDelEditor.Confirmar(
                 "Regenerar el LAB",
                 "Se reemplazará Lab.unity y se perderán los cambios manuales hechos dentro de esa escena. Los prefabs y niveles del juego no se modifican.",
-                "Regenerar", "Cancelar"))
+                "Regenerar"))
             return;
 
-        var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_WILL.prefab");
+        var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaDelJugadorDelLab);
         if (playerPrefab == null)
         {
-            EditorUtility.DisplayDialog("LAB", "No se encontró Assets/Prefabs/_WILL.prefab. No se creó ni modificó ninguna escena.", "Aceptar");
+            OrdenesDelEditor.Avisar("LAB", $"No se encontró {RutaDelJugadorDelLab}. No se creó ni modificó ninguna escena.");
             return;
         }
 
@@ -77,8 +77,8 @@ public static partial class CombatLabBuilder
         navMesh.BuildNavMesh();
 
         var player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
-        player.name = "LAB_JUGADOR_WILL";
-        player.transform.SetPositionAndRotation(new Vector3(0f, 0.1f, -8f), Quaternion.identity);
+        player.name = NombreDelJugadorDelLab;
+        player.transform.SetPositionAndRotation(PosicionDelJugadorDelLab, Quaternion.identity);
 
         var camaraPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/CamaraDelJugador.prefab");
         if (camaraPrefab != null)

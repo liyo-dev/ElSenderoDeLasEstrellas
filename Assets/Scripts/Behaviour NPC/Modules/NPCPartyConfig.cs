@@ -159,6 +159,41 @@ namespace Game.NPC.Modules
         [Range(0f, 5f)]
         public float flightBobFrequency = 1.2f;
 
+        [Header("=== PLATAFORMAS Y RASTRO ===")]
+
+        [Tooltip("Distancia mínima a la que se para detrás del jugador cuando sigue por NavMesh, " +
+                 "aunque distanciaParaPararse sea menor.")]
+        [Range(1.5f, 5f)]
+        public float distanciaMinimaFormacionDetras = 2.5f;
+
+        [Tooltip("Si está activo, en zonas de plataformas o saltos sigue el rastro real del jugador " +
+                 "y repite sus saltos. Si se apaga, usa la formación en V de siempre.")]
+        public bool seguirRastroEnPlataformas = true;
+
+        [Tooltip("Distancia base detrás del jugador a lo largo del rastro para el primer compañero (metros).")]
+        [Range(1.2f, 5f)]
+        public float distanciaBaseEnRastro = 2.2f;
+
+        [Tooltip("Distancia adicional en el rastro por cada puesto de compañero (metros).")]
+        [Range(0.8f, 4f)]
+        public float separacionPorPuestoEnRastro = 1.6f;
+
+        [Tooltip("Desplazamiento lateral respecto al centro del rastro para que dos compañeros no se pisen (metros).")]
+        [Range(0f, 1.5f)]
+        public float separacionLateralEnRastro = 0.45f;
+
+        [Tooltip("Segundos que el compañero observa hacia dónde salta el jugador antes de imitar el salto.")]
+        [Range(0f, 0.8f)]
+        public float tiempoEstudioSalto = 0.2f;
+
+        [Tooltip("Separación lateral de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
+        [Range(0.5f, 3f)]
+        public float plataformaFormationSpread = 1.35f;
+
+        [Tooltip("Distancia hacia atrás de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
+        [Range(1.2f, 4f)]
+        public float plataformaFormationBack = 2.4f;
+
         // ============ PROPIEDADES DE COMPATIBILIDAD (para que el código existente siga funcionando) ============
         
         // Seguimiento

@@ -1,6 +1,6 @@
 # Parte de horneado: Cap1_PerasEldran
 
-2026-11-13 18:06 · guion `Assets/_SEQUENCES/Guiones/Cap1_PerasEldran.guion.txt`
+2026-11-16 14:07 · guion `Assets/_SEQUENCES/Guiones/Cap1_PerasEldran.guion.txt`
 
 **0:34,8** de secuencia · 7 frases · 8 planos · 3 efectos · 4 personajes
 
@@ -18,7 +18,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · victoria 1,5
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
-| 0:00,0 | plano 1 | sobre el hombro de victoria a eldran · 5,3 s · lente 24° · coste 85: cara 85 |
+| 0:00,0 | plano 1 | sobre el hombro de victoria a eldran · 5,3 s · lente 18° · coste 85: cara 79 |
 | 0:00,0 | eldran | «Dos cajas, Victoria. Las cargué yo mismo, una encima de otra.» (5,3 s) · pose |
 | 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:05,3 | plano 2 | sobre el hombro de eldran a victoria · 4,0 s · lente 24° · coste 97: cara 91 |

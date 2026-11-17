@@ -626,7 +626,13 @@ internal sealed partial class Horno
             {
                 n++;
                 EditorUtility.DisplayProgressBar("Storyboard", $"Plano {n} de {asset.planos.Count}", n / (float)asset.planos.Count);
-                float t = Mathf.Lerp(p.t0, p.t1, 0.35f);
+
+                // Varios fotogramas por plano: es lo que convierte el storyboard en un animatic que
+                // enseña el movimiento (un fotograma cada ~0,6 s, como mucho cinco).
+                int cuantos = Mathf.Clamp(Mathf.CeilToInt((p.t1 - p.t0) / 0.6f), 1, 5);
+                for (int cuadro = 0; cuadro < cuantos; cuadro++)
+                {
+                float t = cuantos == 1 ? Mathf.Lerp(p.t0, p.t1, 0.35f) : Mathf.Lerp(p.t0, p.t1, (cuadro + 0.5f) / cuantos);
                 Vector3 cPos = p.PosicionEn(t);
                 if (z1 != null && z2 != null)
                 {
@@ -818,14 +824,18 @@ internal sealed partial class Horno
                 }
                 png.Apply();
                 RenderTexture.active = previo;
-                string archivo = $"{n:000}.png";
+                string archivo = cuadro == 0 ? $"{n:000}.png" : $"{n:000}_{cuadro + 1:00}.png";
                 File.WriteAllBytes(Path.Combine(carpeta, archivo), png.EncodeToPNG());
 
-                var lineas = asset.lineas.Where(l => l.t1 > p.t0 && l.t0 < p.t1)
-                    .Select(l => $"<b>{_actores.Values.FirstOrDefault(x => x.id == l.actor)?.alias}</b>: {System.Security.SecurityElement.Escape((TextoDe(l.clave) ?? l.clave).Replace("\n", " "))}");
-                html.Append($"<div style='width:480px'><img src='{archivo}' style='width:480px'><div><b>{n}</b> · {Tiempo(p.t0)} · {p.t1 - p.t0:0.0} s · {System.Security.SecurityElement.Escape(p.descripcion)}</div>" +
-                            $"<div style='font-size:12px;color:#8ab'>{System.Security.SecurityElement.Escape(NotasDePlano.TryGetValue(p.t0, out var nota) ? nota : "")}</div>" +
-                            $"<div style='font-size:13px;color:#bbb'>{string.Join("<br>", lineas)}</div></div>\n");
+                if (cuadro == 0)
+                {
+                    var lineas = asset.lineas.Where(l => l.t1 > p.t0 && l.t0 < p.t1)
+                        .Select(l => $"<b>{_actores.Values.FirstOrDefault(x => x.id == l.actor)?.alias}</b>: {System.Security.SecurityElement.Escape((TextoDe(l.clave) ?? l.clave).Replace("\n", " "))}");
+                    html.Append($"<div style='width:480px'><img src='{archivo}' style='width:480px'><div><b>{n}</b> · {Tiempo(p.t0)} · {p.t1 - p.t0:0.0} s · {System.Security.SecurityElement.Escape(p.descripcion)}</div>" +
+                                $"<div style='font-size:12px;color:#8ab'>{System.Security.SecurityElement.Escape(NotasDePlano.TryGetValue(p.t0, out var nota) ? nota : "")}</div>" +
+                                $"<div style='font-size:13px;color:#bbb'>{string.Join("<br>", lineas)}</div></div>\n");
+                }
+                }
             }
             UnityEngine.Object.DestroyImmediate(png);
         }

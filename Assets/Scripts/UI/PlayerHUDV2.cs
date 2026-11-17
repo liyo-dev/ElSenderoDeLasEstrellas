@@ -105,21 +105,36 @@ namespace Sendero.UI
         
         private void Start()
         {
-            // Obtener el jugador
+            // Se suscribe antes de buscar al jugador: hay escenas (el LAB) en las que el jugador
+            // se registra después de que el HUD despierte, y antes se quedaba sin enlazar nunca.
+            PlayerPresetService.OnPresetApplied += OnPresetApplied;
+            PlayerService.OnPlayerRegistered += AlRegistrarJugador;
+
+            _hasStarted = true;
+            EnlazarConElJugador();
+        }
+
+        /// <summary>
+        /// Coge vida y maná del jugador registrado y se suscribe a sus cambios. Se puede repetir:
+        /// al cargar partida o al cambiar de personaje se vuelve a llamar.
+        /// </summary>
+        private void EnlazarConElJugador()
+        {
             var player = PlayerService.Player;
             if (player == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[PlayerHUDV2] No se pudo obtener el jugador desde PlayerService");
+                Debug.Log("[PlayerHUDV2] El jugador aún no está registrado; el HUD se enlazará cuando aparezca.");
 #endif
                 return;
             }
-            
-            // Obtener componentes del jugador (buscar en hijos para soportar jerarquías anidadas)
+
+            UnsubscribeFromEvents();
+
+            // Buscar en hijos para soportar jerarquías anidadas.
             _healthSystem = player.GetComponentInChildren<PlayerHealthSystem>(true);
             _manaPool = player.GetComponentInChildren<ManaPool>(true);
 
-            // Validar componentes críticos
             if (_healthSystem == null)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -132,22 +147,10 @@ namespace Sendero.UI
                 Debug.LogWarning("[PlayerHUDV2] No se encontró ManaPool en el jugador");
                 #endif
             }
-            // Suscribirse a eventos
-            SubscribeToEvents();
 
-            // Suscribirse al evento OnPresetApplied para refrescar cuando se carga partida
-            PlayerPresetService.OnPresetApplied += OnPresetApplied;
-            // Y al cambiar de personaje: las barras son las del cuerpo que lleva el jugador.
-            PlayerService.OnPlayerRegistered += AlRegistrarJugador;
-            
-            // Marcar como inicializado
-            _hasStarted = true;
-            
-            // Actualización inicial
+            SubscribeToEvents();
             RefreshHealthBar();
             RefreshManaBar();
-            
-            // Debug.Log($"[PlayerHUDV2] Start completado - Mana: {_manaPool?.Current ?? 0}/{_manaPool?.Max ?? 0}, HP: {_healthSystem?.CurrentHealth ?? 0}");
         }
         
         private void OnDestroy()
@@ -277,7 +280,7 @@ namespace Sendero.UI
         /// </summary>
         private bool _hasStarted = false;
 
-        private void AlRegistrarJugador(GameObject _) => OnPresetApplied();
+        private void AlRegistrarJugador(GameObject _) => EnlazarConElJugador();
 
         /// <summary>
         /// Callback cuando se aplica el preset (al cargar partida o cambiar preset)
@@ -292,40 +295,8 @@ namespace Sendero.UI
 #endif
                 return;
             }
-            
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[PlayerHUDV2] OnPresetApplied - Refrescando HUD completo tras cargar partida");
-#endif
-            
-            // RE-OBTENER referencias del player actual (pueden haber cambiado)
-            var player = PlayerService.Player;
-            if (player != null)
-            {
-                // Desuscribir de eventos anteriores
-                UnsubscribeFromEvents();
-                
-                // Obtener nuevas referencias (buscar en hijos para soportar jerarquías anidadas)
-                _healthSystem = player.GetComponentInChildren<PlayerHealthSystem>(true);
-                _manaPool = player.GetComponentInChildren<ManaPool>(true);
-                
-                // Re-suscribirse a eventos
-                SubscribeToEvents();
-            }
-            
-            // Validar que tenemos las referencias
-            if (_healthSystem == null || _manaPool == null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[PlayerHUDV2] OnPresetApplied - Faltan referencias de componentes del player");
-#endif
-                return;
-            }
-            
-            // Refrescar todo el HUD porque el preset puede haber cambiado
-            RefreshHealthBar();
-            RefreshManaBar();
 
-            // Debug.Log($"[PlayerHUDV2] HUD refrescado completamente tras aplicar preset (Mana: {_manaPool.Current}/{_manaPool.Max})");
+            EnlazarConElJugador();
         }
 
         #endregion

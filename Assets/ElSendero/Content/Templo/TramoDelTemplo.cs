@@ -3,12 +3,12 @@ using Kits.Puzzles;
 using UnityEngine;
 
 /// <summary>
-/// Un tramo del templo que canta: se juega con un pulso que no perdona y se reintenta en el acto,
+/// Un tramo del templo: se juega con un pulso que no perdona y se reintenta en el acto,
 /// sin pantalla de derrota. Cada tramo es su propio punto de vuelta: al fallar (caerse al foso, que
 /// se apaguen las velas o que la marea alcance) se vuelve a empezar con el reloj desde el principio
 /// y el grupo colocado como estaba al entrar.
 /// </summary>
-public sealed class TramoDelTemploQueCanta : PruebaDelJugador
+public sealed class TramoDelTemplo : PruebaDelJugador
 {
     [Header("El tramo")]
     [Tooltip("Reloj del tramo.")]
@@ -21,12 +21,16 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     [SerializeField] private PulseTile[] losas;
     [Tooltip("Rejillas y plataformas que duran compases.")]
     [SerializeField] private BeatGate[] rejas;
+    [Tooltip("Cámara de lado del tramo (lateral/sala final). Se vuelve a poner en cada intento: al morir y reaparecer en la salida, el tramo tiene que seguir jugándose en 2D.")]
+    [SerializeField] private SidePlaneZone camaraDeLado;
 
-    [Tooltip("Pulsos por minuto de este tramo (el estribillo va más deprisa).")]
+    [Tooltip("Pulsos por minuto de este tramo (la sala final va más deprisa).")]
     [SerializeField, Min(40f)] private float bpm = 120f;
 
     [Tooltip("Compases de gracia antes de que la marea empiece a avanzar: los primeros metros se hacen sin ella encima.")]
     [SerializeField, Min(0)] private int compasesDeGracia = 4;
+    [Tooltip("La marea no empieza a contar la gracia hasta que el jugador se aleja estos metros (en planta) de la salida: así no avanza mientras llega o lee la sala.")]
+    [SerializeField, Min(0f)] private float metrosParaSoltarLaMarea = 4f;
 
     [Header("Caída")]
     [Tooltip("Por debajo de esta altura se da el tramo por perdido (foso del templo).")]
@@ -43,6 +47,7 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     [SerializeField] private Transform puestoDeLosCompaneros;
 
     private bool _empezadaLaCuenta;
+    private bool _mareaSuelta;
     private float _siguienteRecogida;
     private readonly object _anclaDeLosCompaneros = new object();
 
@@ -66,6 +71,7 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     protected override void PrepararIntento()
     {
         _empezadaLaCuenta = false;
+        _mareaSuelta = false;
         SoltarElSitio();
 
         if (pulso != null)
@@ -97,11 +103,12 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
     {
         if (pulso != null) pulso.SetBpm(bpm);
         // En las salas de pensar la marea se queda parada en la entrada: el reloj es de las velas.
-        // En las huidas arranca con unos compases de gracia, cuando ya llevas recorrido.
+        // En las huidas se suelta cuando el jugador se adentra en el tramo (Actualizar): así no
+        // empieza a avanzar mientras llega o lee la sala.
         if (marea != null && velas == null)
         {
-            if (compasesDeGracia > 0) marea.PauseForMeasures(compasesDeGracia);
-            else marea.Resume();
+            if (metrosParaSoltarLaMarea <= 0f || salidaDelJugador == null) SoltarMarea();
+            else marea.Pause();
         }
         if (velas != null)
         {
@@ -110,6 +117,18 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
         }
         // Los compañeros salen desde su sitio (su cornisa), no desde donde les dejara el reintento.
         if (puestoDeLosCompaneros != null) ColocarCompaneros();
+        // La cámara de lado se pierde al morir/reaparecer; se vuelve a poner en cada intento.
+        if (camaraDeLado != null) CamaraLateral.Poner(camaraDeLado);
+    }
+
+    /// <summary>Arranca la cuenta de gracia de la marea (una sola vez por intento).</summary>
+    private void SoltarMarea()
+    {
+        if (_mareaSuelta) return;
+        _mareaSuelta = true;
+        if (marea == null || velas != null) return;
+        if (compasesDeGracia > 0) marea.PauseForMeasures(compasesDeGracia);
+        else marea.Resume();
     }
 
     private void ColocarCompaneros()
@@ -159,6 +178,24 @@ public sealed class TramoDelTemploQueCanta : PruebaDelJugador
 
         if (_empezadaLaCuenta && velas != null && velas.RemainingMeasures <= 0)
             Fallar();
+
+        // La marea se queda en la salida hasta que el jugador se adentra en el tramo: la gracia
+        // empieza a contar aquí, no al arrancar el intento. Así no avanza mientras llega de la
+        // sala anterior o se para a leer.
+        if (!_mareaSuelta && marea != null && velas == null && jugador != null)
+        {
+            if (salidaDelJugador == null)
+            {
+                SoltarMarea();
+            }
+            else
+            {
+                Vector3 desde = jugador.position - salidaDelJugador.position;
+                desde.y = 0f;
+                if (desde.sqrMagnitude >= metrosParaSoltarLaMarea * metrosParaSoltarLaMarea)
+                    SoltarMarea();
+            }
+        }
 
         RecogerCompaneros(dt);
     }

@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Cap1_PerasEldran_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap1_PerasEldran
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap1_PerasEldran.guion.txt
   duracion: 34.753197
   presentacion: 1
-  huella: "2026-11-13 18:06 \xB7 37afa1d81585a036fc01efd26760a307"
+  huella: "2026-11-16 14:06 \xB7 0cfb6641ae810e2afa639295766a4482"
   actores:
   - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
     alias: will
     colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
     claveDelNombre: Will
@@ -161,6 +164,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Eldran
+    prefab: Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
     alias: eldran
     colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
     claveDelNombre: Eldran
@@ -381,6 +385,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Victoria
+    prefab: Assets/_NPCs/Victoria.prefab
     alias: victoria
     colorDelNombre: {r: 0.9490196, g: 0.654902, b: 0.78431374, a: 1}
     claveDelNombre: Victoria
@@ -507,6 +512,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Oliver
+    prefab: Assets/_NPCs/_GrafoNarrativo/Oliver.prefab
     alias: oliver
     colorDelNombre: {r: 0.62352943, g: 0.8784314, b: 0.627451, a: 1}
     claveDelNombre: Oliver
@@ -613,6 +619,7 @@ MonoBehaviour:
     t1: 5.302857
     actor: NPC_Eldran
     clave: PERAS_01
+    linea: 43
     gesto: Talk02
     sinPose: 0
     presentacion: -1
@@ -622,6 +629,7 @@ MonoBehaviour:
     t1: 9.325714
     actor: NPC_Victoria
     clave: PERAS_02
+    linea: 45
     gesto: Question01
     sinPose: 1
     presentacion: -1
@@ -631,6 +639,7 @@ MonoBehaviour:
     t1: 14.785306
     actor: NPC_Eldran
     clave: PERAS_03
+    linea: 47
     gesto: Shrug01
     sinPose: 0
     presentacion: -1
@@ -640,6 +649,7 @@ MonoBehaviour:
     t1: 19.905306
     actor: NPC_Victoria
     clave: PERAS_04
+    linea: 49
     gesto: Laugh01
     sinPose: 1
     presentacion: -1
@@ -649,6 +659,7 @@ MonoBehaviour:
     t1: 25.652245
     actor: NPC_Eldran
     clave: PERAS_05
+    linea: 56
     gesto: HandWave01
     sinPose: 0
     presentacion: -1
@@ -658,6 +669,7 @@ MonoBehaviour:
     t1: 26.958366
     actor: NPC_Oliver
     clave: PERAS_OLIVER_VOY
+    linea: 61
     gesto: Cheer01
     sinPose: 1
     presentacion: -1
@@ -667,6 +679,7 @@ MonoBehaviour:
     t1: 31.137959
     actor: NPC_Victoria
     clave: PERAS_VICTORIA_QUEDATE
+    linea: 63
     gesto: HeadNod01
     sinPose: 1
     presentacion: -1
@@ -674,12 +687,13 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 5.302857
+    linea: 38
     tipo: 6
     descripcion: sobre el hombro de victoria a eldran
     posiciones:
     - t: 0
-      p: {x: 1.4911829, y: 27.738256, z: -142.64203}
-    lente: 24
+      p: {x: 2.1076088, y: 27.738256, z: -142.71507}
+    lente: 18
     lenteFinal: 0
     sujetos:
     - NPC_Eldran
@@ -695,6 +709,7 @@ MonoBehaviour:
   - focos: []
     t0: 5.302857
     t1: 9.325714
+    linea: 44
     tipo: 6
     descripcion: sobre el hombro de eldran a victoria
     posiciones:
@@ -716,6 +731,7 @@ MonoBehaviour:
   - focos: []
     t0: 9.325714
     t1: 14.785306
+    linea: 46
     tipo: 6
     descripcion: sobre el hombro de victoria a eldran
     posiciones:
@@ -737,6 +753,7 @@ MonoBehaviour:
   - focos: []
     t0: 14.785306
     t1: 19.905306
+    linea: 48
     tipo: 6
     descripcion: sobre el hombro de eldran a victoria
     posiciones:
@@ -758,6 +775,7 @@ MonoBehaviour:
   - focos: []
     t0: 19.905306
     t1: 25.652245
+    linea: 55
     tipo: 0
     descripcion: general de eldran y will
     posiciones:
@@ -773,7 +791,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.87201035
+    alturaDelFoco: 0.87201023
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -781,11 +799,12 @@ MonoBehaviour:
   - focos: []
     t0: 25.652245
     t1: 26.958366
+    linea: 60
     tipo: 6
     descripcion: sobre el hombro de will a oliver
     posiciones:
     - t: 25.652245
-      p: {x: 1.6088314, y: 27.771374, z: -142.41739}
+      p: {x: 1.6088314, y: 27.771372, z: -142.41739}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -802,6 +821,7 @@ MonoBehaviour:
   - focos: []
     t0: 26.958366
     t1: 31.137959
+    linea: 62
     tipo: 2
     descripcion: medio de victoria
     posiciones:
@@ -823,6 +843,7 @@ MonoBehaviour:
   - focos: []
     t0: 31.137959
     t1: 34.753197
+    linea: 69
     tipo: 5
     descripcion: 'dos: eldran y will'
     posiciones:
@@ -848,19 +869,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294592641368208
+      rid: 6540294656893649036
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 33.553196
     beat:
-      rid: 6540294592641368209
+      rid: 6540294656893649037
     linea: 70
   - onlyIfFlag: 
     skipIfFlag: 
     t: 34.753197
     beat:
-      rid: 6540294592641368210
+      rid: 6540294656893649038
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -884,7 +905,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294592641368208
+    - rid: 6540294656893649036
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -892,7 +913,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294592641368209
+    - rid: 6540294656893649037
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -920,7 +941,7 @@ MonoBehaviour:
           - HeadNod01
           emotions: 
         detenerEscena: 1
-    - rid: 6540294592641368210
+    - rid: 6540294656893649038
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

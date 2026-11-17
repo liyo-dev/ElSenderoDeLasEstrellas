@@ -1,8 +1,12 @@
 # Plan: Director — cinemáticas con IA (16 nov 2026)
 
-**Estado:** plan aprobado en conversación con Raúl. No hay código de producto todavía: esto fija el
-reparto, el contrato y el orden. El trabajo del juego sigue igual; el Director se construye al lado y
-se alimenta de lo que ya existe.
+**Estado:** plan aprobado en conversación con Raúl. El reparto, el contrato y el orden están fijados.
+**Primera entrega hecha el 16 nov 2026 (INC-1255):** el paquete `Packages/com.liyodev.cinematics` existe
+con el puerto `ICinematicsEditorBridge` y la `DirectorWindow` (lista, flipbook con voces, tira de planos y
+puertas al taller / guion / storyboard / horneado), y el enchufe del juego en
+`Assets/ElSendero/Connections/Cinematics/`. Es F0 a medias: **el motor de guiones aún vive en
+`Assets/Editor/Guion`** detrás del puerto (no se ha movido ningún tipo serializado, para no tocar los 36
+horneados ni las 34 secuencias); moverlo con sus `[MovedFrom]` es la siguiente tanda. Ver TDD § 35.
 
 **Decisiones ya tomadas**
 

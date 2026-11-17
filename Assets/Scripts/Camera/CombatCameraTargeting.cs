@@ -125,7 +125,9 @@ public class CombatCameraTargeting : MonoBehaviour
         if (Kits.Core.GameContext.Has(Situaciones.Combate)) return false;
         if (_isInDialogue) return true;
         if (CinematicSequencerBase.AnySequenceActive) return true;
-        if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;
+        // Solo las cámaras de cine ocultan el marcador: la lateral del templo es de juego.
+        if (CameraDirectorService.HayCine) return true;
+        if (!CameraDirectorService.HasOwner && vThirdPersonCamera.lockCameraForCinematic) return true;
         if (playerTargeting != null && playerTargeting.DebeOcultarMarcador()) return true;
         return false;
     }

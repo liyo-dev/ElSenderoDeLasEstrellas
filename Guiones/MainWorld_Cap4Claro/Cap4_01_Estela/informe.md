@@ -1,10 +1,10 @@
 # Parte de horneado: Cap4_01_Estela
 
-2026-11-15 08:58 · guion `Assets/_SEQUENCES/Guiones/Cap4_01_Estela.guion.txt`
+2026-11-16 12:17 · guion `Assets/_SEQUENCES/Guiones/Cap4_01_Estela.guion.txt`
 
 **1:03,5** de secuencia · 12 frases · 7 planos · 4 efectos · 2 personajes
 
-Reparto medido (m): will 1,62/ojos 0,93 · estela 1,62/ojos 0,94
+Reparto medido (m): will 1,62/ojos 0,93 · estela 1,53/ojos 0,94
 
 ## Errores (0)
 
@@ -36,14 +36,14 @@ Reparto medido (m): will 1,62/ojos 0,93 · estela 1,62/ojos 0,94
 | 0:21,9 | will | «Impresionante.» (1,7 s) · pose |
 | 0:23,5 | **@aro** |  |
 | 0:23,8 | will | «Vengo a que leas esto.» (1,9 s) |
-| 0:25,7 | plano 5 | primer plano de estela · 20,2 s · lente 24° · coste 14: ángulo 8 |
+| 0:25,7 | plano 5 | primer plano de estela · 20,2 s · lente 24° · coste 8: ángulo 8 |
 | 0:26,7 | estela | «Runas de sometimiento. Se lo pusieron con una invocación: el demonio hacía lo que le mandaban.» (7,9 s) · pose |
 | 0:34,9 | estela | «El monstruo no era tu demonio. Es quien le puso el aro.» (3,9 s) · pose |
 | 0:39,1 | estela | «Hay una magia que no sale de ti: la sacas de otro. La llaman oscura porque la fuerza no es tuya.» (6,8 s) · pose |
 | 0:45,9 | plano 6 | dos: will y estela · 9,1 s · lente 32° · coste 269: cara 155, ángulo 108 |
 | 0:45,9 | estela | «No acepto aprendices.» (1,8 s) |
 | 0:48,2 | will | «No vengo a aprender. Vengo a pedir ayuda. En la costa hay más animales con aro; lo he apuntado todo.» (6,9 s) |
-| 0:55,1 | plano 7 | primer plano de estela · 8,5 s · lente 24° · coste 14: ángulo 8 |
+| 0:55,1 | plano 7 | primer plano de estela · 8,5 s · lente 24° · coste 8: ángulo 8 |
 | 0:55,1 | estela | «…Alguien está haciendo muchos.» (2,3 s) · pose |
 | 0:58,0 | estela | «Te ayudo. Eso es hacerte un favor. Y ya me lo cobraré.» (4,5 s) |
 | 1:03,0 | efecto | Bandas de cine: retirar (0,5s) |

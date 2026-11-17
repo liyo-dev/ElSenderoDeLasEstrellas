@@ -72,7 +72,9 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         if (Kits.Core.GameContext.Has(Situaciones.Combate)) return false;
         if (_hiddenByDialogue) return true;
         if (CinematicSequencerBase.AnySequenceActive) return true;
-        if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;
+        // Solo las cámaras de cine ocultan el marcador: la lateral del templo es de juego.
+        if (CameraDirectorService.HayCine) return true;
+        if (!CameraDirectorService.HasOwner && vThirdPersonCamera.lockCameraForCinematic) return true;
         if (_actionManager != null && _actionManager.IsInMode(ActionMode.Cinematic)) return true;
         return false;
     }
@@ -431,7 +433,8 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             }
         }
 
-        if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) && rh.collider.transform.root != objetivo.root)
+        if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) &&
+            rh.collider.transform.root != objetivo.root && rh.collider.transform.root != transform.root)
             return;
 
         // Las piezas de puzle siempre exigen línea de visión: marcar un cristal a través de una
