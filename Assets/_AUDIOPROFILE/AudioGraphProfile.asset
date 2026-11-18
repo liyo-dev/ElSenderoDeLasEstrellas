@@ -642,6 +642,6 @@ MonoBehaviour:
     sinBucle: 0
   - sequenceId: PROLOGO_DESEO
     music: {fileID: 8300000, guid: 7e6020d6644fe0849b4a629c967ccfa6, type: 3}
-    fadeIn: 1.2
+    fadeIn: 0
     fadeOut: 1
     sinBucle: 1

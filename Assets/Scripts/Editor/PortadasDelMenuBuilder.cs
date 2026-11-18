@@ -187,20 +187,22 @@ public static class PortadasDelMenuBuilder
         Vector3 dir = asiento.InteractionRotation * Vector3.forward;
         dir.y = 0f;
         dir.Normalize();
-        Vector3 derecha = Vector3.Cross(Vector3.up, dir);
         float yaw = Quaternion.LookRotation(dir, Vector3.up).eulerAngles.y;
 
-        // Cámara por detrás y algo a la izquierda de Will: enseña lo que él ve (la casa, el buzón, las
-        // colmenas) y lo deja en el tercio derecho (a la izquierda van los botones).
-        // Algo apartada a la izquierda y lejos: el vaivén (hacia delante y hacia atrás) no la roza.
-        Vector3 camara = posAsiento - dir * DistanciaColumpio - derecha * 2.2f + Vector3.up * 1.6f;
-        Vector3 hacia = posAsiento + dir * 6f - derecha * 1.0f + Vector3.up * 1.3f;
-        var encuadre = Encuadre(etapa.transform, camara, hacia);
+        // Encuadre elegido por Raúl en el Editor (coordenadas de MainWorld): la cámara mira desde arriba y algo
+        // a un lado el columpio y lo que ve Will, que queda en el tercio derecho (los botones, a la izquierda).
+        Vector3 camara = new Vector3(3.41f, 31.1f, -133.7f);
+        Quaternion giroCamara = Quaternion.Euler(9.52f, 208.8f, 0f);
+        var encuadre = Encuadre(etapa.transform, camara, camara + giroCamara * Vector3.forward);
+        encuadre.rotation = giroCamara;
 
-        mundo.RecortarPueblo(pueblo, camara, (hacia - camara).normalized, posAsiento);
+        mundo.RecortarPueblo(pueblo, camara, giroCamara * Vector3.forward, posAsiento);
+
 
         // Vaivén más corto que el del juego: en una portada fija no debe acercarse a la cámara.
-        var balanceo = pueblo != null ? pueblo.GetComponentInChildren<BalanceoPendular>(true) : null;
+        BalanceoPendular balanceo = null;
+        foreach (var b in deco.GetComponentsInChildren<BalanceoPendular>(true))
+            if (b.name.IndexOf("columpio", System.StringComparison.OrdinalIgnoreCase) >= 0) { balanceo = b; break; }
         if (balanceo != null)
         {
             var soBalanceo = new SerializedObject(balanceo);
@@ -232,8 +234,6 @@ public static class PortadasDelMenuBuilder
         so.ApplyModifiedPropertiesWithoutUndo();
         return etapa;
     }
-
-    const float DistanciaColumpio = 5f;
 
     static NPCWorldPoint AsientoDelColumpio(Transform raiz)
     {
