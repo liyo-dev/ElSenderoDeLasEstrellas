@@ -229,6 +229,7 @@ Material:
     - _Surface: 0
     - _TextureBlendingMode: 0
     - _TextureImpact: 1
+    - _Aplanar: 0.6
     - _ToonCutoffPoint: 0.2
     - _UVSec: 0
     - _UnityShadowOcclusion: 0
