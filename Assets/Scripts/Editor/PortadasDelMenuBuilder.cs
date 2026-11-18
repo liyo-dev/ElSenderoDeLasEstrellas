@@ -24,6 +24,7 @@ public static class PortadasDelMenuBuilder
     const string DecoradoNombre = "Decorado (generado)";
 
     const string NombrePeninsula = "Etapa 1 · Península";
+    const string NombreColumpio  = "Etapa 1 · Columpio";
     const string NombreViaje     = "Etapa 2 · Viaje";
     const string NombreSendero   = "Etapa 3 · Sendero";
     const string NombreNubes     = "Nubes";
@@ -78,30 +79,36 @@ public static class PortadasDelMenuBuilder
 
         // Solo se montan las portadas que no existen: lo que ya está (y lo que se haya retocado a
         // mano en ellas) no se toca. Para rehacer una, se borra su GameObject y se vuelve a montar.
+        var columpio = Existente(raiz.transform, NombreColumpio);
         var peninsula = Existente(raiz.transform, NombrePeninsula);
         var viaje = Existente(raiz.transform, NombreViaje);
         var sendero = Existente(raiz.transform, NombreSendero);
-        if (peninsula == null || viaje == null)
+        if (peninsula == null || viaje == null || columpio == null)
         {
             using (var mundo = MundoCopiado.Abrir(MainWorldPath))
             {
                 if (peninsula == null) peninsula = MontarPeninsula(raiz.transform, mundo);
+                if (columpio == null) columpio = MontarColumpio(raiz.transform, mundo);
                 if (viaje == null) viaje = MontarViaje(raiz.transform, mundo.MaterialDelMar);
             }
         }
         if (sendero == null) sendero = MontarSendero(raiz.transform, camara);
 
         // Añadidos que no rehacen nada: nubes en los cielos de día y el título centrado sobre los botones.
+        PonerNubes(columpio);
         PonerNubes(peninsula);
         PonerNubes(viaje);
         AlinearTituloConBotones();
 
         var so = new SerializedObject(portada);
         var etapas = so.FindProperty("etapas");
-        etapas.arraySize = 3;
-        etapas.GetArrayElementAtIndex(0).objectReferenceValue = peninsula;
+        // La primera es la de partida nueva (el columpio); la del banco queda al final, sin flag: no sale sola,
+        // se ve con «previsualizar 5».
+        etapas.arraySize = 4;
+        etapas.GetArrayElementAtIndex(0).objectReferenceValue = columpio;
         etapas.GetArrayElementAtIndex(1).objectReferenceValue = viaje;
         etapas.GetArrayElementAtIndex(2).objectReferenceValue = sendero;
+        etapas.GetArrayElementAtIndex(3).objectReferenceValue = peninsula;
         so.FindProperty("camara").objectReferenceValue = camara;
         so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -117,12 +124,14 @@ public static class PortadasDelMenuBuilder
         Debug.Log("[PortadasDelMenuBuilder] Portadas montadas en MainMenu.unity (Península, Viaje, Sendero).");
     }
 
-    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 1 Península %#&1")]
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 1 Columpio %#&1")]
     static void Ver1() => Previsualizar(0);
     [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 2 Viaje %#&2")]
     static void Ver2() => Previsualizar(1);
     [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 3 Sendero %#&3")]
     static void Ver3() => Previsualizar(2);
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 5 Península (banco) %#&5")]
+    static void Ver5() => Previsualizar(3);
     [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: según la partida (quitar previsualización) %#&4")]
     static void VerSegunPartida() => Previsualizar(-1);
 
@@ -145,7 +154,73 @@ public static class PortadasDelMenuBuilder
         SceneView.RepaintAll();
     }
 
-    // ── 1. Península ─────────────────────────────────────────────────────────────────────────
+    // ── 1. Columpio ──────────────────────────────────────────────────────────────────────────
+
+    static PortadaEtapa MontarColumpio(Transform raiz, MundoCopiado mundo)
+    {
+        var etapa = Etapa(raiz, NombreColumpio, Vector3.zero);
+        var deco = DecoradoNuevo(etapa.transform);
+        var pueblo = mundo.CopiarPueblo(deco);
+
+        // El columpio del pueblo de Will (si el pueblo copiado no lo trae, se copia suelto).
+        var asiento = AsientoDelColumpio(pueblo);
+        if (asiento == null) asiento = AsientoDelColumpio(mundo.CopiarPorNombre("Árbol del columpio", deco));
+        if (asiento == null)
+        {
+            Debug.LogWarning("[PortadasDelMenuBuilder] No encuentro el columpio en MainWorld: la portada del columpio queda vacía.");
+            return etapa;
+        }
+
+        Vector3 posAsiento = asiento.InteractionPosition;
+        Vector3 dir = asiento.InteractionRotation * Vector3.forward;
+        dir.y = 0f;
+        dir.Normalize();
+        Vector3 derecha = Vector3.Cross(Vector3.up, dir);
+        float yaw = Quaternion.LookRotation(dir, Vector3.up).eulerAngles.y;
+
+        // Cámara por detrás y algo a la izquierda de Will: enseña lo que él ve (la casa, el buzón, las
+        // colmenas) y lo deja en el tercio derecho (a la izquierda van los botones).
+        Vector3 camara = posAsiento - dir * DistanciaColumpio - derecha * 0.8f + Vector3.up * 1.5f;
+        Vector3 hacia = posAsiento + dir * 7f - derecha * 1.4f + Vector3.up * 1.4f;
+        var encuadre = Encuadre(etapa.transform, camara, hacia);
+
+        mundo.RecortarPueblo(pueblo, camara, (hacia - camara).normalized, posAsiento);
+
+        Physics.SyncTransforms();
+        var will = Personaje(WillPath, deco, posAsiento, yaw);
+        var actorWill = Actor(will, "SitSwing_Loop", "");
+        if (actorWill != null)
+        {
+            var soActor = new SerializedObject(actorWill);
+            soActor.FindProperty("forzarSuelo").boolValue = false;
+            soActor.FindProperty("asiento").objectReferenceValue = asiento;
+            soActor.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        var sol = Sol(etapa.transform, new Color(1f, 0.93f, 0.8f), 1.1f, new Vector3(40f, yaw - 140f, 0f));
+
+        var so = Config(etapa, "", encuadre, 45f, MusicaPeninsula, null, sol, PortadaEtapa.Ambiente.DelCielo, Color.gray);
+        so.FindProperty("cielo").objectReferenceValue = CieloDeDia();
+        so.FindProperty("niebla").boolValue = true;
+        so.FindProperty("colorNiebla").colorValue = new Color(0.74f, 0.84f, 0.94f);
+        so.FindProperty("densidadNiebla").floatValue = 0.006f;
+        so.FindProperty("actoresQueSalen").arraySize = 0;
+        so.FindProperty("esperaAlSalir").floatValue = 0f;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        return etapa;
+    }
+
+    const float DistanciaColumpio = 3.4f;
+
+    static NPCWorldPoint AsientoDelColumpio(Transform raiz)
+    {
+        if (raiz == null) return null;
+        foreach (var punto in raiz.GetComponentsInChildren<NPCWorldPoint>(true))
+            if (punto.name.IndexOf("columpio", System.StringComparison.OrdinalIgnoreCase) >= 0) return punto;
+        return null;
+    }
+
+    // ── 1b. Península (banco) ─────────────────────────────────────────────────────────────────────────
 
     static PortadaEtapa MontarPeninsula(Transform raiz, MundoCopiado mundo)
     {
@@ -615,6 +690,22 @@ public static class PortadasDelMenuBuilder
             return copia.transform;
         }
 
+        /// <summary>Copia suelto un objeto de MainWorld (por nombre exacto) con su sitio y su escala.</summary>
+        public Transform CopiarPorNombre(string nombre, Transform padre)
+        {
+            foreach (var root in _escena.GetRootGameObjects())
+                foreach (var t in root.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name != nombre) continue;
+                    var copia = Object.Instantiate(t.gameObject, padre);
+                    copia.name = nombre;
+                    copia.transform.SetPositionAndRotation(t.position, t.rotation);
+                    copia.transform.localScale = t.lossyScale;
+                    return copia.transform;
+                }
+            return null;
+        }
+
         /// <summary>
         /// Deja solo las piezas del pueblo que la cámara puede ver (delante y a menos de 150 m) y
         /// quita lo que se pondría en medio del plano: lo pegado a la cámara, lo que tapa a Will y
@@ -629,7 +720,7 @@ public static class PortadasDelMenuBuilder
             {
                 Vector3 v = hijo.position - camara;
                 if (Vector3.Dot(v, dir) < -8f || v.magnitude > 150f) { quitar.Add(hijo.gameObject); continue; }
-                if (hijo.name.StartsWith("Building")) continue;
+                if (hijo.name.StartsWith("Building") || hijo.name.IndexOf("columpio", System.StringComparison.OrdinalIgnoreCase) >= 0) continue;
 
                 var rs = hijo.GetComponentsInChildren<Renderer>();
                 if (rs.Length == 0) continue;

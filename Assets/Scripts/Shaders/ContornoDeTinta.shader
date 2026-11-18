@@ -50,7 +50,8 @@ Shader "Hidden/El Sendero/Contorno de tinta"
                 float desvanecido = 1.0 - saturate((dC - _Umbrales.z) / (_Umbrales.w - _Umbrales.z));
                 if (desvanecido <= 0.0) return color;
 
-                int g = max(1, (int)_Opciones.x);
+                // Más gruesa de cerca, como el trazo de un dibujo: x1,5 a menos de 4 m, el grosor normal desde 14 m.
+                int g = max(1, (int)round(_Opciones.x * lerp(1.5, 1.0, saturate((dC - 4.0) / 10.0))));
                 int2 pD = min(p + int2(g, 0), tam - 1);
                 int2 pI = max(p - int2(g, 0), int2(0, 0));
                 int2 pA = min(p + int2(0, g), tam - 1);

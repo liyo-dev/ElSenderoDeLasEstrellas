@@ -10,6 +10,7 @@ Shader "El Sendero/Dibujo"
         _Aplanar("Aplanar el dibujo de la textura (0 = tal cual, 1 = solo el color de cada zona)", Range(0, 1)) = 0.0
         _Tinte("Tinte", Color) = (1, 1, 1, 1)
         _Brillo("Brillo de pelo", Range(0, 1)) = 0.0
+        _BordeDeLuz("Borde de luz (personajes)", Range(0, 1)) = 0.0
         [Toggle(DR_VERTEX_COLORS_ON)] _VertexColorsEnabled("Usar los colores de los vértices", Int) = 0
         [HDR] _EmissionColor("Color de emisión", Color) = (0, 0, 0)
         [NoScaleOffset] _EmissionMap("Textura de emisión", 2D) = "white" {}
@@ -161,6 +162,16 @@ Shader "El Sendero/Dibujo"
                 #endif
 
                 half3 color = ColorDeDibujo(inputData, albedo, _Brillo);
+                // Borde de luz de anime: una línea clara y dura en el contorno del lado del sol, para que el
+                // personaje se despegue del fondo. Solo en los materiales que lo piden (personajes).
+                if (_BordeDeLuz > 0.001h)
+                {
+                    Light sol = GetMainLight();
+                    half fresnel = 1.0h - saturate(dot(inputData.normalWS, inputData.viewDirectionWS));
+                    half ladoDelSol = saturate(dot(inputData.normalWS, sol.direction) * 2.0h + 0.3h);
+                    half borde = smoothstep(0.62h, 0.68h, fresnel) * ladoDelSol;
+                    color += borde * _BordeDeLuz * saturate(sol.color) * (albedo * 0.6h + 0.4h);
+                }
                 #if defined(_EMISSION)
                 color += SampleEmission(input.uv, _EmissionColor.rgb, TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap));
                 #endif

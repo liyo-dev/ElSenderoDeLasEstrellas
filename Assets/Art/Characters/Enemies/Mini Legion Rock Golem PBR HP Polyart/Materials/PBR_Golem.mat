@@ -330,6 +330,7 @@ Material:
     - _Anisotropy: 0
     - _Ap_RimLight_FeatherOff: 0
     - _Ap_RimLight_Power: 0.1
+    - _Aplanar: 0
     - _AutoRenderQueue: 1
     - _BaseColorOverridden: 0
     - _BaseColorVisible: 1
@@ -341,6 +342,7 @@ Material:
     - _BlendMode: 0
     - _BlurLevelMatcap: 0
     - _BlurLevelSGM: 0
+    - _BordeDeLuz: 0
     - _Brillo: 0
     - _BumpScale: 1
     - _BumpScaleMatcap: 1
@@ -496,6 +498,7 @@ Material:
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
     - _Parallax: 0.02
+    - _Pincel: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
     - _ReceivesSSR: 1
@@ -524,6 +527,7 @@ Material:
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SmoothnessTextureChannel: 0
+    - _SombraSinRecorte: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularEnabled: 0

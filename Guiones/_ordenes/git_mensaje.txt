@@ -1,6 +1,8 @@
-INC-1298: aplanar el dibujo del pack en casas, vallas, objetos, hierba y cultivos
+INC-1298: flores del terreno a 90 m, tinta más gruesa de cerca y borde de luz en personajes
 
-FK01-03, Tree, Farm01, Terrain02/04, Ground04 y CopaRoja con _Aplanar 0,6-0,8.
+- Terreno: detalles 400 → 90 m, error de altura 0,5 → 3 (menos centelleo y mucho menos coste).
+- ContornoDeTinta: grosor x1,5 a menos de 4 m.
+- Shader Dibujo: _BordeDeLuz; 445 materiales de personaje a 0,45.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpDr

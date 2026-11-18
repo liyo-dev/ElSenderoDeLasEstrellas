@@ -25,6 +25,10 @@ public class ActorDePortada : MonoBehaviour
     [Tooltip("Baja al personaje al suelo bajo sus pies (poses de pie o sentado en el suelo). Desmarcar en una pose sentada en un banco: si se baja, el cuerpo queda metido bajo el asiento.")]
     [SerializeField] private bool forzarSuelo = true;
 
+    [Header("Asiento")]
+    [Tooltip("Asiento donde va sentado (p. ej. el de un columpio: lo ocupa al encenderse la portada y el columpio lo balancea). Vacío = se queda donde lo colocó la portada.")]
+    [SerializeField] private NPCWorldPoint asiento;
+
     [Header("Gestos de vez en cuando")]
     [Tooltip("Estados que el personaje hace de vez en cuando, al azar (p. ej. FoundSomething_NoWeapon, Laugh01, Talk01). Vacío = no hace gestos.")]
     [SerializeField] private string[] gestos = new string[0];
@@ -90,7 +94,13 @@ public class ActorDePortada : MonoBehaviour
         _saliendo = false;
         _haciendoGesto = false;
         _proximoGesto = Time.time + Random.Range(cadaCuanto.x * 0.3f, cadaCuanto.y);
+        if (asiento != null) asiento.TryOccupy(transform);
         PonerPose();
+    }
+
+    void OnDisable()
+    {
+        if (asiento != null) asiento.Release(transform);
     }
 
     void PonerPose()

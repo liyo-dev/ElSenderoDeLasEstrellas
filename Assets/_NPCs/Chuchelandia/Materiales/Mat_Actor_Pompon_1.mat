@@ -113,8 +113,10 @@ Material:
     - _AdditionalLightCutoffPoint: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _Aplanar: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BordeDeLuz: 0
     - _Brillo: 0
     - _BumpScale: 0.1
     - _ClearCoatMask: 0

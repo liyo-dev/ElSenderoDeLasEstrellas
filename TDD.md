@@ -1406,7 +1406,8 @@ El fondo del menú principal cambia según hasta dónde ha llegado la partida qu
 
 | # | Portada | Se ve cuando | Música |
 |---|---|---|---|
-| 1 | Península: Will sentado en un banco en su pueblo (copiado de MainWorld: pueblo inicial + terreno), con el árbol rosa y nubes | sin partida o partida sin los flags de abajo | `menu-principal-el-sendero-v2-alegre` |
+| 1 | Columpio: Will sentado en el columpio del pueblo de Will (copia de MainWorld), que se balancea de verdad (`ActorDePortada.asiento` + `Columpio`); es la de partida nueva (INC-1299). La anterior, Península con Will en el banco, sigue montada al final de la lista, sin flag: no sale sola (`previsualizar 5`) | sin partida o partida sin los flags de abajo | `menu-principal-el-sendero-v2-alegre` |
+| 1b | Península: Will sentado en un banco en su pueblo (copiado de MainWorld: pueblo inicial + terreno), con el árbol rosa y nubes | sin partida o partida sin los flags de abajo | `menu-principal-el-sendero-v2-alegre` |
 | 2 | Viaje: los tres en el barco, con el agua del mar de MainWorld; Will señala o saluda en proa, Estela (sentada) y Liam charlan | flag narrativo `SALIDA_DEL_REINO` | `Brisa del Puerto` |
 | 3 | Sendero: los tres volando entre las nubes del menú original, cielo de noche con estrellas y un sendero de luz | flag narrativo `ENTRADA_AL_SENDERO` | `El Sendero de las Estrellas (Tema Principal)` |
 

@@ -60,6 +60,52 @@ public static class AjustesDeRenderDeDibujo
         Debug.Log("[Render] " + sb);
     }
 
+    /// Flores y hierba del terreno (detalles) a 400 m eran miles de puntitos lejanos que centelleaban y costaban
+    /// mucho; con el dibujo, de lejos se lee mejor el color del suelo. Y el terreno se teselaba a 0,5 px de error.
+    [MenuItem("El Sendero/Aspecto de dibujo/Render: terreno (distancia de flores y detalle)")]
+    static void Terreno()
+    {
+        if (EditorApplication.isPlaying) { Debug.LogWarning("[Render] Sal de Play antes."); return; }
+        var sb = new StringBuilder("# Terreno\n\n");
+        foreach (var t in Object.FindObjectsByType<Terrain>(FindObjectsInactive.Include))
+        {
+            Undo.RecordObject(t, "Terreno de dibujo");
+            sb.Append($"- {t.name}: flores {t.detailObjectDistance} → 90 m, error {t.heightmapPixelError} → 3\n");
+            t.detailObjectDistance = 90f;
+            t.heightmapPixelError = 3f;
+            EditorUtility.SetDirty(t);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(t.gameObject.scene);
+        }
+        File.WriteAllText(Path.Combine("Guiones", "_ordenes", "terreno.md"), sb.ToString());
+    }
+
+    /// Borde de luz en los materiales de los personajes: los de los SkinnedMeshRenderer de las escenas abiertas
+    /// y de los prefabs de Assets/Prefabs y Assets/_NPCs.
+    [MenuItem("El Sendero/Aspecto de dibujo/Render: borde de luz en los personajes")]
+    static void BordeDeLuz()
+    {
+        if (EditorApplication.isPlaying) { Debug.LogWarning("[Render] Sal de Play antes."); return; }
+        var materiales = new System.Collections.Generic.HashSet<Material>();
+        foreach (var r in Object.FindObjectsByType<SkinnedMeshRenderer>(FindObjectsInactive.Include)) materiales.UnionWith(r.sharedMaterials.Where(m => m != null));
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs", "Assets/_NPCs" }))
+        {
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+            if (go == null) continue;
+            foreach (var r in go.GetComponentsInChildren<SkinnedMeshRenderer>(true)) materiales.UnionWith(r.sharedMaterials.Where(m => m != null));
+        }
+        int n = 0;
+        foreach (var m in materiales)
+        {
+            if (m.shader.name != "El Sendero/Dibujo" || !AssetDatabase.Contains(m)) continue;
+            m.SetFloat("_BordeDeLuz", 0.45f);
+            EditorUtility.SetDirty(m);
+            n++;
+        }
+        AssetDatabase.SaveAssets();
+        File.WriteAllText(Path.Combine("Guiones", "_ordenes", "borde_de_luz.md"), $"# Borde de luz\n\n- Materiales de personaje con borde: {n}\n");
+    }
+
     static string Fijar(SerializedObject so, string campo, float valor)
     {
         var p = so.FindProperty(campo);

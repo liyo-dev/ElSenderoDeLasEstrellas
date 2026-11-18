@@ -181,7 +181,13 @@ MonoBehaviour:
   - CAP3_ACAMPADA_CAMINO
   - CAP3_ESPEJO_START
   - CAP3_ESPEJO_DONE
-  npcPositions: []
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 0.6200002, y: 26.301186, z: -130.90999}
+    rotation: {x: 0, y: 0.9788151, z: 0, w: 0.20474622}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

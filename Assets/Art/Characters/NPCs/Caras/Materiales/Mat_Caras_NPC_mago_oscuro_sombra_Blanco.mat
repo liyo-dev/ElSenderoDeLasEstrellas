@@ -114,8 +114,10 @@ Material:
     m_Floats:
     - _AdditionalLightCutoffPoint: 0.8
     - _AlphaClip: 0
+    - _Aplanar: 0
     - _BaseMapPremultiply: 1
     - _Blend: 0
+    - _BordeDeLuz: 0
     - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
