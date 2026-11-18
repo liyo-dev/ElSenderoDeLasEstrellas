@@ -7,6 +7,7 @@ Shader "El Sendero/Dibujo"
     {
         [MainTexture] _BaseMap("Textura de color", 2D) = "white" {}
         _TextureImpact("Cuánto pinta la textura", Range(0, 1)) = 1.0
+        _Aplanar("Aplanar el dibujo de la textura (0 = tal cual, 1 = solo el color de cada zona)", Range(0, 1)) = 0.0
         _Tinte("Tinte", Color) = (1, 1, 1, 1)
         _Brillo("Brillo de pelo", Range(0, 1)) = 0.0
         [Toggle(DR_VERTEX_COLORS_ON)] _VertexColorsEnabled("Usar los colores de los vértices", Int) = 0
@@ -124,6 +125,10 @@ Shader "El Sendero/Dibujo"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 half4 textura = SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+                // Aplanar: el color de la zona (un mip muy borroso) en vez del dibujo fino del pack, para que
+                // las copas y matas se lean como masas de color de dibujo animado y no como escamas que centellean.
+                if (_Aplanar > 0.001h)
+                    textura.rgb = lerp(textura.rgb, SAMPLE_TEXTURE2D_BIAS(_BaseMap, sampler_BaseMap, input.uv, 3.0).rgb, _Aplanar);
                 // El alfa del tinte solo cuenta en los transparentes (fantasmas): en los opacos vale 1.
                 half alfa = textura.a * _Tinte.a;
                 #if defined(_ALPHATEST_ON)

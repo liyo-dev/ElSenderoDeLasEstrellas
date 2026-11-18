@@ -15,6 +15,7 @@ half _Cutoff;
 half _SombraSinRecorte;
 half _Surface;
 half _TextureImpact;
+half _Aplanar;
 half _Brillo;
 half _Pincel;
 CBUFFER_END

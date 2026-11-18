@@ -1,9 +1,8 @@
-INC-1298: render estable para el dibujo, frase final del Mago Oscuro fuera
+INC-1298: sin sombra en lo pequeño, SSAO apagado y copas de árbol aplanadas
 
-- URP: sombras con bias de URP (adiós rayas que bailan en el dos tonos), mapa 2048, suave media, sin sombras de luces puntuales.
-- 94 texturas del mundo a trilineal + anisotropía 4 (sin saltos de mip ni centelleo).
-- Informe de render de la escena (El Sendero ▸ Aspecto de dibujo ▸ Informe: materiales, texturas y render).
-- Prólogo: quitada «No es ninguno de los que existen» (código, textos, voz a Versiones antiguas).
+- 2936 flores, hierbas y objetos pequeños de MainWorld dejan de proyectar sombra (menos moteado y más rendimiento).
+- SSAO apagado en PC_Renderer: casi no se notaba en el dos tonos y metía coste y ruido.
+- Shader Dibujo: «Aplanar» (mip borroso) para quitar el dibujo fino del pack; Follaje_0 a 0,8.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpDr
