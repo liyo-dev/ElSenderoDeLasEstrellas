@@ -44,10 +44,10 @@ MonoBehaviour:
   m_ProbeVolumeSHBands: 1
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
-  m_MainLightShadowmapResolution: 4096
+  m_MainLightShadowmapResolution: 2048
   m_AdditionalLightsRenderingMode: 2
   m_AdditionalLightsPerObjectLimit: 4
-  m_AdditionalLightShadowsSupported: 1
+  m_AdditionalLightShadowsSupported: 0
   m_AdditionalLightsShadowmapResolution: 2048
   m_AdditionalLightsShadowResolutionTierLow: 256
   m_AdditionalLightsShadowResolutionTierMedium: 512
@@ -61,13 +61,13 @@ MonoBehaviour:
   m_Cascade3Split: {x: 0.12, y: 0.4}
   m_Cascade4Split: {x: 0.24684474, y: 0.5590775, z: 0.76150846}
   m_CascadeBorder: 0.06833811
-  m_ShadowDepthBias: 0.1
-  m_ShadowNormalBias: 0.05
+  m_ShadowDepthBias: 1
+  m_ShadowNormalBias: 0.8
   m_AnyShadowsSupported: 1
   m_SoftShadowsSupported: 1
   m_ConservativeEnclosingSphere: 1
   m_NumIterationsEnclosingSphere: 64
-  m_SoftShadowQuality: 3
+  m_SoftShadowQuality: 2
   m_AdditionalLightsCookieResolution: 2048
   m_AdditionalLightsCookieFormat: 3
   m_UseSRPBatcher: 1

@@ -86,8 +86,6 @@ public class DeseoEnElSenderoBeat : SequenceBeat
     public string textoPoder = "PROLOGO_DESEO_PODER_OSCURO";
     public string textoPorFin = "PROLOGO_DESEO_PORFIN_OSCURO";
     public string textoRisa = "PROLOGO_DESEO_RISA_OSCURO";
-    [Tooltip("Tras «¿Y ese poder?»: lo que nota es un poder que no existía cuando pidió el deseo (INC-1287).")]
-    public string textoNuevo = "PROLOGO_DESEO_PODER_NUEVO";
     public string nombreDelMago = "Mago Oscuro";
     public float segundos = 31.5f;
     [Tooltip("Onda de pinchos que sale del pecho al entrar el poder (vacío = ninguna).")]
@@ -296,7 +294,7 @@ public class DeseoEnElSenderoBeat : SequenceBeat
         //   27,5-fin  por encima del hombro, la estrella llena la pantalla; papel en el último 1,2 s
         var deCara = new[] { nucleo, resplandor, contraluz, brilloI, brilloD, brilloEstrella };
         float t = 0f, fin = Mathf.Max(28f, segundos);
-        bool dicho1 = false, dicho2 = false, dicho3 = false, dicho4 = false, gestoPoder = false, miraAtras = false;
+        bool dicho1 = false, dicho2 = false, dicho3 = false, gestoPoder = false, miraAtras = false;
         bool hechizoDelEstallido = false, clin = false, risa = false, sonrisa = false, andando = false;
         var lenteBase = cam.Lens;
         while (t < fin)
@@ -556,14 +554,6 @@ public class DeseoEnElSenderoBeat : SequenceBeat
                         PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null,
                         enCinematica: true);
                     PresentadorDeLinea.SonarLaVoz(textoPoder);
-                }
-                if (!dicho4 && t > 22.8f && !string.IsNullOrEmpty(textoNuevo))
-                {
-                    dicho4 = true;
-                    PresentadorDeLinea.Mostrar(cabeza != null ? cabeza : cuerpo, PresentadorDeLinea.Texto(textoNuevo), 2.4f,
-                        PresentacionDeTexto.Subtitulo, nombreDelMago, new Color(0.71f, 0.55f, 1f), null,
-                        enCinematica: true);
-                    PresentadorDeLinea.SonarLaVoz(textoNuevo);
                 }
             }
             else

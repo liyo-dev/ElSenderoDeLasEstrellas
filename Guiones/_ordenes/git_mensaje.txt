@@ -1,11 +1,9 @@
-INC-1298: cielo de dibujo, lluvia que llega, salpicaduras, viento con restos, suelo con detalle y Quibli fuera
+INC-1298: render estable para el dibujo, frase final del Mago Oscuro fuera
 
-- Cielo: paleta nueva en todas las franjas, nubes con panza lila, encapotado con nubes, frente sin claros.
-- Lluvia: las nubes se juntan, se oscurecen y luego llueve (0,85); oscurecimiento atado a la nubosidad.
-- Salpicaduras por colisión (aro + gotitas) y viento con hojas, pétalos, paja y terrones.
-- Suelo de dibujo: trazos y piedrecitas de cerca (AspectoDeDibujo.detalleDelSuelo).
-- Quibli fuera: post a URP, nubes 3D con shader propio, hierba del prólogo a Dibujo, pack a Versiones antiguas.
-- Voces nuevas del Mago Oscuro (PROLOGO_DESEO, PROLOGO_DESEO_PODER_NUEVO).
+- URP: sombras con bias de URP (adiós rayas que bailan en el dos tonos), mapa 2048, suave media, sin sombras de luces puntuales.
+- 94 texturas del mundo a trilineal + anisotropía 4 (sin saltos de mip ni centelleo).
+- Informe de render de la escena (El Sendero ▸ Aspecto de dibujo ▸ Informe: materiales, texturas y render).
+- Prólogo: quitada «No es ninguno de los que existen» (código, textos, voz a Versiones antiguas).
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpDr

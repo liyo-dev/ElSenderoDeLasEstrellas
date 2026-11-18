@@ -57,8 +57,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 2182e38c4124d404fab12efe71e29eec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _RECEIVE_SHADOWS_OFF
+  m_ValidKeywords: []
   m_InvalidKeywords:
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _RECEIVESHADOWS_OFF
@@ -180,6 +179,7 @@ Material:
     - _OverrideLightAttenuation: 0
     - _OverrideLightmapDir: 0
     - _Parallax: 0.02
+    - _Pincel: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimEnabled: 0

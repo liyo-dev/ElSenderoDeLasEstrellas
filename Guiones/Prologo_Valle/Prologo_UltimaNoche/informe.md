@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-18 17:44 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-18 20:52 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **4:30,8** de secuencia · 32 frases · 56 planos · 203 efectos · 19 personajes
 
@@ -9,13 +9,12 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 ## Errores (0)
 
 
-## Avisos (5)
+## Avisos (4)
 
 - línea 656: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: un punto queda fuera del NavMesh (-202,0, -365,0); voy en línea recta
 - El primer plano empieza en 63,1 s: hasta entonces la cámara se queda donde estuviera.
 - línea 707: plano conjunto liora nina altura=1.0 altura_foco=0.9 lente=40: liora habla de espaldas a la cámara en 174,9 s (157°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
-- 2:11,4: madre y lucas se atraviesan.
-- 3:01,6: v07 y lucas se atraviesan.
+- 2:45,4: liora y nina se atraviesan.
 
 ## Silencios largos entre frases (11)
 
@@ -135,7 +134,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:14,4 | plano 19 | conjunto de v02 y v10 y v01 y nina · 2,0 s · lente 34° · coste 14: ángulo 14 |
 | 2:14,7 | efecto | SFX: SFX_Pueblo_Contraventana_Golpe |
 | 2:16,4 | **@llegada** |  |
-| 2:16,4 | plano 20 | conjunto de mago · 4,0 s · lente 30° · coste 272: cara 187, ángulo 77 |
+| 2:16,4 | plano 20 | conjunto de mago · 4,0 s · lente 30° · coste 299: cara 210, ángulo 81 |
 | 2:16,4 | efecto | Voz: ExteriorNoche, +0,0 dB |
 | 2:16,4 | efecto | Fogonazo (0,18s) |
 | 2:16,4 | efecto | Rayo: 1 × fondo del plano |
@@ -145,7 +144,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:16,8 | efecto | Música: MAGOOSCURO_REVEAL |
 | 2:17,0 | efecto | Ambiente: TORMENTA ← Ambience_Prologo_Tormenta |
 | 2:17,0 | efecto | Tiempo: encender Lluvia |
-| 2:20,4 | plano 21 | medio de mago · 1,8 s · lente 34° · coste 199: cara 138, ángulo 62 |
+| 2:20,4 | plano 21 | medio de mago · 1,8 s · lente 34° · coste 205: cara 137, ángulo 62 |
 | 2:22,2 | plano 22 | medio de archimago · 1,0 s · lente 38° · coste 31: cara 25, ángulo 6 |
 | 2:23,2 | plano 23 | siguiendo a mago · 3,5 s · lente 34° |
 | 2:23,7 | efecto | Rayo: 1 × fondo del plano |
@@ -155,16 +154,16 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 2:26,7 | efecto | Ambiente: PANICO ← Ambience_Prologo_Panico |
 | 2:28,9 | plano 25 | medio de archimago · 3,1 s · lente 38° · coste 121: cara 100, ángulo 15 |
 | 2:28,9 | archimago | «No lo sé. Llévatelos al puente, deprisa.» (3,1 s) · pose |
-| 2:32,1 | plano 26 | medio de archimago · 5,2 s · lente 38° · coste 538: delante 336, cara 176, ángulo 18 |
+| 2:32,1 | plano 26 | medio de archimago · 5,2 s · lente 38° · coste 90: cara 73, ángulo 9 |
 | 2:34,6 | **@huida** |  |
 | 2:34,6 | archimago | «¡Al puente! ¡Todos, ahora!» (2,6 s) · pose |
 | 2:36,6 | efecto | Hojas: abrir Puerta de la madre |
 | 2:37,1 | efecto | De la mano: MadreDelValle coge a LucasDelValle |
-| 2:37,2 | plano 27 | general de v06 y v04 y v09 y v03 · 1,6 s · lente 40° · coste 228: tapado 220 |
+| 2:37,2 | plano 27 | general de v06 y v04 y v09 y v03 · 1,6 s · lente 40° · coste 0: limpio |
 | 2:37,6 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
 | 2:38,8 | plano 28 | medio de liora · 1,3 s · lente 38° · coste 11: ángulo 5 |
 | 2:38,8 | liora | «¿Y tú?» (1,3 s) |
-| 2:40,1 | plano 29 | medio de archimago · 2,3 s · lente 38° · coste 11: ángulo 3 |
+| 2:40,1 | plano 29 | medio de archimago · 2,3 s · lente 38° · coste 802: delante 455, cara 175, ángulo 24 |
 | 2:40,1 | archimago | «Ve. Yo me encargo de él.» (2,3 s) · pose |
 | 2:42,4 | plano 30 | dos: archimago y liora · 7,5 s · lente 40° |
 | 2:42,4 | liora | «Vuelve pronto.» (1,9 s) |
@@ -521,10 +520,10 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:05,5 gesto Laugh01
 - 2:08,4 gesto Talk03
 - 2:10,3 reposo 
-- 2:35,3–2:46,3 anda de (-174,7, -364,1) a (-154,0, -366,8)
+- 2:35,3–2:46,1 anda de (-174,7, -364,1) a (-154,0, -366,8)
 - 2:38,7 gesto SenseSomethingStart_NoWeapon
 - 2:53,8 gesto Sobresalto01
-- 2:57,5–3:08,1 anda de (-154,0, -366,7) a (-143,4, -357,5)
+- 2:57,5–3:07,2 anda de (-154,0, -366,7) a (-143,4, -357,5)
 
 ### v01 (NPC_Aldeano_01)
 
@@ -607,7 +606,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:08,6–2:09,5 anda de (-173,1, -366,6) a (-174,5, -366,4)
 - 2:10,0–2:11,8 anda de (-174,4, -366,4) a (-173,1, -364,0)
 - 2:10,3 reposo 
-- 2:37,1–2:56,8 anda de (-172,9, -364,0) a (-130,0, -374,5)
+- 2:36,3–2:55,9 anda de (-172,9, -364,0) a (-130,0, -374,5)
 
 ### v02 (NPC_Aldeano_02)
 
@@ -698,7 +697,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:10,2 reposo 
 - 2:11,2 gesto FoundSomething_NoWeapon
 - 2:17,0 gesto Fear01
-- 2:35,6–2:54,5 anda de (-168,6, -364,0) a (-124,0, -366,0)
+- 2:36,8–2:55,7 anda de (-168,6, -364,0) a (-124,0, -366,0)
 - 3:32,9 bucle Reverence01_Loop
 
 ### v04 (NPC_Aldeano_04)
@@ -742,7 +741,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:20,1–2:23,0 anda de (-172,2, -369,2) a (-170,1, -369,2)
 - 2:24,8–2:27,7 anda de (-170,1, -369,2) a (-172,2, -369,2)
 - 2:29,5–2:32,4 anda de (-172,2, -369,2) a (-170,1, -369,2)
-- 2:34,2–2:53,4 anda de (-170,1, -369,2) a (-128,4, -368,4)
+- 2:34,2–2:53,1 anda de (-170,1, -369,2) a (-128,4, -368,4)
 
 ### v06 (NPC_Aldeano_06)
 
@@ -767,7 +766,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:10,5 reposo 
 - 2:27,4 gesto Question02
 - 2:29,6 gesto HeadShake01
-- 2:34,7–2:47,6 anda de (-159,3, -367,5) a (-131,0, -364,0)
+- 2:34,7–2:46,9 anda de (-159,2, -367,5) a (-131,0, -364,0)
 - 2:35,3 gesto HeadNod01
 
 ### v07 (NPC_Aldeano_07)
@@ -807,7 +806,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:56,2–1:59,1 anda de (-172,0, -364,8) a (-171,4, -366,8)
 - 2:01,6–2:07,7 anda de (-171,4, -366,8) a (-175,1, -366,6)
 - 2:09,8–2:12,3 anda de (-175,1, -366,6) a (-172,0, -364,8)
-- 2:38,7–2:59,3 anda de (-171,8, -364,8) a (-125,0, -357,0)
+- 2:37,5–2:57,9 anda de (-171,8, -364,8) a (-125,0, -357,0)
 
 ### v08 (NPC_Aldeano_08)
 
@@ -853,7 +852,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:05,2 gesto Question01
 - 2:08,1 gesto HeadShake01
 - 2:10,5 reposo 
-- 2:37,4–2:53,6 anda de (-167,5, -364,5) a (-132,0, -372,0)
+- 2:35,8–2:51,8 anda de (-167,5, -364,5) a (-132,0, -372,0)
 - 3:09,0 bucle Fear01
 
 ### v09 (NPC_Aldeano_09)
@@ -899,7 +898,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 2:09,2 gesto Laugh01
 - 2:10,4 reposo 
 - 2:17,3 gesto Fear01
-- 2:35,1–2:53,6 anda de (-171,0, -359,5) a (-129,0, -359,0)
+- 2:35,1–2:53,4 anda de (-170,9, -359,4) a (-129,0, -359,0)
 - 3:09,3 bucle Fear01
 
 ### v10 (NPC_Aldeano_10)
@@ -922,7 +921,7 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:24,2 gesto HandClap01
 - 2:17,1 gesto Fear01
 - 2:35,4 reposo 
-- 2:35,5–3:03,5 anda de (-183,0, -368,5) a (-118,0, -371,5)
+- 2:35,5–3:03,4 anda de (-183,0, -368,5) a (-118,0, -371,5)
 
 ### madre (MadreDelValle)
 
@@ -935,19 +934,20 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 - 1:24,1–1:31,0 anda de (-183,1, -366,3) a (-178,3, -369,1)
 - 1:44,2 gesto HeadNod01
 - 1:48,6 gesto HeadNod01
-- 2:12,4–2:13,4 anda de (-178,4, -369,1) a (-178,2, -370,2)
+- 2:12,4–2:13,3 anda de (-178,3, -369,1) a (-178,2, -370,2)
 - 2:13,6 desaparece
 - 2:37,0 aparece
-- 2:37,2–3:03,8 anda de (-178,2, -370,1) a (-120,5, -356,5)
+- 2:38,0–3:03,1 anda de (-178,0, -370,2) a (-120,5, -356,5)
 
 ### lucas (LucasDelValle)
 
 - 0:00,1–0:10,7 anda de (-191,5, -365,3) a (-183,2, -366,8)
 - 1:24,0–1:31,0 anda de (-183,2, -366,8) a (-178,6, -369,5)
-- 2:11,3–2:12,2 anda de (-178,6, -369,5) a (-178,2, -370,2)
+- 2:11,3–2:11,8 anda de (-178,6, -369,6) a (-178,2, -370,2)
 - 2:12,2 desaparece
 - 2:37,0 aparece
-- 2:37,1–3:03,8 anda de (-178,2, -370,2) a (-120,7, -356,0)
+- 2:37,1–2:37,5 anda de (-178,2, -370,2) a (-178,8, -370,2)
+- 2:37,9–3:03,1 anda de (-178,7, -370,1) a (-120,7, -356,0)
 - 3:11,8 gesto HeadNod01
 - 3:29,6 gesto HeadShake01
 

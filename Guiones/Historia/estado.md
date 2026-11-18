@@ -1,9 +1,9 @@
-# Estado de la prueba (20:43:03)
+# Estado de la prueba (21:01:09)
 
 ## Órdenes
 · estado → ok
 
-Fotograma 1 · t=10,8 s · segundo plano True
+Fotograma 1 · t=22,8 s · segundo plano True
 Play: True · escenas: MainWorld, Start
 
 ## Grafos
