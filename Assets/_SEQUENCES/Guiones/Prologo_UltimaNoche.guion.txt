@@ -76,7 +76,8 @@ mira_v08         -167.7 -364.5
 centro_plaza     -168.5 -364.5
 # Grúa de apertura: baja del cielo (cam_cielo, a 10 m) hasta delante del maestro (cam_baja).
 cam_cielo        -170.4 -366.5
-cam_baja         -168.6 -364.6
+# Más atrás (INC-1287): a 2,6 m la cámara quedaba bajo el ala del sombrero del maestro.
+cam_baja         -170.0 -366.0
 # Cámara del conjuro: al oeste del maestro, de perfil mientras lanza el conjuro, con la carreta
 # delante de él y algo apartada, sin taparle.
 cam_magia        -167.0 -366.4
@@ -128,6 +129,9 @@ duelo_m          -169.2 -365.2
 choque           -167.4 -365.2
 arch_caida       -162.6 -364.8
 mago_retrocede   -171.3 -365.2
+# Pasos laterales del duelo (INC-1287): se mueven mientras atacan.
+mago_lado        -169.8 -366.5
+arch_lado        -165.0 -363.9
 # La bola del hechizo final sube desde el Archimago hasta aquí (4 m sobre el suelo).
 cielo_conjuro    -162.6 -364.8 38.0
 # El agujero negro: justo encima del Mago, que levita 3 m sobre mago_retrocede y lo sostiene con
@@ -429,6 +433,8 @@ efecto EfectoDeVozBeat preset=ExteriorDia
 # La música del deseo la arranca la propia secuencia (`musicId` = PROLOGO_DESEO): suena desde el
 # primer fotograma, sin esperar a un beat. Ver INC-1211.
 efecto DeseoEnElSenderoBeat escenario=Assets/Art/Cinematic/Apertura/SenderoDeLaApertura.prefab mago=Assets/Prefabs/_MAGO_OSCURO.prefab segundos=31.5 dura=31.5 ondaDelEstallido=Assets/_VFX/Prologo/Piloto/Sombra_Onda.prefab circuloMagico=Assets/_VFX/Prologo/Piloto/Sombra_Circulo.prefab destello=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab
+# «Hace siglos…» sobre el negro del principio: el deseo es de la misma época que el valle (INC-1287).
+& efecto RotuloBeat texto=PROLOGO_ROTULO_SIGLOS aparecer=0.5 mantener=1.2 desaparecer=0.5
 musica PROLOGO_AMANECER_VALLE
 # (INC-1200: el «mapa» es el propio mundo desde el aire, lo abre el vuelo) efecto MapaDeAperturaBeat mapa=Assets/Art/Cinematic/Apertura/MapaDeLaApertura.png segundos=7 dura=7
 ambiente AMBIENTE eventKey=Ambience_Prologo_Pueblo volumen=0.5
@@ -735,53 +741,55 @@ archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
 & mago reposo
 
 # El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
+# El duelo sin turnos (INC-1287): los dos se mueven y atacan a la vez; nadie se queda esperando a
+# que le ataquen. Cada hechizo sale de un gesto propio (antes el mago lanzaba tres con un solo gesto
+# y parecían salir solos). Plano general de los dos, de lado: se lee todo sin cortar en cada golpe.
 plano dos archimago mago desde=cam_duelo_norte altura=1.1 altura_foco=1.0 lente=58 mano=0.25
 mago gesto MagicRight
+& archimago desliza a arch_lado dura=0.45 mirando=mago
 +0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
-+0.3 vfx Assets/_VFX/Prologo/Piloto/Luz_Escudo.prefab en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
-+0.3 archimago gesto Defend_NoWeapon
-+0.8 sonido Prologo_EscudoBloquea en=archimago
-+0.8 destello BFB3FFFF 0.12
-+0.8 sacudida 0.35 0.4
-espera 1.4
-# La respuesta del Archimago, en el mismo dos de perfil: la bola cruza la pantalla hacia el Mago.
-archimago gesto MagicLeft
-+0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Luz_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
-+0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
-+0.85 mago gesto TakeDamage
-espera 1.2
++0.35 archimago gesto MagicLeft
++0.55 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Luz_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.6 mago desliza a mago_lado dura=0.4 mirando=archimago
++0.75 mago gesto MagicLeft
++0.95 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=15 esperarAlImpacto=false
++1.05 sonido Prologo_ImpactoHechizo en=archimago volume=0.6
++1.2 vfx Assets/_VFX/Prologo/Piloto/Luz_Escudo.prefab en=archimago offset=0,-0.1,0 lifetime=1.0 seguirAlActor=true
++1.2 archimago gesto Defend_NoWeapon
++1.45 sonido Prologo_EscudoBloquea en=archimago
++1.45 destello BFB3FFFF 0.10
++1.45 sacudida 0.3 0.35
+espera 1.55
 
-# El intercambio (INC-1084): el Mago vuelve con una ráfaga, el Archimago la esquiva por el aire y
-# contesta desde arriba; el Mago la para con su escudo, que revienta. Planos cortos y cada vez más
-# rápidos hasta el choque.
 @intercambio
-mago desliza a duelo_m dura=0.4 mirando=archimago
-plano medio mago lado=frente altura=1.0 altura_foco=1.1 lente=34 mano=0.35
-mago gesto MagicRight
+# Ráfaga del mago: tres hechizos, tres gestos (derecha, izquierda, derecha) mientras avanza; el
+# Archimago no espera: salta para esquivarlos y contesta desde el aire.
+plano dos archimago mago desde=cam_duelo_norte altura=1.2 altura_foco=1.4 lente=62 mano=0.35
+mago desliza a duelo_m dura=0.5 mirando=archimago
+& mago gesto MagicRight
 +0.15 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
-+0.45 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
-+0.75 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.4 mago gesto MagicLeft
++0.55 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.8 mago gesto MagicRight
++0.95 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.3 efecto SaltoBeat actorId=archimago altura=2.6 desplazamiento=2.2 haciaElLado=true subida=0.32 sostener=0.5 caida=0.4
++0.35 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=archimago offset=0,0.2,0 lifetime=1.4
++0.35 sonido Prologo_Despegue en=archimago volume=0.7
 +0.2 sacudida 0.25 0.9
-espera 0.55
-plano dos archimago mago desde=cam_duelo_norte altura=1.2 altura_foco=1.7 lente=62 mano=0.35
-efecto SaltoBeat actorId=archimago altura=2.6 desplazamiento=2.2 haciaElLado=true subida=0.32 sostener=0.5 caida=0.4
-+0.05 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=archimago offset=0,0.2,0 lifetime=1.4
-+0.05 sonido Prologo_Despegue en=archimago volume=0.7
-+0.3 archimago gesto MagicLeft
-+0.4 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
-+0.4 destello BFB3FFFF 0.10
-espera 0.9
-plano medio mago lado=frente altura=0.9 altura_foco=1.15 lente=30 mano=0.4
-+0.05 vfx Assets/_VFX/Prologo/Piloto/Sombra_Escudo.prefab en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
-+0.05 mago gesto Defend_NoWeapon
-+0.45 sonido Prologo_EscudoBloquea en=mago
-+0.7 vfx Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab en=mago offset=0,0.95,0 lifetime=1.2
-+0.7 sonido Prologo_ImpactoHechizo en=mago
-+0.7 destello FFFFFFFF 0.14
-+0.7 sacudida 0.55 0.6
-+0.75 mago desliza a mago_retrocede dura=0.25 seco mirando=archimago
-espera 1.1
-# Los dos vuelven a su sitio, a la misma distancia del centro: el choque cae en medio.
++0.75 archimago gesto MagicLeft
++0.85 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
++0.85 destello BFB3FFFF 0.10
+# El mago se cubre a la vez que retrocede; el golpe le alcanza igual.
++1.05 vfx Assets/_VFX/Prologo/Piloto/Sombra_Escudo.prefab en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
++1.05 mago gesto Defend_NoWeapon
++1.3 sonido Prologo_EscudoBloquea en=mago
++1.5 vfx Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab en=mago offset=0,0.95,0 lifetime=1.2
++1.5 sonido Prologo_ImpactoHechizo en=mago
++1.5 destello FFFFFFFF 0.14
++1.5 sacudida 0.55 0.6
++1.55 mago desliza a mago_retrocede dura=0.25 seco mirando=archimago
++1.55 mago gesto TakeDamage
+espera 2.0
 archimago desliza a duelo_a dura=0.35 mirando=mago
 & mago desliza a duelo_m dura=0.35 mirando=archimago
 @choque
@@ -852,7 +860,7 @@ mago bucle JumpAir_InPlace_NoWeapon congela
 espera 3.4
 
 # El Archimago se alza en guardia e inicia el cántico de invocación.
-plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 zoom=34
+plano medio archimago lado=frente altura=0.85 altura_foco=1.1 lente=42 gira=-20
 archimago reposo
 archimago bucle CastingIdle01
 & archimago mira mago
@@ -887,7 +895,8 @@ espera 1.4
 # con ellos, y ahí se queda creciendo. Abre los ojos en un primer plano justo antes del grito,
 # y con el grito el orbe sale al cielo pequeño y crece una vez arriba.
 # Plano medio: las manos y el orbe que nace entre ellas tienen que verse (INC-980).
-plano medio archimago lado=der altura=0.85 altura_foco=0.9 lente=44 gira=-35
+# Conjuro (INC-1287): de tres cuartos y algo más abiertos, para que se vean la cara y el hechizo enteros.
+plano conjunto archimago lado=frente altura=1.0 altura_foco=1.15 lente=46 gira=-20
 archimago bucle Beg01_Loop
 & efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_OrbeProtector.prefab entreLasManos=true offset=0,0.52,0.22 avance=0.05 elevacion=0.03 duracion=34 periodo=1.4 escalaInicial=0.3 escalaFinal=1.3 registrarComo=BOLA_PROTECTORA vidaEnPool=90
 # Carga del conjuro: graves que laten y aire brillante, sin tocar la zona de la voz; se aparta en la despedida.
@@ -897,7 +906,7 @@ archimago dice PROLOGO_PLEGARIA_02 cara=dormido
 +0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
 
 # Estrofa 2: llama a lo que aún no existe y la energía despierta en sus manos.
-plano medio archimago lado=der altura=0.75 altura_foco=1.05 lente=40 gira=-35 mano=0.15
+plano medio archimago lado=frente altura=0.95 altura_foco=1.15 lente=48 gira=-20
 archimago dice PROLOGO_PLEGARIA_03 cara=dormido
 +3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_1
 +5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
@@ -910,7 +919,7 @@ espera 1.2
 # Estrofa 3: ofrece su vida y su alma como sello. Alza los brazos con la pose de sostener la
 # magia (la del Mago; la de MagicAttackOmni le metía las manos en la cabeza, INC-939) y el orbe
 # sube por encima de la cabeza. Plano medio desde abajo para que se vean las manos y el orbe.
-plano conjunto archimago lado=der altura=0.55 altura_foco=1.7 lente=52 gira=-35 mano=0.2
+plano conjunto archimago lado=frente altura=0.7 altura_foco=1.6 lente=58 gira=-20
 archimago dice PROLOGO_PLEGARIA_04 cara=dormido
 & archimago bucle Conjuro_Invocar fundido=0.8
 & efecto ConjuroEnLasManosBeat actorId=archimago efectoRegistrado=BOLA_PROTECTORA subirACabeza=true entreLasManos=true offset=0,0.52,0.22 offsetFinal=0,2.45,0.15 tiempoSubida=1.6 duracion=16 escalaInicial=1.3 escalaFinal=6
@@ -919,7 +928,7 @@ archimago dice PROLOGO_PLEGARIA_04 cara=dormido
 +3.5 sacudida 0.3 0.9
 
 # Estrofa 4: clímax del cántico; líneas de concentración y poder desbordado.
-plano medio archimago lado=der altura=0.6 altura_foco=1.9 lente=50 zoom=42 mano=0.3
+plano conjunto archimago lado=frente altura=0.7 altura_foco=1.75 lente=58 gira=-15
 efecto LineasDeConcentracionBeat mostrar=true
 && archimago dice PROLOGO_PLEGARIA_05 cara=dormido
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
@@ -1030,5 +1039,7 @@ ambiente TORMENTA sonar=false fundido=0.2
 # Con la pantalla ya blanca, la música se va despacio. El estallido (13,5 s, con su cola de eco) sigue sonando al
 # destaparse la habitación de Will y se apaga solo; ningún otro SFX largo se cuela en ella.
 silencio 2.0
-espera 2.4
+# «Siglos después.» antes de la habitación de Will (INC-1287): cuando sale, la pantalla ya está en negro (la carga), así que va en dorado.
+efecto RotuloBeat texto=CAP1_ROTULO_SIGLOS_DESPUES aparecer=0.5 mantener=1.4 desaparecer=0.5 esperar=true
+espera 0.4
 bandas quita

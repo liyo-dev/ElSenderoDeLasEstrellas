@@ -33,7 +33,8 @@ HILO
 will en p_will mirando oliver
 & oliver en p_oliver mirando will
 & plano general oliver will desde=cam_alta altura=5.5 lente=40 quieta
-oliver dice OLIVER_GREETING_SPOT_WILL gesto=Cheer02 cara=alegre
+# Saludo grande con la mano: el «Cheer02» de antes parecía un pájaro (INC-1287).
+oliver dice OLIVER_GREETING_SPOT_WILL gesto=HandWave02 cara=alegre
 
 # Corre hasta Will. El mismo plano aéreo: se le ve cruzar la plaza.
 @carrera
@@ -45,8 +46,10 @@ oliver corre a p_llega llega_mirando=will
 plano conjunto oliver will desde=cam_charla altura=1.5 lente=40 quieta
 & will mira oliver
 oliver dice OLIVER_GREETING_OUT_OF_BREATH gesto=Dizzy_NoWeapon cara=cansado
+# Orden nuevo (INC-1287): Will pregunta por la discusión, Oliver contesta y le enseña el hechizo.
+will dice WILL_GREETING_POR_QUE_DISCUTEN gesto=Question01 cara=alegre
+oliver dice OLIVER_GREETING_BEFORE_MENUS_HANDOFF gesto=Shrug01
 oliver dice OLIVER_GREETING_NEW_SPELL_INTRO cara=ilusionado
-& will gesto Question01
 & will cara alegre
 # Oliver se prepara con toda la ceremonia: se recoge, alza los brazos… y petardea.
 oliver bucle Conjuro_Recogerse fundido=0.3
@@ -81,9 +84,8 @@ oliver gesto Laugh01
 will dice WILL_GREETING_OLIVER_CUT_OFF gesto=Laugh01
 & oliver gesto HeadShake01
 
-# Los menús: caja de diálogo, la escena espera a que el jugador la cierre.
+# Los menús, después de la risa: caja de diálogo, la escena espera a que el jugador la cierre.
 @menus
-oliver dice OLIVER_GREETING_BEFORE_MENUS_HANDOFF gesto=Shrug01
 efecto DialogueBeat dialogue=DG_Oliver_Menus actorId=oliver conservarCamaraDeLaSecuencia=true detenerEscena=true reacciones_will=HeadNod01,Question01,HeadNod01,HeadNod01 caras_will=alegre dura=0.3
 oliver dice OLIVER_GREETING_PERAS_HANDOFF gesto=HandWave01
 will dice WILL_GREETING_PERAS_HANDOFF gesto=HeadNod01

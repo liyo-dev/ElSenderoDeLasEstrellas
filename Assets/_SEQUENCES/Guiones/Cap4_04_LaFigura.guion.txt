@@ -39,12 +39,20 @@ plano medio will
 will dice CAP4_FIGURA_03 cara=confuso gesto=Shrug01
 
 @figuras
+# Rehacen las chamuscadas (INC-1287): Estela, molesta, las modela de rodillas y Will la ayuda; ella hace
+# la de la capucha. Así se entiende quién las rehace y por qué.
 plano dos will estela
+& estela reposo
+will gesto Loot01_Begin
+& estela gesto Loot01_Begin
+will bucle Loot01_Loop
+& estela bucle Loot01_Loop
 will dice CAP4_FIGURA_04 cara=alegre
 estela dice CAP4_FIGURA_05 cara=picaro gesto=Laugh01
 will dice CAP4_FIGURA_06 cara=pensativo
-& estela reposo
 estela dice CAP4_FIGURA_07 cara=preocupado
+estela reposo
+& will reposo
 estela mira mira_liam
 
 @liam

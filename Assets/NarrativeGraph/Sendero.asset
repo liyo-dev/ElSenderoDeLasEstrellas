@@ -160,3 +160,4 @@ MonoBehaviour:
         signalFailed: 
         secuencia: {fileID: 11400000, guid: 7f276964bd44ff146b92b5a907aa0d04, type: 2}
         plantillaDeAjustes: SEQ_PerasEldran
+        alMandoElProtagonista: 1

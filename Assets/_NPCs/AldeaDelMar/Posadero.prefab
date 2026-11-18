@@ -21203,8 +21203,6 @@ MonoBehaviour:
     behaviourType: 0
     ambientConfig: {fileID: 11400000, guid: 210d03c05db3059468bc86d1104f3199, type: 2}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 0}
     socialConfig: {fileID: 11400000, guid: 2865c6562777fe543b4f6fbefdd6abc0, type: 2}
     walkSpeed: 1.5
@@ -21286,10 +21284,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
   actorIdSinIA: 
 --- !u!1 &6945697719672368422

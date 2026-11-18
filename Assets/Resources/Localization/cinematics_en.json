@@ -394,7 +394,7 @@
         },
         {
             "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
-            "text": "Are they still arguing? They’ve been at it for a while...\nBefore we go and see what’s happening, I wanted to show you something."
+            "text": "Yeah… they’ve been at it for a while.\nBefore we go and see what’s happening, I wanted to show you something."
         },
         {
             "id": "OLIVER_GREETING_PERAS_HANDOFF",
@@ -614,7 +614,11 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "You haven’t changed a bit! What are Eldran and Victoria arguing about? I can hear them from here."
+            "text": "Ha! You haven’t changed a bit!"
+        },
+        {
+            "id": "WILL_GREETING_POR_QUE_DISCUTEN",
+            "text": "What are Eldran and Victoria arguing about? I can hear them from here."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -966,11 +970,11 @@
         },
         {
             "id": "EVT_MANANA_04b",
-            "text": "Of course. I was helping you."
+            "text": "I saw it."
         },
         {
             "id": "EVT_MANANA_05",
-            "text": "Last night, when you told me, it was half that."
+            "text": "I remember it half that size."
         },
         {
             "id": "EVT_MANANA_06",
@@ -2342,7 +2346,7 @@
         },
         {
             "id": "CAP3_CLARO_01",
-            "text": "Twelve cages. They pay well in the capital for feathers that glow."
+            "text": "Twelve cages. They pay well in the capital for animals that glow."
         },
         {
             "id": "CAP3_CLARO_02",
@@ -2362,7 +2366,7 @@
         },
         {
             "id": "CAP3_CLARO_06",
-            "text": "But there are two of them. And if the fire gets away from me, the cages burn with the birds inside."
+            "text": "But there are two of them. And if the fire gets away from me, the cages burn with the animals inside."
         },
         {
             "id": "CAP3_CLARO_07",
@@ -2438,7 +2442,7 @@
         },
         {
             "id": "CAP4_ESTELA_04",
-            "text": "Impressive."
+            "text": "…In a dress?"
         },
         {
             "id": "CAP4_ESTELA_05",
@@ -2674,15 +2678,15 @@
         },
         {
             "id": "CAP3_DESPEDIDA_01",
-            "text": "There you are. Have you said goodbye to everyone?"
+            "text": "There you are. I thought you'd have a harder time getting out of bed."
         },
         {
             "id": "CAP3_DESPEDIDA_02",
-            "text": "Almost everyone. Tomasa wanted to sell me another useless thing."
+            "text": "I didn't sleep much."
         },
         {
             "id": "CAP3_DESPEDIDA_03",
-            "text": "That woman never rests. Listen, this is important."
+            "text": "Neither did I. Listen, this is important."
         },
         {
             "id": "CAP3_DESPEDIDA_04",
@@ -2730,7 +2734,15 @@
         },
         {
             "id": "PROLOGO_DESEO",
-            "text": "Let no power ever destroy me."
+            "text": "Let no power that exists be able to destroy me."
+        },
+        {
+            "id": "CAP1_ROTULO_SIGLOS_DESPUES",
+            "text": "Centuries later."
+        },
+        {
+            "id": "PROLOGO_ROTULO_SIGLOS",
+            "text": "Centuries ago…"
         },
         {
             "id": "PROLOGO_DESEO_PODER",
@@ -2749,8 +2761,72 @@
             "text": "…And that power? Where does it come from?"
         },
         {
+            "id": "PROLOGO_DESEO_PODER_NUEVO",
+            "text": "It isn’t any of the ones that exist."
+        },
+        {
             "id": "PROLOGO_DESEO_RISA_OSCURO",
             "text": "Ha, ha, ha…"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_12",
+            "text": "I promised that woman I wouldn't leave you alone."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_13",
+            "text": "And you're not. You're just letting me go."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_14",
+            "text": "…That's harder."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_15",
+            "text": "Forty years ago I went looking for something too. Promise me you'll come back. Even if you find nothing."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_16",
+            "text": "I promise."
+        },
+        {
+            "id": "CAP3_CLARO_08",
+            "text": "They're collared. All of them."
+        },
+        {
+            "id": "CAP4_ESTELA_13",
+            "text": "And this. It's from one of the animals on the cart. They were collared."
+        },
+        {
+            "id": "CAP4_MANANA_06",
+            "text": "Helping you is no use if you set yourself on fire every time you sneeze."
+        },
+        {
+            "id": "CAP4_MANZANA_08",
+            "text": "Let's stop for a moment, all right?"
+        },
+        {
+            "id": "CAP4_MANZANA_09",
+            "text": "No need."
+        },
+        {
+            "id": "CAP4_MANZANA_10",
+            "text": "…What are you doing?"
+        },
+        {
+            "id": "CAP4_MANZANA_11",
+            "text": "Resting. I'm the one who's worn out."
+        },
+        {
+            "id": "CAP4_BIFURCACION_12",
+            "text": "You're the one in the hood. You've been following us since yesterday."
+        },
+        {
+            "id": "CAP4_BIFURCACION_13",
+            "text": "I didn't know if I could trust you."
+        },
+        {
+            "id": "CAP4_BIFURCACION_14",
+            "text": "As far as the Kingdom. And in front of me."
         }
     ]
 }

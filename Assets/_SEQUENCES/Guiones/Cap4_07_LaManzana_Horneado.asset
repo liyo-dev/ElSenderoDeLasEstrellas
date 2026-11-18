@@ -13,34 +13,37 @@ MonoBehaviour:
   m_Name: Cap4_07_LaManzana_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap4_07_LaManzana
-  duracion: 26.083767
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap4_07_LaManzana.guion.txt
+  duracion: 35.560524
   presentacion: 1
-  huella: "2026-11-15 08:58 \xB7 41bd0332d7d8a8074dfc427fe991699a"
+  huella: "2026-11-18 15:27 \xB7 e4d44b42a38d19c15b66c71a748e6545"
   actores:
   - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
     alias: will
     colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
     claveDelNombre: Will
     posiciones:
     - t: 0
       p: {x: -102.4, y: 32.676292, z: 54.2}
-    - t: 11.64653
+    - t: 14.724285
       p: {x: -102.4, y: 32.676292, z: 54.2}
-    - t: 11.908559
+    - t: 14.986314
       p: {x: -102.53846, y: 32.67003, z: 54.23077}
-    - t: 12.124273
+    - t: 15.202028
       p: {x: -102.676926, y: 32.663757, z: 54.26154}
-    - t: 12.493288
+    - t: 15.571043
       p: {x: -102.95385, y: 32.65122, z: 54.32308}
-    - t: 12.827019
+    - t: 15.904774
       p: {x: -103.23077, y: 32.63868, z: 54.384617}
-    - t: 13.160758
+    - t: 16.238514
       p: {x: -103.50769, y: 32.626144, z: 54.44615}
-    - t: 13.504342
+    - t: 16.5821
       p: {x: -103.784615, y: 32.613605, z: 54.50769}
-    - t: 13.912353
+    - t: 16.990108
       p: {x: -104.06154, y: 32.601067, z: 54.56923}
-    - t: 14.17438
+    - t: 17.252136
       p: {x: -104.2, y: 32.5948, z: 54.6}
     miradas:
     - t: 0
@@ -58,12 +61,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 14.32438
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: _ESTELA
-    - t: 20.688461
+    - t: 13.674285
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -89,22 +87,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 10.364285
+    - t: 11.484286
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 14.27438
+    - t: 13.624285
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 17.95989
+    - t: 18.364138
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 20.638462
+    - t: 19.914137
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 23.751139
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 27.436647
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 30.11522
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -160,51 +173,44 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 10.314285
+      t: 11.434286
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 10.394285
+      t: 11.514286
       tipo: 2
-      estado: Talk02
+      estado: Question02
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 11.69653
+      t: 13.174286
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 17.909891
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 17.989891
+      t: 14.004286
       tipo: 2
-      estado: Talk02
+      estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 19.788462
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 21.238462
+      t: 17.252136
       tipo: 2
-      estado: HeadNod01
+      estado: SitGround_Begin
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 18.264137
+      tipo: 1
+      estado: SitGround_Loop
       congelar: 0
       alFinal: 0
       voz: 
@@ -215,12 +221,19 @@ MonoBehaviour:
     - t: 5.5436735
       emocion: preocupado
       dura: 2.9338777
-    - t: 17.909891
+    - t: 11.434286
+      emocion: preocupado
+      dura: 2.09
+    - t: 19.864138
+      emocion: picaro
+      dura: 2.675
+    - t: 27.386648
       emocion: alegre
       dura: 2.2285714
     visible: []
     deslizando: []
   - id: _ESTELA
+    prefab: Assets/Prefabs/_ESTELA.prefab
     alias: estela
     colorDelNombre: {r: 1, g: 0.62352943, b: 0.41960785, a: 1}
     claveDelNombre: CHAR_ESTELA
@@ -243,12 +256,17 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 10.464285
+    - t: 11.584286
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.05989
+    - t: 18.264137
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 20.014137
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -269,22 +287,37 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 10.414285
+    - t: 11.534286
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 14.2243805
+    - t: 13.5742855
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 18.009892
+    - t: 18.264137
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 20.58846
+    - t: 19.964138
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 23.701138
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 27.486649
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 30.065218
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -333,22 +366,99 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 10.847183
+      t: 10.514286
+      tipo: 2
+      estado: Pain01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 11.434286
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 12.110286
+      tipo: 2
+      estado: Question02
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 13.524285
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 13.604285
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 14.774285
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 18.264137
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 18.344137
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 19.514137
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0
+      t: 20.564138
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
+    - fundido: 0
+      t: 22.639137
+      tipo: 2
+      estado: SitGround_Begin
+      congelar: 0
+      alFinal: 0
+      voz: 
     - fundido: 0.5
-      t: 11.64653
-      tipo: 1
+      t: 23.651138
+      tipo: 6
       estado: Ofrecer
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0.6
-      t: 20.538462
+    - fundido: 0
+      t: 23.651138
       tipo: 1
+      estado: SitGround_Loop
+      congelar: 0
+      alFinal: 0
+      voz: 
+    - fundido: 0.6
+      t: 30.015219
+      tipo: 6
       estado: ManoAlPecho
       congelar: 0
       alFinal: 0
@@ -360,10 +470,19 @@ MonoBehaviour:
     - t: 8.4775505
       emocion: molesto
       dura: 1.8367347
-    - t: 14.17438
+    - t: 12.025786
+      emocion: sorpresa
+      dura: 1.6899999
+    - t: 13.524285
+      emocion: molesto
+      dura: 1.6
+    - t: 18.264137
+      emocion: confuso
+      dura: 1.6
+    - t: 23.651138
       emocion: triste
       dura: 4.13551
-    - t: 20.538462
+    - t: 30.015219
       emocion: agradecido
       dura: 4.9453063
     visible: []
@@ -375,6 +494,7 @@ MonoBehaviour:
     t1: 4.6236734
     actor: Player
     clave: CAP4_MANZANA_01
+    linea: 24
     gesto: SenseSomethingSearching_NoWeapon
     sinPose: 0
     presentacion: -1
@@ -384,6 +504,7 @@ MonoBehaviour:
     t1: 8.077551
     actor: Player
     clave: CAP4_MANZANA_07
+    linea: 29
     gesto: Question01
     sinPose: 0
     presentacion: -1
@@ -393,54 +514,90 @@ MonoBehaviour:
     t1: 9.914286
     actor: _ESTELA
     clave: CAP4_MANZANA_02
+    linea: 30
     gesto: Talk01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 10.314285
-    t1: 11.64653
+    t0: 11.434286
+    t1: 13.124286
     actor: Player
-    clave: CAP4_MANZANA_03
-    gesto: Talk02
+    clave: CAP4_MANZANA_08
+    linea: 33
+    gesto: Question02
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 14.17438
-    t1: 17.909891
+    t0: 13.524285
+    t1: 14.724285
     actor: _ESTELA
-    clave: CAP4_MANZANA_04
+    clave: CAP4_MANZANA_09
+    linea: 34
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.264137
+    t1: 19.464138
+    actor: _ESTELA
+    clave: CAP4_MANZANA_10
+    linea: 38
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 19.864138
+    t1: 22.139137
+    actor: Player
+    clave: CAP4_MANZANA_11
+    linea: 39
     gesto: 
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 17.909891
-    t1: 19.738462
-    actor: Player
-    clave: CAP4_MANZANA_05
-    gesto: Talk02
-    sinPose: 0
+    t0: 23.651138
+    t1: 27.386648
+    actor: _ESTELA
+    clave: CAP4_MANZANA_04
+    linea: 46
+    gesto: 
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 20.538462
-    t1: 25.083767
+    t0: 27.386648
+    t1: 29.21522
+    actor: Player
+    clave: CAP4_MANZANA_05
+    linea: 48
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 30.015219
+    t1: 34.560524
     actor: _ESTELA
     clave: CAP4_MANZANA_06
+    linea: 52
     gesto: 
     sinPose: 1
     presentacion: -1
   planos:
   - focos: []
     t0: 0
-    t1: 17.909891
+    t1: 27.386648
+    linea: 23
     tipo: 1
     descripcion: conjunto de will y estela
     posiciones:
     - t: 0
-      p: {x: -105.32979, y: 34.142178, z: 49.23828}
+      p: {x: -106.39106, y: 34.093246, z: 48.56562}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -451,18 +608,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1333594
+    alturaDelFoco: 1.1007209
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 17.909891
-    t1: 20.538462
+    t0: 27.386648
+    t1: 30.015219
+    linea: 47
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 17.909891
+    - t: 27.386648
       p: {x: -105.89404, y: 33.309128, z: 51.517887}
     lente: 32
     lenteFinal: 0
@@ -480,13 +638,14 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 20.538462
-    t1: 26.083767
+    t0: 30.015219
+    t1: 35.560524
+    linea: 50
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
-    - t: 20.538462
-      p: {x: -105.12489, y: 33.292572, z: 51.128956}
+    - t: 30.015219
+      p: {x: -105.16092, y: 33.33814, z: 51.63585}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -495,7 +654,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1124943
+    alturaDelFoco: 1.0891812
     encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -505,13 +664,13 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294631505527669
+      rid: 6540294704968237410
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 26.083767
+    t: 35.560524
     beat:
-      rid: 6540294631505527670
+      rid: 6540294704968237411
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -529,7 +688,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294631505527669
+    - rid: 6540294704968237410
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -537,7 +696,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294631505527670
+    - rid: 6540294704968237411
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

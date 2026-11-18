@@ -558,3 +558,4 @@ namespace Sendero.Narrative.Editor
         }
     }
 }
+

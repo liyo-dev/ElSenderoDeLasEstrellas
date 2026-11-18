@@ -24,10 +24,23 @@ plano conjunto will estela
 will dice CAP4_MANZANA_01 cara=pensativo gesto=SenseSomethingSearching_NoWeapon
 estela gesto Pain01
 will mira estela
+# Tres veces (INC-1287): Estela rechaza la ayuda dos veces; a la tercera Will no insiste, se sienta
+# en el camino diciendo que el agotado es él, y ella se sienta a su lado.
 will dice CAP4_MANZANA_07 cara=preocupado
 estela dice CAP4_MANZANA_02 cara=molesto
-will dice CAP4_MANZANA_03
+espera 0.6
+estela gesto Pain01
+will dice CAP4_MANZANA_08 cara=preocupado
+estela dice CAP4_MANZANA_09 cara=molesto gesto=HeadShake01
 will anda a p_will2 ritmo=paseo
+will gesto SitGround_Begin
+will bucle SitGround_Loop
+estela dice CAP4_MANZANA_10 cara=confuso mira=will
+will dice CAP4_MANZANA_11 cara=picaro
+espera 0.5
+# Se sienta a su lado: ha ganado no insistir.
+estela gesto SitGround_Begin
+estela bucle SitGround_Loop
 # Estela saca la manzana y se la enseña.
 & estela bucle Ofrecer fundido=0.5
 estela dice CAP4_MANZANA_04 cara=triste

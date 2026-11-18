@@ -22,9 +22,14 @@ HILO
 will en p_will mirando explosion
 & estela en p_estela mirando explosion
 & bandas
+# Estela está practicando y el hechizo le sale mal (INC-1287): por eso sale tosiendo del humo y de
+# mal humor, y la explosión no parece un fallo de la escena.
+plano general will estela
+estela gesto MagicRight
 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Smoke AOE explosion.prefab" en=explosion lifetime=3
 & sacudida 0.6 0.5
-plano general will estela
+& estela gesto Dizzy_NoWeapon
+& estela cara molesto
 espera 1.5
 estela mira will
 will mira estela
@@ -36,7 +41,7 @@ estela anda a p_estela2 ritmo=paseo
 plano dos will estela
 & estela bucle BrazosEnJarras fundido=0.4
 estela dice CAP4_ESTELA_03 cara=molesto
-will dice CAP4_ESTELA_04 cara=alegre gesto=HandClap01
+will dice CAP4_ESTELA_04 cara=confuso gesto=Question01
 
 @aro
 # Le tiende el trozo de aro y lo sostiene mientras ella lo lee.
@@ -55,8 +60,12 @@ plano dos will estela
 estela dice CAP4_ESTELA_09 cara=molesto gesto=HeadShake01
 will dice CAP4_ESTELA_10 cara=decidido
 & will bucle ManoAlPecho fundido=0.4
+# La pluma del claro: la prueba que Will traía para que le escuchara (INC-1287).
+will dice CAP4_ESTELA_13 cara=decidido
+& will bucle Ofrecer fundido=0.4
 plano primer estela
 & estela reposo
+& will reposo
 estela dice CAP4_ESTELA_11 cara=preocupado
 espera 0.6
 estela dice CAP4_ESTELA_12 cara=picaro

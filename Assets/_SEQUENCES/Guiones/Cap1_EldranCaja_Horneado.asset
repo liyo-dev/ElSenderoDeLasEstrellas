@@ -15,9 +15,9 @@ MonoBehaviour:
   nombre: Cap1_EldranCaja
   escena: MainWorld
   rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap1_EldranCaja.guion.txt
-  duracion: 18.050951
+  duracion: 18.094011
   presentacion: 1
-  huella: "2026-11-15 16:45 \xB7 ee2b912da0597cf8c34f9d283d9a0359"
+  huella: "2026-11-18 15:57 \xB7 ee2b912da0597cf8c34f9d283d9a0359"
   actores:
   - id: Player
     prefab: Assets/Prefabs/_WILL.prefab
@@ -112,31 +112,31 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: 7, y: 26.281815, z: -137}
-    - t: 13.6828575
+    - t: 13.725919
       p: {x: 7, y: 26.281815, z: -137}
-    - t: 13.959025
+    - t: 14.002087
       p: {x: 7.287097, y: 26.281815, z: -136.93549}
-    - t: 14.173852
+    - t: 14.216913
       p: {x: 7.5741935, y: 26.281815, z: -136.87097}
-    - t: 14.460072
+    - t: 14.503133
       p: {x: 8.004839, y: 26.281815, z: -136.7742}
-    - t: 14.744838
+    - t: 14.787899
       p: {x: 8.435484, y: 26.281815, z: -136.67741}
-    - t: 15.029602
+    - t: 15.072663
       p: {x: 8.866129, y: 26.281815, z: -136.58064}
-    - t: 15.314366
+    - t: 15.357428
       p: {x: 9.296774, y: 26.281815, z: -136.48387}
-    - t: 15.599131
+    - t: 15.642192
       p: {x: 9.727419, y: 26.281815, z: -136.3871}
-    - t: 15.883895
+    - t: 15.926956
       p: {x: 10.158064, y: 26.281815, z: -136.29033}
-    - t: 16.168661
+    - t: 16.211721
       p: {x: 10.58871, y: 26.281815, z: -136.19354}
-    - t: 16.46294
+    - t: 16.506
       p: {x: 11.019355, y: 26.281815, z: -136.09677}
-    - t: 16.699875
+    - t: 16.742935
       p: {x: 11.306451, y: 26.281815, z: -136.03226}
-    - t: 16.850952
+    - t: 16.894012
       p: {x: 11.45, y: 26.281815, z: -136}
     miradas:
     - t: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Tomasa
-    - t: 16.850952
+    - t: 16.894012
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -201,14 +201,14 @@ MonoBehaviour:
       alFinal: 0
       voz: 
     - fundido: 0
-      t: 13.732858
+      t: 13.775919
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
     - fundido: 0.4
-      t: 16.850952
+      t: 16.894012
       tipo: 1
       estado: BrazosEnJarras
       congelar: 0
@@ -217,7 +217,7 @@ MonoBehaviour:
     caras:
     - t: 11.775919
       emocion: alegre
-      dura: 2.306939
+      dura: 2.35
     visible: []
     deslizando: []
   - id: NPC_Tomasa
@@ -244,7 +244,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 13.6828575
+    - t: 13.725919
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -270,7 +270,7 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: NPC_Eldran
-    - t: 13.6828575
+    - t: 13.725919
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -338,6 +338,7 @@ MonoBehaviour:
     t1: 4.2579594
     actor: NPC_Tomasa
     clave: TOMASA_ESTRELLA_1
+    linea: 40
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -347,6 +348,7 @@ MonoBehaviour:
     t1: 8.369592
     actor: Player
     clave: WILL_ESTRELLA_1
+    linea: 41
     gesto: Grito01
     sinPose: 0
     presentacion: -1
@@ -356,15 +358,17 @@ MonoBehaviour:
     t1: 11.775919
     actor: NPC_Tomasa
     clave: TOMASA_ESTRELLA_2
+    linea: 42
     gesto: Laugh01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 11.775919
-    t1: 13.6828575
+    t1: 13.725919
     actor: NPC_Eldran
     clave: DLG_ELDRAN_CAJA_LLAMADA
+    linea: 46
     gesto: Cheer01
     sinPose: 0
     presentacion: -1
@@ -395,7 +399,7 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 11.775919
-    t1: 16.850952
+    t1: 16.894012
     linea: 45
     tipo: 0
     descripcion: general de eldran y will
@@ -418,13 +422,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 16.850952
-    t1: 18.050951
+    t0: 16.894012
+    t1: 18.094011
     linea: 57
     tipo: 5
     descripcion: 'dos: eldran y will'
     posiciones:
-    - t: 16.850952
+    - t: 16.894012
       p: {x: 9.563595, y: 27.169455, z: -134.06609}
     lente: 34
     lenteFinal: 0
@@ -446,19 +450,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294635039228363
+      rid: 6540294704968237793
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 16.850952
+    t: 16.894012
     beat:
-      rid: 6540294635039228364
+      rid: 6540294704968237794
     linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 18.050951
+    t: 18.094011
     beat:
-      rid: 6540294635039228365
+      rid: 6540294704968237795
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -468,9 +472,9 @@ MonoBehaviour:
   - nombre: llamada
     t: 11.775919
   - nombre: acerca
-    t: 13.6828575
+    t: 13.725919
   - nombre: charla
-    t: 16.850952
+    t: 16.894012
   puntos:
   - nombre: p_will
     posicion: {x: 13.2, y: 26.281815, z: -135.6}
@@ -484,7 +488,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294635039228363
+    - rid: 6540294704968237793
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -492,7 +496,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294635039228364
+    - rid: 6540294704968237794
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -507,7 +511,7 @@ MonoBehaviour:
           - HeadNod01
           emotions: 
         detenerEscena: 1
-    - rid: 6540294635039228365
+    - rid: 6540294704968237795
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

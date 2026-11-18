@@ -1,7 +1,8 @@
 # Habitación al amanecer. Las alternativas de la vela comparten el mismo hueco de tiempo.
 GUION Cap2_02_MananaDespues
 ESCENA WillHouse
-PREPARA Cap2MananaDespues
+# (Antes llevaba la cabecera de preparación con Cap2MananaDespues): el montaje de un solo uso se retiró el 14 nov (Versiones antiguas/Menús retirados
+# 2026-11-14); lo que preparaba ya está en WillHouse y en el grafo, así que el guion se hornea sin él (INC-1287).
 SECUENCIA Assets/_SEQUENCES/SEQ_MananaDespues.asset
 TEXTO subtitulo
 RITMO entre_frases=0.25 mismo_hablante=0.15

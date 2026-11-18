@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_Cap3_03_ElCarro
   m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
   displayName: 'Cap. 3: llegan los contrabandistas'
-  summary: "Se oyen ruedas: Will se esconde tras un matorral. Llegan los dos contrabandistas con el carro tapado; el vig\xEDa ve las brasas y mira alrededor, y siguen hacia el puente."
+  summary: "Will espera al carro junto al fuego; al o\xEDr las ruedas se esconde tras un matorral. Llegan los dos contrabandistas con el carro tapado; el vig\xEDa ve las brasas y mira alrededor, y siguen hacia el puente. Will decide seguirlos para ver si los animales llevan aro."
   signalIn: CAP3_CARRO_START
   signalOut: CAP3_CARRO_DONE
   musicId: 
@@ -26,11 +26,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 6540294701245530252
+    - rid: 6540294704968237386
   references:
     version: 2
     RefIds:
-    - rid: 6540294701245530252
+    - rid: 6540294704968237386
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

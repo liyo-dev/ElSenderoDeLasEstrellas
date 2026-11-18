@@ -1,9 +1,10 @@
-Punto de control 18 nov: contrabandistas en escena, frases del carro, cerebro de combate nuevo (INC-1281 a INC-1283)
+Cinemáticas de la demo, primera tanda (INC-1287): carro y contrabandistas del Cap. 3, Cap. 4, Oliver, prólogo
 
-- INC-1281: los contrabandistas vuelven a escena para el combate y el sigilo.
-- INC-1282: frases nuevas de la cinemática del carro (Will espera el carro a propósito).
-- INC-1283: cerebro de combate por puntuación (E1 y E2), conviviendo con el clásico.
-- Cámara nueva de la llegada en Cap3_03_ElCarro, TRACKER y lo que hubiera de otros hilos.
+- Cap. 3: el carro vuelve a salir (el soporte «(tramo)» ya no es prop de la cinemática), contrabandistas con config propia y cerebro por puntuación, claro con «Llevan aro», despedida nueva.
+- Cap. 4: pluma, capucha, Estela practicando, manzana en tres intentos, figuras, bifurcación.
+- Cap. 1-2: Oliver reordenado, llamada de Eldran, mañana después sin contradicciones.
+- Prólogo: intro del Mago Oscuro (rótulo, onda del altar, mirada por el hombro), vuelo sin dar vueltas sobre la plaza, duelo sin turnos, cántico de frente, «Siglos después».
+- Voces cambiadas a Versiones antiguas hasta doblarlas.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpdr

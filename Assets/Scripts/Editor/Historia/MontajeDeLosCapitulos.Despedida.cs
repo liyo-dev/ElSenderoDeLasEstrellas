@@ -85,9 +85,9 @@ public static partial class MontajeDeLosCapitulos
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_DESPEDIDA", Guion = "Cap3_00_LaDespedida", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: la despedida en la salida del pueblo",
             Resumen = "Eldran: Estela no acepta aprendices; en la aldea del mar, reúne pruebas de los aros. Él se va al Reino. «Es un hasta pronto»." });
-        TextoDeCine("CAP3_DESPEDIDA_01", "Ya estás aquí. ¿Te has despedido de todos?", "There you are. Have you said goodbye to everyone?");
-        TextoDeCine("CAP3_DESPEDIDA_02", "De casi todos. Tomasa quería venderme otra cosa inútil.", "Almost everyone. Tomasa wanted to sell me another useless thing.");
-        TextoDeCine("CAP3_DESPEDIDA_03", "Esa mujer no descansa. Escucha, que esto es importante.", "That woman never rests. Listen, this is important.");
+        TextoDeCine("CAP3_DESPEDIDA_01", "Ya estás aquí. Pensaba que te costaría más salir de la cama.", "There you are. I thought you'd have a harder time getting out of bed.");
+        TextoDeCine("CAP3_DESPEDIDA_02", "No he dormido mucho.", "I didn't sleep much.");
+        TextoDeCine("CAP3_DESPEDIDA_03", "Yo tampoco. Escucha, que esto es importante.", "Neither did I. Listen, this is important.");
         TextoDeCine("CAP3_DESPEDIDA_04", "Estela no acepta aprendices. Si te presentas con un trozo de hierro y buena cara, te cerrará la puerta.", "Estela doesn't take apprentices. Turn up with a piece of iron and a nice smile and she'll shut the door on you.");
         TextoDeCine("CAP3_DESPEDIDA_05", "Pero en la aldea del mar han visto más animales con aros como ese. Ve allí primero, pregunta y apúntalo todo.", "But at the seaside village they've seen more animals with collars like that one. Go there first, ask around and write it all down.");
         TextoDeCine("CAP3_DESPEDIDA_06", "Llévale algo que no pueda ignorar. Así te escuchará.", "Bring her something she can't ignore. Then she'll listen.");
@@ -96,6 +96,12 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_DESPEDIDA_09", "Entonces no es una despedida.", "So this isn't goodbye.");
         TextoDeCine("CAP3_DESPEDIDA_10", "Claro que no. Es un «hasta pronto». Anda, tira, que se te va el día.", "Of course not. It's a \"see you soon\". Go on, off you go, the day's slipping away.");
         TextoDeCine("CAP3_DESPEDIDA_11", "¡Hasta pronto, Eldran!", "See you soon, Eldran!");
+        // INC-1287: la despedida más emotiva (la promesa a la mujer del carro y la expedición de Eldran).
+        TextoDeCine("CAP3_DESPEDIDA_12", "Le prometí a aquella mujer que no te dejaría solo.", "I promised that woman I wouldn't leave you alone.");
+        TextoDeCine("CAP3_DESPEDIDA_13", "Y no lo haces. Solo me dejas ir.", "And you're not. You're just letting me go.");
+        TextoDeCine("CAP3_DESPEDIDA_14", "…Eso es más difícil.", "…That's harder.");
+        TextoDeCine("CAP3_DESPEDIDA_15", "Hace cuarenta años yo también me fui a buscar algo. Prométeme que vuelves. Aunque no encuentres nada.", "Forty years ago I went looking for something too. Promise me you'll come back. Even if you find nothing.");
+        TextoDeCine("CAP3_DESPEDIDA_16", "Te lo prometo.", "I promise.");
 
         // ── Marcas, acampada y llegadas ────────────────────────────────────────────────
         // El camino del puerto arranca en (50,8, −183,8) y baja hacia el sureste (rumbo ~137°).

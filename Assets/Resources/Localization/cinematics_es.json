@@ -394,7 +394,7 @@
         },
         {
             "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
-            "text": "¿Siguen discutiendo? Llevan así un buen rato...\nAntes de ir a ver qué pasa, quería enseñarte algo."
+            "text": "Sí… llevan así un buen rato.\nAntes de ir a ver qué pasa, quería enseñarte algo."
         },
         {
             "id": "OLIVER_GREETING_PERAS_HANDOFF",
@@ -614,7 +614,11 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "¡Ja, sigues igual! ¿Por qué discuten Eldran y Victoria? Se les oye desde aquí."
+            "text": "¡Ja, sigues igual!"
+        },
+        {
+            "id": "WILL_GREETING_POR_QUE_DISCUTEN",
+            "text": "¿Por qué discuten Eldran y Victoria? Se les oye desde aquí."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -966,11 +970,11 @@
         },
         {
             "id": "EVT_MANANA_04b",
-            "text": "Claro. Si te estaba ayudando."
+            "text": "Lo vi."
         },
         {
             "id": "EVT_MANANA_05",
-            "text": "Anoche, cuando me lo contaste, era la mitad."
+            "text": "Yo lo recuerdo de la mitad."
         },
         {
             "id": "EVT_MANANA_06",
@@ -2342,7 +2346,7 @@
         },
         {
             "id": "CAP3_CLARO_01",
-            "text": "Doce jaulas. En la capital pagan bien por plumas que brillan."
+            "text": "Doce jaulas. En la capital pagan bien por animales que brillan."
         },
         {
             "id": "CAP3_CLARO_02",
@@ -2362,7 +2366,7 @@
         },
         {
             "id": "CAP3_CLARO_06",
-            "text": "Pero son dos. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro."
+            "text": "Pero son dos. Y si el fuego se me escapa, las jaulas arden con los animales dentro."
         },
         {
             "id": "CAP3_CLARO_07",
@@ -2438,7 +2442,7 @@
         },
         {
             "id": "CAP4_ESTELA_04",
-            "text": "Impresionante."
+            "text": "…¿Con vestido?"
         },
         {
             "id": "CAP4_ESTELA_05",
@@ -2674,15 +2678,15 @@
         },
         {
             "id": "CAP3_DESPEDIDA_01",
-            "text": "Ya estás aquí. ¿Te has despedido de todos?"
+            "text": "Ya estás aquí. Pensaba que te costaría más salir de la cama."
         },
         {
             "id": "CAP3_DESPEDIDA_02",
-            "text": "De casi todos. Tomasa quería venderme otra cosa inútil."
+            "text": "No he dormido mucho."
         },
         {
             "id": "CAP3_DESPEDIDA_03",
-            "text": "Esa mujer no descansa. Escucha, que esto es importante."
+            "text": "Yo tampoco. Escucha, que esto es importante."
         },
         {
             "id": "CAP3_DESPEDIDA_04",
@@ -2730,7 +2734,15 @@
         },
         {
             "id": "PROLOGO_DESEO",
-            "text": "Que ningún poder pueda destruirme."
+            "text": "Que ningún poder que exista pueda destruirme."
+        },
+        {
+            "id": "CAP1_ROTULO_SIGLOS_DESPUES",
+            "text": "Siglos después."
+        },
+        {
+            "id": "PROLOGO_ROTULO_SIGLOS",
+            "text": "Hace siglos…"
         },
         {
             "id": "PROLOGO_DESEO_PODER",
@@ -2749,8 +2761,72 @@
             "text": "…¿Y ese poder? ¿De dónde sale?"
         },
         {
+            "id": "PROLOGO_DESEO_PODER_NUEVO",
+            "text": "No es ninguno de los que existen."
+        },
+        {
             "id": "PROLOGO_DESEO_RISA_OSCURO",
             "text": "Ja, ja, ja…"
+        },
+        {
+            "id": "CAP3_DESPEDIDA_12",
+            "text": "Le prometí a aquella mujer que no te dejaría solo."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_13",
+            "text": "Y no lo haces. Solo me dejas ir."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_14",
+            "text": "…Eso es más difícil."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_15",
+            "text": "Hace cuarenta años yo también me fui a buscar algo. Prométeme que vuelves. Aunque no encuentres nada."
+        },
+        {
+            "id": "CAP3_DESPEDIDA_16",
+            "text": "Te lo prometo."
+        },
+        {
+            "id": "CAP3_CLARO_08",
+            "text": "Llevan aro. Todos."
+        },
+        {
+            "id": "CAP4_ESTELA_13",
+            "text": "Y esto. Es de uno de los animales del carro. Llevaban aro."
+        },
+        {
+            "id": "CAP4_MANANA_06",
+            "text": "Ayudarte no sirve de nada si te incendias cada vez que estornudas."
+        },
+        {
+            "id": "CAP4_MANZANA_08",
+            "text": "Paramos un momento, ¿vale?"
+        },
+        {
+            "id": "CAP4_MANZANA_09",
+            "text": "No hace falta."
+        },
+        {
+            "id": "CAP4_MANZANA_10",
+            "text": "…¿Qué haces?"
+        },
+        {
+            "id": "CAP4_MANZANA_11",
+            "text": "Descansar. Yo sí que estoy agotado."
+        },
+        {
+            "id": "CAP4_BIFURCACION_12",
+            "text": "Tú eres el de la capucha. Llevas desde ayer siguiéndonos."
+        },
+        {
+            "id": "CAP4_BIFURCACION_13",
+            "text": "No sabía si erais de fiar."
+        },
+        {
+            "id": "CAP4_BIFURCACION_14",
+            "text": "Hasta el Reino. Y delante de mí."
         }
     ]
 }

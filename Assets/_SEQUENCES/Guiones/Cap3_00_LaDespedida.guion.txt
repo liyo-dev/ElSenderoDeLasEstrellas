@@ -1,7 +1,11 @@
-# Cap. 3 · La despedida en la salida del pueblo (INC-967). Eldran explica por qué ir antes a la aldea
-# del mar (Estela no acepta aprendices: hay que llevarle pruebas de los aros) y se despide con un
-# «hasta pronto»: él se va al Reino. Will baja por el camino del puerto, se gira y saluda, y Eldran
-# vuelve por el pueblo hacia el Reino. Suena la melodía de Eldran.
+# Cap. 3 · La despedida en la salida del pueblo (INC-967; más emotiva, INC-1287). Eldran ha pasado la
+# noche en vela, como Will. Explica por qué ir antes a la aldea del mar (Estela no acepta aprendices:
+# hay que llevarle pruebas de los aros) y que él se va al Reino. Le cuesta: prometió a la mujer del
+# carro que no dejaría solo a Will, y hace cuarenta años él también se fue a buscar algo y no volvieron
+# todos. Le hace prometer que vuelve. «Hasta pronto». Will baja por el camino del puerto, se gira y
+# saluda; cuando se da la vuelta, la cámara se queda con Eldran, que le mira irse con la mano en el pecho
+# y solo entonces vuelve al pueblo. Suena la melodía de Eldran.
+# No hay animación de abrazo ni de mano en el hombro: quedan muy cerca, de frente (pendiente de pose).
 GUION Cap3_00_LaDespedida
 ESCENA MainWorld
 ZONA Cap3Despedida 57 -189 26
@@ -31,8 +35,8 @@ will en p_will mirando eldran
 plano dos will eldran
 espera 0.6
 eldran dice CAP3_DESPEDIDA_01 cara=alegre
-will dice CAP3_DESPEDIDA_02 cara=alegre gesto=Shrug01
-eldran dice CAP3_DESPEDIDA_03 gesto=Laugh01 cara=alegre
+will dice CAP3_DESPEDIDA_02 cara=cansado
+eldran dice CAP3_DESPEDIDA_03 cara=pensativo
 
 @consejo
 plano medio eldran
@@ -43,12 +47,26 @@ eldran dice CAP3_DESPEDIDA_06 cara=decidido
 plano primer will
 will dice CAP3_DESPEDIDA_07 cara=preocupado
 
-@hasta_pronto
+@promesa
 plano medio eldran
-eldran dice CAP3_DESPEDIDA_08 cara=alegre
+eldran dice CAP3_DESPEDIDA_08 cara=decidido
+espera 0.8
+# Silencio: lo que de verdad le cuesta.
+eldran dice CAP3_DESPEDIDA_12 cara=triste mira=will
+plano primer will
+will dice CAP3_DESPEDIDA_13 cara=alegre
+plano primer eldran
+# Media sonrisa que se le quiebra.
+eldran dice CAP3_DESPEDIDA_14 cara=triste
+espera 0.5
+eldran dice CAP3_DESPEDIDA_15 cara=preocupado
+plano primer will
+will dice CAP3_DESPEDIDA_16 cara=decidido
+
+@hasta_pronto
 plano dos will eldran
 will dice CAP3_DESPEDIDA_09 cara=pensativo
-# Le llega: la mano al pecho, y así se queda viéndole marchar.
+# Le llega: la mano al pecho, y así se queda viéndole marchar. El humor, para no emocionarse.
 & eldran bucle ManoAlPecho fundido=0.6
 eldran dice CAP3_DESPEDIDA_10 gesto=HeadNod01 cara=alegre
 
@@ -62,14 +80,17 @@ will gesto HandWave01
 espera 0.6
 
 @se_va
-# Eldran se da la vuelta y se va hacia el pueblo; Will le mira irse. Ya fuera de cuadro (plano de
-# Will, con Eldran a la espalda de la cámara) desaparece; la agenda lo retira del todo al alejarse Will.
-will mira eldran
-& eldran anda a e_vuelta ritmo=normal
-desde @se_va+4.0 plano medio will
-desde @se_va+4.2 eldran desaparece
-desde @se_va+4.6 will cara pensativo
-desde @se_va+6.4 will mira p_puerto
-desde @se_va+6.5 will cara decidido
-espera 7.6
+# Will se da la vuelta y baja hacia el puerto. Lo que Will no ve: la cámara se queda con Eldran, que le
+# mira irse con la mano en el pecho hasta que desaparece camino abajo; solo entonces se vuelve al pueblo.
+will mira p_puerto
+& will anda a p_puerto ritmo=normal sin_esperar
+plano medio eldran
+& eldran bucle ManoAlPecho fundido=0.6
+& eldran mira will
+& eldran cara triste
+espera 4.5
+eldran reposo
+eldran anda a e_vuelta ritmo=paseo sin_esperar
+# Se aleja hacia los árboles; no desaparece en cuadro: lo retira el grafo al acabar (INC-1251).
+espera 3.0
 bandas quita

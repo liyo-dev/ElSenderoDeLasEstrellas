@@ -52,6 +52,7 @@ public static partial class MontajeDeLosCapitulos
 
     private static Capitulo MontarAssetsCap3(StringBuilder informe)
     {
+        AsegurarContrabandistas(informe);
 
         // Nombres de los personajes nuevos.
         foreach (var (clave, es, en) in new[]
@@ -131,7 +132,7 @@ public static partial class MontajeDeLosCapitulos
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CARRO", Guion = "Cap3_03_ElCarro", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: llegan los contrabandistas", Resumen = "Will espera al carro junto al fuego; al oír las ruedas se esconde tras un matorral. Llegan los dos contrabandistas con el carro tapado; el vigía ve las brasas y mira alrededor, y siguen hacia el puente. Will decide seguirlos para ver si los animales llevan aro." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CLARO", Guion = "Cap3_04_ElClaro", Texto = PresentacionDeTexto.Subtitulo,
-            Nombre = "Cap. 3: el claro", Resumen = "Doce jaulas de pájaros de luz. A Will le arden las manos: «¿Debes hacerlo?»." });
+            Nombre = "Cap. 3: el claro", Resumen = "Doce jaulas de animales con aro. A Will le arden las manos: «¿Debes hacerlo?»." });
 
         // Textos de las cinemáticas (tabla de subtítulos).
         TextoDeCine("CAP3_ESPEJO_01", "Hoy me he tomado media sopa.", "I had half my soup today.");
@@ -161,12 +162,13 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_CARRO_05", "Algún pastor. Vamos, que nos esperan antes del alba.", "Some shepherd. Come on, they're expecting us before dawn.");
         TextoDeCine("CAP3_CARRO_02", "Algo brilla bajo la paja… Si llevan animales, quiero ver si tienen aro.", "Something's glowing under the straw… If they're carrying animals, I want to see if they wear collars.");
         TextoDeCine("CAP3_CARRO_03", "Tengo que ver adónde van. Sin que me vean.", "I have to see where they're going. Without being seen.");
-        TextoDeCine("CAP3_CLARO_01", "Doce jaulas. En la capital pagan bien por plumas que brillan.", "Twelve cages. They pay well in the capital for feathers that glow.");
+        TextoDeCine("CAP3_CLARO_01", "Doce jaulas. En la capital pagan bien por animales que brillan.", "Twelve cages. They pay well in the capital for animals that glow.");
         TextoDeCine("CAP3_CLARO_02", "No paran de brillar. Me ponen nervioso.", "They won't stop glowing. They make me nervous.");
         TextoDeCine("CAP3_CLARO_03", "Pues tápalos. Al amanecer, al barco.", "Then cover them. At dawn, to the boat.");
-        TextoDeCine("CAP3_CLARO_04", "El perro no deja de gruñir al bosque.", "The dog won't stop growling at the forest.");
+        // INC-1287: fuera el perro (no hay perro en el claro). Will confirma lo que venía a ver: llevan aro.
+        TextoDeCine("CAP3_CLARO_08", "Llevan aro. Todos.", "They're collared. All of them.");
         TextoDeCine("CAP3_CLARO_05", "Podría entrar ahora mismo y sacarlos de ahí…", "I could go in right now and get them out of there…");
-        TextoDeCine("CAP3_CLARO_06", "Pero son dos. Y si el fuego se me escapa, las jaulas arden con los pájaros dentro.", "But there are two of them. And if the fire gets away from me, the cages burn with the birds inside.");
+        TextoDeCine("CAP3_CLARO_06", "Pero son dos. Y si el fuego se me escapa, las jaulas arden con los animales dentro.", "But there are two of them. And if the fire gets away from me, the cages burn with the animals inside.");
         TextoDeCine("CAP3_CLARO_07", "Eldran siempre lo dice: que puedas hacer algo no quiere decir que debas.", "Eldran always says it: being able to do something doesn't mean you should.");
 
         // ── Marcas, roster y escena ─────────────────────────────────────────────────────────
@@ -219,7 +221,7 @@ public static partial class MontajeDeLosCapitulos
         s_papeles.Add(new Papel { SpawnId = "SPAWN_GuardiaCruce1", Prefab = "Assets/_NPCs/Guard.prefab", Nombre = "GuardiaCruce1", Id = Guardia1, Flag = FlagCap3Iniciado });
         s_papeles.Add(new Papel { SpawnId = "SPAWN_GuardiaCruce2", Prefab = "Assets/_NPCs/Guard.prefab", Nombre = "GuardiaCruce2", Id = Guardia2, Flag = FlagCap3Iniciado });
         s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista1", Prefab = "Assets/_NPCs/Pueblo/Jorge.prefab", Nombre = "Contrabandista1", Id = Contra1, Flag = FlagCap3Iniciado, NavMesh = false });
-        s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista2", Prefab = "Assets/_NPCs/Combat/Boy_Pirate.prefab", Nombre = "Contrabandista2", Id = Contra2, Flag = FlagCap3Iniciado, NavMesh = false });
+        s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista2", Prefab = VigiaContrabandista, Nombre = "Contrabandista2", Id = Contra2, Flag = FlagCap3Iniciado, NavMesh = false });
 
         // Los dos contrabandistas aparecen cuando anochece con Will junto al fuego; después, detenidos o huidos.
         foreach (var c in new[] { Contra1, Contra2 })
@@ -394,7 +396,7 @@ public static partial class MontajeDeLosCapitulos
             P("pillado-combate", "3.3 · Combate contra los dos contrabandistas", GameStepNode.For(new PedirCombateContraNpc
             {
                 npcId = Contra1, otrosNpcs = new List<string> { Contra2 },
-                combatConfig = Cargar<Game.NPC.Modules.NPCCombatConfig>(CombateDeLosContrabandistas), defeatEventKey = S3.CarreteroVencido,
+                combatConfig = Cargar<Game.NPC.Modules.NPCCombatConfig>(ConfigDeLosContrabandistas), defeatEventKey = S3.CarreteroVencido,
                 waitForDefeat = true, restorePeacefulOnDefeat = true,
             }), "pillado-gana", "seguir"),
             P("pillado-gana", "3.3 · Les gana: huyen al campamento", Dialogo(dlgVencido, Contra1)),
@@ -462,6 +464,55 @@ public static partial class MontajeDeLosCapitulos
         informe.AppendLine($"Cap. 3: acampada y claro despejados de flores ({despejadas} celdas de hierba).");
     }
 
+    private const string ConfigDeLosContrabandistas = "Assets/_NPCs/Combat/NPC_Combat_Config_Contrabandistas.asset";
+    private const string VigiaContrabandista = "Assets/_NPCs/_GrafoNarrativo/Contrabandista_Vigia.prefab";
+
+    /// Los contrabandistas no son enemigos de paso (INC-1287): el vigía usaba el prefab del pirata, que
+    /// ataca al ver al jugador y suelta su «¿Ves este ojo?» en cuanto Will se acerca al claro. Tienen
+    /// su propia config, copia de la del pirata pero sin atacar por su cuenta ni charla de alerta y con
+    /// el cerebro por puntuación (pelean en grupo, INC-1283); la pelea la pide la historia
+    /// (PedirCombateContraNpc). El vigía es una variante del pirata con esa config.
+    private static void AsegurarContrabandistas(StringBuilder informe)
+    {
+        var cfg = AssetDatabase.LoadAssetAtPath<Game.NPC.Modules.NPCCombatConfig>(ConfigDeLosContrabandistas);
+        if (cfg == null)
+        {
+            AssetDatabase.CopyAsset(CombateDeLosContrabandistas, ConfigDeLosContrabandistas);
+            cfg = AssetDatabase.LoadAssetAtPath<Game.NPC.Modules.NPCCombatConfig>(ConfigDeLosContrabandistas);
+        }
+        if (cfg == null) { informe.AppendLine("AVISO: no se pudo crear la config de los contrabandistas."); return; }
+        cfg.isAggressive = false;
+        cfg.dialogueOnAlert = null;
+        cfg.dialogueOnAlertRepeat = null;
+        cfg.waitForAlertDialogue = false;
+        cfg.freezePlayerOnAlert = false;
+        cfg.cerebro = Game.NPC.TipoDeCerebroDeCombate.PorPuntuacion;
+        EditorUtility.SetDirty(cfg);
+
+        var vigia = AssetDatabase.LoadAssetAtPath<GameObject>(VigiaContrabandista);
+        if (vigia == null)
+        {
+            var origen = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_NPCs/Combat/Boy_Pirate.prefab");
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(origen);
+            vigia = PrefabUtility.SaveAsPrefabAsset(inst, VigiaContrabandista);
+            Object.DestroyImmediate(inst);
+        }
+        int puestas = 0;
+        foreach (var mb in vigia.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (mb == null) continue;
+            var so = new SerializedObject(mb);
+            var it = so.GetIterator();
+            bool cambio = false;
+            while (it.Next(true))
+                if (it.propertyType == SerializedPropertyType.ObjectReference && it.name == "combatConfig" && it.objectReferenceValue != cfg)
+                { it.objectReferenceValue = cfg; cambio = true; puestas++; }
+            if (cambio) so.ApplyModifiedPropertiesWithoutUndo();
+        }
+        PrefabUtility.SavePrefabAsset(vigia);
+        informe.AppendLine($"Cap. 3: contrabandistas con config propia (no atacan por su cuenta, cerebro por puntuación); vigía «{VigiaContrabandista}» ({puestas} referencia(s) a la config).");
+    }
+
     /// El carro que pasa junto al fuego: va tras el contrabandista del seguimiento, sin colisiones (se
     /// sigue a escondidas a su lado), con una luz cálida bajo la carga tapada que sube y baja despacio.
     private static void PrepararCarroDeLasJaulas(Transform raiz, StringBuilder informe)
@@ -469,7 +520,8 @@ public static partial class MontajeDeLosCapitulos
         var carro = raiz.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PROP_Carro Cap3");
         if (carro == null) { informe.AppendLine("AVISO: falta el carro de las jaulas (PROP_Carro Cap3)."); return; }
         var arrastre = carro.GetComponent<CargaArrastrada>() ?? carro.gameObject.AddComponent<CargaArrastrada>();
-        arrastre.Configurar(Contra1, 2.9f, 90f);
+        // Las varas hacia quien tira: con 90° iban hacia atrás y el carro parecía empujado (INC-1287).
+        arrastre.Configurar(Contra1, 2.9f, 270f);
         EditorUtility.SetDirty(arrastre);
 
         var previa = carro.Find("Luz de la carga");

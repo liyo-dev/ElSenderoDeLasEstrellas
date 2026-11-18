@@ -338,7 +338,7 @@ Este episodio es una prueba del carácter de Will antes de la prueba mágica. El
 
 **El precio de entrada.** Antes de dejarlos pasar, la cueva pide un pago (magia, un recuerdo o vida; se decide al construirlo). Will se dispone a pagarlo y Liam se adelanta. Es un momento breve que anticipa, sin desvelarlos, el sacrificio de Liam y el de Will.
 
-**La mazmorra.** Nivel propio, separado de MainWorld: puzles y plataformas hasta la cámara de la Piedra Ancestral. En las ruinas de la entrada siguen grabados los nombres y motivos de quienes llegaron antes. Dos mecánicas guían el nivel:
+**El templo del Libro.** La cueva lleva a un templo que custodia el Libro: mazmorra en nivel propio, separado de MainWorld, con puzles y plataformas hasta la cámara de la Piedra Ancestral. En las ruinas de la entrada siguen grabados los nombres y motivos de quienes llegaron antes. Dos mecánicas guían el nivel:
 - **El reflejo:** pasarelas y puertas que solo existen en el agua reflejada. Se aprende al principio y se combina al final.
 - **La marea:** el agua sube y baja a un compás y cambia por dónde se puede pasar.
 

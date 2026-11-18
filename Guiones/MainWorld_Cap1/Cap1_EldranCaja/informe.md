@@ -1,6 +1,6 @@
 # Parte de horneado: Cap1_EldranCaja
 
-2026-11-15 16:45 · guion `Assets/_SEQUENCES/Guiones/Cap1_EldranCaja.guion.txt`
+2026-11-18 15:57 · guion `Assets/_SEQUENCES/Guiones/Cap1_EldranCaja.guion.txt`
 
 **0:18,1** de secuencia · 4 frases · 3 planos · 3 efectos · 3 personajes
 
@@ -9,9 +9,10 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · tomasa 1,55/
 ## Errores (0)
 
 
-## Avisos (1)
+## Avisos (2)
 
 - línea 17: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
+- línea 46: eldran dice DLG_ELDRAN_CAJA_LLAMADA gesto=Cheer01 cara=alegre: la frase DLG_ELDRAN_CAJA_LLAMADA no tiene voz en Voices/es; le doy 2,0 s por su texto
 
 ## Línea de tiempo
 
@@ -26,7 +27,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · tomasa 1,55/
 | 0:08,7 | tomasa | «TOMASA_ESTRELLA_2» (3,1 s) · pose |
 | 0:11,8 | **@llamada** |  |
 | 0:11,8 | plano 2 | general de eldran y will · 5,1 s · lente 40° · coste 540: cara 121, ángulo 63, eje 350 |
-| 0:11,8 | eldran | «DLG_ELDRAN_CAJA_LLAMADA» (1,9 s) · pose |
+| 0:11,8 | eldran | «DLG_ELDRAN_CAJA_LLAMADA» (2,0 s) · pose |
 | 0:13,7 | **@acerca** |  |
 | 0:16,9 | **@charla** |  |
 | 0:16,9 | plano 3 | dos: eldran y will · 1,2 s · lente 34° · coste 994: cara 907, ángulo 81 |
@@ -45,7 +46,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · eldran 1,55/ojos 0,94 · tomasa 1,55/
 
 - 0:11,8–0:13,7 habla
 - 0:11,9 gesto Cheer01
-- 0:13,7–0:16,9 anda de (7,0, -137,0) a (11,5, -136,0)
+- 0:13,8–0:16,9 anda de (7,1, -137,0) a (11,5, -136,0)
 - 0:16,9 bucle BrazosEnJarras
 
 ### tomasa (NPC_Tomasa)

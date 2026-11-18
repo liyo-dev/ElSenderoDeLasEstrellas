@@ -464,7 +464,10 @@ public static partial class MontajeDeLosCapitulos
                 e.FindPropertyRelative("target").objectReferenceValue = propias[i].Value;
             }
             var props = so.FindProperty("_props");
-            var atrezo = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("PROP_") && t.name.Contains(c.Cap.Replace(". ", ""))).ToList();
+            // El soporte «(tramo)» de una pieza no es atrezo: es quien la enciende. Si entra como prop, comparte
+            // id con la pieza («PROP_Carro») y la cinemática lo apaga al soltarla, y con él la pieza
+            // durante todo su tramo (el carro del Cap. 3 no salía, INC-1287).
+            var atrezo = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("PROP_") && !t.name.EndsWith(" (tramo)") && t.name.Contains(c.Cap.Replace(". ", ""))).ToList();
             props.arraySize = atrezo.Count;
             for (int i = 0; i < atrezo.Count; i++)
             {
@@ -502,6 +505,10 @@ public static partial class MontajeDeLosCapitulos
     private static void EnTramo(Transform padre, TramoDeHistoria tramo, GameObject objeto)
     {
         if (tramo == null) return;
+        // El soporte es quien decide: tiene que estar encendido siempre. Si se queda apagado
+        // (lo apagó otra herramienta y se guardó así), su ActivoEnTramo no corre nunca y lo que
+        // lleva dentro no aparece en todo el tramo (el carro del Cap. 3, INC-1287).
+        if (!padre.gameObject.activeSelf) padre.gameObject.SetActive(true);
         var a = padre.gameObject.AddComponent<ActivoEnTramo>();
         a.Tramo.empiezaConSenal.AddRange(tramo.empiezaConSenal);
         a.Tramo.acabaConSenal.AddRange(tramo.acabaConSenal);

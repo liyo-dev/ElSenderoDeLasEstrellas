@@ -176,7 +176,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Contrabandista2
-    prefab: {fileID: 7766501778076261952, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
+    prefab: {fileID: 4775726162827106473, guid: 1d7bab2024516da49842b6761a65ad54, type: 3}
     gameObjectName: Contrabandista2
     persistenceId: NPC_Contrabandista2
     vozDeReacciones: Vecino

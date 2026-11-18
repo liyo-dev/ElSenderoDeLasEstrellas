@@ -14,73 +14,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
   startNodeGuid: cap4-inicio
   nodes:
-  - rid: 6540294600349713259
-  - rid: 6540294600349713260
-  - rid: 6540294600349713261
-  - rid: 6540294600349713262
-  - rid: 6540294618706084399
-  - rid: 6540294600349713264
-  - rid: 6540294600349713265
-  - rid: 6540294600349713266
-  - rid: 6540294600349713267
-  - rid: 6540294600349713268
-  - rid: 6540294600349713269
-  - rid: 6540294618706084400
-  - rid: 6540294618706084401
-  - rid: 6540294618706084402
-  - rid: 6540294600349713273
-  - rid: 6540294600349713274
-  - rid: 6540294618706084403
-  - rid: 6540294600349713276
-  - rid: 6540294600349713277
-  - rid: 6540294600349713278
-  - rid: 6540294618706084404
-  - rid: 6540294600349713280
-  - rid: 6540294600349713281
-  - rid: 6540294600349713282
-  - rid: 6540294600349713283
-  - rid: 6540294618706084405
-  - rid: 6540294618706084406
-  - rid: 6540294618706084407
-  - rid: 6540294618706084408
-  - rid: 6540294618706084409
-  - rid: 6540294600349713289
-  - rid: 6540294600349713290
-  - rid: 6540294600349713291
-  - rid: 6540294600349713292
-  - rid: 6540294618706084410
-  - rid: 6540294618706084411
-  - rid: 6540294600349713295
-  - rid: 6540294600349713296
-  - rid: 6540294600349713297
-  - rid: 6540294600349713298
-  - rid: 6540294618706084412
-  - rid: 6540294618706084413
-  - rid: 6540294618706084414
-  - rid: 6540294618706084415
-  - rid: 6540294600349713303
-  - rid: 6540294600349713304
-  - rid: 6540294618706084416
-  - rid: 6540294600349713306
-  - rid: 6540294600349713307
-  - rid: 6540294600349713308
-  - rid: 6540294618706084417
-  - rid: 6540294618706084418
-  - rid: 6540294618706084419
-  - rid: 6540294600349713312
-  - rid: 6540294600349713313
-  - rid: 6540294600349713314
-  - rid: 6540294618706084420
-  - rid: 6540294618706084421
-  - rid: 6540294600349713317
-  - rid: 6540294600349713318
-  - rid: 6540294600349713319
-  - rid: 6540294600349713320
-  - rid: 6540294600349713321
-  - rid: 6540294600349713322
-  - rid: 6540294600349713323
-  - rid: 6540294618706084422
-  - rid: 6540294600349713325
+  - rid: 6540294704968237693
+  - rid: 6540294704968237694
+  - rid: 6540294704968237695
+  - rid: 6540294704968237696
+  - rid: 6540294704968237697
+  - rid: 6540294704968237698
+  - rid: 6540294704968237699
+  - rid: 6540294704968237700
+  - rid: 6540294704968237701
+  - rid: 6540294704968237702
+  - rid: 6540294704968237703
+  - rid: 6540294704968237704
+  - rid: 6540294704968237705
+  - rid: 6540294704968237706
+  - rid: 6540294704968237707
+  - rid: 6540294704968237708
+  - rid: 6540294704968237709
+  - rid: 6540294704968237710
+  - rid: 6540294704968237711
+  - rid: 6540294704968237712
+  - rid: 6540294704968237713
+  - rid: 6540294704968237714
+  - rid: 6540294704968237715
+  - rid: 6540294704968237716
+  - rid: 6540294704968237717
+  - rid: 6540294704968237718
+  - rid: 6540294704968237719
+  - rid: 6540294704968237720
+  - rid: 6540294704968237721
+  - rid: 6540294704968237722
+  - rid: 6540294704968237723
+  - rid: 6540294704968237724
+  - rid: 6540294704968237725
+  - rid: 6540294704968237726
+  - rid: 6540294704968237727
+  - rid: 6540294704968237728
+  - rid: 6540294704968237729
+  - rid: 6540294704968237730
+  - rid: 6540294704968237731
+  - rid: 6540294704968237732
+  - rid: 6540294704968237733
+  - rid: 6540294704968237734
+  - rid: 6540294704968237735
+  - rid: 6540294704968237736
+  - rid: 6540294704968237737
+  - rid: 6540294704968237738
+  - rid: 6540294704968237739
+  - rid: 6540294704968237740
+  - rid: 6540294704968237741
+  - rid: 6540294704968237742
+  - rid: 6540294704968237743
+  - rid: 6540294704968237744
+  - rid: 6540294704968237745
+  - rid: 6540294704968237746
+  - rid: 6540294704968237747
+  - rid: 6540294704968237748
+  - rid: 6540294704968237749
+  - rid: 6540294704968237750
+  - rid: 6540294704968237751
+  - rid: 6540294704968237752
+  - rid: 6540294704968237753
+  - rid: 6540294704968237754
+  - rid: 6540294704968237755
+  - rid: 6540294704968237756
+  - rid: 6540294704968237757
+  - rid: 6540294704968237758
+  - rid: 6540294704968237759
   - rid: 6540294600349712465
   - rid: 6540294600349712466
   - rid: 6540294600349712467
@@ -211,7 +211,7 @@ MonoBehaviour:
         presence: 0
         markId: 
         lines: []
-    - rid: 6540294600349713259
+    - rid: 6540294704968237693
       type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Cap. 4
@@ -223,10 +223,10 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-inicio
-        position: {x: 0, y: 44}
+        position: {x: 0, y: 0}
         outputs:
         - cap4-tras-cap3
-    - rid: 6540294600349713260
+    - rid: 6540294704968237694
       type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Tras el Cap. 3 (CH_Cap3_BACK_1)
@@ -238,14 +238,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-tras-cap3
-        position: {x: 280, y: 44}
+        position: {x: 380, y: 0}
         outputs:
         - cap4-flag
         eventKey: CH_Cap3_BACK_1
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294600349713261
+    - rid: 6540294704968237695
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Fin del Cap. 4 (CH_Cap4_BACK_1)
@@ -257,11 +257,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-fin
-        position: {x: 280, y: 4318}
+        position: {x: 1900, y: 2160}
         outputs:
         - cap4-demo-rotulo
         eventKey: CH_Cap4_BACK_1
-    - rid: 6540294600349713262
+    - rid: 6540294704968237696
       type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "R\xF3tulo: fin de la Primera Parte"
@@ -273,7 +273,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-demo-rotulo
-        position: {x: 560, y: 4318}
+        position: {x: 0, y: 2400}
         outputs:
         - cap4-demo-fin
         text: Fin de la Primera Parte. Gracias por jugar a la demo.
@@ -285,754 +285,7 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
-    - rid: 6540294600349713264
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: Comienza el Cap. 4
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-flag
-        position: {x: 560, y: 44}
-        outputs:
-        - cap4-estela-aparece
-        flagKey: CAP4_INICIADO
-        value: 1
-    - rid: 6540294600349713265
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Estela est\xE1 en su claro (el roster la pone)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-estela-aparece
-        position: {x: 840, y: 44}
-        outputs:
-        - cap4-bosque
-        flagKey: ESTELA_APARECE
-        value: 1
-    - rid: 6540294600349713266
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.1 \xB7 Hacia el Bosque Prohibido (probar desde aqu\xED)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-bosque
-        position: {x: 1120, y: 44}
-        outputs:
-        - cap4-mision-estela
-        eventKey: CAP4_BOSQUE_EMPIEZA
-    - rid: 6540294600349713267
-      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Misi\xF3n: la hechicera del bosque (aviso de misi\xF3n nueva)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-mision-estela
-        position: {x: 1400, y: 44}
-        outputs:
-        - cap4-punto-bosque
-        questId: CAP4_ENCUENTRA_A_ESTELA
-        giverId: 
-        inProgressDialogue: {fileID: 0}
-        noGiver: 1
-    - rid: 6540294600349713268
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.1 \xB7 Punto de guardado: el cruce"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-punto-bosque
-        position: {x: 0, y: 472}
-        outputs:
-        - cap4-llegada-claro
-        checkpointId: CAP4_INICIO
-        player:
-          fields:
-          - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Amanecer","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
-    - rid: 6540294600349713269
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.1 \xB7 Llega al claro de los troncos quemados"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-llegada-claro
-        position: {x: 280, y: 472}
-        outputs:
-        - cap4-mando-estela
-        eventKey: CAP4_LLEGADA_CLARO
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713273
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Paso: encontrar a Estela (cierra la misi\xF3n)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-paso-estela
-        position: {x: 1400, y: 472}
-        outputs:
-        - cap4-casa
-        standingActorId: 
-        standingDialogue: {fileID: 0}
-        questId: CAP4_ENCUENTRA_A_ESTELA
-        stepConditionIds:
-        - CAP4_ESTELA
-        steps: 
-        completeQuest: 1
-        logWarnings: 1
-    - rid: 6540294600349713274
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 La casa entre ra\xEDces (probar desde aqu\xED)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-casa
-        position: {x: 1680, y: 472}
-        outputs:
-        - cap4-casa-noche
-        eventKey: CAP4_CASA_EMPIEZA
-    - rid: 6540294600349713276
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 \xABPuedes mirar, pero no toques la cena\xBB"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-casa-boc
-        position: {x: 0, y: 826}
-        outputs:
-        - cap4-dormir
-        targetTag: Player
-        text: "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jerg\xF3n."
-        textId: CAP4_BOC_CASA
-        duration: 7.5857143
-        waitForCompletion: 1
-        animTrigger: 
-        emphasis: 0
-        speakerName: 
-    - rid: 6540294600349713277
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 Will se acuesta en el jerg\xF3n"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-dormir
-        position: {x: 280, y: 826}
-        outputs:
-        - cap4-rotulo-manana
-        eventKey: CAP4_DORMIR
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713278
-      type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 R\xF3tulo: a la ma\xF1ana siguiente"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-rotulo-manana
-        position: {x: 560, y: 826}
-        outputs:
-        - cap4-manana-hora
-        text: "A la ma\xF1ana siguiente\u2026"
-        textId: CAP4_ROTULO_MANANA
-        color: {r: 1, g: 0.83, b: 0.45, a: 1}
-        fondo: {r: 0, g: 0, b: 0, a: 1}
-        fuente: {fileID: 0}
-        tamano: 64
-        aparecer: 1
-        mantener: 2.2
-        desaparecer: 1
-    - rid: 6540294600349713280
-      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 Will se despierta junto a la casa"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-manana-will
-        position: {x: 1120, y: 826}
-        outputs:
-        - cap4-punto-casa
-        actorId: Player
-        markId: Cap4_Campana_Salida
-        applyPlayerEnvironment: 1
-        showActor: 0
-    - rid: 6540294600349713281
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.2 \xB7 Punto de guardado: la casa de Estela"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-punto-casa
-        position: {x: 0, y: 1284}
-        outputs:
-        - cap4-mision-reino
-        checkpointId: CAP4_CASA
-        player:
-          fields:
-          - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Campana_Salida","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
-    - rid: 6540294600349713282
-      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Misi\xF3n: rumbo al Reino (aviso de misi\xF3n nueva)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-mision-reino
-        position: {x: 280, y: 1284}
-        outputs:
-        - cap4-campana
-        questId: CAP4_RUMBO_AL_REINO
-        giverId: 
-        inProgressDialogue: {fileID: 0}
-        noGiver: 1
-    - rid: 6540294600349713283
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 La prueba de la campana (probar desde aqu\xED)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-campana
-        position: {x: 560, y: 1284}
-        outputs:
-        - cap4-mando-manana
-        eventKey: CAP4_CAMPANA_EMPIEZA
-    - rid: 6540294600349713289
-      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 La prueba (y en paralelo, las figuras chamuscadas)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-campana-fork
-        position: {x: 0, y: 1638}
-        outputs:
-        - cap4-figura-0
-        - cap4-tocada
-    - rid: 6540294600349713290
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Will toca la campana"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-tocada
-        position: {x: 280, y: 1912}
-        outputs:
-        - cap4-liam-aparece
-        eventKey: CAP4_CAMPANA_TOCADA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713291
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Liam les observa (el roster le pone en la loma)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-liam-aparece
-        position: {x: 560, y: 1912}
-        outputs:
-        - cap4-campana-fin
-        flagKey: LIAM_APARECE
-        value: 1
-    - rid: 6540294600349713292
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Fin de la prueba (Liam, en la loma)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-campana-fin
-        position: {x: 840, y: 1912}
-        outputs:
-        - pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
-        eventKey: CAP4_CAMPANA_FIN
-    - rid: 6540294600349713295
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: 'Paso: la prueba de la campana'
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-paso-campana
-        position: {x: 280, y: 2236}
-        outputs:
-        - cap4-golem
-        standingActorId: 
-        standingDialogue: {fileID: 0}
-        questId: CAP4_RUMBO_AL_REINO
-        stepConditionIds:
-        - CAP4_CAMPANA
-        steps: 
-        completeQuest: 0
-        logWarnings: 1
-    - rid: 6540294600349713296
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.4 \xB7 Hacia el Reino: el G\xF3lem (probar desde aqu\xED)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-golem
-        position: {x: 560, y: 2236}
-        outputs:
-        - pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
-        eventKey: CAP4_GOLEM_EMPIEZA
-    - rid: 6540294600349713297
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.4 \xB7 Punto de guardado: el camino del Reino"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-punto-golem
-        position: {x: 0, y: 2694}
-        outputs:
-        - cap4-llegada-arena
-        checkpointId: CAP4_CAMINO
-        player:
-          fields:
-          - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Golem_Entrada","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
-    - rid: 6540294600349713298
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.4 \xB7 Llegan al descanso del camino"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-llegada-arena
-        position: {x: 280, y: 2694}
-        outputs:
-        - cap4-mando-golem
-        eventKey: CAP4_LLEGADA_ARENA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713303
-      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.4 \xB7 La esquirla de cristal"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-esquirla
-        position: {x: 1680, y: 2694}
-        outputs:
-        - cap4-paso-golem
-        item: {fileID: 11400000, guid: 41b82b5e4530fb74aadb0af71d1b1162, type: 2}
-        amount: 1
-        logWarnings: 1
-        onlyOnce: 1
-    - rid: 6540294600349713304
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: 'Paso: cruzar el bosque'
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-paso-golem
-        position: {x: 1960, y: 2694}
-        outputs:
-        - cap4-manzana
-        standingActorId: 
-        standingDialogue: {fileID: 0}
-        questId: CAP4_RUMBO_AL_REINO
-        stepConditionIds:
-        - CAP4_GOLEM
-        steps: 
-        completeQuest: 0
-        logWarnings: 1
-    - rid: 6540294600349713306
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.5 \xB7 Punto de guardado: el campamento"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-punto-manzana
-        position: {x: 0, y: 3506}
-        outputs:
-        - cap4-bifurcacion
-        checkpointId: CAP4_MANZANA
-        player:
-          fields:
-          - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Manzana","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
-    - rid: 6540294600349713307
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.6 \xB7 Hacia la bifurcaci\xF3n del r\xEDo (probar desde aqu\xED)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-bifurcacion
-        position: {x: 280, y: 3506}
-        outputs:
-        - pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
-        eventKey: CAP4_BIFURCACION_EMPIEZA
-    - rid: 6540294600349713308
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.6 \xB7 Llegan a la bifurcaci\xF3n"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-llegada-bifurcacion
-        position: {x: 1120, y: 3506}
-        outputs:
-        - cap4-mando-bifurcacion
-        eventKey: CAP4_LLEGADA_BIFURCACION
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713312
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.6 \xB7 Liam ya va en el grupo"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-liam-grupo-senal
-        position: {x: 0, y: 3860}
-        outputs:
-        - pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
-        eventKey: CAP4_LIAM_EN_EL_GRUPO
-    - rid: 6540294600349713313
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.6 \xB7 \xAB\xA1Mi bota!\xBB"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-bota-boc
-        position: {x: 560, y: 3860}
-        outputs:
-        - cap4-bota
-        targetTag: Player
-        text: "\xA1Se la lleva el r\xEDo! Voy a por ella, r\xEDo abajo."
-        textId: CAP4_BOC_BOTA
-        duration: 4.5142856
-        waitForCompletion: 1
-        animTrigger: 
-        emphasis: 0
-        speakerName: 
-    - rid: 6540294600349713314
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.6 \xB7 Will recoge la bota r\xEDo abajo"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-bota
-        position: {x: 840, y: 3860}
-        outputs:
-        - cap4-mando-bota
-        eventKey: CAP4_BOTA_RECOGIDA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713317
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Paso: el camino del r\xEDo (cierra la misi\xF3n)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-paso-vado
-        position: {x: 1680, y: 3860}
-        outputs:
-        - cap4-fin-punto
-        standingActorId: 
-        standingDialogue: {fileID: 0}
-        questId: CAP4_RUMBO_AL_REINO
-        stepConditionIds:
-        - CAP4_VADO
-        steps: 
-        completeQuest: 1
-        logWarnings: 1
-    - rid: 6540294600349713318
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "Cap. 4 \xB7 Fin (punto de guardado)"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-fin-punto
-        position: {x: 0, y: 4318}
-        outputs:
-        - cap4-fin
-        checkpointId: CAP4_FIN
-        player:
-          fields:
-          - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Bota","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
-    - rid: 6540294600349713319
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Una figura de barro, chamuscada"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-figura-0
-        position: {x: 280, y: 1638}
-        outputs:
-        - cap4-figura-1
-        eventKey: CAP4_FIGURA_CHAMUSCADA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294600349713320
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Queda apuntado"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-figura-1
-        position: {x: 560, y: 1638}
-        outputs:
-        - cap4-figura-2
-        flagKey: CAP4_FIGURAS_CHAMUSCADAS
-        value: 1
-    - rid: 6540294600349713321
-      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Estela: \xAB\xA1Las ten\xEDas que proteger!\xBB"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-figura-2
-        position: {x: 840, y: 1638}
-        outputs:
-        - cap4-figura-0
-        targetTag: Player
-        text: "\xA1Te has salvado t\xFA y has chamuscado a quien ten\xEDas que proteger!"
-        textId: CAP4_BOC_FIGURA
-        duration: 5.5857143
-        waitForCompletion: 1
-        animTrigger: 
-        emphasis: 0
-        speakerName: 
-    - rid: 6540294600349713322
-      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: Nota
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-nota
-        position: {x: 0, y: 4732}
-        outputs: []
-        note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
-        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
-    - rid: 6540294600349713323
-      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "4.3 \xB7 Se destapa la pantalla tras la cinem\xE1tica"
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-figura-destapa
-        position: {x: 1680, y: 1638}
-        outputs:
-        - cap4-levitacion
-        color: {r: 0, g: 0, b: 0, a: 1}
-        duration: 1
-        fadeIn: 0
-        transicion: {fileID: 0}
-        restaurarMusicaDeEscena: 1
-        fundidoDeMusica: 2
-    - rid: 6540294600349713325
-      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: 'Fuera de la build de la demo: se destapa la pantalla y sigue el juego'
-        chapter: Cap. 4
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap4-demo-destapa
-        position: {x: 1120, y: 4318}
-        outputs: []
-        color: {r: 0, g: 0, b: 0, a: 1}
-        duration: 1
-        fadeIn: 0
-        transicion: {fileID: 0}
-        restaurarMusicaDeEscena: 1
-        fundidoDeMusica: 2
-    - rid: 6540294618706084399
+    - rid: 6540294704968237697
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Fin de la demo (en la build de la demo, a los cr\xE9ditos)"
@@ -1044,14 +297,122 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-demo-fin
-        position: {x: 840, y: 4318}
+        position: {x: 380, y: 2400}
         outputs:
         - cap4-demo-destapa
         request:
-          rid: 6540294618706084423
+          rid: 6540294704968237760
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084400
+    - rid: 6540294704968237698
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Comienza el Cap. 4
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-flag
+        position: {x: 760, y: 0}
+        outputs:
+        - cap4-estela-aparece
+        flagKey: CAP4_INICIADO
+        value: 1
+    - rid: 6540294704968237699
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Estela est\xE1 en su claro (el roster la pone)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-estela-aparece
+        position: {x: 1140, y: 0}
+        outputs:
+        - cap4-bosque
+        flagKey: ESTELA_APARECE
+        value: 1
+    - rid: 6540294704968237700
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.1 \xB7 Hacia el Bosque Prohibido (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bosque
+        position: {x: 1520, y: 0}
+        outputs:
+        - cap4-mision-estela
+        eventKey: CAP4_BOSQUE_EMPIEZA
+    - rid: 6540294704968237701
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Misi\xF3n: la hechicera del bosque (aviso de misi\xF3n nueva)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mision-estela
+        position: {x: 1900, y: 0}
+        outputs:
+        - cap4-punto-bosque
+        questId: CAP4_ENCUENTRA_A_ESTELA
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294704968237702
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.1 \xB7 Punto de guardado: el cruce"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-bosque
+        position: {x: 0, y: 240}
+        outputs:
+        - cap4-llegada-claro
+        checkpointId: CAP4_INICIO
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Amanecer","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294704968237703
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.1 \xB7 Llega al claro de los troncos quemados"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-claro
+        position: {x: 380, y: 240}
+        outputs:
+        - cap4-mando-estela
+        eventKey: CAP4_LLEGADA_CLARO
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237704
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Will al mando (la cinem\xE1tica cuenta con \xE9l)"
@@ -1063,14 +424,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-estela
-        position: {x: 560, y: 472}
+        position: {x: 760, y: 240}
         outputs:
         - cap4-estela
         request:
-          rid: 6540294618706084424
+          rid: 6540294704968237761
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084401
+    - rid: 6540294704968237705
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Cinem\xE1tica: Estela, el aro y \xABya me lo cobrar\xE9\xBB"
@@ -1082,15 +443,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-estela
-        position: {x: 840, y: 472}
+        position: {x: 1140, y: 240}
         outputs:
         - cap4-estela-grupo
-        - 
         request:
-          rid: 6540294618706084425
+          rid: 6540294704968237762
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084402
+    - rid: 6540294704968237706
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.1 \xB7 Estela entra en el grupo"
@@ -1102,14 +462,53 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-estela-grupo
-        position: {x: 1120, y: 472}
+        position: {x: 1520, y: 240}
         outputs:
         - cap4-paso-estela
         request:
-          rid: 6540294618706084426
+          rid: 6540294704968237763
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084403
+    - rid: 6540294704968237707
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Paso: encontrar a Estela (cierra la misi\xF3n)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-estela
+        position: {x: 1900, y: 240}
+        outputs:
+        - cap4-casa
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_ENCUENTRA_A_ESTELA
+        stepConditionIds:
+        - CAP4_ESTELA
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294704968237708
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 La casa entre ra\xEDces (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-casa
+        position: {x: 0, y: 480}
+        outputs:
+        - cap4-casa-noche
+        eventKey: CAP4_CASA_EMPIEZA
+    - rid: 6540294704968237709
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Anochece en el claro"
@@ -1121,14 +520,80 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-casa-noche
-        position: {x: 1960, y: 472}
+        position: {x: 380, y: 480}
         outputs:
         - cap4-casa-boc
         request:
-          rid: 6540294618706084427
+          rid: 6540294704968237764
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084404
+    - rid: 6540294704968237710
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 \xABPuedes mirar, pero no toques la cena\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-casa-boc
+        position: {x: 760, y: 480}
+        outputs:
+        - cap4-dormir
+        targetTag: Player
+        text: "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jerg\xF3n."
+        textId: CAP4_BOC_CASA
+        duration: 7.5857143
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294704968237711
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 Will se acuesta en el jerg\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-dormir
+        position: {x: 1140, y: 480}
+        outputs:
+        - cap4-rotulo-manana
+        eventKey: CAP4_DORMIR
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237712
+      type: {class: TitleCardNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 R\xF3tulo: a la ma\xF1ana siguiente"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-rotulo-manana
+        position: {x: 1520, y: 480}
+        outputs:
+        - cap4-manana-hora
+        text: "A la ma\xF1ana siguiente\u2026"
+        textId: CAP4_ROTULO_MANANA
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 0}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1
+    - rid: 6540294704968237713
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Amanece"
@@ -1140,14 +605,88 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manana-hora
-        position: {x: 840, y: 826}
+        position: {x: 1900, y: 480}
         outputs:
         - cap4-manana-will
         request:
-          rid: 6540294618706084428
+          rid: 6540294704968237765
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084405
+    - rid: 6540294704968237714
+      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 Will se despierta junto a la casa"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-manana-will
+        position: {x: 0, y: 720}
+        outputs:
+        - cap4-punto-casa
+        actorId: Player
+        markId: Cap4_Campana_Salida
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 6540294704968237715
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.2 \xB7 Punto de guardado: la casa de Estela"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-casa
+        position: {x: 380, y: 720}
+        outputs:
+        - cap4-mision-reino
+        checkpointId: CAP4_CASA
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Campana_Salida","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294704968237716
+      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Misi\xF3n: rumbo al Reino (aviso de misi\xF3n nueva)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-mision-reino
+        position: {x: 760, y: 720}
+        outputs:
+        - cap4-campana
+        questId: CAP4_RUMBO_AL_REINO
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
+    - rid: 6540294704968237717
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 La prueba de la campana (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana
+        position: {x: 1140, y: 720}
+        outputs:
+        - cap4-mando-manana
+        eventKey: CAP4_CAMPANA_EMPIEZA
+    - rid: 6540294704968237718
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Will al mando"
@@ -1159,14 +698,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-manana
-        position: {x: 840, y: 1284}
+        position: {x: 1520, y: 720}
         outputs:
         - cap4-manana
         request:
-          rid: 6540294618706084429
+          rid: 6540294704968237766
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084406
+    - rid: 6540294704968237719
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Cinem\xE1tica: el cartel y la primera receta"
@@ -1178,15 +717,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manana
-        position: {x: 1120, y: 1284}
+        position: {x: 1900, y: 720}
         outputs:
         - cap4-cupula
-        - 
         request:
-          rid: 6540294618706084430
+          rid: 6540294704968237767
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084407
+    - rid: 6540294704968237720
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Aprende C\xFApula Estelar (primera receta del combo)"
@@ -1198,14 +736,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-cupula
-        position: {x: 1400, y: 1284}
+        position: {x: 0, y: 960}
         outputs:
         - cap4-cupula-tuto
         request:
-          rid: 6540294618706084431
+          rid: 6540294704968237768
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084408
+    - rid: 6540294704968237721
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.2 \xB7 Tutorial: el combo m\xE1gico"
@@ -1217,14 +755,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-cupula-tuto
-        position: {x: 1680, y: 1284}
+        position: {x: 380, y: 960}
         outputs:
         - cap4-reglas
         request:
-          rid: 6540294618706084432
+          rid: 6540294704968237769
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084409
+    - rid: 6540294704968237722
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Cinem\xE1tica: las reglas de la campana"
@@ -1236,15 +774,82 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-reglas
-        position: {x: 1960, y: 1284}
+        position: {x: 760, y: 960}
         outputs:
         - cap4-campana-fork
-        - 
         request:
-          rid: 6540294618706084433
+          rid: 6540294704968237770
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084410
+    - rid: 6540294704968237723
+      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 La prueba (y en paralelo, las figuras chamuscadas)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana-fork
+        position: {x: 1140, y: 960}
+        outputs:
+        - cap4-figura-0
+        - cap4-tocada
+    - rid: 6540294704968237724
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Will toca la campana"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-tocada
+        position: {x: 1520, y: 960}
+        outputs:
+        - cap4-liam-aparece
+        eventKey: CAP4_CAMPANA_TOCADA
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237725
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Liam les observa (el roster le pone en la loma)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-liam-aparece
+        position: {x: 1900, y: 960}
+        outputs:
+        - cap4-campana-fin
+        flagKey: LIAM_APARECE
+        value: 1
+    - rid: 6540294704968237726
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Fin de la prueba (Liam, en la loma)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-campana-fin
+        position: {x: 0, y: 1200}
+        outputs:
+        - pieza-_liam-fromhere-cap-4-en-la-loma-de-la-campana-cap4-campana-fin
+        eventKey: CAP4_CAMPANA_FIN
+    - rid: 6540294704968237727
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Cinem\xE1tica: la figura que resbala, las figuras rehechas y el que observa"
@@ -1256,15 +861,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-figura
-        position: {x: 1400, y: 1638}
+        position: {x: 380, y: 1200}
         outputs:
         - cap4-figura-destapa
-        - 
         request:
-          rid: 6540294618706084434
+          rid: 6540294704968237771
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084411
+    - rid: 6540294704968237728
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Aprende Levitaci\xF3n por instinto"
@@ -1276,14 +880,92 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-levitacion
-        position: {x: 1960, y: 1638}
+        position: {x: 1140, y: 1200}
         outputs:
         - cap4-levitacion-tuto
         request:
-          rid: 6540294618706084435
+          rid: 6540294704968237772
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084412
+    - rid: 6540294704968237729
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 'Paso: la prueba de la campana'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-campana
+        position: {x: 1900, y: 1200}
+        outputs:
+        - cap4-golem
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_CAMPANA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294704968237730
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.4 \xB7 Hacia el Reino: el G\xF3lem (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-golem
+        position: {x: 0, y: 1440}
+        outputs:
+        - pieza-_liam-backtousual-cap-4-en-la-loma-de-la-campana-cap4-golem
+        eventKey: CAP4_GOLEM_EMPIEZA
+    - rid: 6540294704968237731
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.4 \xB7 Punto de guardado: el camino del Reino"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-golem
+        position: {x: 380, y: 1440}
+        outputs:
+        - cap4-llegada-arena
+        checkpointId: CAP4_CAMINO
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Golem_Entrada","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294704968237732
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.4 \xB7 Llegan al descanso del camino"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-arena
+        position: {x: 760, y: 1440}
+        outputs:
+        - cap4-mando-golem
+        eventKey: CAP4_LLEGADA_ARENA
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237733
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Will al mando"
@@ -1295,14 +977,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-golem
-        position: {x: 560, y: 2694}
+        position: {x: 1140, y: 1440}
         outputs:
         - cap4-golem-cine
         request:
-          rid: 6540294618706084436
+          rid: 6540294704968237773
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084413
+    - rid: 6540294704968237734
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Cinem\xE1tica: Liam traza el pacto y el G\xF3lem sale de la tierra"
@@ -1314,15 +996,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-golem-cine
-        position: {x: 840, y: 2694}
+        position: {x: 1520, y: 1440}
         outputs:
         - cap4-golem-batalla
-        - 
         request:
-          rid: 6540294618706084437
+          rid: 6540294704968237774
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084414
+    - rid: 6540294704968237735
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Batalla: el G\xF3lem (fuego de frente lo alimenta, el barro lo hunde, remate en d\xFAo)"
@@ -1334,14 +1015,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-golem-batalla
-        position: {x: 1120, y: 2694}
+        position: {x: 1900, y: 1440}
         outputs:
         - cap4-tras-golem
         request:
-          rid: 6540294618706084438
+          rid: 6540294704968237775
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084415
+    - rid: 6540294704968237736
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.4 \xB7 Cinem\xE1tica: agotados, la esquirla y el cuaderno de Liam"
@@ -1353,15 +1034,56 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-tras-golem
-        position: {x: 1400, y: 2694}
+        position: {x: 0, y: 1680}
         outputs:
         - cap4-esquirla
-        - 
         request:
-          rid: 6540294618706084439
+          rid: 6540294704968237776
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084416
+    - rid: 6540294704968237737
+      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.4 \xB7 La esquirla de cristal"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-esquirla
+        position: {x: 380, y: 1680}
+        outputs:
+        - cap4-paso-golem
+        item: {fileID: 11400000, guid: 41b82b5e4530fb74aadb0af71d1b1162, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294704968237738
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 'Paso: cruzar el bosque'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-golem
+        position: {x: 760, y: 1680}
+        outputs:
+        - cap4-manzana
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_GOLEM
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 6540294704968237739
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.5 \xB7 Cinem\xE1tica: la manzana harinosa"
@@ -1373,15 +1095,69 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-manzana
-        position: {x: 0, y: 3048}
+        position: {x: 1140, y: 1680}
         outputs:
         - cap4-punto-manzana
-        - 
         request:
-          rid: 6540294618706084440
+          rid: 6540294704968237777
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084417
+    - rid: 6540294704968237740
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.5 \xB7 Punto de guardado: el campamento"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-punto-manzana
+        position: {x: 1520, y: 1680}
+        outputs:
+        - cap4-bifurcacion
+        checkpointId: CAP4_MANZANA
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Manzana","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294704968237741
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.6 \xB7 Hacia la bifurcaci\xF3n del r\xEDo (probar desde aqu\xED)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bifurcacion
+        position: {x: 1900, y: 1680}
+        outputs:
+        - pieza-_liam-backtousual-cap-4-en-el-saliente-del-golem-cap4-bifurcacion
+        eventKey: CAP4_BIFURCACION_EMPIEZA
+    - rid: 6540294704968237742
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.6 \xB7 Llegan a la bifurcaci\xF3n"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-llegada-bifurcacion
+        position: {x: 0, y: 1920}
+        outputs:
+        - cap4-mando-bifurcacion
+        eventKey: CAP4_LLEGADA_BIFURCACION
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237743
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Will al mando"
@@ -1393,14 +1169,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-bifurcacion
-        position: {x: 1400, y: 3506}
+        position: {x: 380, y: 1920}
         outputs:
         - cap4-bifurcacion-cine
         request:
-          rid: 6540294618706084441
+          rid: 6540294704968237778
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084418
+    - rid: 6540294704968237744
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Cinem\xE1tica: Liam aparece y se une; la corriente se lleva su bota"
@@ -1412,15 +1188,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bifurcacion-cine
-        position: {x: 1680, y: 3506}
+        position: {x: 760, y: 1920}
         outputs:
         - cap4-liam-grupo
-        - 
         request:
-          rid: 6540294618706084442
+          rid: 6540294704968237779
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084419
+    - rid: 6540294704968237745
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Liam entra en el grupo"
@@ -1432,14 +1207,72 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-liam-grupo
-        position: {x: 1960, y: 3506}
+        position: {x: 1140, y: 1920}
         outputs:
         - cap4-liam-grupo-senal
         request:
-          rid: 6540294618706084443
+          rid: 6540294704968237780
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084420
+    - rid: 6540294704968237746
+      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.6 \xB7 Liam ya va en el grupo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-liam-grupo-senal
+        position: {x: 1520, y: 1920}
+        outputs:
+        - pieza-_liam-backtousual-cap-4-en-la-bifurcacion-cap4-liam-grupo-senal
+        eventKey: CAP4_LIAM_EN_EL_GRUPO
+    - rid: 6540294704968237747
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.6 \xB7 \xAB\xA1Mi bota!\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bota-boc
+        position: {x: 1900, y: 1920}
+        outputs:
+        - cap4-bota
+        targetTag: Player
+        text: "\xA1Se la lleva el r\xEDo! Voy a por ella, r\xEDo abajo."
+        textId: CAP4_BOC_BOTA
+        duration: 4.5142856
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294704968237748
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.6 \xB7 Will recoge la bota r\xEDo abajo"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-bota
+        position: {x: 0, y: 2160}
+        outputs:
+        - cap4-mando-bota
+        eventKey: CAP4_BOTA_RECOGIDA
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237749
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Will al mando"
@@ -1451,14 +1284,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-mando-bota
-        position: {x: 1120, y: 3860}
+        position: {x: 380, y: 2160}
         outputs:
         - cap4-bota-cine
         request:
-          rid: 6540294618706084444
+          rid: 6540294704968237781
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084421
+    - rid: 6540294704968237750
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.6 \xB7 Cinem\xE1tica: \xABTampoco sal\xEDa en el mapa que alguien ir\xEDa a por mi bota\xBB"
@@ -1470,15 +1303,153 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-bota-cine
-        position: {x: 1400, y: 3860}
+        position: {x: 760, y: 2160}
         outputs:
         - cap4-paso-vado
-        - 
         request:
-          rid: 6540294618706084445
+          rid: 6540294704968237782
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084422
+    - rid: 6540294704968237751
+      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Paso: el camino del r\xEDo (cierra la misi\xF3n)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-paso-vado
+        position: {x: 1140, y: 2160}
+        outputs:
+        - cap4-fin-punto
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: CAP4_RUMBO_AL_REINO
+        stepConditionIds:
+        - CAP4_VADO
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 6540294704968237752
+      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Cap. 4 \xB7 Fin (punto de guardado)"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-fin-punto
+        position: {x: 1520, y: 2160}
+        outputs:
+        - cap4-fin
+        checkpointId: CAP4_FIN
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap4_Bota","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+    - rid: 6540294704968237753
+      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Una figura de barro, chamuscada"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-0
+        position: {x: 0, y: 2880}
+        outputs:
+        - cap4-figura-1
+        eventKey: CAP4_FIGURA_CHAMUSCADA
+        acceptEarlierEvent: 1
+        impliedItem: {fileID: 0}
+        impliedItemAmount: 1
+    - rid: 6540294704968237754
+      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Queda apuntado"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-1
+        position: {x: 380, y: 2880}
+        outputs:
+        - cap4-figura-2
+        flagKey: CAP4_FIGURAS_CHAMUSCADAS
+        value: 1
+    - rid: 6540294704968237755
+      type: {class: ShowSpeechBubbleNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Estela: \xAB\xA1Las ten\xEDas que proteger!\xBB"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-2
+        position: {x: 760, y: 2880}
+        outputs:
+        - cap4-figura-0
+        targetTag: Player
+        text: "\xA1Te has salvado t\xFA y has chamuscado a quien ten\xEDas que proteger!"
+        textId: CAP4_BOC_FIGURA
+        duration: 5.5857143
+        waitForCompletion: 1
+        animTrigger: 
+        emphasis: 0
+        speakerName: 
+    - rid: 6540294704968237756
+      type: {class: GraphNoteNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: Nota
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-nota
+        position: {x: 0, y: -240}
+        outputs: []
+        note: "Cap. 4 \xB7 El Bosque Prohibido y el G\xF3lem (GDD \xA7 5.8). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap4-\u2026\xBB se rehacen. Escena: claro de Estela (\u2212330, 65), arena del G\xF3lem (\u221295, 65) con el barro, bifurcaci\xF3n junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."
+        accent: {r: 1, g: 0.93, b: 0.55, a: 1}
+    - rid: 6540294704968237757
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "4.3 \xB7 Se destapa la pantalla tras la cinem\xE1tica"
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-figura-destapa
+        position: {x: 760, y: 1200}
+        outputs:
+        - cap4-levitacion
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2
+    - rid: 6540294704968237758
       type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "4.3 \xB7 Tutorial: Levitaci\xF3n"
@@ -1490,25 +1461,45 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap4-levitacion-tuto
-        position: {x: 0, y: 2236}
+        position: {x: 1520, y: 1200}
         outputs:
         - cap4-paso-campana
         request:
-          rid: 6540294618706084446
+          rid: 6540294704968237783
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294618706084423
+    - rid: 6540294704968237759
+      type: {class: ScreenFadeNode, ns: , asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 'Fuera de la build de la demo: se destapa la pantalla y sigue el juego'
+        chapter: Cap. 4
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap4-demo-destapa
+        position: {x: 760, y: 2400}
+        outputs: []
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1
+        fadeIn: 0
+        transicion: {fileID: 0}
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2
+    - rid: 6540294704968237760
       type: {class: PedirFinDeLaDemo, ns: , asm: Assembly-CSharp}
       data:
         escenaFinal: Credits
         espera: 0.8
-    - rid: 6540294618706084424
+    - rid: 6540294704968237761
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294618706084425
+    - rid: 6540294704968237762
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 4: Estela'
@@ -1518,29 +1509,29 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 80f759b73245ec145a401ca469e2b77f, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084426
+    - rid: 6540294704968237763
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 3
         personaje: Estela
         retirarDeLaEscena: 0
-    - rid: 6540294618706084427
+    - rid: 6540294704968237764
       type: {class: PedirHoraDelDia, ns: , asm: Assembly-CSharp}
       data:
         targetTime: 7
         immediate: 0
-    - rid: 6540294618706084428
+    - rid: 6540294704968237765
       type: {class: PedirHoraDelDia, ns: , asm: Assembly-CSharp}
       data:
         targetTime: 6
         immediate: 1
-    - rid: 6540294618706084429
+    - rid: 6540294704968237766
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294618706084430
+    - rid: 6540294704968237767
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: "Cap. 4: la ma\xF1ana en la casa"
@@ -1550,7 +1541,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 69f80acd9fc3c2a43bf8dd1125bdb5d2, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084431
+    - rid: 6540294704968237768
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
         abilityKeysToUnlock: 
@@ -1559,7 +1550,7 @@ MonoBehaviour:
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
-    - rid: 6540294618706084432
+    - rid: 6540294704968237769
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0
@@ -1571,7 +1562,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
-    - rid: 6540294618706084433
+    - rid: 6540294704968237770
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 4: las reglas de la campana'
@@ -1581,7 +1572,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 58c2ea6a5f5dce14c9190aec94965a46, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084434
+    - rid: 6540294704968237771
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 4: la figura que resbala'
@@ -1591,7 +1582,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 3fded739f8d058142b863900ef160039, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084435
+    - rid: 6540294704968237772
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
         abilityKeysToUnlock: 
@@ -1600,13 +1591,13 @@ MonoBehaviour:
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
-    - rid: 6540294618706084436
+    - rid: 6540294704968237773
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294618706084437
+    - rid: 6540294704968237774
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: "Cap. 4: el G\xF3lem"
@@ -1616,13 +1607,13 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: afcdc25aacfd9c049bdfa63a7eea8d59, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084438
+    - rid: 6540294704968237775
       type: {class: PedirBatalla, ns: , asm: Assembly-CSharp}
       data:
         battleId: Golem_1
         encounter: {fileID: 11400000, guid: 696c6915e9d17c549917392b09955271, type: 2}
         spawnProfileIndex: 0
-    - rid: 6540294618706084439
+    - rid: 6540294704968237776
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: "Cap. 4: despu\xE9s del G\xF3lem"
@@ -1632,7 +1623,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 38e62ec7231aa214f94952658d5928f5, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084440
+    - rid: 6540294704968237777
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 4: la manzana harinosa'
@@ -1642,13 +1633,13 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 89835ad1150c13e4093e35147966cbb9, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084441
+    - rid: 6540294704968237778
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294618706084442
+    - rid: 6540294704968237779
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: "Cap. 4: la bifurcaci\xF3n"
@@ -1658,19 +1649,19 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 4c90c8fb063278542b688f57d358503a, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084443
+    - rid: 6540294704968237780
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 3
         personaje: Liam
         retirarDeLaEscena: 0
-    - rid: 6540294618706084444
+    - rid: 6540294704968237781
       type: {class: PedirGrupo, ns: , asm: Assembly-CSharp}
       data:
         accion: 2
         personaje: Will
         retirarDeLaEscena: 0
-    - rid: 6540294618706084445
+    - rid: 6540294704968237782
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 4: la bota'
@@ -1680,7 +1671,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: f3c76db8407a8bc4698f3c388b25289a, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294618706084446
+    - rid: 6540294704968237783
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0

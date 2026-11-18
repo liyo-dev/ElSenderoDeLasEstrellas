@@ -39,6 +39,9 @@ estela mira liam
 & will mira liam
 & liam bucle ManosALaEspalda fundido=0.4
 estela dice CAP4_BIFURCACION_03 cara=enfado gesto=Challenging_NoWeapon
+# El de la capucha de la figura de barro (INC-1287).
+estela dice CAP4_BIFURCACION_12 cara=enfado
+liam dice CAP4_BIFURCACION_13 cara=pensativo
 liam dice CAP4_BIFURCACION_04 cara=pensativo
 estela dice CAP4_BIFURCACION_05 mira=will cara=decidido
 +1.2 will bucle Ofrecer fundido=0.5
@@ -52,6 +55,8 @@ plano medio will
 will dice CAP4_BIFURCACION_08 cara=alegre
 & estela bucle BrazosCruzados fundido=0.4
 plano medio estela
+# Acepta a regañadientes.
+estela dice CAP4_BIFURCACION_14 cara=molesto
 estela dice CAP4_BIFURCACION_09 cara=molesto
 plano medio liam
 liam dice CAP4_BIFURCACION_10 mira=rio

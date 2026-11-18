@@ -24,6 +24,8 @@ plano conjunto will estela
 espera 0.8
 will dice CAP4_MANANA_01 cara=confuso gesto=Question02
 estela dice CAP4_MANANA_02 cara=picaro
+# Por qué le entrena si «no acepta aprendices» (repite a Eldran sin saberlo, INC-1287).
+estela dice CAP4_MANANA_06 cara=molesto
 plano medio estela
 & estela reposo
 estela dice CAP4_MANANA_03 cara=decidido gesto=CastingEnter01
