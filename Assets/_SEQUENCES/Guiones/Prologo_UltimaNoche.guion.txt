@@ -1,4 +1,4 @@
-﻿# ═══════════════════════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
 #  Guion de rodaje. Se hornea con «El Sendero → Cinemáticas → Guion → 2. Hornear el guion del prólogo».
 #  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
@@ -845,7 +845,7 @@ plano general archimago mago desde=cam_final agujero altura_foco=0 altura=0.9 le
 # Brazos arriba mientras lo conjura (se queda con los brazos en alto).
 mago bucle JumpAir_InPlace_NoWeapon congela
 & mago bucle FoundSomething_NoWeapon congela al_final
-& mago desliza aqui altura=3 dura=2.6
+& mago desliza aqui altura=5 dura=2.6
 +0.1 sonido Prologo_Despegue en=mago
 +0.1 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=mago offset=0,0.2,0 lifetime=1.6
 +0.6 sonido Prologo_HechizoGrande en=mago volume=0.6

@@ -1,8 +1,4 @@
-INC-1298: flores del terreno a 90 m, tinta más gruesa de cerca y borde de luz en personajes
-
-- Terreno: detalles 400 → 90 m, error de altura 0,5 → 3 (menos centelleo y mucho menos coste).
-- ContornoDeTinta: grosor x1,5 a menos de 4 m.
-- Shader Dibujo: _BordeDeLuz; 445 materiales de personaje a 0,45.
+TRACKER: INC-1300 (Director: el botón sigue marcando encargos pendientes tras completarlos)
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpDr

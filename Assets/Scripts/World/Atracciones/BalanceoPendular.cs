@@ -28,6 +28,10 @@ public sealed class BalanceoPendular : MonoBehaviour
     /// <summary>Segundos de una ida y vuelta completa.</summary>
     public float Periodo => periodo;
 
+    /// <summary>Dónde va el vaivén dentro de su periodo (0–1; 0 y 0,5 = pasando por el centro, 0,25 y 0,75 = en los extremos).
+    /// Sirve para que una animación de quien va montado lleve el mismo compás que la tabla.</summary>
+    public float Fase01 => Mathf.Repeat((Time.time + _fase) / periodo, 1f);
+
     void Awake()
     {
         _reposo = Quaternion.Euler(reposo);

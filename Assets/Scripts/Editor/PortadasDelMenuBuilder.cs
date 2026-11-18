@@ -95,6 +95,7 @@ public static class PortadasDelMenuBuilder
         if (sendero == null) sendero = MontarSendero(raiz.transform, camara);
 
         // Añadidos que no rehacen nada: nubes en los cielos de día y el título centrado sobre los botones.
+        AsegurarPostproceso();
         PonerNubes(columpio);
         PonerNubes(peninsula);
         PonerNubes(viaje);
@@ -122,6 +123,17 @@ public static class PortadasDelMenuBuilder
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
         Debug.Log("[PortadasDelMenuBuilder] Portadas montadas en MainMenu.unity (Península, Viaje, Sendero).");
+    }
+
+    [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: rehacer la del columpio")]
+    static void RehacerColumpio()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+        var raiz = GameObject.Find(RaizNombre);
+        var viejo = raiz != null ? raiz.transform.Find(NombreColumpio) : null;
+        if (viejo != null) Object.DestroyImmediate(viejo.gameObject);
+        Montar();
     }
 
     [MenuItem("El Sendero/Interfaz/Menú principal/Portadas: previsualizar 1 Columpio %#&1")]
@@ -180,11 +192,21 @@ public static class PortadasDelMenuBuilder
 
         // Cámara por detrás y algo a la izquierda de Will: enseña lo que él ve (la casa, el buzón, las
         // colmenas) y lo deja en el tercio derecho (a la izquierda van los botones).
-        Vector3 camara = posAsiento - dir * DistanciaColumpio - derecha * 0.8f + Vector3.up * 1.5f;
-        Vector3 hacia = posAsiento + dir * 7f - derecha * 1.4f + Vector3.up * 1.4f;
+        // Algo apartada a la izquierda y lejos: el vaivén (hacia delante y hacia atrás) no la roza.
+        Vector3 camara = posAsiento - dir * DistanciaColumpio - derecha * 2.2f + Vector3.up * 1.6f;
+        Vector3 hacia = posAsiento + dir * 6f - derecha * 1.0f + Vector3.up * 1.3f;
         var encuadre = Encuadre(etapa.transform, camara, hacia);
 
         mundo.RecortarPueblo(pueblo, camara, (hacia - camara).normalized, posAsiento);
+
+        // Vaivén más corto que el del juego: en una portada fija no debe acercarse a la cámara.
+        var balanceo = pueblo != null ? pueblo.GetComponentInChildren<BalanceoPendular>(true) : null;
+        if (balanceo != null)
+        {
+            var soBalanceo = new SerializedObject(balanceo);
+            soBalanceo.FindProperty("amplitud").floatValue = 14f;
+            soBalanceo.ApplyModifiedPropertiesWithoutUndo();
+        }
 
         Physics.SyncTransforms();
         var will = Personaje(WillPath, deco, posAsiento, yaw);
@@ -194,6 +216,7 @@ public static class PortadasDelMenuBuilder
             var soActor = new SerializedObject(actorWill);
             soActor.FindProperty("forzarSuelo").boolValue = false;
             soActor.FindProperty("asiento").objectReferenceValue = asiento;
+            soActor.FindProperty("balanceoQueSigue").objectReferenceValue = balanceo;
             soActor.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -210,7 +233,7 @@ public static class PortadasDelMenuBuilder
         return etapa;
     }
 
-    const float DistanciaColumpio = 3.4f;
+    const float DistanciaColumpio = 5f;
 
     static NPCWorldPoint AsientoDelColumpio(Transform raiz)
     {
@@ -741,6 +764,29 @@ public static class PortadasDelMenuBuilder
         {
             if (!_yaAbierta && _escena.IsValid()) EditorSceneManager.CloseScene(_escena, true);
         }
+    }
+
+    const string PerfilDelMundoPath = "Assets/Settings/Volumenes/Volumen Profile.asset";
+
+    /// <summary>
+    /// Un Volume global con el perfil de postprocesado del juego (corrección de color, resplandor, sin grano):
+    /// sin él, el menú se ve con el color crudo y distinto del mundo.
+    /// </summary>
+    static void AsegurarPostproceso()
+    {
+        foreach (var v in Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Include))
+            if (v.isGlobal && v.sharedProfile != null) return;
+        var perfil = AssetDatabase.LoadAssetAtPath<UnityEngine.Rendering.VolumeProfile>(PerfilDelMundoPath);
+        if (perfil == null)
+        {
+            Debug.LogWarning("[PortadasDelMenuBuilder] No encuentro " + PerfilDelMundoPath + ": el menú queda sin postprocesado.");
+            return;
+        }
+        var go = new GameObject("Postproceso del menú");
+        var volumen = go.AddComponent<UnityEngine.Rendering.Volume>();
+        volumen.isGlobal = true;
+        volumen.weight = 1f;
+        volumen.sharedProfile = perfil;
     }
 
     static PortadaEtapa Existente(Transform raiz, string nombre)

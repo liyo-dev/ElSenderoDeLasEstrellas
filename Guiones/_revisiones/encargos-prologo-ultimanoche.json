@@ -2,24 +2,8 @@
     "guion": "Prologo_UltimaNoche",
     "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
     "escena": "Prologo_Valle",
-    "actualizado": "2026-11-18 17:57",
+    "actualizado": "2026-11-18 22:01",
     "encargos": [
-        {
-            "clave": "p46-npc-magooscuro-subir-mas-al-mago-oscuro-para-que-no-haya-tanta-distancia-entre-el-y-el-agujero-negro",
-            "panel": "P46",
-            "elemento": "NPC_MagoOscuro",
-            "etiquetaElemento": "Mago",
-            "tipo": "nota",
-            "texto": "Subir mas al mago oscuro para que no haya tanta distancia entre el y el agujero negro",
-            "t": -1.0,
-            "t0": 224.25718688964844,
-            "t1": 225.6571807861328,
-            "linea": 886,
-            "ordenGuion": "L886: plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=46",
-            "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/046_03.png",
-            "fecha": "2026-11-18 17:47"
-        },
         {
             "clave": "p07-npc-archimago-cerca-de-este-clip-esta-el-momento-donde-liora-pierda-la-cabeza-se-le-cae-hacia-atras",
             "panel": "P07",

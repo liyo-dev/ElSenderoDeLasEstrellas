@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-18 20:52 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-18 22:01 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **4:30,8** de secuencia · 32 frases · 56 planos · 203 efectos · 19 personajes
 
@@ -9,11 +9,13 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 ## Errores (0)
 
 
-## Avisos (4)
+## Avisos (6)
 
 - línea 656: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: un punto queda fuera del NavMesh (-202,0, -365,0); voy en línea recta
 - El primer plano empieza en 63,1 s: hasta entonces la cámara se queda donde estuviera.
 - línea 707: plano conjunto liora nina altura=1.0 altura_foco=0.9 lente=40: liora habla de espaldas a la cámara en 174,9 s (157°). Prueba lado=, otro desde= o un plano nuevo cuando se gire.
+- línea 886: plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=46: algo del decorado se mete delante y tapa un 40% del cuadro. Prueba lado= o desde=.
+- línea 915: plano general mago desde=cam_final agujero altura_foco=0 altura=0.9 lente=46: algo del decorado se mete delante y tapa un 41% del cuadro. Prueba lado= o desde=.
 - 2:45,4: liora y nina se atraviesan.
 
 ## Silencios largos entre frases (11)

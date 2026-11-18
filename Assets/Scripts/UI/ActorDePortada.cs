@@ -29,6 +29,11 @@ public class ActorDePortada : MonoBehaviour
     [Tooltip("Asiento donde va sentado (p. ej. el de un columpio: lo ocupa al encenderse la portada y el columpio lo balancea). Vacío = se queda donde lo colocó la portada.")]
     [SerializeField] private NPCWorldPoint asiento;
 
+    [Tooltip("Balanceo cuyo compás sigue la pose en bucle (la pose da una vuelta entera por cada ida y vuelta de la tabla). Vacío = la pose corre sola.")]
+    [SerializeField] private BalanceoPendular balanceoQueSigue;
+    [Tooltip("Cuánto se adelanta la pose respecto al balanceo (0–1 de vuelta). Se retoca a ojo hasta que las piernas casen con la tabla.")]
+    [SerializeField, Range(0f, 1f)] private float desfaseConElBalanceo;
+
     [Header("Gestos de vez en cuando")]
     [Tooltip("Estados que el personaje hace de vez en cuando, al azar (p. ej. FoundSomething_NoWeapon, Laugh01, Talk01). Vacío = no hace gestos.")]
     [SerializeField] private string[] gestos = new string[0];
@@ -150,6 +155,11 @@ public class ActorDePortada : MonoBehaviour
         {
             var p = _pistas[i];
             if (p.capaBucle < 0 || !p.animator.isActiveAndEnabled) continue;
+            if (balanceoQueSigue != null)
+            {
+                p.animator.Play(_hashBucle, p.capaBucle, Mathf.Repeat(balanceoQueSigue.Fase01 + desfaseConElBalanceo, 1f));
+                continue;
+            }
             // Un gesto en la misma capa que la pose no se pisa.
             if (_haciendoGesto && i == _cuerpo && _gestoActual.capa == p.capaBucle) continue;
             if (p.animator.IsInTransition(p.capaBucle)) continue;
