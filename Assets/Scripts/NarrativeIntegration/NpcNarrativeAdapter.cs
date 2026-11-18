@@ -119,6 +119,10 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         {
             var npc = BuscarSinAviso(actorId);
             if (npc == null) return true;
+            // Un NPC peleando o haciendo una cinemática no se retira: lo necesitan en escena y, si
+            // desapareciera, la pelea o el tramo seguirían contando con él (ver PedirCombateContraNpc).
+            // Se reintenta en la siguiente revisión, cuando ya no esté ocupado.
+            if (npc.IsInCombatOrAlert || npc.IsInCinematic) return false;
             // Un actor que ya no se ve (una escena lo ha hecho desaparecer) se puede retirar aunque
             // el jugador esté al lado: nadie le ve irse (INC-1031).
             if (CercaDelJugador(npc.transform.position) && SeVe(npc)) return false;
@@ -133,6 +137,28 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         go.SetActive(true);
         _retirados.Remove(actorId);
         return true;
+    }
+
+    /// La historia lo necesita ya (un combate que empieza, una charla en curso): vuelve a escena
+    /// aunque el jugador lo vea aparecer. Aquí no vale esperar a que nadie mire.
+    public bool BringOnStage(string actorId)
+    {
+        if (string.IsNullOrEmpty(actorId)) return true;
+        // Mientras una cinemática lo tiene, es suya: la historia lo hará al terminar.
+        if (RepartoDeEscena.EstaTomado(actorId)) return false;
+
+        if (_retirados.TryGetValue(actorId, out var retirado))
+        {
+            _retirados.Remove(actorId);
+            if (retirado != null) retirado.SetActive(true);
+        }
+
+        // También puede haberlo apagado otra cosa (un tramo, el reparto de la escena): la historia
+        // lo está pidiendo en el acto, así que se enciende igual.
+        var npc = BuscarAunqueNoEsté(actorId);
+        if (npc == null) return false;
+        if (!npc.gameObject.activeSelf) npc.gameObject.SetActive(true);
+        return npc.gameObject.activeInHierarchy;
     }
 
     public bool TryPlaceUnseen(string actorId, string markId)
@@ -180,6 +206,11 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
 
     static NPCBehaviourManagerV2 BuscarSinAviso(string actorId) =>
         !string.IsNullOrEmpty(actorId) && NPCRegistry.HasInstance && NPCRegistry.Instance.TryGetNPCByID(actorId, out var npc) && npc.isActiveAndEnabled
+            ? npc : null;
+
+    /// El NPC aunque esté apagado (la historia puede tenerlo retirado): el registro lo conserva.
+    static NPCBehaviourManagerV2 BuscarAunqueNoEsté(string actorId) =>
+        !string.IsNullOrEmpty(actorId) && NPCRegistry.HasInstance && NPCRegistry.Instance.TryGetNPCByID(actorId, out var npc)
             ? npc : null;
 
     static bool SeVe(NPCBehaviourManagerV2 npc)

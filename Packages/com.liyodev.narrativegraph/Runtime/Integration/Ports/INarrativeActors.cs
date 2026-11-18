@@ -43,6 +43,12 @@ public interface INarrativeActorPresence
     /// <summary>Lo retira o lo devuelve. false = ahora no (el jugador lo vería).</summary>
     bool TrySetPresent(string actorId, bool present);
 
+    /// <summary>
+    /// Lo devuelve a escena en el acto aunque el jugador lo vea: lo pide la historia cuando ya
+    /// está pasando (empieza un combate, una charla). false si una cinemática lo tiene tomado.
+    /// </summary>
+    bool BringOnStage(string actorId);
+
     /// <summary>Lo pone en una marca (devolviéndolo si estaba retirado). false = ahora no.</summary>
     bool TryPlaceUnseen(string actorId, string markId);
 }

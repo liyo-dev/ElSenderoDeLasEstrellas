@@ -76,6 +76,22 @@ public static class CombatTargetProvider
         return mejor;
     }
 
+    /// <summary>Los personajes del grupo que siguen en pie y pueden recibir daño (en 'salida').</summary>
+    public static void ObjetivosEnPie(List<Transform> salida)
+    {
+        salida.Clear();
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+        {
+            var t = ObjetivoValido((Slot)i);
+            if (t != null) salida.Add(t);
+        }
+        if (salida.Count == 0)
+        {
+            var jugador = Jugador();
+            if (jugador != null) salida.Add(jugador);
+        }
+    }
+
     /// El enemigo deja de atacar (muere o sale del combate): su elección deja de contar.
     public static void Olvidar(Object atacante)
     {

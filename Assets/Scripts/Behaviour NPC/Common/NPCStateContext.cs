@@ -21,6 +21,8 @@ namespace Game.NPC.Common
         public bool IsInCombat { get; set; }
         public bool IsInCinematic { get; set; }
         public bool WasDefeatedInCombat { get; set; } // NPC ha sido derrotado
+        /// <summary>El cerebro de combate que está peleando ahora (clásico o por puntuación); null fuera de combate.</summary>
+        public ICerebroDeCombate CerebroDeCombate { get; set; }
 
         // Quién tiene anclado al NPC. Cada sistema ancla y suelta solo con su clave, así ninguno
         // deshace el ancla de otro (p. ej. bajar del barco no suelta el modo Libre del grupo).

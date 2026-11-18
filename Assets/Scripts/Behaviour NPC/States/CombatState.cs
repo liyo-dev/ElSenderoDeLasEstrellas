@@ -13,7 +13,7 @@ namespace Game.NPC.States
     {
         public override string StateName => "Combat";
         
-        private NPCCombatBrain _combatBrain;
+        private ICerebroDeCombate _cerebro;
         private float _checkTimer;
         private const float EXIT_CHECK_INTERVAL = 1.0f;
         private const float MAX_COMBAT_DISTANCE = 30f; // Margen de seguridad para salir de combate
@@ -54,100 +54,20 @@ namespace Game.NPC.States
             // 3. Configuración de Componentes (Targetable, Damageable, UI)
             InitializeCombatComponents(context);
             
-            // 4. Inicializar el Cerebro de Combate
-            _combatBrain = context.Transform.GetComponent<NPCCombatBrain>();
-            if (_combatBrain == null) 
-                _combatBrain = context.Transform.gameObject.AddComponent<NPCCombatBrain>();
-
-            // Inicializar el Brain con el Manager
-            var manager = context.Transform.GetComponent<NPCBehaviourManagerV2>();
-            if (manager != null) _combatBrain.Initialize(manager);
-
-            // 5. Configurar y Arrancar el Brain
-            if (context.Config?.combatConfig != null)
-            {
-                var cc = context.Config.combatConfig;
-                
-                // Mapeamos la configuración del ScriptableObject a la Struct del Brain
-                var brainSettings = new NPCCombatBrain.Settings
-                {
-                    // Distancias
-                    minSafeDistance = cc.minAttackDistance,
-                    optimalDistance = (cc.minAttackDistance + cc.maxAttackDistance) / 2f,
-                    maxDistance = cc.maxAttackDistance,
-                    runSpeed = 6f, // Velocidad base de correr
-                    walkSpeed = 2.5f,
-                    
-                    // Ataques (Mapeo directo de slots)
-                    upperBodyLayer = 1,
-                    leftAttack = new NPCCombatBrain.AttackSlot { 
-                        animationState = "MagicLeft", cooldown = cc.spell1Cooldown, slotIndex = 0 
-                    },
-                    rightAttack = new NPCCombatBrain.AttackSlot { 
-                        animationState = "MagicRight", cooldown = cc.spell2Cooldown, slotIndex = 1 
-                    },
-                    specialAttack = new NPCCombatBrain.AttackSlot { 
-                        animationState = "MagicSpecial", cooldown = cc.spell3Cooldown, slotIndex = 2 
-                    },
-                    
-                    // Comportamiento
-                    attackFrequencyMultiplier = cc.isAggressive ? 1.5f : 1.0f,
-                    globalCooldown = 1.5f, // Pausa entre acciones para "ritmo humano"
-                    spawnProjectileViaAnimEvent = false,
-                    fireDelaySeconds = 0.4f, // Ajustar según animación
-                    maxMana = cc.maxMana,
-                    manaRegenPerSecond = cc.manaRegenPerSecond,
-                    manaRegenDelayAfterSpend = cc.manaRegenDelayAfterSpend,
-                    manaCostLeft = cc.spell1ManaCost,
-                    manaCostRight = cc.spell2ManaCost,
-                    manaCostSpecial = cc.spell3ManaCost,
-                    lowManaRetreatThreshold = cc.lowManaRetreatThreshold,
-                    
-                    // Tácticas & Defensa
-                    difficultyLevel = cc.difficultyLevel, // FIX #13: configurable por NPC (antes hardcodeado a 0.7f para todos)
-                    useShield = cc.useShield,
-                    shieldDuration = cc.shieldMaxDuration,
-                    shieldCooldown = cc.shieldCooldown,
-                    coverLayerMask = cc.coverLayerMask,
-                    coverSearchRadius = cc.coverSearchRadius,
-                    dodgeDistance = 3f,
-
-                    // FIX #5: completar el mapeo de la estrategia de engaño/emboscada — antes
-                    // estos dos campos ni existían en el struct-initializer, así que quedaban en
-                    // 0f/0 por defecto y la mecánica de fingir quedarse sin maná para emboscar
-                    // (~150 líneas ya implementadas en NPCCombatBrain) nunca se activaba.
-                    deceptionChance = cc.deceptionChance,
-                    minAttacksToKeepForAmbush = cc.minAttacksToKeepForAmbush,
-                    
-                    // Búsqueda del Jugador
-                    activelySearchForPlayer = cc.activelySearchForPlayer,
-                    searchDuration = cc.searchDuration,
-                    passiveSearchDuration = cc.passiveSearchDuration,
-                    searchMovementRadius = cc.searchMovementRadius,
-                    returnToOriginAfterSearch = cc.returnToOriginAfterSearch,
-
-                    // PROPUESTA: coordinación de equipo (ver NPCAttackCoordinator) —
-                    // antes faltaba en este mapeo, así que aunque se configurara en el
-                    // NPCCombatConfig se quedaba siempre en 0 (desactivado) al llegar al Brain.
-                    maxConcurrentAttackersOnTarget = cc.maxConcurrentAttackersOnTarget,
-
-                    // PROPUESTA: retirada táctica (ver State_TacticalRetreat) — mismo
-                    // caso que arriba: useTacticalRetreat/retreatHealthThreshold/retreatCooldown ya
-                    // existían en el NPCCombatConfig pero no llegaban al Brain, así que la retirada
-                    // (con el componente NPCTacticalRetreat.cs ya implementado) nunca se disparaba.
-                    useTacticalRetreat = cc.useTacticalRetreat,
-                    retreatHealthThreshold = cc.retreatHealthThreshold,
-                    retreatCooldown = cc.retreatCooldown
-                };
-
-                // ¡ARRANCAR LA FSM DE COMBATE!
-                _combatBrain.BeginCombat(brainSettings, cc);
-                context.Log("[CombatState] Brain activado con configuración exitosa.");
-            }
-            else
+            // 4. Elegir y arrancar el cerebro de combate: el clásico o el de puntuación, según la Combat Config.
+            var cc = context.Config?.combatConfig;
+            if (cc == null)
             {
                 context.LogError("[CombatState] Falta CombatConfig en el NPC. El combate no funcionará bien.");
+                return;
             }
+
+            _cerebro = ElegirCerebro(context.Transform.gameObject, cc.cerebro);
+            var manager = context.Transform.GetComponent<NPCBehaviourManagerV2>();
+            if (manager != null) _cerebro.Inicializar(manager);
+            context.CerebroDeCombate = _cerebro;
+            _cerebro.Comenzar(cc);
+            context.Log($"[CombatState] Cerebro de combate activado ({cc.cerebro}).");
         }
 
         public override void OnUpdate(NPCStateContext context)
@@ -240,10 +160,9 @@ namespace Game.NPC.States
             }
 
             // Detener el cerebro de combate limpiamente
-            if (_combatBrain != null)
-            {
-                _combatBrain.StopCombat();
-            }
+            if (Vivo(_cerebro)) _cerebro.Detener();
+            if (context.CerebroDeCombate == _cerebro) context.CerebroDeCombate = null;
+            _cerebro = null;
             
             // Desactivar targeting para que el marker desaparezca
             var targetable = context.Transform.GetComponent<Targetable>();
@@ -279,6 +198,19 @@ namespace Game.NPC.States
         // ------------------------------------------------------------------------
         // Helpers de Inicialización
         // ------------------------------------------------------------------------
+
+        private static ICerebroDeCombate ElegirCerebro(GameObject npc, TipoDeCerebroDeCombate tipo)
+        {
+            if (tipo == TipoDeCerebroDeCombate.PorPuntuacion)
+            {
+                var nuevo = npc.GetComponent<Combate.CerebroDeCombatePorPuntuacion>();
+                return nuevo != null ? nuevo : npc.AddComponent<Combate.CerebroDeCombatePorPuntuacion>();
+            }
+            var clasico = npc.GetComponent<NPCCombatBrain>();
+            return clasico != null ? clasico : npc.AddComponent<NPCCombatBrain>();
+        }
+
+        private static bool Vivo(ICerebroDeCombate cerebro) => cerebro is Object o && o != null;
 
         private void InitializeCombatComponents(NPCStateContext context)
         {

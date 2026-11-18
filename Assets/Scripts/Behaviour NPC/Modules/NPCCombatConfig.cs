@@ -39,6 +39,13 @@ namespace Game.NPC.Modules
     [CreateAssetMenu(fileName = "NPC_Combat_Config", menuName = "El Sendero/NPCs/Módulos/Combat Config", order = 2)]
     public class NPCCombatConfig : NPCModuleConfigBase
     {
+        [Header("🧠 Cerebro de combate")]
+        [Tooltip("Clásico = la máquina de estados de siempre (NPCCombatBrain). Por puntuación = el cerebro nuevo (CerebroDeCombatePorPuntuacion), que decide con el perfil de abajo y pelea en grupo.")]
+        public TipoDeCerebroDeCombate cerebro = TipoDeCerebroDeCombate.Clasico;
+
+        [Tooltip("Solo con el cerebro por puntuación. Vacío = carácter y defensas sacados de esta config, y los ataques de sus tres huecos de hechizo.")]
+        public Game.NPC.Combate.PerfilDeCombate perfilDeCombate;
+
         [Header("Combat Stats")]
         [Min(0f)]
         [Tooltip("Puntos de vida del NPC")]

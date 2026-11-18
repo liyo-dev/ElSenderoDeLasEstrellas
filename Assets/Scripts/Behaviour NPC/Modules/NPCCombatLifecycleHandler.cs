@@ -50,7 +50,8 @@ namespace Game.NPC.Modules
         private Damageable _damageable;
         private NPCSimpleAnimator _animator;
         private NavMeshAgent _agent;
-        private NPCCombatBrain _brain;
+        // El cerebro que pelea ahora (clásico o por puntuación); lo apunta CombatState en el contexto.
+        private ICerebroDeCombate Cerebro => _manager != null && _manager.Context != null ? _manager.Context.CerebroDeCombate : null;
         private NPCShieldController _shieldController;
         // FIX #25: antes se llamaba GetComponent<NPCTeamMember>()
         // en OnDied/DeathRoutine/HandleGetUpDizzy/HandleMoveToAnchor/MoveTeamMembersToRandomPoints
@@ -131,7 +132,6 @@ namespace Game.NPC.Modules
             _damageable = GetComponent<Damageable>();
             _animator = GetComponent<NPCSimpleAnimator>();
             _agent = GetComponent<NavMeshAgent>();
-            _brain = GetComponent<NPCCombatBrain>();
             _shieldController = GetComponent<NPCShieldController>();
             // FIX #26: NO cachear NPCTeamMember aquí — todavía no existe (ver comentario en la
             // declaración del campo más arriba). Se resuelve perezosamente vía ResolvedTeamMember.
@@ -235,9 +235,9 @@ namespace Game.NPC.Modules
             #endif
 
             // Notificar al CombatBrain (para detectar ataques por la espalda durante búsqueda)
-            if (_brain != null && _manager != null && _manager.Context != null && _manager.Context.Player != null)
+            if (Cerebro != null && _manager.Context.Player != null)
             {
-                _brain.OnTakeDamage(_manager.Context.Player.position);
+                Cerebro.AlRecibirDano(_manager.Context.Player.position);
             }
 
             // Interrupción de Casting
@@ -252,7 +252,7 @@ namespace Game.NPC.Modules
                 // se quedaba con la FSM de combate congelada para siempre (ningún otro código volvía a
                 // llamar a StartCoroutine(FSM_Loop())). InterruptCasting() para la corrutina actual Y
                 // la reinicia desde EVALUATE.
-                if (_brain != null) _brain.InterruptCasting();
+                Cerebro?.InterrumpirLanzamiento();
                 // No hacemos return aquí, dejamos que el stun normal ocurra
             }
 
@@ -412,10 +412,10 @@ namespace Game.NPC.Modules
             }
 
             // 1. DETENER TODO INMEDIATAMENTE
-            if (_brain) _brain.StopCombat();
+            Cerebro?.Detener();
             // FIX #12: parada explícita del escudo aquí también.
-            // _brain.StopCombat() ya para el escudo si _brain existe, pero este NPC puede tener
-            // NPCShieldController sin _brain (o con _brain null por timing) — sin este guard extra,
+            // Detener() ya para el escudo si hay cerebro, pero este NPC puede tener
+            // NPCShieldController sin cerebro (o con el cerebro null por timing) — sin este guard extra,
             // el NPC podía morir a mitad de una animación de defensa y quedarse con el prefab del
             // escudo instanciado y visible sobre el cadáver.
             _shieldController?.StopDefending();

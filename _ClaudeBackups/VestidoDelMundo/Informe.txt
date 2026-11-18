@@ -1,10 +1,10 @@
-﻿Vestido de MainWorld — 2026-11-15 00:45
+﻿Vestido de MainWorld — 2026-11-18 14:23
 Relieve: montaña de Risco esculpida (13057 muestras del heightmap cambiadas).
 Relieve: valle del prólogo esculpido en la costa suroeste (6982 muestras cambiadas).
 Suelo: se parte de la base guardada (con lo pintado a mano) para repintar.
 Borrado el vestido anterior.
 Borrados 34 assets generados de Assets/Scenes/Worlds/MainWorld_data/Vestido.
-Retirados: 483 repuestos.
+Retirados: 481 repuestos.
 Casas: 59 devueltas a su giro original.
 Suelo de Reino: suelo de ciudad (3508 celdas: tierra en las traseras, hierba en jardines, al pie de la muralla y en los taludes), 8 calles y 4 plazas en malla de pavimento, sendas de 66 casas, 449 celdas de talud sin roca, camino de la puerta desviado.
 Suelo de Pueblo pesquero: alfombra con fundido de 25 m, 1 plazas, 2 accesos, sendas de 15 casas y 444 celdas de talud sin roca.
@@ -71,17 +71,17 @@ Pueblo vecino: 64 piezas de detalle.
 Granjas de la cascada: 42 piezas de detalle.
     BuildingAT53: 6,6 m de fachada → CasaDelPueblo_A, en el sitio de la vieja
 Retirados (inactivos, fuera de la build): 7 × casa del pack en el pueblo inicial: la sustituye una casa de campo de entramado y paja
-Retirados (inactivos, fuera de la build): 20 × pieza suelta del pack que se montaba sobre una casa ya cambiada o le tapaba la puerta (molino, chimenea, valla, árbol…)
+Retirados (inactivos, fuera de la build): 18 × pieza suelta del pack que se montaba sobre una casa ya cambiada o le tapaba la puerta (molino, chimenea, valla, árbol…)
     BuildingAT24 (1): es el molino, se queda con sus aspas
     BuildingAT03: 9,3 m de fachada → CasaDelPueblo_C, en el sitio de la vieja
     BuildingAT01: 5,3 m de fachada → CasaDelPueblo_E, con la puerta donde estaba la vieja
     BuildingAT05: 9,6 m de fachada → CasaDelPueblo_F, en el sitio de la vieja
-    BuildingAT09: 11,1 m de fachada → CasaDelPueblo_C, con la puerta donde estaba la vieja
+    BuildingAT09: 5,6 m de fachada → CasaDelPueblo_B, en el sitio de la vieja
     BuildingAT16: 9,7 m de fachada → CasaDelPueblo_F, en el sitio de la vieja
     BuildingAT36: es un puesto, se queda el del pack (juego: SPAWN_Tomasa)
     BuildingAT40: es un puesto, se queda el del pack (juego: PuntoRecogida)
     BuildingAT30 (1): 5,5 m de fachada → CasaDelPueblo_B, en el sitio de la vieja
-  Pueblo inicial: 7 casas del pack cambiadas por casas de campo; 20 piezas sueltas retiradas de encima.
+  Pueblo inicial: 7 casas del pack cambiadas por casas de campo; 18 piezas sueltas retiradas de encima.
 Retirados (inactivos, fuera de la build): 1 × bocamina con vagonetas y raíles: no es de un pueblo de campo
 Retirados (inactivos, fuera de la build): 47 × valla del pueblo inicial que no cierra un huerto ni un cercado (el pueblo estaba cargado de vallas)
 Retirados (inactivos, fuera de la build): 3 × carro o puesto suelto del pueblo inicial (se quedan los del mercado)
@@ -105,7 +105,7 @@ Retirados (inactivos, fuera de la build): 175 × peña o árbol del mundo donde 
   Refugio en (2, 412) a 137,1 m; 4 repisas en la senda alta (cornisa a 134,1 m); 0 pinos; puente a 137,1 m.
   Galería del collado: de (25, 412) a 137,1 m a (13, 444) a 132,1 m; 2 celdas abiertas; OJO: 6 m al aire.
   Cascada de la noria: cae de 118,4 m a 3,1 m en (-53, 466).
-  Risco: calle alta a 132,1 m, plaza a 126,1 m, noria a 118,1 m, huertos a 116,1 m, era a 106,1 m; 42 tramos de valla en la senda, 19 peñas y 98 pinos en la ladera.
+  Risco: calle alta a 132,1 m, plaza a 126,1 m, noria a 118,1 m, huertos a 116,1 m, era a 106,1 m; 42 tramos de valla en la senda, 11 peñas, 46 rocas en las paredes y 98 pinos en la ladera.
   Montacargas de cuerda: la jaula sube de 2,5 m a 126,1 m.
   Cueva del río: 254,6 m de (-165, 236) a (-63, 469); suelo de 43 a 3 m; 3 celdas abiertas.
   Vega: 7 piezas (casas y huertas) y la noria.
@@ -163,7 +163,6 @@ Agua — Laguna de la Era: lámina a 24,50 m (1,2 m bajo el desborde, a 25,70 m)
   Ribera: 6 árboles de orilla (oliva), 3 árboles de orilla (turquesa), 46 flores (azules y blancas), 101 juncos, 2 losas para sentarse en la llegada, 22 nenúfares, 3 nenúfares en flor, 9 peñas de la orilla, 2 piedras al pie del hito, 19 setas, 6 troncos caídos medio hundidos.
   Hito: árbol azul en la punta de tierra de (205, -22); la llegada desde la Era de trilla mira hacia él.
   Ambiente: AmbientZone con AmbientPreset_Laguna.asset (niebla baja del clima en la cuenca), niebla nocturna sobre el agua, ninguna arena de batalla a menos de 25 m del agua, ranas en el juncal de (173, -54).
-  Pendiente: vuelve a hornear el NavMesh (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable); hasta entonces el fondo de Laguna de la Era sigue siendo caminable.
 Río «Río del bosque»: 13608 m² de agua, 691 cajas para nadar en la capa Water y 203 volúmenes «Not Walkable» donde hay 0,6 m o más de fondo.
 Río «Arroyo de la ladera este»: 1812 m² de agua, 203 cajas para nadar en la capa Water y 65 volúmenes «Not Walkable» donde hay 0,6 m o más de fondo.
 Retirados (inactivos, fuera de la build): 41 × vegetación o peña del mundo dentro del valle del prólogo (el valle lleva sus bosquetes)
@@ -279,9 +278,9 @@ Vegetación: 656 árboles (143 de color), 493 matas, 29 setos, 0 racimos de hied
     árboles de color con follaje matizado: 0 (objetivo 0)
   Al planear se han dejado sin poner: 114 × tramo de camino con vistas; 102 × bosquete en el que no caben 3 árboles; 93 × junto a un árbol que ya estaba; 80 × mata: junto a otra pieza de la vegetación; 40 × mata de talud: junto a un árbol que ya estaba; 38 × mata de talud: junto a otra pieza de la vegetación; 33 × pendiente; 31 × sobre un camino.
   Al plantar no han cabido 122: 21 × se pisa con otra pieza del vestido; 19 × la copa se mete en un edificio o una torre; 15 × terreno demasiado desigual bajo el tronco (1,3 m); 12 × zona que debe quedar libre: Río de las cascaditas; 11 × la copa se mete en algo que ya estaba en la escena; 8 × terreno demasiado desigual bajo el tronco (1,4 m); 5 × terreno demasiado desigual bajo el tronco (1,2 m); 4 × terreno demasiado desigual bajo el tronco (1,5 m); 4 × zona que debe quedar libre: Lago de la cortina doble; 3 × terreno demasiado desigual bajo el tronco (1,6 m); 2 × zona que debe quedar libre: Huerto del pueblo vecino; 2 × tapa una senda o una calle; 2 × zona que debe quedar libre: Cascada, poza y mirador; 2 × zona que debe quedar libre: Puente_camino_5; 2 × terreno demasiado desigual (1,2 m); 1 × zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca); 1 × zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods); 1 × zona que debe quedar libre: Sala del trono y calabozo (pendiente); 1 × terreno demasiado desigual (1,8 m); 1 × terreno demasiado desigual (0,9 m); 1 × terreno demasiado desigual (0,8 m); 1 × terreno demasiado desigual (1,0 m); 1 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir; 1 × terreno demasiado desigual bajo el tronco (2,4 m); 1 × choca con algo que ya estaba en la escena.
-  Hornea de nuevo la navegación (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable) y pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).
-Navegación: 2186 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo (390 piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.
-Detalles: 3254 piezas colocadas, 223 descartadas por comprobaciones.
+  Pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).
+Navegación: 2232 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo (390 piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.
+Detalles: 3292 piezas colocadas, 223 descartadas por comprobaciones.
     52 × choca con algo que ya estaba en la escena
     50 × se pisa con otra pieza del vestido
     19 × la copa se mete en un edificio o una torre
@@ -313,5 +312,6 @@ Detalles: 3254 piezas colocadas, 223 descartadas por comprobaciones.
      1 × terreno demasiado desigual bajo el tronco (2,4 m)
      1 × zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca)
      1 × zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods)
-Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?
-Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).
+Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Escenario ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?
+Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Escenario ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).
+NavMesh: rehorneado (1 superficie(s)) con el relieve y el vestido nuevos. Estaban abiertas también Start: su geometría entra en el horneado.

@@ -1,6 +1,6 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-17 12:02 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-18 10:21 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
 **0:40,2** de secuencia · 5 frases · 7 planos · 4 efectos · 3 personajes
 
@@ -12,9 +12,9 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97 · c2 1,31/ojos 0,9
 ## Avisos (5)
 
 - línea 17: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
-- línea 70: c2 dice CAP3_CARRO_04 cara=molesto mira=fuego: la frase CAP3_CARRO_04 no tiene voz en Voices/es; le doy 2,7 s por su texto
-- línea 78: c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2: la frase CAP3_CARRO_05 no tiene voz en Voices/es; le doy 3,4 s por su texto
-- 0:10,0: «conjunto de will y c1 y c2» dura 9,6 s sin voz y con la cámara quieta. ¿Pasa algo dentro?
+- línea 75: c2 dice CAP3_CARRO_04 cara=molesto mira=fuego: la frase CAP3_CARRO_04 no tiene voz en Voices/es; le doy 2,7 s por su texto
+- línea 83: c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2: la frase CAP3_CARRO_05 no tiene voz en Voices/es; le doy 3,4 s por su texto
+- 0:10,0: «general de c1 y c2» dura 9,6 s sin voz y con la cámara quieta. ¿Pasa algo dentro?
 - No hay captura del escenario: usa «El Sendero → Cinemáticas → Guion → 1. Capturar el escenario del prólogo» para tener los dibujos.
 
 ## Silencios largos entre frases (3)
@@ -34,10 +34,10 @@ Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97 · c2 1,31/ojos 0,9
 | 0:01,5 | will | «Ruedas… a estas horas.» (2,2 s) · pose |
 | 0:03,7 | **@esconde** |  |
 | 0:10,0 | **@llegan** |  |
-| 0:10,0 | plano 2 | conjunto de will y c1 y c2 · 9,6 s · lente 34° · coste 270: cara 192, ángulo 72 |
+| 0:10,0 | plano 2 | general de c1 y c2 · 9,6 s · lente 40° |
 | 0:10,0 | efecto | SFX: Wood_Scratching-009 |
 | 0:19,6 | **@vigia** |  |
-| 0:19,6 | plano 3 | medio de c2 · 3,0 s · lente 30° · coste 352: ángulo 2, eje 350 |
+| 0:19,6 | plano 3 | medio de c2 · 3,0 s · lente 30° · coste 277: cara 213, ángulo 65 |
 | 0:19,6 | c2 | «Brasas recientes. Aquí ha estado alguien.» (2,7 s) · pose |
 | 0:22,6 | plano 4 | primer plano de will · 1,4 s · lente 24° · coste 9: ángulo 3 |
 | 0:24,0 | plano 5 | medio de c1 · 3,4 s · lente 30° · coste 2: ángulo 2 |

@@ -8,7 +8,7 @@ using UnityEngine;
 /// Bucles que saltan: en las animaciones en bucle que usan los controladores, compara la postura del
 /// final del clip con la del principio, sobre el personaje real. Si no casan, el personaje da un tirón
 /// cada vez que el clip vuelve a empezar. También avisa si el último paso es mucho más grande que los
-/// demás (un fotograma de más al final de la toma). Ver INC-1210.
+/// demás (un fotograma de más al final de la toma). Ver INC-1285.
 public static partial class AuditorDeAnimaciones
 {
     private const float FpsDeBucle = 30f;

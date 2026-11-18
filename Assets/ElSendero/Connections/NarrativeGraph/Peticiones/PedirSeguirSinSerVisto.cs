@@ -266,6 +266,11 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Sigilo:{StepGuid}] arranca: '{R.npcId}' en {npc.transform.position:F1}, destino '{R.anchorId}' {destino:F1}, jugador {jugador.position:F1}.");
 #endif
+        // La historia puede tenerlos retirados («no está» hasta que anochece): el seguimiento los
+        // necesita en escena, así que vuelven antes de colocarlos en la salida.
+        Presentar(R.npcId);
+        foreach (var a in R.acompanantes) if (a != null) Presentar(a.npcId);
+
         var otros = BuscarAcompanantes();
 
         // El grupo se agacha ya al empezar: así el jugador ve que el tramo ha tomado el control
@@ -273,9 +278,9 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
         SigiloDelGrupo.Empezar(this, Mathf.Min(R.velocidadDelJugador, R.velocidad * 0.85f));
         _enSigilo = true;
 
-        // La presencia de los contrabandistas la decide la historia: puede activarlos un frame
-        // después de entrar al paso. Sin esperar a que estén activos, su agente no existe y el
-        // seguimiento se quedaría quieto con ellos en la marca (o saldría por «Llega»).
+        // La capa de la historia los enciende en su siguiente revisión (BringOnStage ya lo ha
+        // pedido): hasta que estén activos su agente no existe y la colocación en la salida
+        // necesita el NavMesh. Se espera a que la escena los tenga encendidos.
         float finDeEspera = Time.time + 2f;
         while (npc != null && !npc.gameObject.activeInHierarchy && Time.time < finDeEspera)
             yield return null;
@@ -587,6 +592,15 @@ public sealed class SeguirSinSerVistoEnCurso : NarrativeRequestRun<PedirSeguirSi
             if (_lider.Npc != quien) _lider.Npc.SimpleAnimator?.FaceTarget(jugador.position);
             yield return null;
         }
+    }
+
+    // Devuelve a escena al NPC si la historia lo tenía retirado («no está»): el seguimiento empieza
+    // ya y la colocación en la salida va tras un fundido, así que se le puede devolver.
+    private static void Presentar(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return;
+        if (NarrativeServices.TryGet(out INarrativeActorPresence presencia, nameof(SeguirSinSerVistoEnCurso)))
+            presencia.BringOnStage(id);
     }
 
     private List<(Acompanante, NPCBehaviourManagerV2)> BuscarAcompanantes()

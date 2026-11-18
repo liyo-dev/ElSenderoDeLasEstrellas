@@ -247,6 +247,18 @@ public static partial class VestidoDelMundo
         PintarSenda(l, Planta(segundo), 3f, 849, null, CapaRoca, CapaRoca, 0f);
         PintarSenda(l, CanalDelMolino, 2.4f, 850, null, CapaRoca, CapaRoca, 0f);
         foreach (Vector2[] c in CaminitosDeRisco) PintarSenda(l, c, 2.2f, 851 + (int)c[0].x, null, CapaTierraPiedras, CapaTierra, 0.3f);
+        // Hierba en lo que no es pared del cuerpo de las terrazas y su ladera.
+        int hierba = l.Capa(CapaHierba);
+        l.Recorrer(-50f, 458f, 50f, 545f, (i, k, x, z) =>
+        {
+            var q = new Vector2(x, z);
+            if (EnElPuebloDeRisco(q, 0.5f) || AlEsteDeLaGarganta(q) < 8f || q.y < CentroDeLaPlaza.y + MedioFondoDeLaPlaza) return;
+            float h = l.Altura(x, z);
+            float gx = l.Altura(x + 1.5f, z) - l.Altura(x - 1.5f, z), gz = l.Altura(x, z + 1.5f) - l.Altura(x, z - 1.5f);
+            float pendiente = Mathf.Atan(new Vector2(gx, gz).magnitude / 3f) * Mathf.Rad2Deg;
+            if (h < 10f || pendiente > 36f) return;
+            l.Mezclar(i, k, hierba, Mathf.Clamp01((36f - pendiente) / 8f), duro: true);
+        });
     }
 
     /// Caminitos de tierra y piedra que unen, dentro de cada terraza, la llegada de una escalera con la salida de la
@@ -263,11 +275,10 @@ public static partial class VestidoDelMundo
     /// Huertas de la terraza de los huertos (centro en planta).
     private static readonly Vector2[] HuertasDeRisco = { new Vector2(-9.5f, 467.4f), new Vector2(0f, 467.3f) };
 
-    /// Peñas con hierba encima que visten el cuerpo de roca de las terrazas, en dos anillos: uno en el canto, con la
-    /// cara de arriba casi a la cota de la terraza, y otro más abajo y más afuera. Por terraza, los lados que llevan
-    /// peñas (N, E, O) y cada cuántos metros.
+    /// Peñas con hierba encima en el canto de las terrazas, con la cara de arriba casi a la cota de la terraza. Por
+    /// terraza, los lados que llevan peñas (N, E, O) y cada cuántos metros.
     private static readonly (int terraza, string lados)[] LadosConPenas = { (0, "N"), (1, "NE"), (2, "NEO") };
-    private const float SeparacionDePenas = 7.5f, AfueraDelSegundoAnillo = 5.5f, BajoDelSegundoAnillo = 9f;
+    private const float SeparacionDePenas = 7.5f;
 
     /// Sitios del pueblo donde no van peñas: escaleras, senda, plataforma de la noria y canal.
     private static bool EstorbaUnaPena(Vector2 q, float cotaPlaza)
@@ -304,14 +315,58 @@ public static partial class VestidoDelMundo
                     if (!EstorbaUnaPena(q1, cotaPlaza) &&
                         PonZona(o, grupo, piezas[az.Next(piezas.Length)], "Peña del canto", new Vector3(q1.x, cota - 0.25f - 0.5f * (float)az.NextDouble(), q1.y), (float)az.NextDouble() * 360f) != null)
                         puestas++;
-                    Vector2 q2 = borde + normal * AfueraDelSegundoAnillo + new Vector2(normal.y, normal.x) * (SeparacionDePenas * 0.5f);
-                    float y2 = cota - BajoDelSegundoAnillo - 3f * (float)az.NextDouble();
-                    if (!EstorbaUnaPena(q2, cotaPlaza) && AlturaEn(o, q2) < y2 - 1f &&
-                        PonZona(o, grupo, piezas[az.Next(piezas.Length)], "Peña de la ladera", new Vector3(q2.x, y2, q2.y), (float)az.NextDouble() * 360f, 0.8f + 0.4f * (float)az.NextDouble()) != null)
-                        puestas++;
                 }
             }
         }
+        return puestas;
+    }
+
+    /// Peñascos que tapan las paredes del cuerpo de las terrazas, solo cerca de ellas (el terreno solo da la forma),
+    /// del mismo color que las peñas de los cantos. Nunca suben por encima de la terraza o la plaza que tengan cerca,
+    /// ni tapan escaleras, senda, canal, plataforma, cascada o montacargas.
+    private const string PenascosDeRoca = "Assets/Art/World/RPG Tiny Fantasy World 01 PBR/Prefab/Rock/RockCliff0";
+    private const float PasoDeLasRocas = 4f, PendienteDeLasRocas = 40f, CercaDeLasTerrazas = 9f;
+
+    /// La cota más baja de lo que queda encima a menos de 8 m (terrazas, plaza y calle alta); sin nada cerca, +∞.
+    private static float TechoDeLaPared(Vector2 q, float cotaPlaza)
+    {
+        float techo = float.MaxValue;
+        foreach (Terraza t in TerrazasDeRisco)
+            if (DistanciaATerraza(q, t) < 8f) techo = Mathf.Min(techo, t.Cota(cotaPlaza));
+        if (Mathf.Abs(q.x - CentroDeLaPlaza.x) < MedioLargoDeLaPlaza + 8f && q.y - (CentroDeLaPlaza.y + MedioFondoDeLaPlaza) < 8f)
+            techo = Mathf.Min(techo, cotaPlaza);
+        return techo;
+    }
+
+    private static int VestirLasParedes(Obra o, Transform grupo, float cotaPlaza)
+    {
+        var az = new System.Random(4441);
+        Vector2 labio = new Vector2(TerrazaDeLaNoria.XMin + 1.5f - VuelaLaPlataforma - 1.8f, SitioDeLaNoria.y);
+        Vector2[] cascada = { labio, labio + HaciaLaGarganta * 16f };
+        Vector2 jaula = new Vector2(Garganta[0].x - 4f, Garganta[0].z);
+        int puestas = 0;
+        for (float z = 461f; z < 502f; z += PasoDeLasRocas)
+            for (float x = -50f; x < 34f; x += PasoDeLasRocas)
+            {
+                var q = new Vector2(x + ((float)az.NextDouble() - 0.5f) * PasoDeLasRocas * 0.8f, z + ((float)az.NextDouble() - 0.5f) * PasoDeLasRocas * 0.8f);
+                if (q.y < CentroDeLaPlaza.y + MedioFondoDeLaPlaza + 1f) continue;
+                if (EnElPuebloDeRisco(q, 1.2f) || EstorbaUnaPena(q, cotaPlaza) || AlEsteDeLaGarganta(q) < 6f) continue;
+                if (DistanciaAPolilinea(q, cascada) < 6f || Vector2.Distance(q, jaula) < 5f) continue;
+                if (PendienteEn(o, q) < PendienteDeLasRocas) continue;
+                float cerca = float.MaxValue;
+                foreach (Terraza tt in TerrazasDeRisco) cerca = Mathf.Min(cerca, DistanciaATerraza(q, tt));
+                if (cerca > CercaDeLasTerrazas) continue;
+                float h = AlturaEn(o, q), techo = TechoDeLaPared(q, cotaPlaza);
+                float pie = h - 4f;
+                float alto = Mathf.Min(6f + 3f * (float)az.NextDouble(), techo - 0.6f - pie);
+                if (alto < 4f) continue;
+                string pieza = PenascosDeRoca + (1 + az.Next(6)) + ".prefab";
+                Vector3 t = TamanoDeSerie(o, pieza);
+                if (t.y < 0.1f) continue;
+                float escala = Mathf.Clamp(alto / t.y, 0.8f, 2.2f);
+                if (PonZona0(o, grupo, pieza, "Peñasco", new Vector3(q.x, pie, q.y), (float)az.NextDouble() * 360f, escala) != null)
+                    puestas++;
+            }
         return puestas;
     }
 
@@ -355,7 +410,7 @@ public static partial class VestidoDelMundo
         // Calle alta: la capilla mirando a la llegada de la galería y dos casas con la fachada a la plaza.
         PonZona(o, casas, "CapillaDeRisco", "Capilla de Risco", new Vector3(-22f, yC, CentroDeLaCalleAlta.y - 0.2f), -90f);
         PonZona(o, casas, "CasaDeRisco_A", "Casa de Risco", new Vector3(-11.5f, yC, CentroDeLaCalleAlta.y - 0.5f), 180f);
-        PonZona(o, casas, "CasaDeRisco_C", "Casa de Risco", new Vector3(-5f, yC, CentroDeLaCalleAlta.y - 0.7f), 180f);
+        PonZona(o, casas, "CasaDeRisco_D", "Casa de Risco", new Vector3(-4.5f, yC, CentroDeLaCalleAlta.y - 0.6f), 180f);
         // Plaza: dos casas en el borde norte con la fachada a la plaza, el pozo y un árbol.
         PonZona(o, casas, "CasaDeRisco_D", "Casa de Risco", new Vector3(-25f, yP, CentroDeLaPlaza.y + 2.4f), 0f);
         PonZona(o, casas, "CasaDeRisco_A", "Casa de Risco", new Vector3(7f, yP, CentroDeLaPlaza.y + 2.4f), 0f);
@@ -374,7 +429,7 @@ public static partial class VestidoDelMundo
         // Terraza de los huertos: dos casas mirando al mar y las huertas delante.
         Transform huertos = Grupo(grupo, TerrazaDeLosHuertos.Nombre);
         PonZona(o, huertos, "CasaDeRisco_A", "Casa de los huertos", new Vector3(-6f, yH, 472.2f), 180f);
-        PonZona(o, huertos, "CasaDeRisco_C", "Casa de los huertos", new Vector3(3.5f, yH, 472.4f), 180f);
+        PonZona(o, huertos, "CasaDeRisco_D", "Casa de los huertos", new Vector3(4f, yH, 472.4f), 180f);
         string[] huertas = { FK + "Props/Farm/Farm01_a01.prefab", FK + "Props/Farm/Farm01_b01.prefab" };
         for (int j = 0; j < HuertasDeRisco.Length; j++)
             PonZona0(o, huertos, huertas[j % huertas.Length], "Huerta de Risco", new Vector3(HuertasDeRisco[j].x, yH, HuertasDeRisco[j].y), 90f);
@@ -406,6 +461,7 @@ public static partial class VestidoDelMundo
         int tramos = Valla(o, senda, SendaVallada, AnchoDeLaSendaVallada * 0.5f + 0.4f, "Valla de la senda");
         // Peñas en los cantos y pinos sueltos dentro del pueblo.
         int penas = PenasDeLasTerrazas(o, Grupo(grupo, "Peñas de los cantos"), yP);
+        int rocas = VestirLasParedes(o, Grupo(grupo, "Rocas de las paredes"), yP);
         int pinares = PinaresDeRisco(o, Grupo(grupo, "Pinar de la ladera"));
         var az = new System.Random(4417);
         Transform pinos = Grupo(grupo, "Pinos del pueblo");
@@ -413,7 +469,7 @@ public static partial class VestidoDelMundo
         foreach (Vector2 s in sitiosDePinos)
             PonZona0(o, pinos, PinosDeRisco[az.Next(PinosDeRisco.Length)], "Pino de Risco", new Vector3(s.x, AlturaEn(o, s) - 0.2f, s.y), (float)az.NextDouble() * 360f, 0.8f + 0.25f * (float)az.NextDouble());
         o.Informe.Add($"  Risco: calle alta a {yC:0.0} m, plaza a {yP:0.0} m, noria a {yN:0.0} m, huertos a {yH:0.0} m, era a {yE:0.0} m; " +
-                      $"{tramos} tramos de valla en la senda, {penas} peñas y {pinares} pinos en la ladera.");
+                      $"{tramos} tramos de valla en la senda, {penas} peñas, {rocas} rocas en las paredes y {pinares} pinos en la ladera.");
     }
 
     /// Terraza de la noria: molino, noria en el borde, canal desde la presa y cascada a la garganta; escalera desde la plaza.

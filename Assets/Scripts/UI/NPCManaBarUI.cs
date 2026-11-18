@@ -33,7 +33,7 @@ namespace Game.UI
         [SerializeField] private float criticalThreshold = 0.2f;
         
         private Canvas _canvas;
-        private NPCCombatBrain _combatBrain;
+        private ICerebroDeCombate _combatBrain;
         private float _hideTimer;
         private float _currentFillAmount = 1f;
         private float _targetFillAmount = 1f;
@@ -57,11 +57,12 @@ namespace Game.UI
 
         private void Start()
         {
-            _combatBrain = GetComponentInParent<NPCCombatBrain>();
+            var npc = GetComponentInParent<NPCBehaviourManagerV2>();
+            _combatBrain = npc != null && npc.Context != null ? npc.Context.CerebroDeCombate : null;
             if (_combatBrain == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogError("[NPCManaBarUI] No se encontró NPCCombatBrain en los padres.");
+                Debug.LogError("[NPCManaBarUI] El NPC de los padres no tiene cerebro de combate activo.");
 #endif
                 gameObject.SetActive(false);
                 return;

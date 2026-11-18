@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Cap3_AcampadaCamino
+  spawnAnchorId: Cap3_Acampada
   level: 1
   maxHP: 100
   currentHP: 100
@@ -100,6 +100,8 @@ MonoBehaviour:
   - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:5
   - NARRATIVE_FLAG:@usual:NPC_Lucia=pieza-npc_lucia-usual-cap-3-despues-cap3-noche
   - NARRATIVE_FLAG:@usual:NPC_Posadero=pieza-npc_posadero-usual-cap-3-tras-la-hoja-cap3-noche
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:6
+  - QUEST_STEP_DONE:CAP3_MARCAS_DE_HIERRO:7
   abilities:
     swim: 1
     jump: 1
@@ -217,7 +219,7 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: cap3-paso-bosque
+      value: cap3-carro
   senalesEmitidas:
   - PROLOGUE_START
   - PROLOGUE_DONE
@@ -269,6 +271,7 @@ MonoBehaviour:
   - CAP3_PISTA_HECHA
   - CAP3_NOCHE_EMPIEZA
   - CAP3_LLEGADA_BOSQUE
+  - CAP3_CAE_LA_NOCHE
   npcPositions:
   - npcId: Eldran
     position: {x: 0.6200002, y: 26.301186, z: -130.90999}

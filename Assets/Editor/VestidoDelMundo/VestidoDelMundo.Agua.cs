@@ -680,7 +680,6 @@ public static partial class VestidoDelMundo
                 o.Informe.Add("  Ribera: " + (piezas.Count > 0 ? string.Join(", ", piezas) : "nada") + ".");
                 if (rb.HayHito) o.Informe.Add($"  Hito: árbol azul en la punta de tierra de ({rb.Hito.x:0}, {rb.Hito.y:0}); la llegada desde la {lg.ParajeDeLlegada} mira hacia él.");
                 o.Informe.Add($"  Ambiente: {ambiente}{ranas}");
-                o.Informe.Add($"  Pendiente: vuelve a hornear el NavMesh (El Sendero ▸ Escenario ▸ Navegación ▸ Bakear solo la superficie caminable); hasta entonces el fondo de {lg.Nombre} sigue siendo caminable.");
             }
         }
 

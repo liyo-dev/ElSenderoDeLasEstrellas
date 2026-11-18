@@ -1,7 +1,8 @@
-# Cap. 3 · Llegan los contrabandistas. De noche, junto al fuego, Will oye ruedas y se esconde tras el
-# matorral de antes del puente. Por el camino llegan los dos: el grandote tirando del carro (la carga
+# Cap. 3 · Llegan los contrabandistas. Will los espera a propósito junto al fuego: el posadero le dijo que
+# esos carros pasan de noche con animales, y quiere ver si tienen que ver con los aros. Al oír ruedas no se
+# sorprende: se pone alerta y se esconde, como lo tenía pensado, tras el matorral de antes del puente. Por el camino llegan los dos: el grandote tirando del carro (la carga
 # tapada con paja y una luz debajo) y el vigía delante. El vigía ve las brasas y mira alrededor; el
-# grandote le mete prisa y siguen hacia el puente. Will, agachado, decide seguirlos.
+# grandote le mete prisa y siguen hacia el puente. Will decide seguirlos para ver si llevan animales con aro.
 # Lo que hace el vigía junto al fuego (pararse, mirar alrededor) es lo que hará en el seguimiento:
 # así se ve antes de jugarlo.
 # El carro (PROP_Carro) va detrás del grandote solo (CargaArrastrada): no se mueve en el guion y en el
@@ -35,6 +36,9 @@ c1_para     -92 -208.9
 c2_camino   -100.5 -215.6
 c1_fin      -110 -222.3
 c2_fin      -112.5 -224.1
+# Cámara de la llegada: en el camino, del lado del fuego, mirando camino arriba. Los dos entran
+# por el fondo y vienen hacia ella; Will, escondido a su espalda, no entra en este plano.
+cam_llegan  -103 -211.5
 
 HILO
 @inicio
@@ -44,21 +48,23 @@ will en p_will mirando fuego
 plano medio will
 & will bucle BrazosCruzados
 espera 1.0
-# Ruedas a lo lejos, antes de ver nada.
+# Ruedas a lo lejos, antes de ver nada. Will las esperaba: alerta, no sorpresa.
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Wood_Scratching-009.wav" volume=0.35
 & will reposo
 will mira c1_a
-& will cara sorpresa
+& will cara decidido
 espera 0.5
-will dice CAP3_CARRO_01 cara=preocupado
+will dice CAP3_CARRO_01 cara=decidido
 
 @esconde
-# Se esconde de pie tras el matorral (es más alto que él) y espía el camino.
+# Se esconde enseguida, como lo tenía pensado, de pie tras el matorral (es más alto que él) y espía el camino.
 will anda a esc_will ritmo=prisa
 will mira c2_fuego
 
 @llegan
-plano conjunto will c1 c2
+# La llegada se ve entera: vienen camino abajo desde el fondo, el vigía delante y el grandote
+# detrás con el carro. Will ya está escondido (P01) y se le vuelve a ver en el plano del vigía.
+plano general c1 c2 desde=cam_llegan altura=1.7 lente=40
 & sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Wood_Scratching-009.wav" volume=0.5
 & c1 anda a c1_para sin_esperar
 c2 anda a c2_fuego

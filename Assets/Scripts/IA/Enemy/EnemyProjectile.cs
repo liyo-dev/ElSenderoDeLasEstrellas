@@ -51,7 +51,13 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     public Vector3 VelocidadDeAmenaza => rb != null && !rb.isKinematic && rb.linearVelocity.sqrMagnitude > 0.01f
         ? rb.linearVelocity
         : direction * EffectiveSpeed;
-    public TipoDeAmenaza TipoDeAmenaza => TipoDeAmenaza.Devolvible;
+    public TipoDeAmenaza TipoDeAmenaza => _sePuedeDevolver ? TipoDeAmenaza.Devolvible : TipoDeAmenaza.NoBloqueable;
+
+    [Tooltip("El jugador puede devolverlo con la B. Si no, el aviso lo marca como «apártate».")]
+    [SerializeField] private bool _sePuedeDevolver = true;
+
+    /// <summary>Quien lo lanza decide si se puede devolver (antes de Initialize).</summary>
+    public void PermitirDevolucion(bool si) => _sePuedeDevolver = si;
 
     public GameObject Lanzador { get; private set; }
     public float DanoEntrante => damage;
@@ -59,7 +65,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     public void AsignarLanzador(GameObject lanzador) => Lanzador = lanzador;
     public void Devolver(GameObject nuevoDueno, Transform objetivo, Vector3 direccionSiNoHayObjetivo, float dano)
     {
-        if (!initialized || hasHit) return;
+        if (!initialized || hasHit || !_sePuedeDevolver) return;
         float velocidad = VelocidadDeAmenaza.magnitude;
         hasHit = true;
         var devuelto = GetComponent<ProyectilDevuelto>() ?? gameObject.AddComponent<ProyectilDevuelto>();

@@ -72,7 +72,7 @@ La magia de sometimiento está ligada al camino corrompido. Cada runa abre una p
 
 ### Arco y desenlace
 
-El grupo se prepara en el Reino, encuentra a Silas y recupera en la Piedra las fórmulas que faltan en el Libro. En el Sendero afronta las pruebas de Will y Estela en compañía. La Caja separa a Liam y muestra a sus amigos la verdad sobre los ataques. La confianza se rompe. Will decide continuar por convicción propia; después encuentra a Estela y ambos rescatan a Liam. Vuelven a viajar con límites claros, sin fingir un perdón inmediato.
+El grupo se prepara en el Reino, encuentra a Silas, cruza el mar hasta la Piedra, recupera el Libro en la cueva que emerge del agua y abre el Sendero en el cielo. En el Sendero afronta las pruebas de Will y Estela en compañía. La Caja separa a Liam y muestra a sus amigos la verdad sobre los ataques. La confianza se rompe. Will decide continuar por convicción propia; después encuentra a Estela y ambos rescatan a Liam. Vuelven a viajar con límites claros, sin fingir un perdón inmediato.
 
 En la batalla final, el Mago regenera su vida. Will retrocede diez segundos con el Hechizo del Tiempo y reúne a sus compañeros bajo el escudo para resistir la Marea. Queda exhausto. Liam se interpone ante la hoja de sombra dirigida a Will y muere. Pide que cuide de su hermano y le da las gracias.
 
@@ -110,7 +110,7 @@ Eldran y Victoria tienen una relación cercana y amistosa, sin romance. Eldran c
 
 ### Silas
 
-Silas es un hechicero, antiguo amigo de Eldran y dueño de una colección de relojes que no miden el tiempo de la misma manera. Ayuda al grupo tras recuperar su reloj en un bucle temporal. Enseña el ritual de la Piedra y explica el coste de la magia temporal.
+Silas es un hechicero, antiguo amigo de Eldran y dueño de una colección de relojes que no miden el tiempo de la misma manera. Ayuda al grupo tras recuperar su reloj en un bucle temporal. Explica el coste de la magia temporal y las reglas del Sendero, y entrega el barco y los mapas para llegar a la Piedra.
 
 ### Tobías
 
@@ -150,7 +150,7 @@ El daño depende de la mecánica, la posición y la ventana del enemigo. Las reg
 | Demonio 2 | Usar a los tres personajes y el espacio del castillo al defender el Reino. | **Aro de tres runas**, una por personaje (Will, Estela, Liam): cada runa solo la rompe su personaje, así que obliga a cambiar de personaje o a usar dúos; rotas las tres, queda expuesto. **Guerra en el aire:** en la fase 2 sube a las almenas y ataca desde arriba; el jugador sube (plataformas, levitación, vuelo si ya lo tiene) para alcanzarlo. Desde la fase 2, algunas ráfagas se sustituyen por una carga de plasma ocasional: cae donde estaba Will, queda fija y cambia de azul a amarillo y rojo antes de explotar con daño de área. La cuenta atrás da tiempo para apartarse. (Hoy el prefab recibe daño normal: falta construirlo.) |
 | Gólem | Rodear una armadura, alternar objetivos y coordinar un remate. | Recibe el **20 %** del daño por delante/lados y el daño completo por detrás. Estela atrae su atención y protege al grupo. Lluvia de rocas y salto con onda amplían los patrones. **El fuego de frente lo hace crecer** (regla propia de este jefe, no una debilidad elemental general). Llevarlo al **barro** del arroyo lo hunde unos segundos y abre la ventana de la fase 2. El sello final exige el dúo Will + Estela; la magia normal no lo remata. |
 | Araña | Distancia, esquiva y control de grupos pequeños. | Daño normal al cuerpo; no tiene una ventana elemental ni armadura frontal especial. Su acercamiento y preparación del ataque dejan leer cuándo apartarse y responder. |
-| Guardián de la Piedra | Cooperar antes de acceder a las fórmulas y leer el escenario reflejado. | Recibe daño normal; no se acredita un filtro de exposición. Will sostiene, Estela presiona y Liam busca aperturas. **Adaptación del juego:** en la novela examina a Will y se aparta. |
+| Guardián de la Piedra | Cooperar, leer el escenario reflejado y la marea. | Jefe final de la mazmorra bajo el mar; custodia el Libro (§ 5.13). Jefe-puzle de agua y reflejo: se le alcanza a través de su reflejo y la marea cambia el terreno en cada fase (se concreta al construirlo). Will sostiene, Estela presiona y Liam busca aperturas. En este combate Will aprende a volar. **Adaptación del juego:** en la novela examina a Will y se aparta. |
 | Mago Oscuro | Dominio del arsenal, defensa que devuelve proyectiles y uso del espacio. | Las espinas reducen el daño; devolver rayos rompe espinas y aturde. Sin espinas queda expuesto. En los pilares, romper anclas lo derriba; **Liam hace ×2,5 de daño a las anclas** por su personaje, no por su elemento. Tras regenerarse no recibe daño hasta Amanecer. El tramo completo está en 5.19. |
 
 **Enemigos del mundo abierto (decididos, por construir).** La variedad está en el comportamiento: cada uno pide una respuesta distinta, sin debilidades elementales.
@@ -189,9 +189,9 @@ El resto del arco recorre el Reino, Silas, la Piedra y el Sendero hasta el epíl
 
 El mundo conecta pueblos, bosques, costa, islas y ruinas. Hay tesoros desde el minuto cero. Cada uno declara su requisito: ninguno, habilidad, objeto o Amanecer. El juego comunica lo que falta para poder regresar más tarde.
 
-**Barco propio:** Silas entrega el barco con el que él, Eldran y Selene buscaron la Piedra, junto con sus mapas viejos. Está amarrado en el Pueblo Pesquero. Esta entrega es una adaptación jugable decidida.
+**Barco propio:** Silas entrega el barco con el que él, Eldran y Selene buscaron la Piedra, junto con sus mapas viejos. Está amarrado en el Pueblo Pesquero. Con él se cruza el mar picado hasta el lugar de la Piedra (§ 5.13). Esta entrega es una adaptación jugable decidida.
 
-**Vuelo:** Will aprende en la Piedra Ancestral a levantarse a sí mismo, cerrando el ejercicio de la cuchara. Puede volar libremente por el mundo. Solo se bloquea dentro de zonas de puzle, con límites y aviso legibles.
+**Vuelo:** Will aprende a levantarse a sí mismo en el combate contra el Guardián, al final de la mazmorra de la Piedra, cerrando el ejercicio de la cuchara. Lo usa enseguida para subir al portal del Sendero (§ 5.13). Después puede volar libremente por el mundo. Solo se bloquea dentro de zonas de puzle, con límites y aviso legibles.
 
 ### El Sendero
 
@@ -300,7 +300,9 @@ Después, la guardia conduce al grupo ante el Rey. La tensión por los daños y 
 
 ### 5.10. La biblioteca y la salida del Reino — novelas XIII–XV
 
-En la biblioteca real, el grupo investiga las versiones contradictorias del Sendero y las referencias a deseos de curación. Liam oculta para quién busca una cura; Will acaba preguntándoselo directamente. Antes de partir, una conversación con Tobías a través del espejo conecta la aventura con la persona concreta que Liam intenta salvar. La escena importa porque Liam deja de ser solo «el compañero misterioso»: el jugador ve el vínculo fraternal y lo que está en juego.
+En la biblioteca real, a cargo de Odelia, el grupo investiga las versiones contradictorias del Sendero y las referencias a deseos de curación. Liam oculta para quién busca una cura; Will acaba preguntándoselo directamente. Antes de partir, una conversación con Tobías a través del espejo conecta la aventura con la persona concreta que Liam intenta salvar. La escena importa porque Liam deja de ser solo «el compañero misterioso»: el jugador ve el vínculo fraternal y lo que está en juego.
+
+**Lo que da la biblioteca (adaptación del juego).** La biblioteca no guarda el Libro. Entre las versiones de la leyenda, el grupo encuentra dónde se guarda, un punto en mar abierto donde no hay nada, y el conjuro que lo hace emerger. En la novela consultan allí el libro prohibido encadenado a una mesa y copian sus fórmulas incompletas; el juego sustituye esa lectura por la búsqueda del Libro original (§ 5.13).
 
 Durante el viaje, el grupo aprende a leer rastros mágicos. La ruta del Fuego Fatuo puede convertirse en un segmento de exploración nocturna: seguir señales auténticas, comparar rastros y reconocer los engaños del entorno. La charla de camino deja que los tres se conozcan y marca que protección y control pueden parecerse, pero no son lo mismo.
 
@@ -310,13 +312,13 @@ Durante el viaje, el grupo aprende a leer rastros mágicos. La ruta del Fuego Fa
 
 El amigo de Eldran se llama Silas. Su petición no es un favor de recadero: el grupo recupera un reloj perdido en un taller atrapado en un ciclo de cuarenta segundos. Resolverlo requiere observar qué cambia, recordar qué persiste entre ciclos y combinar las capacidades de Will, Estela y Liam. La historia revela la amistad de juventud entre Silas y Eldran y el duelo de Eldran por Selene, que explica parte de su sobreprotección.
 
-Silas explica el ritual para llegar a la Piedra y la regla del Sendero: no premia una etiqueta de «bueno», sino que pone a prueba si cada viajero puede reconocer aquello que corrompería su deseo. También describe la regresión temporal como una oportunidad breve con coste, no como un reinicio gratuito.
+Silas reconoce el lugar que encontraron en la biblioteca: es donde él, Eldran y Selene buscaron la Piedra y donde murió Selene. Explica la regla del Sendero: no premia una etiqueta de «bueno», sino que pone a prueba si cada viajero puede reconocer aquello que corrompería su deseo. También describe la regresión temporal como una oportunidad breve con coste, no como un reinicio gratuito.
 
 **Diseño jugable:** puzle de bucle corto con intentos rápidos, pistas persistentes y coste legible. El jugador observa qué cambios permanecen y coordina al grupo para detener la máquina. Silas provoca las vueltas y paga su coste físico; no vuelve atrás con los demás.
 
 **Archivos de Silas:** el grupo lee el caso del sanador que deseó eliminar todas las enfermedades. El altar creó un lugar sin enfermedad porque nada estaba vivo. Will y Liam ensayan el deseo por Tobías, protegiendo cuerpo, memoria y voluntad. Estela añade que no se traslade el daño a nadie. Este aprendizaje pertenece a Silas, no a una biblioteca del Mago.
 
-Silas explica que la Piedra elige, que el altar concede un único deseo literal y que no resucita a los muertos. Revela cómo las runas de sometimiento filtran la corrupción del Sendero. El grupo elige entrar también para detener esa fuente. Silas entrega el barco y sus mapas viejos del Pueblo Pesquero como adaptación de juego; no enseña todavía la fórmula del tiempo, que se obtiene en la Piedra.
+Silas explica que la Piedra elige, que el altar concede un único deseo literal y que no resucita a los muertos. Revela cómo las runas de sometimiento filtran la corrupción del Sendero. El grupo elige entrar también para detener esa fuente. Silas entrega el barco y sus mapas viejos del Pueblo Pesquero como adaptación de juego; no enseña la fórmula del tiempo, que está en el Libro.
 
 ### 5.12. El precio pequeño: Risco y Vega — novela XVII
 
@@ -326,17 +328,29 @@ Antes de llegar a la Piedra, Will y sus amigos encuentran dos aldeas que compart
 
 Este episodio es una prueba del carácter de Will antes de la prueba mágica. El «precio pequeño» es aceptar que un acuerdo imperfecto puede ser mejor que imponer una solución definitiva.
 
-### 5.13. La Piedra Ancestral y el acceso al Sendero — novela XVIII
+### 5.13. La travesía, la cueva bajo el mar y el portal en el cielo — novela XVIII
 
-El camino atraviesa ruinas donde quienes llegaron antes dejaron sus nombres y motivos. La cámara de la Piedra solo se ve reflejada en el agua; el grupo debe avanzar confiando en ese reflejo. Al recitar Will el conjuro de Silas, aparece el Guardián. El combate se gana cooperando: Will sostiene la línea, Estela presiona y Liam encuentra puntos débiles con su magia de pacto.
+**Adaptación del juego** (decidida el 18 nov 2026). En la novela el grupo llega a pie a la Piedra por unas ruinas y un manantial, completa en el pedestal las copias de la biblioteca y abre el umbral en la propia cueva. El juego lo convierte en una travesía, una mazmorra y un portal en el cielo.
 
-Tras la victoria, las copias incompletas del Libro encajan con las inscripciones del pedestal. El grupo obtiene el ritual de apertura y las fórmulas del Hechizo del Tiempo y del Hechizo de Resurrección. La segunda exige una vida voluntaria a cambio de otra recién perdida. El coste debe explicarse con claridad antes de que la historia llegue al sacrificio; no presentarlo como una sorpresa mecánica.
+**La travesía.** El grupo sale del Pueblo Pesquero en el barco de Silas hacia el punto que encontró en la biblioteca. El mar está picado: niebla, rocas y oleaje en un tramo corto y jugable que transmite que ese sitio no los quiere allí. Al llegar no hay nada, solo agua en todas direcciones.
 
-El grupo estudia las reglas, acuerda señales y un punto de reunión y decide cruzar juntos. El acceso puede ser el último punto de guardado seguro antes de entrar.
+**El conjuro.** Will recita el conjuro de la biblioteca. El mar se calma de golpe hasta quedar como un espejo y emerge una montaña. La entrada de la cueva solo se ve en el reflejo del agua, y el grupo avanza confiando en él, como en el vado de la novela.
 
-**Diseño jugable:** navegación por reflejos, jefe con funciones complementarias y un momento de preparación en el que se revisan controles, consumibles y reglas del Sendero. El jugador debe entender que el hechizo temporal no cura ni revierte el coste de sus acciones y que el de resurrección intercambia vidas.
+**El precio de entrada.** Antes de dejarlos pasar, la cueva pide un pago (magia, un recuerdo o vida; se decide al construirlo). Will se dispone a pagarlo y Liam se adelanta. Es un momento breve que anticipa, sin desvelarlos, el sacrificio de Liam y el de Will.
 
-**Adaptación del juego:** el combate del Guardián sustituye al examen de Will tras el que se aparta en la novela. En la Piedra, Will aprende también el vuelo: levantarse a sí mismo completa el ejercicio de la cuchara. El umbral ofrece aviso de punto sin retorno y guardado explícito.
+**La mazmorra.** Nivel propio, separado de MainWorld: puzles y plataformas hasta la cámara de la Piedra Ancestral. En las ruinas de la entrada siguen grabados los nombres y motivos de quienes llegaron antes. Dos mecánicas guían el nivel:
+- **El reflejo:** pasarelas y puertas que solo existen en el agua reflejada. Se aprende al principio y se combina al final.
+- **La marea:** el agua sube y baja a un compás y cambia por dónde se puede pasar.
+
+Los puzles piden a los tres: Will sostiene y protege, Estela empuja y rompe, y Liam ve lo que los otros no ven con su magia de pacto.
+
+**El Guardián.** Custodia el Libro en la cámara de la Piedra. Es un jefe-puzle ligado al agua y al reflejo (§ 3, Enemigos y jefes). Durante el combate Will cae o el agua sube, y se levanta a sí mismo: completa el ejercicio de la cuchara y aprende a volar.
+
+**El Libro.** Tras la victoria, la Piedra deja tomar el Libro del pedestal. Contiene el ritual de apertura y las fórmulas del Hechizo del Tiempo y del Hechizo de Resurrección. La segunda exige una vida voluntaria a cambio de otra recién perdida. El coste debe explicarse con claridad antes de que la historia llegue al sacrificio; no presentarlo como una sorpresa mecánica. El ritual dice dónde se abre el Sendero: «donde las estrellas tocan el agua».
+
+**El portal en el cielo.** Fuera, de noche y con el mar en calma, las estrellas se reflejan en el agua y marcan un punto en el cielo, sobre la montaña. Antes de subir, el grupo estudia las reglas, acuerda señales y un punto de reunión y decide cruzar juntos. Will sube volando con el grupo, realizan el ritual y el portal se abre en el aire. Es el primer uso del vuelo: la mazmorra da la habilidad y el camino la pide enseguida.
+
+**Diseño jugable:** travesía corta sin fallo terminal; el reflejo y la marea se enseñan por separado antes de combinarse; jefe con funciones complementarias; un momento de preparación antes del portal para revisar controles, consumibles y reglas del Sendero. El jugador debe entender que el hechizo temporal no cura ni revierte el coste de sus acciones y que el de resurrección intercambia vidas. El portal ofrece aviso de punto sin retorno y guardado explícito.
 
 ### 5.14. Entrada al Sendero y prueba de Will — novelas XIX–XX
 
@@ -597,7 +611,7 @@ Las variantes de la tabla son propuestas de diseño conservadas; no cambian las 
 
 ### 7.1. Maqueta Eldoria
 
-Es una propuesta de composición (INC-188), separada de MainWorld. Una reserva espacial no implica NPCs, navegación, colisiones o misiones conectadas. La Piedra se sitúa en una isla propia al sureste, fuera del Bosque Prohibido, con monolito, ruinas y ruta marítima.
+Es una propuesta de composición (INC-188), separada de MainWorld. Una reserva espacial no implica NPCs, navegación, colisiones o misiones conectadas. La Piedra se sitúa en mar abierto al sureste, fuera del Bosque Prohibido: un punto vacío al que se llega en barco y donde su montaña emerge con el conjuro. La mazmorra es un nivel aparte (§ 5.13).
 
 | Necesidad | Diseño espacial |
 |---|---|
@@ -611,7 +625,7 @@ Es una propuesta de composición (INC-188), separada de MainWorld. Una reserva e
 | Biblioteca real | Interior de investigación y conversación íntima mediante el espejo de Tobías. |
 | Fuego Fatuo y Silas | Bosque oriental con rutas curvas, pueblo vecino, casa y taller temporal. |
 | Risco y Vega | Dos aldeas, presa, cauce compartido y rutas agrícolas; ubicación sin fijar en la maqueta. |
-| Piedra Ancestral | Isla sureste, ruinas, monolito, cámara del reflejo y arena del Guardián. |
+| Piedra Ancestral | Mar abierto al sureste: travesía en barco, punto vacío y montaña que emerge con el conjuro. Mazmorra en nivel aparte (ruinas con nombres, reflejo, marea, cámara de la Piedra y arena del Guardián). Portal del Sendero en el cielo, sobre la montaña. |
 | Sendero y pruebas | Niveles separados de Eldoria; Chuchelandia (Puerta del Corazón, vestidor, circuito de obstáculos, torre de caramelo, campo de tiro, salón del duelo y fuente de sirope), feria y Caja con observación exterior de Will y Estela. |
 | Tramo final | Preparación, arena del altar y umbral de resurrección; sin conducto de sombra ni biblioteca final. |
 | Pueblo Pesquero y playas | Viviendas, embarcadero y barco de Silas; playas legibles sin edificios falsos. |
@@ -651,6 +665,7 @@ Cerrado el 8 oct 2026: contrabandistas, extras del capítulo 2, Gólem, Demonio 
 - **Qué personaje enseña cada combo de la Y** y dónde está cada página del grimorio: se fija al construir cada capítulo y zona.
 - **Valores** (vida y maná de cada personaje, daño y maná de Amanecer, objeto para revivir): se ajustan probando en el LAB.
 - **Secundarias:** qué variante de cada una se construye, al llegar a ella.
+- **Mazmorra de la Piedra (§ 5.13):** el precio de entrada (magia, un recuerdo o vida), el nombre del nivel, los puzles concretos y las fases del Guardián.
 - **No entran por ahora:** los dones activables (vida infinita…) y el simulacro antes del altar. Se pueden recuperar más adelante.
 
 ### Clima, reloj y efectos elementales (propuesta, 17 nov 2026 — sin aprobar)

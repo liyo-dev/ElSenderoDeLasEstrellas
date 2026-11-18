@@ -129,7 +129,7 @@ public static partial class MontajeDeLosCapitulos
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_POSADA", Guion = "Cap3_02_LaPosada", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: la posada", Resumen = "Will pregunta por el trozo del aro, le suenan las tripas (una sopa, si alcanza) y Lucía intenta subir la cuchara." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CARRO", Guion = "Cap3_03_ElCarro", Texto = PresentacionDeTexto.Subtitulo,
-            Nombre = "Cap. 3: llegan los contrabandistas", Resumen = "Se oyen ruedas: Will se esconde tras un matorral. Llegan los dos contrabandistas con el carro tapado; el vigía ve las brasas y mira alrededor, y siguen hacia el puente." });
+            Nombre = "Cap. 3: llegan los contrabandistas", Resumen = "Will espera al carro junto al fuego; al oír las ruedas se esconde tras un matorral. Llegan los dos contrabandistas con el carro tapado; el vigía ve las brasas y mira alrededor, y siguen hacia el puente. Will decide seguirlos para ver si los animales llevan aro." });
         s_cines.Add(new Cine { Cap = Cap3, Clave = "CAP3_CLARO", Guion = "Cap3_04_ElClaro", Texto = PresentacionDeTexto.Subtitulo,
             Nombre = "Cap. 3: el claro", Resumen = "Doce jaulas de pájaros de luz. A Will le arden las manos: «¿Debes hacerlo?»." });
 
@@ -156,11 +156,11 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_POSADA_11", "¿Casi? Yo a tu edad no movía ni una miga.", "Almost? At your age I couldn't move a crumb.");
         TextoDeCine("CAP3_POSADA_12", "Tómate la sopa y luego pregunta por ahí. Aquí la gente ve muchas cosas, aunque luego no las cuente.", "Have your soup, then ask around. People here see plenty, even if they don't say so.");
         TextoDeCine("CAP3_POSADA_13", "¿De verdad? ¡Pues mañana llego al pulgar!", "Really? Then tomorrow I'll reach my thumb!");
-        TextoDeCine("CAP3_CARRO_01", "Ruedas… a estas horas.", "Wheels… at this hour.");
+        TextoDeCine("CAP3_CARRO_01", "Ahí vienen. El posadero tenía razón.", "Here they come. The innkeeper was right.");
         TextoDeCine("CAP3_CARRO_04", "Brasas recientes. Aquí ha estado alguien.", "Fresh embers. Someone's been here.");
         TextoDeCine("CAP3_CARRO_05", "Algún pastor. Vamos, que nos esperan antes del alba.", "Some shepherd. Come on, they're expecting us before dawn.");
-        TextoDeCine("CAP3_CARRO_02", "La carga tapada y esa luz bajo la paja… lo que contó el posadero.", "A covered load and that light under the straw… just what the innkeeper said.");
-        TextoDeCine("CAP3_CARRO_03", "Voy a seguirles. Sin que me vean.", "I'm going to follow them. Without being seen.");
+        TextoDeCine("CAP3_CARRO_02", "Algo brilla bajo la paja… Si llevan animales, quiero ver si tienen aro.", "Something's glowing under the straw… If they're carrying animals, I want to see if they wear collars.");
+        TextoDeCine("CAP3_CARRO_03", "Tengo que ver adónde van. Sin que me vean.", "I have to see where they're going. Without being seen.");
         TextoDeCine("CAP3_CLARO_01", "Doce jaulas. En la capital pagan bien por plumas que brillan.", "Twelve cages. They pay well in the capital for feathers that glow.");
         TextoDeCine("CAP3_CLARO_02", "No paran de brillar. Me ponen nervioso.", "They won't stop glowing. They make me nervous.");
         TextoDeCine("CAP3_CLARO_03", "Pues tápalos. Al amanecer, al barco.", "Then cover them. At dawn, to the boat.");
@@ -331,7 +331,7 @@ public static partial class MontajeDeLosCapitulos
             P("cae-noche", "3.3 · Anochece junto al fuego (aparecen los contrabandistas)", Emitir(S3.CaeLaNoche)),
             P("paso-noche", "Paso: esperar la noche", Completar(MisionCap3, "CAP3_NOCHE")),
             P("punto-noche", "3.3 · Punto de guardado: el camino del bosque", Punto("CAP3_ACAMPADA", "Cap3_Acampada")),
-            P("carro", "3.3 · Cinemática: el carro con jaulas", Cinematica("CAP3_CARRO")),
+            P("carro", "3.3 · Cinemática: llega el carro que esperaba", Cinematica("CAP3_CARRO")),
             P("seguir-tuto", "3.3 · Aviso: seguir sin que te vean", Tutorial("CAP3_TUTO_SEGUIR",
                 "Síguelos sin que te vean. Cuando se paren a mirar atrás, escóndete en un matorral o detrás de una pared.",
                 "Follow them without being seen. When they stop to look back, hide in a bush or behind a wall.")),

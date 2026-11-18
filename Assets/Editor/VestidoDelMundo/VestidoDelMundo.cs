@@ -148,8 +148,10 @@ public static partial class VestidoDelMundo
         try
         {
             EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Preparando el suelo…", 0.05f);
+            int relieveAntes = HuellaRelieve(terreno.terrainData);
             DarFormaAlRelieve(terreno, informe);
             DarFormaAlValle(terreno, informe);
+            bool relieveCambiado = HuellaRelieve(terreno.terrainData) != relieveAntes;
             if (suelo)
             {
                 if (!PrepararSuelo(terreno, informe)) { Terminar("Vestido de MainWorld", informe); return; }
@@ -241,6 +243,25 @@ public static partial class VestidoDelMundo
                 EditorSceneManager.SaveScene(escena);
                 informe.Add("Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Escenario ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?");
                 informe.Add("Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Escenario ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).");
+            }
+
+            // Con otro relieve o con lo nuevo que se pisa (escalinatas, pavimento, puentes), el NavMesh
+            // viejo deja a los NPCs flotando o hundidos: se rehornea aquí mismo. Ver INC-1284.
+            if (relieveCambiado || obra != null)
+            {
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Rehorneando el NavMesh…", 0.9f);
+                int superficies = NavMeshDelPrologo.RehornearEscena(escena);
+                EditorSceneManager.SaveScene(escena);
+                var otras = new List<string>();
+                for (int i = 0; i < SceneManager.sceneCount; i++)
+                {
+                    Scene otra = SceneManager.GetSceneAt(i);
+                    if (otra.isLoaded && otra != escena) otras.Add(otra.name);
+                }
+                informe.Add(superficies == 0
+                    ? "NavMesh: MainWorld no tiene NavMeshSurface; no se ha horneado."
+                    : $"NavMesh: rehorneado ({superficies} superficie(s)) con el relieve y el vestido nuevos." +
+                      (otras.Count > 0 ? $" Estaban abiertas también {string.Join(", ", otras)}: su geometría entra en el horneado." : ""));
             }
         }
         catch (Exception e)
@@ -562,6 +583,19 @@ public static partial class VestidoDelMundo
         AsegurarCarpeta(CarpetaRecursos);
         AssetDatabase.CreateAsset(recurso, ruta);
         return recurso;
+    }
+
+    /// Huella de las alturas del terreno, para saber si el relieve ha cambiado.
+    private static int HuellaRelieve(TerrainData datos)
+    {
+        int res = datos.heightmapResolution;
+        float[,] alturas = datos.GetHeights(0, 0, res, res);
+        unchecked
+        {
+            int h = 17;
+            foreach (float a in alturas) h = h * 31 + Mathf.RoundToInt(a * 100000f);
+            return h;
+        }
     }
 
     private static void Terminar(string titulo, List<string> informe)

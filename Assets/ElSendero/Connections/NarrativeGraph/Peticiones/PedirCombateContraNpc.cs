@@ -77,6 +77,10 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
     const float FundidoAlPerder = 0.6f;
 
     readonly List<NPCBehaviourManagerV2> _npcs = new();
+    // Configuración que tenía cada NPC antes de la copia de este combate: se le devuelve al
+    // acabar para que la copia no se quede colgada del NPC (ver PrepararParaPelear).
+    readonly List<NPCBehaviourManagerV2> _npcConCopia = new();
+    readonly List<NPCCombatConfig> _configDeAntes = new();
     INarrativeSignals _signals;
     Action _alCaer;
     int _caidos;
@@ -94,8 +98,22 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
         foreach (var id in R.Ids())
         {
             var m = BuscarNpc(id);
-            if (m != null) { if (!_npcs.Contains(m)) _npcs.Add(m); }
-            else Debug.LogWarning($"[Combate:{StepGuid}] No hay NPCBehaviourManagerV2 con id='{id}'.");
+            if (m == null)
+            {
+                Debug.LogWarning($"[Combate:{StepGuid}] No hay NPCBehaviourManagerV2 con id='{id}'.");
+                continue;
+            }
+
+            // La historia puede tenerlo retirado («no está»): el combate lo pide, así que vuelve a
+            // escena aunque el jugador lo vea. Si aun así no está (una cinemática lo tiene tomado),
+            // no entra en la pelea ni cuenta para esperar su derrota: si contara, no acabaría nunca.
+            if (!m.gameObject.activeInHierarchy && !TraerAEscena(id, m))
+            {
+                Debug.LogWarning($"[Combate:{StepGuid}] '{id}' está fuera de escena y no se le puede devolver ahora: no pelea.");
+                continue;
+            }
+
+            if (!_npcs.Contains(m)) _npcs.Add(m);
         }
         if (_npcs.Count == 0)
         {
@@ -157,6 +175,25 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
         if (_signals != null && _alCaer != null) _signals.OffCustom(R.ClaveDeDerrota, _alCaer);
         _alCaer = null;
         _signals = null;
+        SoltarCopiasDeConfiguracion();
+    }
+
+    // Devuelve a cada NPC la configuración que tenía y suelta las copias hechas para este combate.
+    void SoltarCopiasDeConfiguracion()
+    {
+        for (int i = 0; i < _npcConCopia.Count; ++i)
+        {
+            var npc = _npcConCopia[i];
+            var antes = _configDeAntes[i];
+            if (npc != null && npc.Configuration != null)
+            {
+                var copia = npc.Configuration.combatConfig;
+                npc.Configuration.combatConfig = antes;
+                if (copia != null && copia != antes) UnityEngine.Object.Destroy(copia);
+            }
+        }
+        _npcConCopia.Clear();
+        _configDeAntes.Clear();
     }
 
     /// El grupo ha caído en este combate y «Pierde» está conectada.
@@ -203,15 +240,18 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
         // Copia propia de la configuración: el asset es compartido (los contrabandistas usan el
         // del pirata) y no puede quedarse con la clave de derrota de este combate ni soltar la
         // charla de alerta del pirata encima de la conversación que ya lleva el grafo.
-        var original = R.combatConfig != null ? R.combatConfig : npc.Configuration?.combatConfig;
-        if (original != null)
+        var configuracion = npc.Configuration;
+        var original = R.combatConfig != null ? R.combatConfig : configuracion?.combatConfig;
+        if (original != null && configuracion != null)
         {
             var configDelCombate = UnityEngine.Object.Instantiate(original);
             configDelCombate.dialogueOnAlert = null;
             configDelCombate.dialogueOnAlertRepeat = null;
             configDelCombate.waitForAlertDialogue = false;
             configDelCombate.freezePlayerOnAlert = false;
-            npc.Configuration.combatConfig = configDelCombate;
+            _npcConCopia.Add(npc);
+            _configDeAntes.Add(configuracion.combatConfig);
+            configuracion.combatConfig = configDelCombate;
         }
 
         var config = npc.Configuration?.combatConfig;
@@ -248,6 +288,21 @@ public sealed class CombateContraNpcEnCurso : NarrativeRequestRun<PedirCombateCo
             if (capaInteractuable >= 0) m.gameObject.layer = capaInteractuable;
             m.ForceIdle();
         }
+    }
+
+    // Devuelve a escena al NPC si la historia lo tenía retirado («no está») o apagado: el combate
+    // empieza ya y se le puede ver aparecer. Sin la capa de la historia (pruebas), se enciende tal cual.
+    static bool TraerAEscena(string id, NPCBehaviourManagerV2 npc)
+    {
+        if (NarrativeServices.TryGet(out INarrativeActorPresence presencia, nameof(CombateContraNpcEnCurso)))
+        {
+            if (presencia.BringOnStage(id)) return true;
+            // Una cinemática lo tiene tomado: no se le quita. Si no está en el registro (el NPC
+            // llegó aquí por la búsqueda de escena), se enciende directamente.
+            if (RepartoDeEscena.EstaTomado(id)) return false;
+        }
+        if (!npc.gameObject.activeSelf) npc.gameObject.SetActive(true);
+        return npc.gameObject.activeInHierarchy;
     }
 
     static NPCBehaviourManagerV2 BuscarNpc(string id)

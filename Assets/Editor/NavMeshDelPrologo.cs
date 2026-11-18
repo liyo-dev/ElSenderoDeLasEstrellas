@@ -106,8 +106,8 @@ public static class NavMeshDelPrologo
         Debug.Log($"[NavMesh] Guardado en '{ruta}' (la escena lo referencia, no lo lleva dentro).", s);
     }
 
-    /// Rehornea el NavMesh de UNA escena (lo usa PREPARAR TODO para el valle). Devuelve cuántas
-    /// superficies ha horneado.
+    /// Rehornea el NavMesh de UNA escena (lo usan PREPARAR TODO para el valle y el vestido de MainWorld).
+    /// Devuelve cuántas superficies ha horneado. Recoge la geometría de todas las escenas abiertas.
     public static int RehornearEscena(Scene escena)
     {
         if (!escena.IsValid() || !escena.isLoaded) return 0;

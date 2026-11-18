@@ -17,7 +17,7 @@ MonoBehaviour:
   rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt
   duracion: 40.19617
   presentacion: 1
-  huella: "2026-11-17 12:02 \xB7 ed120588061d13972b8ceb3f266216db"
+  huella: "2026-11-18 10:21 \xB7 29e9dd7921d4087fc8e12e566e49c7f1"
   actores:
   - id: Player
     prefab: Assets/Prefabs/_WILL.prefab
@@ -840,7 +840,7 @@ MonoBehaviour:
     t1: 3.7204082
     actor: Player
     clave: CAP3_CARRO_01
-    linea: 53
+    linea: 56
     gesto: Talk02
     sinPose: 0
     presentacion: -1
@@ -850,7 +850,7 @@ MonoBehaviour:
     t1: 22.304752
     actor: NPC_Contrabandista2
     clave: CAP3_CARRO_04
-    linea: 70
+    linea: 75
     gesto: Talk02
     sinPose: 0
     presentacion: -1
@@ -860,7 +860,7 @@ MonoBehaviour:
     t1: 27.422085
     actor: NPC_Contrabandista1
     clave: CAP3_CARRO_05
-    linea: 78
+    linea: 83
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -870,7 +870,7 @@ MonoBehaviour:
     t1: 35.153923
     actor: Player
     clave: CAP3_CARRO_02
-    linea: 86
+    linea: 91
     gesto: Dudar01
     sinPose: 0
     presentacion: -1
@@ -880,7 +880,7 @@ MonoBehaviour:
     t1: 39.29617
     actor: Player
     clave: CAP3_CARRO_03
-    linea: 87
+    linea: 92
     gesto: Decidido01
     sinPose: 0
     presentacion: -1
@@ -888,7 +888,7 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 10.00631
-    linea: 44
+    linea: 47
     tipo: 2
     descripcion: medio de will
     posiciones:
@@ -990,38 +990,36 @@ MonoBehaviour:
   - focos: []
     t0: 10.00631
     t1: 19.639751
-    linea: 61
-    tipo: 1
-    descripcion: conjunto de will y c1 y c2
+    linea: 66
+    tipo: 0
+    descripcion: general de c1 y c2
     posiciones:
     - t: 10.00631
-      p: {x: -77.44524, y: 21.44665, z: -215.13857}
-    lente: 34
+      p: {x: -103, y: 21.845692, z: -211.5}
+    lente: 40
     lenteFinal: 0
     sujetos:
-    - Player
     - NPC_Contrabandista1
     - NPC_Contrabandista2
     pesos:
     - 1
     - 1
-    - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.98539543
+    alturaDelFoco: 0.71611065
     encuadre: {x: 0, y: 0}
-    suavidad: 0.6
+    suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 19.639751
     t1: 22.642086
-    linea: 69
+    linea: 74
     tipo: 2
     descripcion: medio de c2
     posiciones:
     - t: 19.639751
-      p: {x: -98.3121, y: 21.28567, z: -206.30516}
+      p: {x: -101.53801, y: 21.142061, z: -210.0195}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1031,14 +1029,14 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.058129
-    encuadre: {x: -0.13, y: -0.074}
+    encuadre: {x: 0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
     t0: 22.642086
     t1: 24.042086
-    linea: 74
+    linea: 79
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1060,7 +1058,7 @@ MonoBehaviour:
   - focos: []
     t0: 24.042086
     t1: 27.422085
-    linea: 77
+    linea: 82
     tipo: 2
     descripcion: medio de c1
     posiciones:
@@ -1082,7 +1080,7 @@ MonoBehaviour:
   - focos: []
     t0: 27.422085
     t1: 30.922085
-    linea: 83
+    linea: 88
     tipo: 5
     descripcion: 'dos: c1 y c2'
     posiciones:
@@ -1134,7 +1132,7 @@ MonoBehaviour:
   - focos: []
     t0: 30.922085
     t1: 40.19617
-    linea: 85
+    linea: 90
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1158,25 +1156,25 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294676259012916
+      rid: 6540294701245530248
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 6540294676259012917
-    linea: 48
+      rid: 6540294701245530249
+    linea: 51
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.00631
     beat:
-      rid: 6540294676259012918
-    linea: 62
+      rid: 6540294701245530250
+    linea: 67
   - onlyIfFlag: 
     skipIfFlag: 
     t: 40.19617
     beat:
-      rid: 6540294676259012919
+      rid: 6540294701245530251
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -1210,11 +1208,13 @@ MonoBehaviour:
     posicion: {x: -110, y: 19.73799, z: -222.3}
   - nombre: c2_fin
     posicion: {x: -112.5, y: 19.627539, z: -224.1}
+  - nombre: cam_llegan
+    posicion: {x: -103, y: 20.14569, z: -211.5}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294676259012916
+    - rid: 6540294701245530248
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1222,7 +1222,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294676259012917
+    - rid: 6540294701245530249
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1232,7 +1232,7 @@ MonoBehaviour:
         markName: 
         volume: 0.35
         tono: 1
-    - rid: 6540294676259012918
+    - rid: 6540294701245530250
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1242,7 +1242,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294676259012919
+    - rid: 6540294701245530251
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

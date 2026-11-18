@@ -1,21 +1,9 @@
-Punto de control 11 nov: arte, animación, zonas, interfaz de papel y cinemáticas (INC-1045 a INC-1071)
+Punto de control 18 nov: contrabandistas en escena, frases del carro, cerebro de combate nuevo (INC-1281 a INC-1283)
 
-- Arte y render: piel en sombra sin tono lila (INC-1056), postprocesado general a juego con el
-  aspecto de dibujo (INC-1058), ajustes de render sin uso retirados (INC-1047)
-- Animación: capas que se mueven al andar y correr (INC-1050), cinco poses de actuación nuevas
-  (INC-1051), risa y miedo sin brazos en la cara (INC-1052), vítores y encogerse de hombros
-  (INC-1054), gestos de conjuro (INC-1055), risas por carácter y gesto según la frase (INC-1068)
-- Personajes: vestuario propio de Eldran, Victoria y Erika (previas, INC-1060), pelos sin calva
-  detrás de la oreja (INC-1061)
-- Zonas: Aldea del Mar como puerto y plazas de la capital (INC-1048), primeras casas propias
-  (INC-1053, en curso), exploración y pueblo de Will con piezas propias (INC-1062)
-- Interfaz al estilo del papel (INC-1063)
-- Cinemáticas: repaso de actuación con las poses nuevas (INC-1059), conjuro de la Piedra
-  (INC-1057), miradas de Liam (INC-1046), cámaras y puesta en escena (INC-1071, en curso)
-- Juego: botón de hablar con Victoria en el Cap. 2 (INC-1045), aro del Demonio (INC-1067),
-  lluvia que sonaba sin llover (INC-1066), clima en interiores, paso 1 (INC-1070)
-- Kits genéricos: separación de sistemas en marcha (INC-1049)
-- TRACKER y documentación al día; copias de lo sustituido en «Versiones antiguas»
+- INC-1281: los contrabandistas vuelven a escena para el combate y el sigilo.
+- INC-1282: frases nuevas de la cinemática del carro (Will espera el carro a propósito).
+- INC-1283: cerebro de combate por puntuación (E1 y E2), conviviendo con el clásico.
+- Cámara nueva de la llegada en Cap3_03_ElCarro, TRACKER y lo que hubiera de otros hilos.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_016e2sJ5PwW9W8CtdHEvGtHf
+Claude-Session: https://claude.ai/code/session_016e2sJ5RKMcRLhq8u2qmpdr

@@ -9,74 +9,13 @@ using UnityEngine.AI;
 namespace Game.NPC
 {
     /// <summary>
-    /// PROPUESTA (4 sep 2026, investigación de IA de combate de referencia — patrón "Attack Slot"
-    /// usado en juegos de acción con varios enemigos, ver incidencia del mismo día): registro
-    /// estático que limita cuántos NPCs pueden estar atacando al MISMO objetivo a la vez, para que
-    /// un equipo (p.ej. Lety+Vicky) no descargue todos sus ataques en el mismo instante. Reservas
-    /// con autoexpiración (no dependen de que cada NPC llame a Release en todos sus caminos de
-    /// salida — si algo interrumpe el ataque a mitad, la reserva libera sola pasado
-    /// ReservationLifetime en vez de quedar bloqueada para siempre).
-    /// </summary>
-    public static class NPCAttackCoordinator
-    {
-        private class Reservation
-        {
-            public NPCCombatBrain owner;
-            public float expiresAt;
-        }
-
-        private static readonly Dictionary<Transform, List<Reservation>> _reservationsByTarget = new();
-
-        // Cubre windup + disparo + pausa post-ataque de un NPC (ver State_Attack) con margen.
-        private const float ReservationLifetime = 1.5f;
-
-        /// <summary>
-        /// Intenta reservar un "turno" de ataque sobre <paramref name="target"/> para
-        /// <paramref name="requester"/>. Devuelve true si hay hueco (o si ya tenía reserva activa,
-        /// que se renueva) y false si ya hay maxConcurrent compañeros atacando ese objetivo ahora.
-        /// </summary>
-        public static bool TryReserve(Transform target, NPCCombatBrain requester, int maxConcurrent)
-        {
-            if (target == null) return true;
-
-            if (!_reservationsByTarget.TryGetValue(target, out var list))
-            {
-                list = new List<Reservation>();
-                _reservationsByTarget[target] = list;
-            }
-
-            list.RemoveAll(r => r.owner == null || Time.time >= r.expiresAt);
-
-            var existing = list.Find(r => r.owner == requester);
-            if (existing != null)
-            {
-                existing.expiresAt = Time.time + ReservationLifetime;
-                return true;
-            }
-
-            if (list.Count >= Mathf.Max(1, maxConcurrent))
-                return false;
-
-            list.Add(new Reservation { owner = requester, expiresAt = Time.time + ReservationLifetime });
-            return true;
-        }
-
-        /// <summary>Libera la reserva antes de que expire sola (opcional, solo optimiza el turno del siguiente).</summary>
-        public static void Release(Transform target, NPCCombatBrain requester)
-        {
-            if (target != null && _reservationsByTarget.TryGetValue(target, out var list))
-                list.RemoveAll(r => r.owner == requester);
-        }
-    }
-
-    /// <summary>
     /// Cerebro de Combate Táctico con FSM (Evaluate -> Reposition -> Attack -> Defense).
     /// Soporta Cobertura, Escudos y Dificultad Dinámica.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(NPCSimpleAnimator))]
-    public sealed class NPCCombatBrain : MonoBehaviour
+    public sealed class NPCCombatBrain : MonoBehaviour, ICerebroDeCombate
     {
         #region Configuration
         [Serializable]
@@ -380,6 +319,88 @@ namespace Game.NPC
         public float GetCurrentMana() => _currentMana;
         public float GetMaxMana() => _maxMana;
         public float GetManaPercent() => _maxMana > 0f ? _currentMana / _maxMana : 0f;
+
+        // --- ICerebroDeCombate ---------------------------------------------------------------
+        void ICerebroDeCombate.Inicializar(NPCBehaviourManagerV2 manager) => Initialize(manager);
+        void ICerebroDeCombate.Comenzar(Modules.NPCCombatConfig config) => BeginCombat(AjustesDesdeConfig(config), config);
+        void ICerebroDeCombate.Detener() => StopCombat();
+        void ICerebroDeCombate.InterrumpirLanzamiento() => InterruptCasting();
+        void ICerebroDeCombate.AlRecibirDano(Vector3 origen) => OnTakeDamage(origen);
+
+        /// <summary>Los ajustes de la FSM sacados de la Combat Config del NPC.</summary>
+        public static Settings AjustesDesdeConfig(Modules.NPCCombatConfig cc)
+        {
+            return new Settings
+            {
+                // Distancias
+                minSafeDistance = cc.minAttackDistance,
+                optimalDistance = (cc.minAttackDistance + cc.maxAttackDistance) / 2f,
+                maxDistance = cc.maxAttackDistance,
+                runSpeed = 6f, // Velocidad base de correr
+                walkSpeed = 2.5f,
+                
+                // Ataques (Mapeo directo de slots)
+                upperBodyLayer = 1,
+                leftAttack = new NPCCombatBrain.AttackSlot { 
+                    animationState = "MagicLeft", cooldown = cc.spell1Cooldown, slotIndex = 0 
+                },
+                rightAttack = new NPCCombatBrain.AttackSlot { 
+                    animationState = "MagicRight", cooldown = cc.spell2Cooldown, slotIndex = 1 
+                },
+                specialAttack = new NPCCombatBrain.AttackSlot { 
+                    animationState = "MagicSpecial", cooldown = cc.spell3Cooldown, slotIndex = 2 
+                },
+                
+                // Comportamiento
+                attackFrequencyMultiplier = cc.isAggressive ? 1.5f : 1.0f,
+                globalCooldown = 1.5f, // Pausa entre acciones para "ritmo humano"
+                spawnProjectileViaAnimEvent = false,
+                fireDelaySeconds = 0.4f, // Ajustar según animación
+                maxMana = cc.maxMana,
+                manaRegenPerSecond = cc.manaRegenPerSecond,
+                manaRegenDelayAfterSpend = cc.manaRegenDelayAfterSpend,
+                manaCostLeft = cc.spell1ManaCost,
+                manaCostRight = cc.spell2ManaCost,
+                manaCostSpecial = cc.spell3ManaCost,
+                lowManaRetreatThreshold = cc.lowManaRetreatThreshold,
+                
+                // Tácticas & Defensa
+                difficultyLevel = cc.difficultyLevel, // FIX #13: configurable por NPC (antes hardcodeado a 0.7f para todos)
+                useShield = cc.useShield,
+                shieldDuration = cc.shieldMaxDuration,
+                shieldCooldown = cc.shieldCooldown,
+                coverLayerMask = cc.coverLayerMask,
+                coverSearchRadius = cc.coverSearchRadius,
+                dodgeDistance = 3f,
+
+                // FIX #5: completar el mapeo de la estrategia de engaño/emboscada — antes
+                // estos dos campos ni existían en el struct-initializer, así que quedaban en
+                // 0f/0 por defecto y la mecánica de fingir quedarse sin maná para emboscar
+                // (~150 líneas ya implementadas en NPCCombatBrain) nunca se activaba.
+                deceptionChance = cc.deceptionChance,
+                minAttacksToKeepForAmbush = cc.minAttacksToKeepForAmbush,
+                
+                // Búsqueda del Jugador
+                activelySearchForPlayer = cc.activelySearchForPlayer,
+                searchDuration = cc.searchDuration,
+                passiveSearchDuration = cc.passiveSearchDuration,
+                searchMovementRadius = cc.searchMovementRadius,
+                returnToOriginAfterSearch = cc.returnToOriginAfterSearch,
+
+                // PROPUESTA: coordinación de equipo (ver NPCAttackCoordinator) —
+                // antes faltaba en este mapeo, así que aunque se configurara en el
+                // NPCCombatConfig se quedaba siempre en 0 (desactivado) al llegar al Brain.
+                maxConcurrentAttackersOnTarget = cc.maxConcurrentAttackersOnTarget,
+
+                // PROPUESTA: retirada táctica (ver State_TacticalRetreat) — mismo
+                // caso que arriba: useTacticalRetreat/retreatHealthThreshold/retreatCooldown ya
+                // existían en el NPCCombatConfig pero no llegaban al Brain, así que la retirada
+                // (con el componente NPCTacticalRetreat.cs ya implementado) nunca se disparaba.
+                useTacticalRetreat = cc.useTacticalRetreat,
+                retreatHealthThreshold = cc.retreatHealthThreshold,
+                retreatCooldown = cc.retreatCooldown
+            };
+        }
         
         /// <summary>
         /// Llamado cuando el NPC recibe daño. Si está buscando o huyendo, activa alerta inmediata.

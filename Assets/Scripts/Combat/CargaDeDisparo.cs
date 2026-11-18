@@ -16,6 +16,7 @@ public sealed class CargaDeDisparo : MonoBehaviour
     private Transform _boca;
     private Vector3 _desplazamiento, _escala;
     private float _inicio;
+    private float _duracion;
     private Collider[] _colliders;
     private bool[] _collidersActivos;
     private MonoBehaviour[] _comportamientos;
@@ -29,9 +30,15 @@ public sealed class CargaDeDisparo : MonoBehaviour
     public bool EnCarga => _bola != null;
     public float SegundosDeCarga => segundosDeCarga;
 
-    public bool Cargar(GameObject prefab, Transform boca, Vector3 desplazamiento, Transform objetivo, float velocidad, Action<GameObject, Vector3> disparar)
+    /// <summary>
+    /// Empieza a cargar. 'segundos' (0 = los del componente) y 'tipo' (cómo se avisa al jugador) los
+    /// puede fijar quien dispara para cada ataque.
+    /// </summary>
+    public bool Cargar(GameObject prefab, Transform boca, Vector3 desplazamiento, Transform objetivo, float velocidad, Action<GameObject, Vector3> disparar,
+        float segundos = 0f, TipoDeAmenaza tipo = TipoDeAmenaza.Devolvible)
     {
         if (EnCarga || prefab == null || objetivo == null || disparar == null) return false;
+        _duracion = segundos > 0f ? segundos : segundosDeCarga;
         _boca = boca != null ? boca : transform; _desplazamiento = desplazamiento;
         _objetivo = objetivo; _disparar = disparar; _inicio = Time.time;
         Vector3 origen = _boca.position + desplazamiento;
@@ -61,10 +68,10 @@ public sealed class CargaDeDisparo : MonoBehaviour
         }
         _bola.transform.localScale = Vector3.zero;
         float vuelo = Vector3.Distance(origen, objetivo.position + Vector3.up) / Mathf.Max(1f, velocidad);
-        AmenazasAlJugador.Anunciar(transform, segundosDeCarga + vuelo, TipoDeAmenaza.Devolvible);
+        AmenazasAlJugador.Anunciar(transform, _duracion + vuelo, tipo);
         if (vfxDeCarga != null && VfxPoolService.Instance != null)
         {
-            _vfx = VfxPoolService.Instance.Play(vfxDeCarga, origen, Quaternion.identity, segundosDeCarga + 0.1f);
+            _vfx = VfxPoolService.Instance.Play(vfxDeCarga, origen, Quaternion.identity, _duracion + 0.1f);
             _usoVfx = VfxPoolService.Instance.ObtenerUso(_vfx);
         }
         return true;
@@ -77,7 +84,7 @@ public sealed class CargaDeDisparo : MonoBehaviour
         Vector3 origen = _boca.position + _desplazamiento;
         _bola.transform.position = origen;
         if (_vfx != null) _vfx.position = origen;
-        float k = Mathf.Clamp01((Time.time - _inicio) / segundosDeCarga);
+        float k = Mathf.Clamp01((Time.time - _inicio) / _duracion);
         _bola.transform.localScale = _escala * k;
         if (k < 1f) return;
         var bola = _bola; _bola = null;
