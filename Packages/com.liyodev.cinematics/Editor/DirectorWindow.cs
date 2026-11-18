@@ -5,26 +5,34 @@ using System.IO;
 using Liyodev.Assistant;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Liyodev.Cinematics
 {
-    /// La mesa del Director: la lista de cinemáticas del proyecto, sus planos como una película que
-    /// se puede reproducir sin entrar en PlayMode (fotogramas reales, subtítulos y voces) y las
-    /// puertas a lo que ya sabe editarlas (el taller de rodaje, el .guion.txt, el storyboard).
+    /// La mesa del Director: la lista de cinemáticas del proyecto, la cinemática como una película que
+    /// se reproduce y se arrastra sin entrar en PlayMode (en vivo, con la escena colocada en cada
+    /// segundo, o con los fotogramas del storyboard; con subtítulos y voces) y las puertas a lo que ya
+    /// sabe editarlas (el taller de rodaje, el .guion.txt, el storyboard).
+    ///
+    /// Disposición: a la izquierda los planos; en el centro el visor y el transporte (planos y frases); a la
+    /// derecha las marcas para la IA (señalar, dirección, dibujo, nota), y abajo la caja de la IA, que
+    /// es el chat compartido del asistente con el contexto de la mesa (plano, segundo y marcas).
     ///
     /// No sabe nada del proyecto ni del grafo: todo lo pregunta al puente
     /// (<see cref="ICinematicsEditorBridge"/>). Ver `docs/plan-director-2026-11-16.md`.
     public class DirectorWindow : EditorWindow
     {
-        /// La cinemática que el Director tiene abierta y el punto del timeline que se mira. Lo lee
+        /// La cinemática que el Director tiene abierta y el segundo que se mira. Lo lee
         /// el asistente de IA desde fuera; la ventana no necesita saber quién lo escucha.
         public static string CinematicaActivaId { get; private set; }
         public static int PlanoActivo { get; private set; } = -1;
         public static float SegundoActivo { get; private set; } = -1f;
         public static event Action SeleccionCambiada;
 
-        private const float AnchoLista = 350f;
-        private const float AltoTira = 96f;
+        private const float AnchoPlanos = 196f;
+        private const float AnchoMarcas = 252f;
+        private const float AltoRespuestasIA = 240f;
+        private const string ClaveIaPlegada = "Liyodev.Cinematics.Director.IaPlegada";
 
         private readonly List<CinemaEntry> _entradas = new();
         private readonly List<CinemaEntry> _visibles = new();
@@ -32,20 +40,18 @@ namespace Liyodev.Cinematics
 
         private string _busqueda = string.Empty;
         private Vector2 _scrollLista;
-        private Vector2 _scrollTira;
-        private Vector2 _scrollPistas;
+        private Vector2 _scrollPlanos;
+        private Vector2 _scrollMarcas;
         private Vector2 _scrollAvisos;
 
-        private CinemaClip _clipElegido;
         private CinemaPizarra _pizarra;
         private string _elementoElegido = "camara";
         private string _textoNota = string.Empty;
-        private string _textoTimeline = string.Empty;
-        private bool _trazando;
+        private Herramienta _herramienta;
         private CinemaTrazo _trazoEnCurso;
-        private Rect _rectImagen;
 
         private CinemaEntry _elegida;
+        private string _ultimaElegidaId;
         private CinemaDetail _detalle;
         private string _mensaje;
 
@@ -55,28 +61,61 @@ namespace Liyodev.Cinematics
         private string _vozSonando;
         private int _plano = -1;
         private bool _verAvisos;
-        private bool _verHerramientas;
         private float _tAnterior;
 
-        private GUIStyle _estiloPrincipal;
-        private GUIStyle _estiloChip;
-        private GUIStyle _estiloChipElegido;
+        // Vista en vivo: la escena colocada en el segundo del cabezal y rendida en una textura.
+        private const string ClaveEnVivo = "Liyodev.Cinematics.Director.EnVivo";
+        private const float IntervaloEnVivo = 1f / 30f;
+        private const int AnchoMaximoEnVivo = 1280;
+        private bool _enVivo = true;
+        private ICinematicLiveView _vista;
+        private string _errorVista;
+        private RenderTexture _rtVivo;
+        private Vector2Int _tamanoVivo = new(960, 540);
+        private float _tRendido = -1f;
+        private double _ultimoRender;
+        private bool _vivoRendido;
+        // La escena no se abre solo por elegir una cinemática: hasta que se reproduce, se arrastra o
+        // se enciende «En vivo», el visor enseña los fotogramas del storyboard.
+        private bool _vivoPedido;
 
-        private GUIStyle _estiloNombreFila;
-        private GUIStyle _estiloNombreElegido;
-        private GUIStyle _estiloMetaFila;
-        private GUIStyle _estiloInsignia;
-        private GUIStyle _estiloNombrePista;
-        private GUIStyle _estiloClip;
-        private GUIStyle _estiloSubtitulo;
-        private GUIStyle _estiloSobre;
-        private GUIStyle _estiloTitulo;
+        // En PlayMode la mesa manda sobre la cinemática que rueda de verdad (si el puente sabe).
+        private bool _siguiendoPlay;
+        private bool _pausadaEnPlay;
+
+        // La mesa es IMGUI dentro de un contenedor; debajo, la caja de la IA (UI Toolkit).
+        private IMGUIContainer _mesaIMGUI;
+        private VisualElement _cajaIA;
+        private Label _chipsIA;
+        private Button _plegarIA;
+        private Button _conectarIA;
+        private AssistantView _vistaIA;
+        private IAssistantContext _contextoIA;
+        private bool _iaPlegada;
+        private Rect _area;
+        private float _anchoCentro = 640f;
+
+        /// Lo que hace un clic en el visor: nada (ver) o dejar una marca para la IA.
+        private enum Herramienta { Ver, Senalar, Direccion, Dibujar }
+
+        [NonSerialized] private GUIStyle _estiloSeccion;
+        [NonSerialized] private GUIStyle _estiloTramo;
+        [NonSerialized] private GUIStyle _estiloNotaTexto;
+        [NonSerialized] private GUIStyle _estiloChip;
+        [NonSerialized] private GUIStyle _estiloChipElegido;
+
+        [NonSerialized] private GUIStyle _estiloNombreFila;
+        [NonSerialized] private GUIStyle _estiloNombreElegido;
+        [NonSerialized] private GUIStyle _estiloMetaFila;
+        [NonSerialized] private GUIStyle _estiloInsignia;
+        [NonSerialized] private GUIStyle _estiloSubtitulo;
+        [NonSerialized] private GUIStyle _estiloSobre;
 
         [MenuItem("Liyodev/Director/Mesa del Director", false, 1)]
         public static void Abrir()
         {
             var ventana = GetWindow<DirectorWindow>("Director");
-            ventana.minSize = new Vector2(1120, 860);
+            ventana.minSize = new Vector2(1180, 820);
             ventana.titleContent = new GUIContent("Director");
             ventana.Show();
         }
@@ -87,19 +126,22 @@ namespace Liyodev.Cinematics
             if (string.IsNullOrEmpty(id)) return false;
 
             var ventana = GetWindow<DirectorWindow>("Director");
-            ventana.minSize = new Vector2(1120, 860);
+            ventana.minSize = new Vector2(1180, 820);
             ventana.RefrescarLista();
             var entrada = ventana._entradas.Find(e => e.id == id);
             if (entrada == null) return false;
 
             ventana.Seleccionar(entrada, true);
-            ventana.Repaint();
+            ventana.RepintarMesa();
             return true;
         }
 
         private void OnEnable()
         {
+            _enVivo = EditorPrefs.GetBool(ClaveEnVivo, true);
+            _iaPlegada = EditorPrefs.GetBool(ClaveIaPlegada, false);
             EditorApplication.update += Tick;
+            EditorApplication.playModeStateChanged += AlCambiarElModoDeJuego;
             CinematicsEditorServices.Cambiaron += RefrescarLista;
             RefrescarLista();
         }
@@ -107,8 +149,13 @@ namespace Liyodev.Cinematics
         private void OnDisable()
         {
             EditorApplication.update -= Tick;
+            EditorApplication.playModeStateChanged -= AlCambiarElModoDeJuego;
             CinematicsEditorServices.Cambiaron -= RefrescarLista;
+            if (_contextoIA != null) _contextoIA.Changed -= AlCambiarElContextoIA;
+            AssistantSettings.Changed -= ActualizarBotonDeIA;
             Parar();
+            CerrarVista();
+            LiberarTexturaEnVivo();
             DestruirTexturas();
             CinematicaActivaId = null;
             PlanoActivo = -1;
@@ -172,6 +219,8 @@ namespace Liyodev.Cinematics
 
         private void CargarDetalle()
         {
+            CerrarVista();
+            _vivoPedido = false;
             _detalle = null;
             _plano = -1;
             PlanoActivo = -1;
@@ -189,10 +238,98 @@ namespace Liyodev.Cinematics
             catch { _pizarra = new CinemaPizarra { guion = _elegida.id }; }
 
             _t = 0f;
-            _clipElegido = null;
             _trazoEnCurso = null;
             _textoNota = string.Empty;
+            CalcularTramosSinPlano();
             SincronizarPlano();
+        }
+
+        // ── Tramos sin plano ─────────────────────────────────────────────────────────────────
+
+        /// Un trozo de la cinemática sin plano del guion: lo monta un efecto que pone su propia
+        /// cámara al jugar (una apertura, un vuelo). Ni el storyboard ni la vista en vivo lo pueden
+        /// enseñar; la mesa lo marca y deja verlo en Play desde ahí.
+        private sealed class TramoSinPlano
+        {
+            public float t0;
+            public float t1;
+            public string que;
+        }
+
+        private readonly List<TramoSinPlano> _tramosSinPlano = new();
+
+        private void CalcularTramosSinPlano()
+        {
+            _tramosSinPlano.Clear();
+            if (_detalle == null || _detalle.planos.Count == 0) return;
+
+            const float Minimo = 0.75f;
+            float desde = 0f;
+            foreach (var plano in _detalle.planos)
+            {
+                if (plano.t0 - desde > Minimo) AnadirTramo(desde, plano.t0);
+                desde = Mathf.Max(desde, plano.t1);
+            }
+            float total = Total();
+            if (total - desde > Minimo) AnadirTramo(desde, total);
+        }
+
+        private void AnadirTramo(float t0, float t1)
+        {
+            // Los efectos largos que empiezan en el tramo son los que lo montan.
+            var nombres = new List<string>();
+            foreach (var pista in _detalle.pistas)
+            {
+                if (pista.tipo != CinemaTrackKind.Vfx && pista.tipo != CinemaTrackKind.Escena) continue;
+                foreach (var clip in pista.clips)
+                    if (clip.t0 >= t0 - 0.05f && clip.t0 < t1 && clip.t1 - clip.t0 >= 2f && !string.IsNullOrEmpty(clip.etiqueta)
+                        && !nombres.Contains(clip.etiqueta))
+                        nombres.Add(clip.etiqueta);
+            }
+            _tramosSinPlano.Add(new TramoSinPlano
+            {
+                t0 = t0,
+                t1 = t1,
+                que = nombres.Count > 0 ? string.Join("\n", nombres.GetRange(0, Mathf.Min(3, nombres.Count))) : "un efecto",
+            });
+        }
+
+        /// Elemento de las notas de un tramo sin plano: el efecto que lo monta.
+        private const string ElementoEfecto = "efecto";
+
+        /// El nombre de un tramo en la pizarra: «T01», «T02»… (los planos son «P01»…).
+        private string PanelDeTramo(TramoSinPlano tramo) => $"T{_tramosSinPlano.IndexOf(tramo) + 1:00}";
+
+        private TramoSinPlano TramoEn(float t)
+        {
+            foreach (var tramo in _tramosSinPlano)
+                if (t >= tramo.t0 && t < tramo.t1) return tramo;
+            return null;
+        }
+
+        private void DibujarTramoSinPlano(Rect marco, TramoSinPlano tramo)
+        {
+            var imagen = Encajar(marco, 16f / 9f);
+            EditorGUI.DrawRect(imagen, new Color(0.08f, 0.09f, 0.12f));
+
+            var texto = new Rect(imagen.x + 24f, imagen.y + imagen.height * 0.22f, imagen.width - 48f, imagen.height * 0.4f);
+            GUI.Label(texto,
+                $"Este trozo ({Reloj(tramo.t0)} – {Reloj(tramo.t1)}) lo monta un efecto con su propia cámara, " +
+                $"y solo se ve al jugar:\n\n{tramo.que}", _estiloTramo);
+
+            var boton = new Rect(imagen.center.x - 110f, imagen.y + imagen.height * 0.68f, 220f, 28f);
+            if (GUI.Button(boton, "▶  Verlo en Play desde aquí"))
+                Accion(() =>
+                {
+                    if (!Puente().RodarEnPlay(_elegida.id, tramo.t0))
+                        _mensaje = "No se pudo rodar en Play: mira la consola.";
+                });
+
+            DibujarSubtitulo(imagen);
+            var reloj = new Rect(imagen.x, imagen.y + 6f, imagen.width - 8f, 18f);
+            _estiloSobre.alignment = TextAnchor.UpperRight;
+            GUI.Label(reloj, $"{Reloj(_t)} / {Reloj(Total())} · sin plano", _estiloSobre);
+            _estiloSobre.alignment = TextAnchor.UpperLeft;
         }
 
         private float Total()
@@ -208,6 +345,8 @@ namespace Liyodev.Cinematics
 
         private void Tick()
         {
+            if (SeguirLaDePlay()) return;
+            ActualizarVistaEnVivo();
             if (!_reproduciendo || _detalle == null) return;
 
             double ahora = EditorApplication.timeSinceStartup;
@@ -223,13 +362,14 @@ namespace Liyodev.Cinematics
             SonarLaFraseQueToca();
             SonarEfectosQueTocan();
             SincronizarPlano();
-            Repaint();
+            RepintarMesa();
         }
 
         private void Reproducir()
         {
             if (_detalle == null) return;
             if (_t >= Total() - 0.01f) _t = 0f;
+            _vivoPedido = true;
             _reproduciendo = true;
             _ultimoTick = EditorApplication.timeSinceStartup;
             _vozSonando = null;
@@ -250,13 +390,23 @@ namespace Liyodev.Cinematics
 
         private void IrA(float t)
         {
+            if (_siguiendoPlay && ControlEnPlay() is ICinematicsPlayControl control)
+            {
+                _t = Mathf.Clamp(t, 0f, Total());
+                control.Saltar(_t);
+                SincronizarPlano();
+                RepintarMesa();
+                return;
+            }
+
             _t = Mathf.Clamp(t, 0f, Total());
+            _vivoPedido = true;
             _vozSonando = null;
             EditorAudioPreview.Stop();
             EditorAudioPreview.StopFondo();
             _tAnterior = _t;
             SincronizarPlano();
-            Repaint();
+            RepintarMesa();
         }
 
         private void SincronizarPlano()
@@ -275,9 +425,11 @@ namespace Liyodev.Cinematics
             int indice = 0;
             for (int i = 0; i < _detalle.planos.Count; i++)
                 if (_detalle.planos[i].t0 <= _t + 0.0001f) indice = i;
-            bool cambio = PlanoActivo != indice;
+            // En un tramo sin plano no se mira ningún plano: la IA no debe creer que se habla del P01.
+            int activo = TramoEn(_t) != null ? -1 : indice;
+            bool cambio = PlanoActivo != activo;
             _plano = indice;
-            PlanoActivo = indice;
+            PlanoActivo = activo;
             SegundoActivo = _t;
             if (cambio) SeleccionCambiada?.Invoke();
         }
@@ -334,8 +486,163 @@ namespace Liyodev.Cinematics
             _tAnterior = _t;
         }
 
-        private void OnGUI()
+        private void CreateGUI()
         {
+            var root = rootVisualElement;
+            root.AddToClassList("assistant-root");
+            root.style.flexDirection = FlexDirection.Column;
+
+            string hojaDeEstilo = AssistantPaths.StyleSheet;
+            var hoja = string.IsNullOrEmpty(hojaDeEstilo) ? null : AssetDatabase.LoadAssetAtPath<StyleSheet>(hojaDeEstilo);
+            if (hoja != null) root.styleSheets.Add(hoja);
+
+            _mesaIMGUI = new IMGUIContainer(DibujarMesaCompleta) { style = { flexGrow = 1, flexShrink = 1 } };
+            root.Add(_mesaIMGUI);
+
+            root.Add(CrearCajaIA());
+            AplicarPliegueIA();
+        }
+
+        // ── La caja de la IA ─────────────────────────────────────────────────────────────────
+
+        /// El chat compartido del asistente, con el contexto de cinemáticas. Lo que ve la IA es el
+        /// estado que da el puente: la cinemática, el plano y el segundo de la mesa, y las marcas.
+        private VisualElement CrearCajaIA()
+        {
+            _cajaIA = new VisualElement();
+            _cajaIA.style.flexShrink = 0;
+            _cajaIA.style.borderTopWidth = 1;
+            _cajaIA.style.borderTopColor = new Color(0.21f, 0.31f, 0.42f);
+            _cajaIA.style.backgroundColor = new Color(0.14f, 0.19f, 0.24f);
+            _cajaIA.style.paddingLeft = 8;
+            _cajaIA.style.paddingRight = 8;
+            _cajaIA.style.paddingTop = 4;
+            _cajaIA.style.paddingBottom = 4;
+
+            var cabecera = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            var titulo = new Label("PARA LA IA");
+            titulo.style.unityFontStyleAndWeight = FontStyle.Bold;
+            titulo.style.color = new Color(0.66f, 0.77f, 0.87f);
+            titulo.style.marginRight = 8;
+            cabecera.Add(titulo);
+
+            _chipsIA = new Label();
+            _chipsIA.style.flexGrow = 1;
+            _chipsIA.style.color = new Color(0.66f, 0.77f, 0.87f);
+            cabecera.Add(_chipsIA);
+
+            _conectarIA = new Button(AssistantConnectWindow.Open)
+            {
+                tooltip = "Elegir o cambiar la IA (tu cuenta de ChatGPT, Google o Claude).",
+            };
+            cabecera.Add(_conectarIA);
+            ActualizarBotonDeIA();
+            AssistantSettings.Changed -= ActualizarBotonDeIA;
+            AssistantSettings.Changed += ActualizarBotonDeIA;
+
+            _plegarIA = new Button(() =>
+            {
+                _iaPlegada = !_iaPlegada;
+                EditorPrefs.SetBool(ClaveIaPlegada, _iaPlegada);
+                AplicarPliegueIA();
+            });
+            cabecera.Add(_plegarIA);
+            _cajaIA.Add(cabecera);
+
+            _contextoIA = AssistantContexts.Find("cinematics");
+            if (_contextoIA != null)
+            {
+                _contextoIA.Changed -= AlCambiarElContextoIA;
+                _contextoIA.Changed += AlCambiarElContextoIA;
+                _vistaIA = new AssistantView(_contextoIA);
+                _vistaIA.SettingsRequested += AssistantConnectWindow.Open;
+                _vistaIA.Applied += () => { RefrescarLista(); RepintarMesa(); };
+                _vistaIA.BusyChanged += RepintarMesa;
+                var respuestas = _vistaIA.Q<ScrollView>();
+                if (respuestas != null) respuestas.style.maxHeight = AltoRespuestasIA;
+                _cajaIA.Add(_vistaIA);
+            }
+            else
+            {
+                _cajaIA.Add(new Label("El asistente no está disponible en este proyecto."));
+            }
+            return _cajaIA;
+        }
+
+        /// La mesa vive en un IMGUIContainer: hay que marcarlo para que vuelva a pintarse.
+        private void RepintarMesa()
+        {
+            _mesaIMGUI?.MarkDirtyRepaint();
+            Repaint();
+        }
+
+        private void AplicarPliegueIA()
+        {
+            if (_vistaIA != null) _vistaIA.style.display = _iaPlegada ? DisplayStyle.None : DisplayStyle.Flex;
+            if (_plegarIA != null)
+            {
+                _plegarIA.text = _iaPlegada ? "Abrir" : "Plegar";
+                _plegarIA.tooltip = _iaPlegada ? "Abrir la caja de la IA" : "Plegar la caja de la IA";
+            }
+        }
+
+        private void AlCambiarElContextoIA() => _vistaIA?.RefreshState();
+
+        /// El botón dice qué IA está conectada; sin ninguna, invita a conectarla.
+        private void ActualizarBotonDeIA()
+        {
+            if (_conectarIA == null) return;
+            _conectarIA.text = AssistantSettings.IsReady
+                ? "IA: " + AssistantSettings.Name(AssistantSettings.Current)
+                : "Conectar mi IA";
+        }
+
+        /// La línea de contexto de la caja: lo que la IA sabe que se está mirando.
+        private void ActualizarChipsIA()
+        {
+            if (_chipsIA == null) return;
+            string texto;
+            if (_elegida == null || _detalle == null)
+            {
+                texto = "elige una cinemática";
+            }
+            else if (_detalle.planos.Count == 0)
+            {
+                texto = $"{_elegida.nombre} · {Reloj(_t)}";
+            }
+            else
+            {
+                var tramoActual = TramoEn(_t);
+                string panel = tramoActual != null ? PanelDeTramo(tramoActual) : Panel(_plano);
+                int senaladas = 0, direcciones = 0, dibujos = 0, notas = 0;
+                if (_pizarra != null)
+                    foreach (var nota in _pizarra.notas)
+                    {
+                        if (nota.panel != panel) continue;
+                        if (!string.IsNullOrEmpty(nota.texto)) notas++;
+                        foreach (var trazo in nota.trazos)
+                        {
+                            if (trazo.tipo == CinemaTrazo.Punto) senaladas++;
+                            else if (trazo.tipo == CinemaTrazo.Flecha) direcciones++;
+                            else dibujos++;
+                        }
+                    }
+
+                texto = tramoActual != null ? $"efecto ({panel}) · {Reloj(_t)}" : $"{panel} · {Reloj(_t)}";
+                if (senaladas > 0) texto += $" · {senaladas} señalado(s)";
+                if (direcciones > 0) texto += $" · {direcciones} dirección(es)";
+                if (dibujos > 0) texto += $" · {dibujos} dibujo(s)";
+                if (notas > 0) texto += $" · {notas} nota(s)";
+            }
+            if (_vistaIA != null && _vistaIA.Busy) texto += " · la IA está trabajando…";
+            if (_chipsIA.text != texto) _chipsIA.text = texto;
+        }
+
+        // ── La mesa ──────────────────────────────────────────────────────────────────────────
+
+        private void DibujarMesaCompleta()
+        {
+            if (_mesaIMGUI != null) _area = _mesaIMGUI.contentRect;
             InitEstilos();
             DibujarBarra();
 
@@ -347,10 +654,22 @@ namespace Liyodev.Cinematics
                 return;
             }
 
+            if (_elegida == null)
+            {
+                DibujarLista();
+                ActualizarChipsIA();
+                return;
+            }
+
+            _anchoCentro = Mathf.Max(360f, _area.width - AnchoPlanos - AnchoMarcas - 16f);
+
             EditorGUILayout.BeginHorizontal();
-            DibujarLista();
+            DibujarColumnaDePlanos();
             DibujarMesa();
+            DibujarColumnaDeMarcas();
             EditorGUILayout.EndHorizontal();
+
+            ActualizarChipsIA();
         }
 
         private void DibujarBarra()
@@ -359,27 +678,120 @@ namespace Liyodev.Cinematics
 
             GUILayout.Label("Director", EditorStyles.boldLabel, GUILayout.Width(60));
 
-            EditorGUI.BeginChangeCheck();
-            _busqueda = GUILayout.TextField(_busqueda, EditorStyles.toolbarSearchField, GUILayout.Width(240));
-            if (EditorGUI.EndChangeCheck()) Filtrar();
+            if (_elegida != null)
+            {
+                if (GUILayout.Button(_elegida.nombre + "  ▾", EditorStyles.toolbarDropDown, GUILayout.Width(260)))
+                    MenuDeCinematicas();
+                GUILayout.Label(
+                    $"{_elegida.escena} · {Reloj(Total())} · {(_detalle != null ? _detalle.planos.Count : _elegida.planos)} planos · " +
+                    $"{(_detalle != null ? _detalle.lineas.Count : _elegida.frases)} frases · {_elegida.estado}",
+                    EditorStyles.miniLabel);
+            }
+            else
+            {
+                EditorGUI.BeginChangeCheck();
+                _busqueda = GUILayout.TextField(_busqueda, EditorStyles.toolbarSearchField, GUILayout.Width(240));
+                if (EditorGUI.EndChangeCheck()) Filtrar();
+                GUILayout.Label($"{_entradas.Count} cinemáticas · pincha una para abrirla", EditorStyles.miniLabel);
+
+                var anterior = string.IsNullOrEmpty(_ultimaElegidaId) ? null : _entradas.Find(e => e.id == _ultimaElegidaId);
+                if (anterior != null && GUILayout.Button("← Volver a " + anterior.nombre, EditorStyles.toolbarButton))
+                    Seleccionar(anterior);
+            }
 
             if (GUILayout.Button("Refrescar", EditorStyles.toolbarButton, GUILayout.Width(70))) RefrescarLista();
 
-            if (GUILayout.Button("Asistente", EditorStyles.toolbarButton, GUILayout.Width(80)))
-                AssistantWindow.Open("cinematics");
-
             GUILayout.FlexibleSpace();
 
-            GUILayout.Label($"{_entradas.Count} cinemáticas", EditorStyles.miniLabel);
             if (!EditorAudioPreview.Disponible)
-                GUILayout.Label("· sin audio de previz en este Editor", EditorStyles.miniLabel);
+                GUILayout.Label("sin audio de previz en este Editor", EditorStyles.miniLabel);
+
+            if (_elegida != null)
+            {
+                if (GUILayout.Button("Guion", EditorStyles.toolbarButton, GUILayout.Width(52)))
+                {
+                    if (string.IsNullOrEmpty(_elegida.rutaGuion)) _mensaje = "No encuentro el .guion.txt de esta cinemática.";
+                    else EditorUtility.RevealInFinder(_elegida.rutaGuion);
+                }
+                if (GUILayout.Button("Herramientas", EditorStyles.toolbarDropDown, GUILayout.Width(96)))
+                    MenuDeHerramientas();
+                if (GUILayout.Button("▶  Rodar en Play", EditorStyles.toolbarButton, GUILayout.Width(110)))
+                    Accion(() =>
+                    {
+                        if (!Puente().RodarEnPlay(_elegida.id, _t))
+                            _mensaje = "No se pudo rodar en Play: mira la consola.";
+                    });
+            }
+            else if (GUILayout.Button("Nueva cinemática…", EditorStyles.toolbarButton, GUILayout.Width(120)))
+            {
+                NuevaCinematicaWindow.Abrir();
+            }
 
             EditorGUILayout.EndHorizontal();
         }
 
+        /// Cambiar de cinemática sin volver a la lista: por escena, con la elegida marcada.
+        private void MenuDeCinematicas()
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Ver la lista"), false, () =>
+            {
+                _ultimaElegidaId = _elegida?.id;
+                Parar();
+                CerrarVista();
+                _elegida = null;
+                _detalle = null;
+                CinematicaActivaId = null;
+                PlanoActivo = -1;
+                SegundoActivo = -1f;
+                SeleccionCambiada?.Invoke();
+                RepintarMesa();
+            });
+            menu.AddSeparator(string.Empty);
+            foreach (var e in _entradas)
+            {
+                var entrada = e;
+                string escena = string.IsNullOrEmpty(e.escena) ? "(sin escena)" : e.escena;
+                menu.AddItem(new GUIContent($"{escena}/{e.nombre}"), _elegida != null && _elegida.id == e.id,
+                    () => { Seleccionar(entrada); RepintarMesa(); });
+            }
+            menu.ShowAsContext();
+        }
+
+        /// Lo de autor y lo que se abre fuera de la mesa.
+        private void MenuDeHerramientas()
+        {
+            var menu = new GenericMenu();
+            bool hayGuion = !string.IsNullOrEmpty(_elegida?.rutaGuion);
+            int encargos = _detalle?.entrada?.encargos ?? 0;
+
+            menu.AddItem(new GUIContent("Página anotable"), false, () => Accion(() => Puente().GenerarPaginaAnotable(_elegida.id)));
+            menu.AddItem(new GUIContent("Storyboard"), false, () => Accion(() => Puente().AbrirStoryboard(_elegida.id)));
+            menu.AddItem(new GUIContent("Aplicar correcciones del storyboard…"), false, () => Accion(() => AplicarCorrecciones.Abrir()));
+            menu.AddSeparator(string.Empty);
+            if (hayGuion)
+            {
+                menu.AddItem(new GUIContent("Hornear"), false, () => Accion(() => Puente().Hornear(_elegida.id, false)));
+                menu.AddItem(new GUIContent("Hornear + storyboard"), false, () => Accion(() => Puente().Hornear(_elegida.id, true)));
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent("Hornear"));
+                menu.AddDisabledItem(new GUIContent("Hornear + storyboard"));
+            }
+            menu.AddItem(new GUIContent("Abrir el taller"), false, () => Accion(() => Puente().AbrirTaller(_elegida.id)));
+            if (encargos > 0)
+                menu.AddItem(new GUIContent($"Ver el archivo de encargos ({encargos})"), false, () => Accion(() => Puente().AbrirEncargos(_elegida.id)));
+            else
+                menu.AddDisabledItem(new GUIContent("Ver el archivo de encargos"));
+            menu.AddSeparator(string.Empty);
+            menu.AddItem(new GUIContent("Nueva cinemática…"), false, NuevaCinematicaWindow.Abrir);
+            menu.ShowAsContext();
+        }
+
         private void DibujarLista()
         {
-            EditorGUILayout.BeginVertical(GUILayout.Width(AnchoLista));
+            EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
             _scrollLista = EditorGUILayout.BeginScrollView(_scrollLista, false, false);
 
             foreach (var e in _visibles)
@@ -418,7 +830,7 @@ namespace Liyodev.Cinematics
                 {
                     Seleccionar(e);
                     Event.current.Use();
-                    Repaint();
+                    RepintarMesa();
                 }
             }
 
@@ -433,17 +845,7 @@ namespace Liyodev.Cinematics
 
         private void DibujarMesa()
         {
-            EditorGUILayout.BeginVertical();
-
-            if (_elegida == null)
-            {
-                EditorGUILayout.HelpBox(
-                    "Elige una cinemática de la lista. Verás sus planos como una película (con " +
-                    "subtítulos y voces si el proyecto las tiene) y podrás abrir el taller para cambiarla.",
-                    MessageType.Info);
-                EditorGUILayout.EndVertical();
-                return;
-            }
+            EditorGUILayout.BeginVertical(GUILayout.Width(_anchoCentro));
 
             DibujarCabecera();
             if (_detalle == null)
@@ -454,11 +856,7 @@ namespace Liyodev.Cinematics
             }
 
             DibujarVisor();
-            DibujarPizarra();
             DibujarTransporte();
-            DibujarTira();
-            DibujarTimeline();
-            DibujarBotonera();
             DibujarAvisos();
 
             EditorGUILayout.EndVertical();
@@ -466,30 +864,35 @@ namespace Liyodev.Cinematics
 
         private void DibujarCabecera()
         {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label(_elegida.nombre, _estiloTitulo);
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(_elegida.estado ?? string.Empty, EditorStyles.miniBoldLabel);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.LabelField(
-                $"{_elegida.escena} · {Reloj(Total())} · {(_detalle != null ? _detalle.planos.Count : _elegida.planos)} planos · " +
-                $"{(_detalle != null ? _detalle.lineas.Count : _elegida.frases)} frases", EditorStyles.miniLabel);
-
             if (!string.IsNullOrEmpty(_mensaje))
                 EditorGUILayout.HelpBox(_mensaje, MessageType.None);
         }
 
         private void DibujarVisor()
         {
-            float ancho = Mathf.Max(320f, position.width - AnchoLista - 40f);
-            float alto = Mathf.Clamp(position.height - 660f, 160f, ancho * 9f / 16f);
+            // Lo que queda tras la barra, el transporte y el pie de avisos.
+            float ancho = Mathf.Max(320f, _anchoCentro);
+            float alto = Mathf.Clamp(_area.height - 96f, 160f, ancho * 9f / 16f);
             var marco = GUILayoutUtility.GetRect(ancho, alto, GUILayout.ExpandWidth(true));
 
             EditorGUI.DrawRect(marco, new Color(0.06f, 0.07f, 0.09f));
 
             if (_plano < 0 && _detalle.planos.Count > 0) _plano = 0;
             var plano = (_plano >= 0 && _plano < _detalle.planos.Count) ? _detalle.planos[_plano] : null;
+
+            var tramo = TramoEn(_t);
+            if (tramo != null)
+            {
+                DibujarTramoSinPlano(marco, tramo);
+                return;
+            }
+
+            if (VistaEnVivoActiva())
+            {
+                DibujarVisorEnVivo(marco, plano);
+                return;
+            }
+
             var textura = plano != null ? TexturaDelPlano(plano) : null;
 
             if (textura == null)
@@ -513,9 +916,190 @@ namespace Liyodev.Cinematics
 
                 var reloj = new Rect(imagen.x, imagen.y + 6f, imagen.width - 8f, 18f);
                 _estiloSobre.alignment = TextAnchor.UpperRight;
-                GUI.Label(reloj, $"{Reloj(_t)} / {Reloj(Total())} · {plano.origen}", _estiloSobre);
+                GUI.Label(reloj, _siguiendoPlay
+                    ? $"{Reloj(_t)} / {Reloj(Total())} · rodando en Play (la imagen, en la ventana Game)"
+                    : $"{Reloj(_t)} / {Reloj(Total())} · {plano.origen}", _estiloSobre);
                 _estiloSobre.alignment = TextAnchor.UpperLeft;
             }
+        }
+
+        // ── En PlayMode ──────────────────────────────────────────────────────────────────────
+
+        private static ICinematicsPlayControl ControlEnPlay() =>
+            EditorApplication.isPlaying ? CinematicsEditorServices.Bridge as ICinematicsPlayControl : null;
+
+        /// En Play, la mesa enseña la cinemática que rueda de verdad: la elige si no lo estaba y el
+        /// cabezal va con ella. Sus voces y su música suenan en el juego, no en la mesa.
+        private bool SeguirLaDePlay()
+        {
+            var control = ControlEnPlay();
+            if (control == null || !control.EnMarcha(out string id, out float segundo, out _, out bool pausada))
+            {
+                if (_siguiendoPlay) { _siguiendoPlay = false; RepintarMesa(); }
+                return false;
+            }
+
+            if (!_siguiendoPlay) Parar();
+            _siguiendoPlay = true;
+            _pausadaEnPlay = pausada;
+
+            if (_elegida == null || _elegida.id != id)
+            {
+                var entrada = _entradas.Find(e => e.id == id);
+                if (entrada != null) Seleccionar(entrada);
+            }
+
+            if (Mathf.Abs(segundo - _t) > 0.0001f)
+            {
+                _t = segundo;
+                SincronizarPlano();
+                RepintarMesa();
+            }
+            return true;
+        }
+
+        // ── Vista en vivo ────────────────────────────────────────────────────────────────────
+
+        /// El puente sabe abrir cinemáticas en vivo y el Editor no está en Play.
+        private bool PuedeVerseEnVivo() =>
+            CinematicsEditorServices.Bridge is ICinematicsLivePreview && !EditorApplication.isPlayingOrWillChangePlaymode;
+
+        private bool VistaEnVivoActiva() =>
+            _enVivo && _vivoPedido && _detalle != null && _detalle.planos.Count > 0 && PuedeVerseEnVivo();
+
+        private void DibujarVisorEnVivo(Rect marco, CinemaShot plano)
+        {
+            var imagen = Encajar(marco, 16f / 9f);
+            float ppp = EditorGUIUtility.pixelsPerPoint;
+            int ancho = Mathf.Clamp(Mathf.RoundToInt(imagen.width * ppp), 64, AnchoMaximoEnVivo);
+            _tamanoVivo = new Vector2Int(ancho, Mathf.Max(36, Mathf.RoundToInt(ancho * 9f / 16f)));
+
+            if (_rtVivo != null && _vivoRendido)
+                GUI.DrawTexture(imagen, _rtVivo, ScaleMode.ScaleToFit, false);
+            else
+                GUI.Label(imagen, string.IsNullOrEmpty(_errorVista) ? "Colocando la escena…" : _errorVista, _estiloSobre);
+
+            if (_detalle.subtitulos) DibujarBandas(imagen);
+            DibujarSubtitulo(imagen);
+            if (plano != null) DibujarPizarraSobre(imagen, plano);
+
+            var etiqueta = new Rect(imagen.x + 8f, imagen.y + 6f, imagen.width - 16f, 18f);
+            if (plano != null) GUI.Label(etiqueta, $"P{_plano + 1:00} · {plano.descripcion}", _estiloSobre);
+
+            var reloj = new Rect(imagen.x, imagen.y + 6f, imagen.width - 8f, 18f);
+            _estiloSobre.alignment = TextAnchor.UpperRight;
+            GUI.Label(reloj, $"{Reloj(_t)} / {Reloj(Total())} · en vivo", _estiloSobre);
+            _estiloSobre.alignment = TextAnchor.UpperLeft;
+
+            if (!string.IsNullOrEmpty(_errorVista) && _vivoRendido)
+            {
+                var aviso = new Rect(imagen.x + 8f, imagen.yMax - 22f, imagen.width - 16f, 18f);
+                GUI.Label(aviso, _errorVista, _estiloSobre);
+            }
+        }
+
+        /// Fuera de OnGUI: abre la vista si hace falta y vuelve a rendir cuando el cabezal se ha
+        /// movido (como mucho 30 veces por segundo mientras se reproduce).
+        private void ActualizarVistaEnVivo()
+        {
+            if (!VistaEnVivoActiva())
+            {
+                if (_vista != null) CerrarVista();
+                return;
+            }
+
+            if (TramoEn(_t) != null) return;
+
+            bool cambioDeTamano = _rtVivo == null || _rtVivo.width != _tamanoVivo.x || _rtVivo.height != _tamanoVivo.y;
+            bool cabezalMovido = Mathf.Abs(_t - _tRendido) > 0.0001f;
+            if (!cambioDeTamano && !cabezalMovido) return;
+
+            double ahora = EditorApplication.timeSinceStartup;
+            if (_reproduciendo && !cambioDeTamano && ahora - _ultimoRender < IntervaloEnVivo) return;
+
+            if (_vista == null)
+            {
+                if (!string.IsNullOrEmpty(_errorVista) && _tRendido >= 0f) return;
+                AbrirVista();
+                if (_vista == null) { _tRendido = _t; RepintarMesa(); return; }
+            }
+
+            if (cambioDeTamano) CrearTexturaEnVivo();
+
+            try
+            {
+                bool hecho = _vista.Rendir(_t, _rtVivo);
+                _errorVista = hecho ? null : _vista.Error;
+                _vivoRendido |= hecho;
+            }
+            catch (Exception e)
+            {
+                CerrarVista();
+                _errorVista = "La vista en vivo falló: " + e.Message;
+            }
+
+            _tRendido = _t;
+            _ultimoRender = ahora;
+            RepintarMesa();
+        }
+
+        private void AbrirVista()
+        {
+            _errorVista = null;
+            if (!(CinematicsEditorServices.Bridge is ICinematicsLivePreview vivo) || _elegida == null) return;
+
+            try
+            {
+                _vista = vivo.AbrirVistaEnVivo(_elegida.id, out string error);
+                if (_vista == null) _errorVista = string.IsNullOrEmpty(error) ? "No se puede ver en vivo." : error;
+            }
+            catch (Exception e)
+            {
+                _vista = null;
+                _errorVista = "No se pudo abrir la vista en vivo: " + e.Message;
+            }
+        }
+
+        /// Suelta la escena y libera la vista. La siguiente vez que haga falta se vuelve a abrir.
+        private void CerrarVista()
+        {
+            if (_vista != null)
+            {
+                try { _vista.Dispose(); }
+                catch (Exception e) { Debug.LogException(e); }
+                _vista = null;
+            }
+            _errorVista = null;
+            _tRendido = -1f;
+            _vivoRendido = false;
+        }
+
+        private void AlCambiarElModoDeJuego(PlayModeStateChange cambio)
+        {
+            // La escena no puede entrar en Play colocada: se suelta antes.
+            if (cambio == PlayModeStateChange.ExitingEditMode) CerrarVista();
+            RepintarMesa();
+        }
+
+        private void CrearTexturaEnVivo()
+        {
+            LiberarTexturaEnVivo();
+            _rtVivo = new RenderTexture(_tamanoVivo.x, _tamanoVivo.y, 24, RenderTextureFormat.ARGB32)
+            {
+                antiAliasing = 4,
+                hideFlags = HideFlags.HideAndDontSave,
+                name = "Director · en vivo",
+            };
+            _rtVivo.Create();
+            _vivoRendido = false;
+        }
+
+        private void LiberarTexturaEnVivo()
+        {
+            if (_rtVivo == null) return;
+            _rtVivo.Release();
+            DestroyImmediate(_rtVivo);
+            _rtVivo = null;
         }
 
         private void DibujarBandas(Rect imagen)
@@ -540,58 +1124,234 @@ namespace Liyodev.Cinematics
             GUI.Label(caja, texto, _estiloSubtitulo);
         }
 
-        private void DibujarPizarra()
+        /// La columna de la izquierda: los planos, de arriba abajo. Pinchar uno lleva el cabezal a su
+        /// principio.
+        private void DibujarColumnaDePlanos()
         {
-            if (_detalle == null || _detalle.planos.Count == 0) return;
-            var plano = _detalle.planos[Mathf.Clamp(_plano, 0, _detalle.planos.Count - 1)];
-            string panel = Panel(_plano);
+            EditorGUILayout.BeginVertical(GUILayout.Width(AnchoPlanos));
+            GUILayout.Label("PLANOS", _estiloSeccion);
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Anotar en", EditorStyles.miniBoldLabel, GUILayout.Width(56));
+            _scrollPlanos = EditorGUILayout.BeginScrollView(_scrollPlanos, false, false,
+                GUIStyle.none, GUI.skin.verticalScrollbar, GUIStyle.none);
 
-            foreach (var elemento in plano.elementos)
+            if (_detalle != null)
             {
-                bool elegido = elemento.id == _elementoElegido;
-                if (GUILayout.Button((elegido ? "● " : "○ ") + elemento.etiqueta,
-                        elegido ? _estiloChipElegido : _estiloChip, GUILayout.Height(19f)))
-                    _elementoElegido = elemento.id;
+                float ancho = AnchoPlanos - 22f;
+                float altoFoto = ancho * 9f / 16f;
+                int tramo = 0;
+                for (int i = 0; i < _detalle.planos.Count; i++)
+                {
+                    var p = _detalle.planos[i];
+                    while (tramo < _tramosSinPlano.Count && _tramosSinPlano[tramo].t0 < p.t0)
+                        FichaDeTramo(_tramosSinPlano[tramo++], ancho);
+
+                    var fila = GUILayoutUtility.GetRect(ancho, altoFoto + 24f, GUILayout.Width(ancho));
+                    var foto = new Rect(fila.x, fila.y, ancho, altoFoto);
+
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        EditorGUI.DrawRect(foto, new Color(0.1f, 0.11f, 0.13f));
+                        var textura = TexturaDe(p.imagen);
+                        if (textura != null) GUI.DrawTexture(foto, textura, ScaleMode.ScaleAndCrop, false);
+                        else GUI.Label(foto, "sin foto", _estiloSobre);
+
+                        if (i == _plano) Marco(foto, new Color(1f, 0.8f, 0.3f), 2f);
+
+                        var etiqueta = new Rect(fila.x, foto.yMax + 3f, ancho - 40f, 16f);
+                        GUI.Label(etiqueta, $"P{i + 1:00} · {p.descripcion}", i == _plano ? _estiloNombreElegido : _estiloMetaFila);
+                        var reloj = new Rect(fila.xMax - 40f, foto.yMax + 3f, 40f, 16f);
+                        _estiloInsignia.normal.textColor = EditorStyles.miniLabel.normal.textColor;
+                        GUI.Label(reloj, Reloj(p.t0), _estiloInsignia);
+                    }
+                    else if (Event.current.type == EventType.MouseDown && fila.Contains(Event.current.mousePosition))
+                    {
+                        Parar();
+                        IrA(p.t0);
+                        Event.current.Use();
+                    }
+                }
+                while (tramo < _tramosSinPlano.Count) FichaDeTramo(_tramosSinPlano[tramo++], ancho);
             }
 
-            GUILayout.FlexibleSpace();
-            _trazando = GUILayout.Toggle(_trazando, "✏ Trazar", EditorStyles.miniButton, GUILayout.Width(70));
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+        }
 
-            EditorGUILayout.BeginHorizontal();
-            _textoNota = EditorGUILayout.TextField(_textoNota, GUILayout.Height(19f));
+        /// Un tramo sin plano en la columna: una ficha oscura con lo que lo monta.
+        private void FichaDeTramo(TramoSinPlano tramo, float ancho)
+        {
+            var fila = GUILayoutUtility.GetRect(ancho, 58f, GUILayout.Width(ancho));
+            var caja = new Rect(fila.x, fila.y, fila.width, fila.height - 6f);
+            bool dentro = _t >= tramo.t0 && _t < tramo.t1;
+            if (Event.current.type == EventType.Repaint)
+            {
+                EditorGUI.DrawRect(caja, new Color(0.11f, 0.12f, 0.16f));
+                if (dentro) Marco(caja, new Color(1f, 0.8f, 0.3f), 2f);
+                GUI.Label(new Rect(caja.x + 6f, caja.y + 3f, caja.width - 12f, 16f),
+                    $"Efecto · {Reloj(tramo.t0)}–{Reloj(tramo.t1)}", _estiloMetaFila);
+                GUI.Label(new Rect(caja.x + 6f, caja.y + 19f, caja.width - 12f, 30f),
+                    "Solo en Play: " + tramo.que.Replace('\n', ' '), EditorStyles.wordWrappedMiniLabel);
+            }
+            else if (Event.current.type == EventType.MouseDown && caja.Contains(Event.current.mousePosition))
+            {
+                Parar();
+                IrA(tramo.t0);
+                Event.current.Use();
+            }
+        }
+
+        private static void Marco(Rect r, Color color, float grosor)
+        {
+            EditorGUI.DrawRect(new Rect(r.x, r.y, r.width, grosor), color);
+            EditorGUI.DrawRect(new Rect(r.x, r.yMax - grosor, r.width, grosor), color);
+            EditorGUI.DrawRect(new Rect(r.x, r.y, grosor, r.height), color);
+            EditorGUI.DrawRect(new Rect(r.xMax - grosor, r.y, grosor, r.height), color);
+        }
+
+        /// La columna de la derecha: las marcas para la IA. No cambian nada por sí solas; son el
+        /// contexto de lo que se le pide en la caja de abajo (sobre quién, dónde y en qué segundo).
+        private void DibujarColumnaDeMarcas()
+        {
+            EditorGUILayout.BeginVertical(GUILayout.Width(AnchoMarcas));
+            GUILayout.Label("MARCAS PARA LA IA", _estiloSeccion);
+
+            if (_detalle == null || _detalle.planos.Count == 0)
+            {
+                GUILayout.Label("Sin planos horneados.", EditorStyles.wordWrappedMiniLabel);
+                EditorGUILayout.EndVertical();
+                return;
+            }
+
+            var plano = _detalle.planos[Mathf.Clamp(_plano, 0, _detalle.planos.Count - 1)];
+            var tramo = TramoEn(_t);
+            string panel = tramo != null ? PanelDeTramo(tramo) : Panel(_plano);
+            string elemento = tramo != null ? ElementoEfecto : _elementoElegido;
+
+            if (tramo != null)
+            {
+                GUILayout.Label("Sobre el efecto de este trozo. No hay imagen que marcar: escribe lo que quieres cambiar.",
+                    EditorStyles.wordWrappedMiniLabel);
+            }
+            else
+            {
+                GUILayout.Label("Sobre", EditorStyles.miniBoldLabel);
+                DibujarChipsDeElementos(plano);
+
+                GUILayout.Space(6f);
+                GUILayout.Label("En la imagen", EditorStyles.miniBoldLabel);
+                EditorGUILayout.BeginHorizontal();
+                BotonDeHerramienta(Herramienta.Ver, "Ver", "Los clics en la imagen no dejan marca.");
+                BotonDeHerramienta(Herramienta.Senalar, "Señalar", "Un clic marca un punto: «aquí».");
+                BotonDeHerramienta(Herramienta.Direccion, "Dirección", "Arrastra: de dónde a dónde.");
+                BotonDeHerramienta(Herramienta.Dibujar, "Dibujar", "Dibuja a mano: una forma, un efecto, un camino.");
+                EditorGUILayout.EndHorizontal();
+            }
+            if (tramo == null && _herramienta != Herramienta.Ver)
+                GUILayout.Label(_herramienta == Herramienta.Senalar
+                        ? "Pincha en la imagen para señalar."
+                        : _herramienta == Herramienta.Direccion
+                            ? "Arrastra en la imagen de dónde a dónde."
+                            : "Dibuja en la imagen.",
+                    EditorStyles.wordWrappedMiniLabel);
+
+            GUILayout.Space(6f);
+            GUILayout.Label($"Nota en {Reloj(_t)}", EditorStyles.miniBoldLabel);
+            _textoNota = EditorGUILayout.TextArea(_textoNota, _estiloNotaTexto, GUILayout.Height(44f));
             using (new EditorGUI.DisabledScope(string.IsNullOrWhiteSpace(_textoNota)))
-                if (GUILayout.Button("Añadir nota", EditorStyles.miniButton, GUILayout.Width(90)))
+                if (GUILayout.Button("Añadir nota", EditorStyles.miniButton))
                 {
-                    var nota = NotaDe(panel, _elementoElegido);
+                    var nota = NotaDe(panel, elemento);
                     nota.texto = string.IsNullOrEmpty(nota.texto) ? _textoNota.Trim() : nota.texto + " · " + _textoNota.Trim();
+                    if (nota.t < 0f) nota.t = _t;
                     _textoNota = string.Empty;
+                    GUI.FocusControl(null);
                     GuardarPizarra();
                 }
 
-            if (GUILayout.Button("Aplicar correcciones", EditorStyles.miniButton, GUILayout.Width(140)))
-                AplicarLaPizarra();
-            EditorGUILayout.EndHorizontal();
-
-            var notas = _pizarra.notas.FindAll(n => n.panel == panel);
-            if (notas.Count > 0)
+            GUILayout.Space(6f);
+            var notas = _pizarra != null ? _pizarra.notas.FindAll(n => n.panel == panel) : new List<CinemaNotaPizarra>();
+            GUILayout.Label(notas.Count > 0 ? $"En este plano ({notas.Count})" : "En este plano: nada", EditorStyles.miniBoldLabel);
+            _scrollMarcas = EditorGUILayout.BeginScrollView(_scrollMarcas, GUILayout.ExpandHeight(true));
+            foreach (var nota in notas.ToArray())
             {
                 EditorGUILayout.BeginHorizontal();
-                foreach (var nota in notas.ToArray())
+                string cuando = nota.t >= 0f ? $" · {Reloj(nota.t)}" : string.Empty;
+                GUILayout.Label($"{EtiquetaDe(plano, nota.elemento)}{cuando}: {Recorta(ResumenDe(nota), 80)}",
+                    EditorStyles.wordWrappedMiniLabel);
+                if (GUILayout.Button(new GUIContent("×", "Quitar"), EditorStyles.miniButton, GUILayout.Width(20)))
                 {
-                    string etiqueta = EtiquetaDe(plano, nota.elemento);
-                    string texto = string.IsNullOrEmpty(nota.texto) ? $"{nota.trazos.Count} trazo(s)" : nota.texto;
-                    if (GUILayout.Button($"{etiqueta}: {Recorta(texto, 46)}  ×", EditorStyles.miniButton))
-                    {
-                        _pizarra.notas.Remove(nota);
-                        GuardarPizarra();
-                    }
+                    _pizarra.notas.Remove(nota);
+                    GuardarPizarra();
                 }
                 EditorGUILayout.EndHorizontal();
             }
+            EditorGUILayout.EndScrollView();
+
+            int encargos = _detalle.entrada?.encargos ?? 0;
+            if (_vistaIA != null && _vistaIA.Busy)
+            {
+                using (new EditorGUI.DisabledScope(true))
+                    GUILayout.Button("La IA está trabajando…", EditorStyles.miniButton);
+            }
+            else if (encargos > 0 && _vistaIA != null)
+            {
+                if (GUILayout.Button($"Que la IA resuelva los encargos ({encargos})", EditorStyles.miniButton))
+                {
+                    if (_iaPlegada) { _iaPlegada = false; EditorPrefs.SetBool(ClaveIaPlegada, false); AplicarPliegueIA(); }
+                    _vistaIA.SendQuickAction();
+                }
+            }
+
+            using (new EditorGUI.DisabledScope(_pizarra == null || _pizarra.notas.Count == 0))
+                if (GUILayout.Button(new GUIContent("Pasar las notas a encargos",
+                        "Lo que el juego sabe aplicar solo se aplica; el resto queda en la cola de la IA."), EditorStyles.miniButton))
+                    AplicarLaPizarra();
+
+            GUILayout.Label("Las marcas no cambian nada: dicen a la IA sobre quién, dónde y en qué segundo. Escribe abajo lo que quieres.",
+                EditorStyles.wordWrappedMiniLabel);
+
+            EditorGUILayout.EndVertical();
+        }
+
+        private void BotonDeHerramienta(Herramienta herramienta, string texto, string ayuda)
+        {
+            bool elegida = _herramienta == herramienta;
+            if (GUILayout.Toggle(elegida, new GUIContent(texto, ayuda), EditorStyles.miniButton) && !elegida)
+            {
+                _herramienta = herramienta;
+                _trazoEnCurso = null;
+            }
+        }
+
+        /// Los elementos del plano como fichas que saltan de línea cuando no caben.
+        private void DibujarChipsDeElementos(CinemaShot plano)
+        {
+            float anchoDisponible = AnchoMarcas - 8f;
+            float usado = 0f;
+            EditorGUILayout.BeginHorizontal();
+            foreach (var elemento in plano.elementos)
+            {
+                bool elegido = elemento.id == _elementoElegido;
+                var estilo = elegido ? _estiloChipElegido : _estiloChip;
+                var contenido = new GUIContent(elemento.etiqueta);
+                float ancho = estilo.CalcSize(contenido).x + 4f;
+                if (usado > 0f && usado + ancho > anchoDisponible)
+                {
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.BeginHorizontal();
+                    usado = 0f;
+                }
+                if (GUILayout.Button(contenido, estilo, GUILayout.Height(19f))) _elementoElegido = elemento.id;
+                usado += ancho;
+            }
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private static string ResumenDe(CinemaNotaPizarra nota)
+        {
+            string texto = nota.Describir();
+            return string.IsNullOrEmpty(texto) ? "(vacía)" : texto;
         }
 
         private static string Panel(int indice) => $"P{indice + 1:00}";
@@ -620,7 +1380,7 @@ namespace Liyodev.Cinematics
             if (puente == null || _pizarra == null) return;
             try { puente.GuardarPizarra(_elegida.id, _pizarra); }
             catch (System.Exception e) { _mensaje = "No pude guardar la pizarra: " + e.Message; }
-            Repaint();
+            RepintarMesa();
         }
 
         private void AplicarLaPizarra()
@@ -629,10 +1389,12 @@ namespace Liyodev.Cinematics
             if (puente == null || _pizarra == null) return;
 
             var notas = new List<CinemaNota>();
+            var enviadas = new Dictionary<CinemaNotaPizarra, string>();
             foreach (var nota in _pizarra.notas)
             {
-                string texto = nota.TextoEfectivo();
+                string texto = nota.Describir();
                 if (string.IsNullOrEmpty(texto)) continue;
+                enviadas[nota] = texto;
                 notas.Add(new CinemaNota
                 {
                     panel = nota.panel,
@@ -658,7 +1420,8 @@ namespace Liyodev.Cinematics
                 if (resultado.claves != null && resultado.claves.Count > 0)
                 {
                     int antes = _pizarra.notas.Count;
-                    _pizarra.notas.RemoveAll(n => resultado.claves.Contains(ClaveDeNota(n.panel, n.elemento, n.texto)));
+                    _pizarra.notas.RemoveAll(n => enviadas.TryGetValue(n, out string texto)
+                                                  && resultado.claves.Contains(ClaveDeNota(n.panel, n.elemento, texto)));
                     if (_pizarra.notas.Count != antes) GuardarPizarra();
                 }
             }
@@ -685,7 +1448,7 @@ namespace Liyodev.Cinematics
                 Handles.color = ColorDeElemento(nota.elemento);
                 foreach (var trazo in nota.trazos) PintarTrazo(trazo, imagen);
             }
-            if (_trazoEnCurso != null && _trazoEnCurso.puntos.Count > 1)
+            if (_trazoEnCurso != null && _trazoEnCurso.puntos.Count > 0)
             {
                 Handles.color = ColorDeElemento(_elementoElegido);
                 PintarTrazo(_trazoEnCurso, imagen);
@@ -693,24 +1456,46 @@ namespace Liyodev.Cinematics
             Handles.EndGUI();
             Handles.matrix = previo;
 
-            if (!_trazando) return;
+            if (_herramienta == Herramienta.Ver) return;
 
             var e = Event.current;
-            if (e.type == EventType.MouseDown && imagen.Contains(e.mousePosition))
+            if (e.type == EventType.MouseDown && e.button == 0 && imagen.Contains(e.mousePosition))
             {
-                _trazoEnCurso = new CinemaTrazo();
-                _trazoEnCurso.puntos.Add(Normalizado(e.mousePosition, imagen));
+                Parar();
+                Vector2 punto = Normalizado(e.mousePosition, imagen);
+                if (_herramienta == Herramienta.Senalar)
+                {
+                    var marca = new CinemaTrazo { tipo = CinemaTrazo.Punto, t = _t };
+                    marca.puntos.Add(punto);
+                    NotaDe(panel, _elementoElegido).trazos.Add(marca);
+                    GuardarPizarra();
+                }
+                else
+                {
+                    _trazoEnCurso = new CinemaTrazo
+                    {
+                        tipo = _herramienta == Herramienta.Direccion ? CinemaTrazo.Flecha : CinemaTrazo.Trazo,
+                        t = _t,
+                    };
+                    _trazoEnCurso.puntos.Add(punto);
+                    if (_herramienta == Herramienta.Direccion) _trazoEnCurso.puntos.Add(punto);
+                }
                 e.Use();
             }
             else if (e.type == EventType.MouseDrag && _trazoEnCurso != null)
             {
-                _trazoEnCurso.puntos.Add(Normalizado(e.mousePosition, imagen));
-                Repaint();
+                Vector2 punto = Normalizado(e.mousePosition, imagen);
+                if (_trazoEnCurso.tipo == CinemaTrazo.Flecha) _trazoEnCurso.puntos[1] = punto;
+                else _trazoEnCurso.puntos.Add(punto);
+                RepintarMesa();
                 e.Use();
             }
             else if (e.type == EventType.MouseUp && _trazoEnCurso != null)
             {
-                if (_trazoEnCurso.puntos.Count > 1)
+                bool vale = _trazoEnCurso.puntos.Count > 1
+                            && (_trazoEnCurso.tipo != CinemaTrazo.Flecha
+                                || (_trazoEnCurso.puntos[1] - _trazoEnCurso.puntos[0]).sqrMagnitude > 0.0004f);
+                if (vale)
                 {
                     NotaDe(panel, _elementoElegido).trazos.Add(_trazoEnCurso);
                     GuardarPizarra();
@@ -718,17 +1503,50 @@ namespace Liyodev.Cinematics
                 _trazoEnCurso = null;
                 e.Use();
             }
+
+            if (imagen.Contains(e.mousePosition))
+                EditorGUIUtility.AddCursorRect(imagen, MouseCursor.ArrowPlus);
         }
 
         private static void PintarTrazo(CinemaTrazo trazo, Rect imagen)
         {
+            if (trazo.puntos.Count == 0) return;
+
+            Vector3 EnPantalla(Vector2 p) => new Vector3(imagen.x + p.x * imagen.width, imagen.y + p.y * imagen.height, 0f);
+
+            if (trazo.tipo == CinemaTrazo.Punto)
+            {
+                // Un aro alrededor del punto.
+                Vector3 centro = EnPantalla(trazo.puntos[0]);
+                float radio = Mathf.Max(10f, imagen.height * 0.045f);
+                var aro = new Vector3[25];
+                for (int i = 0; i < aro.Length; i++)
+                {
+                    float a = i / (float)(aro.Length - 1) * Mathf.PI * 2f;
+                    aro[i] = centro + new Vector3(Mathf.Cos(a) * radio, Mathf.Sin(a) * radio, 0f);
+                }
+                Handles.DrawAAPolyLine(3f, aro);
+                return;
+            }
+
+            if (trazo.tipo == CinemaTrazo.Flecha)
+            {
+                if (trazo.puntos.Count < 2) return;
+                Vector3 desde = EnPantalla(trazo.puntos[0]);
+                Vector3 hasta = EnPantalla(trazo.puntos[trazo.puntos.Count - 1]);
+                Handles.DrawAAPolyLine(3f, desde, hasta);
+                Vector3 dir = hasta - desde;
+                if (dir.sqrMagnitude < 1f) return;
+                dir.Normalize();
+                Vector3 lado = new Vector3(-dir.y, dir.x, 0f);
+                float punta = Mathf.Max(8f, imagen.height * 0.03f);
+                Handles.DrawAAPolyLine(3f, hasta - dir * punta + lado * punta * 0.6f, hasta, hasta - dir * punta - lado * punta * 0.6f);
+                return;
+            }
+
             if (trazo.puntos.Count < 2) return;
-
             var puntos = new Vector3[trazo.puntos.Count];
-            for (int i = 0; i < trazo.puntos.Count; i++)
-                puntos[i] = new Vector3(imagen.x + trazo.puntos[i].x * imagen.width,
-                                        imagen.y + trazo.puntos[i].y * imagen.height, 0f);
-
+            for (int i = 0; i < trazo.puntos.Count; i++) puntos[i] = EnPantalla(trazo.puntos[i]);
             Handles.DrawAAPolyLine(2.5f, puntos);
         }
 
@@ -749,9 +1567,11 @@ namespace Liyodev.Cinematics
 
             if (GUILayout.Button("|◀", EditorStyles.miniButton, GUILayout.Width(32))) IrA(0f);
             if (GUILayout.Button("◀", EditorStyles.miniButton, GUILayout.Width(32))) IrA(PlanoAnterior());
-            if (GUILayout.Button(_reproduciendo ? "❚❚" : "▶", EditorStyles.miniButton, GUILayout.Width(40)))
+            bool enMarcha = _siguiendoPlay ? !_pausadaEnPlay : _reproduciendo;
+            if (GUILayout.Button(enMarcha ? "❚❚" : "▶", EditorStyles.miniButton, GUILayout.Width(40)))
             {
-                if (_reproduciendo) Parar();
+                if (_siguiendoPlay && ControlEnPlay() is ICinematicsPlayControl control) control.Pausar(!_pausadaEnPlay);
+                else if (_reproduciendo) Parar();
                 else Reproducir();
             }
             if (GUILayout.Button("▶", EditorStyles.miniButton, GUILayout.Width(32))) IrA(PlanoSiguiente());
@@ -761,6 +1581,20 @@ namespace Liyodev.Cinematics
             DibujarBarraDeTiempo();
 
             GUILayout.Label($"{Reloj(_t)} / {Reloj(Total())}", EditorStyles.miniLabel, GUILayout.Width(110));
+
+            using (new EditorGUI.DisabledScope(!PuedeVerseEnVivo()))
+            {
+                bool enVivo = GUILayout.Toggle(_enVivo, new GUIContent("En vivo",
+                    "Coloca la escena en cada segundo y la rinde aquí. Apagado: fotogramas del storyboard."),
+                    EditorStyles.miniButton, GUILayout.Width(64));
+                if (enVivo != _enVivo)
+                {
+                    _enVivo = enVivo;
+                    _vivoPedido = enVivo;
+                    EditorPrefs.SetBool(ClaveEnVivo, enVivo);
+                    if (!enVivo) CerrarVista();
+                }
+            }
 
             EditorGUILayout.EndHorizontal();
         }
@@ -821,241 +1655,6 @@ namespace Liyodev.Cinematics
             }
         }
 
-        private void DibujarTira()
-        {
-            if (_detalle.planos.Count == 0) return;
-
-            _scrollTira = EditorGUILayout.BeginScrollView(_scrollTira, GUILayout.Height(AltoTira));
-            EditorGUILayout.BeginHorizontal();
-
-            for (int i = 0; i < _detalle.planos.Count; i++)
-            {
-                var p = _detalle.planos[i];
-                var textura = TexturaDe(p.imagen);
-                var marco = GUILayoutUtility.GetRect(128f, 72f, GUILayout.Width(128f), GUILayout.Height(72f));
-
-                if (Event.current.type == EventType.Repaint)
-                {
-                    EditorGUI.DrawRect(marco, new Color(0.1f, 0.11f, 0.13f));
-                    if (textura != null) GUI.DrawTexture(marco, textura, ScaleMode.ScaleAndCrop, false);
-                    if (i == _plano)
-                        EditorGUI.DrawRect(new Rect(marco.x, marco.yMax - 3f, marco.width, 3f),
-                            new Color(1f, 0.85f, 0.3f));
-                    GUI.Label(new Rect(marco.x + 4f, marco.y + 2f, marco.width - 8f, 16f),
-                        $"P{i + 1:00} {Reloj(p.t0)}", _estiloSobre);
-                }
-                else if (Event.current.type == EventType.MouseDown && marco.Contains(Event.current.mousePosition))
-                {
-                    Parar();
-                    IrA(p.t0);
-                    Event.current.Use();
-                }
-            }
-
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndScrollView();
-        }
-
-        /// <summary>
-        /// El timeline: una fila por cosa (cámara, cada personaje, música, efectos, marcas) con sus
-        /// clips a la duración real. De momento solo se lee: darle a un clip lleva el cabezal a su
-        /// segundo y enseña de qué línea del guion sale.
-        /// </summary>
-        private void DibujarTimeline()
-        {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Timeline", EditorStyles.boldLabel, GUILayout.Width(56));
-
-            if (_clipElegido != null)
-            {
-                string deDonde = _clipElegido.linea > 0 ? $"L{_clipElegido.linea}" : "sin línea (horneado viejo)";
-                GUILayout.Label($"{deDonde} · {_clipElegido.etiqueta}", EditorStyles.miniLabel);
-            }
-            else
-            {
-                GUILayout.Label("pincha un clip para ir a su segundo", EditorStyles.miniLabel);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            if (_clipElegido != null)
-            {
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label($"Nota en {Reloj(_clipElegido.t0)}:", EditorStyles.miniLabel, GUILayout.Width(96));
-                _textoTimeline = EditorGUILayout.TextField(_textoTimeline, GUILayout.Height(19f));
-                using (new EditorGUI.DisabledScope(string.IsNullOrWhiteSpace(_textoTimeline)))
-                    if (GUILayout.Button("Anotar", EditorStyles.miniButton, GUILayout.Width(64)))
-                    {
-                        _pizarra.notas.Add(new CinemaNotaPizarra
-                        {
-                            panel = Panel(_plano),
-                            elemento = string.IsNullOrEmpty(_clipElegido.elemento) ? "camara" : _clipElegido.elemento,
-                            texto = _textoTimeline.Trim(),
-                            t = _clipElegido.t0,
-                        });
-                        _textoTimeline = string.Empty;
-                        GuardarPizarra();
-                    }
-                EditorGUILayout.EndHorizontal();
-            }
-
-            if (_detalle.pistas.Count == 0)
-            {
-                EditorGUILayout.HelpBox("Este horneado no trae pistas (vuelve a hornear para verlas).", MessageType.None);
-                return;
-            }
-
-            const float altoFila = 19f;
-            const float anchoNombre = 122f;
-            float total = Mathf.Max(0.01f, Total());
-            float anchoCanvas = Mathf.Max(160f, position.width - AnchoLista - anchoNombre - 60f);
-
-            _scrollPistas = EditorGUILayout.BeginScrollView(_scrollPistas, GUILayout.Height(176f));
-
-            foreach (var pista in _detalle.pistas)
-            {
-                var fila = GUILayoutUtility.GetRect(anchoNombre + anchoCanvas, altoFila, GUILayout.ExpandWidth(true));
-                var lienzo = new Rect(fila.x + anchoNombre, fila.y, anchoCanvas, fila.height);
-
-                if (Event.current.type == EventType.Repaint)
-                {
-                    EditorGUI.DrawRect(fila, new Color(1f, 1f, 1f, 0.02f));
-                    EditorGUI.DrawRect(new Rect(fila.x, fila.yMax - 1f, fila.width, 1f), new Color(0f, 0f, 0f, 0.25f));
-
-                    var color = ColorDePista(pista.tipo);
-                    foreach (var clip in pista.clips)
-                    {
-                        float x0 = lienzo.x + Mathf.Clamp01(clip.t0 / total) * lienzo.width;
-                        float x1 = lienzo.x + Mathf.Clamp01(clip.t1 / total) * lienzo.width;
-                        var caja = new Rect(x0, lienzo.y + 2f, Mathf.Max(2f, x1 - x0), lienzo.height - 5f);
-
-                        bool elegido = _clipElegido != null && ReferenceEquals(_clipElegido, clip);
-                        EditorGUI.DrawRect(caja, elegido ? Color.Lerp(color, Color.white, 0.45f) : color);
-
-                        if (caja.width > 34f)
-                        {
-                            _estiloClip.normal.textColor = new Color(0.05f, 0.06f, 0.08f);
-                            GUI.Label(new Rect(caja.x + 3f, caja.y, caja.width - 6f, caja.height), clip.etiqueta, _estiloClip);
-                        }
-                    }
-
-                    float x = lienzo.x + Mathf.Clamp01(_t / total) * lienzo.width;
-                    EditorGUI.DrawRect(new Rect(x - 1f, lienzo.y, 2f, lienzo.height), new Color(1f, 0.85f, 0.3f));
-
-                    // Las notas del timeline, como marcas blancas en su segundo.
-                    if (_pizarra != null)
-                        foreach (var nota in _pizarra.notas)
-                        {
-                            if (nota.t < 0f || nota.panel != Panel(_plano)) continue;
-                            float xn = lienzo.x + Mathf.Clamp01(nota.t / total) * lienzo.width;
-                            EditorGUI.DrawRect(new Rect(xn - 1f, lienzo.y + 1f, 2f, lienzo.height - 2f),
-                                new Color(0.96f, 0.96f, 0.96f, 0.75f));
-                        }
-                }
-
-                _estiloNombrePista.normal.textColor = pista.tipo == CinemaTrackKind.Voz
-                    ? new Color(0.9f, 0.82f, 0.55f)
-                    : new Color(0.78f, 0.8f, 0.84f);
-                GUI.Label(new Rect(fila.x + 4f, fila.y, anchoNombre - 8f, fila.height), pista.nombre, _estiloNombrePista);
-
-                if (Event.current.type == EventType.MouseDown && lienzo.Contains(Event.current.mousePosition))
-                {
-                    float t = Mathf.Clamp01((Event.current.mousePosition.x - lienzo.x) / lienzo.width) * total;
-                    var tocado = ClipEn(pista, t);
-                    _clipElegido = tocado;
-                    Parar();
-                    IrA(tocado != null ? tocado.t0 : t);
-                    Event.current.Use();
-                }
-            }
-
-            EditorGUILayout.EndScrollView();
-        }
-
-        private static CinemaClip ClipEn(CinemaTrack pista, float t)
-        {
-            CinemaClip cerca = null;
-            foreach (var clip in pista.clips)
-            {
-                if (t < clip.t0 || t > clip.t1) continue;
-                if (cerca == null || clip.t0 > cerca.t0) cerca = clip;
-            }
-            return cerca;
-        }
-
-        private static Color ColorDePista(CinemaTrackKind tipo) => tipo switch
-        {
-            CinemaTrackKind.Camara => new Color(0.36f, 0.51f, 0.69f),
-            CinemaTrackKind.Voz => new Color(0.78f, 0.68f, 0.32f),
-            CinemaTrackKind.Movimiento => new Color(0.36f, 0.62f, 0.46f),
-            CinemaTrackKind.Gesto => new Color(0.56f, 0.47f, 0.76f),
-            CinemaTrackKind.Musica => new Color(0.76f, 0.42f, 0.61f),
-            CinemaTrackKind.Sonido => new Color(0.36f, 0.61f, 0.71f),
-            CinemaTrackKind.Vfx => new Color(0.81f, 0.56f, 0.32f),
-            CinemaTrackKind.Prop => new Color(0.62f, 0.52f, 0.37f),
-            CinemaTrackKind.Marca => new Color(0.55f, 0.55f, 0.58f),
-            _ => new Color(0.45f, 0.46f, 0.5f),
-        };
-
-        private void DibujarBotonera()
-        {
-            EditorGUILayout.BeginHorizontal();
-
-            if (GUILayout.Button("▶  Ver en Unity", _estiloPrincipal, GUILayout.Height(28f)))
-                Accion(() =>
-                {
-                    if (!Puente().RodarEnPlay(_elegida.id, _t))
-                        _mensaje = "No se pudo rodar en Play: mira la consola.";
-                });
-
-            if (GUILayout.Button("Ver el guion", EditorStyles.miniButton, GUILayout.Height(28f)))
-            {
-                if (string.IsNullOrEmpty(_elegida.rutaGuion)) _mensaje = "No encuentro el .guion.txt de esta cinemática.";
-                else EditorUtility.RevealInFinder(_elegida.rutaGuion);
-            }
-
-            if (GUILayout.Button("Página anotable", EditorStyles.miniButton, GUILayout.Height(28f)))
-                Accion(() => Puente().GenerarPaginaAnotable(_elegida.id));
-
-            if (GUILayout.Button("Storyboard", EditorStyles.miniButton, GUILayout.Height(28f)))
-                Accion(() => Puente().AbrirStoryboard(_elegida.id));
-
-            if (GUILayout.Button("Aplicar correcciones…", EditorStyles.miniButton, GUILayout.Height(28f)))
-                Accion(() => AplicarCorrecciones.Abrir());
-
-            int encargos = _detalle?.entrada?.encargos ?? 0;
-            using (new EditorGUI.DisabledScope(encargos <= 0))
-            {
-                string texto = encargos > 0 ? $"Encargos de la IA ({encargos})" : "Encargos de la IA";
-                if (GUILayout.Button(texto, EditorStyles.miniButton, GUILayout.Height(28f)))
-                    Accion(() => AssistantWindow.Open("cinematics", runQuickAction: true));
-            }
-
-            if (GUILayout.Button("Nueva cinemática…", EditorStyles.miniButton, GUILayout.Height(28f)))
-                NuevaCinematicaWindow.Abrir();
-
-            EditorGUILayout.EndHorizontal();
-
-            _verHerramientas = EditorGUILayout.Foldout(_verHerramientas, "Herramientas", true);
-            if (!_verHerramientas) return;
-
-            EditorGUILayout.BeginHorizontal();
-            using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(_elegida.rutaGuion)))
-            {
-                if (GUILayout.Button("Hornear", EditorStyles.miniButton)) Accion(() => Puente().Hornear(_elegida.id, false));
-                if (GUILayout.Button("Hornear + storyboard", EditorStyles.miniButton)) Accion(() => Puente().Hornear(_elegida.id, true));
-            }
-            if (GUILayout.Button("Abrir el taller", EditorStyles.miniButton)) Accion(() => Puente().AbrirTaller(_elegida.id));
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            using (new EditorGUI.DisabledScope(encargos <= 0))
-            {
-                if (GUILayout.Button("Ver archivo de encargos (.md)", EditorStyles.miniButton))
-                    Accion(() => Puente().AbrirEncargos(_elegida.id));
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
         private void DibujarAvisos()
         {
             int errores = _detalle.errores.Count;
@@ -1090,7 +1689,7 @@ namespace Liyodev.Cinematics
             catch (System.Exception e) { _mensaje = e.Message; }
             RefrescarLista();
             if (_elegida != null) CargarDetalle();
-            Repaint();
+            RepintarMesa();
         }
 
         /// El fotograma que toca dentro del plano: si el horneado dejó varios (animatic), el que
@@ -1206,33 +1805,24 @@ namespace Liyodev.Cinematics
                     alignment = TextAnchor.MiddleRight,
                 };
 
-            if (_estiloNombrePista == null)
-                _estiloNombrePista = new GUIStyle(EditorStyles.miniLabel)
-                {
-                    fontSize = 10,
-                    alignment = TextAnchor.MiddleLeft,
-                    clipping = TextClipping.Ellipsis,
-                };
+            if (_estiloSeccion == null)
+            {
+                _estiloSeccion = new GUIStyle(EditorStyles.miniBoldLabel) { fontSize = 10, padding = new RectOffset(2, 2, 6, 4) };
+                _estiloSeccion.normal.textColor = new Color(0.6f, 0.62f, 0.66f);
+            }
 
-            if (_estiloClip == null)
-                _estiloClip = new GUIStyle(EditorStyles.miniLabel)
+            if (_estiloTramo == null)
+            {
+                _estiloTramo = new GUIStyle(EditorStyles.wordWrappedLabel)
                 {
-                    fontSize = 9,
-                    alignment = TextAnchor.MiddleLeft,
-                    clipping = TextClipping.Ellipsis,
-                    padding = new RectOffset(0, 0, 0, 0),
-                };
-
-            if (_estiloTitulo == null)
-                _estiloTitulo = new GUIStyle(EditorStyles.boldLabel) { fontSize = 15 };
-
-            if (_estiloPrincipal == null)
-                _estiloPrincipal = new GUIStyle(EditorStyles.miniButton)
-                {
-                    fontStyle = FontStyle.Bold,
-                    fontSize = 12,
                     alignment = TextAnchor.MiddleCenter,
+                    fontSize = 13,
                 };
+                _estiloTramo.normal.textColor = new Color(0.85f, 0.87f, 0.9f);
+            }
+
+            if (_estiloNotaTexto == null)
+                _estiloNotaTexto = new GUIStyle(EditorStyles.textArea) { wordWrap = true };
 
             if (_estiloChip == null)
                 _estiloChip = new GUIStyle(EditorStyles.miniButton)

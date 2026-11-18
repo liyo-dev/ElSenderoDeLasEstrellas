@@ -44,6 +44,7 @@ namespace NarrativeGraphEditor.Story
         ToolbarMenu _graphMenu;
         TextField _search;
         Label _searchCount;
+        IVisualElementScheduledItem _elsewhereJob;
         Button _status;
         Label _saved;
         Button _play;
@@ -159,6 +160,7 @@ namespace NarrativeGraphEditor.Story
             _outline.StepClicked += n => _canvas.Select(n, true);
             _outline.AddClicked += () => _canvas.OpenAddAtCenter();
             _outline.WordClicked += word => _search.value = word;
+            _outline.GraphClicked += Load;
             body.Add(_outline);
             body.Add(new StorySplitter(_outline, true, "NarrativeGraph.Editor.OutlineWidth", 240f, 180f, 480f));
 
@@ -330,7 +332,7 @@ namespace NarrativeGraphEditor.Story
             Undo.undoRedoPerformed -= OnUndoRedo;
             TestPlayers.SelectionChanged -= RefreshTestPlayerLabel;
             StoryBreakpoints.Hit -= OnBreakpointHit;
-            StoryAssistantSettings.Changed -= OnAssistantSettings;
+            Liyodev.Assistant.AssistantSettings.Changed -= OnAssistantSettings;
             StoryCardImages.Changed -= OnCardImages;
             StoryMapWindow.OpenChanged -= OnMapWindow;
             SaveNow();
@@ -361,11 +363,7 @@ namespace NarrativeGraphEditor.Story
             searchBox.AddToClassList("story-toolbar__search");
             _search = new TextField();
             _search.textEdition.placeholder = StoryText.T("Buscar paso, personaje, misión o frase", "Search step, character, quest or line");
-            _search.RegisterValueChangedCallback(e =>
-            {
-                _canvas.SetSearch(e.newValue);
-                _searchCount.text = string.IsNullOrWhiteSpace(e.newValue) ? string.Empty : _canvas.CountMatches().ToString();
-            });
+            _search.RegisterValueChangedCallback(_ => ApplySearch());
             searchBox.Add(_search);
             _searchCount = new Label();
             _searchCount.AddToClassList("story-mono");
@@ -514,8 +512,8 @@ namespace NarrativeGraphEditor.Story
             // El asistente no es una pestaña: lo abre su botón de la barra y ocupa el panel.
             _assistant = new StoryAssistantPanel { Graph = () => _graph, Step = () => _canvas.Primary };
             _assistant.SettingsRequested += OpenSettings;
-            StoryAssistantSettings.Changed -= OnAssistantSettings;
-            StoryAssistantSettings.Changed += OnAssistantSettings;
+            Liyodev.Assistant.AssistantSettings.Changed -= OnAssistantSettings;
+            Liyodev.Assistant.AssistantSettings.Changed += OnAssistantSettings;
             StoryCardImages.Changed -= OnCardImages;
             StoryCardImages.Changed += OnCardImages;
             _assistant.Changed += () => { _canvas.Rebuild(); OnSelectionChanged(_canvas.Primary); ScheduleSave(); };
@@ -561,7 +559,7 @@ namespace NarrativeGraphEditor.Story
         void OnAssistantSettings()
         {
             if (_assistant == null) return;
-            bool visible = StoryAssistantSettings.Visible;
+            bool visible = Liyodev.Assistant.AssistantSettings.Visible;
             _assistantButton.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
             if (!visible && _assistant.style.display == DisplayStyle.Flex) ShowTab(_stepTab);
         }
@@ -681,7 +679,29 @@ namespace NarrativeGraphEditor.Story
             using (StoryTiming.Measure(StoryText.T("lista de grafos", "graph list"))) RebuildGraphMenu();
             RefreshPanels();
             _saved.text = string.Empty;
+            ApplySearch();
             RestoreLastStep();
+        }
+
+        /// The search dims the cards that do not match and filters the outline. With nothing
+        /// here, it looks in the other graphs, a moment later so typing stays fluid.
+        void ApplySearch()
+        {
+            if (_search == null || _canvas == null || _outline == null) return;
+            var query = _search.value?.Trim() ?? string.Empty;
+            _canvas.SetSearch(query);
+            int count = _canvas.CountMatches();
+            _searchCount.text = query.Length == 0 ? string.Empty : count.ToString();
+            _outline.SetSearch(query, _canvas.Matches);
+
+            _elsewhereJob?.Pause();
+            if (query.Length == 0 || count > 0 || _graph == null) return;
+            var graph = _graph;
+            _elsewhereJob = rootVisualElement.schedule.Execute(() =>
+            {
+                if (_graph != graph || (_search.value?.Trim() ?? string.Empty) != query) return;
+                _outline.SetElsewhere(StorySearch.InOtherGraphs(graph, query));
+            }).StartingIn(300);
         }
 
         /// Al abrir un capítulo, vuelve al último paso con el que se trabajó en él.
@@ -743,6 +763,7 @@ namespace NarrativeGraphEditor.Story
                 _so?.Update();
                 OnSelectionChanged(_canvas.Primary);
             }
+            if (!string.IsNullOrWhiteSpace(_search.value)) ApplySearch();
             ScheduleSave();
         }
 
@@ -753,6 +774,7 @@ namespace NarrativeGraphEditor.Story
             _so?.Update();
             _canvas.Rebuild();
             OnSelectionChanged(_canvas.Primary);
+            if (!string.IsNullOrWhiteSpace(_search.value)) ApplySearch();
             if (EditorUtility.IsDirty(_graph)) ScheduleSave();
         }
 

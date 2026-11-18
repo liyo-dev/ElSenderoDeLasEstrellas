@@ -266,40 +266,6 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
---- !u!114 &-2009941314150278913
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8f6e43869a48f991285995d4df1e93, type: 3}
-  m_Name: ColorGrading
-  m_EditorClassIdentifier: Assembly-CSharp-firstpass::CompoundRendererFeature.PostProcess.ColorGrading
-  active: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0
-  blueShadows:
-    m_OverrideState: 1
-    m_Value: 0
-  greenShadows:
-    m_OverrideState: 1
-    m_Value: 0
-  redHighlights:
-    m_OverrideState: 1
-    m_Value: 0
-  contrast:
-    m_OverrideState: 1
-    m_Value: 0
-  vibrance:
-    m_OverrideState: 1
-    m_Value: 0
-  saturation:
-    m_OverrideState: 1
-    m_Value: 0
 --- !u!114 &-1787263871500696807
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -385,8 +351,6 @@ MonoBehaviour:
   - {fileID: -3523397004161164707}
   - {fileID: -7496291314566218729}
   - {fileID: -6506892080504184407}
-  - {fileID: -2009941314150278913}
-  - {fileID: 8587547253253047965}
 --- !u!114 &455711485287314926
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -812,34 +776,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
---- !u!114 &8587547253253047965
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8317041eee140a38873daddb4b3a5f, type: 3}
-  m_Name: StylizedDetail
-  m_EditorClassIdentifier: Assembly-CSharp-firstpass::CompoundRendererFeature.PostProcess.StylizedDetail
-  active: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0
-  blur:
-    m_OverrideState: 1
-    m_Value: 1
-  edgePreserve:
-    m_OverrideState: 1
-    m_Value: 1.25
-  rangeStart:
-    m_OverrideState: 1
-    m_Value: 10
-  rangeEnd:
-    m_OverrideState: 1
-    m_Value: 30
 --- !u!114 &8912819494037132071
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -177,9 +177,9 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Las nubes de lluvia y tormenta se calculan oscureciendo las nubes del cielo de la escena (Chuchelandia sigue rosa, el prólogo dorado) en vez de usar un gris fijo.")]
     [SerializeField] private bool climaRelativoAlCielo = true;
     [Tooltip("Cuánto se oscurecen las nubes con la lluvia a tope (1 = nada).")]
-    [SerializeField, Range(0.4f, 1f)] private float oscurecerNubesDeLluvia = 0.85f;
+    [SerializeField, Range(0.2f, 1f)] private float oscurecerNubesDeLluvia = 0.32f;
     [Tooltip("Cuánto se oscurecen las nubes con la tormenta a tope (1 = nada).")]
-    [SerializeField, Range(0.2f, 1f)] private float oscurecerNubesDeTormenta = 0.62f;
+    [SerializeField, Range(0.2f, 1f)] private float oscurecerNubesDeTormenta = 0.22f;
     [Tooltip("Color por el que se multiplica la nube para dar su tono en sombra. Violeta, como la sombra del mundo.")]
     [SerializeField] private Color tinteDeSombraDeNubes = new Color(0.62f, 0.66f, 0.90f, 1f);
     [Tooltip("Cuánto se mezcla el color de la niebla con el horizonte del cielo (0 = color base de la franja, 1 = horizonte). Sirve para que la niebla sea aire del sitio y no una sábana gris.")]
@@ -622,8 +622,8 @@ public class DayNightCycle : MonoBehaviour
         Color clima;
         if (climaRelativoAlCielo)
         {
-            float k = Mathf.Lerp(1f, oscurecerNubesDeLluvia, PesoDePrecipitacion)
-                    * Mathf.Lerp(1f, oscurecerNubesDeTormenta, PesoDeTormenta);
+            float k = Mathf.Lerp(1f, oscurecerNubesDeLluvia, OscuridadDeLluvia)
+                    * Mathf.Lerp(1f, oscurecerNubesDeTormenta, PesoDeTormenta * NubesYaJuntas);
             clima = nubeDelCielo * k;
             clima = Color.Lerp(clima, colorDeNubesDeNieve, PesoDeNieve);
         }
@@ -668,6 +668,9 @@ public class DayNightCycle : MonoBehaviour
     public float VisibilidadDeLasEstrellas => 1f - Mathf.SmoothStep(0f, 1f,
         Mathf.InverseLerp(nubosidadQueEmpiezaATaparEstrellas, Mathf.Max(nubosidadQueEmpiezaATaparEstrellas + 0.01f, nubosidadQueTapaLasEstrellas), Nublado));
     public float PesoDeTormenta { get; private set; }
+    /// Cuánto oscurece la lluvia nubes, luz y niebla: nada mientras las nubes aún se están juntando.
+    public float OscuridadDeLluvia => PesoDePrecipitacion * NubesYaJuntas;
+    private float NubesYaJuntas => Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(NubosidadQueEmpiezaAOscurecer, NubosidadDelTodoOscura, Nublado));
     public float PesoDeNieve { get; private set; }
     public float PesoDePrecipitacion { get; private set; }
     public bool HayNubesDePrecipitacion => _lluviaSolicitada || _nieveSolicitada || IsRaining || IsSnowing || IsThunderstorm;
@@ -922,7 +925,7 @@ public class DayNightCycle : MonoBehaviour
         bool visible = !(AnclaDeClima == null && IsSkyboxLockedByEnvironment());
         float cobertura = visible ? Nublado : 0f;
         float nieve = visible ? PesoDeNieve : 0f;
-        float precipitacion = visible ? PesoDePrecipitacion : 0f;
+        float precipitacion = visible ? OscuridadDeLluvia : 0f;
         float lluvia = precipitacion * (1f - nieve);
         if (visible && directionalLight != null && _baseLightIntensity >= 0f)
         {
@@ -1444,7 +1447,11 @@ public class DayNightCycle : MonoBehaviour
         _rainCoroutine = null;
     }
 
-    const float NubosidadQueEmpiezaALlover = 0.45f;
+    // Primero se juntan las nubes, después se ponen oscuras y, ya cerradas y negras, llueve (Raúl, 18 nov).
+    // INC-984 pedía no esperar con el cielo gris sin agua: la oscuridad llega justo antes de la primera gota.
+    const float NubosidadQueEmpiezaALlover = 0.85f;
+    const float NubosidadQueEmpiezaAOscurecer = 0.4f;
+    const float NubosidadDelTodoOscura = 0.9f;
 
     IEnumerator CloudBuildUpRoutine()
     {

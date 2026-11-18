@@ -120078,8 +120078,8 @@ MonoBehaviour:
   rainFogDensityMultiplier: 1.6
   rainMinLightIntensity: 0.5
   climaRelativoAlCielo: 1
-  oscurecerNubesDeLluvia: 0.85
-  oscurecerNubesDeTormenta: 0.62
+  oscurecerNubesDeLluvia: 0.32
+  oscurecerNubesDeTormenta: 0.22
   tinteDeSombraDeNubes: {r: 0.62, g: 0.66, b: 0.9, a: 1}
   nieblaDelHorizonte: 0.7
   tinteDeLuzDeLluvia: {r: 0.78, g: 0.84, b: 0.96, a: 1}

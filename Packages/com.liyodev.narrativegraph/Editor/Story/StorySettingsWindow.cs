@@ -117,56 +117,22 @@ namespace NarrativeGraphEditor.Story
             // Assistant
             var assistant = Section(scroll, StoryText.T("Asistente", "Assistant"));
             Hint(assistant, StoryText.T(
-                "Un chat dentro del editor que lee el capítulo y te propone cambios. Cada uno usa su propio servicio y su clave; se guardan solo en este ordenador.",
-                "A chat inside the editor that reads the chapter and proposes changes. Everyone uses their own service and key, stored only on this computer."));
-            var visible = new Toggle(StoryText.T("Mostrar el botón del asistente", "Show the assistant button")) { value = StoryAssistantSettings.Visible };
-            visible.RegisterValueChangedCallback(e => StoryAssistantSettings.Visible = e.newValue);
+                "Un chat dentro del editor que lee el capítulo y te propone cambios. Funciona con tu cuenta de ChatGPT, Google o Claude (sin clave de API) o con una clave; todo se guarda solo en este ordenador.",
+                "A chat inside the editor that reads the chapter and proposes changes. It works with your ChatGPT, Google or Claude account (no API key) or with a key; everything is stored only on this computer."));
+            var visible = new Toggle(StoryText.T("Mostrar el botón del asistente", "Show the assistant button")) { value = Liyodev.Assistant.AssistantSettings.Visible };
+            visible.RegisterValueChangedCallback(e => Liyodev.Assistant.AssistantSettings.Visible = e.newValue);
             assistant.Add(visible);
 
-            var providers = Enum.GetValues(typeof(StoryAssistantSettings.Provider)).Cast<StoryAssistantSettings.Provider>().ToList();
-            var provider = new DropdownField(StoryText.T("Servicio", "Service"), providers.Select(StoryAssistantSettings.Name).ToList(), providers.IndexOf(StoryAssistantSettings.Current));
-            assistant.Add(provider);
-            var key = new TextField(StoryText.T("Clave de API", "API key")) { isPasswordField = true };
-            var model = new TextField(StoryText.T("Modelo", "Model"));
-            var address = new TextField(StoryText.T("Dirección", "Address"));
-            var addressHint = new Label(StoryText.T("Cualquier servicio con el formato de OpenAI. Ollama en tu ordenador: http://localhost:11434/v1 (sin clave).",
-                                                    "Any service with the OpenAI format. Ollama on your computer: http://localhost:11434/v1 (no key)."));
-            addressHint.AddToClassList("story-muted");
-            var openCodeHint = new Label(StoryText.T(
-                "OpenCode: usa la clave del Console (Go o saldo) y el id exacto del modelo de https://opencode.ai/inference/v1/models (p. ej. deepseek-v4.1-flash).",
-                "OpenCode: use your Console key (Go or balance) and the exact model id from https://opencode.ai/inference/v1/models (e.g. deepseek-v4.1-flash)."));
-            openCodeHint.AddToClassList("story-muted");
-            var ollamaHint = new Label(StoryText.T(
-                "Ollama: instala Ollama (ollama.com) y ejecuta «ollama pull qwen3:8b». Sin clave; el servidor tiene que estar en marcha. El botón para ver los modelos instalados está en Liyodev ▸ Asistente.",
-                "Ollama: install Ollama (ollama.com) and run “ollama pull qwen3:8b”. No key; the server must be running. The button to list installed models is in Liyodev ▸ Assistant."));
-            ollamaHint.AddToClassList("story-muted");
-            assistant.Add(key);
-            assistant.Add(model);
-            assistant.Add(address);
-            assistant.Add(addressHint);
-            assistant.Add(openCodeHint);
-            assistant.Add(ollamaHint);
+            var conectar = new Button(Liyodev.Assistant.AssistantConnectWindow.Open)
+                { text = StoryText.T("Conectar mi IA…", "Connect my AI…") };
+            conectar.AddToClassList("story-button");
+            conectar.style.alignSelf = Align.FlexStart;
+            conectar.style.marginLeft = 0;
+            conectar.style.marginBottom = 6;
+            assistant.Add(conectar);
 
-            void Fill()
-            {
-                var p = StoryAssistantSettings.Current;
-                key.SetValueWithoutNotify(StoryAssistantSettings.Key(p));
-                model.SetValueWithoutNotify(StoryAssistantSettings.Model(p));
-                address.SetValueWithoutNotify(StoryAssistantSettings.Address);
-                bool compatible = p == StoryAssistantSettings.Provider.Compatible;
-                bool openCode = p == StoryAssistantSettings.Provider.OpenCode;
-                bool ollama = p == StoryAssistantSettings.Provider.Ollama;
-                key.style.display = ollama ? DisplayStyle.None : DisplayStyle.Flex;
-                address.style.display = compatible ? DisplayStyle.Flex : DisplayStyle.None;
-                addressHint.style.display = compatible ? DisplayStyle.Flex : DisplayStyle.None;
-                openCodeHint.style.display = openCode ? DisplayStyle.Flex : DisplayStyle.None;
-                ollamaHint.style.display = ollama ? DisplayStyle.Flex : DisplayStyle.None;
-            }
-            Fill();
-            provider.RegisterValueChangedCallback(_ => { StoryAssistantSettings.Current = providers[provider.index]; Fill(); });
-            key.RegisterCallback<FocusOutEvent>(_ => StoryAssistantSettings.SetKey(StoryAssistantSettings.Current, key.value));
-            model.RegisterCallback<FocusOutEvent>(_ => StoryAssistantSettings.SetModel(StoryAssistantSettings.Current, model.value));
-            address.RegisterCallback<FocusOutEvent>(_ => StoryAssistantSettings.Address = address.value);
+            // Otras formas (clave de API, Ollama): los mismos controles que «Conectar mi IA».
+            Liyodev.Assistant.AssistantSettingsUI.BuildSection(assistant);
 
             // Outside tools
             var outside = Section(scroll, StoryText.T("Herramientas externas", "Outside tools"));

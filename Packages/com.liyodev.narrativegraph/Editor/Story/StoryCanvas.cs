@@ -288,7 +288,7 @@ namespace NarrativeGraphEditor.Story
 
         public int CountMatches() => _search.Length == 0 ? _cardOf.Count : _matches.Count;
 
-        bool Matches(NarrativeNode n) => _search.Length == 0 || _matches.Contains(n);
+        public bool Matches(NarrativeNode n) => _search.Length == 0 || _matches.Contains(n);
 
         /// La búsqueda mira el resumen de cada paso (caro de montar): se resuelve una vez al
         /// escribir o al rehacer el lienzo, no en cada resaltado (selección, arrastre, Play).
@@ -296,9 +296,8 @@ namespace NarrativeGraphEditor.Story
         {
             _matches.Clear();
             if (_search.Length == 0) return;
-            bool Has(string s) => !string.IsNullOrEmpty(s) && s.IndexOf(_search, StringComparison.OrdinalIgnoreCase) >= 0;
             foreach (var n in _cardOf.Keys)
-                if (Has(n.displayTitle) || Has(NarrativeNodeCatalog.TitleOf(n)) || Has(_structure.Number(n)) || Has(StepSummary.For(n, 400)))
+                if (StorySearch.Matches(n, _search, _structure.Number(n)))
                     _matches.Add(n);
         }
 

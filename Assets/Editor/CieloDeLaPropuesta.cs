@@ -53,6 +53,13 @@ public static class CieloDeLaPropuesta
         DayNightCycle.Instance?.StartRain(120f, immediate: true);
     }
 
+    [MenuItem("El Sendero/Cielo/Taller/Probar lluvia que llega (Play)", priority = 30)]
+    static void ProbarLluviaQueLlega()
+    {
+        if (!Application.isPlaying) return;
+        DayNightCycle.Instance?.StartRain(120f);
+    }
+
     [MenuItem("El Sendero/Cielo/Taller/Probar tormenta (Play)", priority = 31)]
     static void ProbarTormenta()
     {
@@ -75,6 +82,79 @@ public static class CieloDeLaPropuesta
         var jugador = PlayerService.Player;
         Vector3 direccion = DayNightCycle.Instance != null ? DayNightCycle.Instance.DireccionDelViento : Vector3.right;
         VfxDeClima.CrearViento(jugador != null ? jugador.transform : null, direccion);
+    }
+
+    // Prueba de color en Play, sin guardar nada: cambia solo el cielo que está en pantalla.
+    [MenuItem("El Sendero/Cielo/Taller/Probar cielo de dibujo (Play)", priority = 41)]
+    static void ProbarCieloDeDibujo()
+    {
+        var cielo = RenderSettings.skybox;
+        if (!Application.isPlaying || cielo == null || !cielo.HasProperty("_ColorCenit")) return;
+        cielo.SetColor("_ColorCenit", new Color(0.10f, 0.36f, 0.88f));
+        cielo.SetColor("_ColorHorizonte", new Color(0.55f, 0.82f, 0.96f));
+        cielo.SetColor("_ColorDeBrumaDelHorizonte", new Color(0.70f, 0.88f, 0.97f));
+        cielo.SetFloat("_CaidaDelHorizonte", 0.45f);
+        cielo.SetFloat("_GrosorDeLaBruma", 0.05f);
+        cielo.SetColor("_ColorDeNubes", new Color(1.0f, 0.99f, 0.96f));
+        cielo.SetColor("_ColorDeNubesEnSombra", new Color(0.66f, 0.66f, 0.86f));
+        cielo.SetFloat("_NubosidadBase", 0.5f);
+        cielo.SetFloat("_EscalaDeNubes", 1.1f);
+        cielo.SetFloat("_NubesDeDibujo", 1f);
+    }
+
+    [MenuItem("El Sendero/Cielo/Taller/Franja: amanecer (Play)", priority = 50)] static void IrAmanecer() => IrAFranja(DayNightCycle.TimeOfDay.Morning);
+    [MenuItem("El Sendero/Cielo/Taller/Franja: día (Play)", priority = 51)] static void IrDia() => IrAFranja(DayNightCycle.TimeOfDay.AfterNoon);
+    [MenuItem("El Sendero/Cielo/Taller/Franja: atardecer (Play)", priority = 52)] static void IrAtardecer() => IrAFranja(DayNightCycle.TimeOfDay.Sunset);
+    [MenuItem("El Sendero/Cielo/Taller/Franja: noche (Play)", priority = 53)] static void IrNoche() => IrAFranja(DayNightCycle.TimeOfDay.Night);
+
+    static void IrAFranja(DayNightCycle.TimeOfDay franja)
+    {
+        if (Application.isPlaying) DayNightCycle.Instance?.SetTimeOfDay(franja, immediate: true);
+    }
+
+    [MenuItem("El Sendero/Cielo/Taller/Informe del cielo (Play)", priority = 40)]
+    static void InformeDelCielo()
+    {
+        var ciclo = DayNightCycle.Instance;
+        var cielo = RenderSettings.skybox;
+        var sb = new System.Text.StringBuilder("[Cielo] Informe: ");
+        if (ciclo != null)
+            sb.Append($"activo={ciclo.isActiveAndEnabled} lluvia={ciclo.IsRaining}/{ciclo.LluviaPedida} escala={Time.timeScale} franja={ciclo.CurrentTimeOfDay} nublado={ciclo.Nublado:0.00} noche={ciclo.PesoDeNoche:0.00} sol={ciclo.DireccionDelSol} ");
+        sb.Append($"skybox={(cielo != null ? cielo.name + " (" + cielo.shader.name + ")" : "ninguno")} ");
+        if (cielo != null)
+            foreach (var p in new[] { "_ColorCenit", "_ColorHorizonte", "_ColorDeBrumaDelHorizonte", "_ColorDeNubes", "_ColorDeNubesEnSombra" })
+                if (cielo.HasProperty(p)) sb.Append($"{p}={cielo.GetColor(p)} ");
+        if (cielo != null)
+            foreach (var p in new[] { "_NubosidadBase", "_Nubosidad", "_NubesDeDibujo", "_EscalaDeNubes", "_GrosorDeLaBruma" })
+                if (cielo.HasProperty(p)) sb.Append($"{p}={cielo.GetFloat(p):0.00} ");
+        sb.Append($"niebla={RenderSettings.fog} {RenderSettings.fogMode} dens={RenderSettings.fogDensity:0.0000} color={RenderSettings.fogColor}");
+        foreach (var v in Object.FindObjectsByType<UnityEngine.Rendering.Volume>())
+        {
+            if (!v.isActiveAndEnabled || v.sharedProfile == null) continue;
+            sb.Append($"\n  volumen {v.name} global={v.isGlobal} peso={v.weight:0.00} prioridad={v.priority} perfil={v.sharedProfile.name}:");
+            foreach (var c in v.sharedProfile.components) if (c.active) sb.Append(" " + c.GetType().Name);
+        }
+        var ajustes = UnityEngine.Rendering.VolumeManager.instance.stack?.GetComponent<UnityEngine.Rendering.Universal.ColorAdjustments>();
+        if (ajustes != null) sb.Append($"\n  pila: exposicion={ajustes.postExposure.value:0.00} contraste={ajustes.contrast.value:0} saturacion={ajustes.saturation.value:0} filtro={ajustes.colorFilter.value}");
+        var tono = UnityEngine.Rendering.VolumeManager.instance.stack?.GetComponent<UnityEngine.Rendering.Universal.Tonemapping>();
+        if (tono != null) sb.Append($" tonemapping={tono.mode.value}");
+        var enUso = ciclo != null ? ciclo.SkyboxEnUso : null;
+        var asset = AssetDatabase.LoadAssetAtPath<Material>(CarpetaCielo + "Cielo_Dia.mat");
+        if (enUso != null && asset != null)
+        {
+            sb.Append($"\n  diferencias {enUso.name} vs Cielo_Dia (keywords: {string.Join(",", enUso.shaderKeywords)} / {string.Join(",", asset.shaderKeywords)}):");
+            var sh = enUso.shader;
+            for (int i = 0; i < sh.GetPropertyCount(); i++)
+            {
+                string n = sh.GetPropertyName(i);
+                var t = sh.GetPropertyType(i);
+                string a1 = t == UnityEngine.Rendering.ShaderPropertyType.Color ? enUso.GetColor(n).ToString() : t == UnityEngine.Rendering.ShaderPropertyType.Float || t == UnityEngine.Rendering.ShaderPropertyType.Range ? enUso.GetFloat(n).ToString("0.000") : "";
+                string a2 = t == UnityEngine.Rendering.ShaderPropertyType.Color ? asset.GetColor(n).ToString() : t == UnityEngine.Rendering.ShaderPropertyType.Float || t == UnityEngine.Rendering.ShaderPropertyType.Range ? asset.GetFloat(n).ToString("0.000") : "";
+                if (a1 != a2) sb.Append($" {n}: {a1} / {a2};");
+            }
+        }
+        Debug.Log(sb.ToString());
+        System.IO.File.AppendAllText("Guiones/_ordenes/cielo.log", System.DateTime.Now.ToString("HH:mm:ss ") + sb + "\n");
     }
 
     [MenuItem("El Sendero/Cielo/Volver al cielo de antes", priority = 1)]
@@ -113,43 +193,64 @@ public static class CieloDeLaPropuesta
         EditorUtility.SetDirty(mat);
     }
 
+    // Paleta de cada cielo (aprobada por Raúl el 18 nov: azul vivo, nubes grandes, cuerpo blanco y panza lila).
+    // Cielo == null deja el degradado del material como está y solo toca las nubes.
+    sealed class Paleta
+    {
+        public string ruta; public float cobertura, escala = 1.1f, velocidad = 0.020f;
+        public Color nubes, sombra, suelo;
+        public Color? cenit, horizonte, bruma; public float caida = 0.45f, grosorDeBruma = 0.05f;
+    }
+
+    static readonly Paleta[] Paletas =
+    {
+        new Paleta { ruta = CarpetaCielo + "Cielo_Dia.mat", cobertura = 0.50f, nubes = new Color(1f, 0.99f, 0.96f), sombra = new Color(0.66f, 0.66f, 0.86f), suelo = new Color(0.55f, 0.70f, 0.82f),
+            cenit = new Color(0.10f, 0.36f, 0.88f), horizonte = new Color(0.55f, 0.82f, 0.96f), bruma = new Color(0.70f, 0.88f, 0.97f) },
+        new Paleta { ruta = CarpetaCielo + "Cielo_Amanecer.mat", cobertura = 0.42f, nubes = new Color(1f, 0.86f, 0.78f), sombra = new Color(0.62f, 0.52f, 0.72f), suelo = new Color(0.66f, 0.60f, 0.68f),
+            cenit = new Color(0.30f, 0.45f, 0.80f), horizonte = new Color(1f, 0.72f, 0.55f), bruma = new Color(1f, 0.76f, 0.60f) },
+        new Paleta { ruta = CarpetaCielo + "Cielo_Atardecer.mat", cobertura = 0.45f, nubes = new Color(1f, 0.72f, 0.52f), sombra = new Color(0.52f, 0.36f, 0.56f), suelo = new Color(0.52f, 0.42f, 0.50f),
+            cenit = new Color(0.22f, 0.24f, 0.55f), horizonte = new Color(1f, 0.55f, 0.30f), bruma = new Color(1f, 0.60f, 0.36f) },
+        new Paleta { ruta = CarpetaCielo + "Cielo_Noche.mat", cobertura = 0.30f, velocidad = 0.018f, nubes = new Color(0.22f, 0.25f, 0.36f), sombra = new Color(0.08f, 0.09f, 0.16f), suelo = new Color(0.10f, 0.12f, 0.22f),
+            cenit = new Color(0.02f, 0.03f, 0.09f), horizonte = new Color(0.08f, 0.10f, 0.22f), bruma = new Color(0.08f, 0.10f, 0.22f) },
+        new Paleta { ruta = CarpetaCielo + "Cielo_Prologo.mat", cobertura = 0.50f, nubes = new Color(1f, 0.99f, 0.96f), sombra = new Color(0.66f, 0.66f, 0.86f), suelo = new Color(0.55f, 0.70f, 0.82f),
+            cenit = new Color(0.10f, 0.36f, 0.88f), horizonte = new Color(0.55f, 0.82f, 0.96f), bruma = new Color(0.70f, 0.88f, 0.97f) },
+        new Paleta { ruta = CarpetaCielo + "Cielo_Chuchelandia.mat", cobertura = 0.38f, escala = 1.4f, nubes = new Color(1.05f, 0.98f, 1f), sombra = new Color(0.96f, 0.74f, 0.88f), suelo = new Color(0.78f, 0.66f, 0.82f) },
+        new Paleta { ruta = CarpetaMenu + "CieloDiaMenu.mat", cobertura = 0.50f, nubes = new Color(1f, 0.99f, 0.96f), sombra = new Color(0.66f, 0.66f, 0.86f), suelo = new Color(0.55f, 0.70f, 0.82f),
+            cenit = new Color(0.10f, 0.36f, 0.88f), horizonte = new Color(0.55f, 0.82f, 0.96f), bruma = new Color(0.70f, 0.88f, 0.97f) },
+        new Paleta { ruta = CarpetaMenu + "CieloNocheMenu.mat", cobertura = 0.30f, velocidad = 0.018f, nubes = new Color(0.22f, 0.25f, 0.36f), sombra = new Color(0.08f, 0.09f, 0.16f), suelo = new Color(0.10f, 0.12f, 0.22f),
+            cenit = new Color(0.02f, 0.03f, 0.09f), horizonte = new Color(0.08f, 0.10f, 0.22f), bruma = new Color(0.08f, 0.10f, 0.22f) },
+    };
+
     static int AplicarMateriales()
     {
         int n = 0;
-        n += Aplicar(CarpetaCielo + "Cielo_Dia.mat",
-            0.46f, new Color(1f, 0.98f, 0.93f), new Color(0.62f, 0.66f, 0.90f), new Color(0.55f, 0.70f, 0.82f), 2.6f, 0.020f);
-        n += Aplicar(CarpetaCielo + "Cielo_Amanecer.mat",
-            0.40f, new Color(1f, 0.92f, 0.84f), new Color(0.70f, 0.58f, 0.74f), new Color(0.66f, 0.60f, 0.68f), 2.8f, 0.020f);
-        n += Aplicar(CarpetaCielo + "Cielo_Atardecer.mat",
-            0.42f, new Color(1f, 0.78f, 0.60f), new Color(0.58f, 0.42f, 0.60f), new Color(0.52f, 0.42f, 0.50f), 2.8f, 0.020f);
-        n += Aplicar(CarpetaCielo + "Cielo_Noche.mat",
-            0.32f, new Color(0.30f, 0.34f, 0.50f), new Color(0.12f, 0.14f, 0.26f), new Color(0.10f, 0.12f, 0.22f), 2.6f, 0.018f);
-        n += Aplicar(CarpetaCielo + "Cielo_Chuchelandia.mat",
-            0.44f, new Color(1.05f, 0.98f, 1f), new Color(0.82f, 0.64f, 0.86f), new Color(0.78f, 0.66f, 0.82f), 2.4f, 0.020f);
-        n += Aplicar(CarpetaCielo + "Cielo_Prologo.mat",
-            0.44f, new Color(1f, 0.98f, 0.92f), new Color(0.64f, 0.64f, 0.88f), new Color(0.55f, 0.70f, 0.82f), 2.6f, 0.020f);
-        n += Aplicar(CarpetaMenu + "CieloDiaMenu.mat",
-            0.46f, new Color(1f, 0.98f, 0.93f), new Color(0.62f, 0.66f, 0.90f), new Color(0.55f, 0.70f, 0.82f), 2.6f, 0.020f);
-        n += Aplicar(CarpetaMenu + "CieloNocheMenu.mat",
-            0.32f, new Color(0.30f, 0.34f, 0.50f), new Color(0.12f, 0.14f, 0.26f), new Color(0.10f, 0.12f, 0.22f), 2.6f, 0.018f);
+        foreach (var paleta in Paletas) n += Aplicar(paleta);
         return n;
     }
 
-    static int Aplicar(string ruta, float cobertura, Color luz, Color sombra, Color suelo, float escala, float velocidad)
+    static int Aplicar(Paleta p)
     {
-        var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+        var mat = AssetDatabase.LoadAssetAtPath<Material>(p.ruta);
         if (mat == null)
         {
-            Debug.LogWarning("[Cielo] No encuentro " + ruta);
+            Debug.LogWarning("[Cielo] No encuentro " + p.ruta);
             return 0;
         }
-        mat.SetFloat("_NubosidadBase", cobertura);
-        mat.SetColor("_ColorDeNubes", luz);
-        mat.SetColor("_ColorDeNubesEnSombra", sombra);
-        mat.SetColor("_ColorSuelo", suelo);
-        mat.SetFloat("_EscalaDeNubes", escala);
-        mat.SetFloat("_VelocidadDeNubes", velocidad);
+        mat.SetFloat("_NubosidadBase", p.cobertura);
+        mat.SetColor("_ColorDeNubes", p.nubes);
+        mat.SetColor("_ColorDeNubesEnSombra", p.sombra);
+        mat.SetColor("_ColorSuelo", p.suelo);
+        mat.SetFloat("_EscalaDeNubes", p.escala);
+        mat.SetFloat("_VelocidadDeNubes", p.velocidad);
         mat.SetFloat("_NubesDeDibujo", 1f);
+        if (p.cenit.HasValue)
+        {
+            mat.SetColor("_ColorCenit", p.cenit.Value);
+            mat.SetColor("_ColorHorizonte", p.horizonte.Value);
+            mat.SetColor("_ColorDeBrumaDelHorizonte", p.bruma.Value);
+            mat.SetFloat("_CaidaDelHorizonte", p.caida);
+            mat.SetFloat("_GrosorDeLaBruma", p.grosorDeBruma);
+        }
         EditorUtility.SetDirty(mat);
         return 1;
     }
@@ -185,8 +286,8 @@ public static class CieloDeLaPropuesta
             cambios += Fijar(so, "rainLightIntensityMultiplier", p => p.floatValue = 0.75f);
             cambios += Fijar(so, "rainFogDensityMultiplier", p => p.floatValue = 1.6f);
             cambios += Fijar(so, "rainMinLightIntensity", p => p.floatValue = 0.5f);
-            cambios += Fijar(so, "oscurecerNubesDeLluvia", p => p.floatValue = 0.85f);
-            cambios += Fijar(so, "oscurecerNubesDeTormenta", p => p.floatValue = 0.62f);
+            cambios += Fijar(so, "oscurecerNubesDeLluvia", p => p.floatValue = 0.32f);
+            cambios += Fijar(so, "oscurecerNubesDeTormenta", p => p.floatValue = 0.22f);
             cambios += Fijar(so, "tinteDeSombraDeNubes", p => p.colorValue = new Color(0.62f, 0.66f, 0.90f, 1f));
             cambios += Fijar(so, "nieblaDelHorizonte", p => p.floatValue = 0.7f);
             cambios += Fijar(so, "tinteDeLuzDeLluvia", p => p.colorValue = new Color(0.78f, 0.84f, 0.96f, 1f));

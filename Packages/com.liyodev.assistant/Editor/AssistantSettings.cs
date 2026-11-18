@@ -7,7 +7,32 @@ namespace Liyodev.Assistant
     /// herramientas: una sola clave, un solo modelo, un solo sitio donde cambiarlo.
     public static class AssistantSettings
     {
-        public enum Provider { Anthropic, OpenAI, Gemini, Compatible, OpenCode, Ollama }
+        /// Los tres últimos usan la cuenta del usuario (su plan de ChatGPT, Google o Claude) a través
+        /// del programa de terminal de cada uno, sin clave de API. Van al final para no cambiar el
+        /// número guardado de los demás.
+        public enum Provider { Anthropic, OpenAI, Gemini, Compatible, OpenCode, Ollama, ChatGptAccount, GoogleAccount, ClaudeAccount }
+
+        /// True si el servicio es la cuenta del usuario por su programa de terminal.
+        public static bool IsAccount(Provider p) =>
+            p == Provider.ChatGptAccount || p == Provider.GoogleAccount || p == Provider.ClaudeAccount;
+
+        /// El programa que se lanza para una cuenta (el nombre, o la ruta entera si no está en el PATH).
+        public static string Command(Provider p)
+        {
+            string guardado = GetString(p + ".Command", string.Empty);
+            return string.IsNullOrWhiteSpace(guardado) ? AssistantCli.DefaultCommand(p) : guardado;
+        }
+
+        /// True si la última prueba de «Conectar mi IA» con esa cuenta contestó.
+        public static bool Verified(Provider p) => GetBool(p + ".Verified", false);
+
+        public static void SetVerified(Provider p, bool verified) => SetBool(p + ".Verified", verified);
+
+        public static void SetCommand(Provider p, string command)
+        {
+            SetString(p + ".Command", command?.Trim() ?? string.Empty);
+            Changed?.Invoke();
+        }
 
         /// La API de inferencia de OpenCode habla el formato de OpenAI.
         public const string OpenCodeBaseUrl = "https://opencode.ai/inference/openai/v1";
@@ -63,6 +88,9 @@ namespace Liyodev.Assistant
             Provider.Gemini => "Google (Gemini)",
             Provider.OpenCode => "OpenCode (inference)",
             Provider.Ollama => "Ollama (local, gratis)",
+            Provider.ChatGptAccount => AssistantText.T("Mi cuenta de ChatGPT", "My ChatGPT account"),
+            Provider.GoogleAccount => AssistantText.T("Mi cuenta de Google (Gemini)", "My Google account (Gemini)"),
+            Provider.ClaudeAccount => AssistantText.T("Mi cuenta de Claude", "My Claude account"),
             _ => AssistantText.T("Compatible con OpenAI (Ollama, LM Studio, OpenRouter…)",
                                   "OpenAI-compatible (Ollama, LM Studio, OpenRouter…)"),
         };
@@ -74,6 +102,8 @@ namespace Liyodev.Assistant
             Provider.Gemini => "gemini-2.5-flash",
             Provider.OpenCode => "deepseek-v4.1-flash",
             Provider.Ollama => "qwen3:8b",
+            // Vacío: el modelo que tenga elegido el programa de la cuenta.
+            Provider.ChatGptAccount or Provider.GoogleAccount or Provider.ClaudeAccount => string.Empty,
             _ => "llama3.1",
         };
 
@@ -82,6 +112,7 @@ namespace Liyodev.Assistant
         {
             Provider.Compatible => !string.IsNullOrEmpty(Address),
             Provider.Ollama => true,
+            Provider.ChatGptAccount or Provider.GoogleAccount or Provider.ClaudeAccount => true,
             _ => !string.IsNullOrEmpty(Key(Current)),
         };
 

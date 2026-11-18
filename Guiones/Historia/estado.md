@@ -1,23 +1,23 @@
-# Estado de la prueba (16:38:12)
+# Estado de la prueba (20:43:03)
 
 ## Órdenes
-· foto tr_18 → C:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas\Guiones\Historia\fotos\tr_18.png
+· estado → ok
 
-Fotograma 2571 · t=88,6 s · segundo plano True
-Play: True · escenas: MainWorld, Start, WillHouse, Prologo_Valle
+Fotograma 1 · t=10,8 s · segundo plano True
+Play: True · escenas: MainWorld, Start
 
 ## Grafos
-- Cap1: 3.- Espera fin del sueno (PROLOGUE_DONE)
-- Secundary: (nada) · ramas: Recibo Algas | El mareo de Roberto | Misión buscar botas Rudolfo | Espero a completar la misión | La plaga de arañas (Guardia del Bosque) | El remedio de Bárbara (Tendera) | El remedio contra la resaca (Tabernera) | Pociones para la abuela (Manuel) | Suministros para el hechizo (Nora) | Hablar con Renard | Erika ya te ha entrenado
-- Cap2: 1.- Esperar fin del Cap. 1
+- Cap1: (nada)
+- Secundary: (nada)
+- Cap2: (nada)
 - Sendero: (nada)
 - Chuchelandia: (nada)
-- Cap3: Tras el Cap. 2 (CH_Cap2_BACK_1)
-- Cap4: Tras el Cap. 3 (CH_Cap3_BACK_1)
+- Cap3: (nada)
+- Cap4: (nada)
 
-Jugador: (117.5, 0.8, 0.5)
+Jugador: (-11.0, 39.5, -45.8)
 Diálogo abierto: False
-Cinemáticas en curso: SEQ_Prologo_UltimaNoche
+Cinemáticas en curso: 
 Grupo: 
 
 ## Actores
@@ -30,7 +30,10 @@ Grupo:
 - NPC_GuardiaCruce2: no está
 - NPC_Contrabandista1: no está
 - NPC_Contrabandista2: no está
-- NPC_Eldran: (-1.9, 26.3, -142.8) · fuera del grupo · agente apagado
-- NPC_Oliver: (6.0, 26.3, -143.2) · fuera del grupo · agente apagado
+- NPC_Eldran: no está
+- NPC_Oliver: no está
 
 ## Consola (avisos, errores y pasos del grafo)
+- Log: [WorldBootstrap] GameBootService no disponible aún - Esperando por si Start se carga aditivamente...
+- Warning: BoxCollider does not support negative scale or size.
+- Log: [WorldBootstrap] GameBootService disponible después de 1 frame(s) - Inicializando normalmente

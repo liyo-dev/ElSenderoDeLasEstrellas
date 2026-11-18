@@ -7,14 +7,13 @@
   "author": { "name": "liyodev" },
   "dependencies": {
     "com.unity.ugui": "2.0.0",
-    "com.unity.timeline": "1.8.7",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.liyodev.assistant": "0.1.0"
   },
   "samples": [
     {
       "displayName": "El faro",
-      "description": "Un capítulo corto con su escena: diálogos, una misión, un objeto, una decisión y dos puntos de arranque. Tras importarlo: Tools › Narrative Graph › Ejemplos › Montar «El faro».",
+      "description": "Un capítulo corto con su escena: diálogos, una misión, un objeto, una decisión y dos puntos de arranque. Tras importarlo: Liyodev › Grafo narrativo › Ejemplos › Montar «El faro».",
       "path": "Samples~/El faro"
     }
   ]

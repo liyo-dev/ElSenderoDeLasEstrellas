@@ -5309,7 +5309,7 @@ no cómo empieza. Probado el 17 nov 2026 con las dos notas reales de Raúl en `C
 storyboard lo pone detrás de quien tira (`CargaArrastrada.PoseDetrasDe`); las dos se cierran y volver a
 mandar el mismo fichero responde «2 ya aplicada(s) antes».
 
-**El timeline (de momento solo lectura):** una fila por *cosa*, no por detalle — **Cámara** (un clip por
+**El timeline (retirado de la Mesa en INC-1291; las pistas siguen en el puente para el sonido del animatic):** una fila por *cosa*, no por detalle — **Cámara** (un clip por
 plano), **Voz · \<personaje\>** (frases y voces fuera de escena), **Movimiento · \<personaje\>** (tramos de
 `posiciones` y deslizamientos), **Animación · \<personaje\>** (`animacion`: el estado que hace, p. ej.
 `BrazosCruzados`, o `habla`/`calla`/`reposo`), **Cara · \<personaje\>** (cambios de emoción, en clips
@@ -5321,6 +5321,32 @@ INC-1256, `LineaHorneada.linea`; los horneados viejos la tienen a 0 hasta rehorn
 hará que arrastrar un clip sea reescribir el `desde @marca+X` del `.guion.txt` y hornear, nunca un segundo
 formato. Las voces fuera de escena (`SayBeat` con marca) cuentan como frases: subtítulo con su nombre, voz
 en el play y elemento propio en la página anotable.
+
+**El reproductor, dentro (INC-1288):** el visor tiene dos fuentes. **En vivo** (botón del transporte,
+encendido por defecto; se guarda por usuario): al reproducir, arrastrar la barra o pinchar el timeline, la
+mesa pide al puente una `ICinematicLiveView` (`ICinematicsLivePreview.AbrirVistaEnVivo`), que abre la
+escena del guion, coloca actores, poses y cámara en el segundo del cabezal y la rinde en una
+`RenderTexture` (como mucho 30 veces por segundo al reproducir; solo cuando el cabezal se mueve). Elegir
+una cinemática no abre su escena: hasta que se toca el transporte se ven los **fotogramas del
+storyboard**, la otra fuente. En El Sendero la vista es `VistaEnVivoDelGuion` sobre
+`PrevizDeGuion.Sesion`, la misma sesión que saca las fotos del previz; posa también a los NPCs de la
+escena con el modo de animación del Editor, que lo deshace al parar. La escena **nunca se guarda tocada**:
+la sesión se suelta sola antes de guardar una escena (`EditorSceneManager.sceneSaving`) y la mesa la
+cierra al entrar en Play, al cambiar de cinemática y al cerrarse; la escena que abrió la sesión se cierra
+solo si nadie la ha cambiado. **En Play**, si el puente implementa `ICinematicsPlayControl` y rueda una
+cinemática, la mesa la elige, el cabezal la sigue y play/pausa, la barra y los saltos de plano mandan
+sobre la de verdad (`ReproductorDeGuion.PedirSalto`/`Pausar`/`Reanudar`); la imagen está en la ventana
+Game y las voces suenan en el juego, no en la mesa.
+
+**La disposición (INC-1290):** la ventana es un `IMGUIContainer` con la mesa y, debajo, la **caja de la IA**
+(`AssistantView` del asistente compartido con el contexto `cinematics`, plegable). Barra: desplegable de
+cinemáticas por escena, Guion, Herramientas, Rodar en Play. **Izquierda:** planos de arriba abajo.
+**Centro:** visor, transporte (planos y frases) y avisos. **Derecha, marcas para la IA:** fichas del plano (sobre
+quién), herramienta de la imagen (Ver, Señalar, Dirección, Dibujar), nota en el segundo del cabezal y la
+lista del plano. Cada marca es un `CinemaTrazo` con `tipo` (`punto`, `flecha`, `trazo`) y `t`, en
+coordenadas de la imagen; el estado para la IA las describe con `CinemaNotaPizarra.Describir`. La
+botonera de antes pasa a la barra y al menú Herramientas; la lista de cinemáticas sale a pantalla entera
+cuando no hay ninguna elegida.
 
 **Lo que aún no hace:** el Studio web con flipbook exportable (F1–F5). El motor de guiones sigue viviendo
 en `Assets/Editor/Guion`: moverlo al paquete, con sus `[MovedFrom]`, es la siguiente tanda de F0.

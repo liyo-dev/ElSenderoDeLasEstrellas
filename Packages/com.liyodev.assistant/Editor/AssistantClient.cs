@@ -24,6 +24,13 @@ namespace Liyodev.Assistant
             Action<string> onAnswer, Action<string> onError, string openCodeSessionId = null)
         {
             var p = AssistantSettings.Current;
+            turns = Recientes(turns);
+            if (AssistantSettings.IsAccount(p))
+            {
+                AssistantCli.Send(p, system, turns, onAnswer, onError);
+                return;
+            }
+
             string key = AssistantSettings.Key(p);
             string model = AssistantSettings.Model(p);
             UnityWebRequest request;
@@ -97,6 +104,21 @@ namespace Liyodev.Assistant
                 catch (Exception e) { onError?.Invoke(e.Message); }
                 finally { request.Dispose(); }
             };
+        }
+
+        /// Cuántos turnos de la conversación se mandan. El estado y el manual ya van en las
+        /// instrucciones de cada petición; los turnos viejos solo gastan.
+        public const int TurnosEnviados = 8;
+
+        static IReadOnlyList<AssistantTurn> Recientes(IReadOnlyList<AssistantTurn> turns)
+        {
+            if (turns == null || turns.Count <= TurnosEnviados) return turns;
+            var recientes = new List<AssistantTurn>(TurnosEnviados);
+            int desde = turns.Count - TurnosEnviados;
+            // Que empiece por un turno del usuario, como piden las API.
+            if (!turns[desde].FromUser && desde + 1 < turns.Count) desde++;
+            for (int i = desde; i < turns.Count; i++) recientes.Add(turns[i]);
+            return recientes;
         }
 
         static string ReadAnswer(AssistantSettings.Provider p, JObject answer)

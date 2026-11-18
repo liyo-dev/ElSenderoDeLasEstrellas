@@ -12,6 +12,7 @@
 #include "Assets/Shaders/Dibujo/DibujoLuz.hlsl"
 
 half _DibujoTexturaDelSuelo;
+half _DibujoDetalleDelSuelo;
 // Nieve de las cumbres (AspectoDeDibujo): x = cota desde la que hay nieve, y = cuánto sube y baja el borde.
 float4 _DibujoNieve;
 half4 _DibujoColorDeLaNieve;
@@ -150,6 +151,53 @@ float CuantoDeLlano(half3 normal)
 // entre hierba, tierra y piedra salgan con borde de pincel y no en línea de cuadrícula. En las
 // paredes mengua: allí un texel del mapa ocupa muchos metros de alto y el borde saldría en dientes
 // largos que cuelgan. En lo llano es el mismo de siempre.
+float2 AzarDelSuelo2(float2 p) { return frac(sin(float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)))) * 43758.5453); }
+
+// Detalle pintado del suelo: trazos cortos y piedrecitas sueltas, en una rejilla del mundo con un punto al
+// azar por celda (miro también las vecinas para que nada se corte en el borde de la celda). Todo en
+// unidades de celda; «ancho» es el antialias en esas mismas unidades.
+void DetalleDeUnaCapa(float2 xz, float celda, float largo, float grueso, float ancho, inout half trazo, inout half piedra)
+{
+    float2 q = xz / celda, c = floor(q), f = frac(q);
+    [unroll] for (int j = -1; j <= 1; j++)
+    [unroll] for (int i = -1; i <= 1; i++)
+    {
+        float2 r = AzarDelSuelo2(c + float2(i, j));
+        float2 d = f - (float2(i, j) + 0.15 + 0.7 * r);
+        float tipo = frac(r.x * 7.31 + r.y * 3.17);
+        if (tipo < 0.6)
+        {
+            float angulo = r.x * 6.2832 + r.y * 2.0;
+            float2 dir = float2(cos(angulo), sin(angulo));
+            float a = clamp(dot(d, dir), -largo, largo);
+            float dist = length(d - dir * a);
+            trazo = max(trazo, 1 - smoothstep(grueso - ancho, grueso + ancho, dist));
+        }
+        else if (tipo < 0.85)
+        {
+            float radio = grueso * (1.6 + 1.2 * r.y);
+            piedra = max(piedra, 1 - smoothstep(radio - ancho, radio + ancho, length(d * float2(1, 1.3))));
+        }
+    }
+}
+
+// Que el suelo se lea como suelo y no como una mancha: la tierra lleva marcas y piedrecitas; la hierba,
+// trazos de brizna. Solo en llano y de cerca (de lejos se volverían ruido). Fuerza en AspectoDeDibujo.
+half3 DetalleDelSuelo(half3 albedo, float3 posicion, half llano)
+{
+    float distancia = distance(posicion, _WorldSpaceCameraPos);
+    half fuerza = (half)((1 - smoothstep(16.0, 38.0, distancia)) * llano) * _DibujoDetalleDelSuelo;
+    if (fuerza <= 0.001h) return albedo;
+    half tierra = saturate((albedo.r - albedo.g) * 6.0h + 0.15h);
+    half trazo = 0, piedra = 0;
+    float ancho = max(fwidth(posicion.x) + fwidth(posicion.z), 0.002);
+    DetalleDeUnaCapa(posicion.xz, 0.9, 0.24, 0.035, ancho / 0.9, trazo, piedra);
+    DetalleDeUnaCapa(posicion.xz + 17.3, 0.5, 0.2, 0.05, ancho / 0.5, trazo, piedra);
+    albedo = lerp(albedo, albedo * 0.72h, trazo * fuerza * lerp(0.55h, 1.0h, tierra));
+    albedo = lerp(albedo, albedo * 1.2h + 0.03h, piedra * fuerza * tierra);
+    return albedo;
+}
+
 float2 DesplazamientoDePincel(float2 xz, float llano)
 {
     float2 n = float2(RuidoDelSuelo(xz * 0.3) * 0.65 + RuidoDelSuelo(xz * 1.1 + 5.3) * 0.35,
@@ -217,6 +265,7 @@ void FragmentoTerrenoDeDibujo(
     #endif
     half3 albedo = lerp(ColorMedioDeLasCapas(IN.uvSplat01, IN.uvSplat23, pesosDePincel),
                         TexturaDeLasCapas(IN.uvSplat01, IN.uvSplat23, pesosDePincel), cuantaTextura);
+    albedo = DetalleDelSuelo(albedo, IN.positionWS, (half)CuantoDeLlano(NormalDelTerreno(IN)));
 #endif
     half pared = CuantoDePared(NormalDelTerreno(IN), IN.positionWS);
 #ifdef TERRAIN_SPLAT_ADDPASS

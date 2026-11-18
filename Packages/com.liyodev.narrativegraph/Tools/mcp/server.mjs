@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // MCP server for Narrative Graph. It talks to the Unity editor through the local bridge
-// (Tools > Narrative Graph > Permitir herramientas externas). No dependencies: Node 18+.
+// (Liyodev > Grafo narrativo > Herramientas > Permitir herramientas externas). No dependencies: Node 18+.
 //
 // Claude Desktop / Claude Code config:
 //   { "mcpServers": { "narrative-graph": { "command": "node", "args": ["<path>/server.mjs"] } } }
@@ -85,7 +85,7 @@ rl.on("line", async (line) => {
       send({ jsonrpc: "2.0", id, result: { content: [{ type: "text", text: r.text }], isError: !r.ok } });
     } catch (e) {
       send({ jsonrpc: "2.0", id, result: {
-        content: [{ type: "text", text: "Unity is not reachable. Open the project and turn on Tools > Narrative Graph > Permitir herramientas externas. (" + e.message + ")" }],
+        content: [{ type: "text", text: "Unity is not reachable. Open the project and turn on Liyodev > Grafo narrativo > Herramientas > Permitir herramientas externas. (" + e.message + ")" }],
         isError: true } });
     }
   } else if (id !== undefined) {

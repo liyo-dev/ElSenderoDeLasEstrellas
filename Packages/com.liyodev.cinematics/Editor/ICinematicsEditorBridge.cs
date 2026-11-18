@@ -235,11 +235,41 @@ namespace Liyodev.Cinematics
         public string etiqueta;
     }
 
-    /// Un trazo libre sobre el fotograma, en coordenadas de la imagen (0..1).
+    /// Una marca sobre la imagen del plano, en coordenadas de la imagen (0..1, el (0, 0) arriba a la
+    /// izquierda): un punto señalado, una dirección (de dónde a dónde) o un dibujo a mano.
     [Serializable]
     public class CinemaTrazo
     {
+        public const string Trazo = "trazo";
+        public const string Punto = "punto";
+        public const string Flecha = "flecha";
+
+        [Tooltip("«trazo» (dibujo a mano), «punto» (señalado) o «flecha» (de dónde a dónde).")]
+        public string tipo = Trazo;
+        [Tooltip("Segundo en el que se hizo la marca (-1 = todo el plano).")]
+        public float t = -1f;
         public List<Vector2> puntos = new();
+
+        /// La marca en una frase para la IA.
+        public string Describir()
+        {
+            if (puntos == null || puntos.Count == 0) return string.Empty;
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            Vector2 a = puntos[0];
+            Vector2 b = puntos[puntos.Count - 1];
+            string cuando = t >= 0f ? string.Format(ci, " en t={0:0.0}", t) : string.Empty;
+            switch (tipo)
+            {
+                case Punto:
+                    return string.Format(ci, "señala ({0:0.###}, {1:0.###}){2}", a.x, a.y, cuando);
+                case Flecha:
+                    return string.Format(ci, "dirección de ({0:0.###}, {1:0.###}) a ({2:0.###}, {3:0.###}){4}",
+                        a.x, a.y, b.x, b.y, cuando);
+                default:
+                    return string.Format(ci, "dibujo de {0} puntos de ({1:0.###}, {2:0.###}) a ({3:0.###}, {4:0.###}){5}",
+                        puntos.Count, a.x, a.y, b.x, b.y, cuando);
+            }
+        }
     }
 
     /// Una nota de la pizarra: un plano, un elemento, lo que se dice y lo que se dibuja encima.
@@ -252,6 +282,20 @@ namespace Liyodev.Cinematics
         public string texto;
         public float t = -1f;
         public List<CinemaTrazo> trazos = new();
+
+        /// La nota entera para la IA: el texto y cada marca (señalado, dirección, dibujo) con su segundo.
+        public string Describir()
+        {
+            var partes = new List<string>();
+            if (!string.IsNullOrEmpty(texto)) partes.Add(texto);
+            if (trazos != null)
+                foreach (var trazo in trazos)
+                {
+                    string marca = trazo?.Describir();
+                    if (!string.IsNullOrEmpty(marca)) partes.Add(marca);
+                }
+            return string.Join(" · ", partes);
+        }
 
         /// Lo que dice la nota: el texto o, si es solo un dibujo, lo que dibuja. Así una nota de la
         /// pizarra se puede encargar y cerrar con la misma huella que las de la página.

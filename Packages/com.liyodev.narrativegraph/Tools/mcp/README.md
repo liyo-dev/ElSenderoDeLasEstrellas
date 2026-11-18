@@ -3,7 +3,7 @@
 Lets an assistant that speaks MCP (Claude Desktop, Claude Code, other clients) read and edit the
 graphs of the Unity project that is open.
 
-1. In Unity: Tools › Narrative Graph › Permitir herramientas externas (puerto local).
+1. In Unity: Liyodev › Grafo narrativo › Herramientas › Permitir herramientas externas (puerto local).
    The editor listens on http://127.0.0.1:47821, only on this computer.
 2. Add the server to your client (Node 18 or newer, no install needed):
 

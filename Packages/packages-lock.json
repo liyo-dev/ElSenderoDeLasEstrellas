@@ -23,7 +23,6 @@
       "source": "embedded",
       "dependencies": {
         "com.unity.ugui": "2.0.0",
-        "com.unity.timeline": "1.8.7",
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.liyodev.assistant": "0.1.0"
       }

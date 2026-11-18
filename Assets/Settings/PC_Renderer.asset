@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-932722753685603009
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce2e666a0193a442ab1551414ba5f7c3, type: 3}
-  m_Name: QuibliPostProcess
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    renderersAfterOpaqueAndSky: []
-    renderersBeforePostProcess:
-    - CompoundRendererFeature.PostProcess.ColorGradingRenderer, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - CompoundRendererFeature.PostProcess.StylizedDetailRenderer, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    renderersAfterPostProcess: []
 --- !u!114 &-604040157873739648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -59,9 +40,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  - {fileID: -932722753685603009}
   - {fileID: -604040157873739648}
-  m_RendererFeatureMap: ad6b866f10d7b46c3f3da5e8984d0ef38068dd3fad049ef7l
+  m_RendererFeatureMap: ad6b866f10d7b46c8068dd3fad049ef7l
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3

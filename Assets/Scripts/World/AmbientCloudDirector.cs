@@ -25,7 +25,7 @@ public class AmbientCloudDirector : MonoBehaviour
     [Header("Nubes sueltas")]
     [Tooltip("Si está apagado no pasan nubes sueltas por el cielo; la cobertura se sigue paseando e informando al sorteo de lluvia igual.")]
     [SerializeField] private bool nubesSueltasActivas = false;
-    [Tooltip("Prefabs de nube para los vuelos ambientales (recomendado: los mismos QuibliRainCloud3D_1..4 de Assets/Prefabs/VFX, o variantes 'de buen tiempo'). Cada hueco del pool elige uno al azar UNA vez en Awake y lo reutiliza siempre.")]
+    [Tooltip("Prefabs de nube para los vuelos ambientales (recomendado: los NubeDeLluvia3D_1..4 de Assets/Prefabs/VFX, o variantes 'de buen tiempo'). Cada hueco del pool elige uno al azar UNA vez en Awake y lo reutiliza siempre.")]
     [SerializeField] private GameObject[] ambientCloudPrefabs;
     [Tooltip("Nº máximo de nubes sueltas vivas a la vez. Si se necesita una nueva y el pool está lleno (todas en pleno vuelo), ese ciclo de spawn simplemente se salta.")]
     [SerializeField] private int poolSize = 6;

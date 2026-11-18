@@ -17,7 +17,8 @@ using UnityEngine.SceneManagement;
 /// RenderTexture. No es un fotograma exacto: los actores van en su pose de reposo y no se lanzan VFX
 /// ni partículas. Para juzgar encuadre, cabezas cortadas y oclusiones, sí. Ver INC-1230 y TDD § 33.4.
 ///
-/// Al terminar deja la escena como estaba: posiciones, rotaciones y objetos activos.
+/// Al terminar deja la escena como estaba: posiciones, rotaciones, poses y objetos activos. La misma
+/// <see cref="Sesion"/> sirve a la vista en vivo del Director.
 internal static class PrevizDeGuion
 {
     internal sealed class Fotograma
@@ -42,37 +43,8 @@ internal static class PrevizDeGuion
         if (guion == null) { error = "No hay guion."; return fotos; }
         if (guion.planos == null || guion.planos.Count == 0) { error = "El guion no tiene planos."; return fotos; }
 
-        string escenaNombre = EscenaDe(guion);
-        if (string.IsNullOrEmpty(escenaNombre)) { error = "El guion no dice de qué escena es."; return fotos; }
-
-        bool yaEstabaAbierta = SceneManager.GetSceneByName(escenaNombre).isLoaded;
-        Scene escena = CapturaDeEscenario.AbrirEscena(escenaNombre);
-        if (!escena.IsValid() || !escena.isLoaded)
-        {
-            error = $"No puedo abrir la escena '{escenaNombre}'.";
-            return fotos;
-        }
-
-        var originales = new Dictionary<Transform, Estado>();
-        var instanciados = new List<GameObject>();
-        var activados = new List<GameObject>();
-        var uiOculta = new List<GameObject>();
-        var actores = ResolverActores(guion, instanciados);
-        var cargas = ResolverCargas(guion, actores, escena);
-        OcultarUiDeEscena(escena, uiOculta);
-        bool modoAnimacion = false;
-        if (instanciados.Count > 0 && !AnimationMode.InAnimationMode())
-        {
-            AnimationMode.StartAnimationMode();
-            modoAnimacion = true;
-        }
-        var camaraGo = new GameObject("~PrevizDeGuion") { hideFlags = HideFlags.HideAndDontSave };
-        var camara = camaraGo.AddComponent<Camera>();
-        camaraGo.AddComponent<UniversalAdditionalCameraData>();
-        camara.enabled = false;
-        camara.clearFlags = CameraClearFlags.Skybox;
-        camara.nearClipPlane = 0.05f;
-        camara.farClipPlane = 900f;
+        using Sesion sesion = Sesion.Abrir(guion, out error);
+        if (sesion == null) return fotos;
 
         var rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
         var png = new Texture2D(ancho, alto, TextureFormat.RGB24, false);
@@ -89,32 +61,17 @@ internal static class PrevizDeGuion
                 EditorUtility.DisplayProgressBar("Previz del guion",
                     $"Plano {i + 1}/{guion.planos.Count}", (float)i / guion.planos.Count);
 
-                ColocarActores(guion, actores, t, originales);
-                ColocarCargas(cargas, t, originales, activados);
-                Physics.SyncTransforms();
-
-                if (!guion.PoseDeCamara(t, out Vector3 posicion, out Quaternion rotacion, out float fov))
+                if (!sesion.Rendir(t, rt))
                 {
-                    Debug.LogWarning($"[Previz] El plano {i + 1} no tiene pose de cámara; se salta.");
+                    Debug.LogWarning($"[Previz] Plano {i + 1}: {sesion.Error} Se salta.");
                     continue;
                 }
-
-                camara.transform.SetPositionAndRotation(posicion, rotacion);
-                camara.fieldOfView = fov;
-                camara.targetTexture = rt;
-
-                var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
-                if (RenderPipeline.SupportsRenderRequest(camara, peticion))
-                    RenderPipeline.SubmitRenderRequest(camara, peticion);
-                else
-                    camara.Render();
 
                 RenderTexture anterior = RenderTexture.active;
                 RenderTexture.active = rt;
                 png.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
                 png.Apply();
                 RenderTexture.active = anterior;
-                camara.targetTexture = null;
 
                 string ruta = Path.Combine(carpeta, $"{i + 1:000}.png");
                 File.WriteAllBytes(ruta, png.EncodeToPNG());
@@ -129,35 +86,191 @@ internal static class PrevizDeGuion
         finally
         {
             EditorUtility.ClearProgressBar();
+            UnityEngine.Object.DestroyImmediate(png);
+            rt.Release();
+            UnityEngine.Object.DestroyImmediate(rt);
+        }
 
-            if (modoAnimacion) AnimationMode.StopAnimationMode();
+        return fotos;
+    }
 
-            foreach (var kv in originales)
+    /// La escena de un guion abierta y lista para colocarla en cualquier segundo y rendirla. La
+    /// usan las fotos del previz (un segundo por plano) y la vista en vivo del Director (cada
+    /// fotograma mientras se reproduce o se arrastra la barra).
+    ///
+    /// Mientras está colocada, la escena está tocada: actores movidos y posados, la interfaz de la
+    /// escena apagada, cargas encendidas. <see cref="Soltar"/> lo devuelve todo a como estaba sin
+    /// cerrar la sesión, y se llama solo antes de guardar una escena, para que nunca se guarde
+    /// tocada. <see cref="Dispose"/> suelta, destruye lo creado y cierra la escena si la abrió ella.
+    internal sealed class Sesion : IDisposable
+    {
+        private readonly GuionHorneado _guion;
+        private readonly Scene _escena;
+        private readonly bool _abrioLaEscena;
+        private readonly Dictionary<Transform, Estado> _originales = new();
+        private readonly List<GameObject> _instanciados = new();
+        private readonly List<GameObject> _activados = new();
+        private readonly List<GameObject> _uiOculta = new();
+        private readonly Dictionary<string, SequenceActor> _actores;
+        private readonly List<CargaEnEscena> _cargas;
+        private GameObject _camaraGo;
+        private Camera _camara;
+        private bool _colocada;
+        private bool _modoAnimacionPropio;
+        private bool _cerrada;
+
+        public string Error { get; private set; } = string.Empty;
+
+        private Sesion(GuionHorneado guion, Scene escena, bool abrioLaEscena)
+        {
+            _guion = guion;
+            _escena = escena;
+            _abrioLaEscena = abrioLaEscena;
+            _actores = ResolverActores(guion, _instanciados);
+            _cargas = ResolverCargas(guion, _actores, escena);
+            foreach (GameObject copia in _instanciados)
+                if (copia != null) copia.SetActive(false);
+
+            _camaraGo = new GameObject("~PrevizDeGuion") { hideFlags = HideFlags.HideAndDontSave };
+            _camara = _camaraGo.AddComponent<Camera>();
+            _camaraGo.AddComponent<UniversalAdditionalCameraData>();
+            _camara.enabled = false;
+            _camara.clearFlags = CameraClearFlags.Skybox;
+            _camara.nearClipPlane = 0.05f;
+            _camara.farClipPlane = 900f;
+
+            EditorSceneManager.sceneSaving += AlGuardarUnaEscena;
+        }
+
+        /// Abre la escena del guion (si no lo estaba) y prepara el reparto. Null si no se puede.
+        public static Sesion Abrir(GuionHorneado guion, out string error)
+        {
+            error = null;
+            if (guion == null) { error = "No hay guion."; return null; }
+
+            string escenaNombre = EscenaDe(guion);
+            if (string.IsNullOrEmpty(escenaNombre)) { error = "El guion no dice de qué escena es."; return null; }
+
+            bool yaEstabaAbierta = SceneManager.GetSceneByName(escenaNombre).isLoaded;
+            Scene escena = CapturaDeEscenario.AbrirEscena(escenaNombre);
+            if (!escena.IsValid() || !escena.isLoaded)
+            {
+                error = $"No puedo abrir la escena '{escenaNombre}'.";
+                return null;
+            }
+            return new Sesion(guion, escena, !yaEstabaAbierta);
+        }
+
+        /// Coloca la escena en `t` y la rinde en `destino`.
+        public bool Rendir(float t, RenderTexture destino)
+        {
+            Error = string.Empty;
+            if (_cerrada) { Error = "La vista está cerrada."; return false; }
+            if (destino == null) { Error = "No hay textura donde rendir."; return false; }
+            if (!_escena.IsValid() || !_escena.isLoaded) { Error = "La escena del guion ya no está abierta."; return false; }
+
+            Colocar(t);
+
+            if (!_guion.PoseDeCamara(t, out Vector3 posicion, out Quaternion rotacion, out float fov))
+            {
+                Error = "Este momento no tiene plano de cámara.";
+                return false;
+            }
+
+            _camara.transform.SetPositionAndRotation(posicion, rotacion);
+            _camara.fieldOfView = fov;
+            _camara.aspect = destino.width / (float)Mathf.Max(1, destino.height);
+            _camara.targetTexture = destino;
+            try
+            {
+                var peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = destino };
+                if (RenderPipeline.SupportsRenderRequest(_camara, peticion))
+                    RenderPipeline.SubmitRenderRequest(_camara, peticion);
+                else
+                    _camara.Render();
+            }
+            finally
+            {
+                _camara.targetTexture = null;
+            }
+            return true;
+        }
+
+        /// Pone actores, poses y cargas en `t`. Prepara la escena la primera vez.
+        public void Colocar(float t)
+        {
+            if (!_colocada)
+            {
+                OcultarUiDeEscena(_escena, _uiOculta);
+                foreach (GameObject copia in _instanciados)
+                    if (copia != null) copia.SetActive(true);
+                if (!AnimationMode.InAnimationMode())
+                {
+                    AnimationMode.StartAnimationMode();
+                    _modoAnimacionPropio = true;
+                }
+                _colocada = true;
+            }
+
+            ColocarActores(_guion, _actores, t, _originales);
+            ColocarCargas(_cargas, t, _originales, _activados);
+            Physics.SyncTransforms();
+        }
+
+        /// Deja la escena como estaba, sin cerrar la sesión. El siguiente Rendir la vuelve a colocar.
+        public void Soltar()
+        {
+            if (!_colocada) return;
+            _colocada = false;
+
+            // Primero las poses: al parar el modo de animación se deshace lo muestreado.
+            if (_modoAnimacionPropio && AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
+            _modoAnimacionPropio = false;
+
+            foreach (var kv in _originales)
             {
                 if (kv.Key == null) continue;
                 kv.Key.gameObject.SetActive(kv.Value.activo);
                 kv.Key.SetPositionAndRotation(kv.Value.posicion, kv.Value.rotacion);
             }
+            _originales.Clear();
             Physics.SyncTransforms();
 
-            for (int i = activados.Count - 1; i >= 0; i--)
-                if (activados[i] != null) activados[i].SetActive(false);
+            for (int i = _activados.Count - 1; i >= 0; i--)
+                if (_activados[i] != null) _activados[i].SetActive(false);
+            _activados.Clear();
 
-            foreach (GameObject go in uiOculta)
+            foreach (GameObject go in _uiOculta)
                 if (go != null) go.SetActive(true);
-            foreach (GameObject go in instanciados)
-                if (go != null) UnityEngine.Object.DestroyImmediate(go);
+            _uiOculta.Clear();
 
-            UnityEngine.Object.DestroyImmediate(camaraGo);
-            UnityEngine.Object.DestroyImmediate(png);
-            rt.Release();
-            UnityEngine.Object.DestroyImmediate(rt);
-
-            if (!yaEstabaAbierta && escena.IsValid() && escena.isLoaded)
-                EditorSceneManager.CloseScene(escena, true);
+            foreach (GameObject copia in _instanciados)
+                if (copia != null) copia.SetActive(false);
         }
 
-        return fotos;
+        public void Dispose()
+        {
+            if (_cerrada) return;
+            _cerrada = true;
+            EditorSceneManager.sceneSaving -= AlGuardarUnaEscena;
+
+            Soltar();
+
+            foreach (GameObject go in _instanciados)
+                if (go != null) UnityEngine.Object.DestroyImmediate(go);
+            _instanciados.Clear();
+
+            if (_camaraGo != null) UnityEngine.Object.DestroyImmediate(_camaraGo);
+            _camaraGo = null;
+            _camara = null;
+
+            // Se cierra solo si la abrió la sesión y nadie la ha cambiado mientras: cerrar descarta
+            // los cambios sin preguntar. Si está cambiada, se queda abierta para que se guarde.
+            if (_abrioLaEscena && _escena.IsValid() && _escena.isLoaded && !_escena.isDirty)
+                EditorSceneManager.CloseScene(_escena, true);
+        }
+
+        private void AlGuardarUnaEscena(Scene escena, string ruta) => Soltar();
     }
 
     private static string EscenaDe(GuionHorneado guion)
@@ -351,14 +464,14 @@ internal static class PrevizDeGuion
         }
     }
 
-    /// Pone la pose base del actor (el bucle en el que está, o su idle) sobre la copia del prefab.
-    /// Solo toca copias: una pose muestreada sobre un NPC de la escena habría que deshacerla, y el
-    /// previz no puede dejar la escena tocada. No reproduce gestos ni poses de medio cuerpo: para
-    /// juzgar el encuadre, la pose base es lo que importa.
+    /// Pone la pose base del actor (el bucle en el que está, o su idle), en la copia del prefab o en
+    /// el NPC de la escena. Solo con el modo de animación del Editor en marcha: lo muestreado se
+    /// deshace al pararlo (<see cref="Sesion.Soltar"/>), así que la escena no queda tocada. No
+    /// reproduce gestos ni poses de medio cuerpo: para juzgar el encuadre, la pose base es lo que importa.
     private static void PoseEn(ActorHorneado datos, SequenceActor actor, float t)
     {
         Transform tr = actor.Transform;
-        if (tr == null || (tr.gameObject.hideFlags & HideFlags.HideAndDontSave) == 0) return;
+        if (tr == null || !AnimationMode.InAnimationMode()) return;
 
         var animador = tr.GetComponentInChildren<Animator>(true);
         if (animador == null) return;

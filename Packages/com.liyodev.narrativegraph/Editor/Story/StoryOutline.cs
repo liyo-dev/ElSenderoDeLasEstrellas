@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UIElements;
 
 namespace NarrativeGraphEditor.Story
@@ -11,6 +13,8 @@ namespace NarrativeGraphEditor.Story
         public event Action AddClicked;
         /// A word of the vocabulary was picked: show the steps that use it.
         public event Action<string> WordClicked;
+        /// Another graph that contains the searched text was picked.
+        public event Action<NarrativeGraph> GraphClicked;
 
         readonly ScrollView _words;
         readonly Button _stepsTab;
@@ -21,6 +25,13 @@ namespace NarrativeGraphEditor.Story
         readonly Label _title;
         readonly Label _count;
         readonly ScrollView _list;
+
+        StoryStructure _structure;
+        NarrativeNode _selected;
+        Func<NarrativeNode, bool> _onPath;
+        string _query = string.Empty;
+        Func<NarrativeNode, bool> _matches;
+        IReadOnlyList<StorySearch.GraphHits> _elsewhere;
 
         public StoryOutline()
         {
@@ -107,7 +118,7 @@ namespace NarrativeGraphEditor.Story
                 foreach (var pair in group.Uses)
                 {
                     var word = pair.Key;
-                    var row = new Button(() => WordClicked?.Invoke(word)) { tooltip = StoryText.T("Ver los pasos que lo usan", "Show the steps that use it") };
+                    var row = new Button(() => { ShowWords(false); WordClicked?.Invoke(word); }) { tooltip = StoryText.T("Ver los pasos que lo usan", "Show the steps that use it") };
                     row.AddToClassList("story-outline__row");
                     var title = new Label(word);
                     title.AddToClassList("story-outline__row-title");
@@ -123,18 +134,58 @@ namespace NarrativeGraphEditor.Story
         public void Refresh(NarrativeGraph graph, StoryStructure structure, NarrativeNode selected, Func<NarrativeNode, bool> onPath)
         {
             _graph = graph;
+            _structure = structure;
+            _selected = selected;
+            _onPath = onPath;
             if (_showWords) RefreshWords();
+            Draw();
+        }
+
+        /// With a text to search, only the steps that contain it are listed.
+        public void SetSearch(string query, Func<NarrativeNode, bool> matches)
+        {
+            _query = query ?? string.Empty;
+            _matches = matches;
+            _elsewhere = null;
+            Draw();
+        }
+
+        /// Other graphs that contain the searched text; shown when this one has none.
+        public void SetElsewhere(IReadOnlyList<StorySearch.GraphHits> found)
+        {
+            _elsewhere = found;
+            Draw();
+        }
+
+        void Draw()
+        {
+            var graph = _graph;
+            var structure = _structure;
+            var selected = _selected;
+            var onPath = _onPath;
             _list.Clear();
             _title.text = graph != null ? graph.name : "—";
             if (graph == null || structure == null) { _count.text = string.Empty; return; }
 
             int steps = 0;
             foreach (var section in structure.Sections) steps += section.Steps.Count;
-            _count.text = StoryText.T($"{steps} pasos · {structure.Sections.Count} secciones", $"{steps} steps · {structure.Sections.Count} sections");
+            bool searching = _query.Length > 0 && _matches != null;
+            int shown = searching ? structure.Sections.Sum(section => section.Steps.Count(_matches)) : steps;
+            _count.text = searching
+                ? StoryText.T($"{shown} de {steps} pasos con «{_query}»", $"{shown} of {steps} steps with \"{_query}\"")
+                : StoryText.T($"{steps} pasos · {structure.Sections.Count} secciones", $"{steps} steps · {structure.Sections.Count} sections");
+
+            if (searching && shown == 0)
+            {
+                DrawNotFound();
+                return;
+            }
 
             VisualElement selectedRow = null;
             foreach (var section in structure.Sections)
             {
+                var sectionSteps = searching ? section.Steps.Where(_matches).ToList() : section.Steps;
+                if (sectionSteps.Count == 0) continue;
                 var head = new VisualElement();
                 head.AddToClassList("story-outline__section");
                 var num = new Label((section.Index + 1).ToString());
@@ -143,12 +194,12 @@ namespace NarrativeGraphEditor.Story
                 var name = new Label(StoryStructure.DisplayName(section.Name).ToUpperInvariant());
                 name.AddToClassList("story-outline__section-name");
                 head.Add(name);
-                var count = new Label(section.Steps.Count.ToString());
+                var count = new Label(sectionSteps.Count.ToString());
                 count.AddToClassList("story-mono");
                 head.Add(count);
                 _list.Add(head);
 
-                foreach (var step in section.Steps)
+                foreach (var step in sectionSteps)
                 {
                     var row = Row(step, structure.Number(step), step == selected, onPath != null && onPath(step), selected != null);
                     _list.Add(row);
@@ -159,6 +210,46 @@ namespace NarrativeGraphEditor.Story
             // El índice baja solo hasta el paso elegido.
             if (selectedRow != null)
                 _list.schedule.Execute(() => { if (_list.contentContainer.Contains(selectedRow)) _list.ScrollTo(selectedRow); }).StartingIn(30);
+        }
+
+        void DrawNotFound()
+        {
+            AddNote(StoryText.T($"«{_query}» no aparece en este capítulo.", $"\"{_query}\" is not in this chapter."));
+            if (_elsewhere == null)
+            {
+                AddNote(StoryText.T("Buscando en los demás capítulos…", "Looking in the other chapters…"));
+                return;
+            }
+            if (_elsewhere.Count == 0)
+            {
+                AddNote(StoryText.T("Tampoco aparece en los demás capítulos.", "It is not in the other chapters either."));
+                return;
+            }
+
+            var head = new Label(StoryText.T("APARECE EN", "FOUND IN"));
+            head.AddToClassList("story-outline__section-name");
+            head.AddToClassList("story-outline__word-group");
+            _list.Add(head);
+            foreach (var hit in _elsewhere)
+            {
+                var graph = hit.Graph;
+                var row = new Button(() => GraphClicked?.Invoke(graph)) { tooltip = StoryText.T("Abrir este capítulo con la misma búsqueda", "Open this chapter with the same search") };
+                row.AddToClassList("story-outline__row");
+                var title = new Label(graph.name);
+                title.AddToClassList("story-outline__row-title");
+                row.Add(title);
+                var count = new Label(StoryText.T($"{hit.Count} pasos", $"{hit.Count} steps"));
+                count.AddToClassList("story-mono");
+                row.Add(count);
+                _list.Add(row);
+            }
+        }
+
+        void AddNote(string text)
+        {
+            var note = new Label(text);
+            note.AddToClassList("story-outline__tip");
+            _list.Add(note);
         }
 
         VisualElement Row(NarrativeNode node, string number, bool selected, bool onPath, bool anySelected)

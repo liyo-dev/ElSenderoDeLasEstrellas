@@ -71,7 +71,7 @@ Esto vale para batallas, cinemáticas, minijuegos, viajes, desbloqueos, cambios 
 
 ## Requisitos
 
-Unity 6 (6000.0 o superior), uGUI/TextMeshPro, Timeline y Newtonsoft JSON. El editor es bilingüe español/inglés.
+Unity 6 (6000.0 o superior), uGUI/TextMeshPro, Newtonsoft JSON y el asistente de Liyodev (`com.liyodev.assistant`, se instala solo). El paso de reproducir un Timeline usa el paquete Timeline de tu proyecto si lo tienes. El editor es bilingüe español/inglés.
 
 ## Ejemplo
 

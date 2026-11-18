@@ -199,7 +199,7 @@ Es exclusivamente historia principal. El umbral marca el punto sin vuelta atrás
 
 ### Post-juego
 
-Se abre tras el epílogo, desde la escena del río; Eldran puede dar acceso. Contiene templos y mazmorras con guardianes que requieren Amanecer u objetos concretos. No permite entrar al Sendero.
+Se abre tras el epílogo, en el barco de Silas, en mitad del mar donde se abrió el portal; Eldran puede dar acceso. Contiene templos y mazmorras con guardianes que requieren Amanecer u objetos concretos. No permite entrar al Sendero.
 
 **Pruebas de las Estrellas (decidido).** Pruebas opcionales repartidas por el mundo, dejadas por los viajeros que buscaron el Sendero antes que Will. Cada una enciende una estrella de una constelación en el cielo nocturno; una constelación completa da una recompensa grande (equipo con nombre, hechizo o lore del Sendero). Se juegan con la zona sin vuelo del kit de puzles.
 
@@ -336,13 +336,17 @@ Este episodio es una prueba del carácter de Will antes de la prueba mágica. El
 
 **El conjuro.** Will recita el conjuro de la biblioteca. El mar se calma de golpe hasta quedar como un espejo y emerge una montaña. La entrada de la cueva solo se ve en el reflejo del agua, y el grupo avanza confiando en él, como en el vado de la novela.
 
-**El precio de entrada.** Antes de dejarlos pasar, la cueva pide un pago (magia, un recuerdo o vida; se decide al construirlo). Will se dispone a pagarlo y Liam se adelanta. Es un momento breve que anticipa, sin desvelarlos, el sacrificio de Liam y el de Will.
+**El precio de entrada.** Antes de dejarlos pasar, la cueva pide un pago. Will se dispone a pagarlo y Liam se adelanta: con su magia de pacto ofrece el precio en nombre de los tres. Es un momento breve que anticipa, sin desvelarlos, el sacrificio de Liam y el de Will. El jugador elige qué se paga, como en la Sintonía Estelar pero al revés, y vale para todo el grupo (si pagara uno solo, bastaría con cambiar de personaje):
+- **Vida:** el grupo entra con 1 PS. Se puede usar la magia, pero cualquier golpe derriba. Templo de precisión: atacar de lejos y no dejarse tocar.
+- **Magia:** el grupo entra sin poder lanzar hechizos, con toda la vida. Templo de esquiva: evitar a los enemigos en lugar de pelear.
+
+La Piedra devuelve la vida y la magia al llegar a su cámara, antes del Guardián: el jefe se juega siempre a plena potencia.
 
 **El templo del Libro.** La cueva lleva a un templo que custodia el Libro: mazmorra en nivel propio, separado de MainWorld, con puzles y plataformas hasta la cámara de la Piedra Ancestral. En las ruinas de la entrada siguen grabados los nombres y motivos de quienes llegaron antes. Dos mecánicas guían el nivel:
 - **El reflejo:** pasarelas y puertas que solo existen en el agua reflejada. Se aprende al principio y se combina al final.
 - **La marea:** el agua sube y baja a un compás y cambia por dónde se puede pasar.
 
-Los puzles piden a los tres: Will sostiene y protege, Estela empuja y rompe, y Liam ve lo que los otros no ven con su magia de pacto.
+Los puzles piden a los tres: Will sostiene y protege, Estela empuja y rompe, y Liam ve lo que los otros no ven. **Ningún puzle necesita magia**, para que el templo se pueda resolver con cualquiera de los dos precios: se resuelven con el reflejo, la marea, palancas y plataformas, y la magia solo ayuda en los combates. Es un nivel de plataformas mezclado con puzles; alguna sala es de cuenta atrás, en la que hay que aguantar con enemigos hasta que se abre la salida (con magia se les vence; sin ella se les esquiva). Con 1 PS se cae a menudo, así que el reintento es en el acto, al principio de la sala, sin cargar ni repetir tramos largos.
 
 **El Guardián.** Custodia el Libro en la cámara de la Piedra. Es un jefe-puzle ligado al agua y al reflejo (§ 3, Enemigos y jefes). Durante el combate Will cae o el agua sube, y se levanta a sí mismo: completa el ejercicio de la cuchara y aprende a volar.
 
@@ -450,11 +454,15 @@ El Sendero se cierra. Estela carga con Liam hacia el umbral. Allí deja el cuerp
 
 ### 5.23. Epílogo: el adiós del Archimago y el regreso de Will
 
-Liam despierta junto a Estela y la Piedra apagada. Ella cuenta que Will la empujó fuera. Una figura aparece sobre la piedra. Estela cree que es Will; la figura responde «No soy Will». Es el Archimago. Usó la fuerza que le quedaba para devolver a Will a casa y se marcha con Liora, su familia y sus amigos.
+**Adaptación del juego** (decidida el 18 nov 2026): en la novela el epílogo ocurre junto a la Piedra apagada y la pesca, junto al río. En el juego el reencuentro ocurre en el cielo, sobre el último trozo del Sendero, y la pesca, en el barco.
+
+El portal se cierra a su espalda. Liam despierta junto a Estela sobre el camino de luz que queda del Sendero: una superficie mágica suspendida entre nubes y estrellas, sobre el mar en calma. Ella cuenta que Will la empujó fuera. Una figura aparece sobre el camino. Estela cree que es Will; la figura responde «No soy Will». Es el Archimago. Usó la fuerza que le quedaba para devolver a Will a casa y se marcha con Liora, su familia y sus amigos.
 
 Will aparece vivo con la cinta roja: «Creo que esta cinta es de alguien». Los tres se abrazan. Los recuerdos del Archimago se desvanecen; la magia de Will sigue siendo suya. La estrella de madera ya no está con él y queda torcida en el cielo.
 
-Semanas después pescan con Tobías recuperado junto al río. Eldran llegará al día siguiente. **Diseño jugable:** cierre breve, contemplativo, con silencios y miradas. Después se abre el post-juego desde el río, sin volver al Sendero.
+La escena termina con el abrazo. Corte a «Semanas después»: pescan desde el barco con Tobías recuperado. Eldran llegará al día siguiente.
+
+**Diseño jugable:** todo el epílogo es cinemática, breve y contemplativa, con silencios y miradas. El camino de luz solo se ve desde la cámara: no se pisa ni necesita colisiones. Después se abre el post-juego en el barco, sin volver al Sendero.
 
 ## 6. Sistemas
 
@@ -665,7 +673,8 @@ Cerrado el 8 oct 2026: contrabandistas, extras del capítulo 2, Gólem, Demonio 
 - **Qué personaje enseña cada combo de la Y** y dónde está cada página del grimorio: se fija al construir cada capítulo y zona.
 - **Valores** (vida y maná de cada personaje, daño y maná de Amanecer, objeto para revivir): se ajustan probando en el LAB.
 - **Secundarias:** qué variante de cada una se construye, al llegar a ella.
-- **Mazmorra de la Piedra (§ 5.13):** el precio de entrada (magia, un recuerdo o vida), el nombre del nivel, los puzles concretos y las fases del Guardián.
+- **Tobías en el post-juego (ideas sin decidir, 18 nov 2026):** el post-juego empieza en el barco, con Tobías ya curado (en la novela quería ver el mar). Opciones abiertas: (a) primera misión, ir a casa de Liam; Tobías se queda con una vecina, insiste en ir y o se une como jugador o va por su cuenta siguiendo al grupo, controlado aparte de los tres; (b) acompaña sin luchar y sus piedras con forma de animal coinciden con las constelaciones de las Pruebas de las Estrellas: solo él sabe leerlas y señala dónde está cada prueba o templo. Por decidir también si es la clave para avanzar en el post-juego.
+- **Templo del Libro (§ 5.13):** el nombre del nivel, los puzles concretos, las fases del Guardián y dónde reaparecen Liam y Estela al volver del Sendero.
 - **No entran por ahora:** los dones activables (vida infinita…) y el simulacro antes del altar. Se pueden recuperar más adelante.
 
 ### Clima, reloj y efectos elementales (propuesta, 17 nov 2026 — sin aprobar)

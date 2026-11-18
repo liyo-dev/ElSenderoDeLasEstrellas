@@ -14,6 +14,27 @@ Las notas que no son un cambio de `lente` quedan como **encargos para la IA** en
 lee y las cierra por el buzón (`encargos`, `revisiones-hechas`). Es el camino que usarán el Studio y el
 MCP de F2/F4: el `.guion.txt` sigue siendo la verdad y la IA propone/hace el cambio, no el botón.
 
+**Tercera entrega (18 nov 2026, INC-1288):** el reproductor va dentro de la mesa. Fuera de Play, «En vivo»
+coloca la escena en el segundo del cabezal (actores, poses, cámara) y la rinde en el visor, a hasta 30 fps;
+en Play, la mesa sigue y manda sobre la cinemática que rueda. No es un viewport 3D navegable (sigue fuera
+de alcance, sección 8): es la cámara del guion rendida. Contrato: `ICinematicLiveView`,
+`ICinematicsLivePreview`, `ICinematicsPlayControl`.
+
+**Cambios de rumbo del 18 nov 2026 (Raúl):**
+
+- La mesa de trabajo es la ventana de Unity (la Mesa del Director), no una web: la decisión 1 de abajo
+  queda superada. Maqueta de la mesa nueva en el Project («Mesa del Director — maqueta»).
+- Disposición: a la izquierda, los planos; en el centro, el lienzo (Ver / Montar / Anotar para la IA) con
+  el transporte y el timeline; a la derecha, la bandeja de lo que puede llevar un plano (cámaras, reparto,
+  movimiento, actuación, efectos y sonido) y las marcas para la IA; abajo, la caja de texto para la IA.
+- Montar sin IA: arrastrar de la bandeja al lienzo escribe líneas del guion por el mismo camino que la IA
+  (operaciones con diff). Las marcas (señalar, dirección, dibujo, nota) no cambian nada por sí solas: son
+  el contexto de lo que se le pide a la IA.
+- Configuración: la cinemática es su guion; la ficha enseña y cambia su cabecera. Dónde: escena + ancla
+  (posiciones relativas al ancla, **por hacer**: hoy son del mundo) y decorado en la escena del juego o
+  escena propia. Quién: reparto por id (en el juego se coge esté donde esté; en el editor, el de la
+  escena o su prefab de muestra). Cómo: texto (cine o bocadillos) y señal de entrada.
+
 **Decisiones ya tomadas**
 
 1. La mesa de trabajo es **web** (no una ventana de Unity).

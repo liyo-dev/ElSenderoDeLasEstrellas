@@ -38,9 +38,9 @@ public static class NarrativeQuickStart
 
     /// <summary>
     /// Una herramienta del editor va a montar la escena a mano y no quiere que la historia
-    /// arranque por su cuenta en esta sesión de Play (el Director de cinemáticas: si MainWorld
-    /// arranca Cap1, sale el prólogo encima de la secuencia que se prueba). Se olvida al salir
-    /// de Play.
+    /// arranque por su cuenta en esta sesión de Play (p. ej. una herramienta de cinemáticas que
+    /// prueba una secuencia suelta: si la escena arrancara su capítulo, la historia saldría encima).
+    /// Se olvida al salir de Play.
     /// </summary>
     public static void SuppressAutoStart() => Active = true;
 

@@ -18,7 +18,7 @@ using UnityEngine.SceneManagement;
 ///
 /// El paquete `Liyodev.Cinematics` no conoce nada de esto: solo ve el contrato. Ver
 /// `docs/plan-director-2026-11-16.md`.
-public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
+public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinematicsLivePreview, ICinematicsPlayControl
 {
     private const string CarpetaGuiones = "Assets/_SEQUENCES/Guiones";
 
@@ -351,6 +351,38 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         return null;
     }
 
+    public ICinematicLiveView AbrirVistaEnVivo(string id, out string error)
+    {
+        var guion = HorneadoDe(id);
+        if (guion == null)
+        {
+            error = "Esta cinemática aún no está horneada: hornéala para verla en vivo.";
+            return null;
+        }
+        return VistaEnVivoDelGuion.Abrir(guion, out error);
+    }
+
+    public bool EnMarcha(out string id, out float segundo, out float duracion, out bool pausada)
+    {
+        var reproductor = GuionEnMarcha.Actual;
+        bool rueda = EditorApplication.isPlaying && reproductor != null && reproductor.EnMarcha && reproductor.Guion != null;
+        id = rueda ? reproductor.Guion.nombre : null;
+        segundo = rueda ? reproductor.Tiempo : 0f;
+        duracion = rueda ? reproductor.Duracion : 0f;
+        pausada = rueda && reproductor.Pausado;
+        return rueda;
+    }
+
+    public void Saltar(float segundo) => GuionEnMarcha.Actual?.PedirSalto(segundo);
+
+    public void Pausar(bool pausar)
+    {
+        var reproductor = GuionEnMarcha.Actual;
+        if (reproductor == null) return;
+        if (pausar) reproductor.Pausar();
+        else reproductor.Reanudar();
+    }
+
     public bool RodarEnPlay(string id, float desde)    {
         var guion = HorneadoDe(id);
         if (guion == null) { Avisar("Director", $"No encuentro «{id}»."); return false; }
@@ -610,15 +642,18 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         var notas = pizarra?.notas;
         if (notas != null && notas.Count > 0)
         {
-            var pendientes = notas.Where(n => !string.IsNullOrWhiteSpace(n.TextoEfectivo())).ToList();
+            var pendientes = notas.Where(n => !string.IsNullOrWhiteSpace(n.Describir())).ToList();
             if (pendientes.Count > 0)
             {
                 sb.AppendLine();
-                sb.AppendLine($"## Notas de la pizarra sin aplicar ({pendientes.Count})");
+                sb.AppendLine($"## Notas y marcas de la mesa ({pendientes.Count})");
+                sb.AppendLine("Las marcas van en coordenadas de la imagen del plano (0..1, (0, 0) arriba a la izquierda), " +
+                              "en el segundo que dicen: «señala» es un punto («aquí»), «dirección» va de dónde a dónde y " +
+                              "«dibujo» es una forma a mano (un efecto, un camino). Son el contexto de lo que se pide.");
                 foreach (var nota in pendientes)
                 {
                     string cuando = nota.t >= 0f ? $" t={nota.t:0.0}" : string.Empty;
-                    sb.AppendLine($"- {nota.panel} · {nota.elemento} · «{nota.TextoEfectivo()}»{cuando}");
+                    sb.AppendLine($"- {nota.panel} · {nota.elemento} · «{nota.Describir()}»{cuando}");
                 }
             }
         }
@@ -733,7 +768,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         encargo.t = nota.t;
         encargo.t0 = plano?.t0 ?? 0f;
         encargo.t1 = plano?.t1 ?? 0f;
-        encargo.linea = plano?.linea ?? 0;
+        encargo.linea = plano?.linea ?? LineaDelEfectoEn(guion, nota.t);
         encargo.ordenGuion = LineaDeTexto(lineas, encargo.linea);
         encargo.rutaGuion = ruta;
         encargo.imagen = FotoDelPlano(guion.nombre, numero);
@@ -951,7 +986,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
 
             int antes = pizarra.notas.Count;
             var conjunto = new HashSet<string>(claves);
-            pizarra.notas.RemoveAll(n => conjunto.Contains(CinemaNota.CalcularClave(n.panel, n.elemento, n.TextoEfectivo())));
+            pizarra.notas.RemoveAll(n => conjunto.Contains(CinemaNota.CalcularClave(n.panel, n.elemento, n.Describir()))
+                                     || conjunto.Contains(CinemaNota.CalcularClave(n.panel, n.elemento, n.TextoEfectivo())));
             if (pizarra.notas.Count == antes) return;
 
             if (pizarra.notas.Count == 0) File.Delete(ruta);
@@ -1105,9 +1141,27 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge
         return false;
     }
 
+    /// El número de plano de «P06». Otros nombres (los tramos sin plano de la mesa, «T01») no son
+    /// planos: devuelven 0.
+    /// Una nota sin plano (un tramo que monta un efecto): la línea del último efecto que empieza
+    /// antes de ese segundo, para que el encargo diga dónde mirar en el guion.
+    private static int LineaDelEfectoEn(GuionHorneado guion, float t)
+    {
+        if (t < 0f || guion?.efectos == null) return 0;
+        int linea = 0;
+        float mejor = float.MinValue;
+        foreach (var efecto in guion.efectos)
+            if (efecto != null && efecto.t <= t + 0.01f && efecto.t >= mejor && efecto.linea > 0)
+            {
+                mejor = efecto.t;
+                linea = efecto.linea;
+            }
+        return linea;
+    }
+
     private static int NumeroDePanel(string panel)
     {
-        if (string.IsNullOrEmpty(panel)) return 0;
+        if (string.IsNullOrEmpty(panel) || char.ToUpperInvariant(panel[0]) != 'P') return 0;
         string digitos = new string(panel.Where(char.IsDigit).ToArray());
         return int.TryParse(digitos, out int numero) ? numero : 0;
     }

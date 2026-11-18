@@ -24,8 +24,8 @@ namespace NarrativeGraphEditor.Story
         public string Placeholder => StoryText.T("¿Qué quieres hacer en este capítulo?", "What do you want to do in this chapter?");
 
         public string Intro => StoryText.T(
-            "Escribe lo que quieres y el asistente lee el capítulo, te contesta y te propone cambios que tú aplicas. Elige el servicio y pon tu clave en los ajustes.",
-            "Write what you want: the assistant reads the chapter, answers and proposes changes you apply. Pick the service and enter your key in the settings.");
+            "Escribe lo que quieres y el asistente lee el capítulo, te contesta y te propone cambios que tú aplicas. Conecta tu IA (tu cuenta de ChatGPT, Google o Claude, sin clave) o usa una clave de API.",
+            "Write what you want: the assistant reads the chapter, answers and proposes changes you apply. Connect your AI (your ChatGPT, Google or Claude account, no key) or use an API key.");
 
         public event Action Changed;
 
@@ -33,6 +33,7 @@ namespace NarrativeGraphEditor.Story
             "You help a game writer work on a chapter of a narrative graph in Unity. Answer in the language the user writes in, briefly.\n" +
             "Steps are numbered by section ('2.3'). To propose changes, end your answer with ONE fenced json block {\"ops\":[...]}; the user reviews it and applies it or not. " +
             "Operations: add {id, type, title, after, port, fields:[{name,value}]}, set {step, fields}, connect {from, to, port}, disconnect {from, port}, section {step, value}, delete {step}. " +
+            "Every operation is an object whose \"op\" key names it, for example: {\"ops\":[{\"op\":\"set\",\"step\":\"2.4\",\"fields\":[{\"name\":\"displayTitle\",\"value\":\"New title\"}]}]}. " +
             "Steps are named by number, id, or the id of a step added earlier in the same block. Field values are text. Use only step types and fields from the manual.\n\n" +
             "When asked why something is missing or wrong in the game, use the story state report below: where the story is, what it waits for and what does not match.";
 

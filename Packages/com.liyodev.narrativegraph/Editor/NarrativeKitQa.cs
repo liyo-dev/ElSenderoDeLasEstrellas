@@ -108,12 +108,17 @@ namespace NarrativeGraphEditor
                 // Las agujas se montan aquí para que este fichero no se delate a sí mismo.
                 string oldTools = "\"Tools/" + "Narrative Graph";
                 string oldWindow = "\"Window/" + "Narrative Graph";
-                foreach (var file in Directory.GetFiles(PackageRoot, "*.cs", SearchOption.AllDirectories))
+                // Código, manifiesto, textos y el servidor MCP: la ruta vieja también engaña en un texto.
+                string oldText = "Tools › " + "Narrative Graph";
+                string oldArrow = "Tools > " + "Narrative Graph";
+                foreach (var file in Directory.GetFiles(PackageRoot, "*.*", SearchOption.AllDirectories))
                 {
+                    var ext = Path.GetExtension(file).ToLowerInvariant();
+                    if (ext != ".cs" && ext != ".json" && ext != ".md" && ext != ".mjs") continue;
                     var text = File.ReadAllText(file);
-                    if (!text.Contains(oldTools) && !text.Contains(oldWindow)) continue;
+                    if (!text.Contains(oldTools) && !text.Contains(oldWindow) && !text.Contains(oldText) && !text.Contains(oldArrow)) continue;
                     errors++;
-                    report.AppendLine($"ERROR {file.Replace(PackageRoot + "/", "")}: ruta de menú vieja");
+                    report.AppendLine($"ERROR {file.Replace(PackageRoot + "/", "").Replace('\\', '/')}: ruta de menú vieja");
                 }
 
                 var samples = Directory.GetDirectories(Path.Combine(PackageRoot, "Samples~"));

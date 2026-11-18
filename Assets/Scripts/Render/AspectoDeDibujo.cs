@@ -52,6 +52,9 @@ public sealed class AspectoDeDibujo : ScriptableObject
     [Tooltip("Cuánto se ve el dibujo de las texturas del terreno. 0 = cada capa de un color plano (su color medio); 1 = la textura entera.")]
     [Range(0f, 1f)] public float texturaDelSuelo = 0.2f;
 
+    [Tooltip("Marcas pintadas del suelo de cerca: trazos y piedrecitas en la tierra, briznas en la hierba. 0 = suelo liso.")]
+    [Range(0f, 1f)] public float detalleDelSuelo = 1f;
+
     [Tooltip("Altura (m) desde la que el terreno se cubre de nieve. El borde es una curva suave que sube y baja por la sierra.")]
     public float cotaDeLaNieve = 205f;
 
@@ -82,6 +85,7 @@ public sealed class AspectoDeDibujo : ScriptableObject
     private static readonly int IdLucesExtra = Shader.PropertyToID("_DibujoLucesExtra");
     private static readonly int IdTopeDeLuz = Shader.PropertyToID("_DibujoTopeDeLuz");
     private static readonly int IdTexturaDelSuelo = Shader.PropertyToID("_DibujoTexturaDelSuelo");
+    private static readonly int IdDetalleDelSuelo = Shader.PropertyToID("_DibujoDetalleDelSuelo");
     private static readonly int IdNieve = Shader.PropertyToID("_DibujoNieve");
     private static readonly int IdColorDeLaNieve = Shader.PropertyToID("_DibujoColorDeLaNieve");
     private static readonly int IdPincel = Shader.PropertyToID("_DibujoPincel");
@@ -107,6 +111,7 @@ public sealed class AspectoDeDibujo : ScriptableObject
         Shader.SetGlobalFloat(IdLucesExtra, lucesPuntuales);
         Shader.SetGlobalFloat(IdTopeDeLuz, topeDeLuz);
         Shader.SetGlobalFloat(IdTexturaDelSuelo, texturaDelSuelo);
+        Shader.SetGlobalFloat(IdDetalleDelSuelo, detalleDelSuelo);
         Shader.SetGlobalVector(IdNieve, new Vector4(cotaDeLaNieve, ondasDeLaNieve, 0f, 0f));
         Shader.SetGlobalVector(IdColorDeLaNieve, new Vector4(colorDeLaNieve.r, colorDeLaNieve.g, colorDeLaNieve.b, 1f));
         Shader.SetGlobalFloat(IdPincel, pinceladas);

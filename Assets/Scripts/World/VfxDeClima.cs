@@ -11,13 +11,15 @@ public static class VfxDeClima
     private static Material _materialLluvia;
     private static Material _materialSalpicadura;
     private static Material _materialRizo;
+    private static Material _materialRestos;
     private static Texture2D _punto;
+    private static Texture2D _restos;
     private static Texture2D _trazo;
     private static Texture2D _aro;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { _material = null; _materialLluvia = null; _materialSalpicadura = null; _materialRizo = null; _punto = null; _trazo = null; _aro = null; }
+    static void ResetStatics() { _material = null; _materialLluvia = null; _materialSalpicadura = null; _materialRizo = null; _materialRestos = null; _restos = null; _punto = null; _trazo = null; _aro = null; }
 #endif
 
     /// Lluvia de dibujo: trazos que caen en una caja alrededor del ancla y aros de salpicadura
@@ -55,28 +57,87 @@ public static class VfxDeClima
         AparecerYDesvanecer(gotas, 0.05f, 0.9f);
         gotas.Play();
 
-        // Aros planos a ras de suelo: la salpicadura se lee desde arriba y no parece una burbuja.
-        var salpicaduras = CrearSistema(go, "Salpicaduras");
-        var m2 = salpicaduras.main;
-        m2.startLifetime = new ParticleSystem.MinMaxCurve(0.22f, 0.34f);
-        m2.startSpeed = 0f;
-        m2.startSize = new ParticleSystem.MinMaxCurve(0.12f, 0.20f);
-        m2.startColor = new Color(0.86f, 0.92f, 1f, 0.45f);
-        m2.maxParticles = 420;
-        var forma2 = salpicaduras.shape;
-        forma2.shapeType = ParticleSystemShapeType.Box;
-        forma2.scale = new Vector3(18f, 0.04f, 18f);
-        forma2.position = new Vector3(0f, 0.08f, 0f);
-        var emision2 = salpicaduras.emission;
-        emision2.rateOverTime = 150f;
-        var r2 = salpicaduras.GetComponent<ParticleSystemRenderer>();
-        r2.renderMode = ParticleSystemRenderMode.HorizontalBillboard;
-        r2.sharedMaterial = MaterialDeSalpicadura();
-        AparecerYDesvanecer(salpicaduras, 0.08f, 0.75f);
-        salpicaduras.Play();
+        // Una parte de las gotas choca con el mundo (suelo, tejados, rocas, agua) y, donde choca, salta
+        // la salpicadura: un aro plano que se abre y unas gotitas que rebotan. Así salpica en las cuestas
+        // y en los tejados, no en un plano a la altura del jugador.
+        var queTocan = CrearSistema(go, "Gotas que salpican");
+        var m3 = queTocan.main;
+        m3.startLifetime = 1.6f;
+        m3.startSpeed = 0f;
+        m3.startSize = new ParticleSystem.MinMaxCurve(0.02f, 0.035f);
+        m3.startColor = new Color(0.86f, 0.92f, 1f, 0.5f);
+        m3.maxParticles = 900;
+        m3.gravityModifier = 0.12f;
+        var forma3 = queTocan.shape;
+        forma3.shapeType = ParticleSystemShapeType.Box;
+        forma3.scale = new Vector3(18f, 1f, 18f);
+        forma3.position = new Vector3(0f, 9f, 0f);
+        var emision3 = queTocan.emission;
+        emision3.rateOverTime = 420f;
+        var vel3 = queTocan.velocityOverLifetime;
+        vel3.enabled = true;
+        vel3.space = ParticleSystemSimulationSpace.World;
+        vel3.x = new ParticleSystem.MinMaxCurve(-1.2f, 0.2f);
+        vel3.y = new ParticleSystem.MinMaxCurve(-18f, -14f);
+        vel3.z = new ParticleSystem.MinMaxCurve(-0.5f, 0.3f);
+        var choque = queTocan.collision;
+        choque.enabled = true;
+        choque.type = ParticleSystemCollisionType.World;
+        choque.mode = ParticleSystemCollisionMode.Collision3D;
+        choque.quality = ParticleSystemCollisionQuality.Medium;
+        // Floor para el terreno, Default para props, Obstacle para rocas y árboles, Water para el agua.
+        choque.collidesWith = LayerMask.GetMask("Floor", "Default", "Obstacle", "Water");
+        choque.lifetimeLoss = 1f;
+        choque.radiusScale = 0.1f;
+        var r3 = queTocan.GetComponent<ParticleSystemRenderer>();
+        r3.renderMode = ParticleSystemRenderMode.Stretch;
+        r3.velocityScale = 0.06f;
+        r3.lengthScale = 1.0f;
+        r3.sharedMaterial = MaterialDeLluvia();
+        queTocan.Play();
 
-        var alSuelo = go.AddComponent<SalpicadurasDeLluvia>();
-        alSuelo.Configurar(salpicaduras.transform);
+        var aro = CrearSistema(queTocan.gameObject, "Aro", precalentar: false);
+        var ma = aro.main;
+        ma.startLifetime = new ParticleSystem.MinMaxCurve(0.22f, 0.32f);
+        ma.startSpeed = 0f;
+        ma.startSize = new ParticleSystem.MinMaxCurve(0.26f, 0.42f);
+        ma.startColor = new Color(0.86f, 0.92f, 1f, 0.55f);
+        ma.maxParticles = 400;
+        var ea = aro.emission;
+        ea.rateOverTime = 0f;
+        ea.SetBursts(new[] { new ParticleSystem.Burst(0f, 1) });
+        var formaAro = aro.shape;
+        formaAro.enabled = false;
+        var crece = aro.sizeOverLifetime;
+        crece.enabled = true;
+        crece.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.35f, 1f, 1f));
+        var ra = aro.GetComponent<ParticleSystemRenderer>();
+        ra.renderMode = ParticleSystemRenderMode.HorizontalBillboard;
+        ra.sharedMaterial = MaterialDeSalpicadura();
+        AparecerYDesvanecer(aro, 0.05f, 0.5f);
+
+        var gotitas = CrearSistema(queTocan.gameObject, "Gotitas", precalentar: false);
+        var mg = gotitas.main;
+        mg.startLifetime = new ParticleSystem.MinMaxCurve(0.22f, 0.34f);
+        mg.startSpeed = new ParticleSystem.MinMaxCurve(1.4f, 2.4f);
+        mg.startSize = new ParticleSystem.MinMaxCurve(0.045f, 0.07f);
+        mg.startColor = new Color(0.86f, 0.92f, 1f, 0.7f);
+        mg.gravityModifier = 0.9f;
+        mg.maxParticles = 1200;
+        var eg = gotitas.emission;
+        eg.rateOverTime = 0f;
+        eg.SetBursts(new[] { new ParticleSystem.Burst(0f, 2, 4) });
+        var fg = gotitas.shape;
+        fg.shapeType = ParticleSystemShapeType.Cone;
+        fg.angle = 35f;
+        fg.radius = 0.02f;
+        fg.rotation = new Vector3(-90f, 0f, 0f);
+        AparecerYDesvanecer(gotitas, 0.02f, 0.6f);
+
+        var hijos = queTocan.subEmitters;
+        hijos.enabled = true;
+        hijos.AddSubEmitter(aro, ParticleSystemSubEmitterType.Collision, ParticleSystemSubEmitterProperties.InheritNothing);
+        hijos.AddSubEmitter(gotitas, ParticleSystemSubEmitterType.Collision, ParticleSystemSubEmitterProperties.InheritNothing);
 
         return go;
     }
@@ -136,32 +197,48 @@ public static class VfxDeClima
         var viento = rizos.AddComponent<VientoDeRizos>();
         viento.Configurar(direccion);
 
-        // Hojas: motas pequeñas de tonos otoñales y verdes, girando y con turbulencia.
-        var hojas = CrearSistema(go, "Hojas");
-        var m2 = hojas.main;
+        // Restos que arrastra el aire: hojas, pétalos, briznas de paja y terrones, de dibujo (color plano
+        // y la misma tinta que el contorno). Giran y se dan la vuelta (se estrechan y se ensanchan) mientras vuelan.
+        var restos = CrearSistema(go, "Restos");
+        var m2 = restos.main;
         m2.startLifetime = new ParticleSystem.MinMaxCurve(3f, 5f);
         m2.startSpeed = 0f;
-        m2.startSize = new ParticleSystem.MinMaxCurve(0.07f, 0.14f);
+        m2.startSize = new ParticleSystem.MinMaxCurve(0.16f, 0.3f);
         m2.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
-        m2.startColor = new ParticleSystem.MinMaxGradient(new Color(0.55f, 0.42f, 0.16f), new Color(0.36f, 0.5f, 0.2f));
-        m2.maxParticles = 300;
-        var s2 = hojas.shape;
+        m2.startColor = new ParticleSystem.MinMaxGradient(Color.white, new Color(0.86f, 0.9f, 0.82f));
+        m2.maxParticles = 700;
+        var s2 = restos.shape;
         s2.shapeType = ParticleSystemShapeType.Box;
-        s2.scale = new Vector3(30f, 3f, 30f);
+        s2.scale = new Vector3(24f, 3f, 24f);
         s2.position = new Vector3(0f, 1.2f, 0f);
-        var e2 = hojas.emission;
-        e2.rateOverTime = 22f;
-        Velocidad(hojas, direccion * 7f, 2f);
-        var rot = hojas.rotationOverLifetime;
+        var e2 = restos.emission;
+        e2.rateOverTime = 90f;
+        Velocidad(restos, direccion * 7f, 2f);
+        var rot = restos.rotationOverLifetime;
         rot.enabled = true;
         rot.z = new ParticleSystem.MinMaxCurve(-6f, 6f);
-        var ruido = hojas.noise;
+        var vuelta = restos.sizeOverLifetime;
+        vuelta.enabled = true;
+        vuelta.separateAxes = true;
+        vuelta.x = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Constant(0f, 1f, 1f));
+        vuelta.y = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(
+            new Keyframe(0f, 1f), new Keyframe(0.2f, 0.3f), new Keyframe(0.4f, 1f),
+            new Keyframe(0.6f, 0.3f), new Keyframe(0.8f, 1f), new Keyframe(1f, 0.3f)));
+        var hoja = restos.textureSheetAnimation;
+        hoja.enabled = true;
+        hoja.numTilesX = TiposDeResto;
+        hoja.numTilesY = 1;
+        hoja.animation = ParticleSystemAnimationType.WholeSheet;
+        hoja.frameOverTime = new ParticleSystem.MinMaxCurve(0f);
+        hoja.startFrame = new ParticleSystem.MinMaxCurve(0f, TiposDeResto - 0.01f);
+        var ruido = restos.noise;
         ruido.enabled = true;
         ruido.strength = 1.6f;
         ruido.frequency = 0.6f;
         ruido.scrollSpeed = 0.8f;
-        AparecerYDesvanecer(hojas, 0.1f, 0.8f);
-        hojas.Play();
+        restos.GetComponent<ParticleSystemRenderer>().sharedMaterial = MaterialDeRestos();
+        AparecerYDesvanecer(restos, 0.1f, 0.8f);
+        restos.Play();
 
         return go;
     }
@@ -174,6 +251,7 @@ public static class VfxDeClima
         if (_materialLluvia != null) _materialLluvia.color = Color.Lerp(luz, Color.white, 0.3f);
         if (_materialSalpicadura != null) _materialSalpicadura.color = Color.Lerp(luz, Color.white, 0.3f);
         if (_materialRizo != null) _materialRizo.color = Color.Lerp(luz, Color.white, 0.45f);
+        if (_materialRestos != null) _materialRestos.color = Color.Lerp(luz, Color.white, 0.35f);
     }
 
     private static GameObject CrearRaiz(string nombre, Transform padre)
@@ -260,6 +338,75 @@ public static class VfxDeClima
         if (_materialRizo != null) return _materialRizo;
         _materialRizo = new Material(Shader.Find("Sprites/Default")) { name = "[VfxDeClima] Rizo" };
         return _materialRizo;
+    }
+
+    private static Material MaterialDeRestos()
+    {
+        if (_materialRestos != null) return _materialRestos;
+        _materialRestos = new Material(Shader.Find("Sprites/Default")) { name = "[VfxDeClima] Restos" };
+        _materialRestos.mainTexture = Restos();
+        return _materialRestos;
+    }
+
+    private const int TiposDeResto = 4;
+    private const int LadoDeResto = 32;
+    private static readonly Color Tinta = new Color(0.20f, 0.15f, 0.23f);
+
+    /// Hoja, pétalo, brizna de paja y terrón, en fila. Cada uno es una forma con relleno plano, una
+    /// banda de sombra con color y el borde de tinta: el mismo dibujo que los VFX de hechizos.
+    private static Texture2D Restos()
+    {
+        if (_restos != null) return _restos;
+        _restos = new Texture2D(LadoDeResto * TiposDeResto, LadoDeResto, TextureFormat.RGBA32, false)
+        {
+            name = "[VfxDeClima] Restos",
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Bilinear,
+        };
+        var px = new Color32[LadoDeResto * TiposDeResto * LadoDeResto];
+        var relleno = new[] { new Color(0.42f, 0.66f, 0.22f), new Color(1f, 0.74f, 0.82f), new Color(0.94f, 0.80f, 0.38f), new Color(0.52f, 0.36f, 0.22f) };
+        for (int tipo = 0; tipo < TiposDeResto; tipo++)
+            for (int y = 0; y < LadoDeResto; y++)
+                for (int x = 0; x < LadoDeResto; x++)
+                {
+                    // Coordenadas -1..1 dentro de la casilla.
+                    float u = (x + 0.5f) / LadoDeResto * 2f - 1f, v = (y + 0.5f) / LadoDeResto * 2f - 1f;
+                    float d = DistanciaDeResto(tipo, u, v);
+                    float pixel = 2f / LadoDeResto;
+                    float dentro = Mathf.Clamp01(-d / pixel + 0.5f);
+                    float tinta = Mathf.Clamp01((d + 2.2f * pixel) / pixel);
+                    Color c = relleno[tipo];
+                    if (v < -0.15f + 0.25f * u) c *= 0.78f;                  // sombra con color, borde duro
+                    if (tipo == 0 && Mathf.Abs(u) < pixel * 0.7f && v > -0.7f) c = Color.Lerp(c, Tinta, 0.5f); // nervio
+                    c = Color.Lerp(c, Tinta, tinta);
+                    c.a = dentro;
+                    px[y * LadoDeResto * TiposDeResto + tipo * LadoDeResto + x] = c;
+                }
+        _restos.SetPixels32(px);
+        _restos.Apply(false, true);
+        return _restos;
+    }
+
+    // Distancia con signo (negativa dentro) de cada forma, en unidades de la casilla (-1..1).
+    private static float DistanciaDeResto(int tipo, float u, float v)
+    {
+        switch (tipo)
+        {
+            case 0: // hoja: dos arcos que se cortan, con punta arriba y abajo
+                return Mathf.Max(new Vector2(u - 0.55f, v).magnitude - 1.15f, new Vector2(u + 0.55f, v).magnitude - 1.15f) * 0.8f;
+            case 1: // pétalo: gota redondeada
+                return new Vector2(u * 1.25f, (v + 0.1f) * 0.95f).magnitude - 0.62f + Mathf.Max(0f, v) * 0.35f;
+            case 2: // brizna de paja: palito fino e inclinado
+            {
+                Vector2 p = new Vector2(u * 0.8f + v * 0.6f, -u * 0.6f + v * 0.8f);
+                return Mathf.Max(Mathf.Abs(p.x) - 0.12f, Mathf.Abs(p.y) - 0.9f);
+            }
+            default: // terrón: canto rodado irregular
+            {
+                float a = Mathf.Atan2(v, u);
+                return new Vector2(u, v).magnitude - (0.5f + 0.08f * Mathf.Sin(a * 3f) + 0.05f * Mathf.Sin(a * 5f + 1f));
+            }
+        }
     }
 
     private static Texture2D Punto()

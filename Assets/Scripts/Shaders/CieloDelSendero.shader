@@ -19,7 +19,7 @@ Shader "El Sendero/Cielo"
         _VelocidadDeNubes ("Velocidad de nubes", Float) = 0.025
         _Nubosidad ("Nubosidad del clima", Float) = 0
         [HDR] _ColorDeNubesDeClima ("Nubes de clima", Color) = (0.52,0.58,0.66,1)
-        _ColorDeNubesDeClimaEnSombra ("Sombra de clima", Color) = (0.34,0.38,0.43,1)
+        [HDR] _ColorDeNubesDeClimaEnSombra ("Sombra de clima", Color) = (0.34,0.38,0.43,1)
         _AvanceDelFrente ("Avance del frente", Float) = 0
         _NubesDeDibujo ("Nubes de dibujo (0 = algodón, 1 = borde duro y dos tonos)", Range(0, 1)) = 1
     }
@@ -48,6 +48,7 @@ Shader "El Sendero/Cielo"
         [unroll] for (int j=0;j<4;j++) { n += ruido(p)*peso; p=p*2.03+float2(13.7,7.9); peso*=0.5; }
         return n;
     }
+    float redondo(float2 uv) { return ruido(uv*0.55)*0.62+ruido(uv*1.2+float2(5.2,1.3))*0.38; }
     float3 seguro(float3 v) { return v * rsqrt(max(dot(v,v),0.000001)); }
     float2 coordenadasDelAstro(float3 d, float3 eje)
     {
@@ -72,26 +73,38 @@ Shader "El Sendero/Cielo"
         float bajo=1-saturate(sol.y);
         float resplandor=exp(-angSol/max(0.01,_TamanoDelResplandor))*_FuerzaDelResplandor*(0.3+1.7*bajo)*saturate(_CieloColorDelSol.a);
         cielo+=_ColorDelResplandor.rgb*resplandor;
-        float2 uv=d.xz/(max(d.y,0.0)+0.12)*max(0.01,_EscalaDeNubes)+_CieloViento.xy*_Time.y*_VelocidadDeNubes;
+        float2 base=d.xz/(max(d.y,0.0)+0.12)*max(0.01,_EscalaDeNubes), viento=_CieloViento.xy*_Time.y*_VelocidadDeNubes;
+        float2 uv=base+viento;
         // De dibujo: dos octavas de ruido en vez de cuatro, para manchas redondas y no deshilachadas.
-        float redondo=ruido(uv*0.55)*0.62+ruido(uv*1.2+float2(5.2,1.3))*0.38;
-        float n=lerp(fbm(uv),redondo,_NubesDeDibujo);
+        float n=lerp(fbm(uv),redondo(uv),_NubesDeDibujo);
+        // El mismo ruido un poco hacia el horizonte: si ahí ya no hay nube, este punto es la panza.
+        float nAbajo=redondo(base*1.1+viento);
         float c=saturate(max(_NubosidadBase,_Nubosidad));
         float2 horizontal=d.xz*rsqrt(max(dot(d.xz,d.xz),0.000001));
-        float local=saturate(c+_AvanceDelFrente*dot(horizontal,_CieloDireccionDelFrente.xy)*0.5);
+        // El frente solo suma nubes por el lado del viento: por el otro no puede abrir claros mientras se nubla.
+        float haciaElFrente=dot(horizontal,_CieloDireccionDelFrente.xy);
+        float local=saturate(c+_AvanceDelFrente*lerp(haciaElFrente,max(0,haciaElFrente),_NubesDeDibujo)*0.5);
+        // De dibujo, las nubes nunca se funden en una mancha lisa: crecen y se juntan hasta un tope, y lo que
+        // queda entre ellas se va tapando con un fondo de nube en sombra. Así, encapotado, siguen viéndose nubes.
+        float umbral=lerp(1-local,max(1-local,0.36),_NubesDeDibujo);
         // Nubes de dibujo: borde duro (lo justo para no dentar) y dos tonos con el corte marcado.
         float suavidad=lerp(max(0.001,_SuavidadDeNubes),max(fwidth(n)*1.2,0.004),_NubesDeDibujo);
-        float densidad=smoothstep(1-local,1-local+suavidad,n);
-        // La cobertura total conserva relieve de color y no deja huecos en el cénit.
-        densidad=lerp(densidad,1,smoothstep(0.9,1,local));
+        float densidad=smoothstep(umbral,umbral+suavidad,n);
+        // La cobertura total conserva relieve de color y no deja huecos en el cénit (algodón).
+        densidad=lerp(densidad,1,smoothstep(0.9,1,local)*(1-_NubesDeDibujo));
         densidad=lerp(densidad,c,exp(-altura*18));
         if(d.y<0) densidad=c;
         float3 luz=lerp(_ColorDeNubes.rgb,_ColorDeNubesDeClima.rgb,saturate(_Nubosidad));
         float3 sombra=lerp(_ColorDeNubesEnSombra.rgb,_ColorDeNubesDeClimaEnSombra.rgb,saturate(_Nubosidad));
-        float corteDeLuz=lerp(0.15,0.62,_NubesDeDibujo), anchoDeLuz=lerp(0.7,max(fwidth(n)*1.5,0.004),_NubesDeDibujo);
-        float3 nube=lerp(sombra,luz,smoothstep(corteDeLuz,corteDeLuz+anchoDeLuz,n));
+        // Algodón: la sombra sigue al ruido. Dibujo: cuerpo blanco y la panza (el lado del horizonte) en sombra, corte duro.
+        float luzAlgodon=smoothstep(0.15,0.85,n);
+        float umbralDeLuz=umbral+0.06;
+        float luzDibujo=smoothstep(umbralDeLuz,umbralDeLuz+max(fwidth(nAbajo)*1.5,0.004),nAbajo);
+        float3 nube=lerp(sombra,luz,lerp(luzAlgodon,luzDibujo,_NubesDeDibujo));
 
         nube+=_ColorDelResplandor.rgb*exp(-angSol*8)*densidad*(1-densidad)*2*saturate(_CieloColorDelSol.a);
+        float fondoCubierto=smoothstep(0.6,0.95,local)*_NubesDeDibujo;
+        cielo=lerp(cielo,sombra*0.88,fondoCubierto);
         cielo=lerp(cielo,nube,densidad);
         float radioSol=max(0.0001,_CieloTamanoDelSol);
         float2 discoSol=coordenadasDelAstro(d,sol);

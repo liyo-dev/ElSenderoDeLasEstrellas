@@ -24,7 +24,7 @@ namespace Liyodev.Cinematics
             "What do you want to fix in this cinematic?");
 
         public string Intro => AssistantText.T(
-            "Abre una cinemática en el Director y pregunta por ella. El asistente lee el guion, el último horneado y los encargos pendientes, y puede proponer cambios que tú aplicas.",
+            "Abre una cinemática en el Director y pregunta por ella. El asistente lee el guion, el último horneado, las marcas y los encargos pendientes, y propone cambios que tú aplicas. Conecta tu IA (tu cuenta de ChatGPT, Google o Claude, sin clave) o usa una clave de API.",
             "Open a cinematic in the Director and ask about it. The assistant reads the guion, the last bake and the pending tasks, and can propose changes you apply.");
 
         public event Action Changed;
@@ -37,12 +37,16 @@ namespace Liyodev.Cinematics
             "- insert_after {line|anchor, text} / insert_before {line|anchor, text}: insert one or more lines; anchor can be a section (PUNTOS) or a label (@inicio).\n" +
             "- delete_line {line, match}: remove the line.\n" +
             "- resolve_task {task:\"P06\"|\"all\"}: close those pending tasks after the change.\n" +
+            "Every operation is an object whose \"op\" key names it, for example: {\"ops\":[{\"op\":\"set_options\",\"line\":12,\"match\":\"plano medio will\",\"options\":[{\"name\":\"lente\",\"value\":\"35\"}]},{\"op\":\"resolve_task\",\"task\":\"P03\"}]}.\n" +
             "Lines are the L... from the state, on the original text. Use match whenever you change a line, so the game can check it is still the same line. Apply the minimum change and use only the aliases, points, labels, animation states and beat fields from the manual and the state. Cite the line and the shot. The game writes the guion, bakes it and closes the tasks only if the bake accepts the change.";
 
+        /// El manual del guion solo hace falta con una cinemática abierta: sin ella no se proponen
+        /// cambios, y mandarlo sería gastar.
         public string Manual()
         {
             var bridge = CinematicsEditorServices.Bridge;
-            return bridge != null ? bridge.ManualDeGuion() : "No hay puente de cinemáticas en este proyecto.";
+            if (bridge == null) return "No hay puente de cinemáticas en este proyecto.";
+            return HasTarget ? bridge.ManualDeGuion() : string.Empty;
         }
 
         public string State()
@@ -50,13 +54,49 @@ namespace Liyodev.Cinematics
             var bridge = CinematicsEditorServices.Bridge;
             if (bridge == null) return "No hay puente de cinemáticas en este proyecto.";
             string id = DirectorWindow.CinematicaActivaId;
-            if (string.IsNullOrEmpty(id)) return "No hay ninguna cinemática abierta en el Director.";
+            if (string.IsNullOrEmpty(id)) return Resumen(bridge);
             return bridge.EstadoParaAsistente(id, DirectorWindow.PlanoActivo, DirectorWindow.SegundoActivo);
+        }
+
+        /// Sin cinemática abierta: la lista de todas, con lo que espera a alguien (encargos de la IA,
+        /// errores del horneado), para contestar preguntas sobre el conjunto.
+        private static string Resumen(ICinematicsEditorBridge bridge)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("# Cinemáticas del proyecto (ninguna abierta en el Director)");
+            sb.AppendLine("No propongas cambios (no emitas ops): para cambiar una, di cuál hay que abrir en el Director.");
+            sb.AppendLine();
+            List<CinemaEntry> lista;
+            try { lista = bridge.Listar(); }
+            catch (Exception e) { return sb.AppendLine("No se pudo leer la lista: " + e.Message).ToString(); }
+
+            foreach (var e in lista)
+            {
+                string extra = string.Empty;
+                if (e.encargos > 0) extra += $" · {e.encargos} encargo(s) para la IA";
+                if (e.errores > 0) extra += $" · {e.errores} error(es) en el horneado";
+                sb.AppendLine($"- {e.nombre} ({e.escena}) · {e.estado}{extra}");
+            }
+
+            const int Tope = 1500;
+            foreach (var e in lista)
+            {
+                if (e.encargos <= 0) continue;
+                string texto;
+                try { texto = bridge.TextoDeEncargos(e.id) ?? string.Empty; }
+                catch (Exception) { continue; }
+                if (texto.Length > Tope) texto = texto.Substring(0, Tope) + "…";
+                sb.AppendLine();
+                sb.AppendLine($"## Encargos de {e.nombre}");
+                sb.AppendLine(texto.Trim());
+            }
+            return sb.ToString();
         }
 
         public string DescribeOp(JObject op)
         {
             if (op == null) return "?";
+            Normalizar(op);
             string o = (string)op["op"];
             return o switch
             {
@@ -99,6 +139,18 @@ namespace Liyodev.Cinematics
                 return result;
             }
 
+            try
+            {
+                var lote = JObject.Parse(json);
+                if (lote["ops"] is JArray ops)
+                    foreach (var op in ops) Normalizar(op as JObject);
+                json = lote.ToString();
+            }
+            catch (Exception)
+            {
+                // Un JSON que no se lee lo rechaza el puente con su propio mensaje.
+            }
+
             var edicion = bridge.AplicarEdicionDeGuion(id, json);
             result.Applied = edicion.aplicado;
             if (!string.IsNullOrEmpty(edicion.resumen))
@@ -112,6 +164,14 @@ namespace Liyodev.Cinematics
             result.Errors.AddRange(edicion.errores);
             if (result.Applied) NotifyChanged();
             return result;
+        }
+
+        /// En las cinemáticas ninguna operación usa «type»: si falta «op», es el nombre de la operación.
+        private static void Normalizar(JObject op)
+        {
+            if (op == null || op["op"] != null) return;
+            var nombre = op["type"] ?? op["action"] ?? op["operation"];
+            if (nombre != null) op["op"] = nombre.ToString();
         }
 
         public string QuickActionLabel => AssistantText.T("Resolver encargos", "Resolve tasks");

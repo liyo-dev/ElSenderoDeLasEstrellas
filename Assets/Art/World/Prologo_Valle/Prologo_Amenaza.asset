@@ -62,34 +62,6 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 1
     m_Value: 1000
---- !u!114 &-4523652236335259343
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8317041eee140a38873daddb4b3a5f, type: 3}
-  m_Name: StylizedDetail
-  m_EditorClassIdentifier: Assembly-CSharp-firstpass::CompoundRendererFeature.PostProcess.StylizedDetail
-  active: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.1
-  blur:
-    m_OverrideState: 1
-    m_Value: 1.2
-  edgePreserve:
-    m_OverrideState: 1
-    m_Value: 1.25
-  rangeStart:
-    m_OverrideState: 1
-    m_Value: 30
-  rangeEnd:
-    m_OverrideState: 1
-    m_Value: 80
 --- !u!114 &-1693749815516758448
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -209,8 +181,6 @@ MonoBehaviour:
   - {fileID: 966118777762555007}
   - {fileID: 5681638874800857392}
   - {fileID: -6899644343214497428}
-  - {fileID: -4523652236335259343}
-  - {fileID: 5208157560572597564}
 --- !u!114 &966118777762555007
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -277,40 +247,6 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0.45
   rounded:
-    m_OverrideState: 1
-    m_Value: 0
---- !u!114 &5208157560572597564
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8f6e43869a48f991285995d4df1e93, type: 3}
-  m_Name: ColorGrading
-  m_EditorClassIdentifier: Assembly-CSharp-firstpass::CompoundRendererFeature.PostProcess.ColorGrading
-  active: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0
-  blueShadows:
-    m_OverrideState: 1
-    m_Value: 0
-  greenShadows:
-    m_OverrideState: 1
-    m_Value: 0
-  redHighlights:
-    m_OverrideState: 1
-    m_Value: 0
-  contrast:
-    m_OverrideState: 1
-    m_Value: 0
-  vibrance:
-    m_OverrideState: 1
-    m_Value: 0
-  saturation:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &5307393714508895931

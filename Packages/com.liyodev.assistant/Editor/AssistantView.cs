@@ -7,9 +7,10 @@ using UnityEngine.UIElements;
 
 namespace Liyodev.Assistant
 {
-    /// El chat compartido: una vista que se puede meter en cualquier ventana y que habla con el
-    /// contexto que le pasen. El contexto pone el manual, el estado y la forma de aplicar cambios;
-    /// aquí solo está la conversación y la caja de «Propone N cambios».
+    /// La caja de pedidos a la IA: una vista que se puede meter en cualquier ventana y que habla con
+    /// el contexto que le pasen. No es un chat: cada pedido va solo (con el estado de lo que se mira,
+    /// que ya lleva las marcas y el contexto), se enseña lo que contesta y los cambios que propone, y
+    /// el siguiente pedido empieza de cero. Así cada petición gasta lo justo.
     public sealed class AssistantView : VisualElement
     {
         private static readonly Regex ChangesBlock =
@@ -19,7 +20,6 @@ namespace Liyodev.Assistant
         private readonly ScrollView _log;
         private readonly TextField _input;
         private readonly Button _send;
-        private readonly Label _service;
         private readonly VisualElement _notReady;
         private readonly VisualElement _chat;
         private readonly List<AssistantTurn> _turns = new();
@@ -28,6 +28,12 @@ namespace Liyodev.Assistant
 
         public event Action SettingsRequested;
         public event Action Applied;
+
+        /// True mientras la IA trabaja en un pedido. Quien aloja la caja puede reflejarlo (un botón
+        /// que pasa a «trabajando»).
+        public bool Busy => _busy;
+
+        public event Action BusyChanged;
 
         public AssistantView(IAssistantContext context)
         {
@@ -40,20 +46,24 @@ namespace Liyodev.Assistant
             var intro = new Label(context != null ? context.Intro : string.Empty);
             intro.AddToClassList("story-muted");
             _notReady.Add(intro);
+            var conectar = new Button(AssistantConnectWindow.Open)
+                { text = AssistantText.T("Conectar mi IA (ChatGPT, Google o Claude)", "Connect my AI (ChatGPT, Google or Claude)") };
+            conectar.AddToClassList("story-button");
+            conectar.AddToClassList("is-primary");
+            conectar.style.marginTop = 10;
+            _notReady.Add(conectar);
             var open = new Button(() => SettingsRequested?.Invoke())
-                { text = "⚙  " + AssistantText.T("Abrir ajustes", "Open settings") };
+                { text = "⚙  " + AssistantText.T("Usar una clave de API u Ollama", "Use an API key or Ollama") };
             open.AddToClassList("story-button");
-            open.style.marginTop = 10;
+            open.style.marginTop = 6;
             _notReady.Add(open);
             Add(_notReady);
 
             _chat = new VisualElement { style = { flexGrow = 1 } };
-            _service = new Label();
-            _service.AddToClassList("story-assistant__service");
-            _chat.Add(_service);
             _log = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
             _log.AddToClassList("story-panel__scroll");
             _log.style.flexGrow = 1;
+            _log.style.display = DisplayStyle.None;
             _chat.Add(_log);
             var bottom = new VisualElement();
             bottom.AddToClassList("story-assistant__input");
@@ -68,21 +78,10 @@ namespace Liyodev.Assistant
                 }
             }, TrickleDown.TrickleDown);
             bottom.Add(_input);
-            _send = new Button(Send) { text = AssistantText.T("Enviar", "Send") };
+            _send = new Button(Send) { text = AssistantText.T("Pedir a la IA", "Ask the AI") };
             _send.AddToClassList("story-button");
+            _send.AddToClassList("is-primary");
             bottom.Add(_send);
-            var reset = new Button(() =>
-            {
-                _turns.Clear();
-                _log.Clear();
-                _sessionId = Guid.NewGuid().ToString("N");
-            })
-            {
-                text = AssistantText.T("Nueva", "New"),
-                tooltip = AssistantText.T("Empezar una conversación nueva", "Start a new conversation"),
-            };
-            reset.AddToClassList("story-button");
-            bottom.Add(reset);
             _chat.Add(bottom);
             Add(_chat);
 
@@ -102,37 +101,46 @@ namespace Liyodev.Assistant
         {
             if (!AssistantSettings.IsReady) return;
             string prompt = _context?.QuickActionPrompt();
-            if (!string.IsNullOrWhiteSpace(prompt)) Send(prompt);
+            if (!string.IsNullOrWhiteSpace(prompt)) Send(prompt, _context.QuickActionLabel);
         }
 
         public void Send()
         {
             var text = _input.value?.Trim();
             if (_busy || string.IsNullOrEmpty(text)) return;
-            if (_context == null || !_context.HasTarget)
+            if (_context == null)
             {
-                Note(AssistantText.T("No hay nada abierto sobre lo que trabajar.", "There is nothing open to work on."), true);
+                Note(AssistantText.T("No hay ninguna herramienta abierta con la que hablar.", "There is no tool open to talk to."), true);
                 return;
             }
             _input.value = string.Empty;
             Send(text);
         }
 
-        private void Send(string text)
+        /// `etiqueta`: lo que se enseña del pedido cuando el texto es una instrucción interna (la de
+        /// una acción rápida); si no, se enseña el texto tal cual.
+        private void Send(string text, string etiqueta = null)
         {
             if (_busy || string.IsNullOrEmpty(text)) return;
-            if (_context == null || !_context.HasTarget)
+            if (_context == null)
             {
-                Note(AssistantText.T("No hay nada abierto sobre lo que trabajar.", "There is nothing open to work on."), true);
+                Note(AssistantText.T("No hay ninguna herramienta abierta con la que hablar.", "There is no tool open to talk to."), true);
                 return;
             }
 
-            Bubble(text, true);
+            // Cada pedido empieza de cero: lo de antes ya está aplicado o descartado.
+            _turns.Clear();
+            _log.Clear();
+            AjustarRegistro();
+            _sessionId = Guid.NewGuid().ToString("N");
+            Bubble(string.IsNullOrEmpty(etiqueta) ? text : etiqueta, true);
             _turns.Add(new AssistantTurn(true, text));
 
             _busy = true;
+            _send.text = AssistantText.T("Trabajando…", "Working…");
+            BusyChanged?.Invoke();
             _send.SetEnabled(false);
-            var thinking = Note(AssistantText.T("Pensando…", "Thinking…"));
+            var thinking = Note(AssistantText.T("Trabajando…", "Working…"));
             string system = _context.RolePrompt() + "\n\n" + _context.Manual() + "\n\n" + _context.State();
             AssistantClient.Send(system, _turns, answer =>
             {
@@ -143,7 +151,7 @@ namespace Liyodev.Assistant
             {
                 Done(thinking);
                 if (_turns.Count > 0) _turns.RemoveAt(_turns.Count - 1);
-                Note(AssistantText.T("No se pudo contactar con el servicio: ", "Could not reach the service: ") + error, true);
+                Note(AssistantText.T("La IA no ha contestado. ", "The AI did not answer. ") + error, true);
             }, _sessionId);
         }
 
@@ -151,7 +159,9 @@ namespace Liyodev.Assistant
         {
             thinking.RemoveFromHierarchy();
             _busy = false;
-            _send.SetEnabled(_context != null && _context.HasTarget);
+            _send.text = AssistantText.T("Pedir a la IA", "Ask the AI");
+            BusyChanged?.Invoke();
+            _send.SetEnabled(_context != null);
         }
 
         private void Show(string answer)
@@ -163,6 +173,9 @@ namespace Liyodev.Assistant
             try
             {
                 var ops = JObject.Parse(match.Groups[1].Value)["ops"] as JArray;
+                if (ops != null)
+                    foreach (var op in ops)
+                        NormalizarOp(op as JObject);
                 if (ops != null && ops.Count > 0) Proposal(ops);
             }
             catch (Exception)
@@ -170,6 +183,14 @@ namespace Liyodev.Assistant
                 Note(AssistantText.T("El asistente propuso cambios que no se pueden leer.",
                                      "The assistant proposed changes that cannot be read."), true);
             }
+        }
+
+        /// Algunos modelos llaman a la operación «action» u «operation» en vez de «op».
+        private static void NormalizarOp(JObject op)
+        {
+            if (op == null || op["op"] != null) return;
+            var nombre = op["action"] ?? op["operation"];
+            if (nombre != null) op["op"] = nombre.ToString();
         }
 
         private void Proposal(JArray ops)
@@ -193,10 +214,6 @@ namespace Liyodev.Assistant
                         ? AssistantText.T("Cambios aplicados (Ctrl+Z los deshace).", "Changes applied (Ctrl+Z undoes them).") + "\n" + result
                         : result != null ? result.ToString() : "No hay contexto.",
                     !applied);
-                _turns.Add(new AssistantTurn(true, applied
-                    ? "[I applied your changes.]"
-                    : "[Your changes could not be applied:\n" + result + "]"));
-                _turns.Add(new AssistantTurn(false, "OK."));
                 if (applied)
                 {
                     _context?.NotifyChanged();
@@ -210,8 +227,6 @@ namespace Liyodev.Assistant
             apply.AddToClassList("is-primary");
             discard = new Button(() =>
             {
-                _turns.Add(new AssistantTurn(true, "[I discarded those changes.]"));
-                _turns.Add(new AssistantTurn(false, "OK."));
                 apply.SetEnabled(false);
                 discard.SetEnabled(false);
             })
@@ -233,9 +248,7 @@ namespace Liyodev.Assistant
             bool ready = AssistantSettings.IsReady;
             _notReady.style.display = ready ? DisplayStyle.None : DisplayStyle.Flex;
             _chat.style.display = ready ? DisplayStyle.Flex : DisplayStyle.None;
-            var p = AssistantSettings.Current;
-            _service.text = $"{AssistantSettings.Name(p)} · {AssistantSettings.Model(p)}";
-            _send.SetEnabled(!_busy && _context != null && _context.HasTarget);
+            _send.SetEnabled(!_busy && _context != null);
         }
 
         private void Bubble(string text, bool mine)
@@ -258,6 +271,13 @@ namespace Liyodev.Assistant
         }
 
         private void ScrollToEnd()
-            => _log.schedule.Execute(() => _log.scrollOffset = new Vector2(0, float.MaxValue));
+        {
+            AjustarRegistro();
+            _log.schedule.Execute(() => _log.scrollOffset = new Vector2(0, float.MaxValue));
+        }
+
+        /// Sin pedido no hay nada que enseñar: la zona de respuestas solo ocupa sitio cuando la hay.
+        private void AjustarRegistro()
+            => _log.style.display = _log.contentContainer.childCount > 0 ? DisplayStyle.Flex : DisplayStyle.None;
     }
 }
