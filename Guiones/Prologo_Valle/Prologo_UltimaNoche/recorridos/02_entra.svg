@@ -346,7 +346,7 @@
 <line x1='-292629.7' y1='304183.8' x2='-292635.3' y2='304168.8' stroke='#c79bff' stroke-width='2'/>
 <text x='-292621.7' y='304175.8' font-size='14' fill='#c79bff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>vc</text>
 <circle cx='-292629.7' cy='304183.8' r='4' fill='#000' stroke='#c79bff' stroke-width='1'/>
-<polygon points='-292911.6,303995.9 -292852.7,303785.1 -292702.7,303930.5' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<polygon points='-292911.6,303995.9 -292886.4,303778.5 -292695,303964' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='-292911.6' cy='303995.9' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='-292904.6' y='303999.9' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>1</text>
 <polygon points='-292854.5,303900.7 -292767.8,303865.4 -292777.8,303954.1' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>

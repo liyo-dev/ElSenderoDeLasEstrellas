@@ -879,8 +879,9 @@ public class VueloDeAperturaBeat : SequenceBeat
         new Vector3(-220f, 150f, -660f),
         new Vector3(-168f, 34f, -585f), new Vector3(-160f, 20f, -500f), new Vector3(-153.5f, 7f, -446f),
         new Vector3(-152.6f, 14f, -434f), new Vector3(-152.4f, 30f, -428.5f), new Vector3(-151.5f, 42f, -414f),
-        // Llega al maestro a poca altura, de frente, sin pasar por encima de la plaza mirando abajo (INC-1287).
-        new Vector3(-155f, 47f, -392f), new Vector3(-162.5f, 40.5f, -379f), new Vector3(-168.2f, 37.4f, -369.8f),
+        // Llega al maestro a poca altura, de frente, y acaba justo donde empieza el plano del saludo (cam_baja,
+        // 1,15 m sobre el suelo, mirándole): sin fundido ni corte, el maestro empieza a hablar (INC-1287).
+        new Vector3(-155f, 47f, -392f), new Vector3(-162.5f, 40.5f, -379f), new Vector3(-170.0f, 35.15f, -366.0f),
     };
     static readonly Vector3[] Mira =
     {
@@ -888,7 +889,7 @@ public class VueloDeAperturaBeat : SequenceBeat
         new Vector3(-155f, 25f, -440f),
         new Vector3(-152f, 20f, -425f), new Vector3(-152f, 16f, -425f), new Vector3(-152.4f, 14f, -423f),
         new Vector3(-152.4f, 26f, -422f), new Vector3(-151f, 40f, -405f), new Vector3(-158f, 36f, -372f),
-        new Vector3(-166f, 34.5f, -364f), new Vector3(-166.8f, 36.0f, -362.7f), new Vector3(-166.8f, 36.0f, -362.7f),
+        new Vector3(-166f, 34.5f, -364f), new Vector3(-166.8f, 35.0f, -362.7f), new Vector3(-166.8f, 35.0f, -362.7f),
     };
     // Tramo de la curva (en puntos) en el que se ve el logo: subiendo por la cascada.
     const float LogoDesdePunto = 7.4f, LogoHastaPunto = 9.8f;

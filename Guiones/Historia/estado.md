@@ -1,9 +1,9 @@
-# Estado de la prueba (16:27:09)
+# Estado de la prueba (16:38:12)
 
 ## Órdenes
-· foto ds_26 → C:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas\Guiones\Historia\fotos\ds_26.png
+· foto tr_18 → C:\Users\luarb\dev\unity\ElSenderoDeLasEstrellas\Guiones\Historia\fotos\tr_18.png
 
-Fotograma 1137 · t=40,4 s · segundo plano True
+Fotograma 2571 · t=88,6 s · segundo plano True
 Play: True · escenas: MainWorld, Start, WillHouse, Prologo_Valle
 
 ## Grafos

@@ -463,9 +463,9 @@ desde @entra+4.2 efecto HojasConBisagraBeat nombre="Mirador · Abuela" abrir=tru
 desde @entra+4.2 sonido SFX_Pueblo_Contraventana_Abre en=M_Mirador_Abuela volume=0.5 tono=0.95
 desde @entra+3.2 sonido SFX_Pueblo_Contraventana_Abre en=M_Mirador_Vecino volume=0.6
 # El vuelo acaba sobre la plaza. En vez de la grúa lenta hasta el maestro, un fundido a negro rápido y su cara.
-efecto ScreenFadeBeat fadeIn=true color=000000FF duration=0.2 waitForEnd=true
-plano medio archimago solo desde=cam_baja altura=1.15 altura_foco=1.0 lente=38
-efecto ScreenFadeBeat fadeIn=false color=000000FF duration=0.25 waitForEnd=true
+# Sin fundido (INC-1287): el vuelo acaba donde empieza este plano (misma posición, mirada y lente), así
+# que la cámara llega al maestro y él empieza a hablar sin corte.
+plano medio archimago solo desde=cam_baja altura=1.15 altura_foco=1.0 lente=50
 @saludo
 archimago dice PROLOGO_MANANA_INTRO gesto=Talk01 cara=alegre
 # Solo el maestro y la Vecina: v01 anda por el otro lado de la plaza y, al meterlo en el plano,

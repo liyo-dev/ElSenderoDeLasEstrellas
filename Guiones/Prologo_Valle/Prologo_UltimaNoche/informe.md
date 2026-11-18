@@ -1,8 +1,8 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-11-18 16:26 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-11-18 16:35 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
-**4:30,8** de secuencia · 32 frases · 56 planos · 205 efectos · 19 personajes
+**4:30,8** de secuencia · 32 frases · 56 planos · 203 efectos · 19 personajes
 
 Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,81/ojos 0,98 · nina 1,16/ojos 0,63 · v01 1,31/ojos 0,98 · v02 1,58/ojos 0,98 · v03 1,51/ojos 0,98 · v04 1,68/ojos 0,98 · v06 1,64/ojos 0,98 · v07 1,30/ojos 0,98 · v08 1,58/ojos 0,98 · v09 1,46/ojos 0,97 · v10 1,58/ojos 0,97 · panadera 1,55/ojos 0,95 · madre 1,44/ojos 0,94 · lucas 1,23/ojos 0,63 · vm 1,58/ojos 0,94 · ab 1,55/ojos 0,95 · vc 1,51/ojos 0,94
 
@@ -54,10 +54,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 0:31,5 | efecto | Decorado: mover PROP_Carreta (al instante) |
 | 1:03,1 | **@entra** |  |
 | 1:03,1 | **@saludo** |  |
-| 1:03,1 | plano 1 | medio de archimago · 3,7 s · lente 38° |
+| 1:03,1 | plano 1 | medio de archimago · 3,7 s · lente 50° |
 | 1:03,1 | archimago | «Buenos días, pueblo. ¿Qué se te ha estropeado hoy?» (3,7 s) · pose |
-| 1:03,1 | efecto | Pantalla: descubrir (0,25s) |
-| 1:03,1 | efecto | Pantalla: cubrir (0,2s) |
 | 1:06,3 | efecto | SFX: SFX_Pueblo_Contraventana_Abre |
 | 1:06,3 | efecto | Hojas: abrir Mirador · Vecino |
 | 1:06,8 | plano 2 | medio de v02 · 4,0 s · lente 38° |
@@ -103,10 +101,10 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 1:50,5 | efecto | Sol: en cuadro, poniéndose en 19 s |
 | 1:50,5 | efecto | Pantalla: descubrir (0,5s) |
 | 1:50,5 | efecto | Hora del día: Sunset |
+| 1:50,5 | efecto | Ambiente: AMBIENTE_RIO ← Ambience_Prologo_Rio |
 | 1:50,5 | efecto | Ambiente: parar AMBIENTE |
 | 1:50,5 | efecto | Música: PROLOGUE_DREAM |
 | 1:50,5 | efecto | Pantalla: cubrir (0,4s) |
-| 1:50,5 | efecto | Ambiente: AMBIENTE_RIO ← Ambience_Prologo_Rio |
 | 1:51,5 | **@rio_paseo** |  |
 | 1:52,1 | liora | «¿Has pensado qué contestar a la academia? Llevas semanas con la carta.» (4,4 s) |
 | 1:57,1 | plano 14 | medio de archimago · 5,7 s · lente 38° · coste 121: cara 100, ángulo 15 |
@@ -220,8 +218,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 3:21,7 | efecto | Sacudida de cámara (0,55, 0,6s) |
 | 3:23,0 | **@choque** |  |
 | 3:23,0 | plano 41 | dos: archimago y mago · 3,8 s · lente 58° |
-| 3:23,1 | efecto | Conjuro en las manos: NPC_MagoOscuro (0,6 s) |
 | 3:23,1 | efecto | Conjuro en las manos: NPC_Archimago (0,6 s) |
+| 3:23,1 | efecto | Conjuro en las manos: NPC_MagoOscuro (0,6 s) |
 | 3:23,1 | efecto | VFX: Luz_Circulo en NPC_Archimago |
 | 3:23,1 | efecto | VFX: Sombra_Circulo en NPC_MagoOscuro |
 | 3:23,2 | efecto | VFX: Marca en choque |
@@ -232,8 +230,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 3:24,0 | efecto | Líneas de concentración: mostrar |
 | 3:24,0 | efecto | VFX: Choque en choque |
 | 3:24,0 | efecto | VFX: Pilar en choque |
-| 3:24,0 | efecto | Sacudida de cámara (0,75, 1s) |
 | 3:24,0 | efecto | Fogonazo (0,28s) |
+| 3:24,0 | efecto | Sacudida de cámara (0,75, 1s) |
 | 3:24,1 | efecto | SFX: Prologue_WarClashStinger_A |
 | 3:26,8 | plano 42 | dos: archimago y mago · 2,1 s · lente 58° |
 | 3:27,0 | efecto | Hechizo: NPC_MagoOscuro → NPC_Archimago |
@@ -241,8 +239,8 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 3:27,4 | efecto | SFX: SFX_Prologo_Latigazo |
 | 3:27,7 | efecto | VFX: Sombra_Grieta en NPC_Archimago |
 | 3:27,9 | efecto | SFX: Prologo_ImpactoHechizo |
-| 3:27,9 | efecto | Sacudida de cámara (0,7, 0,9s) |
 | 3:27,9 | efecto | VFX: Sombra_Onda en NPC_Archimago |
+| 3:27,9 | efecto | Sacudida de cámara (0,7, 0,9s) |
 | 3:27,9 | efecto | SFX: SFX_Prologo_Impacto |
 | 3:28,9 | **@ultimo** |  |
 | 3:28,9 | plano 43 | primer plano de mago · 3,3 s · lente 36° · coste 5: ángulo 5 |
@@ -291,9 +289,9 @@ Reparto medido (m): archimago 1,36/ojos 0,94 · liora 1,35/ojos 0,94 · mago 1,8
 | 4:03,7 | plano 50 | conjunto de archimago · 6,3 s · lente 58° · coste 0: limpio |
 | 4:03,7 | archimago | «Que mi vida sea el precio y mi alma el sello... ¡No importa lo que quede de mí cuando la luz se apague!» (6,3 s) |
 | 4:03,7 | efecto | Conjuro a la cabeza: NPC_Archimago (16,0 s) |
+| 4:07,2 | efecto | VFX: Pilar en NPC_Archimago |
 | 4:07,2 | efecto | Sacudida de cámara (0,3, 0,9s) |
 | 4:07,2 | efecto | SFX: Prologo_MagiaLevitar |
-| 4:07,2 | efecto | VFX: Pilar en NPC_Archimago |
 | 4:10,0 | plano 51 | conjunto de archimago · 6,1 s · lente 58° · coste 260: eje 260 |
 | 4:10,0 | archimago | «¡Haz de mi último aliento un escudo inquebrantable! ¡Arde conmigo y detén la oscuridad!» (6,1 s) |
 | 4:10,0 | efecto | Líneas de concentración: mostrar |
