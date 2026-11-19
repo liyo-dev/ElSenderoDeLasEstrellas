@@ -522,10 +522,12 @@ public class MainMenuController : MonoBehaviour
 
         if (forcePreset)
         {
-            // MODO TESTING: El preset de testeo controla TODO - no hace falta resetear ni borrar saves
+            // Modo pruebas: el guardado no se toca, pero la partida en memoria vuelve al preset de
+            // pruebas (puede venir de jugar en esta misma sesión y volver al menú).
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[MainMenu] NEW GAME en modo preset/test → Save NO se borra, bootPreset tiene control absoluto");
+            Debug.Log("[MainMenu] NEW GAME en modo preset/test → Save NO se borra, se recarga el bootPreset");
 #endif
+            GameBootService.NewGameReset();
         }
         else
         {

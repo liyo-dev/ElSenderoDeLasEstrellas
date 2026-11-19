@@ -96,6 +96,10 @@ Shader "El Sendero/Agua de dibujo"
             half _AnchoDeLomo;
             CBUFFER_END
 
+            // Desplazamiento acumulado del mundo cíclico (lo publica WorldWrapper; 0 sin él): el dibujo del
+            // agua usa (posición − desplazamiento) para no cambiar de golpe al cruzar el borde.
+            float4 _WorldWrapShift;
+
             // Fase de la ola en un punto del mundo (radianes): una ola larga y otra más corta cruzada.
             float FaseDeOla(float2 xz, float t, out float fase2)
             {
@@ -132,7 +136,7 @@ Shader "El Sendero/Agua de dibujo"
                 // Oleaje: la superficie sube y baja despacio (se nota donde la malla tiene vértices).
                 float3 mundo = TransformObjectToWorld(input.positionOS.xyz);
                 float fase2;
-                float fase = FaseDeOla(mundo.xz, _Time.y, fase2);
+                float fase = FaseDeOla(mundo.xz - _WorldWrapShift.xz, _Time.y, fase2);
                 mundo.y += _AlturaDeOla * (sin(fase) + 0.4 * sin(fase2));
                 input.positionOS.xyz = TransformWorldToObject(mundo);
                 VertexPositionInputs p = GetVertexPositionInputs(input.positionOS.xyz);
@@ -203,7 +207,8 @@ Shader "El Sendero/Agua de dibujo"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 float t = _Time.y;
-                float2 xz = input.positionWS.xz - _Corriente.xy * t;
+                float2 xzMundo = input.positionWS.xz - _WorldWrapShift.xz;
+                float2 xz = xzMundo - _Corriente.xy * t;
                 float2 uvPantalla = GetNormalizedScreenSpaceUV(input.positionCS);
                 float hondura = max(ProfundidadDelFondo(uvPantalla) - input.profundidadOjo, 0.0);
 
@@ -216,7 +221,7 @@ Shader "El Sendero/Agua de dibujo"
 
                 // Lomos de ola: bandas claras y finas que pasan despacio (solo donde ya no es orilla).
                 float fase2;
-                float fase = FaseDeOla(input.positionWS.xz, t, fase2);
+                float fase = FaseDeOla(xzMundo, t, fase2);
                 half lomo = step(1.0h - _AnchoDeLomo, 0.5h + 0.5h * sin(fase) * (0.8h + 0.2h * sin(fase2))) * step(_CorteMedio, k);
                 color = lerp(color, _ColorLomo.rgb, lomo * _ColorLomo.a);
 

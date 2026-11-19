@@ -8,6 +8,7 @@ using Game.NPC;
 /// queda el icono de «habla conmigo». No completa la misión: eso lo hace el paso siguiente
 /// (normalmente esperar la charla con el NPC), así el icono significa literalmente «habla conmigo».
 [Serializable]
+[SavePoint("Seguro guardar mientras espera la entrega")]
 [NarrativeNodeInfo("NPCs", "Esperar entrega de objeto", "Espera a que el jugador le entregue por proximidad un objeto llevado en brazos a un NPC: el objeto desaparece con VFX/SFX, el NPC se gira y hace un gesto, y queda el icono de 'habla conmigo'.")]
 public sealed class PedirEntregaDeObjeto : NarrativeRequest, INarrativeStateEffect
 {

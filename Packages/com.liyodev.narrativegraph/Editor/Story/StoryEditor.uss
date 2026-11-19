@@ -217,7 +217,8 @@
 
 .story-card__header { flex-direction: row; align-items: center; height: 30px; padding: 0 10px; border-bottom-width: 2px; flex-shrink: 0; }
 .story-card__icon { width: 18px; height: 18px; border-radius: 5px; margin-right: 8px; flex-shrink: 0; }
-.story-card__art { height: 112px; flex-shrink: 0; }
+.story-card__art { height: 64px; flex-shrink: 0; overflow: hidden; }
+.story-card__art-drawing { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .story-card__body { padding: 7px 10px 0 10px; }
 .story-card__line { flex-direction: row; align-items: center; margin-top: 4px; }
 .story-card__face { width: 26px; height: 26px; border-radius: 7px; margin-right: 7px; flex-shrink: 0; }

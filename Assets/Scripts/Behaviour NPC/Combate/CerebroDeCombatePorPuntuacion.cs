@@ -69,6 +69,7 @@ namespace Game.NPC.Combate
         private float _esquivaListaEn;
         private float _siguienteDecision;
         private float _siguienteSondeo;
+        private float _defendiendoDesde = -1f;
 
         private readonly List<Transform> _amenazas = new List<Transform>();
         private readonly List<Transform> _companerosT = new List<Transform>();
@@ -149,6 +150,9 @@ namespace Game.NPC.Combate
             if (_objetivo != null) _memoria.Visto(_objetivo.position);
 
             LecturaDelJugador.Asegurar();
+            PlayerShieldController.AlDevolverAtaque -= AlDevolverleUnAtaque;
+            PlayerShieldController.AlDevolverAtaque += AlDevolverleUnAtaque;
+            _defendiendoDesde = -1f;
             CoordinacionDeGrupo.Entrar(this);
             _ctx.CerebroDeCombate = this;
             _animador.SetBattleMode(true);
@@ -167,6 +171,7 @@ namespace Game.NPC.Combate
             Parar();
             BajarEscudo();
             _aCubierto = false;
+            PlayerShieldController.AlDevolverAtaque -= AlDevolverleUnAtaque;
             if (_objetivo != null) NPCAttackCoordinator.Release(_objetivo, this);
             CoordinacionDeGrupo.Salir(this);
             CombatTargetProvider.Olvidar(this);
@@ -298,6 +303,7 @@ namespace Game.NPC.Combate
         private void OnDestroy()
         {
             if (_vida != null) _vida.OnDamaged -= AlDanarse;
+            PlayerShieldController.AlDevolverAtaque -= AlDevolverleUnAtaque;
         }
 
         private void Update()
@@ -423,6 +429,9 @@ namespace Game.NPC.Combate
             _s.jugadorMeApunta = LecturaDelJugador.ApuntaA(transform);
             _s.segundosDesdeQueLanzo = LecturaDelJugador.SegundosDesdeQueLanzo;
             _s.jugadorDefendiendo = LecturaDelJugador.Defendiendo;
+            if (!_s.jugadorDefendiendo) _defendiendoDesde = -1f;
+            else if (_defendiendoDesde < 0f) _defendiendoDesde = Time.time;
+            _s.segundosDefendiendo = _defendiendoDesde < 0f ? 0f : Time.time - _defendiendoDesde;
             CoordinacionDeGrupo.TodosLosCuerpos(_grupo);
             _s.devolucionesRecientes = LecturaDelJugador.DevolucionesRecientes(_grupo, SegundosDeDevoluciones);
 
@@ -507,6 +516,14 @@ namespace Game.NPC.Combate
             if (_animator == null || string.IsNullOrEmpty(estado)) return;
             _animator.SetLayerWeight(CapaDeMedioCuerpo, 1f);
             _animator.Play(estado, CapaDeMedioCuerpo);
+        }
+
+        // Se lo atribuye a la última acción que lanzó: lanza de una en una y la siguiente no sale
+        // hasta pasada la recuperación, así que casi siempre es la que vuela.
+        private void AlDevolverleUnAtaque(GameObject lanzador)
+        {
+            if (!_activo || lanzador != gameObject || _lanzador == null) return;
+            _memoria.Devuelta(_lanzador.UltimaAccionSalida);
         }
 
         private void AlDanarse(float cuanto)

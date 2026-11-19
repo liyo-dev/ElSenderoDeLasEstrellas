@@ -19,6 +19,8 @@ half _Aplanar;
 half _BordeDeLuz;
 half _Brillo;
 half _Pincel;
+half _Follaje;
+half _FollajeMip;         // Mip del que se toma el color medio de cada zona de follaje.
 CBUFFER_END
 
 #endif

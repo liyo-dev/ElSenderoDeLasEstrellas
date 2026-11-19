@@ -84,6 +84,7 @@ public static partial class Partida
         }
 
         if (!string.IsNullOrEmpty(d.lastSpawnAnchorId)) p.spawnAnchorId = d.lastSpawnAnchorId;
+        p.posicionDeAutoguardado = d.posicionDeAutoguardado;
 
         // Básicos: los del guardado que sigan desbloqueados. Un guardado anterior a INC-486 trae
         // ranuras izquierda/derecha; sin ninguno válido, el primer hechizo desbloqueado.
@@ -105,6 +106,8 @@ public static partial class Partida
         p.abilities.jump = d.canJump;
         p.abilities.fly = d.canFly;
         p.abilities.magic = d.canMagic;
+        p.abilities.sprint = d.canSprint;
+        p.abilities.shield = d.canShield;
     }
 
     /// <summary>Construye el guardado a partir del preset de la partida.</summary>
@@ -150,6 +153,8 @@ public static partial class Partida
             d.canJump = p.abilities.jump;
             d.canFly = p.abilities.fly;
             d.canMagic = p.abilities.magic;
+            d.canSprint = p.abilities.sprint;
+            d.canShield = p.abilities.shield;
         }
 
         d.npcPositions = new List<PlayerSaveData.NpcPosEntry>();

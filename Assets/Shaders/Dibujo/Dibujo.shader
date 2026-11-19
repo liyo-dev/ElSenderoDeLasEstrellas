@@ -19,6 +19,9 @@ Shader "El Sendero/Dibujo"
         _Cutoff("Umbral del recorte", Range(0, 1)) = 0.5
         [Toggle(_SOMBRA_SIN_RECORTE)] _SombraSinRecorte("La sombra no usa el recorte (sombra estable)", Float) = 0.0
         [Toggle(_PINCEL)] _Pincel("Pinceladas (piezas de color liso)", Float) = 0.0
+        [Toggle(_FOLLAJE)] _Follaje("Follaje de dibujo (copas y matas: color de zona, golpes de hoja y matiz por árbol)", Float) = 0.0
+        [NoScaleOffset] _MascaraDeFollaje("Qué parte de la textura es follaje (blanco = follaje)", 2D) = "white" {}
+        _FollajeMip("Nivel de la textura del que sale el color de cada zona", Range(0, 10)) = 5.0
 
         [HideInInspector][MainColor] _BaseColor("Color (no tiñe)", Color) = (1, 1, 1, 1)
         [HideInInspector] _BumpMap("Normal Map", 2D) = "bump" {}
@@ -53,6 +56,7 @@ Shader "El Sendero/Dibujo"
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local_fragment _PINCEL
+            #pragma shader_feature_local_fragment _FOLLAJE
             // La emisión se enciende en juego (ventanas de noche): la variante tiene que existir siempre.
             #pragma multi_compile_local_fragment _ _EMISSION
 
@@ -70,6 +74,7 @@ Shader "El Sendero/Dibujo"
             #include "DibujoEntrada.hlsl"
             #include "DibujoLuz.hlsl"
             #include "DibujoPincel.hlsl"
+            #include "DibujoFollaje.hlsl"
 
             struct Attributes
             {
@@ -139,6 +144,9 @@ Shader "El Sendero/Dibujo"
                 LODFadeCrossFade(input.positionCS);
                 #endif
 
+                #if defined(_FOLLAJE)
+                textura.rgb = ColorDeFollaje(input.uv, textura.rgb, _FollajeMip, input.positionWS, NormalizeNormalPerPixel(input.normalWS));
+                #endif
                 half3 albedo = lerp(half3(1.0h, 1.0h, 1.0h), textura.rgb, _TextureImpact) * _Tinte.rgb;
                 #if defined(DR_VERTEX_COLORS_ON)
                 albedo *= input.color.rgb;

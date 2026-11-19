@@ -33,6 +33,8 @@ namespace Game.NPC.Combate
         public bool jugadorMeApunta;
         public float segundosDesdeQueLanzo;
         public bool jugadorDefendiendo;
+        /// Segundos seguidos que lleva con el escudo arriba (0 si no lo tiene).
+        public float segundosDefendiendo;
         /// Devoluciones con la B a proyectiles del grupo en los últimos segundos.
         public int devolucionesRecientes;
 

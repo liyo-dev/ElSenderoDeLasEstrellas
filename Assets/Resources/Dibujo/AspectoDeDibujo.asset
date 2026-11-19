@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: AspectoDeDibujo
   m_EditorClassIdentifier: Assembly-CSharp::AspectoDeDibujo
   tinteDeSombra: {r: 0.72, g: 0.62, b: 0.8, a: 1}
+  tinteDeSombraCalida: {r: 0.84, g: 0.66, b: 0.66, a: 1}
   umbral: 0.05
   suavidad: 0.02
   saturacionDeSombra: 1.15
@@ -23,3 +24,14 @@ MonoBehaviour:
   oclusion: 0.4
   umbralDelBrillo: 0.92
   fuerzaDelBrillo: 0.35
+  texturaDelSuelo: 0.2
+  detalleDelSuelo: 1
+  cotaDeLaNieve: 205
+  ondasDeLaNieve: 16
+  colorDeLaNieve: {r: 0.88, g: 0.91, b: 0.92, a: 1}
+  pinceladas: 0.12
+  tamanoDeLasPinceladas: 0.6
+  golpesDeHoja: {fileID: 2800000, guid: 67250ec447e3b6645841f23b0963cc64, type: 3}
+  fuerzaDeLosGolpes: 0.16
+  tamanoDeLosGolpes: 6
+  variacionPorArbol: 0.5

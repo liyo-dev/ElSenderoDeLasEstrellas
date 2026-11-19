@@ -11,7 +11,7 @@ namespace NarrativeGraphEditor.Story
         public const float CardWidth = 220f;
         public const float CardHeight = 112f;
         public const float CardHeightWithOutputs = 142f;
-        public const float CardArtHeight = 112f;
+        public const float CardArtHeight = 64f;
         public const float ColumnGap = 60f;
         public const float RowGap = 50f;
         public const float SectionGap = 110f;

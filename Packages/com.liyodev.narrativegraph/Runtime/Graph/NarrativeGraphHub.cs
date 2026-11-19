@@ -32,6 +32,7 @@ public sealed class NarrativeGraphHub : MonoBehaviour
 
     private readonly Dictionary<string, NarrativeRunner> _runnersByLabel = new();
     private readonly List<NarrativeRunner> _allRunners = new();
+    private readonly Dictionary<NarrativeRunner, List<SimpleBlackboard.Entry>> _initialValues = new();
     private readonly HashSet<string> _validatedLabels = new();
 
     void Awake()
@@ -67,6 +68,8 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             runner.SetSignalsProvider(signals);
 
             _allRunners.Add(runner);
+            if (slot.initialBlackboardValues != null && slot.initialBlackboardValues.Count > 0)
+                _initialValues[runner] = slot.initialBlackboardValues;
             
             if (!_runnersByLabel.ContainsKey(slot.label ?? string.Empty))
                 _runnersByLabel.Add(slot.label ?? string.Empty, runner);
@@ -160,19 +163,44 @@ public sealed class NarrativeGraphHub : MonoBehaviour
     }
 
     /// <summary>
-    /// Limpia todos los blackboards. Útil al iniciar nueva partida.
+    /// Deja cada blackboard como al arrancar el juego (vacío más los valores iniciales de su
+    /// grafo). Útil al iniciar nueva partida o al cargar otra.
     /// Los grafos se deben reiniciar manualmente usando NarrativeGraphStarter en cada escena.
     /// </summary>
     public void ClearAllBlackboards()
     {
         foreach (var runner in _allRunners)
         {
-            if (runner == null) continue;
-            if (runner.Blackboard != null)
-            {
-                runner.Blackboard.Clear();
-            }
+            if (runner == null || runner.Blackboard == null) continue;
+            runner.Blackboard.Clear();
+            if (_initialValues.TryGetValue(runner, out var initial))
+                runner.Blackboard.ImportFromSerializable(initial);
         }
+    }
+
+    /// <summary>
+    /// true si en todos los grafos los pasos en curso son seguros para guardar
+    /// (<see cref="NarrativeRunner.IsAtSafeStep"/>): es lo que pide un guardado automático.
+    /// </summary>
+    public bool IsAtSafeStep()
+    {
+        foreach (var runner in _allRunners)
+            if (runner != null && !runner.IsAtSafeStep) return false;
+        return true;
+    }
+
+    /// <summary>
+    /// Primer paso en curso, en cualquier grafo, que no deja guardar la partida
+    /// (<see cref="NarrativeNode.blockSaving"/>). Null si se puede guardar.
+    /// </summary>
+    public NarrativeNode FindSaveBlocker()
+    {
+        foreach (var runner in _allRunners)
+        {
+            var blocker = runner != null ? runner.SaveBlocker : null;
+            if (blocker != null) return blocker;
+        }
+        return null;
     }
     
     /// <summary>

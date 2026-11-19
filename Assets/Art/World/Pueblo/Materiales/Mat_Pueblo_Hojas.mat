@@ -13,7 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _EMISSION
-  - _PINCEL
+  - _FOLLAJE
   - _RECEIVE_SHADOWS_OFF
   m_InvalidKeywords:
   - DR_RIM_ON
@@ -75,6 +75,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8cd81fc9e22ada7489668156f208499b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MascaraDeFollaje:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -115,8 +119,10 @@ Material:
     m_Floats:
     - _AdditionalLightCutoffPoint: 0.8
     - _AlphaClip: 0
+    - _Aplanar: 0
     - _BaseMapPremultiply: 0
     - _Blend: 0
+    - _BordeDeLuz: 0
     - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
@@ -135,6 +141,8 @@ Material:
     - _FlatRimSize: 0.617
     - _FlatSpecularEdgeSmoothness: 0
     - _FlatSpecularSize: 0.1
+    - _Follaje: 1
+    - _FollajeMip: 0
     - _Glossiness: 1
     - _GradientAngle: 0
     - _GradientCenterX: 0
@@ -158,7 +166,7 @@ Material:
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
     - _Parallax: 0.02
-    - _Pincel: 1
+    - _Pincel: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 0

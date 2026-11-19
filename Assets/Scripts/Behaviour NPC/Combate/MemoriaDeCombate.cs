@@ -4,13 +4,14 @@ namespace Game.NPC.Combate
 {
     /// <summary>
     /// Memoria corta de un NPC en combate: dónde vio por última vez al objetivo, cuánto daño ha
-    /// recibido hace poco, qué escondites le han fallado, cuándo atacó y qué hechizo entrante ya
-    /// decidió esquivar o no. Todo caduca solo; nada se guarda entre combates.
+    /// recibido hace poco, qué escondites le han fallado, cuándo atacó, qué ataques suyos le han
+    /// devuelto y qué hechizo entrante ya decidió esquivar o no. Todo caduca solo; nada se guarda entre combates.
     /// </summary>
     public sealed class MemoriaDeCombate
     {
         private const int Golpes = 8;
         private const int Escondites = 4;
+        private const int Devoluciones = 8;
         private const float SegundosDeEsconditeDescartado = 12f;
         private const float RadioDeEsconditeDescartado = 2.5f;
 
@@ -21,6 +22,10 @@ namespace Game.NPC.Combate
         private readonly Vector3[] _escondite = new Vector3[Escondites];
         private readonly float[] _esconditeCuando = new float[Escondites];
         private int _esconditeSiguiente;
+
+        private readonly int[] _devueltaAccion = new int[Devoluciones];
+        private readonly float[] _devueltaCuando = new float[Devoluciones];
+        private int _devueltaSiguiente;
 
         public Vector3 UltimaPosicionVista { get; private set; }
         public float UltimaVezVisto { get; private set; } = -999f;
@@ -38,6 +43,7 @@ namespace Game.NPC.Combate
         {
             for (int i = 0; i < Golpes; i++) { _golpeCuando[i] = -999f; _golpeCuanto[i] = 0f; }
             for (int i = 0; i < Escondites; i++) _esconditeCuando[i] = -999f;
+            for (int i = 0; i < Devoluciones; i++) { _devueltaCuando[i] = -999f; _devueltaAccion[i] = -1; }
             UltimaVezVisto = -999f;
             UltimoAtaquePropio = -999f;
             UltimoGolpeRecibido = -999f;
@@ -82,6 +88,25 @@ namespace Game.NPC.Combate
             _escondite[_esconditeSiguiente] = donde;
             _esconditeCuando[_esconditeSiguiente] = Time.time;
             _esconditeSiguiente = (_esconditeSiguiente + 1) % Escondites;
+        }
+
+        /// <summary>Le han devuelto con la B un proyectil de esa acción del catálogo.</summary>
+        public void Devuelta(int accion)
+        {
+            if (accion < 0) return;
+            _devueltaAccion[_devueltaSiguiente] = accion;
+            _devueltaCuando[_devueltaSiguiente] = Time.time;
+            _devueltaSiguiente = (_devueltaSiguiente + 1) % Devoluciones;
+        }
+
+        /// <summary>Veces que le han devuelto esa acción en los últimos 'segundos'.</summary>
+        public int DevueltasDe(int accion, float segundos)
+        {
+            float desde = Time.time - segundos;
+            int n = 0;
+            for (int i = 0; i < Devoluciones; i++)
+                if (_devueltaAccion[i] == accion && _devueltaCuando[i] >= desde) n++;
+            return n;
         }
 
         public bool CoberturaDescartada(Vector3 donde)

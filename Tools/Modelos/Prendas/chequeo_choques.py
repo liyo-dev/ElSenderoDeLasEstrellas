@@ -9,6 +9,9 @@
 #     (manga dentro del costado, puño dentro del pecho, capa dentro de la manga).
 #     Un puño o una boca de manga metidos en el tronco (pelvis, spine) no se perdonan: se ven cortados.
 #   - SUELTA: piezas que se separan de la pieza a la que van pegadas (aros de puño, capa, coleta).
+#   - CABEZA EN LA ROPA: la cabeza (barbilla, mandíbula, nuca) que se hunde en una prenda del tronco al mover la cabeza
+#     (mirar arriba o abajo, girarla). Un cuello alto pesado al pecho que llega a la barbilla corta la cara en cuanto la
+#     cabeza se mueve: se ve como una franja que la parte.
 # Saca un informe (texto y json) y una hoja de fotos con lo peor de cada cosa marcado en rojo.
 #
 # Uso (bpy 5.x, p. ej. pip install bpy==5.3.0):
@@ -35,6 +38,7 @@ DENTRO_TOL = 0.004          # cuánto tiene que estar dentro para contar (m)
 DENTRO_RADIO = 0.06         # solo se mira contra superficies cercanas (m)
 SUELTA_EXTRA = 0.02
 SE_METE_PARTE = 0.10        # parte de la pieza que tiene que meterse (más que en reposo) para avisar
+GRAVE_CABEZA = 0.03         # parte de los puntos de la cabeza hundidos en la ropa (más que en reposo) para no pasar
 # Graves (hacen que no pase): lo que se ve sí o sí al andar. Lo demás son avisos para mirar en las fotos.
 GRAVE_DESGARRO = 10         # aristas rasgadas en una pieza
 GRAVE_ASOMA = 15            # puntos del cuerpo fuera por un hueso
@@ -120,10 +124,16 @@ POSES = {
     "manos_juntas": [("upperarm", 'Y', 60), ("upperarm", 'X', -45), ("lowerarm", 'X', -50), ("lowerarm", 'Z', -80)],
     # sentado en un banco, con las manos en el regazo (cinemáticas en casa: Eldran, 14 nov 2026)
     "sentado": [("thigh", 'X', -80), ("calf", 'X', 85), ("upperarm", 'Y', 65), ("upperarm", 'X', -25), ("lowerarm", 'X', -45)],
+    # cabeza que se mueve sobre el cuello: lo que permite el avatar del pack (±22° cuello y cabeza) más la mirada de las
+    # cinemáticas (DialogueHeadLook). Los huesos sin lado (neck_01, head) se giran una vez, sin espejo.
+    "cabeza_arriba": [("neck_01", 'X', -22), ("head", 'X', -30)],
+    "cabeza_abajo": [("neck_01", 'X', 22), ("head", 'X', 30)],
+    "cabeza_girada": [("neck_01", 'Z', 22), ("head", 'Z', 35), ("head", 'X', -15)],
 }
 def poner_pose(nombre):
     pose_reposo()
     for hueso, eje, g in POSES[nombre]:
+        if hueso in arm.pose.bones: girar(arm.pose.bones[hueso], eje, g); continue
         for lado, s in (("l", 1), ("r", -1)):
             gg = g * (s if eje in ('Y', 'Z') else 1)
             girar(arm.pose.bones[f"{hueso}_{lado}"], eje, gg)
@@ -190,6 +200,8 @@ for p in piezas:
     vistos[p.nombre] = vistos.get(p.nombre, 0) + 1
     if vistos[p.nombre] > 1: p.nombre += f"#{vistos[p.nombre]}"
 ropa_piezas = [p for p in piezas if not p.piel]
+# lo que cuelga de la cabeza (pelo, sombreros, flequillo) se mueve con ella: no cuenta como ropa que tapa la cara
+ropa_bajo_la_cabeza = [p for p in ropa_piezas if p.hueso not in ("head", "neck_01")]
 
 def bvh_de(lista, C, con_dueno=False):
     vs, fs, dueno, off = [], [], [], 0
@@ -231,6 +243,10 @@ def medir(C):
             margen = CENIDA if CERCA_EN_REPOSO[i] > CENIDA_MAX else max(CENIDA, CERCA_EN_REPOSO[i] + 0.01)
             tapado[i] = hit[0] is not None or d <= margen
     dentro = {}
+    # la piel propia del modelo (brazos de piel hechos a medida, más gruesos que los del pack): la ropa que se mete en
+    # ella se ve igual que si se metiera en otra prenda, y el cuerpo de referencia no la tiene
+    # (lo que queda del cuerpo del pack, «Cuerpo», ya está en el de referencia)
+    piel_propia, dueno_piel = bvh_de([q for q in piezas if q.piel and len(q.caras) and ":Cuerpo " not in q.nombre], C, True)
     for p in ropa_piezas:
         otros, dueno = bvh_de([q for q in ropa_piezas if q is not p], C, True)
         mismos = bvh_de([q for q in ropa_piezas if q is not p and q.obj is p.obj], C)   # «suelta»: solo dentro de la misma pieza exportada
@@ -238,7 +254,8 @@ def medir(C):
         cnt = 0; dist_min = 1e9; contra = {}
         for x in P:
             x = Vector(x)
-            for b, quien in ((otros, lambda f: dueno[f]), (bvh_ref, lambda f: "cuerpo/" + hueso_cara_ref[f])):
+            for b, quien in ((otros, lambda f: dueno[f]), (piel_propia, lambda f: "piel/" + dueno_piel[f].split(":")[-1].split(" (")[0]),
+                             (bvh_ref, lambda f: "cuerpo/" + hueso_cara_ref[f])):
                 if b is None: continue
                 loc, nor, f, d = b.find_nearest(x, DENTRO_RADIO)
                 if loc is not None and (x - loc).dot(nor) < -DENTRO_TOL:
@@ -248,6 +265,18 @@ def medir(C):
                 if d is not None: dist_min = min(dist_min, d)
         dentro[p.nombre] = (cnt, dist_min, contra)
     return tapado, dentro
+
+def cabeza_en_la_ropa(C):
+    """{punto de la cabeza: prenda} de los puntos hundidos en una prenda que no cuelga de ella."""
+    if cabeza is None: return {}
+    bvh, dueno = bvh_de(ropa_bajo_la_cabeza, C, True)
+    if bvh is None: return {}
+    dentro = {}
+    for i, x in enumerate(coords(cabeza)):
+        x = Vector(x)
+        loc, nor, f, _ = bvh.find_nearest(x, DENTRO_RADIO)
+        if loc is not None and (x - loc).dot(nor) < -DENTRO_TOL: dentro[i] = dueno[f]
+    return dentro
 
 def estado(pose):
     return {o.name: coords(o) for o in ropa}
@@ -260,6 +289,8 @@ hueso_cara_ref = [_hv[pl.vertices[0]] for pl in ref.data.polygons]
 pose_reposo()
 C0 = estado("reposo")
 tapado0, dentro0 = medir(C0)
+cabeza0 = cabeza_en_la_ropa(C0)
+N_CABEZA = len(cabeza.data.vertices) if cabeza is not None else 0
 largo0 = {p.nombre: np.linalg.norm(C0[p.obj.name][p.aristas[:, 0]] - C0[p.obj.name][p.aristas[:, 1]], axis=1) if len(p.aristas) else np.array([]) for p in ropa_piezas}
 huesos_ref = []
 grupos_ref = {g.index: g.name for g in ref.vertex_groups}
@@ -289,7 +320,12 @@ for f in fotogramas:
     etiqueta = ir_a(f)
     C = estado(etiqueta)
     tapado, dentro = medir(C)
-    r = {"pose": etiqueta, "desgarro": {}, "asoma": {}, "se_mete": {}, "suelta": {}, "_vert": {}}
+    r = {"pose": etiqueta, "desgarro": {}, "asoma": {}, "se_mete": {}, "suelta": {}, "cabeza": {}, "_vert": {}}
+    nuevos = {}
+    for i, q in cabeza_en_la_ropa(C).items():
+        if i not in cabeza0: nuevos[q] = nuevos.get(q, 0) + 1
+    for nombre, n in nuevos.items():
+        if n >= 3: r["cabeza"][nombre] = {"puntos": n, "de": N_CABEZA}
     for p in ropa_piezas:
         if not len(p.aristas): continue
         l = np.linalg.norm(C[p.obj.name][p.aristas[:, 0]] - C[p.obj.name][p.aristas[:, 1]], axis=1)
@@ -317,8 +353,9 @@ for f in fotogramas:
 # ── Informe ──
 def gravedad(r):
     return (sum(v["aristas"] for v in r["desgarro"].values()) + sum(r["asoma"].values())
-            + sum(v["puntos"] for v in r["se_mete"].values()) + 20 * len(r["suelta"]))
-resumen = {"desgarro": {}, "asoma": {}, "se_mete": {}, "suelta": {}}
+            + sum(v["puntos"] for v in r["se_mete"].values()) + 20 * len(r["suelta"])
+            + sum(v["puntos"] for v in r["cabeza"].values()))
+resumen = {"desgarro": {}, "asoma": {}, "se_mete": {}, "suelta": {}, "cabeza": {}}
 for f, r in resultados:
     for k in resumen:
         for nombre, val in r[k].items():
@@ -333,7 +370,8 @@ for f, r in resultados:
 lineas = [f"# Chequeo de choques — {os.path.basename(BLEND)}", "",
           f"Poses revisadas: {len(resultados)} ({', '.join(a.name for a in acciones)} + {', '.join(POSES)})", ""]
 titulos = {"desgarro": "Tela que se rasga (aristas estiradas)", "asoma": "Cuerpo que asoma por la ropa (puntos, por hueso)",
-           "se_mete": "Piezas que se meten dentro de otra (puntos)", "suelta": "Piezas que se separan (cm)"}
+           "se_mete": "Piezas que se meten dentro de otra (puntos)", "suelta": "Piezas que se separan (cm)",
+           "cabeza": "Cabeza que se hunde en la ropa al moverla (puntos de la cabeza)"}
 total = graves = 0
 tam = {p.nombre: len(p.idx) for p in ropa_piezas}
 PIEZAS_DE_PUNO = ("puno", "puño", "brazal", "muñequera")
@@ -343,6 +381,12 @@ def puno_en_el_tronco(k, nombre, pose):
     """Puño o boca de manga metido en el tronco: no se perdona como «manos sobre la tripa» (el aro se ve cortado)."""
     return (k == "se_mete" and any(p in nombre.lower() for p in PIEZAS_DE_PUNO)
             and any(f"dentro de cuerpo/{h}" in pose for h in HUESOS_DE_TRONCO))
+PIEZAS_DE_ARO = PIEZAS_DE_PUNO + ("ribete",)
+def aro_en_otra_prenda(nombre, pose):
+    """Ribete o puño de manga que se hunde en otra prenda (la manga en el costado de la camiseta, por la axila): por la
+    espalda se ve la tela del tronco atravesando la manga y el contorno se corta ahí. Ver INC-1309."""
+    return (any(p in nombre.lower() for p in PIEZAS_DE_ARO) and "dentro de " in pose
+            and "dentro de cuerpo/" not in pose and "dentro de piel/" not in pose)
 def es_grave(k, nombre, peso, pose):
     f = 2 if any(pose.startswith(a) for a in ANIMS_CORRER) else 1
     if k == "desgarro": return peso > GRAVE_DESGARRO * f
@@ -350,7 +394,9 @@ def es_grave(k, nombre, peso, pose):
     if k == "se_mete" and puno_en_el_tronco(k, nombre, pose):
         if pose.startswith(POSES_BRAZO_PEGADO): return False
         return peso > SE_METE_PARTE * f * tam.get(nombre, 1e9)
+    if k == "se_mete" and aro_en_otra_prenda(nombre, pose): return peso > SE_METE_PARTE * f * tam.get(nombre, 1e9)
     if k == "se_mete": return "dentro de cuerpo" not in pose and peso > GRAVE_SE_METE * tam.get(nombre, 1e9)
+    if k == "cabeza": return peso > GRAVE_CABEZA * max(1, N_CABEZA)
     return k == "suelta"
 for k, t in titulos.items():
     lineas.append(f"## {t}")

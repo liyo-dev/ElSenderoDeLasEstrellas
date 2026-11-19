@@ -6,14 +6,27 @@ Incidencia: INC-1283 en `TRACKER.md`. Etapas E1 (esqueleto) y E2 (decisión por 
 
 ## Estado
 
-- Código escrito. **Sin compilar en Unity**: Unity estaba cerrado y en este hilo no se pudo usar el Roslyn del SDK de Unity (sin acceso a las DLL de Unity). Lo que sí se comprobó: los 16 archivos nuevos compilan con Roslyn (C# 9) contra unos stubs que imitan las firmas de Unity y del proyecto, y los 9 archivos modificados no tienen errores de sintaxis.
-- **Sin probar en Play.** Por defecto ningún NPC cambia: todos siguen con el cerebro clásico.
+- **Compila en Unity** (19 nov): el Editor cargó el código de E1–E2 sin `error CS` ni CS0618 en sus archivos, y una build de Windows salió bien con él. Ver abajo la revisión del 19 nov.
+- **Sin probar en Play.** Por defecto ningún NPC cambia: todos siguen con el cerebro clásico, salvo los contrabandistas del Cap. 3.
+
+## Revisión del 19 nov (con la propuesta del 13 nov)
+
+Cambios:
+
+- **Memoria de qué le devuelven** (`MemoriaDeCombate.Devuelta`/`DevueltasDe`): cada devolución con la B a un proyectil suyo se apunta a la última acción que lanzó; esa acción pesa 1/(1+n) durante 15 s. Se suma a la regla de grupo (2 o más devoluciones al grupo en 20 s → lo devolvible ×0,3).
+- **Jugador que se protege mucho**: con el escudo arriba más de 0,8 s, lo devolvible ×0,25 (antes ×0,6 siempre); a partir de 1,2 s, `Rodear` vale también solo o sin turno, escalado por movilidad (el poco movido espera). Sin rodeador en grupo, el punto de rodeo se calcula desde su propia línea: da vueltas mientras dure el escudo.
+- **«Si le rodean, cambia de escondite o sale a por él»**: si le descubren en 3 escondites seguidos, `Cubrirse y recargar` vale ×0,35 durante 5 s, y sale a pelear con lo que tenga.
+- **Reglas del CLAUDE.md**: `SondeoDelTerreno` ya no busca componentes en cada impacto de rayo; recuerda qué es cada collider (personaje, proyectil, escudo) en una tabla compartida que se vacía al llegar a 1024 entradas.
+
+Repaso sin cambios (ya cumplía): cobertura comprobada con rayos contra todo el grupo del jugador y descarte si alguien le ve; recarga a cubierto; esquiva o escudo si el jugador carga o acaba de lanzar; distancia preferida, rincones y apretura; un solo atacante por turno y los demás rodean; aviso y ventana de castigo en cada ataque; no esquiva todo (una tirada por hechizo).
+
+Sigue pendiente de diseño (no es E2): con los hechizos del pirata **todos los ataques se pueden devolver**, así que «dejar los devolvibles» solo baja el ritmo de ataque; hacen falta variantes no devolvibles (decisión 3).
 
 ## Cómo se activa en un NPC
 
 1. Abrir su Combat Config (`NPCCombatConfig`) y, arriba del todo, en **🧠 Cerebro de combate**, poner `Cerebro` = **Por Puntuacion**.
 2. (Opcional) Crear un perfil: *Create ▸ El Sendero ▸ NPCs ▸ Módulos ▸ Perfil de combate* y arrastrarlo a `Perfil De Combate`. Sin perfil, el cerebro saca carácter y defensas de la propia config, y los ataques de sus tres huecos de hechizo.
-3. Los contrabandistas usan la config del pirata (`NPC_Combat_Config_BoyPirate.asset`). Para no cambiar al pirata, lo limpio es duplicarla (p. ej. `NPC_Combat_Config_Contrabandistas`), poner el cerebro nuevo en la copia y asignarla en el campo `Combat Config` del paso de combate del Cap. 3 (`PedirCombateContraNpc`). No se ha hecho: el grafo del Cap. 3 lo lleva otro hilo.
+3. Los contrabandistas ya tienen config propia, `NPC_Combat_Config_Contrabandistas.asset`, con `Cerebro = Por Puntuacion`, asignada en el paso de combate del Cap. 3 (`PedirCombateContraNpc`, INC-1287). El pirata sigue con el clásico.
 
 ## Qué hay
 
@@ -41,15 +54,15 @@ Fases (E3), legibilidad completa (E4), Erika (E5), migrar los demás NPCs y reti
 ## Prueba para Raúl (no se ha podido hacer)
 
 1. Abrir Unity, dejar compilar y mirar `Logs/Editor.log`: 0 `error CS`. Si hay errores, son de firmas que no se pudieron comprobar sin Unity.
-2. Duplicar `NPC_Combat_Config_BoyPirate.asset`, ponerle `Cerebro = Por Puntuacion` y asignarla al paso de combate del Cap. 3 (o, solo para probar, cambiar el campo en la del pirata y devolverlo luego).
+2. (Ya hecho: los contrabandistas usan `NPC_Combat_Config_Contrabandistas`, con el cerebro nuevo.)
 3. Probar el combate de los contrabandistas desde ese paso. Seleccionar cada contrabandista en la jerarquía: el campo `Decision Actual` del componente dice qué hace; con `Registrar Decisiones` sale en consola.
-4. Mirar: (a) no atacan a la vez; uno lanza y el otro se va hacia un lado; luego se cambian. (b) Cada lanzamiento avisa (bola creciendo, aviso de devolver) y tras lanzar se quedan un momento quietos: se les puede castigar. (c) Golpearles mientras preparan les corta el hechizo. (d) Devolver varias bolas seguidas con la B: dejan de lanzar tanto (con los hechizos del pirata todos son devolvibles, así que lanzan menos y se mueven más). (e) Gastarles el maná: van detrás de una roca o una casa donde no se les ve; si se les rodea, cambian de sitio. (f) No se quedan en rincones ni pegados entre sí. (g) Aturdir y dormir siguen funcionando (se marean y vuelven).
+4. Mirar: (a) no atacan a la vez; uno lanza y el otro se va hacia un lado; luego se cambian. (b) Cada lanzamiento avisa (bola creciendo, aviso de devolver) y tras lanzar se quedan un momento quietos: se les puede castigar. (c) Golpearles mientras preparan les corta el hechizo. (d) Devolver varias bolas seguidas con la B: dejan de lanzar tanto (con los hechizos del pirata todos son devolvibles, así que lanzan menos y se mueven más). (e) Gastarles el maná: van detrás de una roca o una casa donde no se les ve; si se les rodea, cambian de sitio. (f) No se quedan en rincones ni pegados entre sí. (g) Aturdir y dormir siguen funcionando (se marean y vuelven). (h) Con el escudo arriba más de un segundo dejan de lanzar y le rodean; al bajarlo vuelven a atacar. (i) Devolver siempre el mismo hechizo: lo usan menos y tiran de los otros dos. (j) Descubrirles en tres escondites seguidos: dejan de esconderse un rato.
 5. Lo mismo con un NPC solo con el cerebro clásico (cualquier otro): debe pelear igual que antes.
 
 ## Decisiones pendientes de Raúl
 
 1. **Kit o juego.** Por la regla 9 del `CLAUDE.md`, lo genérico debería ir a un kit (`Kits.CombatAI`, con nombres en inglés). El encargo pedía nombres en español como el resto, así que el cerebro está en `Assets/Scripts/Behaviour NPC/Combate/`, con el núcleo (perfil, situación, opciones, memoria) sin dependencias del juego salvo las lecturas. ¿Se pasa a kit en E6, al retirar el cerebro clásico?
-2. **Contrabandistas**: ¿config propia con el cerebro nuevo (recomendado) o se cambia la del pirata?
+2. ~~Contrabandistas~~: resuelto, config propia (INC-1287).
 3. **Proyectiles no devolvibles**: hoy ningún NPC tiene uno. ¿Se crean variantes (otro color, para que se lean) para que tenga sentido «deja los devolvibles»?
 4. Recarga ×1,5 a cubierto: es una mecánica nueva; ¿se queda?
 5. Código repetido temporal: la búsqueda de cobertura y la línea de fuego existen también en el cerebro clásico. Se van con él en E6.
@@ -60,3 +73,9 @@ Fases (E3), legibilidad completa (E4), Erika (E5), migrar los demás NPCs y reti
 Nuevos (`Assets/Scripts/Behaviour NPC/Combate/`): `ICerebroDeCombate.cs`, `PerfilDeCombate.cs`, `PerfilEnUso.cs`, `CerebroDeCombatePorPuntuacion.cs`, `ICombatiente.cs`, `SituacionDeCombate.cs`, `OpcionDeCombate.cs`, `OpcionAtacar.cs`, `OpcionesDeDefensa.cs`, `OpcionesDeMovimiento.cs`, `LanzadorDeAcciones.cs`, `LecturaDelJugador.cs`, `MemoriaDeCombate.cs`, `CoordinacionDeGrupo.cs`, `SondeoDelTerreno.cs`; y `Assets/Scripts/Behaviour NPC/NPCAttackCoordinator.cs` (sacado de `NPCCombatBrain.cs`).
 
 Tocados: `NPCCombatBrain.cs`, `States/CombatState.cs`, `Common/NPCStateContext.cs`, `Modules/NPCCombatConfig.cs`, `Modules/NPCCombatLifecycleHandler.cs`, `UI/NPCManaBarUI.cs`, `IA/Enemy/CombatTargetProvider.cs` (`ObjetivosEnPie`), `IA/Enemy/EnemyProjectile.cs` (`PermitirDevolucion`), `Combat/CargaDeDisparo.cs` (segundos y tipo de aviso por disparo). Copias de antes en `_ClaudeBackups/ia-combate-e1-e2-2026-11-18/`.
+
+## Decisiones de Raúl (19 nov 2026)
+1. Proyectiles no devolvibles: sí, con otro color para que se lean (cada hechizo nuevo con su VFX propio, regla de VFX).
+2. Recarga de maná ×1,5 a cubierto: se queda.
+3. Pasar a kit (`Kits.CombatAI`) en E6: sí.
+4. Rodeo con el escudo arriba cuando pelea solo: pendiente (se le ha explicado la diferencia).

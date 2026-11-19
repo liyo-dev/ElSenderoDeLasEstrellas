@@ -82,3 +82,14 @@ un arreglo en uno no llegaba a los demás. Ahora están una vez en `taller.py`, 
 - Pendiente para el taller: más piezas con sus reglas (capa pegada al tronco, pelo con casquete en metros), y meter
   en el chequeo las poses de actuación y las animaciones que de verdad usan las cinemáticas.
 
+
+## Cabeza que se mueve, piel propia y ribetes en otra prenda (19 nov 2026, INC-1308 / INC-1309)
+- `chequeo_choques.py` lleva tres poses de cabeza (`cabeza_arriba`, `cabeza_abajo`, `cabeza_girada`: cuello y cabeza
+  hasta lo que permite el avatar del pack más la mirada de las cinemáticas) y una medida nueva, **cabeza que se hunde en
+  la ropa** (barbilla o nuca dentro de una prenda del tronco: un cuello alto pesado al pecho). Lo que cuelga de la
+  cabeza (pelo, sombreros) no cuenta. Liora (cuello crema hasta la barbilla): no se hunde en ese rango.
+- La ropa se mide también contra la **piel propia** del modelo (brazos de piel hechos a medida, más gruesos que los del
+  pack); antes solo contra el cuerpo de referencia, y una camiseta que se metía en el brazo de Will no salía.
+- Un **ribete o puño de manga que se hunde en otra prenda** (la manga en el costado de la camiseta, por la axila) es
+  grave a partir del 10 % de la pieza: por la espalda se ve la tela del tronco atravesando la manga y el contorno se
+  corta ahí. Will (`Body23_Aventurero`) da NO PASA por esto en `brazos_bajados` (RibeteManga dentro de Camiseta).

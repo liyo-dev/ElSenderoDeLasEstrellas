@@ -27,6 +27,9 @@ public class GameBootProfile : ScriptableObject
     [Header("Guardado")]
     [Tooltip("Permite auto-guardados fuera de los puntos de guardado.")]
     public bool allowAutoSaves;
+    [Min(0f)]
+    [Tooltip("Segundos mínimos entre dos auto-guardados (y desde que se carga una partida).")]
+    public float segundosEntreAutoguardados = 30f;
 
     public bool ShouldBootFromPreset() => usePresetInsteadOfSave && bootPreset != null;
 }

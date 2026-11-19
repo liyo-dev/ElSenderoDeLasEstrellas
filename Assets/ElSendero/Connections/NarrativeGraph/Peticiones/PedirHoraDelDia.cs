@@ -78,6 +78,7 @@ public sealed class SegunHoraDelDiaEnCurso : NarrativeRequestRun<PedirSegunHoraD
 /// (CampfireRestInteractable). Si ya es esa franja y el jugador está en la marca, sigue enseguida.
 /// Sin marca, basta con la hora.
 [Serializable]
+[SavePoint("Seguro guardar mientras espera la hora")]
 [NarrativeNodeInfo("Mundo", "Esperar la hora del día", "Espera a que sea una franja del día (p. ej. de noche) y, si hay marca, a que el jugador esté cerca de ella. El tiempo pasa solo o descansando en una hoguera.")]
 public sealed class PedirEsperarHoraDelDia : NarrativeRequest, INarrativeStateEffect
 {

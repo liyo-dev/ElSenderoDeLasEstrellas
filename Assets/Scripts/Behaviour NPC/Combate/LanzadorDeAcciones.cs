@@ -50,6 +50,9 @@ namespace Game.NPC.Combate
         public bool Recuperando => _fase == Fase.Recuperando;
         public Transform Boca => _boca;
 
+        /// <summary>Índice de la última acción que llegó a salir (-1 si ninguna).</summary>
+        public int UltimaAccionSalida { get; private set; } = -1;
+
         /// <summary>Empieza a lanzar la acción 'indice' contra el objetivo. False si no puede.</summary>
         public bool Empezar(int indice, AccionDeCombate accion, Transform objetivo)
         {
@@ -143,6 +146,7 @@ namespace Game.NPC.Combate
         private void Salio()
         {
             _enfriar(_indice, _accion.enfriamiento);
+            UltimaAccionSalida = _indice;
             _salioEn = Time.time;
             _fase = Fase.Recuperando;
         }

@@ -1,6 +1,10 @@
 {
     "texts": [
         {
+            "key": "AUTOGUARDADO",
+            "value": "Partida guardada"
+        },
+        {
             "key": "STAT_EFECTO_ATAQUE_MAS",
             "value": "Tus hechizos hacen un {0} % más de daño"
         },

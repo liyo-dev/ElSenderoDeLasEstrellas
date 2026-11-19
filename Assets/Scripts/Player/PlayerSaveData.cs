@@ -7,6 +7,22 @@ public class PlayerSaveData
 {
     public string lastSpawnAnchorId;
 
+    /// <summary>
+    /// Dónde estaba el jugador en un auto-guardado: punto del NavMesh, rumbo y escena del suelo que
+    /// pisaba. Al cargar se aparece ahí si la escena está cargada y el punto sigue valiendo; si no,
+    /// en <see cref="lastSpawnAnchorId"/>. Los guardados en un punto de guardado no la llevan.
+    /// </summary>
+    [Serializable]
+    public struct PosicionGuardada
+    {
+        public bool valida;
+        public Vector3 posicion;
+        public float rumbo;
+        public string escena;
+    }
+
+    public PosicionGuardada posicionDeAutoguardado;
+
     public int level;
     public float maxHp, currentHp;
     public float maxMp, currentMp;
@@ -86,4 +102,6 @@ public class PlayerSaveData
     public bool canJump;
     public bool canFly;
     public bool canMagic;
+    public bool canSprint;
+    public bool canShield;
 }

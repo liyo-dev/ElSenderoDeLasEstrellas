@@ -154,13 +154,17 @@ public class GameBootService : MonoBehaviour
 
     /// <summary>
     /// Partida nueva: borra el guardado y vuelve al preset por defecto. En modo pruebas vuelve al
-    /// preset de pruebas.
+    /// preset de pruebas como al cargarlo (sesión narrativa reiniciada), sin tocar el guardado.
     /// </summary>
     public static void NewGameReset()
     {
         if (_instance == null) return;
 
-        if (IsPresetOverrideActive) Partida.CargarDesdePlantilla(_profile.bootPreset);
+        if (IsPresetOverrideActive)
+        {
+            Partida.CargarDesdePlantilla(_profile.bootPreset);
+            Partida.AplicarPartidaCargada(aplicarPosicionesDeNpcs: false);
+        }
         else Partida.PrepararNueva(_saveSystem);
 
         if (Game.NPC.PlayerParty.HasInstance) Game.NPC.PlayerParty.Instance.ResetForNewGame();

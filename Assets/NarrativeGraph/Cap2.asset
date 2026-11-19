@@ -57,9 +57,9 @@ MonoBehaviour:
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294704968237603
-  - rid: 6540294704968237604
-  - rid: 6540294704968237605
+  - rid: 6540294723586752669
+  - rid: 6540294723586752670
+  - rid: 6540294723586752671
   - rid: 6540294600349712458
   - rid: 6540294600349712459
   - rid: 6540294600349712460
@@ -504,7 +504,7 @@ MonoBehaviour:
         player:
           fields:
           - spawnAnchorId
-          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Will_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Will_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
     - rid: 5630202655468159109
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
@@ -1097,7 +1097,7 @@ MonoBehaviour:
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
-    - rid: 6540294704968237603
+    - rid: 6540294723586752669
       type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
@@ -1113,7 +1113,7 @@ MonoBehaviour:
         outputs:
         - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294704968237604
+    - rid: 6540294723586752670
       type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26e.- Misi\xF3n: hora de partir"
@@ -1132,7 +1132,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294704968237605
+    - rid: 6540294723586752671
       type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '29.- Paso: despedirse de Oliver'

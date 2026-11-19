@@ -90,6 +90,7 @@ public static partial class Partida
     private static void VaciarPreset(PlayerPresetSO p)
     {
         p.spawnAnchorId = AnclaPorDefecto;
+        p.posicionDeAutoguardado = default;
         p.level = 1;
         p.maxHP = 100f; p.currentHP = 100f;
         p.maxMP = 50f; p.currentMP = 50f;

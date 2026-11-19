@@ -305,8 +305,10 @@ public static partial class MontajeDeLosCapitulos
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        foreach (var r in escena.GetRootGameObjects().Where(r => r.name == NombreGenerado).ToArray())
-            Object.DestroyImmediate(r);
+        // La raíz anterior no se borra todavía: se aparta (apagada, para que no estorbe a los rayos contra
+        // el suelo) y, ya montada la nueva, lo que tenga puesto a mano se rescata antes de borrarla (INC-1307).
+        var anteriores = escena.GetRootGameObjects().Where(r => r.name == NombreGenerado).ToArray();
+        foreach (var r in anteriores) { r.name = NombreGenerado + " (anterior)"; r.SetActive(false); }
         var raiz = new GameObject(NombreGenerado);
         SceneManager.MoveGameObjectToScene(raiz, escena);
 
@@ -336,7 +338,7 @@ public static partial class MontajeDeLosCapitulos
         }
         // El marcador viejo de Liam (en el origen) deja paso al de los capítulos.
         foreach (var t in escena.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<NpcSpawnPoint>(true)))
-            if (t.transform.root != raiz.transform && s_puntos.Any(p => p.SpawnId == t.spawnId))
+            if (t.transform.root != raiz.transform && !anteriores.Contains(t.transform.root.gameObject) && s_puntos.Any(p => p.SpawnId == t.spawnId))
             {
                 informe.AppendLine($"MainWorld: el marcador antiguo {t.name} ({t.spawnId}) se retira.");
                 Object.DestroyImmediate(t.gameObject);
@@ -414,8 +416,12 @@ public static partial class MontajeDeLosCapitulos
                 }
             }
         }
+        PonerObjetosDeMision(raiz.transform, informe);
         MontarCinematicas(escena, raiz.transform, marcas, informe);
         PonerExtrasDeEscena(raiz.transform, marcas, informe);
+
+        RescatarLoPuestoAMano(escena, anteriores, raiz.transform, informe);
+        foreach (var r in anteriores) Object.DestroyImmediate(r);
 
         EditorSceneManager.MarkSceneDirty(escena);
         if (teniaCambios) informe.AppendLine("AVISO: MainWorld tenía cambios sin guardar; no la guardo: hay que guardarla a mano.");

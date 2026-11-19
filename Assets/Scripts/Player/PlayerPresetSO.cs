@@ -175,4 +175,8 @@ public class PlayerPresetSO : ScriptableObject
     [Header("Sistema de Teletransporte")]
     [Tooltip("IDs de los puntos de teletransporte desbloqueados por el jugador.")]
     public List<string> unlockedTeleportPoints = new();
+
+    [HideInInspector]
+    [Tooltip("Dónde estaba el jugador en el último auto-guardado (ver PlayerSaveData.PosicionGuardada).")]
+    public PlayerSaveData.PosicionGuardada posicionDeAutoguardado;
 }

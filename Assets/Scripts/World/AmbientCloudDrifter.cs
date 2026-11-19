@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Kits.WorldWrap;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -11,6 +12,9 @@ using UnityEngine.Rendering;
 /// callback de <see cref="Play"/>) cuando el fundido de salida ya ha terminado del todo: para ese
 /// momento la nube lleva recorrida toda su ruta y está lejos del punto de paso, así que el
 /// SetActive(false) que la recicla no se nota nunca.
+///
+/// En un mundo que da la vuelta (WorldWrapper), su ruta se mueve con el mundo al cruzar el borde, para
+/// que la nube siga en el mismo sitio del cielo que ve el jugador.
 /// </summary>
 [DisallowMultipleComponent]
 public class AmbientCloudDrifter : MonoBehaviour
@@ -30,6 +34,8 @@ public class AmbientCloudDrifter : MonoBehaviour
     private Renderer[] _renderers;
     private MaterialPropertyBlock _mpb;
     private Coroutine _routine;
+    private Vector3 _start;
+    private Vector3 _end;
 
     /// <summary>True mientras la corrutina de vuelo (nace -> cruza -> se disipa) está en marcha.</summary>
     public bool IsFlying => _routine != null;
@@ -47,6 +53,16 @@ public class AmbientCloudDrifter : MonoBehaviour
         }
     }
 
+    void OnEnable() => WorldWrapper.Shifted += AlCruzarElMundo;
+    void OnDisable() => WorldWrapper.Shifted -= AlCruzarElMundo;
+
+    void AlCruzarElMundo(Vector3 desplazamiento)
+    {
+        _start += desplazamiento;
+        _end += desplazamiento;
+        transform.position += desplazamiento;
+    }
+
     /// <summary>
     /// Lanza el vuelo en línea recta de <paramref name="start"/> a <paramref name="end"/> a
     /// <paramref name="speed"/> unidades/seg, con fundido de entrada/salida de
@@ -59,14 +75,16 @@ public class AmbientCloudDrifter : MonoBehaviour
         if (_routine != null)
             StopCoroutine(_routine);
 
+        _start = start;
+        _end = end;
         transform.position = start;
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-        _routine = StartCoroutine(FlyRoutine(start, end, speed, fadeIn, fadeOut, onFinished));
+        _routine = StartCoroutine(FlyRoutine(speed, fadeIn, fadeOut, onFinished));
     }
 
-    IEnumerator FlyRoutine(Vector3 start, Vector3 end, float speed, float fadeIn, float fadeOut, Action<AmbientCloudDrifter> onFinished)
+    IEnumerator FlyRoutine(float speed, float fadeIn, float fadeOut, Action<AmbientCloudDrifter> onFinished)
     {
-        float distance = Vector3.Distance(start, end);
+        float distance = Vector3.Distance(_start, _end);
         float travelTime = distance / Mathf.Max(0.01f, speed);
         // Si la ruta es corta para la velocidad dada, los fundidos se recortan para que quepan
         // (con margen) y nunca se solapen dejando la nube siempre a medio formar.
@@ -81,7 +99,7 @@ public class AmbientCloudDrifter : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / travelTime);
-            transform.position = Vector3.Lerp(start, end, t);
+            transform.position = Vector3.Lerp(_start, _end, t);
 
             float alpha;
             if (elapsed < fadeIn)

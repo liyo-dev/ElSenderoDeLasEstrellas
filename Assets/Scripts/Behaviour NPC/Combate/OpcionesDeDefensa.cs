@@ -100,13 +100,15 @@ namespace Game.NPC.Combate
     /// <summary>
     /// Con poco maná (o poca vida, si es cauto) va a un sitio que le tapa de verdad de todos los que
     /// le atacan, comprobado con rayos, y recarga allí. Si le ven o le rodean, descarta ese
-    /// escondite y busca otro. Sin cobertura cerca, se aleja.
+    /// escondite y busca otro; si le descubren en todos, deja de esconderse un rato y sale a pelear
+    /// con lo que tenga. Sin cobertura cerca, se aleja.
     /// </summary>
     public sealed class OpcionCubrirseYRecargar : OpcionDeCombate
     {
         private enum Fase { Yendo, Esperando, Alejandose }
 
         private const int CambiosDeEsconditeMaximos = 3;
+        private const float SegundosSinEsconderse = 5f;
 
         private Fase _fase;
         private Vector3 _sitio;
@@ -114,6 +116,7 @@ namespace Game.NPC.Combate
         private float _siguienteMirada;
         private int _cambios;
         private float _sinCoberturaHasta = -999f;
+        private float _descubiertoHasta = -999f;
 
         public OpcionCubrirseYRecargar(ICombatiente cuerpo) : base(cuerpo) { }
 
@@ -133,6 +136,7 @@ namespace Game.NPC.Combate
             // Ya escondido y aún sin maná para salir: sigue aquí.
             if (s.aCubierto && s.mana < ManaParaSalir) p = Mathf.Max(p, 0.7f);
             if (Time.time < _sinCoberturaHasta) p *= 0.6f;
+            if (Time.time < _descubiertoHasta) p *= 0.35f;
             return p;
         }
 
@@ -170,7 +174,11 @@ namespace Game.NPC.Combate
                         {
                             Cuerpo.ACubierto = false;
                             Cuerpo.Memoria.DescartarCobertura(_sitio);
-                            if (++_cambios > CambiosDeEsconditeMaximos) return false;
+                            if (++_cambios > CambiosDeEsconditeMaximos)
+                            {
+                                _descubiertoHasta = Time.time + SegundosSinEsconderse;
+                                return false;
+                            }
                             IrAUnEscondite(s);
                         }
                     }

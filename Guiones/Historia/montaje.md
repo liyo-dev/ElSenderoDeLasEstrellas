@@ -1,7 +1,7 @@
 # Montaje de los capítulos 3 y 4
 
 Despedida: misión «Hora de partir», frases de despedida, cinemática e interludio de Tobías a mitad del camino.
-Cap. 3: contrabandistas con config propia (no atacan por su cuenta, cerebro por puntuación); vigía «Assets/_NPCs/_GrafoNarrativo/Contrabandista_Vigia.prefab» (1 referencia(s) a la config).
+Cap. 3: contrabandistas con config propia (no atacan por su cuenta, cerebro por puntuación); vigía «Assets/_NPCs/_GrafoNarrativo/Contrabandista_Vigia.prefab» (0 referencia(s) a la config).
 Aldea del mar: 7 vecinos (0 prefabs nuevos), agendas y nasas.
 Cap. 3: assets y tablas listos.
 Cap. 4: assets y tablas listos.
@@ -26,6 +26,7 @@ Personajes según la historia: 21 (32 situaciones).
   Cap4 · enganchadas tras «4.4 · Hacia el Reino: el Gólem (probar desde aquí)»: Liam: vuelve a lo de siempre (acaba «Cap. 4 · en la loma de la campana»), Liam desde aquí: Cap. 4 · en el saliente del Gólem
   Cap4 · enganchadas tras «4.6 · Hacia la bifurcación del río (probar desde aquí)»: Liam: vuelve a lo de siempre (acaba «Cap. 4 · en el saliente del Gólem»), Liam desde aquí: Cap. 4 · en la bifurcación
   Cap4 · enganchadas tras «4.6 · Liam ya va en el grupo»: Liam: vuelve a lo de siempre (acaba «Cap. 4 · en la bifurcación»)
+Objeto de misión Cap1: «Goods_Interactable» en (89,27, 35,63, 6,84).
 Cinemáticas: 14 reproductores en MainWorld.
 Cap. 3: campamento de los contrabandistas en el claro.
 Cap. 3: carro de las jaulas tras el contrabandista, con la luz que respira.

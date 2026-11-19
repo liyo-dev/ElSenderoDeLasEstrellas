@@ -1,0 +1,74 @@
+{
+    "materiales": [
+        {
+            "ruta": "Assets/Art/World/Fantasy_Kingdom_Pack/Materials/Tree.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Vestido/CopaRoja.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Vestido/Tree_Cerezo.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Vestido/Materials/Tree_Cerezo_D.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Pueblo/ArbolEnFlor.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Pueblo/Materiales/Mat_Pueblo_Hojas.mat",
+            "pincel": true,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Zonas/Materiales/Mat_Zonas_Hojas.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Art/World/Zonas/Materiales/Mat_Zonas_CopaClara.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Scenes/Worlds/MainWorld_data/Recursos/Follaje_0.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        },
+        {
+            "ruta": "Assets/Scenes/Worlds/MainWorld_data/Recursos/Follaje_1.mat",
+            "pincel": false,
+            "follaje": false,
+            "mip": 5.0,
+            "mascara": ""
+        }
+    ]
+}

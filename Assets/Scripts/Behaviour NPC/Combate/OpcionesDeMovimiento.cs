@@ -80,10 +80,13 @@ namespace Game.NPC.Combate
 
     /// <summary>
     /// Mientras otro del grupo tiene el turno y presiona de frente, ir hacia un lado del objetivo
-    /// (cada rodeador a uno distinto) para atacar desde ahí cuando le toque.
+    /// (cada rodeador a uno distinto) para atacar desde ahí cuando le toque. También rodea, solo o
+    /// en grupo, al jugador que se queda tras el escudo un rato.
     /// </summary>
     public sealed class OpcionRodear : OpcionDeCombate
     {
+        private const float SegundosDeEscudoLargo = 1.2f;
+
         private float _hasta;
         private float _siguienteRumbo;
 
@@ -91,13 +94,19 @@ namespace Game.NPC.Combate
 
         public override string Nombre => "Rodear";
 
+        private static bool TocaRodear(in SituacionDeCombate s) =>
+            s.rol == RolEnElGrupo.Rodea || (s.jugadorDefendiendo && s.segundosDefendiendo > SegundosDeEscudoLargo && s.veAlObjetivo);
+
         public override float Puntuar(in SituacionDeCombate s)
         {
-            if (s.rol != RolEnElGrupo.Rodea || s.objetivo == null) return 0f;
+            if (!TocaRodear(s) || s.objetivo == null) return 0f;
             Vector3 punto = Cuerpo.PuntoDeRodeo();
             float falta = Vector3.Distance(Cuerpo.Transform.position, punto);
             if (falta < 1.5f) return 0.08f;
-            return 0.5f + 0.3f * Cuerpo.Perfil.Caracter.movilidad;
+            float p = 0.5f + 0.3f * Cuerpo.Perfil.Caracter.movilidad;
+            // Contra el escudo, solo si es movido; si no, espera (Esperar) a que lo baje.
+            if (s.rol != RolEnElGrupo.Rodea) p *= Cuerpo.Perfil.Caracter.movilidad;
+            return p;
         }
 
         public override void Empezar(in SituacionDeCombate s)
@@ -109,7 +118,7 @@ namespace Game.NPC.Combate
 
         public override bool Actualizar(in SituacionDeCombate s)
         {
-            if (s.rol != RolEnElGrupo.Rodea || Time.time >= _hasta) return false;
+            if (!TocaRodear(s) || Time.time >= _hasta) return false;
             if (Time.time >= _siguienteRumbo) Ir();
             return !Cuerpo.HaLlegado(0.6f);
         }

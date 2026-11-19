@@ -23,6 +23,7 @@ namespace NarrativeGraphEditor.Story
         readonly VisualElement _header;
         readonly VisualElement _icon;
         readonly VisualElement _art;
+        readonly VisualElement _artDrawing;
         readonly Image _face;
         Color _color;
 
@@ -58,9 +59,13 @@ namespace NarrativeGraphEditor.Story
             _warning.AddToClassList("story-card__warning");
             header.Add(_warning);
 
+            // La banda recorta su dibujo: el eco del pictograma se sale por el borde a propósito.
             _art = new VisualElement { pickingMode = PickingMode.Ignore };
             _art.AddToClassList("story-card__art");
-            _art.generateVisualContent += DrawCardArt;
+            _artDrawing = new VisualElement { pickingMode = PickingMode.Ignore };
+            _artDrawing.AddToClassList("story-card__art-drawing");
+            _artDrawing.generateVisualContent += DrawCardArt;
+            _art.Add(_artDrawing);
             Add(_art);
 
             var body = new VisualElement();
@@ -136,8 +141,7 @@ namespace NarrativeGraphEditor.Story
             {
                 var custom = StoryCardImages.CardArtOf(Model);
                 _art.style.backgroundImage = custom != null ? new StyleBackground(custom) : new StyleBackground(StyleKeyword.None);
-                _art.style.backgroundColor = custom != null ? Color.clear : new Color(_color.r, _color.g, _color.b, 0.10f);
-                _art.MarkDirtyRepaint();
+                _artDrawing.MarkDirtyRepaint();
             }
 
             var face = StoryCardImages.ShowPortraits && !Model.IsAnnotation ? StoryCardImages.PortraitOf(StoryCardImages.ActorOf(Model)) : null;
@@ -185,79 +189,17 @@ namespace NarrativeGraphEditor.Story
             }
         }
 
-        /// Un dibujo sencillo por familia de pasos, en blanco sobre el cuadrado de su color.
+        /// El pictograma de la familia, en línea blanca sobre el cuadrado de su color.
         void DrawIcon(MeshGenerationContext ctx)
-        {
-            var p = ctx.painter2D;
-            var r = _icon.contentRect;
-            float w = r.width, h = r.height;
-            if (w <= 0) return;
-            Vector2 P(float x, float y) => new Vector2(x * w, y * h);
-            p.strokeColor = Color.white;
-            p.fillColor = Color.white;
-            p.lineWidth = 1.6f;
-            p.lineCap = LineCap.Round;
-            p.lineJoin = LineJoin.Round;
-            switch (_icon.userData as string)
-            {
-                case "Diálogo":
-                    p.BeginPath(); p.MoveTo(P(.2f, .25f)); p.LineTo(P(.8f, .25f)); p.LineTo(P(.8f, .62f)); p.LineTo(P(.45f, .62f)); p.LineTo(P(.28f, .8f)); p.LineTo(P(.3f, .62f)); p.LineTo(P(.2f, .62f)); p.ClosePath(); p.Stroke();
-                    break;
-                case "Combate":
-                    p.BeginPath(); p.MoveTo(P(.22f, .22f)); p.LineTo(P(.78f, .78f)); p.MoveTo(P(.78f, .22f)); p.LineTo(P(.22f, .78f)); p.Stroke();
-                    break;
-                case "Quests":
-                    p.BeginPath(); p.MoveTo(P(.5f, .2f)); p.LineTo(P(.5f, .6f)); p.Stroke();
-                    p.BeginPath(); p.Arc(P(.5f, .78f), w * .07f, 0, 360); p.Fill();
-                    break;
-                case "NPCs":
-                case "Grupo":
-                    p.BeginPath(); p.Arc(P(.5f, .35f), w * .14f, 0, 360); p.Fill();
-                    p.BeginPath(); p.MoveTo(P(.25f, .82f)); p.BezierCurveTo(P(.25f, .55f), P(.75f, .55f), P(.75f, .82f)); p.Stroke();
-                    break;
-                case "Cinemáticas":
-                case "Audio y cine":
-                    p.BeginPath(); p.MoveTo(P(.33f, .24f)); p.LineTo(P(.78f, .5f)); p.LineTo(P(.33f, .76f)); p.ClosePath(); p.Fill();
-                    break;
-                case "Objetos":
-                    p.BeginPath(); p.MoveTo(P(.22f, .38f)); p.LineTo(P(.78f, .38f)); p.LineTo(P(.72f, .8f)); p.LineTo(P(.28f, .8f)); p.ClosePath(); p.Stroke();
-                    p.BeginPath(); p.MoveTo(P(.38f, .38f)); p.LineTo(P(.38f, .24f)); p.LineTo(P(.62f, .24f)); p.LineTo(P(.62f, .38f)); p.Stroke();
-                    break;
-                case "Mundo":
-                    p.BeginPath(); p.MoveTo(P(.5f, .18f)); p.LineTo(P(.82f, .5f)); p.LineTo(P(.5f, .82f)); p.LineTo(P(.18f, .5f)); p.ClosePath(); p.Stroke();
-                    break;
-                case "Señales":
-                    p.BeginPath(); p.MoveTo(P(.15f, .5f)); p.LineTo(P(.32f, .5f)); p.LineTo(P(.42f, .25f)); p.LineTo(P(.58f, .75f)); p.LineTo(P(.68f, .5f)); p.LineTo(P(.85f, .5f)); p.Stroke();
-                    break;
-                case "Jugador":
-                    p.BeginPath();
-                    for (int i = 0; i < 10; i++)
-                    {
-                        float a = Mathf.PI * 2 * i / 10f - Mathf.PI / 2, rad = i % 2 == 0 ? .36f : .16f;
-                        var v = P(.5f + Mathf.Cos(a) * rad, .52f + Mathf.Sin(a) * rad);
-                        if (i == 0) p.MoveTo(v); else p.LineTo(v);
-                    }
-                    p.ClosePath(); p.Fill();
-                    break;
-                case "Flujo":
-                    p.BeginPath(); p.MoveTo(P(.2f, .5f)); p.LineTo(P(.75f, .5f)); p.MoveTo(P(.55f, .3f)); p.LineTo(P(.78f, .5f)); p.LineTo(P(.55f, .7f)); p.Stroke();
-                    break;
-                case "Notas":
-                    p.BeginPath(); p.MoveTo(P(.25f, .32f)); p.LineTo(P(.75f, .32f)); p.MoveTo(P(.25f, .5f)); p.LineTo(P(.75f, .5f)); p.MoveTo(P(.25f, .68f)); p.LineTo(P(.6f, .68f)); p.Stroke();
-                    break;
-                default:
-                    p.BeginPath(); p.Arc(P(.5f, .5f), w * .16f, 0, 360); p.Fill();
-                    break;
-            }
-        }
+            => StoryCardArt.DrawIcon(ctx.painter2D, _icon.contentRect, _icon.userData as string, _color);
 
-        /// El dibujo de la categoría en el hueco de la antigua foto; si hay una textura propia,
-        /// la pinta el fondo y aquí no se dibuja nada.
+        /// La banda con el pictograma de la familia; si hay una textura propia, la pinta el
+        /// fondo y aquí no se dibuja nada.
         void DrawCardArt(MeshGenerationContext ctx)
         {
             if (!StoryCardImages.ShowCardArt || Model.IsAnnotation) return;
             if (StoryCardImages.CardArtOf(Model) != null) return;
-            StoryCardArt.Draw(ctx.painter2D, _art.contentRect, NarrativeNodeCatalog.CategoryOf(Model.KindType), _color);
+            StoryCardArt.DrawBand(ctx.painter2D, _artDrawing.contentRect, NarrativeNodeCatalog.CategoryOf(Model.KindType), _color);
         }
 
         public void SetPosition(Vector2 position)
@@ -275,6 +217,8 @@ namespace NarrativeGraphEditor.Story
     public static class StoryColors
     {
         public static readonly Color Accent = new Color32(0x3D, 0x8B, 0xFF, 0xFF);
+        /// El fondo de las tarjetas (--card en StoryEditor.uss).
+        public static readonly Color Card = new Color32(0x1E, 0x24, 0x30, 0xFF);
         public static readonly Color Line = new Color32(0x4A, 0x54, 0x68, 0xFF);
         public static readonly Color LineNear = new Color32(0x8C, 0x9A, 0xB3, 0xFF);
         public static readonly Color Ok = new Color32(0xA8, 0xD8, 0xB0, 0xFF);

@@ -96,6 +96,7 @@ public static class PortadasDelMenuBuilder
 
         // Añadidos que no rehacen nada: nubes en los cielos de día y el título centrado sobre los botones.
         AsegurarPostproceso();
+        AsegurarEstiloDePapel();
         PonerNubes(columpio);
         PonerNubes(peninsula);
         PonerNubes(viaje);
@@ -129,10 +130,16 @@ public static class PortadasDelMenuBuilder
     static void RehacerColumpio()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-        EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+        var escena = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         var raiz = GameObject.Find(RaizNombre);
         var viejo = raiz != null ? raiz.transform.Find(NombreColumpio) : null;
-        if (viejo != null) Object.DestroyImmediate(viejo.gameObject);
+        if (viejo != null)
+        {
+            Object.DestroyImmediate(viejo.gameObject);
+            // Montar vuelve a abrir la escena desde disco: el borrado tiene que estar guardado.
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+        }
         Montar();
     }
 
@@ -787,6 +794,31 @@ public static class PortadasDelMenuBuilder
         volumen.isGlobal = true;
         volumen.weight = 1f;
         volumen.sharedProfile = perfil;
+    }
+
+    /// <summary>Pone el aspecto de papel al menú principal (idempotente): el componente va en el panel de botones.</summary>
+    static void AsegurarEstiloDePapel()
+    {
+        Transform botones = null, velo = null, titulo = null;
+        foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include))
+        {
+            if (t.name == "ButtonPanel") botones = t;
+            else if (t.name == "VeloLateral") velo = t;
+            else if (t.name == "LogoTitulo") titulo = t;
+        }
+        if (botones == null) { Debug.LogWarning("[PortadasDelMenuBuilder] No encuentro ButtonPanel: el menú queda sin papel."); return; }
+        var panel = botones.Find("Panel");
+        var estrella = botones.Find("CursorSeleccion/Estrella");
+        var estilo = Componente<EstiloDePapelDelMenu>(botones.gameObject);
+        var so = new SerializedObject(estilo);
+        so.FindProperty("filas").objectReferenceValue = panel;
+        var apagar = so.FindProperty("apagar");
+        apagar.arraySize = velo != null ? 1 : 0;
+        if (velo != null) apagar.GetArrayElementAtIndex(0).objectReferenceValue = velo.gameObject;
+        so.FindProperty("titulo").objectReferenceValue = titulo as RectTransform;
+        var imagenEstrella = estrella != null ? estrella.GetComponent<UnityEngine.UI.Image>() : null;
+        so.FindProperty("estrella").objectReferenceValue = imagenEstrella != null ? imagenEstrella.sprite : null;
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     static PortadaEtapa Existente(Transform raiz, string nombre)

@@ -1,5 +1,6 @@
 using System.Linq;
 using Kits.WorldWrap;
+using Kits.WorldWrap.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -10,7 +11,8 @@ using UnityEngine.SceneManagement;
 /// - «Techo de vuelo» (`AltitudeCeiling`) queda por encima del terreno más alto, con margen;
 /// - «Mundo cíclico» (`WorldWrapper` + `MundoCiclicoDelJuego`) cose los bordes: un cuadrado de
 ///   `LadoDelMundo` centrado en el terreno; al salir por un lado se entra por el contrario.
-/// Avisa en el registro de lo activo que quede fuera del mundo o cerca de la costura (se vería aparecer).
+/// Avisa en el registro (con la revisión de costura del kit) de lo activo que quede fuera del mundo o
+/// a menos de la distancia de vista del borde (se vería aparecer al cruzar).
 /// Se puede volver a ejecutar: solo ajusta componentes y medidas. Ver INC-1197
 public static class MundoCiclicoDeMainWorld
 {
@@ -21,7 +23,8 @@ public static class MundoCiclicoDeMainWorld
     private const float FranjaSuaveDelTecho = 30f;
     private const string NombreDelMundo = "Mundo cíclico";
     private const float LadoDelMundo = 3000f;
-    private const float FranjaVisibleDeLaCostura = 500f;
+    // Lo que deja ver la niebla más fina del ciclo (DayNightCycle.visibilidadMaxima).
+    private const float DistanciaDeVista = 900f;
 
     [MenuItem("El Sendero/Escenario/MainWorld: mundo cíclico (mar sin fin, techo de vuelo y vuelta) (INC-1197)")]
     public static void Montar()
@@ -51,7 +54,8 @@ public static class MundoCiclicoDeMainWorld
         EditorSceneManager.SaveScene(escena);
         Informar($"[Mundo cíclico] MainWorld: mar de {LadoDelMar:0} m que sigue a la cámara, techo de vuelo a {techo:0} m, " +
                   $"mundo de {mundo.Size.x:0} × {mundo.Size.y:0} m con centro en ({mundo.Center.x:0}, {mundo.Center.y:0}).");
-        RevisarCostura(escena, mundo, mar.gameObject);
+        var costura = WorldWrapSeamCheck.Run(mundo, DistanciaDeVista, new[] { mar.gameObject });
+        Informar(WorldWrapSeamCheck.Describe(costura, DistanciaDeVista));
     }
 
     private static void MontarMar(MeshRenderer mar)
@@ -110,32 +114,6 @@ public static class MundoCiclicoDeMainWorld
         mundo.Size = new Vector2(LadoDelMundo, LadoDelMundo);
         EditorUtility.SetDirty(mundo);
         return mundo;
-    }
-
-    /// Avisa de lo que se vería mal con la costura: lo que queda fuera del mundo y lo que queda tan
-    /// cerca del borde que, al cruzarlo, aparecería o desaparecería de golpe.
-    private static void RevisarCostura(Scene escena, WorldWrapper mundo, GameObject mar)
-    {
-        float mitadX = mundo.Size.x * 0.5f, mitadZ = mundo.Size.y * 0.5f;
-        int fuera = 0, cerca = 0;
-        var ejemplos = new System.Collections.Generic.List<string>();
-        foreach (var r in escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Renderer>(false)))
-        {
-            if (r.gameObject == mar || r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer) continue;
-            Vector3 c = r.bounds.center;
-            float dx = mitadX - Mathf.Abs(c.x - mundo.Center.x);
-            float dz = mitadZ - Mathf.Abs(c.z - mundo.Center.y);
-            float alBorde = Mathf.Min(dx, dz);
-            if (alBorde < 0f) fuera++;
-            else if (alBorde < FranjaVisibleDeLaCostura) cerca++;
-            else continue;
-            if (ejemplos.Count < 8) ejemplos.Add($"{r.name} ({c.x:0}, {c.z:0})");
-        }
-        if (fuera == 0 && cerca == 0)
-            Informar($"[Mundo cíclico] Costura limpia: nada a menos de {FranjaVisibleDeLaCostura:0} m del borde.");
-        else
-            Informar($"[Mundo cíclico] {fuera} objetos fuera del mundo y {cerca} a menos de {FranjaVisibleDeLaCostura:0} m del borde " +
-                             "(se verían aparecer al cruzar). Ejemplos: " + string.Join(", ", ejemplos));
     }
 
     /// Al registro y, si se ha lanzado desde el buzón de órdenes, también a su registro.

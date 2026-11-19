@@ -62,22 +62,45 @@ public static class AjustesDeRenderDeDibujo
 
     /// Flores y hierba del terreno (detalles) a 400 m eran miles de puntitos lejanos que centelleaban y costaban
     /// mucho; con el dibujo, de lejos se lee mejor el color del suelo. Y el terreno se teselaba a 0,5 px de error.
-    [MenuItem("El Sendero/Aspecto de dibujo/Render: terreno (distancia de flores y detalle)")]
-    static void Terreno()
+    [MenuItem("El Sendero/Aspecto de dibujo/Render: terreno (distancia de flores y detalle) (escenas abiertas)")]
+    static void TerrenoEnLasAbiertas() => Terreno(false);
+
+    [MenuItem("El Sendero/Aspecto de dibujo/Render: terreno (distancia de flores y detalle) (todas las escenas jugables)")]
+    static void TerrenoEnLasJugables() => Terreno(true);
+
+    const float DistanciaDeFlores = 90f;
+    const float ErrorDelTerreno = 3f;
+
+    static void Terreno(bool todasLasJugables)
     {
         if (EditorApplication.isPlaying) { Debug.LogWarning("[Render] Sal de Play antes."); return; }
         var sb = new StringBuilder("# Terreno\n\n");
-        foreach (var t in Object.FindObjectsByType<Terrain>(FindObjectsInactive.Include))
-        {
-            Undo.RecordObject(t, "Terreno de dibujo");
-            sb.Append($"- {t.name}: flores {t.detailObjectDistance} → 90 m, error {t.heightmapPixelError} → 3\n");
-            t.detailObjectDistance = 90f;
-            t.heightmapPixelError = 3f;
-            EditorUtility.SetDirty(t);
-            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
-            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(t.gameObject.scene);
-        }
+        EscenasJugables.ParaCada(todasLasJugables, TerrenoEn, sb);
         File.WriteAllText(Path.Combine("Guiones", "_ordenes", "terreno.md"), sb.ToString());
+    }
+
+    static bool TerrenoEn(UnityEngine.SceneManagement.Scene escena, StringBuilder sb)
+    {
+        bool cambia = false;
+        int terrenos = 0;
+        foreach (var t in escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Terrain>(true)))
+        {
+            terrenos++;
+            if (Mathf.Approximately(t.detailObjectDistance, DistanciaDeFlores) && Mathf.Approximately(t.heightmapPixelError, ErrorDelTerreno))
+            {
+                sb.Append($"- {escena.name} / {t.name}: ya estaba (flores {DistanciaDeFlores} m, error {ErrorDelTerreno})\n");
+                continue;
+            }
+            Undo.RecordObject(t, "Terreno de dibujo");
+            sb.Append($"- {escena.name} / {t.name}: flores {t.detailObjectDistance} → {DistanciaDeFlores} m, error {t.heightmapPixelError} → {ErrorDelTerreno}\n");
+            t.detailObjectDistance = DistanciaDeFlores;
+            t.heightmapPixelError = ErrorDelTerreno;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(t);
+            EditorUtility.SetDirty(t);
+            cambia = true;
+        }
+        if (terrenos == 0) sb.Append($"- {escena.name}: sin terreno\n");
+        return cambia;
     }
 
     /// Borde de luz en los materiales de los personajes: los de los SkinnedMeshRenderer de las escenas abiertas

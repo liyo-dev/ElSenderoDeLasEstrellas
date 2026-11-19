@@ -69,12 +69,11 @@ public class SavePoint : MonoBehaviour
             return;
         }
 
-        // Verificar si el nodo narrativo actual bloquea el guardado
-        var narrativeRunner = FindAnyObjectByType<NarrativeRunner>();
-        if (narrativeRunner != null && narrativeRunner.IsCurrentNodeBlockingSave)
+        // Pasos de cualquier grafo que no dejan guardar, combate o cinemática: ver Partida.PuedeGuardarAhora.
+        if (!Partida.PuedeGuardarAhora(out var motivo))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[SavePoint] No se puede guardar: el nodo narrativo actual bloquea el guardado.");
+            Debug.Log($"[SavePoint] No se puede guardar: {motivo}.");
 #endif
             ShowBlockedSaveFeedback();
             return;
@@ -139,9 +138,14 @@ public class SavePoint : MonoBehaviour
             SpawnManager.SetCurrentAnchor(anchorId);
         }
 
-        if (healOnSave && playerGo != null)
+        if (healOnSave && SaludDelGrupo.Instance != null)
         {
-            // Curar al jugador a través del PlayerHealthSystem
+            // Vida y maná llenos para los tres y los caídos en pie (el dueño de la salud del grupo).
+            SaludDelGrupo.Instance.CurarATodos();
+        }
+        else if (healOnSave && playerGo != null)
+        {
+            // Sin SaludDelGrupo (escenas de prueba): solo el cuerpo del jugador.
             var playerHealth = playerGo.GetComponent<PlayerHealthSystem>() ?? playerGo.GetComponentInParent<PlayerHealthSystem>();
             if (playerHealth != null)
             {

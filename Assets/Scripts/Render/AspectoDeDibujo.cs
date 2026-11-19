@@ -71,6 +71,19 @@ public sealed class AspectoDeDibujo : ScriptableObject
     [Tooltip("Tamaño de cada mancha de pincel, en metros.")]
     [Range(0.1f, 3f)] public float tamanoDeLasPinceladas = 0.6f;
 
+    [Header("Follaje")]
+    [Tooltip("Golpes de hoja que pinta el follaje de dibujo (copas y matas con «Follaje de dibujo» en el material). Canal rojo: 0,5 en el borde de cada golpe; se repite sin costura.")]
+    public Texture2D golpesDeHoja;
+
+    [Tooltip("Cuánto más claros son los golpes de hoja que el color de la copa. 0 = copa de un solo tono.")]
+    [Range(0f, 0.5f)] public float fuerzaDeLosGolpes = 0.16f;
+
+    [Tooltip("Metros que ocupa una tesela de golpes de hoja: más alto = matas de hojas más grandes.")]
+    [Range(1f, 20f)] public float tamanoDeLosGolpes = 6f;
+
+    [Tooltip("Cuánto cambia el matiz y la luz de un árbol a otro. 0 = todos los árboles de un mismo material iguales.")]
+    [Range(0f, 1f)] public float variacionPorArbol = 0.5f;
+
     private static readonly int IdActivo = Shader.PropertyToID("_DibujoActivo");
     private static readonly int IdSombra = Shader.PropertyToID("_DibujoSombra");
     private static readonly int IdSombraCalida = Shader.PropertyToID("_DibujoSombraCalida");
@@ -90,6 +103,8 @@ public sealed class AspectoDeDibujo : ScriptableObject
     private static readonly int IdColorDeLaNieve = Shader.PropertyToID("_DibujoColorDeLaNieve");
     private static readonly int IdPincel = Shader.PropertyToID("_DibujoPincel");
     private static readonly int IdPincelEscala = Shader.PropertyToID("_DibujoPincelEscala");
+    private static readonly int IdHojas = Shader.PropertyToID("_DibujoHojas");
+    private static readonly int IdFollaje = Shader.PropertyToID("_DibujoFollaje");
 
     /// Pone los ajustes como valores globales de shader.
     public void Aplicar()
@@ -116,6 +131,9 @@ public sealed class AspectoDeDibujo : ScriptableObject
         Shader.SetGlobalVector(IdColorDeLaNieve, new Vector4(colorDeLaNieve.r, colorDeLaNieve.g, colorDeLaNieve.b, 1f));
         Shader.SetGlobalFloat(IdPincel, pinceladas);
         Shader.SetGlobalFloat(IdPincelEscala, tamanoDeLasPinceladas);
+        // Sin textura de golpes el follaje queda de un tono (la textura negra no llega al borde de 0,5).
+        Shader.SetGlobalTexture(IdHojas, golpesDeHoja != null ? golpesDeHoja : Texture2D.blackTexture);
+        Shader.SetGlobalVector(IdFollaje, new Vector4(fuerzaDeLosGolpes, tamanoDeLosGolpes, variacionPorArbol, 0f));
         Shader.SetGlobalFloat(IdActivo, 1f);
     }
 

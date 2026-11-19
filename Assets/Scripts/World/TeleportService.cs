@@ -169,6 +169,24 @@ public class TeleportService : MonoBehaviour
         Inst.DoTeleportToAnchor(player, sa.transform, useTransition);
     }
 
+    /// <summary>
+    /// Lleva al jugador a un punto concreto, sin transición (aparecer donde se auto-guardó). El
+    /// ancla <paramref name="anchorId"/>, si existe, queda como ancla actual y da el entorno
+    /// (interior o exterior).
+    /// </summary>
+    public static void TeleportToPosition(GameObject player, Vector3 pos, Quaternion rot, string anchorId)
+    {
+        if (!Inst || !player)
+        {
+            InvokeEvent(OnTeleportEnded, nameof(OnTeleportEnded));
+            return;
+        }
+        var sa = string.IsNullOrEmpty(anchorId) ? null : SpawnManager.GetAnchor(anchorId);
+        if (sa) SpawnManager.SetCurrentAnchor(sa.anchorId);
+        InvokeEvent(OnTeleportStarted, nameof(OnTeleportStarted));
+        Inst.MoveNow(player, pos, rot, sa ? sa.transform : null);
+    }
+
     // ================== API de instancia ==================
 
     public void DoTeleportToAnchor(GameObject player, Transform anchor, bool? useTransition = null)

@@ -31,6 +31,25 @@ namespace Game.NPC.Combate
         private readonly Collider[] _hueco = new Collider[8];
         private readonly Collider[] _proyectiles = new Collider[16];
 
+        // Qué es cada collider (personaje, proyectil, escudo de NPC): se mira una vez y se recuerda,
+        // para no buscar componentes en cada rayo. Compartido por todos los cerebros; se vacía al
+        // llegar al tope (los colliders destruidos no se quedan para siempre).
+        [System.Flags]
+        private enum Clase : byte { Nada = 0, Personaje = 1, Proyectil = 2, Escudo = 4 }
+
+        private const int TopeDeClases = 1024;
+        private static readonly Dictionary<Collider, Clase> s_clases = new Dictionary<Collider, Clase>(256);
+        private static readonly Dictionary<Collider, MagicProjectile> s_hechizos = new Dictionary<Collider, MagicProjectile>(64);
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            s_clases.Clear();
+            s_hechizos.Clear();
+        }
+#endif
+
         public SondeoDelTerreno(Transform yo)
         {
             _yo = yo;
@@ -169,7 +188,7 @@ namespace Game.NPC.Combate
             {
                 var c = _proyectiles[i];
                 if (c == null) continue;
-                var proyectil = c.GetComponentInParent<MagicProjectile>();
+                var proyectil = HechizoDe(c);
                 if (proyectil == null || proyectil.transform.IsChildOf(_yo)) continue;
                 Vector3 velocidad = c.attachedRigidbody != null ? c.attachedRigidbody.linearVelocity : Vector3.zero;
                 if (velocidad.sqrMagnitude < 0.01f) velocidad = proyectil.transform.forward * 10f;
@@ -242,11 +261,30 @@ namespace Game.NPC.Combate
         private bool Ignorable(Collider c)
         {
             if (c.transform == _yo || c.transform.IsChildOf(_yo)) return true;
-            if (c.GetComponentInParent<MagicProjectile>() != null) return true;
-            if (c.GetComponentInParent<EnemyProjectile>() != null) return true;
-            return c.GetComponentInParent<NPCShieldController.NPCShieldMarker>() != null;
+            return (ClaseDe(c) & (Clase.Proyectil | Clase.Escudo)) != 0;
         }
 
-        private static bool EsPersonaje(Collider c) => c.transform.root.GetComponent<NPCSimpleAnimator>() != null;
+        private static bool EsPersonaje(Collider c) => (ClaseDe(c) & Clase.Personaje) != 0;
+
+        private static Clase ClaseDe(Collider c)
+        {
+            if (s_clases.TryGetValue(c, out var clase)) return clase;
+            if (s_clases.Count >= TopeDeClases) s_clases.Clear();
+            clase = Clase.Nada;
+            if (c.transform.root.GetComponent<NPCSimpleAnimator>() != null) clase |= Clase.Personaje;
+            if (c.GetComponentInParent<MagicProjectile>() != null || c.GetComponentInParent<EnemyProjectile>() != null) clase |= Clase.Proyectil;
+            if (c.GetComponentInParent<NPCShieldController.NPCShieldMarker>() != null) clase |= Clase.Escudo;
+            s_clases[c] = clase;
+            return clase;
+        }
+
+        private static MagicProjectile HechizoDe(Collider c)
+        {
+            if (s_hechizos.TryGetValue(c, out var hechizo)) return hechizo;
+            if (s_hechizos.Count >= TopeDeClases) s_hechizos.Clear();
+            hechizo = c.GetComponentInParent<MagicProjectile>();
+            s_hechizos[c] = hechizo;
+            return hechizo;
+        }
     }
 }

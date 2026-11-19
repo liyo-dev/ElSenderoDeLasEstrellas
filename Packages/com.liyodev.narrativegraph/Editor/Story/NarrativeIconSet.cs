@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace NarrativeGraphEditor.Story
 {
-    /// Los dibujos propios del grafo: una textura por categoría (en el hueco de la antigua foto)
-    /// y una por personaje (en la tarjeta y en el mapa). Lo que falte se queda con el dibujo
-    /// vectorial de la categoría o con el retrato del juego. Es opcional: sin asset, el grafo
+    /// Los dibujos propios del grafo: una textura por categoría (en la banda de la tarjeta)
+    /// y una por personaje (en la tarjeta y en el mapa). Lo que falte se queda con el pictograma
+    /// de la categoría o con el retrato del juego. Es opcional: sin asset, el grafo
     /// funciona igual.
     [CreateAssetMenu(menuName = "Narrative Graph/Dibujos del grafo", fileName = "Dibujos del grafo")]
     public sealed class NarrativeIconSet : ScriptableObject
@@ -16,7 +16,7 @@ namespace NarrativeGraphEditor.Story
         {
             [Tooltip("Nombre de la categoría tal y como lo declara el paso: Diálogo, Quests, Combate…")]
             public string category;
-            [Tooltip("Dibujo de la categoría. Mejor 2:1 (por ejemplo 440 × 224) y con fondo transparente.")]
+            [Tooltip("Dibujo de la categoría para la banda de la tarjeta (220 × 64). Mejor apaisado, por ejemplo 440 × 128.")]
             public Texture2D image;
         }
 

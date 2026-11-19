@@ -5,11 +5,15 @@ namespace Game.NPC.Combate
     /// <summary>
     /// Lanzar una acción concreta del catálogo. Hay una opción por acción: cada una se puntúa por su
     /// alcance, su maná y enfriamiento, su peso, su función (presión, golpe, remate) y lo que está
-    /// haciendo el jugador (si acaba de lanzar, si abusa de la B, si tiene el escudo levantado).
+    /// haciendo el jugador (si acaba de lanzar, si abusa de la B, si tiene el escudo levantado) y lo
+    /// que recuerda (las acciones que le han devuelto hace poco las usa menos).
     /// Necesita el turno del grupo; si le golpean mientras prepara, se corta sin cobrar.
     /// </summary>
     public sealed class OpcionAtacar : OpcionDeCombate
     {
+        private const float SegundosDeMemoriaDeDevueltas = 15f;
+        private const float SegundosDeEscudoLargo = 0.8f;
+
         private readonly int _indice;
         private readonly AccionDeCombate _accion;
         private readonly float _pesoRelativo;
@@ -57,7 +61,13 @@ namespace Game.NPC.Combate
             }
 
             if (s.devolucionesRecientes >= 2) p *= _accion.sePuedeDevolver ? 0.3f : 1.3f;
-            if (s.jugadorDefendiendo && _accion.sePuedeDevolver) p *= 0.6f;
+            if (_accion.sePuedeDevolver)
+            {
+                int devueltas = Cuerpo.Memoria.DevueltasDe(_indice, SegundosDeMemoriaDeDevueltas);
+                if (devueltas > 0) p /= 1f + devueltas;
+                // Escudo arriba: con lo devolvible espera; si lo mantiene, mucho más (rodea o espera).
+                if (s.jugadorDefendiendo) p *= s.segundosDefendiendo > SegundosDeEscudoLargo ? 0.25f : 0.6f;
+            }
 
             float manaDespues = s.mana - _accion.costeDeMana / Mathf.Max(1f, Cuerpo.Perfil.MaxMana);
             if (manaDespues < 0.15f * k.cautela) p *= 0.7f;

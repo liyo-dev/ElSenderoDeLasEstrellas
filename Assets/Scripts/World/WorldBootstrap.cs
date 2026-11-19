@@ -476,8 +476,11 @@ public class WorldBootstrap : MonoBehaviour
         // Teleportar al jugador
         if (player.activeInHierarchy)
         {
-            // Debug.Log($"[WorldBootstrap] Ejecutando TeleportTo('{anchorId}')");
-            SpawnManager.TeleportTo(anchorId, false);
+            // Tras cargar un auto-guardado se aparece donde se guardó; si no vale, en el ancla.
+            if (Partida.TomarPosicionDeAutoguardado(out var posicion, out var giro))
+                TeleportService.TeleportToPosition(player, posicion, giro, anchorId);
+            else
+                SpawnManager.TeleportTo(anchorId, false);
 #if UNITY_EDITOR
             StartCoroutine(DiagnosticoDeCaida(player, anchorId)); // Ver INC-890: quitar al cerrarla.
 #endif
@@ -529,7 +532,10 @@ public class WorldBootstrap : MonoBehaviour
 
         if (player != null && player.activeInHierarchy)
         {
-            SpawnManager.TeleportTo(anchorId, false);
+            if (Partida.TomarPosicionDeAutoguardado(out var posicion, out var giro))
+                TeleportService.TeleportToPosition(player, posicion, giro, anchorId);
+            else
+                SpawnManager.TeleportTo(anchorId, false);
         }
     }
 }

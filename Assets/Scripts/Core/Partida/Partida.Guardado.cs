@@ -21,9 +21,42 @@ public static partial class Partida
         }
 
         VolcarEstadoDelJuego();
-        bool ok = guardado.Save(AGuardado(Preset), contexto);
+        // Un auto-guardado recuerda dónde está el jugador; un guardado manual vuelve a su ancla.
+        // Solo va al archivo: en memoria se queda vacía para que un cambio de escena no la use.
+        var datos = AGuardado(Preset);
+        datos.posicionDeAutoguardado = contexto == SaveRequestContext.Auto ? CapturarPosicionDelJugador() : default;
+        bool ok = guardado.Save(datos, contexto);
         GameBootProfileDebugger.Log("Guardar", ok ? $"Guardado ({contexto})" : "Error al guardar", ok ? LogType.Log : LogType.Error);
         return ok;
+    }
+
+    /// <summary>
+    /// Si ahora se puede guardar: no hay teletransporte en marcha, ningún paso en curso de los
+    /// grafos lo impide (<see cref="NarrativeNode.blockSaving"/>, también en las ramas de un fork)
+    /// y no hay combate ni cinemática. <paramref name="motivo"/> dice qué lo impide (diagnóstico).
+    /// Lo consultan los puntos de guardado y lo consultará cualquier otra forma de guardar.
+    /// </summary>
+    public static bool PuedeGuardarAhora(out string motivo)
+    {
+        motivo = QueImpideGuardar(out var paso);
+        if (paso != null) motivo = $"el paso «{paso.displayTitle}» no deja guardar";
+        return motivo == null;
+    }
+
+    /// <summary>Lo mismo sin explicar el motivo (no reserva memoria: se puede consultar a menudo).</summary>
+    public static bool PuedeGuardarAhora() => QueImpideGuardar(out _) == null;
+
+    static string QueImpideGuardar(out NarrativeNode paso)
+    {
+        paso = null;
+        if (TeleportSystem.IsTeleporting) return "teletransporte en marcha";
+
+        paso = NarrativeGraphHub.Instance != null ? NarrativeGraphHub.Instance.FindSaveBlocker() : null;
+        if (paso != null) return "paso que no deja guardar";
+
+        if (Kits.Core.GameContext.Has(Situaciones.Combate)) return "combate en curso";
+        if (Kits.Core.GameContext.Has(Situaciones.Cinematica)) return "cinemática en curso";
+        return null;
     }
 
     /// <summary>

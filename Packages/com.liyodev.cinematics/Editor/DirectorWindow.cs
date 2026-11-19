@@ -58,6 +58,8 @@ namespace Liyodev.Cinematics
         private bool _reproduciendo;
         private float _t;
         private double _ultimoTick;
+        private double _ultimaRevisionDeEncargos;
+        private const double IntervaloRevisionDeEncargos = 2.0;
         private string _vozSonando;
         private int _plano = -1;
         private bool _verAvisos;
@@ -188,7 +190,45 @@ namespace Liyodev.Cinematics
                 if (misma != null) Seleccionar(misma, true);
                 else { _elegida = null; _detalle = null; }
             }
+
+            RepintarMesa();
         }
+
+        /// Los encargos de la IA se cierran fuera de la ventana (buzón, otra sesión, edición a mano del
+        /// archivo): se vuelve a contar cada pocos segundos y al recuperar el foco, y solo se repinta
+        /// si el número ha cambiado.
+        private void RevisarEncargosPendientes(bool ya = false)
+        {
+            double ahora = EditorApplication.timeSinceStartup;
+            if (!ya && ahora - _ultimaRevisionDeEncargos < IntervaloRevisionDeEncargos) return;
+            _ultimaRevisionDeEncargos = ahora;
+
+            var puente = CinematicsEditorServices.Bridge;
+            if (puente == null || _entradas.Count == 0) return;
+
+            bool cambio = false;
+            try
+            {
+                foreach (var e in _entradas)
+                {
+                    int ahoraN = puente.EncargosPendientes(e.id);
+                    if (ahoraN == e.encargos) continue;
+                    e.encargos = ahoraN;
+                    cambio = true;
+                }
+            }
+            catch { return; }
+
+            if (_detalle?.entrada != null && _elegida != null && _detalle.entrada.encargos != _elegida.encargos)
+            {
+                _detalle.entrada.encargos = _elegida.encargos;
+                cambio = true;
+            }
+
+            if (cambio) RepintarMesa();
+        }
+
+        private void OnFocus() => RevisarEncargosPendientes(true);
 
         private void Filtrar()
         {
@@ -345,6 +385,7 @@ namespace Liyodev.Cinematics
 
         private void Tick()
         {
+            RevisarEncargosPendientes();
             if (SeguirLaDePlay()) return;
             ActualizarVistaEnVivo();
             if (!_reproduciendo || _detalle == null) return;

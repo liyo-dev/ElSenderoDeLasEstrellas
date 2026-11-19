@@ -94,7 +94,54 @@ public class NarrativeRunner : MonoBehaviour
 
     /// <summary>Nodo del flujo principal en curso (null si espera en ramas de un fork o terminó).</summary>
     public NarrativeNode CurrentNode => _current;
-    public bool IsCurrentNodeBlockingSave => _current != null && _current.blockSaving;
+
+    /// <summary>
+    /// Un paso seguro para guardar (<see cref="SavePointAttribute.IsSafe"/>) se ha quedado en curso,
+    /// esperando, en el flujo principal o en una rama de un fork. Es un buen momento para que el
+    /// juego guarde; antes de hacerlo debe comprobar <see cref="NarrativeGraphHub.IsAtSafeStep"/>.
+    /// </summary>
+    public static event System.Action<NarrativeRunner, NarrativeNode> SafeStepReached;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetSafeStepReached() => SafeStepReached = null;
+#endif
+
+    void RaiseSafeStepReached(NarrativeNode node)
+    {
+        try { SafeStepReached?.Invoke(this, node); }
+        catch (System.Exception ex) { Debug.LogError($"[NarrativeRunner] SafeStepReached: {ex}"); }
+    }
+
+    /// <summary>
+    /// true si todos los pasos en curso de este grafo (flujo principal y ramas) son seguros para
+    /// guardar, o si no hay ninguno en curso.
+    /// </summary>
+    public bool IsAtSafeStep
+    {
+        get
+        {
+            if (_current != null && !SavePointAttribute.IsSafe(_current)) return false;
+            foreach (var node in _activeBranchNodes)
+                if (node != null && !SavePointAttribute.IsSafe(node)) return false;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Paso en curso que no deja guardar (<see cref="NarrativeNode.blockSaving"/>): el del flujo
+    /// principal o el de una rama de un fork que está esperando. Null si ninguno lo impide.
+    /// </summary>
+    public NarrativeNode SaveBlocker
+    {
+        get
+        {
+            if (_current != null && _current.blockSaving) return _current;
+            foreach (var node in _activeBranchNodes)
+                if (node != null && node.blockSaving) return node;
+            return null;
+        }
+    }
 
     /// <summary>
     /// Detiene toda ejecución en curso: para corrutinas huérfanas y limpia el nodo actual.
@@ -266,6 +313,7 @@ public class NarrativeRunner : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         StepEntered?.Invoke(this, _current);
 #endif
+        var entered = _current;
         _current.Enter(_ctx, () =>
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -273,6 +321,8 @@ public class NarrativeRunner : MonoBehaviour
 #endif
             Advance();
         });
+        // Sigue en curso (esperando): si es un paso seguro, se avisa.
+        if (_current == entered && SavePointAttribute.IsSafe(entered)) RaiseSafeStepReached(entered);
     }
 
     void Advance()
@@ -524,6 +574,8 @@ public class NarrativeRunner : MonoBehaviour
                 _activeBranchNodes.Remove(node);
                 yield break;
             }
+
+            if (!ready && SavePointAttribute.IsSafe(node)) RaiseSafeStepReached(node);
 
             yield return new WaitUntil(() => ready);
 

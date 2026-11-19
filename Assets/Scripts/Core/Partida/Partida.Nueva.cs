@@ -23,6 +23,7 @@ public static partial class Partida
 
         // Nada de la partida anterior: NPCs, cinemáticas vistas, lugares conocidos, pizarras, narrativas, avisos, grupo.
         p.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
+        p.posicionDeAutoguardado = default;
         p.flags ??= new List<string>();
         p.flags.RemoveAll(f => !string.IsNullOrEmpty(f) && f.StartsWith("CINEMATIC_SEEN:", StringComparison.OrdinalIgnoreCase));
         p.flags.RemoveAll(f => !string.IsNullOrEmpty(f) && f.StartsWith(LugaresConocidos.Prefijo, StringComparison.Ordinal));
@@ -36,6 +37,7 @@ public static partial class Partida
         if (BossProgressTracker.TryGetInstance(out var jefes)) jefes.LoadFromSnapshot(p.defeatedBossIds);
         QuestManager.Instance?.ResetAllQuests();
         TeleportRegistry.Clear();
+        NPCRelationshipRegistry.LoadFromSaveEntries(p.npcRelationships);
         ReiniciarSesionNarrativa();
 
         GameBootProfileDebugger.Log("Nueva partida", "Preset y sistemas reiniciados", UnityEngine.LogType.Log);
